@@ -1,0 +1,18 @@
+# Literature-search exemplar: the domain src/ layer is a thin wrapper around
+# infrastructure.search / infrastructure.reference / infrastructure.llm /
+# infrastructure.reporting / infrastructure.core.logging — every file below
+# imports one of those directly by design (this project's whole purpose is
+# orchestrating those infrastructure capabilities for the literature-search
+# workflow), so each is declared here per the layer-boundary contract
+# infrastructure/project/drift/checks_boundary.py enforces.
+allow_infrastructure_imports:
+  - src/composition.py
+  - src/dashboard.py
+  - src/deep_search.py
+  - src/deep_search_cli.py
+  - src/figures.py
+  - src/llm_runtime.py
+  - src/pipeline.py
+  - src/report.py
+  - src/search_pipeline_cli.py
+  - src/synthesis.py

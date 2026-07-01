@@ -12,7 +12,7 @@ references and an LLM-synthesised reading report" with no manual steps.
 * `infrastructure/reference/citation/` — BibTeX read/write/convert
   byte-compatible with the Pandoc-consumed
   `projects/templates/template_code_project/manuscript/references.bib`.
-* [`projects/archive/template_search_project/`](../../projects/archive/template_search_project/) — fully wired exemplar (copy locally under `projects/` to run; not git-tracked).
+* [`projects/templates/template_search_project/`](../../projects/templates/template_search_project/) — fully wired public exemplar.
 
 ## Stream Map
 
@@ -95,7 +95,7 @@ flowchart LR
 |---|---|---|---|
 | Search | `infrastructure/search/literature/` | ~1100 | 71 + 15 (fulltext) |
 | Reference | `infrastructure/reference/citation/` | ~700 | 105 + 11 (cli-direct) |
-| Project | [`projects/archive/template_search_project/`](../../projects/archive/template_search_project/) | ~600 | included in suite when checked out locally |
+| Project | [`projects/templates/template_search_project/`](../../projects/templates/template_search_project/) | ~600 | included in the public CI suite |
 
 ## Roadmap (post-merge)
 

@@ -1,0 +1,21 @@
+{
+  "creators": [
+    {
+      "affiliation": "Research Template Institute",
+      "name": "Author, Research Template",
+      "orcid": "0000-0000-0000-1234"
+    }
+  ],
+  "description": "Source code for Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference (2026).",
+  "keywords": [
+    "literature search",
+    "automated reference management",
+    "BibTeX",
+    "reproducible research",
+    "local LLM synthesis"
+  ],
+  "license": "MIT",
+  "title": "Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference",
+  "upload_type": "software",
+  "version": "0.1"
+}

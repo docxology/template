@@ -78,7 +78,7 @@ Stability probing, benchmarking hooks—consumed heavily by optimization exempla
 
 ### `infrastructure.search` (${module_search_python_file_count} files)
 
-`literature/` client stack (`client.py`, backends, caches) powering archive-only `template_search_project` literature workflows when copied locally from `projects/archive/`.
+`literature/` client stack (`client.py`, backends, caches) powering `template_search_project` literature workflows.
 
 ### `infrastructure.sia` (${module_sia_python_file_count} files)
 

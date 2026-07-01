@@ -47,4 +47,4 @@ Supporting assets: `preamble.md`, `config.yaml`, `references.bib`.
 | `${project_template_code_project_*}` | Code exemplar |
 | `${project_template_prose_project_*}` | Prose exemplar |
 | `${project_template_autoresearch_project_*}` | AutoResearch exemplar |
-| `${project_template_search_project_*}` | Archive-only when `projects/archive/template_search_project` is present |
+| `${project_template_search_project_*}` | Literature-search exemplar |

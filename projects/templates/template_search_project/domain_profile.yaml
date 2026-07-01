@@ -1,0 +1,50 @@
+domain: literature_search
+display_name: Literature Search & Synthesis Pipeline Exemplar
+required_packages:
+  - pyyaml
+  - matplotlib
+  - networkx
+  - defusedxml
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - source_quality
+  - citation_integrity
+  - artifact_manifest
+  - render_validation
+  - publication_readiness
+figure_types:
+  - papers_per_source
+  - year_histogram
+  - score_distribution
+citation_policy: official_or_scholarly
+source_policy: "Prefer the bundled offline data/corpus.json (default, CI-safe) or live arxiv/crossref/paperclip backends configured in manuscript/config.yaml; every reference must resolve to a retrieved SearchResult record, not a hand-typed citation."
+review_gates:
+  - source_quality
+  - citation_integrity
+  - publication_readiness
+artifact_expectations:
+  - manuscript/references.bib
+  - output/corpus.json
+  - output/search/results.json
+  - output/reading_report.md
+  - output/data/manuscript_variables.json
+  - output/figures/papers_per_source.png
+benchmark_rubric:
+  name: literature-search-readiness
+  dimensions:
+    - name: retrieval_reproducibility
+      weight: 1.5
+    - name: deduplication_integrity
+      weight: 1.5
+    - name: citation_integrity
+      weight: 1.5
+    - name: evidence_grounding
+      weight: 2.0
+    - name: render_success
+      weight: 1.0
+    - name: publication_readiness
+      weight: 1.0
+llm_prompt_guidance: "LLM synthesis (Ollama-local, disabled by default) must ground every per-paper and corpus-level summary in the retrieved abstract/fulltext actually cached for that paper; never let the model invent bibliographic facts not present in the SearchResult or fulltext cache."

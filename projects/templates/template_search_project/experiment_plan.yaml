@@ -1,0 +1,30 @@
+conditions:
+  - name: offline_local_corpus
+    role: reference
+    description: "The default CI-safe run: sources: [local] against the bundled data/corpus.json, no network or LLM dependency."
+  - name: live_multi_backend_search
+    role: proposed
+    description: "The same query executed against live arxiv/crossref (and optional paperclip) backends configured in manuscript/config.yaml, with per-backend graceful degradation."
+  - name: llm_synthesis_enabled
+    role: variant
+    description: "The live or offline corpus re-run with llm.enabled: true, adding per-paper and corpus-level Ollama (gemma3:4b) synthesis sections to the reading report."
+metrics:
+  primary:
+    name: deduplicated_paper_count
+    direction: maximize
+  secondary:
+    - name: papers_missing_doi_count
+      direction: minimize
+    - name: papers_missing_abstract_count
+      direction: minimize
+protocol: "Run scripts/run_search_pipeline.py to build the corpus (search -> per-backend results -> DOI/arXiv-id/title dedup -> abstract enrichment), write manuscript/references.bib and output/reading_report.md, then scripts/y_generate_search_figures.py and scripts/z_generate_manuscript_variables.py to hydrate manuscript variables from output/run_summary.json for every condition using the same query and cache settings."
+expected_figures:
+  - fig:papers_per_source
+  - fig:year_histogram
+  - fig:score_distribution
+expected_tables:
+  - tbl:determinism
+baselines:
+  - offline_local_corpus
+ablations:
+  - llm_synthesis_enabled

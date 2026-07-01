@@ -62,5 +62,4 @@ flowchart TB
   `manuscript/` + `manuscript/config.yaml`.
 * **`manuscript/references.bib` is read-only here.** The prose project
   *validates* citations; it never writes to the bib file. Contrast with
-  the optional `projects/archive/template_search_project` add-on, which
-  auto-populates it.
+  the `template_search_project` exemplar, which auto-populates it.

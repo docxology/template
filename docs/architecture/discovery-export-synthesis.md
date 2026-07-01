@@ -101,7 +101,7 @@ behaviour is "any data beats no data."
 ## Layer-2 Responsibility
 
 A project that uses these modules (e.g.
-[`projects/archive/template_search_project/`](../../projects/archive/template_search_project/))
+[`projects/templates/template_search_project/`](../../projects/templates/template_search_project/))
 owns:
 
 1. The query (`config.yaml` or env-driven).

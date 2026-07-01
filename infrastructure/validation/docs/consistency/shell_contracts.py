@@ -37,26 +37,6 @@ _DETERMINISTIC_SHELL_STRIP_ACTION_RE = re.compile(
     re.IGNORECASE,
 )
 _DETERMINISTIC_MENTION_RE = re.compile(r"--deterministic|\bdeterministic\b", re.IGNORECASE)
-_TEMPLATE_SEARCH_PATH_RE = re.compile(r"(?<!/)projects/template_search_project/")
-_TEMPLATE_SEARCH_OK_PHRASES: tuple[str, ...] = (
-    "projects/archive/template_search_project",
-    "local-only",
-    "local only",
-    "copy under projects",
-    "copy it under projects",
-    "never commit",
-    "not git-tracked",
-    "archive",
-    "archived",
-    "projects/archive/",
-)
-
-
-def _line_ok_for_template_search(line: str) -> bool:
-    low = line.lower()
-    if "projects/archive/template_search_project" in line:
-        return True
-    return any(phrase in low for phrase in _TEMPLATE_SEARCH_OK_PHRASES)
 
 
 def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
@@ -157,20 +137,6 @@ def check_stale_shell_contracts(repo_root: Path) -> list[Inconsistency]:
                             "claims secure_run.sh strips or parses --deterministic — "
                             "Python `secure` subcommand owns the flag "
                             "(infrastructure.orchestration.cli)"
-                        ),
-                    )
-                )
-                continue
-            if _TEMPLATE_SEARCH_PATH_RE.search(raw_line) and not _line_ok_for_template_search(raw_line):
-                issues.append(
-                    Inconsistency(
-                        file=md,
-                        line=line_no,
-                        category="shell-contract",
-                        detail=(
-                            "hard-codes `projects/template_search_project/` without "
-                            "projects/archive/ or local-only copy context — canonical home is "
-                            "projects/archive/template_search_project/"
                         ),
                     )
                 )

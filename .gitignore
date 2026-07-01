@@ -113,6 +113,8 @@ output/templates/*
 !output/templates/template_newspaper/**
 !output/templates/template_prose_project/
 !output/templates/template_prose_project/**
+!output/templates/template_search_project/
+!output/templates/template_search_project/**
 !output/templates/template_sia/
 !output/templates/template_sia/**
 !output/templates/template_template/
@@ -183,6 +185,8 @@ projects/templates/*
 !projects/templates/template_eda_notebook/**
 !projects/templates/template_methods_paper/
 !projects/templates/template_methods_paper/**
+!projects/templates/template_search_project/
+!projects/templates/template_search_project/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
 # Local code-intelligence indexes and agent scratch state stay ignored even

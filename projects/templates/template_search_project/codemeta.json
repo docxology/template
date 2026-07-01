@@ -1,0 +1,28 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0000-0000-1234",
+      "@type": "Person",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Research Template Institute"
+      },
+      "familyName": "Author",
+      "givenName": "Research Template"
+    }
+  ],
+  "codeRepository": "https://github.com/docxology/template_search_project",
+  "dateModified": "2026-07-01",
+  "keywords": [
+    "literature search",
+    "automated reference management",
+    "BibTeX",
+    "reproducible research",
+    "local LLM synthesis"
+  ],
+  "license": "https://spdx.org/licenses/MIT",
+  "name": "Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference",
+  "version": "0.1"
+}

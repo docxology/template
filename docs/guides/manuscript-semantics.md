@@ -1,6 +1,6 @@
 # Manuscript Semantics & Syntax (Canonical)
 
-This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars under `projects/templates/`, plus the local-only `projects/archive/template_search_project/` add-on, conform to the conventions below. The authoritative, always-current roster lives in [`docs/_generated/active_projects.md`](../_generated/active_projects.md). New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
+This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars under `projects/templates/` conform to the conventions below. The authoritative, always-current roster lives in [`docs/_generated/active_projects.md`](../_generated/active_projects.md). New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
 
 The PDF rendering pipeline uses **two cooperating tools**:
 
@@ -205,5 +205,5 @@ Before committing a manuscript change:
 
 - [`projects/templates/template_code_project/manuscript/SYNTAX.md`](../../projects/templates/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
 - [`projects/templates/template_prose_project/manuscript/SYNTAX.md`](../../projects/templates/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
-- [`projects/archive/template_search_project/manuscript/SYNTAX.md`](../../projects/archive/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
+- [`projects/templates/template_search_project/manuscript/SYNTAX.md`](../../projects/templates/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
 - [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) — Pandoc `--natbib` invocation (`build_pandoc_tex_command`); [`_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) is the backward-compatible re-export facade.

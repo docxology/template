@@ -524,3 +524,48 @@ class TestDiscoverProjects:
         assert projects[0].name == "active_project"
 
 
+class TestCategoryGroupedDiscovery:
+    """Discovery of category-grouped projects under a rendered program directory.
+
+    Mirrors the ``_<category>/<name>`` grouping convention in
+    ``infrastructure.project.linking`` — a private lifecycle child directory
+    whose name starts with ``_`` is a grouping, not a project; its own direct
+    children are the projects.
+    """
+
+    @staticmethod
+    def _make_project(base: Path) -> None:
+        (base / "src").mkdir(parents=True)
+        (base / "tests").mkdir()
+        (base / "src" / "__init__.py").write_text("")
+        (base / "tests" / "__init__.py").write_text("")
+
+    def test_category_grouped_project_discovered_under_active(self, tmp_path: Path) -> None:
+        projects_dir = tmp_path / "projects"
+        active = projects_dir / "active" / "_legal" / "foo_project"
+        self._make_project(active)
+
+        projects = discover_projects(tmp_path)
+
+        assert len(projects) == 1
+        assert projects[0].qualified_name == "active/_legal/foo_project"
+        assert projects[0].path == active
+
+    def test_flat_and_category_grouped_projects_coexist_under_active(self, tmp_path: Path) -> None:
+        projects_dir = tmp_path / "projects"
+        self._make_project(projects_dir / "active" / "flat_project")
+        self._make_project(projects_dir / "active" / "_legal" / "foo_project")
+
+        projects = discover_projects(tmp_path)
+
+        names = {p.qualified_name for p in projects}
+        assert names == {"active/flat_project", "active/_legal/foo_project"}
+
+    def test_category_nesting_deeper_than_one_level_is_opaque(self, tmp_path: Path) -> None:
+        """A category found while already inside a category is never expanded."""
+        projects_dir = tmp_path / "projects"
+        self._make_project(projects_dir / "active" / "_legal" / "_sub" / "deep_project")
+
+        projects = discover_projects(tmp_path)
+
+        assert projects == []

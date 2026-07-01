@@ -39,8 +39,8 @@ flowchart TB
   inline code, and link URLs before measuring readability.
 * **`references.bib` is hand-curated and read-only.** This project
   *validates* citations against it but never writes to it. (Contrast
-  with the optional `projects/archive/template_search_project` add-on,
-  which auto-populates the bib from a literature query.)
+  with the `template_search_project` exemplar, which auto-populates the
+  bib from a literature query.)
 * **`preamble.md`** is injected into Pandoc before LaTeX compilation.
   Do not put prose here.
 

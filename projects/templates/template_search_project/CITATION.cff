@@ -1,0 +1,19 @@
+authors:
+- affiliation: Research Template Institute
+  family-names: Author
+  given-names: Research Template
+  orcid: 0000-0000-0000-1234
+cff-version: 1.2.0
+date-released: '2026-07-01'
+keywords:
+- literature search
+- automated reference management
+- BibTeX
+- reproducible research
+- local LLM synthesis
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_search_project
+title: Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference
+type: software
+version: '0.1'

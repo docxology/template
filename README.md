@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_prose_project`, `template_sia`, `template_template`, `template_textbook`. The search exemplar is an optional add-on under `projects/archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_prose_project`, `template_search_project`, `template_sia`, `template_template`, `template_textbook`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -201,13 +201,9 @@ autonomous agents.
 > **🔒 Confidentiality.** This is a **public** template repo. Only the
 > canonical exemplars above (under `projects/templates/`) are git-tracked/pushed
 > — `.gitignore` ignores `projects/*` and negates only `projects/templates/`. Any
-> project you add under `projects/` (research, client, confidential, or the
-> optional local-only `template_search_project` literature-search exemplar that
-> rests in [`projects/archive/`](projects/archive/template_search_project/)) stays
-> **local-only and is never committed**; `scripts/check_tracked_projects.py`
-> blocks any accidental commit in the pre-push hook and CI. Copy
-> `template_search_project` under `projects/active/` locally to exercise literature
-> discovery, then never commit it.
+> other project you add under `projects/` (research, client, or confidential work)
+> stays **local-only and is never committed**; `scripts/check_tracked_projects.py`
+> blocks any accidental commit in the pre-push hook and CI.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
 projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`.

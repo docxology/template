@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-07-01T07:49:03.999146",
+  "infrastructure": {
+    "passed": 7943,
+    "failed": 7,
+    "skipped": 2,
+    "total": 7952,
+    "warnings": 2,
+    "exit_code": 1,
+    "discovery_count": 8038,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 837.03,
+      "execution": 837.03
+    },
+    "test_categories": {},
+    "coverage_percent": 84.5711614053923,
+    "failed_tests": [
+      {
+        "test": "test_stability.py",
+        "error_type": "RuntimeWarning",
+        "error_message": "overflow encountered in exp",
+        "traceback": []
+      }
+    ]
+  },
+  "project": {
+    "passed": 292,
+    "failed": 2,
+    "skipped": 2,
+    "total": 296,
+    "warnings": 0,
+    "exit_code": 1,
+    "discovery_count": 296,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 10.1,
+      "collection": 10.1,
+      "execution": 10.1
+    },
+    "test_categories": {},
+    "coverage_percent": 95.1,
+    "failed_tests": [
+      {
+        "test": "tests/test_llm_runtime.py::test_build_llm_callable_returns_callable_when_infra_importable",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      },
+      {
+        "test": "tests/test_llm_runtime.py::test_returned_callable_signature_is_str_to_str",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      }
+    ]
+  },
+  "summary": {
+    "total_passed": 8235,
+    "total_failed": 9,
+    "total_skipped": 4,
+    "total_tests": 8248,
+    "all_passed": false,
+    "infrastructure_coverage": 84.5711614053923,
+    "project_coverage": 95.1
+  }
+}

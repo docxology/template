@@ -1,0 +1,78 @@
+review:
+  stages:
+  - name: prerender_validation
+    enabled: false
+    infra_module: infrastructure.validation.cli
+    command: prerender
+    args:
+    - manuscript
+    - --repo-root
+    - .
+    description: 'Strict source-markdown gate: undefined citations, malformed markers'
+  - name: markdown_links
+    enabled: false
+    infra_module: infrastructure.validation.cli
+    command: links
+    args:
+    - --repo-root
+    - .
+    description: Validate all internal markdown links resolve
+  - name: bibtex_validation
+    enabled: true
+    infra_module: infrastructure.reference.citation.cli
+    command: validate
+    args:
+    - manuscript/references.bib
+    - --strict
+    description: Validate BibTeX syntax and required fields
+  - name: bibliography_completeness
+    enabled: true
+    stage_type: custom
+    module: src.analysis
+    function: validate_bibliography_completeness
+    description: Ensure every [@key] in manuscript has a BibTeX entry
+  - name: variables_resolved
+    enabled: false
+    stage_type: custom
+    module: src.analysis
+    function: validate_variables_resolved
+    description: Check {{UPPER_CASE}} markers fully substituted
+  - name: output_integrity
+    enabled: false
+    infra_module: infrastructure.validation.cli
+    command: integrity
+    args:
+    - output/
+    description: Verify output artifacts are present and non-corrupt
+  - name: test_suite_health
+    enabled: false
+    stage_type: custom
+    module: infrastructure.testing.cli
+    function: run_project_tests
+    args:
+    - --project
+    - .
+    - --cov
+    description: Run pytest and enforce 90% coverage minimum
+  - name: infrastructure_usage
+    enabled: true
+    stage_type: custom
+    module: src.analysis
+    function: audit_infrastructure_imports
+    description: Audit that src/ modules properly leverage infra
+  - name: determinism_check
+    enabled: true
+    stage_type: custom
+    module: src.analysis
+    function: check_determinism_artifacts
+    description: Verify cache present, seed pinned, temperature=0
+  thresholds:
+    min_coverage: 90.0
+    allow_undefined_citations: false
+    allow_unresolved_variables: false
+    max_missing_refs: 0
+  output:
+    dir: output/review
+    stages_json: stages.json
+    summary_json: summary.json
+    report_md: report.md

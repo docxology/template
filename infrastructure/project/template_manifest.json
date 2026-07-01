@@ -78,7 +78,7 @@
       "qualified_name": "templates/template_gold_refinement",
       "title": "Gold Refinement — Metallurgical Manuscript Composition Exemplar",
       "use_when": "Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection.",
-      "test_file_count": 19,
+      "test_file_count": 21,
       "coverage_floor": 90
     },
     {
@@ -87,6 +87,14 @@
       "title": "A Domain Language for Specifying Controlled Methods — Methods Paper Exemplar",
       "use_when": "Use this template when the paper you are writing **describes a methodology** rather than reports results: a procedure, protocol, or specification language, where the contribution is the controlled vocabulary and its guarantees (dimensional safety, staged validation, deterministic compilation) rather than a numeric outcome.",
       "test_file_count": 11,
+      "coverage_floor": 90
+    },
+    {
+      "name": "template_search_project",
+      "qualified_name": "templates/template_search_project",
+      "title": "template_search_project",
+      "use_when": "Use this template for **literature-review and evidence-synthesis pipelines**: multi-backend search (arXiv, Crossref, local corpora, optional Paperclip), deduplication, BibTeX generation, and LLM-assisted per-paper and corpus-level synthesis.",
+      "test_file_count": 19,
       "coverage_floor": 90
     },
     {

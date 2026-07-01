@@ -153,11 +153,19 @@ def discover_projects(
     return projects
 
 
-def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:
+def _discover_nested_projects(
+    program_dir: Path, program_name: str, *, _allow_category: bool = True
+) -> list[ProjectInfo]:
     """Discover projects nested within a program directory.
 
     A program directory is a folder that contains multiple related projects,
-    but is not a project itself.
+    but is not a project itself. A child directory whose name starts with
+    ``_`` is a category grouping (see :mod:`infrastructure.project.linking`) —
+    its own direct children, one level deeper, are the actual projects,
+    discovered with the compound qualified name ``<program>/_<category>/<name>``.
+    Category nesting is exactly one level deep, mirroring the linking-sync rule:
+    a category found while already inside a category is left opaque (not
+    expanded further), matching :func:`infrastructure.project.linking._source_dirs`.
 
     Args:
         program_dir: Path to the program directory
@@ -181,6 +189,12 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> list[Proj
             project_info = build_project_info(child_dir, program=program_name)
             nested_projects.append(project_info)
             logger.debug(f"Discovered nested project: {project_info.qualified_name} at {project_info.path}")
+        elif _allow_category and child_dir.name.startswith("_"):
+            nested_projects.extend(
+                _discover_nested_projects(
+                    child_dir, program_name=f"{program_name}/{child_dir.name}", _allow_category=False
+                )
+            )
 
     return nested_projects
 

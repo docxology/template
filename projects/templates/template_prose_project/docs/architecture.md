@@ -72,7 +72,7 @@ and prose-review paths; the optional search add-on covers literature discovery:
 |---|---|---|---|
 | `template_code_project` | Numerical experiment + analysis | yes (`src/optimizer.py`) | no |
 | `template_prose_project` | Editorial review (readability + structure + bibliography) | no | no (read-only validation) |
-| `projects/archive/template_search_project` | Literature discovery → BibTeX → LLM synthesis | no | yes (auto-populates) |
+| `template_search_project` | Literature discovery → BibTeX → LLM synthesis | no | yes (auto-populates) |
 
 The infrastructure modules are deliberately small and stable; each
 exemplar is small and explicit. New projects pick whichever shape is

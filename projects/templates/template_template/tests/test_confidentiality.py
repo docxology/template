@@ -56,7 +56,6 @@ PRIVATE_NAME_DENYLIST = (
     "corym",
     "fep_lean",
     "blake_jiang",
-    "template_search_project",
     "projects_archive",
     "projects_in_progress",
     "projects/working/",

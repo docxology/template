@@ -158,28 +158,38 @@ class TestBuildManuscriptMetricsDict:
         """CONFIDENTIALITY: projects/archive/ contents must NEVER reach metrics.
 
         ``projects/archive/`` symlinks private/rotating projects. Even when an
-        archived project (e.g. ``template_search_project``) is present on disk with
-        a full ``manuscript/config.yaml``, its name must not appear as a
-        ``project_*`` metric key, because those keys flow straight into the public
-        manuscript and DOI. This is the direct inversion of the former (leaking)
-        behaviour.
+        archived project is present on disk with a full ``manuscript/config.yaml``,
+        its name must not appear as a ``project_*`` metric key, because those keys
+        flow straight into the public manuscript and DOI. This is the direct
+        inversion of the former (leaking) behaviour.
+
+        A direct child of ``archive/`` whose name starts with ``_`` is a category
+        grouping (see ``infrastructure/project/linking.py``), not a project — its
+        own children, one level down, are the actual archived projects. Both levels
+        are scanned so a newly-categorized archive entry cannot silently evade this
+        check.
         """
         metrics = build_manuscript_metrics_dict(REPO_ROOT)
         archive_dir = REPO_ROOT / "projects" / "archive"
         if not archive_dir.is_dir():
             return
-        archived_names = {
-            child.name
-            for child in archive_dir.iterdir()
-            if child.is_dir()
-            and not child.name.startswith((".", "_"))
-            and (child / "manuscript" / "config.yaml").is_file()
-        }
+
+        def _is_archived_project(path: Path) -> bool:
+            return path.is_dir() and (path / "manuscript" / "config.yaml").is_file()
+
+        archived_names: set[str] = set()
+        for child in archive_dir.iterdir():
+            if not child.is_dir() or child.name.startswith("."):
+                continue
+            if child.name.startswith("_"):
+                archived_names.update(
+                    grandchild.name for grandchild in child.iterdir() if _is_archived_project(grandchild)
+                )
+            elif _is_archived_project(child):
+                archived_names.add(child.name)
         # Public exemplars never live under projects/archive/, so any archived name
         # is by definition out of scope for the published metrics.
         for name in archived_names:
             assert f"project_{name}_test_count" not in metrics, (
                 f"Archived project '{name}' leaked into metrics — confidentiality breach"
             )
-        # Specifically prove the historically-leaked archive exemplar is gone.
-        assert "project_template_search_project_test_count" not in metrics

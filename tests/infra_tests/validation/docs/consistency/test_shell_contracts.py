@@ -108,18 +108,3 @@ def test_stale_shell_deterministic_strip_flagged(tmp_path: Path) -> None:
     assert "deterministic" in issues[0].detail.lower()
 
 
-def test_stale_shell_template_search_unqualified_flagged(tmp_path: Path) -> None:
-    repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(repo / "docs" / "g.md", "See `projects/template_search_project/manuscript/config.yaml`.\n")
-    issues = check_stale_shell_contracts(repo)
-    assert len(issues) == 1
-    assert "template_search_project" in issues[0].detail
-
-
-def test_stale_shell_template_search_archive_path_ok(tmp_path: Path) -> None:
-    repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(
-        repo / "docs" / "g.md",
-        "Canonical home: `projects/archive/template_search_project/`; copy locally under `projects/` only.\n",
-    )
-    assert check_stale_shell_contracts(repo) == []

@@ -44,7 +44,7 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-06-30"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-01"
 
 
 @dataclass(frozen=True)
@@ -77,6 +77,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_methods_paper", 79, "98.97 %"),
     ExemplarSnapshot("template_newspaper", 53, "94.37 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
+    ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
     ExemplarSnapshot("template_template", 89, "91.62 %"),
     ExemplarSnapshot("template_textbook", 112, "96.73 %"),
@@ -191,8 +192,6 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 **Always-present canonical exemplars** (the public exemplar projects guaranteed to live under `projects/`):
 
 {roster}
-
-Optional add-on: `projects/archive/template_search_project` (mirrored read-only from the private repo's `archive/`) can be copied under `projects/active/` for literature-search workflows.
 
 Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`). The simplified sidecar defaults to `working/` and `archive/`; optional `ongoing/` (long-lived projects with no publication target) plus legacy `active/`, `published/`, and `other/` folders are still recognized when present. `run.sh`/`infrastructure.orchestration` symlinks existing private lifecycle folders into same-named typed subfolders under `template/projects/` (`working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, optional `active/*` → `projects/active/*`, …) before discovery/rendering; only `projects/templates/` and optional `projects/active/` are default-rendered, while `working/`, `ongoing/`, and `archive/` are non-rendered mirrors for explicit targeted work. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 

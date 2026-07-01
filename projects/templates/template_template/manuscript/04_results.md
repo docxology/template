@@ -17,9 +17,6 @@ Runs used the `./run.sh` interactive orchestrator (“all projects core (fast)�
 
 ²Counts show passing tests versus discovered tests for the sampled configuration.
 
-
-³`template_search_project` lives under `projects/archive/` (local-only literature-search exemplar); it is not part of the public CI roster.
-
 ***Overall success:*** 100 % pipeline completion for sampled runs.
 
 
@@ -128,4 +125,4 @@ Figure 4 summarizes the Appendix F capability matrix.
 - **`template_code_project`** focuses on numerical reproducibility assertions.
 
 
-- **`template_autoresearch_project`** exercises the AutoResearch readiness planner (`infrastructure/autoresearch/`). **`template_search_project`** remains archive-only for literature-search workflows.
+- **`template_autoresearch_project`** exercises the AutoResearch readiness planner (`infrastructure/autoresearch/`). **`template_search_project`** exercises literature-search workflows.

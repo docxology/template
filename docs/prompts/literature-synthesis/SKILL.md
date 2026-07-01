@@ -69,7 +69,7 @@ Given GOAL + corpus: per paper COVERS/LACKS sub-claims; propose 3 follow-up expe
 ## Verification
 
 - Outputs under `output/llm/` or project convention; keys match `references.bib`.
-- See [`projects/archive/template_search_project/`](../../../projects/archive/template_search_project/) for wired implementation.
+- See [`projects/templates/template_search_project/`](../../../projects/templates/template_search_project/) for wired implementation.
 
 ## When NOT to use
 

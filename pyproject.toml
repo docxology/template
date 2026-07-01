@@ -277,7 +277,7 @@ ignore = [
 # E501 in docstrings/comments (ruff format handles code structure line length)
 "infrastructure/__init__.py" = ["E501"]  # Module inventory docstring
 "infrastructure/documentation/counts_doc.py" = ["E501"]  # Long markdown prose lines in the COUNTS.md template literal
-"projects/template_search_project/src/__init__.py" = ["E402"]  # Deferred exports after public __all__
+"projects/templates/template_search_project/src/__init__.py" = ["E402"]  # Deferred exports after public __all__
 "infrastructure/core/runtime/checkpoint.py" = ["E501"]
 "infrastructure/core/errors.py" = ["E501"]
 "infrastructure/core/exceptions.py" = ["E501"]
@@ -375,8 +375,15 @@ module = [
 ]
 ignore_errors = true
 
+# template_search_project uses a src/ layout with top-level imports
+# (conftest puts src/ on sys.path), so with explicit_package_bases mypy
+# resolves its modules under both name forms. Same pattern as
+# template_literature_meta_analysis above.
 [[tool.mypy.overrides]]
-module = "projects.template_search_project.*"
+module = [
+    "projects.template_search_project.*",
+    "projects.templates.template_search_project.*",
+]
 ignore_errors = true
 
 [[tool.mypy.overrides]]

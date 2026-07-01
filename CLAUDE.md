@@ -190,6 +190,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) — methods paper template: a tested controlled-method specification DSL (staged validation gates, deterministic compilation), informed by BPL (Biology Programming Language) as an upstream domain language
 - [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
+- [`projects/templates/template_search_project/`](projects/templates/template_search_project/) — literature-search → BibTeX → LLM-synthesis template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
 - [`projects/templates/template_template/`](projects/templates/template_template/) — autopoietic meta-template (introspects infrastructure and public exemplar roster)
 - [`projects/templates/template_textbook/`](projects/templates/template_textbook/) — modular, fillable book-length manuscript scaffold (config-driven parts/chapters/labs)
@@ -198,15 +199,11 @@ ever git-tracked/pushed:
 (the public exemplars) plus the repo-level `projects/*.md` docs. **Every other
 path under `projects/` — optional `active/` hot-seat render set, the `working/`,
 `ongoing/`, and `archive/` sidecar mirrors, optional legacy `published/` and `other/`
-lifecycle folders, plus the optional
-`template_search_project` literature-search exemplar — is LOCAL-ONLY and must
+lifecycle folders — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
 `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push
 `pre-push-quick` hook on any non-template tracked project (a `git add -f`
-cannot slip past it). `template_search_project` rests in
-[`projects/archive/template_search_project/`](projects/archive/template_search_project/);
-copy it under `projects/active/` **locally** to exercise the literature-search
-workflow, then never commit it.
+cannot slip past it).
 
 Private work lives outside this public repo, usually at the sibling
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`/`../projects` sidecar. The current simplified

@@ -1,0 +1,13 @@
+.coverage
+.coverage.*
+.pytest_cache/
+__pycache__/
+*.pyc
+.benchmarks/
+
+# Project-local virtualenvs (root .venv is shared)
+.venv/
+
+# Local secrets — never commit. See .env.example for the schema.
+.env
+.env.local

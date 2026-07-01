@@ -14,6 +14,16 @@ existing lifecycle folder is mirrored into a same-named *typed subfolder* under
 - ``archive/``   — symlinked into ``projects/archive/``   (not rendered)
 - ``other/``     — symlinked into ``projects/other/``     (optional, not rendered)
 
+Within any lifecycle folder, a child directory whose name starts with ``_`` is
+a *category grouping* rather than a project: its own direct children are the
+projects, mirrored as ``projects/<lifecycle>/_<category>/<name>``. Category
+nesting is exactly one level deep — a category's children are never
+themselves treated as categories. This lets a lifecycle folder like
+``archive/`` group related retired projects (e.g. ``archive/_legal/foo``,
+``archive/_legal/bar``) while everything ungrouped stays a flat
+``archive/<name>`` entry; the leading underscore also sorts groupings ahead of
+plain lowercase project names in a directory listing.
+
 The public canonical exemplars live in ``projects/templates/`` and are tracked
 natively in this repo — they are NOT part of the private companion repo and are
 never linked.
@@ -184,20 +194,34 @@ def private_projects_root(repo_root: Path) -> Path | None:
     return None
 
 
-def _source_dirs(private_root: Path, lifecycle_subdir: str) -> list[Path]:
-    """Return project directories under a private lifecycle folder."""
-    active_dir = private_root / lifecycle_subdir
-    if not active_dir.is_dir():
+def _source_dirs(private_root: Path, lifecycle_subdir: str) -> list[tuple[str, Path]]:
+    """Return ``(relative_name, path)`` pairs for projects under a lifecycle folder.
+
+    A direct child directory is a project, addressed by its bare name. A child
+    directory whose name starts with ``_`` is a category grouping — its direct
+    children are the actual projects, addressed as ``"<category>/<name>"``.
+    Category nesting is exactly one level deep; a category's children are
+    never themselves treated as categories. The leading underscore also sorts
+    category groupings ahead of plain lowercase project names in a listing.
+    """
+    lifecycle_dir = private_root / lifecycle_subdir
+    if not lifecycle_dir.is_dir():
         return []
-    sources: list[Path] = []
-    for child in sorted(active_dir.iterdir()):
+    sources: list[tuple[str, Path]] = []
+    for child in sorted(lifecycle_dir.iterdir()):
+        if child.name in IGNORED_LIFECYCLE_ENTRY_NAMES or not child.is_dir():
+            continue
+        if child.name.startswith("_"):
+            for grandchild in sorted(child.iterdir()):
+                if grandchild.name.startswith(".") or grandchild.name in IGNORED_LIFECYCLE_ENTRY_NAMES:
+                    continue
+                if not grandchild.is_dir():
+                    continue
+                sources.append((f"{child.name}/{grandchild.name}", grandchild))
+            continue
         if child.name.startswith("."):
             continue
-        if child.name in IGNORED_LIFECYCLE_ENTRY_NAMES:
-            continue
-        if not child.is_dir():
-            continue
-        sources.append(child)
+        sources.append((child.name, child))
     return sources
 
 
@@ -237,14 +261,21 @@ def _lifecycle_for_link(path: Path) -> str | None:
     """Infer the expected private lifecycle from a local mirror path.
 
     Mirror directories are nested (``projects/active``, ``projects/working``,
-    …), so a managed symlink sits at ``projects/<lifecycle>/<name>``. Match on
-    the trailing path segments of the symlink's parent against each mapped
-    mirror directory.
+    …), so a managed symlink sits at ``projects/<lifecycle>/<name>`` or, under
+    a category grouping, ``projects/<lifecycle>/_<category>/<name>``. Match on
+    the trailing path segments of the symlink's parent (or grandparent, for a
+    category-nested link) against each mapped mirror directory.
     """
     parent_parts = path.parent.parts
     for lifecycle, link_dir in LIFECYCLE_LINK_DIRS.items():
         link_parts = Path(link_dir).parts
         if parent_parts[-len(link_parts) :] == link_parts:
+            return lifecycle
+        if (
+            len(parent_parts) > len(link_parts)
+            and parent_parts[-1].startswith("_")
+            and parent_parts[-len(link_parts) - 1 : -1] == link_parts
+        ):
             return lifecycle
     return None
 
@@ -305,7 +336,7 @@ def _sync_lifecycle_links(
         link_dir.mkdir(parents=True, exist_ok=True)
 
     sources = _source_dirs(private_root, lifecycle_subdir)
-    wanted: dict[str, Path] = {src.name: src for src in sources}
+    wanted: dict[str, Path] = dict(sources)
 
     if dry_run and not link_dir.exists():
         for name in sorted(wanted):
@@ -340,21 +371,59 @@ def _sync_lifecycle_links(
             logger.warning("link-sync: %s shadows private source; left untouched", display)
         else:
             if not dry_run:
+                target.parent.mkdir(parents=True, exist_ok=True)
                 target.symlink_to(src)
             result.created.append(display)
 
     if prune and link_dir.exists():
-        for child in sorted(link_dir.iterdir()):
-            if child.name in wanted or child.name in PROTECTED_NAMES:
-                continue
-            display = _repo_relative(child, repo_root)
-            try:
-                if is_managed_symlink(child, private_root):
-                    if not dry_run:
-                        child.unlink()
-                    result.removed.append(display)
-            except OSError as exc:  # one bad link must not abort the whole sync
-                logger.warning("link-sync: could not prune %s: %s", display, exc)
+        _prune_lifecycle_dir(link_dir, wanted, private_root, result, repo_root, dry_run=dry_run)
+
+
+def _prune_lifecycle_dir(
+    dir_path: Path,
+    wanted: dict[str, Path],
+    private_root: Path,
+    result: LinkSyncResult,
+    repo_root: Path,
+    *,
+    dry_run: bool,
+    name_prefix: str = "",
+) -> bool:
+    """Remove managed links under *dir_path* no longer present in *wanted*.
+
+    Descends one level into category directories (name starting with ``_``)
+    so nested ``_<category>/<name>`` entries are pruned the same as flat ones.
+    A category directory is only ``rmdir()``-ed once it is left empty *by this
+    prune* (i.e. it held at least one managed link that got removed) — an
+    unmanaged real ``_``-prefixed directory a user created (empty or not) is
+    never touched, preserving the "never unlink/remove a real directory"
+    invariant.
+
+    Returns whether anything was actually removed under *dir_path*.
+    """
+    removed_any = False
+    for child in sorted(dir_path.iterdir()):
+        rel_name = f"{name_prefix}{child.name}"
+        if child.is_dir() and not child.is_symlink() and child.name.startswith("_"):
+            child_removed_any = _prune_lifecycle_dir(
+                child, wanted, private_root, result, repo_root, dry_run=dry_run, name_prefix=f"{rel_name}/"
+            )
+            removed_any = removed_any or child_removed_any
+            if not dry_run and child_removed_any and not any(child.iterdir()):
+                child.rmdir()
+            continue
+        if rel_name in wanted or child.name in PROTECTED_NAMES:
+            continue
+        display = _repo_relative(child, repo_root)
+        try:
+            if is_managed_symlink(child, private_root):
+                if not dry_run:
+                    child.unlink()
+                result.removed.append(display)
+                removed_any = True
+        except OSError as exc:  # one bad link must not abort the whole sync
+            logger.warning("link-sync: could not prune %s: %s", display, exc)
+    return removed_any
 
 
 def sync_private_project_links(

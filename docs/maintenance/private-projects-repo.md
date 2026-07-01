@@ -36,6 +36,18 @@ Because `projects/` is a Python namespace package, symlinks resolve
 transparently for imports, project-root resolution, validation, and rendering.
 Execution stays in this checkout, so `infrastructure/` resolves natively.
 
+**Category groupings (one level deep).** Within a lifecycle folder, a private
+child directory named with a leading underscore is a *category*, not a
+project: its own children mirror as `projects/<lifecycle>/_<category>/<name>`
+instead of a flat `projects/<lifecycle>/<name>`. For example
+`archive/_legal/foo_project` mirrors to
+`template/projects/archive/_legal/foo_project`. Nesting stops at one level —
+a category's children are never themselves treated as categories — and
+ungrouped entries stay flat. The underscore prefix also sorts categories ahead
+of plain lowercase project names in a directory listing. `link-projects`
+prunes stale nested links the same as flat ones and removes an emptied
+category directory.
+
 The normal sidecar workflow is explicit rendering of `working/<name>` projects:
 
 ```bash

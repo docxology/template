@@ -78,7 +78,6 @@ Cross-link lint also skips `**/_skill-eval/**` via `_DEFAULT_EXCLUDE_GLOBS`.
 
 - PIPELINE_MODE export claims tied to `run.sh` (bash-local only, not exported)
 - claims that `secure_run.sh` owns `--deterministic` parsing (Python `secure` subcommand owns the flag)
-- unconditional `projects/template_search_project/` without `projects/archive/` or local-only copy context
 
 ## Mermaid lint (`mermaid_lint.py`)
 

@@ -1,0 +1,91 @@
+# template_search_project — exemplar literature-search project.
+#
+# This pyproject is consumed two ways:
+#
+#   1. Workspace mode (the common case). The project is loaded from the
+#      monorepo root via the workspace's pythonpath; `infrastructure.*`
+#      is resolved via the root pyproject's `[tool.pytest.ini_options]`
+#      pythonpath and is therefore NOT listed in `dependencies` below
+#      (declaring it would be a phantom dependency since the repo does
+#      not publish `infrastructure` to PyPI).
+#
+#   2. Standalone clone (rare). If you copy this directory out of the
+#      monorepo, you MUST also bring `infrastructure/` along and add it
+#      to the Python path (e.g. with `pip install -e ./infrastructure`
+#      after writing a thin pyproject for it). See `docs/quickstart.md`.
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_search_project"
+version = "0.1.0"
+description = "Configurable literature-search → BibTeX → LLM-synthesis pipeline built on infrastructure/search and infrastructure/reference."
+authors = [{name = "Research Template Author", email = "author@research-template.org"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+
+# Runtime dependencies for the *project-local* code in `src/`.
+# `infrastructure.*` is intentionally NOT listed (see header note).
+dependencies = [
+    "pyyaml>=6.0,<7.0",
+    "matplotlib>=3.7,<4.0",
+    "networkx>=3.4.2,<4.0",
+    # `infrastructure/search/literature/backends.py` imports
+    # `defusedxml.ElementTree` directly. Workspace mode picks it up
+    # transitively through `py-serializable`; project-local venvs (used
+    # by `execute_pipeline.py --core-only`) need it declared explicitly.
+    "defusedxml>=0.7,<1.0",
+]
+
+[project.optional-dependencies]
+# Test surface — `pytest-httpserver` is used to drive the HTTP backends
+# in `infrastructure/search/literature/` without mocking network calls.
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-httpserver>=1.0.8",
+]
+# Mirrors the root project's optional groups so `uv sync --group rendering`
+# and `uv sync --group llm` install the same deps when this project is
+# used standalone. Keep these in sync with the root pyproject.toml.
+rendering = [
+    "pypdf>=5.0",
+    "reportlab>=4.0.0",
+]
+llm = [
+    "ollama>=0.3.0",
+    "requests>=2.31.0",
+]
+
+[tool.setuptools]
+# Explicit package list so a future setuptools upgrade does not silently
+# auto-discover unintended top-level packages from this directory.
+packages = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml

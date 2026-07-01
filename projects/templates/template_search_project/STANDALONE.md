@@ -1,0 +1,94 @@
+# Standalone Fork Guide
+
+## Purpose
+
+`template_search_project` is the canonical literature-search exemplar: a
+configurable query → BibTeX → LLM-synthesis pipeline built on
+`infrastructure/search/`, `infrastructure/reference/`, and
+`infrastructure/llm/`, with an offline local corpus for CI-safe default runs
+and optional live arXiv/Crossref/Paperclip retrieval.
+
+## Copy This When
+
+Use it whenever the research object is *evidence retrieval and synthesis over
+a literature corpus*: point one config key at a search query (or a
+`deep_search` keyword list) and get a reproducible, deduplicated BibTeX file
+plus an LLM-assisted reading report. If you are implementing algorithms with
+numerical experiments, start from
+[`template_code_project`](../template_code_project/) instead; for a
+statistics-heavy literature *meta-analysis* over a fixed topic, see
+[`template_literature_meta_analysis`](../template_literature_meta_analysis/).
+
+## Clean Copy Command
+
+From the template repository root:
+
+```bash
+uv run python scripts/copy_exemplar.py \
+  --source templates/template_search_project \
+  --dest projects/working/my_search_project \
+  --new-name my_search_project
+```
+
+Fallback when the helper is unavailable:
+
+```bash
+rsync -a \
+  --exclude '.venv/' --exclude '.pytest_cache/' --exclude '.ruff_cache/' \
+  --exclude 'htmlcov/' --exclude 'output/' --exclude 'rendered/' --exclude '*.egg-info/' \
+  projects/templates/template_search_project/ projects/working/my_search_project/
+```
+
+## Required Post-Fork Edits
+
+- Update `manuscript/config.yaml` (`search.query`, `search.sources`,
+  `deep_search.keywords`, `publication.*`), `domain_profile.yaml`,
+  `experiment_plan.yaml`, `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and
+  `pyproject.toml`.
+- Replace `data/corpus.json` (the bundled offline fixture) with your own
+  corpus, or switch `search.sources` to `[arxiv, crossref]` (and set
+  `crossref_mailto`) for live retrieval.
+- Regenerate `manuscript/references.bib`, figures, and manuscript variables
+  before updating any manuscript claims.
+
+## Validation Commands
+
+From the template repository root after copying into `projects/working/`:
+
+```bash
+uv run pytest projects/working/my_search_project/tests/ \
+  --cov=projects/working/my_search_project/src --cov-fail-under=90
+uv run python projects/working/my_search_project/scripts/run_search_pipeline.py
+uv run python projects/working/my_search_project/scripts/y_generate_search_figures.py
+uv run python projects/working/my_search_project/scripts/z_generate_manuscript_variables.py
+```
+
+For the public exemplar:
+
+```bash
+uv run pytest projects/templates/template_search_project/tests/ \
+  --cov=projects/templates/template_search_project/src --cov-fail-under=90
+```
+
+See [`docs/quickstart.md`](docs/quickstart.md) for the full six-step walkthrough
+(smoke test, offline run, figures/manuscript variables, full pipeline, live
+search, and LLM synthesis).
+
+## Intentional Non-Standalone Dependencies
+
+Workspace mode resolves `infrastructure.*` via the root pyproject's
+`[tool.pytest.ini_options]` pythonpath, so it is intentionally **not** listed
+in this project's `dependencies`. A true standalone clone outside the
+monorepo must also bring `infrastructure/` along and add it to the Python
+path (e.g. `pip install -e ./infrastructure` after writing a thin pyproject
+for it) — see the header comment in `pyproject.toml` and
+[`docs/quickstart.md`](docs/quickstart.md).
+
+## What Not To Claim
+
+Do not claim retrieval coverage, novelty, or synthesis findings from a
+renamed fork until `manuscript/references.bib`, the figures in
+`output/figures/`, and `output/data/manuscript_variables.json` have been
+regenerated from the forked query/corpus. The bundled `data/corpus.json` is a
+small deterministic fixture for CI, not evidence about any real research
+question.
