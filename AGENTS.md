@@ -24,6 +24,8 @@ This document provides documentation for the Research Project Template system, e
 | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) | Measured coverage and counts; refresh after changing gates or discovery |
 | [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
 | [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, local reproduction commands |
+| [`TO-DO.md`](TO-DO.md) | Current backlog, scoped by acceptance line |
+| [`CHANGELOG.md`](CHANGELOG.md) | Release history |
 
 ## For assistants and automation
 
@@ -226,6 +228,7 @@ flowchart TB
     ROOT --> INFRA[infrastructure<br/>Layer 1 · generic build · validation tools]
     ROOT --> SCRIPTS[scripts<br/>Pipeline stage orchestrators 00–07]
     ROOT --> TESTS[tests<br/>Infrastructure test suite]
+    ROOT --> DOCS[docs<br/>Documentation hub · 300+ files]
     ROOT --> PROJECTS[projects<br/>Typed subfolders · templates+active rendered]
     ROOT --> OUT[output<br/>Final deliverables · organized by project]
 
@@ -249,7 +252,7 @@ flowchart TB
     classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
     classDef gen fill:#7c2d12,stroke:#0f172a,color:#fff
     class ROOT root
-    class INFRA,SCRIPTS,TESTS,I_CONFIG,I_DOCKER,I_SUB,I_DOCS l1
+    class INFRA,SCRIPTS,TESTS,DOCS,I_CONFIG,I_DOCKER,I_SUB,I_DOCS l1
     class PROJECTS,P_CODE,P_OTHER,P_STUB,P_README,P_C_SRC l2
     class WIP,ARCH,OUT,O_CODE,O_DOTS gen
 ```
@@ -328,6 +331,7 @@ flowchart TB
     ROOT --> SCR[scripts<br/>Pipeline stage entry points]
     ROOT --> TS[tests<br/>Infrastructure tests]
     ROOT --> PR[projects<br/>Typed subfolders · templates+active rendered]
+    ROOT --> OUT[output<br/>Final deliverables · disposable]
     ROOT --> PYPROJ[pyproject.toml<br/>Root configuration]
 
     INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
@@ -355,7 +359,7 @@ flowchart TB
     class ROOT,PYPROJ root
     class INFRA,DOCS,CUR,SCR,TS,I_DOCS,I_CFG,I_DOCKER,I_MODULES,D_FILES,C_FILES,S_DOCS,S_STAGES,T_FILES l1
     class PR,PR_CODE,PR_OTHER,PRC_LAYOUT l2
-    class WIP,ARC gen
+    class WIP,ARC,OUT gen
 ```
 
 **Documentation in each directory:**

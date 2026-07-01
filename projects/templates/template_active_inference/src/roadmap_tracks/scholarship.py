@@ -279,20 +279,30 @@ def _section_id_from_path(root: Path, path: Path) -> str:
     return re.sub(r"^\d+_(?:\d+_)?", "", path.stem)
 
 
-def _citation_sections(root: Path, key: str) -> list[str]:
+def _manuscript_section_files(root: Path) -> list[tuple[str, str]]:
+    """Read every manuscript section markdown file once: ``(section_id, text)`` pairs.
+
+    ``_citation_sections`` used to re-glob and re-read this same file set from
+    scratch for every citation key, turning a ``len(SCHOLARSHIP_SOURCES)``-key
+    lookup into that many full directory scans (~25 keys x ~138 files =
+    thousands of redundant reads, the dominant cost behind
+    ``test_aggregate_forgery_controls.py`` timing out). Callers that need
+    multiple keys should read the files once via this helper and pass the
+    result to ``_citation_sections`` via ``files=``.
+    """
+
     paths = sorted((root / "manuscript" / "sections").glob("**/*.md")) + sorted(
         path
         for path in (root / "manuscript").glob("*.md")
         if path.name not in {"99_references.md", "SYNTAX.md", "README.md", "AGENTS.md"}
     )
+    return [(_section_id_from_path(root, path), path.read_text(encoding="utf-8")) for path in paths if path.is_file()]
+
+
+def _citation_sections(root: Path, key: str, *, files: list[tuple[str, str]] | None = None) -> list[str]:
+    section_files = files if files is not None else _manuscript_section_files(root)
     needle = f"@{key}"
-    return sorted(
-        {
-            _section_id_from_path(root, path)
-            for path in paths
-            if path.is_file() and needle in path.read_text(encoding="utf-8")
-        }
-    )
+    return sorted({section_id for section_id, text in section_files if needle in text})
 
 
 def _registry_tracks(root: Path) -> set[str]:
@@ -339,6 +349,7 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
     bib_entries = _bib_entries(root)
     registry = _registry_tracks(root)
     sections = _manifest_sections(root)
+    section_files = _manuscript_section_files(root)
     rows: list[dict[str, Any]] = []
     for source in SCHOLARSHIP_SOURCES:
         key = str(source["citation_key"])
@@ -346,7 +357,7 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
         artifact = str(source["artifact"])
         track_ids = [str(track) for track in source["tracks"]]
         section_ids = [str(section) for section in source["manuscript_sections"]]
-        citation_sections = _citation_sections(root, key)
+        citation_sections = _citation_sections(root, key, files=section_files)
         cited_declared_sections = sorted(set(section_ids) & set(citation_sections))
         row = {
             **source,

@@ -15,12 +15,30 @@ A reproducibility template that claims to make science *reproducible* needs to b
 
 ## The contract this directory creates
 
-> **Current state:** this tier has its first populated slice. As of 2026-06-13,
-> `tests/regression/projects/template_code_project/tables/test_optimization_results_claims.py`
-> collects three real tests against deterministic optimizer manuscript claims, and
-> `tests/regression/pinned_values/template_code_project.json` carries source-backed pins
-> plus provenance. The broader per-figure/per-table contract below remains the target for
-> the rest of the public exemplars.
+> **Current state:** as of 2026-07-01, five of the thirteen public exemplars carry
+> real, source-re-derived regression pins: `template_code_project` (2026-06-13,
+> first populated slice), plus `template_prose_project`, `template_autoscientists`,
+> `template_autoresearch_project`, and `template_eda_notebook` (2026-07-01). 17
+> tests collect and pass together across the five (`uv run pytest tests/regression/`).
+> The remaining eight public exemplars (`template_active_inference`,
+> `template_gold_refinement`, `template_literature_meta_analysis`,
+> `template_madlib`, `template_newspaper`, `template_sia`, `template_template`,
+> `template_textbook`) still need this tier populated — the broader per-figure/
+> per-table contract below remains the target for each.
+>
+> **Cross-project import isolation (2026-07-01):** every exemplar ships a
+> top-level `src` package. A bare `sys.path.insert` + module-level
+> `from src.x import y` — the original `template_code_project` pattern — lets
+> whichever test module collects first win the cached `src` entry in
+> `sys.modules`, breaking every other project's collection with
+> `ModuleNotFoundError` once a second exemplar joins the tier. All five
+> current test files load their project's `src` package under a
+> project-unique alias via `importlib.util.spec_from_file_location(...,
+> submodule_search_locations=[...])` instead — see the `_load_src_package`
+> helper duplicated (intentionally — each regression test file is already
+> self-contained by convention) near the top of each `test_*_claims.py` file.
+> Any new exemplar's regression test must follow the same alias pattern, not
+> the pre-2026-07-01 bare-import pattern.
 
 Every quantitative claim in a manuscript figure or table — a coefficient, a p-value, an effect size, a count, a percentage, a ratio — **should** have a corresponding **pinned regression test** in `tests/regression/` that:
 

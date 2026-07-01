@@ -216,7 +216,7 @@ tests/              Infrastructure test suite
 projects/templates/ Public canonical exemplars (tracked in git)
 projects/working/   Private working projects (local-only, symlinked from sidecar)
 output/             Generated deliverables (disposable, not committed)
-docs/               Documentation corpus (~100+ files, hierarchy in docs/AGENTS.md)
+docs/               Documentation corpus (300+ files, hierarchy in docs/AGENTS.md)
 ```
 
 ---

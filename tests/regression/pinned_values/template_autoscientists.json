@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_autoscientists",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the deterministic coordination-mechanism testbed in manuscript/03_results.md. This exemplar explicitly makes a no-speedup / honest-framing claim (clean-metric advantage == 0), so the pins bind that honesty (advantage 0.0, matched-budget efficiency 16 / 36 re-probes) and the load-bearing robustness benefit (confirmation noise-inflation via full-precision reported metrics). arXiv:2605.28655 primitives."
+  },
+  "_provenance": {
+    "comparison_coordinated_experiments_to_optimum": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Experiment index at which the coordinated three-team run first reaches the clean ground-truth optimum, under the matched 60-experiment budget. Re-derived from src, not copied from the manuscript.",
+      "script": "PYTHONPATH=<autoscientists>:<autoscientists>/src .venv/bin/python -c 'run_search(SyntheticObjective(dimensions=4, noise_scale=0.02), DeterministicProposer(), SearchConfig(budget=60)).experiments_to_target'"
+    },
+    "comparison_baseline_redundant_reprobes": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Redundant re-probes of already-retired directions spent by the single-thread baseline (no dead-end registry) across the full 60-experiment budget. This is the efficiency-headline count in the comparison table.",
+      "script": "PYTHONPATH=<autoscientists>:<autoscientists>/src .venv/bin/python -c 'run_search(SyntheticObjective(dimensions=4, noise_scale=0.02), DeterministicProposer(), SearchConfig.single_thread_baseline(budget=60)).redundant_experiments'"
+    },
+    "comparison_clean_metric_advantage": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "The honest no-speedup headline: clean(coordinated) - clean(baseline). Both configurations reach the same clean optimum, so this is exactly 0.0. Re-derived via objective.clean on both champions.",
+      "script": "PYTHONPATH=<autoscientists>:<autoscientists>/src .venv/bin/python -c 'obj.clean(coord.champion.params) - obj.clean(base.champion.params)'"
+    },
+    "ablation_full_coordination_reported_metric": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Full-precision reported (noisy) champion metric of the full coordinated configuration in the ablation table (manuscript displays 0.00121). Catches sub-display drift.",
+      "script": "PYTHONPATH=<autoscientists>:<autoscientists>/src .venv/bin/python -c 'run_search(SyntheticObjective(dimensions=4, noise_scale=0.02), DeterministicProposer(), SearchConfig(budget=60)).champion.metric'"
+    },
+    "ablation_no_confirmation_reported_metric": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Full-precision reported champion metric when noise-band confirmation is switched off (manuscript displays 0.01565). Removing confirmation inflates accepted noise ~13x (0.01565 vs 0.00121) while the clean metric stays 0.0 — the load-bearing robustness claim.",
+      "script": "PYTHONPATH=<autoscientists>:<autoscientists>/src .venv/bin/python -c 'run_search(SyntheticObjective(dimensions=4, noise_scale=0.02), DeterministicProposer(), replace(SearchConfig(budget=60), use_confirmation=False)).champion.metric'"
+    }
+  },
+  "comparison_coordinated_experiments_to_optimum": {
+    "manuscript_section": "manuscript/03_results.md / Matched-budget comparison",
+    "claim_text": "Coordinated teams | 0.0012 | 0.0000 | 16 | 36 | 0 ... the coordinated run gets there at experiment 16 versus the baseline's 12",
+    "value": 16,
+    "abs_tolerance": 0,
+    "verifier_function": "src.search.run_search",
+    "verifier_args": {"objective": "SyntheticObjective(dimensions=4, noise_scale=0.02)", "config": "SearchConfig(budget=60)", "read": "experiments_to_target"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "64f665eb"
+  },
+  "comparison_baseline_redundant_reprobes": {
+    "manuscript_section": "manuscript/03_results.md / Matched-budget comparison",
+    "claim_text": "Single-thread baseline | 0.0012 | 0.0000 | 12 | 60 | 36 ... spends the full budget and wastes 36 experiments re-testing directions already known to fail.",
+    "value": 36,
+    "abs_tolerance": 0,
+    "verifier_function": "src.search.run_search",
+    "verifier_args": {"objective": "SyntheticObjective(dimensions=4, noise_scale=0.02)", "config": "SearchConfig.single_thread_baseline(budget=60)", "read": "redundant_experiments"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "64f665eb"
+  },
+  "comparison_clean_metric_advantage": {
+    "manuscript_section": "manuscript/03_results.md / Matched-budget comparison",
+    "claim_text": "the clean-metric advantage of coordination over the baseline is exactly 0.0000 ... advantage = 0.0000",
+    "value": 0.0,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.objective.SyntheticObjective.clean",
+    "verifier_args": {"objective": "SyntheticObjective(dimensions=4, noise_scale=0.02)", "expr": "clean(coordinated.champion.params) - clean(baseline.champion.params)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "64f665eb"
+  },
+  "ablation_full_coordination_reported_metric": {
+    "manuscript_section": "manuscript/03_results.md / Per-mechanism ablation",
+    "claim_text": "Full coordination | 0.00121 | 0.0000 | 0.00121 | 36 | 0",
+    "value": 0.0012065640438283457,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.search.run_search",
+    "verifier_args": {"objective": "SyntheticObjective(dimensions=4, noise_scale=0.02)", "config": "SearchConfig(budget=60)", "read": "champion.metric"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "64f665eb"
+  },
+  "ablation_no_confirmation_reported_metric": {
+    "manuscript_section": "manuscript/03_results.md / Per-mechanism ablation",
+    "claim_text": "No confirmation | 0.01565 | 0.0000 | 0.01565 | 36 | 0 ... inflates the reported metric from 0.00121 to 0.01565 — a roughly 13x increase in accepted noise.",
+    "value": 0.015645836069054717,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.search.run_search",
+    "verifier_args": {"objective": "SyntheticObjective(dimensions=4, noise_scale=0.02)", "config": "replace(SearchConfig(budget=60), use_confirmation=False)", "read": "champion.metric"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "64f665eb"
+  }
+}

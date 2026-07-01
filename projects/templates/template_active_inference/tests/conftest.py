@@ -19,6 +19,56 @@ if str(TESTS) not in sys.path:
 
 os.environ.setdefault("MPLBACKEND", "Agg")
 
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    """Pre-warm the gate-artifact bootstrap before any per-test timeout starts.
+
+    ``ensure_gate_artifacts`` (see ``gate_support.py``) memoizes its expensive
+    full rebuild (pymdp policy sampling, figure generation, sheaf
+    consolidation, GIF rendering) behind a content-signature cache that is
+    genuinely fast (~0.01s) on every call *after* the first. But the first
+    call alone measured ~250s on this machine -- well past the repo's real
+    per-test timeout (``infrastructure.core.test_runner.DEFAULT_TIMEOUT =
+    120``, forwarded as pytest's ``--timeout``). Whichever test happens to run
+    first pays that cost inside its own timeout window and gets killed before
+    the bootstrap finishes, so its cache marker never gets set -- the *next*
+    test then retries the same never-completing bootstrap, cascading the
+    failure across every test in the file (this is what made
+    ``test_aggregate_forgery_controls.py`` fail wholesale rather than just its
+    first test).
+
+    ``pytest_sessionstart`` runs once, before pytest-timeout's per-item timer
+    starts, so the cold bootstrap can run to completion here. If pymdp is
+    unavailable, ``ensure_gate_artifacts`` calls ``pytest.skip(...)``, which
+    is only meaningful inside a test's execution -- swallow it here and let
+    each test's own ``ensure_gate_artifacts()`` call skip normally.
+
+    The bootstrap (``compose_all_sections`` etc.) hydrates tracked
+    ``manuscript/**/*.md`` sources as a side effect -- exactly what the
+    ``_restore_mutable_project_sources`` fixture below exists to undo after
+    each test. But that fixture's snapshot is only taken lazily, on the
+    *first test's* setup phase; running the pre-warm here, before any test
+    has started, would hydrate those files before the snapshot captures
+    "original" content, permanently drifting the git-tracked source. Snapshot
+    and restore the same mutable-source set around the pre-warm call so the
+    real snapshot fixture still captures pristine content afterward. The
+    signature cache this pre-warm populates is keyed on ``output/`` artifacts
+    only (see ``_REQUIRED_GATE_ARTIFACTS``), not manuscript source, so
+    restoring the manuscript files does not invalidate it.
+    """
+
+    try:
+        from gate_support import ensure_gate_artifacts
+
+        snapshots = {path: path.read_bytes() for path in _iter_mutable_project_sources()}
+        try:
+            ensure_gate_artifacts(PROJECT_ROOT)
+        finally:
+            _restore_snapshots(snapshots)
+    except Exception:
+        pass
+
+
 # Tracked source files whose composed/regenerated content embeds live output/
 # artifact state. Gate tests call compose_all_sections / ensure_coverage_artifacts
 # on the real project root, and negative controls temporarily mutate source

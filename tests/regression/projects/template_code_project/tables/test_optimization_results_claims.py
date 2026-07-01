@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import importlib.util
 from pathlib import Path
 import sys
+from types import ModuleType
 from typing import Any
 
 import numpy as np
@@ -12,11 +14,48 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_code_project"
-sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.analysis.experiments import run_convergence_experiment  # noqa: E402
-from src.experiment_config import load_experiment_config  # noqa: E402
-from src.optimizer import quadratic_optimum  # noqa: E402
+_PKG_ALIAS = "_code_project_src"
+
+
+def _load_src_package() -> ModuleType:
+    """Load this exemplar's ``src`` package under a project-unique alias.
+
+    Every public exemplar ships a top-level ``src`` package, so a bare
+    ``sys.path.insert`` + ``from src...`` (the single-project pattern this
+    file used before) collides on ``sys.modules['src']`` once a second
+    project's regression test joins the same pytest session — whichever
+    module collects first wins the cached ``src`` entry and every other
+    project fails collection with ``ModuleNotFoundError``. Registering the
+    package under a namespaced key keeps the real tested functions in scope
+    (no mocks), lets the package's own internal imports resolve via
+    ``submodule_search_locations``, and stays collision-free regardless of
+    collection order.
+    """
+
+    if _PKG_ALIAS in sys.modules:
+        return sys.modules[_PKG_ALIAS]
+    src_init = PROJECT_ROOT / "src" / "__init__.py"
+    spec = importlib.util.spec_from_file_location(
+        _PKG_ALIAS,
+        src_init,
+        submodule_search_locations=[str(PROJECT_ROOT / "src")],
+    )
+    assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
+    package = importlib.util.module_from_spec(spec)
+    sys.modules[_PKG_ALIAS] = package
+    spec.loader.exec_module(package)
+    return package
+
+
+def _import_submodule(dotted: str) -> ModuleType:
+    _load_src_package()
+    return importlib.import_module(f"{_PKG_ALIAS}.{dotted}")
+
+
+run_convergence_experiment = _import_submodule("analysis.experiments").run_convergence_experiment
+load_experiment_config = _import_submodule("experiment_config").load_experiment_config
+quadratic_optimum = _import_submodule("optimizer").quadratic_optimum
 
 
 def _pin(pinned: dict[str, Any], key: str) -> dict[str, Any]:

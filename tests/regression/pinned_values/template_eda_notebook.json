@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_eda_notebook",
+    "populated_on": "2026-07-01",
+    "populated_by": "Engineer",
+    "note": "First real regression pins for the EDA notebook exemplar. Every value re-derived from the deterministic src/eda functions against the shipped data/measurements.csv, not transcribed from prose. Manuscript source: manuscript/03_results.md."
+  },
+  "_provenance": {
+    "dataset_subject_record_count": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Raw subject-record count of the shipped deterministic CSV fixture; the '120 subject records' claim in manuscript/03_results.md.",
+      "script": "cd projects/templates/template_eda_notebook && uv run --no-sync python -c 'from src.eda.dataset import load_dataset; print(len(load_dataset()))'  # -> 120"
+    },
+    "missingness_rows_dropped": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Rows removed by clean_dataset() for missing numeric features; the 'four rows are removed' claim in the Dataset and missingness section.",
+      "script": "cd projects/templates/template_eda_notebook && uv run --no-sync python -c 'from src.eda.dataset import load_dataset; from src.eda.cleaning import clean_dataset; _,r=clean_dataset(load_dataset()); print(r.dropped)'  # -> 4"
+    },
+    "strongest_pair_height_weight_value": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Pearson correlation of the dominant feature pair (height ~ weight), the top-ranked distinct pair from strongest_pairs on complete-case data; backs the 'strongly positively correlated' / 'dominant relationship is height ~ weight' claim.",
+      "script": "cd projects/templates/template_eda_notebook && uv run --no-sync python -c 'from src.eda.dataset import load_dataset; from src.eda.cleaning import clean_dataset; from src.eda.correlation import correlation_matrix, strongest_pairs; c,_=clean_dataset(load_dataset()); print(strongest_pairs(correlation_matrix(c))[0])'  # -> ('height_cm','weight_kg', 0.7200855106986739)"
+    },
+    "second_pair_height_hr_value": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Pearson correlation of the second-ranked pair (height ~ resting heart rate); backs the 'comparatively weak height ~ resting heart rate (slightly negative)' claim. Sign matters: the pin is negative.",
+      "script": "cd projects/templates/template_eda_notebook && uv run --no-sync python -c 'from src.eda.dataset import load_dataset; from src.eda.cleaning import clean_dataset; from src.eda.correlation import correlation_matrix, strongest_pairs; c,_=clean_dataset(load_dataset()); print(strongest_pairs(correlation_matrix(c))[1])'  # -> ('height_cm','resting_hr_bpm', -0.12098307049852419)"
+    },
+    "height_histogram_counts_sum": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Sum of the 10 height histogram bin counts; the figure caption asserts 'the bin counts sum to the number of complete-case rows'. Equals rows_out = 116.",
+      "script": "cd projects/templates/template_eda_notebook && uv run --no-sync python -c 'from src.eda.dataset import load_dataset; from src.eda.cleaning import clean_dataset; from src.eda.figures import histogram_data; c,_=clean_dataset(load_dataset()); print(sum(histogram_data(c,\"height_cm\",bins=10).counts))'  # -> 116"
+    }
+  },
+  "dataset_subject_record_count": {
+    "manuscript_section": "manuscript/03_results.md / Dataset and missingness",
+    "claim_text": "The dataset contains 120 subject records across three groups (alpha, beta, gamma) with three numeric features.",
+    "value": 120,
+    "abs_tolerance": 0,
+    "verifier_function": "src.eda.dataset.load_dataset",
+    "verifier_args": {"source": "projects/templates/template_eda_notebook/data/measurements.csv"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "missingness_rows_dropped": {
+    "manuscript_section": "manuscript/03_results.md / Dataset and missingness",
+    "claim_text": "clean_dataset() then drops rows missing any numeric feature ... With the shipped data, four rows are removed, leaving a complete-case dataset.",
+    "value": 4,
+    "abs_tolerance": 0,
+    "verifier_function": "src.eda.cleaning.clean_dataset",
+    "verifier_args": {"source": "projects/templates/template_eda_notebook/data/measurements.csv"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "strongest_pair_height_weight_value": {
+    "manuscript_section": "manuscript/03_results.md / Correlation structure",
+    "claim_text": "the dominant relationship is height ~ weight (a strong positive correlation, by design) ... Height and weight are strongly positively correlated.",
+    "value": 0.7200855107,
+    "abs_tolerance": 1e-4,
+    "verifier_function": "src.eda.correlation.strongest_pairs",
+    "verifier_args": {"source": "projects/templates/template_eda_notebook/data/measurements.csv", "top_n": 3, "rank": 0, "expected_pair": ["height_cm", "weight_kg"]},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "second_pair_height_hr_value": {
+    "manuscript_section": "manuscript/03_results.md / Correlation structure",
+    "claim_text": "followed by the comparatively weak height ~ resting heart rate (slightly negative) ... resting heart rate is only weakly related to the other two.",
+    "value": -0.1209830705,
+    "abs_tolerance": 1e-4,
+    "verifier_function": "src.eda.correlation.strongest_pairs",
+    "verifier_args": {"source": "projects/templates/template_eda_notebook/data/measurements.csv", "top_n": 3, "rank": 1, "expected_pair": ["height_cm", "resting_hr_bpm"]},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "height_histogram_counts_sum": {
+    "manuscript_section": "manuscript/03_results.md / Distributions (fig:height_histogram caption)",
+    "claim_text": "The bin counts sum to the number of complete-case rows.",
+    "value": 116,
+    "abs_tolerance": 0,
+    "verifier_function": "src.eda.figures.histogram_data",
+    "verifier_args": {"source": "projects/templates/template_eda_notebook/data/measurements.csv", "column": "height_cm", "bins": 10},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  }
+}

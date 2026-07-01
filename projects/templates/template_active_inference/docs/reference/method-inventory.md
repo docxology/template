@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 802
+Total documented definitions: 804
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -663,16 +663,17 @@ Total documented definitions: 802
 | 260 | `function` | `_bib_entries` | inventory fallback | Inventory fallback for function `_bib_entries` defined at `src/roadmap_tracks/scholarship.py:260`. |
 | 269 | `function` | `_citation_present` | inventory fallback | Inventory fallback for function `_citation_present` defined at `src/roadmap_tracks/scholarship.py:269`. |
 | 273 | `function` | `_section_id_from_path` | inventory fallback | Inventory fallback for function `_section_id_from_path` defined at `src/roadmap_tracks/scholarship.py:273`. |
-| 282 | `function` | `_citation_sections` | inventory fallback | Inventory fallback for function `_citation_sections` defined at `src/roadmap_tracks/scholarship.py:282`. |
-| 298 | `function` | `_registry_tracks` | inventory fallback | Inventory fallback for function `_registry_tracks` defined at `src/roadmap_tracks/scholarship.py:298`. |
-| 303 | `function` | `_manifest_sections` | inventory fallback | Inventory fallback for function `_manifest_sections` defined at `src/roadmap_tracks/scholarship.py:303`. |
-| 308 | `function` | `_has_locator` | inventory fallback | Inventory fallback for function `_has_locator` defined at `src/roadmap_tracks/scholarship.py:308`. |
-| 313 | `function` | `_locator_kind` | inventory fallback | Inventory fallback for function `_locator_kind` defined at `src/roadmap_tracks/scholarship.py:313`. |
-| 326 | `function` | `_scope_guarded` | inventory fallback | Inventory fallback for function `_scope_guarded` defined at `src/roadmap_tracks/scholarship.py:326`. |
-| 332 | `function` | `_row_key` | inventory fallback | Inventory fallback for function `_row_key` defined at `src/roadmap_tracks/scholarship.py:332`. |
-| 336 | `function` | `build_scholarship_source_matrix` | docstring | Build the literature-to-method traceability matrix. |
-| 423 | `function` | `write_scholarship_source_matrix` | docstring | Write the source-backed scholarship matrix. |
-| 431 | `function` | `validate_scholarship_source_matrix` | docstring | Validate the saved scholarship-source matrix against its row evidence. |
+| 282 | `function` | `_manuscript_section_files` | docstring | Read every manuscript section markdown file once: ``(section_id, text)`` pairs. |
+| 302 | `function` | `_citation_sections` | inventory fallback | Inventory fallback for function `_citation_sections` defined at `src/roadmap_tracks/scholarship.py:302`. |
+| 308 | `function` | `_registry_tracks` | inventory fallback | Inventory fallback for function `_registry_tracks` defined at `src/roadmap_tracks/scholarship.py:308`. |
+| 313 | `function` | `_manifest_sections` | inventory fallback | Inventory fallback for function `_manifest_sections` defined at `src/roadmap_tracks/scholarship.py:313`. |
+| 318 | `function` | `_has_locator` | inventory fallback | Inventory fallback for function `_has_locator` defined at `src/roadmap_tracks/scholarship.py:318`. |
+| 323 | `function` | `_locator_kind` | inventory fallback | Inventory fallback for function `_locator_kind` defined at `src/roadmap_tracks/scholarship.py:323`. |
+| 336 | `function` | `_scope_guarded` | inventory fallback | Inventory fallback for function `_scope_guarded` defined at `src/roadmap_tracks/scholarship.py:336`. |
+| 342 | `function` | `_row_key` | inventory fallback | Inventory fallback for function `_row_key` defined at `src/roadmap_tracks/scholarship.py:342`. |
+| 346 | `function` | `build_scholarship_source_matrix` | docstring | Build the literature-to-method traceability matrix. |
+| 434 | `function` | `write_scholarship_source_matrix` | docstring | Write the source-backed scholarship matrix. |
+| 442 | `function` | `validate_scholarship_source_matrix` | docstring | Validate the saved scholarship-source matrix against its row evidence. |
 
 ## `src/roadmap_tracks/security.py`
 
@@ -868,16 +869,17 @@ Total documented definitions: 802
 | 81 | `function` | `_all_sources_present` | inventory fallback | Inventory fallback for function `_all_sources_present` defined at `src/roadmap_tracks/visualization_audit.py:81`. |
 | 85 | `function` | `_figure_section_bindings` | inventory fallback | Inventory fallback for function `_figure_section_bindings` defined at `src/roadmap_tracks/visualization_audit.py:85`. |
 | 104 | `function` | `_section_id_from_path` | inventory fallback | Inventory fallback for function `_section_id_from_path` defined at `src/roadmap_tracks/visualization_audit.py:104`. |
-| 114 | `function` | `_figure_reference_sections` | inventory fallback | Inventory fallback for function `_figure_reference_sections` defined at `src/roadmap_tracks/visualization_audit.py:114`. |
-| 129 | `function` | `_manifest_section_tracks` | inventory fallback | Inventory fallback for function `_manifest_section_tracks` defined at `src/roadmap_tracks/visualization_audit.py:129`. |
-| 147 | `function` | `_reference_section_status` | inventory fallback | Inventory fallback for function `_reference_section_status` defined at `src/roadmap_tracks/visualization_audit.py:147`. |
-| 157 | `function` | `_figure_evidence_rows` | docstring | Derive live figure evidence rows from registry, source maps, hashes, and renders. |
-| 245 | `function` | `build_visualization_quality_audit` | docstring | Build figure accessibility, source, hash, and render-readiness rows. |
-| 291 | `function` | `write_visualization_quality_audit` | docstring | Write the deterministic visualization-quality audit report. |
-| 300 | `function` | `build_statistical_visualization_bridge` | docstring | Build the crosswalk from statistical figure rows to scholarship and sheaf bindings. |
-| 399 | `function` | `write_statistical_visualization_bridge` | docstring | Write the statistical-visualization scholarship/sheaf crosswalk. |
-| 408 | `function` | `validate_visualization_quality_audit` | docstring | Validate the saved visualization-quality audit against its row evidence. |
-| 581 | `function` | `validate_statistical_visualization_bridge` | docstring | Validate the saved statistical visualization crosswalk against row evidence. |
+| 114 | `function` | `_imrad_section_files` | docstring | Read every IMRaD manuscript markdown file once: ``(section_id, text)`` pairs. |
+| 135 | `function` | `_figure_reference_sections` | inventory fallback | Inventory fallback for function `_figure_reference_sections` defined at `src/roadmap_tracks/visualization_audit.py:135`. |
+| 142 | `function` | `_manifest_section_tracks` | inventory fallback | Inventory fallback for function `_manifest_section_tracks` defined at `src/roadmap_tracks/visualization_audit.py:142`. |
+| 160 | `function` | `_reference_section_status` | inventory fallback | Inventory fallback for function `_reference_section_status` defined at `src/roadmap_tracks/visualization_audit.py:160`. |
+| 170 | `function` | `_figure_evidence_rows` | docstring | Derive live figure evidence rows from registry, source maps, hashes, and renders. |
+| 258 | `function` | `build_visualization_quality_audit` | docstring | Build figure accessibility, source, hash, and render-readiness rows. |
+| 304 | `function` | `write_visualization_quality_audit` | docstring | Write the deterministic visualization-quality audit report. |
+| 313 | `function` | `build_statistical_visualization_bridge` | docstring | Build the crosswalk from statistical figure rows to scholarship and sheaf bindings. |
+| 413 | `function` | `write_statistical_visualization_bridge` | docstring | Write the statistical-visualization scholarship/sheaf crosswalk. |
+| 422 | `function` | `validate_visualization_quality_audit` | docstring | Validate the saved visualization-quality audit against its row evidence. |
+| 595 | `function` | `validate_statistical_visualization_bridge` | docstring | Validate the saved statistical visualization crosswalk against row evidence. |
 
 ## `src/roadmap_tracks/visualization_contract.py`
 

@@ -1,0 +1,130 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_autoresearch_project",
+    "populated_on": "2026-07-01",
+    "populated_by": "Engineer",
+    "note": "First real regression pins for the deterministic bounded-ML AutoResearch claims in manuscript/03_results.md 'Candidate Outcome'. Every value is re-derived by calling src.ml.task.run_bounded_ml_task with the configured budget policy (no mocks, no hand-copy). Percent-rendered tokens (BASELINE_ACCURACY, BEST_ACCURACY, ACCURACY_DELTA) pin the underlying raw fraction the token formats."
+  },
+  "_provenance": {
+    "candidate_outcome_candidate_count": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Total proposed candidate set size for the bounded loop (len(config.candidates)); manuscript token {{CANDIDATE_COUNT}}.",
+      "script": "cd projects/templates/template_autoresearch_project; PYTHONPATH=$(pwd):$(pwd)/src:<repo_root> python -c 'from src.config import load_loop_config; from src.ml.task import run_bounded_ml_task; from pathlib import Path; c=load_loop_config(Path.cwd()); r=run_bounded_ml_task(Path.cwd(), c.budget_policy); print(r.candidate_count)'"
+    },
+    "candidate_outcome_evaluated_candidate_count": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Number of candidates actually evaluated under the budget cap (min(max_candidates, max_iterations)); manuscript token {{EVALUATED_CANDIDATE_COUNT}}.",
+      "script": "same probe as above; printed r.evaluated_candidate_count"
+    },
+    "candidate_outcome_baseline_accuracy": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Nearest-centroid baseline test accuracy on the fixed local MNIST fixture; manuscript token {{BASELINE_ACCURACY}} renders 0.826 as 82.6%.",
+      "script": "same probe as above; printed r.baseline.test_accuracy"
+    },
+    "candidate_outcome_best_accuracy": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Accepted-candidate (exp-mlp-tanh-64) test accuracy; manuscript token {{BEST_ACCURACY}} renders 0.894 as 89.4%.",
+      "script": "same probe as above; printed r.best_accuracy"
+    },
+    "candidate_outcome_accuracy_delta": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Absolute accuracy improvement of the accepted candidate over the baseline (best_accuracy - baseline_accuracy); manuscript token {{ACCURACY_DELTA}} renders 0.068 as 6.8%.",
+      "script": "same probe as above; printed round(r.accuracy_delta, 6)"
+    },
+    "candidate_outcome_accepted_parameter_count": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Trained parameter count of the accepted MLP candidate; manuscript token {{ACCEPTED_PARAMETER_COUNT}}.",
+      "script": "same probe as above; printed r.accepted_candidate.parameter_count"
+    },
+    "candidate_outcome_benchmark_score": {
+      "commit": "64f665eb",
+      "date": "2026-07-01",
+      "reason": "Compact methods-contract benchmark score (mean of metric/budget/offline/neural/selection component scores, rounded to 3dp); manuscript token {{BENCHMARK_SCORE}} renders 1.0 as 1.",
+      "script": "same probe as above; printed r.benchmark_score"
+    }
+  },
+  "candidate_outcome_candidate_count": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "... after evaluating {{EVALUATED_CANDIDATE_COUNT}} candidate(s) from a proposed set of {{CANDIDATE_COUNT}}.",
+    "value": 5,
+    "abs_tolerance": 0,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "candidate_outcome_evaluated_candidate_count": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "... after evaluating {{EVALUATED_CANDIDATE_COUNT}} candidate(s) from a proposed set of {{CANDIDATE_COUNT}}.",
+    "value": 4,
+    "abs_tolerance": 0,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "candidate_outcome_baseline_accuracy": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "The {{BASELINE_ID}} ({{BASELINE_MODEL_TYPE_LABEL}}) baseline reached {{BASELINE_ACCURACY}} {{METRIC_NAME}} (renders 82.6%).",
+    "value": 0.826,
+    "abs_tolerance": 1e-06,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "candidate_outcome_best_accuracy": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "... while the selected candidate reached {{BEST_ACCURACY}} (renders 89.4%).",
+    "value": 0.894,
+    "abs_tolerance": 1e-06,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "candidate_outcome_accuracy_delta": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "... an absolute change of {{ACCURACY_DELTA}} (renders 6.8%).",
+    "value": 0.068,
+    "abs_tolerance": 1e-06,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "candidate_outcome_accepted_parameter_count": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "The selected model has {{ACCEPTED_PARAMETER_COUNT}} parameters.",
+    "value": 50890,
+    "abs_tolerance": 0,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  },
+  "candidate_outcome_benchmark_score": {
+    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "claim_text": "The benchmark score is {{BENCHMARK_SCORE}} (renders 1).",
+    "value": 1.0,
+    "abs_tolerance": 1e-09,
+    "verifier_function": "src.ml.task.run_bounded_ml_task",
+    "verifier_args": {"source": "projects/templates/template_autoresearch_project (config via src.config.load_loop_config)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "64f665eb"
+  }
+}

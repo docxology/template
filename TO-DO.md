@@ -38,6 +38,22 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **REGRESSION-PIN-2 — regression tier expanded to 5 exemplars (2026-07-01, [Unreleased]):**
+  populated real, source-re-derived regression pins (following the
+  `REGRESSION-PIN-1` `template_code_project` contract) for `template_prose_project`
+  (was a 9-line stub), `template_autoscientists`, `template_autoresearch_project`,
+  and `template_eda_notebook` — 17 tests collect and pass together
+  (`uv run pytest tests/regression/`, verified from the main checkout, not just
+  per-project). Along the way, found and fixed a real cross-project collision:
+  every exemplar ships a top-level `src` package, so the original bare
+  `sys.path.insert` + `from src.x import y` pattern let whichever test module
+  collected first win `sys.modules['src']`, breaking every other project's
+  collection. Standardized all five test files on loading each project's `src`
+  under a project-unique alias via `importlib.util.spec_from_file_location`
+  (see `docs/maintenance/regression-testing.md` for the pattern). Eight public
+  exemplars remain unpinned: `template_active_inference`, `template_gold_refinement`,
+  `template_literature_meta_analysis`, `template_madlib`, `template_newspaper`,
+  `template_sia`, `template_template`, `template_textbook`.
 - **Modularity + exemplar deepening (2026-06-28, [Unreleased]):** split the
   oversized `template_gold_refinement/src/figures.py` (1280 lines) into a
   `figures/` subpackage (`_common`, `graphs`, `charts`, `diagrams`, `registry`
@@ -191,25 +207,53 @@ Keep this section short. Details live in release notes or archived audits.
 
 ### AI-GATE-PERF-2 — Reduce active-inference gate runtime after correctness
 
-- **Problem:** `template_active_inference` gate tests still have one heavy
-  explicit roadmap/sheaf write path; clean-state fixed-point and gate setup now
-  avoid redundant regeneration, but the full project suite still needs a
-  durations-driven pass.
+- **Problem:** `template_active_inference` gate tests had a heavy explicit
+  roadmap/sheaf write path whose *first* invocation in a process took ~250s —
+  well past the repo's real per-test timeout
+  (`infrastructure.core.test_runner.DEFAULT_TIMEOUT = 120`).
 - **Why it matters:** slow gates discourage local verification and make future
   semantic changes harder to review.
-- **Blocker (2026-06-26):** The `template_active_inference` test suite currently
-  has 47 collection errors due to a Python 3.14/3.12 binary incompatibility —
-  the project venv was built for Python 3.14 but the main runner is Python 3.12.
-  Running `--durations=20` locally is blocked until the project venv is rebuilt
-  with the correct interpreter. **Fix:** run `uv sync` inside the
-  `projects/templates/template_active_inference/` directory to rebuild the venv
-  for the active Python version before attempting any perf profiling.
-- **Smallest next step:** rebuild the project venv (prerequisite above), then
-  complete the remaining project-local `MEDIUM-TEST-PERF-1` split with cheap
-  source-only negative controls plus one end-to-end refresh characterization.
-- **Acceptance check:** 47 collection errors are gone, focused mutation tests
-  still catch the known failure classes, `--durations=20` shows fewer redundant
-  artifact refreshes, and the manuscript gate still passes.
+- **Blocker (2026-06-26, resolved 2026-07-01):** The `template_active_inference`
+  test suite had 47 collection errors due to a Python 3.14/3.12 binary
+  incompatibility — the project venv was built for Python 3.14 but the main
+  runner is Python 3.12. Fixed by rebuilding the venv pinned to 3.12
+  (`rm -rf .venv && UV_PYTHON=3.12 uv sync --extra dev` inside
+  `projects/templates/template_active_inference/` — a bare `uv sync` alone
+  re-resolves against the newest installed interpreter and also omits the
+  `dev` extra that carries `pytest`, so both flags are required). Collection
+  now succeeds cleanly: 493 tests collected, 0 errors.
+- **Heavy-test root cause found and fixed (2026-07-01):** `ensure_gate_artifacts`
+  memoizes its expensive bootstrap behind an `output/`-artifact signature cache
+  that is genuinely fast (~0.01s) on every call after the first — but the
+  first call alone measured ~250s. Whichever test ran first paid that cost
+  inside its own 120s timeout window and got killed mid-bootstrap, so its
+  cache marker never landed; the next test then retried the same
+  never-completing bootstrap, cascading the failure across every test in
+  `test_aggregate_forgery_controls.py` (all 7 timed out, not just one). Fixed
+  with a `pytest_sessionstart` hook in `tests/conftest.py` that pre-warms the
+  bootstrap once, before pytest-timeout's per-item timer starts (hooks aren't
+  subject to the per-test timeout). The hook snapshots and restores the
+  mutable `manuscript/**/*.md` sources around its own pre-warm call so it
+  doesn't hydrate them before the existing `_restore_mutable_project_sources`
+  fixture takes its "original" snapshot. Along the way, also fixed two
+  independent O(N×M) redundant-file-read bottlenecks that compounded the cold
+  start: `scholarship.py::_citation_sections` and
+  `visualization_audit.py::_figure_reference_sections` each re-globbed and
+  re-read every manuscript markdown file from scratch per citation
+  key/figure id (~25 keys × ~138 files, ~7 rows × ~116 files); both now read
+  the file set once per `build_*` call and reuse it across the loop.
+  Full suite verified: `uv run pytest tests/ -q --timeout=120 -k "not long_running"`
+  → 381 passed (112 deselected), ~12 minutes wall-clock, 0 failures.
+- **Acceptance check met:** 47 collection errors are gone (0 errors, 493
+  collected); `test_aggregate_forgery_controls.py`'s 7 tests all pass; the
+  full non-long-running suite (381 tests) passes under the real 120s per-test
+  timeout; manuscript source and `output/` stay git-clean after a full run.
+- **Remaining:** the `--durations=20` profiling pass itself (to look for
+  further redundant artifact refreshes beyond the two fixed here) and the
+  project-local `MEDIUM-TEST-PERF-1` split (cheap source-only negative
+  controls plus one end-to-end refresh characterization) are still open —
+  this item closed the *correctness/timeout* blocker, not the full perf-tuning
+  scope.
 - **Out of scope:** weakening coverage, skipping pymdp-backed evidence, or
   dropping the end-to-end refresh characterization.
 

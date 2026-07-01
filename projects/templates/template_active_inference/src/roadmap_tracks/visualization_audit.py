@@ -111,18 +111,31 @@ def _section_id_from_path(root: Path, path: Path) -> str:
     return re.sub(r"^\d+_(?:\d+_)?", "", stem)
 
 
-def _figure_reference_sections(root: Path, figure_id: str) -> list[str]:
+def _imrad_section_files(root: Path) -> list[tuple[str, str]]:
+    """Read every IMRaD manuscript markdown file once: ``(section_id, text)`` pairs.
+
+    ``_figure_reference_sections`` used to re-glob and re-read this same file
+    set from scratch for every figure row, turning a per-row lookup into that
+    many full directory scans (~7 statistically-backed rows x ~116 imrad files
+    = hundreds of redundant reads, compounding the ``scholarship.py`` version
+    of the same bug as the dominant cost behind
+    ``test_aggregate_forgery_controls.py`` timing out). Callers that need
+    multiple figure ids should read the files once via this helper and pass
+    the result to ``_figure_reference_sections`` via ``files=``.
+    """
+
     paths = sorted((root / "manuscript" / "sections" / "imrad").glob("**/*.md")) + sorted(
         path
         for path in (root / "manuscript").glob("*.md")
         if path.name not in {"AGENTS.md", "README.md", "SYNTAX.md", "preamble.md"}
     )
+    return [(_section_id_from_path(root, path), path.read_text(encoding="utf-8")) for path in paths if path.is_file()]
+
+
+def _figure_reference_sections(root: Path, figure_id: str, *, files: list[tuple[str, str]] | None = None) -> list[str]:
+    section_files = files if files is not None else _imrad_section_files(root)
     needles = (f"@fig:{figure_id}", f"#fig:{figure_id}")
-    sections = {
-        _section_id_from_path(root, path)
-        for path in paths
-        if path.is_file() and any(needle in path.read_text(encoding="utf-8") for needle in needles)
-    }
+    sections = {section_id for section_id, text in section_files if any(needle in text for needle in needles)}
     return sorted(sections)
 
 
@@ -325,11 +338,12 @@ def build_statistical_visualization_bridge(project_root: Path) -> dict[str, Any]
     scholarship_connected = bool(scholarship_rows) and all(row.get("connected") for row in scholarship_rows)
     tracks_registered = bool(scholarship_tracks) and set(scholarship_tracks).issubset(registered_tracks)
     section_tracks = _manifest_section_tracks(root)
+    imrad_files = _imrad_section_files(root)
     rows: list[dict[str, Any]] = []
     for row in visualization.get("rows") or []:
         if not row.get("statistically_backed"):
             continue
-        figure_reference_sections = _figure_reference_sections(root, str(row.get("figure_id", "")))
+        figure_reference_sections = _figure_reference_sections(root, str(row.get("figure_id", "")), files=imrad_files)
         referenced_in_manuscript = bool(figure_reference_sections)
         reference_track_bindings = {section: section_tracks.get(section, []) for section in figure_reference_sections}
         reference_sections_sheaf_bound = bool(figure_reference_sections) and all(

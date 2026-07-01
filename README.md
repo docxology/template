@@ -595,6 +595,8 @@ and CI-gated quality. Full benefits + rationale:
 | Run pipeline | [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md) |
 | Contribute code | [`docs/development/contributing.md`](docs/development/contributing.md), [`docs/rules/AGENTS.md`](docs/rules/AGENTS.md) |
 | Find all docs | [`docs/documentation-index.md`](docs/documentation-index.md) |
+| Check the backlog | [`TO-DO.md`](TO-DO.md) |
+| See what changed | [`CHANGELOG.md`](CHANGELOG.md) |
 
 ---
 

@@ -9,6 +9,52 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🧭 **Root signposting drift** — reconciled the two disagreeing root
+  `AGENTS.md` structure mermaids (one omitted `docs/`, the other `output/`);
+  linked the previously-orphaned `TO-DO.md`/`CHANGELOG.md` into `AGENTS.md`'s
+  Documentation map and `README.md`'s Quick Navigation table; added the
+  missing `infrastructure/logrotate.d/` row to `CLAUDE.md`'s module list;
+  corrected `START_HERE.md`'s "~100+ files" `docs/` count to "300+" (actual 310).
+- 🐍 **`AI-GATE-PERF-2` unblocked** — `template_active_inference`'s exemplar
+  venv was pinned to Python 3.14 against the repo's 3.12; rebuilt
+  (`rm -rf .venv && UV_PYTHON=3.12 uv sync --extra dev`), taking collection
+  errors from 47 to 0 (493 tests now collect). The `--durations=20`
+  perf-profiling pass itself is unblocked but not yet run.
+- ⏱️ **`template_active_inference` heavy-test timeout cascade** —
+  `ensure_gate_artifacts`'s expensive one-time bootstrap (~250s cold) exceeded
+  the repo's real per-test timeout (`DEFAULT_TIMEOUT = 120`), so whichever
+  test ran first got killed mid-bootstrap before its cache marker landed,
+  causing every test in `test_aggregate_forgery_controls.py` to retry and
+  time out (7/7 failed, not just the first). Added a `pytest_sessionstart`
+  hook in the exemplar's `tests/conftest.py` to pre-warm the bootstrap once,
+  outside any single test's timeout window, with a manuscript-source
+  snapshot/restore around it so it doesn't disturb the existing
+  `_restore_mutable_project_sources` fixture's baseline. Also fixed two
+  compounding O(N×M) redundant-file-read bottlenecks in
+  `scholarship.py::_citation_sections` and
+  `visualization_audit.py::_figure_reference_sections` (each re-read every
+  manuscript markdown file per citation key / figure id instead of once).
+  Full suite verified green: 381 passed (112 deselected), 0 failures.
+- 🧵 **Cross-project `src` import collision in `tests/regression/`** — every
+  public exemplar ships a top-level `src` package, so the original bare
+  `sys.path.insert` + `from src.x import y` pattern let whichever test module
+  collected first win `sys.modules['src']`, breaking every other project's
+  collection with `ModuleNotFoundError` the moment a second exemplar's
+  regression tests joined the tier. Standardized all regression test files on
+  loading each project's `src` package under a project-unique alias via
+  `importlib.util.spec_from_file_location(..., submodule_search_locations=[...])`.
+
+### Added
+
+- 🧪 **`REGRESSION-PIN-2` — regression tier expanded to 5 public exemplars** —
+  real, source-re-derived regression pins (no shape tests, no mocks) for
+  `template_prose_project` (previously a 9-line stub), `template_autoscientists`,
+  `template_autoresearch_project`, and `template_eda_notebook`, alongside the
+  existing `template_code_project` pins. 17 tests collect and pass together
+  from a single `uv run pytest tests/regression/` invocation.
+
 ### Changed
 
 - 🧩 **Split `template_gold_refinement/src/figures.py` (1280 lines) into a
