@@ -1,0 +1,94 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_search_project",
+    "note": "Every value here is re-derived OFFLINE from the committed deterministic corpus data/corpus.json (6 curated papers, sources: [local]) by calling the real source functions the manuscript pipeline uses -- infrastructure.search.literature.LiteratureClient.search over a LocalBackend, src.pipeline._build_citation_keys, and src.manuscript_variables.compute_variables. Never the network, never a hand-copied manuscript number. AbstractFetcher short-circuits with status 'skipped' for every corpus paper (all six ship an abstract), so the standard pipeline is genuinely network-free for this corpus, but these pins bind to the pure functions directly rather than to the on-disk output/ artefacts (which are regeneratable and can lag)."
+  },
+  "_provenance": {
+    "run_num_papers": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "{{RESULT_NUM_PAPERS}} in 00_abstract.md / 03_results.md 'Run snapshot' = len(result.papers) after LiteratureClient.search over the LocalBackend reading data/corpus.json. The corpus ships exactly 6 curated papers; the local corpus has no duplicates, so all 6 survive deduplication.",
+      "script": "LiteratureClient([LocalBackend('data/corpus.json')], cache=None).search(SearchQuery(text='reproducible research optimization', max_results=100, year_min=None, year_max=None), use_cache=False) -> len(result.papers)"
+    },
+    "run_with_doi": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "{{RESULT_WITH_DOI}} in 00_abstract.md / 03_results.md = compute_variables(...).result_with_doi = sum(1 for p in papers if p.get('doi')). 4 of the 6 corpus papers carry a DOI (the two arXiv-only preprints do not).",
+      "script": "src.manuscript_variables.compute_variables(config_query='reproducible research optimization', config_max_results=100, config_sources=['local'], search_result_payload={'papers':[p.to_dict() for p in result.papers], ...}).result_with_doi"
+    },
+    "run_with_abstract": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "{{RESULT_WITH_ABSTRACT}} in 00_abstract.md / 03_results.md = compute_variables(...).result_with_abstract = sum(1 for p in papers if p.get('abstract')). All 6 corpus papers ship an abstract.",
+      "script": "src.manuscript_variables.compute_variables(...).result_with_abstract"
+    },
+    "bibtex_entry_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "manuscript/references.bib is auto-populated by the single-query pipeline (02_methodology.md stage 3 + 03_results.md output list). Its entry count = len(bib_entries) from src.pipeline._build_citation_keys(result.papers) -- one BibEntry per deduplicated paper, so 6.",
+      "script": "src.pipeline._build_citation_keys(result.papers) -> len(bib_entries)"
+    },
+    "bibtex_unique_citation_keys": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "02_methodology.md documents collision-free citation-key generation. len(set(citation_keys.values())) must equal the paper count (6) -- no two papers share a key. Binds the 'collision-free' claim to source, catching any regression that lets keys collide.",
+      "script": "src.pipeline._build_citation_keys(result.papers) -> len(set(citation_keys.values()))"
+    }
+  },
+  "run_num_papers": {
+    "manuscript_section": "manuscript/00_abstract.md + manuscript/03_results.md / Run snapshot",
+    "claim_text": "returned {{RESULT_NUM_PAPERS}} deduplicated paper(s)",
+    "value": 6,
+    "abs_tolerance": 0,
+    "verifier_function": "infrastructure.search.literature.LiteratureClient.search",
+    "verifier_args": {"source": "projects/templates/template_search_project/data/corpus.json", "backend": "LocalBackend", "sources": ["local"]},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "run_with_doi": {
+    "manuscript_section": "manuscript/00_abstract.md + manuscript/03_results.md / Run snapshot",
+    "claim_text": "({{RESULT_WITH_DOI}} carrying a DOI ...)",
+    "value": 4,
+    "abs_tolerance": 0,
+    "verifier_function": "src.manuscript_variables.compute_variables",
+    "verifier_args": {"source": "projects/templates/template_search_project/data/corpus.json", "field": "result_with_doi"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "run_with_abstract": {
+    "manuscript_section": "manuscript/00_abstract.md + manuscript/03_results.md / Run snapshot",
+    "claim_text": "{{RESULT_WITH_ABSTRACT}} carrying an abstract",
+    "value": 6,
+    "abs_tolerance": 0,
+    "verifier_function": "src.manuscript_variables.compute_variables",
+    "verifier_args": {"source": "projects/templates/template_search_project/data/corpus.json", "field": "result_with_abstract"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "bibtex_entry_count": {
+    "manuscript_section": "manuscript/02_methodology.md / stage 3 + manuscript/03_results.md / output list",
+    "claim_text": "manuscript/references.bib -- the auto-populated bibliography from the single-query pipeline (one entry per deduplicated paper)",
+    "value": 6,
+    "abs_tolerance": 0,
+    "verifier_function": "src.pipeline._build_citation_keys",
+    "verifier_args": {"source": "projects/templates/template_search_project/data/corpus.json", "field": "len(bib_entries)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "bibtex_unique_citation_keys": {
+    "manuscript_section": "manuscript/02_methodology.md / collision-free citation-key generation",
+    "claim_text": "collision-free citation-key generation in _build_citation_keys",
+    "value": 6,
+    "abs_tolerance": 0,
+    "verifier_function": "src.pipeline._build_citation_keys",
+    "verifier_args": {"source": "projects/templates/template_search_project/data/corpus.json", "field": "len(set(citation_keys.values()))"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Engineer",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

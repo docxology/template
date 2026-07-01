@@ -15,30 +15,40 @@ A reproducibility template that claims to make science *reproducible* needs to b
 
 ## The contract this directory creates
 
-> **Current state:** as of 2026-07-01, five of the thirteen public exemplars carry
-> real, source-re-derived regression pins: `template_code_project` (2026-06-13,
-> first populated slice), plus `template_prose_project`, `template_autoscientists`,
-> `template_autoresearch_project`, and `template_eda_notebook` (2026-07-01). 17
-> tests collect and pass together across the five (`uv run pytest tests/regression/`).
-> The remaining eight public exemplars (`template_active_inference`,
-> `template_gold_refinement`, `template_literature_meta_analysis`,
-> `template_madlib`, `template_newspaper`, `template_sia`, `template_template`,
-> `template_textbook`) still need this tier populated — the broader per-figure/
-> per-table contract below remains the target for each.
+> **Current state:** as of 2026-07-01, ten of the (now fifteen) public exemplars
+> carry real, source-re-derived regression pins: `template_code_project`
+> (2026-06-13, first populated slice), plus `template_prose_project`,
+> `template_autoscientists`, `template_autoresearch_project`,
+> `template_eda_notebook`, `template_gold_refinement`,
+> `template_literature_meta_analysis`, `template_sia`, `template_template`, and
+> `template_methods_paper` (all 2026-07-01). 36 tests collect and pass together
+> across the ten (`uv run pytest tests/regression/`). The remaining exemplars
+> (`template_active_inference`, `template_madlib`, `template_newspaper`,
+> `template_search_project`, `template_textbook`) still need this tier
+> populated — the broader per-figure/per-table contract below remains the
+> target for each.
 >
 > **Cross-project import isolation (2026-07-01):** every exemplar ships a
 > top-level `src` package. A bare `sys.path.insert` + module-level
 > `from src.x import y` — the original `template_code_project` pattern — lets
 > whichever test module collects first win the cached `src` entry in
 > `sys.modules`, breaking every other project's collection with
-> `ModuleNotFoundError` once a second exemplar joins the tier. All five
-> current test files load their project's `src` package under a
-> project-unique alias via `importlib.util.spec_from_file_location(...,
-> submodule_search_locations=[...])` instead — see the `_load_src_package`
-> helper duplicated (intentionally — each regression test file is already
-> self-contained by convention) near the top of each `test_*_claims.py` file.
-> Any new exemplar's regression test must follow the same alias pattern, not
-> the pre-2026-07-01 bare-import pattern.
+> `ModuleNotFoundError` once a second exemplar joins the tier. Every current
+> test file loads its project's `src` package under a project-unique alias
+> via `importlib.util.spec_from_file_location(..., submodule_search_locations=[...])`
+> instead — see the `_load_src_package` helper duplicated (intentionally —
+> each regression test file is already self-contained by convention) near the
+> top of each `test_*_claims.py` file. Exemplars whose modules use *absolute*
+> imports internally (e.g. `template_literature_meta_analysis`, whose
+> top-level `analysis` package collides with `template_code_project`'s) need
+> an additional project-scoped `sys.meta_path` finder layered on top of the
+> alias — see that exemplar's test file for the extended pattern. Any new
+> exemplar's regression test must follow the alias pattern (extended with a
+> meta-path finder if its module names collide with another exemplar's), not
+> the pre-2026-07-01 bare-import pattern. One exemplar (`template_template`)
+> also needed a `@pytest.mark.timeout(30)` override on its slow
+> whole-repo-introspection test — the repo's default 10s pytest timeout is too
+> tight for a full `rglob("*.py")` walk of this ~17k-file monorepo.
 
 Every quantitative claim in a manuscript figure or table — a coefficient, a p-value, an effect size, a count, a percentage, a ratio — **should** have a corresponding **pinned regression test** in `tests/regression/` that:
 

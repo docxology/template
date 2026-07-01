@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_textbook",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the modular, config-driven textbook scaffold. Every claim is a STRUCTURAL count derived from manuscript/config.yaml (the single source of truth) via the tested loaders textbook.config.unit_blocks / iter_chapters and textbook.toc.build_toc — never hand-copied from prose. The manuscript states these numbers in front_matter.md ('Twelve chapters across four parts') and manuscript/README.md (each part labelled '(3 chapters)', 'One guided lab per chapter', 'One question bank per chapter'). Counts are exact-match pins (abs_tolerance 0): a real regression (adding/removing a part, chapter, lab, or question in config.yaml without updating the prose) drifts the count and fails the test."
+  },
+  "_provenance": {
+    "structure_num_parts": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of top-level parts (units) declared in manuscript/config.yaml. The manuscript states 'four parts' (front_matter.md 'About This Template' and 'How to Read This Book'). Re-derived by len(unit_blocks(load_config(manuscript))), not copied from the prose.",
+      "script": "PYTHONPATH=<textbook>/src .venv/bin/python -c 'from textbook.config import load_config, unit_blocks; print(len(unit_blocks(load_config(\"<textbook>/manuscript\"))))'"
+    },
+    "structure_num_chapters": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Total chapters numbered sequentially across the whole book. The manuscript states 'Twelve chapters across four parts' (front_matter.md 'About This Template'). Re-derived by len(iter_chapters(load_config(manuscript))) — equivalently the last build_toc entry's .number — not copied from the prose.",
+      "script": "PYTHONPATH=<textbook>/src .venv/bin/python -c 'from textbook.config import load_config, iter_chapters; print(len(iter_chapters(load_config(\"<textbook>/manuscript\"))))'"
+    },
+    "structure_chapters_per_part": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Chapters per part. manuscript/README.md labels every part directory '(3 chapters)' (part_0, part_I, part_II, part_III). Re-derived by grouping iter_chapters by part_id and asserting every group has this size; pin is the single shared per-part count (3).",
+      "script": "PYTHONPATH=<textbook>/src .venv/bin/python -c 'from collections import Counter; from textbook.config import load_config, iter_chapters; c=Counter(ch.part_id for ch in iter_chapters(load_config(\"<textbook>/manuscript\"))); print(set(c.values()))'"
+    },
+    "structure_num_labs": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of guided labs declared in manuscript/config.yaml appendices.labs. The manuscript states 'A matching lab ... for every chapter' (front_matter.md) and 'One guided lab per chapter' (README.md) — i.e. one per chapter, so this must equal structure_num_chapters (12). Re-derived by summing appendices.labs[*].files lengths.",
+      "script": "PYTHONPATH=<textbook>/src .venv/bin/python -c 'from textbook.config import load_config; a=load_config(\"<textbook>/manuscript\")[\"appendices\"]; print(sum(len(u[\"files\"]) for u in a[\"labs\"]))'"
+    },
+    "structure_num_questions": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of question banks declared in manuscript/config.yaml appendices.questions. The manuscript states 'A matching ... question bank for every chapter' (front_matter.md) and 'One question bank per chapter' (README.md) — one per chapter, so this must equal structure_num_chapters (12). Re-derived by summing appendices.questions[*].files lengths.",
+      "script": "PYTHONPATH=<textbook>/src .venv/bin/python -c 'from textbook.config import load_config; a=load_config(\"<textbook>/manuscript\")[\"appendices\"]; print(sum(len(u[\"files\"]) for u in a[\"questions\"]))'"
+    }
+  },
+  "structure_num_parts": {
+    "manuscript_section": "manuscript/front_matter.md / How to Read This Book (+ About This Template)",
+    "claim_text": "The book is organised into four parts that build on one another. ... Twelve chapters across four parts",
+    "value": 4,
+    "abs_tolerance": 0,
+    "verifier_function": "textbook.config.unit_blocks",
+    "verifier_args": {"source": "projects/templates/template_textbook/manuscript/config.yaml", "expr": "len(unit_blocks(load_config(manuscript)))"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "structure_num_chapters": {
+    "manuscript_section": "manuscript/front_matter.md / About This Template",
+    "claim_text": "**Twelve chapters** across four parts, each a valid chapter shell ...",
+    "value": 12,
+    "abs_tolerance": 0,
+    "verifier_function": "textbook.config.iter_chapters",
+    "verifier_args": {"source": "projects/templates/template_textbook/manuscript/config.yaml", "expr": "len(iter_chapters(load_config(manuscript)))"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "structure_chapters_per_part": {
+    "manuscript_section": "manuscript/README.md / Layout",
+    "claim_text": "part_0/ Orientation and Methods (3 chapters); part_I/ Fundamentals (3 chapters); part_II/ Core Systems (3 chapters); part_III/ Applications and Synthesis (3 chapters)",
+    "value": 3,
+    "abs_tolerance": 0,
+    "verifier_function": "textbook.config.iter_chapters",
+    "verifier_args": {"source": "projects/templates/template_textbook/manuscript/config.yaml", "expr": "the single shared value of Counter(ch.part_id for ch in iter_chapters(load_config(manuscript))).values()"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "structure_num_labs": {
+    "manuscript_section": "manuscript/front_matter.md / About This Template (+ manuscript/README.md Layout)",
+    "claim_text": "A matching lab and question bank for every chapter ... One guided lab per chapter, grouped by part",
+    "value": 12,
+    "abs_tolerance": 0,
+    "verifier_function": "textbook.config.load_config",
+    "verifier_args": {"source": "projects/templates/template_textbook/manuscript/config.yaml", "expr": "sum(len(u['files']) for u in load_config(manuscript)['appendices']['labs'])"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "structure_num_questions": {
+    "manuscript_section": "manuscript/front_matter.md / About This Template (+ manuscript/README.md Layout)",
+    "claim_text": "A matching lab and question bank for every chapter ... One question bank per chapter, grouped by part",
+    "value": 12,
+    "abs_tolerance": 0,
+    "verifier_function": "textbook.config.load_config",
+    "verifier_args": {"source": "projects/templates/template_textbook/manuscript/config.yaml", "expr": "sum(len(u['files']) for u in load_config(manuscript)['appendices']['questions'])"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

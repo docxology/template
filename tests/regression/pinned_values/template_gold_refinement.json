@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_gold_refinement",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the metallurgical gold-refining exemplar in manuscript/03_results.md. The refinery pipeline (ore -> smelting -> assaying -> cupellation -> certification) is load-bearing, not rhetorical: each headline number is re-derived from a real source function -- run_refinery() for stage count / final purity / nines count, formalism_count() for the source-owned formalism registry, and build_evidence_registry() for the project-local claim-support assay -- never hand-copied from the rendered manuscript. Nine-nines (0.999999999) certification is the terminal purity claim."
+  },
+  "_provenance": {
+    "refinery_num_stages": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of canonical refinery stages (ore, smelting, assaying, cupellation, certification). Manuscript 03_results.md opens with 'across 5 stages'. Re-derived from run_refinery().stage_count, not copied.",
+      "script": "PYTHONPATH=<gold_refinement>:<gold_refinement>/src .venv/bin/python -c 'from refinery import run_refinery; print(run_refinery().stage_count)'"
+    },
+    "refinery_final_purity": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Final certified purity fraction reached by the pipeline (nine-nines, 0.999999999). Manuscript renders it as '99.9999999% (nine-nines)'. Re-derived from run_refinery().final_purity at full float precision.",
+      "script": "PYTHONPATH=<gold_refinement>:<gold_refinement>/src .venv/bin/python -c 'from refinery import run_refinery; print(repr(run_refinery().final_purity))'"
+    },
+    "refinery_final_nines": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Consecutive nines in the final purity percentage. Manuscript 03_results.md 'Nines count: 9'. Re-derived by purity.purity_to_nines(final_purity), the same function the manuscript-variable generator calls.",
+      "script": "PYTHONPATH=<gold_refinement>:<gold_refinement>/src .venv/bin/python -c 'from refinery import run_refinery; from purity import purity_to_nines; print(purity_to_nines(run_refinery().final_purity))'"
+    },
+    "formalism_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of source-owned formalisms in the equation registry. Manuscript 03_results.md 'exposes 7 source-owned formalisms'. Re-derived from formalisms.formalism_count() (len of the FORMALISMS tuple).",
+      "script": "PYTHONPATH=<gold_refinement>:<gold_refinement>/src .venv/bin/python -c 'from formalisms import formalism_count; print(formalism_count())'"
+    },
+    "claim_support_supported": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Supported contribution claims from the project-local evidence assay. Manuscript 03_results.md 'reports 9 supported claims out of 9 total claims'. Re-derived by build_evidence_registry(config, project_root), which AST-verifies each claim's evidence source against the real project files -- never a copied count.",
+      "script": "PYTHONPATH=<gold_refinement>:<gold_refinement>/src .venv/bin/python -c 'from pathlib import Path; from config import load_gold_refinement_config; from evidence import build_evidence_registry; r=Path(\"projects/templates/template_gold_refinement\").resolve(); print(build_evidence_registry(load_gold_refinement_config(r), r).supported_claims)'"
+    },
+    "claim_support_total": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Total contribution claims in the config ledger, cross-checked by the evidence assay. Manuscript 03_results.md 'out of 9 total claims'. Re-derived by build_evidence_registry(...).total_claims.",
+      "script": "PYTHONPATH=<gold_refinement>:<gold_refinement>/src .venv/bin/python -c 'from pathlib import Path; from config import load_gold_refinement_config; from evidence import build_evidence_registry; r=Path(\"projects/templates/template_gold_refinement\").resolve(); print(build_evidence_registry(load_gold_refinement_config(r), r).total_claims)'"
+    }
+  },
+  "refinery_num_stages": {
+    "manuscript_section": "manuscript/03_results.md / opening + Final certification",
+    "claim_text": "The refinery pipeline produces a monotonically increasing purity sequence across 5 stages, reaching final purity of 99.9999999% (nine-nines) (24K (nine-nines certified)).",
+    "value": 5,
+    "abs_tolerance": 0,
+    "verifier_function": "src.refinery.run_refinery",
+    "verifier_args": {"stages": "CANONICAL_STAGES (default)", "read": "stage_count"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "refinery_final_purity": {
+    "manuscript_section": "manuscript/03_results.md / Final certification",
+    "claim_text": "Final purity: 99.9999999% (nine-nines) ... reaching final purity of 99.9999999% (nine-nines)",
+    "value": 0.999999999,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "src.refinery.run_refinery",
+    "verifier_args": {"stages": "CANONICAL_STAGES (default)", "read": "final_purity"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "refinery_final_nines": {
+    "manuscript_section": "manuscript/03_results.md / Final certification",
+    "claim_text": "Nines count: 9",
+    "value": 9,
+    "abs_tolerance": 0,
+    "verifier_function": "src.purity.purity_to_nines",
+    "verifier_args": {"purity": "run_refinery().final_purity", "read": "purity_to_nines(final_purity)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "formalism_count": {
+    "manuscript_section": "manuscript/03_results.md / Formalism traceability",
+    "claim_text": "The registry currently exposes 7 source-owned formalisms.",
+    "value": 7,
+    "abs_tolerance": 0,
+    "verifier_function": "src.formalisms.formalism_count",
+    "verifier_args": {"read": "formalism_count()"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "claim_support_supported": {
+    "manuscript_section": "manuscript/03_results.md / Contribution claims + Claim-evidence assay",
+    "claim_text": "The project-local claim-support assay reports 9 supported claims out of 9 total claims, for 100.00% support.",
+    "value": 9,
+    "abs_tolerance": 0,
+    "verifier_function": "src.evidence.build_evidence_registry",
+    "verifier_args": {"config": "load_gold_refinement_config(project_root)", "project_root": "projects/templates/template_gold_refinement", "read": "supported_claims"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "claim_support_total": {
+    "manuscript_section": "manuscript/03_results.md / Contribution claims + Claim-evidence assay",
+    "claim_text": "... out of 9 total claims, for 100.00% support. Unsupported claims: 0.",
+    "value": 9,
+    "abs_tolerance": 0,
+    "verifier_function": "src.evidence.build_evidence_registry",
+    "verifier_args": {"config": "load_gold_refinement_config(project_root)", "project_root": "projects/templates/template_gold_refinement", "read": "total_claims"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

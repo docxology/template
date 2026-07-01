@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_madlib",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the conditional token-injection manuscript exemplar. The manuscript is fully tokenized; its quantitative claims are the deterministic count tokens rendered from manuscript/config.yaml (seed 431) through the real pipeline function src.manuscript_variables.generate_variables. Five load-bearing configuration/token-plan/QA/lexicon counts are pinned: the deterministic token-plan size (TOKEN_CHOICE_COUNT), the lexicon-size claim (LEXICON_CATEGORY_COUNT), the QA probe count (QUALITY_PROBE_COUNT), the slot-rule count that drives injection (SLOT_RULE_COUNT), and the enabled-visualization-flag count (CONFIGURED_FIELD_VISUALIZED_COUNT). Every value is re-derived from source (generate_variables / load_madlib_config / generate_token_plan), never hand-copied from the manuscript. No mocks: the real config loader and token planner run against the committed manuscript/config.yaml."
+  },
+  "_provenance": {
+    "setup_token_choice_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Total number of deterministic token choices in the injection plan (one per expanded slot ordinal). This is the token-plan-size headline of the token-injection generator. Re-derived as len(generate_token_plan(config).choices), surfaced as generate_variables(root)['TOKEN_CHOICE_COUNT']. Cross-checked: equals sum(slot.count for slot in config.slots) == 40.",
+      "script": "cd projects/templates/template_madlib && PYTHONPATH=src .venv/bin/python -c \"from manuscript_variables import generate_variables; from pathlib import Path; print(generate_variables(Path('.')) ['TOKEN_CHOICE_COUNT'])\""
+    },
+    "setup_lexicon_category_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of lexicon categories declared in manuscript/config.yaml (madlib.lexicon). This is the lexicon-size claim reported in the configuration counts. Re-derived as len(config.lexicon), surfaced as generate_variables(root)['LEXICON_CATEGORY_COUNT'].",
+      "script": "cd projects/templates/template_madlib && PYTHONPATH=src .venv/bin/python -c \"from config import load_madlib_config; from pathlib import Path; print(len(load_madlib_config(Path('.')).lexicon))\""
+    },
+    "evaluation_quality_probe_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of QA quality probes declared in manuscript/config.yaml (madlib.quality_probes); these populate the Quality Probes table in 06_evaluation.md and the configuration counts in 05_experimental_setup.md. Re-derived as len(config.quality_probes), surfaced as generate_variables(root)['QUALITY_PROBE_COUNT'].",
+      "script": "cd projects/templates/template_madlib && PYTHONPATH=src .venv/bin/python -c \"from config import load_madlib_config; from pathlib import Path; print(len(load_madlib_config(Path('.')).quality_probes))\""
+    },
+    "setup_slot_rule_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of slot rules declared in manuscript/config.yaml (madlib.slots); each slot is expanded deterministically into its ordinal token choices. Re-derived as len(config.slots), surfaced as generate_variables(root)['SLOT_RULE_COUNT'].",
+      "script": "cd projects/templates/template_madlib && PYTHONPATH=src .venv/bin/python -c \"from config import load_madlib_config; from pathlib import Path; print(len(load_madlib_config(Path('.')).slots))\""
+    },
+    "setup_configured_field_visualized_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of enabled visualization flags in the configured-field audit; reported as the 'Enabled visualization flags' configuration count in 05_experimental_setup.md. Re-derived via configured_field_counts over configured_field_inventory, surfaced as generate_variables(root)['CONFIGURED_FIELD_VISUALIZED_COUNT'].",
+      "script": "cd projects/templates/template_madlib && PYTHONPATH=src .venv/bin/python -c \"from manuscript_variables import generate_variables; from pathlib import Path; print(generate_variables(Path('.')) ['CONFIGURED_FIELD_VISUALIZED_COUNT'])\""
+    }
+  },
+  "setup_token_choice_count": {
+    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "claim_text": "Token choices: `{{TOKEN_CHOICE_COUNT}}`",
+    "value": 40,
+    "abs_tolerance": 0,
+    "verifier_function": "src.tokens.generate_token_plan",
+    "verifier_args": {"source": "projects/templates/template_madlib/manuscript/config.yaml", "read": "len(generate_token_plan(config).choices)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "setup_lexicon_category_count": {
+    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "claim_text": "Lexicon categories: `{{LEXICON_CATEGORY_COUNT}}`",
+    "value": 10,
+    "abs_tolerance": 0,
+    "verifier_function": "src.config.load_madlib_config",
+    "verifier_args": {"source": "projects/templates/template_madlib/manuscript/config.yaml", "read": "len(config.lexicon)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "evaluation_quality_probe_count": {
+    "manuscript_section": "manuscript/06_evaluation.md / Quality Probes (count in 05_experimental_setup.md / Configuration Counts)",
+    "claim_text": "Quality probes: `{{QUALITY_PROBE_COUNT}}`",
+    "value": 14,
+    "abs_tolerance": 0,
+    "verifier_function": "src.config.load_madlib_config",
+    "verifier_args": {"source": "projects/templates/template_madlib/manuscript/config.yaml", "read": "len(config.quality_probes)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "setup_slot_rule_count": {
+    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "claim_text": "Slot rules: `{{SLOT_RULE_COUNT}}`",
+    "value": 22,
+    "abs_tolerance": 0,
+    "verifier_function": "src.config.load_madlib_config",
+    "verifier_args": {"source": "projects/templates/template_madlib/manuscript/config.yaml", "read": "len(config.slots)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "setup_configured_field_visualized_count": {
+    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "claim_text": "Enabled visualization flags: `{{CONFIGURED_FIELD_VISUALIZED_COUNT}}`",
+    "value": 7,
+    "abs_tolerance": 0,
+    "verifier_function": "src.manuscript_variables.generate_variables",
+    "verifier_args": {"source": "projects/templates/template_madlib/manuscript/config.yaml", "read": "generate_variables(root)['CONFIGURED_FIELD_VISUALIZED_COUNT']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_literature_meta_analysis",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the generic literature meta-analysis exemplar (default term 'modafinil'; multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics). The live pipeline makes network calls (multi-engine retrieval); these pins deliberately re-derive every value OFFLINE from the committed deterministic seed corpus data/fixtures/modafinil_corpus.jsonl (80 synthetic records, reserved 10.5555/ test DOIs, RNG seed 42) via the real source functions src.literature.corpus.Corpus.load + src.analysis.descriptive_stats + src.analysis.temporal_analysis -- the same functions whose outputs manuscript/src/manuscript/variables.py injects into the {{CORPUS_SIZE}}/{{UNIQUE_AUTHORS}}/{{CITATION_MAX}}/{{CITATION_TOTAL}}/{{GINI_COEFFICIENT}}/{{PEAK_YEAR}} tokens in manuscript/03a_results_field_overview.md. No network, no mocks. A live retrieval run replaces the fixture corpus and legitimately shifts these values; when that happens the pins and the manuscript must be updated together per docs/maintenance/regression-testing.md."
+  },
+  "_provenance": {
+    "field_overview_corpus_size": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of de-duplicated records in the default offline corpus. Injected as {{CORPUS_SIZE}} in 03a_results_field_overview.md ('N = {{CORPUS_SIZE}} records'). Re-derived as len(Corpus.load(fixtures/modafinil_corpus.jsonl).papers), matching variables.compute_variables corpus_size = len(papers).",
+      "script": ".venv/bin/python -c 'from literature.corpus import Corpus; print(len(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers))'"
+    },
+    "field_overview_unique_authors": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Distinct author-name count across the corpus, injected as {{UNIQUE_AUTHORS}} in the Descriptive Bibliometrics prose. Re-derived via descriptive_stats(papers)['unique_authors'] -- the exact source variables.py reads for the UNIQUE_AUTHORS token.",
+      "script": ".venv/bin/python -c 'from analysis.descriptive_stats import descriptive_stats; from literature.corpus import Corpus; print(descriptive_stats(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers)[\"unique_authors\"])'"
+    },
+    "field_overview_pct_with_doi": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Percentage of records carrying a DOI, injected as {{PCT_WITH_DOI}} ('DOI_COUNT of CORPUS_SIZE records (PCT_WITH_DOI%) carry DOIs'). Every synthetic fixture record has a reserved 10.5555/ DOI, so this is exactly 100.0. Re-derived via descriptive_stats(papers)['pct_with_doi'].",
+      "script": ".venv/bin/python -c 'from analysis.descriptive_stats import descriptive_stats; from literature.corpus import Corpus; print(descriptive_stats(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers)[\"pct_with_doi\"])'"
+    },
+    "bibliometrics_citation_count_max": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Maximum citation count in the corpus, injected as {{CITATION_MAX}} ('Citation counts range from zero to CITATION_MAX'). Re-derived via descriptive_stats(papers)['citation_count_max'].",
+      "script": ".venv/bin/python -c 'from analysis.descriptive_stats import descriptive_stats; from literature.corpus import Corpus; print(descriptive_stats(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers)[\"citation_count_max\"])'"
+    },
+    "bibliometrics_citation_count_total": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Total citations summed across the corpus, injected as {{CITATION_TOTAL}} ('a total of CITATION_TOTAL citations across the corpus'). Re-derived via descriptive_stats(papers)['citation_count_total']; also cross-checked equal to citation_distribution(papers)['total_citations'].",
+      "script": ".venv/bin/python -c 'from analysis.descriptive_stats import descriptive_stats; from literature.corpus import Corpus; print(descriptive_stats(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers)[\"citation_count_total\"])'"
+    },
+    "bibliometrics_gini_coefficient": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Gini coefficient of citation concentration, injected as {{GINI_COEFFICIENT}} (manuscript renders variables.py's f'{gini:.3f}' = 0.398). Pinned at full float precision to catch sub-display drift; a 1e-9 tolerance covers benign numpy pairwise-difference reordering. Re-derived via citation_distribution(papers)['gini'].",
+      "script": ".venv/bin/python -c 'from analysis.descriptive_stats import citation_distribution; from literature.corpus import Corpus; print(repr(citation_distribution(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers)[\"gini\"]))'"
+    },
+    "field_overview_peak_year": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Year with the most publications, injected as {{PEAK_YEAR}} ('peaking in PEAK_YEAR'). Re-derived via compute_temporal_metrics(papers)['peak_year'] -- the source variables.py reads for the PEAK_YEAR token.",
+      "script": ".venv/bin/python -c 'from analysis.temporal_analysis import compute_temporal_metrics; from literature.corpus import Corpus; print(compute_temporal_metrics(Corpus.load(\"data/fixtures/modafinil_corpus.jsonl\").papers)[\"peak_year\"])'"
+    }
+  },
+  "field_overview_corpus_size": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Field Overview",
+    "claim_text": "The de-duplicated corpus for modafinil contains $N = {{CORPUS_SIZE}}$ records spanning {{YEAR_START}}--{{YEAR_END}}",
+    "value": 80,
+    "abs_tolerance": 0,
+    "verifier_function": "src.literature.corpus.Corpus.load",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "len(Corpus.load(fixture).papers)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "field_overview_unique_authors": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "claim_text": "The corpus spans {{UNIQUE_AUTHORS}} unique authors across {{CORPUS_SIZE}} papers",
+    "value": 151,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.descriptive_stats.descriptive_stats",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "descriptive_stats(papers)['unique_authors']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "field_overview_pct_with_doi": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Identifier and Full-Text Coverage",
+    "claim_text": "{{DOI_COUNT}} of {{CORPUS_SIZE}} records ({{PCT_WITH_DOI}}\\%) carry DOIs",
+    "value": 100.0,
+    "abs_tolerance": 1e-09,
+    "verifier_function": "src.analysis.descriptive_stats.descriptive_stats",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "descriptive_stats(papers)['pct_with_doi']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "bibliometrics_citation_count_max": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "claim_text": "Citation counts range from zero to {{CITATION_MAX}} (mean {{CITATION_MEAN}}, median {{CITATION_MEDIAN}})",
+    "value": 110,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.descriptive_stats.descriptive_stats",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "descriptive_stats(papers)['citation_count_max']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "bibliometrics_citation_count_total": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "claim_text": "with a total of {{CITATION_TOTAL}} citations across the corpus",
+    "value": 3146,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.descriptive_stats.descriptive_stats",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "descriptive_stats(papers)['citation_count_total']", "cross_check": "citation_distribution(papers)['total_citations']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "bibliometrics_gini_coefficient": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "claim_text": "The Gini coefficient of citation concentration is {{GINI_COEFFICIENT}} (rendered 0.398)",
+    "value": 0.397616020343293,
+    "abs_tolerance": 1e-09,
+    "verifier_function": "src.analysis.descriptive_stats.citation_distribution",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "citation_distribution(papers)['gini']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "field_overview_peak_year": {
+    "manuscript_section": "manuscript/03a_results_field_overview.md / Field Overview + RQ1",
+    "claim_text": "peaking in {{PEAK_YEAR}} with {{PEAK_YEAR_PUBS}} records that year",
+    "value": 2023,
+    "abs_tolerance": 0,
+    "verifier_function": "src.analysis.temporal_analysis.compute_temporal_metrics",
+    "verifier_args": {"source": "data/fixtures/modafinil_corpus.jsonl", "read": "compute_temporal_metrics(papers)['peak_year']"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

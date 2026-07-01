@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_active_inference",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the multi-track Active Inference exemplar. This exemplar's jax/pymdp tracks are NOT importable from the root .venv (numpy 2.4.1 + scipy 1.17.1 only, no jax/pymdp), so these pins are deliberately drawn from the numpy/scipy-only ANALYTICAL track (src/analytical/*) — the closed-form Bernoulli/Ising toy that backs the MI-sweep and free-energy Results sections (manuscript/10_results_mi_sweep.md, 11_results_free_energy.md, 05_methods_analytical.md). Every value is re-derived by calling the same src functions the analysis pipeline uses (analytical.bernoulli_toy / analytical.decomposition / analytical.hyperparameters), exactly as orchestration/analysis.write_parameter_sweep and manuscript/variables.py compute the manuscript tokens — never hand-copied from the manuscript. No mocks: real deterministic (no-sampling) closed-form objects only."
+  },
+  "_provenance": {
+    "mi_sweep_grid_points": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of lambda grid points in the deterministic MI sweep (param_sweep_grid_points token). Re-derived as len(lambda_grid(load_hyperparameters())), identical to what orchestration.analysis.write_parameter_sweep iterates and what manuscript/variables._core_token_values reports. Exact count, tolerance 0.",
+      "script": "PYTHONPATH=<ai>:<ai>/src .venv/bin/python -c 'from analytical.hyperparameters import load_hyperparameters, lambda_grid; print(len(lambda_grid(load_hyperparameters())))'"
+    },
+    "mi_sweep_lambda_max": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Upper end of the lambda grid (lambda_max token). Single source of truth is Hyperparameters.lambda_max = 4.0. Exact config value, tolerance 0.",
+      "script": "PYTHONPATH=<ai>:<ai>/src .venv/bin/python -c 'from analytical.hyperparameters import load_hyperparameters; print(load_hyperparameters().lambda_max)'"
+    },
+    "ising_mi_saturation": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Grid-maximum closed-form mutual information in nats (ising_mi_saturation token). Re-derived as max(ising_mutual_information(lam) for lam in lambda_grid(hp)); because MI is monotone increasing in lambda this equals ising_mutual_information(lambda_max=4.0). Matches manuscript/variables._ising_mi_saturation_from_sweep applied to the pipeline's parameter_sweep.csv rows. Full float precision, tolerance 1e-12.",
+      "script": "PYTHONPATH=<ai>:<ai>/src .venv/bin/python -c 'from analytical.hyperparameters import load_hyperparameters, lambda_grid; from analytical.bernoulli_toy import ising_mutual_information; print(max(ising_mutual_information(l) for l in lambda_grid(load_hyperparameters())))'"
+    },
+    "mi_sweep_max_residual": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Maximum absolute residual between the closed-form MI and the independent exact recomputation via total correlation, across the lambda grid (sweep_max_residual token; the 'both estimators agree to X nats' claim). Re-derived as max(|empirical_mutual_information(lam) - ising_mutual_information(lam)|) over the grid, exactly as analytical.sweep_io.summarize_sweep_rows computes it from the pipeline's parameter_sweep.csv. This is a cross-implementation agreement check, so the observed value (~4.4e-16) is machine epsilon; tolerance 1e-12 sits far above the value yet orders of magnitude below any real cross-implementation divergence, so a genuine regression (the two code paths diverging) still fails loudly.",
+      "script": "PYTHONPATH=<ai>:<ai>/src .venv/bin/python -c 'from analytical.hyperparameters import load_hyperparameters, lambda_grid; from analytical.bernoulli_toy import ising_mutual_information, empirical_mutual_information; g=lambda_grid(load_hyperparameters()); print(max(abs(empirical_mutual_information(l)-ising_mutual_information(l)) for l in g))'"
+    },
+    "free_energy_argmin_lambda": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Lambda minimizing the free energy of the entangled posterior against the mean-field prior (free_energy_argmin_lambda token). Re-derived by replicating manuscript/variables._free_energy_argmin_lambda: evaluate free_energy_against_entangled_prior over the grid and take the grid lambda at argmin, rounded to 4dp. For the symmetric toy the minimum is at lambda=0 (the posterior coincides with the independent mean-field product there; any lambda>0 raises the free energy). Grid-lambda value, tolerance 0.",
+      "script": "PYTHONPATH=<ai>:<ai>/src .venv/bin/python -c 'see _free_energy_argmin_lambda in src/manuscript/variables.py; argmin over free_energy_against_entangled_prior(ising_joint_posterior(lam), mf, [0,0], ising_coupling(), zeros, gamma=1.0, lam=lam) on lambda_grid(hp)'"
+    }
+  },
+  "mi_sweep_grid_points": {
+    "manuscript_section": "manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 05_methods_analytical.md)",
+    "claim_text": "We sweep coupling strength $\\lambda$ on a grid of {{param_sweep_grid_points}} points up to $\\lambda_{\\max} = {{lambda_max}}$.",
+    "value": 21,
+    "abs_tolerance": 0,
+    "verifier_function": "analytical.hyperparameters.lambda_grid",
+    "verifier_args": {"hp": "load_hyperparameters()", "read": "len(lambda_grid(hp))"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "mi_sweep_lambda_max": {
+    "manuscript_section": "manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 05_methods_analytical.md)",
+    "claim_text": "... up to $\\lambda_{\\max} = {{lambda_max}}$ ... across $\\lambda \\in [0, {{lambda_max}}]$",
+    "value": 4.0,
+    "abs_tolerance": 0,
+    "verifier_function": "analytical.hyperparameters.load_hyperparameters",
+    "verifier_args": {"read": "load_hyperparameters().lambda_max"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "ising_mi_saturation": {
+    "manuscript_section": "manuscript/11_results_free_energy.md / Saturation MI (also 10_results_mi_sweep.md figure caption)",
+    "claim_text": "Saturation MI (grid maximum on the measured $\\lambda$ sweep): {{ising_mi_saturation}} nats. ... grid maximum {{ising_mi_saturation}} nats.",
+    "value": 0.6030524127937693,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "analytical.bernoulli_toy.ising_mutual_information",
+    "verifier_args": {"hp": "load_hyperparameters()", "expr": "max(ising_mutual_information(lam) for lam in lambda_grid(hp))"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "mi_sweep_max_residual": {
+    "manuscript_section": "manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 15_discussion_outlook.md, 16_appendix_full_sheaf.md)",
+    "claim_text": "... both are deterministic (no sampling) and agree to {{sweep_max_residual}} nats. ... cross-implementation agreement check (max residual {{sweep_max_residual}} nats), not a sampling residual.",
+    "value": 4.440892098500626e-16,
+    "abs_tolerance": 1e-12,
+    "verifier_function": "analytical.bernoulli_toy.empirical_mutual_information",
+    "verifier_args": {"hp": "load_hyperparameters()", "expr": "max(abs(empirical_mutual_information(lam) - ising_mutual_information(lam)) for lam in lambda_grid(hp))"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "free_energy_argmin_lambda": {
+    "manuscript_section": "manuscript/11_results_free_energy.md / Free-energy decomposition",
+    "claim_text": "The curve in [@fig:free_energy_curve] instead reports free energy against the *mean-field* prior: its minimum at $\\lambda={{free_energy_argmin_lambda}}$ is where the entangled posterior coincides with the factorized mean-field product ...",
+    "value": 0.0,
+    "abs_tolerance": 0,
+    "verifier_function": "analytical.decomposition.free_energy_against_entangled_prior",
+    "verifier_args": {"hp": "load_hyperparameters()", "expr": "lambda_grid[argmin(free_energy_against_entangled_prior(ising_joint_posterior(lam), mf, [0,0], ising_coupling(), zeros((2,2)), gamma=1.0, lam=lam))] rounded 4dp"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

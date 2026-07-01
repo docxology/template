@@ -38,22 +38,28 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
-- **REGRESSION-PIN-2 — regression tier expanded to 5 exemplars (2026-07-01, [Unreleased]):**
+- **REGRESSION-PIN-2 — regression tier expanded to 10 exemplars (2026-07-01, [Unreleased]):**
   populated real, source-re-derived regression pins (following the
-  `REGRESSION-PIN-1` `template_code_project` contract) for `template_prose_project`
-  (was a 9-line stub), `template_autoscientists`, `template_autoresearch_project`,
-  and `template_eda_notebook` — 17 tests collect and pass together
-  (`uv run pytest tests/regression/`, verified from the main checkout, not just
-  per-project). Along the way, found and fixed a real cross-project collision:
-  every exemplar ships a top-level `src` package, so the original bare
-  `sys.path.insert` + `from src.x import y` pattern let whichever test module
-  collected first win `sys.modules['src']`, breaking every other project's
-  collection. Standardized all five test files on loading each project's `src`
-  under a project-unique alias via `importlib.util.spec_from_file_location`
-  (see `docs/maintenance/regression-testing.md` for the pattern). Eight public
-  exemplars remain unpinned: `template_active_inference`, `template_gold_refinement`,
-  `template_literature_meta_analysis`, `template_madlib`, `template_newspaper`,
-  `template_sia`, `template_template`, `template_textbook`.
+  `REGRESSION-PIN-1` `template_code_project` contract) for
+  `template_prose_project` (was a 9-line stub), `template_autoscientists`,
+  `template_autoresearch_project`, `template_eda_notebook`,
+  `template_gold_refinement`, `template_literature_meta_analysis`,
+  `template_sia`, `template_template`, and `template_methods_paper` — 36 tests
+  collect and pass together (`uv run pytest tests/regression/`, verified from
+  the main checkout, not just per-project). Along the way, found and fixed a
+  real cross-project collision: every exemplar ships a top-level `src`
+  package, so the original bare `sys.path.insert` + `from src.x import y`
+  pattern let whichever test module collected first win `sys.modules['src']`,
+  breaking every other project's collection. Standardized on loading each
+  project's `src` under a project-unique alias via
+  `importlib.util.spec_from_file_location`, extended with a project-scoped
+  `sys.meta_path` finder for exemplars using absolute internal imports whose
+  module names collide (`template_literature_meta_analysis`'s `analysis`
+  package vs. `template_code_project`'s), and a `@pytest.mark.timeout(30)`
+  override for `template_template`'s slow whole-repo-introspection test (see
+  `docs/maintenance/regression-testing.md` for all three patterns). Remaining
+  unpinned: `template_active_inference`, `template_madlib`,
+  `template_newspaper`, `template_search_project`, `template_textbook`.
 - **Modularity + exemplar deepening (2026-06-28, [Unreleased]):** split the
   oversized `template_gold_refinement/src/figures.py` (1280 lines) into a
   `figures/` subpackage (`_common`, `graphs`, `charts`, `diagrams`, `registry`

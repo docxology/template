@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_template",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the frozen pipeline.yaml DAG structure (declared 12 / default-full 10 / core-only 8) and the confidentiality-invariant public exemplar roster count (15) at tolerance 0; (2) the live infrastructure module_count (23) at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
+  },
+  "_provenance": {
+    "pipeline_stages_declared": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of stages declared in infrastructure/core/pipeline/pipeline.yaml. The manuscript states this as a literal 12 in AGENTS.md and injects it as ${pipeline_stages_declared} across the abstract, introduction, architecture, documentation, and security sections. Frozen structural count -> tolerance 0. Re-derived from the live report, not copied from prose.",
+      "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'build_infrastructure_report(Path(\".\").resolve()).pipeline_stages_declared'"
+    },
+    "pipeline_stages_default_full": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Stages in a default full run -- pipeline.yaml stages that carry neither the 'bundle' nor the 'archival' tag (10 of 12). AGENTS.md pins this as the literal (10); the abstract/architecture/security/documentation sections inject ${pipeline_stages_default_full}. Frozen -> tolerance 0.",
+      "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'build_infrastructure_report(Path(\".\").resolve()).pipeline_stages_default_full'"
+    },
+    "pipeline_stages_core_only": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Stages in a --core-only run -- pipeline.yaml stages tagged 'core' AND NOT 'llm' (8 of 12). AGENTS.md pins the literal (8); the 04_results.md execution table injects ${pipeline_stages_core_only} as the effective-core-stages column for all three sampled exemplars. Frozen -> tolerance 0.",
+      "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'build_infrastructure_report(Path(\".\").resolve()).pipeline_stages_core_only'"
+    },
+    "public_exemplar_roster_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Count of git-tracked public exemplars in infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES. The manuscript injects the full roster as ${public_exemplar_list} (abstract, introduction, architecture, appendix-exemplars) and discover_projects(public_only=True) returns exactly this set. The roster is a confidentiality invariant (only these names may ever reach the public DOI), so its size is a hard, frozen claim -> tolerance 0. Re-derived via public_project_names(root), not copied from prose (the appendix prose 'currently nine workspaces' is stale and deliberately NOT pinned).",
+      "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'len(public_project_names(Path(\".\").resolve()))'"
+    },
+    "module_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Count of infrastructure/ subdirectories returned by discover_infrastructure_modules (23 at pin time). This is the single most-cited introspection number in the manuscript (${module_count} appears in the abstract, introduction, architecture, results, quality, scalability, infrastructure-modules, ai-collaboration, and appendix-docs sections). It is a LIVE count that legitimately drifts as the repo grows, so per this exemplar's own convention (manuscript/AGENTS.md defers rotating layout facts to docs/_generated/COUNTS.md) it is pinned with abs_tolerance 2: wide enough to survive adding one infra module, tight enough to fail loudly on a broken discovery (0, a halving) or a large structural jump.",
+      "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'len(discover_infrastructure_modules(Path(\".\").resolve()))'"
+    }
+  },
+  "pipeline_stages_declared": {
+    "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
+    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (12)",
+    "value": 12,
+    "abs_tolerance": 0,
+    "verifier_function": "template_template.introspection.build_infrastructure_report",
+    "verifier_args": {"repo_root": ".", "read": "pipeline_stages_declared"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "pipeline_stages_default_full": {
+    "manuscript_section": "manuscript/00_abstract.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
+    "claim_text": "default full runs use ${pipeline_stages_default_full} stages ... `${pipeline_stages_default_full}` | Default full run (10)",
+    "value": 10,
+    "abs_tolerance": 0,
+    "verifier_function": "template_template.introspection.build_infrastructure_report",
+    "verifier_args": {"repo_root": ".", "read": "pipeline_stages_default_full"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "pipeline_stages_core_only": {
+    "manuscript_section": "manuscript/04_results.md / Multi-Project Pipeline Execution table, manuscript/AGENTS.md / pipeline-stages token table",
+    "claim_text": "Effective core stages: ${pipeline_stages_core_only} ... `${pipeline_stages_core_only}` | `--core-only` run (8)",
+    "value": 8,
+    "abs_tolerance": 0,
+    "verifier_function": "template_template.introspection.build_infrastructure_report",
+    "verifier_args": {"repo_root": ".", "read": "pipeline_stages_core_only"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "public_exemplar_roster_count": {
+    "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
+    "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
+    "value": 15,
+    "abs_tolerance": 0,
+    "verifier_function": "infrastructure.project.public_scope.public_project_names",
+    "verifier_args": {"repo_root": ".", "read": "len"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "module_count": {
+    "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",
+    "claim_text": "a Two-Layer Architecture that separates ${module_count} infrastructure subdirectories ... All ${module_count} enumerated subdirectories carry Tier-1/README.md and Tier-2/AGENTS.md coverage",
+    "value": 23,
+    "abs_tolerance": 2,
+    "verifier_function": "template_template.introspection.discover_infrastructure_modules",
+    "verifier_args": {"repo_root": ".", "read": "len"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

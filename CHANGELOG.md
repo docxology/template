@@ -48,12 +48,14 @@ not to the contents of any specific workspace.
 
 ### Added
 
-- 🧪 **`REGRESSION-PIN-2` — regression tier expanded to 5 public exemplars** —
+- 🧪 **`REGRESSION-PIN-2` — regression tier expanded to 10 public exemplars** —
   real, source-re-derived regression pins (no shape tests, no mocks) for
   `template_prose_project` (previously a 9-line stub), `template_autoscientists`,
-  `template_autoresearch_project`, and `template_eda_notebook`, alongside the
-  existing `template_code_project` pins. 17 tests collect and pass together
-  from a single `uv run pytest tests/regression/` invocation.
+  `template_autoresearch_project`, `template_eda_notebook`,
+  `template_gold_refinement`, `template_literature_meta_analysis`,
+  `template_sia`, `template_template`, and `template_methods_paper`, alongside
+  the existing `template_code_project` pins. 36 tests collect and pass
+  together from a single `uv run pytest tests/regression/` invocation.
 
 ### Changed
 

@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_newspaper",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the data-driven large-format newspaper layout engine. Unlike a scientific-results manuscript this exemplar reports deterministic LAYOUT / RENDER statistics: manuscript/04_reproducibility.md explicitly names 'the page count, the trim dimensions, the figure count' as its quantitative claims and points at data/claim_ledger.yaml as their register. Each pin re-derives its value from src (load_edition, load_newspaper_config(...).geometry(), figures.generate_all) exactly as the real render path (engine.build_and_render) does -- never by copying a number from the manuscript prose. Trim is bound through the config loader (edition.yaml declares page: tabloid) rather than the bare PageGeometry default so it exercises the same path the renderer uses. No mocks: real YAML content dir + real Pillow/Matplotlib figure generation."
+  },
+  "_provenance": {
+    "layout_edition_page_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of printed pages in the deterministic edition, re-derived from the content data model: content/edition.yaml lists exactly 12 page files and Edition.page_count == len(pages). This is the manuscript's headline 'twelve-page' claim and the claim_ledger 'page-count' entry. Not copied from prose.",
+      "script": "PYTHONPATH=<newspaper>/src .venv/bin/python -c 'from newspaper.content import load_edition; print(load_edition(\"<newspaper>/content\").page_count)'"
+    },
+    "layout_trim_width_pt": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Page trim WIDTH in points via the real render path: load_newspaper_config(content).geometry().width. edition.yaml declares page: tabloid, so config maps it to (11in, 17in) and PageGeometry stores 11*72 = 792.0pt. This is the same geometry the Canvas is opened with in engine.render_edition, and the claim_ledger 'page-trim-width-pt' entry.",
+      "script": "PYTHONPATH=<newspaper>/src .venv/bin/python -c 'from newspaper.config import load_newspaper_config; print(load_newspaper_config(\"<newspaper>/content\").geometry().width)'"
+    },
+    "layout_trim_height_pt": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Page trim HEIGHT in points via the real render path: load_newspaper_config(content).geometry().height. Tabloid maps to 17in, so PageGeometry stores 17*72 = 1224.0pt. Matches the claim_ledger 'page-trim-height-pt' entry and the Canvas pagesize used by engine.render_edition.",
+      "script": "PYTHONPATH=<newspaper>/src .venv/bin/python -c 'from newspaper.config import load_newspaper_config; print(load_newspaper_config(\"<newspaper>/content\").geometry().height)'"
+    },
+    "layout_generated_figure_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Total figures the standard edition generator emits: figures.generate_all writes 6 halftone scenes + 4 color display-ad graphics + 3 charts = 13 PNGs and returns their paths. This is the manuscript's 'figure count' claim and the claim_ledger 'figure-count' entry; re-derived by actually running the real Pillow/Matplotlib generators into a temp dir (no mocks).",
+      "script": "PYTHONPATH=<newspaper>/src .venv/bin/python -c 'import tempfile; from newspaper import figures; d=tempfile.mkdtemp(); print(len(figures.generate_all(d)))'"
+    }
+  },
+  "layout_edition_page_count": {
+    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (line 17: \"exactly twelve pages\"); manuscript/00_abstract.md (\"twelve-page, large-format newspaper\")",
+    "claim_text": "renders ... a valid PDF of exactly twelve pages at the correct trim with no over-set page",
+    "value": 12,
+    "abs_tolerance": 0,
+    "verifier_function": "src.newspaper.content.load_edition",
+    "verifier_args": {"content_dir": "projects/templates/template_newspaper/content", "read": "page_count"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "layout_trim_width_pt": {
+    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (\"the trim dimensions\"); data/claim_ledger.yaml / page-trim-width-pt",
+    "claim_text": "the page trim ... US Tabloid / Ledger, 11in x 17in -> 792pt wide (page-trim-width-pt: 792)",
+    "value": 792.0,
+    "abs_tolerance": 1e-9,
+    "verifier_function": "src.newspaper.config.load_newspaper_config",
+    "verifier_args": {"content_dir": "projects/templates/template_newspaper/content", "expr": "geometry().width"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "layout_trim_height_pt": {
+    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (\"the trim dimensions\"); data/claim_ledger.yaml / page-trim-height-pt",
+    "claim_text": "the page trim ... 11in x 17in -> 1224pt tall (page-trim-height-pt: 1224)",
+    "value": 1224.0,
+    "abs_tolerance": 1e-9,
+    "verifier_function": "src.newspaper.config.load_newspaper_config",
+    "verifier_args": {"content_dir": "projects/templates/template_newspaper/content", "expr": "geometry().height"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "layout_generated_figure_count": {
+    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (\"the figure count\"); data/claim_ledger.yaml / figure-count",
+    "claim_text": "halftone \"engraving\" figures and ... charts ... 6 halftone scenes + 4 color ad graphics + 3 charts = 13 (figure-count: 13)",
+    "value": 13,
+    "abs_tolerance": 0,
+    "verifier_function": "src.newspaper.figures.generate_all",
+    "verifier_args": {"output_dir": "<tmp>", "read": "len(returned paths)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}

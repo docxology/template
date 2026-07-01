@@ -3,7 +3,7 @@
 The manuscript abstract / introduction reference values like
 ``{{RESULT_NUM_PAPERS}}`` that must be replaced with the latest run's
 numbers before PDF rendering. This module mirrors the pattern used by
-``projects/template_code_project/scripts/z_generate_manuscript_variables.py``.
+``projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py``.
 """
 
 from __future__ import annotations

@@ -5,8 +5,10 @@
 Exemplar project demonstrating end-to-end use of the
 `infrastructure/search/`, `infrastructure/reference/`, and
 `infrastructure/llm/` modules. Mirrors the structure of
-`projects/template_code_project/` so the pipeline runner discovers and executes
-both projects with the same code.
+`projects/templates/template_code_project/` so the pipeline runner discovers
+and executes both projects with the same code.
+
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`manuscript/AGENTS.md`](manuscript/AGENTS.md), [`src/AGENTS.md`](src/AGENTS.md), [`tests/AGENTS.md`](tests/AGENTS.md), [`scripts/AGENTS.md`](scripts/AGENTS.md) (each with a [`README.md`](README.md) in the same directory).
 

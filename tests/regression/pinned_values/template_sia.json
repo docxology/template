@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "project_name": "template_sia",
+    "populated_on": "2026-07-01",
+    "populated_by": "Marcus Webb (Engineer)",
+    "note": "First real regression pins for the deterministic SIA self-improvement harness in manuscript/03_results.md. This exemplar defaults to fixture replay (sia.live=false): infrastructure.sia.run_sia_loop copies the recorded per-generation fixtures into output/runs/run_1/gen_{n}/ and reads results.json verbatim, so CI never executes generated agent code or calls an external LLM. The pins bind the load-bearing self-improvement claims (Meta -> Target -> Feedback loop over 3 generations: accuracy 0.5000 -> 0.6667 -> 0.8333, delta 0.3333, final accuracy 0.8333 at n=6) directly to a fresh run of the real loop, never by hand-copying a rendered manuscript token."
+  },
+  "_provenance": {
+    "generation_count": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Number of completed SIA generations in the bundled fixture-replay run (Meta -> Target -> Feedback loop, max_generations=3 in manuscript/config.yaml). Backs SIA_GENERATION_COUNT and the row count of the fixture-replay metrics table. Re-derived as len(run_sia_loop(config)) from the real infrastructure loop, not copied from the manuscript.",
+      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'from infrastructure.sia import RunConfig, run_sia_loop; len(run_sia_loop(RunConfig(task_dir=.../tasks/mini_classify, output_dir=<tmp>, run_id=1, max_generations=3, live=False, fixtures_dir=.../src/fixtures/recorded_generations)))'"
+    },
+    "first_generation_accuracy": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Accuracy of the seed (generation 1) target agent under fixture replay, the baseline of the self-refinement signal. Re-derived from artifacts[0].evaluation.metric_value of the real loop; fixture gen_1/results.json records 0.5.",
+      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'run_sia_loop(config)[0].evaluation.metric_value'"
+    },
+    "final_generation_accuracy": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Accuracy of the final (generation 3) target agent under fixture replay. Backs SIA_FINAL_METRIC_VALUE ('Final injected token: accuracy=0.8333') in 03_results.md. Re-derived from artifacts[-1].evaluation.metric_value of the real loop; fixture gen_3/results.json records 0.8333.",
+      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'run_sia_loop(config)[-1].evaluation.metric_value'"
+    },
+    "metric_delta_final_minus_first": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Self-improvement delta = final accuracy - first accuracy = 0.8333 - 0.5 = 0.3333 (float 0.33330000000000004). Backs the SIA_METRIC_DELTA claim 'Metric delta (final - first generation): 0.3333' in 03_results.md. Re-derived by subtracting the real loop's first/last evaluation.metric_value; the manuscript token is format_metric(last-first) -> '0.3333', so the pin is held at the raw float with a 4-decimal-display tolerance.",
+      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'evals=[a.evaluation.metric_value for a in run_sia_loop(config)]; evals[-1]-evals[0]'"
+    },
+    "final_generation_n_samples": {
+      "commit": "691d6ebf",
+      "date": "2026-07-01",
+      "reason": "Sample count backing the final evaluation. Backs SIA_FINAL_N_SAMPLES ('accuracy=0.8333 (n=6)') in 03_results.md and the N column of the fixture-replay metrics table. Re-derived from artifacts[-1].evaluation.n_samples of the real loop; fixture gen_3/results.json records 6.",
+      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'run_sia_loop(config)[-1].evaluation.n_samples'"
+    }
+  },
+  "generation_count": {
+    "manuscript_section": "manuscript/03_results.md / SIA generation metrics (fixture replay) table",
+    "claim_text": "{{SIA_METRICS_TABLE}} ... a three-generation fixture-replay run (Gen 1, 2, 3)",
+    "value": 3,
+    "abs_tolerance": 0,
+    "verifier_function": "infrastructure.sia.run_sia_loop",
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "len(artifacts)"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "first_generation_accuracy": {
+    "manuscript_section": "manuscript/03_results.md / SIA generation metrics (fixture replay) table",
+    "claim_text": "| 1 | accuracy | 0.5000 | 6 | (seed generation baseline of the self-refinement signal)",
+    "value": 0.5,
+    "abs_tolerance": 1e-9,
+    "verifier_function": "infrastructure.sia.run_sia_loop",
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "artifacts[0].evaluation.metric_value"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "final_generation_accuracy": {
+    "manuscript_section": "manuscript/03_results.md / Final injected token",
+    "claim_text": "Final injected token: accuracy=0.8333 (n=6).",
+    "value": 0.8333,
+    "abs_tolerance": 1e-9,
+    "verifier_function": "infrastructure.sia.run_sia_loop",
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "artifacts[-1].evaluation.metric_value"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "metric_delta_final_minus_first": {
+    "manuscript_section": "manuscript/03_results.md / metric delta prose",
+    "claim_text": "Metric delta (final - first generation): 0.3333.",
+    "value": 0.33330000000000004,
+    "abs_tolerance": 5e-05,
+    "verifier_function": "infrastructure.sia.run_sia_loop",
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "expr": "artifacts[-1].evaluation.metric_value - artifacts[0].evaluation.metric_value"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  },
+  "final_generation_n_samples": {
+    "manuscript_section": "manuscript/03_results.md / Final injected token",
+    "claim_text": "Final injected token: accuracy=0.8333 (n=6).",
+    "value": 6,
+    "abs_tolerance": 0,
+    "verifier_function": "infrastructure.sia.run_sia_loop",
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "artifacts[-1].evaluation.n_samples"},
+    "pinned_on": "2026-07-01",
+    "pinned_by": "Marcus Webb (Engineer)",
+    "pinned_at_commit": "691d6ebf"
+  }
+}
