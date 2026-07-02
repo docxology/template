@@ -1,0 +1,36 @@
+claims:
+  - claim_id: deep-search-keywords
+    kind: number
+    value: 5
+    source: projects/templates/template_search_project/manuscript/config.yaml deep_search keywords default count
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/deep_search_results.json
+  - claim_id: max-results-per-keyword
+    kind: number
+    value: 100
+    source: projects/templates/template_search_project/src/deep_search.py max_results_per_keyword default
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/search_results.json
+  - claim_id: default-year-min
+    kind: number
+    value: 2020
+    source: projects/templates/template_search_project/manuscript/config.yaml search year_min default
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/search_results.json
+  - claim_id: corpus-paper-count
+    kind: number
+    value: 250
+    source: projects/templates/template_search_project/data/corpus.json fixture paper count
+    source_tier: fixture
+    freshness: active
+    artifact_path: data/corpus.json
+  - claim_id: llm-synthesis-enabled
+    kind: boolean
+    value: true
+    source: projects/templates/template_search_project/manuscript/config.yaml llm block
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/review/synthesis_report.md

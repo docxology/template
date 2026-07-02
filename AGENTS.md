@@ -79,7 +79,7 @@ Every path under `projects/` other than `templates/` — especially the local-on
 
 Operational gotchas: running **all** `projects/*/tests/` in **one** pytest process fails when projects each ship `tests/conftest` under the `tests.conftest` package name — run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage), or follow `.github/workflows/ci.yml`. `resolve_project_root` accepts a qualified `<subfolder>/<name>` path (e.g. `templates/template_code_project`, `active/demo`) and resolves it directly under `projects/`. For a bare name it prefers `projects/active/<name>/` (the hot seat) when that tree has project markers, then `projects/working/<name>/`, then a flat standalone `projects/<name>/`, falling back to `projects/active/<name>/` for error messages.
 
-**Agent skills hub:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) (`template-workflows`); regenerate via `uv run python -m infrastructure.skills write`.
+**Agent skills hub:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) (`template-workflows`); regenerate via `uv run python -m infrastructure.skills write`. Each canonical exemplar under `projects/templates/` also ships its own `.agents/skills/<name>/SKILL.md` discoverable by Hermes and agentskills.io runtimes.
 
 ## 📋 Table of Contents
 

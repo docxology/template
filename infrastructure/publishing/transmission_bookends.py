@@ -309,8 +309,13 @@ def build_transmission_context(
     repo_root: Path | None = None,
 ) -> TransmissionContext | None:
     """Build bookend context when the feature is enabled."""
-    config_path = project_root / "manuscript" / "config.yaml"
-    if not config_path.is_file():
+    _config_candidates = [
+        project_root / "manuscript" / "config.yaml",
+        project_root / "output" / "manuscript" / "config.yaml",
+        project_root / "docs" / "manuscript" / "config.yaml",
+    ]
+    config_path = next((p for p in _config_candidates if p.is_file()), None)
+    if config_path is None:
         return None
 
     raw_config = _load_raw_config(config_path)

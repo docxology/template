@@ -108,7 +108,40 @@ index, not a hard-coded file count, which drifts). Top-level layout:
 ## 🤖 Agentic operation and SKILLS
 
 Agents should load the smallest applicable workflow before editing. The routing
-surface is first-class and generated from live `SKILL.md` discovery:
+surface is first-class and available via two skill discovery channels:
+
+### Hermes / agentskills.io project-local skills
+
+Every canonical exemplar under `projects/templates/` now ships its own
+`.agents/skills/<name>/SKILL.md` with YAML frontmatter discoverable by
+Hermes and agentskills.io runtimes. Each skill captures **when to use**,
+**quick reference** (pytest / analysis / render commands), **pitfalls**,
+and **cross-refs** for that template. Load the skill by its name
+(e.g. `template-code-project`, `template-active-inference`) when working
+inside that exemplar.
+
+| Skill | Template | When to load |
+| --- | --- | --- |
+| `template-code-project` | `template_code_project` | Code-driven computational research |
+| `template-active-inference` | `template_active_inference` | Multi-track Active Inference |
+| `template-autoresearch-project` | `template_autoresearch_project` | Bounded AutoResearch loop |
+| `template-autoscientists` | `template_autoscientists` | Agent-team coordination testbed |
+| `template-template` | `template_template` | Self-referential meta-template |
+| `template-newspaper` | `template_newspaper` | Data-driven print layout |
+| `template-textbook` | `template_textbook` | Book-length manuscript scaffold |
+| `template-prose-project` | `template_prose_project` | Editorial prose review |
+| `template-madlib` | `template_madlib` | Token-injection manuscript generation |
+| `template-gold-refinement` | `template_gold_refinement` | Metallurgical composition analogy |
+| `template-literature-meta-analysis` | `template_literature_meta_analysis` | Literature meta-analysis |
+| `template-methods-paper` | `template_methods_paper` | Methods DSL specification |
+| `template-eda-notebook` | `template_eda_notebook` | EDA notebook extraction |
+| `template-search-project` | `template_search_project` | Literature search pipeline |
+| `template-sia` | `template_sia` | SIA harness evaluation |
+
+### Generated infrastructure skills
+
+In addition to the project-local skills, the repo generates infrastructure-level
+SKILL.md files from live discovery:
 
 - **Workflow router:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md)
   (`template-workflows`) routes broad requests such as full audits, pipeline

@@ -1,0 +1,50 @@
+claims:
+  - claim_id: chapter-count
+    kind: number
+    value: 12
+    source: projects/templates/template_textbook/manuscript/config.yaml declared chapter count
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: part-count
+    kind: number
+    value: 3
+    source: projects/templates/template_textbook/manuscript/config.yaml declared part count
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: citation-key-count
+    kind: number
+    value: 10
+    source: projects/templates/template_textbook/src/textbook/constants.py CITATION_KEYS whitelist
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/references.bib
+  - claim_id: glossary-anchor-count
+    kind: number
+    value: 15
+    source: projects/templates/template_textbook/src/textbook/constants.py GLOSSARY_ANCHORS
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/glossary.md
+  - claim_id: stub-marker-types
+    kind: number
+    value: 3
+    source: projects/templates/template_textbook/src/textbook/constants.py STUB_MARKERS count
+    source_tier: project_source
+    freshness: active
+    artifact_path: tests/test_manuscript_integrity.py
+  - claim_id: required-section-headings
+    kind: number
+    value: 9
+    source: projects/templates/template_textbook/src/textbook/constants.py REQUIRED_SECTION_HEADINGS
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/textbook/constants.py
+  - claim_id: model-function-count
+    kind: number
+    value: 7
+    source: projects/templates/template_textbook/src/textbook/models.py worked formalism count
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/textbook/models.py

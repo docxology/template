@@ -1,0 +1,36 @@
+claims:
+  - claim_id: infrastructure-module-count
+    kind: number
+    value: 25
+    source: projects/templates/template_template/src/template_template/introspection.py discover_infrastructure_modules live count
+    source_tier: generated_metric
+    freshness: regenerated
+    artifact_path: output/data/manifest.json
+  - claim_id: public-exemplar-count
+    kind: number
+    value: 15
+    source: projects/templates/template_template/src/template_template/introspection.py discover_projects count
+    source_tier: generated_metric
+    freshness: regenerated
+    artifact_path: output/data/manuscript_variables.json
+  - claim_id: pipeline-stage-count
+    kind: number
+    value: 12
+    source: infrastructure/core/pipeline/pipeline.yaml declared stage count
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/manifest.json
+  - claim_id: security-layer-modules
+    kind: number
+    value: 8
+    source: projects/templates/template_template/src/template_template/introspection.py security module scan
+    source_tier: generated_metric
+    freshness: regenerated
+    artifact_path: output/data/manifest.json
+  - claim_id: figure-module-count
+    kind: number
+    value: 4
+    source: projects/templates/template_template/src/template_template/architecture_viz.py figure module count
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/figures/figure_registry.json

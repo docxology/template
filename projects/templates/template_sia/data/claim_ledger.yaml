@@ -1,0 +1,36 @@
+claims:
+  - claim_id: max-generations
+    kind: number
+    value: 3
+    source: projects/templates/template_sia/manuscript/config.yaml sia.max_generations default
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/sia_loop_result.json
+  - claim_id: public-train-split
+    kind: number
+    value: 0.7
+    source: projects/templates/template_sia/tasks/mini_classify/public/ public train fraction
+    source_tier: project_source
+    freshness: active
+    artifact_path: tasks/mini_classify/public/data.csv
+  - claim_id: fixture-replay-gens
+    kind: number
+    value: 3
+    source: projects/templates/template_sia/src/fixtures/recorded_generations/ fixture generation count
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/data/sia_loop_result.json
+  - claim_id: task-classes
+    kind: number
+    value: 2
+    source: projects/templates/template_sia/tasks/mini_classify/ task binary classification
+    source_tier: project_source
+    freshness: active
+    artifact_path: tasks/mini_classify/public/data.csv
+  - claim_id: target-agent-exit-zero
+    kind: boolean
+    value: true
+    source: projects/templates/template_sia/tasks/mini_classify/reference/reference_target_agent.py expected exit
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/sia_loop_result.json
