@@ -2,7 +2,7 @@
 
 Generated from live `SKILL.md` discovery.
 
-Default discovery roots: `infrastructure/`, `projects/`, `docs/prompts/`, `.cursor/skills/`.
+Default discovery roots: `infrastructure/`, `projects/templates/`, `docs/prompts/`, `.cursor/skills/`.
 Project-level skills are opt-in: they are discovered only when a project ships a `SKILL.md` under those roots.
 
 | Skill | Path | Description |

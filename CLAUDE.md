@@ -21,7 +21,7 @@ This is a research project template with a test-driven development workflow, aut
 | Task | Command |
 | --- | --- |
 | Interactive menu | `./run.sh` |
-| Reproducible run matrix (project × stage; preferred over the menu for repeatable subset runs) | `uv run python scripts/run_matrix.py` (reads `run.config`; `--dry-run` to preview, `--fail-fast` to stop on first failure; see [`run.config.example.yaml`](run.config.example.yaml)) |
+| Reproducible run matrix (project × stage; preferred over the menu for repeatable subset runs) | `cp run.config.example.yaml run.config` first (the CLI errors without one), then `uv run python scripts/run_matrix.py` (reads `run.config`; `--dry-run` to preview, `--fail-fast` to stop on first failure; see [`run.config.example.yaml`](run.config.example.yaml)) |
 | Secure workflow via main shell (`secure` subcommand) | `./run.sh --secure-run` |
 | Full pipeline | `./run.sh --pipeline` |
 | Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |
@@ -43,7 +43,7 @@ This is a research project template with a test-driven development workflow, aut
 | Archive publication real deposit | `uv run python scripts/09_archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
 | Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
 | Reproduction bundle (single / all public exemplars) | `uv run python scripts/10_repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
-| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (scaffold-only until populated — exits 5 with 0 collected tests on a clean checkout; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
+| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (populated across all 15 public exemplars — 55 tests collect and pass together; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
@@ -645,7 +645,7 @@ uv run python scripts/03_render_pdf.py --project {name}
 - **docs/core/architecture.md** - Detailed architecture guide
 - **docs/core/workflow.md** - Development workflow details
 - **docs/core/how-to-use.md** - Usage guide (12 skill levels)
-- **docs/documentation-index.md** - Documentation inventory (authoritative file list)
+- **docs/documentation-index.md** - Curated documentation map (by category; not an exhaustive listing of every tracked file)
 
 ## Important Notes
 

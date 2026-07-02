@@ -128,13 +128,17 @@ class TestManifestRoundTrip:
 
 
 class TestTemplateRepository:
-    def test_default_roots_includes_infrastructure_and_projects(self) -> None:
+    def test_default_roots_scope_projects_to_public_templates(self) -> None:
+        # Must scan projects/templates/ (the tracked public exemplars) and NOT
+        # bare "projects", which would recurse into untracked local-only sibling
+        # projects and leak their SKILL.md names into the tracked manifest/index.
         assert DEFAULT_SKILL_SEARCH_ROOTS == (
             "infrastructure",
-            "projects",
+            "projects/templates",
             "docs/prompts",
             ".cursor/skills",
         )
+        assert "projects" not in DEFAULT_SKILL_SEARCH_ROOTS
 
     def test_template_workflow_skills_present(self) -> None:
         root = _template_repo_root()

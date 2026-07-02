@@ -18,6 +18,7 @@ All inputs are real files written to `tmp_path` — no mocks.
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -827,6 +828,35 @@ def test_docs_hardcoded_counts_flags_readme_literal(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_docs_hardcoded_counts(tmp_path, rep)
     assert any(f.rule == "repo_docs_hardcoded_test_count" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_ignores_untracked_dirs_in_git_repo(drift_module, tmp_path):
+    """In a real git repo, an untracked sibling dir must not redden the gate.
+
+    Restores local↔CI parity: CI runs against a fresh clone that never contains
+    local-only sibling projects, so a maintainer's `--strict` run must ignore
+    them too. No mocks — a real git repo with a tracked-clean + untracked-dirty
+    pair proves the tracked-set intersection.
+    """
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    tracked = tmp_path / "README.md"
+    tracked.write_text("This template links to COUNTS.md for live numbers.\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True)
+
+    untracked = tmp_path / "projects" / "codomyrmex_local"
+    untracked.mkdir(parents=True)
+    (untracked / "AGENTS.md").write_text("Coverage sits at 40% coverage right now.\n", encoding="utf-8")
+
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert not any("codomyrmex_local" in f.message for f in rep.findings)
+
+    # Regression guard: a tracked doc with a hardcoded count is still caught.
+    tracked.write_text("Coverage sits at 40% coverage right now.\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True)
+    rep2 = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep2)
+    assert any(f.rule == "repo_docs_hardcoded_coverage_pct" for f in rep2.findings)
 
 
 def test_project_src_boundary_errors_on_standalone_infra_import(drift_module, tmp_path):

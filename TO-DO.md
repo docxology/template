@@ -38,15 +38,17 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
-- **REGRESSION-PIN-2 — regression tier expanded to 10 exemplars (2026-07-01, [Unreleased]):**
+- **REGRESSION-PIN-2 — regression tier expanded to all 15 exemplars (2026-07-01, [Unreleased]):**
   populated real, source-re-derived regression pins (following the
-  `REGRESSION-PIN-1` `template_code_project` contract) for
-  `template_prose_project` (was a 9-line stub), `template_autoscientists`,
-  `template_autoresearch_project`, `template_eda_notebook`,
-  `template_gold_refinement`, `template_literature_meta_analysis`,
-  `template_sia`, `template_template`, and `template_methods_paper` — 36 tests
-  collect and pass together (`uv run pytest tests/regression/`, verified from
-  the main checkout, not just per-project). Along the way, found and fixed a
+  `REGRESSION-PIN-1` `template_code_project` contract) for every public
+  exemplar — `template_prose_project` (was a 9-line stub),
+  `template_autoscientists`, `template_autoresearch_project`,
+  `template_eda_notebook`, `template_gold_refinement`,
+  `template_literature_meta_analysis`, `template_sia`, `template_template`,
+  `template_methods_paper`, `template_active_inference`, `template_madlib`,
+  `template_newspaper`, `template_search_project`, and `template_textbook` — 55
+  tests collect and pass together (`uv run pytest tests/regression/`, verified
+  from the main checkout, not just per-project). Along the way, found and fixed a
   real cross-project collision: every exemplar ships a top-level `src`
   package, so the original bare `sys.path.insert` + `from src.x import y`
   pattern let whichever test module collected first win `sys.modules['src']`,
@@ -57,9 +59,9 @@ Keep this section short. Details live in release notes or archived audits.
   module names collide (`template_literature_meta_analysis`'s `analysis`
   package vs. `template_code_project`'s), and a `@pytest.mark.timeout(30)`
   override for `template_template`'s slow whole-repo-introspection test (see
-  `docs/maintenance/regression-testing.md` for all three patterns). Remaining
-  unpinned: `template_active_inference`, `template_madlib`,
-  `template_newspaper`, `template_search_project`, `template_textbook`.
+  `docs/maintenance/regression-testing.md` for all three patterns). All 15
+  public exemplars are now pinned; the tier is not yet wired into a CI job or
+  pre-push hook (see [`docs/maintenance/review-remediation-2026-07.md`](docs/maintenance/review-remediation-2026-07.md), item R1).
 - **Modularity + exemplar deepening (2026-06-28, [Unreleased]):** split the
   oversized `template_gold_refinement/src/figures.py` (1280 lines) into a
   `figures/` subpackage (`_common`, `graphs`, `charts`, `diagrams`, `registry`
@@ -210,6 +212,20 @@ Keep this section short. Details live in release notes or archived audits.
 ---
 
 ## Active backlog
+
+### REVIEW-2026-07-02 — Multi-lens review remediation backlog
+
+- **Source:** a 9-dimension adversarial review at HEAD `890abb6a` (43 findings
+  confirmed against HEAD, 3 refuted). The safe, bounded fixes shipped the same
+  session (two CI-breaking CRITICALs cleared — 4 missing `data/README.md` +
+  stale `exemplar_roster.md` — plus health-CLI, drift-gate-scoping, upload-script,
+  CITATION.cff, and doc-drift fixes; `./run.sh` health went FAIL → PASS 11/11).
+- **Open items (R1–R18)** with per-item acceptance lines live in
+  [`docs/maintenance/review-remediation-2026-07.md`](docs/maintenance/review-remediation-2026-07.md).
+  Highest leverage: **R1** (wire the 15-exemplar / 55-test regression tier into
+  CI — it is currently unenforced), **R2** (scope skills discovery to tracked
+  paths, mirroring the drift-gate fix already shipped), **R7** (operations
+  catalog / MCP miss single-file CLIs).
 
 ### AI-GATE-PERF-2 — Reduce active-inference gate runtime after correctness
 

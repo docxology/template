@@ -96,6 +96,8 @@ Operational gotchas: running **all** `projects/*/tests/` in **one** pytest proce
 9. [Troubleshooting](#troubleshooting)
 10. [Maintenance](#maintenance)
 
+<a id="core-architecture"></a>
+
 ## 🏗️ Core Architecture
 
 ### Two-Layer Architecture
@@ -372,6 +374,8 @@ flowchart TB
 - Root `src/` no longer exists (was empty shells)
 - All code is in `infrastructure/` (generic) or `projects/{name}/src/` (project-specific)
 - This separation enables reusability across projects
+
+<a id="configuration-system"></a>
 
 ## ⚙️ Configuration System
 

@@ -138,7 +138,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     public_targets = _public_source_targets(repo_root)
 
     return [
-        ("mypy", ["uv", "run", "mypy", *public_targets]),
+        ("mypy", ["uv", "run", "python", "-m", "mypy", *public_targets]),
         (
             "ruff",
             ["uvx", "ruff", "check", *public_targets],
@@ -498,6 +498,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not args.quiet and not args.json_output:
         color = _supports_color(sys.stdout) and not args.no_color
         print(format_report_table(report, color=color))
+        # Surface captured diagnostics for every failing gate, so a FAIL row is
+        # actionable instead of an opaque "FAIL 0.03s" (a gate that fails to
+        # spawn, times out, or reports real errors all print their tail here).
+        for result in report.results:
+            if not result.passed and result.output:
+                print(f"\n── {result.name} ──\n{result.output}", file=sys.stderr)
 
     return 0 if report.passed else 1
 

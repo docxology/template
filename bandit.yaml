@@ -9,6 +9,7 @@ exclude_dirs:
   # to the exemplar security floor. Keep in sync with
   # infrastructure.project.discovery.NON_RENDERED_SUBDIRS.
   - "projects/working"
+  - "projects/ongoing"
   - "projects/published"
   - "projects/archive"
   - "projects/other"
@@ -85,10 +86,11 @@ skips:
 
   # B603 — subprocess_without_shell_equals_true.
   # Same systemic justification as B404. Every call site passes a fixed
-  # argv list (`shell=False`); no user-controlled string is concatenated
-  # into a command. Inputs that vary across runs (project names, file
-  # paths) are validated by `infrastructure.core.security` before being
-  # placed into argv lists.
+  # argv list with the default `shell=False`; no user-controlled string is
+  # concatenated into a command. The one run-varying token — a project slug
+  # — is path-traversal-validated by
+  # `infrastructure.orchestration.discovery.validate_project_slug` before it
+  # reaches any argv list.
   - B603
 
   # B607 — start_process_with_partial_path.

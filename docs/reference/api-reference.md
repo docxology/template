@@ -2916,7 +2916,7 @@ DEFAULT_OPERATION_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure',)
 *constant — defined in `infrastructure.skills.discovery`*
 
 ```python
-DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects', 'docs/prompts', '.cursor/skills')
+DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects/templates', 'docs/prompts', '.cursor/skills')
 ```
 
 ### `discover_operations`

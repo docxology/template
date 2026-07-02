@@ -335,6 +335,45 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Job — Regression tier (claim-binding pins across all public exemplars)
+# ─────────────────────────────────────────────────────────────────────────────
+  test-regression:
+    name: "Regression Tier (claim-binding pins)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [verify-no-mocks]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group rendering --group monitoring
+
+      # The claim-binding regression tier re-derives every pinned manuscript
+      # number from source and fails if a value drifts. Run serial (no -n auto):
+      # exemplars ship colliding top-level ``src`` packages resolved via
+      # per-project aliases + temporary sys.meta_path finders whose isolation is
+      # collection-order-sensitive (see docs/maintenance/regression-testing.md).
+      # exit 5 (no tests collected on a clean scaffold) is tolerated so a future
+      # empty tier does not hard-fail the build; any real failure (exit 1) does.
+      - name: Run claim-binding regression tier
+        run: |
+          set +e
+          uv run pytest tests/regression/ -q --no-cov --timeout=120
+          code=$?
+          set -e
+          if [ "$code" -eq 5 ]; then
+            echo "::notice::regression tier collected 0 tests (clean scaffold) — tolerated"
+            exit 0
+          fi
+          exit "$code"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (one parallel job per public exemplar)
 # ─────────────────────────────────────────────────────────────────────────────
   test-project:
@@ -631,6 +670,19 @@ jobs:
       - name: Code security scan (Bandit MEDIUM+ severity)
         run: >-
           uv run bandit -c bandit.yaml -r -ll
+          infrastructure/
+          scripts/
+          projects/
+
+      # Targeted shell-injection sweep at LOW severity: the MEDIUM+ gate above
+      # rates a constant-string ``shell=True`` (B602/B604/B605/B609) as LOW and
+      # so lets it pass. This always-on pass closes that gap across all three
+      # trees; keep it green by never introducing ``shell=True`` / partial-path
+      # ``os.system`` calls (use list-form argv with ``shell=False``).
+      - name: Shell-injection sweep (Bandit B602/B604/B605/B609, LOW+)
+        run: >-
+          uv run bandit -c bandit.yaml -r
+          -t B602,B604,B605,B609 --severity-level low
           infrastructure/
           scripts/
           projects/

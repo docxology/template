@@ -57,23 +57,13 @@ TARGETS = UploadTargets(
 
 
 def _load_dotenv() -> None:
-    try:
-        from infrastructure.core.config.dotenv import ensure_dotenv_loaded
+    # Thin wrapper over the canonical loader (python-dotenv when available, else
+    # a minimal non-overriding parser). The previous inline parser guarded a
+    # dead `infrastructure.core.config.dotenv` import behind a silent
+    # `except Exception` swallow, so it never used the real helper.
+    from infrastructure.core.credentials import ensure_dotenv_loaded
 
-        ensure_dotenv_loaded()
-        return
-    except Exception as exc:
-        del exc
-    env = REPO / ".env"
-    if not env.exists():
-        return
-    import os
-
-    for line in env.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, _, value = line.partition("=")
-            os.environ.setdefault(key.strip(), value.strip())
+    ensure_dotenv_loaded(REPO / ".env")
 
 
 def main() -> int:

@@ -54,26 +54,18 @@ from infrastructure.publishing.upload_runner import (  # noqa: E402
 
 
 def _load_dotenv() -> None:
-    try:
-        from infrastructure.core.config.dotenv import ensure_dotenv_loaded
+    # Thin wrapper over the canonical loader (python-dotenv when available, else
+    # a minimal non-overriding parser). The previous inline parser guarded a
+    # dead `infrastructure.core.config.dotenv` import behind a silent
+    # `except Exception` swallow, so it never used the real helper.
+    from infrastructure.core.credentials import ensure_dotenv_loaded
 
-        ensure_dotenv_loaded()
-        return
-    except Exception as exc:
-        del exc
-    env = REPO / ".env"
-    if not env.exists():
-        return
-    import os
-
-    for line in env.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, _, value = line.partition("=")
-            os.environ.setdefault(key.strip(), value.strip())
+    ensure_dotenv_loaded(REPO / ".env")
 
 
 def _resolve_targets(name: str) -> UploadTargets:
+    import os
+
     project_root = REPO / "projects" / "templates" / name
     status = compile_publishing_status(project_root)
     github_repo = status.github_repo or f"docxology/{name}"
@@ -85,6 +77,9 @@ def _resolve_targets(name: str) -> UploadTargets:
         github_repo=github_repo,
         osf_title=status.title or name,
         site_id=name.replace("_", "-"),
+        # Reuse an existing OSF node when the caller exports OSF_NODE_ID, so a
+        # re-run updates that node instead of creating a duplicate.
+        osf_node_id=os.environ.get("OSF_NODE_ID") or None,
     )
 
 

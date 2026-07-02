@@ -94,7 +94,7 @@
       "qualified_name": "templates/template_search_project",
       "title": "template_search_project",
       "use_when": "Use this template for **literature-review and evidence-synthesis pipelines**: multi-backend search (arXiv, Crossref, local corpora, optional Paperclip), deduplication, BibTeX generation, and LLM-assisted per-paper and corpus-level synthesis.",
-      "test_file_count": 19,
+      "test_file_count": 24,
       "coverage_floor": 90
     },
     {

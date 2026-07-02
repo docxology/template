@@ -5,6 +5,7 @@ authors:
   orcid: 0000-0001-6232-9096
 cff-version: 1.2.0
 date-released: "2026-06-30"
+doi: 10.5281/zenodo.21086548
 keywords:
 - methods paper
 - domain-specific language

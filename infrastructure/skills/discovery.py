@@ -15,7 +15,13 @@ from infrastructure.validation.docs.scan_scope import (
 # Roots (relative to repository root) searched recursively for **/SKILL.md
 DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     "infrastructure",
-    "projects",  # Covers all projects (only permanent exemplars have src/ dirs)
+    # Only the tracked public exemplars under projects/templates/ — NOT bare
+    # "projects", which would recurse into untracked, local-only sibling
+    # projects (private WIP, rotating research) and bake their SKILL.md names
+    # into the tracked manifest / skills index / MCP list_skills. The
+    # confidentiality invariant guarantees every tracked project skill lives
+    # under projects/templates/, so this scope loses nothing on a clean clone.
+    "projects/templates",
     "docs/prompts",
     ".cursor/skills",
 )

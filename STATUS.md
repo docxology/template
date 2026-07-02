@@ -4,7 +4,7 @@
 >
 > Refresh target: every 6 months. Anything older than **365 days** should be treated as potentially dormant.
 
-**Last updated:** 2026-07-01
+**Last updated:** 2026-07-02
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))
 
 ## Verification ledger
@@ -12,7 +12,7 @@
 | Subsystem | Last verified | Verified by | Verification scope | Health |
 | --- | --- | --- | --- | --- |
 | Pipeline orchestration (`infrastructure/orchestration/`) | 2026-05-21 | Daniel | `./run.sh --pipeline --project template_code_project --core-only --skip-infra` and `./run.sh --pipeline --project template_prose_project --core-only --skip-infra` run to completion; both named exemplars green | 🟢 healthy |
-| Test runner (`scripts/01_run_tests.py`, `tests/infra_tests/`) | 2026-05-20 | Daniel | 60% infra coverage floor + 90% per-project floor + 75% combined union floor all enforced; mypy --strict passes per memory (2026-05-20) | 🟢 healthy |
+| Test runner (`scripts/01_run_tests.py`, `tests/infra_tests/`) | 2026-07-02 | Daniel (agent session) | 60% infra coverage floor + 90% per-project floor + 75% combined union floor all enforced. mypy runs clean on the CI public-scope paths under the repo config (NOT `--strict`: `disallow_untyped_defs=false` globally and 8 `infrastructure.*` packages carry `ignore_errors` overrides in `pyproject.toml` — `mypy --strict infrastructure` currently reports 5 errors, tracked in [`docs/maintenance/review-remediation-2026-07.md`](docs/maintenance/review-remediation-2026-07.md)) | 🟢 healthy (CI-config typing; strict typing is a tracked backlog item) |
 | PDF rendering (`infrastructure/rendering/`) | 2026-05-21 | Daniel | Stage 5 rendered combined PDF/HTML/DOCX/slides for `template_code_project` and `template_prose_project`; `template_code_project` also rendered EPUB | 🟢 healthy |
 | Output validation (`infrastructure/validation/`) | 2026-05-21 | Daniel | Stage 6 validation passed 7/7 checks for `template_code_project` and `template_prose_project` after full core renders | 🟢 healthy |
 | LLM stages (`infrastructure/llm/`, Stages 7+8) | 2026-07-01 | Daniel (agent session) | Model pin `gemma3:4b` re-verified pullable/available (`ollama pull gemma3:4b` succeeded, 3.3GB); live `pytest tests/infra_tests/llm/ -m requires_ollama` — 50/51 passed (1 failure was a 20s timeout on `smollm2:latest` under local load, an environmental flake unrelated to the `gemma3:4b` pin, not a gate defect); "draft assistance" framing from 2026-05-20 confirmed still accurate in `infrastructure/llm/README.md` | 🟢 healthy |
@@ -24,7 +24,7 @@
 | CI matrix (`.github/workflows/ci.yml`) | 2026-05-20 | Daniel | Ubuntu/macOS × Python 3.10–3.12, Dependabot wired; local reproduction documented in `docs/maintenance/ci-local.md` | 🟢 healthy; Python 3.10 EOL Oct 2026 → drop next refresh |
 | Documentation index (`docs/documentation-index.md`) | 2026-05-20 | Daniel | Authoritative per-file index; `docs/_generated/active_projects.md` is the rotating-project source-of-truth | 🟢 healthy |
 | Skills manifest (`infrastructure/skills/`) | 2026-05-21 | Daniel | `uv run python -m infrastructure.skills write` and `write-index` refreshed `.cursor/skill_manifest.json` and `docs/_generated/skills_index.md` after steganography skill edits | 🟢 healthy |
-| Regression tests (`tests/regression/`) | 2026-06-13 | Codex | First populated slice: `uv run pytest tests/regression/ --collect-only -q --no-cov` collects 3 `template_code_project` claim tests; `uv run pytest tests/regression/ -q --no-cov` passes, including a pinned-value mutation negative control. See `docs/maintenance/regression-testing.md` | 🟡 first pins live; expand beyond canonical optimizer claims |
+| Regression tests (`tests/regression/`) | 2026-07-02 | Daniel (agent session) | All fifteen public exemplars carry source-re-derived regression pins under `tests/regression/projects/` with matching pinned-value JSONs and per-project negative controls: `uv run pytest tests/regression/ --collect-only -q --no-cov` collects 55 tests, `uv run pytest tests/regression/ -q --no-cov` passes together. Not yet wired into a CI job (tracked in [`docs/maintenance/review-remediation-2026-07.md`](docs/maintenance/review-remediation-2026-07.md)). See `docs/maintenance/regression-testing.md` | 🟡 all 15 exemplars pinned locally; CI wiring pending |
 | AutoResearch exemplar (`projects/templates/template_autoresearch_project/`) | 2026-06-13 | Codex | `uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks | 🟢 healthy |
 
 ## Health legend

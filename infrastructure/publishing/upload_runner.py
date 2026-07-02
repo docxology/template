@@ -32,6 +32,9 @@ class UploadTargets:
     github_repo: str
     osf_title: str
     site_id: str = "project-site"
+    # When set, OSF deposits reuse this existing node instead of creating a new
+    # one on every ``--commit`` run (idempotency). Left None → create-new.
+    osf_node_id: str | None = None
 
 
 def upload_pinata(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
@@ -52,7 +55,7 @@ def upload_huggingface(targets: UploadTargets, commit: bool, env: Mapping[str, s
 def upload_osf(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
     from infrastructure.publishing.osf import OSFAdapter, OSFConfig
 
-    adapter = OSFAdapter(OSFConfig(title=targets.osf_title))
+    adapter = OSFAdapter(OSFConfig(title=targets.osf_title, node_id=targets.osf_node_id))
     receipt = adapter.publish(targets.pdf, dry_run=not commit)
     return {"status": receipt.status, "node_id": receipt.node_id, "url": receipt.url, "error": receipt.error}
 

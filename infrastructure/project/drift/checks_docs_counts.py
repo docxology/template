@@ -3,9 +3,33 @@
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 from infrastructure.project.drift.models import Report
+
+
+def _tracked_paths(repo_root: Path) -> set[Path] | None:
+    """Resolved paths of every git-tracked file, or ``None`` if git is unavailable.
+
+    Filesystem-walking checks intersect their candidates with this set so that
+    untracked, git-ignored sibling directories (local-only projects, nested
+    worktree checkouts) cannot redden the gate on a maintainer's machine while
+    passing on CI, which runs against a fresh clone that never contains them.
+    Returning ``None`` (no ``.git``, git binary missing, exported tarball) keeps
+    the previous name-based skip behavior so the check still runs offline.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return {(repo_root / rel).resolve() for rel in proc.stdout.decode("utf-8").split("\0") if rel}
+
 
 SHARED_TEMPLATE_DESIGN_REQUIRED_SECTIONS: tuple[str, ...] = (
     "## 1. Atmosphere & Identity",
@@ -84,19 +108,25 @@ def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
         ".git",
     }
     scanned: set[Path] = set()
+    tracked = _tracked_paths(repo_root)
+
+    def _include(md: Path) -> bool:
+        if any(part in skip_dir_names for part in md.parts):
+            return False
+        # When git is available, only scan tracked files so untracked local-only
+        # dirs (e.g. a sibling private project) cannot redden the gate off-CI.
+        return tracked is None or md.resolve() in tracked
 
     docs_dir = repo_root / "docs"
     if docs_dir.is_dir():
         for md in docs_dir.rglob("*.md"):
-            if any(part in skip_dir_names for part in md.parts):
-                continue
-            scanned.add(md.resolve())
+            if _include(md):
+                scanned.add(md.resolve())
 
     for name in ("README.md", "AGENTS.md"):
         for md in repo_root.rglob(name):
-            if any(part in skip_dir_names for part in md.parts):
-                continue
-            scanned.add(md.resolve())
+            if _include(md):
+                scanned.add(md.resolve())
 
     for md in sorted(scanned):
         text = _strip_code_fences(_read(md))

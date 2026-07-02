@@ -11,6 +11,38 @@ not to the contents of any specific workspace.
 
 ### Fixed
 
+- 🩺 **Multi-lens review remediation (2026-07-02)** — a 9-dimension adversarial
+  review (43 findings confirmed against HEAD) drove a batch of fixes; the
+  unified health gate went from FAIL to **PASS (11/11)**. CI-breaking on clean
+  `main`: added the four missing `projects/templates/{template_autoscientists,
+  template_sia,template_template,template_textbook}/data/README.md` doc-pair
+  files (docs-lint was red) and regenerated the stale
+  `docs/_generated/exemplar_roster.md` (+ `template_manifest.json`). Health CLI:
+  the mypy gate now shells `python -m mypy` (the bare console-script broke on a
+  relocated venv, yielding a spurious 0.03s FAIL) and `main()` now prints each
+  failing gate's captured output to stderr instead of an opaque `FAIL`. Drift
+  gate `check_docs_hardcoded_counts` now intersects its filesystem walk with
+  `git ls-files`, so untracked local-only sibling projects no longer redden
+  `--strict` off-CI (with a real-git no-mocks test). Added the two missing
+  `CITATION.cff` concept DOIs (`template_eda_notebook`, `template_methods_paper`;
+  `publication_records.md` regenerated in-sync). Both `scripts/publish/upload_*.py`
+  `_load_dotenv` helpers dropped a dead `infrastructure.core.config.dotenv`
+  import that was masked by a silent `except Exception` swallow, delegating to
+  the real `infrastructure.core.credentials.ensure_dotenv_loaded`. Doc-drift
+  corrections across `CLAUDE.md`/`STATUS.md`/`TO-DO.md`/`getting-started.md`
+  (regression tier is 15 exemplars/55 tests; dropped the unbacked `mypy --strict
+  passes` claim; `run_matrix` needs `run.config` first; softened the
+  "authoritative file list" overclaim; aligned the two entry docs on a core-only
+  first run). Corrected the bandit B603 justification to name the real control
+  (`shell=False` + `validate_project_slug`) and added `projects/ongoing` to
+  bandit `exclude_dirs` to honor the documented `NON_RENDERED_SUBDIRS` sync.
+  Pinned the `uv` bootstrap installer to an overridable version instead of the
+  floating remote URL. Scoped `infrastructure.skills` discovery to
+  `projects/templates` so `infrastructure.skills check` no longer scans
+  untracked sibling projects. Fixed the two emoji AGENTS.md headings the README
+  deep-links (explicit `<a id>` anchors) so the links resolve on GitHub. Full
+  remediation backlog: `docs/maintenance/review-remediation-2026-07.md`.
+
 - 🧭 **Root signposting drift** — reconciled the two disagreeing root
   `AGENTS.md` structure mermaids (one omitted `docs/`, the other `output/`);
   linked the previously-orphaned `TO-DO.md`/`CHANGELOG.md` into `AGENTS.md`'s
@@ -48,14 +80,32 @@ not to the contents of any specific workspace.
 
 ### Added
 
-- 🧪 **`REGRESSION-PIN-2` — regression tier expanded to 10 public exemplars** —
-  real, source-re-derived regression pins (no shape tests, no mocks) for
-  `template_prose_project` (previously a 9-line stub), `template_autoscientists`,
-  `template_autoresearch_project`, `template_eda_notebook`,
-  `template_gold_refinement`, `template_literature_meta_analysis`,
-  `template_sia`, `template_template`, and `template_methods_paper`, alongside
-  the existing `template_code_project` pins. 36 tests collect and pass
-  together from a single `uv run pytest tests/regression/` invocation.
+- 🧪 **CI `Regression Tier` job** — `.github/workflows/ci.yml` now runs the
+  15-exemplar / 55-test claim-binding regression tier on every push/PR
+  (serial to respect the collection-order-sensitive import isolation;
+  exit-5-tolerant so a future empty scaffold does not hard-fail). Add it to
+  branch-protection required checks to enforce "cannot merge until it passes."
+- 🛡️ **Always-on shell-injection bandit sweep** — the CI security job gained a
+  targeted `-t B602,B604,B605,B609 --severity-level low` pass over all three
+  trees, closing the gap where the MEDIUM+ gate rated constant-string
+  `shell=True` as LOW and let it through.
+- 🔒 **`.agents/skills` lane validation test** — a new gate parses every public
+  exemplar's `.agents/skills/*/SKILL.md` frontmatter (the Hermes/agentskills
+  lane that `infrastructure.skills` intentionally does not scan), so a
+  YAML-quoting regression like the one that shipped once is now caught.
+- ♻️ **OSF uploader idempotency** — `UploadTargets` gained `osf_node_id`
+  (threaded into `upload_osf`); exporting `OSF_NODE_ID` makes a `--commit`
+  re-run update the existing node instead of creating a duplicate.
+- 🧪 **`REGRESSION-PIN-2` — regression tier expanded to all 15 public exemplars** —
+  real, source-re-derived regression pins (no shape tests, no mocks) now cover
+  every public exemplar: `template_prose_project` (previously a 9-line stub),
+  `template_autoscientists`, `template_autoresearch_project`,
+  `template_eda_notebook`, `template_gold_refinement`,
+  `template_literature_meta_analysis`, `template_sia`, `template_template`,
+  `template_methods_paper`, `template_active_inference`, `template_madlib`,
+  `template_newspaper`, `template_search_project`, and `template_textbook`,
+  alongside the existing `template_code_project` pins. 55 tests collect and
+  pass together from a single `uv run pytest tests/regression/` invocation.
 
 ### Changed
 

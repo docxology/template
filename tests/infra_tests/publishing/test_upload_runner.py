@@ -17,6 +17,7 @@ from infrastructure.publishing.upload_runner import (
     upload_github,
     upload_github_pages,
     upload_huggingface,
+    upload_osf,
     upload_pinata,
 )
 
@@ -32,6 +33,30 @@ def _targets(tmp_path: Path) -> UploadTargets:
         github_repo="owner/repo",
         osf_title="Title",
     )
+
+
+def test_upload_osf_threads_node_id_for_idempotency(tmp_path: Path) -> None:
+    # With osf_node_id set, the dry-run deposit targets that existing node
+    # (idempotent re-run) rather than proposing to create a new one.
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4 minimal")
+    reuse = UploadTargets(
+        project_root=tmp_path,
+        pdf=pdf,
+        web_dir=tmp_path / "web",
+        hf_repo_id="owner/repo",
+        github_repo="owner/repo",
+        osf_title="Title",
+        osf_node_id="abcde",
+    )
+    receipt = upload_osf(reuse, commit=False, env={})
+    assert receipt["node_id"] == "abcde"
+    assert receipt["url"] == "https://osf.io/abcde/"
+
+    # Without a node id, the receipt does not claim a reused node.
+    fresh = _targets(tmp_path)
+    fresh_receipt = upload_osf(fresh, commit=False, env={})
+    assert fresh_receipt["node_id"] != "abcde"
 
 
 def test_select_jobs_defaults_to_core() -> None:
