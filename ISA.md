@@ -2,8 +2,8 @@
 project: humos-template
 task: Multi-lens deep review (RedTeam/FirstPrinciples/Science), scoped improvement plans, and ambitious same-session fixes
 effort: E5
-phase: execute
-progress: 0/9
+phase: complete
+progress: 9/9
 iteration: 7-deferred-refactors-workflow
 baseline_head_iter7: 3c60e9551c0ac015a09ec10a86067f7571d4604e
 baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
@@ -178,7 +178,7 @@ hand-edits.
 - [x] ISC-58: R5 — ALL `mypy --strict infrastructure` errors fixed (6: 4 pre-existing type-params + 2 refactor-introduced re-export/`_rel` issues) AND `infrastructure.orchestration.*` removed from `ignore_errors` with CI-config mypy green (1031 files) + orchestration 123 tests pass (probe: mypy --strict = 0; CI-scope mypy Success).
 - [x] ISC-59: Committed as one cohesive gate-verified batch (show-your-math: the regenerated aggregate docs — api-reference/COUNTS/operations_manifest — reflect WP1+WP2+WP3+R5 jointly and cannot attribute to a single WP without stale intermediate states; all WPs were verified together as a unit, health 11/11 after).
 - [x] ISC-60: Anti: no pollution — final changeset = 48 files, `output/` limited to the 5 intended R9 manifests; generated docs only via their generators; R10 test-run pollution reverted (probe: git status scan clean).
-- [ ] ISC-61: Pushed to `origin/main`; remote HEAD live-verified == local; full infra suite green pre-push (probe: `git ls-remote` + pytest exit 0) — PENDING suite + push.
+- [x] ISC-61: Pushed to `origin/main` (`ed2f8b70`); remote HEAD live-verified == local (`git ls-remote origin main` == `git rev-parse HEAD`); full infra suite 7867 passed / 3 skipped / 0 failed pre-push.
 
 ## Goal (iteration 5)
 
