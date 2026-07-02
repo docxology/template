@@ -29,6 +29,12 @@ projects/templates/
 └── template_textbook/              # modular textbook scaffold
 ```
 
+Every exemplar also carries these agent-facing surfaces:
+
+- `.agents/AGENTS.md` — per-template agent contract catalog
+- `.agents/skills/<name>/SKILL.md` — Hermes/agentskills.io-compatible skill definition
+- `.agents/skills/<name>/AGENTS.md` + `README.md` — skill folder contract
+
 ## Where To Look
 
 | Task | Location | Notes |
@@ -38,6 +44,7 @@ projects/templates/
 | Shared project rules | `../AGENTS.md` | Confidentiality and lifecycle rules live there. |
 | Shared design/browser QA | `DESIGN.md` | Applies to generated manuscript, web, and PDF outputs across all public templates. |
 | Template-specific rules | `<template>/AGENTS.md` | Read this before editing that exemplar. |
+| Agent skill definition | `<template>/.agents/skills/<name>/SKILL.md` | Hermes-compatible YAML frontmatter skill; load when working inside that exemplar. |
 | Manuscript rules | `<template>/manuscript/AGENTS.md` | Token, figure, bibliography, and config rules. |
 | Script ordering | `<template>/scripts/AGENTS.md` | Project scripts stay thin and may be order-sensitive. |
 | Open work | `<template>/TODO.md` | Forward-only integrity/template-status ladder. |
@@ -66,7 +73,7 @@ projects/templates/
   narrower project-specific rule.
 - All public templates must carry the canonical forkable surface:
   `README.md`, `AGENTS.md`, `TODO.md`, `pyproject.toml`, `.gitignore`,
-  `scripts/`, `src/`, `tests/`, `manuscript/config.yaml`,
+  `.agents/` (skill catalog), `scripts/`, `src/`, `tests/`, `manuscript/config.yaml`,
   `manuscript/config.yaml.example`, `manuscript/references.bib`, and
   `manuscript/preamble.md`.
 - `TODO.md` is future-only: current validation evidence first, then integrity

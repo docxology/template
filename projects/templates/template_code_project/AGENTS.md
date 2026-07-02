@@ -445,7 +445,15 @@ with log_operation("Running convergence experiments", logger=logger):
 log_success("Analysis completed successfully!", logger=logger)
 ```
 
-### Publishing Integration
+##
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-code-project/SKILL.md`](.agents/skills/template-code-project/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
+
+# Publishing Integration
 
 Automated citation generation and metadata extraction:
 

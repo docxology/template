@@ -61,6 +61,14 @@ treat it as a failure, not a warning.
   use the `display` box kind only for boxed house ads.
 - Only `typography.py` may name a font. Everything else uses `Fonts` roles.
 
-## Publishing
+#
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-newspaper/SKILL.md`](.agents/skills/template-newspaper/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
+
+# Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

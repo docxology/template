@@ -38,6 +38,14 @@ uv run python scripts/04_validate_output.py --project templates/template_madlib
 
 A clean validation run should report figure registry, evidence registry, design overlays, and artifact manifest as passed.
 
-## Publishing
+#
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-madlib/SKILL.md`](.agents/skills/template-madlib/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
+
+# Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

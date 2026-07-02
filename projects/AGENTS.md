@@ -65,12 +65,15 @@ documentation inventories:
 - Core project boundaries: `src/`, `tests/`, `scripts/`, `manuscript/`,
   `pyproject.toml`, root `README.md` + `AGENTS.md`; `output/` is disposable and
   regenerated.
+- **Agent skill surface**: `.agents/skills/<name>/SKILL.md` with YAML frontmatter
+  discoverable by Hermes and agentskills.io runtimes — one per exemplar, covering
+  when-to-use, quick reference commands, pitfalls, and cross-refs.
 - A top-level `STANDALONE.md` describing purpose, clean-copy command,
   post-fork edits, validation commands, intentional dependencies, and claim
   boundaries.
-- `domain_profile.yaml` + `experiment_plan.yaml` overlays for review gates,
-  artifact expectations, benchmark rubrics, declared conditions, primary
-  metrics, baselines, and ablations.
+- `domain_profile.yaml` + `experiment_plan.yaml` + `data/claim_ledger.yaml`
+  advisory overlays for review gates, artifact expectations, benchmark rubrics,
+  declared conditions, primary metrics, baselines, ablations, and evidence claims.
 - Fit-for-purpose documentation: every directory carries local `AGENTS.md` and
   `README.md` where the repo expects them, but specialized exemplars are not
   required to imitate the older 12-file docs hub.

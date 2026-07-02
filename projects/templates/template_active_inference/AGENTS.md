@@ -87,6 +87,14 @@ uv run python scripts/compute_statistics.py
   nearby `WHY:` comments only for surprising local choices, generated counts for
   volatile facts, and negative controls for verifier-like gates.
 
+
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-active-inference/SKILL.md`](.agents/skills/template-active-inference/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
+
 ## Parent Docs
 
 - Template root: [`../../../AGENTS.md`](../../../AGENTS.md)

@@ -62,6 +62,14 @@ uv run python scripts/01_run_tests.py --project templates/template_sia --project
 - [`manuscript/AGENTS.md`](manuscript/AGENTS.md)
 - [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md)
 
-## Publishing
+#
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-sia/SKILL.md`](.agents/skills/template-sia/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
+
+# Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

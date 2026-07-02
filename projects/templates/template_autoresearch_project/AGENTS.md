@@ -108,7 +108,15 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 - Keep `autoresearch.yaml` stage names exact against `pipeline.yaml`.
 - Update `docs/` when changing configurable methods or output contracts.
 
-## Publishing
+#
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-autoresearch-project/SKILL.md`](.agents/skills/template-autoresearch-project/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
+
+# Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
 - `manuscript/config.yaml` uses split DOIs: `publication.doi` (concept), `version_doi`, `version_record`

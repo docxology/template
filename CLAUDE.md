@@ -159,6 +159,11 @@ uv run python -m infrastructure.documentation.generate_glossary_cli projects/{pr
 # Agent SKILL.md manifest (Cursor / editors)
 uv run python -m infrastructure.skills write
 uv run python -m infrastructure.skills check
+
+# Discoverable per-template skills (Hermes / agentskills.io)
+# Every exemplar under projects/templates/ ships .agents/skills/<name>/SKILL.md
+# Load via Hermes: skill_view(name='template-code-project')
+# List skills in a template: ls projects/templates/<name>/.agents/skills/
 ```
 
 ### Multi-Project Operations
