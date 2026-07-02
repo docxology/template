@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T07:10:09.515804",
+  "timestamp": "2026-07-02T05:30:23.324120",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -23,6 +23,7 @@
       "03a_architecture.md: unsupported number 02",
       "03e_quality.md: unsupported number 90%",
       "03e_quality.md: unsupported number 60%",
+      "03e_quality.md: unsupported number 83%",
       "04_results.md: unsupported number 40",
       "04_results.md: unsupported number 90%",
       "04_results.md: unsupported number 35",
@@ -39,16 +40,14 @@
       "04_results.md: unsupported number 1.6",
       "08d_appendix_exemplars.md: unsupported number 02",
       "08d_appendix_exemplars.md: unsupported number 90%",
-      "08e_appendix_docs.md: unsupported number 90",
       "08f_appendix_matrix.md: unsupported number 25",
       "08f_appendix_matrix.md: unsupported number 1.2",
       "02_introduction.md: unsupported number 1576",
-      "02_introduction.md: unsupported number 70%",
       "02_introduction.md: unsupported number 28",
       "02_introduction.md: unsupported number 1.4",
       "02_introduction.md: unsupported number 24%",
       "02_introduction.md: unsupported number 36%",
-      "02_introduction.md: unsupported number 17",
+      "02_introduction.md: unsupported number 6",
       "02_introduction.md: unsupported number 60%",
       "02_introduction.md: unsupported number 90",
       "03b_pipeline.md: unsupported number 60",
@@ -62,13 +61,11 @@
       "05b_scalability.md: unsupported number 02",
       "05c_comparison.md: unsupported number 90%",
       "05c_comparison.md: unsupported number 24",
-      "05c_comparison.md: unsupported number 17",
       "05d_ai_collaboration.md: unsupported number 53%",
-      "05d_ai_collaboration.md: unsupported number 50",
-      "05d_ai_collaboration.md: unsupported number 170",
-      "05d_ai_collaboration.md: unsupported number 7",
+      "05d_ai_collaboration.md: unsupported number 6",
       "06_infrastructure_modules.md: unsupported number 01",
-      "07_security_provenance.md: unsupported number 8601"
+      "07_security_provenance.md: unsupported number 8601",
+      "08e_appendix_docs.md: unsupported number 90"
     ],
     "artifact_manifest_issues": [
       "changed artifact: output/data/metrics.json",
@@ -77,13 +74,18 @@
       "changed artifact: output/manuscript/00_abstract.md",
       "changed artifact: output/manuscript/02_introduction.md",
       "changed artifact: output/manuscript/03a_architecture.md",
+      "changed artifact: output/manuscript/03b_pipeline.md",
+      "changed artifact: output/manuscript/03c_documentation.md",
       "changed artifact: output/manuscript/03e_quality.md",
       "changed artifact: output/manuscript/04_results.md",
       "changed artifact: output/manuscript/05a_zeromock_tradeoff.md",
       "changed artifact: output/manuscript/05b_scalability.md",
+      "changed artifact: output/manuscript/05d_ai_collaboration.md",
       "changed artifact: output/manuscript/06_infrastructure_modules.md",
       "changed artifact: output/manuscript/08c_appendix_directory.md",
       "changed artifact: output/manuscript/08d_appendix_exemplars.md",
+      "changed artifact: output/manuscript/08e_appendix_docs.md",
+      "changed artifact: output/manuscript/AGENTS.md",
       "changed artifact: output/manuscript/config.yaml",
       "changed artifact: output/manuscript/config.yaml.example",
       "changed artifact: output/data/transmission_manifest.json",
@@ -174,13 +176,13 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.33,
+            "size_mb": 1.37,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.75,
+            "size_mb": 1.8,
             "readable": true,
             "optional": false
           },
@@ -194,14 +196,14 @@
           "slides": {
             "exists": true,
             "files": 169,
-            "size_mb": 3.4,
+            "size_mb": 3.46,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
             "files": 6,
-            "size_mb": 1.07,
+            "size_mb": 1.12,
             "readable": true,
             "optional": false
           },
@@ -246,7 +248,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.75",
+          "size_mb": "1.80",
           "largest_file": "template_template_combined.pdf"
         },
         "web": {
@@ -258,14 +260,14 @@
         "slides": {
           "exists": true,
           "file_count": 169,
-          "size_mb": "3.40",
+          "size_mb": "3.46",
           "largest_file": "04_results_slides.pdf"
         },
         "figures": {
           "exists": true,
           "file_count": 6,
-          "size_mb": "1.07",
-          "largest_file": "comparative_feature_matrix.png"
+          "size_mb": "1.12",
+          "largest_file": "architecture_overview.png"
         },
         "data": {
           "exists": true,
@@ -309,7 +311,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 6.9677839279174805,
+      "total_size_mb": 7.1311140060424805,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -319,15 +321,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.7462272644042969
+      "size_mb": 1.798940658569336
     },
     "figures": {
       "files": 6,
-      "size_mb": 1.073023796081543
+      "size_mb": 1.1165943145751953
     },
     "data": {
       "files": 3,
-      "size_mb": 0.010058403015136719
+      "size_mb": 0.012375831604003906
     }
   },
   "summary": {

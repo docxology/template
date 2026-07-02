@@ -28,7 +28,7 @@ flowchart TB
 
 ## "Pipeline failed in Project Analysis stage"
 
-**Symptom:** `./run.sh --project template_search_project --pipeline` exits
+**Symptom:** `./run.sh --project templates/template_search_project --pipeline` exits
 on stage 4.
 
 **Causes / fixes:**

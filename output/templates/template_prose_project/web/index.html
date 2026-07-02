@@ -239,9 +239,16 @@ Pipeline</title>
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <style>
 :root {
@@ -619,10 +626,11 @@ and writes a markdown review report alongside JSON artefacts and three
 figures. None of this is project-specific: a different project can
 re-use the same infrastructure with a different <code>config.yaml</code>
 and a different manuscript directory.</p>
-<p>The remainder of this paper documents the methodology (sec. 3), the
-run-time results on the bundled manuscript (sec. 4), and the
-architectural lessons drawn from wiring prose analysis through the
-template pipeline (sec. 5).</p>
+<p>The remainder of this paper documents the methodology (sec. <a
+href="#sec:methodology">3</a>), the run-time results on the bundled
+manuscript (sec. <a href="#sec:results">4</a>), and the architectural
+lessons drawn from wiring prose analysis through the template pipeline
+(sec. <a href="#sec:conclusion">5</a>).</p>
 <hr />
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
@@ -821,8 +829,9 @@ starts with an H1.</li>
 </ul>
 <p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
 2011 palette) [wong2011points], 300 dpi, and PNG-only for archival
-stability. They are referenced in sec. 6 where we walk through the
-on-disk artefact set in full.</p>
+stability. They are referenced in sec. <a
+href="#sec:pipeline_internals">6</a> where we walk through the on-disk
+artefact set in full.</p>
 <p>The full pass/fail summary lands in
 <code>output/review_report.md</code>, which is itself a Markdown file
 rendered alongside the manuscript by Pandoc — i.e. the project reports
@@ -985,7 +994,7 @@ the pipeline.</li>
 <li><strong>No hidden state.</strong> The pipeline does not mutate
 <code>manuscript/</code>; it reads and reports.
 <code>manuscript/references.bib</code> is read-only here (in contrast
-with the optional search add-on, where it is auto-populated).</li>
+with the public search exemplar, where it is auto-populated).</li>
 <li><strong>Same code, different config.</strong> A reviewer who wants
 stricter standards edits <code>manuscript/config.yaml</code>
 (<code>prose.target_grade_level_max: 14.0</code>, say); no code changes

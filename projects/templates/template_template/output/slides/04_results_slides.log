@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  27 JUN 2026 14:00
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  2 JUL 2026 05:29
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1592,9 +1592,9 @@ t/slides/04_results_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4.
 LaTeX Font Info:    Font shape `TU/lmss/bx/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/bx/sl' tried instead on input line 52.
+(Font)              Font shape `TU/lmss/bx/sl' tried instead on input line 48.
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 56.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 52.
 ) [3
 
 ] [4
@@ -1803,11 +1803,11 @@ File: ../figures/module_inventory.png Graphic file (type bmp)
 ) [17
 
 ]
-Underfull \vbox (badness 1112) detected at line 492
+Underfull \vbox (badness 1112) detected at line 488
  []
 
 
-Overfull \vbox (580.71274pt too high) detected at line 492
+Overfull \vbox (580.71274pt too high) detected at line 488
  []
 
 [18
@@ -1824,11 +1824,11 @@ ext;!
 [19
 
 ]
-Underfull \vbox (badness 1112) detected at line 511
+Underfull \vbox (badness 1112) detected at line 507
  []
 
 
-Overfull \vbox (91.05132pt too high) detected at line 511
+Overfull \vbox (91.05132pt too high) detected at line 507
  []
 
 [20
@@ -1900,7 +1900,7 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  31164 strings out of 468168
  629604 string characters out of 5432815
- 1198423 words of memory out of 5000000
+ 1198422 words of memory out of 5000000
  59311 multiletter control sequences out of 15000+600000
  631264 words of font info for 73 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

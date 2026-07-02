@@ -3,17 +3,17 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.75",
-      "total_size_bytes": 1831052,
+      "size_mb": "1.80",
+      "total_size_bytes": 1886326,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "1.33",
+          "size_mb": "1.37",
           "path": "pdf/template_template_combined.pdf"
         },
         {
           "name": "_combined_manuscript.tex",
-          "size_mb": "0.14",
+          "size_mb": "0.15",
           "path": "pdf/_combined_manuscript.tex"
         },
         {
@@ -38,11 +38,11 @@
       "exists": true,
       "file_count": 23,
       "size_mb": "0.51",
-      "total_size_bytes": 529703,
+      "total_size_bytes": 539676,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.17",
+          "size_mb": "0.18",
           "path": "web/index.html"
         },
         {
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 169,
-      "size_mb": "3.40",
-      "total_size_bytes": 3569936,
+      "size_mb": "3.46",
+      "total_size_bytes": 3627835,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "1.11",
+          "size_mb": "1.15",
           "path": "slides/04_results_slides.pdf"
         },
         {
@@ -97,18 +97,18 @@
     "figures": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "1.07",
-      "total_size_bytes": 1125147,
+      "size_mb": "1.12",
+      "total_size_bytes": 1170834,
       "largest_files": [
+        {
+          "name": "architecture_overview.png",
+          "size_mb": "0.37",
+          "path": "figures/architecture_overview.png"
+        },
         {
           "name": "comparative_feature_matrix.png",
           "size_mb": "0.34",
           "path": "figures/comparative_feature_matrix.png"
-        },
-        {
-          "name": "architecture_overview.png",
-          "size_mb": "0.32",
-          "path": "figures/architecture_overview.png"
         },
         {
           "name": "module_inventory.png",
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.01",
-      "total_size_bytes": 10547,
+      "total_size_bytes": 12977,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -150,7 +150,7 @@
       "exists": true,
       "file_count": 26,
       "size_mb": "0.23",
-      "total_size_bytes": 239712,
+      "total_size_bytes": 239901,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -210,31 +210,31 @@
     }
   },
   "total_files": 238,
-  "total_size_mb": 6.96778678894043,
+  "total_size_mb": 7.131296157836914,
   "largest_files": [
     {
       "name": "template_template_combined.pdf",
-      "size_mb": "1.33",
+      "size_mb": "1.37",
       "category": "pdf",
       "path": "pdf/template_template_combined.pdf"
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "1.11",
+      "size_mb": "1.15",
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
+    },
+    {
+      "name": "architecture_overview.png",
+      "size_mb": "0.37",
+      "category": "figures",
+      "path": "figures/architecture_overview.png"
     },
     {
       "name": "comparative_feature_matrix.png",
       "size_mb": "0.34",
       "category": "figures",
       "path": "figures/comparative_feature_matrix.png"
-    },
-    {
-      "name": "architecture_overview.png",
-      "size_mb": "0.32",
-      "category": "figures",
-      "path": "figures/architecture_overview.png"
     },
     {
       "name": "module_inventory.png",
@@ -244,13 +244,13 @@
     },
     {
       "name": "index.html",
-      "size_mb": "0.17",
+      "size_mb": "0.18",
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "_combined_manuscript.tex",
-      "size_mb": "0.14",
+      "size_mb": "0.15",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.tex"
     },
@@ -275,12 +275,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.7462272644042969,
-    "web": 0.5051641464233398,
-    "slides": 3.4045562744140625,
-    "figures": 1.073023796081543,
-    "data": 0.010058403015136719,
-    "reports": 0.228607177734375,
+    "pdf": 1.798940658569336,
+    "web": 0.5146751403808594,
+    "slides": 3.459773063659668,
+    "figures": 1.1165943145751953,
+    "data": 0.012375831604003906,
+    "reports": 0.22878742218017578,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.00014972686767578125

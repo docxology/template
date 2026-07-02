@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:introduction">Introduction</h1>
+<p>Reproducible computational research demands that every claim be
+traceable back to a stable artifact — code, data, and citations alike
+[peng2011reproducible]. Manual literature curation is a well-known
+bottleneck in such workflows: a graduate student writing a related-work
+section may spend hours searching arXiv, Crossref, and Google Scholar;
+copying citations into a <code>.bib</code> file by hand; and tracking
+which papers they have actually read. Three failure modes recur:</p>
+<ol type="1">
+<li><strong>Style drift</strong> — hand-edited <code>.bib</code> files
+accumulate formatting inconsistencies that hide real semantic conflicts
+in version-control diffs.</li>
+<li><strong>Stale state</strong> — the bibliography, the reading list,
+and the manuscript prose drift apart as the project evolves; the
+citation key in the manuscript no longer matches the entry in
+<code>.bib</code>, or the entry no longer matches the actual paper.</li>
+<li><strong>Lost context</strong> — abstracts and full text are read
+once during search, then discarded; six months later the same paper has
+to be re-skimmed to recall its contribution.</li>
+</ol>
+<p><code>template_search_project</code> exists to demonstrate one
+disciplined solution. The pipeline outputs are summarised in <span
+class="citation" data-cites="sec:methodology">[@sec:methodology]</span>
+(overview figure at the start of that section):</p>
+<ul>
+<li>The discovery side (<a
+href="../../../../infrastructure/search/"><code>infrastructure/search/</code></a>)
+provides multi-source paper search with failure-isolated aggregation,
+DOI/arXiv-aware deduplication, and deterministic JSON caching keyed on
+canonical query identity.</li>
+<li>The export side (<a
+href="../../../../infrastructure/reference/"><code>infrastructure/reference/</code></a>)
+provides BibTeX read/write/convert facilities byte-compatible with the
+existing exemplar <code>references.bib</code>, suitable for the
+combined-PDF pipeline (Pandoc <code>--natbib</code> + BibTeX).</li>
+<li>A small project-local synthesis layer (in <a
+href="../src/synthesis.py"><code>src/synthesis.py</code></a>) takes
+enriched papers, builds reproducible LLM prompts, and assembles a
+markdown reading report.</li>
+</ul>
+<p>The project is <em>configurable</em> via a single
+<code>manuscript/config.yaml</code>: changing the topic, year filters,
+backend set, enrichment level, and LLM parameters never requires editing
+code. The project is <em>modular</em> in the strict sense the template
+uses: every reusable component lives in <code>infrastructure/</code>,
+and <code>src/</code> contains only project-specific orchestration.</p>
+<p>The contribution of this exemplar is therefore not a new algorithm;
+it is a <strong>demonstration that a reproducible literature workflow
+can be built from existing template infrastructure</strong> with no new
+optional dependencies, no mocks in the test suite, and complete
+configurability through a single YAML file.</p>
+</body>
+</html>

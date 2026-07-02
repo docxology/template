@@ -6,10 +6,10 @@ The **default YAML graph contains ten named stages** (plus telemetry configurati
 
 1. **Clean Output Directories** — wipes prior `projects/<name>/output/` + delivered `output/<name>/` paths so stale PDFs cannot satisfy validation.
 2. **Environment Setup** (`00_setup_environment.py`) — Python/uv probing, toolchain discovery, scaffolding directories, `PYTHONPATH` wiring.
-3. **Infrastructure Tests** (`01_run_tests.py --infra-only`) — `tests/` suite with infra coverage thresholds (≥60 %).
-4. **Project Tests** (`01_run_tests.py --project-only`) — per-project suites with ≥90 % coverage mandate.
+3. **Infrastructure Tests** (`01_run_tests.py --infra-only`) — `tests/` suite with infra coverage thresholds (≥60 %).
+4. **Project Tests** (`01_run_tests.py --project-only`) — per-project suites with ≥90 % coverage mandate.
 5. **Project Analysis** (`02_run_analysis.py`) — lexicographically ordered `projects/<name>/scripts/*.py`, each a thin orchestrator (`src/` does real work).
-6. **PDF Rendering** (`03_render_pdf.py`) — Pandoc → XeLaTeX loop, bibliography assembly, injected variables from Stage 02 artefacts.
+6. **PDF Rendering** (`03_render_pdf.py`) — Pandoc → XeLaTeX loop, bibliography assembly, injected variables from Stage 02 artefacts.
 7. **Output Validation** (`04_validate_output.py`) — PDF structure, manifests, Markdown hygiene.
 8. **LLM Scientific Review** (`06_llm_review.py --reviews-only`; `tags: llm`) — executive + quality critiques via local Ollama; `allow_skip: true`.
 9. **LLM Translations** (`06_llm_review.py --translations-only`; tags `llm`, same dependency edges) — multilingual abstract expansion.
@@ -23,9 +23,9 @@ Topological order therefore differs slightly from lexical script numbering (e.g.
 
 ### Stage Highlights
 
-**Infrastructure vs project tests.** Splitting pytest invocations isolates flaky infra regressions (`MAX_TEST_FAILURES` knobs) from zero-tolerance gates on domain code (`max_project_test_failures` default 0 declared in YAML front-matter/testing blocks).
+**Infrastructure vs project tests.** Splitting pytest invocations isolates flaky infra regressions (`MAX_TEST_FAILURES` knobs) from zero-tolerance gates on domain code (`max_project_test_failures` default 0 declared in YAML front-matter/testing blocks).
 
-**Stage 02 illustration.** Rather than hypothetical diagram factories, canonical projects ship concrete behaviours—`template_autoresearch_project` runs readiness validation; archived `template_search_project` merges remote literature JSON, scripted figures (`y_generate_search_figures.py`), and manifest writers; `template_code_project` emits optimization plots; `template_prose_project` mainly triggers structural validation scaffolding.
+**Stage 02 illustration.** The analysis stage is deliberately concrete rather than a hypothetical diagram factory: each canonical project ships real behaviour at this node. `template_autoresearch_project` runs readiness validation; `template_search_project` merges remote literature JSON, generates scripted figures (`y_generate_search_figures.py`), and writes manifests; `template_code_project` emits optimization plots; and `template_prose_project` triggers structural validation scaffolding. The pipeline shape is identical across all four—only the Stage 02 payload differs—which is exactly what lets one orchestrator serve heterogeneous research domains.
 
 ### Interactive Orchestration
 

@@ -204,11 +204,15 @@ function signatures. All 23 infrastructure modules carry
 <code>AGENTS.md</code> and <code>README.md</code>; all additionally
 carry <code>SKILL.md</code>, ensuring no documentation blind spots.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
-software engineering literature. The scale of the
-investment—approximately 170 documentation files across
-<code>docs/</code>, <code>AGENTS.md</code>/<code>README.md</code> pairs,
-and per-module skill descriptors—represents a deliberate commitment to
-machine-readable context that reduces hallucination surface area.</p>
+software engineering literature. The scale of the investment is
+substantial: <code>378</code> Markdown files under <code>docs/</code>
+alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
+every directory and a <code>SKILL.md</code> descriptor on every
+infrastructure module. That count is itself injected from live
+introspection—the manuscript refuses to quote a documentation total it
+cannot recompute—and it represents a deliberate commitment to
+machine-readable context that shrinks the surface on which an agent can
+hallucinate.</p>
 <h2 id="the-learning-curve">The Learning Curve</h2>
 <p>The Thin Orchestrator pattern imposes a cognitive overhead on
 researchers accustomed to writing monolithic scripts. The requirement to

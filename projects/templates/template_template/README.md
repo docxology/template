@@ -16,7 +16,7 @@ If you are studying an external subject rather than the repo, start from
 [`template_code_project`](../template_code_project/) (computational research)
 or [`template_prose_project`](../template_prose_project/) (editorial
 pipeline). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

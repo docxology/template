@@ -15,7 +15,7 @@ agent-team coordination mechanisms see
 AutoResearch loop see
 [`template_autoresearch_project`](../template_autoresearch_project/). Full
 roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

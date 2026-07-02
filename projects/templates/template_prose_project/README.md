@@ -3,7 +3,7 @@
 A configurable, reproducible **prose-review** pipeline built on
 `infrastructure/prose/` (readability + structure + quality) and
 `infrastructure/reference/` (BibTeX validation). Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -14,7 +14,7 @@ the artifact under test. If you are implementing algorithms with numerical
 experiments, start from [`template_code_project`](../template_code_project/)
 instead; for book-length structure see
 [`template_textbook`](../template_textbook/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

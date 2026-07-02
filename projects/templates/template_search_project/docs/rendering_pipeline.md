@@ -99,7 +99,7 @@ uv run python projects/templates/template_search_project/scripts/z_generate_manu
 
 **Command**:
 ```bash
-uv run python scripts/03_render_pdf.py --project template_search_project
+uv run python scripts/03_render_pdf.py --project templates/template_search_project
 ```
 
 **Inputs**: `output/manuscript/*.md` (resolved) + `manuscript/config.yaml` + `manuscript/preamble.md` + every `manuscript/*.bib`.
@@ -127,12 +127,12 @@ uv run python scripts/03_render_pdf.py --project template_search_project
 
 **Commands**:
 ```bash
-uv run python scripts/05_copy_outputs.py --project template_search_project
+uv run python scripts/05_copy_outputs.py --project templates/template_search_project
 uv run python projects/templates/template_search_project/scripts/zz_generate_review_report.py
 ```
 
 **Outputs**:
-- `output/template_search_project/template_search_project_combined.pdf` — the promoted artifact (used by CI artifact upload and the multi-project executive report).
+- `output/templates/template_search_project/template_search_project_combined.pdf` — the promoted artifact (used by CI artifact upload and the multi-project executive report).
 - `output/review/stage_*.json`, `output/review/summary.json` — per-stage review outputs from `scripts/review`.
 - `output/review/REVIEW_REPORT.md` — human-readable aggregation written by `zz_generate_review_report.py`.
 
@@ -195,7 +195,7 @@ grep -rn "{{[A-Z_]*}}" projects/templates/template_search_project/output/manuscr
 
 **Cause**: `s_compose_literature_review.py` ran *after* `z_generate_manuscript_variables.py`, so `output/manuscript/references_deep.bib` is stale.
 
-**Fix**: Re-run the composer **before** the resolver, or run them in alphabetical script order via `./run.sh --project template_search_project --pipeline`. The pre-render gate unions every `manuscript/*.bib`; a missing or stale second file means deep-only keys fail.
+**Fix**: Re-run the composer **before** the resolver, or run them in alphabetical script order via `./run.sh --project templates/template_search_project --pipeline`. The pre-render gate unions every `manuscript/*.bib`; a missing or stale second file means deep-only keys fail.
 
 ### LLM stage produced no output
 

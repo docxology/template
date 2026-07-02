@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T08:29:42.712033",
+  "timestamp": "2026-07-02T05:35:37.283616",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -23,7 +23,9 @@
       "changed artifact: output/manuscript/00_abstract.md",
       "changed artifact: output/manuscript/03_results.md",
       "changed artifact: output/manuscript/05_pipeline_internals.md",
+      "changed artifact: output/manuscript/06_reproducibility.md",
       "changed artifact: output/manuscript/config.yaml",
+      "changed artifact: output/manuscript/references.bib",
       "changed artifact: output/manuscript_report.json",
       "changed artifact: output/review_report.md",
       "changed artifact: output/run_summary.json",
@@ -34,6 +36,7 @@
       "changed artifact: output/manuscript/99_zz_transmission_end.md",
       "changed artifact: output/pdf/_combined_manuscript.md",
       "changed artifact: output/pdf/_combined_manuscript.tex",
+      "changed artifact: output/pdf/references.bib",
       "changed artifact: output/pdf/template_prose_project_combined.pdf",
       "changed artifact: output/slides/00_abstract_slides.pdf",
       "changed artifact: output/slides/00_abstract_slides.tex",
@@ -212,7 +215,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 1.7774362564086914,
+      "total_size_mb": 1.7783432006835938,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -222,7 +225,7 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.2466106414794922
+      "size_mb": 0.24661540985107422
     },
     "figures": {
       "files": 5,

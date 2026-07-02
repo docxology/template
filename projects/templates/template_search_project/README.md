@@ -3,7 +3,7 @@
 A configurable, reproducible literature-search → BibTeX → LLM-synthesis
 pipeline built on `infrastructure/search/`, `infrastructure/reference/`,
 and `infrastructure/llm/`. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -14,7 +14,7 @@ synthesis. If you are implementing algorithms with numerical experiments,
 start from [`template_code_project`](../template_code_project/) instead; for
 prose-quality/editorial review see
 [`template_prose_project`](../template_prose_project/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -282,11 +282,11 @@ Quality gate via [`scripts/review`](scripts/review) and [`review_config.yaml`](r
 ```bash
 # From repository root
 uv run python projects/templates/template_search_project/scripts/review \
-  --project-root "$(pwd)/projects/template_search_project"
+  --project-root "$(pwd)/projects/templates/template_search_project"
 
 # List stages
 uv run python projects/templates/template_search_project/scripts/review --list \
-  --project-root "$(pwd)/projects/template_search_project"
+  --project-root "$(pwd)/projects/templates/template_search_project"
 ```
 
 Artifacts: `output/review/stage_<name>.json`, `summary.json`, and `REVIEW_REPORT.md`. See [`AGENTS.md`](AGENTS.md#review-phase) for the stage table.

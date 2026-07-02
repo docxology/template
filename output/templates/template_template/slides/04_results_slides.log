@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  26 JUN 2026 07:02
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  2 JUL 2026 05:29
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1592,9 +1592,9 @@ t/slides/04_results_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4.
 LaTeX Font Info:    Font shape `TU/lmss/bx/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/bx/sl' tried instead on input line 52.
+(Font)              Font shape `TU/lmss/bx/sl' tried instead on input line 48.
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 56.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 52.
 ) [3
 
 ] [4
@@ -1803,11 +1803,11 @@ File: ../figures/module_inventory.png Graphic file (type bmp)
 ) [17
 
 ]
-Underfull \vbox (badness 1112) detected at line 477
+Underfull \vbox (badness 1112) detected at line 488
  []
 
 
-Overfull \vbox (403.92361pt too high) detected at line 477
+Overfull \vbox (580.71274pt too high) detected at line 488
  []
 
 [18
@@ -1824,11 +1824,11 @@ ext;!
 [19
 
 ]
-Underfull \vbox (badness 1112) detected at line 496
+Underfull \vbox (badness 1112) detected at line 507
  []
 
 
-Overfull \vbox (91.05132pt too high) detected at line 496
+Overfull \vbox (91.05132pt too high) detected at line 507
  []
 
 [20

@@ -46,7 +46,8 @@ _MERMAID_FENCE = re.compile(
 # Heuristic: first non-empty, non-comment line tells us the diagram kind.
 _KIND_RE = re.compile(r"^\s*(?P<kind>[A-Za-z][A-Za-z0-9_-]*)")
 _MMDC_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TIMEOUT", "30"))
-_MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "135"))
+_MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "300"))
+_MMDC_BATCH_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_TIMEOUT", "60"))
 _MMDC_BATCH_SIZE = max(1, int(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_SIZE", "10")))
 
 
@@ -407,7 +408,7 @@ def validate_blocks(
                         )
                     )
                     return failures
-                batch_timeout = min(remaining, timeout_seconds * len(batch))
+                batch_timeout = min(remaining, _MMDC_BATCH_TIMEOUT_SECONDS)
                 batch_timeout_description = (
                     f"mermaid lint total timeout after {total_timeout_seconds:g}s"
                     if remaining <= batch_timeout
@@ -424,8 +425,20 @@ def validate_blocks(
                 if batch_rc == 0:
                     continue
                 if batch_rc == 124:
-                    failures.append(ValidationFailure(block=batch[0], stderr=batch_stderr, returncode=batch_rc))
-                    return failures
+                    failures.extend(
+                        _validate_blocks_individually(
+                            batch,
+                            mmdc_bin=mmdc_bin,
+                            puppeteer_cfg_path=cfg_path,
+                            workdir=tmp_path,
+                            timeout_seconds=timeout_seconds,
+                            total_timeout_seconds=total_timeout_seconds,
+                            started_at=started_at,
+                        )
+                    )
+                    if failures and failures[-1].returncode == 124:
+                        return failures
+                    continue
                 failures.extend(
                     _validate_blocks_individually(
                         batch,

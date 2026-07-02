@@ -134,7 +134,7 @@ Reference}\label{infrastructure-module-reference}
 \begin{frame}[fragile,allowframebreaks]{Infrastructure Module Reference}
 This section inventories every Layer‑1 subdirectory returned by
 \texttt{23} \breaktt{discover\_infrastructure\_modules(repo\_root)}. File
-totals use \texttt{604} Python sources across infra + \texttt{7,780}
+totals use \texttt{604} Python sources across infra + \texttt{7,904}
 infra tests guarding them. Documentation Duality = paired
 \texttt{README.md} + \texttt{AGENTS.md}; optional \texttt{SKILL.md}
 manifests feed \breaktt{python\ -m\ infrastructure.skills}.
@@ -184,7 +184,7 @@ point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
-\texttt{publishing} & 71 & ✓ & ✓ & Zenodo, executable bundle, archival
+\texttt{publishing} & 70 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
 \texttt{rendering} & 50 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
@@ -201,7 +201,7 @@ harness, metric capture \\
 regeneration \\
 \texttt{steganography} & 11 & ✓ & ✓ & Watermark overlays + hash
 manifests \\
-\texttt{validation} & 83 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
+\texttt{validation} & 84 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -289,8 +289,8 @@ Readability metrics + Markdown tooling for prose-centric manuscripts /
 CI gates.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.publishing} (71 files)}
-\protect\phantomsection\label{infrastructure.publishing-71-files}
+\begin{block}{\breaktt{infrastructure.publishing} (70 files)}
+\protect\phantomsection\label{infrastructure.publishing-70-files}
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 \end{block}
 
@@ -321,8 +321,7 @@ exemplars (\breaktt{template\_code\_project} scripts).
 \begin{block}{\breaktt{infrastructure.search} (44 files)}
 \protect\phantomsection\label{infrastructure.search-44-files}
 \texttt{literature/} client stack (\texttt{client.py}, backends, caches)
-powering archive-only \breaktt{template\_search\_project} literature
-workflows when copied locally from \breaktt{projects/archive/}.
+powering \breaktt{template\_search\_project} literature workflows.
 \end{block}
 
 \begin{block}{\breaktt{infrastructure.sia} (10 files)}
@@ -344,8 +343,8 @@ Watermark overlays, hashing companions triggered by secure pipeline
 path.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.validation} (83 files)}
-\protect\phantomsection\label{infrastructure.validation-83-files}
+\begin{block}{\breaktt{infrastructure.validation} (84 files)}
+\protect\phantomsection\label{infrastructure.validation-84-files}
 Markdown + PDF + integrity CLIs underpinning Stage~04 diagnostics.
 \end{block}
 

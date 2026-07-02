@@ -17,7 +17,7 @@ composition laws (not an editor's eyeball) prove the fragments glue into a
 single coherent document. If your project is single-method, start from
 [`template_code_project`](../template_code_project/) instead; for the full
 roster see
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

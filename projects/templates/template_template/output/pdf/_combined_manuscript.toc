@@ -71,7 +71,7 @@
 \contentsline {subsubsection}{\numberline {6.1.10}\breaktt {infrastructure.orchestration} (8 files)}{35}{subsubsection.6.1.10}%
 \contentsline {subsubsection}{\numberline {6.1.11}\breaktt {infrastructure.project} (27 files)}{35}{subsubsection.6.1.11}%
 \contentsline {subsubsection}{\numberline {6.1.12}\breaktt {infrastructure.prose} (9 files)}{35}{subsubsection.6.1.12}%
-\contentsline {subsubsection}{\numberline {6.1.13}\breaktt {infrastructure.publishing} (71 files)}{35}{subsubsection.6.1.13}%
+\contentsline {subsubsection}{\numberline {6.1.13}\breaktt {infrastructure.publishing} (70 files)}{35}{subsubsection.6.1.13}%
 \contentsline {subsubsection}{\numberline {6.1.14}\breaktt {infrastructure.reference} (16 files)}{35}{subsubsection.6.1.14}%
 \contentsline {subsubsection}{\numberline {6.1.15}\breaktt {infrastructure.rendering} (50 files)}{35}{subsubsection.6.1.15}%
 \contentsline {subsubsection}{\numberline {6.1.16}\breaktt {infrastructure.reporting} (57 files)}{35}{subsubsection.6.1.16}%
@@ -80,7 +80,7 @@
 \contentsline {subsubsection}{\numberline {6.1.19}\breaktt {infrastructure.sia} (10 files)}{36}{subsubsection.6.1.19}%
 \contentsline {subsubsection}{\numberline {6.1.20}\breaktt {infrastructure.skills} (7 files)}{36}{subsubsection.6.1.20}%
 \contentsline {subsubsection}{\numberline {6.1.21}\breaktt {infrastructure.steganography} (11 files)}{36}{subsubsection.6.1.21}%
-\contentsline {subsubsection}{\numberline {6.1.22}\breaktt {infrastructure.validation} (83 files)}{36}{subsubsection.6.1.22}%
+\contentsline {subsubsection}{\numberline {6.1.22}\breaktt {infrastructure.validation} (84 files)}{36}{subsubsection.6.1.22}%
 \contentsline {subsubsection}{\numberline {6.1.23}\breaktt {infrastructure/logrotate.d} (0 files)}{36}{subsubsection.6.1.23}%
 \contentsline {section}{\numberline {7}Security and Provenance}{37}{section.7}%
 \contentsline {subsection}{\numberline {7.1}Threat Model}{37}{subsection.7.1}%

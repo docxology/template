@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.25",
-      "total_size_bytes": 258590,
+      "total_size_bytes": 258595,
       "largest_files": [
         {
           "name": "template_prose_project_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.12",
-      "total_size_bytes": 123879,
+      "total_size_bytes": 124458,
       "largest_files": [
         {
           "name": "index.html",
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 65,
       "size_mb": "0.78",
-      "total_size_bytes": 813772,
+      "total_size_bytes": 813766,
       "largest_files": [
         {
           "name": "02_methodology_slides.log",
@@ -152,7 +152,7 @@
       "exists": true,
       "file_count": 26,
       "size_mb": "0.16",
-      "total_size_bytes": 167476,
+      "total_size_bytes": 167654,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -212,7 +212,7 @@
     }
   },
   "total_files": 123,
-  "total_size_mb": 1.7776222229003906,
+  "total_size_mb": 1.7783432006835938,
   "largest_files": [
     {
       "name": "readability_metrics.png",
@@ -277,12 +277,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2466106414794922,
-    "web": 0.11814022064208984,
-    "slides": 0.7760734558105469,
+    "pdf": 0.24661540985107422,
+    "web": 0.11869239807128906,
+    "slides": 0.7760677337646484,
     "figures": 0.475189208984375,
     "data": 0.0017366409301757812,
-    "reports": 0.15971755981445312,
+    "reports": 0.15988731384277344,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.0001544952392578125

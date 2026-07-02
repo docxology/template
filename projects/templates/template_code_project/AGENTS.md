@@ -1,6 +1,6 @@
 # Code Project - Optimization Research Exemplar
 
-**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Public exemplar roster and comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on). Publication DOI layout: [`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
+**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Public exemplar roster and comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars). Publication DOI layout: [`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
 
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
@@ -509,4 +509,4 @@ Step sizes: 100%|██████████████████| 4/4 [00
 - [infrastructure/scientific/](../../../infrastructure/scientific/AGENTS.md) - Scientific utilities
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax for this project
 - [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics
-- [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) — public exemplar roster
+- [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster

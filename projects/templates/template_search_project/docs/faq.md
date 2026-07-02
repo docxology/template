@@ -113,7 +113,7 @@ projects/templates/template_search_project/output/pdf/template_search_project_co
 
 Promoted copy (used by CI artifact upload and the multi-project executive report):
 ```
-output/template_search_project/template_search_project_combined.pdf
+output/templates/template_search_project/template_search_project_combined.pdf
 ```
 
 ## Common Pitfalls

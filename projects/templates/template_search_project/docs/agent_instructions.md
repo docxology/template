@@ -165,7 +165,7 @@ grep -rE "from infrastructure\.(scientific|reporting|rendering)" \
     projects/templates/template_search_project/src/ || echo "Clean — src/ stays in its lane"
 
 # 4. The configurable review CLI is wired
-cd projects/template_search_project && uv run python scripts/review --list
+cd projects/templates/template_search_project && uv run python scripts/review --list
 ```
 
 Checks 2 and 3 must produce the "Clean" message. Check 4 must list the nine review stages without raising.

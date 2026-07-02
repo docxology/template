@@ -30,7 +30,7 @@ metadata:
 ## Inputs to confirm
 
 - **Research topic** — objectives, methods, expected contributions (user provides).
-- **Exemplar** — default [`projects/templates/template_code_project/`](../../../projects/templates/template_code_project/); Active Inference multi-track → `template_active_inference`; prose → `template_prose_project`; AutoResearch/readiness loop → `template_autoresearch_project`; meta-template / infrastructure introspection → `template_template`; search → local `template_search_project` from archive. Roster: [`docs/_generated/active_projects.md`](../../_generated/active_projects.md) and [`projects/AGENTS.md`](../../../projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+- **Exemplar** — default [`projects/templates/template_code_project/`](../../../projects/templates/template_code_project/); Active Inference multi-track → `template_active_inference`; prose → `template_prose_project`; AutoResearch/readiness loop → `template_autoresearch_project`; meta-template / infrastructure introspection → `template_template`; search → public `template_search_project`. Roster: [`docs/_generated/active_projects.md`](../../_generated/active_projects.md) and [`projects/AGENTS.md`](../../../projects/AGENTS.md#permanent-canonical-exemplars).
 - **Cross-ref style** — Pandoc-crossref vs registry tokens (pick one; see [manuscript-cross-references](../manuscript-cross-references/SKILL.md)).
 
 ## Workflow

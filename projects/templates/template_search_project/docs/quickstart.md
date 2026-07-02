@@ -58,7 +58,7 @@ Outputs:
 ## 4. Run under the full pipeline
 
 ```bash
-./run.sh --project template_search_project --pipeline
+./run.sh --project templates/template_search_project --pipeline
 ```
 
 The infrastructure pipeline runner:

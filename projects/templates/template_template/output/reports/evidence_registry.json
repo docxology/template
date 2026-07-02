@@ -1,14 +1,14 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 416,
+  "fact_count": 418,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 277,
     "citation": 62,
     "figure": 6,
-    "number": 71
+    "number": 73
   },
-  "omitted_fact_count": 216,
+  "omitted_fact_count": 218,
   "sample_facts": [
     {
       "active": true,
@@ -168,10 +168,22 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.project_count",
-      "source_field": "$.project_count",
+      "source": "output/data/metrics.json:$.module_autoresearch_python_file_count",
+      "source_field": "$.module_autoresearch_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "10"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_sia_python_file_count",
+      "source_field": "$.module_sia_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -192,10 +204,22 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.project_count (numeric variant)",
-      "source_field": "$.project_count",
+      "source": "output/data/metrics.json:$.module_autoresearch_python_file_count (numeric variant)",
+      "source_field": "$.module_autoresearch_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_sia_python_file_count (numeric variant)",
+      "source_field": "$.module_sia_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -218,32 +242,8 @@
       "active": true,
       "checked_at": "2026-06-14T19:26:36+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_autoresearch_python_file_count",
-      "source_field": "$.module_autoresearch_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "8"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "number",
       "source": "output/data/metrics.json:$.module_orchestration_python_file_count",
       "source_field": "$.module_orchestration_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "8"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_prose_python_file_count",
-      "source_field": "$.module_prose_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -266,18 +266,6 @@
       "active": true,
       "checked_at": "2026-06-14T19:26:36+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_autoresearch_python_file_count (numeric variant)",
-      "source_field": "$.module_autoresearch_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.08"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "number",
       "source": "output/data/metrics.json:$.module_orchestration_python_file_count (numeric variant)",
       "source_field": "$.module_orchestration_python_file_count",
       "source_path": "output/data/metrics.json",
@@ -288,19 +276,31 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_prose_python_file_count (numeric variant)",
-      "source_field": "$.module_prose_python_file_count",
+      "source": "output/data/metrics.json:$.project_count",
+      "source_field": "$.project_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.08"
+      "value": "15"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.project_count (numeric variant)",
+      "source_field": "$.project_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.15"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.total_infra_python_files",
       "source_field": "$.total_infra_python_files",
@@ -308,11 +308,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "567"
+      "value": "604"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.total_infra_python_files (numeric variant)",
       "source_field": "$.total_infra_python_files",
@@ -320,11 +320,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "5.67"
+      "value": "6.04"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.infra_test_file_count",
       "source_field": "$.infra_test_file_count",
@@ -332,11 +332,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "426"
+      "value": "467"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.infra_test_file_count (numeric variant)",
       "source_field": "$.infra_test_file_count",
@@ -344,11 +344,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "4.26"
+      "value": "4.67"
     },
     {
       "active": true,
-      "checked_at": "2026-06-21T21:18:18+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.infra_test_count",
       "source_field": "$.infra_test_count",
@@ -356,11 +356,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "7375"
+      "value": "7904"
     },
     {
       "active": true,
-      "checked_at": "2026-06-21T21:18:18+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.infra_test_count (numeric variant)",
       "source_field": "$.infra_test_count",
@@ -368,11 +368,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "73.75"
+      "value": "79.04"
     },
     {
       "active": true,
-      "checked_at": "2026-06-21T21:18:18+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.all_projects_test_count",
       "source_field": "$.all_projects_test_count",
@@ -380,11 +380,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1236"
+      "value": "3377"
     },
     {
       "active": true,
-      "checked_at": "2026-06-21T21:18:18+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.all_projects_test_count (numeric variant)",
       "source_field": "$.all_projects_test_count",
@@ -392,11 +392,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "12.36"
+      "value": "33.77"
     },
     {
       "active": true,
-      "checked_at": "2026-06-21T21:18:18+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.total_test_count",
       "source_field": "$.total_test_count",
@@ -404,11 +404,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "8611"
+      "value": "11281"
     },
     {
       "active": true,
-      "checked_at": "2026-06-21T21:18:18+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.total_test_count (numeric variant)",
       "source_field": "$.total_test_count",
@@ -416,11 +416,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "86.11"
+      "value": "112.81"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.docs_file_count",
       "source_field": "$.docs_file_count",
@@ -428,11 +428,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "376"
+      "value": "378"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.docs_file_count (numeric variant)",
       "source_field": "$.docs_file_count",
@@ -440,11 +440,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.76"
+      "value": "3.78"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.docs_subdir_count",
       "source_field": "$.docs_subdir_count",
@@ -452,11 +452,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "18"
+      "value": "17"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.docs_subdir_count (numeric variant)",
       "source_field": "$.docs_subdir_count",
@@ -464,7 +464,31 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.18"
+      "value": "0.17"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.prompt_template_count",
+      "source_field": "$.prompt_template_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "21"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.prompt_template_count (numeric variant)",
+      "source_field": "$.prompt_template_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.21"
     },
     {
       "active": true,
@@ -528,7 +552,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_core_python_file_count",
       "source_field": "$.module_core_python_file_count",
@@ -536,11 +560,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "105"
+      "value": "109"
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_core_python_file_count (numeric variant)",
       "source_field": "$.module_core_python_file_count",
@@ -548,7 +572,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1.05"
+      "value": "1.09"
     },
     {
       "active": true,
@@ -648,7 +672,31 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_prose_python_file_count",
+      "source_field": "$.module_prose_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
+      "kind": "number",
+      "source": "output/data/metrics.json:$.module_prose_python_file_count (numeric variant)",
+      "source_field": "$.module_prose_python_file_count",
+      "source_path": "output/data/metrics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.09"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_publishing_python_file_count",
       "source_field": "$.module_publishing_python_file_count",
@@ -656,23 +704,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "44"
+      "value": "70"
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_search_python_file_count",
-      "source_field": "$.module_search_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "44"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_publishing_python_file_count (numeric variant)",
       "source_field": "$.module_publishing_python_file_count",
@@ -680,19 +716,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.44"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "number",
-      "source": "output/data/metrics.json:$.module_search_python_file_count (numeric variant)",
-      "source_field": "$.module_search_python_file_count",
-      "source_path": "output/data/metrics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.44"
+      "value": "0.7"
     },
     {
       "active": true,
@@ -720,7 +744,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_rendering_python_file_count",
       "source_field": "$.module_rendering_python_file_count",
@@ -728,11 +752,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "49"
+      "value": "50"
     },
     {
       "active": true,
-      "checked_at": "2026-06-20T20:32:14+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_rendering_python_file_count (numeric variant)",
       "source_field": "$.module_rendering_python_file_count",
@@ -740,7 +764,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.49"
+      "value": "0.5"
     },
     {
       "active": true,
@@ -794,29 +818,29 @@
       "active": true,
       "checked_at": "2026-06-14T19:26:36+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_sia_python_file_count",
-      "source_field": "$.module_sia_python_file_count",
+      "source": "output/data/metrics.json:$.module_search_python_file_count",
+      "source_field": "$.module_search_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "9"
+      "value": "44"
     },
     {
       "active": true,
       "checked_at": "2026-06-14T19:26:36+00:00",
       "kind": "number",
-      "source": "output/data/metrics.json:$.module_sia_python_file_count (numeric variant)",
-      "source_field": "$.module_sia_python_file_count",
+      "source": "output/data/metrics.json:$.module_search_python_file_count (numeric variant)",
+      "source_field": "$.module_search_python_file_count",
       "source_path": "output/data/metrics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.09"
+      "value": "0.44"
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_skills_python_file_count",
       "source_field": "$.module_skills_python_file_count",
@@ -824,11 +848,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "6"
+      "value": "7"
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_skills_python_file_count (numeric variant)",
       "source_field": "$.module_skills_python_file_count",
@@ -836,11 +860,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.06"
+      "value": "0.07"
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_validation_python_file_count",
       "source_field": "$.module_validation_python_file_count",
@@ -848,11 +872,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "83"
+      "value": "84"
     },
     {
       "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
+      "checked_at": "2026-07-02T12:30:23+00:00",
       "kind": "number",
       "source": "output/data/metrics.json:$.module_validation_python_file_count (numeric variant)",
       "source_field": "$.module_validation_python_file_count",
@@ -860,7 +884,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.83"
+      "value": "0.84"
     },
     {
       "active": true,
@@ -2385,36 +2409,12 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "output/slides/05c_comparison_slides.pdf"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/04_results_slides.pdf",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/04_results_slides.pdf"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-14T19:26:36+00:00",
-      "kind": "artifact",
-      "source": "filesystem",
-      "source_field": "",
-      "source_path": "output/slides/05d_ai_collaboration_slides.vrb",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "output/slides/05d_ai_collaboration_slides.vrb"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
     "artifact": 283,
     "bibliography": 62,
-    "generated_metric": 71
+    "generated_metric": 73
   }
 }

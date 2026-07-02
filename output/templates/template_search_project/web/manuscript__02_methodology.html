@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methodology.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="sec:methodology">Methodology</h1>
+<p>Two distinct workflows run on top of
+<code>infrastructure/search/literature</code> and
+<code>infrastructure/reference/citation</code>:</p>
+<ul>
+<li><strong>Standard pipeline</strong>
+(<code>scripts/run_search_pipeline.py</code> →
+<code>src/pipeline.py::run_literature_pipeline</code>) — single
+<code>SearchQuery</code>. Four pure-orchestration stages with no LLM
+dependency: (1) search via <code>LiteratureClient</code>, (2) enrichment
+via <code>AbstractFetcher</code> and (optional)
+<code>FulltextFetcher</code>, (3) collision-free citation-key generation
+in <code>_build_citation_keys</code>, (4) writing
+<code>output/corpus.json</code> + <code>manuscript/references.bib</code>
++ <code>output/enrichment_log.json</code>. The orchestrator script then
+optionally calls <code>src/synthesis.py</code> for per-paper and corpus
+LLM synthesis and <code>src/report.py</code> for the final reading
+report.</li>
+<li><strong>Deep search</strong>
+(<code>scripts/run_deep_search.py</code> →
+<code>src/deep_search.py::run_deep_search</code>) — multi-keyword
+fan-out: each keyword runs its own <code>SearchQuery</code> capped at
+<code>max_results_per_keyword</code> (100 by default), every paper is
+fully enriched (abstract + PDF fulltext when available), and an
+LLM-driven multi-section deep summary (CONTRIBUTION / METHOD / EVIDENCE
+/ LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) is written for each
+paper as a standalone markdown reading note. Output lands under
+<code>output/deep_search/&lt;keyword_slug&gt;/</code> plus aggregate
+<code>aggregate.json</code>, <code>aggregate_report.md</code>, and a
+unified, deduplicated <code>manuscript/references_deep.bib</code> with
+collision-free citation keys.</li>
+</ul>
+<p>The standard pipeline is described first in this section; the
+deep-search workflow is documented in <span class="citation"
+data-cites="sec:deep_search">[@sec:deep_search]</span>. Diagnostic
+figures for the latest pipeline run appear at the end of this
+section.</p>
+<h2 id="search">Search</h2>
+<p>The search stage is intentionally faithful to the standard
+literature-search pattern documented in foundational optimisation
+textbooks [boyd2004convex; nocedal2006numerical] — a deterministic
+query, capped result count, and explicit failure isolation between
+sources — so reviewers familiar with those references can reason about
+the workflow without learning new abstractions.</p>
+<p>A <code>SearchQuery</code> is constructed from
+<code>config.search</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>SearchQuery(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span>config.search.query,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    max_results<span class="op">=</span>config.search.max_results,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    year_min<span class="op">=</span>config.search.year_min,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    year_max<span class="op">=</span>config.search.year_max,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>A <code>LiteratureClient</code> is constructed with the configured
+backends. Each backend produces a normalised <code>Paper</code> record;
+the aggregator deduplicates by DOI → arXiv id → normalised (title,
+year), keeping the highest-scored copy and filling missing fields from
+the loser.</p>
+<p>Per-backend errors are recorded into <code>SearchResult.errors</code>
+rather than raised. A network outage in one backend never breaks the
+workflow; partial coverage is reported by the final stage.</p>
+<h2 id="cache">Cache</h2>
+<p><code>SearchCache</code> writes one JSON file per query, named by a
+16-character SHA-256 prefix of the canonical query identity. Identical
+queries (modulo whitespace and case) share a cache entry. Cache files
+are pretty-printed JSON, version-control-friendly, and contain a
+<code>_cached_at</code> timestamp for optional TTL enforcement.</p>
+<h2 id="enrichment">Enrichment</h2>
+<p>Two fetchers populate fields the search backends did not supply:</p>
+<ul>
+<li><code>AbstractFetcher</code> — currently fetches arXiv abstracts via
+the export API, writes them to <code>&lt;safe_id&gt;.txt</code> under
+the configured cache directory, and re-uses them on subsequent
+runs.</li>
+<li><code>FulltextFetcher</code> — downloads PDFs (arXiv URL,
+<code>paper.pdf_url</code>, or a caller-supplied override), writes the
+bytes verbatim to <code>&lt;safe_id&gt;.pdf</code>, and extracts text
+via <code>pypdf</code> to <code>&lt;safe_id&gt;.txt</code>. Without
+<code>pypdf</code> the PDF is still cached, and the fetcher returns
+<code>status="error"</code> with an informative message; the rest of the
+pipeline continues.</li>
+</ul>
+<p>Both fetchers stamp <code>paper.abstract</code> /
+<code>paper.fulltext</code> in place, so downstream stages see enriched
+records without re-loading.</p>
+<h2 id="export">Export</h2>
+<p>For every paper, <code>paper_to_bibentry()</code> produces a
+<code>BibEntry</code> whose:</p>
+<ul>
+<li>citation key follows the exemplar’s
+<code>&lt;author&gt;&lt;year&gt;&lt;title-word&gt;</code> convention
+with stop-word filtering and unicode folding;</li>
+<li>entry type is routed by <code>venue_type</code> (journal →
+<code>@article</code>, conference → <code>@inproceedings</code>, book →
+<code>@book</code>, preprint → <code>@article</code>, etc.);</li>
+<li>fields are emitted in the order observed in
+<code>references.bib</code>: title, author, journal/booktitle, year,
+volume, number, pages, publisher, edition, isbn, doi, url, abstract,
+keywords.</li>
+</ul>
+<p>A <code>BibDatabase</code> collects these entries and
+<code>write_bibfile</code> renders them in the project’s house format:
+2-space indent, trailing-comma rule, <code>pages={N--M}</code>, verbatim
+DOIs/years, bare unicode.</p>
+<h2 id="synthesis">Synthesis</h2>
+<p>Two LLM passes produce the reading report (see
+<code>src/synthesis.py</code>):</p>
+<ul>
+<li><strong>Per-paper synthesis</strong> —
+<code>build_paper_block(paper, citation_key, max_fulltext=4000)</code>
+renders the paper as a markdown block; <code>synthesise_per_paper</code>
+formats <code>PROMPT_PER_PAPER</code> and calls the injected
+<code>llm</code> callable. The prompt requests five sections:
+CONTRIBUTION, METHOD, EVIDENCE, LIMITATION, TAGS, plus a citation-key
+reference.</li>
+<li><strong>Corpus synthesis</strong> — <code>build_corpus_block</code>
+concatenates every paper into a single citation-keyed block;
+<code>synthesise_corpus</code> formats <code>PROMPT_CORPUS</code>, which
+asks for 3–7 thematic clusters, methodological agreements /
+disagreements (≥ 2 papers each), and three open questions that the
+corpus does not answer.</li>
+</ul>
+<p>Both functions return a
+<code>SynthesisResult(kind, prompt, text, paper_id)</code> record so the
+prompt is recoverable for reproducibility. The synthesis layer takes a
+callable <code>llm: (str) -&gt; str</code> so tests pass a deterministic
+local function (no Ollama dependency) and runtime callers pass a thin
+adapter around <code>infrastructure.llm.LLMClient</code>. Determinism in
+production runs is enforced by
+<code>OllamaClientConfig(seed=42, temperature=0.0)</code>.</p>
+<p>The deep-search workflow uses a richer prompt
+(<code>src/deep_search.py::DEEP_PROMPT</code>) with seven sections
+(CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS /
+SIGNIFICANCE / TAGS) and a much larger <code>max_fulltext</code> budget
+(400 k chars by default).</p>
+<h2 id="report">Report</h2>
+<p><code>src/report.py::write_reading_report</code> assembles a markdown
+file with:</p>
+<ul>
+<li>Topic, result count, year filter, and any backend errors at the
+top.</li>
+<li>A per-source count table.</li>
+<li>One-line summaries for every paper.</li>
+<li>The corpus synthesis (if present).</li>
+<li>All per-paper notes (if present).</li>
+</ul>
+<p>Citation keys appear in <code>[brackets]</code> so a downstream tool
+— for example a Pandoc filter or a manual search — can resolve them
+against the auto-generated <code>references.bib</code>.</p>
+<h2 id="diagnostic-figures">Diagnostic figures</h2>
+<p><code>scripts/y_generate_search_figures.py</code> (a thin
+orchestrator over <code>src/figures.py</code>) writes three diagnostic
+plots into <code>../figures/</code> from
+<code>output/search/results.json</code>. Each figure uses Matplotlib’s
+<code>Agg</code> backend so the pipeline runs headlessly in CI; the
+colour palette is colourblind-safe (Wong, <em>Nature Methods</em>
+2011).</p>
+<p><span class="citation"
+data-cites="fig:papers_per_source">[@fig:papers_per_source]</span>
+reports the per-backend contribution counts before deduplication,
+surfacing which sources actually returned coverage for the configured
+query. The bar values are read directly from
+<code>SearchResult.per_source_counts</code> (set by
+<code>LiteratureClient</code> <em>before</em> the DOI / arXiv-id / title
+merge step), so a backend that returned five papers all duplicating
+arXiv hits still scores five here.</p>
+<figure id="fig:papers_per_source">
+<img src="../figures/papers_per_source.png"
+alt="Per-source paper counts read from SearchResult.per_source_counts (pre-deduplication contribution per backend). The numeric label above each bar reports the raw count; the y-axis spans [0, max + headroom]. Bar order follows the order recorded in config.search.sources. Empty runs render (no results) centred. Generated by src/figures.py::plot_papers_per_source." />
+<figcaption aria-hidden="true">Per-source paper counts read from
+<code>SearchResult.per_source_counts</code> (pre-deduplication
+contribution per backend). The numeric label above each bar reports the
+raw count; the y-axis spans <code>[0, max + headroom]</code>. Bar order
+follows the order recorded in <code>config.search.sources</code>. Empty
+runs render <code>(no results)</code> centred. Generated by
+<code>src/figures.py::plot_papers_per_source</code>.</figcaption>
+</figure>
+<p><span class="citation"
+data-cites="fig:year_histogram">[@fig:year_histogram]</span> shows the
+publication-year distribution <em>after</em> the merge step (one bar per
+unique paper, not per backend hit) — useful for spotting backend
+coverage gaps in older / newer literature. Papers with no
+<code>year</code> field are dropped silently from the histogram (they
+remain in the corpus).</p>
+<figure id="fig:year_histogram">
+<img src="../figures/year_histogram.png"
+alt="Publication-year histogram of the deduplicated paper roster. One bin per year (no smoothing); the x-axis spans the observed [min(year), max(year)] from result.papers. Papers with year is None are dropped; the y-axis is per-year paper count. Generated by src/figures.py::plot_year_histogram." />
+<figcaption aria-hidden="true">Publication-year histogram of the
+deduplicated paper roster. One bin per year (no smoothing); the x-axis
+spans the observed <code>[min(year), max(year)]</code> from
+<code>result.papers</code>. Papers with <code>year is None</code> are
+dropped; the y-axis is per-year paper count. Generated by
+<code>src/figures.py::plot_year_histogram</code>.</figcaption>
+</figure>
+<p><span class="citation"
+data-cites="fig:score_distribution">[@fig:score_distribution]</span>
+shows the per-paper relevance scores returned by the backends, ranked
+descending. Papers from backends without an explicit ranking signal
+(e.g. <code>LocalBackend</code>, the offline default) carry
+<code>Paper.score = 0.0</code>; their bars therefore have zero length
+but still appear as ticks on the y-axis so the reader can see how many
+unranked papers exist.</p>
+<figure id="fig:score_distribution">
+<img src="../figures/score_distribution.png"
+alt="Per-paper backend-reported relevance scores ranked descending (highest at top). Each horizontal bar is one Paper.score; the y-tick label is the paper title truncated to 60 characters with an ellipsis. Backends without scoring (notably LocalBackend) report Paper.score = 0.0 so those bars have zero length. Generated by src/figures.py::plot_score_distribution." />
+<figcaption aria-hidden="true">Per-paper backend-reported relevance
+scores ranked descending (highest at top). Each horizontal bar is one
+<code>Paper.score</code>; the y-tick label is the paper title truncated
+to 60 characters with an ellipsis. Backends without scoring (notably
+<code>LocalBackend</code>) report <code>Paper.score = 0.0</code> so
+those bars have zero length. Generated by
+<code>src/figures.py::plot_score_distribution</code>.</figcaption>
+</figure>
+</body>
+</html>

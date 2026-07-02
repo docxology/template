@@ -45,14 +45,12 @@
     {
       "name": "bibliography_consistency",
       "passed": true,
-      "message": "6 cited / 7 in bib · 0 missing · 1 unused",
+      "message": "6 cited / 6 in bib · 0 missing · 0 unused",
       "details": {
         "missing": [],
-        "unused": [
-          "Hand-curated"
-        ],
+        "unused": [],
         "cited_count": 6,
-        "bib_count": 7
+        "bib_count": 6
       }
     }
   ]

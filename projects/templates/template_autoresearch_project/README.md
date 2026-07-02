@@ -26,7 +26,7 @@ Choose [`template_autoscientists`](../template_autoscientists/) instead if
 your focus is agent-team **coordination primitives** (dead-end registries,
 noise-band confirmation, stagnation-driven reorganization) rather than
 AutoResearch loop infrastructure. For the full exemplar roster see
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

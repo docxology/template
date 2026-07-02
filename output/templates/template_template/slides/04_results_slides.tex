@@ -183,12 +183,12 @@ Coverage
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-\breaktt{template\_code\_project} & 8 & \textasciitilde40 s & 197/197 &
+\breaktt{template\_code\_project} & 8 & \textasciitilde40 s & 236/236 &
 90\%+ \\
-\breaktt{template\_prose\_project} & 8 & \textasciitilde35 s & 78/78 &
+\breaktt{template\_prose\_project} & 8 & \textasciitilde35 s & 120/120 &
 90\%+ \\
 \breaktt{template\_autoresearch\_project} & 8 & \textasciitilde30 s &
-157/157 & 90\%+ \\
+296/296 & 90\%+ \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -200,10 +200,6 @@ with cached fixtures.
 ²Counts show passing tests versus discovered tests for the sampled
 configuration.
 
-³\breaktt{template\_search\_project} lives under
-\breaktt{projects/archive/} (local-only literature-search exemplar); it
-is not part of the public CI roster.
-
 \textbf{\emph{Overall success:}} 100\,\% pipeline completion for sampled
 runs.
 
@@ -211,7 +207,7 @@ runs.
 seeds).}
 
 Search-stage overhead dwarfs the optimization exemplar's
-runtime---confirming Stage~02 remains the bottleneck for outbound API
+runtime---confirming Stage 02 remains the bottleneck for outbound API
 traffic while retaining Zero-Mock subprocess + filesystem checks
 downstream.
 \end{frame}
@@ -230,8 +226,8 @@ Value
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-Test files & 426+ \\
-Total tests & \textasciitilde7,375 \\
+Test files & 467+ \\
+Total tests & \textasciitilde7,904 \\
 Infrastructure coverage gate & ≥60\,\% (repo ≥80\,\%+ during recent
 audits) \\
 Zero-mock imports & Verified via static scanning \\
@@ -271,13 +267,13 @@ Key Exports
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-\texttt{autoresearch} & 8 & ✓ & ✓ & \breaktt{build\_autoresearch\_plan},
+\texttt{autoresearch} & 10 & ✓ & ✓ & \breaktt{build\_autoresearch\_plan},
 readiness validation CLI \\
 \texttt{benchmark} & 3 & ✓ & ✓ & Template harness scoring + comparative
 gates \\
 \texttt{config} & 0 & ✓ & ✓ & Repository defaults + hardened
 templates \\
-\texttt{core} & 105 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 109 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation scaffolding \\
 \texttt{doctor} & 14 & ✓ & ✓ & Checkout diagnose/fix/undo repairs \\
@@ -294,11 +290,11 @@ validation \\
 point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
-\texttt{prose} & 8 & ✓ & ✓ & Markdown readability + prose tooling \\
-\texttt{publishing} & 44 & ✓ & ✓ & Zenodo, executable bundle, archival
+\texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
+\texttt{publishing} & 70 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
-\texttt{rendering} & 49 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 50 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & ✓ & ✓ & Coverage parsers, dashboards,
 executive artefacts \\
@@ -306,13 +302,13 @@ executive artefacts \\
 \breaktt{benchmark\_function} \\
 \texttt{search} & 44 & ✓ & ✓ & \breaktt{infrastructure.search.literature}
 clients + cache \\
-\texttt{sia} & 9 & ✓ & ✓ & Self-Improving-AI loop: task validation,
+\texttt{sia} & 10 & ✓ & ✓ & Self-Improving-AI loop: task validation,
 harness, metric capture \\
-\texttt{skills} & 6 & ✓ & ✓ & \texttt{discover\_skills}, SKILL manifest
+\texttt{skills} & 7 & ✓ & ✓ & \texttt{discover\_skills}, SKILL manifest
 regeneration \\
 \texttt{steganography} & 11 & ✓ & ✓ & Watermark overlays + hash
 manifests \\
-\texttt{validation} & 83 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
+\texttt{validation} & 84 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -347,7 +343,7 @@ PAI capsule & Repository level \texttt{PAI.md} narratives \\
 \end{longtable}
 }
 
-\texttt{376+} Markdown shards under \texttt{docs/} capture operational
+\texttt{378+} Markdown shards under \texttt{docs/} capture operational
 knowledge without duplicating auto-generated inventories.
 \end{frame}
 
@@ -450,8 +446,10 @@ Total (approx.)
 \end{longtable}
 }
 
-Measurements single-thread Apple\,Silicon; dominated by watermark
-overlay complexity.
+All measurements use single-threaded execution on Apple Silicon, and the
+totals are dominated by watermark-overlay complexity rather than by
+hashing or metadata embedding, which each stay well under one-tenth of a
+second per document.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Self-Referential Analysis}
@@ -463,25 +461,38 @@ Rendered via \breaktt{projects/templates/template\_template}
 sizes constrained by §QA.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Two-Layer Architecture Overview}]{../figures/architecture_overview.png}}
-\textbf{Figure~1.} Live Two-Layer graph with documentation badges
-\texttt{{[}ARSP{]}} and per-module file counts derived from
-introspection snapshots.
+\textbf{Figure 1.} Live rendering of the Two-Layer Architecture from
+repository introspection: the infrastructure layer (top) holds the
+\texttt{23} reusable subpackages, each annotated with its Python file
+count and a four-slot documentation badge---\texttt{A} AGENTS.md,
+\texttt{R} README.md, \texttt{S} SKILL.md, \texttt{P} PAI.md, with
+\texttt{·} marking an absent file---so a fully documented module reads
+\texttt{{[}ARSP{]}}. A YAML DAG arrow connects it to the project layer
+(bottom) of public exemplars labelled with chapter and test counts. The
+takeaway: documentation-duality coverage is near-uniform across the
+infrastructure, and every box was placed from the same live data the
+prose cites.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Pipeline Stage Flow}]{../figures/pipeline_stages.png}}
-\textbf{Figure~2.} Pipeline DAG with 12 YAML-declared stages (core, LLM,
+\textbf{Figure 2.} Pipeline DAG with 12 YAML-declared stages (core, LLM,
 bundle, archival tags).
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Infrastructure Module Inventory}]{../figures/module_inventory.png}}
-\textbf{Figure~3.} File-count histogram for each infrastructure
-subdirectory.
+\textbf{Figure 3.} Horizontal file-count histogram of every
+infrastructure subdirectory, sorted largest-first. The long tail of
+small, single-purpose packages beside a handful of larger ones
+(\texttt{core}, \texttt{validation}, \texttt{publishing}) is the visual
+signature of the Unix-philosophy modularity the architecture section
+argues for---capability concentrated where it compounds, not spread
+evenly by fiat.
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Comparative Feature Analysis}
 \protect\phantomsection\label{comparative-feature-analysis}
-Figure~4 summarizes the Appendix~F capability matrix.
+Figure 4 summarizes the Appendix F capability matrix.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Comparative Feature Analysis Heatmap}]{../figures/comparative_feature_matrix.png}}
-\textbf{Figure~4.} 14\,×\,10 heatmap annotated in appendix text---green
+\textbf{Figure 4.} 14\,×\,10 heatmap annotated in appendix text---green
 \textbf{✓} full native capability, yellow \textbf{◐} partial /
 plugin-hosted, red \textbf{---} unavailable. Rows group \emph{Core
 Pipeline}, \emph{Quality \& Security}, then \emph{Ecosystem}.
@@ -514,7 +525,7 @@ manuscript gates.
   \textbf{\breaktt{template\_autoresearch\_project}} exercises the
   AutoResearch readiness planner
   (\breaktt{infrastructure/autoresearch/}).
-  \textbf{\breaktt{template\_search\_project}} remains archive-only for
+  \textbf{\breaktt{template\_search\_project}} exercises
   literature-search workflows.
 \end{itemize}
 \end{frame}

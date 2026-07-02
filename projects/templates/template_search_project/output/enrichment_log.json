@@ -1,0 +1,38 @@
+[
+  {
+    "paper_id": "doi:10.1126/science.1213847",
+    "status": "skipped",
+    "message": "already present",
+    "path": null
+  },
+  {
+    "paper_id": "arxiv:2003.06070",
+    "status": "skipped",
+    "message": "already present",
+    "path": null
+  },
+  {
+    "paper_id": "arxiv:1412.6980",
+    "status": "skipped",
+    "message": "already present",
+    "path": null
+  },
+  {
+    "paper_id": "doi:10.1007/s10107-012-0629-5",
+    "status": "skipped",
+    "message": "already present",
+    "path": null
+  },
+  {
+    "paper_id": "doi:10.1007/978-0-387-40065-5",
+    "status": "skipped",
+    "message": "already present",
+    "path": null
+  },
+  {
+    "paper_id": "doi:10.1017/CBO9780511804441",
+    "status": "skipped",
+    "message": "already present",
+    "path": null
+  }
+]

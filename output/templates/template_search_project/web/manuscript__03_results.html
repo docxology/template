@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_results.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:results">Results</h1>
+<p><strong>Run snapshot.</strong> With the bundled
+<code>manuscript/config.yaml</code> the most recent execution evaluated
+the query <em>“reproducible research optimization”</em> against local,
+returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an
+abstract); the per-source breakdown is local=6 and recorded backend
+errors are none. The deep-search workflow (<span class="citation"
+data-cites="sec:deep_search">[@sec:deep_search]</span>) covered 3
+keyword(s) — <em>convex optimization; stochastic gradient descent;
+reproducible research</em> — drawn from arxiv, crossref, paperclip,
+producing <deep-search not run> unique paper(s) after cross-keyword
+deduplication.</p>
+<p>The diagnostic figures generated for this run are catalogued in <span
+class="citation" data-cites="sec:methodology">[@sec:methodology]</span>:
+<span class="citation"
+data-cites="fig:papers_per_source">[@fig:papers_per_source]</span>
+surfaces per-backend coverage, <span class="citation"
+data-cites="fig:year_histogram">[@fig:year_histogram]</span> surfaces
+the temporal distribution, and <span class="citation"
+data-cites="fig:score_distribution">[@fig:score_distribution]</span>
+surfaces the relevance-score profile. The full determinism contract for
+each stage is itemised in <span class="citation"
+data-cites="tbl:determinism">[@tbl:determinism]</span> of <span
+class="citation"
+data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
+<h2 id="interpreting-the-run-snapshot">Interpreting the run
+snapshot</h2>
+<p>The numerical values in the run-snapshot paragraph that opens this
+section are read directly from <code>output/run_summary.json</code> and
+<code>output/data/manuscript_variables.json</code> so they always
+reflect the most recent run rather than a stale claim hand-typed into
+the prose. Three properties are worth highlighting (the formal
+determinism contract for each underlying stage is enumerated in <span
+class="citation"
+data-cites="tbl:determinism">[@tbl:determinism]</span>):</p>
+<ul>
+<li><strong>Cache reuse is observable.</strong> A second invocation
+against the same config produces a byte-identical artifact tree (modulo
+the wall-clock timestamp inside
+<code>output/search/cache/search_&lt;hash&gt;.json</code> itself); see
+also the <em>Search (cached hit)</em> row of <span class="citation"
+data-cites="tbl:determinism">[@tbl:determinism]</span> and the
+verification recipe in <span class="citation"
+data-cites="sec:reproducibility">[@sec:reproducibility]</span>. The
+cache file thus doubles as a cryptographic seal: re-running is a file
+read, not a network round-trip.</li>
+<li><strong>Deduplication is signal-preserving.</strong> The aggregator
+merges by DOI → arXiv id → normalised (title, year), keeping the
+highest-scored copy and filling missing fields from the loser (see
+<em>Dedup / merge</em> in <span class="citation"
+data-cites="tbl:determinism">[@tbl:determinism]</span> and the
+per-backend pre-dedup view in <span class="citation"
+data-cites="fig:papers_per_source">[@fig:papers_per_source]</span>). The
+<code>RESULT_NUM_PAPERS</code> figure therefore equals “papers a
+reviewer needs to read”, not “raw backend hit count” — the per-source
+contributions in <code>RESULT_PER_SOURCE</code> are the pre-dedup
+view.</li>
+<li><strong>Enrichment coverage is honest.</strong>
+<code>RESULT_WITH_ABSTRACT</code> and <code>RESULT_WITH_DOI</code> count
+fields the corpus or the <code>AbstractFetcher</code> actually
+populated, never values inferred. When a paper is missing a DOI it is
+excluded from the DOI count even if its arXiv id resolves to one
+upstream. The temporal coverage of those papers is summarised by <span
+class="citation"
+data-cites="fig:year_histogram">[@fig:year_histogram]</span>, and their
+backend-reported relevance scores by <span class="citation"
+data-cites="fig:score_distribution">[@fig:score_distribution]</span>.</li>
+</ul>
+<h2 id="output-artefacts">Output artefacts</h2>
+<p>After running <code>scripts/run_search_pipeline.py</code> against the
+default <code>manuscript/config.yaml</code>, the project produces:</p>
+<ul>
+<li><code>output/search/results.json</code> — the raw
+<code>SearchResult</code> JSON, including <code>per_source_counts</code>
+and <code>errors</code> for diagnostic purposes.</li>
+<li><code>output/search/cache/search_&lt;hash&gt;.json</code> — the
+deterministic search cache; identical reruns are file reads.</li>
+<li><code>output/cache/abs/&lt;safe_id&gt;.txt</code> — one file per
+fetched abstract.</li>
+<li><code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code> — PDFs and
+extracted text (only when
+<code>enrichment.fetch_fulltext: true</code>).</li>
+<li><code>output/corpus.json</code> — a
+<code>LocalBackend</code>-compatible JSON corpus of every result,
+enriched in place.</li>
+<li><code>manuscript/references.bib</code> — the auto-populated
+bibliography from the single-query pipeline (merged with any other
+<code>manuscript/*.bib</code> at PDF render time).</li>
+<li><code>output/llm/per_paper/&lt;safe_id&gt;.md</code> — per-paper LLM
+analyses (only when <code>llm.per_paper: true</code> <em>and</em> the
+LLM stack is reachable).</li>
+<li><code>output/llm/synthesis.md</code> — corpus-level LLM synthesis
+(only when <code>llm.corpus_synthesis: true</code> <em>and</em> the LLM
+stack is reachable).</li>
+<li><code>output/reading_report.md</code> — the final assembled reading
+report.</li>
+</ul>
+<p>When the LLM stack is genuinely unreachable, the
+<code>output/llm/</code> artefacts are simply absent — no placeholder
+file is ever written into the archive (see <span class="citation"
+data-cites="sec:pipeline_internals">[@sec:pipeline_internals]</span>).</p>
+<p>Because the search cache and abstract cache are deterministic, a
+second run with identical <code>config.yaml</code> produces
+byte-identical artifacts (modulo timestamp metadata in the cache files
+themselves). This is the property the project exists to demonstrate.</p>
+<p>The exact paper count, DOI list, and synthesis text depend on the
+live state of arXiv and Crossref at the time of the run — and are
+therefore not reproducible <em>across</em> runs in different weeks.
+Users seeking strict reproducibility should:</p>
+<ol type="1">
+<li>Pin a <code>LocalBackend</code> corpus generated from a successful
+run (<code>infrastructure.search.literature.write_corpus</code>) and
+remove <code>arxiv</code> / <code>crossref</code> from
+<code>config.search.sources</code>.</li>
+<li>Commit the <code>output/search/cache/</code> directory to version
+control.</li>
+<li>Pin the LLM seed (<code>config.llm.seed</code>) and avoid model
+upgrades.</li>
+</ol>
+<p>With those three steps, every run from the same commit produces the
+same outputs.</p>
+</body>
+</html>

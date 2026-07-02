@@ -15,18 +15,12 @@ A reproducibility template that claims to make science *reproducible* needs to b
 
 ## The contract this directory creates
 
-> **Current state:** as of 2026-07-01, ten of the (now fifteen) public exemplars
-> carry real, source-re-derived regression pins: `template_code_project`
-> (2026-06-13, first populated slice), plus `template_prose_project`,
-> `template_autoscientists`, `template_autoresearch_project`,
-> `template_eda_notebook`, `template_gold_refinement`,
-> `template_literature_meta_analysis`, `template_sia`, `template_template`, and
-> `template_methods_paper` (all 2026-07-01). 36 tests collect and pass together
-> across the ten (`uv run pytest tests/regression/`). The remaining exemplars
-> (`template_active_inference`, `template_madlib`, `template_newspaper`,
-> `template_search_project`, `template_textbook`) still need this tier
-> populated — the broader per-figure/per-table contract below remains the
-> target for each.
+> **Current state:** as of 2026-07-02, all fifteen public exemplars carry real,
+> source-re-derived regression pins under `tests/regression/projects/` plus
+> matching pinned-value ledgers under `tests/regression/pinned_values/`. 55 tests
+> collect together (`uv run pytest tests/regression/ --collect-only -q`). The
+> broader per-figure/per-table contract below remains the target for deepening
+> each exemplar's tier.
 >
 > **Cross-project import isolation (2026-07-01):** every exemplar ships a
 > top-level `src` package. A bare `sys.path.insert` + module-level

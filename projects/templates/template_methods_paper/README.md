@@ -4,7 +4,7 @@ A methods-paper exemplar: the manuscript's subject is the methodology itself
 — a small, tested domain language for specifying, validating, and
 deterministically compiling controlled procedures (`src/methods_dsl/`), not
 results produced by running one. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 

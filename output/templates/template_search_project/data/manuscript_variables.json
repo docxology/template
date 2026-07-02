@@ -1,0 +1,18 @@
+{
+  "config_query": "reproducible research optimization",
+  "config_max_results": 100,
+  "config_sources": "local",
+  "result_num_papers": 6,
+  "result_num_sources": 1,
+  "result_per_source": "local=6",
+  "result_errors": "none",
+  "result_year_min": "—",
+  "result_year_max": "—",
+  "result_with_abstract": 6,
+  "result_with_doi": 4,
+  "deep_max_results_per_keyword": 100,
+  "deep_keyword_count": 3,
+  "deep_keywords_joined": "convex optimization; stochastic gradient descent; reproducible research",
+  "deep_sources": "arxiv, crossref, paperclip",
+  "deep_unique_papers": "<deep-search not run>"
+}

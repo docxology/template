@@ -1,0 +1,50 @@
+\frametitle{Limitations}
+\protect\phantomsection\label{limitations}
+The reproducibility contract enumerated in \breakseq{[@sec:reproducibility]}
+(items 1--5 and \breakseq{[@tbl:determinism]}) does not eliminate the following
+well-defined sources of non-reproducibility, which are surfaced here so
+reviewers can audit them explicitly rather than inferring from the
+contract table:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Live search drift.} When \breaktt{config.search.sources}
+  includes \texttt{arxiv} or \texttt{crossref}, the first cache-miss
+  invocation hits the live API; the cached JSON freezes that response,
+  but two cold-start clones running on different days will see different
+  paper sets. Pin a \texttt{LocalBackend} corpus or commit
+  \breaktt{output/search/cache/} to break this dependency.
+\item
+  \textbf{\texttt{pypdf} version drift.} The fulltext fetcher uses
+  \texttt{pypdf} to extract text from a downloaded PDF. \texttt{pypdf}'s
+  text-extraction algorithm is not bit-stable across major versions;
+  upgrading \texttt{pypdf} can produce different
+  \texttt{\textless{}safe\_id\textgreater{}.txt} cache contents from the
+  same source PDF. The PDF bytes themselves are bit-stable so the cache
+  freezes the inputs, not the extraction.
+\item
+  \textbf{Ollama version drift.} Pinning \texttt{seed=42} and
+  \texttt{temperature=0.0} controls Ollama's sampling, but the model
+  weights, tokenizer, and template can change between Ollama releases.
+  Document the Ollama version alongside \breaktt{config.llm.model} when
+  archiving a run for replication.
+\item
+  \textbf{Paperclip backend status.} The \texttt{paperclip} backend is
+  opt-in and currently degrades to HTTP 405 on the production endpoint;
+  the run records the error in
+  \texttt{SearchResult.errors{[}paperclip{]}} and continues. Treat
+  \texttt{paperclip} results as advisory until the upstream service
+  stabilises.
+\item
+  \textbf{External backend behaviour outside this project's control.}
+  arXiv and Crossref are the source of truth; this project is faithful
+  to whatever they return. A retraction, metadata fix, or DOI assignment
+  upstream will alter the cache on the next cold-start invocation.
+\end{itemize}
+
+These limitations bound \emph{what} the cache + seed + corpus pinning
+achieves. Inside those bounds, the contract in \breakseq{[@tbl:determinism]} is
+total: every cached pipeline stage is byte-stable across reruns
+(verified by
+\breaktt{tests/test\_pipeline.py::TestRunLiteraturePipeline::test\_bibtex\_byte\_identical\_across\_reruns}).

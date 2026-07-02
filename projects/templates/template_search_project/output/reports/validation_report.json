@@ -1,0 +1,319 @@
+{
+  "timestamp": "2026-07-02T05:30:22.798625",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": false,
+    "Evidence registry": false,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [
+    "Figure registry not found but 3 figure reference(s) found in manuscript"
+  ],
+  "output_statistics": {
+    "evidence_issues": [
+      "S01_literature_review.md: unsupported number 10.1017",
+      "S01_literature_review.md: unsupported number 10.1007",
+      "S01_literature_review.md: unsupported number 9781108699211.006",
+      "S01_literature_review.md: unsupported number 10.1561",
+      "S01_literature_review.md: unsupported number 9781108699211.015",
+      "S01_literature_review.md: unsupported number 10.1201",
+      "S01_literature_review.md: unsupported number 10.1016",
+      "S01_literature_review.md: unsupported number 10.1515",
+      "S01_literature_review.md: unsupported number 9783110361629.117",
+      "S01_literature_review.md: unsupported number 9781009510561.012",
+      "S01_literature_review.md: unsupported number 10.2307",
+      "S01_literature_review.md: unsupported number 10.1080",
+      "S01_literature_review.md: unsupported number 02331930500096270",
+      "S01_literature_review.md: unsupported number 9781009510561.021",
+      "S01_literature_review.md: unsupported number 9783110361629.30",
+      "S01_literature_review.md: unsupported number 9781108980647.012",
+      "S01_literature_review.md: unsupported number 9781009510561.024",
+      "S01_literature_review.md: unsupported number 9781108377447.033",
+      "S01_literature_review.md: unsupported number 9781009510561.003",
+      "S01_literature_review.md: unsupported number 10.1002",
+      "S01_literature_review.md: unsupported number 9781009510561.013",
+      "S01_literature_review.md: unsupported number 02331939908844436",
+      "S01_literature_review.md: unsupported number 9781009510561.020",
+      "S01_literature_review.md: unsupported number 9781009510561.015",
+      "S01_literature_review.md: unsupported number 9781009510561.023",
+      "S01_literature_review.md: unsupported number 10.23943",
+      "S01_literature_review.md: unsupported number 10.1023",
+      "S01_literature_review.md: unsupported number 1021792726715",
+      "S01_literature_review.md: unsupported number 9781009510561.025",
+      "S01_literature_review.md: unsupported number 1017532225395",
+      "S01_literature_review.md: unsupported number 9781009510561.009",
+      "S01_literature_review.md: unsupported number 9781009493512.006",
+      "S01_literature_review.md: unsupported number 02331939208843789",
+      "S01_literature_review.md: unsupported number 9781009428095.021",
+      "S01_literature_review.md: unsupported number 10.1093",
+      "S01_literature_review.md: unsupported number 10.2478",
+      "S01_literature_review.md: unsupported number 9783110426045.4",
+      "S01_literature_review.md: unsupported number 10.31274",
+      "S01_literature_review.md: unsupported number 10.7717",
+      "S01_literature_review.md: unsupported number 10.7490",
+      "S01_literature_review.md: unsupported number 10.53347",
+      "S01_literature_review.md: unsupported number 10.32614",
+      "S01_literature_review.md: unsupported number 10.2139",
+      "S01_literature_review.md: unsupported number 10.1117",
+      "S01_literature_review.md: unsupported number 10.25148",
+      "S01_literature_review.md: unsupported number 10.21203",
+      "S01_literature_review.md: unsupported number 10.5220",
+      "S01_literature_review.md: unsupported number 0012687400003702",
+      "S01_literature_review.md: unsupported number 10.70675",
+      "S01_literature_review.md: unsupported number 10.3329",
+      "S01_literature_review.md: unsupported number 10.36227",
+      "S01_literature_review.md: unsupported number 10.1109",
+      "S01_literature_review.md: unsupported number 10.54647",
+      "S01_literature_review.md: unsupported number 0011795500003411",
+      "S01_literature_review.md: unsupported number 10.47611",
+      "S01_literature_review.md: unsupported number 10.1063",
+      "S01_literature_review.md: unsupported number 5.0148736",
+      "S01_literature_review.md: unsupported number 9781108860604.006",
+      "S01_literature_review.md: unsupported number 10.1103",
+      "S01_literature_review.md: unsupported number 10.1101",
+      "S01_literature_review.md: unsupported number 348557",
+      "S01_literature_review.md: unsupported number 10.15607",
+      "S01_literature_review.md: unsupported number 10.1287",
+      "S01_literature_review.md: unsupported number 10.1049",
+      "S01_literature_review.md: unsupported number 19991170",
+      "S01_literature_review.md: unsupported number 60",
+      "S01_literature_review.md: unsupported number 10.3788",
+      "S01_literature_review.md: unsupported number 10.52202",
+      "S01_literature_review.md: unsupported number 10.3934",
+      "S01_literature_review.md: unsupported number 10.1145",
+      "S01_literature_review.md: unsupported number 3411408.3411436",
+      "S01_literature_review.md: unsupported number 10.53759",
+      "S01_literature_review.md: unsupported number 7669",
+      "S01_literature_review.md: unsupported number 10.3997",
+      "S01_literature_review.md: unsupported number 10.23919",
+      "S01_literature_review.md: unsupported number 10.21437",
+      "S01_literature_review.md: unsupported number 9781009509435.009",
+      "S01_literature_review.md: unsupported number 10.17586",
+      "S01_literature_review.md: unsupported number 10.1162",
+      "S01_literature_review.md: unsupported number 10.4208",
+      "S01_literature_review.md: unsupported number 10.1525",
+      "S01_literature_review.md: unsupported number 10.31219",
+      "S01_literature_review.md: unsupported number 10.12688",
+      "S01_literature_review.md: unsupported number 10.14293",
+      "S01_literature_review.md: unsupported number 10.59350",
+      "S01_literature_review.md: unsupported number 10.31234",
+      "S01_literature_review.md: unsupported number 10.63485",
+      "S01_literature_review.md: unsupported number 9780429031854",
+      "S01_literature_review.md: unsupported number 10.32388",
+      "S01_literature_review.md: unsupported number 649864",
+      "S01_literature_review.md: unsupported number 9781315382548",
+      "S01_literature_review.md: unsupported number 10.22541",
+      "S01_literature_review.md: unsupported number 10.4135",
+      "S01_literature_review.md: unsupported number 9781526421036926480",
+      "S01_literature_review.md: unsupported number 9781036230647",
+      "S01_literature_review.md: unsupported number 10.21428",
+      "S01_literature_review.md: unsupported number 12",
+      "S01_literature_review.md: unsupported number 10.61700",
+      "S01_literature_review.md: unsupported number 9781315373461",
+      "S01_literature_review.md: unsupported number 10.5194",
+      "S01_literature_review.md: unsupported number 10.7554",
+      "S01_literature_review.md: unsupported number 10.17077",
+      "S01_literature_review.md: unsupported number 9781036216696",
+      "S01_literature_review.md: unsupported number 10.32942",
+      "S01_literature_review.md: unsupported number 10.1038",
+      "S01_literature_review.md: unsupported number 29",
+      "S01_literature_review.md: unsupported number 10.52519",
+      "S01_literature_review.md: unsupported number 00193",
+      "02_methodology.md: unsupported number 7",
+      "02_methodology.md: unsupported number 400",
+      "02_methodology.md: unsupported number 60",
+      "04_conclusion.md: unsupported number 1000",
+      "06_reproducibility.md: unsupported number 405",
+      "07_deep_search.md: unsupported number 405",
+      "S01_literature_review.md: unsupported number 300",
+      "S01_literature_review.md: unsupported number 95",
+      "S01_literature_review.md: unsupported number 93",
+      "S01_literature_review.md: unsupported number 94"
+    ],
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 0.45,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 11,
+            "size_mb": 1.01,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 12,
+            "size_mb": 0.43,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 81,
+            "size_mb": 1.46,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 3,
+            "size_mb": 0.17,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 2,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "llm": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "logs": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 11,
+          "size_mb": "1.01",
+          "largest_file": "template_search_project_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 12,
+          "size_mb": "0.43",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 81,
+          "size_mb": "1.46",
+          "largest_file": "02_methodology_slides.pdf"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 3,
+          "size_mb": "0.17",
+          "largest_file": "score_distribution.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "manuscript_variables.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 2,
+          "size_mb": "0.00",
+          "largest_file": "test_results.json"
+        },
+        "simulations": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "llm": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "logs": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        }
+      },
+      "file_counts": {
+        "pdf": 11,
+        "web": 12,
+        "slides": 81,
+        "figures": 3,
+        "data": 1,
+        "reports": 2
+      },
+      "total_size_mb": 3.0726194381713867,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty",
+          "Directory 'logs/' missing or empty"
+        ],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 11,
+      "size_mb": 1.0129051208496094
+    },
+    "figures": {
+      "files": 3,
+      "size_mb": 0.16721630096435547
+    },
+    "data": {
+      "files": 1,
+      "size_mb": 0.0005750656127929688
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 6,
+    "failed": 2,
+    "figure_issues_count": 1,
+    "all_passed": false
+  },
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "Evidence registry reported unsupported manuscript facts",
+      "action": "Register generated facts or replace unsupported hard-coded claims",
+      "file": "projects/templates/template_search_project/output/reports/evidence_registry.json"
+    },
+    {
+      "priority": "medium",
+      "issue": "1 figure reference issue(s)",
+      "action": "Register missing figures or remove unused references",
+      "file": "projects/templates/template_search_project/output/figures/figure_registry.json"
+    }
+  ]
+}

@@ -167,7 +167,7 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 | standard BibTeX | `projects/templates/template_search_project/manuscript/references.bib` |
 | deep BibTeX | `projects/templates/template_search_project/manuscript/references_deep.bib` |
 | working PDF | `projects/templates/template_search_project/output/pdf/template_search_project_combined.pdf` |
-| promoted PDF | `output/template_search_project/template_search_project_combined.pdf` |
+| promoted PDF | `output/templates/template_search_project/template_search_project_combined.pdf` |
 
 ---
 

@@ -395,7 +395,7 @@
         "gunning_fog": 14.03
       },
       "structure": {
-        "total_words": 317,
+        "total_words": 319,
         "max_depth": 2,
         "has_h1": true,
         "has_skipped_level": false,
@@ -416,7 +416,7 @@
             "level": 1,
             "title": "Pipeline Internals {#sec:pipeline_internals}",
             "line": 1,
-            "word_count": 183
+            "word_count": 185
           },
           {
             "level": 2,
@@ -514,12 +514,12 @@
         ],
         "passive_sentences": [
           "# Reproducibility {#sec:reproducibility}\n\nThe bundled  is configured for the **strict reproducibility** discipline advocated for computational science by [@peng2011reproducible]:\n\n1. **No network calls.** All analysis is local: prose metrics, structure, quality flags, and bibliography validation are computed from in-repo files only.\n2. **Deterministic outputs.** , , and  are pure functions over their input strings.",
-          "The same manuscript text + the same  produces byte-identical JSON artefacts (modulo timestamp metadata in any caches the project later adds).\n3. **Threshold transparency.** Every pass/fail decision is recorded in  along with the numeric value that triggered it, so a reviewer can audit the gate without re-running the pipeline.\n4. **No hidden state.** The pipeline does not mutate ; it reads and reports.  is read-only here (in contrast with the optional search add-on, where it is auto-populated).\n5. **Same code, different config.** A reviewer who wants stricter standards edits  (, say); no code changes are required.\n\n## Verifying reproducibility locally\n\n\n\nThe diff should be empty."
+          "The same manuscript text + the same  produces byte-identical JSON artefacts (modulo timestamp metadata in any caches the project later adds).\n3. **Threshold transparency.** Every pass/fail decision is recorded in  along with the numeric value that triggered it, so a reviewer can audit the gate without re-running the pipeline.\n4. **No hidden state.** The pipeline does not mutate ; it reads and reports.  is read-only here (in contrast with the public search exemplar, where it is auto-populated).\n5. **Same code, different config.** A reviewer who wants stricter standards edits  (, say); no code changes are required.\n\n## Verifying reproducibility locally\n\n\n\nThe diff should be empty."
         ],
         "hedge_words": [],
         "long_sentences": [
           "# Reproducibility {#sec:reproducibility}\n\nThe bundled  is configured for the **strict reproducibility** discipline advocated for computational science by [@peng2011reproducible]:\n\n1. **No network calls.** All analysis is local: prose metrics, structure, quality flags, and bibliography validation are computed from in-repo files only.\n2. **Deterministic outputs.** , , and  are pure functions over their input strings.",
-          "The same manuscript text + the same  produces byte-identical JSON artefacts (modulo timestamp metadata in any caches the project later adds).\n3. **Threshold transparency.** Every pass/fail decision is recorded in  along with the numeric value that triggered it, so a reviewer can audit the gate without re-running the pipeline.\n4. **No hidden state.** The pipeline does not mutate ; it reads and reports.  is read-only here (in contrast with the optional search add-on, where it is auto-populated).\n5. **Same code, different config.** A reviewer who wants stricter standards edits  (, say); no code changes are required.\n\n## Verifying reproducibility locally\n\n\n\nThe diff should be empty.",
+          "The same manuscript text + the same  produces byte-identical JSON artefacts (modulo timestamp metadata in any caches the project later adds).\n3. **Threshold transparency.** Every pass/fail decision is recorded in  along with the numeric value that triggered it, so a reviewer can audit the gate without re-running the pipeline.\n4. **No hidden state.** The pipeline does not mutate ; it reads and reports.  is read-only here (in contrast with the public search exemplar, where it is auto-populated).\n5. **Same code, different config.** A reviewer who wants stricter standards edits  (, say); no code changes are required.\n\n## Verifying reproducibility locally\n\n\n\nThe diff should be empty.",
           "If it is not, the pipeline has acquired non-determinism — file an issue.\n\n## Determinism guarantees\n\n| Stage | Deterministic? | Mechanism |\n|---|---|---|\n| Prose analysis | yes | pure functions over text |\n| Bibliography parse | yes | byte-stable round-trip in  |\n| Check evaluation | yes | pure comparisons |\n| Markdown report assembly | yes | sorted file list, fixed output template |\n| Figure generation | yes (within Matplotlib version) | fixed palette, no random subsampling |\n| Manuscript variables | yes | derived from the deterministic JSON report |"
         ]
       }

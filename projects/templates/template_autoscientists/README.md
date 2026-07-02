@@ -20,7 +20,7 @@ reporting (including nulls). Choose
 if your focus is end-to-end AutoResearch **loop infrastructure** (evidence
 registries, review gates, artifact integrity) rather than coordination
 primitives. Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

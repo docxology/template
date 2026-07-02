@@ -22,7 +22,7 @@ keep hundreds of pages from drifting. For a single-paper computational
 project see [`template_code_project`](../template_code_project/); for
 editorial/prose review see
 [`template_prose_project`](../template_prose_project/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

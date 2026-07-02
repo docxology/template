@@ -10,9 +10,14 @@ The full public exemplar roster is:
 \breaktt{templates/template\_autoresearch\_project},
 \breaktt{templates/template\_autoscientists},
 \breaktt{templates/template\_code\_project},
+\breaktt{templates/template\_eda\_notebook},
+\breaktt{templates/template\_gold\_refinement},
+\breaktt{templates/template\_literature\_meta\_analysis},
 \breaktt{templates/template\_madlib},
+\breaktt{templates/template\_methods\_paper},
 \breaktt{templates/template\_newspaper},
 \breaktt{templates/template\_prose\_project},
+\breaktt{templates/template\_search\_project},
 \breaktt{templates/template\_sia}, \breaktt{templates/template\_template},
 \breaktt{templates/template\_textbook}. The three rows below are a
 representative sample; a future \breaktt{exemplar\_summary\_table} token
@@ -41,12 +46,12 @@ Figures (Stage~02 hint)
 \midrule\noalign{}
 \endhead
 \breaktt{template\_code\_project} & Optimization tutorial & Convex demo
-figures, scripted tables & 197 @ 90\%+ gate & Controlled matplotlib
+figures, scripted tables & 236 @ 90\%+ gate & Controlled matplotlib
 exports \\
 \breaktt{template\_prose\_project} & Prose-heavy workflow & Validates
-narrative-only repos & 78 & Lightweight / optional plots \\
+narrative-only repos & 120 & Lightweight / optional plots \\
 \breaktt{template\_autoresearch\_project} & AutoResearch readiness &
-Planner + validation CLI & 157 & Readiness reports from Stage 02 \\
+Planner + validation CLI & 296 & Readiness reports from Stage 02 \\
 \bottomrule\noalign{}
 \end{longtable}
 }

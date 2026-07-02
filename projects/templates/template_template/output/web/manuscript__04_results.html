@@ -210,7 +210,7 @@ after success without redrawing the TUI banner.</p>
 <td><code>template_code_project</code></td>
 <td>8</td>
 <td>~40 s</td>
-<td>231/231</td>
+<td>236/236</td>
 <td>90%+</td>
 </tr>
 <tr>
@@ -234,9 +234,6 @@ optional network-heavy LLM or long-running retrieval scripts when run
 with cached fixtures.</p>
 <p>²Counts show passing tests versus discovered tests for the sampled
 configuration.</p>
-<p>³<code>template_search_project</code> lives under
-<code>projects/archive/</code> (local-only literature-search exemplar);
-it is not part of the public CI roster.</p>
 <p><strong><em>Overall success:</em></strong> 100 % pipeline completion
 for sampled runs.</p>
 <p><em>Timing illustrative (Apple Silicon workstation, SSD, fixed
@@ -260,11 +257,11 @@ downstream.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>447+</td>
+<td>467+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~7,780</td>
+<td>~7,904</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -399,7 +396,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">71</td>
+<td style="text-align: center;">70</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -464,7 +461,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">83</td>
+<td style="text-align: center;">84</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
@@ -509,7 +506,7 @@ Documentation Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>390+</code> Markdown shards under <code>docs/</code> capture
+<p><code>378+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
@@ -714,8 +711,8 @@ numerical reproducibility assertions.</p></li>
 <li><p><strong><code>template_autoresearch_project</code></strong>
 exercises the AutoResearch readiness planner
 (<code>infrastructure/autoresearch/</code>).
-<strong><code>template_search_project</code></strong> remains
-archive-only for literature-search workflows.</p></li>
+<strong><code>template_search_project</code></strong> exercises
+literature-search workflows.</p></li>
 </ul>
 </body>
 </html>

@@ -25,6 +25,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
 - [`templates/template_gold_refinement/`](templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → nine-nines, mega-madlib token injection)
 - [`templates/template_literature_meta_analysis/`](templates/template_literature_meta_analysis/) — generic literature meta-analysis (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
+- [`templates/template_methods_paper/`](templates/template_methods_paper/) — controlled-method specification DSL with staged validation and deterministic compilation
 - [`templates/template_prose_project/`](templates/template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
@@ -32,6 +33,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_eda_notebook/`](templates/template_eda_notebook/) — EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs
 - [`templates/template_madlib/`](templates/template_madlib/) — conditional token-injection manuscript generator with QA probes and authoring contract
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
+- [`templates/template_search_project/`](templates/template_search_project/) — literature-search pipeline with auto-populated BibTeX and optional local LLM synthesis
 - [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
 - [`templates/template_textbook/`](templates/template_textbook/) — modular fillable textbook scaffold
@@ -40,14 +42,11 @@ They share the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`,
 root `README.md`/`AGENTS.md`) plus a tested forkability contract:
 `STANDALONE.md`, `domain_profile.yaml`, and `experiment_plan.yaml`. Exact
 validation commands and infrastructure dependencies are exemplar-specific; read
-the chosen exemplar's `STANDALONE.md`. The optional `template_search_project`
-literature-search exemplar is **local-only** — it lives at
-[`archive/template_search_project/`](archive/template_search_project/) and is
-**not git-tracked**. This is a public repo: only the public canonical exemplars
-under `templates/` are tracked; copy `template_search_project` under
-`projects/active/` *locally* to exercise literature-search workflows, but never
-commit it (`scripts/check_tracked_projects.py` blocks any non-template project in
-pre-push + CI). Examples in this documentation default to
+the chosen exemplar's `STANDALONE.md`. This is a public repo: only the public
+canonical exemplars under `templates/` are tracked; every other lifecycle folder
+under `projects/` remains local-only and is blocked by
+`scripts/check_tracked_projects.py` in pre-push + CI. Examples in this
+documentation default to
 `projects/templates/template_code_project/` unless a doc explicitly compares
 projects.
 
@@ -66,7 +65,9 @@ projects.
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
 | [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
+| [`template_methods_paper`](templates/template_methods_paper/) | Controlled-method specification DSL with staged validation | yes (`src/methods_dsl/*`) | no (curated) | step-count figure | see canonical facts | see canonical facts |
 | [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
+| [`template_search_project`](templates/template_search_project/) | Literature-search pipeline with auto-populated BibTeX | no (orchestration over search/reference/LLM infrastructure) | yes (`references.bib` + `references_deep.bib`) | 3 figures | see canonical facts | see canonical facts |
 | [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
 | [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
 | [`template_textbook`](templates/template_textbook/) | Book-length scaffold with labs/question banks | yes (`src/textbook/*`) | no (curated) | deterministic figures/diagrams | see canonical facts | see canonical facts |
@@ -77,9 +78,8 @@ current numbers in
 The permanent exemplars cover Active Inference, computational research,
 prose-review, deterministic AutoResearch, AutoScientists coordination tests,
 conditional token injection, newspaper layout, SIA harnesses, meta-template
-introspection, and modular fillable textbooks. Use the archived search exemplar
-when the project needs literature discovery, auto-populated BibTeX, or optional
-LLM synthesis.
+introspection, modular fillable textbooks, and literature discovery with
+auto-populated BibTeX or optional LLM synthesis.
 **Important:** run each
 project's `tests/` in **its own** `pytest` invocation — pointing pytest at
 `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because
@@ -180,7 +180,9 @@ between lifecycle folders instead of committing it here.
 | `templates/template_autoscientists/` | AutoScientists coordination-mechanism testbed | see canonical facts | see canonical facts |
 | `templates/template_eda_notebook/` | EDA notebook exemplar (notebook imports tested `src/eda/*`) | see canonical facts | see canonical facts |
 | `templates/template_madlib/` | Conditional token-injection manuscript exemplar | see canonical facts | see canonical facts |
+| `templates/template_methods_paper/` | Methods-paper exemplar (controlled-method specification DSL) | see canonical facts | see canonical facts |
 | `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
+| `templates/template_search_project/` | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | `templates/template_sia/` | SIA self-improvement harness exemplar | see canonical facts | see canonical facts |
 | `templates/template_template/` | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 | `templates/template_textbook/` | Modular fillable textbook scaffold | see canonical facts | see canonical facts |
@@ -947,8 +949,10 @@ infrastructure compliance:
 - **template_gold_refinement**: Metallurgical gold-refining analogy exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_literature_meta_analysis**: Generic literature meta-analysis exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_madlib**: Conditional token-injection manuscript exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_methods_paper**: Methods-paper exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_newspaper**: Newspaper layout exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_search_project**: Literature-search exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_sia**: SIA harness exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_template**: Meta-template exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_textbook**: Textbook scaffold exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

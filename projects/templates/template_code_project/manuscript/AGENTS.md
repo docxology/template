@@ -121,7 +121,7 @@ Final deliverables appear under `output/templates/template_code_project/` after 
 
 - [`README.md`](README.md) — Quick orientation
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc syntax reference for this manuscript
-- [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars and optional search add-on
+- [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow (4 phases)
 - [`../docs/syntax_guide.md`](../docs/syntax_guide.md) — Complete `{{VARIABLE}}` token reference
 - [`../src/manuscript_variables.py`](../src/manuscript_variables.py) — Variable computation logic (`generate_variables()`)

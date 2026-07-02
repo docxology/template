@@ -12,7 +12,7 @@ _Avg FRE:_ 19.46 · _avg FKGL:_ 15.93 · _avg Gunning Fog:_ 16.69 · _unique cit
 | `citation_density_above_floor` | ✅ | density = 4.59/1000 words (min 0.0) |
 | `no_skipped_heading_levels` | ✅ | 0 file(s) with skipped levels |
 | `every_file_has_h1` | ✅ | 0 file(s) missing H1 |
-| `bibliography_consistency` | ✅ | 6 cited / 7 in bib · 0 missing · 1 unused |
+| `bibliography_consistency` | ✅ | 6 cited / 6 in bib · 0 missing · 0 unused |
 
 ## Per-file metrics
 

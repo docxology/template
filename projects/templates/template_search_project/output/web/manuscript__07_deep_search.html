@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>07_deep_search.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="sec:deep_search">Deep Search</h1>
+<p>The deep-search workflow extends the standard literature pipeline
+along three axes: <strong>breadth</strong> (multi-keyword fan-out),
+<strong>depth</strong> (full enrichment of every paper, abstract + PDF
+fulltext), and <strong>archival quality</strong> (per-paper
+multi-section LLM reading notes saved as standalone markdown). It is
+invoked from the same configuration file but a separate orchestrator
+script.</p>
+<h2 id="configuration">Configuration</h2>
+<p>The <code>deep_search:</code> block in
+<code>manuscript/config.yaml</code> controls the run. The most-used
+knobs:</p>
+<ul>
+<li><code>keywords</code> — list of free-text queries (each becomes one
+<code>SearchQuery</code>).</li>
+<li><code>max_results_per_keyword</code> — per-keyword cap (100 by
+default; honoured by the aggregator after dedup).</li>
+<li><code>sources</code> — backend list, same vocabulary as the standard
+pipeline (<code>arxiv</code>, <code>crossref</code>, <code>local</code>,
+<code>paperclip</code>).</li>
+<li><code>fetch_abstracts</code> / <code>fetch_fulltext</code> — when
+both are <code>true</code>, every returned paper has its abstract
+fetched (arXiv export API) and (where a PDF URL is available) its
+fulltext extracted via <code>pypdf</code>. Cached on disk under
+<code>output/cache/abs/</code> and <code>output/cache/pdf/</code>.</li>
+<li><code>llm_per_paper</code> — when <code>true</code> and Ollama is
+reachable, each paper gets a multi-section markdown reading note
+generated by the local LLM. When <code>false</code>, or when the LLM
+stack is genuinely unreachable at runtime, the per-paper note is written
+with only the abstract / fulltext-excerpt sections; the synthesis
+section is omitted entirely (no placeholder text). The composer’s
+Supplemental S1 also drops the per-paper synthesis subsection in that
+case rather than emitting empty rows.</li>
+<li><code>write_unified_bibtex</code> / <code>unified_bibtex_path</code>
+— when <code>true</code>, a deduplicated, collision-suffixed BibTeX file
+is written under <code>manuscript/references_deep.bib</code> so it can
+be cited from the manuscript via Pandoc <code>[key]</code> syntax
+exactly the same way as the hand-curated
+<code>references.bib</code>.</li>
+</ul>
+<h2 id="pipeline-shape">Pipeline shape</h2>
+<p>The deep-search pipeline reads the <code>deep_search:</code> block
+from <code>manuscript/config.yaml</code>, runs one
+<code>SearchQuery</code> per keyword (capped at
+<code>max_results_per_keyword</code>), aggregates the per-backend
+results through <code>LiteratureClient</code>, enriches every paper via
+<code>AbstractFetcher</code> and <code>FulltextFetcher</code>, generates
+collision-free citation keys with <code>paper_to_bibentry</code>, and
+(when <code>llm_per_paper: true</code> and Ollama is reachable) calls
+the local LLM with <code>DEEP_PROMPT</code> to produce a seven-section
+reading note per paper. The per-keyword outputs are then merged by
+<code>merge_papers</code> to form a deduplicated aggregate roster which
+is written to <code>manuscript/references_deep.bib</code>,
+<code>output/deep_search/aggregate.json</code>, and
+<code>output/deep_search/aggregate_report.md</code>. A Mermaid flowchart
+in this subsection renders the same flow visually in the HTML build.</p>
+<pre class="mermaid"><code>flowchart TB
+    CFG[deep_search block of config.yaml]
+    CFG --&gt; KW{{For each keyword}}
+    KW --&gt; SEARCH[SearchQuery · max_results_per_keyword]
+    SEARCH --&gt; CLIENT[LiteratureClient&lt;br/&gt;aggregates arxiv · crossref · local · paperclip]
+    CLIENT --&gt; ENRICH[AbstractFetcher + FulltextFetcher&lt;br/&gt;cached on disk]
+    ENRICH --&gt; KEYS[paper_to_bibentry&lt;br/&gt;collision-free keys]
+    KEYS --&gt; LLMQ{LLM per-paper?}
+    LLMQ -- yes --&gt; LLM[Ollama LLMClient&lt;br/&gt;DEEP_PROMPT · 7 sections]
+    LLMQ -- no --&gt; SKIP[skip synthesis · no placeholder]
+    LLM --&gt; NOTE[output/deep_search/&amp;lt;slug&amp;gt;/per_paper/&amp;lt;safe_id&amp;gt;.md]
+    SKIP --&gt; NOTE
+    NOTE --&gt; KR[KeywordResult]
+
+    KR --&gt; AGG[merge_papers across all keywords]
+    AGG --&gt; BIB[unified BibTeX&lt;br/&gt;references_deep.bib]
+    AGG --&gt; AJSON[aggregate.json]
+    AGG --&gt; AMD[aggregate_report.md]
+
+    classDef cfg fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef llm fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef out fill:#0f766e,stroke:#0f172a,color:#fff
+    class CFG,KW,LLMQ cfg
+    class SEARCH,CLIENT,ENRICH,KEYS,KR,AGG proc
+    class LLM,SKIP llm
+    class NOTE,BIB,AJSON,AMD out</code></pre>
+<h2 id="llm-prompt">LLM prompt</h2>
+<p>The deep-search prompt is richer than the standard
+<code>synthesis.PROMPT_PER_PAPER</code>. It produces a self-contained
+reading note suitable for archival without re-reading the paper:</p>
+<pre><code>## Contribution
+One paragraph stating the paper&#39;s central claim and why it is novel.
+
+## Method
+2-4 bullets describing the technical approach.
+
+## Evidence
+2-4 bullets describing experiments / proofs.
+
+## Limitations
+1-3 bullets covering caveats and what the paper does NOT address.
+
+## Connections
+1-3 bullets relating this paper to other work in the field, citing only
+papers explicitly named in the input.
+
+## Significance for {keyword}
+One paragraph explaining why this paper matters for the keyword.
+
+## Tags
+5-10 lowercase keywords.</code></pre>
+<p>The LLM is duck-typed as <code>Callable[[str], str]</code> so tests
+pass a deterministic local callable that returns real, well-formed
+reading-note text; runtime callers wrap an
+<code>infrastructure.llm.LLMClient</code> with
+<code>seed=42, temperature=0.0</code> for reproducibility. When the LLM
+stack is unreachable, callers pass <code>None</code> and the per-paper
+synthesis stage is skipped entirely — no placeholder text is ever
+written into the archive.</p>
+<h2 id="on-disk-layout">On-disk layout</h2>
+<p>A successful deep-search run writes the following artefacts (paths
+shown relative to the project root); a Mermaid tree in this subsection
+renders the same hierarchy in the HTML build:</p>
+<ul>
+<li><code>output/deep_search/aggregate.json</code> — every unique paper
+across keywords.</li>
+<li><code>output/deep_search/aggregate_report.md</code> — cross-keyword
+markdown summary.</li>
+<li><code>output/deep_search/run_summary.json</code> — one-line metadata
+for the run.</li>
+<li><code>output/deep_search/&lt;keyword_slug&gt;/papers.json</code> —
+enriched per-keyword paper list.</li>
+<li><code>output/deep_search/&lt;keyword_slug&gt;/reading_report.md</code>
+— per-keyword markdown summary.</li>
+<li><code>output/deep_search/&lt;keyword_slug&gt;/per_paper/&lt;safe_id&gt;.md</code>
+— one reading note per paper.</li>
+<li><code>manuscript/references_deep.bib</code> — auto-generated,
+deduplicated unified BibTeX file.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TB
+    P[&quot;projects/templates/template_search_project/&quot;]
+    P --&gt; OUT[&quot;output/deep_search/&quot;]
+    P --&gt; BIB[manuscript/references_deep.bib&lt;br/&gt;auto-generated · deduplicated]
+
+    OUT --&gt; AGG[aggregate.json&lt;br/&gt;every unique paper]
+    OUT --&gt; AMD[aggregate_report.md&lt;br/&gt;cross-keyword summary]
+    OUT --&gt; RS[run_summary.json&lt;br/&gt;one-line metadata]
+    OUT --&gt; KW1[&quot;&amp;lt;keyword_slug_1&amp;gt;/&quot;]
+    OUT --&gt; KW2[&quot;&amp;lt;keyword_slug_2&amp;gt;/&quot;]
+    OUT --&gt; KW3[&quot;&amp;lt;keyword_slug_3&amp;gt;/&quot;]
+
+    KW1 --&gt; KW1_P[papers.json]
+    KW1 --&gt; KW1_R[reading_report.md]
+    KW1 --&gt; KW1_PP[&quot;per_paper/&lt;br/&gt;SAFE_ID.md per paper&quot;]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef bib fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,OUT,KW1,KW2,KW3,KW1_PP d
+    class AGG,AMD,RS,KW1_P,KW1_R f
+    class BIB bib</code></pre>
+<h2 id="determinism">Determinism</h2>
+<p>Three caches make this workflow replayable:</p>
+<ol type="1">
+<li><code>SearchCache</code>
+(<code>output/search/cache/search_&lt;hash&gt;.json</code>) — keyed on
+canonical query identity per keyword.</li>
+<li>Abstract cache
+(<code>output/cache/abs/&lt;safe_id&gt;.txt</code>).</li>
+<li>Fulltext cache
+(<code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code>).</li>
+<li>LLM seed (<code>deep_search.llm_seed: 42</code>) + temperature
+(<code>0.0</code>).</li>
+</ol>
+<p>Commit any subset of these caches to version control to freeze a
+run.</p>
+<h2 id="paperclip-backend">Paperclip backend</h2>
+<p>The <a href="https://paperclip.gxl.ai">Paperclip backend</a> is
+opt-in. Enable it by:</p>
+<ol type="1">
+<li>Creating
+<code>projects/templates/template_search_project/.env</code>
+(gitignored) with your <code>PAPERCLIP_API_KEY=gxl_…</code> (template at
+<code>.env.example</code>).</li>
+<li>Including <code>paperclip</code> in
+<code>deep_search.sources</code>.</li>
+</ol>
+<p>The orchestrator scripts auto-load <code>.env</code> via the
+lightweight <code>src.dotenv</code> module before constructing the
+backend list. The <code>PaperclipBackend</code> adapter mirrors the wire
+protocol of the official <code>gxl_paperclip</code> Python SDK:
+<code>POST /papers</code> with an <code>X-API-Key</code> header and a
+JSON-RPC <code>tools/call</code> envelope. We support both the modern
+<code>structuredContent.papers</code> response shape and the older
+text-only <code>content[].text</code> shape (best-effort regex
+extraction).</p>
+<p>Failure-isolation: any per-backend error (including the
+migration-state HTTP 405 the production endpoint may currently return)
+is captured into <code>SearchResult.errors[paperclip]</code> and the run
+continues. See
+<code>output/deep_search/&lt;keyword&gt;/papers.json</code> and the
+aggregate <code>run_summary.json</code> for the recorded errors.</p>
+<h2 id="cli">CLI</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with everything from config.yaml (assumes deep_search.enabled: true)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Force-enable without touching config.yaml</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Override keyword list at the command line</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--keyword</span> <span class="st">&quot;convex optimization&quot;</span> <span class="at">--keyword</span> <span class="st">&quot;stochastic gradient descent&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip LLM stage even when config enables it</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-llm</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bypass cache (writes still happen)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-cache</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Local-corpus mode (offline · CI-friendly)</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--corpus</span> projects/templates/template_search_project/data/corpus.json</span></code></pre></div>
+</body>
+</html>

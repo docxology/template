@@ -4,7 +4,7 @@ A computational-notebook exemplar: an interactive walkthrough notebook
 ([`notebooks/eda_walkthrough.ipynb`](notebooks/eda_walkthrough.ipynb)) that
 imports a small, fully-tested EDA library instead of carrying logic in its
 cells. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 

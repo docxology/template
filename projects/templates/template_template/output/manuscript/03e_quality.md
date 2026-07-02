@@ -31,8 +31,8 @@ These thresholds are enforced at Stage 01 of the pipeline. If project test cover
 
 The repository maintains three test suites:
 
-- **Infrastructure tests** (`tests/`): ~7,780 tests validating the 23 infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
-- **Project tests** (`projects/*/tests/`): Per-project suites whose sizes scale with each exemplar's surface area — for example 296 tests in `template_autoresearch_project` and 231 in `template_code_project`, with several exemplars larger still. (A true min/max span would require dedicated `project_test_count_min`/`project_test_count_max` tokens in `build_manuscript_metrics_dict`; see the meta-template's generator backlog.)
+- **Infrastructure tests** (`tests/`): ~7,904 tests validating the 23 infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
+- **Project tests** (`projects/*/tests/`): Per-project suites whose sizes scale with each exemplar's surface area — for example 296 tests in `template_autoresearch_project` and 236 in `template_code_project`, with several exemplars larger still. (A true min/max span would require dedicated `project_test_count_min`/`project_test_count_max` tokens in `build_manuscript_metrics_dict`; see the meta-template's generator backlog.)
 - **Integration tests**: Embedded within infrastructure tests, these exercise full pipeline stages against real manuscript inputs, validating end-to-end behavior from Markdown source to rendered PDF.
 
 ### Visualization Standards

@@ -17,6 +17,6 @@
   \textbf{\breaktt{template\_autoresearch\_project}} exercises the
   AutoResearch readiness planner
   (\breaktt{infrastructure/autoresearch/}).
-  \textbf{\breaktt{template\_search\_project}} remains archive-only for
+  \textbf{\breaktt{template\_search\_project}} exercises
   literature-search workflows.
 \end{itemize}

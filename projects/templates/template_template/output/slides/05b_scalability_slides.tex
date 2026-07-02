@@ -138,10 +138,10 @@ changes, no \texttt{pyproject.toml} modifications, no CI configuration
 updates. The \texttt{run.sh} orchestrator automatically discovers new
 projects and presents them in its interactive menu.
 
-We have validated scaling with 12 canonical exemplars under
+We have validated scaling with 15 canonical exemplars under
 \breaktt{projects/templates/}---always present for onboarding and
 tooling---and with this manuscript from
-\breaktt{projects/templates/template\_template} (127 tests) as a
+\breaktt{projects/templates/template\_template} (130 tests) as a
 git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
@@ -150,7 +150,7 @@ Canonical trio:
 \tightlist
 \item
   \textbf{\breaktt{template\_code\_project}}: Numerical optimization
-  example with gradient-descent narration, 231 tests, 90\%+ coverage.
+  example with gradient-descent narration, 236 tests, 90\%+ coverage.
   Minimal footprint: compact \texttt{src/}, scripted analysis, short
   manuscript sections.
 \item
@@ -161,12 +161,11 @@ Canonical trio:
 \item
   \textbf{\breaktt{template\_autoresearch\_project}}: AutoResearch
   readiness workflow invoking
-  \breaktt{projects/template\_search\_project/scripts/} to run corpus
-  builders, scripted figures (\texttt{output/figures/}), and
-  manifold-variable injection (the archive-only literature-search
-  exemplar, restored on demand). Typical Stage~02 workloads include
-  bibliography fusion, corpus JSON assembly, deep-search aggregates, and
-  report composition.
+  \breaktt{projects/templates/template\_search\_project/scripts/} to run
+  corpus builders, scripted figures (\texttt{output/figures/}), and
+  manifold-variable injection (the literature-search exemplar). Typical
+  Stage~02 workloads include bibliography fusion, corpus JSON assembly,
+  deep-search aggregates, and report composition.
 \end{itemize}
 
 Meta manuscript
@@ -213,12 +212,12 @@ Metric
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-Source modules & 25 & 6 & 60 \\
-Test files & 11 & 8 & 17 \\
-Test count & 231 & 120 & 296 \\
+Source modules & 26 & 6 & 60 \\
+Test files & 12 & 8 & 17 \\
+Test count & 236 & 120 & 296 \\
 Manuscript chapters & 9 & 8 & 6 \\
-Analysis scripts & 6 & 4 & 4 \\
-Figures (auto-generated) & 8 & 5 & 27 \\
+Analysis scripts & 7 & 4 & 4 \\
+Figures (auto-generated) & 9 & 5 & 27 \\
 \bottomrule\noalign{}
 \end{longtable}
 }

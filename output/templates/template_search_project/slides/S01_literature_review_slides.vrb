@@ -1,0 +1,341 @@
+\frametitle{reproducible research}
+\protect\phantomsection\label{reproducible-research}
+\emph{Papers retrieved:} \textbf{100} · \emph{per-source contributions:}
+arxiv=100, crossref=100, paperclip=94 · \emph{backend errors:} none
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3077}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Cite
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Title
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Year
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+DOI / URL
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\breakseq{[@gandrud2018introducing]} & Introducing Reproducible Research & 2018
+& DOI 10.1201/9781315382548-1
+(\href{https://doi.org/10.1201/9781315382548-1}{open}) \\
+\breakseq{[@gandrud2020introducing]} & Introducing Reproducible Research & 2020
+& DOI 10.1201/9780429031854-2
+(\href{https://doi.org/10.1201/9780429031854-2}{open}) \\
+\breakseq{[@gandrud2020getting]} & Getting Started with Reproducible Research &
+2020 & DOI 10.1201/9780429031854-3
+(\href{https://doi.org/10.1201/9780429031854-3}{open}) \\
+\breakseq{[@gandrud2018getting]} & Getting Started with Reproducible Research &
+2018 & DOI 10.1201/9781315382548-2
+(\href{https://doi.org/10.1201/9781315382548-2}{open}) \\
+\breakseq{[@hoefling2018reproducible]} & Reproducible Research for Large-Scale
+Data Analysis & 2018 & DOI 10.1201/9781315373461-8
+(\href{https://doi.org/10.1201/9781315373461-8}{open}) \\
+\breakseq{[@xie2018knitr]} & knitr: A Comprehensive Tool for Reproducible
+Research in R & 2018 & DOI 10.1201/9781315373461-1
+(\href{https://doi.org/10.1201/9781315373461-1}{open}) \\
+\breakseq{[@baker2022reproducible]} & Reproducible data analysis & 2022 & DOI
+10.1093/hesc/9780192896599.003.0019
+(\href{https://doi.org/10.1093/hesc/9780192896599.003.0019}{open}) \\
+\breakseq{[@anon2019reproducible]} & Reproducible Workflow & 2019 & DOI
+10.2307/j.ctvpb3xkg.16
+(\href{https://doi.org/10.2307/j.ctvpb3xkg.16}{open}) \\
+\breakseq{[@preeyanon2018reproducible]} & Reproducible Bioinformatics Research
+for Biologists & 2018 & DOI 10.1201/9781315373461-7
+(\href{https://doi.org/10.1201/9781315373461-7}{open}) \\
+\breakseq{[@davison2018sumatra]} & Sumatra: A Toolkit for Reproducible Research
+& 2018 & DOI 10.1201/9781315373461-3
+(\href{https://doi.org/10.1201/9781315373461-3}{open}) \\
+\breakseq{[@anon2019eleven]} & ELEVEN. Reproducible Workflow & 2019 & DOI
+10.1525/9780520969230-014
+(\href{https://doi.org/10.1525/9780520969230-014}{open}) \\
+\breakseq{[@hrynaszkiewicz2018open]} & Open Science and the Role of Publishers
+in Reproducible Research & 2018 & DOI 10.1201/9781315373461-15
+(\href{https://doi.org/10.1201/9781315373461-15}{open}) \\
+\breakseq{[@anonsupplemental]} & Supplemental Information 1: Reproducible
+Research Instructions. & n.d. & DOI 10.7717/peerj-cs.904/supp-1
+(\href{https://doi.org/10.7717/peerj-cs.904/supp-1}{open}) \\
+\breakseq{[@kedron2023reproducible]} & Reproducible Research Practices and
+Barriers to Reproducible Research in Geography: Insights from a Survey &
+2023 & DOI 10.31219/osf.io/nyrq9
+(\href{https://doi.org/10.31219/osf.io/nyrq9}{open}) \\
+\breakseq{[@stodden2014implementing]} & Implementing Reproducible Research &
+2014 & DOI 10.1201/b16868
+(\href{https://doi.org/10.1201/b16868}{open}) \\
+\breakseq{[@anonreproducible]} & Reproducible Research Data and Software & n.d.
+& DOI 10.12688/f1000research.channels.908
+(\href{https://doi.org/10.12688/f1000research.channels.908}{open}) \\
+\breakseq{[@murrayrust2018reproducible]} & Reproducible Physical Science and
+the Declaratron & 2018 & DOI 10.1201/9781315373461-5
+(\href{https://doi.org/10.1201/9781315373461-5}{open}) \\
+\breakseq{[@burgess2018reproducible]} & Reproducible research article
+collection & 2018 & DOI 10.14293/s2199-1006.1.sor-uncat.clsuuhc.v1
+(\href{https://doi.org/10.14293/s2199-1006.1.sor-uncat.clsuuhc.v1}{open}) \\
+\breakseq{[@solt2016pewdata]} & pewdata: Reproducible Retrieval of Pew Research
+Center Datasets & 2016 & DOI 10.32614/cran.package.pewdata
+(\href{https://doi.org/10.32614/cran.package.pewdata}{open}) \\
+\breakseq{[@edmunds2016reproducible]} & Reproducible Research Resources for
+Research(ing) Parasites & 2016 & DOI 10.59350/63nv3-fa097
+(\href{https://doi.org/10.59350/63nv3-fa097}{open}) \\
+\breakseq{[@edmunds2016reproduciblea]} & Reproducible Research Resources for
+Research(ing) Parasites & 2016 & DOI 10.59350/vhpgg-ec668
+(\href{https://doi.org/10.59350/vhpgg-ec668}{open}) \\
+\breakseq{[@hinsen2013platforms]} & Platforms for reproducible research & 2013
+& DOI 10.59350/s56jr-3cn95
+(\href{https://doi.org/10.59350/s56jr-3cn95}{open}) \\
+\breakseq{[@edmunds2015fermenting]} & Fermenting a Reproducible Research
+Revolution & 2015 & DOI 10.59350/0hs8b-m2239
+(\href{https://doi.org/10.59350/0hs8b-m2239}{open}) \\
+\breakseq{[@hector2021reproducible]} & Reproducible Research & 2021 & DOI
+10.1093/oso/9780198798170.003.0004
+(\href{https://doi.org/10.1093/oso/9780198798170.003.0004}{open}) \\
+\breakseq{[@edmunds2015fermentinga]} & Fermenting a Reproducible Research
+Revolution & 2015 & DOI 10.59350/ejn9k-s7c54
+(\href{https://doi.org/10.59350/ejn9k-s7c54}{open}) \\
+\breakseq{[@kunisato2019introduction]} & Introduction to reproducible
+psychological research & 2019 & DOI 10.31234/osf.io/x8js5
+(\href{https://doi.org/10.31234/osf.io/x8js5}{open}) \\
+\breakseq{[@suber2008oa]} & OA for reproducible research & 2008 & DOI
+10.63485/4jjac-1dd97
+(\href{https://doi.org/10.63485/4jjac-1dd97}{open}) \\
+\breakseq{[@turek2019case]} & Case Studies in Reproducible Research & 2019 &
+DOI 10.1525/9780520967779-006
+(\href{https://doi.org/10.1525/9780520967779-006}{open}) \\
+\breakseq{[@gandrud2020reproducible]} & Reproducible Research with R and
+RStudio & 2020 & DOI 10.1201/9780429031854
+(\href{https://doi.org/10.1201/9780429031854}{open}) \\
+\breakseq{[@basu2018reproducible]} & Reproducible research using minimalist
+plain text tools & 2018 & DOI 10.32388/649864
+(\href{https://doi.org/10.32388/649864}{open}) \\
+\breakseq{[@gandrud2018reproducible]} & Reproducible Research with R and
+RStudio & 2018 & DOI 10.1201/9781315382548
+(\href{https://doi.org/10.1201/9781315382548}{open}) \\
+\breakseq{[@edmunds2014carmen]} & CARMEN, reproducible research and push-button
+papers & 2014 & DOI 10.59350/xx4rg-zcd90
+(\href{https://doi.org/10.59350/xx4rg-zcd90}{open}) \\
+\breakseq{[@gandrud2013reproducible]} & Reproducible Research with R and R
+Studio & 2013 & DOI 10.1201/b15100
+(\href{https://doi.org/10.1201/b15100}{open}) \\
+\breakseq{[@basureproducible]} & Reproducible research with jupyter notebooks &
+n.d. & DOI 10.22541/au.151460905.57485984
+(\href{https://doi.org/10.22541/au.151460905.57485984}{open}) \\
+\breakseq{[@bahlai2016open]} & The open science and reproducible research
+course & 2016 & DOI 10.7490/f1000research.1112876.1
+(\href{https://doi.org/10.7490/f1000research.1112876.1}{open}) \\
+\breakseq{[@white2018software]} & Software skills for reproducible
+data-intensive research & 2018 & DOI 10.7490/f1000research.1115901.1
+(\href{https://doi.org/10.7490/f1000research.1115901.1}{open}) \\
+\breakseq{[@missingvalueplatforms]} & Platforms & n.d. & DOI 10.1201/b16868-20
+(\href{https://doi.org/10.1201/b16868-20}{open}) \\
+\breakseq{[@edmunds2014carmena]} & CARMEN, reproducible research and
+push-button papers & 2014 & DOI 10.59350/p6xyp-h2p77
+(\href{https://doi.org/10.59350/p6xyp-h2p77}{open}) \\
+\breakseq{[@anonfigure]} & Figure 2: The final reproducible research criteria
+used for the evaluation. & n.d. & DOI 10.7717/peerj.5072/fig-2
+(\href{https://doi.org/10.7717/peerj.5072/fig-2}{open}) \\
+\breakseq{[@anon2020transparent]} & Transparent and Reproducible Data Analysis
+& 2020 & DOI 10.4135/9781526421036926480
+(\href{https://doi.org/10.4135/9781526421036926480}{open}) \\
+\breakseq{[@kitzes2019basic]} & The Basic Reproducible Workflow Template & 2019
+& DOI 10.1525/9780520967779-005
+(\href{https://doi.org/10.1525/9780520967779-005}{open}) \\
+\breakseq{[@anon2016reproducible]} & Reproducible Research with R and R Studio,
+Second Edition & 2016 & DOI 10.1201/b18546
+(\href{https://doi.org/10.1201/b18546}{open}) \\
+\breakseq{[@missingvaluetools]} & Tools & n.d. & DOI 10.1201/b16868-6
+(\href{https://doi.org/10.1201/b16868-6}{open}) \\
+\breakseq{[@suber2008open]} & Open licensing to enable reproducible research &
+2008 & DOI 10.63485/8k73p-vrh09
+(\href{https://doi.org/10.63485/8k73p-vrh09}{open}) \\
+\breakseq{[@hinsen2016reproducible]} & From reproducible to verifiable
+computer-aided research & 2016 & DOI 10.59350/fj0g3-5yv59
+(\href{https://doi.org/10.59350/fj0g3-5yv59}{open}) \\
+\breakseq{[@anon2025preparing]} & Preparing for Transparent and Reproducible
+Quantitative Social Science Research & 2025 & DOI 10.4135/9781036230647
+(\href{https://doi.org/10.4135/9781036230647}{open}) \\
+\breakseq{[@anon2016reproduciblea]} & Reproducible Research & 2016 & DOI
+10.1201/b15166-10 (\href{https://doi.org/10.1201/b15166-10}{open}) \\
+\breakseq{[@suber2009more]} & More on OA to facilitate reproducible research &
+2009 & DOI 10.63485/tys9t-3y862
+(\href{https://doi.org/10.63485/tys9t-3y862}{open}) \\
+\breakseq{[@geertreproducible]} & Reproducible research reports with Quarto &
+n.d. & DOI 10.21428/1192f2f8.fb1a1b7f
+(\href{https://doi.org/10.21428/1192f2f8.fb1a1b7f}{open}) \\
+\breakseq{[@marwick2019case]} & Case Study 12: Using R and Related Tools for
+Reproducible Research in Archaeology & 2019 & DOI
+10.1525/9780520967779-021
+(\href{https://doi.org/10.1525/9780520967779-021}{open}) \\
+\breakseq{[@maerz2024quarto]} & Quarto in RStudio: Writing Reproducible \&
+Dynamic Research Papers & 2024 & DOI 10.61700/pdeaaefq62n681556
+(\href{https://doi.org/10.61700/pdeaaefq62n681556}{open}) \\
+\breakseq{[@anon2018implementing]} & Implementing Reproducible Research & 2018
+& DOI 10.1201/9781315373461
+(\href{https://doi.org/10.1201/9781315373461}{open}) \\
+\breakseq{[@hinsen2013python]} & Python as a platform for reproducible research
+& 2013 & DOI 10.59350/85pnj-bak53
+(\href{https://doi.org/10.59350/85pnj-bak53}{open}) \\
+\breakseq{[@wiebels2021leveraging]} & Leveraging Containers for Reproducible
+Psychological Research & 2021 & DOI 10.31234/osf.io/h7tkg
+(\href{https://doi.org/10.31234/osf.io/h7tkg}{open}) \\
+\breakseq{[@moresi2018alaska]} & Alaska Moho Model (Reproducible research with
+containers) & 2018 & DOI 10.59350/pn8gh-98592
+(\href{https://doi.org/10.59350/pn8gh-98592}{open}) \\
+\breakseq{[@roskar2022renku]} & Renku: a platform for collaborative, reusable
+and reproducible research & 2022 & DOI 10.5194/egusphere-egu22-10697
+(\href{https://doi.org/10.5194/egusphere-egu22-10697}{open}) \\
+\breakseq{[@gandrud2020conclusion]} & Conclusion & 2020 & DOI
+10.1201/9780429031854-17
+(\href{https://doi.org/10.1201/9780429031854-17}{open}) \\
+\breakseq{[@hediyehzadeh2016computational]} & Computational workflows for
+research students: towards a reproducible research & 2016 & DOI
+10.7490/f1000research.1113332.1
+(\href{https://doi.org/10.7490/f1000research.1113332.1}{open}) \\
+\breakseq{[@heston2023statistics]} & Statistics, Ethics, and the Promotion of
+Reproducible Research & 2023 & DOI 10.22541/au.169627960.06669688/v1
+(\href{https://doi.org/10.22541/au.169627960.06669688/v1}{open}) \\
+\breakseq{[@anon2021decision]} & Decision letter: Is preclinical research in
+cancer biology reproducible enough? & 2021 & DOI 10.7554/elife.67527.sa1
+(\href{https://doi.org/10.7554/elife.67527.sa1}{open}) \\
+\breakseq{[@gandrud2018conclusion]} & Conclusion & 2018 & DOI
+10.1201/9781315382548-14
+(\href{https://doi.org/10.1201/9781315382548-14}{open}) \\
+\breakseq{[@missingvaluepractices]} & Practices and Guidelines & n.d. & DOI
+10.1201/b16868-12 (\href{https://doi.org/10.1201/b16868-12}{open}) \\
+\breakseq{[@boettiger2019case]} & Case Study 3: A Reproducible R Notebook Using
+Docker & 2019 & DOI 10.1525/9780520967779-012
+(\href{https://doi.org/10.1525/9780520967779-012}{open}) \\
+\breakseq{[@moresi2018alaskaa]} & Alaska Moho Model (Reproducible research with
+containers) & 2018 & DOI 10.59350/15qd1-96r10
+(\href{https://doi.org/10.59350/15qd1-96r10}{open}) \\
+\breakseq{[@limarereproducible]} & Reproducible research, software quality,
+online interfaces and publishing for image processing & n.d. & DOI
+10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc
+(\href{https://doi.org/10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc}{open}) \\
+\breakseq{[@solt2016icpsrdata]} & icpsrdata: Reproducible Data Retrieval from
+the ICPSR Archive & 2016 & DOI 10.32614/cran.package.icpsrdata
+(\href{https://doi.org/10.32614/cran.package.icpsrdata}{open}) \\
+\breakseq{[@anon2025reviewer]} & Reviewer \#1 (Public review): Spyglass: a
+framework for reproducible and shareable neuroscience research & 2025 &
+DOI 10.7554/elife.108089.1.sa1
+(\href{https://doi.org/10.7554/elife.108089.1.sa1}{open}) \\
+\breakseq{[@peyrache2025elife]} & eLife Assessment: Spyglass: a framework for
+reproducible and shareable neuroscience research & 2025 & DOI
+10.7554/elife.108089.1.sa2
+(\href{https://doi.org/10.7554/elife.108089.1.sa2}{open}) \\
+\breakseq{[@lebeau2020reproducible]} & Reproducible Analyses in Educational
+Research & 2020 & DOI 10.17077/pp.005637
+(\href{https://doi.org/10.17077/pp.005637}{open}) \\
+\breakseq{[@gavel2025ensuring]} & Ensuring Your Quantitative Research is
+Replicable and Reproducible & 2025 & DOI 10.4135/9781036216696
+(\href{https://doi.org/10.4135/9781036216696}{open}) \\
+\breakseq{[@hinsen2017sustainable]} & Sustainable software and reproducible
+research: dealing with software collapse & 2017 & DOI
+10.59350/7tavk-2hf75
+(\href{https://doi.org/10.59350/7tavk-2hf75}{open}) \\
+\breakseq{[@basu2021how]} & How to use orgmode for reproducible research, rough
+cut version 1 & 2021 & DOI 10.32388/b5rvo7
+(\href{https://doi.org/10.32388/b5rvo7}{open}) \\
+\breakseq{[@alston2020beginners]} & A Beginner's Guide to Conducting
+Reproducible Research & 2020 & DOI 10.32942/osf.io/h5r6n
+(\href{https://doi.org/10.32942/osf.io/h5r6n}{open}) \\
+\breakseq{[@hinsen2017reproducible]} & Reproducible research in the Python
+ecosystem: a reality check & 2017 & DOI 10.59350/wgebd-68y68
+(\href{https://doi.org/10.59350/wgebd-68y68}{open}) \\
+\breakseq{[@turner2010sweave]} & Sweave for Reproducible Research and Beatiful
+Statistical Reports & 2010 & DOI 10.59350/pexqx-j5g86
+(\href{https://doi.org/10.59350/pexqx-j5g86}{open}) \\
+\breakseq{[@peyrache2026elife]} & eLife Assessment: Spyglass: a framework for
+reproducible and shareable neuroscience research & 2026 & DOI
+10.7554/elife.108089.2.sa3
+(\href{https://doi.org/10.7554/elife.108089.2.sa3}{open}) \\
+\breakseq{[@anon2026reviewer]} & Reviewer \#2 (Public review): Spyglass: a
+framework for reproducible and shareable neuroscience research & 2026 &
+DOI 10.7554/elife.108089.2.sa1
+(\href{https://doi.org/10.7554/elife.108089.2.sa1}{open}) \\
+\breakseq{[@turner2010sweavea]} & Sweave for Reproducible Research and Beatiful
+Statistical Reports & 2010 & DOI 10.59350/247k5-kfv86
+(\href{https://doi.org/10.59350/247k5-kfv86}{open}) \\
+\breakseq{[@anon2026reviewera]} & Reviewer \#1 (Public review): Spyglass: a
+framework for reproducible and shareable neuroscience research & 2026 &
+DOI 10.7554/elife.108089.2.sa2
+(\href{https://doi.org/10.7554/elife.108089.2.sa2}{open}) \\
+\breakseq{[@strand2019publishing]} & Publishing open, reproducible research
+with undergraduates & 2019 & DOI 10.31234/osf.io/f7kuy
+(\href{https://doi.org/10.31234/osf.io/f7kuy}{open}) \\
+\breakseq{[@hastings2023ai]} & AI for Reproducible Research & 2023 & DOI
+10.1201/9781003226642-4
+(\href{https://doi.org/10.1201/9781003226642-4}{open}) \\
+\breakseq{[@yildiz2023dataintegrated]} & Data-integrated executable
+publications for reproducible geohazards research & 2023 & DOI
+10.5194/egusphere-egu23-7417
+(\href{https://doi.org/10.5194/egusphere-egu23-7417}{open}) \\
+\breakseq{[@anon2017fostering]} & Fostering reproducible fMRI research & 2017 &
+DOI 10.1038/ncomms14748
+(\href{https://doi.org/10.1038/ncomms14748}{open}) \\
+\breakseq{[@anon2025reviewera]} & Reviewer \#2 (Public review): Spyglass: a
+framework for reproducible and shareable neuroscience research & 2025 &
+DOI 10.7554/elife.108089.1.sa0
+(\href{https://doi.org/10.7554/elife.108089.1.sa0}{open}) \\
+\breakseq{[@chow2019reproducible]} & Reproducible Research & 2019 & DOI
+10.1201/9780429275067-9
+(\href{https://doi.org/10.1201/9780429275067-9}{open}) \\
+\breakseq{[@hinsen2012unifying]} & Unifying version control and dependency
+management for reproducible research & 2012 & DOI 10.59350/986d5-0he30
+(\href{https://doi.org/10.59350/986d5-0he30}{open}) \\
+\breakseq{[@turner2009seminar]} & Seminar: Reproducible Research with R, LaTeX,
+\&amp; Sweave & 2009 & DOI 10.59350/2958f-vdz74
+(\href{https://doi.org/10.59350/2958f-vdz74}{open}) \\
+\breakseq{[@poldrack2019case]} & Case Study 29: Developing a Reproducible
+Workflow for Large-Scale Phenotyping & 2019 & DOI
+10.1525/9780520967779-038
+(\href{https://doi.org/10.1525/9780520967779-038}{open}) \\
+\breakseq{[@turner2009seminara]} & Seminar: Reproducible Research with R,
+LaTeX, \&amp; Sweave & 2009 & DOI 10.59350/d3cd0-5jy93
+(\href{https://doi.org/10.59350/d3cd0-5jy93}{open}) \\
+\breakseq{[@mittal2025explainable]} & Explainable AI-Augmented DevSecOps for
+Secure and Reproducible Cloud-Native Research Software & 2025 & DOI
+10.36227/techrxiv.175617187.78775647/v1
+(\href{https://doi.org/10.36227/techrxiv.175617187.78775647/v1}{open}) \\
+\breakseq{[@anon2019replication]} & Replication & 2019 & DOI
+10.2307/j.ctvpb3xkg.14
+(\href{https://doi.org/10.2307/j.ctvpb3xkg.14}{open}) \\
+\breakseq{[@ohta2015containerbased]} & Container-based sequence data analysis
+workflow for reproducible research & 2015 & DOI
+10.7490/f1000research.1110170.1
+(\href{https://doi.org/10.7490/f1000research.1110170.1}{open}) \\
+\breakseq{[@baggerly2024importance]} & The Importance of Reproducible Research
+in High-Throughput Biology & 2024 & DOI 10.52519/00193
+(\href{https://doi.org/10.52519/00193}{open}) \\
+\breakseq{[@anon2019introduction]} & Introduction & 2019 & DOI
+10.2307/j.ctvpb3xkg.6
+(\href{https://doi.org/10.2307/j.ctvpb3xkg.6}{open}) \\
+\breakseq{[@anon2019tables]} & Tables & 2019 & DOI 10.1525/9780520969230-002
+(\href{https://doi.org/10.1525/9780520969230-002}{open}) \\
+\breakseq{[@gandrud2020presenting]} & Presenting with LaTeX & 2020 & DOI
+10.1201/9780429031854-15
+(\href{https://doi.org/10.1201/9780429031854-15}{open}) \\
+\breakseq{[@butland2019community]} & Community Call - Reproducible Research
+with R & 2019 & DOI 10.59350/v7xr3-6sn63
+(\href{https://doi.org/10.59350/v7xr3-6sn63}{open}) \\
+\breakseq{[@anon2019what]} & What Is Ethical Research? & 2019 & DOI
+10.2307/j.ctvpb3xkg.7
+(\href{https://doi.org/10.2307/j.ctvpb3xkg.7}{open}) \\
+\breakseq{[@simaan2023reproducible]} & Reproducible Research in Portfolio
+Selection & 2023 & DOI 10.2139/ssrn.4318828
+(\href{https://doi.org/10.2139/ssrn.4318828}{open}) \\
+\breakseq{[@anon2019conclusion]} & Conclusion & 2019 & DOI
+10.2307/j.ctvpb3xkg.17
+(\href{https://doi.org/10.2307/j.ctvpb3xkg.17}{open}) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+\emph{Per-paper synthesis omitted --- no LLM Contribution paragraphs are
+present in the deep-search outputs (set
+\breaktt{deep\_search.llm\_per\_paper:\ true} and ensure Ollama is
+reachable to populate this section).}

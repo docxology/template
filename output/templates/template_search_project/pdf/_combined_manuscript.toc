@@ -1,0 +1,37 @@
+\contentsline {section}{\numberline {1}Abstract}{2}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
+\contentsline {section}{\numberline {3}Methodology}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Search}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Cache}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Enrichment}{4}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Export}{5}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Synthesis}{5}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Report}{5}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Diagnostic figures}{6}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Results}{8}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Interpreting the run snapshot}{8}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Output artefacts}{8}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Conclusion}{10}{section.5}%
+\contentsline {section}{\numberline {6}Pipeline Internals}{11}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Data structures}{11}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}On-disk layout}{11}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Citation-key collision handling}{11}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Failure isolation}{11}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Reproducibility}{15}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Switching to live search}{15}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Determinism guarantees}{15}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Verifying reproducibility locally}{16}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Limitations}{16}{subsection.7.4}%
+\contentsline {section}{\numberline {8}Deep Search}{17}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Configuration}{17}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Pipeline shape}{17}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}LLM prompt}{17}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}On-disk layout}{19}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Determinism}{20}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Paperclip backend}{20}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}CLI}{20}{subsection.8.7}%
+\contentsline {section}{\numberline {9}Supplemental S1 --- Literature Review (auto-composed from deep search)}{21}{section.9}%
+\contentsline {subsection}{\numberline {9.1}convex optimization}{21}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}stochastic gradient descent}{27}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}reproducible research}{37}{subsection.9.3}%
+\contentsline {section}{\numberline {10}References}{45}{section.10}%

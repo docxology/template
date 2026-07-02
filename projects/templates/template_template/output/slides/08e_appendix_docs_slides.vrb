@@ -25,7 +25,7 @@ Purpose
 Repository root & \texttt{AGENTS.md}, \texttt{CLAUDE.md},
 \texttt{README.md}, \texttt{RUN\_GUIDE.md} & Global navigation and AI
 agent context \\
-\texttt{docs/} directory & 390 files across 18 subdirectories & User
+\texttt{docs/} directory & 378 files across 17 subdirectories & User
 guides, API reference, troubleshooting \\
 Per-directory & \texttt{AGENTS.md} + \texttt{README.md} at every
 directory & Documentation Duality standard \\
@@ -44,13 +44,13 @@ docs), \texttt{guides/} (skill levels 1--12), \texttt{architecture/}
 \texttt{reference/} (API, FAQ, glossary), \texttt{modules/} (23
 infrastructure modules), \texttt{development/} (contributing, testing),
 \texttt{best-practices/} (version control, migration), \texttt{prompts/}
-(20 AI prompt templates), \texttt{security/} (steganography, hashing),
+(21 AI prompt templates), \texttt{security/} (steganography, hashing),
 and \texttt{audit/} (review reports).
 
 Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: \texttt{390} counts every
-Markdown file beneath \texttt{docs/} recursively, \texttt{18} counts its
-first-level subdirectories, and \texttt{20} counts the workflow
+introspection rather than hand-maintained: \texttt{378} counts every
+Markdown file beneath \texttt{docs/} recursively, \texttt{17} counts its
+first-level subdirectories, and \texttt{21} counts the workflow
 subdirectories that each carry a \texttt{SKILL.md} descriptor. This is
 the same discipline the manuscript argues for throughout---a hand-typed
 ``90+ files across 12 subdirectories'' silently rots as the tree grows,

@@ -405,9 +405,11 @@ memory as the three fundamental capabilities of autonomous agents; Yao
 et al.’s ReAct framework [yao2023react] demonstrates that interleaving
 reasoning traces with tool actions dramatically improves agent
 reliability in interactive settings. The <code>template/</code> skill
-architecture provides the tool-use layer aligned with these frameworks,
-the 12 declared stages in <code>pipeline.yaml</code>; default full runs
-use 10 provides the planning scaffold, and the checkpoint system
-provides the memory layer.</p>
+architecture maps cleanly onto these three capabilities: the
+<code>SKILL.md</code> descriptors supply the tool-use layer, the
+declarative DAG of <code>12</code> <code>pipeline.yaml</code> stages (a
+default full run executes <code>10</code>) supplies the planning
+scaffold, and the per-criterion checkpoint system supplies the memory
+layer.</p>
 </body>
 </html>

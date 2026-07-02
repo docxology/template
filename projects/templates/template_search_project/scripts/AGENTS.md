@@ -24,19 +24,19 @@ Thin orchestrators executed in **lexicographic order** by `scripts/02_run_analys
 
 ## Review entrypoint
 
-[`review`](review) (executable Python file) reads [`../review_config.yaml`](../review_config.yaml). Stages that pass `--repo-root` use `.` with `cwd` = project root (`projects/template_search_project`).
+[`review`](review) (executable Python file) reads [`../review_config.yaml`](../review_config.yaml). Stages that pass `--repo-root` use `.` with `cwd` = project root (`projects/templates/template_search_project`).
 
 From repository root:
 
 ```bash
 uv run python projects/templates/template_search_project/scripts/review \
-  --project-root "$(pwd)/projects/template_search_project"
+  --project-root "$(pwd)/projects/templates/template_search_project"
 ```
 
 From project directory:
 
 ```bash
-cd projects/template_search_project && uv run python scripts/review
+cd projects/templates/template_search_project && uv run python scripts/review
 ```
 
 ## Environment

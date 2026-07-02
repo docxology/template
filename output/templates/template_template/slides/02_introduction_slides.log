@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  26 JUN 2026 07:02
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  2 JUL 2026 05:29
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1692,6 +1692,9 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ] [13
 
+
+] [14
+
 ]
 \tf@nav=\write5
 \openout5 = `02_introduction_slides.nav'.
@@ -1711,13 +1714,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 31123 strings out of 468168
- 627773 string characters out of 5432815
- 1236706 words of memory out of 5000000
- 59291 multiletter control sequences out of 15000+600000
+ 31125 strings out of 468168
+ 627789 string characters out of 5432815
+ 1236762 words of memory out of 5000000
+ 59293 multiletter control sequences out of 15000+600000
  631256 words of font info for 72 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1106b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
-te_template/output/slides/02_introduction_slides.pdf (13 pages).
+te_template/output/slides/02_introduction_slides.pdf (14 pages).

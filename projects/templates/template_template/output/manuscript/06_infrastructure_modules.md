@@ -1,6 +1,6 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `23` `discover_infrastructure_modules(repo_root)`. File totals use `604` Python sources across infra + `7,780` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `23` `discover_infrastructure_modules(repo_root)`. File totals use `604` Python sources across infra + `7,904` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
@@ -17,7 +17,7 @@ This section inventories every Layer‑1 subdirectory returned by `23` `discover
 | `orchestration` | 8 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
 | `project` | 27 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
-| `publishing` | 71 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `publishing` | 70 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
 | `rendering` | 50 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
@@ -26,7 +26,7 @@ This section inventories every Layer‑1 subdirectory returned by `23` `discover
 | `sia` | 10 | ✓ | ✓ | Self-Improving-AI loop: task validation, harness, metric capture |
 | `skills` | 7 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
 | `steganography` | 11 | ✓ | ✓ | Watermark overlays + hash manifests |
-| `validation` | 83 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 84 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 ## Alphabetical summaries
 
@@ -80,7 +80,7 @@ Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug vali
 
 Readability metrics + Markdown tooling for prose-centric manuscripts / CI gates.
 
-### `infrastructure.publishing` (71 files)
+### `infrastructure.publishing` (70 files)
 
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
@@ -102,7 +102,7 @@ Stability probing, benchmarking hooks—consumed heavily by optimization exempla
 
 ### `infrastructure.search` (44 files)
 
-`literature/` client stack (`client.py`, backends, caches) powering archive-only `template_search_project` literature workflows when copied locally from `projects/archive/`.
+`literature/` client stack (`client.py`, backends, caches) powering `template_search_project` literature workflows.
 
 ### `infrastructure.sia` (10 files)
 
@@ -116,7 +116,7 @@ Discovers `SKILL.md` frontmatter → `.cursor/skill_manifest.json`.
 
 Watermark overlays, hashing companions triggered by secure pipeline path.
 
-### `infrastructure.validation` (83 files)
+### `infrastructure.validation` (84 files)
 
 Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.
 

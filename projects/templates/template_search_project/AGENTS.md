@@ -161,14 +161,14 @@ Configurable gate via [`scripts/review`](scripts/review) and [`review_config.yam
 List stages:
 
 ```bash
-cd projects/template_search_project && uv run python scripts/review --list
+cd projects/templates/template_search_project && uv run python scripts/review --list
 ```
 
 Run all enabled stages (from repo root):
 
 ```bash
 uv run python projects/templates/template_search_project/scripts/review \
-  --project-root "$(pwd)/projects/template_search_project"
+  --project-root "$(pwd)/projects/templates/template_search_project"
 ```
 
 ### Available stages
@@ -198,4 +198,3 @@ Add `stage_type: custom` and wire the subprocess in `scripts/review` to `src.ana
 * [`docs/modules/literature-search-and-references.md`](../../../docs/modules/literature-search-and-references.md) — module overview.
 * [`docs/guides/literature-workflow-guide.md`](../../../docs/guides/literature-workflow-guide.md) — narrative tutorial.
 * [`infrastructure/search/AGENTS.md`](../../../infrastructure/search/AGENTS.md) and [`infrastructure/reference/AGENTS.md`](../../../infrastructure/reference/AGENTS.md) — infrastructure guides.
-

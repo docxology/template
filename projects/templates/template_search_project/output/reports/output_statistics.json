@@ -1,0 +1,279 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 11,
+      "size_mb": "1.01",
+      "total_size_bytes": 1062108,
+      "largest_files": [
+        {
+          "name": "template_search_project_combined.pdf",
+          "size_mb": "0.45",
+          "path": "pdf/template_search_project_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.12",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "references_deep.bib",
+          "size_mb": "0.12",
+          "path": "pdf/references_deep.bib"
+        }
+      ],
+      "extensions": {
+        ".bib": 2,
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".pdf": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 12,
+      "size_mb": "0.43",
+      "total_size_bytes": 454332,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.15",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.10",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__S01_literature_review.html",
+          "size_mb": "0.08",
+          "path": "web/manuscript__S01_literature_review.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 11
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 81,
+      "size_mb": "1.46",
+      "total_size_bytes": 1527556,
+      "largest_files": [
+        {
+          "name": "02_methodology_slides.pdf",
+          "size_mb": "0.22",
+          "path": "slides/02_methodology_slides.pdf"
+        },
+        {
+          "name": "S01_literature_review_slides.pdf",
+          "size_mb": "0.09",
+          "path": "slides/S01_literature_review_slides.pdf"
+        },
+        {
+          "name": "S01_literature_review_slides.log",
+          "size_mb": "0.08",
+          "path": "slides/S01_literature_review_slides.log"
+        }
+      ],
+      "extensions": {
+        ".nav": 10,
+        ".vrb": 10,
+        ".pdf": 10,
+        ".log": 10,
+        ".toc": 10,
+        ".tex": 11,
+        ".snm": 10,
+        ".aux": 10
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 3,
+      "size_mb": "0.17",
+      "total_size_bytes": 175339,
+      "largest_files": [
+        {
+          "name": "score_distribution.png",
+          "size_mb": "0.08",
+          "path": "figures/score_distribution.png"
+        },
+        {
+          "name": "year_histogram.png",
+          "size_mb": "0.04",
+          "path": "figures/year_histogram.png"
+        },
+        {
+          "name": "papers_per_source.png",
+          "size_mb": "0.04",
+          "path": "figures/papers_per_source.png"
+        }
+      ],
+      "extensions": {
+        ".png": 3
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 603,
+      "largest_files": [
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.00",
+          "path": "data/manuscript_variables.json"
+        }
+      ],
+      "extensions": {
+        ".json": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 6,
+      "size_mb": "0.08",
+      "total_size_bytes": 88226,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.07",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.01",
+          "path": "reports/validation_report.json"
+        },
+        {
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "path": "reports/test_results.json"
+        }
+      ],
+      "extensions": {
+        ".json": 4,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "llm": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 114,
+  "total_size_mb": 3.1549110412597656,
+  "largest_files": [
+    {
+      "name": "template_search_project_combined.pdf",
+      "size_mb": "0.45",
+      "category": "pdf",
+      "path": "pdf/template_search_project_combined.pdf"
+    },
+    {
+      "name": "02_methodology_slides.pdf",
+      "size_mb": "0.22",
+      "category": "slides",
+      "path": "slides/02_methodology_slides.pdf"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.15",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.12",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "references_deep.bib",
+      "size_mb": "0.12",
+      "category": "pdf",
+      "path": "pdf/references_deep.bib"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.10",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
+    },
+    {
+      "name": "S01_literature_review_slides.pdf",
+      "size_mb": "0.09",
+      "category": "slides",
+      "path": "slides/S01_literature_review_slides.pdf"
+    },
+    {
+      "name": "manuscript__S01_literature_review.html",
+      "size_mb": "0.08",
+      "category": "web",
+      "path": "web/manuscript__S01_literature_review.html"
+    },
+    {
+      "name": "S01_literature_review_slides.log",
+      "size_mb": "0.08",
+      "category": "slides",
+      "path": "slides/S01_literature_review_slides.log"
+    },
+    {
+      "name": "score_distribution.png",
+      "size_mb": "0.08",
+      "category": "figures",
+      "path": "figures/score_distribution.png"
+    }
+  ],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 1.0129051208496094,
+    "web": 0.4332847595214844,
+    "slides": 1.4567909240722656,
+    "figures": 0.16721630096435547,
+    "data": 0.0005750656127929688,
+    "reports": 0.08413887023925781
+  },
+  "file_counts_by_type": {
+    ".bib": 2,
+    ".md": 4,
+    ".log": 12,
+    ".aux": 11,
+    ".blg": 1,
+    ".pdf": 11,
+    ".tex": 12,
+    ".toc": 11,
+    ".bbl": 1,
+    ".html": 11,
+    ".nav": 10,
+    ".vrb": 10,
+    ".snm": 10,
+    ".png": 3,
+    ".json": 5
+  }
+}

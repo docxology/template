@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_pipeline_internals.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:pipeline_internals">Pipeline Internals</h1>
+<p>This supplemental section documents the data structures and on-disk
+artifacts the pipeline produces, for readers who want to extend or audit
+it.</p>
+<h2 id="data-structures">Data structures</h2>
+<p>The Mermaid class diagram in this subsection shows the canonical
+fields each record carries through the pipeline. Records have additional
+optional metadata (e.g. <code>Paper.url</code>,
+<code>Paper.publisher</code>, <code>Paper.isbn</code>,
+<code>Paper.raw</code>) omitted for readability — consult
+<code>infrastructure/search/literature/models.py</code> (<a
+href="https://github.com/docxology/template/tree/main/infrastructure/search/literature">source
+on GitHub</a>) and <code>src/pipeline.py</code> (<a
+href="https://github.com/docxology/template/tree/main/projects/templates/template_search_project/src">source
+on GitHub</a>) for the full schema.</p>
+<pre class="mermaid"><code>classDiagram
+    class SearchQuery {
+        +str text
+        +int max_results
+        +int|None year_min
+        +int|None year_max
+        +list~str~ sources
+        +list~str~ fields
+        +matches_year(year) bool
+    }
+
+    class Paper {
+        +str id
+        +str title
+        +list~str~ authors
+        +int|None year
+        +str|None doi
+        +str|None url
+        +str|None abstract
+        +str|None pdf_url
+        +str|None fulltext
+        +str|None venue
+        +str|None venue_type
+        +str|None volume
+        +str|None issue
+        +str|None pages
+        +str|None publisher
+        +str|None edition
+        +str|None isbn
+        +list~str~ keywords
+        +str|None source
+        +float score
+        +dict raw
+        +to_dict() dict
+        +from_dict(d) Paper
+    }
+
+    class SearchResult {
+        +SearchQuery query
+        +list~Paper~ papers
+        +dict per_source_counts
+        +dict errors
+        +to_dict() dict
+        +to_json() str
+    }
+
+    class BibEntry {
+        +str entry_type
+        +str citation_key
+        +OrderedDict fields
+    }
+
+    class BibDatabase {
+        +list~BibEntry~ entries
+        +str|None preamble
+        +find(key) BibEntry
+    }
+
+    class LiteratureRunArtifacts {
+        +SearchResult result
+        +Path|None corpus_path
+        +Path|None bibtex_path
+        +list~FetchResult~ enrichment_log
+        +Path|None cache_dir
+        +dict citation_keys
+        +papers() list~Paper~
+    }
+
+    class ManuscriptVariables {
+        +str config_query
+        +int config_max_results
+        +str config_sources
+        +int result_num_papers
+        +int result_num_sources
+        +str result_per_source
+        +str result_errors
+        +str result_year_min
+        +str result_year_max
+        +int result_with_abstract
+        +int result_with_doi
+        +int deep_max_results_per_keyword
+        +int deep_keyword_count
+        +str deep_keywords_joined
+        +str deep_sources
+        +str deep_unique_papers
+        +as_dict() dict
+        +as_uppercase_keys() dict
+    }
+
+    class SynthesisResult {
+        +str kind
+        +str prompt
+        +str text
+        +str|None paper_id
+    }
+
+    SearchResult --&gt; SearchQuery
+    SearchResult --&gt; &quot;*&quot; Paper
+    LiteratureRunArtifacts --&gt; SearchResult
+    LiteratureRunArtifacts --&gt; &quot;*&quot; BibEntry : via paper_to_bibentry
+    BibDatabase --&gt; &quot;*&quot; BibEntry</code></pre>
+<h2 id="on-disk-layout">On-disk layout</h2>
+<p>The project keeps committed input data in <code>data/</code>,
+regeneratable outputs in <code>output/</code> (gitignored), and the
+manuscript source in <code>manuscript/</code>. The Mermaid flowchart in
+this subsection (rendered in the HTML build; the PDF build strips
+Mermaid) lists every artefact the standard pipeline writes:</p>
+<ul>
+<li><code>data/corpus.json</code> — the bundled offline corpus, CI-safe
+default for <code>LocalBackend</code>.</li>
+<li><code>output/search/results.json</code> — raw
+<code>SearchResult</code> JSON from the latest run.</li>
+<li><code>output/search/cache/search_&lt;hash&gt;.json</code> —
+deterministic <code>SearchCache</code> files.</li>
+<li><code>output/cache/abs/&lt;safe_id&gt;.txt</code> — one cached
+abstract per paper.</li>
+<li><code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code> — PDF bytes
+plus extracted text.</li>
+<li><code>output/llm/synthesis.md</code> — corpus-level LLM synthesis
+(when enabled).</li>
+<li><code>output/llm/per_paper/&lt;safe_id&gt;.md</code> — one per-paper
+note per paper (when enabled).</li>
+<li><code>../figures/{papers_per_source,year_histogram,score_distribution}.png</code>
+— diagnostic figures.</li>
+<li><code>output/data/manuscript_variables.json</code> — substitution
+table consumed by the resolver.</li>
+<li><code>output/corpus.json</code> — enriched corpus, written in
+<code>LocalBackend</code>-compatible format so it can re-seed a
+deterministic future run.</li>
+<li><code>output/enrichment_log.json</code> — one entry per fetcher per
+paper.</li>
+<li><code>output/reading_report.md</code> — final markdown reading
+report.</li>
+<li><code>output/run_summary.json</code> — one-line metadata for the
+run.</li>
+<li><code>manuscript/references.bib</code> — auto-populated,
+Pandoc-ready BibTeX.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TB
+    P[&quot;projects/templates/template_search_project/&quot;]
+    P --&gt; DAT[&quot;data/&lt;br/&gt;committed&quot;]
+    P --&gt; OUT[&quot;output/&lt;br/&gt;regeneratable · gitignored&quot;]
+    P --&gt; MAN[&quot;manuscript/&quot;]
+
+    DAT --&gt; CORP_IN[corpus.json&lt;br/&gt;bundled offline corpus&lt;br/&gt;CI-safe default]
+
+    OUT --&gt; SR[&quot;search/&quot;]
+    OUT --&gt; CC[&quot;cache/&quot;]
+    OUT --&gt; LD[&quot;llm/&quot;]
+    OUT --&gt; FIG[&quot;figures/&quot;]
+    OUT --&gt; DD[&quot;data/&quot;]
+    OUT --&gt; CORP_OUT[corpus.json&lt;br/&gt;enriched · LocalBackend-compatible]
+    OUT --&gt; ELOG[enrichment_log.json&lt;br/&gt;per-fetch status]
+    OUT --&gt; RR[reading_report.md]
+    OUT --&gt; RS[run_summary.json]
+
+    SR --&gt; SR_R[results.json&lt;br/&gt;SearchResult]
+    SR --&gt; SR_C[&quot;cache/search_HASH.json&lt;br/&gt;deterministic SearchCache&quot;]
+
+    CC --&gt; CC_A[&quot;abs/SAFE_ID.txt&quot;]
+    CC --&gt; CC_P[&quot;pdf/SAFE_ID.pdf and .txt&quot;]
+
+    LD --&gt; LD_S[synthesis.md]
+    LD --&gt; LD_PP[&quot;per_paper/SAFE_ID.md&quot;]
+
+    FIG --&gt; F1[papers_per_source.png]
+    FIG --&gt; F2[year_histogram.png]
+    FIG --&gt; F3[score_distribution.png]
+
+    DD --&gt; MV[manuscript_variables.json]
+
+    MAN --&gt; BIB[references.bib&lt;br/&gt;auto-populated · Pandoc-ready]
+
+    classDef dir fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,DAT,OUT,MAN,SR,CC,LD,FIG,DD dir
+    class CORP_OUT,ELOG,RR,RS,SR_R,SR_C,CC_A,CC_P,LD_S,LD_PP,F1,F2,F3,MV,BIB gen
+    class CORP_IN src</code></pre>
+<h2 id="citation-key-collision-handling">Citation-key collision
+handling</h2>
+<p><code>paper_to_bibentry()</code> generates citation keys as
+<code>&lt;author&gt;&lt;year&gt;&lt;title-word&gt;</code> (with
+stop-words filtered and unicode folded). When two papers in the same
+result set produce the same key — common when one author publishes
+multiple papers in the same year on closely related topics —
+<code>src/pipeline.py::_disambiguate_citation_key</code> appends a
+deterministic suffix from the alphabet (<code>a</code>, <code>b</code>,
+…, <code>z</code>, then two-letter combinations <code>aa</code>,
+<code>ab</code>, …) until uniqueness is restored, with a numeric
+<code>_1</code>, <code>_2</code>, … fallback for the pathological case.
+The mapping is exposed to downstream stages via
+<code>LiteratureRunArtifacts.citation_keys</code>, and the report uses
+these keys verbatim, so the LLM synthesis and the BibTeX file always
+agree.</p>
+<p>The deep-search workflow has its own collision handler in
+<code>src/deep_search.py::run_deep_search</code> that operates over the
+post-deduplication aggregate roster — see <span class="citation"
+data-cites="sec:deep_search">[@sec:deep_search]</span> — and the unified
+<code>references_deep.bib</code> reflects the same mapping.</p>
+<h2 id="failure-isolation">Failure isolation</h2>
+<ul>
+<li><strong>A backend is unreachable.</strong>
+<code>LiteratureClient</code> records the message into
+<code>result.errors[name]</code> and continues. The reading report
+surfaces these errors in a callout block at the top.</li>
+<li><strong>An abstract fetch fails.</strong> The fetcher records
+<code>status="error"</code> in <code>enrichment_log.json</code> and the
+paper keeps its existing (possibly empty) abstract.</li>
+<li><strong>A PDF fetch fails or <code>pypdf</code> is missing.</strong>
+Same pattern — the PDF, if downloaded, is still cached on disk. The
+reading report does not reference the missing fulltext.</li>
+<li><strong>The LLM is unreachable or unconfigured.</strong>
+<code>scripts/run_search_pipeline.py</code> logs a warning and skips the
+synthesis stage entirely — <code>output/llm/</code> is left empty and
+the reading report omits both the per-paper-notes and cross-corpus
+sections. No placeholder text is ever written into the archive, so a
+missing LLM is observable from the absence of those sections rather than
+from a fake “(LLM unavailable)” string.</li>
+</ul>
+</body>
+</html>

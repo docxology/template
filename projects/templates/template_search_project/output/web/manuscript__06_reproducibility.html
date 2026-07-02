@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_reproducibility.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="sec:reproducibility">Reproducibility</h1>
+<p>Reproducibility in computational research has well-documented
+prerequisites: open data, open code, and a deterministic build that can
+be re-run from scratch [peng2011reproducible]. The bundled
+<code>manuscript/config.yaml</code> is intentionally configured to
+satisfy all three for <strong>strict reproducibility</strong>:</p>
+<ol type="1">
+<li><code>search.sources: [local]</code> consumes
+<code>data/corpus.json</code>, which is a curated and committed JSON
+corpus. No network is required to run the pipeline.</li>
+<li><code>search.cache_dir: output/search/cache</code> writes
+deterministic JSON cache files; running the same query twice produces a
+byte-identical artifact tree (modulo timestamp metadata in the cache
+file itself).</li>
+<li><code>enrichment.fetch_abstracts: true</code> reads abstracts
+directly from the corpus when present; no network fetch is
+required.</li>
+<li><code>enrichment.fetch_fulltext: false</code> is the default —
+full-text fetching is opt-in and gated behind the optional
+<code>pypdf</code> dependency
+(<code>uv sync --group rendering</code>).</li>
+<li><code>llm.enabled: false</code> is the default — the LLM stage is
+opt-in and requires a running <code>ollama serve</code>. When enabled,
+<code>seed: 42</code> and <code>temperature: 0.0</code> are pinned.</li>
+</ol>
+<h2 id="switching-to-live-search">Switching to live search</h2>
+<p>Replace the <code>sources</code> list with the desired backend
+set:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">search</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">query</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;your topic&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sources</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">arxiv</span><span class="kw">,</span><span class="at"> crossref</span><span class="kw">]</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">crossref_mailto</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;you@example.org&quot;</span></span></code></pre></div>
+<p>A first live run populates <code>output/search/cache/</code>. Commit
+that directory to the repo and the pipeline becomes reproducible across
+machines without further configuration changes.</p>
+<h2 id="determinism-guarantees">Determinism guarantees</h2>
+<p>The full determinism contract is itemised in <span class="citation"
+data-cites="tbl:determinism">[@tbl:determinism]</span>: every pipeline
+stage is annotated as fully, conditionally, or non-deterministic, with
+an explicit mechanism column so reviewers can audit each row
+independently.</p>
+<table id="tbl:determinism">
+<caption>Determinism contract by pipeline stage. Cached stages are
+byte-stable across reruns; live stages depend on the upstream source and
+are pinned to the cache file once a successful run completes.</caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Deterministic?</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search (cached hit)</td>
+<td>yes</td>
+<td><code>SearchCache</code> JSON files</td>
+</tr>
+<tr>
+<td>Search (cache miss)</td>
+<td>no</td>
+<td>live API</td>
+</tr>
+<tr>
+<td>Dedup / merge</td>
+<td>yes</td>
+<td>DOI / arXiv-id canonical keys; tie-break by score then year</td>
+</tr>
+<tr>
+<td>Citation-key generation</td>
+<td>yes</td>
+<td>unicode folding + stop-word skip; collision suffix is
+deterministic</td>
+</tr>
+<tr>
+<td>BibTeX writer</td>
+<td>yes</td>
+<td>byte-stable format pinning (verified by
+<code>tests/infra_tests/reference/</code>)</td>
+</tr>
+<tr>
+<td>Abstract fetch</td>
+<td>yes (cached) / no (live)</td>
+<td>per-paper <code>&lt;safe_id&gt;.txt</code> cache</td>
+</tr>
+<tr>
+<td>Fulltext fetch</td>
+<td>yes (cached) / mostly (live)</td>
+<td>per-paper <code>&lt;safe_id&gt;.{pdf,txt}</code> cache; live fetch’s
+<code>pypdf</code> text extraction is not bit-stable across
+versions</td>
+</tr>
+<tr>
+<td>LLM synthesis</td>
+<td>mostly</td>
+<td><code>seed=42</code>, <code>temperature=0.0</code>; Ollama
+deterministic up to its own minor variance</td>
+</tr>
+<tr>
+<td>Figure generation</td>
+<td>yes (within Matplotlib version)</td>
+<td>fixed palette, fixed bin width, no random subsampling</td>
+</tr>
+</tbody>
+</table>
+<h2 id="verifying-reproducibility-locally">Verifying reproducibility
+locally</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run twice; nothing in output/ should diff except the cache timestamps.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_search_pipeline.py</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/templates/template_search_project/output projects/templates/template_search_project/output_first</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_search_pipeline.py</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="at">-ru</span> <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/output_first/corpus.json <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/output/corpus.json</span></code></pre></div>
+<p>The only expected differences are inside
+<code>output/search/cache/search_*.json</code>, where
+<code>_cached_at</code> is wall-clock time at write.</p>
+<h2 id="limitations">Limitations</h2>
+<p>The reproducibility contract enumerated in <span class="citation"
+data-cites="sec:reproducibility">[@sec:reproducibility]</span> (items
+1–5 and <span class="citation"
+data-cites="tbl:determinism">[@tbl:determinism]</span>) does not
+eliminate the following well-defined sources of non-reproducibility,
+which are surfaced here so reviewers can audit them explicitly rather
+than inferring from the contract table:</p>
+<ul>
+<li><strong>Live search drift.</strong> When
+<code>config.search.sources</code> includes <code>arxiv</code> or
+<code>crossref</code>, the first cache-miss invocation hits the live
+API; the cached JSON freezes that response, but two cold-start clones
+running on different days will see different paper sets. Pin a
+<code>LocalBackend</code> corpus or commit
+<code>output/search/cache/</code> to break this dependency.</li>
+<li><strong><code>pypdf</code> version drift.</strong> The fulltext
+fetcher uses <code>pypdf</code> to extract text from a downloaded PDF.
+<code>pypdf</code>’s text-extraction algorithm is not bit-stable across
+major versions; upgrading <code>pypdf</code> can produce different
+<code>&lt;safe_id&gt;.txt</code> cache contents from the same source
+PDF. The PDF bytes themselves are bit-stable so the cache freezes the
+inputs, not the extraction.</li>
+<li><strong>Ollama version drift.</strong> Pinning <code>seed=42</code>
+and <code>temperature=0.0</code> controls Ollama’s sampling, but the
+model weights, tokenizer, and template can change between Ollama
+releases. Document the Ollama version alongside
+<code>config.llm.model</code> when archiving a run for replication.</li>
+<li><strong>Paperclip backend status.</strong> The
+<code>paperclip</code> backend is opt-in and currently degrades to HTTP
+405 on the production endpoint; the run records the error in
+<code>SearchResult.errors[paperclip]</code> and continues. Treat
+<code>paperclip</code> results as advisory until the upstream service
+stabilises.</li>
+<li><strong>External backend behaviour outside this project’s
+control.</strong> arXiv and Crossref are the source of truth; this
+project is faithful to whatever they return. A retraction, metadata fix,
+or DOI assignment upstream will alter the cache on the next cold-start
+invocation.</li>
+</ul>
+<p>These limitations bound <em>what</em> the cache + seed + corpus
+pinning achieves. Inside those bounds, the contract in <span
+class="citation" data-cites="tbl:determinism">[@tbl:determinism]</span>
+is total: every cached pipeline stage is byte-stable across reruns
+(verified by
+<code>tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns</code>).</p>
+</body>
+</html>

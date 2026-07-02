@@ -24,7 +24,7 @@ editions in `content/`, pure-Python ReportLab engine in `src/`). If you are
 producing a research manuscript rather than a designed layout, see
 [`template_code_project`](../template_code_project/) or
 [`template_prose_project`](../template_prose_project/) instead. Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on).
+[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

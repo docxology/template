@@ -8,10 +8,10 @@ truth for that mapping.
 
 ```mermaid
 flowchart TB
-    P[/projects/templates/template_search_project//]
-    P --> DAT[/data/<br/>committed]
-    P --> MAN[/manuscript/]
-    P --> OUT[/output/<br/>regeneratable · gitignored]
+    P["projects/templates/template_search_project/"]
+    P --> DAT["data/<br/>committed"]
+    P --> MAN["manuscript/"]
+    P --> OUT["output/<br/>regeneratable · gitignored"]
 
     DAT --> CORP_IN[corpus.json<br/>offline default corpus]
 
@@ -33,12 +33,12 @@ flowchart TB
     OUT --> O_ELOG[enrichment_log.json<br/>per-fetcher status]
     OUT --> O_RS[run_summary.json]
     OUT --> O_RR[reading_report.md]
-    OUT --> O_DATA[/data/]
-    OUT --> O_MSM[/manuscript/<br/>resolved .md + .bib for render]
-    OUT --> O_FIG[/figures/]
-    OUT --> O_SR[/search/]
-    OUT --> O_CC[/cache/]
-    OUT --> O_LLM[/llm/]
+    OUT --> O_DATA["data/"]
+    OUT --> O_MSM["manuscript/<br/>resolved .md + .bib for render"]
+    OUT --> O_FIG["figures/"]
+    OUT --> O_SR["search/"]
+    OUT --> O_CC["cache/"]
+    OUT --> O_LLM["llm/"]
 
     O_DATA --> O_MV[manuscript_variables.json]
 
@@ -47,13 +47,13 @@ flowchart TB
     O_FIG --> O_F3[score_distribution.png]
 
     O_SR --> O_RES[results.json<br/>SearchResult]
-    O_SR --> O_SC[/cache/search_HASH.json/]
+    O_SR --> O_SC["cache/search_HASH.json"]
 
-    O_CC --> O_ABS[/abs/SAFE_ID.txt/<br/>cached abstracts]
-    O_CC --> O_PDF[/pdf/SAFE_ID.pdf and .txt/]
+    O_CC --> O_ABS["abs/SAFE_ID.txt<br/>cached abstracts"]
+    O_CC --> O_PDF["pdf/SAFE_ID.pdf and .txt"]
 
     O_LLM --> O_SYN[synthesis.md<br/>corpus-level LLM synthesis]
-    O_LLM --> O_PP[/per_paper/SAFE_ID.md/]
+    O_LLM --> O_PP["per_paper/SAFE_ID.md"]
 
     classDef dir fill:#0f172a,stroke:#0f172a,color:#fff
     classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff

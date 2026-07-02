@@ -37,7 +37,7 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **References**: Own cross-reference system and bibliography
 - **Metadata**: Project-specific publication information
 
-## Permanent Canonical Exemplars and Optional Search Add-On
+## Permanent Canonical Exemplars
 
 Fifteen projects under `projects/templates/` are **permanent canonical exemplars**: `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_prose_project`, `template_search_project`, `template_sia`, `template_template`, and `template_textbook`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/check_tracked_projects.py`. Authoritative names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). **CONFIDENTIALITY INVARIANT (public repo):** every other path under `projects/` (the `active/` hot-seat set, the `working/`/`published/`/`archive/`/`other/` lifecycle folders) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover Active Inference multi-track research, computational, exploratory data analysis on tabular data, metallurgical gold-refining analogy for manuscript composition with mega-madlib token injection, literature meta-analysis, conditional token-injection with QA probes and an authoring contract, a controlled-method specification DSL with staged validation and deterministic compilation (informed by BPL), prose-review, deterministic AutoResearch, AutoScientists coordination-mechanism testbed, newspaper layout/typography, SIA self-improvement harness (fixture replay by default), the autopoietic meta-template, the modular fillable textbook scaffold, and literature-search + LLM synthesis:
 
@@ -131,6 +131,7 @@ graph TD
         P11[templates/template_gold_refinement<br/>Gold-refining analogy exemplar · see canonical facts]
         P12[templates/template_eda_notebook<br/>EDA notebook exemplar · see canonical facts]
         P13[templates/template_methods_paper<br/>Methods-paper exemplar · see canonical facts]
+        P14[templates/template_search_project<br/>Literature-search exemplar · see canonical facts]
         Pn[active/* rotating hot-seat workspaces<br/>see docs/_generated/active_projects.md]
     end
 

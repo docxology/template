@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.75",
-      "total_size_bytes": 1832068,
+      "total_size_bytes": 1831052,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 23,
       "size_mb": "0.51",
-      "total_size_bytes": 529609,
+      "total_size_bytes": 529703,
       "largest_files": [
         {
           "name": "index.html",
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 169,
       "size_mb": "3.40",
-      "total_size_bytes": 3569922,
+      "total_size_bytes": 3569936,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -98,7 +98,7 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "1.07",
-      "total_size_bytes": 1125197,
+      "total_size_bytes": 1125147,
       "largest_files": [
         {
           "name": "comparative_feature_matrix.png",
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.01",
-      "total_size_bytes": 10102,
+      "total_size_bytes": 10547,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -150,7 +150,7 @@
       "exists": true,
       "file_count": 26,
       "size_mb": "0.23",
-      "total_size_bytes": 239713,
+      "total_size_bytes": 239712,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -210,7 +210,7 @@
     }
   },
   "total_files": 238,
-  "total_size_mb": 6.9682769775390625,
+  "total_size_mb": 6.96778678894043,
   "largest_files": [
     {
       "name": "template_template_combined.pdf",
@@ -275,12 +275,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.7471961975097656,
-    "web": 0.5050745010375977,
-    "slides": 3.404542922973633,
-    "figures": 1.0730714797973633,
-    "data": 0.009634017944335938,
-    "reports": 0.2286081314086914,
+    "pdf": 1.7462272644042969,
+    "web": 0.5051641464233398,
+    "slides": 3.4045562744140625,
+    "figures": 1.073023796081543,
+    "data": 0.010058403015136719,
+    "reports": 0.228607177734375,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.00014972686767578125

@@ -1,0 +1,4031 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Reproducible Literature Synthesis with infrastructure/search
+and infrastructure/reference</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: 100vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 390px;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: red;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Reproducible Literature Synthesis with
+infrastructure/search and infrastructure/reference</h1>
+<p class="subtitle">A configurable pipeline from query → references.bib
+→ LLM-driven reading report</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:abstract" id="toc-sec:abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#sec:introduction" id="toc-sec:introduction"><span
+class="toc-section-number">2</span> Introduction</a></li>
+<li><a href="#sec:methodology" id="toc-sec:methodology"><span
+class="toc-section-number">3</span> Methodology</a>
+<ul>
+<li><a href="#search" id="toc-search"><span
+class="toc-section-number">3.1</span> Search</a></li>
+<li><a href="#cache" id="toc-cache"><span
+class="toc-section-number">3.2</span> Cache</a></li>
+<li><a href="#enrichment" id="toc-enrichment"><span
+class="toc-section-number">3.3</span> Enrichment</a></li>
+<li><a href="#export" id="toc-export"><span
+class="toc-section-number">3.4</span> Export</a></li>
+<li><a href="#synthesis" id="toc-synthesis"><span
+class="toc-section-number">3.5</span> Synthesis</a></li>
+<li><a href="#report" id="toc-report"><span
+class="toc-section-number">3.6</span> Report</a></li>
+<li><a href="#diagnostic-figures" id="toc-diagnostic-figures"><span
+class="toc-section-number">3.7</span> Diagnostic figures</a></li>
+</ul></li>
+<li><a href="#sec:results" id="toc-sec:results"><span
+class="toc-section-number">4</span> Results</a>
+<ul>
+<li><a href="#interpreting-the-run-snapshot"
+id="toc-interpreting-the-run-snapshot"><span
+class="toc-section-number">4.1</span> Interpreting the run
+snapshot</a></li>
+<li><a href="#output-artefacts" id="toc-output-artefacts"><span
+class="toc-section-number">4.2</span> Output artefacts</a></li>
+</ul></li>
+<li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
+class="toc-section-number">5</span> Conclusion</a></li>
+<li><a href="#sec:pipeline_internals"
+id="toc-sec:pipeline_internals"><span
+class="toc-section-number">6</span> Pipeline Internals</a>
+<ul>
+<li><a href="#data-structures" id="toc-data-structures"><span
+class="toc-section-number">6.1</span> Data structures</a></li>
+<li><a href="#on-disk-layout" id="toc-on-disk-layout"><span
+class="toc-section-number">6.2</span> On-disk layout</a></li>
+<li><a href="#citation-key-collision-handling"
+id="toc-citation-key-collision-handling"><span
+class="toc-section-number">6.3</span> Citation-key collision
+handling</a></li>
+<li><a href="#failure-isolation" id="toc-failure-isolation"><span
+class="toc-section-number">6.4</span> Failure isolation</a></li>
+</ul></li>
+<li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
+class="toc-section-number">7</span> Reproducibility</a>
+<ul>
+<li><a href="#switching-to-live-search"
+id="toc-switching-to-live-search"><span
+class="toc-section-number">7.1</span> Switching to live search</a></li>
+<li><a href="#determinism-guarantees"
+id="toc-determinism-guarantees"><span
+class="toc-section-number">7.2</span> Determinism guarantees</a></li>
+<li><a href="#verifying-reproducibility-locally"
+id="toc-verifying-reproducibility-locally"><span
+class="toc-section-number">7.3</span> Verifying reproducibility
+locally</a></li>
+<li><a href="#limitations" id="toc-limitations"><span
+class="toc-section-number">7.4</span> Limitations</a></li>
+</ul></li>
+<li><a href="#sec:deep_search" id="toc-sec:deep_search"><span
+class="toc-section-number">8</span> Deep Search</a>
+<ul>
+<li><a href="#configuration" id="toc-configuration"><span
+class="toc-section-number">8.1</span> Configuration</a></li>
+<li><a href="#pipeline-shape" id="toc-pipeline-shape"><span
+class="toc-section-number">8.2</span> Pipeline shape</a></li>
+<li><a href="#llm-prompt" id="toc-llm-prompt"><span
+class="toc-section-number">8.3</span> LLM prompt</a></li>
+<li><a href="#on-disk-layout-1" id="toc-on-disk-layout-1"><span
+class="toc-section-number">8.4</span> On-disk layout</a></li>
+<li><a href="#determinism" id="toc-determinism"><span
+class="toc-section-number">8.5</span> Determinism</a></li>
+<li><a href="#paperclip-backend" id="toc-paperclip-backend"><span
+class="toc-section-number">8.6</span> Paperclip backend</a></li>
+<li><a href="#cli" id="toc-cli"><span
+class="toc-section-number">8.7</span> CLI</a></li>
+</ul></li>
+<li><a href="#sec:supplemental_s1" id="toc-sec:supplemental_s1"><span
+class="toc-section-number">9</span> Supplemental S1 — Literature Review
+(auto-composed from deep search)</a>
+<ul>
+<li><a href="#convex-optimization" id="toc-convex-optimization"><span
+class="toc-section-number">9.1</span> convex optimization</a></li>
+<li><a href="#stochastic-gradient-descent"
+id="toc-stochastic-gradient-descent"><span
+class="toc-section-number">9.2</span> stochastic gradient
+descent</a></li>
+<li><a href="#reproducible-research"
+id="toc-reproducible-research"><span
+class="toc-section-number">9.3</span> reproducible research</a></li>
+</ul></li>
+<li><a href="#sec:references" id="toc-sec:references"><span
+class="toc-section-number">10</span> References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="sec:abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>This paper documents <code>template_search_project</code>, the
+literature-search exemplar shipped with the <a
+href="https://github.com/docxology/template">Research Project
+Template</a>. The project demonstrates <strong>two configurable,
+reproducible pipelines</strong> sharing the same configuration file and
+the same <code>infrastructure/search/</code> +
+<code>infrastructure/reference/</code> modules. The standard pipeline
+(<code>scripts/run_search_pipeline.py</code>) handles a single
+<code>SearchQuery</code> end-to-end. The deep-search pipeline
+(<code>scripts/run_deep_search.py</code>, see sec. <a
+href="#sec:deep_search">8</a>) fans out across a list of keywords (each
+capped at 100 papers per keyword from
+<code>deep_search.max_results_per_keyword</code> in
+<code>manuscript/config.yaml</code>), fully enriches every paper with
+its abstract and PDF fulltext, and (optionally) uses the local LLM to
+write a multi-section reading note for every paper. When a deep-search
+aggregate exists, the latest run covered <strong>3</strong> keyword(s)
+with <strong><deep-search not run></strong> unique paper(s) after
+cross-keyword deduplication. Both turn a free-text topic into:</p>
+<ol type="1">
+<li>a deduplicated, year-filtered set of papers drawn from arXiv,
+Crossref, optional local corpora, and (opt-in) <a
+href="https://paperclip.gxl.ai/">Paperclip</a>;</li>
+<li>a Pandoc-compatible <code>references.bib</code> byte-identical in
+style to the canonical exemplar in <a
+href="../../template_code_project/manuscript/references.bib"><code>template_code_project</code></a>
+(file <code>manuscript/references.bib</code>);</li>
+<li>cached abstracts and (optionally) extracted PDF full text, written
+to disk under stable per-paper identifiers; and</li>
+<li>an LLM-synthesised reading report assembled from per-paper analyses
+and a cross-corpus thematic synthesis, all produced by a local Ollama
+model with pinned seed and temperature.</li>
+</ol>
+<p>All discovery logic lives in
+<code>infrastructure/search/literature/</code> (<a
+href="https://github.com/docxology/template/tree/main/infrastructure/search/literature">source
+on GitHub</a>); all export logic lives in
+<code>infrastructure/reference/citation/</code> (<a
+href="https://github.com/docxology/template/tree/main/infrastructure/reference/citation">source
+on GitHub</a>); LLM synthesis reuses the existing
+<code>infrastructure/llm/</code> (<a
+href="https://github.com/docxology/template/tree/main/infrastructure/llm">source
+on GitHub</a>) bridge. The project itself contains only thin
+orchestration, manuscript prose, and a test suite — perfectly mirroring
+the <strong>two-layer architecture</strong> the template enforces.</p>
+<p>The motivating concern is <em>reproducibility</em>: a query at time
+<span class="math inline">\(t_0\)</span> should produce the same results
+at time <span class="math inline">\(t_1\)</span> unless the cache is
+explicitly invalidated. This is achieved by deterministic search caching
+keyed on canonical query identity, on-disk caching of every fetched
+abstract / PDF, and pinned LLM seeds. The same
+<code>manuscript/config.yaml</code> that drives the pipeline is also the
+only configuration any reviewer needs.</p>
+<p><strong>Run snapshot.</strong> With the bundled
+<code>manuscript/config.yaml</code>, the most recent pipeline execution
+evaluated the query <em>“reproducible research optimization”</em>
+against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6
+carrying an abstract), and recorded backend errors: none. Resolve
+<code>{{…}}</code> tokens by running
+<code>scripts/z_generate_manuscript_variables.py</code> after
+<code>run_search_pipeline.py</code>; the script writes
+<code>output/data/manuscript_variables.json</code> and resolved markdown
+under <code>output/manuscript/</code>, which the PDF-rendering stage
+prefers when present.</p>
+<p><strong>Keywords:</strong> literature search, BibTeX automation,
+reproducible research, local LLM synthesis, scientific
+infrastructure</p>
+<hr />
+<h1 data-number="2" id="sec:introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>Reproducible computational research demands that every claim be
+traceable back to a stable artifact — code, data, and citations alike
+[peng2011reproducible]. Manual literature curation is a well-known
+bottleneck in such workflows: a graduate student writing a related-work
+section may spend hours searching arXiv, Crossref, and Google Scholar;
+copying citations into a <code>.bib</code> file by hand; and tracking
+which papers they have actually read. Three failure modes recur:</p>
+<ol type="1">
+<li><strong>Style drift</strong> — hand-edited <code>.bib</code> files
+accumulate formatting inconsistencies that hide real semantic conflicts
+in version-control diffs.</li>
+<li><strong>Stale state</strong> — the bibliography, the reading list,
+and the manuscript prose drift apart as the project evolves; the
+citation key in the manuscript no longer matches the entry in
+<code>.bib</code>, or the entry no longer matches the actual paper.</li>
+<li><strong>Lost context</strong> — abstracts and full text are read
+once during search, then discarded; six months later the same paper has
+to be re-skimmed to recall its contribution.</li>
+</ol>
+<p><code>template_search_project</code> exists to demonstrate one
+disciplined solution. The pipeline outputs are summarised in sec. <a
+href="#sec:methodology">3</a> (overview figure at the start of that
+section):</p>
+<ul>
+<li>The discovery side (<a
+href="../../../../infrastructure/search/"><code>infrastructure/search/</code></a>)
+provides multi-source paper search with failure-isolated aggregation,
+DOI/arXiv-aware deduplication, and deterministic JSON caching keyed on
+canonical query identity.</li>
+<li>The export side (<a
+href="../../../../infrastructure/reference/"><code>infrastructure/reference/</code></a>)
+provides BibTeX read/write/convert facilities byte-compatible with the
+existing exemplar <code>references.bib</code>, suitable for the
+combined-PDF pipeline (Pandoc <code>--natbib</code> + BibTeX).</li>
+<li>A small project-local synthesis layer (in <a
+href="../src/synthesis.py"><code>src/synthesis.py</code></a>) takes
+enriched papers, builds reproducible LLM prompts, and assembles a
+markdown reading report.</li>
+</ul>
+<p>The project is <em>configurable</em> via a single
+<code>manuscript/config.yaml</code>: changing the topic, year filters,
+backend set, enrichment level, and LLM parameters never requires editing
+code. The project is <em>modular</em> in the strict sense the template
+uses: every reusable component lives in <code>infrastructure/</code>,
+and <code>src/</code> contains only project-specific orchestration.</p>
+<p>The contribution of this exemplar is therefore not a new algorithm;
+it is a <strong>demonstration that a reproducible literature workflow
+can be built from existing template infrastructure</strong> with no new
+optional dependencies, no mocks in the test suite, and complete
+configurability through a single YAML file.</p>
+<hr />
+<h1 data-number="3" id="sec:methodology"><span
+class="header-section-number">3</span> Methodology</h1>
+<p>Two distinct workflows run on top of
+<code>infrastructure/search/literature</code> and
+<code>infrastructure/reference/citation</code>:</p>
+<ul>
+<li><strong>Standard pipeline</strong>
+(<code>scripts/run_search_pipeline.py</code> →
+<code>src/pipeline.py::run_literature_pipeline</code>) — single
+<code>SearchQuery</code>. Four pure-orchestration stages with no LLM
+dependency: (1) search via <code>LiteratureClient</code>, (2) enrichment
+via <code>AbstractFetcher</code> and (optional)
+<code>FulltextFetcher</code>, (3) collision-free citation-key generation
+in <code>_build_citation_keys</code>, (4) writing
+<code>output/corpus.json</code> + <code>manuscript/references.bib</code>
++ <code>output/enrichment_log.json</code>. The orchestrator script then
+optionally calls <code>src/synthesis.py</code> for per-paper and corpus
+LLM synthesis and <code>src/report.py</code> for the final reading
+report.</li>
+<li><strong>Deep search</strong>
+(<code>scripts/run_deep_search.py</code> →
+<code>src/deep_search.py::run_deep_search</code>) — multi-keyword
+fan-out: each keyword runs its own <code>SearchQuery</code> capped at
+<code>max_results_per_keyword</code> (100 by default), every paper is
+fully enriched (abstract + PDF fulltext when available), and an
+LLM-driven multi-section deep summary (CONTRIBUTION / METHOD / EVIDENCE
+/ LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) is written for each
+paper as a standalone markdown reading note. Output lands under
+<code>output/deep_search/&lt;keyword_slug&gt;/</code> plus aggregate
+<code>aggregate.json</code>, <code>aggregate_report.md</code>, and a
+unified, deduplicated <code>manuscript/references_deep.bib</code> with
+collision-free citation keys.</li>
+</ul>
+<p>The standard pipeline is described first in this section; the
+deep-search workflow is documented in sec. <a
+href="#sec:deep_search">8</a>. Diagnostic figures for the latest
+pipeline run appear at the end of this section.</p>
+<h2 data-number="3.1" id="search"><span
+class="header-section-number">3.1</span> Search</h2>
+<p>The search stage is intentionally faithful to the standard
+literature-search pattern documented in foundational optimisation
+textbooks [boyd2004convex; nocedal2006numerical] — a deterministic
+query, capped result count, and explicit failure isolation between
+sources — so reviewers familiar with those references can reason about
+the workflow without learning new abstractions.</p>
+<p>A <code>SearchQuery</code> is constructed from
+<code>config.search</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>SearchQuery(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span>config.search.query,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    max_results<span class="op">=</span>config.search.max_results,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    year_min<span class="op">=</span>config.search.year_min,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    year_max<span class="op">=</span>config.search.year_max,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>A <code>LiteratureClient</code> is constructed with the configured
+backends. Each backend produces a normalised <code>Paper</code> record;
+the aggregator deduplicates by DOI → arXiv id → normalised (title,
+year), keeping the highest-scored copy and filling missing fields from
+the loser.</p>
+<p>Per-backend errors are recorded into <code>SearchResult.errors</code>
+rather than raised. A network outage in one backend never breaks the
+workflow; partial coverage is reported by the final stage.</p>
+<h2 data-number="3.2" id="cache"><span
+class="header-section-number">3.2</span> Cache</h2>
+<p><code>SearchCache</code> writes one JSON file per query, named by a
+16-character SHA-256 prefix of the canonical query identity. Identical
+queries (modulo whitespace and case) share a cache entry. Cache files
+are pretty-printed JSON, version-control-friendly, and contain a
+<code>_cached_at</code> timestamp for optional TTL enforcement.</p>
+<h2 data-number="3.3" id="enrichment"><span
+class="header-section-number">3.3</span> Enrichment</h2>
+<p>Two fetchers populate fields the search backends did not supply:</p>
+<ul>
+<li><code>AbstractFetcher</code> — currently fetches arXiv abstracts via
+the export API, writes them to <code>&lt;safe_id&gt;.txt</code> under
+the configured cache directory, and re-uses them on subsequent
+runs.</li>
+<li><code>FulltextFetcher</code> — downloads PDFs (arXiv URL,
+<code>paper.pdf_url</code>, or a caller-supplied override), writes the
+bytes verbatim to <code>&lt;safe_id&gt;.pdf</code>, and extracts text
+via <code>pypdf</code> to <code>&lt;safe_id&gt;.txt</code>. Without
+<code>pypdf</code> the PDF is still cached, and the fetcher returns
+<code>status="error"</code> with an informative message; the rest of the
+pipeline continues.</li>
+</ul>
+<p>Both fetchers stamp <code>paper.abstract</code> /
+<code>paper.fulltext</code> in place, so downstream stages see enriched
+records without re-loading.</p>
+<h2 data-number="3.4" id="export"><span
+class="header-section-number">3.4</span> Export</h2>
+<p>For every paper, <code>paper_to_bibentry()</code> produces a
+<code>BibEntry</code> whose:</p>
+<ul>
+<li>citation key follows the exemplar’s
+<code>&lt;author&gt;&lt;year&gt;&lt;title-word&gt;</code> convention
+with stop-word filtering and unicode folding;</li>
+<li>entry type is routed by <code>venue_type</code> (journal →
+<code>@article</code>, conference → <code>@inproceedings</code>, book →
+<code>@book</code>, preprint → <code>@article</code>, etc.);</li>
+<li>fields are emitted in the order observed in
+<code>references.bib</code>: title, author, journal/booktitle, year,
+volume, number, pages, publisher, edition, isbn, doi, url, abstract,
+keywords.</li>
+</ul>
+<p>A <code>BibDatabase</code> collects these entries and
+<code>write_bibfile</code> renders them in the project’s house format:
+2-space indent, trailing-comma rule, <code>pages={N--M}</code>, verbatim
+DOIs/years, bare unicode.</p>
+<h2 data-number="3.5" id="synthesis"><span
+class="header-section-number">3.5</span> Synthesis</h2>
+<p>Two LLM passes produce the reading report (see
+<code>src/synthesis.py</code>):</p>
+<ul>
+<li><strong>Per-paper synthesis</strong> —
+<code>build_paper_block(paper, citation_key, max_fulltext=4000)</code>
+renders the paper as a markdown block; <code>synthesise_per_paper</code>
+formats <code>PROMPT_PER_PAPER</code> and calls the injected
+<code>llm</code> callable. The prompt requests five sections:
+CONTRIBUTION, METHOD, EVIDENCE, LIMITATION, TAGS, plus a citation-key
+reference.</li>
+<li><strong>Corpus synthesis</strong> — <code>build_corpus_block</code>
+concatenates every paper into a single citation-keyed block;
+<code>synthesise_corpus</code> formats <code>PROMPT_CORPUS</code>, which
+asks for 3–7 thematic clusters, methodological agreements /
+disagreements (≥ 2 papers each), and three open questions that the
+corpus does not answer.</li>
+</ul>
+<p>Both functions return a
+<code>SynthesisResult(kind, prompt, text, paper_id)</code> record so the
+prompt is recoverable for reproducibility. The synthesis layer takes a
+callable <code>llm: (str) -&gt; str</code> so tests pass a deterministic
+local function (no Ollama dependency) and runtime callers pass a thin
+adapter around <code>infrastructure.llm.LLMClient</code>. Determinism in
+production runs is enforced by
+<code>OllamaClientConfig(seed=42, temperature=0.0)</code>.</p>
+<p>The deep-search workflow uses a richer prompt
+(<code>src/deep_search.py::DEEP_PROMPT</code>) with seven sections
+(CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS /
+SIGNIFICANCE / TAGS) and a much larger <code>max_fulltext</code> budget
+(400 k chars by default).</p>
+<h2 data-number="3.6" id="report"><span
+class="header-section-number">3.6</span> Report</h2>
+<p><code>src/report.py::write_reading_report</code> assembles a markdown
+file with:</p>
+<ul>
+<li>Topic, result count, year filter, and any backend errors at the
+top.</li>
+<li>A per-source count table.</li>
+<li>One-line summaries for every paper.</li>
+<li>The corpus synthesis (if present).</li>
+<li>All per-paper notes (if present).</li>
+</ul>
+<p>Citation keys appear in <code>[brackets]</code> so a downstream tool
+— for example a Pandoc filter or a manual search — can resolve them
+against the auto-generated <code>references.bib</code>.</p>
+<h2 data-number="3.7" id="diagnostic-figures"><span
+class="header-section-number">3.7</span> Diagnostic figures</h2>
+<p><code>scripts/y_generate_search_figures.py</code> (a thin
+orchestrator over <code>src/figures.py</code>) writes three diagnostic
+plots into <code>../figures/</code> from
+<code>output/search/results.json</code>. Each figure uses Matplotlib’s
+<code>Agg</code> backend so the pipeline runs headlessly in CI; the
+colour palette is colourblind-safe (Wong, <em>Nature Methods</em>
+2011).</p>
+<p>fig. <a href="#fig:papers_per_source">1</a> reports the per-backend
+contribution counts before deduplication, surfacing which sources
+actually returned coverage for the configured query. The bar values are
+read directly from <code>SearchResult.per_source_counts</code> (set by
+<code>LiteratureClient</code> <em>before</em> the DOI / arXiv-id / title
+merge step), so a backend that returned five papers all duplicating
+arXiv hits still scores five here.</p>
+<figure id="fig:papers_per_source">
+<img src="../figures/papers_per_source.png"
+alt="Figure 1: Per-source paper counts read from SearchResult.per_source_counts (pre-deduplication contribution per backend). The numeric label above each bar reports the raw count; the y-axis spans [0, max + headroom]. Bar order follows the order recorded in config.search.sources. Empty runs render (no results) centred. Generated by src/figures.py::plot_papers_per_source." />
+<figcaption aria-hidden="true">Figure 1: Per-source paper counts read
+from <code>SearchResult.per_source_counts</code> (pre-deduplication
+contribution per backend). The numeric label above each bar reports the
+raw count; the y-axis spans <code>[0, max + headroom]</code>. Bar order
+follows the order recorded in <code>config.search.sources</code>. Empty
+runs render <code>(no results)</code> centred. Generated by
+<code>src/figures.py::plot_papers_per_source</code>.</figcaption>
+</figure>
+<p>fig. <a href="#fig:year_histogram">2</a> shows the publication-year
+distribution <em>after</em> the merge step (one bar per unique paper,
+not per backend hit) — useful for spotting backend coverage gaps in
+older / newer literature. Papers with no <code>year</code> field are
+dropped silently from the histogram (they remain in the corpus).</p>
+<figure id="fig:year_histogram">
+<img src="../figures/year_histogram.png"
+alt="Figure 2: Publication-year histogram of the deduplicated paper roster. One bin per year (no smoothing); the x-axis spans the observed [min(year), max(year)] from result.papers. Papers with year is None are dropped; the y-axis is per-year paper count. Generated by src/figures.py::plot_year_histogram." />
+<figcaption aria-hidden="true">Figure 2: Publication-year histogram of
+the deduplicated paper roster. One bin per year (no smoothing); the
+x-axis spans the observed <code>[min(year), max(year)]</code> from
+<code>result.papers</code>. Papers with <code>year is None</code> are
+dropped; the y-axis is per-year paper count. Generated by
+<code>src/figures.py::plot_year_histogram</code>.</figcaption>
+</figure>
+<p>fig. <a href="#fig:score_distribution">3</a> shows the per-paper
+relevance scores returned by the backends, ranked descending. Papers
+from backends without an explicit ranking signal
+(e.g. <code>LocalBackend</code>, the offline default) carry
+<code>Paper.score = 0.0</code>; their bars therefore have zero length
+but still appear as ticks on the y-axis so the reader can see how many
+unranked papers exist.</p>
+<figure id="fig:score_distribution">
+<img src="../figures/score_distribution.png"
+alt="Figure 3: Per-paper backend-reported relevance scores ranked descending (highest at top). Each horizontal bar is one Paper.score; the y-tick label is the paper title truncated to 60 characters with an ellipsis. Backends without scoring (notably LocalBackend) report Paper.score = 0.0 so those bars have zero length. Generated by src/figures.py::plot_score_distribution." />
+<figcaption aria-hidden="true">Figure 3: Per-paper backend-reported
+relevance scores ranked descending (highest at top). Each horizontal bar
+is one <code>Paper.score</code>; the y-tick label is the paper title
+truncated to 60 characters with an ellipsis. Backends without scoring
+(notably <code>LocalBackend</code>) report
+<code>Paper.score = 0.0</code> so those bars have zero length. Generated
+by <code>src/figures.py::plot_score_distribution</code>.</figcaption>
+</figure>
+<hr />
+<h1 data-number="4" id="sec:results"><span
+class="header-section-number">4</span> Results</h1>
+<p><strong>Run snapshot.</strong> With the bundled
+<code>manuscript/config.yaml</code> the most recent execution evaluated
+the query <em>“reproducible research optimization”</em> against local,
+returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an
+abstract); the per-source breakdown is local=6 and recorded backend
+errors are none. The deep-search workflow (sec. <a
+href="#sec:deep_search">8</a>) covered 3 keyword(s) — <em>convex
+optimization; stochastic gradient descent; reproducible research</em> —
+drawn from arxiv, crossref, paperclip, producing <deep-search not run>
+unique paper(s) after cross-keyword deduplication.</p>
+<p>The diagnostic figures generated for this run are catalogued in
+sec. <a href="#sec:methodology">3</a>: fig. <a
+href="#fig:papers_per_source">1</a> surfaces per-backend coverage,
+fig. <a href="#fig:year_histogram">2</a> surfaces the temporal
+distribution, and fig. <a href="#fig:score_distribution">3</a> surfaces
+the relevance-score profile. The full determinism contract for each
+stage is itemised in tbl. <a href="#tbl:determinism">1</a> of sec. <a
+href="#sec:reproducibility">7</a>.</p>
+<h2 data-number="4.1" id="interpreting-the-run-snapshot"><span
+class="header-section-number">4.1</span> Interpreting the run
+snapshot</h2>
+<p>The numerical values in the run-snapshot paragraph that opens this
+section are read directly from <code>output/run_summary.json</code> and
+<code>output/data/manuscript_variables.json</code> so they always
+reflect the most recent run rather than a stale claim hand-typed into
+the prose. Three properties are worth highlighting (the formal
+determinism contract for each underlying stage is enumerated in tbl. <a
+href="#tbl:determinism">1</a>):</p>
+<ul>
+<li><strong>Cache reuse is observable.</strong> A second invocation
+against the same config produces a byte-identical artifact tree (modulo
+the wall-clock timestamp inside
+<code>output/search/cache/search_&lt;hash&gt;.json</code> itself); see
+also the <em>Search (cached hit)</em> row of tbl. <a
+href="#tbl:determinism">1</a> and the verification recipe in sec. <a
+href="#sec:reproducibility">7</a>. The cache file thus doubles as a
+cryptographic seal: re-running is a file read, not a network
+round-trip.</li>
+<li><strong>Deduplication is signal-preserving.</strong> The aggregator
+merges by DOI → arXiv id → normalised (title, year), keeping the
+highest-scored copy and filling missing fields from the loser (see
+<em>Dedup / merge</em> in tbl. <a href="#tbl:determinism">1</a> and the
+per-backend pre-dedup view in fig. <a
+href="#fig:papers_per_source">1</a>). The <code>RESULT_NUM_PAPERS</code>
+figure therefore equals “papers a reviewer needs to read”, not “raw
+backend hit count” — the per-source contributions in
+<code>RESULT_PER_SOURCE</code> are the pre-dedup view.</li>
+<li><strong>Enrichment coverage is honest.</strong>
+<code>RESULT_WITH_ABSTRACT</code> and <code>RESULT_WITH_DOI</code> count
+fields the corpus or the <code>AbstractFetcher</code> actually
+populated, never values inferred. When a paper is missing a DOI it is
+excluded from the DOI count even if its arXiv id resolves to one
+upstream. The temporal coverage of those papers is summarised by fig. <a
+href="#fig:year_histogram">2</a>, and their backend-reported relevance
+scores by fig. <a href="#fig:score_distribution">3</a>.</li>
+</ul>
+<h2 data-number="4.2" id="output-artefacts"><span
+class="header-section-number">4.2</span> Output artefacts</h2>
+<p>After running <code>scripts/run_search_pipeline.py</code> against the
+default <code>manuscript/config.yaml</code>, the project produces:</p>
+<ul>
+<li><code>output/search/results.json</code> — the raw
+<code>SearchResult</code> JSON, including <code>per_source_counts</code>
+and <code>errors</code> for diagnostic purposes.</li>
+<li><code>output/search/cache/search_&lt;hash&gt;.json</code> — the
+deterministic search cache; identical reruns are file reads.</li>
+<li><code>output/cache/abs/&lt;safe_id&gt;.txt</code> — one file per
+fetched abstract.</li>
+<li><code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code> — PDFs and
+extracted text (only when
+<code>enrichment.fetch_fulltext: true</code>).</li>
+<li><code>output/corpus.json</code> — a
+<code>LocalBackend</code>-compatible JSON corpus of every result,
+enriched in place.</li>
+<li><code>manuscript/references.bib</code> — the auto-populated
+bibliography from the single-query pipeline (merged with any other
+<code>manuscript/*.bib</code> at PDF render time).</li>
+<li><code>output/llm/per_paper/&lt;safe_id&gt;.md</code> — per-paper LLM
+analyses (only when <code>llm.per_paper: true</code> <em>and</em> the
+LLM stack is reachable).</li>
+<li><code>output/llm/synthesis.md</code> — corpus-level LLM synthesis
+(only when <code>llm.corpus_synthesis: true</code> <em>and</em> the LLM
+stack is reachable).</li>
+<li><code>output/reading_report.md</code> — the final assembled reading
+report.</li>
+</ul>
+<p>When the LLM stack is genuinely unreachable, the
+<code>output/llm/</code> artefacts are simply absent — no placeholder
+file is ever written into the archive (see sec. <a
+href="#sec:pipeline_internals">6</a>).</p>
+<p>Because the search cache and abstract cache are deterministic, a
+second run with identical <code>config.yaml</code> produces
+byte-identical artifacts (modulo timestamp metadata in the cache files
+themselves). This is the property the project exists to demonstrate.</p>
+<p>The exact paper count, DOI list, and synthesis text depend on the
+live state of arXiv and Crossref at the time of the run — and are
+therefore not reproducible <em>across</em> runs in different weeks.
+Users seeking strict reproducibility should:</p>
+<ol type="1">
+<li>Pin a <code>LocalBackend</code> corpus generated from a successful
+run (<code>infrastructure.search.literature.write_corpus</code>) and
+remove <code>arxiv</code> / <code>crossref</code> from
+<code>config.search.sources</code>.</li>
+<li>Commit the <code>output/search/cache/</code> directory to version
+control.</li>
+<li>Pin the LLM seed (<code>config.llm.seed</code>) and avoid model
+upgrades.</li>
+</ol>
+<p>With those three steps, every run from the same commit produces the
+same outputs.</p>
+<hr />
+<h1 data-number="5" id="sec:conclusion"><span
+class="header-section-number">5</span> Conclusion</h1>
+<p><code>template_search_project</code> packages a complete,
+configurable, reproducible literature workflow into the Research Project
+Template’s two-layer architecture. By keeping discovery, export, and
+synthesis in three orthogonal infrastructure modules, the project
+demonstrates that ambitious research automation can still respect the
+template’s principles:</p>
+<ul>
+<li><strong>Single source of truth</strong> — <code>Paper</code> for
+discovery, <code>BibEntry</code> for export, structured
+<code>SynthesisResult</code> records for LLM output.</li>
+<li><strong>Test-driven development</strong> — every module is covered
+by real-data tests; HTTP backends are exercised through
+<code>pytest-httpserver</code>, the LLM bridge through deterministic
+local callables.</li>
+<li><strong>Thin orchestrator pattern</strong> —
+<code>scripts/run_search_pipeline.py</code> does only argument parsing,
+configuration loading, and I/O; all logic lives in
+<code>infrastructure/</code> or <code>src/</code>.</li>
+<li><strong>No mocks</strong> — neither in the new infrastructure
+modules nor in the project test suite.</li>
+<li><strong>Multi-project support</strong> — the project lives alongside
+<code>template_code_project/</code> and follows the same layout, so the
+existing pipeline runner discovers and executes it without
+modification.</li>
+<li><strong>Reproducibility</strong> — deterministic search caching,
+on-disk enrichment caching, and pinned LLM seeds make a single
+<code>manuscript/config.yaml</code> the only artifact a reviewer
+needs.</li>
+</ul>
+<p>We close with three concrete extensions that build naturally on this
+foundation:</p>
+<ol type="1">
+<li><strong>Crossref TDM full-text fetch</strong> for non-arXiv DOIs,
+completing the abstract-to-fulltext picture without changing the
+project’s API.</li>
+<li><strong>CSL-JSON export</strong> alongside BibTeX, enabling Zotero /
+Mendeley / Pandoc-CSL workflows from the same
+<code>BibDatabase</code>.</li>
+<li><strong>Vector recall on <code>LocalBackend</code></strong> for
+curated corpora exceeding ~1000 papers, gated behind an optional
+dependency.</li>
+</ol>
+<p>The infrastructure modules are deliberately small and stable; the
+project that exercises them is deliberately small and explicit. Together
+they show that <em>domain-specific research automation</em> and
+<em>template-strict architectural discipline</em> are compatible — and,
+in fact, mutually reinforcing.</p>
+<p>The bundled <code>data/corpus.json</code> exercises classical
+optimisation references [boyd2004convex; nocedal2006numerical;
+nesterov2013gradient] alongside modern stochastic-optimisation work
+[kingma2014adam; reddi2018convergence] and the canonical reproducibility
+paper [peng2011reproducible], so the auto-generated
+<code>manuscript/references.bib</code> always contains real
+citation-ready entries that downstream tooling can resolve.</p>
+<hr />
+<h1 data-number="6" id="sec:pipeline_internals"><span
+class="header-section-number">6</span> Pipeline Internals</h1>
+<p>This supplemental section documents the data structures and on-disk
+artifacts the pipeline produces, for readers who want to extend or audit
+it.</p>
+<h2 data-number="6.1" id="data-structures"><span
+class="header-section-number">6.1</span> Data structures</h2>
+<p>The Mermaid class diagram in this subsection shows the canonical
+fields each record carries through the pipeline. Records have additional
+optional metadata (e.g. <code>Paper.url</code>,
+<code>Paper.publisher</code>, <code>Paper.isbn</code>,
+<code>Paper.raw</code>) omitted for readability — consult
+<code>infrastructure/search/literature/models.py</code> (<a
+href="https://github.com/docxology/template/tree/main/infrastructure/search/literature">source
+on GitHub</a>) and <code>src/pipeline.py</code> (<a
+href="https://github.com/docxology/template/tree/main/projects/templates/template_search_project/src">source
+on GitHub</a>) for the full schema.</p>
+<pre class="mermaid"><code>classDiagram
+    class SearchQuery {
+        +str text
+        +int max_results
+        +int|None year_min
+        +int|None year_max
+        +list~str~ sources
+        +list~str~ fields
+        +matches_year(year) bool
+    }
+
+    class Paper {
+        +str id
+        +str title
+        +list~str~ authors
+        +int|None year
+        +str|None doi
+        +str|None url
+        +str|None abstract
+        +str|None pdf_url
+        +str|None fulltext
+        +str|None venue
+        +str|None venue_type
+        +str|None volume
+        +str|None issue
+        +str|None pages
+        +str|None publisher
+        +str|None edition
+        +str|None isbn
+        +list~str~ keywords
+        +str|None source
+        +float score
+        +dict raw
+        +to_dict() dict
+        +from_dict(d) Paper
+    }
+
+    class SearchResult {
+        +SearchQuery query
+        +list~Paper~ papers
+        +dict per_source_counts
+        +dict errors
+        +to_dict() dict
+        +to_json() str
+    }
+
+    class BibEntry {
+        +str entry_type
+        +str citation_key
+        +OrderedDict fields
+    }
+
+    class BibDatabase {
+        +list~BibEntry~ entries
+        +str|None preamble
+        +find(key) BibEntry
+    }
+
+    class LiteratureRunArtifacts {
+        +SearchResult result
+        +Path|None corpus_path
+        +Path|None bibtex_path
+        +list~FetchResult~ enrichment_log
+        +Path|None cache_dir
+        +dict citation_keys
+        +papers() list~Paper~
+    }
+
+    class ManuscriptVariables {
+        +str config_query
+        +int config_max_results
+        +str config_sources
+        +int result_num_papers
+        +int result_num_sources
+        +str result_per_source
+        +str result_errors
+        +str result_year_min
+        +str result_year_max
+        +int result_with_abstract
+        +int result_with_doi
+        +int deep_max_results_per_keyword
+        +int deep_keyword_count
+        +str deep_keywords_joined
+        +str deep_sources
+        +str deep_unique_papers
+        +as_dict() dict
+        +as_uppercase_keys() dict
+    }
+
+    class SynthesisResult {
+        +str kind
+        +str prompt
+        +str text
+        +str|None paper_id
+    }
+
+    SearchResult --&gt; SearchQuery
+    SearchResult --&gt; &quot;*&quot; Paper
+    LiteratureRunArtifacts --&gt; SearchResult
+    LiteratureRunArtifacts --&gt; &quot;*&quot; BibEntry : via paper_to_bibentry
+    BibDatabase --&gt; &quot;*&quot; BibEntry</code></pre>
+<h2 data-number="6.2" id="on-disk-layout"><span
+class="header-section-number">6.2</span> On-disk layout</h2>
+<p>The project keeps committed input data in <code>data/</code>,
+regeneratable outputs in <code>output/</code> (gitignored), and the
+manuscript source in <code>manuscript/</code>. The Mermaid flowchart in
+this subsection (rendered in the HTML build; the PDF build strips
+Mermaid) lists every artefact the standard pipeline writes:</p>
+<ul>
+<li><code>data/corpus.json</code> — the bundled offline corpus, CI-safe
+default for <code>LocalBackend</code>.</li>
+<li><code>output/search/results.json</code> — raw
+<code>SearchResult</code> JSON from the latest run.</li>
+<li><code>output/search/cache/search_&lt;hash&gt;.json</code> —
+deterministic <code>SearchCache</code> files.</li>
+<li><code>output/cache/abs/&lt;safe_id&gt;.txt</code> — one cached
+abstract per paper.</li>
+<li><code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code> — PDF bytes
+plus extracted text.</li>
+<li><code>output/llm/synthesis.md</code> — corpus-level LLM synthesis
+(when enabled).</li>
+<li><code>output/llm/per_paper/&lt;safe_id&gt;.md</code> — one per-paper
+note per paper (when enabled).</li>
+<li><code>../figures/{papers_per_source,year_histogram,score_distribution}.png</code>
+— diagnostic figures.</li>
+<li><code>output/data/manuscript_variables.json</code> — substitution
+table consumed by the resolver.</li>
+<li><code>output/corpus.json</code> — enriched corpus, written in
+<code>LocalBackend</code>-compatible format so it can re-seed a
+deterministic future run.</li>
+<li><code>output/enrichment_log.json</code> — one entry per fetcher per
+paper.</li>
+<li><code>output/reading_report.md</code> — final markdown reading
+report.</li>
+<li><code>output/run_summary.json</code> — one-line metadata for the
+run.</li>
+<li><code>manuscript/references.bib</code> — auto-populated,
+Pandoc-ready BibTeX.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TB
+    P[&quot;projects/templates/template_search_project/&quot;]
+    P --&gt; DAT[&quot;data/&lt;br/&gt;committed&quot;]
+    P --&gt; OUT[&quot;output/&lt;br/&gt;regeneratable · gitignored&quot;]
+    P --&gt; MAN[&quot;manuscript/&quot;]
+
+    DAT --&gt; CORP_IN[corpus.json&lt;br/&gt;bundled offline corpus&lt;br/&gt;CI-safe default]
+
+    OUT --&gt; SR[&quot;search/&quot;]
+    OUT --&gt; CC[&quot;cache/&quot;]
+    OUT --&gt; LD[&quot;llm/&quot;]
+    OUT --&gt; FIG[&quot;figures/&quot;]
+    OUT --&gt; DD[&quot;data/&quot;]
+    OUT --&gt; CORP_OUT[corpus.json&lt;br/&gt;enriched · LocalBackend-compatible]
+    OUT --&gt; ELOG[enrichment_log.json&lt;br/&gt;per-fetch status]
+    OUT --&gt; RR[reading_report.md]
+    OUT --&gt; RS[run_summary.json]
+
+    SR --&gt; SR_R[results.json&lt;br/&gt;SearchResult]
+    SR --&gt; SR_C[&quot;cache/search_HASH.json&lt;br/&gt;deterministic SearchCache&quot;]
+
+    CC --&gt; CC_A[&quot;abs/SAFE_ID.txt&quot;]
+    CC --&gt; CC_P[&quot;pdf/SAFE_ID.pdf and .txt&quot;]
+
+    LD --&gt; LD_S[synthesis.md]
+    LD --&gt; LD_PP[&quot;per_paper/SAFE_ID.md&quot;]
+
+    FIG --&gt; F1[papers_per_source.png]
+    FIG --&gt; F2[year_histogram.png]
+    FIG --&gt; F3[score_distribution.png]
+
+    DD --&gt; MV[manuscript_variables.json]
+
+    MAN --&gt; BIB[references.bib&lt;br/&gt;auto-populated · Pandoc-ready]
+
+    classDef dir fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,DAT,OUT,MAN,SR,CC,LD,FIG,DD dir
+    class CORP_OUT,ELOG,RR,RS,SR_R,SR_C,CC_A,CC_P,LD_S,LD_PP,F1,F2,F3,MV,BIB gen
+    class CORP_IN src</code></pre>
+<h2 data-number="6.3" id="citation-key-collision-handling"><span
+class="header-section-number">6.3</span> Citation-key collision
+handling</h2>
+<p><code>paper_to_bibentry()</code> generates citation keys as
+<code>&lt;author&gt;&lt;year&gt;&lt;title-word&gt;</code> (with
+stop-words filtered and unicode folded). When two papers in the same
+result set produce the same key — common when one author publishes
+multiple papers in the same year on closely related topics —
+<code>src/pipeline.py::_disambiguate_citation_key</code> appends a
+deterministic suffix from the alphabet (<code>a</code>, <code>b</code>,
+…, <code>z</code>, then two-letter combinations <code>aa</code>,
+<code>ab</code>, …) until uniqueness is restored, with a numeric
+<code>_1</code>, <code>_2</code>, … fallback for the pathological case.
+The mapping is exposed to downstream stages via
+<code>LiteratureRunArtifacts.citation_keys</code>, and the report uses
+these keys verbatim, so the LLM synthesis and the BibTeX file always
+agree.</p>
+<p>The deep-search workflow has its own collision handler in
+<code>src/deep_search.py::run_deep_search</code> that operates over the
+post-deduplication aggregate roster — see sec. <a
+href="#sec:deep_search">8</a> — and the unified
+<code>references_deep.bib</code> reflects the same mapping.</p>
+<h2 data-number="6.4" id="failure-isolation"><span
+class="header-section-number">6.4</span> Failure isolation</h2>
+<ul>
+<li><strong>A backend is unreachable.</strong>
+<code>LiteratureClient</code> records the message into
+<code>result.errors[name]</code> and continues. The reading report
+surfaces these errors in a callout block at the top.</li>
+<li><strong>An abstract fetch fails.</strong> The fetcher records
+<code>status="error"</code> in <code>enrichment_log.json</code> and the
+paper keeps its existing (possibly empty) abstract.</li>
+<li><strong>A PDF fetch fails or <code>pypdf</code> is missing.</strong>
+Same pattern — the PDF, if downloaded, is still cached on disk. The
+reading report does not reference the missing fulltext.</li>
+<li><strong>The LLM is unreachable or unconfigured.</strong>
+<code>scripts/run_search_pipeline.py</code> logs a warning and skips the
+synthesis stage entirely — <code>output/llm/</code> is left empty and
+the reading report omits both the per-paper-notes and cross-corpus
+sections. No placeholder text is ever written into the archive, so a
+missing LLM is observable from the absence of those sections rather than
+from a fake “(LLM unavailable)” string.</li>
+</ul>
+<hr />
+<h1 data-number="7" id="sec:reproducibility"><span
+class="header-section-number">7</span> Reproducibility</h1>
+<p>Reproducibility in computational research has well-documented
+prerequisites: open data, open code, and a deterministic build that can
+be re-run from scratch [peng2011reproducible]. The bundled
+<code>manuscript/config.yaml</code> is intentionally configured to
+satisfy all three for <strong>strict reproducibility</strong>:</p>
+<ol type="1">
+<li><code>search.sources: [local]</code> consumes
+<code>data/corpus.json</code>, which is a curated and committed JSON
+corpus. No network is required to run the pipeline.</li>
+<li><code>search.cache_dir: output/search/cache</code> writes
+deterministic JSON cache files; running the same query twice produces a
+byte-identical artifact tree (modulo timestamp metadata in the cache
+file itself).</li>
+<li><code>enrichment.fetch_abstracts: true</code> reads abstracts
+directly from the corpus when present; no network fetch is
+required.</li>
+<li><code>enrichment.fetch_fulltext: false</code> is the default —
+full-text fetching is opt-in and gated behind the optional
+<code>pypdf</code> dependency
+(<code>uv sync --group rendering</code>).</li>
+<li><code>llm.enabled: false</code> is the default — the LLM stage is
+opt-in and requires a running <code>ollama serve</code>. When enabled,
+<code>seed: 42</code> and <code>temperature: 0.0</code> are pinned.</li>
+</ol>
+<h2 data-number="7.1" id="switching-to-live-search"><span
+class="header-section-number">7.1</span> Switching to live search</h2>
+<p>Replace the <code>sources</code> list with the desired backend
+set:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">search</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">query</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;your topic&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sources</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">arxiv</span><span class="kw">,</span><span class="at"> crossref</span><span class="kw">]</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">crossref_mailto</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;you@example.org&quot;</span></span></code></pre></div>
+<p>A first live run populates <code>output/search/cache/</code>. Commit
+that directory to the repo and the pipeline becomes reproducible across
+machines without further configuration changes.</p>
+<h2 data-number="7.2" id="determinism-guarantees"><span
+class="header-section-number">7.2</span> Determinism guarantees</h2>
+<p>The full determinism contract is itemised in tbl. <a
+href="#tbl:determinism">1</a>: every pipeline stage is annotated as
+fully, conditionally, or non-deterministic, with an explicit mechanism
+column so reviewers can audit each row independently.</p>
+<table id="tbl:determinism">
+<caption>Table 1: Determinism contract by pipeline stage. Cached stages
+are byte-stable across reruns; live stages depend on the upstream source
+and are pinned to the cache file once a successful run
+completes.</caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Deterministic?</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search (cached hit)</td>
+<td>yes</td>
+<td><code>SearchCache</code> JSON files</td>
+</tr>
+<tr>
+<td>Search (cache miss)</td>
+<td>no</td>
+<td>live API</td>
+</tr>
+<tr>
+<td>Dedup / merge</td>
+<td>yes</td>
+<td>DOI / arXiv-id canonical keys; tie-break by score then year</td>
+</tr>
+<tr>
+<td>Citation-key generation</td>
+<td>yes</td>
+<td>unicode folding + stop-word skip; collision suffix is
+deterministic</td>
+</tr>
+<tr>
+<td>BibTeX writer</td>
+<td>yes</td>
+<td>byte-stable format pinning (verified by
+<code>tests/infra_tests/reference/</code>)</td>
+</tr>
+<tr>
+<td>Abstract fetch</td>
+<td>yes (cached) / no (live)</td>
+<td>per-paper <code>&lt;safe_id&gt;.txt</code> cache</td>
+</tr>
+<tr>
+<td>Fulltext fetch</td>
+<td>yes (cached) / mostly (live)</td>
+<td>per-paper <code>&lt;safe_id&gt;.{pdf,txt}</code> cache; live fetch’s
+<code>pypdf</code> text extraction is not bit-stable across
+versions</td>
+</tr>
+<tr>
+<td>LLM synthesis</td>
+<td>mostly</td>
+<td><code>seed=42</code>, <code>temperature=0.0</code>; Ollama
+deterministic up to its own minor variance</td>
+</tr>
+<tr>
+<td>Figure generation</td>
+<td>yes (within Matplotlib version)</td>
+<td>fixed palette, fixed bin width, no random subsampling</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="7.3" id="verifying-reproducibility-locally"><span
+class="header-section-number">7.3</span> Verifying reproducibility
+locally</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run twice; nothing in output/ should diff except the cache timestamps.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_search_pipeline.py</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> projects/templates/template_search_project/output projects/templates/template_search_project/output_first</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_search_pipeline.py</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="at">-ru</span> <span class="dt">\</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/output_first/corpus.json <span class="dt">\</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/output/corpus.json</span></code></pre></div>
+<p>The only expected differences are inside
+<code>output/search/cache/search_*.json</code>, where
+<code>_cached_at</code> is wall-clock time at write.</p>
+<h2 data-number="7.4" id="limitations"><span
+class="header-section-number">7.4</span> Limitations</h2>
+<p>The reproducibility contract enumerated in sec. <a
+href="#sec:reproducibility">7</a> (items 1–5 and tbl. <a
+href="#tbl:determinism">1</a>) does not eliminate the following
+well-defined sources of non-reproducibility, which are surfaced here so
+reviewers can audit them explicitly rather than inferring from the
+contract table:</p>
+<ul>
+<li><strong>Live search drift.</strong> When
+<code>config.search.sources</code> includes <code>arxiv</code> or
+<code>crossref</code>, the first cache-miss invocation hits the live
+API; the cached JSON freezes that response, but two cold-start clones
+running on different days will see different paper sets. Pin a
+<code>LocalBackend</code> corpus or commit
+<code>output/search/cache/</code> to break this dependency.</li>
+<li><strong><code>pypdf</code> version drift.</strong> The fulltext
+fetcher uses <code>pypdf</code> to extract text from a downloaded PDF.
+<code>pypdf</code>’s text-extraction algorithm is not bit-stable across
+major versions; upgrading <code>pypdf</code> can produce different
+<code>&lt;safe_id&gt;.txt</code> cache contents from the same source
+PDF. The PDF bytes themselves are bit-stable so the cache freezes the
+inputs, not the extraction.</li>
+<li><strong>Ollama version drift.</strong> Pinning <code>seed=42</code>
+and <code>temperature=0.0</code> controls Ollama’s sampling, but the
+model weights, tokenizer, and template can change between Ollama
+releases. Document the Ollama version alongside
+<code>config.llm.model</code> when archiving a run for replication.</li>
+<li><strong>Paperclip backend status.</strong> The
+<code>paperclip</code> backend is opt-in and currently degrades to HTTP
+405 on the production endpoint; the run records the error in
+<code>SearchResult.errors[paperclip]</code> and continues. Treat
+<code>paperclip</code> results as advisory until the upstream service
+stabilises.</li>
+<li><strong>External backend behaviour outside this project’s
+control.</strong> arXiv and Crossref are the source of truth; this
+project is faithful to whatever they return. A retraction, metadata fix,
+or DOI assignment upstream will alter the cache on the next cold-start
+invocation.</li>
+</ul>
+<p>These limitations bound <em>what</em> the cache + seed + corpus
+pinning achieves. Inside those bounds, the contract in tbl. <a
+href="#tbl:determinism">1</a> is total: every cached pipeline stage is
+byte-stable across reruns (verified by
+<code>tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns</code>).</p>
+<hr />
+<h1 data-number="8" id="sec:deep_search"><span
+class="header-section-number">8</span> Deep Search</h1>
+<p>The deep-search workflow extends the standard literature pipeline
+along three axes: <strong>breadth</strong> (multi-keyword fan-out),
+<strong>depth</strong> (full enrichment of every paper, abstract + PDF
+fulltext), and <strong>archival quality</strong> (per-paper
+multi-section LLM reading notes saved as standalone markdown). It is
+invoked from the same configuration file but a separate orchestrator
+script.</p>
+<h2 data-number="8.1" id="configuration"><span
+class="header-section-number">8.1</span> Configuration</h2>
+<p>The <code>deep_search:</code> block in
+<code>manuscript/config.yaml</code> controls the run. The most-used
+knobs:</p>
+<ul>
+<li><code>keywords</code> — list of free-text queries (each becomes one
+<code>SearchQuery</code>).</li>
+<li><code>max_results_per_keyword</code> — per-keyword cap (100 by
+default; honoured by the aggregator after dedup).</li>
+<li><code>sources</code> — backend list, same vocabulary as the standard
+pipeline (<code>arxiv</code>, <code>crossref</code>, <code>local</code>,
+<code>paperclip</code>).</li>
+<li><code>fetch_abstracts</code> / <code>fetch_fulltext</code> — when
+both are <code>true</code>, every returned paper has its abstract
+fetched (arXiv export API) and (where a PDF URL is available) its
+fulltext extracted via <code>pypdf</code>. Cached on disk under
+<code>output/cache/abs/</code> and <code>output/cache/pdf/</code>.</li>
+<li><code>llm_per_paper</code> — when <code>true</code> and Ollama is
+reachable, each paper gets a multi-section markdown reading note
+generated by the local LLM. When <code>false</code>, or when the LLM
+stack is genuinely unreachable at runtime, the per-paper note is written
+with only the abstract / fulltext-excerpt sections; the synthesis
+section is omitted entirely (no placeholder text). The composer’s
+Supplemental S1 also drops the per-paper synthesis subsection in that
+case rather than emitting empty rows.</li>
+<li><code>write_unified_bibtex</code> / <code>unified_bibtex_path</code>
+— when <code>true</code>, a deduplicated, collision-suffixed BibTeX file
+is written under <code>manuscript/references_deep.bib</code> so it can
+be cited from the manuscript via Pandoc <code>[key]</code> syntax
+exactly the same way as the hand-curated
+<code>references.bib</code>.</li>
+</ul>
+<h2 data-number="8.2" id="pipeline-shape"><span
+class="header-section-number">8.2</span> Pipeline shape</h2>
+<p>The deep-search pipeline reads the <code>deep_search:</code> block
+from <code>manuscript/config.yaml</code>, runs one
+<code>SearchQuery</code> per keyword (capped at
+<code>max_results_per_keyword</code>), aggregates the per-backend
+results through <code>LiteratureClient</code>, enriches every paper via
+<code>AbstractFetcher</code> and <code>FulltextFetcher</code>, generates
+collision-free citation keys with <code>paper_to_bibentry</code>, and
+(when <code>llm_per_paper: true</code> and Ollama is reachable) calls
+the local LLM with <code>DEEP_PROMPT</code> to produce a seven-section
+reading note per paper. The per-keyword outputs are then merged by
+<code>merge_papers</code> to form a deduplicated aggregate roster which
+is written to <code>manuscript/references_deep.bib</code>,
+<code>output/deep_search/aggregate.json</code>, and
+<code>output/deep_search/aggregate_report.md</code>. A Mermaid flowchart
+in this subsection renders the same flow visually in the HTML build.</p>
+<pre class="mermaid"><code>flowchart TB
+    CFG[deep_search block of config.yaml]
+    CFG --&gt; KW{{For each keyword}}
+    KW --&gt; SEARCH[SearchQuery · max_results_per_keyword]
+    SEARCH --&gt; CLIENT[LiteratureClient&lt;br/&gt;aggregates arxiv · crossref · local · paperclip]
+    CLIENT --&gt; ENRICH[AbstractFetcher + FulltextFetcher&lt;br/&gt;cached on disk]
+    ENRICH --&gt; KEYS[paper_to_bibentry&lt;br/&gt;collision-free keys]
+    KEYS --&gt; LLMQ{LLM per-paper?}
+    LLMQ -- yes --&gt; LLM[Ollama LLMClient&lt;br/&gt;DEEP_PROMPT · 7 sections]
+    LLMQ -- no --&gt; SKIP[skip synthesis · no placeholder]
+    LLM --&gt; NOTE[output/deep_search/&amp;lt;slug&amp;gt;/per_paper/&amp;lt;safe_id&amp;gt;.md]
+    SKIP --&gt; NOTE
+    NOTE --&gt; KR[KeywordResult]
+
+    KR --&gt; AGG[merge_papers across all keywords]
+    AGG --&gt; BIB[unified BibTeX&lt;br/&gt;references_deep.bib]
+    AGG --&gt; AJSON[aggregate.json]
+    AGG --&gt; AMD[aggregate_report.md]
+
+    classDef cfg fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef llm fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef out fill:#0f766e,stroke:#0f172a,color:#fff
+    class CFG,KW,LLMQ cfg
+    class SEARCH,CLIENT,ENRICH,KEYS,KR,AGG proc
+    class LLM,SKIP llm
+    class NOTE,BIB,AJSON,AMD out</code></pre>
+<h2 data-number="8.3" id="llm-prompt"><span
+class="header-section-number">8.3</span> LLM prompt</h2>
+<p>The deep-search prompt is richer than the standard
+<code>synthesis.PROMPT_PER_PAPER</code>. It produces a self-contained
+reading note suitable for archival without re-reading the paper:</p>
+<pre><code>## Contribution
+One paragraph stating the paper&#39;s central claim and why it is novel.
+
+## Method
+2-4 bullets describing the technical approach.
+
+## Evidence
+2-4 bullets describing experiments / proofs.
+
+## Limitations
+1-3 bullets covering caveats and what the paper does NOT address.
+
+## Connections
+1-3 bullets relating this paper to other work in the field, citing only
+papers explicitly named in the input.
+
+## Significance for {keyword}
+One paragraph explaining why this paper matters for the keyword.
+
+## Tags
+5-10 lowercase keywords.</code></pre>
+<p>The LLM is duck-typed as <code>Callable[[str], str]</code> so tests
+pass a deterministic local callable that returns real, well-formed
+reading-note text; runtime callers wrap an
+<code>infrastructure.llm.LLMClient</code> with
+<code>seed=42, temperature=0.0</code> for reproducibility. When the LLM
+stack is unreachable, callers pass <code>None</code> and the per-paper
+synthesis stage is skipped entirely — no placeholder text is ever
+written into the archive.</p>
+<h2 data-number="8.4" id="on-disk-layout-1"><span
+class="header-section-number">8.4</span> On-disk layout</h2>
+<p>A successful deep-search run writes the following artefacts (paths
+shown relative to the project root); a Mermaid tree in this subsection
+renders the same hierarchy in the HTML build:</p>
+<ul>
+<li><code>output/deep_search/aggregate.json</code> — every unique paper
+across keywords.</li>
+<li><code>output/deep_search/aggregate_report.md</code> — cross-keyword
+markdown summary.</li>
+<li><code>output/deep_search/run_summary.json</code> — one-line metadata
+for the run.</li>
+<li><code>output/deep_search/&lt;keyword_slug&gt;/papers.json</code> —
+enriched per-keyword paper list.</li>
+<li><code>output/deep_search/&lt;keyword_slug&gt;/reading_report.md</code>
+— per-keyword markdown summary.</li>
+<li><code>output/deep_search/&lt;keyword_slug&gt;/per_paper/&lt;safe_id&gt;.md</code>
+— one reading note per paper.</li>
+<li><code>manuscript/references_deep.bib</code> — auto-generated,
+deduplicated unified BibTeX file.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TB
+    P[&quot;projects/templates/template_search_project/&quot;]
+    P --&gt; OUT[&quot;output/deep_search/&quot;]
+    P --&gt; BIB[manuscript/references_deep.bib&lt;br/&gt;auto-generated · deduplicated]
+
+    OUT --&gt; AGG[aggregate.json&lt;br/&gt;every unique paper]
+    OUT --&gt; AMD[aggregate_report.md&lt;br/&gt;cross-keyword summary]
+    OUT --&gt; RS[run_summary.json&lt;br/&gt;one-line metadata]
+    OUT --&gt; KW1[&quot;&amp;lt;keyword_slug_1&amp;gt;/&quot;]
+    OUT --&gt; KW2[&quot;&amp;lt;keyword_slug_2&amp;gt;/&quot;]
+    OUT --&gt; KW3[&quot;&amp;lt;keyword_slug_3&amp;gt;/&quot;]
+
+    KW1 --&gt; KW1_P[papers.json]
+    KW1 --&gt; KW1_R[reading_report.md]
+    KW1 --&gt; KW1_PP[&quot;per_paper/&lt;br/&gt;SAFE_ID.md per paper&quot;]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef bib fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,OUT,KW1,KW2,KW3,KW1_PP d
+    class AGG,AMD,RS,KW1_P,KW1_R f
+    class BIB bib</code></pre>
+<h2 data-number="8.5" id="determinism"><span
+class="header-section-number">8.5</span> Determinism</h2>
+<p>Three caches make this workflow replayable:</p>
+<ol type="1">
+<li><code>SearchCache</code>
+(<code>output/search/cache/search_&lt;hash&gt;.json</code>) — keyed on
+canonical query identity per keyword.</li>
+<li>Abstract cache
+(<code>output/cache/abs/&lt;safe_id&gt;.txt</code>).</li>
+<li>Fulltext cache
+(<code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code>).</li>
+<li>LLM seed (<code>deep_search.llm_seed: 42</code>) + temperature
+(<code>0.0</code>).</li>
+</ol>
+<p>Commit any subset of these caches to version control to freeze a
+run.</p>
+<h2 data-number="8.6" id="paperclip-backend"><span
+class="header-section-number">8.6</span> Paperclip backend</h2>
+<p>The <a href="https://paperclip.gxl.ai">Paperclip backend</a> is
+opt-in. Enable it by:</p>
+<ol type="1">
+<li>Creating
+<code>projects/templates/template_search_project/.env</code>
+(gitignored) with your <code>PAPERCLIP_API_KEY=gxl_…</code> (template at
+<code>.env.example</code>).</li>
+<li>Including <code>paperclip</code> in
+<code>deep_search.sources</code>.</li>
+</ol>
+<p>The orchestrator scripts auto-load <code>.env</code> via the
+lightweight <code>src.dotenv</code> module before constructing the
+backend list. The <code>PaperclipBackend</code> adapter mirrors the wire
+protocol of the official <code>gxl_paperclip</code> Python SDK:
+<code>POST /papers</code> with an <code>X-API-Key</code> header and a
+JSON-RPC <code>tools/call</code> envelope. We support both the modern
+<code>structuredContent.papers</code> response shape and the older
+text-only <code>content[].text</code> shape (best-effort regex
+extraction).</p>
+<p>Failure-isolation: any per-backend error (including the
+migration-state HTTP 405 the production endpoint may currently return)
+is captured into <code>SearchResult.errors[paperclip]</code> and the run
+continues. See
+<code>output/deep_search/&lt;keyword&gt;/papers.json</code> and the
+aggregate <code>run_summary.json</code> for the recorded errors.</p>
+<h2 data-number="8.7" id="cli"><span
+class="header-section-number">8.7</span> CLI</h2>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with everything from config.yaml (assumes deep_search.enabled: true)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Force-enable without touching config.yaml</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Override keyword list at the command line</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--keyword</span> <span class="st">&quot;convex optimization&quot;</span> <span class="at">--keyword</span> <span class="st">&quot;stochastic gradient descent&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip LLM stage even when config enables it</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-llm</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bypass cache (writes still happen)</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-cache</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Local-corpus mode (offline · CI-friendly)</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--corpus</span> projects/templates/template_search_project/data/corpus.json</span></code></pre></div>
+<hr />
+<h1 data-number="9" id="sec:supplemental_s1"><span
+class="header-section-number">9</span> Supplemental S1 — Literature
+Review (auto-composed from deep search)</h1>
+<p><em>Composed by <code>scripts/s_compose_literature_review.py</code>
+from the most recent deep-search run. Edit the script, not this file —
+manual edits will be overwritten on the next pipeline run.</em></p>
+<p>This review covers <strong>3 keyword(s)</strong>, <strong>300 unique
+paper(s)</strong> (retrieved at up to 100 per keyword from arxiv,
+crossref, paperclip). All references are stored in
+<code>manuscript/references_deep.bib</code> and resolved by the
+combined-PDF pipeline (Pandoc <code>--natbib</code> + BibTeX over all
+<code>manuscript/*.bib</code> files).</p>
+<h2 data-number="9.1" id="convex-optimization"><span
+class="header-section-number">9.1</span> convex optimization</h2>
+<p><em>Papers retrieved:</em> <strong>100</strong> · <em>per-source
+contributions:</em> arxiv=100, crossref=100, paperclip=95 · <em>backend
+errors:</em> none</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cite</th>
+<th>Title</th>
+<th style="text-align: right;">Year</th>
+<th>DOI / URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[anon2004convex]</td>
+<td>Convex optimization problems</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.005 (<a
+href="https://doi.org/10.1017/cbo9780511804441.005">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004convexa]</td>
+<td>Convex functions</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.004 (<a
+href="https://doi.org/10.1017/cbo9780511804441.004">open</a>)</td>
+</tr>
+<tr>
+<td>[anonreverse]</td>
+<td>Reverse Convex Optimization, Reverse convex programming</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72642 (<a
+href="https://doi.org/10.1007/springerreference_72642">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021convex]</td>
+<td>Convex Optimization and Efficiency</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108699211.006 (<a
+href="https://doi.org/10.1017/9781108699211.006">open</a>)</td>
+</tr>
+<tr>
+<td>[suh20221]</td>
+<td>1. Convex Optimization Basics</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.1561/9781638280538.ch1 (<a
+href="https://doi.org/10.1561/9781638280538.ch1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021ellipsoid]</td>
+<td>Ellipsoid Method for Convex Optimization</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108699211.015 (<a
+href="https://doi.org/10.1017/9781108699211.015">open</a>)</td>
+</tr>
+<tr>
+<td>[nesterov2004smooth]</td>
+<td>Smooth Convex Optimization</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1007/978-1-4419-8853-9_2 (<a
+href="https://doi.org/10.1007/978-1-4419-8853-9_2">open</a>)</td>
+</tr>
+<tr>
+<td>[nesterov2004nonsmooth]</td>
+<td>Nonsmooth Convex Optimization</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1007/978-1-4419-8853-9_3 (<a
+href="https://doi.org/10.1007/978-1-4419-8853-9_3">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2022convex]</td>
+<td>Convex Optimization Basics</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.1561/978-1-63828-053-820251002 (<a
+href="https://doi.org/10.1561/978-1-63828-053-820251002">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004convexb]</td>
+<td>Convex sets</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.003 (<a
+href="https://doi.org/10.1017/cbo9780511804441.003">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011what]</td>
+<td>What Is Convex Optimization?</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-7 (<a
+href="https://doi.org/10.1201/b11156-7">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011convex]</td>
+<td>Convex Semi-Infinite Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-17 (<a
+href="https://doi.org/10.1201/b11156-17">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011tools]</td>
+<td>Tools for Convex Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-8 (<a
+href="https://doi.org/10.1201/b11156-8">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004convexc]</td>
+<td>Convex Sets. Convex and Generalized Convex Functions</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1016/b978-044450550-7/50002-8 (<a
+href="https://doi.org/10.1016/b978-044450550-7/50002-8">open</a>)</td>
+</tr>
+<tr>
+<td>[anon20146]</td>
+<td>6 Convex optimization algorithms</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1515/9783110361629.117 (<a
+href="https://doi.org/10.1515/9783110361629.117">open</a>)</td>
+</tr>
+<tr>
+<td>[jacobsen2008reverse]</td>
+<td>Reverse Convex Optimization</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.1007/978-0-387-74759-0_564 (<a
+href="https://doi.org/10.1007/978-0-387-74759-0_564">open</a>)</td>
+</tr>
+<tr>
+<td>[nesterov2018nonsmooth]</td>
+<td>Nonsmooth Convex Optimization</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1007/978-3-319-91578-4_3 (<a
+href="https://doi.org/10.1007/978-3-319-91578-4_3">open</a>)</td>
+</tr>
+<tr>
+<td>[jacobsen2001bb]</td>
+<td>αBB algorithm; Concave programming; D.C. programming; Quadratic
+knapsack. Quadratic programming with bound constraints; Reverse convex
+optimization Standard quadratic optimization problems: Theory REVERSE
+CONVEX OPTIMIZATION</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/0-306-48332-7_431 (<a
+href="https://doi.org/10.1007/0-306-48332-7_431">open</a>)</td>
+</tr>
+<tr>
+<td>[tuypartly]</td>
+<td>Partly Convex and Convex-Monotonic Optimization Problems</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/3-540-27170-8_37 (<a
+href="https://doi.org/10.1007/3-540-27170-8_37">open</a>)</td>
+</tr>
+<tr>
+<td>[nesterov2018smooth]</td>
+<td>Smooth Convex Optimization</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1007/978-3-319-91578-4_2 (<a
+href="https://doi.org/10.1007/978-3-319-91578-4_2">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011weak]</td>
+<td>Weak Sharp Minima in Convex Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-15 (<a
+href="https://doi.org/10.1201/b11156-15">open</a>)</td>
+</tr>
+<tr>
+<td>[anonconvex]</td>
+<td>Convex Discrete Optimization</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72172 (<a
+href="https://doi.org/10.1007/springerreference_72172">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025convex]</td>
+<td>Convex Functions</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.012 (<a
+href="https://doi.org/10.1017/9781009510561.012">open</a>)</td>
+</tr>
+<tr>
+<td>[zaslavski2020nonsmooth]</td>
+<td>Nonsmooth Convex Optimization</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1007/978-3-030-60300-7_2 (<a
+href="https://doi.org/10.1007/978-3-030-60300-7_2">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2020appendix]</td>
+<td>Appendix:</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.2307/j.ctvqsdxqd.15 (<a
+href="https://doi.org/10.2307/j.ctvqsdxqd.15">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2005connectedness]</td>
+<td>Connectedness of efficient points in convex and convex transformable
+vector optimization</td>
+<td style="text-align: right;">2005</td>
+<td>DOI 10.1080/02331930500096270 (<a
+href="https://doi.org/10.1080/02331930500096270">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025convexa]</td>
+<td>Convex Programming Problems and Convex Theorem of the
+Alternative</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.021 (<a
+href="https://doi.org/10.1017/9781009510561.021">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011toolsa]</td>
+<td>Tools for Convex Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-3 (<a
+href="https://doi.org/10.1201/b11156-3">open</a>)</td>
+</tr>
+<tr>
+<td>[tuy1998convex]</td>
+<td>Convex Functions</td>
+<td style="text-align: right;">1998</td>
+<td>DOI 10.1007/978-1-4757-2809-5_2 (<a
+href="https://doi.org/10.1007/978-1-4757-2809-5_2">open</a>)</td>
+</tr>
+<tr>
+<td>[mattingley2009automatic]</td>
+<td>Automatic code generation for real-time convex optimization</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.1017/cbo9780511804458.002 (<a
+href="https://doi.org/10.1017/cbo9780511804458.002">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011whata]</td>
+<td>What Is Convex Optimization?</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-2 (<a
+href="https://doi.org/10.1201/b11156-2">open</a>)</td>
+</tr>
+<tr>
+<td>[tuy1998convexa]</td>
+<td>Convex Sets</td>
+<td style="text-align: right;">1998</td>
+<td>DOI 10.1007/978-1-4757-2809-5_1 (<a
+href="https://doi.org/10.1007/978-1-4757-2809-5_1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2020appendixa]</td>
+<td>Appendix: Executive Summary on Efficient Solvability of Convex
+Optimization Problems</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1515/9780691200316-013 (<a
+href="https://doi.org/10.1515/9780691200316-013">open</a>)</td>
+</tr>
+<tr>
+<td>[bonnans2019convex]</td>
+<td>A Convex Optimization Toolbox</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1007/978-3-030-14977-2_1 (<a
+href="https://doi.org/10.1007/978-3-030-14977-2_1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon20142]</td>
+<td>2 Convex sets and convex functions</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1515/9783110361629.30 (<a
+href="https://doi.org/10.1515/9783110361629.30">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021convexa]</td>
+<td>Convex Optimization</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108980647.012 (<a
+href="https://doi.org/10.1017/9781108980647.012">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2017convex]</td>
+<td>Convex Optimization Problems</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1201/9781315366920-5 (<a
+href="https://doi.org/10.1201/9781315366920-5">open</a>)</td>
+</tr>
+<tr>
+<td>[zaslavski2020pdabased]</td>
+<td>PDA-Based Method for Convex Optimization</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1007/978-3-030-37822-6_9 (<a
+href="https://doi.org/10.1007/978-3-030-37822-6_9">open</a>)</td>
+</tr>
+<tr>
+<td>[tuy2016convex]</td>
+<td>Convex Functions</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1007/978-3-319-31484-6_2 (<a
+href="https://doi.org/10.1007/978-3-319-31484-6_2">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004introduction]</td>
+<td>Introduction</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.002 (<a
+href="https://doi.org/10.1017/cbo9780511804441.002">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025optimality]</td>
+<td>Optimality Conditions in Convex Programming</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.024 (<a
+href="https://doi.org/10.1017/9781009510561.024">open</a>)</td>
+</tr>
+<tr>
+<td>[lasserre2011convex]</td>
+<td>On convex optimization without convex representation</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1007/s11590-011-0323-1 (<a
+href="https://doi.org/10.1007/s11590-011-0323-1">open</a>)</td>
+</tr>
+<tr>
+<td>[anonconvexa]</td>
+<td>Convex Envelopes in Optimization Problems</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72173 (<a
+href="https://doi.org/10.1007/springerreference_72173">open</a>)</td>
+</tr>
+<tr>
+<td>[li2015convex]</td>
+<td>Convex Relaxation</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.1007/978-3-662-46356-7_6 (<a
+href="https://doi.org/10.1007/978-3-662-46356-7_6">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004preface]</td>
+<td>Preface</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.001 (<a
+href="https://doi.org/10.1017/cbo9780511804441.001">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021convexb]</td>
+<td>Convex Analysis and Convex Optimization</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108377447.033 (<a
+href="https://doi.org/10.1017/9781108377447.033">open</a>)</td>
+</tr>
+<tr>
+<td>[tuy2016convexa]</td>
+<td>Convex Sets</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1007/978-3-319-31484-6_1 (<a
+href="https://doi.org/10.1007/978-3-319-31484-6_1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025first]</td>
+<td>First Acquaintance with Convex Sets</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.003 (<a
+href="https://doi.org/10.1017/9781009510561.003">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021convexc]</td>
+<td>Convex Sets</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1002/9781119804093.ch2 (<a
+href="https://doi.org/10.1002/9781119804093.ch2">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021convexd]</td>
+<td>Convex Functions</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1002/9781119804093.ch3 (<a
+href="https://doi.org/10.1002/9781119804093.ch3">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025firsta]</td>
+<td>First Acquaintance with Convex Functions</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.013 (<a
+href="https://doi.org/10.1017/9781009510561.013">open</a>)</td>
+</tr>
+<tr>
+<td>[singer2001duality]</td>
+<td>On Duality for Quasi-convex Supremization and Reverse Convex
+Infimization</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/978-1-4613-0295-7_16 (<a
+href="https://doi.org/10.1007/978-1-4613-0295-7_16">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004references]</td>
+<td>References</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.016 (<a
+href="https://doi.org/10.1017/cbo9780511804441.016">open</a>)</td>
+</tr>
+<tr>
+<td>[anonglobal]</td>
+<td>Global Optimization: Tight Convex Underestimators</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72325 (<a
+href="https://doi.org/10.1007/springerreference_72325">open</a>)</td>
+</tr>
+<tr>
+<td>[singer1999duality]</td>
+<td>Duality in quasi-convex supremization and reverse convex
+infimization via abstract convex analysis,and applications to
+approximation **</td>
+<td style="text-align: right;">1999</td>
+<td>DOI 10.1080/02331939908844436 (<a
+href="https://doi.org/10.1080/02331939908844436">open</a>)</td>
+</tr>
+<tr>
+<td>[marechal2001generating]</td>
+<td>Generating Convex Functions</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/978-1-4613-0279-7_21 (<a
+href="https://doi.org/10.1007/978-1-4613-0279-7_21">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025convexb]</td>
+<td>Convex Programming, Lagrange Duality, Saddle Points</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.020 (<a
+href="https://doi.org/10.1017/9781009510561.020">open</a>)</td>
+</tr>
+<tr>
+<td>[peypouquet2015convex]</td>
+<td>Convex Analysis and Subdifferential Calculus</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.1007/978-3-319-13710-0_3 (<a
+href="https://doi.org/10.1007/978-3-319-13710-0_3">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025minima]</td>
+<td>Minima and Maxima of Convex Functions</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.015 (<a
+href="https://doi.org/10.1017/9781009510561.015">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025convexc]</td>
+<td>★ Convex Programming in Cone-Constrained Form</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.023 (<a
+href="https://doi.org/10.1017/9781009510561.023">open</a>)</td>
+</tr>
+<tr>
+<td>[stillwell2019statistical]</td>
+<td>Statistical Inference via Convex Optimization</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.23943/princeton/9780691197296.001.0001 (<a
+href="https://doi.org/10.23943/princeton/9780691197296.001.0001">open</a>)</td>
+</tr>
+<tr>
+<td>[dutta2014barrier]</td>
+<td>Barrier method in nonsmooth convex optimization without convex
+representation</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1007/s11590-014-0811-1 (<a
+href="https://doi.org/10.1007/s11590-014-0811-1">open</a>)</td>
+</tr>
+<tr>
+<td>[youness1999econvex]</td>
+<td>E-Convex Sets, E-Convex Functions, and E-Convex Programming</td>
+<td style="text-align: right;">1999</td>
+<td>DOI 10.1023/a:1021792726715 (<a
+href="https://doi.org/10.1023/a:1021792726715">open</a>)</td>
+</tr>
+<tr>
+<td>[lasserre2014erratum]</td>
+<td>Erratum to: On convex optimization without convex
+representation</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1007/s11590-014-0735-9 (<a
+href="https://doi.org/10.1007/s11590-014-0735-9">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004unconstrained]</td>
+<td>Unconstrained minimization</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.010 (<a
+href="https://doi.org/10.1017/cbo9780511804441.010">open</a>)</td>
+</tr>
+<tr>
+<td>[halman2015approximating]</td>
+<td>Approximating convex functions via non-convex oracles under the
+relative noise model</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.1016/j.disopt.2014.12.001 (<a
+href="https://doi.org/10.1016/j.disopt.2014.12.001">open</a>)</td>
+</tr>
+<tr>
+<td>[anonduality]</td>
+<td>Duality Theory: Monoduality in Convex Optimization</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72219 (<a
+href="https://doi.org/10.1007/springerreference_72219">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004geometric]</td>
+<td>Geometric problems</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.009 (<a
+href="https://doi.org/10.1017/cbo9780511804441.009">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004statistical]</td>
+<td>Statistical estimation</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.008 (<a
+href="https://doi.org/10.1017/cbo9780511804441.008">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025coneconvex]</td>
+<td>★ Cone-Convex Functions: Elementary Calculus and Examples</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.025 (<a
+href="https://doi.org/10.1017/9781009510561.025">open</a>)</td>
+</tr>
+<tr>
+<td>[yang2001econvex]</td>
+<td>On E-Convex Sets, E-Convex Functions, and E-Convex Programming</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1023/a:1017532225395 (<a
+href="https://doi.org/10.1023/a:1017532225395">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004mathematical]</td>
+<td>Mathematical background</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.013 (<a
+href="https://doi.org/10.1017/cbo9780511804441.013">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025separation]</td>
+<td>Separation Theorem and Geometry of Convex Sets</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.009 (<a
+href="https://doi.org/10.1017/9781009510561.009">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025convexd]</td>
+<td>Convex Optimization</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009493512.006 (<a
+href="https://doi.org/10.1017/9781009493512.006">open</a>)</td>
+</tr>
+<tr>
+<td>[dragomirescu1992smallest]</td>
+<td>The smallest convex extensions of a convex function</td>
+<td style="text-align: right;">1992</td>
+<td>DOI 10.1080/02331939208843789 (<a
+href="https://doi.org/10.1080/02331939208843789">open</a>)</td>
+</tr>
+<tr>
+<td>[rubsamen2009robust]</td>
+<td>Robust broadband adaptive beamforming using convex optimization</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.1017/cbo9780511804458.010 (<a
+href="https://doi.org/10.1017/cbo9780511804458.010">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021generalizations]</td>
+<td>Generalizations of Convex Functions</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1002/9781119804093.ch4 (<a
+href="https://doi.org/10.1002/9781119804093.ch4">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025convexe]</td>
+<td>Convex Optimization Theory</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009428095.021 (<a
+href="https://doi.org/10.1017/9781009428095.021">open</a>)</td>
+</tr>
+<tr>
+<td>[florenzano2001convex]</td>
+<td>Convex Optimization With Convex Constraints</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/978-3-642-56522-9_7 (<a
+href="https://doi.org/10.1007/978-3-642-56522-9_7">open</a>)</td>
+</tr>
+<tr>
+<td>[floudas1995convex]</td>
+<td>Convex Analysis</td>
+<td style="text-align: right;">1995</td>
+<td>DOI 10.1093/oso/9780195100563.003.0006 (<a
+href="https://doi.org/10.1093/oso/9780195100563.003.0006">open</a>)</td>
+</tr>
+<tr>
+<td>[anon20144]</td>
+<td>4 Convex Nonsmooth Optimization</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.2478/9783110426045.4 (<a
+href="https://doi.org/10.2478/9783110426045.4">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011algorithms]</td>
+<td>Algorithms for Conic Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b10839-12 (<a
+href="https://doi.org/10.1201/b10839-12">open</a>)</td>
+</tr>
+<tr>
+<td>[murota2008lconvex]</td>
+<td>L-convex Functions and M-convex Functions</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.1007/978-0-387-74759-0_325 (<a
+href="https://doi.org/10.1007/978-0-387-74759-0_325">open</a>)</td>
+</tr>
+<tr>
+<td>[murota2024lconvex]</td>
+<td>L-Convex Functions and M-Convex Functions</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.1007/978-3-030-54621-2_325-1 (<a
+href="https://doi.org/10.1007/978-3-030-54621-2_325-1">open</a>)</td>
+</tr>
+<tr>
+<td>[strongin2000global]</td>
+<td>Global Optimization under Non-Convex Constraints — The Index
+Approach</td>
+<td style="text-align: right;">2000</td>
+<td>DOI 10.1007/978-1-4615-4677-1_6 (<a
+href="https://doi.org/10.1007/978-1-4615-4677-1_6">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004equality]</td>
+<td>Equality constrained minimization</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.011 (<a
+href="https://doi.org/10.1017/cbo9780511804441.011">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004approximation]</td>
+<td>Approximation and fitting</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.007 (<a
+href="https://doi.org/10.1017/cbo9780511804441.007">open</a>)</td>
+</tr>
+<tr>
+<td>[kramerbasis]</td>
+<td>Basis identification through convex optimization</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.31274/etd-180810-1098 (<a
+href="https://doi.org/10.31274/etd-180810-1098">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2004duality]</td>
+<td>Duality</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.006 (<a
+href="https://doi.org/10.1017/cbo9780511804441.006">open</a>)</td>
+</tr>
+<tr>
+<td>[anonintroduction]</td>
+<td>Introduction</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1017/cbo9781139924672.002 (<a
+href="https://doi.org/10.1017/cbo9781139924672.002">open</a>)</td>
+</tr>
+<tr>
+<td>[zalinescu2024locally]</td>
+<td>On locally Lipschitz convex functions defined on subsets with empty
+interior of locally convex spaces</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.1080/02331934.2024.2388200 (<a
+href="https://doi.org/10.1080/02331934.2024.2388200">open</a>)</td>
+</tr>
+<tr>
+<td>[liuautonomous]</td>
+<td>Autonomous Trajectory Planning by Convex Optimization</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.31274/etd-180810-3525 (<a
+href="https://doi.org/10.31274/etd-180810-3525">open</a>)</td>
+</tr>
+<tr>
+<td>[anonbackground]</td>
+<td>Background</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1017/cbo9781139924672.003 (<a
+href="https://doi.org/10.1017/cbo9781139924672.003">open</a>)</td>
+</tr>
+<tr>
+<td>[murota2001lconvex]</td>
+<td>L-Convex Functions and M-Convex Functions</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/0-306-48332-7_244 (<a
+href="https://doi.org/10.1007/0-306-48332-7_244">open</a>)</td>
+</tr>
+<tr>
+<td>[anonpreface]</td>
+<td>Preface</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1017/cbo9781139924672.001 (<a
+href="https://doi.org/10.1017/cbo9781139924672.001">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011cones]</td>
+<td>Cones, Complementarity, and Conic Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b10839-5 (<a
+href="https://doi.org/10.1201/b10839-5">open</a>)</td>
+</tr>
+<tr>
+<td>[oktem2017computational]</td>
+<td>Computational Spectral and Ultrafast Imaging via Convex
+Optimization</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1007/978-3-319-61609-4_5 (<a
+href="https://doi.org/10.1007/978-3-319-61609-4_5">open</a>)</td>
+</tr>
+<tr>
+<td>[anonalgorithm]</td>
+<td>Algorithm 1 : Convex optimization with regularized feature
+selection.</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.7717/peerj-cs.3752/table-101 (<a
+href="https://doi.org/10.7717/peerj-cs.3752/table-101">open</a>)</td>
+</tr>
+<tr>
+<td>[anoneconomics]</td>
+<td>Economics</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1017/cbo9781139924672.007 (<a
+href="https://doi.org/10.1017/cbo9781139924672.007">open</a>)</td>
+</tr>
+<tr>
+<td>[onn2008convex]</td>
+<td>Convex Discrete Optimization</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.1007/978-0-387-74759-0_94 (<a
+href="https://doi.org/10.1007/978-0-387-74759-0_94">open</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="9.2" id="stochastic-gradient-descent"><span
+class="header-section-number">9.2</span> stochastic gradient
+descent</h2>
+<p><em>Papers retrieved:</em> <strong>100</strong> · <em>per-source
+contributions:</em> arxiv=100, crossref=100, paperclip=93 · <em>backend
+errors:</em> none</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cite</th>
+<th>Title</th>
+<th style="text-align: right;">Year</th>
+<th>DOI / URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[gwozdz2018stochastic]</td>
+<td>Stochastic and semi-stochastic gradient descent in speech
+disambiguation</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.7490/f1000research.1115776.1 (<a
+href="https://doi.org/10.7490/f1000research.1115776.1">open</a>)</td>
+</tr>
+<tr>
+<td>[wang2018stochastic]</td>
+<td>Stochastic gradient descent</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.53347/rid-61715 (<a
+href="https://doi.org/10.53347/rid-61715">open</a>)</td>
+</tr>
+<tr>
+<td>[kosinski2017coxphsgd]</td>
+<td>coxphSGD: Stochastic Gradient Descent log-Likelihood Estimation in
+Cox Proportional Hazards Model</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.32614/cran.package.coxphsgd (<a
+href="https://doi.org/10.32614/cran.package.coxphsgd">open</a>)</td>
+</tr>
+<tr>
+<td>[anontable]</td>
+<td>Table 4: Stochastic gradient descent (SGD) parameter settings with
+CC images.</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.7717/peerj-cs.3332/table-4 (<a
+href="https://doi.org/10.7717/peerj-cs.3332/table-4">open</a>)</td>
+</tr>
+<tr>
+<td>[peseux2023stochastic]</td>
+<td>Stochastic Gradient Descent with Gradient Estimator for Categorical
+Features</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.2139/ssrn.4439301 (<a
+href="https://doi.org/10.2139/ssrn.4439301">open</a>)</td>
+</tr>
+<tr>
+<td>[theodoridis2015stochastic]</td>
+<td>Stochastic Gradient Descent</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.1016/b978-0-12-801522-3.00005-7 (<a
+href="https://doi.org/10.1016/b978-0-12-801522-3.00005-7">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2014stochastic]</td>
+<td>Stochastic Gradient Descent</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1017/cbo9781107298019.015 (<a
+href="https://doi.org/10.1017/cbo9781107298019.015">open</a>)</td>
+</tr>
+<tr>
+<td>[anon1011171223051015783306294001]</td>
+<td>10.1117/12.2305101.5783306294001</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2305101.5783306294001 (<a
+href="https://doi.org/10.1117/12.2305101.5783306294001">open</a>)</td>
+</tr>
+<tr>
+<td>[anon1011171225128176013939792001]</td>
+<td>10.1117/12.2512817.6013939792001</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2512817.6013939792001 (<a
+href="https://doi.org/10.1117/12.2512817.6013939792001">open</a>)</td>
+</tr>
+<tr>
+<td>[lan2023stochastic]</td>
+<td>Stochastic Gradient Descent</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.1007/978-3-030-54621-2_777-1 (<a
+href="https://doi.org/10.1007/978-3-030-54621-2_777-1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon1011171226435646314793833112]</td>
+<td>10.1117/12.2643564.6314793833112</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2643564.6314793833112 (<a
+href="https://doi.org/10.1117/12.2643564.6314793833112">open</a>)</td>
+</tr>
+<tr>
+<td>[songanglebased]</td>
+<td>An Angle-based Stochastic Gradient Descent Method for Machine
+Learning: Principle and Application</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.25148/etd.fidc009555 (<a
+href="https://doi.org/10.25148/etd.fidc009555">open</a>)</td>
+</tr>
+<tr>
+<td>[ketkar2017stochastic]</td>
+<td>Stochastic Gradient Descent</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1007/978-1-4842-2766-4_8 (<a
+href="https://doi.org/10.1007/978-1-4842-2766-4_8">open</a>)</td>
+</tr>
+<tr>
+<td>[turali2024optimal]</td>
+<td>Optimal Stochastic Gradient Descent Algorithm for Filtering</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.2139/ssrn.4879640 (<a
+href="https://doi.org/10.2139/ssrn.4879640">open</a>)</td>
+</tr>
+<tr>
+<td>[alonso2025mathematics]</td>
+<td>The Mathematics of Stochastic Gradient Descent and Non-Convex
+Optimization</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.2139/ssrn.5032378 (<a
+href="https://doi.org/10.2139/ssrn.5032378">open</a>)</td>
+</tr>
+<tr>
+<td>[yang2022adaptive]</td>
+<td>Adaptive stochastic gradient descent for large-scale learning
+problems</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.21203/rs.3.rs-1066512/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-1066512/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[amor2024realtime]</td>
+<td>Real-Time Traffic Prediction Through Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.5220/0012687400003702 (<a
+href="https://doi.org/10.5220/0012687400003702">open</a>)</td>
+</tr>
+<tr>
+<td>[pillaudvivienlearning]</td>
+<td>Learning with reproducing kernel Hilbert spaces : stochastic
+gradient descent and laplacian estimation</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.70675/f938eaabz37fcz4483zba85z57f0849e7747 (<a
+href="https://doi.org/10.70675/f938eaabz37fcz4483zba85z57f0849e7747">open</a>)</td>
+</tr>
+<tr>
+<td>[arefin2016minimizing]</td>
+<td>Minimizing Average of Loss Functions Using Gradient Descent and
+Stochastic Gradient Descent</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.3329/dujs.v64i2.54490 (<a
+href="https://doi.org/10.3329/dujs.v64i2.54490">open</a>)</td>
+</tr>
+<tr>
+<td>[abubaker2022scaling]</td>
+<td>Scaling Stratified Stochastic Gradient Descent for Distributed
+Matrix Completion</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.36227/techrxiv.19350536.v1 (<a
+href="https://doi.org/10.36227/techrxiv.19350536.v1">open</a>)</td>
+</tr>
+<tr>
+<td>[chendistributed]</td>
+<td>Distributed Stochastic Gradient Descent with Staleness: A Stochastic
+Delay Differential Equation Based Framework_supp1-3546574.pdf</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1109/tsp.2025.3546574/mm1 (<a
+href="https://doi.org/10.1109/tsp.2025.3546574/mm1">open</a>)</td>
+</tr>
+<tr>
+<td>[abubaker2022scalinga]</td>
+<td>Scaling Stratified Stochastic Gradient Descent for Distributed
+Matrix Completion</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.36227/techrxiv.19350536 (<a
+href="https://doi.org/10.36227/techrxiv.19350536">open</a>)</td>
+</tr>
+<tr>
+<td>[fu2025theoretical]</td>
+<td>A Theoretical and Experimental Study of Gradient Descent and Its
+Stochastic Variants</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.36227/techrxiv.176162233.33076025/v1 (<a
+href="https://doi.org/10.36227/techrxiv.176162233.33076025/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon101117123028105e628af96d7c5ee11a99e00505691c5e1]</td>
+<td>10.1117/12.3028105.e628af96-d7c5-ee11-a99e-00505691c5e1</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.3028105.e628af96-d7c5-ee11-a99e-00505691c5e1 (<a
+href="https://doi.org/10.1117/12.3028105.e628af96-d7c5-ee11-a99e-00505691c5e1">open</a>)</td>
+</tr>
+<tr>
+<td>[lam2023resampling]</td>
+<td>Resampling Stochastic Gradient Descent Cheaply</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.1109/wsc60868.2023.10408023 (<a
+href="https://doi.org/10.1109/wsc60868.2023.10408023">open</a>)</td>
+</tr>
+<tr>
+<td>[tarkhan2020bigsurvsgd]</td>
+<td>bigSurvSGD: Big Survival Analysis Using Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.32614/cran.package.bigsurvsgd (<a
+href="https://doi.org/10.32614/cran.package.bigsurvsgd">open</a>)</td>
+</tr>
+<tr>
+<td>[sun2023noisy]</td>
+<td>Noisy Stochastic Gradient Descent Algorithm with Stochastic
+Event-Triggered Mechanism for Communication-Efficient Distributed
+Learning</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.2139/ssrn.4588764 (<a
+href="https://doi.org/10.2139/ssrn.4588764">open</a>)</td>
+</tr>
+<tr>
+<td>[theodoridis2026online]</td>
+<td>Online learning: the stochastic gradient descent family of
+algorithms</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.1016/b978-0-44-329238-5.00011-1 (<a
+href="https://doi.org/10.1016/b978-0-44-329238-5.00011-1">open</a>)</td>
+</tr>
+<tr>
+<td>[theodoridis2020online]</td>
+<td>Online Learning: the Stochastic Gradient Descent Family of
+Algorithms</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1016/b978-0-12-818803-3.00014-3 (<a
+href="https://doi.org/10.1016/b978-0-12-818803-3.00014-3">open</a>)</td>
+</tr>
+<tr>
+<td>[guo2022variable]</td>
+<td>Variable selection of regularized stochastic gradient descent in
+logistic regression</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.54647/mathematics11319 (<a
+href="https://doi.org/10.54647/mathematics11319">open</a>)</td>
+</tr>
+<tr>
+<td>[sirignano2017stochastic]</td>
+<td>Stochastic Gradient Descent in Continuous Time</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.2139/ssrn.2954149 (<a
+href="https://doi.org/10.2139/ssrn.2954149">open</a>)</td>
+</tr>
+<tr>
+<td>[cacciola2023convergence]</td>
+<td>On the Convergence of Stochastic Gradient Descent in Low-Precision
+Number Formats</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.5220/0011795500003411 (<a
+href="https://doi.org/10.5220/0011795500003411">open</a>)</td>
+</tr>
+<tr>
+<td>[anon1011171225997446269411057001]</td>
+<td>10.1117/12.2599744.6269411057001</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2599744.6269411057001 (<a
+href="https://doi.org/10.1117/12.2599744.6269411057001">open</a>)</td>
+</tr>
+<tr>
+<td>[ali2023comparing]</td>
+<td>Comparing the Effectiveness of Support Vector Classifier and
+Stochastic Gradient Descent in Hate-Speech Detection</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.47611/harp.315 (<a
+href="https://doi.org/10.47611/harp.315">open</a>)</td>
+</tr>
+<tr>
+<td>[nguyenheavytailed]</td>
+<td>Heavy-tailed nature of stochastic gradient descent in deep learning
+: theoretical and empirical analysis</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.70675/674d4873zb009z425cz9c8ezb792c820253d (<a
+href="https://doi.org/10.70675/674d4873zb009z425cz9c8ezb792c820253d">open</a>)</td>
+</tr>
+<tr>
+<td>[shrimali2023comparative]</td>
+<td>A comparative study of gradient descent and stochastic gradient
+descent method for optimization</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.1063/5.0148736 (<a
+href="https://doi.org/10.1063/5.0148736">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2011largescale]</td>
+<td>Large-Scale Machine Learning with Stochastic Gradient Descent Léon
+Bottou</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11429-6 (<a
+href="https://doi.org/10.1201/b11429-6">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021stochastic]</td>
+<td>Stochastic Gradient Descent</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108860604.006 (<a
+href="https://doi.org/10.1017/9781108860604.006">open</a>)</td>
+</tr>
+<tr>
+<td>[anonymous2026absorbing]</td>
+<td>Absorbing state dynamics of stochastic gradient descent</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.1103/sbv7-syp7 (<a
+href="https://doi.org/10.1103/sbv7-syp7">open</a>)</td>
+</tr>
+<tr>
+<td>[li2024stochastic]</td>
+<td>Stochastic Gradient Descent in Nonconvex Optimization:
+Continuous-Time Dynamics and the Role of Learning Rates</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.2139/ssrn.4980990 (<a
+href="https://doi.org/10.2139/ssrn.4980990">open</a>)</td>
+</tr>
+<tr>
+<td>[yamada2018hyperparameterfree]</td>
+<td>Hyperparameter-free optimizer of stochastic gradient descent that
+incorporates unit correction and moment estimation</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1101/348557 (<a
+href="https://doi.org/10.1101/348557">open</a>)</td>
+</tr>
+<tr>
+<td>[cai2023communicationefficient]</td>
+<td>Communication-Efficient Distributed Stochastic Gradient Descent with
+Pooling Operator</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.2139/ssrn.4327869 (<a
+href="https://doi.org/10.2139/ssrn.4327869">open</a>)</td>
+</tr>
+<tr>
+<td>[ayadi2021stochastic]</td>
+<td>Stochastic Runge-Kutta methods and adaptive SGD-G2 stochastic
+gradient descent</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1109/icpr48806.2021.9412831 (<a
+href="https://doi.org/10.1109/icpr48806.2021.9412831">open</a>)</td>
+</tr>
+<tr>
+<td>[ramos2015hilbert]</td>
+<td>Hilbert maps: scalable continuous occupancy mapping with stochastic
+gradient descent</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.15607/rss.2015.xi.002 (<a
+href="https://doi.org/10.15607/rss.2015.xi.002">open</a>)</td>
+</tr>
+<tr>
+<td>[hafshejani2023fast]</td>
+<td>Fast Armijo line search for stochastic gradient descent</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.21203/rs.3.rs-2285238/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-2285238/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[sirignano2020stochastic]</td>
+<td>Stochastic Gradient Descent in Continuous Time: A Central Limit
+Theorem</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1287/stsy.2019.0050 (<a
+href="https://doi.org/10.1287/stsy.2019.0050">open</a>)</td>
+</tr>
+<tr>
+<td>[kour2024stochastic]</td>
+<td>Stochastic Gradient Descent Optimized Efficient Transfer Learning
+Architecture for Brain Tumor Segmentation</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.2139/ssrn.5012382 (<a
+href="https://doi.org/10.2139/ssrn.5012382">open</a>)</td>
+</tr>
+<tr>
+<td>[bottou2010largescale]</td>
+<td>Large-Scale Machine Learning with Stochastic Gradient Descent</td>
+<td style="text-align: right;">2010</td>
+<td>DOI 10.1007/978-3-7908-2604-3_16 (<a
+href="https://doi.org/10.1007/978-3-7908-2604-3_16">open</a>)</td>
+</tr>
+<tr>
+<td>[cheng2025convergence]</td>
+<td>Convergence Analysis of the Last Iterate in Distributed Stochastic
+Gradient Descent with Momentum</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.2139/ssrn.5351413 (<a
+href="https://doi.org/10.2139/ssrn.5351413">open</a>)</td>
+</tr>
+<tr>
+<td>[amari1993backpropagation]</td>
+<td>Backpropagation and stochastic gradient descent method</td>
+<td style="text-align: right;">1993</td>
+<td>DOI 10.1016/0925-2312(93)90006-o (<a
+href="https://doi.org/10.1016/0925-2312(93)90006-o">open</a>)</td>
+</tr>
+<tr>
+<td>[chen2025revisit]</td>
+<td>Revisit Stochastic Gradient Descent for Strongly Convex Objectives:
+Tight Uniform-in-Time Bounds</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.2139/ssrn.5546711 (<a
+href="https://doi.org/10.2139/ssrn.5546711">open</a>)</td>
+</tr>
+<tr>
+<td>[schraudolph1999local]</td>
+<td>Local gain adaptation in stochastic gradient descent</td>
+<td style="text-align: right;">1999</td>
+<td>DOI 10.1049/cp:19991170 (<a
+href="https://doi.org/10.1049/cp:19991170">open</a>)</td>
+</tr>
+<tr>
+<td>[huadaptive]</td>
+<td>Adaptive Batch Size Time Evolving Stochastic Gradient Descent for
+Federated Learning_supp1-3610169.pdf</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1109/tpami.2025.3610169/mm1 (<a
+href="https://doi.org/10.1109/tpami.2025.3610169/mm1">open</a>)</td>
+</tr>
+<tr>
+<td>[anonymous2025noise]</td>
+<td>Noise balance and stationary distribution of stochastic gradient
+descent</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1103/zjq6-nzwd (<a
+href="https://doi.org/10.1103/zjq6-nzwd">open</a>)</td>
+</tr>
+<tr>
+<td>[liu2024optimizing]</td>
+<td>Optimizing Synchronous Stochastic Gradient Descent with Local
+Efficient Sign and Model Averaging Correction</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.2139/ssrn.4965637 (<a
+href="https://doi.org/10.2139/ssrn.4965637">open</a>)</td>
+</tr>
+<tr>
+<td>[chang2020efficient]</td>
+<td>Efficient phase-locking of 60 fiber lasers by stochastic parallel
+gradient descent algorithm</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.3788/col202018.101403 (<a
+href="https://doi.org/10.3788/col202018.101403">open</a>)</td>
+</tr>
+<tr>
+<td>[livni2024sample]</td>
+<td>The Sample Complexity of Gradient Descent in Stochastic Convex
+Optimization</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.52202/079017-2048 (<a
+href="https://doi.org/10.52202/079017-2048">open</a>)</td>
+</tr>
+<tr>
+<td>[li2024withdrawn]</td>
+<td>WITHDRAWN: Bridging Stochastic Gradient Descent and Markov Chains:
+Constant Step-Size Convergence and Richardson-Romberg Extrapolation</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.21203/rs.3.rs-5202271/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-5202271/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[bao2020stochastic]</td>
+<td>Stochastic gradient descent algorithm for stochastic optimization in
+solving analytic continuation problems</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.3934/fods.2020001 (<a
+href="https://doi.org/10.3934/fods.2020001">open</a>)</td>
+</tr>
+<tr>
+<td>[koutsibella2020stochastic]</td>
+<td>Stochastic gradient descent possibilistic clustering</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1145/3411408.3411436 (<a
+href="https://doi.org/10.1145/3411408.3411436">open</a>)</td>
+</tr>
+<tr>
+<td>[chen2012dictionary]</td>
+<td>Dictionary learning with weighted stochastic gradient descent</td>
+<td style="text-align: right;">2012</td>
+<td>DOI 10.1109/iccps.2012.6384229 (<a
+href="https://doi.org/10.1109/iccps.2012.6384229">open</a>)</td>
+</tr>
+<tr>
+<td>[li2024withdrawna]</td>
+<td>WITHDRAWN: Bridging Stochastic Gradient Descent and Markov Chains:
+Constant Step-Size Convergence and Richardson-Romberg Extrapolation</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.21203/rs.3.rs-5202271/v2 (<a
+href="https://doi.org/10.21203/rs.3.rs-5202271/v2">open</a>)</td>
+</tr>
+<tr>
+<td>[lee2017differentially]</td>
+<td>Differentially Private Variance Reduced Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1109/ictcs.2017.60 (<a
+href="https://doi.org/10.1109/ictcs.2017.60">open</a>)</td>
+</tr>
+<tr>
+<td>[t2024hybrid]</td>
+<td>Hybrid Optimization Model Integrating Gradient Descent and
+Stochastic Descent for Enhanced Osteoporosis and Osteopenia
+Recognition</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.53759/7669/jmc202404032 (<a
+href="https://doi.org/10.53759/7669/jmc202404032">open</a>)</td>
+</tr>
+<tr>
+<td>[anon1011171225259536062680904001]</td>
+<td>10.1117/12.2525953.6062680904001</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2525953.6062680904001 (<a
+href="https://doi.org/10.1117/12.2525953.6062680904001">open</a>)</td>
+</tr>
+<tr>
+<td>[ravasi2022multidimensional]</td>
+<td>Multi-Dimensional Deconvolution with Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.3997/2214-4609.202210234 (<a
+href="https://doi.org/10.3997/2214-4609.202210234">open</a>)</td>
+</tr>
+<tr>
+<td>[song2021agsgd]</td>
+<td>AG-SGD: Angle-Based Stochastic Gradient Descent</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1109/access.2021.3055993 (<a
+href="https://doi.org/10.1109/access.2021.3055993">open</a>)</td>
+</tr>
+<tr>
+<td>[williams2022stochastic]</td>
+<td>Stochastic Gradient Descent for Optimization of Nuclear Systems</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.21203/rs.3.rs-2073277/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-2073277/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2014convergence]</td>
+<td>On the Convergence Rate of Stochastic Gradient Descent for Strongly
+Convex Functions</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1201/b17558-10 (<a
+href="https://doi.org/10.1201/b17558-10">open</a>)</td>
+</tr>
+<tr>
+<td>[sharma2021guided]</td>
+<td>Guided parallelized stochastic gradient descent for delay
+compensation</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1016/j.asoc.2021.107084 (<a
+href="https://doi.org/10.1016/j.asoc.2021.107084">open</a>)</td>
+</tr>
+<tr>
+<td>[yaghoubi2017hybrid]</td>
+<td>Hybrid approximate gradient and stochastic descent for falsification
+of nonlinear systems</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.23919/acc.2017.7963007 (<a
+href="https://doi.org/10.23919/acc.2017.7963007">open</a>)</td>
+</tr>
+<tr>
+<td>[azimjonov2023stochastic]</td>
+<td>Stochastic Gradient Descent Classifier-Based Lightweight Intrusion
+Detection Systems Using the Most Efficient Feature Subsets of
+Datasets</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.2139/ssrn.4378339 (<a
+href="https://doi.org/10.2139/ssrn.4378339">open</a>)</td>
+</tr>
+<tr>
+<td>[data2020byzantineresilient]</td>
+<td>On Byzantine-Resilient High-Dimensional Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1109/isit44484.2020.9174363 (<a
+href="https://doi.org/10.1109/isit44484.2020.9174363">open</a>)</td>
+</tr>
+<tr>
+<td>[cheng2019static]</td>
+<td>Static &amp; Dynamic Appointment Scheduling with Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.23919/acc.2019.8814666 (<a
+href="https://doi.org/10.23919/acc.2019.8814666">open</a>)</td>
+</tr>
+<tr>
+<td>[anon1011171230261530df877b5f9b8ee11a99dc49c781f4d15]</td>
+<td>10.1117/12.3026153.0df877b5-f9b8-ee11-a99d-c49c781f4d15</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.3026153.0df877b5-f9b8-ee11-a99d-c49c781f4d15 (<a
+href="https://doi.org/10.1117/12.3026153.0df877b5-f9b8-ee11-a99d-c49c781f4d15">open</a>)</td>
+</tr>
+<tr>
+<td>[doshi2022efficiency]</td>
+<td>Efficiency Ordering of Stochastic Gradient Descent</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.52202/068431-1155 (<a
+href="https://doi.org/10.52202/068431-1155">open</a>)</td>
+</tr>
+<tr>
+<td>[zamora2016dendrite]</td>
+<td>Dendrite morphological neurons trained by stochastic gradient
+descent</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1109/ssci.2016.7849933 (<a
+href="https://doi.org/10.1109/ssci.2016.7849933">open</a>)</td>
+</tr>
+<tr>
+<td>[jain2025controlling]</td>
+<td>Controlling stochastic gradient descent using stochastic
+approximation for robust distributed optimization</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.3934/naco.2024041 (<a
+href="https://doi.org/10.3934/naco.2024041">open</a>)</td>
+</tr>
+<tr>
+<td>[liu2021diffusion]</td>
+<td>A Diffusion Approximation Theory of Momentum Stochastic Gradient
+Descent in Nonconvex Optimization</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1287/stsy.2021.0083 (<a
+href="https://doi.org/10.1287/stsy.2021.0083">open</a>)</td>
+</tr>
+<tr>
+<td>[bhardwaj2016practical]</td>
+<td>Practical Efficiency of Asynchronous Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1109/mlhpc.2016.010 (<a
+href="https://doi.org/10.1109/mlhpc.2016.010">open</a>)</td>
+</tr>
+<tr>
+<td>[afshar2009gradient]</td>
+<td>Gradient descent optimisation for ILC-based stochastic distribution
+control</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.1109/icca.2009.5410612 (<a
+href="https://doi.org/10.1109/icca.2009.5410612">open</a>)</td>
+</tr>
+<tr>
+<td>[jiao2024emergence]</td>
+<td>Emergence of heavy tails in homogenized stochastic gradient
+descent</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.52202/079017-0450 (<a
+href="https://doi.org/10.52202/079017-0450">open</a>)</td>
+</tr>
+<tr>
+<td>[iutzeler2024derivatives]</td>
+<td>Derivatives of Stochastic Gradient Descent in parametric
+optimization</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.52202/079017-3775 (<a
+href="https://doi.org/10.52202/079017-3775">open</a>)</td>
+</tr>
+<tr>
+<td>[cui2019acoustic]</td>
+<td>Acoustic Model Optimization Based on Evolutionary Stochastic
+Gradient Descent with Anchors for Automatic Speech Recognition</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.21437/interspeech.2019-2620 (<a
+href="https://doi.org/10.21437/interspeech.2019-2620">open</a>)</td>
+</tr>
+<tr>
+<td>[ferrarotti2019synthesis]</td>
+<td>Synthesis of Optimal Feedback Controllers from Data via Stochastic
+Gradient Descent</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.23919/ecc.2019.8796130 (<a
+href="https://doi.org/10.23919/ecc.2019.8796130">open</a>)</td>
+</tr>
+<tr>
+<td>[sharma2018guided]</td>
+<td>Guided Stochastic Gradient Descent Algorithm for inconsistent
+datasets</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1016/j.asoc.2018.09.038 (<a
+href="https://doi.org/10.1016/j.asoc.2018.09.038">open</a>)</td>
+</tr>
+<tr>
+<td>[hua2023machinelearning]</td>
+<td>Machine-Learning Topology Optimization with Stochastic Gradient
+Descent Optimizer for Heat Conduction Problems</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.2139/ssrn.4594476 (<a
+href="https://doi.org/10.2139/ssrn.4594476">open</a>)</td>
+</tr>
+<tr>
+<td>[sundecentralized]</td>
+<td>On the Decentralized Stochastic Gradient Descent with Markov Chain
+Sampling_supp1-3297053.pdf</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1109/tsp.2023.3297053/mm1 (<a
+href="https://doi.org/10.1109/tsp.2023.3297053/mm1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025neural]</td>
+<td>Neural Networks, Backpropagation, and Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009509435.009 (<a
+href="https://doi.org/10.1017/9781009509435.009">open</a>)</td>
+</tr>
+<tr>
+<td>[li2021fast]</td>
+<td>Fast Distributed Stochastic Nesterov Gradient Descent Algorithm for
+Image Classification</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1109/cac53003.2021.9727635 (<a
+href="https://doi.org/10.1109/cac53003.2021.9727635">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2020testing]</td>
+<td>Testing of the stochastic parallel gradient descent algorithm to the
+alignment of a two-mirror telescope</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.17586/1023-5086-2020-87-05-31-41 (<a
+href="https://doi.org/10.17586/1023-5086-2020-87-05-31-41">open</a>)</td>
+</tr>
+<tr>
+<td>[wijnhoven2010fast]</td>
+<td>Fast Training of Object Detection Using Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2010</td>
+<td>DOI 10.1109/icpr.2010.112 (<a
+href="https://doi.org/10.1109/icpr.2010.112">open</a>)</td>
+</tr>
+<tr>
+<td>[christensen2024learning]</td>
+<td>Is Learning in Biological Neural Networks Based on Stochastic
+Gradient Descent? An Analysis Using Stochastic Processes</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.1162/neco_a_01668 (<a
+href="https://doi.org/10.1162/neco_a_01668">open</a>)</td>
+</tr>
+<tr>
+<td>[archibald2020stochastic]</td>
+<td>A Stochastic Gradient Descent Approach for Stochastic Optimal
+Control</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.4208/eajam.190420.200420 (<a
+href="https://doi.org/10.4208/eajam.190420.200420">open</a>)</td>
+</tr>
+<tr>
+<td>[mukhopadhyay2020stochastic]</td>
+<td>Stochastic gradient descent for linear systems with sequential
+matrix entry accumulation</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1016/j.sigpro.2020.107494 (<a
+href="https://doi.org/10.1016/j.sigpro.2020.107494">open</a>)</td>
+</tr>
+<tr>
+<td>[patel2022global]</td>
+<td>Global Convergence and Stability of Stochastic Gradient Descent</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.52202/068431-2610 (<a
+href="https://doi.org/10.52202/068431-2610">open</a>)</td>
+</tr>
+<tr>
+<td>[wang2014robust]</td>
+<td>Robust pose graph optimization using stochastic gradient
+descent</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1109/icra.2014.6907482 (<a
+href="https://doi.org/10.1109/icra.2014.6907482">open</a>)</td>
+</tr>
+<tr>
+<td>[koren2022benign]</td>
+<td>Benign Underfitting of Stochastic Gradient Descent</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.52202/068431-1425 (<a
+href="https://doi.org/10.52202/068431-1425">open</a>)</td>
+</tr>
+<tr>
+<td>[mahboubi2024study]</td>
+<td>Study on Stochastic Gradient Descent Without Explicit Error
+Backpropagation with Momentum</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.1109/cai59869.2024.00241 (<a
+href="https://doi.org/10.1109/cai59869.2024.00241">open</a>)</td>
+</tr>
+<tr>
+<td>[sa2022gradient]</td>
+<td>From Gradient Flow on Population Loss to Learning with Stochastic
+Gradient Descent</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.52202/068431-2245 (<a
+href="https://doi.org/10.52202/068431-2245">open</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="9.3" id="reproducible-research"><span
+class="header-section-number">9.3</span> reproducible research</h2>
+<p><em>Papers retrieved:</em> <strong>100</strong> · <em>per-source
+contributions:</em> arxiv=100, crossref=100, paperclip=94 · <em>backend
+errors:</em> none</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cite</th>
+<th>Title</th>
+<th style="text-align: right;">Year</th>
+<th>DOI / URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[gandrud2018introducing]</td>
+<td>Introducing Reproducible Research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315382548-1 (<a
+href="https://doi.org/10.1201/9781315382548-1">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2020introducing]</td>
+<td>Introducing Reproducible Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1201/9780429031854-2 (<a
+href="https://doi.org/10.1201/9780429031854-2">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2020getting]</td>
+<td>Getting Started with Reproducible Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1201/9780429031854-3 (<a
+href="https://doi.org/10.1201/9780429031854-3">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2018getting]</td>
+<td>Getting Started with Reproducible Research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315382548-2 (<a
+href="https://doi.org/10.1201/9781315382548-2">open</a>)</td>
+</tr>
+<tr>
+<td>[hoefling2018reproducible]</td>
+<td>Reproducible Research for Large-Scale Data Analysis</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461-8 (<a
+href="https://doi.org/10.1201/9781315373461-8">open</a>)</td>
+</tr>
+<tr>
+<td>[xie2018knitr]</td>
+<td>knitr: A Comprehensive Tool for Reproducible Research in R</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461-1 (<a
+href="https://doi.org/10.1201/9781315373461-1">open</a>)</td>
+</tr>
+<tr>
+<td>[baker2022reproducible]</td>
+<td>Reproducible data analysis</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.1093/hesc/9780192896599.003.0019 (<a
+href="https://doi.org/10.1093/hesc/9780192896599.003.0019">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019reproducible]</td>
+<td>Reproducible Workflow</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.2307/j.ctvpb3xkg.16 (<a
+href="https://doi.org/10.2307/j.ctvpb3xkg.16">open</a>)</td>
+</tr>
+<tr>
+<td>[preeyanon2018reproducible]</td>
+<td>Reproducible Bioinformatics Research for Biologists</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461-7 (<a
+href="https://doi.org/10.1201/9781315373461-7">open</a>)</td>
+</tr>
+<tr>
+<td>[davison2018sumatra]</td>
+<td>Sumatra: A Toolkit for Reproducible Research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461-3 (<a
+href="https://doi.org/10.1201/9781315373461-3">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019eleven]</td>
+<td>ELEVEN. Reproducible Workflow</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520969230-014 (<a
+href="https://doi.org/10.1525/9780520969230-014">open</a>)</td>
+</tr>
+<tr>
+<td>[hrynaszkiewicz2018open]</td>
+<td>Open Science and the Role of Publishers in Reproducible
+Research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461-15 (<a
+href="https://doi.org/10.1201/9781315373461-15">open</a>)</td>
+</tr>
+<tr>
+<td>[anonsupplemental]</td>
+<td>Supplemental Information 1: Reproducible Research Instructions.</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.7717/peerj-cs.904/supp-1 (<a
+href="https://doi.org/10.7717/peerj-cs.904/supp-1">open</a>)</td>
+</tr>
+<tr>
+<td>[kedron2023reproducible]</td>
+<td>Reproducible Research Practices and Barriers to Reproducible
+Research in Geography: Insights from a Survey</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.31219/osf.io/nyrq9 (<a
+href="https://doi.org/10.31219/osf.io/nyrq9">open</a>)</td>
+</tr>
+<tr>
+<td>[stodden2014implementing]</td>
+<td>Implementing Reproducible Research</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1201/b16868 (<a
+href="https://doi.org/10.1201/b16868">open</a>)</td>
+</tr>
+<tr>
+<td>[anonreproducible]</td>
+<td>Reproducible Research Data and Software</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.12688/f1000research.channels.908 (<a
+href="https://doi.org/10.12688/f1000research.channels.908">open</a>)</td>
+</tr>
+<tr>
+<td>[murrayrust2018reproducible]</td>
+<td>Reproducible Physical Science and the Declaratron</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461-5 (<a
+href="https://doi.org/10.1201/9781315373461-5">open</a>)</td>
+</tr>
+<tr>
+<td>[burgess2018reproducible]</td>
+<td>Reproducible research article collection</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.14293/s2199-1006.1.sor-uncat.clsuuhc.v1 (<a
+href="https://doi.org/10.14293/s2199-1006.1.sor-uncat.clsuuhc.v1">open</a>)</td>
+</tr>
+<tr>
+<td>[solt2016pewdata]</td>
+<td>pewdata: Reproducible Retrieval of Pew Research Center Datasets</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.32614/cran.package.pewdata (<a
+href="https://doi.org/10.32614/cran.package.pewdata">open</a>)</td>
+</tr>
+<tr>
+<td>[edmunds2016reproducible]</td>
+<td>Reproducible Research Resources for Research(ing) Parasites</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.59350/63nv3-fa097 (<a
+href="https://doi.org/10.59350/63nv3-fa097">open</a>)</td>
+</tr>
+<tr>
+<td>[edmunds2016reproduciblea]</td>
+<td>Reproducible Research Resources for Research(ing) Parasites</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.59350/vhpgg-ec668 (<a
+href="https://doi.org/10.59350/vhpgg-ec668">open</a>)</td>
+</tr>
+<tr>
+<td>[hinsen2013platforms]</td>
+<td>Platforms for reproducible research</td>
+<td style="text-align: right;">2013</td>
+<td>DOI 10.59350/s56jr-3cn95 (<a
+href="https://doi.org/10.59350/s56jr-3cn95">open</a>)</td>
+</tr>
+<tr>
+<td>[edmunds2015fermenting]</td>
+<td>Fermenting a Reproducible Research Revolution</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.59350/0hs8b-m2239 (<a
+href="https://doi.org/10.59350/0hs8b-m2239">open</a>)</td>
+</tr>
+<tr>
+<td>[hector2021reproducible]</td>
+<td>Reproducible Research</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1093/oso/9780198798170.003.0004 (<a
+href="https://doi.org/10.1093/oso/9780198798170.003.0004">open</a>)</td>
+</tr>
+<tr>
+<td>[edmunds2015fermentinga]</td>
+<td>Fermenting a Reproducible Research Revolution</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.59350/ejn9k-s7c54 (<a
+href="https://doi.org/10.59350/ejn9k-s7c54">open</a>)</td>
+</tr>
+<tr>
+<td>[kunisato2019introduction]</td>
+<td>Introduction to reproducible psychological research</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.31234/osf.io/x8js5 (<a
+href="https://doi.org/10.31234/osf.io/x8js5">open</a>)</td>
+</tr>
+<tr>
+<td>[suber2008oa]</td>
+<td>OA for reproducible research</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.63485/4jjac-1dd97 (<a
+href="https://doi.org/10.63485/4jjac-1dd97">open</a>)</td>
+</tr>
+<tr>
+<td>[turek2019case]</td>
+<td>Case Studies in Reproducible Research</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-006 (<a
+href="https://doi.org/10.1525/9780520967779-006">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2020reproducible]</td>
+<td>Reproducible Research with R and RStudio</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1201/9780429031854 (<a
+href="https://doi.org/10.1201/9780429031854">open</a>)</td>
+</tr>
+<tr>
+<td>[basu2018reproducible]</td>
+<td>Reproducible research using minimalist plain text tools</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.32388/649864 (<a
+href="https://doi.org/10.32388/649864">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2018reproducible]</td>
+<td>Reproducible Research with R and RStudio</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315382548 (<a
+href="https://doi.org/10.1201/9781315382548">open</a>)</td>
+</tr>
+<tr>
+<td>[edmunds2014carmen]</td>
+<td>CARMEN, reproducible research and push-button papers</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.59350/xx4rg-zcd90 (<a
+href="https://doi.org/10.59350/xx4rg-zcd90">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2013reproducible]</td>
+<td>Reproducible Research with R and R Studio</td>
+<td style="text-align: right;">2013</td>
+<td>DOI 10.1201/b15100 (<a
+href="https://doi.org/10.1201/b15100">open</a>)</td>
+</tr>
+<tr>
+<td>[basureproducible]</td>
+<td>Reproducible research with jupyter notebooks</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.22541/au.151460905.57485984 (<a
+href="https://doi.org/10.22541/au.151460905.57485984">open</a>)</td>
+</tr>
+<tr>
+<td>[bahlai2016open]</td>
+<td>The open science and reproducible research course</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.7490/f1000research.1112876.1 (<a
+href="https://doi.org/10.7490/f1000research.1112876.1">open</a>)</td>
+</tr>
+<tr>
+<td>[white2018software]</td>
+<td>Software skills for reproducible data-intensive research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.7490/f1000research.1115901.1 (<a
+href="https://doi.org/10.7490/f1000research.1115901.1">open</a>)</td>
+</tr>
+<tr>
+<td>[missingvalueplatforms]</td>
+<td>Platforms</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1201/b16868-20 (<a
+href="https://doi.org/10.1201/b16868-20">open</a>)</td>
+</tr>
+<tr>
+<td>[edmunds2014carmena]</td>
+<td>CARMEN, reproducible research and push-button papers</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.59350/p6xyp-h2p77 (<a
+href="https://doi.org/10.59350/p6xyp-h2p77">open</a>)</td>
+</tr>
+<tr>
+<td>[anonfigure]</td>
+<td>Figure 2: The final reproducible research criteria used for the
+evaluation.</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.7717/peerj.5072/fig-2 (<a
+href="https://doi.org/10.7717/peerj.5072/fig-2">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2020transparent]</td>
+<td>Transparent and Reproducible Data Analysis</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.4135/9781526421036926480 (<a
+href="https://doi.org/10.4135/9781526421036926480">open</a>)</td>
+</tr>
+<tr>
+<td>[kitzes2019basic]</td>
+<td>The Basic Reproducible Workflow Template</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-005 (<a
+href="https://doi.org/10.1525/9780520967779-005">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2016reproducible]</td>
+<td>Reproducible Research with R and R Studio, Second Edition</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1201/b18546 (<a
+href="https://doi.org/10.1201/b18546">open</a>)</td>
+</tr>
+<tr>
+<td>[missingvaluetools]</td>
+<td>Tools</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1201/b16868-6 (<a
+href="https://doi.org/10.1201/b16868-6">open</a>)</td>
+</tr>
+<tr>
+<td>[suber2008open]</td>
+<td>Open licensing to enable reproducible research</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.63485/8k73p-vrh09 (<a
+href="https://doi.org/10.63485/8k73p-vrh09">open</a>)</td>
+</tr>
+<tr>
+<td>[hinsen2016reproducible]</td>
+<td>From reproducible to verifiable computer-aided research</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.59350/fj0g3-5yv59 (<a
+href="https://doi.org/10.59350/fj0g3-5yv59">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025preparing]</td>
+<td>Preparing for Transparent and Reproducible Quantitative Social
+Science Research</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.4135/9781036230647 (<a
+href="https://doi.org/10.4135/9781036230647">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2016reproduciblea]</td>
+<td>Reproducible Research</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1201/b15166-10 (<a
+href="https://doi.org/10.1201/b15166-10">open</a>)</td>
+</tr>
+<tr>
+<td>[suber2009more]</td>
+<td>More on OA to facilitate reproducible research</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.63485/tys9t-3y862 (<a
+href="https://doi.org/10.63485/tys9t-3y862">open</a>)</td>
+</tr>
+<tr>
+<td>[geertreproducible]</td>
+<td>Reproducible research reports with Quarto</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.21428/1192f2f8.fb1a1b7f (<a
+href="https://doi.org/10.21428/1192f2f8.fb1a1b7f">open</a>)</td>
+</tr>
+<tr>
+<td>[marwick2019case]</td>
+<td>Case Study 12: Using R and Related Tools for Reproducible Research
+in Archaeology</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-021 (<a
+href="https://doi.org/10.1525/9780520967779-021">open</a>)</td>
+</tr>
+<tr>
+<td>[maerz2024quarto]</td>
+<td>Quarto in RStudio: Writing Reproducible &amp; Dynamic Research
+Papers</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.61700/pdeaaefq62n681556 (<a
+href="https://doi.org/10.61700/pdeaaefq62n681556">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2018implementing]</td>
+<td>Implementing Reproducible Research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461 (<a
+href="https://doi.org/10.1201/9781315373461">open</a>)</td>
+</tr>
+<tr>
+<td>[hinsen2013python]</td>
+<td>Python as a platform for reproducible research</td>
+<td style="text-align: right;">2013</td>
+<td>DOI 10.59350/85pnj-bak53 (<a
+href="https://doi.org/10.59350/85pnj-bak53">open</a>)</td>
+</tr>
+<tr>
+<td>[wiebels2021leveraging]</td>
+<td>Leveraging Containers for Reproducible Psychological Research</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.31234/osf.io/h7tkg (<a
+href="https://doi.org/10.31234/osf.io/h7tkg">open</a>)</td>
+</tr>
+<tr>
+<td>[moresi2018alaska]</td>
+<td>Alaska Moho Model (Reproducible research with containers)</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.59350/pn8gh-98592 (<a
+href="https://doi.org/10.59350/pn8gh-98592">open</a>)</td>
+</tr>
+<tr>
+<td>[roskar2022renku]</td>
+<td>Renku: a platform for collaborative, reusable and reproducible
+research</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.5194/egusphere-egu22-10697 (<a
+href="https://doi.org/10.5194/egusphere-egu22-10697">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2020conclusion]</td>
+<td>Conclusion</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1201/9780429031854-17 (<a
+href="https://doi.org/10.1201/9780429031854-17">open</a>)</td>
+</tr>
+<tr>
+<td>[hediyehzadeh2016computational]</td>
+<td>Computational workflows for research students: towards a
+reproducible research</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.7490/f1000research.1113332.1 (<a
+href="https://doi.org/10.7490/f1000research.1113332.1">open</a>)</td>
+</tr>
+<tr>
+<td>[heston2023statistics]</td>
+<td>Statistics, Ethics, and the Promotion of Reproducible Research</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.22541/au.169627960.06669688/v1 (<a
+href="https://doi.org/10.22541/au.169627960.06669688/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2021decision]</td>
+<td>Decision letter: Is preclinical research in cancer biology
+reproducible enough?</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.7554/elife.67527.sa1 (<a
+href="https://doi.org/10.7554/elife.67527.sa1">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2018conclusion]</td>
+<td>Conclusion</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315382548-14 (<a
+href="https://doi.org/10.1201/9781315382548-14">open</a>)</td>
+</tr>
+<tr>
+<td>[missingvaluepractices]</td>
+<td>Practices and Guidelines</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1201/b16868-12 (<a
+href="https://doi.org/10.1201/b16868-12">open</a>)</td>
+</tr>
+<tr>
+<td>[boettiger2019case]</td>
+<td>Case Study 3: A Reproducible R Notebook Using Docker</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-012 (<a
+href="https://doi.org/10.1525/9780520967779-012">open</a>)</td>
+</tr>
+<tr>
+<td>[moresi2018alaskaa]</td>
+<td>Alaska Moho Model (Reproducible research with containers)</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.59350/15qd1-96r10 (<a
+href="https://doi.org/10.59350/15qd1-96r10">open</a>)</td>
+</tr>
+<tr>
+<td>[limarereproducible]</td>
+<td>Reproducible research, software quality, online interfaces and
+publishing for image processing</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc (<a
+href="https://doi.org/10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc">open</a>)</td>
+</tr>
+<tr>
+<td>[solt2016icpsrdata]</td>
+<td>icpsrdata: Reproducible Data Retrieval from the ICPSR Archive</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.32614/cran.package.icpsrdata (<a
+href="https://doi.org/10.32614/cran.package.icpsrdata">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025reviewer]</td>
+<td>Reviewer #1 (Public review): Spyglass: a framework for reproducible
+and shareable neuroscience research</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.7554/elife.108089.1.sa1 (<a
+href="https://doi.org/10.7554/elife.108089.1.sa1">open</a>)</td>
+</tr>
+<tr>
+<td>[peyrache2025elife]</td>
+<td>eLife Assessment: Spyglass: a framework for reproducible and
+shareable neuroscience research</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.7554/elife.108089.1.sa2 (<a
+href="https://doi.org/10.7554/elife.108089.1.sa2">open</a>)</td>
+</tr>
+<tr>
+<td>[lebeau2020reproducible]</td>
+<td>Reproducible Analyses in Educational Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.17077/pp.005637 (<a
+href="https://doi.org/10.17077/pp.005637">open</a>)</td>
+</tr>
+<tr>
+<td>[gavel2025ensuring]</td>
+<td>Ensuring Your Quantitative Research is Replicable and
+Reproducible</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.4135/9781036216696 (<a
+href="https://doi.org/10.4135/9781036216696">open</a>)</td>
+</tr>
+<tr>
+<td>[hinsen2017sustainable]</td>
+<td>Sustainable software and reproducible research: dealing with
+software collapse</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.59350/7tavk-2hf75 (<a
+href="https://doi.org/10.59350/7tavk-2hf75">open</a>)</td>
+</tr>
+<tr>
+<td>[basu2021how]</td>
+<td>How to use orgmode for reproducible research, rough cut version
+1</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.32388/b5rvo7 (<a
+href="https://doi.org/10.32388/b5rvo7">open</a>)</td>
+</tr>
+<tr>
+<td>[alston2020beginners]</td>
+<td>A Beginner’s Guide to Conducting Reproducible Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.32942/osf.io/h5r6n (<a
+href="https://doi.org/10.32942/osf.io/h5r6n">open</a>)</td>
+</tr>
+<tr>
+<td>[hinsen2017reproducible]</td>
+<td>Reproducible research in the Python ecosystem: a reality check</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.59350/wgebd-68y68 (<a
+href="https://doi.org/10.59350/wgebd-68y68">open</a>)</td>
+</tr>
+<tr>
+<td>[turner2010sweave]</td>
+<td>Sweave for Reproducible Research and Beatiful Statistical
+Reports</td>
+<td style="text-align: right;">2010</td>
+<td>DOI 10.59350/pexqx-j5g86 (<a
+href="https://doi.org/10.59350/pexqx-j5g86">open</a>)</td>
+</tr>
+<tr>
+<td>[peyrache2026elife]</td>
+<td>eLife Assessment: Spyglass: a framework for reproducible and
+shareable neuroscience research</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.7554/elife.108089.2.sa3 (<a
+href="https://doi.org/10.7554/elife.108089.2.sa3">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2026reviewer]</td>
+<td>Reviewer #2 (Public review): Spyglass: a framework for reproducible
+and shareable neuroscience research</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.7554/elife.108089.2.sa1 (<a
+href="https://doi.org/10.7554/elife.108089.2.sa1">open</a>)</td>
+</tr>
+<tr>
+<td>[turner2010sweavea]</td>
+<td>Sweave for Reproducible Research and Beatiful Statistical
+Reports</td>
+<td style="text-align: right;">2010</td>
+<td>DOI 10.59350/247k5-kfv86 (<a
+href="https://doi.org/10.59350/247k5-kfv86">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2026reviewera]</td>
+<td>Reviewer #1 (Public review): Spyglass: a framework for reproducible
+and shareable neuroscience research</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.7554/elife.108089.2.sa2 (<a
+href="https://doi.org/10.7554/elife.108089.2.sa2">open</a>)</td>
+</tr>
+<tr>
+<td>[strand2019publishing]</td>
+<td>Publishing open, reproducible research with undergraduates</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.31234/osf.io/f7kuy (<a
+href="https://doi.org/10.31234/osf.io/f7kuy">open</a>)</td>
+</tr>
+<tr>
+<td>[hastings2023ai]</td>
+<td>AI for Reproducible Research</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.1201/9781003226642-4 (<a
+href="https://doi.org/10.1201/9781003226642-4">open</a>)</td>
+</tr>
+<tr>
+<td>[yildiz2023dataintegrated]</td>
+<td>Data-integrated executable publications for reproducible geohazards
+research</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.5194/egusphere-egu23-7417 (<a
+href="https://doi.org/10.5194/egusphere-egu23-7417">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2017fostering]</td>
+<td>Fostering reproducible fMRI research</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1038/ncomms14748 (<a
+href="https://doi.org/10.1038/ncomms14748">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2025reviewera]</td>
+<td>Reviewer #2 (Public review): Spyglass: a framework for reproducible
+and shareable neuroscience research</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.7554/elife.108089.1.sa0 (<a
+href="https://doi.org/10.7554/elife.108089.1.sa0">open</a>)</td>
+</tr>
+<tr>
+<td>[chow2019reproducible]</td>
+<td>Reproducible Research</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1201/9780429275067-9 (<a
+href="https://doi.org/10.1201/9780429275067-9">open</a>)</td>
+</tr>
+<tr>
+<td>[hinsen2012unifying]</td>
+<td>Unifying version control and dependency management for reproducible
+research</td>
+<td style="text-align: right;">2012</td>
+<td>DOI 10.59350/986d5-0he30 (<a
+href="https://doi.org/10.59350/986d5-0he30">open</a>)</td>
+</tr>
+<tr>
+<td>[turner2009seminar]</td>
+<td>Seminar: Reproducible Research with R, LaTeX, &amp;amp; Sweave</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.59350/2958f-vdz74 (<a
+href="https://doi.org/10.59350/2958f-vdz74">open</a>)</td>
+</tr>
+<tr>
+<td>[poldrack2019case]</td>
+<td>Case Study 29: Developing a Reproducible Workflow for Large-Scale
+Phenotyping</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-038 (<a
+href="https://doi.org/10.1525/9780520967779-038">open</a>)</td>
+</tr>
+<tr>
+<td>[turner2009seminara]</td>
+<td>Seminar: Reproducible Research with R, LaTeX, &amp;amp; Sweave</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.59350/d3cd0-5jy93 (<a
+href="https://doi.org/10.59350/d3cd0-5jy93">open</a>)</td>
+</tr>
+<tr>
+<td>[mittal2025explainable]</td>
+<td>Explainable AI-Augmented DevSecOps for Secure and Reproducible
+Cloud-Native Research Software</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.36227/techrxiv.175617187.78775647/v1 (<a
+href="https://doi.org/10.36227/techrxiv.175617187.78775647/v1">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019replication]</td>
+<td>Replication</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.2307/j.ctvpb3xkg.14 (<a
+href="https://doi.org/10.2307/j.ctvpb3xkg.14">open</a>)</td>
+</tr>
+<tr>
+<td>[ohta2015containerbased]</td>
+<td>Container-based sequence data analysis workflow for reproducible
+research</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.7490/f1000research.1110170.1 (<a
+href="https://doi.org/10.7490/f1000research.1110170.1">open</a>)</td>
+</tr>
+<tr>
+<td>[baggerly2024importance]</td>
+<td>The Importance of Reproducible Research in High-Throughput
+Biology</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.52519/00193 (<a
+href="https://doi.org/10.52519/00193">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019introduction]</td>
+<td>Introduction</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.2307/j.ctvpb3xkg.6 (<a
+href="https://doi.org/10.2307/j.ctvpb3xkg.6">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019tables]</td>
+<td>Tables</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520969230-002 (<a
+href="https://doi.org/10.1525/9780520969230-002">open</a>)</td>
+</tr>
+<tr>
+<td>[gandrud2020presenting]</td>
+<td>Presenting with LaTeX</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1201/9780429031854-15 (<a
+href="https://doi.org/10.1201/9780429031854-15">open</a>)</td>
+</tr>
+<tr>
+<td>[butland2019community]</td>
+<td>Community Call - Reproducible Research with R</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.59350/v7xr3-6sn63 (<a
+href="https://doi.org/10.59350/v7xr3-6sn63">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019what]</td>
+<td>What Is Ethical Research?</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.2307/j.ctvpb3xkg.7 (<a
+href="https://doi.org/10.2307/j.ctvpb3xkg.7">open</a>)</td>
+</tr>
+<tr>
+<td>[simaan2023reproducible]</td>
+<td>Reproducible Research in Portfolio Selection</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.2139/ssrn.4318828 (<a
+href="https://doi.org/10.2139/ssrn.4318828">open</a>)</td>
+</tr>
+<tr>
+<td>[anon2019conclusion]</td>
+<td>Conclusion</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.2307/j.ctvpb3xkg.17 (<a
+href="https://doi.org/10.2307/j.ctvpb3xkg.17">open</a>)</td>
+</tr>
+</tbody>
+</table>
+<p><em>Per-paper synthesis omitted — no LLM Contribution paragraphs are
+present in the deep-search outputs (set
+<code>deep_search.llm_per_paper: true</code> and ensure Ollama is
+reachable to populate this section).</em></p>
+<hr />
+<p><em>Composition summary: 3 keywords · 300 unique papers · 300
+per-paper notes integrated · 300 BibTeX entries · 0 key(s) missing from
+bib.</em></p>
+<hr />
+<h1 data-number="10" id="sec:references"><span
+class="header-section-number">10</span> References</h1>
+<p>This project can produce <strong>two</strong> BibTeX files; the
+template combined-PDF path uses Pandoc <code>--natbib</code> plus BibTeX
+and merges every <code>manuscript/*.bib</code> for citation
+resolution:</p>
+<ul>
+<li><a href="references.bib"><code>manuscript/references.bib</code></a>
+— single-query pipeline output
+(<code>scripts/run_search_pipeline.py</code>).</li>
+<li><a
+href="references_deep.bib"><code>manuscript/references_deep.bib</code></a>
+— deduplicated multi-keyword deep-search output
+(<code>scripts/run_deep_search.py</code>). Every citation in sec. <a
+href="#sec:supplemental_s1">9</a> resolves against this file. The
+supplemental section is auto-composed by
+<code>scripts/s_compose_literature_review.py</code>; do not edit by
+hand.</li>
+</ul>
+<p>To regenerate the standard bibliography:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_search_pipeline.py</span></code></pre></div>
+<p>To regenerate the deep-search bibliography (10 papers per keyword,
+fully enriched, LLM-summarised):</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/s_compose_literature_review.py</span></code></pre></div>
+<p>To validate that either <code>.bib</code> is syntactically clean and
+contains the required fields per entry type:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/manuscript/references.bib <span class="at">--strict</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/manuscript/references_deep.bib <span class="at">--strict</span></span></code></pre></div>
+</body>
+</html>

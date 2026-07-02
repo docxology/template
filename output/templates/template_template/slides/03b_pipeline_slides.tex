@@ -148,19 +148,19 @@ telemetry configuration metadata):
 \item
   \textbf{Infrastructure Tests}
   (\breaktt{01\_run\_tests.py\ -\/-infra-only}) --- \texttt{tests/} suite
-  with infra coverage thresholds (≥60\,\%).
+  with infra coverage thresholds (≥60 \%).
 \item
   \textbf{Project Tests} (\breaktt{01\_run\_tests.py\ -\/-project-only})
-  --- per-project suites with ≥90\,\% coverage mandate.
+  --- per-project suites with ≥90 \% coverage mandate.
 \item
   \textbf{Project Analysis} (\breaktt{02\_run\_analysis.py}) ---
   lexicographically ordered
   \texttt{projects/\textless{}name\textgreater{}/scripts/*.py}, each a
   thin orchestrator (\texttt{src/} does real work).
 \item
-  \textbf{PDF Rendering} (\breaktt{03\_render\_pdf.py}) ---
-  Pandoc\,→\,XeLaTeX loop, bibliography assembly, injected variables
-  from Stage~02 artefacts.
+  \textbf{PDF Rendering} (\breaktt{03\_render\_pdf.py}) --- Pandoc →
+  XeLaTeX loop, bibliography assembly, injected variables from Stage 02
+  artefacts.
 \item
   \textbf{Output Validation} (\breaktt{04\_validate\_output.py}) --- PDF
   structure, manifests, Markdown hygiene.
@@ -199,18 +199,20 @@ numbering (e.g., copy executes after validation even though script
 \textbf{Infrastructure vs project tests.} Splitting pytest invocations
 isolates flaky infra regressions (\breaktt{MAX\_TEST\_FAILURES} knobs)
 from zero-tolerance gates on domain code
-(\breaktt{max\_project\_test\_failures} default~0 declared in YAML
+(\breaktt{max\_project\_test\_failures} default 0 declared in YAML
 front-matter/testing blocks).
 
-\textbf{Stage~02 illustration.} Rather than hypothetical diagram
-factories, canonical projects ship concrete
-behaviours---\breaktt{template\_autoresearch\_project} runs readiness
-validation; archived \breaktt{template\_search\_project} merges remote
-literature JSON, scripted figures
-(\breaktt{y\_generate\_search\_figures.py}), and manifest writers;
-\breaktt{template\_code\_project} emits optimization plots;
-\breaktt{template\_prose\_project} mainly triggers structural validation
-scaffolding.
+\textbf{Stage 02 illustration.} The analysis stage is deliberately
+concrete rather than a hypothetical diagram factory: each canonical
+project ships real behaviour at this node.
+\breaktt{template\_autoresearch\_project} runs readiness validation;
+\breaktt{template\_search\_project} merges remote literature JSON,
+generates scripted figures (\breaktt{y\_generate\_search\_figures.py}),
+and writes manifests; \breaktt{template\_code\_project} emits
+optimization plots; and \breaktt{template\_prose\_project} triggers
+structural validation scaffolding. The pipeline shape is identical
+across all four---only the Stage 02 payload differs---which is exactly
+what lets one orchestrator serve heterogeneous research domains.
 \end{block}
 
 \begin{block}{Interactive Orchestration}

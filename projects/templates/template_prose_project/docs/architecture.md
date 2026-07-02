@@ -65,8 +65,8 @@ sequenceDiagram
 
 ## Why These Exemplar Shapes?
 
-The permanent `template_*_project` exemplars cover the always-on computational
-and prose-review paths; the optional search add-on covers literature discovery:
+The permanent `template_*` exemplars cover the always-on computational,
+prose-review, and literature-discovery paths:
 
 | Project | Workflow | Algorithm? | Mutates `references.bib`? |
 |---|---|---|---|

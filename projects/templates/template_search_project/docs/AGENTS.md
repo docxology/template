@@ -66,7 +66,7 @@ grep -rE "from infrastructure\.(rendering|reporting|scientific)" \
     projects/templates/template_search_project/src/ || echo "Clean"
 
 # 4. The configurable review CLI lists the nine stages
-cd projects/template_search_project && uv run python scripts/review --list
+cd projects/templates/template_search_project && uv run python scripts/review --list
 ```
 
 ## Contracts
