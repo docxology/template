@@ -2,9 +2,10 @@
 project: humos-template
 task: Multi-lens deep review (RedTeam/FirstPrinciples/Science), scoped improvement plans, and ambitious same-session fixes
 effort: E5
-phase: complete
-progress: 14/14
-iteration: 6-comprehensive-remediation-and-push
+phase: execute
+progress: 0/9
+iteration: 7-deferred-refactors-workflow
+baseline_head_iter7: 3c60e9551c0ac015a09ec10a86067f7571d4604e
 baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
 iteration: 5-multi-lens-review-plans-fixes
 mode: algorithm
@@ -158,6 +159,26 @@ uniform and verifiable, (c) module public APIs are explicitly fenced for safe
 composition, and (d) the exemplar templates are structurally consistent — all
 delivered as additive, gate-green, behavior-preserving changes verified by tool
 probe and recorded in this ISA.
+
+## Goal (iteration 7)
+
+Every remaining review-plan refactor (R5–R10, R13, R14, R18) is implemented in
+worktree-isolated parallel agents, reconciled into the main checkout as its own
+gate-verified logical commit, all repo gates + full infra suite green, then
+pushed to public `docxology/template` main — no pollution, no generated-block
+hand-edits.
+
+## Criteria (iteration 7)
+
+- [x] ISC-53: WP1 (R7+R18) — single-file CLIs now discovered (live ops 18→31, incl. the 4 named); `OperationDescriptor.effect` tier added, MCP `invoke_cli` refuses mutating ops unless `allow_mutating`/`TEMPLATE_MCP_ALLOW_MUTATING` (probe: test_operation_registry + test_mcp_server 32→ pass; operations-check green; manifest regenerated).
+- [x] ISC-54: WP2 (R6+R8) — `_get_session`→`lazy_session`, `_iter_files`→`iter_bundle_files`, 4 numeric-cell helpers, `_read_json_object`/`_load_yaml_mapping`/`_rel` each consolidated to one home (dup-scan 0; `secure_run._load_yaml_mapping` intentionally kept — materially different error behavior); arXiv now pulls rendered `.tex` when present + honest references-only docstring/README with 2 tests (probe: publishing 597 pass).
+- [x] ISC-55: WP3 (R13) — `_pdf_title_page.py` 774→192-line facade + 4 sibling modules (largest 357); module-line-count gate green; rendering 814 tests pass; code moved verbatim (byte-stable) (probe: wc -l + gate + tests).
+- [x] ISC-56: WP4 R9 shipped — all 15 exemplar repro manifests declare ≥1 present output-artifact (5 regenerated); test_repro_determinism asserts it. **R10 (benchmark determinism) REVERTED** — the agent's impl removed `execution_time`, which `manuscript_variables.py:301` reads → would render "N/A μs" in the manuscript; the honest fix (manuscript should not pin a wall-clock μs as a reproducible fact) is a content decision, returned to the plan as open (probe: R9 test passes; benchmark JSON unchanged from HEAD).
+- [x] ISC-57: WP5 (R14) — `documentation-index.md` gained the 12 previously-omitted substantive docs into existing sections; links resolve (probe: lint_docs + drift green).
+- [x] ISC-58: R5 — ALL `mypy --strict infrastructure` errors fixed (6: 4 pre-existing type-params + 2 refactor-introduced re-export/`_rel` issues) AND `infrastructure.orchestration.*` removed from `ignore_errors` with CI-config mypy green (1031 files) + orchestration 123 tests pass (probe: mypy --strict = 0; CI-scope mypy Success).
+- [x] ISC-59: Committed as one cohesive gate-verified batch (show-your-math: the regenerated aggregate docs — api-reference/COUNTS/operations_manifest — reflect WP1+WP2+WP3+R5 jointly and cannot attribute to a single WP without stale intermediate states; all WPs were verified together as a unit, health 11/11 after).
+- [x] ISC-60: Anti: no pollution — final changeset = 48 files, `output/` limited to the 5 intended R9 manifests; generated docs only via their generators; R10 test-run pollution reverted (probe: git status scan clean).
+- [ ] ISC-61: Pushed to `origin/main`; remote HEAD live-verified == local; full infra suite green pre-push (probe: `git ls-remote` + pytest exit 0) — PENDING suite + push.
 
 ## Goal (iteration 5)
 

@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
 from infrastructure.core.exceptions import PublishingError, UploadError
+from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
 from infrastructure.publishing.zenodo.client import ZenodoClient
 from infrastructure.publishing.zenodo.config import ZenodoConfig
 
@@ -101,7 +102,7 @@ class ZenodoProvider:
             client = ZenodoClient(ZenodoConfig(access_token=self._token, base_url=self._base_url))
             deposition = client.create_deposition()
 
-            for file_path in self._iter_files(bundle):
+            for file_path in iter_bundle_files(bundle):
                 object_key = str(file_path.relative_to(bundle.parent))
                 client.upload_file(
                     deposition.bucket_url,
@@ -130,12 +131,6 @@ class ZenodoProvider:
                 bundle_sha256=sha,
                 error=f"Zenodo HTTP error: {exc}",
             )
-
-    @staticmethod
-    def _iter_files(bundle: Path) -> list[Path]:
-        if bundle.is_file():
-            return [bundle]
-        return [p for p in sorted(bundle.rglob("*")) if p.is_file()]
 
 
 # ---------------------------------------------------------------------------
@@ -170,15 +165,6 @@ class IPFSPinataProvider:
         self._session_arg = session  # None → lazily created on first network call
         self._timeout = timeout
 
-    def _get_session(self) -> Any:
-        if self._session_arg is not None:
-            return self._session_arg
-        import requests  # noqa: PLC0415
-
-        if not hasattr(self, "_lazy_session"):
-            self._lazy_session: Any = requests.Session()
-        return self._lazy_session
-
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
         sha = _bundle_sha256(bundle)
 
@@ -199,7 +185,7 @@ class IPFSPinataProvider:
         import requests  # noqa: PLC0415 — deferred; see module docstring
 
         try:
-            session = self._get_session()
+            session = lazy_session(self)
             files = self._build_files(bundle)
             resp = session.post(
                 f"{self._base_url}/pinning/pinFileToIPFS",
@@ -267,15 +253,6 @@ class IPFSWeb3StorageProvider:
         self._session_arg = session
         self._timeout = timeout
 
-    def _get_session(self) -> Any:
-        if self._session_arg is not None:
-            return self._session_arg
-        import requests  # noqa: PLC0415
-
-        if not hasattr(self, "_lazy_session"):
-            self._lazy_session: Any = requests.Session()
-        return self._lazy_session
-
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
         sha = _bundle_sha256(bundle)
 
@@ -296,7 +273,7 @@ class IPFSWeb3StorageProvider:
         import requests  # noqa: PLC0415 — deferred; see module docstring
 
         try:
-            session = self._get_session()
+            session = lazy_session(self)
             # Web3.Storage supports CAR upload; for the bundle scaffold we POST
             # a tar-balled directory or a single file.
             if bundle.is_file():
@@ -374,15 +351,6 @@ class SoftwareHeritageProvider:
         self._session_arg = session
         self._timeout = timeout
 
-    def _get_session(self) -> Any:
-        if self._session_arg is not None:
-            return self._session_arg
-        import requests  # noqa: PLC0415
-
-        if not hasattr(self, "_lazy_session"):
-            self._lazy_session: Any = requests.Session()
-        return self._lazy_session
-
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
         sha = _bundle_sha256(bundle)
         repo_url = self._resolve_repo_url(bundle)
@@ -419,7 +387,7 @@ class SoftwareHeritageProvider:
         import requests  # noqa: PLC0415 — deferred; see module docstring
 
         try:
-            session = self._get_session()
+            session = lazy_session(self)
             resp = session.post(endpoint, timeout=self._timeout)
             resp.raise_for_status()
             payload = resp.json()

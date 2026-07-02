@@ -12,6 +12,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.files.serialization import read_json_object as _read_json_object
+
 
 @dataclass(frozen=True)
 class PauseRecommendation:
@@ -160,13 +162,3 @@ def _stage_num_for(stage_name: str, project_output_dir: Path) -> int:
         if isinstance(row, dict) and row.get("stage_name") == stage_name:
             return int(row.get("stage_num", 0) or 0)
     return 0
-
-
-def _read_json_object(path: Path) -> dict[str, Any]:
-    if not path.exists():
-        return {}
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return payload if isinstance(payload, dict) else {}

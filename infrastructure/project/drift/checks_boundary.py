@@ -7,6 +7,7 @@ from pathlib import Path
 
 import yaml
 
+from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.project.drift.models import Report
 
 _STANDALONE_SRC_PROJECTS = frozenset(
@@ -23,13 +24,6 @@ _CODE_ADAPTER_ALLOWLIST = frozenset(
         "src/_runtime.py",
     }
 )
-
-
-def _rel(path: Path, project_root: Path) -> str:
-    try:
-        return str(path.relative_to(project_root))
-    except ValueError:
-        return str(path)
 
 
 def _load_layer_contract_allowlist(project_root: Path) -> set[str]:

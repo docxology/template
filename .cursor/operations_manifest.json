@@ -59,7 +59,33 @@
         "validate_autoresearch_overlay",
         "validate_autoresearch_plan",
         "write_autoresearch_report"
-      ]
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.benchmark.template_harness",
+      "invocation": "python -m infrastructure.benchmark.template_harness",
+      "source_path": "infrastructure/benchmark/template_harness.py",
+      "purpose": "Small benchmark harness for canonical template exemplars.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.core.cli",
+      "invocation": "python -m infrastructure.core.cli",
+      "source_path": "infrastructure/core/cli.py",
+      "purpose": "CLI interface for core infrastructure modules.",
+      "subcommands": [],
+      "exports": [
+        "create_parser",
+        "handle_discover_command",
+        "handle_inventory_command",
+        "handle_multi_project_command",
+        "handle_pipeline_command",
+        "main"
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.core.config",
@@ -78,7 +104,25 @@
         "get_translation_languages",
         "load_config",
         "register_project_schema_extension"
-      ]
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.core.health",
+      "invocation": "python -m infrastructure.core.health",
+      "source_path": "infrastructure/core/health.py",
+      "purpose": "Unified repository health check command.",
+      "subcommands": [],
+      "exports": [
+        "GateResult",
+        "HealthReport",
+        "GATE_NAMES",
+        "build_gate_specs",
+        "run_health_checks",
+        "format_report_table",
+        "main"
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.core.pipeline",
@@ -117,7 +161,8 @@
         "generate_pipeline_summary",
         "get_system_resources",
         "stage_label"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.doctor",
@@ -184,7 +229,17 @@
         "EXIT_CRITICAL",
         "EXIT_REGRESSION",
         "EXIT_USAGE"
-      ]
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.documentation.generate_glossary_cli",
+      "invocation": "python -m infrastructure.documentation.generate_glossary_cli",
+      "source_path": "infrastructure/documentation/generate_glossary_cli.py",
+      "purpose": "Glossary generation script for building API index from source code.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.llm.cli",
@@ -192,7 +247,25 @@
       "source_path": "infrastructure/llm/cli/__main__.py",
       "purpose": "``python -m infrastructure.llm.cli`` entry point.",
       "subcommands": [],
-      "exports": []
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.mcp_server",
+      "invocation": "python -m infrastructure.mcp_server",
+      "source_path": "infrastructure/mcp_server.py",
+      "purpose": "Self-contained stdio MCP server exposing the template's agent surface.",
+      "subcommands": [],
+      "exports": [
+        "PROTOCOL_VERSION",
+        "SERVER_INFO",
+        "handle_request",
+        "invoke_cli",
+        "list_tools",
+        "main",
+        "serve"
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.methods",
@@ -216,7 +289,8 @@
         "build_methods_orchestration_plan",
         "render_methods_orchestration_markdown",
         "validate_methods_orchestration_plan"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.orchestration",
@@ -263,7 +337,33 @@
         "select_project_interactive",
         "setup_stage_log",
         "validate_project_slug"
-      ]
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.project.linking",
+      "invocation": "python -m infrastructure.project.linking",
+      "source_path": "infrastructure/project/linking.py",
+      "purpose": "Symlink private lifecycle projects into the template checkout.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.project.public_scope",
+      "invocation": "python -m infrastructure.project.public_scope",
+      "source_path": "infrastructure/project/public_scope.py",
+      "purpose": "Public-repository project scope helpers.",
+      "subcommands": [],
+      "exports": [
+        "LOCAL_ONLY_TEMPLATE_NAMES",
+        "PUBLIC_PROJECT_NAMES",
+        "main",
+        "public_ci_source_paths",
+        "public_project_infos",
+        "public_project_names"
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.prose",
@@ -325,7 +425,8 @@
         "analyze_manuscript",
         "write_report",
         "load_report_json"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.publishing",
@@ -398,7 +499,8 @@
         "get_platform",
         "first_class_platforms",
         "documented_platforms"
-      ]
+      ],
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reference.citation",
@@ -438,7 +540,8 @@
         "generate_citation_key",
         "escape_latex",
         "unescape_latex"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.reference.verification",
@@ -475,7 +578,8 @@
         "verify_bibfile",
         "verify_database",
         "verify_entry"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.rendering",
@@ -516,7 +620,57 @@
         "substitute_manuscript_text",
         "verify_figures_exist",
         "write_resolved_manuscript_tree"
-      ]
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.evidence_graph",
+      "invocation": "python -m infrastructure.reporting.evidence_graph",
+      "source_path": "infrastructure/reporting/evidence_graph.py",
+      "purpose": "Queryable evidence graph data layer (EVIDENCE-GRAPH-1).",
+      "subcommands": [
+        {
+          "name": "build",
+          "help": "Build the evidence graph for a project."
+        }
+      ],
+      "exports": [
+        "NodeType",
+        "RelationType",
+        "EvidenceNode",
+        "EvidenceEdge",
+        "EvidenceGraph",
+        "build_evidence_graph",
+        "graph_to_json",
+        "main"
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.release_readiness",
+      "invocation": "python -m infrastructure.reporting.release_readiness",
+      "source_path": "infrastructure/reporting/release_readiness.py",
+      "purpose": "Local, no-network release-readiness dashboard.",
+      "subcommands": [],
+      "exports": [
+        "CoverageFacts",
+        "DocsLintStatus",
+        "EvidenceGraphStatus",
+        "PipelineState",
+        "ProjectCoverage",
+        "ReleaseMetadata",
+        "ReleaseReadinessReport",
+        "collect_coverage_facts",
+        "collect_docs_lint",
+        "collect_evidence_graph",
+        "collect_pipeline_state",
+        "collect_release_metadata",
+        "collect_release_readiness",
+        "main",
+        "render_html",
+        "render_markdown"
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.search.deep_research",
@@ -576,7 +730,8 @@
         "collect_project_context",
         "save_deep_research_result",
         "save_deep_research_results"
-      ]
+      ],
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.search.exa",
@@ -626,7 +781,8 @@
         "SearchOutput",
         "SearchResponse",
         "UrllibExaHttpClient"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.search.literature",
@@ -668,7 +824,8 @@
         "FetchResult",
         "enrich_papers",
         "write_corpus"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.sia",
@@ -704,7 +861,8 @@
         "run_sia_loop",
         "validate_task_dir",
         "write_results_json"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.skills",
@@ -775,7 +933,8 @@
         "validate_skill_contract_file",
         "write_operations_manifest",
         "write_skill_manifest"
-      ]
+      ],
+      "effect": "read_only"
     },
     {
       "module": "infrastructure.validation.cli",
@@ -783,7 +942,71 @@
       "source_path": "infrastructure/validation/cli/__main__.py",
       "purpose": "Allow `python -m infrastructure.validation.cli`.",
       "subcommands": [],
-      "exports": []
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.validation.docs.scanner",
+      "invocation": "python -m infrastructure.validation.docs.scanner",
+      "source_path": "infrastructure/validation/docs/scanner.py",
+      "purpose": "Comprehensive documentation scan and improvement analysis.",
+      "subcommands": [],
+      "exports": [
+        "DocumentationScanner",
+        "ScanAccuracyIssue",
+        "CompletenessGap",
+        "DocumentationFile",
+        "LinkIssue",
+        "QualityIssue",
+        "ScanResults"
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.validation.integrity.check_links",
+      "invocation": "python -m infrastructure.validation.integrity.check_links",
+      "source_path": "infrastructure/validation/integrity/check_links.py",
+      "purpose": "CLI entry point for documentation link and reference audits.",
+      "subcommands": [],
+      "exports": [
+        "LinkCheckResult",
+        "_get_actual_project_names",
+        "_is_real_path_item",
+        "_resolve_template_path",
+        "_should_validate_path",
+        "_validate_import_path",
+        "check_file_reference",
+        "extract_code_blocks",
+        "extract_headings",
+        "extract_links",
+        "discover_markdown_files",
+        "generate_comprehensive_report",
+        "main",
+        "run_link_audit",
+        "validate_directory_structures",
+        "validate_file_paths_in_code",
+        "validate_placeholder_consistency",
+        "validate_python_imports"
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.validation.integrity.link_validator",
+      "invocation": "python -m infrastructure.validation.integrity.link_validator",
+      "source_path": "infrastructure/validation/integrity/link_validator.py",
+      "purpose": "Link validation utilities for documentation.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.validation.repo.scanner",
+      "invocation": "python -m infrastructure.validation.repo.scanner",
+      "source_path": "infrastructure/validation/repo/scanner.py",
+      "purpose": "Repository-wide accuracy and completeness scan.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
     }
   ]
 }

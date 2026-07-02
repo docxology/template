@@ -9,6 +9,31 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Changed
+
+- 🧹 **Deferred review-refactor batch (2026-07-02)** — implemented the remaining
+  plan items via worktree-isolated parallel agents, centrally re-verified (full
+  infra suite green, health 11/11). **R5**: fixed every `mypy --strict
+  infrastructure` error (0 remaining) and removed `infrastructure.orchestration.*`
+  from the `ignore_errors` list (CI-config mypy green over 1031 files). **R6**:
+  de-duplicated verbatim helper bodies — a shared `infrastructure/publishing/_adapter_http.py`
+  (`lazy_session`, `iter_bundle_files`) and a new `infrastructure/core/files/serialization.py`
+  (`read_json_object`, `load_yaml_mapping`, `relative_or_self`); the numeric-cell
+  helpers now live only in `evidence_registry.py`. **R7**: the operations catalog
+  now discovers single-file `python -m` CLIs (e.g. `infrastructure.core.health`,
+  `infrastructure.project.public_scope`), not just packages with `__main__.py`
+  (18→31 ops). **R8**: the arXiv submission tarball includes the rendered `.tex`
+  when present and is honestly framed as a references-only partial package
+  otherwise. **R9**: every public exemplar's repro manifest now declares at least
+  one present output-artifact. **R13**: split the 774-line
+  `infrastructure/rendering/_pdf_title_page.py` into a 192-line facade plus four
+  cohesive sibling modules (behavior byte-stable). **R14**:
+  `docs/documentation-index.md` gained 12 previously-omitted substantive docs.
+  **R18**: MCP `invoke_cli` now carries an `effect` tier and refuses mutating
+  operations unless explicitly opted in. R10 (benchmark determinism) was attempted
+  and reverted — it is downstream-coupled to a manuscript variable; see
+  `docs/maintenance/review-remediation-2026-07.md`.
+
 ### Fixed
 
 - 🩺 **Multi-lens review remediation (2026-07-02)** — a 9-dimension adversarial

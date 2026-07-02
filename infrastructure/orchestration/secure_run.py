@@ -240,7 +240,7 @@ def run_secure_pipeline(
             core_only=options.core_only,
             resume=options.resume,
         )
-        rc = runner.run(invocation)
+        rc = int(runner.run(invocation))
         if rc != 0:
             logger.error("Pipeline phase failed; skipping steganography.")
             return rc

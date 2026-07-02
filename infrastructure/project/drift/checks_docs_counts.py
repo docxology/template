@@ -6,6 +6,7 @@ import re
 import subprocess
 from pathlib import Path
 
+from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.project.drift.models import Report
 
 
@@ -46,13 +47,6 @@ SHARED_TEMPLATE_DESIGN_REQUIRED_SECTIONS: tuple[str, ...] = (
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
-
-
-def _rel(path: Path, repo_root: Path) -> str:
-    try:
-        return str(path.relative_to(repo_root))
-    except ValueError:
-        return str(path)
 
 
 def _strip_code_fences(text: str) -> str:

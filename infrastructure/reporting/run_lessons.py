@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
+from infrastructure.core.files.serialization import read_json_object as _read_json_object
 from infrastructure.core.pipeline.types import PipelineStageResult
 
 
@@ -247,16 +248,6 @@ def _lessons_from_telemetry(path: Path, *, project_output_dir: Path) -> list[Run
             )
         )
     return lessons
-
-
-def _read_json_object(path: Path) -> dict[str, object]:
-    if not path.exists():
-        return {}
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return payload if isinstance(payload, dict) else {}
 
 
 def _release_safe_source(path: Path, project_output_dir: Path) -> str:

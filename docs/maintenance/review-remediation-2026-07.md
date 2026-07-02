@@ -65,6 +65,36 @@ The remaining open items (R5–R10, R13, R14, R18) are genuine multi-step
 refactors or design changes — each warrants its own focused PR per this repo's
 contribution model rather than being bundled into one large push.
 
+## Shipped 2026-07-02 (third pass — the deferred refactors, via worktree-isolated workflow)
+
+Implemented in 5 parallel worktree-isolated agents, reconciled + centrally
+re-verified in the main loop, full infra suite green: **R5** (all `mypy --strict
+infrastructure` errors fixed — 0 remaining — AND `infrastructure.orchestration.*`
+removed from `ignore_errors` with CI-config mypy green), **R6** (helper dedup —
+`lazy_session`/`iter_bundle_files` in a shared `_adapter_http`, numeric-cell
+helpers single-homed, `read_json_object`/`load_yaml_mapping`/`relative_or_self`
+in a new `infrastructure/core/files/serialization.py`; `secure_run._load_yaml_mapping`
+deliberately kept — different error semantics), **R7** (operations catalog now
+discovers single-file CLIs, 18→31 ops), **R8** (arXiv tarball pulls rendered
+`.tex` + honest references-only framing), **R9** (all 15 repro manifests declare
+a present output-artifact), **R13** (`_pdf_title_page.py` split 774→192-line
+facade + 4 modules), **R14** (documentation-index gained 12 omitted docs),
+**R18** (MCP `invoke_cli` capability tiering — mutating ops refused by default).
+
+**R10 (benchmark determinism) attempted and REVERTED — now with a sharper open
+spec.** The mechanical fix (remove wall-clock `execution_time` from the tracked
+`performance_benchmark.json` so it is byte-reproducible) is downstream-coupled:
+`projects/templates/template_code_project/src/manuscript_variables.py:301` reads
+`execution_time` to populate `BENCHMARK_AVG_TIME`, rendered as "**{{...}} μs**"
+in `manuscript/05_experimental_setup.md`. Removing the field makes the manuscript
+render "N/A μs". So R10 cannot be a drive-by: the real question is *what should a
+byte-reproducible exemplar present for an inherently wall-clock quantity* — either
+(a) reword the manuscript so the μs figure is explicitly environment-dependent
+and not a pinned reproducible fact, or (b) drop the numeric claim and describe
+the benchmark qualitatively. Both are content decisions on a public exemplar,
+left open for a maintainer. Acceptance unchanged; add: the manuscript must not
+regress to "N/A μs".
+
 ## Open — High
 
 ### R1 · Wire the claim-binding regression tier into CI — ✅ SHIPPED

@@ -469,8 +469,8 @@ def _dispatch_menu_key(
     if key in MENU_KEY_TO_STAGE:
         stage = MENU_KEY_TO_STAGE[key]
         if stage_runner is not None:
-            return stage_runner(stage, project, repo_root)
-        return execute_single_stage(stage, project, repo_root)
+            return int(stage_runner(stage, project, repo_root))
+        return int(execute_single_stage(stage, project, repo_root))
     return 1
 
 

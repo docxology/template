@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.project.drift.models import Report
 
 # Trivial helpers allowed in thin orchestrators without counting toward "fat".
@@ -35,13 +36,6 @@ _FAT_SCRIPT_FAIL_LINES = 200
 _FAT_MIN_FUNCTIONS = 3
 _ROOT_REUSABLE_HELPER_MIN_FUNCTIONS = 4
 _ROOT_REUSABLE_HELPER_MIN_LINES = 1
-
-
-def _rel(path: Path, repo_root: Path) -> str:
-    try:
-        return str(path.relative_to(repo_root))
-    except ValueError:
-        return str(path)
 
 
 def _is_skipped_script(path: Path) -> bool:

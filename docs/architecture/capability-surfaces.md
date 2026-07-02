@@ -60,7 +60,16 @@ editor:
 
 `invoke_cli` is curated: it refuses any module that is not `infrastructure.*` and
 not reported invocable by the operation registry — it is a vetted tool surface,
-not an arbitrary shell.
+not an arbitrary shell. It is also **capability-tiered**: each operation carries an
+`effect` (`read_only` by default, `mutating` for the publish / upload / paid CLIs
+in the registry's `MUTATING_OPERATIONS` allowlist), and a `mutating` op is refused
+unless the caller passes `allow_mutating=true` or sets `TEMPLATE_MCP_ALLOW_MUTATING=1`.
+
+The operation registry discovers both **packages** (a directory with `__main__.py`)
+and **single-file CLIs** (a `foo.py` with an `if __name__ == "__main__":` guard whose
+directory is not itself an invocable package) — so documented single-file entry points
+such as `infrastructure.core.health` and `infrastructure.project.public_scope` are
+reachable through this surface too.
 
 Run it:
 

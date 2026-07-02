@@ -42,6 +42,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
 
 from .models import HuggingFaceConfig, HuggingFaceResult, HFRepoType
 
@@ -107,15 +108,6 @@ class HuggingFaceHubAdapter:
         self._session_arg = session
 
     # ------------------------------------------------------------------
-    def _get_session(self) -> Any:
-        if self._session_arg is not None:
-            return self._session_arg
-        import requests  # noqa: PLC0415 — deferred to first network use
-
-        if not hasattr(self, "_lazy_session"):
-            self._lazy_session: Any = requests.Session()
-        return self._lazy_session
-
     @property
     def _repo_url(self) -> str:
         rt = self.config.repo_type
@@ -143,7 +135,7 @@ class HuggingFaceHubAdapter:
         revision:
             Target branch/revision (default ``main``).
         """
-        files = self._iter_files(bundle)
+        files = iter_bundle_files(bundle)
         rel_names = tuple(str(p.relative_to(bundle if bundle.is_dir() else bundle.parent)) for p in files)
 
         if dry_run:
@@ -190,7 +182,7 @@ class HuggingFaceHubAdapter:
         import requests  # noqa: PLC0415 — deferred; see module docstring
 
         headers = {"Authorization": f"Bearer {self.config.token}"}
-        session = self._get_session()
+        session = lazy_session(self)
 
         try:
             # 1) Create repo (exist_ok semantics: 409 is treated as success).
@@ -305,9 +297,3 @@ class HuggingFaceHubAdapter:
                 error=f"huggingface_hub upload failed: {exc}",
                 timestamp_utc=_now_utc_iso(),
             )
-
-    @staticmethod
-    def _iter_files(bundle: Path) -> list[Path]:
-        if bundle.is_file():
-            return [bundle]
-        return [p for p in sorted(bundle.rglob("*")) if p.is_file()]

@@ -12,8 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
-import yaml
-
+from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
 from infrastructure.project.public_scope import public_project_names
 
 README_BLOCK_BEGIN = "<!-- BEGIN:PUBLICATION_RECORDS -->"
@@ -125,13 +124,6 @@ class PublicationRecord:
         if self.external_findings:
             statuses.extend(self.external_findings)
         return "; ".join(statuses)
-
-
-def _load_yaml_mapping(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return loaded if isinstance(loaded, dict) else {}
 
 
 def _load_json_mapping(path: Path) -> dict[str, Any]:

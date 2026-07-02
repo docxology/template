@@ -13,26 +13,14 @@ from pathlib import Path
 
 import yaml
 
+from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
+from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.project.drift.models import Report
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
-
-
-def _rel(p: Path, repo_root: Path) -> str:
-    """Best-effort relative path against repo_root.
-
-    Falls back to the absolute path when ``p`` is outside the repository
-    (e.g., synthetic test fixtures under ``tmp_path``). Production calls
-    always pass repo-internal paths and stay short; tests call against
-    a temp tree and get the absolute path. Keeps the detectors testable.
-    """
-    try:
-        return str(p.relative_to(repo_root))
-    except ValueError:
-        return str(p)
 
 
 def _find_check_function_names(pipeline_py: Path) -> set[str]:
@@ -363,13 +351,6 @@ def check_all_export_drift(project_root: Path, report: Report, project: str) -> 
 
 
 _ZENODO_DOI_RE = re.compile(r"^10\.5281/zenodo\.\d+$")
-
-
-def _load_yaml_mapping(path: Path) -> dict:
-    if not path.is_file():
-        return {}
-    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return loaded if isinstance(loaded, dict) else {}
 
 
 def _normalize_doi(value: object) -> str:

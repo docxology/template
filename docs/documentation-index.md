@@ -99,6 +99,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **Agent skills manifest** — `uv run python -m infrastructure.skills write` (default output: `.cursor/skill_manifest.json`) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
 - **Open Gauss naming** — [reference/opengauss-naming.md](reference/opengauss-naming.md) (math-inc `gauss` CLI vs Huawei DBMS; does not require `fep_lean` on disk)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
+- **[how-to-use.md](how-to-use.md)** - Signpost stub redirecting to the canonical `core/how-to-use.md`
 - **[core/literature-data-flow.md](core/literature-data-flow.md)** - Literature search and data pipeline overview
 - **[accessibility.md](accessibility.md)** - Accessibility notes for generated documentation and diagrams
 
@@ -139,6 +140,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 
 ### Skill-Level Guides
 
+- **[guides/startup-and-setup.md](guides/startup-and-setup.md)** - Complete install + validation procedure (copy-pasteable steps for humans and agents)
 - **[guides/getting-started.md](guides/getting-started.md)** - Levels 1-3 (Beginner)
 - **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by public template exemplars
 - **[guides/methods-orchestration.md](guides/methods-orchestration.md)** - Connect methods prose, pipeline contracts, artifacts, and evidence registries
@@ -188,6 +190,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[development/no-mocks-http-testing.md](development/no-mocks-http-testing.md)** - HTTP testing without mocks
 - **[development/validation_gates.md](development/validation_gates.md)** - Validation gates
 - **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
+- **[development/optional-dependencies.md](development/optional-dependencies.md)** - Optional dependency + capability matrix (which extras unlock which features)
 - **[maintenance/README.md](maintenance/README.md)** - Maintenance hub index
 - **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`, `published/`, `other/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
@@ -196,6 +199,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/ci_local.sh`)
 - **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 10 executable bundle design
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
+- **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
+- **[maintenance/review-remediation-2026-07.md](maintenance/review-remediation-2026-07.md)** - Multi-lens review remediation plan (R1–R18 items with acceptance lines)
 
 ---
 
@@ -323,6 +328,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
 - **[prompts/SKILL.md](prompts/SKILL.md)** - Hub router (`template-workflows`)
 - **[prompts/MODE_REGISTRY.md](prompts/MODE_REGISTRY.md)** - Workflow-skill mode registry
+- **[prompts/COMPOSITION.md](prompts/COMPOSITION.md)** - Workflow composition map (how prompt skills chain together)
+- **[prompts/startup/SKILL.md](prompts/startup/SKILL.md)** - Startup / environment-bootstrap workflow skill
 - **[prompts/_skill-eval/README.md](prompts/_skill-eval/README.md)** - Synthetic workflow-skill benchmark workspace
 - **[prompts/manuscript-creation/SKILL.md](prompts/manuscript-creation/SKILL.md)** - Manuscript creation
 - **[prompts/manuscript-cross-references/SKILL.md](prompts/manuscript-cross-references/SKILL.md)** - Registry/token manuscript cross-references
@@ -344,6 +351,14 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[prompts/agentic-use/SKILL.md](prompts/agentic-use/SKILL.md)** - Agentic-use planning
 - **[prompts/deep-research/SKILL.md](prompts/deep-research/SKILL.md)** - Deep research synthesis
 - **[prompts/methods-orchestration/SKILL.md](prompts/methods-orchestration/SKILL.md)** - Methods orchestration
+
+### Prompt reference deep-dives (`prompts/*/references/`)
+
+- **[prompts/code-development/references/patterns.md](prompts/code-development/references/patterns.md)** - Code-development prompt patterns
+- **[prompts/feature-addition/references/checklist.md](prompts/feature-addition/references/checklist.md)** - Feature-addition checklist
+- **[prompts/literature-synthesis/references/prompt-blocks.md](prompts/literature-synthesis/references/prompt-blocks.md)** - Literature-synthesis prompt blocks
+- **[prompts/manuscript-creation/references/structure-checklist.md](prompts/manuscript-creation/references/structure-checklist.md)** - Manuscript structure checklist
+- **[prompts/test-creation/references/patterns.md](prompts/test-creation/references/patterns.md)** - Test patterns (no mocks)
 
 ---
 

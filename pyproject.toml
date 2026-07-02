@@ -352,10 +352,6 @@ module = "infrastructure.search.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = "infrastructure.orchestration.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "projects.template_prose_project.*"
 ignore_errors = true
 

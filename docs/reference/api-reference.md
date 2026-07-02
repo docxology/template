@@ -1623,7 +1623,7 @@ Metadata about a publishing platform adapter.
 prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path
 ```
 
-Prepare a submission package for arXiv upload.
+Assemble a LaTeX-source submission package and tar it for manual arXiv upload.
 
 ### `PublicationMetadata`
 

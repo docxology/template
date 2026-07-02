@@ -33,6 +33,7 @@ opt-in agent-facing surface. See ``docs/architecture/capability-surfaces.md``.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -44,9 +45,14 @@ from infrastructure.skills.discovery import (
     skill_descriptors_as_json_serializable,
 )
 from infrastructure.skills.operation_registry import (
+    OperationDescriptor,
     build_operations_payload,
     discover_operations,
 )
+
+# Env var that opts an agent into running ``mutating`` (publish / upload / paid)
+# CLIs through :func:`invoke_cli`. Any truthy value enables it.
+ALLOW_MUTATING_ENV = "TEMPLATE_MCP_ALLOW_MUTATING"
 
 __all__ = [
     "PROTOCOL_VERSION",
@@ -85,25 +91,51 @@ def _tool_list_skills(_args: dict[str, Any]) -> dict[str, Any]:
     return {"version": 1, "skills": skill_descriptors_as_json_serializable(skills)}
 
 
-def _invocable_modules() -> set[str]:
-    return {op.module for op in discover_operations(_repo_root())}
+def _operations_by_module() -> dict[str, OperationDescriptor]:
+    return {op.module: op for op in discover_operations(_repo_root())}
 
 
-def invoke_cli(module: str, args: list[str] | None = None, *, timeout: float = 120.0) -> dict[str, Any]:
+def _mutating_opt_in_env() -> bool:
+    return os.environ.get(ALLOW_MUTATING_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def invoke_cli(
+    module: str,
+    args: list[str] | None = None,
+    *,
+    timeout: float = 120.0,
+    allow_mutating: bool = False,
+) -> dict[str, Any]:
     """Run ``python -m <module> <args...>`` for an invocable ``infrastructure.*`` module.
 
     Returns ``{exit_code, stdout, stderr}``. Refuses any module outside
     ``infrastructure.*`` or not reported as invocable by the operation registry —
     this is a curated tool surface, not an arbitrary shell.
+
+    Capability tiering: a ``mutating`` operation (publish / upload / paid CLI, per
+    the operation registry's ``effect`` tier) is refused unless the caller passes
+    ``allow_mutating=True`` or sets the ``TEMPLATE_MCP_ALLOW_MUTATING`` env var.
+    ``read_only`` operations run unconditionally.
     """
     args = list(args or [])
     if not module.startswith("infrastructure."):
         return {"exit_code": 2, "stdout": "", "stderr": f"refused: {module!r} is not an infrastructure.* module"}
-    if module not in _invocable_modules():
+    operations = _operations_by_module()
+    descriptor = operations.get(module)
+    if descriptor is None:
         return {
             "exit_code": 2,
             "stdout": "",
             "stderr": f"refused: {module!r} is not a registered invocable CLI (see list_operations)",
+        }
+    if descriptor.effect == "mutating" and not (allow_mutating or _mutating_opt_in_env()):
+        return {
+            "exit_code": 2,
+            "stdout": "",
+            "stderr": (
+                f"refused: {module!r} is a mutating/paid operation; re-invoke with "
+                f"allow_mutating=true (or set {ALLOW_MUTATING_ENV}=1) to opt in"
+            ),
         }
     proc = subprocess.run(  # noqa: S603 - curated module list, not arbitrary input
         [sys.executable, "-m", module, *args],
@@ -120,7 +152,7 @@ def _tool_invoke_cli(args: dict[str, Any]) -> dict[str, Any]:
     cli_args = args.get("args") or []
     if not isinstance(cli_args, list):
         return {"exit_code": 2, "stdout": "", "stderr": "args must be a list of strings"}
-    return invoke_cli(module, [str(a) for a in cli_args])
+    return invoke_cli(module, [str(a) for a in cli_args], allow_mutating=bool(args.get("allow_mutating", False)))
 
 
 # name -> (handler, description, inputSchema)
@@ -146,12 +178,17 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
     ),
     "invoke_cli": (
         _tool_invoke_cli,
-        "Run a registered infrastructure.* CLI via 'python -m <module>' and return exit_code/stdout/stderr.",
+        "Run a registered infrastructure.* CLI via 'python -m <module>' and return exit_code/stdout/stderr. "
+        "Mutating/paid CLIs are refused unless allow_mutating is true.",
         {
             "type": "object",
             "properties": {
                 "module": {"type": "string", "description": "Dotted module, e.g. infrastructure.core.pipeline"},
                 "args": {"type": "array", "items": {"type": "string"}, "description": "CLI arguments"},
+                "allow_mutating": {
+                    "type": "boolean",
+                    "description": "Opt in to running a mutating/paid (publish/upload) operation",
+                },
             },
             "required": ["module"],
             "additionalProperties": False,

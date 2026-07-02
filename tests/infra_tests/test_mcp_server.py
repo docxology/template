@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from infrastructure.mcp_server import (
+    ALLOW_MUTATING_ENV,
     PROTOCOL_VERSION,
     handle_request,
     invoke_cli,
@@ -83,6 +84,28 @@ class TestInvokeCli:
         assert out["exit_code"] == 0
         payload = json.loads(out["stdout"])
         assert len(payload["stages"]) == 12
+
+    def test_read_only_single_file_cli_is_reachable(self) -> None:
+        # R7: a documented single-file CLI (read_only) runs via invoke_cli.
+        out = invoke_cli("infrastructure.project.public_scope", ["source-paths"])
+        assert out["exit_code"] == 0
+        assert out["stdout"].strip()
+
+    def test_refuses_mutating_op_by_default(self) -> None:
+        # R18: a publish/paid (mutating) op is refused without opt-in — and never spawned.
+        out = invoke_cli("infrastructure.publishing", ["--help"])
+        assert out["exit_code"] == 2
+        assert "mutating" in out["stderr"]
+
+    def test_mutating_op_allowed_with_flag(self) -> None:
+        # --help is side-effect free; opt-in must bypass the tier refusal.
+        out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=True)
+        assert "mutating" not in out["stderr"]
+
+    def test_mutating_op_allowed_with_env(self, monkeypatch) -> None:
+        monkeypatch.setenv(ALLOW_MUTATING_ENV, "1")
+        out = invoke_cli("infrastructure.publishing", ["--help"])
+        assert "mutating" not in out["stderr"]
 
 
 class TestServeLoop:

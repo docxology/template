@@ -20,8 +20,23 @@ Discovery is **purely static** — it parses source with :mod:`ast` and never
 imports the target modules. That matters because many CLIs (rendering, llm,
 steganography, …) only import cleanly when their optional dependency group is
 installed; a registry that imported them would be fragile and environment
-dependent. A CLI is "invocable via ``python -m X``" iff its package directory
-contains ``__main__.py`` — a deterministic, dependency-free signal.
+dependent. A capability is "invocable via ``python -m X``" when either signal
+holds, both statically detectable and dependency-free:
+
+* a **package** whose directory contains ``__main__.py`` (e.g.
+  ``infrastructure.validation.cli``); or
+* a **single-file module** (``foo.py``) whose source contains a top-level
+  ``if __name__ == "__main__":`` guard and whose directory is *not* itself an
+  invocable package (so it is not redundant with a package entry point). This is
+  what makes documented single-file CLIs — ``infrastructure.core.health``,
+  ``infrastructure.project.public_scope``,
+  ``infrastructure.documentation.generate_glossary_cli`` and
+  ``infrastructure.reporting.release_readiness`` — reachable.
+
+Each descriptor also carries an :attr:`OperationDescriptor.effect` tier
+(``read_only`` by default, ``mutating`` for the small allowlist of publish /
+upload / paid CLIs in :data:`MUTATING_OPERATIONS`) so an agent surface can refuse
+side-effecting operations unless explicitly opted in.
 """
 
 from __future__ import annotations
@@ -30,9 +45,10 @@ import ast
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Literal, Sequence
 
 __all__ = [
+    "MUTATING_OPERATIONS",
     "OperationDescriptor",
     "SubcommandInfo",
     "build_operations_payload",
@@ -45,8 +61,22 @@ __all__ = [
 
 _MANIFEST_VERSION = 1
 
-# Package roots scanned for ``__main__.py`` (relative to repo root).
+# Package roots scanned for invocable operations (relative to repo root).
 DEFAULT_OPERATION_SEARCH_ROOTS: tuple[str, ...] = ("infrastructure",)
+
+# Effect tier for the capability surface.
+Effect = Literal["read_only", "mutating"]
+
+# Explicit allowlist of dotted module paths whose CLIs mutate external state or
+# incur cost (network publishing / uploads / paid API calls). Everything else is
+# treated as ``read_only``. Kept deliberately small and hand-maintained — an
+# agent surface may refuse these unless a caller explicitly opts in.
+MUTATING_OPERATIONS: frozenset[str] = frozenset(
+    {
+        "infrastructure.publishing",  # DOI / Zenodo / arXiv publish + archival CLIs
+        "infrastructure.search.deep_research",  # PAID deep-research dispatch
+    }
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,7 +101,9 @@ class OperationDescriptor:
     """First line of the CLI module docstring."""
     subcommands: tuple[SubcommandInfo, ...] = field(default_factory=tuple)
     exports: tuple[str, ...] = field(default_factory=tuple)
-    """``__all__`` of the owning package's ``__init__.py`` (its public API)."""
+    """``__all__`` of the owning package (or single-file module) — its public API."""
+    effect: Effect = "read_only"
+    """Capability tier: ``read_only`` (default) or ``mutating`` (see :data:`MUTATING_OPERATIONS`)."""
 
 
 def _dotted_path(repo_root: Path, package_dir: Path) -> str:
@@ -127,13 +159,11 @@ def _extract_subcommands(source: str) -> tuple[SubcommandInfo, ...]:
     return tuple(found)
 
 
-def _extract_dunder_all(init_path: Path) -> tuple[str, ...]:
-    """Return the ``__all__`` list declared in a package ``__init__.py`` (static)."""
-    if not init_path.is_file():
-        return ()
+def _dunder_all_from_source(source: str) -> tuple[str, ...]:
+    """Return the ``__all__`` list declared in module source (static)."""
     try:
-        tree = ast.parse(init_path.read_text(encoding="utf-8"))
-    except (SyntaxError, OSError):
+        tree = ast.parse(source)
+    except SyntaxError:
         return ()
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
@@ -147,6 +177,42 @@ def _extract_dunder_all(init_path: Path) -> tuple[str, ...]:
                         ]
                         return tuple(names)
     return ()
+
+
+def _extract_dunder_all(init_path: Path) -> tuple[str, ...]:
+    """Return the ``__all__`` list declared in a package ``__init__.py`` (static)."""
+    if not init_path.is_file():
+        return ()
+    try:
+        return _dunder_all_from_source(init_path.read_text(encoding="utf-8"))
+    except OSError:
+        return ()
+
+
+def _has_main_guard(source: str) -> bool:
+    """Return whether module source contains a top-level ``__name__ == "__main__"`` guard."""
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return False
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.If) or not isinstance(node.test, ast.Compare):
+            continue
+        left = node.test.left
+        comparators = node.test.comparators
+        if isinstance(left, ast.Name) and left.id == "__name__":
+            if any(isinstance(c, ast.Constant) and c.value == "__main__" for c in comparators):
+                return True
+        if isinstance(left, ast.Constant) and left.value == "__main__":
+            if any(isinstance(c, ast.Name) and c.id == "__name__" for c in comparators):
+                return True
+    return False
+
+
+def _module_dotted_path(repo_root: Path, module_file: Path) -> str:
+    """Return the dotted import path for a single-file ``.py`` module under repo root."""
+    rel = module_file.resolve().relative_to(repo_root.resolve())
+    return ".".join(rel.with_suffix("").parts)
 
 
 def _cli_source_for(package_dir: Path) -> Path:
@@ -167,22 +233,33 @@ def discover_operations(
 ) -> list[OperationDescriptor]:
     """Discover every ``python -m``-invocable CLI under the search roots.
 
-    A package directory is invocable iff it contains ``__main__.py``. For each,
-    the adjacent ``cli.py`` (or ``__main__.py``) is parsed statically for its
-    docstring purpose and ``add_parser`` subcommands, and the package
-    ``__init__.py`` ``__all__`` is recorded as the public Python API.
+    Two invocation signals are recognised, both purely static:
+
+    * a **package** directory containing ``__main__.py`` — its adjacent
+      ``cli.py`` (or ``__main__.py``) is parsed for docstring purpose and
+      ``add_parser`` subcommands, and the package ``__init__.py`` ``__all__`` is
+      recorded as the public API; and
+    * a **single-file module** (``foo.py``) with a top-level
+      ``if __name__ == "__main__":`` guard whose directory is *not* itself an
+      invocable package — parsed the same way, with the module's own ``__all__``.
+
+    Each descriptor is tagged with an :attr:`OperationDescriptor.effect` tier from
+    :data:`MUTATING_OPERATIONS`.
     """
     root = Path(repo_root).resolve()
     roots = tuple(search_roots) if search_roots is not None else DEFAULT_OPERATION_SEARCH_ROOTS
     descriptors: list[OperationDescriptor] = []
+    package_dirs: set[Path] = set()
     for root_name in roots:
         base = root / root_name
         if not base.is_dir():
             continue
+        # Pass 1: packages with __main__.py.
         for main_path in sorted(base.rglob("__main__.py")):
             if "__pycache__" in main_path.parts:
                 continue
             package_dir = main_path.parent
+            package_dirs.add(package_dir)
             dotted = _dotted_path(root, package_dir)
             source_path = _cli_source_for(package_dir)
             source = source_path.read_text(encoding="utf-8") if source_path.is_file() else ""
@@ -194,6 +271,38 @@ def discover_operations(
                     purpose=_module_docstring_first_line(source),
                     subcommands=_extract_subcommands(source),
                     exports=_extract_dunder_all(package_dir / "__init__.py"),
+                    effect="mutating" if dotted in MUTATING_OPERATIONS else "read_only",
+                )
+            )
+    for root_name in roots:
+        base = root / root_name
+        if not base.is_dir():
+            continue
+        # Pass 2: single-file modules with a __main__ guard, not shadowed by a
+        # package entry point in the same directory.
+        for py_path in sorted(base.rglob("*.py")):
+            if "__pycache__" in py_path.parts:
+                continue
+            if py_path.name in {"__init__.py", "__main__.py"}:
+                continue
+            if py_path.parent in package_dirs:
+                continue
+            try:
+                source = py_path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            if not _has_main_guard(source):
+                continue
+            dotted = _module_dotted_path(root, py_path)
+            descriptors.append(
+                OperationDescriptor(
+                    module=dotted,
+                    invocation=f"python -m {dotted}",
+                    source_path=py_path.resolve().relative_to(root).as_posix(),
+                    purpose=_module_docstring_first_line(source),
+                    subcommands=_extract_subcommands(source),
+                    exports=_dunder_all_from_source(source),
+                    effect="mutating" if dotted in MUTATING_OPERATIONS else "read_only",
                 )
             )
     descriptors.sort(key=lambda d: d.module)
@@ -212,6 +321,7 @@ def operation_descriptors_as_json_serializable(
             "purpose": op.purpose,
             "subcommands": [{"name": s.name, "help": s.help} for s in op.subcommands],
             "exports": list(op.exports),
+            "effect": op.effect,
         }
         for op in ops
     ]

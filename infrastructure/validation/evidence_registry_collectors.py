@@ -10,7 +10,14 @@ from typing import Any, Iterable
 
 import yaml
 
-from infrastructure.validation.evidence_registry import EvidenceFact, VerifiedEvidenceRegistry
+from infrastructure.validation.evidence_registry import (
+    EvidenceFact,
+    VerifiedEvidenceRegistry,
+    _canonical_number_token,
+    _csv_source_field,
+    _is_numeric_cell,
+    _number_to_string,
+)
 
 _BIBTEX_KEY_RE = re.compile(r"@[A-Za-z]+\s*\{\s*([^,\s]+)")
 _FIGURE_LABEL_RE = re.compile(r"#(fig:[A-Za-z0-9_:-]+)")
@@ -285,23 +292,3 @@ def _relative_to_project(path: Path, project_root: Path) -> Path:
         return path.relative_to(project_root)
     except ValueError:
         return path
-
-
-def _canonical_number_token(value: str) -> str:
-    return value.strip().replace(",", "")
-
-
-def _is_numeric_cell(value: str) -> bool:
-    return bool(re.fullmatch(r"-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?(?:e[+-]?\d+)?%?", value.strip(), re.I))
-
-
-def _csv_source_field(header: list[str], row_index: int, col_index: int) -> str:
-    if col_index < len(header) and header[col_index] and not _is_numeric_cell(header[col_index]):
-        return f"row_{row_index}.{header[col_index]}"
-    return f"row_{row_index}.col_{col_index}"
-
-
-def _number_to_string(value: int | float) -> str:
-    if isinstance(value, int):
-        return str(value)
-    return f"{value:g}"

@@ -151,6 +151,44 @@ class TestPrepareArxivSubmission:
             assert any(n.endswith(".cls") for n in names)
             assert any(n.endswith(".bst") for n in names)
 
+    def test_rendered_tex_from_output_included(self, tmp_path: Path):
+        """A .tex rendered under output/ (Markdown manuscripts) is picked up into the tarball."""
+        output_dir = tmp_path / "output"
+        (output_dir / "pdf").mkdir(parents=True)
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        # Markdown-only manuscript: no .tex in manuscript/, only a rendered one under output/pdf/.
+        (manuscript_dir / "01_intro.md").write_text("# Intro")
+        (manuscript_dir / "references.bib").write_text("@article{x, title={X}}")
+        (output_dir / "pdf" / "Test_Paper.tex").write_text("\\documentclass{article}")
+
+        metadata = _make_metadata()
+        result = prepare_arxiv_submission(output_dir, metadata)
+
+        with tarfile.open(result, "r:gz") as tar:
+            names = tar.getnames()
+        assert any(n.endswith("Test_Paper.tex") for n in names)
+        assert any(n.endswith("references.bib") for n in names)
+
+    def test_markdown_only_manuscript_is_references_only(self, tmp_path: Path):
+        """With no .tex anywhere, the tarball is a references-only partial package (documented promise)."""
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_intro.md").write_text("# Intro")
+        (manuscript_dir / "references.bib").write_text("@article{x, title={X}}")
+
+        metadata = _make_metadata()
+        result = prepare_arxiv_submission(output_dir, metadata)
+
+        with tarfile.open(result, "r:gz") as tar:
+            names = tar.getnames()
+        # References ship, but no LaTeX source — must be completed by hand before upload.
+        assert any(n.endswith("references.bib") for n in names)
+        assert not any(n.endswith(".tex") for n in names)
+        assert not any(n.endswith(".md") for n in names)
+
 
 class TestPrepareArxivSubmissionFromPlatforms:
     def test_basic_submission(self, tmp_path):

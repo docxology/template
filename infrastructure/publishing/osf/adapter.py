@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
 
 from .models import OSFConfig, OSFResult
 
@@ -76,15 +77,6 @@ class OSFAdapter:
         self._session_arg = session
 
     # ------------------------------------------------------------------
-    def _get_session(self) -> Any:
-        if self._session_arg is not None:
-            return self._session_arg
-        import requests  # noqa: PLC0415 — deferred to first network use
-
-        if not hasattr(self, "_lazy_session"):
-            self._lazy_session: Any = requests.Session()
-        return self._lazy_session
-
     @staticmethod
     def _node_web_url(node_id: str) -> str:
         return f"https://osf.io/{node_id}/"
@@ -103,7 +95,7 @@ class OSFAdapter:
             When ``True`` (default) nothing is sent; a ``"dry-run"`` result lists
             the endpoints and files that would be used.
         """
-        files = self._iter_files(bundle)
+        files = iter_bundle_files(bundle)
         names = tuple(p.name for p in files)
 
         if dry_run:
@@ -131,7 +123,7 @@ class OSFAdapter:
         import requests  # noqa: PLC0415 — deferred; see module docstring
 
         headers = {"Authorization": f"Bearer {self.config.token}"}
-        session = self._get_session()
+        session = lazy_session(self)
 
         try:
             node_id = self.config.node_id
@@ -202,9 +194,3 @@ class OSFAdapter:
         )
         resp.raise_for_status()
         return resp.status_code in (200, 201)
-
-    @staticmethod
-    def _iter_files(bundle: Path) -> list[Path]:
-        if bundle.is_file():
-            return [bundle]
-        return [p for p in sorted(bundle.rglob("*")) if p.is_file()]

@@ -5,8 +5,9 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.project.domain_profile import load_domain_profile
-from infrastructure.project.drift.checks_exemplar import _read, _rel
+from infrastructure.project.drift.checks_exemplar import _read
 from infrastructure.project.drift.models import Report
 from infrastructure.project.experiment_plan import load_experiment_plan, validate_experiment_plan
 

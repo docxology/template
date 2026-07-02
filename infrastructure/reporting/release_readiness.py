@@ -39,6 +39,7 @@ try:
 except ImportError:  # Python <3.11 — use backport
     import tomli as tomllib  # type: ignore[no-redef]
 
+from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting import html_templates
 
@@ -185,13 +186,6 @@ def _read_json(path: Path) -> dict[str, Any] | None:
     except (OSError, json.JSONDecodeError):
         return None
     return data if isinstance(data, dict) else None
-
-
-def _rel(path: Path, repo_root: Path) -> str:
-    try:
-        return str(path.relative_to(repo_root))
-    except ValueError:
-        return str(path)
 
 
 def collect_release_metadata(repo_root: Path, *, latest_tag: str | None = None) -> ReleaseMetadata:

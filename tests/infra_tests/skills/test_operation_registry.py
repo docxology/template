@@ -7,6 +7,7 @@ from pathlib import Path
 
 from infrastructure.skills.cli import main as skills_cli_main
 from infrastructure.skills.operation_registry import (
+    MUTATING_OPERATIONS,
     OperationDescriptor,
     build_operations_payload,
     discover_operations,
@@ -76,6 +77,55 @@ class TestDiscoverOperations:
         assert ops[0].purpose == "Bar entry."
         assert ops[0].exports == ()
 
+    def test_discovers_single_file_module_with_main_guard(self, tmp_path: Path) -> None:
+        # A single-file CLI in a directory that is NOT itself an invocable package.
+        pkg = tmp_path / "infrastructure" / "reporting"
+        pkg.mkdir(parents=True)
+        (pkg / "__init__.py").write_text("\n", encoding="utf-8")
+        (pkg / "release_readiness.py").write_text(
+            '"""Release-readiness dashboard.\n\nMore prose.\n"""\n'
+            '__all__ = ["build_dashboard"]\n\n\n'
+            "def build_dashboard():\n    return {}\n\n\n"
+            'if __name__ == "__main__":\n    raise SystemExit(0)\n',
+            encoding="utf-8",
+        )
+        ops = discover_operations(tmp_path)
+        assert len(ops) == 1
+        op = ops[0]
+        assert op.module == "infrastructure.reporting.release_readiness"
+        assert op.invocation == "python -m infrastructure.reporting.release_readiness"
+        assert op.source_path == "infrastructure/reporting/release_readiness.py"
+        assert op.purpose == "Release-readiness dashboard."
+        assert op.exports == ("build_dashboard",)
+        assert op.effect == "read_only"
+
+    def test_single_file_without_main_guard_is_ignored(self, tmp_path: Path) -> None:
+        pkg = tmp_path / "infrastructure" / "helpers"
+        pkg.mkdir(parents=True)
+        (pkg / "__init__.py").write_text("\n", encoding="utf-8")
+        (pkg / "plain_module.py").write_text("def helper():\n    return 1\n", encoding="utf-8")
+        assert discover_operations(tmp_path) == []
+
+    def test_single_file_shadowed_by_package_entry_point_is_not_duplicated(self, tmp_path: Path) -> None:
+        # ``cli.py`` in a package that already has ``__main__.py`` must not also be
+        # emitted as its own single-file operation.
+        _make_fake_cli_package(tmp_path)  # infrastructure/foo with __main__.py + cli.py
+        # Give cli.py a main guard so it *would* match pass 2 if not filtered.
+        cli = tmp_path / "infrastructure" / "foo" / "cli.py"
+        cli.write_text(cli.read_text(encoding="utf-8") + '\n\nif __name__ == "__main__":\n    pass\n', encoding="utf-8")
+        ops = discover_operations(tmp_path)
+        assert [o.module for o in ops] == ["infrastructure.foo"]
+
+    def test_mutating_effect_tier_from_allowlist(self, tmp_path: Path) -> None:
+        mutating_leaf = sorted(MUTATING_OPERATIONS)[0].split(".")[-1]
+        pkg = tmp_path / "infrastructure" / mutating_leaf
+        pkg.mkdir(parents=True)
+        (pkg / "__init__.py").write_text("\n", encoding="utf-8")
+        (pkg / "__main__.py").write_text("\n", encoding="utf-8")
+        ops = discover_operations(tmp_path)
+        assert len(ops) == 1
+        assert ops[0].effect == "mutating"
+
     def test_results_sorted_by_module(self, tmp_path: Path) -> None:
         for name in ("zebra", "apple"):
             pkg = tmp_path / "infrastructure" / name
@@ -129,6 +179,26 @@ class TestAgainstLiveRepo:
         assert "infrastructure.core.pipeline" in modules
         # Every invocable op must carry a runnable invocation string.
         assert all(o.invocation.startswith("python -m infrastructure") for o in ops)
+
+    def test_discovers_documented_single_file_clis(self) -> None:
+        ops = discover_operations(_template_repo_root())
+        modules = {o.module for o in ops}
+        # The four documented single-file CLIs must be discoverable (R7).
+        assert {
+            "infrastructure.core.health",
+            "infrastructure.project.public_scope",
+            "infrastructure.documentation.generate_glossary_cli",
+            "infrastructure.reporting.release_readiness",
+        } <= modules
+
+    def test_effect_tier_present_and_publish_is_mutating(self) -> None:
+        ops = discover_operations(_template_repo_root())
+        by_module = {o.module: o for o in ops}
+        # Every descriptor carries a valid effect tier.
+        assert all(o.effect in {"read_only", "mutating"} for o in ops)
+        # The publish/upload CLI is tiered mutating; a plain read-only CLI is not.
+        assert by_module["infrastructure.publishing"].effect == "mutating"
+        assert by_module["infrastructure.core.health"].effect == "read_only"
 
     def test_cli_list_json_round_trips(self, capsys) -> None:
         rc = skills_cli_main(["operations-list-json", "--repo-root", str(_template_repo_root())])

@@ -29,7 +29,7 @@ from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.doctor.detectors import DETECTORS, run_detectors
 from infrastructure.doctor.fixers import FIXER_REGISTRY, build_plans_for_findings
-from infrastructure.doctor.models import DoctorReport, TherapyLevel
+from infrastructure.doctor.models import DoctorReport, FixPlan, MutateRecord, TherapyLevel
 from infrastructure.doctor.reporter import (
     EXIT_CRITICAL,
     EXIT_USAGE,
@@ -159,9 +159,9 @@ def _emit_report(report: DoctorReport, *, as_json: bool) -> None:
 def _build_report(
     repo_root: Path,
     *,
-    applied: list | None = None,
-    skipped: list | None = None,
-    failed: list | None = None,
+    applied: list[MutateRecord] | None = None,
+    skipped: list[FixPlan] | None = None,
+    failed: list[MutateRecord] | None = None,
 ) -> DoctorReport:
     findings = run_detectors(repo_root)
     overall, dims = compute_scorecard(findings)

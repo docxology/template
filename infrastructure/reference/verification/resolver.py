@@ -22,6 +22,7 @@ import json
 import re
 import urllib.parse
 from dataclasses import dataclass
+from typing import Any
 
 from infrastructure.reference.verification.cache import CacheMiss, ResolutionCache
 from infrastructure.search.literature.arxiv_backend import ArxivBackend
@@ -298,7 +299,7 @@ def title_similarity(a: str | None, b: str | None) -> float:
     return SequenceMatcher(None, _normalize_title(a), _normalize_title(b)).ratio()
 
 
-def _openalex_work_to_paper(work: dict) -> Paper:
+def _openalex_work_to_paper(work: dict[str, Any]) -> Paper:
     """Map an OpenAlex ``works`` record to a :class:`Paper` (minimal fields)."""
     title = work.get("title") or work.get("display_name") or "Untitled"
     authors: list[str] = []
