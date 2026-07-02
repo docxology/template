@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "5.05",
-      "total_size_bytes": 5291182,
+      "size_mb": "5.09",
+      "total_size_bytes": 5337432,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "4.69",
+          "size_mb": "4.74",
           "path": "pdf/template_gold_refinement_combined.pdf"
         },
         {
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 12,
       "size_mb": "0.36",
-      "total_size_bytes": 374373,
+      "total_size_bytes": 374460,
       "largest_files": [
         {
           "name": "index.html",
@@ -62,25 +62,27 @@
       }
     },
     "slides": {
-      "exists": false,
+      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
     },
     "figures": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "6.26",
-      "total_size_bytes": 6568391,
+      "size_mb": "6.19",
+      "total_size_bytes": 6489920,
       "largest_files": [
         {
           "name": "cover_visualization.png",
-          "size_mb": "1.71",
+          "size_mb": "1.72",
           "path": "figures/cover_visualization.png"
         },
         {
           "name": "claim_evidence_assay.png",
-          "size_mb": "0.67",
+          "size_mb": "0.65",
           "path": "figures/claim_evidence_assay.png"
         },
         {
@@ -97,9 +99,9 @@
     },
     "data": {
       "exists": true,
-      "file_count": 3,
+      "file_count": 2,
       "size_mb": "0.03",
-      "total_size_bytes": 35892,
+      "total_size_bytes": 34996,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
@@ -110,22 +112,17 @@
           "name": "refinery_results.json",
           "size_mb": "0.00",
           "path": "data/refinery_results.json"
-        },
-        {
-          "name": "publication_ledger.json",
-          "size_mb": "0.00",
-          "path": "data/publication_ledger.json"
         }
       ],
       "extensions": {
-        ".json": 3
+        ".json": 2
       }
     },
     "reports": {
       "exists": true,
-      "file_count": 12,
-      "size_mb": "0.10",
-      "total_size_bytes": 107092,
+      "file_count": 17,
+      "size_mb": "0.14",
+      "total_size_bytes": 151779,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -133,59 +130,72 @@
           "path": "reports/evidence_registry.json"
         },
         {
-          "name": "token_plan.json",
-          "size_mb": "0.01",
-          "path": "reports/token_plan.json"
+          "name": "artifact_manifest.json",
+          "size_mb": "0.02",
+          "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "output_statistics.json",
+          "name": "stage-07-output-validation.json",
           "size_mb": "0.01",
-          "path": "reports/output_statistics.json"
+          "path": "reports/snapshots/stage-07-output-validation.json"
         }
       ],
       "extensions": {
-        ".json": 9,
-        ".txt": 1,
+        ".json": 15,
         ".md": 2
       }
     },
     "simulations": {
-      "exists": false,
+      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
     },
     "llm": {
-      "exists": false,
+      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
     },
     "logs": {
-      "exists": false,
-      "file_count": 0,
+      "exists": true,
+      "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 164,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
     }
   },
-  "total_files": 64,
-  "total_size_mb": 11.803560256958008,
+  "total_files": 69,
+  "total_size_mb": 11.814833641052246,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "4.69",
+      "size_mb": "4.74",
       "category": "pdf",
       "path": "pdf/template_gold_refinement_combined.pdf"
     },
     {
       "name": "cover_visualization.png",
-      "size_mb": "1.71",
+      "size_mb": "1.72",
       "category": "figures",
       "path": "figures/cover_visualization.png"
     },
     {
       "name": "claim_evidence_assay.png",
-      "size_mb": "0.67",
+      "size_mb": "0.65",
       "category": "figures",
       "path": "figures/claim_evidence_assay.png"
     },
@@ -232,22 +242,21 @@
       "path": "web/manuscript__03_results.html"
     }
   ],
-  "missing_expected_files": [
-    "slides/ directory",
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 5.046064376831055,
-    "web": 0.35702991485595703,
-    "figures": 6.264105796813965,
-    "data": 0.034229278564453125,
-    "reports": 0.10213088989257812
+    "pdf": 5.090171813964844,
+    "web": 0.3571128845214844,
+    "slides": 0.0,
+    "figures": 6.18927001953125,
+    "data": 0.033374786376953125,
+    "reports": 0.14474773406982422,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.000156402587890625
   },
   "file_counts_by_type": {
     ".md": 4,
-    ".log": 2,
+    ".log": 3,
     ".aux": 1,
     ".blg": 1,
     ".bib": 1,
@@ -258,7 +267,6 @@
     ".html": 11,
     ".svg": 13,
     ".png": 13,
-    ".json": 13,
-    ".txt": 1
+    ".json": 18
   }
 }

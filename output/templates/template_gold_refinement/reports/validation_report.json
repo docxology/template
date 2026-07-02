@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-01T06:54:36.533793",
+  "timestamp": "2026-07-02T05:02:16.538112",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -15,22 +15,22 @@
     "detailed_validation": {
       "structure": {
         "valid": true,
-        "issues": [
-          "Missing directory: slides/"
-        ],
+        "issues": [],
         "missing_files": [],
-        "suspicious_sizes": [],
+        "suspicious_sizes": [
+          "slides/ directory is empty"
+        ],
         "warnings": [],
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 4.69,
+            "size_mb": 4.74,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 5.05,
+            "size_mb": 5.09,
             "readable": true,
             "optional": false
           },
@@ -42,48 +42,52 @@
             "optional": false
           },
           "slides": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
             "files": 27,
-            "size_mb": 6.14,
+            "size_mb": 6.19,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 3,
+            "files": 2,
             "size_mb": 0.03,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 12,
-            "size_mb": 0.1,
+            "files": 13,
+            "size_mb": 0.06,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "logs": {
-            "exists": false,
-            "files": 0,
+            "exists": true,
+            "files": 1,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           }
         }
@@ -92,7 +96,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "5.05",
+          "size_mb": "5.09",
           "largest_file": "template_gold_refinement_combined.pdf"
         },
         "web": {
@@ -102,75 +106,80 @@
           "largest_file": "index.html"
         },
         "slides": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "figures": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "6.14",
+          "size_mb": "6.19",
           "largest_file": "cover_visualization.png"
         },
         "data": {
           "exists": true,
-          "file_count": 3,
+          "file_count": 2,
           "size_mb": "0.03",
           "largest_file": "manuscript_variables.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 12,
-          "size_mb": "0.10",
-          "largest_file": "evidence_registry.json"
+          "file_count": 13,
+          "size_mb": "0.06",
+          "largest_file": "artifact_manifest.json"
         },
         "simulations": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "llm": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "logs": {
-          "exists": false,
-          "file_count": 0,
-          "size_mb": "0.00"
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
         }
       },
       "file_counts": {
         "pdf": 10,
         "web": 12,
+        "slides": 0,
         "figures": 27,
-        "data": 3,
-        "reports": 12
+        "data": 2,
+        "reports": 13,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
       },
-      "total_size_mb": 11.675840377807617,
+      "total_size_mb": 11.727506637573242,
       "issues_by_severity": {
         "critical": [],
-        "warning": [
-          "Directory 'slides/' missing or empty",
-          "Directory 'simulations/' missing or empty",
-          "Directory 'llm/' missing or empty",
-          "Directory 'logs/' missing or empty"
-        ],
-        "info": []
+        "warning": [],
+        "info": [
+          "slides/ directory is empty"
+        ]
       },
       "recommendations": []
     },
     "pdf": {
       "files": 10,
-      "size_mb": 5.046064376831055
+      "size_mb": 5.090171813964844
     },
     "figures": {
       "files": 27,
-      "size_mb": 6.136159896850586
+      "size_mb": 6.18927001953125
     },
     "data": {
-      "files": 3,
-      "size_mb": 0.03427314758300781
+      "files": 2,
+      "size_mb": 0.033374786376953125
     }
   },
   "summary": {

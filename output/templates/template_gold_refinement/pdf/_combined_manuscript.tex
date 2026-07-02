@@ -150,6 +150,17 @@
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
+\ifXeTeX
+\special{pdf:trailerid [ <bc199a30d84b1458dc0785759c554353> <bc199a30d84b1458dc0785759c554353> ]}
+\fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ <bc199a30d84b1458dc0785759c554353> <bc199a30d84b1458dc0785759c554353> ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ <bc199a30d84b1458dc0785759c554353> <bc199a30d84b1458dc0785759c554353> ]}
+\fi
+
 \author{}
 \date{}
 
@@ -250,8 +261,8 @@ dynamic reports, and reproducible computational research
 \citep{knuth1984literate, leisch2002sweave, peng2011reproducible, sandve2013ten}.
 The project-local claim assay reports 9/9 supported contribution claims
 (100.00\%, passing), while the integrity model exposes 9 source-owned
-risk dimensions and the shared template evidence registry contributes
-281 source-tiered facts when the validation gate has run.
+risk dimensions and the shared template evidence registry contributes 0
+source-tiered facts when the validation gate has run.
 
 \textbf{Results:} The refinery achieves final purity of 99.9999999\%
 (nine-nines) (24K (nine-nines certified)) with a total purity gain of
@@ -1410,7 +1421,7 @@ bibliography records, source code, or disposable artifacts.
 
 The ladder complements the risk matrix by counting source tiers rather
 than plotting risks. When the shared evidence registry is available, the
-manuscript can report 281 source-tiered facts to the validation surface.
+manuscript can report 0 source-tiered facts to the validation surface.
 When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the
 evidentiary mix instead of receiving an undifferentiated assurance that
@@ -1446,10 +1457,13 @@ Source tier & Count & Role \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-artifact & 123 & Generated artifacts exposed to readers \\
-generated\_metric & 94 & Numbers regenerated from project analysis \\
-bibliography & 47 & Reference records and citation metadata \\
-claim\_ledger & 17 & Source-owned claim and fact declarations \\
+artifact & 2 & Generated artifacts exposed to readers \\
+source\_code & 2 & Executable source files and symbols \\
+bibliography & 1 & Reference records and citation metadata \\
+claim\_ledger & 1 & Source-owned claim and fact declarations \\
+config & 1 & Author-controlled project configuration \\
+generated\_metric & 1 & Numbers regenerated from project analysis \\
+validation & 1 & Template gates and test results \\
 \end{longtable}
 
 \subsection{Adversarial security
@@ -1594,7 +1608,7 @@ summary}\label{shared-evidence-registry-summary}
 
 When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 281.
+available to this variable pass: 0.
 
 \begin{longtable}[]{@{}ll@{}}
 \caption{Shared evidence-registry fact kinds when
@@ -1609,13 +1623,7 @@ Fact kind & Count \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-artifact & 78 \\
-citation & 47 \\
-equation & 8 \\
-figure & 29 \\
-number & 102 \\
-section & 10 \\
-table & 7 \\
+not generated & 0 \\
 \end{longtable}
 
 \subsection{Figure quality report}\label{figure-quality-report}
@@ -1679,7 +1687,7 @@ Status
 \endlastfoot
 claim\_evidence\_assay & yes & yes & 3947x2038 & 0.218 & 0.06041014 &
 pass \\
-evidence\_tier\_ladder & yes & yes & 3338x1332 & 0.220 & 0.05591035 &
+evidence\_tier\_ladder & yes & yes & 3020x1724 & 0.216 & 0.05410730 &
 pass \\
 formalism\_traceability & yes & yes & 3315x1797 & 0.140 & 0.04409869 &
 pass \\
@@ -2051,7 +2059,7 @@ source-owned inputs.
 \item
   \textbf{Config hash:} 8d3efef5bcbe8b23
 \item
-  \textbf{Generation timestamp:} 2026-07-01T13:53:47Z
+  \textbf{Generation timestamp:} 2026-06-25T00:00:00Z
 \item
   \textbf{Python version:} 3.12.13
 \end{itemize}
@@ -2067,9 +2075,9 @@ Category & Count \\
 \bottomrule\noalign{}
 \endlastfoot
 Figures & 26 \\
-Data files & 3 \\
-Reports & 12 \\
-\textbf{Total} & 41 \\
+Data files & 2 \\
+Reports & 7 \\
+\textbf{Total} & 35 \\
 \end{longtable}
 }
 
