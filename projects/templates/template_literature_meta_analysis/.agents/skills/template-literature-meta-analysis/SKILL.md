@@ -1,6 +1,6 @@
 ---
 name: template-literature-meta-analysis
-description: Literature meta-analysis exemplar — multi-engine retrieval, dedup, full-text, bibliometrics, embeddings, optional knowledge graph. Default term: modafinil.
+description: "Literature meta-analysis exemplar — multi-engine retrieval, dedup, full-text, bibliometrics, embeddings, optional knowledge graph. Default term: modafinil."
 version: 0.1.0
 author: docxology
 license: MIT

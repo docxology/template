@@ -1,6 +1,6 @@
 ---
 name: template-template
-description: Meta-template exemplar — self-referential introspection of the template repo: infrastructure modules, pipeline DAG, security layers, and public exemplar roster.
+description: "Meta-template exemplar — self-referential introspection of the template repo: infrastructure modules, pipeline DAG, security layers, and public exemplar roster."
 version: 0.1.0
 author: docxology
 license: MIT
