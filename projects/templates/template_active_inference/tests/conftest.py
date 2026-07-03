@@ -57,6 +57,9 @@ def pytest_sessionstart(session: pytest.Session) -> None:
     restoring the manuscript files does not invalidate it.
     """
 
+    if getattr(session.config.option, "collectonly", False):
+        return
+
     try:
         from gate_support import ensure_gate_artifacts
 
@@ -89,6 +92,13 @@ _MUTABLE_PROJECT_SOURCE_FILES = (
     "src/roadmap_tracks/__init__.py",
     "tracks.yaml",
 )
+_MUTABLE_PROJECT_OUTPUT_GLOBS = (
+    "output/data/**/*",
+    "output/figures/*",
+    "output/logs/**/*",
+    "output/manuscript/**/*.md",
+    "output/reports/**/*",
+)
 
 
 def _iter_mutable_project_sources() -> Iterator[Path]:
@@ -105,6 +115,25 @@ def _iter_mutable_project_sources() -> Iterator[Path]:
             yield path
 
 
+def _iter_mutable_project_outputs() -> Iterator[Path]:
+    seen: set[Path] = set()
+    for pattern in _MUTABLE_PROJECT_OUTPUT_GLOBS:
+        for path in sorted(PROJECT_ROOT.glob(pattern)):
+            if path.is_file() and path not in seen:
+                seen.add(path)
+                yield path
+
+
+def _snapshot_paths(paths: Iterator[Path]) -> dict[Path, bytes]:
+    snapshots: dict[Path, bytes] = {}
+    for path in paths:
+        try:
+            snapshots[path] = path.read_bytes()
+        except OSError:
+            continue
+    return snapshots
+
+
 def _restore_snapshots(snapshots: dict[Path, bytes]) -> None:
     for path, original in snapshots.items():
         try:
@@ -118,19 +147,22 @@ def _restore_snapshots(snapshots: dict[Path, bytes]) -> None:
 
 @pytest.fixture(scope="session")
 def _mutable_project_source_snapshots() -> dict[Path, bytes]:
-    snapshots: dict[Path, bytes] = {}
-    for path in _iter_mutable_project_sources():
-        try:
-            snapshots[path] = path.read_bytes()
-        except OSError:
-            continue
-    return snapshots
+    return _snapshot_paths(_iter_mutable_project_sources())
+
+
+@pytest.fixture(scope="session")
+def _mutable_project_output_snapshots() -> dict[Path, bytes]:
+    return _snapshot_paths(_iter_mutable_project_outputs())
 
 
 @pytest.fixture(autouse=True)
-def _restore_mutable_project_sources(_mutable_project_source_snapshots: dict[Path, bytes]) -> Iterator[None]:
+def _restore_mutable_project_state(
+    _mutable_project_source_snapshots: dict[Path, bytes],
+    _mutable_project_output_snapshots: dict[Path, bytes],
+) -> Iterator[None]:
     yield
     _restore_snapshots(_mutable_project_source_snapshots)
+    _restore_snapshots(_mutable_project_output_snapshots)
 
 
 @pytest.fixture

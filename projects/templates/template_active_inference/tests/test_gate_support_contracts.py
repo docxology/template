@@ -2,11 +2,23 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 from pathlib import Path
+from types import SimpleNamespace
 
 import gate_support
 import pytest
+
+
+def _load_tests_conftest():
+    conftest_path = Path(__file__).with_name("conftest.py")
+    spec = importlib.util.spec_from_file_location("active_inference_tests_conftest", conftest_path)
+    assert spec is not None
+    assert spec.loader is not None
+    project_conftest = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(project_conftest)
+    return project_conftest
 
 
 def test_required_gate_artifact_signature_uses_content_hash(
@@ -30,6 +42,31 @@ def test_required_gate_artifact_signature_uses_content_hash(
     assert first is not None
     assert second is not None
     assert second != first
+
+
+def test_session_prewarm_skips_collect_only(monkeypatch) -> None:
+    project_conftest = _load_tests_conftest()
+
+    def fail_if_called() -> None:
+        raise AssertionError("collect-only discovery must not prewarm gate artifacts")
+
+    monkeypatch.setattr(project_conftest, "_iter_mutable_project_sources", fail_if_called)
+    session = SimpleNamespace(config=SimpleNamespace(option=SimpleNamespace(collectonly=True)))
+
+    project_conftest.pytest_sessionstart(session)
+
+
+def test_mutable_output_snapshot_includes_gate_contract_artifacts() -> None:
+    project_conftest = _load_tests_conftest()
+
+    rels = {
+        path.relative_to(project_conftest.PROJECT_ROOT).as_posix()
+        for path in project_conftest._iter_mutable_project_outputs()
+    }
+
+    assert "output/data/artifact_provenance.json" in rels
+    assert "output/data/sheaf_gluing_certificate.json" in rels
+    assert "output/reports/artifact_diffoscope.json" in rels
 
 
 def test_ensure_gate_artifacts_reuses_matching_session_signature(
