@@ -1,0 +1,46 @@
+domain: illustrated_storybook
+display_name: Full-Page Storybook Exemplar
+required_packages:
+  - pillow
+  - pyyaml
+  - reportlab
+  - pytest
+preferred_outputs:
+  - pdf
+  - png
+figure_types:
+  - full_page_scene
+  - shape_character
+  - symbolic_yinyang
+validation_gates:
+  - render_validation
+  - publication_readiness
+citation_policy: not_applicable
+source_policy: >-
+  The bundled story is illustrative fiction. Treat content/story.yaml as the
+  source of truth for story text, cast records, page order, palettes, and text
+  overlay choices.
+review_gates:
+  - render_validation
+  - publication_readiness
+artifact_expectations:
+  - output/pdf/the-shape-between.pdf
+  - output/figures/storybook_pages/00_cover.png
+  - output/data/storybook_manifest.json
+  - output/reports/storybook_summary.md
+benchmark_rubric:
+  name: storybook-render-readiness
+  dimensions:
+    - name: render_success
+      weight: 2.0
+    - name: page_count_correct
+      weight: 1.0
+    - name: full_page_images
+      weight: 1.0
+    - name: text_readability
+      weight: 1.0
+    - name: source_separation
+      weight: 1.0
+llm_prompt_guidance: >-
+  Keep story changes in content/story.yaml. Keep character construction,
+  illustration logic, text overlays, and PDF assembly in src/storybook/.

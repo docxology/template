@@ -1,0 +1,47 @@
+paper:
+  title: "My Storybook Template Fork"
+  subtitle: "Full-page illustration and PDF assembly"
+  version: "0.1.0"
+
+authors:
+  - name: "Your Name"
+    orcid: ""
+    email: "you@example.com"
+    affiliation: "Your Organization"
+    corresponding: true
+
+publication:
+  github_repository: "your-org/my_storybook"
+  year: "2026"
+
+keywords:
+  - "storybook"
+  - "illustration"
+  - "pdf"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+manuscript_dir: "manuscript"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+analysis:
+  scripts:
+    - "10_render_cover.py"
+    - "20_render_page_01.py"
+    - "21_render_page_02.py"
+    - "22_render_page_03.py"
+    - "23_render_page_04.py"
+    - "24_render_page_05.py"
+    - "25_render_page_06.py"
+    - "26_render_page_07.py"
+    - "27_render_page_08.py"
+    - "90_build_storybook_pdf.py"

@@ -1,0 +1,49 @@
+paper:
+  title: "The Shape Between: A Full-Page Illustrated Storybook Template"
+  subtitle: "Character generation, symbolic page composition, and PDF assembly"
+  version: "0.1.0"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  github_repository: "docxology/template_storybook"
+  year: "2026"
+
+keywords:
+  - "storybook"
+  - "illustration"
+  - "procedural graphics"
+  - "reportlab"
+  - "reproducible publishing"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+manuscript_dir: "manuscript"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+analysis:
+  scripts:
+    - "10_render_cover.py"
+    - "20_render_page_01.py"
+    - "21_render_page_02.py"
+    - "22_render_page_03.py"
+    - "23_render_page_04.py"
+    - "24_render_page_05.py"
+    - "25_render_page_06.py"
+    - "26_render_page_07.py"
+    - "27_render_page_08.py"
+    - "90_build_storybook_pdf.py"

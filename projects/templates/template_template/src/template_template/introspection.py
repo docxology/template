@@ -104,11 +104,17 @@ class InfrastructureReport:
 
     @property
     def pipeline_stages_default_full(self) -> int:
-        return sum(1 for stage in self.pipeline_stages if "bundle" not in stage.tags and "archival" not in stage.tags)
+        opt_in_tags = {"bundle", "archival", "ebook", "metadata"}
+        return sum(1 for stage in self.pipeline_stages if opt_in_tags.isdisjoint(stage.tags))
 
     @property
     def pipeline_stages_core_only(self) -> int:
-        return sum(1 for stage in self.pipeline_stages if "core" in stage.tags and "llm" not in stage.tags)
+        opt_in_tags = {"bundle", "archival", "ebook", "metadata"}
+        return sum(
+            1
+            for stage in self.pipeline_stages
+            if "core" in stage.tags and "llm" not in stage.tags and opt_in_tags.isdisjoint(stage.tags)
+        )
 
 
 def resolve_template_repo_root(project_dir: Path) -> Path:

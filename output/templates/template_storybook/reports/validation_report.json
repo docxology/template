@@ -1,0 +1,187 @@
+{
+  "timestamp": "2026-07-03T09:00:43.013927",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": true,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [
+          "Combined PDF is unusually small: 0.04 MB"
+        ],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 0.04,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 11,
+            "size_mb": 0.78,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 8,
+            "size_mb": 0.04,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 46,
+            "size_mb": 0.45,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 9,
+            "size_mb": 0.63,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 9,
+            "size_mb": 0.05,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "llm": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          },
+          "logs": {
+            "exists": false,
+            "files": 0,
+            "size_mb": 0.0,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 11,
+          "size_mb": "0.78",
+          "largest_file": "the-shape-between.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 8,
+          "size_mb": "0.04",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 46,
+          "size_mb": "0.45",
+          "largest_file": "02_architecture_slides.log"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 9,
+          "size_mb": "0.63",
+          "largest_file": "08_shared_home.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "storybook_manifest.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 9,
+          "size_mb": "0.05",
+          "largest_file": "evidence_registry.json"
+        },
+        "simulations": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "llm": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "logs": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        }
+      },
+      "file_counts": {
+        "pdf": 11,
+        "web": 8,
+        "slides": 46,
+        "figures": 9,
+        "data": 1,
+        "reports": 9
+      },
+      "total_size_mb": 1.9680509567260742,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty",
+          "Directory 'logs/' missing or empty",
+          "Combined PDF is unusually small: 0.04 MB"
+        ],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 11,
+      "size_mb": 0.7795248031616211
+    },
+    "figures": {
+      "files": 0,
+      "size_mb": 0.0
+    },
+    "data": {
+      "files": 1,
+      "size_mb": 0.0037527084350585938
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
+  },
+  "recommendations": []
+}

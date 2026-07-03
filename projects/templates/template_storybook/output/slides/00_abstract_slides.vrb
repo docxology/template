@@ -1,0 +1,16 @@
+\frametitle{Abstract}
+\breaktt{template\_storybook} demonstrates a public, standalone
+picture-book workflow in the research template repository. The bundled
+project renders a deterministic nine-page storybook in which a child
+tetrahedron raised by cubes meets a child cube raised by tetrahedra. The
+story uses a large reciprocal symbol to frame belonging without
+sameness: square and triangle families remain distinct while the space
+between them becomes navigable.
+
+The project separates story data, rendering logic, and orchestration.
+Story text, characters, page order, palettes, and overlay choices live
+in \breaktt{content/story.yaml}; character generation and illustration
+live in \texttt{src/storybook/}; one script renders the cover, each page
+script renders a numbered page, and a final script assembles the PDF.
+This makes the exemplar a forkable pattern for full-page creative
+artifacts rather than standard manuscript-centered figure generation.

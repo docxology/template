@@ -1,0 +1,11 @@
+# Story and Graphics
+
+Every page is rendered as a full-page PNG. Some pages place text directly over
+the illustration with shadowed lettering; others use a translucent box when the
+scene is visually dense. The YAML `overlay_box` value controls that choice per
+page.
+
+The renderer uses simple geometric primitives: isometric cubes, shaded
+tetrahedra, family clusters, a curved reciprocal symbol, and deterministic star
+fields. This gives forks a readable baseline. Replacing the story does not
+require editing Python; replacing the visual grammar does.

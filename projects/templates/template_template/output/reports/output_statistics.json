@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.80",
-      "total_size_bytes": 1886326,
+      "size_mb": "1.84",
+      "total_size_bytes": 1934492,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "1.37",
+          "size_mb": "1.42",
           "path": "pdf/template_template_combined.pdf"
         },
         {
@@ -18,7 +18,7 @@
         },
         {
           "name": "_combined_manuscript.md",
-          "size_mb": "0.10",
+          "size_mb": "0.11",
           "path": "pdf/_combined_manuscript.md"
         }
       ],
@@ -37,8 +37,8 @@
     "web": {
       "exists": true,
       "file_count": 23,
-      "size_mb": "0.51",
-      "total_size_bytes": 539676,
+      "size_mb": "0.52",
+      "total_size_bytes": 540253,
       "largest_files": [
         {
           "name": "index.html",
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 169,
-      "size_mb": "3.46",
-      "total_size_bytes": 3627835,
+      "size_mb": "3.51",
+      "total_size_bytes": 3675708,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "1.15",
+          "size_mb": "1.20",
           "path": "slides/04_results_slides.pdf"
         },
         {
@@ -97,12 +97,12 @@
     "figures": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "1.12",
-      "total_size_bytes": 1170834,
+      "size_mb": "1.16",
+      "total_size_bytes": 1219420,
       "largest_files": [
         {
           "name": "architecture_overview.png",
-          "size_mb": "0.37",
+          "size_mb": "0.40",
           "path": "figures/architecture_overview.png"
         },
         {
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.01",
-      "total_size_bytes": 12977,
+      "total_size_bytes": 13316,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -150,7 +150,7 @@
       "exists": true,
       "file_count": 26,
       "size_mb": "0.23",
-      "total_size_bytes": 239901,
+      "total_size_bytes": 241844,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -177,20 +177,16 @@
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
       "exists": true,
@@ -210,23 +206,23 @@
     }
   },
   "total_files": 238,
-  "total_size_mb": 7.131296157836914,
+  "total_size_mb": 7.271947860717773,
   "largest_files": [
     {
       "name": "template_template_combined.pdf",
-      "size_mb": "1.37",
+      "size_mb": "1.42",
       "category": "pdf",
       "path": "pdf/template_template_combined.pdf"
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "1.15",
+      "size_mb": "1.20",
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
     {
       "name": "architecture_overview.png",
-      "size_mb": "0.37",
+      "size_mb": "0.40",
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
@@ -256,7 +252,7 @@
     },
     {
       "name": "_combined_manuscript.md",
-      "size_mb": "0.10",
+      "size_mb": "0.11",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.md"
     },
@@ -273,16 +269,17 @@
       "path": "slides/04_results_slides.log"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 1.798940658569336,
-    "web": 0.5146751403808594,
-    "slides": 3.459773063659668,
-    "figures": 1.1165943145751953,
-    "data": 0.012375831604003906,
-    "reports": 0.22878742218017578,
-    "simulations": 0.0,
-    "llm": 0.0,
+    "pdf": 1.8448753356933594,
+    "web": 0.5152254104614258,
+    "slides": 3.5054283142089844,
+    "figures": 1.1629295349121094,
+    "data": 0.012699127197265625,
+    "reports": 0.23064041137695312,
     "logs": 0.00014972686767578125
   },
   "file_counts_by_type": {

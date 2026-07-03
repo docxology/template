@@ -1,0 +1,20 @@
+{
+  "title": "The Shape Between: template_storybook",
+  "upload_type": "software",
+  "description": "A full-page illustrated storybook exemplar with shape-character generation, page-level orchestrators, text overlays, and deterministic PDF assembly.",
+  "creators": [
+    {
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "storybook",
+    "illustration",
+    "pdf",
+    "procedural graphics",
+    "reproducible publishing"
+  ],
+  "version": "0.1.0"
+}

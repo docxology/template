@@ -1,30 +1,51 @@
 {
-  "timestamp": "2026-06-14T12:24:32.309468",
+  "timestamp": "2026-07-03T08:51:00.602960",
   "infrastructure": {},
   "project": {
-    "passed": 89,
-    "failed": 0,
+    "passed": 126,
+    "failed": 4,
     "skipped": 0,
-    "total": 89,
+    "total": 130,
     "warnings": 0,
-    "exit_code": 0,
-    "discovery_count": 89,
+    "exit_code": 1,
+    "discovery_count": 130,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 33.57,
-      "collection": 33.57,
-      "execution": 33.57
+      "setup": 28.86,
+      "collection": 28.86,
+      "execution": 28.86
     },
     "test_categories": {},
-    "coverage_percent": 91.88,
-    "failed_tests": []
+    "coverage_percent": 99.37,
+    "failed_tests": [
+      {
+        "test": "tests/test_meta.py::TestCountPipelineStages::test_stages_are_sequential",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      },
+      {
+        "test": "tests/test_meta.py::TestBuildInfrastructureReport::test_pipeline_stage_counts",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      },
+      {
+        "test": "tests/test_meta.py::TestInjectMetrics::test_load_metrics_round_trip_with_generate_script",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      },
+      {
+        "test": "tests/test_metrics.py::TestBuildManuscriptMetricsDict::test_returns_expected_keys_and_values",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      }
+    ]
   },
   "summary": {
-    "total_passed": 89,
-    "total_failed": 0,
+    "total_passed": 126,
+    "total_failed": 4,
     "total_skipped": 0,
-    "total_tests": 89,
-    "all_passed": true,
-    "project_coverage": 91.88
+    "total_tests": 130,
+    "all_passed": false,
+    "project_coverage": 99.37
   }
 }

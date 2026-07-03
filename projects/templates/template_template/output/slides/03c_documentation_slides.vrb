@@ -142,7 +142,7 @@ interleaving reasoning traces with tool actions dramatically improves
 agent reliability in interactive settings. The \texttt{template/} skill
 architecture maps cleanly onto these three capabilities: the
 \texttt{SKILL.md} descriptors supply the tool-use layer, the declarative
-DAG of \texttt{12} \texttt{pipeline.yaml} stages (a default full run
+DAG of \texttt{14} \texttt{pipeline.yaml} stages (a default full run
 executes \texttt{10}) supplies the planning scaffold, and the
 per-criterion checkpoint system supplies the memory layer.
 \end{block}

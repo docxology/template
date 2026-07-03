@@ -425,14 +425,14 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 23 infrastructure subdirectories (20 importable
-packages) comprising ~604 Python modules provide reusable services;
+packages) comprising ~616 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
 where pipeline advancement is contingent on test passage. Infrastructure
 tests must achieve 60% coverage; project tests must achieve 90%. All
 tests use real filesystem operations, real subprocess calls, and real
 network connections—no mock objects, no fake services, no synthetic test
-doubles. ~7,904 infrastructure tests and 3377+ project tests enforce
+doubles. ~7,968 infrastructure tests and 3390+ project tests enforce
 this standard.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -487,10 +487,10 @@ are:</p>
 <li>A formal description of the Two-Layer Architecture and Standalone
 Project Paradigm that enables N independent research projects to share
 infrastructure without coupling.</li>
-<li>A detailed specification of the 12-stage DAG in
+<li>A detailed specification of the 14-stage DAG in
 <code>infrastructure/core/pipeline/pipeline.yaml</code>: default full
-runs use 10 stages; <code>--core-only</code> runs 8; opt-in bundle and
-archival stages via <code>--tags</code>.</li>
+runs use 10 stages; <code>--core-only</code> runs 8; opt-in ebook,
+metadata, bundle, and archival stages via <code>--tags</code>.</li>
 <li>A comparative analysis positioning <code>template/</code> against
 nine peer tools—Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
 Markdown, DVC, Overleaf, OpenAI Prism—across fourteen feature
@@ -511,6 +511,7 @@ the fourteen enforcement capabilities enumerated in §Results.</li>
 <code>templates/template_prose_project</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
+<code>templates/template_storybook</code>,
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>)—including this meta manuscript
 from <code>projects/templates/template_template</code>, which exercises

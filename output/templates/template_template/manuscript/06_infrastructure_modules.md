@@ -1,13 +1,13 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `23` `discover_infrastructure_modules(repo_root)`. File totals use `604` Python sources across infra + `7,904` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `23` `discover_infrastructure_modules(repo_root)`. File totals use `616` Python sources across infra + `7,968` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
 | `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 3 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 109 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 110 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
 | `documentation` | 12 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
@@ -17,9 +17,9 @@ This section inventories every Layer‑1 subdirectory returned by `23` `discover
 | `orchestration` | 8 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
 | `project` | 27 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
-| `publishing` | 70 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `publishing` | 74 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 50 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `rendering` | 57 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
 | `search` | 44 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
@@ -44,7 +44,7 @@ Template harness scoring and comparative gate helpers exercised in CI smoke path
 
 Repository-wide YAML templates and secure manifests (`.env.template`, hardened defaults referenced by Docker + CLI). `config/` carries no `__init__.py`, so it is a configuration subdirectory rather than an importable package.
 
-### `infrastructure.core` (109 files)
+### `infrastructure.core` (110 files)
 
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges, filesystem helpers, hardened exceptions. Everything else imports logging + error taxonomy from here first.
 
@@ -80,7 +80,7 @@ Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug vali
 
 Readability metrics + Markdown tooling for prose-centric manuscripts / CI gates.
 
-### `infrastructure.publishing` (70 files)
+### `infrastructure.publishing` (74 files)
 
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
@@ -88,7 +88,7 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (50 files)
+### `infrastructure.rendering` (57 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 

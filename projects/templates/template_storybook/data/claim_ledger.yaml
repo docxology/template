@@ -1,0 +1,15 @@
+claims:
+  - id: storybook-full-page
+    claim: "Every configured page renders as a full-page illustration."
+    evidence:
+      - "tests/test_rendering.py"
+      - "output/figures/storybook_pages/"
+  - id: storybook-thin-scripts
+    claim: "Stage-02 scripts delegate rendering behavior to src/storybook."
+    evidence:
+      - "scripts/"
+      - "src/storybook/rendering.py"
+  - id: storybook-primary-pdf
+    claim: "The primary artifact is a multi-page storybook PDF."
+    evidence:
+      - "output/pdf/the-shape-between.pdf"

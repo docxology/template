@@ -2,7 +2,7 @@
 
 ## Overview
 
-`projects/templates/` contains the thirteen public canonical exemplar projects for
+`projects/templates/` contains the sixteen public canonical exemplar projects for
 the template repository. This directory is public and tracked; private,
 rotating, archived, active, or search-only project work belongs outside this
 subtree and is guarded by `.gitignore`, `scripts/check_tracked_projects.py`, and
@@ -25,6 +25,7 @@ projects/templates/
 ├── template_newspaper/             # ReportLab newspaper layout engine
 ├── template_prose_project/         # prose/references validation exemplar
 ├── template_sia/                   # fixture-backed SIA harness
+├── template_storybook/             # full-page illustrated storybook PDF
 ├── template_template/              # meta-template introspection exemplar
 └── template_textbook/              # modular textbook scaffold
 ```

@@ -1,0 +1,29 @@
+conditions:
+  - name: bundled_story
+    role: reference
+    description: "The checked-in nine-page storybook about reciprocal cube and tetrahedron families."
+  - name: direct_text_overlay
+    role: variant
+    description: "Pages that place story text directly on the illustration with shadowed lettering."
+  - name: boxed_text_overlay
+    role: variant
+    description: "Pages that place story text in a translucent reading box."
+metrics:
+  primary:
+    name: rendered_page_count
+    direction: maximize
+protocol: >-
+  Load content/story.yaml, render all page PNGs, assemble the storybook PDF,
+  and assert that PDF page count, image count, and manifest page count match.
+expected_figures:
+  - fig:storybook_cover
+  - fig:square_house
+  - fig:pointed_house
+  - fig:mega_symbol
+expected_tables:
+  - tbl:storybook_manifest
+baselines:
+  - bundled_story
+ablations:
+  - direct_text_overlay
+  - boxed_text_overlay

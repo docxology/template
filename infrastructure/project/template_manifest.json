@@ -106,6 +106,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_storybook",
+      "qualified_name": "templates/template_storybook",
+      "title": "The Shape Between - `template_storybook`",
+      "use_when": "Use this template when you need **full-page illustrated PDF storytelling**: picture-book pages, symbolic scenes, character-generation methods, page-level orchestrators, and deterministic raster art assembled into a print-ready PDF.",
+      "test_file_count": 2,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_template",
       "qualified_name": "templates/template_template",
       "title": "Template: Meta-Research Project",

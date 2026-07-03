@@ -44,7 +44,7 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-01"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-03"
 
 
 @dataclass(frozen=True)
@@ -79,6 +79,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
+    ExemplarSnapshot("template_storybook", 9, "91.78 %"),
     ExemplarSnapshot("template_template", 89, "91.62 %"),
     ExemplarSnapshot("template_textbook", 112, "96.73 %"),
 )

@@ -387,7 +387,7 @@ pipeline-enforced system with version-controlled infrastructure
   separates globally shared infrastructure (logging, rendering,
   validation, steganography) from project-specific logic (manuscripts,
   scripts, data). 23 infrastructure subdirectories (20 importable
-  packages) comprising \textasciitilde604 Python modules provide
+  packages) comprising \textasciitilde616 Python modules provide
   reusable services; projects consume them without modification.
 \item
   \textbf{Execution Integrity}: A Zero-Mock testing policy where
@@ -395,7 +395,7 @@ pipeline-enforced system with version-controlled infrastructure
   tests must achieve 60\% coverage; project tests must achieve 90\%. All
   tests use real filesystem operations, real subprocess calls, and real
   network connections---no mock objects, no fake services, no synthetic
-  test doubles. \textasciitilde7,904 infrastructure tests and 3377+
+  test doubles. \textasciitilde7,968 infrastructure tests and 3390+
   project tests enforce this standard.
 \item
   \textbf{Automated Provenance}: Steganographic watermarking and
@@ -458,10 +458,10 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   Project Paradigm that enables N independent research projects to share
   infrastructure without coupling.
 \item
-  A detailed specification of the 12-stage DAG in
+  A detailed specification of the 14-stage DAG in
   \breaktt{infrastructure/core/pipeline/pipeline.yaml}: default full runs
-  use 10 stages; \texttt{-\/-core-only} runs 8; opt-in bundle and
-  archival stages via \texttt{-\/-tags}.
+  use 10 stages; \texttt{-\/-core-only} runs 8; opt-in ebook, metadata,
+  bundle, and archival stages via \texttt{-\/-tags}.
 \item
   A comparative analysis positioning \texttt{template/} against nine
   peer tools---Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
@@ -484,6 +484,7 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   \breaktt{templates/template\_prose\_project},
   \breaktt{templates/template\_search\_project},
   \breaktt{templates/template\_sia},
+  \breaktt{templates/template\_storybook},
   \breaktt{templates/template\_template},
   \breaktt{templates/template\_textbook})---including this meta
   manuscript from \breaktt{projects/templates/template\_template}, which

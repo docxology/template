@@ -287,6 +287,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) | [AGENTS.md](projects/templates/template_methods_paper/AGENTS.md) | [README.md](projects/templates/template_methods_paper/README.md) | Methods-paper exemplar — controlled-method specification DSL, staged validation, deterministic compilation, informed by BPL (canonical, always present) |
 | [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) | [AGENTS.md](projects/templates/template_newspaper/AGENTS.md) | [README.md](projects/templates/template_newspaper/README.md) | Newspaper layout-engine exemplar (canonical, always present) |
 | [`projects/templates/template_sia/`](projects/templates/template_sia/) | [AGENTS.md](projects/templates/template_sia/AGENTS.md) | [README.md](projects/templates/template_sia/README.md) | SIA harness exemplar (canonical, always present) |
+| [`projects/templates/template_storybook/`](projects/templates/template_storybook/) | [AGENTS.md](projects/templates/template_storybook/AGENTS.md) | [README.md](projects/templates/template_storybook/README.md) | Full-page illustrated storybook exemplar (canonical, always present) |
 | [`projects/templates/template_template/`](projects/templates/template_template/) | [AGENTS.md](projects/templates/template_template/AGENTS.md) | [README.md](projects/templates/template_template/README.md) | Meta-template exemplar (canonical, always present) |
 | [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | [AGENTS.md](projects/templates/template_textbook/AGENTS.md) | [README.md](projects/templates/template_textbook/README.md) | Modular fillable-textbook scaffold exemplar (canonical, always present) |
 | [`projects/templates/template_search_project/`](projects/templates/template_search_project/) | [AGENTS.md](projects/templates/template_search_project/AGENTS.md) | [README.md](projects/templates/template_search_project/README.md) | Literature-search exemplar (canonical, always present) |
@@ -626,10 +627,10 @@ steganography:
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
 9. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
-**Opt-in long-horizon stages** (added 2026-05-20; NOT in default core or `--core-only` runs — enable via `--tags bundle` or `--tags archival`):
+**Opt-in long-horizon stages** (added 2026-05-20; NOT in default core or `--core-only` runs — enable via `--tags ebook`, `--tags metadata`, `--tags bundle`, or `--tags archival`):
 
-10. **Ebook Generation** (`scripts/07_ebook_generation.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/07_ebook_generation.py --project <name>`.
-11. **Metadata Package** (`scripts/08_metadata_package.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/08_metadata_package.py --project <name>`.
+10. **Ebook Generation** (`scripts/11_ebook_generation.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/11_ebook_generation.py --project <name>`.
+11. **Metadata Package** (`scripts/12_metadata_package.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/12_metadata_package.py --project <name>`.
 12. **Executable Bundle** (`scripts/08_executable_bundle.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project, parallel to PDF as the durable artifact. Design: [`docs/maintenance/stage-10-executable-bundle.md`](docs/maintenance/stage-10-executable-bundle.md).
 13. **Archival Publication** (`scripts/09_archive_publication.py`, tag `archival`) — Mirror the executable bundle to multiple independent archival targets (Zenodo, Software Heritage, IPFS via Pinata/Web3.Storage). Defaults to dry-run; pass `--commit` to actually deposit. Design: [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md).
 
@@ -1503,8 +1504,8 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Ebook Generation | `07_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **11** Metadata Package | `08_metadata_package.py` | `core`, `metadata` | soft fail |
+| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
 | **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
 | **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->

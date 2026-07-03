@@ -62,7 +62,7 @@
 \contentsline {subsubsection}{\numberline {6.1.1}\breaktt {infrastructure.autoresearch} (10 files)}{34}{subsubsection.6.1.1}%
 \contentsline {subsubsection}{\numberline {6.1.2}\breaktt {infrastructure.benchmark} (3 files)}{34}{subsubsection.6.1.2}%
 \contentsline {subsubsection}{\numberline {6.1.3}\breaktt {infrastructure/config} (non-package subdirectory)}{34}{subsubsection.6.1.3}%
-\contentsline {subsubsection}{\numberline {6.1.4}\breaktt {infrastructure.core} (109 files)}{34}{subsubsection.6.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.4}\breaktt {infrastructure.core} (110 files)}{34}{subsubsection.6.1.4}%
 \contentsline {subsubsection}{\numberline {6.1.5}\breaktt {infrastructure.doctor} (14 files)}{34}{subsubsection.6.1.5}%
 \contentsline {subsubsection}{\numberline {6.1.6}\breaktt {infrastructure.docker} (0 files)}{35}{subsubsection.6.1.6}%
 \contentsline {subsubsection}{\numberline {6.1.7}\breaktt {infrastructure.documentation} (12 files)}{35}{subsubsection.6.1.7}%
@@ -71,9 +71,9 @@
 \contentsline {subsubsection}{\numberline {6.1.10}\breaktt {infrastructure.orchestration} (8 files)}{35}{subsubsection.6.1.10}%
 \contentsline {subsubsection}{\numberline {6.1.11}\breaktt {infrastructure.project} (27 files)}{35}{subsubsection.6.1.11}%
 \contentsline {subsubsection}{\numberline {6.1.12}\breaktt {infrastructure.prose} (9 files)}{35}{subsubsection.6.1.12}%
-\contentsline {subsubsection}{\numberline {6.1.13}\breaktt {infrastructure.publishing} (70 files)}{35}{subsubsection.6.1.13}%
+\contentsline {subsubsection}{\numberline {6.1.13}\breaktt {infrastructure.publishing} (74 files)}{35}{subsubsection.6.1.13}%
 \contentsline {subsubsection}{\numberline {6.1.14}\breaktt {infrastructure.reference} (16 files)}{35}{subsubsection.6.1.14}%
-\contentsline {subsubsection}{\numberline {6.1.15}\breaktt {infrastructure.rendering} (50 files)}{35}{subsubsection.6.1.15}%
+\contentsline {subsubsection}{\numberline {6.1.15}\breaktt {infrastructure.rendering} (57 files)}{35}{subsubsection.6.1.15}%
 \contentsline {subsubsection}{\numberline {6.1.16}\breaktt {infrastructure.reporting} (57 files)}{35}{subsubsection.6.1.16}%
 \contentsline {subsubsection}{\numberline {6.1.17}\breaktt {infrastructure.scientific} (4 files)}{35}{subsubsection.6.1.17}%
 \contentsline {subsubsection}{\numberline {6.1.18}\breaktt {infrastructure.search} (44 files)}{35}{subsubsection.6.1.18}%

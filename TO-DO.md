@@ -38,6 +38,11 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **SECURITY-AUDIT-1 — pip-audit exemption re-baselined (2026-07-03, [Unreleased]):**
+  added `PYSEC-2026-597` to `.github/pip-audit-ignore.txt` for `nltk 3.9.4`
+  after `pip-audit` reported no fixed version. Acceptance evidence: exemption is
+  documented inline in the ignore file, limited to the advisory ID, and should
+  be removed when upstream publishes a fixed release.
 - **REGRESSION-PIN-2 — regression tier expanded to all 15 exemplars (2026-07-01, [Unreleased]):**
   populated real, source-re-derived regression pins (following the
   `REGRESSION-PIN-1` `template_code_project` contract) for every public

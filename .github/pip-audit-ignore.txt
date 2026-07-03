@@ -27,3 +27,10 @@
 # also cannot be upgraded here (criterion 1). Re-evaluate / remove once the runner
 # image ships pip >= 26.1.2.
 PYSEC-2026-196
+
+# PYSEC-2026-597 affects nltk 3.9.4. pip-audit currently reports no fixed
+# version. `nltk` is present for local text-analysis helpers and is not exposed
+# as a network service or untrusted-file execution surface in the template
+# pipeline; keep the exemption narrow and remove it once an upstream fixed
+# release is available.
+PYSEC-2026-597

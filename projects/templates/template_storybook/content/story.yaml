@@ -1,0 +1,101 @@
+storybook:
+  title: "The Shape Between"
+  subtitle: "A full-page illustrated storybook about reciprocal belonging"
+  output_pdf: "output/pdf/the-shape-between.pdf"
+  page_width: 1275
+  page_height: 1650
+
+characters:
+  - id: tessa
+    name: "Tessa"
+    shape: "tetrahedron"
+    family_shape: "cube"
+    fill: "#f5c84c"
+    accent: "#27364a"
+    role: "a child tetrahedron raised in a house of cubes"
+  - id: ciro
+    name: "Ciro"
+    shape: "cube"
+    family_shape: "tetrahedron"
+    fill: "#62c7d8"
+    accent: "#4d2d73"
+    role: "a child cube raised among bright tetrahedra"
+  - id: cube_family
+    name: "The Square House"
+    shape: "cube"
+    family_shape: "cube"
+    fill: "#8fb3ff"
+    accent: "#1c2f55"
+    role: "Tessa's loving cube family"
+  - id: tetra_family
+    name: "The Pointed House"
+    shape: "tetrahedron"
+    family_shape: "tetrahedron"
+    fill: "#ff9d7a"
+    accent: "#5a2430"
+    role: "Ciro's loving tetrahedral family"
+
+pages:
+  - number: 0
+    slug: "cover"
+    title: "The Shape Between"
+    scene: "cosmic_yinyang"
+    overlay_box: false
+    palette: ["#0f1028", "#f7efe5", "#ffcf56", "#5ed6df"]
+    text: "A tetrahedron child in a cube family. A cube child in a tetrahedral family. One turning symbol between them."
+  - number: 1
+    slug: "square_house"
+    title: "The Square House"
+    scene: "cube_home"
+    overlay_box: true
+    palette: ["#e8f2ff", "#f9d66c", "#5f83c8", "#243b64"]
+    text: "Tessa had four bright triangular faces and lived in a house where everyone else had six square ones. Her cube family loved her angles, but the shelves, chairs, and bedtime songs all came in corners of four."
+  - number: 2
+    slug: "pointed_house"
+    title: "The Pointed House"
+    scene: "tetra_home"
+    overlay_box: false
+    palette: ["#fff1e8", "#ff9d7a", "#9f4d63", "#31243d"]
+    text: "Across the valley, Ciro rolled his square shoulders through a family of tetrahedra. They folded tents from triangles and told stories that always climbed to a point."
+  - number: 3
+    slug: "valley_symbol"
+    title: "The Valley That Turned"
+    scene: "symbol_valley"
+    overlay_box: true
+    palette: ["#f5f0e8", "#0f1028", "#f4f1ea", "#d85f6f"]
+    text: "Between the two homes was a round valley split like day and night. Cubes slept in the pale half. Tetrahedra dreamed in the dark half. The border curved like a question."
+  - number: 4
+    slug: "first_connection"
+    title: "The First Edge"
+    scene: "meeting"
+    overlay_box: false
+    palette: ["#e6fff7", "#f5c84c", "#62c7d8", "#1f3f45"]
+    text: "Tessa and Ciro met where the curve bent inward. She offered an edge. He offered a face. Neither fit perfectly, and that was exactly why they listened."
+  - number: 5
+    slug: "mirror_families"
+    title: "Mirror Families"
+    scene: "mirror"
+    overlay_box: true
+    palette: ["#f8f5ff", "#8fb3ff", "#ff9d7a", "#32224a"]
+    text: "Each child brought the other home. The cube family learned to set a triangular place at the table. The tetrahedral family learned that a square could hold a sky."
+  - number: 6
+    slug: "bridge_of_edges"
+    title: "Bridge of Edges"
+    scene: "bridge"
+    overlay_box: false
+    palette: ["#eef9ff", "#f5c84c", "#62c7d8", "#566a82"]
+    text: "They built a bridge from shared edges: cube to tetrahedron, tetrahedron to cube, step after step until the valley no longer divided the map."
+  - number: 7
+    slug: "mega_symbol"
+    title: "The Mega-Symbol"
+    scene: "mega_symbol"
+    overlay_box: true
+    palette: ["#141421", "#f8f2e9", "#f5c84c", "#62c7d8"]
+    text: "When both families crossed, the valley rose into a mega-symbol: square inside triangle, triangle inside square, dark carrying light, light carrying dark."
+  - number: 8
+    slug: "shared_home"
+    title: "The Shape Between"
+    scene: "shared_home"
+    overlay_box: false
+    palette: ["#f7efe5", "#2b3350", "#f5c84c", "#62c7d8"]
+    text: "Tessa and Ciro did not become the same shape. They became a way through. Their homes kept their own geometry, and the space between them learned to glow."

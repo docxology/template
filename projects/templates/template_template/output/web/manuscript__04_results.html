@@ -257,11 +257,11 @@ downstream.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>467+</td>
+<td>470+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~7,904</td>
+<td>~7,968</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -323,7 +323,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">109</td>
+<td style="text-align: center;">110</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -396,7 +396,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">70</td>
+<td style="text-align: center;">74</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -410,7 +410,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">50</td>
+<td style="text-align: center;">57</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -506,7 +506,7 @@ Documentation Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>378+</code> Markdown shards under <code>docs/</code> capture
+<p><code>380+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
@@ -673,7 +673,8 @@ infrastructure, and every box was placed from the same live data the
 prose cites.</p>
 <p><img src="../figures/pipeline_stages.png"
 alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 12 YAML-declared stages (core, LLM, bundle, archival tags).</p>
+with 14 YAML-declared stages (core, LLM, ebook, metadata, bundle,
+archival tags).</p>
 <p><img src="../figures/module_inventory.png"
 alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
 Horizontal file-count histogram of every infrastructure subdirectory,

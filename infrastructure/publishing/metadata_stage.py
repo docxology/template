@@ -237,7 +237,7 @@ def _generate_opf(meta: dict[str, Any]) -> str:
 
 def run_metadata_package(repo_root: Path, project: str) -> int:
     """Execute metadata package generation orchestration."""
-    log_header(f"STAGE 08: Metadata Package (Project: {project})", logger)
+    log_header(f"STAGE 12: Metadata Package (Project: {project})", logger)
 
     project_root = resolve_project_root(repo_root, project)
 

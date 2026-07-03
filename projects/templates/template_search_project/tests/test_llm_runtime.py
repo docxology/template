@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import sys
 
+import pytest
 
 from src.llm_runtime import build_llm_callable
 
@@ -40,6 +41,7 @@ def test_build_llm_callable_returns_callable_when_infra_importable():
     real ``(prompt: str) -> str`` callable. We don't *invoke* it (that
     would hit a real Ollama server); we only assert the return type so
     the orchestrator's ``llm is not None`` guard works as documented."""
+    pytest.importorskip("infrastructure.llm", exc_type=ImportError)
     result = build_llm_callable(**_kwargs())
     assert result is not None
     assert callable(result)
@@ -79,6 +81,7 @@ def test_returned_callable_signature_is_str_to_str():
     confirm it exposes one positional ``prompt`` argument."""
     import inspect
 
+    pytest.importorskip("infrastructure.llm", exc_type=ImportError)
     result = build_llm_callable(**_kwargs())
     assert result is not None
     sig = inspect.signature(result)

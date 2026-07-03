@@ -140,9 +140,9 @@ the research lifecycle, making the manuscript, test suite, and
 provenance chain version-controlled, deterministically buildable, and
 independently verifiable. It is built on a Two-Layer Architecture that
 separates 23 infrastructure subdirectories (20 importable Python
-packages, \textasciitilde604 modules, validated by \textasciitilde7,904
+packages, \textasciitilde616 modules, validated by \textasciitilde7,968
 tests) from self-contained project workspaces, connected by a
-YAML-declared pipeline (12 stages; default full 10)-based build pipeline
+YAML-declared pipeline (14 stages; default full 10)-based build pipeline
 progressing from environment sanitization through test execution (with a
 Zero-Mock testing policy enforcing 90\% project-level and 60\%
 infrastructure-level coverage via real filesystem operations and
@@ -169,7 +169,9 @@ Scalability is demonstrated across the generated public exemplar roster
 \breaktt{templates/template\_newspaper},
 \breaktt{templates/template\_prose\_project},
 \breaktt{templates/template\_search\_project},
-\breaktt{templates/template\_sia}, \breaktt{templates/template\_template},
+\breaktt{templates/template\_sia},
+\breaktt{templates/template\_storybook},
+\breaktt{templates/template\_template},
 \breaktt{templates/template\_textbook}), with representative
 heterogeneous cases under \breaktt{projects/templates/}: optimization
 (\breaktt{template\_code\_project}, 236 tests), prose

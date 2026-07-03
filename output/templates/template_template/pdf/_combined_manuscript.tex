@@ -294,9 +294,9 @@ the research lifecycle, making the manuscript, test suite, and
 provenance chain version-controlled, deterministically buildable, and
 independently verifiable. It is built on a Two-Layer Architecture that
 separates 23 infrastructure subdirectories (20 importable Python
-packages, about 604 modules, validated by about 7,904
+packages, about 616 modules, validated by about 7,968
 tests) from self-contained project workspaces, connected by a
-YAML-declared pipeline (12 stages; default full 10)-based build pipeline
+YAML-declared pipeline (14 stages; default full 10)-based build pipeline
 progressing from environment sanitization through test execution (with a
 Zero-Mock testing policy enforcing 90\% project-level and 60\%
 infrastructure-level coverage via real filesystem operations and
@@ -323,7 +323,9 @@ Scalability is demonstrated across the generated public exemplar roster
 \breaktt{templates/template\_newspaper},
 \breaktt{templates/template\_prose\_project},
 \breaktt{templates/template\_search\_project},
-\breaktt{templates/template\_sia}, \breaktt{templates/template\_template},
+\breaktt{templates/template\_sia},
+\breaktt{templates/template\_storybook},
+\breaktt{templates/template\_template},
 \breaktt{templates/template\_textbook}), with representative
 heterogeneous cases under \breaktt{projects/templates/}: optimization
 (\breaktt{template\_code\_project}, 236 tests), prose
@@ -607,7 +609,7 @@ pipeline-enforced system with version-controlled infrastructure
   separates globally shared infrastructure (logging, rendering,
   validation, steganography) from project-specific logic (manuscripts,
   scripts, data). 23 infrastructure subdirectories (20 importable
-  packages) comprising about 604 Python modules provide
+  packages) comprising about 616 Python modules provide
   reusable services; projects consume them without modification.
 \item
   \textbf{Execution Integrity}: A Zero-Mock testing policy where
@@ -615,7 +617,7 @@ pipeline-enforced system with version-controlled infrastructure
   tests must achieve 60\% coverage; project tests must achieve 90\%. All
   tests use real filesystem operations, real subprocess calls, and real
   network connections---no mock objects, no fake services, no synthetic
-  test doubles. about 7,904 infrastructure tests and 3377+
+  test doubles. about 7,968 infrastructure tests and 3390+
   project tests enforce this standard.
 \item
   \textbf{Automated Provenance}: Steganographic watermarking and
@@ -677,10 +679,10 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   Project Paradigm that enables N independent research projects to share
   infrastructure without coupling.
 \item
-  A detailed specification of the 12-stage DAG in
+  A detailed specification of the 14-stage DAG in
   \breaktt{infrastructure/core/pipeline/pipeline.yaml}: default full runs
-  use 10 stages; \texttt{-\/-core-only} runs 8; opt-in bundle and
-  archival stages via \texttt{-\/-tags}.
+  use 10 stages; \texttt{-\/-core-only} runs 8; opt-in ebook, metadata,
+  bundle, and archival stages via \texttt{-\/-tags}.
 \item
   A comparative analysis positioning \texttt{template/} against nine
   peer tools---Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
@@ -703,6 +705,7 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   \breaktt{templates/template\_prose\_project},
   \breaktt{templates/template\_search\_project},
   \breaktt{templates/template\_sia},
+  \breaktt{templates/template\_storybook},
   \breaktt{templates/template\_template},
   \breaktt{templates/template\_textbook})---including this meta
   manuscript from \breaktt{projects/templates/template\_template}, which
@@ -743,7 +746,7 @@ pipeline, configuration, and comparative references.
 The \texttt{template/} architecture is deliberately bifurcated into a
 globally shared \texttt{infrastructure/} layer and project-specific
 \texttt{projects/} silos. This section describes the four core design
-patterns, the YAML-declared pipeline (12 stages; default full 10)
+patterns, the YAML-declared pipeline (14 stages; default full 10)
 pipeline that operationalizes them, and the AI collaboration model that
 distinguishes this system from conventional research templates.
 
@@ -754,7 +757,7 @@ The repository is organized into two strictly separated layers:
 
 \textbf{Infrastructure Layer} (\texttt{infrastructure/}): 23
 infrastructure subdirectories---20 of them independently-importable
-Python packages---comprising about 604 modules and providing
+Python packages---comprising about 616 modules and providing
 reusable services. Each importable package has its own
 \texttt{\_\_init\_\_.py}, \texttt{AGENTS.md}, and \texttt{README.md},
 and exports a well-defined public API (the remaining subdirectories,
@@ -825,7 +828,9 @@ canonical exemplars under \breaktt{projects/templates/}
 \breaktt{templates/template\_newspaper},
 \breaktt{templates/template\_prose\_project},
 \breaktt{templates/template\_search\_project},
-\breaktt{templates/template\_sia}, \breaktt{templates/template\_template},
+\breaktt{templates/template\_sia},
+\breaktt{templates/template\_storybook},
+\breaktt{templates/template\_template},
 \breaktt{templates/template\_textbook}), including this meta-manuscript
 at \breaktt{projects/templates/template\_template/}.
 
@@ -1198,7 +1203,7 @@ that interleaving reasoning traces with tool actions dramatically
 improves agent reliability in interactive settings. The
 \texttt{template/} skill architecture maps cleanly onto these three
 capabilities: the \texttt{SKILL.md} descriptors supply the tool-use
-layer, the declarative DAG of \texttt{12} \texttt{pipeline.yaml} stages
+layer, the declarative DAG of \texttt{14} \texttt{pipeline.yaml} stages
 (a default full run executes \texttt{10}) supplies the planning
 scaffold, and the per-criterion checkpoint system supplies the memory
 layer.
@@ -1366,7 +1371,7 @@ The repository maintains three test suites:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Infrastructure tests} (\texttt{tests/}): about 7,904
+  \textbf{Infrastructure tests} (\texttt{tests/}): about 7,968
   tests validating the 23 infrastructure subdirectories, covering
   logging, rendering, validation, steganography, reporting, and LLM
   integration.
@@ -1497,8 +1502,8 @@ Value
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Test files & 467+ \\
-Total tests & about 7,904 \\
+Test files & 470+ \\
+Total tests & about 7,968 \\
 Infrastructure coverage gate & \texorpdfstring{\textgreater{}=}{>=}60\,\% (repo \texorpdfstring{\textgreater{}=}{>=}80\,\%+ during recent
 audits) \\
 Zero-mock imports & Verified via static scanning \\
@@ -1545,7 +1550,7 @@ readiness validation CLI \\
 gates \\
 \texttt{config} & 0 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Repository defaults + hardened
 templates \\
-\texttt{core} & 109 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texttt{get\_logger},
+\texttt{core} & 110 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Containerisation scaffolding \\
 \texttt{doctor} & 14 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Checkout diagnose/fix/undo repairs \\
@@ -1563,10 +1568,10 @@ point for \texttt{./run.sh} \\
 \texttt{project} & 27 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Markdown readability + prose tooling \\
-\texttt{publishing} & 70 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Zenodo, executable bundle, archival
+\texttt{publishing} & 74 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & BibTeX models, parsers, converters \\
-\texttt{rendering} & 50 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 57 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Coverage parsers, dashboards,
 executive artefacts \\
@@ -1614,7 +1619,7 @@ PAI capsule & Repository level \texttt{PAI.md} narratives \\
 \end{longtable}
 }
 
-\texttt{378+} Markdown shards under \texttt{docs/} capture operational
+\texttt{380+} Markdown shards under \texttt{docs/} capture operational
 knowledge without duplicating auto-generated inventories.
 
 \subsection{DAG Reference (Declarative
@@ -1745,8 +1750,8 @@ infrastructure, and every box was placed from the same live data the
 prose cites.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Pipeline Stage Flow}]{../figures/pipeline_stages.png}}
-\textbf{Figure 2.} Pipeline DAG with 12 YAML-declared stages (core, LLM,
-bundle, archival tags).
+\textbf{Figure 2.} Pipeline DAG with 14 YAML-declared stages (core, LLM,
+ebook, metadata, bundle, archival tags).
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Infrastructure Module Inventory}]{../figures/module_inventory.png}}
 \textbf{Figure 3.} Horizontal file-count histogram of every
@@ -1810,7 +1815,7 @@ policy} is \texttt{template/}'s most distinctive design decision. By
 prohibiting all mock objects, we gain confidence that tests exercise
 real code paths---a pytest run against the template genuinely invokes
 \texttt{pandoc}, writes to disk, and parses real YAML. The cost is test
-duration: the full infrastructure test suite (about 7,904
+duration: the full infrastructure test suite (about 7,968
 tests) takes 2--4 minutes, compared to sub-second execution typical of
 heavily-mocked suites.
 
@@ -1896,7 +1901,7 @@ changes, no \texttt{pyproject.toml} modifications, no CI configuration
 updates. The \texttt{run.sh} orchestrator automatically discovers new
 projects and presents them in its interactive menu.
 
-We have validated scaling with 15 canonical exemplars under
+We have validated scaling with 16 canonical exemplars under
 \breaktt{projects/templates/}---always present for onboarding and
 tooling---and with this manuscript from
 \breaktt{projects/templates/template\_template} (130 tests) as a
@@ -1933,7 +1938,7 @@ it now lives alongside the other public exemplars under
 \breaktt{projects/templates/}.
 
 These workspaces share no project-level code---only Layer~1 (23
-infrastructure subdirectories, about 604 Python
+infrastructure subdirectories, about 616 Python
 files)---validating insulation between domain repos and reusable
 services.
 
@@ -1982,7 +1987,7 @@ Figures (auto-generated) & 9 & 5 & 27 \\
 }
 
 The infrastructure overhead per project is constant regardless of
-project size: the same 23 modules, the same 11 pipeline stages, the same
+project size: the same 23 modules, the same 13 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.
 
@@ -2113,7 +2118,7 @@ no documentation blind spots.
 
 This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
-substantial: \texttt{378} Markdown files under \texttt{docs/} alone,
+substantial: \texttt{380} Markdown files under \texttt{docs/} alone,
 plus an \texttt{AGENTS.md}/\texttt{README.md} pair in every directory
 and a \texttt{SKILL.md} descriptor on every infrastructure module. That
 count is itself injected from live introspection---the manuscript
@@ -2331,7 +2336,7 @@ Reference}\label{infrastructure-module-reference}
 
 This section inventories every Layer‑1 subdirectory returned by
 \texttt{23} \breaktt{discover\_infrastructure\_modules(repo\_root)}. File
-totals use \texttt{604} Python sources across infra + \texttt{7,904}
+totals use \texttt{616} Python sources across infra + \texttt{7,968}
 infra tests guarding them. Documentation Duality = paired
 \texttt{README.md} + \texttt{AGENTS.md}; optional \texttt{SKILL.md}
 manifests feed \breaktt{python\ -m\ infrastructure.skills}.
@@ -2365,7 +2370,7 @@ readiness validation CLI \\
 gates \\
 \texttt{config} & 0 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Repository defaults + hardened
 templates \\
-\texttt{core} & 109 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texttt{get\_logger},
+\texttt{core} & 110 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Containerisation scaffolding \\
 \texttt{doctor} & 14 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Checkout diagnose/fix/undo repairs \\
@@ -2383,10 +2388,10 @@ point for \texttt{./run.sh} \\
 \texttt{project} & 27 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Markdown readability + prose tooling \\
-\texttt{publishing} & 70 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Zenodo, executable bundle, archival
+\texttt{publishing} & 74 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & BibTeX models, parsers, converters \\
-\texttt{rendering} & 50 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 57 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & \texorpdfstring{\ensuremath{\checkmark}}{[ok]} & Coverage parsers, dashboards,
 executive artefacts \\
@@ -2431,8 +2436,8 @@ Repository-wide YAML templates and secure manifests
 \texttt{config/} carries no \texttt{\_\_init\_\_.py}, so it is a
 configuration subdirectory rather than an importable package.
 
-\subsubsection{\texorpdfstring{\breaktt{infrastructure.core} (109
-files)}{infrastructure.core (109 files)}}\label{infrastructure.core-109-files}
+\subsubsection{\texorpdfstring{\breaktt{infrastructure.core} (110
+files)}{infrastructure.core (110 files)}}\label{infrastructure.core-110-files}
 
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
@@ -2487,8 +2492,8 @@ files)}{infrastructure.prose (9 files)}}\label{infrastructure.prose-9-files}
 Readability metrics + Markdown tooling for prose-centric manuscripts /
 CI gates.
 
-\subsubsection{\texorpdfstring{\breaktt{infrastructure.publishing} (70
-files)}{infrastructure.publishing (70 files)}}\label{infrastructure.publishing-70-files}
+\subsubsection{\texorpdfstring{\breaktt{infrastructure.publishing} (74
+files)}{infrastructure.publishing (74 files)}}\label{infrastructure.publishing-74-files}
 
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
@@ -2498,8 +2503,8 @@ files)}{infrastructure.reference (16 files)}}\label{infrastructure.reference-16-
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts
 and retrieval scripts.
 
-\subsubsection{\texorpdfstring{\breaktt{infrastructure.rendering} (50
-files)}{infrastructure.rendering (50 files)}}\label{infrastructure.rendering-50-files}
+\subsubsection{\texorpdfstring{\breaktt{infrastructure.rendering} (57
+files)}{infrastructure.rendering (57 files)}}\label{infrastructure.rendering-57-files}
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.
@@ -2706,7 +2711,7 @@ post-processing steganography:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Execute the standard YAML-declared pipeline (12 stages; default full
+  Execute the standard YAML-declared pipeline (14 stages; default full
   10) pipeline for the target project.
 \item
   The \texttt{secure\_run.sh} script invokes
@@ -3001,8 +3006,8 @@ Structure}\label{appendix-directory}
 \NormalTok{│   ├── published/               \# Non{-}rendered published (symlinked, private)}
 \NormalTok{│   ├── archive/                 \# Non{-}rendered retired (symlinked, private)}
 \NormalTok{│   └── other/                   \# Non{-}rendered misc (symlinked, private)}
-\NormalTok{├── docs/ (17 top{-}level areas, 378+ markdown files per live counter)}
-\NormalTok{├── tests/                       \# Infra suites (467+ files)}
+\NormalTok{├── docs/ (17 top{-}level areas, 380+ markdown files per live counter)}
+\NormalTok{├── tests/                       \# Infra suites (470+ files)}
 \NormalTok{├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml}
 \NormalTok{├── run.sh / secure\_run.sh}
 \NormalTok{└── output/ …                    \# Mirrors after copy stage}
@@ -3037,7 +3042,9 @@ The full public exemplar roster is:
 \breaktt{templates/template\_newspaper},
 \breaktt{templates/template\_prose\_project},
 \breaktt{templates/template\_search\_project},
-\breaktt{templates/template\_sia}, \breaktt{templates/template\_template},
+\breaktt{templates/template\_sia},
+\breaktt{templates/template\_storybook},
+\breaktt{templates/template\_template},
 \breaktt{templates/template\_textbook}. The three rows below are a
 representative sample; a future \breaktt{exemplar\_summary\_table} token
 in \breaktt{build\_manuscript\_metrics\_dict} would let this table cover
@@ -3119,7 +3126,7 @@ Purpose
 Repository root & \texttt{AGENTS.md}, \texttt{CLAUDE.md},
 \texttt{README.md}, \texttt{RUN\_GUIDE.md} & Global navigation and AI
 agent context \\
-\texttt{docs/} directory & 378 files across 17 subdirectories & User
+\texttt{docs/} directory & 380 files across 17 subdirectories & User
 guides, API reference, troubleshooting \\
 Per-directory & \texttt{AGENTS.md} + \texttt{README.md} at every
 directory & Documentation Duality standard \\
@@ -3141,7 +3148,7 @@ infrastructure modules), \texttt{development/} (contributing, testing),
 and \texttt{audit/} (review reports).
 
 Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: \texttt{378} counts every
+introspection rather than hand-maintained: \texttt{380} counts every
 Markdown file beneath \texttt{docs/} recursively, \texttt{17} counts its
 first-level subdirectories, and \texttt{21} counts the workflow
 subdirectories that each carry a \texttt{SKILL.md} descriptor. This is

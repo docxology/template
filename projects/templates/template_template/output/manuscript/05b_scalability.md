@@ -2,7 +2,7 @@
 
 The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
-We have validated scaling with 15 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (130 tests) as a git-tracked public exemplar in the same automated discovery menus.
+We have validated scaling with 16 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (130 tests) as a git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
 
@@ -12,7 +12,7 @@ Canonical trio:
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
-These workspaces share no project-level code—only Layer 1 (23 infrastructure subdirectories, ~604 Python files)—validating insulation between domain repos and reusable services.
+These workspaces share no project-level code—only Layer 1 (23 infrastructure subdirectories, ~616 Python files)—validating insulation between domain repos and reusable services.
 
 ### Multi-Project Orchestration
 
@@ -29,4 +29,4 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 | Analysis scripts | 7 | 4 | 4 |
 | Figures (auto-generated) | 9 | 5 | 27 |
 
-The infrastructure overhead per project is constant regardless of project size: the same 23 modules, the same 11 pipeline stages, the same rendering and validation logic. This O(1) infrastructure cost is the architectural payoff of the Two-Layer separation.
+The infrastructure overhead per project is constant regardless of project size: the same 23 modules, the same 13 pipeline stages, the same rendering and validation logic. This O(1) infrastructure cost is the architectural payoff of the Two-Layer separation.

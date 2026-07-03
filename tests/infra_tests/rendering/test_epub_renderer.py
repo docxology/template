@@ -82,7 +82,7 @@ def _opf_text(epub_path: Path) -> str:
 # frontmatter (title/author/language live only in the project's separate
 # manuscript/config.yaml), which is exactly the gap that let a real EPUB
 # ship with no dc:title/dc:creator and an invalid dc:language ("C", the
-# POSIX locale name) — see 07_ebook_generation.py's _load_manuscript_metadata.
+# POSIX locale name) — see 11_ebook_generation.py's _load_manuscript_metadata.
 _NO_FRONTMATTER_MD = "# Chapter 1\n\nA paragraph with no YAML frontmatter at all.\n"
 
 

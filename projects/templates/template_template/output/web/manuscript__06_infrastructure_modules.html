@@ -179,8 +179,8 @@
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>23</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>604</code> Python sources across infra +
-<code>7,904</code> infra tests guarding them. Documentation Duality =
+File totals use <code>616</code> Python sources across infra +
+<code>7,968</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -225,7 +225,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">109</td>
+<td style="text-align: center;">110</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -298,7 +298,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">70</td>
+<td style="text-align: center;">74</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -312,7 +312,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">50</td>
+<td style="text-align: center;">57</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -391,8 +391,8 @@ id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 id="infrastructure.core-109-files"><code>infrastructure.core</code>
-(109 files)</h3>
+<h3 id="infrastructure.core-110-files"><code>infrastructure.core</code>
+(110 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -443,8 +443,8 @@ namespaces.</p>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
 <h3
-id="infrastructure.publishing-70-files"><code>infrastructure.publishing</code>
-(70 files)</h3>
+id="infrastructure.publishing-74-files"><code>infrastructure.publishing</code>
+(74 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3
@@ -453,8 +453,8 @@ id="infrastructure.reference-16-files"><code>infrastructure.reference</code>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
 <h3
-id="infrastructure.rendering-50-files"><code>infrastructure.rendering</code>
-(50 files)</h3>
+id="infrastructure.rendering-57-files"><code>infrastructure.rendering</code>
+(57 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3

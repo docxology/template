@@ -15,7 +15,7 @@ claims:
     artifact_path: output/data/manuscript_variables.json
   - claim_id: pipeline-stage-count
     kind: number
-    value: 12
+    value: 14
     source: infrastructure/core/pipeline/pipeline.yaml declared stage count
     source_tier: project_source
     freshness: active

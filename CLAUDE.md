@@ -43,7 +43,7 @@ This is a research project template with a test-driven development workflow, aut
 | Archive publication real deposit | `uv run python scripts/09_archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
 | Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
 | Reproduction bundle (single / all public exemplars) | `uv run python scripts/10_repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
-| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (populated across all 15 public exemplars — 55 tests collect and pass together; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
+| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (55 claim-binding tests plus a public-roster pin; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
@@ -197,6 +197,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
 - [`projects/templates/template_search_project/`](projects/templates/template_search_project/) — literature-search → BibTeX → LLM-synthesis template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
+- [`projects/templates/template_storybook/`](projects/templates/template_storybook/) — full-page illustrated storybook PDF template
 - [`projects/templates/template_template/`](projects/templates/template_template/) — autopoietic meta-template (introspects infrastructure and public exemplar roster)
 - [`projects/templates/template_textbook/`](projects/templates/template_textbook/) — modular, fillable book-length manuscript scaffold (config-driven parts/chapters/labs)
 
@@ -366,7 +367,7 @@ flowchart TB
 
 ## Pipeline Stages
 
-### Full Pipeline (default 10-stage path; 12 declared stages)
+### Full Pipeline (default 10-stage path; 14 declared stages)
 
 0. **Clean Output Directories** - Remove previous outputs for a fresh run
 1. **Environment Setup** - Validate dependencies, discover projects

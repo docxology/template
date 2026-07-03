@@ -18,7 +18,9 @@ The full public exemplar roster is:
 \breaktt{templates/template\_newspaper},
 \breaktt{templates/template\_prose\_project},
 \breaktt{templates/template\_search\_project},
-\breaktt{templates/template\_sia}, \breaktt{templates/template\_template},
+\breaktt{templates/template\_sia},
+\breaktt{templates/template\_storybook},
+\breaktt{templates/template\_template},
 \breaktt{templates/template\_textbook}. The three rows below are a
 representative sample; a future \breaktt{exemplar\_summary\_table} token
 in \breaktt{build\_manuscript\_metrics\_dict} would let this table cover

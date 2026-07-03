@@ -29,8 +29,8 @@ Search-stage overhead dwarfs the optimization exemplar’s runtime—confirming 
 
 | Metric | Value |
 |--------|-------|
-| Test files | 467+ |
-| Total tests | ~7,904 |
+| Test files | 470+ |
+| Total tests | ~7,968 |
 | Infrastructure coverage gate | ≥60 % (repo ≥80 %+ during recent audits) |
 | Zero-mock imports | Verified via static scanning |
 
@@ -45,7 +45,7 @@ The introspection module (`template_template.introspection`) emits the authorita
 | `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 3 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 109 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 110 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
 | `documentation` | 12 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
@@ -55,9 +55,9 @@ The introspection module (`template_template.introspection`) emits the authorita
 | `orchestration` | 8 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
 | `project` | 27 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
-| `publishing` | 70 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `publishing` | 74 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 50 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `rendering` | 57 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
 | `search` | 44 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
@@ -77,7 +77,7 @@ All 23 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`378+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`380+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
@@ -116,7 +116,7 @@ Rendered via `projects/templates/template_template` (`generate_manuscript_metric
 **Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `23` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
 
 ![Pipeline Stage Flow](../output/figures/pipeline_stages.png)
-**Figure 2.** Pipeline DAG with 12 YAML-declared stages (core, LLM, bundle, archival tags).
+**Figure 2.** Pipeline DAG with 14 YAML-declared stages (core, LLM, ebook, metadata, bundle, archival tags).
 
 ![Infrastructure Module Inventory](../output/figures/module_inventory.png)
 **Figure 3.** Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first. The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.

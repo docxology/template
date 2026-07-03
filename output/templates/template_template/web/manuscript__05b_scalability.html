@@ -184,7 +184,7 @@ code changes, no <code>pyproject.toml</code> modifications, no CI
 configuration updates. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
-<p>We have validated scaling with 15 canonical exemplars under
+<p>We have validated scaling with 16 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
 <code>projects/templates/template_template</code> (130 tests) as a
@@ -213,7 +213,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (23
-infrastructure subdirectories, ~604 Python files)—validating insulation
+infrastructure subdirectories, ~616 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 id="multi-project-orchestration">Multi-Project Orchestration</h3>
 <p>When the <code>--all-projects</code> flag is passed to
@@ -282,7 +282,7 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tbody>
 </table>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 23 modules, the same 11 pipeline stages, the same
+project size: the same 23 modules, the same 13 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.</p>
 </body>

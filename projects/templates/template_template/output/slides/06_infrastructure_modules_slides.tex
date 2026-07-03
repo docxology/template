@@ -134,7 +134,7 @@ Reference}\label{infrastructure-module-reference}
 \begin{frame}[fragile,allowframebreaks]{Infrastructure Module Reference}
 This section inventories every Layer‑1 subdirectory returned by
 \texttt{23} \breaktt{discover\_infrastructure\_modules(repo\_root)}. File
-totals use \texttt{604} Python sources across infra + \texttt{7,904}
+totals use \texttt{616} Python sources across infra + \texttt{7,968}
 infra tests guarding them. Documentation Duality = paired
 \texttt{README.md} + \texttt{AGENTS.md}; optional \texttt{SKILL.md}
 manifests feed \breaktt{python\ -m\ infrastructure.skills}.
@@ -166,7 +166,7 @@ readiness validation CLI \\
 gates \\
 \texttt{config} & 0 & ✓ & ✓ & Repository defaults + hardened
 templates \\
-\texttt{core} & 109 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 110 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation scaffolding \\
 \texttt{doctor} & 14 & ✓ & ✓ & Checkout diagnose/fix/undo repairs \\
@@ -184,10 +184,10 @@ point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
-\texttt{publishing} & 70 & ✓ & ✓ & Zenodo, executable bundle, archival
+\texttt{publishing} & 74 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
-\texttt{rendering} & 50 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 57 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & ✓ & ✓ & Coverage parsers, dashboards,
 executive artefacts \\
@@ -233,8 +233,8 @@ Repository-wide YAML templates and secure manifests
 configuration subdirectory rather than an importable package.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.core} (109 files)}
-\protect\phantomsection\label{infrastructure.core-109-files}
+\begin{block}{\breaktt{infrastructure.core} (110 files)}
+\protect\phantomsection\label{infrastructure.core-110-files}
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.
@@ -289,8 +289,8 @@ Readability metrics + Markdown tooling for prose-centric manuscripts /
 CI gates.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.publishing} (70 files)}
-\protect\phantomsection\label{infrastructure.publishing-70-files}
+\begin{block}{\breaktt{infrastructure.publishing} (74 files)}
+\protect\phantomsection\label{infrastructure.publishing-74-files}
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 \end{block}
 
@@ -300,8 +300,8 @@ Citation/BibTeX parsing + conversion utilities leveraged by manuscripts
 and retrieval scripts.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.rendering} (50 files)}
-\protect\phantomsection\label{infrastructure.rendering-50-files}
+\begin{block}{\breaktt{infrastructure.rendering} (57 files)}
+\protect\phantomsection\label{infrastructure.rendering-57-files}
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.
 \end{block}

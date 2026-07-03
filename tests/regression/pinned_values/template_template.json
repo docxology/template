@@ -4,25 +4,25 @@
     "project_name": "template_template",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the frozen pipeline.yaml DAG structure (declared 12 / default-full 10 / core-only 8) and the confidentiality-invariant public exemplar roster count (15) at tolerance 0; (2) the live infrastructure module_count (23) at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
+    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the frozen pipeline.yaml DAG structure (declared 14 / default-full 10 / core-only 8) and the confidentiality-invariant public exemplar roster count (16) at tolerance 0; (2) the live infrastructure module_count (23) at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
   },
   "_provenance": {
     "pipeline_stages_declared": {
       "commit": "691d6ebf",
       "date": "2026-07-01",
-      "reason": "Number of stages declared in infrastructure/core/pipeline/pipeline.yaml. The manuscript states this as a literal 12 in AGENTS.md and injects it as ${pipeline_stages_declared} across the abstract, introduction, architecture, documentation, and security sections. Frozen structural count -> tolerance 0. Re-derived from the live report, not copied from prose.",
+      "reason": "Number of stages declared in infrastructure/core/pipeline/pipeline.yaml. The manuscript states this as a literal 14 in AGENTS.md and injects it as ${pipeline_stages_declared} across the abstract, introduction, architecture, documentation, and security sections. Frozen structural count -> tolerance 0. Re-derived from the live report, not copied from prose.",
       "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'build_infrastructure_report(Path(\".\").resolve()).pipeline_stages_declared'"
     },
     "pipeline_stages_default_full": {
       "commit": "691d6ebf",
       "date": "2026-07-01",
-      "reason": "Stages in a default full run -- pipeline.yaml stages that carry neither the 'bundle' nor the 'archival' tag (10 of 12). AGENTS.md pins this as the literal (10); the abstract/architecture/security/documentation sections inject ${pipeline_stages_default_full}. Frozen -> tolerance 0.",
+      "reason": "Stages in a default full run -- pipeline.yaml stages that carry none of the opt-in tags 'ebook', 'metadata', 'bundle', or 'archival' (10 of 14). AGENTS.md pins this as the literal (10); the abstract/architecture/security/documentation sections inject ${pipeline_stages_default_full}. Frozen -> tolerance 0.",
       "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'build_infrastructure_report(Path(\".\").resolve()).pipeline_stages_default_full'"
     },
     "pipeline_stages_core_only": {
       "commit": "691d6ebf",
       "date": "2026-07-01",
-      "reason": "Stages in a --core-only run -- pipeline.yaml stages tagged 'core' AND NOT 'llm' (8 of 12). AGENTS.md pins the literal (8); the 04_results.md execution table injects ${pipeline_stages_core_only} as the effective-core-stages column for all three sampled exemplars. Frozen -> tolerance 0.",
+      "reason": "Stages in a --core-only run -- pipeline.yaml stages tagged 'core' AND NOT 'llm', excluding opt-in ebook/metadata publication stages (8 of 14). AGENTS.md pins the literal (8); the 04_results.md execution table injects ${pipeline_stages_core_only} as the effective-core-stages column for all three sampled exemplars. Frozen -> tolerance 0.",
       "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'build_infrastructure_report(Path(\".\").resolve()).pipeline_stages_core_only'"
     },
     "public_exemplar_roster_count": {
@@ -40,8 +40,8 @@
   },
   "pipeline_stages_declared": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
-    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (12)",
-    "value": 12,
+    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (14)",
+    "value": 14,
     "abs_tolerance": 0,
     "verifier_function": "template_template.introspection.build_infrastructure_report",
     "verifier_args": {"repo_root": ".", "read": "pipeline_stages_declared"},
@@ -74,7 +74,7 @@
   "public_exemplar_roster_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
     "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
-    "value": 15,
+    "value": 16,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.project.public_scope.public_project_names",
     "verifier_args": {"repo_root": ".", "read": "len"},

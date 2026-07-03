@@ -18,7 +18,7 @@ discover_*  ->  build_*_payload  ->  write_*_manifest  ->  *_matches_discovery (
 | --- | --- | --- | --- |
 | **Skills** (`SKILL.md` descriptors) | `infrastructure.skills.discovery` | `.cursor/skill_manifest.json` | `manifest_matches_discovery` |
 | **Operations** (every `python -m` CLI) | `infrastructure.skills.operation_registry` | `.cursor/operations_manifest.json` | `operations_manifest_matches_discovery` |
-| **Pipeline stages** (12-stage contract) | `infrastructure.core.pipeline.cli` | derived live from `pipeline.yaml` | n/a (derive-only) |
+| **Pipeline stages** (14-stage contract) | `infrastructure.core.pipeline.cli` | derived live from `pipeline.yaml` | n/a (derive-only) |
 | **Templates** (public exemplars) | `infrastructure.project.exemplar_roster` | `infrastructure/project/template_manifest.json` | `--check` in `generate_exemplar_roster_doc.py` |
 
 Catalogs are **derived, never hand-maintained** — so they cannot silently rot.

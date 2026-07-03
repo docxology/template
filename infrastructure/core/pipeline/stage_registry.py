@@ -47,8 +47,8 @@ STAGE_DISPATCH: Final[dict[str, StageDispatch]] = {
     "llm_reviews": StageDispatch("scripts/06_llm_review.py", ("--reviews-only",)),
     "llm_translations": StageDispatch("scripts/06_llm_review.py", ("--translations-only",)),
     "executive_report": StageDispatch("scripts/07_generate_executive_report.py"),
-    "ebook_generation": StageDispatch("scripts/07_ebook_generation.py"),
-    "metadata_package": StageDispatch("scripts/08_metadata_package.py"),
+    "ebook_generation": StageDispatch("scripts/11_ebook_generation.py"),
+    "metadata_package": StageDispatch("scripts/12_metadata_package.py"),
 }
 
 MENU_KEY_TO_STAGE: Final[dict[str, str]] = {

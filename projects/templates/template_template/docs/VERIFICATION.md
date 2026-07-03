@@ -44,7 +44,7 @@ uv run python -c "
 from pathlib import Path
 from template_template.introspection import build_infrastructure_report
 r = build_infrastructure_report(Path('.'))
-assert r.pipeline_stages_declared >= 12
+assert r.pipeline_stages_declared >= 14
 assert r.pipeline_stages_core_only == 8
 assert r.pipeline_stages_default_full == 10
 print('OK:', r.pipeline_stages_declared, 'declared,', len(r.modules), 'modules')
@@ -68,7 +68,7 @@ uv run python scripts/03_render_pdf.py --project template_template
 | Figures | 4 PNG files in `output/figures/` |
 | Metrics | Valid JSON; pipeline keys present |
 | Manuscript | No unresolved `${` in numbered chapters |
-| Introspection | 12 declared stages, 8 core-only |
+| Introspection | 14 declared stages, 8 core-only |
 
 ## Common Issues
 

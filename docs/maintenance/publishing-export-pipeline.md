@@ -335,4 +335,3 @@ uv run docpub distribute --platform gumroad --update
 - [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 11)
 - [`private-projects-repo.md`](private-projects-repo.md) — private-projects sidecar contract
 - [`infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md) — publishing infrastructure
-- [`../../publishing/workspace/README.md`](../../../../publishing/workspace/README.md) — workspace directory guide

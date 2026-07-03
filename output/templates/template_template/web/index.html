@@ -655,10 +655,10 @@ class="toc-section-number">6.1.2</span>
 id="toc-infrastructureconfig-non-package-subdirectory"><span
 class="toc-section-number">6.1.3</span>
 <code>infrastructure/config</code> (non-package subdirectory)</a></li>
-<li><a href="#infrastructure.core-109-files"
-id="toc-infrastructure.core-109-files"><span
+<li><a href="#infrastructure.core-110-files"
+id="toc-infrastructure.core-110-files"><span
 class="toc-section-number">6.1.4</span> <code>infrastructure.core</code>
-(109 files)</a></li>
+(110 files)</a></li>
 <li><a href="#infrastructure.doctor-14-files"
 id="toc-infrastructure.doctor-14-files"><span
 class="toc-section-number">6.1.5</span>
@@ -691,18 +691,18 @@ class="toc-section-number">6.1.11</span>
 id="toc-infrastructure.prose-9-files"><span
 class="toc-section-number">6.1.12</span>
 <code>infrastructure.prose</code> (9 files)</a></li>
-<li><a href="#infrastructure.publishing-70-files"
-id="toc-infrastructure.publishing-70-files"><span
+<li><a href="#infrastructure.publishing-74-files"
+id="toc-infrastructure.publishing-74-files"><span
 class="toc-section-number">6.1.13</span>
-<code>infrastructure.publishing</code> (70 files)</a></li>
+<code>infrastructure.publishing</code> (74 files)</a></li>
 <li><a href="#infrastructure.reference-16-files"
 id="toc-infrastructure.reference-16-files"><span
 class="toc-section-number">6.1.14</span>
 <code>infrastructure.reference</code> (16 files)</a></li>
-<li><a href="#infrastructure.rendering-50-files"
-id="toc-infrastructure.rendering-50-files"><span
+<li><a href="#infrastructure.rendering-57-files"
+id="toc-infrastructure.rendering-57-files"><span
 class="toc-section-number">6.1.15</span>
-<code>infrastructure.rendering</code> (50 files)</a></li>
+<code>infrastructure.rendering</code> (57 files)</a></li>
 <li><a href="#infrastructure.reporting-57-files"
 id="toc-infrastructure.reporting-57-files"><span
 class="toc-section-number">6.1.16</span>
@@ -899,8 +899,8 @@ to the research lifecycle, making the manuscript, test suite, and
 provenance chain version-controlled, deterministically buildable, and
 independently verifiable. It is built on a Two-Layer Architecture that
 separates 23 infrastructure subdirectories (20 importable Python
-packages, ~604 modules, validated by ~7,904 tests) from self-contained
-project workspaces, connected by a YAML-declared pipeline (12 stages;
+packages, ~616 modules, validated by ~7,968 tests) from self-contained
+project workspaces, connected by a YAML-declared pipeline (14 stages;
 default full 10)-based build pipeline progressing from environment
 sanitization through test execution (with a Zero-Mock testing policy
 enforcing 90% project-level and 60% infrastructure-level coverage via
@@ -928,6 +928,7 @@ roster (<code>templates/template_active_inference</code>,
 <code>templates/template_prose_project</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
+<code>templates/template_storybook</code>,
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>), with representative
 heterogeneous cases under <code>projects/templates/</code>: optimization
@@ -1219,14 +1220,14 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 23 infrastructure subdirectories (20 importable
-packages) comprising ~604 Python modules provide reusable services;
+packages) comprising ~616 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
 where pipeline advancement is contingent on test passage. Infrastructure
 tests must achieve 60% coverage; project tests must achieve 90%. All
 tests use real filesystem operations, real subprocess calls, and real
 network connections—no mock objects, no fake services, no synthetic test
-doubles. ~7,904 infrastructure tests and 3377+ project tests enforce
+doubles. ~7,968 infrastructure tests and 3390+ project tests enforce
 this standard.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -1282,10 +1283,10 @@ are:</p>
 <li>A formal description of the Two-Layer Architecture and Standalone
 Project Paradigm that enables N independent research projects to share
 infrastructure without coupling.</li>
-<li>A detailed specification of the 12-stage DAG in
+<li>A detailed specification of the 14-stage DAG in
 <code>infrastructure/core/pipeline/pipeline.yaml</code>: default full
-runs use 10 stages; <code>--core-only</code> runs 8; opt-in bundle and
-archival stages via <code>--tags</code>.</li>
+runs use 10 stages; <code>--core-only</code> runs 8; opt-in ebook,
+metadata, bundle, and archival stages via <code>--tags</code>.</li>
 <li>A comparative analysis positioning <code>template/</code> against
 nine peer tools—Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
 Markdown, DVC, Overleaf, OpenAI Prism—across fourteen feature
@@ -1306,6 +1307,7 @@ the fourteen enforcement capabilities enumerated in §Results.</li>
 <code>templates/template_prose_project</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
+<code>templates/template_storybook</code>,
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>)—including this meta manuscript
 from <code>projects/templates/template_template</code>, which exercises
@@ -1341,7 +1343,7 @@ class="header-section-number">3</span> Methods</h1>
 <p>The <code>template/</code> architecture is deliberately bifurcated
 into a globally shared <code>infrastructure/</code> layer and
 project-specific <code>projects/</code> silos. This section describes
-the four core design patterns, the YAML-declared pipeline (12 stages;
+the four core design patterns, the YAML-declared pipeline (14 stages;
 default full 10) pipeline that operationalizes them, and the AI
 collaboration model that distinguishes this system from conventional
 research templates.</p>
@@ -1350,7 +1352,7 @@ class="header-section-number">3.1</span> The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
 23 infrastructure subdirectories—20 of them independently-importable
-Python packages—comprising ~604 modules and providing reusable services.
+Python packages—comprising ~616 modules and providing reusable services.
 Each importable package has its own <code>__init__.py</code>,
 <code>AGENTS.md</code>, and <code>README.md</code>, and exports a
 well-defined public API (the remaining subdirectories,
@@ -1434,6 +1436,7 @@ hosts its public canonical exemplars under
 <code>templates/template_prose_project</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
+<code>templates/template_storybook</code>,
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>), including this
 meta-manuscript at
@@ -1760,7 +1763,7 @@ reasoning traces with tool actions dramatically improves agent
 reliability in interactive settings. The <code>template/</code> skill
 architecture maps cleanly onto these three capabilities: the
 <code>SKILL.md</code> descriptors supply the tool-use layer, the
-declarative DAG of <code>12</code> <code>pipeline.yaml</code> stages (a
+declarative DAG of <code>14</code> <code>pipeline.yaml</code> stages (a
 default full run executes <code>10</code>) supplies the planning
 scaffold, and the per-criterion checkpoint system supplies the memory
 layer.</p>
@@ -1913,7 +1916,7 @@ source code.</p>
 class="header-section-number">3.8.3</span> Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,904
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,968
 tests validating the 23 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
@@ -2035,11 +2038,11 @@ class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>467+</td>
+<td>470+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~7,904</td>
+<td>~7,968</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -2102,7 +2105,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">109</td>
+<td style="text-align: center;">110</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -2175,7 +2178,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">70</td>
+<td style="text-align: center;">74</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -2189,7 +2192,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">50</td>
+<td style="text-align: center;">57</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -2286,7 +2289,7 @@ Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>378+</code> Markdown shards under <code>docs/</code> capture
+<p><code>380+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 data-number="4.5" id="dag-reference-declarative-executor"><span
@@ -2456,7 +2459,8 @@ infrastructure, and every box was placed from the same live data the
 prose cites.</p>
 <p><img src="../figures/pipeline_stages.png"
 alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 12 YAML-declared stages (core, LLM, bundle, archival tags).</p>
+with 14 YAML-declared stages (core, LLM, ebook, metadata, bundle,
+archival tags).</p>
 <p><img src="../figures/module_inventory.png"
 alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
 Horizontal file-count histogram of every infrastructure subdirectory,
@@ -2510,7 +2514,7 @@ testing policy</a> is <code>template/</code>’s most distinctive design
 decision. By prohibiting all mock objects, we gain confidence that tests
 exercise real code paths—a pytest run against the template genuinely
 invokes <code>pandoc</code>, writes to disk, and parses real YAML. The
-cost is test duration: the full infrastructure test suite (~7,904 tests)
+cost is test duration: the full infrastructure test suite (~7,968 tests)
 takes 2–4 minutes, compared to sub-second execution typical of
 heavily-mocked suites.</p>
 <p>We argue this tradeoff is strongly favorable for research software.
@@ -2584,7 +2588,7 @@ code changes, no <code>pyproject.toml</code> modifications, no CI
 configuration updates. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
-<p>We have validated scaling with 15 canonical exemplars under
+<p>We have validated scaling with 16 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
 <code>projects/templates/template_template</code> (130 tests) as a
@@ -2613,7 +2617,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (23
-infrastructure subdirectories, ~604 Python files)—validating insulation
+infrastructure subdirectories, ~616 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 data-number="5.2.1" id="multi-project-orchestration"><span
 class="header-section-number">5.2.1</span> Multi-Project
@@ -2685,7 +2689,7 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tbody>
 </table>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 23 modules, the same 11 pipeline stages, the same
+project size: the same 23 modules, the same 13 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.</p>
 <hr />
@@ -2804,7 +2808,7 @@ function signatures. All 23 infrastructure modules carry
 carry <code>SKILL.md</code>, ensuring no documentation blind spots.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
-substantial: <code>378</code> Markdown files under <code>docs/</code>
+substantial: <code>380</code> Markdown files under <code>docs/</code>
 alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
 every directory and a <code>SKILL.md</code> descriptor on every
 infrastructure module. That count is itself injected from live
@@ -2989,8 +2993,8 @@ class="header-section-number">6</span> Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>23</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>604</code> Python sources across infra +
-<code>7,904</code> infra tests guarding them. Documentation Duality =
+File totals use <code>616</code> Python sources across infra +
+<code>7,968</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -3035,7 +3039,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">109</td>
+<td style="text-align: center;">110</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -3108,7 +3112,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">70</td>
+<td style="text-align: center;">74</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -3122,7 +3126,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">50</td>
+<td style="text-align: center;">57</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -3203,9 +3207,9 @@ class="header-section-number">6.1.3</span>
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 data-number="6.1.4" id="infrastructure.core-109-files"><span
+<h3 data-number="6.1.4" id="infrastructure.core-110-files"><span
 class="header-section-number">6.1.4</span>
-<code>infrastructure.core</code> (109 files)</h3>
+<code>infrastructure.core</code> (110 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -3257,9 +3261,9 @@ class="header-section-number">6.1.12</span>
 <code>infrastructure.prose</code> (9 files)</h3>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
-<h3 data-number="6.1.13" id="infrastructure.publishing-70-files"><span
+<h3 data-number="6.1.13" id="infrastructure.publishing-74-files"><span
 class="header-section-number">6.1.13</span>
-<code>infrastructure.publishing</code> (70 files)</h3>
+<code>infrastructure.publishing</code> (74 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3 data-number="6.1.14" id="infrastructure.reference-16-files"><span
@@ -3267,9 +3271,9 @@ class="header-section-number">6.1.14</span>
 <code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3 data-number="6.1.15" id="infrastructure.rendering-50-files"><span
+<h3 data-number="6.1.15" id="infrastructure.rendering-57-files"><span
 class="header-section-number">6.1.15</span>
-<code>infrastructure.rendering</code> (50 files)</h3>
+<code>infrastructure.rendering</code> (57 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3 data-number="6.1.16" id="infrastructure.reporting-57-files"><span
@@ -3425,7 +3429,7 @@ Orchestrator</h2>
 <code>secure_run.sh</code>, a Bash script that wraps the standard
 <code>run.sh</code> pipeline with post-processing steganography:</p>
 <ol type="1">
-<li>Execute the standard YAML-declared pipeline (12 stages; default full
+<li>Execute the standard YAML-declared pipeline (14 stages; default full
 10) pipeline for the target project.</li>
 <li>The <code>secure_run.sh</code> script invokes
 <code>SteganographyProcessor</code>.</li>
@@ -3739,8 +3743,8 @@ Structure</h2>
 │   ├── published/               # Non-rendered published (symlinked, private)
 │   ├── archive/                 # Non-rendered retired (symlinked, private)
 │   └── other/                   # Non-rendered misc (symlinked, private)
-├── docs/ (17 top-level areas, 378+ markdown files per live counter)
-├── tests/                       # Infra suites (467+ files)
+├── docs/ (17 top-level areas, 380+ markdown files per live counter)
+├── tests/                       # Infra suites (470+ files)
 ├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage</code></pre>
@@ -3765,6 +3769,7 @@ Summary</h2>
 <code>templates/template_prose_project</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
+<code>templates/template_storybook</code>,
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>. The three rows below are a
 representative sample; a future <code>exemplar_summary_table</code>
@@ -3848,7 +3853,7 @@ Inventory</h2>
 </tr>
 <tr>
 <td><code>docs/</code> directory</td>
-<td style="text-align: center;">378 files across 17 subdirectories</td>
+<td style="text-align: center;">380 files across 17 subdirectories</td>
 <td>User guides, API reference, troubleshooting</td>
 </tr>
 <tr>
@@ -3882,7 +3887,7 @@ troubleshooting), <code>reference/</code> (API, FAQ, glossary),
 <code>prompts/</code> (21 AI prompt templates), <code>security/</code>
 (steganography, hashing), and <code>audit/</code> (review reports).</p>
 <p>Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: <code>378</code> counts every
+introspection rather than hand-maintained: <code>380</code> counts every
 Markdown file beneath <code>docs/</code> recursively, <code>17</code>
 counts its first-level subdirectories, and <code>21</code> counts the
 workflow subdirectories that each carry a <code>SKILL.md</code>

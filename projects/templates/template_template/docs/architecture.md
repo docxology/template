@@ -36,7 +36,7 @@ Exports:
 
 `InfrastructureReport` properties:
 
-- `pipeline_stages_declared` — YAML stage count (12)
+- `pipeline_stages_declared` — YAML stage count (14)
 - `pipeline_stages_default_full` — default full run (10)
 - `pipeline_stages_core_only` — `--core-only` (8)
 

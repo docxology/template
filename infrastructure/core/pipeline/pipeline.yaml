@@ -171,13 +171,13 @@ stages:
   # docs/maintenance/archival-targets.md for rationale.
   #
   # Invoke directly when needed:
-  #   uv run python scripts/07_ebook_generation.py --project <name>
-  #   uv run python scripts/08_metadata_package.py --project <name>
+  #   uv run python scripts/11_ebook_generation.py --project <name>
+  #   uv run python scripts/12_metadata_package.py --project <name>
   #   uv run python scripts/08_executable_bundle.py --project <name>
   #   uv run python scripts/09_archive_publication.py --project <name>
 
   - name: Ebook Generation
-    script: 07_ebook_generation.py
+    script: 11_ebook_generation.py
     allow_skip: true
     depends_on: [PDF Rendering]
     tags: [core, ebook]
@@ -191,7 +191,7 @@ stages:
       rollback_to: "PDF Rendering"
 
   - name: Metadata Package
-    script: 08_metadata_package.py
+    script: 12_metadata_package.py
     allow_skip: true
     depends_on: [Copy Outputs]
     tags: [core, metadata]

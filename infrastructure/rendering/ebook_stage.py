@@ -102,7 +102,7 @@ def run_ebook_generation(
     cover_image_arg: str | None = None,
 ) -> int:
     """Execute ebook generation orchestration."""
-    log_header(f"STAGE 07: Ebook Generation (Project: {project})", logger)
+    log_header(f"STAGE 11: Ebook Generation (Project: {project})", logger)
 
     project_root = resolve_project_root(repo_root, project)
 

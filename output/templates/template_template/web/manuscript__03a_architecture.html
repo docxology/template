@@ -244,7 +244,7 @@
 <p>The <code>template/</code> architecture is deliberately bifurcated
 into a globally shared <code>infrastructure/</code> layer and
 project-specific <code>projects/</code> silos. This section describes
-the four core design patterns, the YAML-declared pipeline (12 stages;
+the four core design patterns, the YAML-declared pipeline (14 stages;
 default full 10) pipeline that operationalizes them, and the AI
 collaboration model that distinguishes this system from conventional
 research templates.</p>
@@ -252,7 +252,7 @@ research templates.</p>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
 23 infrastructure subdirectories—20 of them independently-importable
-Python packages—comprising ~604 modules and providing reusable services.
+Python packages—comprising ~616 modules and providing reusable services.
 Each importable package has its own <code>__init__.py</code>,
 <code>AGENTS.md</code>, and <code>README.md</code>, and exports a
 well-defined public API (the remaining subdirectories,
@@ -335,6 +335,7 @@ hosts its public canonical exemplars under
 <code>templates/template_prose_project</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
+<code>templates/template_storybook</code>,
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>), including this
 meta-manuscript at

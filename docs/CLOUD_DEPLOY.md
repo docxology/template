@@ -350,7 +350,7 @@ uv run python scripts/00_setup_environment.py
 ## See Also
 
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline stages and entry points
-- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (12 declared stages; default run executes 10 core+LLM stages; `--core-only` excludes LLM-tagged stages → 8)
+- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (14 declared stages; default run executes 10 core+LLM stages; `--core-only` excludes LLM-tagged and opt-in publication stages → 8)
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration
 - [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — CI reference

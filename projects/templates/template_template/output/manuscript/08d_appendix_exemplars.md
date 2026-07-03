@@ -7,7 +7,7 @@
 \label{tab:exemplar-projects}
 \end{table}
 
-The full public exemplar roster is: `templates/template_active_inference`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_eda_notebook`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_prose_project`, `templates/template_search_project`, `templates/template_sia`, `templates/template_template`, `templates/template_textbook`. The three rows below are a representative sample; a future `exemplar_summary_table` token in `build_manuscript_metrics_dict` would let this table cover every exemplar without hand-editing.
+The full public exemplar roster is: `templates/template_active_inference`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_eda_notebook`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_prose_project`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`. The three rows below are a representative sample; a future `exemplar_summary_table` token in `build_manuscript_metrics_dict` would let this table cover every exemplar without hand-editing.
 
 | Project slug | Purpose | Highlights | Tests | Figures (Stage 02 hint) |
 |--------------|---------|------------|:-----:|:-----------------------|

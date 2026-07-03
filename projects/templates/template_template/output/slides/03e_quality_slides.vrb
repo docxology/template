@@ -83,7 +83,7 @@ The repository maintains three test suites:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Infrastructure tests} (\texttt{tests/}): \textasciitilde7,904
+  \textbf{Infrastructure tests} (\texttt{tests/}): \textasciitilde7,968
   tests validating the 23 infrastructure subdirectories, covering
   logging, rendering, validation, steganography, reporting, and LLM
   integration.

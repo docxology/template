@@ -1,0 +1,117 @@
+{
+  "title": "The Shape Between",
+  "subtitle": "A full-page illustrated storybook about reciprocal belonging",
+  "page_count": 9,
+  "characters": [
+    {
+      "id": "tessa",
+      "name": "Tessa",
+      "shape": "tetrahedron",
+      "family_shape": "cube",
+      "role": "a child tetrahedron raised in a house of cubes"
+    },
+    {
+      "id": "ciro",
+      "name": "Ciro",
+      "shape": "cube",
+      "family_shape": "tetrahedron",
+      "role": "a child cube raised among bright tetrahedra"
+    },
+    {
+      "id": "cube_family",
+      "name": "The Square House",
+      "shape": "cube",
+      "family_shape": "cube",
+      "role": "Tessa's loving cube family"
+    },
+    {
+      "id": "tetra_family",
+      "name": "The Pointed House",
+      "shape": "tetrahedron",
+      "family_shape": "tetrahedron",
+      "role": "Ciro's loving tetrahedral family"
+    }
+  ],
+  "pages": [
+    {
+      "number": 0,
+      "slug": "cover",
+      "title": "The Shape Between",
+      "scene": "cosmic_yinyang",
+      "overlay_box": false
+    },
+    {
+      "number": 1,
+      "slug": "square_house",
+      "title": "The Square House",
+      "scene": "cube_home",
+      "overlay_box": true
+    },
+    {
+      "number": 2,
+      "slug": "pointed_house",
+      "title": "The Pointed House",
+      "scene": "tetra_home",
+      "overlay_box": false
+    },
+    {
+      "number": 3,
+      "slug": "valley_symbol",
+      "title": "The Valley That Turned",
+      "scene": "symbol_valley",
+      "overlay_box": true
+    },
+    {
+      "number": 4,
+      "slug": "first_connection",
+      "title": "The First Edge",
+      "scene": "meeting",
+      "overlay_box": false
+    },
+    {
+      "number": 5,
+      "slug": "mirror_families",
+      "title": "Mirror Families",
+      "scene": "mirror",
+      "overlay_box": true
+    },
+    {
+      "number": 6,
+      "slug": "bridge_of_edges",
+      "title": "Bridge of Edges",
+      "scene": "bridge",
+      "overlay_box": false
+    },
+    {
+      "number": 7,
+      "slug": "mega_symbol",
+      "title": "The Mega-Symbol",
+      "scene": "mega_symbol",
+      "overlay_box": true
+    },
+    {
+      "number": 8,
+      "slug": "shared_home",
+      "title": "The Shape Between",
+      "scene": "shared_home",
+      "overlay_box": false
+    }
+  ],
+  "render": {
+    "output_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
+    "page_count": 9,
+    "image_paths": [
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/01_square_house.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/02_pointed_house.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/03_valley_symbol.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/04_first_connection.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/05_mirror_families.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/06_bridge_of_edges.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/07_mega_symbol.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/08_shared_home.png"
+    ],
+    "manifest_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/data/storybook_manifest.json",
+    "summary_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/reports/storybook_summary.md"
+  }
+}

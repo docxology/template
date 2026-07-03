@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_prose_project`, `template_search_project`, `template_sia`, `template_template`, `template_textbook`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -131,6 +131,7 @@ inside that exemplar.
 | `template-textbook` | `template_textbook` | Book-length manuscript scaffold |
 | `template-prose-project` | `template_prose_project` | Editorial prose review |
 | `template-madlib` | `template_madlib` | Token-injection manuscript generation |
+| `template-storybook` | `template_storybook` | Full-page illustrated storybook PDF |
 | `template-gold-refinement` | `template_gold_refinement` | Metallurgical composition analogy |
 | `template-literature-meta-analysis` | `template_literature_meta_analysis` | Literature meta-analysis |
 | `template-methods-paper` | `template_methods_paper` | Methods DSL specification |
@@ -184,6 +185,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
 | [`projects/templates/template_search_project/`](projects/templates/template_search_project/) | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | [`projects/templates/template_sia/`](projects/templates/template_sia/) | SIA harness (meta → target → feedback loop, fixture replay) | see canonical facts | see canonical facts |
+| [`projects/templates/template_storybook/`](projects/templates/template_storybook/) | Full-page illustrated storybook PDF (shape-character generation, page scripts, text overlays, and symbolic raster art) | see canonical facts | see canonical facts |
 | [`projects/templates/template_template/`](projects/templates/template_template/) | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 | [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | Book-length manuscript scaffold (data-driven parts → chapters → labs/question banks, fillable stubs) | see canonical facts | see canonical facts |
 
@@ -390,7 +392,7 @@ narrative + benefits:
 - **Markdown-to-PDF pipeline** with cross-referenced manuscripts and figure
   integration ([`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md),
   [`docs/modules/pdf-validation.md`](docs/modules/pdf-validation.md)).
-- **Validated build system** with 12 declared stages, a default 10-stage
+- **Validated build system** with 14 declared stages, a default 10-stage
   core+LLM path, an 8-stage `--core-only` path, and CI gates
   ([`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md)).
 - **Generic + reusable** — drop the same `infrastructure/` into any project that

@@ -1,0 +1,281 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 11,
+      "size_mb": "0.78",
+      "total_size_bytes": 817391,
+      "largest_files": [
+        {
+          "name": "the-shape-between.pdf",
+          "size_mb": "0.68",
+          "path": "pdf/the-shape-between.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.04",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "template_storybook_combined.pdf",
+          "size_mb": "0.04",
+          "path": "pdf/template_storybook_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".pdf": 2,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 8,
+      "size_mb": "0.04",
+      "total_size_bytes": 43722,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.01",
+          "path": "web/index.html"
+        },
+        {
+          "name": "manuscript__00_abstract.html",
+          "size_mb": "0.00",
+          "path": "web/manuscript__00_abstract.html"
+        },
+        {
+          "name": "manuscript__02_architecture.html",
+          "size_mb": "0.00",
+          "path": "web/manuscript__02_architecture.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 7
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 46,
+      "size_mb": "0.45",
+      "total_size_bytes": 477081,
+      "largest_files": [
+        {
+          "name": "02_architecture_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/02_architecture_slides.log"
+        },
+        {
+          "name": "03_story_and_graphics_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/03_story_and_graphics_slides.log"
+        },
+        {
+          "name": "00_abstract_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/00_abstract_slides.log"
+        }
+      ],
+      "extensions": {
+        ".nav": 6,
+        ".pdf": 6,
+        ".toc": 6,
+        ".tex": 7,
+        ".aux": 6,
+        ".vrb": 3,
+        ".snm": 6,
+        ".log": 6
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.63",
+      "total_size_bytes": 665080,
+      "largest_files": [
+        {
+          "name": "08_shared_home.png",
+          "size_mb": "0.09",
+          "path": "figures/storybook_pages/08_shared_home.png"
+        },
+        {
+          "name": "02_pointed_house.png",
+          "size_mb": "0.08",
+          "path": "figures/storybook_pages/02_pointed_house.png"
+        },
+        {
+          "name": "03_valley_symbol.png",
+          "size_mb": "0.07",
+          "path": "figures/storybook_pages/03_valley_symbol.png"
+        }
+      ],
+      "extensions": {
+        ".png": 9
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 3935,
+      "largest_files": [
+        {
+          "name": "storybook_manifest.json",
+          "size_mb": "0.00",
+          "path": "data/storybook_manifest.json"
+        }
+      ],
+      "extensions": {
+        ".json": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.05",
+      "total_size_bytes": 57164,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.04",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "output_statistics.json",
+          "size_mb": "0.01",
+          "path": "reports/output_statistics.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        }
+      ],
+      "extensions": {
+        ".json": 5,
+        ".txt": 1,
+        ".md": 3
+      }
+    },
+    "simulations": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "llm": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 84,
+  "total_size_mb": 1.9687395095825195,
+  "largest_files": [
+    {
+      "name": "the-shape-between.pdf",
+      "size_mb": "0.68",
+      "category": "pdf",
+      "path": "pdf/the-shape-between.pdf"
+    },
+    {
+      "name": "08_shared_home.png",
+      "size_mb": "0.09",
+      "category": "figures",
+      "path": "figures/storybook_pages/08_shared_home.png"
+    },
+    {
+      "name": "02_pointed_house.png",
+      "size_mb": "0.08",
+      "category": "figures",
+      "path": "figures/storybook_pages/02_pointed_house.png"
+    },
+    {
+      "name": "03_valley_symbol.png",
+      "size_mb": "0.07",
+      "category": "figures",
+      "path": "figures/storybook_pages/03_valley_symbol.png"
+    },
+    {
+      "name": "02_architecture_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/02_architecture_slides.log"
+    },
+    {
+      "name": "03_story_and_graphics_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/03_story_and_graphics_slides.log"
+    },
+    {
+      "name": "00_abstract_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/00_abstract_slides.log"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.04",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "template_storybook_combined.pdf",
+      "size_mb": "0.04",
+      "category": "pdf",
+      "path": "pdf/template_storybook_combined.pdf"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.04",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    }
+  ],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 0.7795248031616211,
+    "web": 0.04169654846191406,
+    "slides": 0.45497989654541016,
+    "figures": 0.6342697143554688,
+    "data": 0.0037527084350585938,
+    "reports": 0.054515838623046875
+  },
+  "file_counts_by_type": {
+    ".md": 5,
+    ".log": 8,
+    ".aux": 7,
+    ".blg": 1,
+    ".pdf": 8,
+    ".bib": 1,
+    ".tex": 8,
+    ".toc": 7,
+    ".bbl": 1,
+    ".html": 7,
+    ".nav": 6,
+    ".vrb": 3,
+    ".snm": 6,
+    ".png": 9,
+    ".json": 6,
+    ".txt": 1
+  }
+}

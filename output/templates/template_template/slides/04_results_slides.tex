@@ -226,8 +226,8 @@ Value
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-Test files & 467+ \\
-Total tests & \textasciitilde7,904 \\
+Test files & 470+ \\
+Total tests & \textasciitilde7,968 \\
 Infrastructure coverage gate & ≥60\,\% (repo ≥80\,\%+ during recent
 audits) \\
 Zero-mock imports & Verified via static scanning \\
@@ -273,7 +273,7 @@ readiness validation CLI \\
 gates \\
 \texttt{config} & 0 & ✓ & ✓ & Repository defaults + hardened
 templates \\
-\texttt{core} & 109 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 110 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation scaffolding \\
 \texttt{doctor} & 14 & ✓ & ✓ & Checkout diagnose/fix/undo repairs \\
@@ -291,10 +291,10 @@ point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
-\texttt{publishing} & 70 & ✓ & ✓ & Zenodo, executable bundle, archival
+\texttt{publishing} & 74 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
-\texttt{rendering} & 50 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 57 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & ✓ & ✓ & Coverage parsers, dashboards,
 executive artefacts \\
@@ -343,7 +343,7 @@ PAI capsule & Repository level \texttt{PAI.md} narratives \\
 \end{longtable}
 }
 
-\texttt{378+} Markdown shards under \texttt{docs/} capture operational
+\texttt{380+} Markdown shards under \texttt{docs/} capture operational
 knowledge without duplicating auto-generated inventories.
 \end{frame}
 
@@ -474,8 +474,8 @@ infrastructure, and every box was placed from the same live data the
 prose cites.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Pipeline Stage Flow}]{../figures/pipeline_stages.png}}
-\textbf{Figure 2.} Pipeline DAG with 12 YAML-declared stages (core, LLM,
-bundle, archival tags).
+\textbf{Figure 2.} Pipeline DAG with 14 YAML-declared stages (core, LLM,
+ebook, metadata, bundle, archival tags).
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Infrastructure Module Inventory}]{../figures/module_inventory.png}}
 \textbf{Figure 3.} Horizontal file-count histogram of every

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  2 JUL 2026 05:30
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 08:57
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1177,50 +1177,50 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 
  [2] [3] [4] [5] [6]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 591.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 593.
  [7] [8] [9] [10]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 869.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 874.
 
 [11]
-Overfull \hbox (14.45833pt too wide) in paragraph at lines 923--928
+Overfull \hbox (14.45833pt too wide) in paragraph at lines 928--933
 []\TU/lmr/bx/n/10 Project Analysis \TU/lmr/m/n/10 (\TU/lmtt/m/n/10 0 2 _ r u n 
 _ a n a l y s i s . p y\TU/lmr/m/n/10 ) — lexicographically ordered \TU/lmtt/m/
 n/10 projects/<name>/scripts/*.py\TU/lmr/m/n/10 ,
  []
 
 [12] [13] [14] [15] [16]
-Overfull \hbox (8.44249pt too wide) in paragraph at lines 1350--1350
+Overfull \hbox (8.44249pt too wide) in paragraph at lines 1355--1355
 []|\TU/lmtt/m/n/10 projects/*/src/|  
  []
 
 
-Overfull \hbox (8.44249pt too wide) in paragraph at lines 1352--1352
+Overfull \hbox (8.44249pt too wide) in paragraph at lines 1357--1357
 []|\TU/lmtt/m/n/10 infrastructure/|  
  []
 
 [17] [18]
-Overfull \hbox (10.28062pt too wide) in paragraph at lines 1542--1542
+Overfull \hbox (10.28062pt too wide) in paragraph at lines 1547--1547
 []|\TU/lmtt/m/n/10 autoresearch|  
  []
 
 
-Overfull \hbox (15.53062pt too wide) in paragraph at lines 1552--1552
+Overfull \hbox (15.53062pt too wide) in paragraph at lines 1557--1557
 []|\TU/lmtt/m/n/10 documentation|  
  []
 
 
-Overfull \hbox (5.03062pt too wide) in paragraph at lines 1556--1556
+Overfull \hbox (5.03062pt too wide) in paragraph at lines 1561--1561
 []|\TU/lmtt/m/n/10 logrotate.d|  
  []
 
 
-Overfull \hbox (15.53062pt too wide) in paragraph at lines 1561--1561
+Overfull \hbox (15.53062pt too wide) in paragraph at lines 1566--1566
 []|\TU/lmtt/m/n/10 orchestration|  
  []
 
 
-Overfull \hbox (15.53062pt too wide) in paragraph at lines 1581--1581
+Overfull \hbox (15.53062pt too wide) in paragraph at lines 1586--1586
 []|\TU/lmtt/m/n/10 steganography|  
  []
 
@@ -1228,17 +1228,17 @@ Overfull \hbox (15.53062pt too wide) in paragraph at lines 1581--1581
 ignored: Infinite glue shrinkage found in box being split [19]
 ignored: Infinite glue shrinkage fo
 und in box being split [20]
-Overfull \hbox (15.61562pt too wide) in paragraph at lines 1649--1649
+Overfull \hbox (15.61562pt too wide) in paragraph at lines 1654--1654
 []|\TU/lmr/m/n/10 Environment 
  []
 
 
-Overfull \hbox (20.02562pt too wide) in paragraph at lines 1651--1651
+Overfull \hbox (20.02562pt too wide) in paragraph at lines 1656--1656
 []|\TU/lmr/m/n/10 Infrastructure 
  []
 
 
-Overfull \hbox (38.56125pt too wide) in paragraph at lines 1655--1656
+Overfull \hbox (38.56125pt too wide) in paragraph at lines 1660--1661
 \TU/lmtt/m/n/10 projects/<name>/scripts/*.py|  
  []
 
@@ -1247,7 +1247,7 @@ ignored: Infinite glue shrinkage found in box being split [21]
 File: ../figures/architecture_overview.png Graphic file (type bmp)
 <../figures/architecture_overview.png>
 
-Underfull \hbox (badness 10000) in paragraph at lines 1734--1746
+Underfull \hbox (badness 10000) in paragraph at lines 1739--1751
 [][]
  []
 
@@ -1255,7 +1255,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1734--1746
 File: ../figures/pipeline_stages.png Graphic file (type bmp)
 <../figures/pipeline_stages.png>
 
-Underfull \hbox (badness 10000) in paragraph at lines 1747--1750
+Underfull \hbox (badness 10000) in paragraph at lines 1752--1755
 [][]
  []
 
@@ -1268,58 +1268,58 @@ File: ../figures/comparative_feature_matrix.png Graphic file (type bmp)
 Missing character: There is no ◐ (U+25D0) in font [lmroman10-bold]:mapping=tex-
 text;!
 
-Underfull \hbox (badness 10000) in paragraph at lines 1765--1770
+Underfull \hbox (badness 10000) in paragraph at lines 1770--1775
 [][]
  []
 
 [25] [26] [27] [28] [29] [30] [31] [32]
-Overfull \hbox (10.28062pt too wide) in paragraph at lines 2362--2362
+Overfull \hbox (10.28062pt too wide) in paragraph at lines 2367--2367
 []|\TU/lmtt/m/n/10 autoresearch|  
  []
 
 
-Overfull \hbox (15.53062pt too wide) in paragraph at lines 2372--2372
+Overfull \hbox (15.53062pt too wide) in paragraph at lines 2377--2377
 []|\TU/lmtt/m/n/10 documentation|  
  []
 
 
-Overfull \hbox (5.03062pt too wide) in paragraph at lines 2376--2376
+Overfull \hbox (5.03062pt too wide) in paragraph at lines 2381--2381
 []|\TU/lmtt/m/n/10 logrotate.d|  
  []
 
 
-Overfull \hbox (15.53062pt too wide) in paragraph at lines 2381--2381
+Overfull \hbox (15.53062pt too wide) in paragraph at lines 2386--2386
 []|\TU/lmtt/m/n/10 orchestration|  
  []
 
 
-Overfull \hbox (15.53062pt too wide) in paragraph at lines 2401--2401
+Overfull \hbox (15.53062pt too wide) in paragraph at lines 2406--2406
 []|\TU/lmtt/m/n/10 steganography|  
  []
 
 
 ignored: Infinite glue shrinkage found in box being split [33] [34] [35] [36] [37]
-Overfull \hbox (34.24498pt too wide) in paragraph at lines 2681--2681
+Overfull \hbox (34.24498pt too wide) in paragraph at lines 2686--2686
 []\TU/lmtt/m/n/10 template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | p
 ipeline: v2.0.0 | project: template[] 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 2699.
+(hyperref)                removing `subscript' on input line 2704.
 
 [38] [39]
-Overfull \hbox (42.05057pt too wide) in paragraph at lines 2877--2879
+Overfull \hbox (42.05057pt too wide) in paragraph at lines 2882--2884
 \TU/lmtt/m/n/10 projects/<name>/output/\TU/lmr/m/n/10 , 
  []
 
 
-Overfull \hbox (1.9992pt too wide) in paragraph at lines 2883--2883
+Overfull \hbox (1.9992pt too wide) in paragraph at lines 2888--2888
 []|\TU/lmr/m/n/10 Infrastructure 
  []
 
 
-Overfull \hbox (35.41057pt too wide) in paragraph at lines 2888--2888
+Overfull \hbox (35.41057pt too wide) in paragraph at lines 2893--2893
 []|\TU/lmtt/m/n/10 projects/<name>/tests/|  
  []
 
@@ -1430,67 +1430,67 @@ Missing character: There is no └ (U+2514) in font [lmmono10-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
 [42]
-Overfull \hbox (2.96333pt too wide) in paragraph at lines 3074--3074
+Overfull \hbox (2.96333pt too wide) in paragraph at lines 3081--3081
 []|\TU/lmr/m/n/10 AutoResearch 
  []
 
 [43] [44]
-Overfull \hbox (13.81471pt too wide) in paragraph at lines 3191--3192
+Overfull \hbox (13.81471pt too wide) in paragraph at lines 3198--3199
  []\TU/lmtt/m/n/10 template/ 
  []
 
 
-Overfull \hbox (17.48308pt too wide) in paragraph at lines 3193--3194
+Overfull \hbox (17.48308pt too wide) in paragraph at lines 3200--3201
  []\TU/lmr/m/n/10 Snakemake 
  []
 
 
-Overfull \hbox (7.40308pt too wide) in paragraph at lines 3195--3196
+Overfull \hbox (7.40308pt too wide) in paragraph at lines 3202--3203
  []\TU/lmr/m/n/10 Nextflow 
  []
 
 
-Overfull \hbox (5.44246pt too wide) in paragraph at lines 3199--3200
+Overfull \hbox (5.44246pt too wide) in paragraph at lines 3206--3207
  []\TU/lmr/m/n/10 Quarto 
  []
 
 
-Overfull \hbox (3.78818pt too wide) in paragraph at lines 3205--3206
+Overfull \hbox (3.78818pt too wide) in paragraph at lines 3212--3213
  []\TU/lmr/m/n/10 DVC 
  []
 
 
-Overfull \hbox (2.96227pt too wide) in paragraph at lines 3217--3217
+Overfull \hbox (2.96227pt too wide) in paragraph at lines 3224--3224
 []|\TU/lmr/m/n/10 Manuscript 
  []
 
 
-Overfull \hbox (16.82227pt too wide) in paragraph at lines 3220--3220
+Overfull \hbox (16.82227pt too wide) in paragraph at lines 3227--3227
 []|\TU/lmr/m/n/10 Cryptographic 
  []
 
 
-Overfull \hbox (7.00818pt too wide) in paragraph at lines 3221--3221
+Overfull \hbox (7.00818pt too wide) in paragraph at lines 3228--3228
  []|\TU/lmr/m/n/10 about 
  []
 
 
-Overfull \hbox (20.40227pt too wide) in paragraph at lines 3222--3222
+Overfull \hbox (20.40227pt too wide) in paragraph at lines 3229--3229
 []|\TU/lmr/m/n/10 Steganographic 
  []
 
 
-Overfull \hbox (2.53226pt too wide) in paragraph at lines 3227--3227
+Overfull \hbox (2.53226pt too wide) in paragraph at lines 3234--3234
 \TU/lmr/m/n/10 (SKILL.md 
  []
 
 
-Overfull \hbox (3.65227pt too wide) in paragraph at lines 3232--3232
+Overfull \hbox (3.65227pt too wide) in paragraph at lines 3239--3239
 []|\TU/lmr/m/n/10 Distributed 
  []
 
 
-Overfull \hbox (7.00818pt too wide) in paragraph at lines 3232--3232
+Overfull \hbox (7.00818pt too wide) in paragraph at lines 3239--3239
  []|\TU/lmr/m/n/10 about 
  []
 

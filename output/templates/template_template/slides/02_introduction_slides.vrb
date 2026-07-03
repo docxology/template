@@ -21,10 +21,10 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   Project Paradigm that enables N independent research projects to share
   infrastructure without coupling.
 \item
-  A detailed specification of the 12-stage DAG in
+  A detailed specification of the 14-stage DAG in
   \breaktt{infrastructure/core/pipeline/pipeline.yaml}: default full runs
-  use 10 stages; \texttt{-\/-core-only} runs 8; opt-in bundle and
-  archival stages via \texttt{-\/-tags}.
+  use 10 stages; \texttt{-\/-core-only} runs 8; opt-in ebook, metadata,
+  bundle, and archival stages via \texttt{-\/-tags}.
 \item
   A comparative analysis positioning \texttt{template/} against nine
   peer tools---Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
@@ -47,6 +47,7 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   \breaktt{templates/template\_prose\_project},
   \breaktt{templates/template\_search\_project},
   \breaktt{templates/template\_sia},
+  \breaktt{templates/template\_storybook},
   \breaktt{templates/template\_template},
   \breaktt{templates/template\_textbook})---including this meta
   manuscript from \breaktt{projects/templates/template\_template}, which

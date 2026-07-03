@@ -35,6 +35,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
 - [`templates/template_search_project/`](templates/template_search_project/) — literature-search pipeline with auto-populated BibTeX and optional local LLM synthesis
 - [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
+- [`templates/template_storybook/`](templates/template_storybook/) — full-page illustrated storybook PDF exemplar
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
 - [`templates/template_textbook/`](templates/template_textbook/) — modular fillable textbook scaffold
 
@@ -69,6 +70,7 @@ projects.
 | [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
 | [`template_search_project`](templates/template_search_project/) | Literature-search pipeline with auto-populated BibTeX | no (orchestration over search/reference/LLM infrastructure) | yes (`references.bib` + `references_deep.bib`) | 3 figures | see canonical facts | see canonical facts |
 | [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
+| [`template_storybook`](templates/template_storybook/) | Full-page illustrated storybook PDF | yes (`src/storybook/*`) | n/a | yes (full-page story art) | see canonical facts | see canonical facts |
 | [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
 | [`template_textbook`](templates/template_textbook/) | Book-length scaffold with labs/question banks | yes (`src/textbook/*`) | no (curated) | deterministic figures/diagrams | see canonical facts | see canonical facts |
 
@@ -184,6 +186,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
 | `templates/template_search_project/` | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | `templates/template_sia/` | SIA self-improvement harness exemplar | see canonical facts | see canonical facts |
+| `templates/template_storybook/` | Full-page illustrated storybook PDF exemplar | see canonical facts | see canonical facts |
 | `templates/template_template/` | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 | `templates/template_textbook/` | Modular fillable textbook scaffold | see canonical facts | see canonical facts |
 
@@ -954,6 +957,7 @@ infrastructure compliance:
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_search_project**: Literature-search exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_sia**: SIA harness exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_storybook**: Full-page illustrated storybook exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_template**: Meta-template exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_textbook**: Textbook scaffold exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 

@@ -12,7 +12,7 @@ to the real source functions:
 
 - ``pipeline_stages_declared`` / ``_default_full`` / ``_core_only`` come from
   the frozen ``infrastructure/core/pipeline/pipeline.yaml`` DAG structure and
-  are pinned by AGENTS.md as the literals ``(12)`` / ``(10)`` / ``(8)`` — hard
+  are pinned by AGENTS.md as the literals ``(14)`` / ``(10)`` / ``(8)`` — hard
   structural claims, tolerance 0.
 - ``public_exemplar_roster_count`` is the size of the confidentiality-invariant
   public exemplar roster (``PUBLIC_PROJECT_NAMES``) that the manuscript renders
@@ -121,7 +121,7 @@ def test_pipeline_dag_stage_counts_rederive_from_yaml(
 ) -> None:
     """Bind the frozen pipeline.yaml DAG stage counts to a fresh source read.
 
-    manuscript/AGENTS.md token table pins the literals (12) / (10) / (8);
+    manuscript/AGENTS.md token table pins the literals (14) / (10) / (8);
     ${pipeline_stages_declared} / ${pipeline_stages_default_full} /
     ${pipeline_stages_core_only} are injected across the abstract, introduction,
     architecture, documentation, security, and results sections.

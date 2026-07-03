@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this exemplar, cite the template repository and this storybook template."
+title: "The Shape Between: template_storybook"
+version: "0.1.0"
+authors:
+  - family-names: "Friedman"
+    given-names: "Daniel Ari"
+    orcid: "https://orcid.org/0000-0001-6232-9096"
+license: "MIT"
+repository-code: "https://github.com/docxology/template_storybook"
+date-released: "2026-07-03"

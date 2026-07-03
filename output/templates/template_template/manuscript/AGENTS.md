@@ -38,7 +38,7 @@ Supporting assets: `preamble.md`, `config.yaml`, `references.bib`.
 |-------|---------|
 | `${module_count}` | Infrastructure subdirectories from live discovery |
 | `${importable_package_count}` | Subdirectories that are importable Python packages (carry `__init__.py`) |
-| `${pipeline_stages_declared}` | YAML stage count (12) |
+| `${pipeline_stages_declared}` | YAML stage count (14) |
 | `${pipeline_stages_default_full}` | Default full run (10) |
 | `${pipeline_stages_core_only}` | `--core-only` run (8) |
 | `${stage_count}` | Numbered `scripts/NN_*.py` files only |
