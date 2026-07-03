@@ -69,7 +69,7 @@
         "manuscript/05_methods_analytical.md": "a8236ef82f60f54946d1ce1a3459ebc7e29a005a91791a5380bfd0e56b30f069",
         "manuscript/06_methods_pymdp.md": "c9f5cd00dfc99b68abae4e643f74b2dc4f2170f3dff053a84542d641c72d8512",
         "manuscript/07_methods_lean.md": "cdf90f28941253de3f4545a9c2b9e2d504c54f41d0c9a62fdfcc48b11dd20c6d",
-        "manuscript/08_methods_sheaf.md": "b3466ad5931d82ae0b3040654340f9fe1d2d15da8f624f0bfe36f3e0119630a1",
+        "manuscript/08_methods_sheaf.md": "a7525e8a0a3e919fe205d274a96aa346a55bf08f7d4aec728aee05d0177de495",
         "manuscript/10_results_mi_sweep.md": "9c2459d28630e506e58a6e7fa411ed0fd37de86b299a56108a4898486c58cbd9",
         "manuscript/11_results_free_energy.md": "ebaaa2cde02862d2c7f950b8ea0de779cf4aebbaf737ec605cc7ffbae33d413b",
         "manuscript/12_results_si_tmaze.md": "0bbc79be70aac500cffbb1acda62e70518c3ba82f7170e341b5a73358bb47ea3",
@@ -130,7 +130,7 @@
         "output/data/si_policy_comparison.json": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
         "output/data/si_tmaze_summary.json": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
         "output/data/si_tmaze_trace.json": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
-        "output/reports/pymdp_runtime_diagnostics.json": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
+        "output/reports/pymdp_runtime_diagnostics.json": "9a57b2413663a6ada5c4a5689809e862b25f028e85770d7b87b90f60f58ded96",
         "output/reports/si_invariants.json": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
         "output/reports/si_tmaze_run_report.json": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f"
       },
@@ -380,8 +380,8 @@
       "output_hashes": {
         "output/data/cross_track_symbol_table.json": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
         "output/data/figure_source_map.json": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
-        "output/data/manuscript_evidence_tables.json": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
-        "output/data/manuscript_token_provenance.json": "41e94ded983339b6646881493ffbcd1138b638794dbc7ee8384f23cc6467b476",
+        "output/data/manuscript_evidence_tables.json": "ea47920973d061c0b0246ba1ef38b2c9eb4cafe812d25fec293f03310f139261",
+        "output/data/manuscript_token_provenance.json": "547e20315d732449dc63b0fb64a08a6acf40b0405b3cac054bf618c2a1b456dc",
         "output/data/statistical_visualization_bridge.json": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
         "output/data/validation_gate_index.json": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
         "output/reports/artifact_license_audit.json": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
@@ -390,7 +390,7 @@
         "output/reports/producer_completeness.json": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
         "output/reports/release_notes_evidence.json": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
         "output/reports/scope_boundary_audit.json": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
-        "output/reports/stale_artifact_report.json": "ebe4d41d73c39c9acfc6c29013ce716adda9bd98b73a11ea398d3c3fa45c0c69",
+        "output/reports/stale_artifact_report.json": "b844d9d1f0c2d27f0fb1d03a9b1b318c6024989adcbfdaf28055cc3c9e5e4f52",
         "output/reports/visualization_quality_audit.json": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c"
       },
       "producer_script": "generate_integration_audit.py",
@@ -457,7 +457,7 @@
       "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
-        "output/data/artifact_contract_index.json": "fb9df1da5bc8b9f64631ded7d5f0fb432fe4f8ac4c2ece9dddf5beb56b4e5413",
+        "output/data/artifact_contract_index.json": "21af6029655ecf596d46c058f7e0716ce0a1c139a0411ebec338acf39acd2072",
         "output/data/evidence_field_index.json": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
         "output/data/proof_dependency_graph.json": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
         "output/data/scholarship_source_matrix.json": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
@@ -473,8 +473,8 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "c2ad4ff95446241bc7386d0a578a23d74a748edaa2e9f1605dcb511811653d28",
-        "output/reports/release_bundle_manifest.json": "00aa8aaf978d69cb4fc74a6a4ce6b55648b6bb3f434d3b13944c0a37f383b57c",
+        "output/reports/release_attestation.json": "8b20d3520dc9fed48882b71fe19c232a03184f31e91760d7997fa07754ff402f",
+        "output/reports/release_bundle_manifest.json": "bd039691fa8a5ef6173b16081c7ed4484aa30e818060d2a9d8b9949c405e5b82",
         "output/reports/security_posture_audit.json": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
         "output/reports/sheaf_render_log.json": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0"
       },
@@ -495,8 +495,8 @@
       "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
-        "output/data/manuscript_variables.json": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
-        "output/reports/manuscript_staleness_report.json": "d0efcf3605cd0d9ce50adad9751d103996b6b6300b9ca2dde92595c0c4ef0b3f"
+        "output/data/manuscript_variables.json": "6ad859f3f1ac4f36418ba50b2f0ecea44190090567362d5b0d8269f740efb4e3",
+        "output/reports/manuscript_staleness_report.json": "fb0cff3b8656ebb91bfbcc2eb36f24e46022d7facb60c7415b3ba0b8f8262ced"
       },
       "producer_script": "z_generate_manuscript_variables.py",
       "replay_method": "artifact_fingerprint"

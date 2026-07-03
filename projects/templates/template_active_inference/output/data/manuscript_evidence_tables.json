@@ -30,7 +30,7 @@
     },
     {
       "id": "pymdp_runtime_diagnostics",
-      "row_count": 4,
+      "row_count": 1,
       "source": "output/reports/pymdp_runtime_diagnostics.json"
     },
     {

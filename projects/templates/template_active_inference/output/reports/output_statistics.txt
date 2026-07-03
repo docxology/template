@@ -5,7 +5,7 @@ OUTPUT STATISTICS REPORT
 Output Directory: output
 
 Total Files: 139
-Total Size: 12.08 MB
+Total Size: 12.07 MB
 
 Files by Category:
   • pdf: 10 files (4.44 MB)

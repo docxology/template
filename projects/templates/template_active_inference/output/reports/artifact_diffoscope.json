@@ -302,8 +302,8 @@
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
-      "saved_sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
+      "live_sha256": "9a57b2413663a6ada5c4a5689809e862b25f028e85770d7b87b90f60f58ded96",
+      "saved_sha256": "9a57b2413663a6ada5c4a5689809e862b25f028e85770d7b87b90f60f58ded96",
       "source": "output/data/artifact_provenance.json"
     },
     {

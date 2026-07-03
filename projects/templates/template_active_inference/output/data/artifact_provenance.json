@@ -17,7 +17,7 @@
       "producer": "compute_statistics.py",
       "sha256": "d00535628dfa61a475a882f2c648a135d632c89571b0c5fc611b22cc3bd60ff6",
       "size_bytes": 965,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/analytical_assumption_index.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -27,7 +27,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96",
       "size_bytes": 3655,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/analytical_observable_sweep.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -37,7 +37,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "size_bytes": 41997,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/animation_frame_deltas.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -47,7 +47,7 @@
       "producer": "render_animation.py",
       "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
       "size_bytes": 2165,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/artifact_contract_index.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -55,9 +55,9 @@
       "exists": true,
       "path": "output/data/artifact_contract_index.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "364598c9f147e371b1d27a455a06dbadc9b489f0eeb7ee0acd49b5f92a4c0ade",
-      "size_bytes": 105659,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "sha256": "2c7d076435e7dba4e0c270b4f6d14bc6b4202b29a83dd3b8d98c1f1d8496837f",
+      "size_bytes": 105661,
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/artifact_provenance.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -65,9 +65,9 @@
       "exists": true,
       "path": "output/data/artifact_provenance.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "efe6f297d9c155f390447576340283b5d67c9a4dc6cfe88bc159fb13a2a1b0a3",
+      "sha256": "fd92930b13b3ff2328eea04da811b0e02518ad4abba3c51b452931880d761a8d",
       "size_bytes": 171999,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/causal_ablation_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -77,7 +77,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
       "size_bytes": 9726,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/cross_track_symbol_table.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -87,7 +87,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
       "size_bytes": 198816,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/evidence_field_index.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -97,7 +97,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
       "size_bytes": 78822,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/figure_source_map.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -107,7 +107,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
       "size_bytes": 43395,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/gnn_roundtrip_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -117,7 +117,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
       "size_bytes": 454,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/interop_roundtrip_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -127,7 +127,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
       "size_bytes": 506,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/manuscript_evidence_tables.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -135,9 +135,9 @@
       "exists": true,
       "path": "output/data/manuscript_evidence_tables.json",
       "producer": "generate_integration_audit.py",
-      "sha256": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
+      "sha256": "ea47920973d061c0b0246ba1ef38b2c9eb4cafe812d25fec293f03310f139261",
       "size_bytes": 3167,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/manuscript_token_provenance.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -145,9 +145,9 @@
       "exists": true,
       "path": "output/data/manuscript_token_provenance.json",
       "producer": "generate_integration_audit.py",
-      "sha256": "3afc9041ebd0139f4b824fa762049b69b7bda446ceaddac3f285d5756a6e65b7",
+      "sha256": "b9b7148bc9ac8bd783a1c013a8b1c30fe9fd68b482cd076b8effeb49135ce20b",
       "size_bytes": 290393,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/manuscript_variables.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -155,9 +155,9 @@
       "exists": true,
       "path": "output/data/manuscript_variables.json",
       "producer": "z_generate_manuscript_variables.py",
-      "sha256": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
+      "sha256": "6ad859f3f1ac4f36418ba50b2f0ecea44190090567362d5b0d8269f740efb4e3",
       "size_bytes": 8635,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/ontology_alias_index.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -167,7 +167,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
       "size_bytes": 3012,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/ontology_profile_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -177,7 +177,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d",
       "size_bytes": 6685,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/parameter_sweep.csv": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -187,7 +187,7 @@
       "producer": "run_analytical_sweep.py",
       "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
       "size_bytes": 1037,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/proof_dependency_graph.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -197,7 +197,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
       "size_bytes": 34009,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/proof_extraction_index.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -207,7 +207,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
       "size_bytes": 4187,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/pymdp_policy_posterior_grid.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -217,7 +217,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
       "size_bytes": 4547,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/scholarship_source_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -227,7 +227,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
       "size_bytes": 23354,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/sensitivity_sweep.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -237,7 +237,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
       "size_bytes": 44895,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/sheaf_coverage_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -247,7 +247,7 @@
       "producer": "generate_figures.py",
       "sha256": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230",
       "size_bytes": 103816,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/sheaf_evidence_crosswalk.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -257,7 +257,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "79c38673a666594140175dcd5bffdce9e0d1da379d36931552aba56a6b043f65",
       "size_bytes": 57584,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/sheaf_gluing_certificate.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -265,9 +265,9 @@
       "exists": true,
       "path": "output/data/sheaf_gluing_certificate.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+      "sha256": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209",
       "size_bytes": 202911,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/sheaf_section_status_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -277,7 +277,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "333867025a1762b84cc770de08190d1d4f7aeec4ede3a83d7013ea099d9923a9",
       "size_bytes": 801239,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_efe_terms.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -287,7 +287,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936",
       "size_bytes": 1089,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_graph_world_summary.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -297,7 +297,7 @@
       "producer": "simulate_si_graph_world.py",
       "sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
       "size_bytes": 268,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_graph_world_topology_sweep.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -307,7 +307,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
       "size_bytes": 842,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_graph_world_topology_traces.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -317,7 +317,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
       "size_bytes": 2646,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_graph_world_trace.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -327,7 +327,7 @@
       "producer": "simulate_si_graph_world.py",
       "sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
       "size_bytes": 639,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_policy_comparison.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -337,7 +337,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
       "size_bytes": 8325,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_policy_grid.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -347,7 +347,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
       "size_bytes": 1382,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_tmaze_summary.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -357,7 +357,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
       "size_bytes": 941,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/si_tmaze_trace.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -367,7 +367,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
       "size_bytes": 1295,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/state_space_catalog.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -377,7 +377,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
       "size_bytes": 1764,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/state_transition_table.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -387,7 +387,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
       "size_bytes": 6364,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/statistical_visualization_bridge.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -397,7 +397,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
       "size_bytes": 12558,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/theorem_traceability_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -407,7 +407,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
       "size_bytes": 122352,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/toy_benchmark_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -417,7 +417,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
       "size_bytes": 759,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/track_improvement_scope.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -427,7 +427,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "f74366a4e4b0a7fd3f615edc12256c7d876e93a43bc479acb3b6cf709ce2f4dc",
       "size_bytes": 52830,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/track_lane_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -437,7 +437,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
       "size_bytes": 57772,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/uncertainty_summary.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -447,7 +447,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
       "size_bytes": 6541,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/validation_dependency_graph.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -457,7 +457,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
       "size_bytes": 386145,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/data/validation_gate_index.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -467,7 +467,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
       "size_bytes": 11938,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/artifact_contract_map.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -477,7 +477,7 @@
       "producer": "generate_figures.py",
       "sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
       "size_bytes": 466540,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/causal_ablation_heatmap.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -487,7 +487,7 @@
       "producer": "generate_figures.py",
       "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
       "size_bytes": 57015,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/figure_registry.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -497,7 +497,7 @@
       "producer": "generate_figures.py",
       "sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
       "size_bytes": 24177,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/scholarship_source_map.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -507,7 +507,7 @@
       "producer": "generate_figures.py",
       "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
       "size_bytes": 470707,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/security_posture_map.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -517,7 +517,7 @@
       "producer": "generate_figures.py",
       "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
       "size_bytes": 218708,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/semantic_gluing_graph.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -527,7 +527,7 @@
       "producer": "generate_figures.py",
       "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
       "size_bytes": 251230,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/sheaf_coverage_heatmap.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -537,7 +537,7 @@
       "producer": "generate_figures.py",
       "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
       "size_bytes": 236608,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/sheaf_layers_overview.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -547,7 +547,7 @@
       "producer": "generate_figures.py",
       "sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
       "size_bytes": 566982,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/si_belief_trajectory.gif": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -557,7 +557,7 @@
       "producer": "render_animation.py",
       "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
       "size_bytes": 7058,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/figures/theorem_traceability_graph.png": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -567,7 +567,7 @@
       "producer": "generate_figures.py",
       "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
       "size_bytes": 122202,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/ablation_sensitivity_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -577,7 +577,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
       "size_bytes": 18673,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/adversarial_audit.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -587,7 +587,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
       "size_bytes": 9400,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/artifact_diffoscope.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -595,9 +595,9 @@
       "exists": true,
       "path": "output/reports/artifact_diffoscope.json",
       "producer": "generate_integration_audit.py",
-      "sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+      "sha256": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3",
       "size_bytes": 14546,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/artifact_license_audit.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -607,7 +607,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
       "size_bytes": 18243,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/blocked_scope_manifest.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -617,7 +617,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
       "size_bytes": 2953,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/claim_evidence_audit.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -627,7 +627,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
       "size_bytes": 49252,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/counterexample_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -637,7 +637,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
       "size_bytes": 16801,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/figure_hash_manifest.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -647,7 +647,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "f401215be721181657fd679a1e753d7ba9e8a607b06a0045ff682baec30f5b87",
       "size_bytes": 5383,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/gnn_lint_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -657,7 +657,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
       "size_bytes": 6548,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/graph_world_invariants.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -667,7 +667,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
       "size_bytes": 1370,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/invariants.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -677,7 +677,7 @@
       "producer": "run_analytical_sweep.py",
       "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
       "size_bytes": 499,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/lean_graph_world_inventory.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -687,7 +687,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
       "size_bytes": 1056,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/lean_theorem_inventory.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -697,7 +697,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
       "size_bytes": 1914,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/manuscript_staleness_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -705,9 +705,9 @@
       "exists": true,
       "path": "output/reports/manuscript_staleness_report.json",
       "producer": "z_generate_manuscript_variables.py",
-      "sha256": "d0efcf3605cd0d9ce50adad9751d103996b6b6300b9ca2dde92595c0c4ef0b3f",
+      "sha256": "fb0cff3b8656ebb91bfbcc2eb36f24e46022d7facb60c7415b3ba0b8f8262ced",
       "size_bytes": 72360,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/model_checking_witnesses.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -717,7 +717,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
       "size_bytes": 4418,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/producer_completeness.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -727,7 +727,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
       "size_bytes": 14479,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/pymdp_runtime_diagnostics.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -735,9 +735,9 @@
       "exists": true,
       "path": "output/reports/pymdp_runtime_diagnostics.json",
       "producer": "simulate_si_tmaze.py",
-      "sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
-      "size_bytes": 8982,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "sha256": "9a57b2413663a6ada5c4a5689809e862b25f028e85770d7b87b90f60f58ded96",
+      "size_bytes": 2783,
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/release_attestation.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -745,9 +745,9 @@
       "exists": true,
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "d9d1ef8e119cb84a061a47eb36c050cc11bdee01d60c4ee91e5d890d9863cc2a",
+      "sha256": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315",
       "size_bytes": 1687,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/release_bundle_manifest.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -755,9 +755,9 @@
       "exists": true,
       "path": "output/reports/release_bundle_manifest.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "7d46e67b4b7eac450133bcecc2d0d4130465a16b9b319b9469ff5abafab890b6",
-      "size_bytes": 31041,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "sha256": "8285b9ab4ac843661c434bf5ca722365a4a8c4190de99aa6bb1466b42e775278",
+      "size_bytes": 31043,
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/release_notes_evidence.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -767,7 +767,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
       "size_bytes": 1051,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/replay_matrix.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -775,9 +775,9 @@
       "exists": true,
       "path": "output/reports/replay_matrix.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "cde3c32fc40ff4c83ebc52fe6d72fe0c910c4111d0839d05bd06d7d78bea04c1",
+      "sha256": "b9cb457f48da6348109b2ad9c274c7502b508cf0e7fcb6df121c126f4d41e871",
       "size_bytes": 27403,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/reproducibility_replay.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -787,7 +787,7 @@
       "producer": "generate_validation_spine.py",
       "sha256": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4",
       "size_bytes": 1604,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/scope_boundary_audit.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -797,7 +797,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
       "size_bytes": 9506,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/security_posture_audit.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -807,7 +807,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
       "size_bytes": 10504,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/sheaf_render_log.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -817,7 +817,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0",
       "size_bytes": 2247,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/si_invariants.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -827,7 +827,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
       "size_bytes": 271,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/si_tmaze_run_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -837,7 +837,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
       "size_bytes": 862,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/stale_artifact_report.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -845,9 +845,9 @@
       "exists": true,
       "path": "output/reports/stale_artifact_report.json",
       "producer": "generate_integration_audit.py",
-      "sha256": "ebe4d41d73c39c9acfc6c29013ce716adda9bd98b73a11ea398d3c3fa45c0c69",
+      "sha256": "b844d9d1f0c2d27f0fb1d03a9b1b318c6024989adcbfdaf28055cc3c9e5e4f52",
       "size_bytes": 8838,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     "output/reports/visualization_quality_audit.json": {
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
@@ -857,7 +857,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
       "size_bytes": 39680,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     }
   },
   "bundle_count": 5,
@@ -902,7 +902,7 @@
           "artifact": "output/data/sheaf_gluing_certificate.json",
           "exists": true,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439"
+          "sha256": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209"
         },
         {
           "artifact": "output/data/validation_dependency_graph.json",
@@ -944,13 +944,13 @@
           "artifact": "output/reports/release_bundle_manifest.json",
           "exists": true,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "7d46e67b4b7eac450133bcecc2d0d4130465a16b9b319b9469ff5abafab890b6"
+          "sha256": "8285b9ab4ac843661c434bf5ca722365a4a8c4190de99aa6bb1466b42e775278"
         },
         {
           "artifact": "output/reports/artifact_diffoscope.json",
           "exists": true,
           "producer": "generate_integration_audit.py",
-          "sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830"
+          "sha256": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3"
         },
         {
           "artifact": "output/reports/artifact_license_audit.json",
@@ -986,10 +986,10 @@
           "artifact": "output/reports/release_attestation.json",
           "exists": true,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "d9d1ef8e119cb84a061a47eb36c050cc11bdee01d60c4ee91e5d890d9863cc2a"
+          "sha256": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315"
         }
       ],
-      "bundle_hash": "da8873b940182216f971276e12163ee486dae7c205c81b3f6333ef63cfc78f0f",
+      "bundle_hash": "a83865bef496d13c11ea2bb3fee11bbcd81efe0f34c7c3ec6852802ef95022bc",
       "bundle_id": "semantic_audit",
       "complete": true,
       "missing": []
@@ -1200,7 +1200,7 @@
       "jsonpath": "$",
       "producer": "compute_statistics.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/analytical_assumption_index.json",
@@ -1214,7 +1214,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/analytical_observable_sweep.json",
@@ -1228,7 +1228,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/animation_frame_deltas.json",
@@ -1241,11 +1241,11 @@
       "jsonpath": "$",
       "producer": "render_animation.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/artifact_contract_index.json",
-      "artifact_hash": "364598c9f147e371b1d27a455a06dbadc9b489f0eeb7ee0acd49b5f92a4c0ade",
+      "artifact_hash": "2c7d076435e7dba4e0c270b4f6d14bc6b4202b29a83dd3b8d98c1f1d8496837f",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -1255,11 +1255,11 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/artifact_provenance.json",
-      "artifact_hash": "efe6f297d9c155f390447576340283b5d67c9a4dc6cfe88bc159fb13a2a1b0a3",
+      "artifact_hash": "fd92930b13b3ff2328eea04da811b0e02518ad4abba3c51b452931880d761a8d",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -1268,7 +1268,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/causal_ablation_matrix.json",
@@ -1282,7 +1282,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/cross_track_symbol_table.json",
@@ -1296,7 +1296,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/evidence_field_index.json",
@@ -1310,7 +1310,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/figure_source_map.json",
@@ -1324,7 +1324,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/gnn_roundtrip_report.json",
@@ -1338,7 +1338,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/interop_roundtrip_report.json",
@@ -1352,11 +1352,11 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/manuscript_evidence_tables.json",
-      "artifact_hash": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
+      "artifact_hash": "ea47920973d061c0b0246ba1ef38b2c9eb4cafe812d25fec293f03310f139261",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -1366,11 +1366,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/manuscript_token_provenance.json",
-      "artifact_hash": "3afc9041ebd0139f4b824fa762049b69b7bda446ceaddac3f285d5756a6e65b7",
+      "artifact_hash": "b9b7148bc9ac8bd783a1c013a8b1c30fe9fd68b482cd076b8effeb49135ce20b",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -1380,11 +1380,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/manuscript_variables.json",
-      "artifact_hash": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
+      "artifact_hash": "6ad859f3f1ac4f36418ba50b2f0ecea44190090567362d5b0d8269f740efb4e3",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -1394,7 +1394,7 @@
       "jsonpath": "$",
       "producer": "z_generate_manuscript_variables.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/ontology_alias_index.json",
@@ -1408,7 +1408,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/ontology_profile_matrix.json",
@@ -1422,7 +1422,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/parameter_sweep.csv",
@@ -1436,7 +1436,7 @@
       "jsonpath": "$",
       "producer": "run_analytical_sweep.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/proof_dependency_graph.json",
@@ -1450,7 +1450,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -1464,7 +1464,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/pymdp_policy_posterior_grid.json",
@@ -1478,7 +1478,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/scholarship_source_matrix.json",
@@ -1492,7 +1492,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -1506,7 +1506,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/sheaf_coverage_matrix.json",
@@ -1520,7 +1520,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/sheaf_evidence_crosswalk.json",
@@ -1533,11 +1533,11 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/sheaf_gluing_certificate.json",
-      "artifact_hash": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+      "artifact_hash": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -1547,7 +1547,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/sheaf_section_status_matrix.json",
@@ -1561,7 +1561,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_efe_terms.json",
@@ -1575,7 +1575,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_graph_world_summary.json",
@@ -1589,7 +1589,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_graph_world.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_graph_world_topology_sweep.json",
@@ -1603,7 +1603,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_graph_world_topology_traces.json",
@@ -1617,7 +1617,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_graph_world_trace.json",
@@ -1632,7 +1632,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_graph_world.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_policy_comparison.json",
@@ -1646,7 +1646,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_policy_grid.json",
@@ -1660,7 +1660,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_tmaze_summary.json",
@@ -1674,7 +1674,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/si_tmaze_trace.json",
@@ -1688,7 +1688,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/state_space_catalog.json",
@@ -1702,7 +1702,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/state_transition_table.json",
@@ -1716,7 +1716,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -1730,7 +1730,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/theorem_traceability_matrix.json",
@@ -1744,7 +1744,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/toy_benchmark_matrix.json",
@@ -1758,7 +1758,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/track_improvement_scope.json",
@@ -1772,7 +1772,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -1786,7 +1786,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/uncertainty_summary.json",
@@ -1800,7 +1800,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/validation_dependency_graph.json",
@@ -1813,7 +1813,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/data/validation_gate_index.json",
@@ -1827,7 +1827,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/artifact_contract_map.png",
@@ -1841,7 +1841,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
@@ -1854,7 +1854,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/figure_registry.json",
@@ -1868,7 +1868,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",
@@ -1882,7 +1882,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/security_posture_map.png",
@@ -1896,7 +1896,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
@@ -1909,7 +1909,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/sheaf_coverage_heatmap.png",
@@ -1922,7 +1922,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/sheaf_layers_overview.png",
@@ -1935,7 +1935,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -1948,7 +1948,7 @@
       "jsonpath": "$",
       "producer": "render_animation.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/figures/theorem_traceability_graph.png",
@@ -1961,7 +1961,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/ablation_sensitivity_report.json",
@@ -1975,7 +1975,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/adversarial_audit.json",
@@ -1989,11 +1989,11 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/artifact_diffoscope.json",
-      "artifact_hash": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+      "artifact_hash": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2003,7 +2003,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/artifact_license_audit.json",
@@ -2017,7 +2017,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/blocked_scope_manifest.json",
@@ -2032,7 +2032,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/claim_evidence_audit.json",
@@ -2046,7 +2046,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/counterexample_matrix.json",
@@ -2059,7 +2059,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/figure_hash_manifest.json",
@@ -2073,7 +2073,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/gnn_lint_report.json",
@@ -2087,7 +2087,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/graph_world_invariants.json",
@@ -2101,7 +2101,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/invariants.json",
@@ -2114,7 +2114,7 @@
       "jsonpath": "$",
       "producer": "run_analytical_sweep.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/lean_graph_world_inventory.json",
@@ -2128,7 +2128,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/lean_theorem_inventory.json",
@@ -2142,11 +2142,11 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/manuscript_staleness_report.json",
-      "artifact_hash": "d0efcf3605cd0d9ce50adad9751d103996b6b6300b9ca2dde92595c0c4ef0b3f",
+      "artifact_hash": "fb0cff3b8656ebb91bfbcc2eb36f24e46022d7facb60c7415b3ba0b8f8262ced",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2156,7 +2156,7 @@
       "jsonpath": "$",
       "producer": "z_generate_manuscript_variables.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/model_checking_witnesses.json",
@@ -2170,7 +2170,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/producer_completeness.json",
@@ -2184,11 +2184,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
-      "artifact_hash": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
+      "artifact_hash": "9a57b2413663a6ada5c4a5689809e862b25f028e85770d7b87b90f60f58ded96",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2198,11 +2198,11 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/release_attestation.json",
-      "artifact_hash": "d9d1ef8e119cb84a061a47eb36c050cc11bdee01d60c4ee91e5d890d9863cc2a",
+      "artifact_hash": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2212,11 +2212,11 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/release_bundle_manifest.json",
-      "artifact_hash": "7d46e67b4b7eac450133bcecc2d0d4130465a16b9b319b9469ff5abafab890b6",
+      "artifact_hash": "8285b9ab4ac843661c434bf5ca722365a4a8c4190de99aa6bb1466b42e775278",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2226,7 +2226,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/release_notes_evidence.json",
@@ -2240,11 +2240,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
-      "artifact_hash": "cde3c32fc40ff4c83ebc52fe6d72fe0c910c4111d0839d05bd06d7d78bea04c1",
+      "artifact_hash": "b9cb457f48da6348109b2ad9c274c7502b508cf0e7fcb6df121c126f4d41e871",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2254,7 +2254,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/reproducibility_replay.json",
@@ -2267,7 +2267,7 @@
       "jsonpath": "$",
       "producer": "generate_validation_spine.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/scope_boundary_audit.json",
@@ -2281,7 +2281,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/security_posture_audit.json",
@@ -2295,7 +2295,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/sheaf_render_log.json",
@@ -2309,7 +2309,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/si_invariants.json",
@@ -2322,7 +2322,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/si_tmaze_run_report.json",
@@ -2335,11 +2335,11 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/stale_artifact_report.json",
-      "artifact_hash": "ebe4d41d73c39c9acfc6c29013ce716adda9bd98b73a11ea398d3c3fa45c0c69",
+      "artifact_hash": "b844d9d1f0c2d27f0fb1d03a9b1b318c6024989adcbfdaf28055cc3c9e5e4f52",
       "complete": true,
       "config_digest": "28531102a6b92a46d48a3df3645c40527b85d0f9f3895ae138a43dd5f5a4f394",
       "input_artifact_lineage": [
@@ -2349,7 +2349,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     },
     {
       "artifact": "output/reports/visualization_quality_audit.json",
@@ -2363,7 +2363,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951"
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f"
     }
   ],
   "producer_coverage": {
@@ -2399,7 +2399,7 @@
       "producer_configured": true,
       "sha256": "d00535628dfa61a475a882f2c648a135d632c89571b0c5fc611b22cc3bd60ff6",
       "size_bytes": 965,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2424,7 +2424,7 @@
       "producer_configured": true,
       "sha256": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96",
       "size_bytes": 3655,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2448,7 +2448,7 @@
       "producer_configured": true,
       "sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "size_bytes": 41997,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2472,7 +2472,7 @@
       "producer_configured": true,
       "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
       "size_bytes": 2165,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2497,9 +2497,9 @@
       "path": "output/data/artifact_contract_index.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "364598c9f147e371b1d27a455a06dbadc9b489f0eeb7ee0acd49b5f92a4c0ade",
-      "size_bytes": 105659,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "sha256": "2c7d076435e7dba4e0c270b4f6d14bc6b4202b29a83dd3b8d98c1f1d8496837f",
+      "size_bytes": 105661,
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2523,9 +2523,9 @@
       "path": "output/data/artifact_provenance.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "efe6f297d9c155f390447576340283b5d67c9a4dc6cfe88bc159fb13a2a1b0a3",
+      "sha256": "fd92930b13b3ff2328eea04da811b0e02518ad4abba3c51b452931880d761a8d",
       "size_bytes": 171999,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2551,7 +2551,7 @@
       "producer_configured": true,
       "sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
       "size_bytes": 9726,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2577,7 +2577,7 @@
       "producer_configured": true,
       "sha256": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
       "size_bytes": 198816,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2603,7 +2603,7 @@
       "producer_configured": true,
       "sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
       "size_bytes": 78822,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2629,7 +2629,7 @@
       "producer_configured": true,
       "sha256": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
       "size_bytes": 43395,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2653,7 +2653,7 @@
       "producer_configured": true,
       "sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
       "size_bytes": 454,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2679,7 +2679,7 @@
       "producer_configured": true,
       "sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
       "size_bytes": 506,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2702,9 +2702,9 @@
       "path": "output/data/manuscript_evidence_tables.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-      "sha256": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
+      "sha256": "ea47920973d061c0b0246ba1ef38b2c9eb4cafe812d25fec293f03310f139261",
       "size_bytes": 3167,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2728,9 +2728,9 @@
       "path": "output/data/manuscript_token_provenance.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-      "sha256": "3afc9041ebd0139f4b824fa762049b69b7bda446ceaddac3f285d5756a6e65b7",
+      "sha256": "b9b7148bc9ac8bd783a1c013a8b1c30fe9fd68b482cd076b8effeb49135ce20b",
       "size_bytes": 290393,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2754,9 +2754,9 @@
       "path": "output/data/manuscript_variables.json",
       "producer": "z_generate_manuscript_variables.py",
       "producer_configured": true,
-      "sha256": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
+      "sha256": "6ad859f3f1ac4f36418ba50b2f0ecea44190090567362d5b0d8269f740efb4e3",
       "size_bytes": 8635,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript"
       ]
@@ -2779,7 +2779,7 @@
       "producer_configured": true,
       "sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
       "size_bytes": 3012,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2802,7 +2802,7 @@
       "producer_configured": true,
       "sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d",
       "size_bytes": 6685,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2825,7 +2825,7 @@
       "producer_configured": true,
       "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
       "size_bytes": 1037,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2850,7 +2850,7 @@
       "producer_configured": true,
       "sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
       "size_bytes": 34009,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2876,7 +2876,7 @@
       "producer_configured": true,
       "sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
       "size_bytes": 4187,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2902,7 +2902,7 @@
       "producer_configured": true,
       "sha256": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
       "size_bytes": 4547,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2928,7 +2928,7 @@
       "producer_configured": true,
       "sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
       "size_bytes": 23354,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -2955,7 +2955,7 @@
       "producer_configured": true,
       "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
       "size_bytes": 44895,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2980,7 +2980,7 @@
       "producer_configured": true,
       "sha256": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230",
       "size_bytes": 103816,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3005,7 +3005,7 @@
       "producer_configured": true,
       "sha256": "79c38673a666594140175dcd5bffdce9e0d1da379d36931552aba56a6b043f65",
       "size_bytes": 57584,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3033,9 +3033,9 @@
       "path": "output/data/sheaf_gluing_certificate.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+      "sha256": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209",
       "size_bytes": 202911,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3061,7 +3061,7 @@
       "producer_configured": true,
       "sha256": "333867025a1762b84cc770de08190d1d4f7aeec4ede3a83d7013ea099d9923a9",
       "size_bytes": 801239,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3087,7 +3087,7 @@
       "producer_configured": true,
       "sha256": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936",
       "size_bytes": 1089,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3112,7 +3112,7 @@
       "producer_configured": true,
       "sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
       "size_bytes": 268,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3135,7 +3135,7 @@
       "producer_configured": true,
       "sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
       "size_bytes": 842,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3160,7 +3160,7 @@
       "producer_configured": true,
       "sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
       "size_bytes": 2646,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3186,7 +3186,7 @@
       "producer_configured": true,
       "sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
       "size_bytes": 639,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3212,7 +3212,7 @@
       "producer_configured": true,
       "sha256": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
       "size_bytes": 8325,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3237,7 +3237,7 @@
       "producer_configured": true,
       "sha256": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
       "size_bytes": 1382,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3262,7 +3262,7 @@
       "producer_configured": true,
       "sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
       "size_bytes": 941,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3287,7 +3287,7 @@
       "producer_configured": true,
       "sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
       "size_bytes": 1295,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3312,7 +3312,7 @@
       "producer_configured": true,
       "sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
       "size_bytes": 1764,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3338,7 +3338,7 @@
       "producer_configured": true,
       "sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
       "size_bytes": 6364,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3364,7 +3364,7 @@
       "producer_configured": true,
       "sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
       "size_bytes": 12558,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3390,7 +3390,7 @@
       "producer_configured": true,
       "sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
       "size_bytes": 122352,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3416,7 +3416,7 @@
       "producer_configured": true,
       "sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
       "size_bytes": 759,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3441,7 +3441,7 @@
       "producer_configured": true,
       "sha256": "f74366a4e4b0a7fd3f615edc12256c7d876e93a43bc479acb3b6cf709ce2f4dc",
       "size_bytes": 52830,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3467,7 +3467,7 @@
       "producer_configured": true,
       "sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
       "size_bytes": 57772,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3494,7 +3494,7 @@
       "producer_configured": true,
       "sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
       "size_bytes": 6541,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3519,7 +3519,7 @@
       "producer_configured": true,
       "sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
       "size_bytes": 386145,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3546,7 +3546,7 @@
       "producer_configured": true,
       "sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
       "size_bytes": 11938,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3572,7 +3572,7 @@
       "producer_configured": true,
       "sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
       "size_bytes": 466540,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3595,7 +3595,7 @@
       "producer_configured": true,
       "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
       "size_bytes": 57015,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3619,7 +3619,7 @@
       "producer_configured": true,
       "sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
       "size_bytes": 24177,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3644,7 +3644,7 @@
       "producer_configured": true,
       "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
       "size_bytes": 470707,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3670,7 +3670,7 @@
       "producer_configured": true,
       "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
       "size_bytes": 218708,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3695,7 +3695,7 @@
       "producer_configured": true,
       "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
       "size_bytes": 251230,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3720,7 +3720,7 @@
       "producer_configured": true,
       "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
       "size_bytes": 236608,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3745,7 +3745,7 @@
       "producer_configured": true,
       "sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
       "size_bytes": 566982,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3770,7 +3770,7 @@
       "producer_configured": true,
       "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
       "size_bytes": 7058,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3792,7 +3792,7 @@
       "producer_configured": true,
       "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
       "size_bytes": 122202,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -3818,7 +3818,7 @@
       "producer_configured": true,
       "sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
       "size_bytes": 18673,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3845,7 +3845,7 @@
       "producer_configured": true,
       "sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
       "size_bytes": 9400,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3869,9 +3869,9 @@
       "path": "output/reports/artifact_diffoscope.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-      "sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+      "sha256": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3",
       "size_bytes": 14546,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3897,7 +3897,7 @@
       "producer_configured": true,
       "sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
       "size_bytes": 18243,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3924,7 +3924,7 @@
       "producer_configured": true,
       "sha256": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
       "size_bytes": 2953,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3950,7 +3950,7 @@
       "producer_configured": true,
       "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
       "size_bytes": 49252,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3976,7 +3976,7 @@
       "producer_configured": true,
       "sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
       "size_bytes": 16801,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4002,7 +4002,7 @@
       "producer_configured": true,
       "sha256": "f401215be721181657fd679a1e753d7ba9e8a607b06a0045ff682baec30f5b87",
       "size_bytes": 5383,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4026,7 +4026,7 @@
       "producer_configured": true,
       "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
       "size_bytes": 6548,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4051,7 +4051,7 @@
       "producer_configured": true,
       "sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
       "size_bytes": 1370,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4073,7 +4073,7 @@
       "producer_configured": true,
       "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
       "size_bytes": 499,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4098,7 +4098,7 @@
       "producer_configured": true,
       "sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
       "size_bytes": 1056,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4123,7 +4123,7 @@
       "producer_configured": true,
       "sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
       "size_bytes": 1914,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4146,9 +4146,9 @@
       "path": "output/reports/manuscript_staleness_report.json",
       "producer": "z_generate_manuscript_variables.py",
       "producer_configured": true,
-      "sha256": "d0efcf3605cd0d9ce50adad9751d103996b6b6300b9ca2dde92595c0c4ef0b3f",
+      "sha256": "fb0cff3b8656ebb91bfbcc2eb36f24e46022d7facb60c7415b3ba0b8f8262ced",
       "size_bytes": 72360,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4175,7 +4175,7 @@
       "producer_configured": true,
       "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
       "size_bytes": 4418,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4200,7 +4200,7 @@
       "producer_configured": true,
       "sha256": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
       "size_bytes": 14479,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4224,9 +4224,9 @@
       "path": "output/reports/pymdp_runtime_diagnostics.json",
       "producer": "simulate_si_tmaze.py",
       "producer_configured": true,
-      "sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
-      "size_bytes": 8982,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "sha256": "9a57b2413663a6ada5c4a5689809e862b25f028e85770d7b87b90f60f58ded96",
+      "size_bytes": 2783,
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4250,9 +4250,9 @@
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "d9d1ef8e119cb84a061a47eb36c050cc11bdee01d60c4ee91e5d890d9863cc2a",
+      "sha256": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315",
       "size_bytes": 1687,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4276,9 +4276,9 @@
       "path": "output/reports/release_bundle_manifest.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "7d46e67b4b7eac450133bcecc2d0d4130465a16b9b319b9469ff5abafab890b6",
-      "size_bytes": 31041,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "sha256": "8285b9ab4ac843661c434bf5ca722365a4a8c4190de99aa6bb1466b42e775278",
+      "size_bytes": 31043,
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4304,7 +4304,7 @@
       "producer_configured": true,
       "sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
       "size_bytes": 1051,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4328,9 +4328,9 @@
       "path": "output/reports/replay_matrix.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "cde3c32fc40ff4c83ebc52fe6d72fe0c910c4111d0839d05bd06d7d78bea04c1",
+      "sha256": "b9cb457f48da6348109b2ad9c274c7502b508cf0e7fcb6df121c126f4d41e871",
       "size_bytes": 27403,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4355,7 +4355,7 @@
       "producer_configured": true,
       "sha256": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4",
       "size_bytes": 1604,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4380,7 +4380,7 @@
       "producer_configured": true,
       "sha256": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
       "size_bytes": 9506,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4406,7 +4406,7 @@
       "producer_configured": true,
       "sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
       "size_bytes": 10504,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4432,7 +4432,7 @@
       "producer_configured": true,
       "sha256": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0",
       "size_bytes": 2247,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -4455,7 +4455,7 @@
       "producer_configured": true,
       "sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
       "size_bytes": 271,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4477,7 +4477,7 @@
       "producer_configured": true,
       "sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
       "size_bytes": 862,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4500,9 +4500,9 @@
       "path": "output/reports/stale_artifact_report.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-      "sha256": "ebe4d41d73c39c9acfc6c29013ce716adda9bd98b73a11ea398d3c3fa45c0c69",
+      "sha256": "b844d9d1f0c2d27f0fb1d03a9b1b318c6024989adcbfdaf28055cc3c9e5e4f52",
       "size_bytes": 8838,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4529,7 +4529,7 @@
       "producer_configured": true,
       "sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
       "size_bytes": 39680,
-      "source_commit": "30351cc3bd0db59cab72aeec9971d16745793951",
+      "source_commit": "363bd9882b1b8fe58bc861970be5b92a5ae1af9f",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"

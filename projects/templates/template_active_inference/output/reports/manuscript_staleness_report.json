@@ -290,14 +290,14 @@
       "token": "si_policy_comparison_complete_grid"
     },
     {
-      "expected": "4",
+      "expected": "1",
       "fresh": true,
       "resolved_path": "output/manuscript/06_methods_pymdp.md",
       "section": "manuscript/06_methods_pymdp.md",
       "token": "pymdp_runtime_construction_count"
     },
     {
-      "expected": "4",
+      "expected": "1",
       "fresh": true,
       "resolved_path": "output/manuscript/06_methods_pymdp.md",
       "section": "manuscript/06_methods_pymdp.md",
@@ -1585,7 +1585,7 @@
       "token": "analytical_assumptions_indexed"
     },
     {
-      "expected": "4",
+      "expected": "1",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",

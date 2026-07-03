@@ -1135,9 +1135,9 @@ Total documented definitions: 804
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 13 | `function` | `_normalize_rgb_extrema` | inventory fallback | Inventory fallback for function `_normalize_rgb_extrema` defined at `src/visualizations/figure_io.py:13`. |
-| 22 | `function` | `image_render_metrics` | docstring | Return deterministic live PNG metrics used by render validators. |
-| 55 | `function` | `save_figure_png` | docstring | Save a figure to PNG and optionally normalize to RGB for PDF pipelines. |
+| 15 | `function` | `_normalize_rgb_extrema` | inventory fallback | Inventory fallback for function `_normalize_rgb_extrema` defined at `src/visualizations/figure_io.py:15`. |
+| 24 | `function` | `image_render_metrics` | docstring | Return deterministic live PNG metrics used by render validators. |
+| 65 | `function` | `save_figure_png` | docstring | Save a figure to PNG and optionally normalize to RGB for PDF pipelines. |
 
 ## `src/visualizations/figure_registry.py`
 
