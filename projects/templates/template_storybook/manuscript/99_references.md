@@ -1,4 +1,4 @@
 # References
 
-The project is an illustrative template. The current manuscript does not depend
-on external scholarly claims.
+The bundled story is illustrative fiction. The Synergetics reference grounds
+the tetrahedron-inside-cube design motif used in the stability page.

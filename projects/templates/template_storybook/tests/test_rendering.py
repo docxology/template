@@ -35,9 +35,20 @@ def test_build_storybook_pdf_writes_manifest_and_pdf(isolated_project) -> None:
     assert len(result.image_paths) == result.page_count
 
 
+def test_build_storybook_pdf_removes_stale_page_images(isolated_project) -> None:
+    stale_dir = isolated_project / "output" / "figures" / "storybook_pages"
+    stale_dir.mkdir(parents=True)
+    stale = stale_dir / "99_retired_page.png"
+    stale.write_bytes(b"old page")
+
+    build_storybook_pdf(isolated_project)
+
+    assert not stale.exists()
+
+
 def test_render_story_number_uses_configured_filename(isolated_project) -> None:
     path = render_story_number(isolated_project, 2)
-    assert path.name == "02_pointed_house.png"
+    assert path.name == "02_square_house.png"
     assert path.is_file()
 
 
@@ -49,6 +60,6 @@ def test_page_script_accepts_project_root(isolated_project, project_root) -> Non
         capture_output=True,
         text=True,
     )
-    rendered = isolated_project / "output" / "figures" / "storybook_pages" / "01_square_house.png"
+    rendered = isolated_project / "output" / "figures" / "storybook_pages" / "01_publication_information.png"
     assert str(rendered) in completed.stdout
     assert rendered.is_file()

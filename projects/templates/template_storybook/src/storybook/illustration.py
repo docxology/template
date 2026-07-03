@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import itertools
 import math
 import random
 import textwrap
@@ -76,6 +77,21 @@ def _draw_yinyang(draw: ImageDraw.ImageDraw, cx: int, cy: int, radius: int, ligh
     draw.ellipse((cx - dot, cy - radius // 2 - dot, cx + dot, cy - radius // 2 + dot), fill=dark)
     draw.ellipse((cx - dot, cy + radius // 2 - dot, cx + dot, cy + radius // 2 + dot), fill=light)
     draw.ellipse(box, outline=_mix(light, dark, 0.45), width=max(4, radius // 70))
+
+
+def _text_width(draw: ImageDraw.ImageDraw, line: str, font: ImageFont.ImageFont | ImageFont.FreeTypeFont) -> int:
+    bbox = draw.textbbox((0, 0), line, font=font)
+    return int(bbox[2] - bbox[0])
+
+
+def _wrapped_lines(text: str, width: int) -> list[str]:
+    lines: list[str] = []
+    for paragraph in text.splitlines():
+        if not paragraph.strip():
+            lines.append("")
+            continue
+        lines.extend(textwrap.wrap(paragraph, width=width))
+    return lines
 
 
 def _tetra_points(
@@ -170,21 +186,112 @@ def _draw_family(draw: ImageDraw.ImageDraw, character: Character, centers: list[
             draw_tetrahedron(draw, center, scale, character.fill, character.accent)
 
 
+def _draw_cover_text(image: Image.Image, page: PageSpec) -> None:
+    draw = ImageDraw.Draw(image, "RGBA")
+    width, height = image.size
+    title_font = _font(106, bold=True)
+    subtitle_font = _font(43, bold=True)
+    small_font = _font(30)
+    title_lines = _wrapped_lines(page.title, 18)
+    subtitle_lines = _wrapped_lines(page.text, 38)
+    y = 92
+    for line in title_lines:
+        x = (width - _text_width(draw, line, title_font)) // 2
+        draw.text((x + 5, y + 5), line, font=title_font, fill=(10, 12, 24, 230))
+        draw.text((x, y), line, font=title_font, fill=(255, 249, 236, 255))
+        y += 116
+    y += 12
+    for line in subtitle_lines:
+        x = (width - _text_width(draw, line, subtitle_font)) // 2
+        draw.text((x + 3, y + 3), line, font=subtitle_font, fill=(10, 12, 24, 220))
+        draw.text((x, y), line, font=subtitle_font, fill=(255, 249, 236, 255))
+        y += 56
+    footer = "template_storybook"
+    x = (width - _text_width(draw, footer, small_font)) // 2
+    draw.text((x, height - 122), footer, font=small_font, fill=(35, 38, 55, 220))
+
+
+def _draw_publication_text(image: Image.Image, page: PageSpec) -> None:
+    draw = ImageDraw.Draw(image, "RGBA")
+    width, height = image.size
+    title_font = _font(58, bold=True)
+    body_font = _font(32)
+    small_font = _font(26)
+    margin = 112
+    panel = (margin - 38, 150, width - margin + 38, height - 170)
+    draw.rounded_rectangle(panel, radius=28, fill=(255, 250, 240, 232), outline=(35, 38, 55, 170), width=4)
+    draw.text((margin, 198), page.title, font=title_font, fill=(24, 28, 42, 255))
+    y = 296
+    for line in _wrapped_lines(page.text, 57):
+        if not line:
+            y += 28
+            continue
+        font = body_font if y < 690 else small_font
+        draw.text((margin, y), line, font=font, fill=(24, 28, 42, 255))
+        y += 43 if font is body_font else 36
+
+
+def _wire_cube_points(cx: int, cy: int, size: int) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
+    half = size // 2
+    shift = int(size * 0.30)
+    front = [
+        (cx - half, cy - half + shift),
+        (cx + half, cy - half + shift),
+        (cx + half, cy + half + shift),
+        (cx - half, cy + half + shift),
+    ]
+    back = [(x + shift, y - shift) for x, y in front]
+    return front, back
+
+
+def _draw_tetra_stability(draw: ImageDraw.ImageDraw, cx: int, cy: int, size: int) -> None:
+    front, back = _wire_cube_points(cx, cy, size)
+    cube_edges = [
+        (front[0], front[1]),
+        (front[1], front[2]),
+        (front[2], front[3]),
+        (front[3], front[0]),
+        (back[0], back[1]),
+        (back[1], back[2]),
+        (back[2], back[3]),
+        (back[3], back[0]),
+        (front[0], back[0]),
+        (front[1], back[1]),
+        (front[2], back[2]),
+        (front[3], back[3]),
+    ]
+    for start, end in cube_edges:
+        draw.line((*start, *end), fill=(240, 250, 255, 180), width=8)
+    tetra = [back[0], front[1], front[3], back[2]]
+    for start, end in itertools.combinations(tetra, 2):
+        draw.line((*start, *end), fill=(245, 200, 76, 235), width=12)
+    for point in tetra:
+        x, y = point
+        draw.ellipse((x - 18, y - 18, x + 18, y + 18), fill=(245, 200, 76, 255), outline=(39, 54, 74, 255), width=4)
+    draw.polygon(tetra[:3], fill=(245, 200, 76, 42))
+
+
 def _overlay_text(image: Image.Image, page: PageSpec) -> None:
+    if page.slug == "cover":
+        _draw_cover_text(image, page)
+        return
+    if page.slug == "publication_information":
+        _draw_publication_text(image, page)
+        return
     draw = ImageDraw.Draw(image, "RGBA")
     width, height = image.size
     title_font = _font(58, bold=True)
     text_font = _font(37)
     margin = 86
     max_chars = 40
-    title_lines = textwrap.wrap(page.title, width=24)
-    body_lines = textwrap.wrap(page.text, width=max_chars)
+    title_lines = _wrapped_lines(page.title, 24)
+    body_lines = _wrapped_lines(page.text, max_chars)
     line_gap = 12
     title_height = 68 * len(title_lines)
     body_height = 48 * len(body_lines)
     box_height = title_height + body_height + 72
     top = height - box_height - 88
-    if page.slug in {"cover", "mega_symbol"}:
+    if page.slug in {"mega_symbol"}:
         top = 92
     if page.overlay_box:
         draw.rounded_rectangle(
@@ -230,6 +337,11 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
         _draw_yinyang(draw, width // 2, height // 2 + 30, 460, _hex("#f7efe5"), _hex("#141421"))
         _draw_character(draw, tessa, (width // 2 - 175, height // 2 - 40), 210)
         _draw_character(draw, ciro, (width // 2 + 210, height // 2 + 60), 220)
+    elif page.scene == "publication_info":
+        draw.rounded_rectangle((145, 250, width - 145, height - 260), radius=36, fill=(255, 250, 240, 90))
+        draw_cube(draw, (width // 2 - 120, 990), 138, "#62c7d8", "#4d2d73")
+        draw_tetrahedron(draw, (width // 2 + 155, 980), 140, "#f5c84c", "#27364a")
+        draw.line((width // 2 - 15, 1000, width // 2 + 35, 1000), fill=_hex("#27364a"), width=7)
     elif page.scene == "cube_home":
         _draw_family(draw, tessa, [(250, 1110), (470, 1030), (720, 1125), (965, 1038)], 170)
         _draw_character(draw, tessa, (width // 2, 680), 250)
@@ -248,6 +360,11 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
         _draw_character(draw, tessa, (470, 820), 230)
         _draw_character(draw, ciro, (820, 830), 230)
         draw.line((572, 835, 705, 835), fill=_hex("#ffffff"), width=12)
+    elif page.scene == "tetra_stability":
+        _draw_tetra_stability(draw, width // 2 - 90, 720, 560)
+        _draw_character(draw, tessa, (width // 2 - 345, 870), 160)
+        _draw_character(draw, ciro, (width // 2 + 375, 890), 165)
+        draw.arc((220, 360, 1040, 1195), 198, 342, fill=(255, 255, 255, 160), width=7)
     elif page.scene == "mirror":
         draw.line((width // 2, 260, width // 2, 1260), fill=_hex("#ffffff"), width=10)
         _draw_family(draw, tessa, [(250, 950), (420, 1040), (275, 1145)], 140)

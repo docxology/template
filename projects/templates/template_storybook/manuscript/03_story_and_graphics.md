@@ -7,5 +7,8 @@ page.
 
 The renderer uses simple geometric primitives: isometric cubes, shaded
 tetrahedra, family clusters, a curved reciprocal symbol, and deterministic star
-fields. This gives forks a readable baseline. Replacing the story does not
-require editing Python; replacing the visual grammar does.
+fields. The new stability page borrows from the Synergetics intuition that
+triangulated structure braces square space: a tetrahedron is drawn through four
+alternating cube corners so the cube becomes steadier without ceasing to be a
+cube [@fuller1975synergetics]. This gives forks a readable baseline. Replacing
+the story does not require editing Python; replacing the visual grammar does.

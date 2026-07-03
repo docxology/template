@@ -15,6 +15,16 @@ def image_output_path(project_root: Path | str, page: PageSpec) -> Path:
     return Path(project_root) / "output" / "figures" / "storybook_pages" / page.filename
 
 
+def _clean_stale_page_images(project_root: Path, spec: StorybookSpec) -> None:
+    pages_dir = project_root / "output" / "figures" / "storybook_pages"
+    if not pages_dir.is_dir():
+        return
+    expected = {page.filename for page in spec.pages}
+    for path in pages_dir.glob("*.png"):
+        if path.name not in expected:
+            path.unlink()
+
+
 def render_story_page(project_root: Path | str, slug: str) -> Path:
     root = Path(project_root)
     spec = load_storybook(root)
@@ -32,23 +42,15 @@ def render_story_number(project_root: Path | str, number: int) -> Path:
 def render_all_images(project_root: Path | str) -> tuple[Path, ...]:
     root = Path(project_root)
     spec = load_storybook(root)
+    _clean_stale_page_images(root, spec)
     return tuple(render_page_image(spec, page, image_output_path(root, page)) for page in spec.pages)
-
-
-def _ensure_images(spec: StorybookSpec, project_root: Path) -> tuple[Path, ...]:
-    paths: list[Path] = []
-    for page in spec.pages:
-        path = image_output_path(project_root, page)
-        if not path.is_file():
-            render_page_image(spec, page, path)
-        paths.append(path)
-    return tuple(paths)
 
 
 def build_storybook_pdf(project_root: Path | str) -> RenderResult:
     root = Path(project_root)
     spec = load_storybook(root)
-    image_paths = _ensure_images(spec, root)
+    _clean_stale_page_images(root, spec)
+    image_paths = tuple(render_page_image(spec, page, image_output_path(root, page)) for page in spec.pages)
     output_path = root / spec.output_pdf
     output_path.parent.mkdir(parents=True, exist_ok=True)
 

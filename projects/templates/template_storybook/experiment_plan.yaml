@@ -1,7 +1,7 @@
 conditions:
   - name: bundled_story
     role: reference
-    description: "The checked-in nine-page storybook about reciprocal cube and tetrahedron families."
+    description: "The checked-in eleven-page storybook about reciprocal cube and tetrahedron families."
   - name: direct_text_overlay
     role: variant
     description: "Pages that place story text directly on the illustration with shadowed lettering."

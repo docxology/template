@@ -46,4 +46,6 @@ analysis:
     - "25_render_page_06.py"
     - "26_render_page_07.py"
     - "27_render_page_08.py"
+    - "28_render_page_09.py"
+    - "29_render_page_10.py"
     - "90_build_storybook_pdf.py"

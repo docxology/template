@@ -90,11 +90,12 @@ ty)) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
 )
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
-[1] (./_combined_manuscript.toc) [1] [2] [3] [4] [5] [6] [7]
-(./_combined_manuscript.bbl
-
-Package natbib Warning: Empty `thebibliography' environment on input line 8.
-
-) [8] (./_combined_manuscript.aux) )
+[1] (./_combined_manuscript.toc) [1]
+Underfull \hbox (badness 1377) in paragraph at lines 136--145
+\TU/lmtt/m/n/10 t e m p l a t e _ s t o r y b o o k \TU/lmr/m/n/10 demonstrates
+ a public, standalone picture-book workflow in the research template
+[2] [3] [4] [5] [6] [7] (./_combined_manuscript.bbl) [8]
+(./_combined_manuscript.aux) )
+(see the transcript file for additional information)
 Output written on _combined_manuscript.pdf (9 pages).
 Transcript written on _combined_manuscript.log.

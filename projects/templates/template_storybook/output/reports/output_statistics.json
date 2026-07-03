@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "0.78",
-      "total_size_bytes": 817391,
+      "size_mb": "1.01",
+      "total_size_bytes": 1060858,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
-          "size_mb": "0.68",
+          "size_mb": "0.90",
           "path": "pdf/the-shape-between.pdf"
         },
         {
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.04",
-      "total_size_bytes": 43722,
+      "total_size_bytes": 44976,
       "largest_files": [
         {
           "name": "index.html",
@@ -64,8 +64,8 @@
     "slides": {
       "exists": true,
       "file_count": 46,
-      "size_mb": "0.45",
-      "total_size_bytes": 477081,
+      "size_mb": "0.46",
+      "total_size_bytes": 479964,
       "largest_files": [
         {
           "name": "02_architecture_slides.log",
@@ -96,35 +96,35 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.63",
-      "total_size_bytes": 665080,
+      "file_count": 11,
+      "size_mb": "0.85",
+      "total_size_bytes": 887123,
       "largest_files": [
         {
-          "name": "08_shared_home.png",
+          "name": "06_tetra_inside_cube.png",
           "size_mb": "0.09",
-          "path": "figures/storybook_pages/08_shared_home.png"
+          "path": "figures/storybook_pages/06_tetra_inside_cube.png"
         },
         {
-          "name": "02_pointed_house.png",
-          "size_mb": "0.08",
-          "path": "figures/storybook_pages/02_pointed_house.png"
+          "name": "01_publication_information.png",
+          "size_mb": "0.09",
+          "path": "figures/storybook_pages/01_publication_information.png"
         },
         {
-          "name": "03_valley_symbol.png",
-          "size_mb": "0.07",
-          "path": "figures/storybook_pages/03_valley_symbol.png"
+          "name": "03_pointed_house.png",
+          "size_mb": "0.09",
+          "path": "figures/storybook_pages/03_pointed_house.png"
         }
       ],
       "extensions": {
-        ".png": 9
+        ".png": 11
       }
     },
     "data": {
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 3935,
+      "total_size_bytes": 4566,
       "largest_files": [
         {
           "name": "storybook_manifest.json",
@@ -139,12 +139,12 @@
     "reports": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.05",
-      "total_size_bytes": 57164,
+      "size_mb": "0.06",
+      "total_size_bytes": 60960,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.04",
+          "size_mb": "0.05",
           "path": "reports/evidence_registry.json"
         },
         {
@@ -183,32 +183,32 @@
       "total_size_bytes": 0
     }
   },
-  "total_files": 84,
-  "total_size_mb": 1.9687395095825195,
+  "total_files": 86,
+  "total_size_mb": 2.420851707458496,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
-      "size_mb": "0.68",
+      "size_mb": "0.90",
       "category": "pdf",
       "path": "pdf/the-shape-between.pdf"
     },
     {
-      "name": "08_shared_home.png",
+      "name": "06_tetra_inside_cube.png",
       "size_mb": "0.09",
       "category": "figures",
-      "path": "figures/storybook_pages/08_shared_home.png"
+      "path": "figures/storybook_pages/06_tetra_inside_cube.png"
     },
     {
-      "name": "02_pointed_house.png",
-      "size_mb": "0.08",
+      "name": "01_publication_information.png",
+      "size_mb": "0.09",
       "category": "figures",
-      "path": "figures/storybook_pages/02_pointed_house.png"
+      "path": "figures/storybook_pages/01_publication_information.png"
     },
     {
-      "name": "03_valley_symbol.png",
-      "size_mb": "0.07",
+      "name": "03_pointed_house.png",
+      "size_mb": "0.09",
       "category": "figures",
-      "path": "figures/storybook_pages/03_valley_symbol.png"
+      "path": "figures/storybook_pages/03_pointed_house.png"
     },
     {
       "name": "02_architecture_slides.log",
@@ -229,6 +229,12 @@
       "path": "slides/00_abstract_slides.log"
     },
     {
+      "name": "evidence_registry.json",
+      "size_mb": "0.05",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
       "name": "_combined_manuscript.log",
       "size_mb": "0.04",
       "category": "pdf",
@@ -239,12 +245,6 @@
       "size_mb": "0.04",
       "category": "pdf",
       "path": "pdf/template_storybook_combined.pdf"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.04",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     }
   ],
   "missing_expected_files": [
@@ -253,12 +253,12 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.7795248031616211,
-    "web": 0.04169654846191406,
-    "slides": 0.45497989654541016,
-    "figures": 0.6342697143554688,
-    "data": 0.0037527084350585938,
-    "reports": 0.054515838623046875
+    "pdf": 1.0117130279541016,
+    "web": 0.0428924560546875,
+    "slides": 0.4577293395996094,
+    "figures": 0.8460264205932617,
+    "data": 0.0043544769287109375,
+    "reports": 0.058135986328125
   },
   "file_counts_by_type": {
     ".md": 5,
@@ -274,7 +274,7 @@
     ".nav": 6,
     ".vrb": 3,
     ".snm": 6,
-    ".png": 9,
+    ".png": 11,
     ".json": 6,
     ".txt": 1
   }

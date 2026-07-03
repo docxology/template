@@ -29,7 +29,7 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 
 - Keep README examples clear that Stage 02 renders the storybook PDF, while
   Stage 03 renders the descriptive manuscript PDF.
-- Add a visual contact sheet when the project grows beyond nine pages.
+- Add a visual contact sheet for the current eleven-page book.
 
 ## Test and validator gaps
 

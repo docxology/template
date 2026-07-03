@@ -9,10 +9,14 @@ from storybook import child_pair, generate_character, load_storybook
 def test_load_storybook_story_contract(project_root) -> None:
     spec = load_storybook(project_root)
     assert spec.title == "The Shape Between"
-    assert spec.page_count == 9
+    assert spec.page_count == 11
     assert spec.pages[0].slug == "cover"
+    assert spec.pages[1].slug == "publication_information"
+    assert spec.page_by_number(6).slug == "tetra_inside_cube"
     assert spec.pages[-1].slug == "shared_home"
     assert all(page.text for page in spec.pages)
+    assert "Synergetics" in spec.pages[1].text
+    assert "tetrahedron inside the cube" in spec.page_by_number(6).text
 
 
 def test_child_pair_uses_opposite_family_shapes(project_root) -> None:

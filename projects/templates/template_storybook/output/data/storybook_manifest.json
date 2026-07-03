@@ -1,7 +1,7 @@
 {
   "title": "The Shape Between",
   "subtitle": "A full-page illustrated storybook about reciprocal belonging",
-  "page_count": 9,
+  "page_count": 11,
   "characters": [
     {
       "id": "tessa",
@@ -42,55 +42,69 @@
     },
     {
       "number": 1,
+      "slug": "publication_information",
+      "title": "Publication Information",
+      "scene": "publication_info",
+      "overlay_box": true
+    },
+    {
+      "number": 2,
       "slug": "square_house",
       "title": "The Square House",
       "scene": "cube_home",
       "overlay_box": true
     },
     {
-      "number": 2,
+      "number": 3,
       "slug": "pointed_house",
       "title": "The Pointed House",
       "scene": "tetra_home",
       "overlay_box": false
     },
     {
-      "number": 3,
+      "number": 4,
       "slug": "valley_symbol",
       "title": "The Valley That Turned",
       "scene": "symbol_valley",
       "overlay_box": true
     },
     {
-      "number": 4,
+      "number": 5,
       "slug": "first_connection",
       "title": "The First Edge",
       "scene": "meeting",
       "overlay_box": false
     },
     {
-      "number": 5,
+      "number": 6,
+      "slug": "tetra_inside_cube",
+      "title": "The Tetrahedron Inside",
+      "scene": "tetra_stability",
+      "overlay_box": true
+    },
+    {
+      "number": 7,
       "slug": "mirror_families",
       "title": "Mirror Families",
       "scene": "mirror",
       "overlay_box": true
     },
     {
-      "number": 6,
+      "number": 8,
       "slug": "bridge_of_edges",
       "title": "Bridge of Edges",
       "scene": "bridge",
       "overlay_box": false
     },
     {
-      "number": 7,
+      "number": 9,
       "slug": "mega_symbol",
       "title": "The Mega-Symbol",
       "scene": "mega_symbol",
       "overlay_box": true
     },
     {
-      "number": 8,
+      "number": 10,
       "slug": "shared_home",
       "title": "The Shape Between",
       "scene": "shared_home",
@@ -99,17 +113,19 @@
   ],
   "render": {
     "output_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
-    "page_count": 9,
+    "page_count": 11,
     "image_paths": [
       "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/01_square_house.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/02_pointed_house.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/03_valley_symbol.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/04_first_connection.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/05_mirror_families.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/06_bridge_of_edges.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/07_mega_symbol.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/08_shared_home.png"
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/02_square_house.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/03_pointed_house.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/04_valley_symbol.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/05_first_connection.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/09_mega_symbol.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/10_shared_home.png"
     ],
     "manifest_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/data/storybook_manifest.json",
     "summary_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/reports/storybook_summary.md"

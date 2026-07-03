@@ -2,10 +2,12 @@
 
 `template_storybook` demonstrates a public, standalone picture-book workflow in
 the research template repository. The bundled project renders a deterministic
-nine-page storybook in which a child tetrahedron raised by cubes meets a child
-cube raised by tetrahedra. The story uses a large reciprocal symbol to frame
-belonging without sameness: square and triangle families remain distinct while
-the space between them becomes navigable.
+eleven-page storybook: a clear cover, a publication-and-acknowledgements page,
+and nine story pages in which a child tetrahedron raised by cubes meets a child
+cube raised by tetrahedra. The story uses a large reciprocal symbol and a
+tetrahedron-inside-cube stability spread to frame belonging without sameness:
+square and triangle families remain distinct while the space between them
+becomes navigable.
 
 The project separates story data, rendering logic, and orchestration. Story
 text, characters, page order, palettes, and overlay choices live in

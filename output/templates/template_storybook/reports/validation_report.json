@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-03T09:00:43.013927",
+  "timestamp": "2026-07-03T09:26:15.466242",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -30,7 +30,7 @@
           "pdf": {
             "exists": true,
             "files": 11,
-            "size_mb": 0.78,
+            "size_mb": 1.01,
             "readable": true,
             "optional": false
           },
@@ -44,14 +44,14 @@
           "slides": {
             "exists": true,
             "files": 46,
-            "size_mb": 0.45,
+            "size_mb": 0.46,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
-            "files": 9,
-            "size_mb": 0.63,
+            "files": 11,
+            "size_mb": 0.85,
             "readable": true,
             "optional": false
           },
@@ -65,7 +65,7 @@
           "reports": {
             "exists": true,
             "files": 9,
-            "size_mb": 0.05,
+            "size_mb": 0.06,
             "readable": true,
             "optional": false
           },
@@ -93,7 +93,7 @@
         "pdf": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "0.78",
+          "size_mb": "1.01",
           "largest_file": "the-shape-between.pdf"
         },
         "web": {
@@ -105,14 +105,14 @@
         "slides": {
           "exists": true,
           "file_count": 46,
-          "size_mb": "0.45",
+          "size_mb": "0.46",
           "largest_file": "02_architecture_slides.log"
         },
         "figures": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "0.63",
-          "largest_file": "08_shared_home.png"
+          "file_count": 11,
+          "size_mb": "0.85",
+          "largest_file": "06_tetra_inside_cube.png"
         },
         "data": {
           "exists": true,
@@ -123,7 +123,7 @@
         "reports": {
           "exists": true,
           "file_count": 9,
-          "size_mb": "0.05",
+          "size_mb": "0.06",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -146,11 +146,11 @@
         "pdf": 11,
         "web": 8,
         "slides": 46,
-        "figures": 9,
+        "figures": 11,
         "data": 1,
         "reports": 9
       },
-      "total_size_mb": 1.9680509567260742,
+      "total_size_mb": 2.4208507537841797,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -165,7 +165,7 @@
     },
     "pdf": {
       "files": 11,
-      "size_mb": 0.7795248031616211
+      "size_mb": 1.0117130279541016
     },
     "figures": {
       "files": 0,
@@ -173,7 +173,7 @@
     },
     "data": {
       "files": 1,
-      "size_mb": 0.0037527084350585938
+      "size_mb": 0.0043544769287109375
     }
   },
   "summary": {

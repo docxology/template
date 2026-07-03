@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 09:00
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 09:26
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1123,25 +1123,27 @@ Package hyperref Info: Link coloring ON on input line 113.
 \tf@toc=\write3
 \openout3 = `_combined_manuscript.toc'.
 
- [1] [2] [3] [4] [5] [6] [7]
-(./_combined_manuscript.bbl
+ [1]
+Underfull \hbox (badness 1377) in paragraph at lines 136--145
+\TU/lmtt/m/n/10 t e m p l a t e _ s t o r y b o o k \TU/lmr/m/n/10 demonstrates
+ a public, standalone picture-book workflow in the research template
+ []
 
-Package natbib Warning: Empty `thebibliography' environment on input line 8.
+[2] [3] [4] [5] [6] [7] (./_combined_manuscript.bbl) [8
 
-) [8
-
-] (./_combined_manuscript.aux)
+]
+(./_combined_manuscript.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20618 strings out of 468168
- 375904 string characters out of 5432815
- 959249 words of memory out of 5000000
- 49122 multiletter control sequences out of 15000+600000
- 628421 words of font info for 55 fonts, out of 8000000 for 9000
+ 20629 strings out of 468168
+ 376131 string characters out of 5432815
+ 959274 words of memory out of 5000000
+ 49128 multiletter control sequences out of 15000+600000
+ 628429 words of font info for 56 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,5n,114p,1017b,386s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
