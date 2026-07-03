@@ -56,7 +56,7 @@ Publishing surface — 20 platforms, 9 published:
 
 _Keywords: reproducible research, infrastructure-as-code, steganography, cryptographic provenance, LaTeX rendering, modular infrastructure, publication integrity, zero-mock testing, thin orchestrator, two-layer architecture, FAIR4RS, research software engineering._
 
-_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
+_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
 The 3 platforms still shown ⚪ available are not automatable to "published" with

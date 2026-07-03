@@ -50,7 +50,7 @@ Publishing surface — 20 platforms, 1 published:
 
 _Keywords: literature search, automated reference management, BibTeX, reproducible research, local LLM synthesis._
 
-_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
+_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
 The publishing metadata and per-platform status below are **compiled from
