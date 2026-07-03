@@ -29,7 +29,7 @@ from manuscript.sheaf import (
 
 ROOT = Path(__file__).resolve().parents[1]
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(180)]
+pytestmark = [pytest.mark.timeout(180)]
 
 
 def _live() -> tuple[SheafManifest, TrackRegistry]:
@@ -39,9 +39,7 @@ def _live() -> tuple[SheafManifest, TrackRegistry]:
 
 
 def _replace_section(manifest: SheafManifest, section_id: str, **changes: object) -> SheafManifest:
-    sections = tuple(
-        dataclasses.replace(s, **changes) if s.id == section_id else s for s in manifest.sections
-    )
+    sections = tuple(dataclasses.replace(s, **changes) if s.id == section_id else s for s in manifest.sections)
     return dataclasses.replace(manifest, sections=sections)
 
 

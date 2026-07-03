@@ -18,7 +18,7 @@ from manuscript.sheaf import (
 from manuscript.sheaf.cli import build_parser, run_compose_cli
 
 _parse_missing = parse_missing
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(120)]
+pytestmark = [pytest.mark.timeout(120)]
 
 
 def test_compose_writes_markdown_sections(tmp_path: Path) -> None:

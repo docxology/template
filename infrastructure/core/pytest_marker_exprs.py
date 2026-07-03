@@ -12,6 +12,7 @@ def build_pytest_marker_expression(
     skip_requires_ollama: bool,
     skip_slow: bool,
     skip_bench: bool,
+    skip_long_running: bool = True,
     skip_private_project: bool = True,
     skip_external_fixture: bool = True,
 ) -> str | None:
@@ -21,6 +22,7 @@ def build_pytest_marker_expression(
         skip_requires_ollama: When True, append ``not requires_ollama``.
         skip_slow: When True, append ``not slow``.
         skip_bench: When True, append ``not bench``.
+        skip_long_running: When True, append ``not long_running``.
         skip_private_project: When True, append ``not private_project``.
         skip_external_fixture: When True, append ``not external_fixture``.
     """
@@ -31,6 +33,8 @@ def build_pytest_marker_expression(
         parts.append("not slow")
     if skip_bench:
         parts.append("not bench")
+    if skip_long_running:
+        parts.append("not long_running")
     if skip_private_project:
         parts.append("not private_project")
     if skip_external_fixture:

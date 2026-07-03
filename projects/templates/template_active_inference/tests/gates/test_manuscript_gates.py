@@ -14,7 +14,7 @@ from gates.validation import validate_manuscript
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 from visualizations.figure_registry import write_figure_registry_json
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.timeout(300)]
 
 
 def _prepare_minimal_manuscript_gate_artifacts(project_root: Path) -> None:
@@ -105,18 +105,10 @@ def test_validate_manuscript_resolved_hydrated_negative(project_root: Path) -> N
     from manuscript.variables import generate_variables
 
     resolved_dir = project_root / "output" / "manuscript"
-    candidates = [
-        path
-        for path in sorted(resolved_dir.glob("*.md"))
-        if path.name not in EXCLUDED_DOC_FILENAMES
-    ]
+    candidates = [path for path in sorted(resolved_dir.glob("*.md")) if path.name not in EXCLUDED_DOC_FILENAMES]
     if not candidates:
         write_resolved_manuscript(project_root, generate_variables(project_root, require_analysis_outputs=False))
-        candidates = [
-            path
-            for path in sorted(resolved_dir.glob("*.md"))
-            if path.name not in EXCLUDED_DOC_FILENAMES
-        ]
+        candidates = [path for path in sorted(resolved_dir.glob("*.md")) if path.name not in EXCLUDED_DOC_FILENAMES]
     assert candidates, "expected hydrated manuscript pages for negative control"
     originals = {path: path.read_text(encoding="utf-8") for path in candidates}
     try:

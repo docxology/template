@@ -8,7 +8,7 @@ import pytest
 
 from manuscript.sheaf.cli import build_parser, run_compose_cli
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(120)]
+pytestmark = [pytest.mark.timeout(120)]
 
 
 def test_build_parser_has_expected_flags() -> None:

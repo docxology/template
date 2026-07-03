@@ -14,7 +14,7 @@ from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.timeout(300)]
 
 
 @pytest.fixture
@@ -29,6 +29,7 @@ def _write_png(path: Path, *, blank: bool = False) -> None:
     if not blank:
         image.putpixel((20, 20), (0, 0, 0))
     image.save(path, format="PNG")
+
 
 # Regenerates heavy sheaf/roadmap gate artifacts; ~57-59s locally and can exceed the
 # CI-wide --timeout=120 on slower runners. The per-module marker overrides the CLI value.
@@ -147,6 +148,7 @@ def test_validate_outputs_key_surface_is_stable(
     assert set(checks) == set(REQUIRED_OUTPUTS) | EXPECTED_DERIVED_OUTPUT_CHECK_KEYS
 
 
+@pytest.mark.long_running
 def test_validate_outputs_no_regression_on_stable_artifact_tree(prepared_output_gate_artifacts: Path) -> None:
     refresh_generated_gate_artifacts(prepared_output_gate_artifacts)
     first_checks = validate_outputs(prepared_output_gate_artifacts)
@@ -163,7 +165,9 @@ def test_validate_outputs_no_regression_on_stable_artifact_tree(prepared_output_
 
     assert checks["figures_nonblank"] is True
     for path, previous in pre_hashes.items():
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == previous, path.relative_to(prepared_output_gate_artifacts)
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == previous, path.relative_to(
+            prepared_output_gate_artifacts
+        )
 
 
 def test_validate_outputs_negative_si_invariants_fail(project_root: Path, tmp_path: Path) -> None:

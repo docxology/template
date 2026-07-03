@@ -8,7 +8,7 @@ from pathlib import Path
 from gates.validation import validate_manuscript
 import pytest
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.timeout(300)]
 
 
 def test_validate_manuscript_claim_ledger_missing_file_negative(project_root: Path, tmp_path: Path) -> None:

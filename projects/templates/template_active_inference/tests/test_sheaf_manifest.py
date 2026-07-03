@@ -16,7 +16,8 @@ from manuscript.sheaf import (
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.timeout(300)]
+
 
 def test_manifest_loads_imrad_sections() -> None:
     root = Path(__file__).resolve().parents[1]

@@ -22,7 +22,8 @@ from track_consolidation_support import (
     _write,
 )
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.timeout(600)]
+
 
 def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from roadmap_tracks import sheaf_tracks
@@ -202,9 +203,7 @@ def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> 
     assert scholarship["declared_section_citation_overlap_count"] >= 1
     assert scholarship["quantitative_method_role_count"] >= 3
     assert all(
-        row["source_locator_kind"]
-        and row["citation_sections"]
-        and row["claim_boundary_scope_guarded"]
+        row["source_locator_kind"] and row["citation_sections"] and row["claim_boundary_scope_guarded"]
         for row in scholarship["rows"]
     )
     assert proof_dependency["all_theorems_have_dependencies"] is True

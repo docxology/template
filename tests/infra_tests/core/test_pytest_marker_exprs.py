@@ -10,17 +10,20 @@ def test_default_triple_skip_matches_repo_gate() -> None:
         skip_requires_ollama=True,
         skip_slow=True,
         skip_bench=True,
-    ) == ("not requires_ollama and not slow and not bench and not private_project and not external_fixture")
+    ) == (
+        "not requires_ollama and not slow and not bench and not long_running "
+        "and not private_project and not external_fixture"
+    )
 
 
-def test_include_slow_matches_ci_project_job_expression() -> None:
+def test_include_slow_still_skips_long_running_ci_project_job_expression() -> None:
     assert (
         build_pytest_marker_expression(
             skip_requires_ollama=True,
             skip_slow=False,
             skip_bench=True,
         )
-        == "not requires_ollama and not bench and not private_project and not external_fixture"
+        == "not requires_ollama and not bench and not long_running and not private_project and not external_fixture"
     )
 
 
@@ -31,7 +34,7 @@ def test_include_ollama_include_slow_still_skips_bench() -> None:
             skip_slow=False,
             skip_bench=True,
         )
-        == "not bench and not private_project and not external_fixture"
+        == "not bench and not long_running and not private_project and not external_fixture"
     )
 
 
@@ -41,6 +44,7 @@ def test_all_skips_disabled_returns_none() -> None:
             skip_requires_ollama=False,
             skip_slow=False,
             skip_bench=False,
+            skip_long_running=False,
             skip_private_project=False,
             skip_external_fixture=False,
         )
@@ -55,5 +59,17 @@ def test_only_slow_skip() -> None:
             skip_slow=True,
             skip_bench=False,
         )
-        == "not slow and not private_project and not external_fixture"
+        == "not slow and not long_running and not private_project and not external_fixture"
+    )
+
+
+def test_include_long_running_omits_long_running_filter() -> None:
+    assert (
+        build_pytest_marker_expression(
+            skip_requires_ollama=True,
+            skip_slow=False,
+            skip_bench=True,
+            skip_long_running=False,
+        )
+        == "not requires_ollama and not bench and not private_project and not external_fixture"
     )

@@ -18,7 +18,7 @@ from orchestration.coverage_pipeline import run_coverage_pipeline
 from visualizations.figure_registry import load_figure_registry, load_section_figures
 from visualizations.figures import figure_sheaf_coverage_heatmap
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(120)]
+pytestmark = [pytest.mark.timeout(120)]
 
 
 def test_coverage_matrix_colors() -> None:

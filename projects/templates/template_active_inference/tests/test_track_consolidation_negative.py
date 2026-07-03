@@ -6,7 +6,12 @@ from pathlib import Path
 
 import pytest
 
-from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation, temporary_yaml_mutation
+from gate_support import (
+    ensure_gate_artifacts,
+    temporary_json_mutation,
+    temporary_text_mutation,
+    temporary_yaml_mutation,
+)
 from track_consolidation_support import (
     JsonMutation,
     _break_statistical_bridge_visualization_binding,
@@ -19,8 +24,10 @@ from track_consolidation_support import (
     _write,
 )
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.timeout(600)]
 
+
+@pytest.mark.long_running
 def test_sheaf_track_writer_looks_up_source_commit_once(
     project_root: Path,
     monkeypatch: pytest.MonkeyPatch,

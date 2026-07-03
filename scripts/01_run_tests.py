@@ -78,6 +78,14 @@ def main() -> int:
         help="Include slow tests (normally skipped for faster execution)",
     )
     parser.add_argument(
+        "--include-long-running",
+        action="store_true",
+        help=(
+            "Include long-running end-to-end/deep gate tests. These are heavier "
+            "than ordinary slow tests and are skipped by default."
+        ),
+    )
+    parser.add_argument(
         "--infra-only",
         action="store_true",
         help="Run only infrastructure tests (skip project tests)",
@@ -169,6 +177,7 @@ def main() -> int:
             skip_requires_ollama=not args.include_ollama_tests,
             skip_slow=not args.include_slow,
             skip_bench=True,
+            skip_long_running=not args.include_long_running,
         )
         projects = None
         if args.public_projects:
@@ -194,6 +203,7 @@ def main() -> int:
         run_project=run_project,
         quiet=quiet,
         include_slow=args.include_slow,
+        include_long_running=args.include_long_running,
         include_ollama_tests=args.include_ollama_tests,
         strict=strict,
         infra_scope=args.infra_scope,

@@ -157,6 +157,7 @@ def run_project_tests(
     project_name: str = "project",
     quiet: bool = True,
     include_slow: bool = False,
+    include_long_running: bool = False,
     include_bench: bool = False,
     strict: bool = True,
     include_ollama_tests: bool = False,
@@ -175,6 +176,7 @@ def run_project_tests(
             project_name,
             quiet=quiet,
             include_slow=include_slow,
+            include_long_running=include_long_running,
             include_bench=include_bench,
             strict=strict,
             include_ollama_tests=include_ollama_tests,
@@ -186,6 +188,7 @@ def _run_project_tests_impl(
     project_name: str = "project",
     quiet: bool = True,
     include_slow: bool = False,
+    include_long_running: bool = False,
     include_bench: bool = False,
     strict: bool = True,
     include_ollama_tests: bool = False,
@@ -244,6 +247,7 @@ def _run_project_tests_impl(
         skip_requires_ollama=not include_ollama_tests,
         skip_slow=not include_slow,
         skip_bench=not include_bench,
+        skip_long_running=not include_long_running,
     )
     if project_marker:
         cmd.extend(["-m", project_marker])
@@ -300,6 +304,7 @@ def execute_test_pipeline(
     run_project: bool,
     quiet: bool,
     include_slow: bool,
+    include_long_running: bool,
     include_ollama_tests: bool,
     strict: bool,
     infra_scope: InfrastructureTestScope = "full",
@@ -331,6 +336,7 @@ def execute_test_pipeline(
             project_name,
             quiet,
             include_slow,
+            include_long_running=include_long_running,
             strict=strict,
             include_ollama_tests=include_ollama_tests,
         )

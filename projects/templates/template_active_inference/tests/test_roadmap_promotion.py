@@ -22,7 +22,7 @@ from gate_support import (
 # ~33-75s locally but ubuntu CI runners have been observed ~3.5x slower, so give the whole
 # module a wide per-test ceiling (a marker overrides the CLI --timeout value). 600s covers
 # the heaviest negative control on the slowest leg without masking a real hang.
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.timeout(600)]
 
 
 def _load(path: Path) -> dict:
@@ -37,6 +37,7 @@ def _relative_posix(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
 
 
+@pytest.mark.long_running
 def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) -> None:
     from roadmap_tracks import (
         validate_formal_interop_artifacts,
@@ -123,6 +124,7 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     refresh_gate_artifact_session_signature(project_root)
 
 
+@pytest.mark.long_running
 def test_toy_sweep_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_toy_sweep_artifacts, write_toy_sweep_artifacts
 
@@ -190,6 +192,7 @@ def test_toy_sweep_negative_controls(project_root: Path) -> None:
             assert any(expected in issue for issue in validate_toy_sweep_artifacts(project_root)), path.name
 
 
+@pytest.mark.long_running
 def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_root: Path) -> None:
     from roadmap_tracks import write_toy_sweep_artifacts
     from simulation.si_artifacts import write_policy_comparison, write_policy_posterior_grid
@@ -226,6 +229,7 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
     refresh_output_gate_contracts(project_root)
 
 
+@pytest.mark.long_running
 def test_formal_interop_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_formal_interop_artifacts, write_formal_interop_artifacts
 

@@ -12,7 +12,8 @@ from manuscript.sheaf import (
 )
 
 
-pytestmark = [pytest.mark.long_running, pytest.mark.timeout(120)]
+pytestmark = [pytest.mark.timeout(120)]
+
 
 def test_registry_defines_track_order() -> None:
     root = Path(__file__).resolve().parents[1]
