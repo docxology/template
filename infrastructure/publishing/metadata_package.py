@@ -33,12 +33,18 @@ from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any
-from xml.dom import minidom
 from xml.etree import ElementTree as ET
 
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+
+def _serialize_xml(root: ET.Element) -> str:
+    ET.indent(root, space="  ")
+    body = ET.tostring(root, encoding="unicode", xml_declaration=False)
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + body
+
 
 # ── Data model ────────────────────────────────────────────────────────────────
 
@@ -246,13 +252,7 @@ def generate_onix_xml(meta: PublicationMetadata) -> str:
         _onix_subelement(price_el, "PriceAmount", str(meta.price.get("amount", "0") if meta.price else "0"))
         _onix_subelement(price_el, "CurrencyCode", str(meta.price.get("currency", "USD") if meta.price else "USD"))
 
-    # Pretty-print via minidom
-    raw = ET.tostring(root, encoding="unicode", xml_declaration=False)
-    pretty = minidom.parseString(raw).toprettyxml(indent="  ")
-    # minidom adds a redundant first line; strip it and add our own declaration
-    lines = pretty.splitlines()
-    body = "\n".join(lines[1:])  # drop minidom's declaration
-    return '<?xml version="1.0" encoding="UTF-8"?>\n' + body
+    return _serialize_xml(root)
 
 
 # ── metadata.json generator ───────────────────────────────────────────────────
@@ -451,11 +451,7 @@ def generate_epub_opf(meta: PublicationMetadata) -> str:
     # ── spine (skeleton) ──────────────────────────────────────────────────────
     ET.SubElement(package, "{%s}spine" % _OPF_NS, attrib={"toc": "ncx"})
 
-    raw = ET.tostring(package, encoding="unicode", xml_declaration=False)
-    pretty = minidom.parseString(raw).toprettyxml(indent="  ")
-    lines = pretty.splitlines()
-    body = "\n".join(lines[1:])
-    return '<?xml version="1.0" encoding="UTF-8"?>\n' + body
+    return _serialize_xml(package)
 
 
 # ── Orchestrator ──────────────────────────────────────────────────────────────
