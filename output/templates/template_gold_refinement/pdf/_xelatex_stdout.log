@@ -310,111 +310,111 @@ Overfull \hbox (209.96051pt too wide) in paragraph at lines 1151--1152
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
 ves[1]|  
  [12] [13] [14] [15] [16] [17] [18] [19] [20] [21]
-Overfull \hbox (60.32585pt too wide) in paragraph at lines 1525--1525
+Overfull \hbox (60.32585pt too wide) in paragraph at lines 1522--1522
 []|\TU/lmr/m/n/10 output/reports/evidence_registry.json 
 
-Overfull \hbox (5.34436pt too wide) in paragraph at lines 1526--1526
+Overfull \hbox (5.34436pt too wide) in paragraph at lines 1523--1523
 []|\TU/lmr/m/n/10 infrastructure.validation.cli 
 
-Overfull \hbox (6.78175pt too wide) in paragraph at lines 1528--1528
+Overfull \hbox (6.78175pt too wide) in paragraph at lines 1525--1525
 \TU/lmr/m/n/10 development 
 
-Overfull \hbox (2.90176pt too wide) in paragraph at lines 1537--1537
+Overfull \hbox (2.90176pt too wide) in paragraph at lines 1534--1534
 []|\TU/lmr/m/n/10 unvalidated 
  [22]
-Overfull \hbox (34.76411pt too wide) in paragraph at lines 1571--1571
+Overfull \hbox (34.76411pt too wide) in paragraph at lines 1568--1568
 []|\TU/lmr/m/n/10 src/refinery.py::CANONICAL_STAGES|  
 
-Overfull \hbox (36.8141pt too wide) in paragraph at lines 1573--1573
+Overfull \hbox (36.8141pt too wide) in paragraph at lines 1570--1570
 []|\TU/lmr/m/n/10 src/purity.py::assert_monotone_increase|  
 
-Overfull \hbox (30.7841pt too wide) in paragraph at lines 1575--1575
+Overfull \hbox (30.7841pt too wide) in paragraph at lines 1572--1572
 []|\TU/lmr/m/n/10 src/purity.py::NINE_NINES_PURITY|  
 
-Overfull \hbox (11.9441pt too wide) in paragraph at lines 1577--1577
+Overfull \hbox (11.9441pt too wide) in paragraph at lines 1574--1574
 []|\TU/lmr/m/n/10 src/composition.py::_choose_value|  
 
-Overfull \hbox (8.79411pt too wide) in paragraph at lines 1579--1579
+Overfull \hbox (8.79411pt too wide) in paragraph at lines 1576--1576
 []|\TU/lmr/m/n/10 src/formalisms.py::FORMALISMS|  
 
-Overfull \hbox (185.19412pt too wide) in paragraph at lines 1582--1582
+Overfull \hbox (185.19412pt too wide) in paragraph at lines 1579--1579
 []|\TU/lmr/m/n/10 scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME| 
  
 
-Overfull \hbox (114.0141pt too wide) in paragraph at lines 1587--1587
+Overfull \hbox (114.0141pt too wide) in paragraph at lines 1584--1584
 []|\TU/lmr/m/n/10 src/figures/diagrams.py::generate_implementation_circuit|  
 
-Overfull \hbox (51.76411pt too wide) in paragraph at lines 1591--1591
+Overfull \hbox (51.76411pt too wide) in paragraph at lines 1588--1588
 []|\TU/lmr/m/n/10 src/integrity.py::build_integrity_dimensions|  
 
-Overfull \hbox (51.1141pt too wide) in paragraph at lines 1595--1595
+Overfull \hbox (51.1141pt too wide) in paragraph at lines 1592--1592
 []|\TU/lmr/m/n/10 src/security_assay.py::build_security_assay|  
-[23]
-Overfull \hbox (28.35374pt too wide) in paragraph at lines 1688--1688
+ [23]
+Overfull \hbox (28.35374pt too wide) in paragraph at lines 1691--1691
 []|\TU/lmr/m/n/10 claim_evidence_assay|  
 
-Overfull \hbox (24.43375pt too wide) in paragraph at lines 1690--1690
+Overfull \hbox (24.43375pt too wide) in paragraph at lines 1693--1693
 []|\TU/lmr/m/n/10 evidence_tier_ladder|  
 
-Overfull \hbox (30.32375pt too wide) in paragraph at lines 1692--1692
+Overfull \hbox (30.32375pt too wide) in paragraph at lines 1695--1695
 []|\TU/lmr/m/n/10 formalism_traceability|  
 
-Overfull \hbox (33.57375pt too wide) in paragraph at lines 1694--1694
+Overfull \hbox (33.57375pt too wide) in paragraph at lines 1697--1697
 []|\TU/lmr/m/n/10 implementation_circuit|  
 
-Overfull \hbox (29.71375pt too wide) in paragraph at lines 1696--1696
+Overfull \hbox (29.71375pt too wide) in paragraph at lines 1699--1699
 []|\TU/lmr/m/n/10 integrity_gate_matrix|  
 
-Overfull \hbox (27.30374pt too wide) in paragraph at lines 1698--1698
+Overfull \hbox (27.30374pt too wide) in paragraph at lines 1701--1701
 []|\TU/lmr/m/n/10 integrity_risk_matrix|  
 
-Overfull \hbox (15.56374pt too wide) in paragraph at lines 1701--1701
+Overfull \hbox (15.56374pt too wide) in paragraph at lines 1704--1704
 []|\TU/lmr/m/n/10 provenance_sankey|  
 
-Overfull \hbox (24.76373pt too wide) in paragraph at lines 1703--1703
+Overfull \hbox (24.76373pt too wide) in paragraph at lines 1706--1706
 []|\TU/lmr/m/n/10 purity_claim_scatter|  
 
-Overfull \hbox (13.47374pt too wide) in paragraph at lines 1705--1705
+Overfull \hbox (13.47374pt too wide) in paragraph at lines 1708--1708
 []|\TU/lmr/m/n/10 purity_progression|  
 [24]
-Overfull \hbox (25.95882pt too wide) in paragraph at lines 1822--1822
+Overfull \hbox (25.95882pt too wide) in paragraph at lines 1825--1825
 []|\TU/lmr/m/n/10 test_all_manuscript_tokens_are_generated 
  [25] [26] [27]
-Overfull \hbox (5.31102pt too wide) in paragraph at lines 1978--1983
+Overfull \hbox (5.31102pt too wide) in paragraph at lines 1981--1986
 []\TU/lmr/m/n/10 7 source-owned formalisms with equation labels: eq:purity_func
 tional, eq:monotone_refinery, eq:token_digest, eq:claim_support,
 [28] [29] [30] [31] [32]
-Overfull \hbox (4.80272pt too wide) in paragraph at lines 2352--2353
+Overfull \hbox (4.80272pt too wide) in paragraph at lines 2355--2356
 \TU/lmr/m/n/10 put/data/refinery_results.json|  
 
-Overfull \hbox (11.95271pt too wide) in paragraph at lines 2355--2356
+Overfull \hbox (11.95271pt too wide) in paragraph at lines 2358--2359
 []|\TU/lmr/m/n/10 output/reports/token_plan.json|  
 
-Overfull \hbox (9.77272pt too wide) in paragraph at lines 2362--2364
+Overfull \hbox (9.77272pt too wide) in paragraph at lines 2365--2367
 \TU/lmr/m/n/10 ures/integrity_risk_matrix.png|  
 
-Overfull \hbox (15.46272pt too wide) in paragraph at lines 2374--2377
+Overfull \hbox (15.46272pt too wide) in paragraph at lines 2377--2380
 []|\TU/lmr/m/n/10 manuscript/02_methodology.md, 
 
-Overfull \hbox (3.67271pt too wide) in paragraph at lines 2374--2377
+Overfull \hbox (3.67271pt too wide) in paragraph at lines 2377--2380
 \TU/lmr/m/n/10 manuscript/04_discussion.md, 
 
-Overfull \hbox (3.51273pt too wide) in paragraph at lines 2374--2377
+Overfull \hbox (3.51273pt too wide) in paragraph at lines 2377--2380
 \TU/lmr/m/n/10 manuscript/08_evaluation.md|  
 
-Overfull \hbox (23.59273pt too wide) in paragraph at lines 2382--2387
+Overfull \hbox (23.59273pt too wide) in paragraph at lines 2385--2390
 []|\TU/lmr/m/n/10 manuscript/06_reproducibility.md, 
 
-Overfull \hbox (4.90273pt too wide) in paragraph at lines 2382--2387
+Overfull \hbox (4.90273pt too wide) in paragraph at lines 2385--2390
 \TU/lmr/m/n/10 manuscript/08_evaluation.md, 
 
-Overfull \hbox (45.80272pt too wide) in paragraph at lines 2382--2387
+Overfull \hbox (45.80272pt too wide) in paragraph at lines 2385--2390
 \TU/lmr/m/n/10 manuscript/09_authoring_contract.md, 
 
-Overfull \hbox (25.38272pt too wide) in paragraph at lines 2382--2387
+Overfull \hbox (25.38272pt too wide) in paragraph at lines 2385--2390
 \TU/lmr/m/n/10 put/reports/evidence_registry.json, 
 
-Overfull \hbox (22.66272pt too wide) in paragraph at lines 2382--2387
+Overfull \hbox (22.66272pt too wide) in paragraph at lines 2385--2390
 \TU/lmr/m/n/10 put/reports/output_statistics.json|  
  [33] [34] [35] [36] (./_combined_manuscript.bbl [37] [38]) [39]
 (./_combined_manuscript.aux) )

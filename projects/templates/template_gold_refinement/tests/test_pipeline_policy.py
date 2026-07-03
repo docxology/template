@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from pipeline_policy import llm_review_gate_reason, llm_review_is_enabled, load_pipeline_policy
@@ -75,3 +76,26 @@ def test_llm_review_gating_requires_ollama_and_opt_in(tmp_path):
     )
     assert llm_review_is_enabled(policy.llm_reviews, ollama_available=True, explicit_opt_in=True) is True
     assert llm_review_gate_reason(policy.llm_reviews, ollama_available=True, explicit_opt_in=True) == "ready"
+
+
+def test_string_boolean_values_are_parsed_strictly(tmp_path):
+    root = _write_policy_config(tmp_path, llm_enabled="false")  # type: ignore[arg-type]
+    policy = load_pipeline_policy(root)
+
+    assert policy.steganography.enabled is True
+    assert policy.steganography.encryption_enabled is False
+    assert policy.llm_reviews.enabled is False
+    assert policy.llm_reviews.requires_ollama is True
+    assert policy.llm_reviews.requires_explicit_opt_in is True
+
+
+def test_invalid_string_boolean_raises(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "config.yaml").write_text(
+        yaml.dump({"steganography": {"enabled": "definitely"}}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="steganography.enabled"):
+        load_pipeline_policy(tmp_path)

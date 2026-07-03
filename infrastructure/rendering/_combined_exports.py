@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+import shutil
 import subprocess
 import traceback
 from pathlib import Path
@@ -14,6 +16,52 @@ from infrastructure.publishing.transmission_bookends import is_transmission_book
 from infrastructure.rendering import RenderManager
 
 logger = get_logger(__name__)
+
+# Matches markdown image refs whose target ends in .pdf, e.g.
+# ``](../figures/timeline_dark.pdf){#fig-timeline}`` — captures the path.
+# Alt text uses a non-greedy ``.*?`` (not ``[^\]]*``) because captions
+# routinely contain nested bracket groups from inline citations, e.g.
+# ``![...caption text [@fetter1965development; @laughlin1898bimetallism].](path.pdf)``
+# — a negated-class ``[^\]]*`` cannot skip over that inner ``]`` at all, so it
+# silently fails to match the *entire* ref (leaving affected figures on their
+# broken .pdf reference). Non-greedy ``.*?`` correctly extends past inner
+# ``]`` characters that aren't immediately followed by ``(``.
+_PDF_IMAGE_REF_RE = re.compile(r"(!\[.*?\]\()([^)\s]+\.pdf)(\)|\s)", re.DOTALL)
+
+_RASTER_EXTENSIONS = (".png", ".jpg", ".jpeg")
+
+
+def rewrite_pdf_figure_refs_to_raster(markdown_text: str, combined_md_path: Path) -> str:
+    """Rewrite ``.pdf`` figure references to a raster sibling for non-PDF output.
+
+    Combined manuscripts are written with PDF figure references (LaTeX embeds
+    PDF vector graphics directly), but PDF is not a valid inline-image media
+    type for EPUB/MOBI/DOCX — pandoc silently fails to embed such references
+    (confirmed via epubcheck: ``RSC-007 Referenced resource ... could not be
+    found``), which is what triggered a real KDP "couldn't convert your HTML
+    file to Kindle format" rejection on a real book upload. Every project that
+    combines PDF figures into its ebook output hits this, not just one.
+
+    For each ``.pdf`` reference, checks whether a raster sibling (``.png``,
+    then ``.jpg``/``.jpeg``) exists at the resolved location (relative to
+    *combined_md_path*'s directory, matching pandoc's own path resolution)
+    and rewrites the reference to point to it. References with no raster
+    sibling are left untouched (surfaces as a normal missing-resource error
+    rather than silently vanishing).
+    """
+
+    def _replace(match: re.Match[str]) -> str:
+        prefix, ref_path, suffix = match.group(1), match.group(2), match.group(3)
+        resolved = (combined_md_path.parent / ref_path).resolve()
+        for ext in _RASTER_EXTENSIONS:
+            candidate = resolved.with_suffix(ext)
+            if candidate.is_file():
+                new_ref = ref_path[: -len(".pdf")] + ext
+                return f"{prefix}{new_ref}{suffix}"
+        logger.warning("No raster sibling found for PDF figure ref %s; leaving as-is (will fail to embed)", ref_path)
+        return match.group(0)
+
+    return _PDF_IMAGE_REF_RE.sub(_replace, markdown_text)
 
 
 def combined_source_files(md_files: list[Path]) -> list[Path]:
@@ -70,8 +118,6 @@ def render_combined_docx(
     docx_dir.mkdir(parents=True, exist_ok=True)
     out_path = docx_dir / f"{project_name}_combined.docx"
     bibliography = resolve_bibliography(manuscript_dir)
-
-    import shutil
 
     # Image refs in the combined markdown are written as ``figures/<name>``, so
     # the resource path must be the *parent* of the figures dir (e.g. ``output/``),
@@ -149,6 +195,16 @@ def render_combined_epub(
         "--resource-path=" + str(figures_dir),
         "--resource-path=" + str(figures_dir.parent),
     ]
+    # Without pandoc-crossref, {#fig-x} cross-reference targets (e.g. a manual
+    # "[see Figure](#fig-x)" link) don't reliably resolve to a real EPUB anchor
+    # — confirmed via epubcheck RSC-012 "Fragment identifier is not defined"
+    # on a real manuscript. render_combined_docx already adds this filter;
+    # EPUB needs the identical treatment, not a partial subset.
+    crossref = shutil.which("pandoc-crossref")
+    if crossref:
+        extra_args.extend(["--filter", crossref])
+    else:
+        logger.warning("pandoc-crossref not on PATH; EPUB @fig:/@sec:/@tbl:/@eq: will not resolve.")
 
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined EPUB manuscript...")

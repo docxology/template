@@ -165,13 +165,44 @@ stages:
 
   # ── Opt-in long-horizon stage definitions ─────────────────────────────
   # These stages are declared here so contracts stay versioned with the DAG,
-  # but PipelineExecutor filters tags `bundle` and `archival` out of default
-  # runs. See docs/maintenance/stage-10-executable-bundle.md and
+  # but PipelineExecutor filters tags `bundle`, `archival`, `ebook`, and
+  # `metadata` out of default runs.
+  # See docs/maintenance/stage-10-executable-bundle.md and
   # docs/maintenance/archival-targets.md for rationale.
   #
   # Invoke directly when needed:
+  #   uv run python scripts/07_ebook_generation.py --project <name>
+  #   uv run python scripts/08_metadata_package.py --project <name>
   #   uv run python scripts/08_executable_bundle.py --project <name>
   #   uv run python scripts/09_archive_publication.py --project <name>
+
+  - name: Ebook Generation
+    script: 07_ebook_generation.py
+    allow_skip: true
+    depends_on: [PDF Rendering]
+    tags: [core, ebook]
+    failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/output/"]
+      output_artifacts: ["projects/{project}/output/ebook/"]
+      definition_of_done: "EPUB, MOBI, and DOCX ebook files are generated or the stage is gracefully skipped when the combined markdown is absent."
+      failure_code: "EBOOK_GENERATION_FAILED"
+      retry_policy: 0
+      rollback_to: "PDF Rendering"
+
+  - name: Metadata Package
+    script: 08_metadata_package.py
+    allow_skip: true
+    depends_on: [Copy Outputs]
+    tags: [core, metadata]
+    failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/config.yaml"]
+      output_artifacts: ["projects/{project}/output/metadata/"]
+      definition_of_done: "ONIX XML, metadata.json, and OPF skeleton are written to output/metadata/ or the stage is gracefully skipped when config.yaml is absent."
+      failure_code: "METADATA_PACKAGE_FAILED"
+      retry_policy: 0
+      rollback_to: "Copy Outputs"
 
   - name: Executable Bundle
     script: 08_executable_bundle.py

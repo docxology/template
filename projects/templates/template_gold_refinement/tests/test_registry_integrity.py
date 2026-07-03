@@ -6,7 +6,6 @@ import json
 import re
 from pathlib import Path
 
-import pytest
 from figures import FIGURE_SPECS
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -45,8 +44,7 @@ class TestFigureRegistryIntegrity:
     def test_all_fig_refs_in_registry(self):
         # Load figure registry
         registry_path = _PROJECT_ROOT / "output" / "figures" / "figure_registry.json"
-        if not registry_path.exists():
-            pytest.skip("figure_registry.json not found — run refinement_analysis.py first")
+        assert registry_path.exists(), "figure_registry.json not found — run refinement_analysis.py first"
 
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         registered_labels = {f["label"] for f in registry.get("figures", [])}
@@ -70,8 +68,7 @@ class TestFigureRegistryIntegrity:
 
     def test_registry_has_all_expected_figures(self):
         registry_path = _PROJECT_ROOT / "output" / "figures" / "figure_registry.json"
-        if not registry_path.exists():
-            pytest.skip("figure_registry.json not found")
+        assert registry_path.exists(), "figure_registry.json not found"
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         labels = {f["label"] for f in registry.get("figures", [])}
         expected = {spec.label for spec in FIGURE_SPECS}
@@ -81,8 +78,7 @@ class TestFigureRegistryIntegrity:
 
     def test_all_pngs_exist(self):
         registry_path = _PROJECT_ROOT / "output" / "figures" / "figure_registry.json"
-        if not registry_path.exists():
-            pytest.skip("figure_registry.json not found")
+        assert registry_path.exists(), "figure_registry.json not found"
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         figures_dir = _PROJECT_ROOT / "output" / "figures"
         for fig in registry.get("figures", []):
@@ -96,8 +92,7 @@ class TestFigureRegistryIntegrity:
 
     def test_figure_quality_report_matches_registry(self):
         quality_path = _PROJECT_ROOT / "output" / "reports" / "figure_quality_report.json"
-        if not quality_path.exists():
-            pytest.skip("figure_quality_report.json not found")
+        assert quality_path.exists(), "figure_quality_report.json not found"
         report = json.loads(quality_path.read_text(encoding="utf-8"))
         assert report["figure_count"] == len(FIGURE_SPECS)
         assert report["png_count"] == len(FIGURE_SPECS)
@@ -125,8 +120,7 @@ class TestDashboardIntegrity:
 
     def test_dashboard_exists(self):
         dashboard_path = _PROJECT_ROOT / "output" / "dashboard.html"
-        if not dashboard_path.exists():
-            pytest.skip("dashboard.html not found — run refinement_analysis.py first")
+        assert dashboard_path.exists(), "dashboard.html not found — run refinement_analysis.py first"
         content = dashboard_path.read_text(encoding="utf-8")
         assert "<html" in content.lower()
         assert "Gold Refinement Dashboard" in content

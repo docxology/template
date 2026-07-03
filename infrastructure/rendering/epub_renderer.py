@@ -53,6 +53,9 @@ def render_epub(
     *,
     bibliography: Path | None = None,
     cover_image: Path | None = None,
+    title: str | None = None,
+    author: str | None = None,
+    language: str = "en",
     pandoc_path: str = "pandoc",
     extra_args: list[str] | None = None,
 ) -> EpubRenderResult:
@@ -63,6 +66,17 @@ def render_epub(
         output_path: Target .epub path; parent created if missing.
         bibliography: Optional `.bib` file. When given, --citeproc is enabled.
         cover_image: Optional cover image path (passed via --epub-cover-image).
+        title: Book title, passed via ``--metadata title=``. Without this
+            (and without a ``title:`` YAML frontmatter field already in
+            *combined_md*), pandoc emits an EPUB with no ``dc:title`` at
+            all, which retailer converters (e.g. Amazon KDP) can reject
+            outright rather than merely warn about.
+        author: Author name, passed via ``--metadata author=``. Same
+            missing-``dc:creator`` failure mode as *title* when absent.
+        language: BCP-47 language tag, passed via ``--metadata lang=``.
+            Defaults to "en" — without an explicit value, pandoc falls back
+            to the host's locale (e.g. the POSIX "C" locale becomes the
+            literal, invalid ``dc:language`` value "C").
         pandoc_path: pandoc binary (default "pandoc").
         extra_args: Extra args appended to the pandoc command.
 
@@ -94,7 +108,12 @@ def render_epub(
         "-o",
         str(output_path),
         "--standalone",
+        f"--metadata=lang:{language}",
     ]
+    if title is not None:
+        cmd.append(f"--metadata=title:{title}")
+    if author is not None:
+        cmd.append(f"--metadata=author:{author}")
     if bibliography is not None:
         cmd.extend(["--citeproc", f"--bibliography={bibliography}"])
     if cover_image is not None:

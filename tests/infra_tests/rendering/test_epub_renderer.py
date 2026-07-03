@@ -70,6 +70,61 @@ def test_render_epub_missing_source_raises(tmp_path: Path) -> None:
         render_epub(tmp_path / "missing.md", out)
 
 
+def _opf_text(epub_path: Path) -> str:
+    with zipfile.ZipFile(epub_path) as zip_file:
+        names = zip_file.namelist()
+        opf_name = next((name for name in names if name.endswith(".opf")), None)
+        assert opf_name is not None, f"no .opf manifest found in EPUB: {names}"
+        return zip_file.read(opf_name).decode("utf-8")
+
+
+# Frontmatter-free source: real combined-manuscript markdown has no YAML
+# frontmatter (title/author/language live only in the project's separate
+# manuscript/config.yaml), which is exactly the gap that let a real EPUB
+# ship with no dc:title/dc:creator and an invalid dc:language ("C", the
+# POSIX locale name) — see 07_ebook_generation.py's _load_manuscript_metadata.
+_NO_FRONTMATTER_MD = "# Chapter 1\n\nA paragraph with no YAML frontmatter at all.\n"
+
+
+def test_render_epub_without_metadata_args_omits_title_and_creator(tmp_path: Path) -> None:
+    """Regression: source markdown with no frontmatter must not silently ship untitled."""
+    src = tmp_path / "combined.md"
+    src.write_text(_NO_FRONTMATTER_MD, encoding="utf-8")
+    out = tmp_path / "out.epub"
+
+    render_epub(src, out)
+
+    opf = _opf_text(out)
+    assert "<dc:title>" not in opf
+    assert "<dc:creator" not in opf
+
+
+def test_render_epub_metadata_args_populate_title_and_creator(tmp_path: Path) -> None:
+    """title=/author=/language= must reach the OPF even with frontmatter-free source."""
+    src = tmp_path / "combined.md"
+    src.write_text(_NO_FRONTMATTER_MD, encoding="utf-8")
+    out = tmp_path / "out.epub"
+
+    render_epub(src, out, title="Explicit Title", author="Explicit Author", language="en-US")
+
+    opf = _opf_text(out)
+    assert ">Explicit Title</dc:title>" in opf
+    assert ">Explicit Author</dc:creator>" in opf
+    assert "<dc:language>en-US</dc:language>" in opf
+
+
+def test_render_epub_default_language_is_not_locale_dependent(tmp_path: Path) -> None:
+    """Without an explicit language=, must default to 'en', never fall through to the host locale."""
+    src = tmp_path / "combined.md"
+    src.write_text(_NO_FRONTMATTER_MD, encoding="utf-8")
+    out = tmp_path / "out.epub"
+
+    render_epub(src, out)
+
+    opf = _opf_text(out)
+    assert "<dc:language>en</dc:language>" in opf
+
+
 # 1x1 PNG — smallest real image, used to assert media embedding.
 _PNG_1x1 = (
     b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"

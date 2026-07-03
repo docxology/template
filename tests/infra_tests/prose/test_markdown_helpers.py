@@ -102,6 +102,16 @@ class TestStripLeadingAbstractHeading:
         text = "# Abstract and Outlook\n\nBody."
         assert strip_leading_abstract_heading(text) == text
 
+    def test_removes_heading_with_colon_subtitle(self):
+        text = "# Abstract: A Source-Anchored Map of Entomological Law {#sec:abstract}\n\nThere is no statute."
+        out = strip_leading_abstract_heading(text)
+        assert out == "There is no statute."
+
+    def test_removes_heading_with_colon_subtitle_no_attr(self):
+        text = "# Abstract: Provenance-Bound Curriculum\n\nBody."
+        out = strip_leading_abstract_heading(text)
+        assert out == "Body."
+
     def test_keeps_body_that_begins_with_the_word_abstract(self):
         text = "Abstract reasoning is the focus here.\n\nBody."
         assert strip_leading_abstract_heading(text) == text

@@ -173,7 +173,7 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **pipeline/pipeline.yaml**
 - Default declarative pipeline stage definitions
-- 12 declared pipeline stages (8 core + 2 LLM + 2 opt-in bundle/archival); default full runs execute 10 core+LLM stages; `--core-only` runs 8
+- 14 declared pipeline stages (8 core + 2 LLM + 2 opt-in ebook/metadata + 2 opt-in bundle/archival); default full runs execute 10 core+LLM stages; `--core-only` runs 8
 - Tag-based filtering for `--core-only` vs full pipeline
 - Stage metadata: name, script, description, dependencies, tags
 - Optional `telemetry:` configuration block

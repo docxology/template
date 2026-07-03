@@ -46,18 +46,82 @@ def _python_target_matches(node: ast.AST, symbol_name: str) -> bool:
     return False
 
 
-def _python_symbol_exists(file_path: Path, symbol_name: str) -> bool:
+def _clean_symbol_path(symbol_part: str) -> str:
+    return symbol_part.split("(", 1)[0].split("[", 1)[0].strip()
+
+
+def _normalise_symbol_token(value: str) -> str:
+    return re.sub(r"[^0-9A-Za-z]+", "_", value).strip("_").lower()
+
+
+def _literal_member_exists(node: ast.AST, member_name: str) -> bool:
+    expected = _normalise_symbol_token(member_name)
+    for child in ast.walk(node):
+        if isinstance(child, ast.Constant) and isinstance(child.value, str):
+            if _normalise_symbol_token(child.value) == expected:
+                return True
+    return False
+
+
+def _class_member_exists(node: ast.ClassDef, member_parts: list[str]) -> bool:
+    current: ast.ClassDef | None = node
+    for index, member_name in enumerate(member_parts):
+        if current is None:
+            return False
+        for child in current.body:
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and child.name == member_name:
+                if index == len(member_parts) - 1:
+                    return True
+                current = child if isinstance(child, ast.ClassDef) else None
+                break
+            if isinstance(child, ast.Assign) and any(
+                _python_target_matches(target, member_name) for target in child.targets
+            ):
+                return index == len(member_parts) - 1
+            if isinstance(child, ast.AnnAssign) and _python_target_matches(child.target, member_name):
+                return index == len(member_parts) - 1
+        else:
+            return False
+    return True
+
+
+def _module_bindings(tree: ast.Module) -> dict[str, ast.AST]:
+    bindings: dict[str, ast.AST] = {}
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            bindings[node.name] = node
+            continue
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    bindings[target.id] = node.value
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            bindings[node.target.id] = node.value if node.value is not None else node.target
+    return bindings
+
+
+def _python_symbol_exists(file_path: Path, symbol_path: str) -> bool:
+    symbol_path = _clean_symbol_path(symbol_path)
+    if not symbol_path:
+        return True
+    symbol_parts = [part for part in symbol_path.split(".") if part]
+    if not symbol_parts:
+        return True
     try:
         tree = ast.parse(file_path.read_text(encoding="utf-8"))
     except SyntaxError:
         return False
-    for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == symbol_name:
-            return True
-        if isinstance(node, ast.Assign) and any(_python_target_matches(target, symbol_name) for target in node.targets):
-            return True
-        if isinstance(node, ast.AnnAssign) and _python_target_matches(node.target, symbol_name):
-            return True
+    bindings = _module_bindings(tree)
+    binding = bindings.get(symbol_parts[0])
+    if binding is None:
+        return False
+    if len(symbol_parts) == 1:
+        return True
+    member_parts = symbol_parts[1:]
+    if isinstance(binding, ast.ClassDef):
+        return _class_member_exists(binding, member_parts)
+    if len(member_parts) == 1:
+        return _literal_member_exists(binding, member_parts[0])
     return False
 
 
@@ -79,7 +143,7 @@ def _symbol_exists(file_path: Path, symbol_part: str) -> bool:
         return True
     if file_path.suffix in {".yaml", ".yml"}:
         return _yaml_path_exists(file_path, symbol_part)
-    symbol_name = symbol_part.split("(", 1)[0].split(".", 1)[0].split("[", 1)[0]
+    symbol_name = _clean_symbol_path(symbol_part)
     if not symbol_name:
         return True
     if file_path.suffix == ".py":

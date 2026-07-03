@@ -14,11 +14,18 @@ _INLINE_CODE_RE = re.compile(r"`([^`\n]+)`")
 _LINK_RE = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\([^\)]+\)")
 _MARKDOWN_HEADER_RE = re.compile(r"^#+\s*", re.MULTILINE)
-# A leading ``# Abstract`` heading (optionally with a Pandoc ``{#id}`` attribute)
-# whose only text is "Abstract". Matched before header markers are stripped so the
-# redundant label can be dropped whole rather than surviving as bare body text.
+# A leading ``# Abstract`` heading (optionally with a Pandoc ``{#id}`` attribute),
+# optionally followed by a ``:``-separated subtitle that just restates the paper
+# title (e.g. ``# Abstract: A Field Map of Entomological Law``). Matched before
+# header markers are stripped so the redundant label can be dropped whole rather
+# than surviving as bare body text (e.g. a Zenodo/GitHub deposit description
+# opening with the literal word "Abstract:"). A colon is required for the
+# subtitle case specifically so this stays narrow: ``# Abstract and Outlook``
+# has no colon after "abstract" and is deliberately left untouched — "and"
+# signals a compound heading covering real additional content, not a restated
+# subtitle.
 _LEADING_ABSTRACT_HEADING_RE = re.compile(
-    r"\A\s*#{1,6}[ \t]+abstract[ \t]*(?:\{[^}]*\})?[ \t]*(?:\n+|\Z)",
+    r"\A\s*#{1,6}[ \t]+abstract(?:[ \t]*:[ \t]*[^\n{}]*)?[ \t]*(?:\{[^}]*\})?[ \t]*(?:\n+|\Z)",
     re.IGNORECASE,
 )
 _PANDOC_ATTR_RE = re.compile(r"\s*\{#[^}]+\}")
@@ -84,13 +91,17 @@ def strip_markdown_headers(text: str) -> str:
 def strip_leading_abstract_heading(text: str) -> str:
     """Drop a redundant leading ``# Abstract`` heading from deposit text.
 
-    Manuscript abstracts open with a ``# Abstract`` heading. Deposit targets
-    (Zenodo, GitHub releases) already label the field "Abstract", so the heading
-    is redundant — and because :func:`strip_markdown_headers` keeps the header
-    *text*, it would otherwise survive as the literal first word of the
-    description (``"Abstract\\n\\nThis paper..."``). Only a standalone heading
-    whose sole text is "Abstract" is removed; ``# Abstract and Outlook`` or an
-    abstract that genuinely begins with the word are left untouched.
+    Manuscript abstracts open with a ``# Abstract`` heading, sometimes with a
+    ``:``-separated subtitle that just restates the paper title (e.g.
+    ``# Abstract: A Field Map of Entomological Law``). Deposit targets
+    (Zenodo, GitHub releases) already label the field "Abstract", so the
+    heading is redundant — and because :func:`strip_markdown_headers` keeps
+    the header *text*, it would otherwise survive as the literal first word(s)
+    of the description (``"Abstract: A Field Map...\\n\\nThis paper..."``).
+    A standalone heading whose text is "Abstract" or "Abstract: <subtitle>" is
+    removed; ``# Abstract and Outlook`` (a compound heading covering real
+    additional content, not a restated subtitle) or an abstract body that
+    genuinely begins with the word are left untouched.
     """
     return _LEADING_ABSTRACT_HEADING_RE.sub("", text, count=1)
 

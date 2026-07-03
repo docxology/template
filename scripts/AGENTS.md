@@ -16,6 +16,8 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `05_copy_outputs.py` - output copying orchestration
 - `06_llm_review.py` - LLM review and translation orchestration
 - `07_generate_executive_report.py` - multi-project executive reporting
+- `07_ebook_generation.py` - ebook generation orchestration (EPUB, MOBI, DOCX; opt-in `ebook` tag)
+- `08_metadata_package.py` - metadata package generation (ONIX XML, metadata.json, OPF; opt-in `metadata` tag)
 - `10_repro_bundle.py` - reproduction-bundle build/verify (`infrastructure.publishing.repro_bundle`)
 - `execute_pipeline.py` - single-project pipeline runner
 - `execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
@@ -99,11 +101,13 @@ by `scripts/generate_stage_table_doc.py`):
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **10** Ebook Generation | `07_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **11** Metadata Package | `08_metadata_package.py` | `core`, `metadata` | soft fail |
+| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
-`execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`.
+`execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, `executive_report`, `ebook_generation`, and `metadata_package`.
 
 ## Public Types
 
@@ -143,7 +147,9 @@ orchestrator:
 | `04_validate_output.py` | `infrastructure.validation.cli` | |
 | `05_copy_outputs.py` | `infrastructure.reporting.output_organizer` | |
 | `06_llm_review.py` | `infrastructure.llm.review` | Skipped when Ollama is absent. |
-| `07_generate_executive_report.py` | `infrastructure.reporting.multi_project_reporter.generate_multi_project_report`, `infrastructure.reporting.output_organizer.OutputOrganizer.copy_combined_pdfs` | Multi-project only; skips when one project discovered. |
+|| `07_generate_executive_report.py` | `infrastructure.reporting.multi_project_reporter.generate_multi_project_report`, `infrastructure.reporting.output_organizer.OutputOrganizer.copy_combined_pdfs` | Multi-project only; skips when one project discovered. |
+|| `07_ebook_generation.py` | `infrastructure.rendering.ebook_stage.run_ebook_generation` | Opt-in ebook stage; gracefully skips (exit 2) when combined markdown absent. |
+|| `08_metadata_package.py` | `infrastructure.publishing.metadata_stage.run_metadata_package` | Opt-in metadata stage; gracefully skips (exit 2) when config.yaml absent. |
 | `maintenance/render_working_projects.py` | `infrastructure.project.working_render` | Local WIP audit under `projects/working/`; not part of default pipeline. |
 | `maintenance/rerender_working_pdfs.py` | subprocess over the `03_render_pdf.py` / `05_copy_outputs.py` stages (+ `infrastructure.project.working_render`) | Local-only working-PDF re-render; not part of default pipeline. |
 | `maintenance/merge_test_supplements.py` | `infrastructure.validation.test_supplements.merge_supplements` | Local maintenance helper. |

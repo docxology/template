@@ -58,6 +58,8 @@ def render_docx(
     *,
     bibliography: Path | None = None,
     reference_doc: Path | None = None,
+    title: str | None = None,
+    author: str | None = None,
     pandoc_path: str = "pandoc",
     extra_args: list[str] | None = None,
 ) -> DocxRenderResult:
@@ -68,6 +70,10 @@ def render_docx(
         output_path: Target .docx path; parent created if missing.
         bibliography: Optional `.bib` file. When given, --citeproc is enabled.
         reference_doc: Optional .docx template for styling.
+        title: Book title, passed via ``--metadata title=`` (populates the
+            Word document's Title core property).
+        author: Author name, passed via ``--metadata author=`` (populates
+            the Word document's Author core property).
         pandoc_path: pandoc binary (default "pandoc").
         extra_args: Extra args appended to the pandoc command.
 
@@ -100,6 +106,10 @@ def render_docx(
         str(output_path),
         "--standalone",
     ]
+    if title is not None:
+        cmd.append(f"--metadata=title:{title}")
+    if author is not None:
+        cmd.append(f"--metadata=author:{author}")
     if bibliography is not None:
         cmd.extend(["--citeproc", f"--bibliography={bibliography}"])
     if reference_doc is not None:

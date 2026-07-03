@@ -9,6 +9,7 @@ from config import load_gold_refinement_config
 from evidence import (
     EvidenceEntry,
     EvidenceRegistry,
+    _check_evidence_source,
     build_evidence_registry,
     check_claim_ledger_alignment,
     write_evidence_registry,
@@ -47,6 +48,25 @@ class TestBuildEvidenceRegistry:
         d = entry.as_dict()
         assert d["claim_name"] == "test"
         assert d["supported"] is True
+
+    def test_dotted_python_symbol_source_must_resolve_exactly(self):
+        project_root = Path(__file__).resolve().parent.parent
+        supported, notes = _check_evidence_source(
+            "src/formalisms.py::FORMALISMS.eq_token_digest",
+            project_root,
+        )
+        assert supported is True
+        assert notes == ""
+
+    def test_missing_dotted_python_symbol_is_not_supported(self):
+        project_root = Path(__file__).resolve().parent.parent
+        for source in (
+            "src/formalisms.py::FORMALISMS.not_real_member",
+            "src/refinery.py::CANONICAL_STAGES.not_real_member",
+        ):
+            supported, notes = _check_evidence_source(source, project_root)
+            assert supported is False
+            assert "not found" in notes
 
 
 class TestWriteEvidenceRegistry:

@@ -68,6 +68,32 @@ not to the contents of any specific workspace.
   deep-links (explicit `<a id>` anchors) so the links resolve on GitHub. Full
   remediation backlog: `docs/maintenance/review-remediation-2026-07.md`.
 
+- 📝 **Deposit abstract kept a redundant "Abstract: &lt;subtitle&gt;" prefix** —
+  `strip_leading_abstract_heading()` in `infrastructure/prose/markdown.py`
+  only stripped a leading `# Abstract` heading when its *sole* text was
+  "Abstract"; a heading like `# Abstract: A Field Map of Entomological Law`
+  (title-as-subtitle style) fell through and survived as literal body text on
+  Zenodo/GitHub release descriptions (`build_deposit_description()` /
+  `build_github_release_body()` in `infrastructure/publishing/abstract_plaintext.py`).
+  Found when `working/EntoLaw`'s live Zenodo record (10.5281/zenodo.21137277)
+  shipped with the description opening "A Source-Anchored Map of
+  Entomological Law There is no statute…" instead of the actual abstract.
+  Extended the regex to also match an optional `:`-separated subtitle before
+  the heading is dropped, while still preserving compound headings like
+  `# Abstract and Outlook` (real added content, not a restated subtitle) —
+  see the updated docstring and `TestStripLeadingAbstractHeading` in
+  `tests/infra_tests/prose/test_markdown_helpers.py` for the exact contract.
+  At least one other project (`working/Active_Skillference`) had the same
+  latent bug; both now render clean on next deposit. The already-published
+  Zenodo record's description was hand-edited to remove the literal word
+  "Abstract:" but the restated-title subtitle text before it was not — the
+  live record still opens "A Source-Anchored Map of Entomological Law
+  There is no statute…" rather than jumping straight to the real abstract.
+  A programmatic re-patch attempt failed (published Zenodo depositions
+  return 404 on metadata `PUT`/`PATCH` outside a new-version draft — see
+  `docs/guides/zenodo-doi-strategy.md`), so fully cleaning up the live
+  record needs either another Zenodo web-UI edit or a `--new-version`
+  republish; only the underlying code path is fixed by this entry.
 - 🧭 **Root signposting drift** — reconciled the two disagreeing root
   `AGENTS.md` structure mermaids (one omitted `docs/`, the other `output/`);
   linked the previously-orphaned `TO-DO.md`/`CHANGELOG.md` into `AGENTS.md`'s

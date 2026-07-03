@@ -6,6 +6,11 @@ from typing import Any, Sequence
 
 import yaml
 
+try:
+    from .coercion import coerce_bool
+except ImportError:
+    from coercion import coerce_bool  # type: ignore[no-redef]
+
 
 def _load_project_config(project_root: Path) -> dict[str, Any]:
     config_path = project_root / "manuscript" / "config.yaml"
@@ -16,10 +21,8 @@ def _load_project_config(project_root: Path) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
-def _as_bool(value: Any, default: bool = False) -> bool:
-    if value is None:
-        return default
-    return bool(value)
+def _as_bool(value: Any, default: bool = False, *, field_name: str) -> bool:
+    return coerce_bool(value, default=default, field_name=field_name)
 
 
 def _as_str_tuple(value: Any) -> tuple[str, ...]:
@@ -144,26 +147,46 @@ def load_steganography_profile(project_root: Path | None = None) -> Steganograph
     if not isinstance(raw, dict):
         raw = {}
     return SteganographyProfile(
-        enabled=_as_bool(raw.get("enabled"), False),
-        overlays_enabled=_as_bool(raw.get("overlays_enabled", raw.get("overlays")), False),
-        barcodes_enabled=_as_bool(raw.get("barcodes_enabled", raw.get("barcodes")), False),
-        metadata_enabled=_as_bool(raw.get("metadata_enabled", raw.get("metadata")), False),
-        hashing_enabled=_as_bool(raw.get("hashing_enabled", raw.get("hashing")), False),
-        encryption_enabled=_as_bool(raw.get("encryption_enabled", raw.get("encryption")), False),
+        enabled=_as_bool(raw.get("enabled"), False, field_name="steganography.enabled"),
+        overlays_enabled=_as_bool(
+            raw.get("overlays_enabled", raw.get("overlays")),
+            False,
+            field_name="steganography.overlays_enabled",
+        ),
+        barcodes_enabled=_as_bool(
+            raw.get("barcodes_enabled", raw.get("barcodes")),
+            False,
+            field_name="steganography.barcodes_enabled",
+        ),
+        metadata_enabled=_as_bool(
+            raw.get("metadata_enabled", raw.get("metadata")),
+            False,
+            field_name="steganography.metadata_enabled",
+        ),
+        hashing_enabled=_as_bool(
+            raw.get("hashing_enabled", raw.get("hashing")),
+            False,
+            field_name="steganography.hashing_enabled",
+        ),
+        encryption_enabled=_as_bool(
+            raw.get("encryption_enabled", raw.get("encryption")),
+            False,
+            field_name="steganography.encryption_enabled",
+        ),
         overlay_mode=str(raw.get("overlay_mode", "text")),
         overlay_text=str(raw.get("overlay_text", "")),
         overlay_opacity=_as_float(raw.get("overlay_opacity"), 0.08),
         pdf_password=str(raw.get("pdf_password", "")),
         pdf_encryption_algorithm=str(raw.get("pdf_encryption_algorithm", "AES-256")),
-        kmyth_enabled=_as_bool(raw.get("kmyth_enabled"), False),
-        kmyth_required=_as_bool(raw.get("kmyth_required"), False),
+        kmyth_enabled=_as_bool(raw.get("kmyth_enabled"), False, field_name="steganography.kmyth_enabled"),
+        kmyth_required=_as_bool(raw.get("kmyth_required"), False, field_name="steganography.kmyth_required"),
         kmyth_binary_dir=str(raw.get("kmyth_binary_dir", "")),
         kmyth_source_dir=str(raw.get("kmyth_source_dir", "")),
         kmyth_pcrs=_as_int_tuple(raw.get("kmyth_pcrs")),
         kmyth_cipher=str(raw.get("kmyth_cipher", "")),
         kmyth_seal_artifacts=_as_str_tuple(raw.get("kmyth_seal_artifacts")),
         kmyth_output_suffix=str(raw.get("kmyth_output_suffix", "")),
-        kmyth_overwrite=_as_bool(raw.get("kmyth_overwrite"), False),
+        kmyth_overwrite=_as_bool(raw.get("kmyth_overwrite"), False, field_name="steganography.kmyth_overwrite"),
         kmyth_timeout_seconds=int(raw.get("kmyth_timeout_seconds", 0) or 0),
     )
 
@@ -178,10 +201,18 @@ def load_llm_review_policy(project_root: Path | None = None) -> LLMReviewPolicy:
     if not isinstance(reviews, dict):
         reviews = {}
     return LLMReviewPolicy(
-        enabled=_as_bool(reviews.get("enabled"), False),
+        enabled=_as_bool(reviews.get("enabled"), False, field_name="llm.reviews.enabled"),
         types=_as_str_tuple(reviews.get("types")),
-        requires_ollama=_as_bool(reviews.get("requires_ollama"), True),
-        requires_explicit_opt_in=_as_bool(reviews.get("requires_explicit_opt_in"), True),
+        requires_ollama=_as_bool(
+            reviews.get("requires_ollama"),
+            True,
+            field_name="llm.reviews.requires_ollama",
+        ),
+        requires_explicit_opt_in=_as_bool(
+            reviews.get("requires_explicit_opt_in"),
+            True,
+            field_name="llm.reviews.requires_explicit_opt_in",
+        ),
     )
 
 

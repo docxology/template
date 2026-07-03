@@ -35,7 +35,7 @@
 \contentsline {subsection}{\numberline {4.13}Evidence-tier ladder}{21}{subsection.4.13}%
 \contentsline {subsection}{\numberline {4.14}Adversarial security assay}{22}{subsection.4.14}%
 \contentsline {subsection}{\numberline {4.15}Contribution claims}{23}{subsection.4.15}%
-\contentsline {subsection}{\numberline {4.16}Shared evidence registry summary}{24}{subsection.4.16}%
+\contentsline {subsection}{\numberline {4.16}Shared evidence registry summary}{23}{subsection.4.16}%
 \contentsline {subsection}{\numberline {4.17}Figure quality report}{24}{subsection.4.17}%
 \contentsline {section}{\numberline {5}Discussion: Load-Bearing vs Rhetorical Analogy}{25}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Load-bearing vs rhetorical}{25}{subsection.5.1}%

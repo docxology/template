@@ -6,18 +6,22 @@ same forkability contract as the other exemplars.
 
 ## Current validation evidence
 
-- 255 tests pass at 93.17% coverage on `src/` (90% gate enforced)
+- 310 tests pass at 91.40% coverage on `src/` (90% gate enforced)
 - Ruff lint clean on `src/`, `tests/`, and `scripts/`
 - Mypy type-check clean on `src/`
 - Refinery pipeline runs end-to-end: ore (9K) → nine-nines certification
 - All manuscript `{{TOKEN}}` variables resolve with zero unresolved tokens
 - `check_tracked_projects.py` passes (confidentiality guard)
-- `check_template_drift.py --strict` passes (no drift)
+- Project publishing-status drift is resolved; unrelated root thin-orchestrator
+  drift warnings may still appear from dirty root files outside this exemplar
 - Figure generation: 12 figures (purity progression, karat grading, token density,
   provenance Sankey, purity-claim scatter, token heatmap, integrity gate matrix,
   formalism traceability, implementation circuit, claim-evidence assay,
   integrity risk matrix, evidence tier ladder)
-- Evidence registry: `src/evidence.py` cross-checks contribution claims
+- Evidence registry: `src/evidence.py` cross-checks contribution claims,
+  including dotted Python member paths
+- Publishing status block: 20 platforms tracked, 7 published, 8 documented
+  commercial/book platforms still planned
 - Interactive HTML dashboard: `src/dashboard.py` with refinery metrics
 - Mega-madlib token injection: deterministic, seeded, config-owned lexicon
 - Config blocks: contribution_claims, pipeline_phases, audit_rules, steganography,
@@ -34,10 +38,11 @@ same forkability contract as the other exemplars.
 - Figure-registry validation: every `[@fig:...]` cross-checked
 - Bug fix: `generate_purity_claim_scatter` evidence path corrected (was using `.parent`)
 - Edge-case tests: _check_evidence_source (#/:: paths, missing files/symbols,
-  path escapes), dashboard category+evidence rows and preloaded snapshots,
-  figure None-path fallbacks, staleness detection, SOURCE_DATE_EPOCH, config
-  branch misses, composition empty-lexicon error path, secure-pipeline policy,
-  and domain adapter purity scoring
+  path escapes, unresolved dotted members), dashboard category+evidence rows
+  and preloaded snapshots, figure None-path fallbacks, staleness detection,
+  SOURCE_DATE_EPOCH, config branch misses, composition empty-lexicon error path,
+  strict boolean parsing for secure-pipeline and domain-adapter config, and
+  domain adapter purity scoring
 
 ## integrity and template-status gaps
 
@@ -152,11 +157,14 @@ same forkability contract as the other exemplars.
 
 ### Phase 8: Publishing and provenance (future)
 
-1. [ ] Add `.zenodo.json` for Zenodo deposit integration
-2. [ ] Add `manuscript/config.yaml` DOI fields when published
+1. [x] Add `.zenodo.json` for Zenodo deposit integration
+2. [x] Add `manuscript/config.yaml` DOI fields when published
 3. [ ] Add transmission bookends (transmission_begin/end manuscript sections)
 4. [x] Add steganography profile for secure pipeline (`secure_run.sh`)
 5. [x] Add LLM review enablement (`manuscript/config.yaml` llm block)
+6. [ ] Publish or record references for planned documented platforms:
+   amazon_kdp, google_play_books, gumroad, leanpub, lulu, draft2digital,
+   stripe, ingramspark
 
 ### Phase 9: Deeper analogy research (future)
 

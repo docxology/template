@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 289,
+  "fact_count": 281,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 86,
+    "artifact": 78,
     "citation": 47,
     "equation": 8,
     "figure": 29,
@@ -11,7 +11,7 @@
     "section": 10,
     "table": 7
   },
-  "omitted_fact_count": 89,
+  "omitted_fact_count": 81,
   "sample_facts": [
     {
       "active": true,
@@ -179,7 +179,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -191,7 +191,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -203,7 +203,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -215,7 +215,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -227,7 +227,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -239,7 +239,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -251,7 +251,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -263,7 +263,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -323,7 +323,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "90%"
+      "value": "90"
     },
     {
       "active": true,
@@ -335,7 +335,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "90"
+      "value": "90%"
     },
     {
       "active": true,
@@ -455,6 +455,42 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
+      "value": "37.5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:02:16+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
+      "source_field": "$.stages[0].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "37.5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:02:16+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
+      "source_field": "$.stages[1].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "37.5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:02:16+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
+      "source_field": "$.purity_sequence[1]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
       "value": "37.5%"
     },
     {
@@ -552,42 +588,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.4"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
-      "source_field": "$.purity_sequence[1]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
-      "source_field": "$.stages[0].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
-      "source_field": "$.stages[1].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5"
     },
     {
       "active": true,
@@ -635,7 +635,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "75%"
     },
     {
       "active": true,
@@ -647,7 +647,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "75%"
     },
     {
       "active": true,
@@ -659,7 +659,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "75%"
     },
     {
       "active": true,
@@ -671,7 +671,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75%"
+      "value": "75"
     },
     {
       "active": true,
@@ -683,7 +683,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75%"
+      "value": "75"
     },
     {
       "active": true,
@@ -695,7 +695,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75%"
+      "value": "75"
     },
     {
       "active": true,
@@ -779,6 +779,42 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
+      "value": "0.917"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:02:16+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
+      "source_field": "$.stages[2].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.917"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:02:16+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
+      "source_field": "$.stages[3].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.917"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-02T12:02:16+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
+      "source_field": "$.purity_sequence[3]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
       "value": "91.7%"
     },
     {
@@ -851,7 +887,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.92"
+      "value": "91.67"
     },
     {
       "active": true,
@@ -863,7 +899,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.92"
+      "value": "91.67"
     },
     {
       "active": true,
@@ -875,7 +911,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.92"
+      "value": "91.67"
     },
     {
       "active": true,
@@ -923,7 +959,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.917"
+      "value": "0.92"
     },
     {
       "active": true,
@@ -935,7 +971,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.917"
+      "value": "0.92"
     },
     {
       "active": true,
@@ -947,43 +983,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.917"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
-      "source_field": "$.purity_sequence[3]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.67"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
-      "source_field": "$.stages[2].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.67"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
-      "source_field": "$.stages[3].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.67"
+      "value": "0.92"
     },
     {
       "active": true,
@@ -2416,7 +2416,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 131,
+    "artifact": 123,
     "bibliography": 47,
     "claim_ledger": 17,
     "generated_metric": 94

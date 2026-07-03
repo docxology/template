@@ -6,6 +6,11 @@ from typing import Any, Mapping, Sequence
 
 import yaml
 
+try:
+    from .coercion import coerce_bool
+except ImportError:
+    from coercion import coerce_bool  # type: ignore[no-redef]
+
 
 def _load_domain_profile_data(project_root: Path) -> dict[str, Any]:
     profile_path = project_root / "domain_profile.yaml"
@@ -32,10 +37,8 @@ def _as_float(value: Any, default: float = 0.0) -> float:
     return float(value)
 
 
-def _as_bool(value: Any, default: bool = True) -> bool:
-    if value is None:
-        return default
-    return bool(value)
+def _as_bool(value: Any, default: bool = True, *, field_name: str) -> bool:
+    return coerce_bool(value, default=default, field_name=field_name)
 
 
 @dataclass(frozen=True)
@@ -171,7 +174,11 @@ def _metric_specs(benchmark: Any) -> tuple[DomainMetricSpec, ...]:
                 weight=float(item.get("weight", 1.0) or 1.0),
                 minimum=_as_float(item.get("minimum"), 0.0),
                 maximum=_as_float(item.get("maximum"), 1.0),
-                higher_is_better=_as_bool(item.get("higher_is_better"), True),
+                higher_is_better=_as_bool(
+                    item.get("higher_is_better"),
+                    True,
+                    field_name=f"benchmark_rubric.dimensions[{len(specs) + 1}].higher_is_better",
+                ),
                 description=str(item.get("description", "")),
             )
         )

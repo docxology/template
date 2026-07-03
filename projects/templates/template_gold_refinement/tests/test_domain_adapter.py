@@ -87,3 +87,27 @@ def test_load_domain_profile_requires_declared_metrics(tmp_path):
 
     with pytest.raises(KeyError, match="citation_accuracy"):
         profile.purity_from_metrics({"evidence_coverage": 0.9})
+
+
+def test_string_boolean_values_are_parsed_strictly(tmp_path):
+    root = _write_domain_profile(tmp_path)
+    profile_path = root / "domain_profile.yaml"
+    data = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
+    data["benchmark_rubric"]["dimensions"][1]["higher_is_better"] = "false"
+    profile_path.write_text(yaml.dump(data), encoding="utf-8")
+
+    profile = load_domain_profile(root)
+    citation_metric = next(metric for metric in profile.metrics if metric.name == "citation_accuracy")
+    assert citation_metric.higher_is_better is False
+    assert citation_metric.normalized(0.25) == pytest.approx(0.75)
+
+
+def test_invalid_string_boolean_raises(tmp_path):
+    root = _write_domain_profile(tmp_path)
+    profile_path = root / "domain_profile.yaml"
+    data = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
+    data["benchmark_rubric"]["dimensions"][0]["higher_is_better"] = "sometimes"
+    profile_path.write_text(yaml.dump(data), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="higher_is_better"):
+        load_domain_profile(root)

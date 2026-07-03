@@ -11,6 +11,7 @@ from config import (
     DEFAULT_SECTION_TITLES,
     GOLD_REFINEMENT_SCHEMA_FIELDS,
     GoldRefinementConfigError,
+    PROJECT_SCHEMA_EXTENSION,
     REQUIRED_LEXICON_CATEGORIES,
     SECTION_KEYS,
     SlotSpec,
@@ -74,13 +75,21 @@ class TestLoadConfig:
 
     def test_infrastructure_loader_accepts_gold_refinement_extension(self, caplog):
         from infrastructure.core.config.loader import load_config
+        from infrastructure.core.config.schema import register_project_schema_extension
 
+        register_project_schema_extension("template_gold_refinement", PROJECT_SCHEMA_EXTENSION)
         project_root = Path(__file__).resolve().parent.parent
         config_path = project_root / "manuscript" / "config.yaml"
         with caplog.at_level("WARNING"):
             loaded = load_config(config_path)
         assert loaded is not None
         assert not any("Unknown config key 'gold_refinement'" in record.message for record in caplog.records)
+
+    def test_src_config_does_not_import_infrastructure(self):
+        source = (Path(__file__).resolve().parent.parent / "src" / "config.py").read_text(encoding="utf-8")
+        assert "from infrastructure." not in source
+        assert "import infrastructure." not in source
+        assert PROJECT_SCHEMA_EXTENSION == {"gold_refinement": dict}
 
     def test_load_from_missing_file_returns_defaults(self, tmp_path):
         cfg = load_gold_refinement_config(tmp_path)

@@ -13,12 +13,7 @@ from typing import Any
 
 import yaml
 
-from infrastructure.core.config.schema import register_project_schema_extension
-
-_PROJECT_SCHEMA_EXTENSION = {"gold_refinement": dict}
-
-register_project_schema_extension("template_gold_refinement", _PROJECT_SCHEMA_EXTENSION)
-register_project_schema_extension("", _PROJECT_SCHEMA_EXTENSION)
+PROJECT_SCHEMA_EXTENSION = {"gold_refinement": dict}
 
 REQUIRED_LEXICON_CATEGORIES: tuple[str, ...] = (
     "metallurgical_terms",
@@ -403,6 +398,7 @@ __all__ = [
     "GOLD_REFINEMENT_SCHEMA_FIELDS",
     "GoldRefinementConfig",
     "GoldRefinementConfigError",
+    "PROJECT_SCHEMA_EXTENSION",
     "REQUIRED_LEXICON_CATEGORIES",
     "REQUIRED_ROW_FIELDS",
     "SECTION_KEYS",

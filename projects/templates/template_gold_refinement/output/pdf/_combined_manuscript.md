@@ -4,7 +4,7 @@ This paper presents a metallurgical analogy for scientific manuscript compositio
 
 The analogy is **load-bearing**, not merely rhetorical: each metallurgical stage corresponds to a real template-infrastructure operation. This makes the paper an explicit structure-mapping exercise rather than a loose metaphor [@gentner1983structure; @hesse1966models]. Smelting removes dross (filler, unsupported claims); assaying tests claims against evidence; cupellation resolves cross-references; certification validates the full pipeline. The mega-madlib token engine selects 24 domain tokens deterministically via seeded SHA-256 digest over category inventories, ensuring every prose element is traceable and reproducible.
 
-The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 0 source-tiered facts when the validation gate has run.
+The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 289 source-tiered facts when the validation gate has run.
 
 **Results:** The refinery achieves final purity of 99.9999999% (nine-nines) (24K (nine-nines certified)) with a total purity gain of 90.00% across all stages. Nine-nines certification: Yes. The purity progression is shown in [@fig:purity_progression], and the karat grading scale in [@fig:karat_grading].
 
@@ -541,7 +541,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 0 source-tiered facts to the validation
+can report 289 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -560,13 +560,10 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| artifact | 2 | Generated artifacts exposed to readers |
-| source_code | 2 | Executable source files and symbols |
-| bibliography | 1 | Reference records and citation metadata |
-| claim_ledger | 1 | Source-owned claim and fact declarations |
-| config | 1 | Author-controlled project configuration |
-| generated_metric | 1 | Numbers regenerated from project analysis |
-| validation | 1 | Template gates and test results |
+| artifact | 131 | Generated artifacts exposed to readers |
+| generated_metric | 94 | Numbers regenerated from project analysis |
+| bibliography | 47 | Reference records and citation metadata |
+| claim_ledger | 17 | Source-owned claim and fact declarations |
 : Evidence tiers used by the integrity model and shared registry when available. {#tbl:evidence_tiers}
 
 ## Adversarial security assay
@@ -600,11 +597,17 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 0.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 289.
 
 | Fact kind | Count |
 |-----------|-------|
-| not generated | 0 |
+| artifact | 86 |
+| citation | 47 |
+| equation | 8 |
+| figure | 29 |
+| number | 102 |
+| section | 10 |
+| table | 7 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
 
 ## Figure quality report
@@ -614,7 +617,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
 | claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
-| evidence_tier_ladder | yes | yes | 3020x1724 | 0.216 | 0.05410730 | pass |
+| evidence_tier_ladder | yes | yes | 3339x1332 | 0.219 | 0.05501373 | pass |
 | formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
 | implementation_circuit | yes | yes | 2966x1846 | 0.069 | 0.02257238 | pass |
 | integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
@@ -760,9 +763,9 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 | Category | Count |
 |----------|-------|
 | Figures | 26 |
-| Data files | 2 |
-| Reports | 7 |
-| **Total** | 35 |
+| Data files | 3 |
+| Reports | 12 |
+| **Total** | 41 |
 
 ## Regeneration commands
 

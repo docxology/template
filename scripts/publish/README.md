@@ -1,94 +1,171 @@
 # Publishing Scripts
 
-This directory contains scripts for PyPI package publishing and installation verification.
+This directory contains scripts for packaging and distributing template/ outputs — both to PyPI (for the template infrastructure itself) and to the docxology/publishing repo (for finished manuscripts and ebooks).
 
-## Files
+## Scripts
 
-- **test_pypi.py** — Builds the package, uploads to TestPyPI, and verifies installation in a clean venv.
-- **verify_install.py** — Verifies the published package installs and runs correctly from PyPI (production).
+| Script | Purpose |
+|---|---|
+| `test_pypi.py` | Build → TestPyPI upload → fresh-venv install → `template doctor` |
+| `verify_install.py` | Verify the published package installs correctly from PyPI |
+| `upload_template_project.py` | Upload a rendered exemplar project to all configured platforms (Zenodo, HuggingFace, OSF, etc.) |
+| `upload_gold_refinement.py` | Original hand-tuned reference uploader for the gold-standard exemplar |
+| `export_for_publishing.py` | **Bridge script** — bundle template/ outputs for the docxology/publishing repo |
 
-## Prerequisites
+---
 
-- `uv` installed and available in PATH
-- `twine` installed (automatically handled by test_pypi.py)
-- For TestPyPI upload: `TEST_PYPI_API_TOKEN` environment variable set with an API token from https://test.pypi.org/manage/account/token/
+## Bridge: template/ → docxology/publishing
 
-## Workflow
+The `export_for_publishing.py` script is the formal handoff point between this repo's rendering pipeline and the downstream publishing pipeline in `~/Documents/GitHub/publishing/`.
 
-### 1. TestPyPI Dry Run
+### Two-repo architecture
 
-Before publishing to production PyPI, do a full end-to-end test on TestPyPI:
+```
+template/                          publishing/
+├── projects/<name>/               ├── workspace/
+│   ├── manuscript/                │   └── imports/
+│   │   └── config.yaml            │       └── <name>-<timestamp>/
+│   └── output/                    │           ├── manifest.json
+│       ├── pdf/                   │           ├── pdf/
+│       ├── ebook/                 │           ├── ebook/
+│       └── metadata/              │           └── metadata/
+└── scripts/publish/               └── src/
+    └── export_for_publishing.py       └── docxology_publishing/
+```
+
+`template/` **produces** artifacts. `publishing/` **distributes** them to marketplaces (Gumroad, Leanpub, Stripe, etc.).
+
+### Workflow
+
+1. **Render** — run the template pipeline to produce PDF, EPUB, MOBI, metadata packages
+2. **Export** — run `export_for_publishing.py` to bundle outputs and write a `manifest.json`
+3. **Import** — the publishing pipeline reads from `workspace/imports/` and cross-posts to platforms
+
+```bash
+# Step 1: render (from template/ root)
+./run.sh --project templates/my_book --pipeline --core-only
+
+# Step 2: export
+uv run python scripts/publish/export_for_publishing.py \
+    --project templates/my_book
+
+# Step 3: in the publishing repo
+cd ~/Documents/GitHub/publishing
+uv run docpub import workspace/imports/my_book-latest/manifest.json
+uv run docpub distribute --platform gumroad
+```
+
+### What export_for_publishing.py does
+
+1. Resolves the project root from the qualified project name
+2. Reads `manuscript/config.yaml` for title, author, and metadata
+3. Scans `output/pdf/`, `output/ebook/`, and `output/metadata/` for generated artifacts
+4. Creates a timestamped subdirectory under `--output-dir` (default: `~/Documents/GitHub/publishing/workspace/imports/`)
+5. Copies all discovered artifacts into the bundle subdirectory
+6. Writes `manifest.json` with paths, checksums, timestamps, and config metadata
+7. Creates/updates the `latest` symlink pointing to the new export
+
+### Manifest schema
+
+```json
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-07-02T12:00:00Z",
+  "project": "templates/my_book",
+  "source_root": "/path/to/template/projects/templates/my_book",
+  "metadata": {
+    "title": "My Book",
+    "author": "Author Name",
+    "isbn": "...",
+    "license": "CC-BY-4.0"
+  },
+  "artifacts": {
+    "pdf": [{"filename": "my_book_combined.pdf", "sha256": "...", "size_bytes": 123456}],
+    "epub": [{"filename": "my_book.epub", "sha256": "...", "size_bytes": 78901}],
+    "metadata": [{"filename": "onix.xml", "sha256": "...", "size_bytes": 4321}]
+  }
+}
+```
+
+### Prerequisites
+
+- The template pipeline has been run and `output/` is populated
+- `~/Documents/GitHub/publishing/` exists (clone of docxology/publishing)
+- The `workspace/imports/` directory exists (created automatically if missing)
+
+---
+
+## PyPI Publishing Workflow
+
+### 1. TestPyPI dry run
 
 ```bash
 export TEST_PYPI_API_TOKEN="pypi-xxxx..."
 uv run python scripts/publish/test_pypi.py
 ```
 
-What this does:
-1. Runs `uv build` to create wheel and sdist in `dist/`
-2. Uploads all distributions to TestPyPI via `twine`
-3. Creates a fresh virtual environment
-4. Installs the package from TestPyPI
-5. Runs `template doctor` to verify the installation works
-6. Reports success or failure
-
-If this succeeds, your package is ready for production publish.
-
-### 2. Production Publish
-
-Upload to the real PyPI:
+### 2. Production publish
 
 ```bash
-# Prefer PyPI Trusted Publishing/OIDC from CI when available.
-# For local manual upload, keep the token out of argv and shell history:
 export TWINE_USERNAME="__token__"
 export TWINE_PASSWORD="$PYPI_TOKEN"
 twine upload dist/*
 ```
 
-Never pass API tokens as command-line password arguments; command arguments can
-be visible in process listings and copied into logs.
+Never pass API tokens as command-line arguments — they appear in process listings and logs.
 
-### 3. Post-Publish Verification
-
-After the package is live on PyPI, verify it can be installed cleanly:
+### 3. Post-publish verification
 
 ```bash
 uv run python scripts/publish/verify_install.py
 ```
 
-This creates a fresh venv, installs from https://pypi.org/simple/, and runs `template doctor` to confirm everything works.
+### Optional environment variables
 
-### Optional Environment Variables
+| Variable | Purpose | Default |
+|---|---|---|
+| `TEST_PYPI_API_TOKEN` | TestPyPI upload token | required for test_pypi.py |
+| `PACKAGE_NAME` | Override package name | `template` |
+| `INDEX_URL` | Custom package index URL | `https://pypi.org/simple/` |
 
-- `PACKAGE_NAME` — Override package name (default: `template`)
-- `INDEX_URL` — Use a custom package index URL (default: `https://pypi.org/simple/`)
-- `TEST_PYPI_API_TOKEN` — TestPyPI API token (required for test_pypi.py)
+---
 
 ## Troubleshooting
 
 ### twine not found
 
-`test_pypi.py` will attempt to install twine automatically if not present. If that fails, install manually:
-
-```bash
-pip install twine
-```
+`test_pypi.py` auto-installs twine; if that fails: `pip install twine`
 
 ### Build failures
 
-Ensure pyproject.toml is valid and all version constraints are satisfied:
-
 ```bash
-uv sync --all-groups  # check dependency resolution
+uv sync --all-groups  # verify dependency resolution
 ```
-
-### template doctor fails after install
-
-This usually means a missing runtime dependency or import error. Check that all required dependencies are declared correctly in pyproject.toml `[project]` and `[project.optional-dependencies]`.
 
 ### TestPyPI upload rejects package
 
-- Verify the package name is available on TestPyPI
-- Check that version is unique (TestPyPI requires version bump for re-upload)
+- Verify package name is available on TestPyPI
+- Version must be unique (TestPyPI requires version bump for re-upload)
 - Ensure `TEST_PYPI_API_TOKEN` has upload scope
+
+### Export: no artifacts found
+
+Run the pipeline first:
+```bash
+./run.sh --project templates/my_book --pipeline --core-only
+```
+
+Check that `output/pdf/` contains files after the render stage.
+
+### Symlink `latest` not updating
+
+The script removes the old symlink before creating a new one. If it fails (e.g. permissions), delete manually:
+```bash
+rm ~/Documents/GitHub/publishing/workspace/imports/latest
+```
+
+## See also
+
+- [`AGENTS.md`](AGENTS.md) — agent-facing guide with CI integration examples
+- [`../../infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md) — publishing infrastructure
+- [`../../docs/maintenance/publishing-export-pipeline.md`](../../docs/maintenance/publishing-export-pipeline.md) — design document for the two-repo pipeline

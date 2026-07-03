@@ -151,14 +151,14 @@
   pdfcreator={LaTeX via pandoc}}
 
 \ifXeTeX
-\special{pdf:trailerid [ <bc199a30d84b1458dc0785759c554353> <bc199a30d84b1458dc0785759c554353> ]}
+\special{pdf:trailerid [ <791d36acf07c0365b7484e40132f48ea> <791d36acf07c0365b7484e40132f48ea> ]}
 \fi
 \ifPDFTeX
 \pdftrailerid{}
-\pdftrailer{/ID [ <bc199a30d84b1458dc0785759c554353> <bc199a30d84b1458dc0785759c554353> ]}
+\pdftrailer{/ID [ <791d36acf07c0365b7484e40132f48ea> <791d36acf07c0365b7484e40132f48ea> ]}
 \fi
 \ifLuaTeX
-\pdfvariable trailerid {[ <bc199a30d84b1458dc0785759c554353> <bc199a30d84b1458dc0785759c554353> ]}
+\pdfvariable trailerid {[ <791d36acf07c0365b7484e40132f48ea> <791d36acf07c0365b7484e40132f48ea> ]}
 \fi
 
 \author{}
@@ -261,8 +261,8 @@ dynamic reports, and reproducible computational research
 \citep{knuth1984literate, leisch2002sweave, peng2011reproducible, sandve2013ten}.
 The project-local claim assay reports 9/9 supported contribution claims
 (100.00\%, passing), while the integrity model exposes 9 source-owned
-risk dimensions and the shared template evidence registry contributes 0
-source-tiered facts when the validation gate has run.
+risk dimensions and the shared template evidence registry contributes
+289 source-tiered facts when the validation gate has run.
 
 \textbf{Results:} The refinery achieves final purity of 99.9999999\%
 (nine-nines) (24K (nine-nines certified)) with a total purity gain of
@@ -1421,7 +1421,7 @@ bibliography records, source code, or disposable artifacts.
 
 The ladder complements the risk matrix by counting source tiers rather
 than plotting risks. When the shared evidence registry is available, the
-manuscript can report 0 source-tiered facts to the validation surface.
+manuscript can report 289 source-tiered facts to the validation surface.
 When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the
 evidentiary mix instead of receiving an undifferentiated assurance that
@@ -1457,13 +1457,10 @@ Source tier & Count & Role \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-artifact & 2 & Generated artifacts exposed to readers \\
-source\_code & 2 & Executable source files and symbols \\
-bibliography & 1 & Reference records and citation metadata \\
-claim\_ledger & 1 & Source-owned claim and fact declarations \\
-config & 1 & Author-controlled project configuration \\
-generated\_metric & 1 & Numbers regenerated from project analysis \\
-validation & 1 & Template gates and test results \\
+artifact & 131 & Generated artifacts exposed to readers \\
+generated\_metric & 94 & Numbers regenerated from project analysis \\
+bibliography & 47 & Reference records and citation metadata \\
+claim\_ledger & 17 & Source-owned claim and fact declarations \\
 \end{longtable}
 
 \subsection{Adversarial security
@@ -1608,7 +1605,7 @@ summary}\label{shared-evidence-registry-summary}
 
 When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 0.
+available to this variable pass: 289.
 
 \begin{longtable}[]{@{}ll@{}}
 \caption{Shared evidence-registry fact kinds when
@@ -1623,7 +1620,13 @@ Fact kind & Count \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-not generated & 0 \\
+artifact & 86 \\
+citation & 47 \\
+equation & 8 \\
+figure & 29 \\
+number & 102 \\
+section & 10 \\
+table & 7 \\
 \end{longtable}
 
 \subsection{Figure quality report}\label{figure-quality-report}
@@ -1687,7 +1690,7 @@ Status
 \endlastfoot
 claim\_evidence\_assay & yes & yes & 3947x2038 & 0.218 & 0.06041014 &
 pass \\
-evidence\_tier\_ladder & yes & yes & 3020x1724 & 0.216 & 0.05410730 &
+evidence\_tier\_ladder & yes & yes & 3339x1332 & 0.219 & 0.05501373 &
 pass \\
 formalism\_traceability & yes & yes & 3315x1797 & 0.140 & 0.04409869 &
 pass \\
@@ -2075,9 +2078,9 @@ Category & Count \\
 \bottomrule\noalign{}
 \endlastfoot
 Figures & 26 \\
-Data files & 2 \\
-Reports & 7 \\
-\textbf{Total} & 35 \\
+Data files & 3 \\
+Reports & 12 \\
+\textbf{Total} & 41 \\
 \end{longtable}
 }
 

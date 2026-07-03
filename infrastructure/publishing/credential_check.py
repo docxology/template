@@ -123,6 +123,30 @@ PROBES: tuple[PlatformProbe, ...] = (
         (),
         note="No read-only identity endpoint; token validated at upload time.",
     ),
+    PlatformProbe(
+        "gumroad",
+        ("GUMROAD_ACCESS_TOKEN",),
+        "https://api.gumroad.com/v2/user",
+        "Bearer {token}",
+        ("user", "name"),
+        note="Gumroad API v2 — returns authenticated user info.",
+    ),
+    PlatformProbe(
+        "leanpub",
+        ("LEANPUB_API_KEY",),
+        "https://leanpub.com/api/v1/me?api_key={token}",
+        None,
+        ("username",),
+        note="Leanpub v1 API — token passed as query param.",
+    ),
+    PlatformProbe(
+        "stripe",
+        ("STRIPE_SECRET_KEY",),
+        "https://api.stripe.com/v1/balance",
+        "Bearer {token}",
+        ("object",),
+        note="Stripe Balance endpoint — read-only, confirms key is valid.",
+    ),
 )
 
 

@@ -30,6 +30,21 @@ from infrastructure.publishing.archival import (
     ArchivalRun,
 )
 
+# ── Documented ebook / retail platform names ──────────────────────────────────
+# These platforms are catalogued in the PLATFORM_REGISTRY at DOCUMENTED tier.
+# Adapters are not yet implemented; the names are listed here for discoverability
+# via `from infrastructure.publishing.platforms import DOCUMENTED_EBOOK_PLATFORMS`.
+DOCUMENTED_EBOOK_PLATFORMS: tuple[str, ...] = (
+    "amazon_kdp",
+    "google_play_books",
+    "gumroad",
+    "leanpub",
+    "lulu",
+    "draft2digital",
+    "stripe",
+    "ingramspark",
+)
+
 __all__ = [
     "create_github_release",
     "prepare_arxiv_submission",
@@ -57,4 +72,6 @@ __all__ = [
     "ArchivalProvider",
     "ArchivalReceipt",
     "ArchivalRun",
+    # Documented ebook platforms
+    "DOCUMENTED_EBOOK_PLATFORMS",
 ]

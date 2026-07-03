@@ -1,0 +1,270 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "5.05",
+      "total_size_bytes": 5295145,
+      "largest_files": [
+        {
+          "name": "template_gold_refinement_combined.pdf",
+          "size_mb": "4.70",
+          "path": "pdf/template_gold_refinement_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.11",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.08",
+          "path": "pdf/_combined_manuscript.md"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1,
+        ".pdf": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 12,
+      "size_mb": "0.36",
+      "total_size_bytes": 374373,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.13",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.08",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__03_results.html",
+          "size_mb": "0.04",
+          "path": "web/manuscript__03_results.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 11
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 27,
+      "size_mb": "6.26",
+      "total_size_bytes": 6568391,
+      "largest_files": [
+        {
+          "name": "cover_visualization.png",
+          "size_mb": "1.71",
+          "path": "figures/cover_visualization.png"
+        },
+        {
+          "name": "claim_evidence_assay.png",
+          "size_mb": "0.67",
+          "path": "figures/claim_evidence_assay.png"
+        },
+        {
+          "name": "cover_visualization.svg",
+          "size_mb": "0.48",
+          "path": "figures/cover_visualization.svg"
+        }
+      ],
+      "extensions": {
+        ".svg": 13,
+        ".png": 13,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 3,
+      "size_mb": "0.03",
+      "total_size_bytes": 35892,
+      "largest_files": [
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.03",
+          "path": "data/manuscript_variables.json"
+        },
+        {
+          "name": "refinery_results.json",
+          "size_mb": "0.00",
+          "path": "data/refinery_results.json"
+        },
+        {
+          "name": "publication_ledger.json",
+          "size_mb": "0.00",
+          "path": "data/publication_ledger.json"
+        }
+      ],
+      "extensions": {
+        ".json": 3
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 12,
+      "size_mb": "0.10",
+      "total_size_bytes": 107281,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.07",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "token_plan.json",
+          "size_mb": "0.01",
+          "path": "reports/token_plan.json"
+        },
+        {
+          "name": "output_statistics.json",
+          "size_mb": "0.01",
+          "path": "reports/output_statistics.json"
+        }
+      ],
+      "extensions": {
+        ".json": 9,
+        ".txt": 1,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 64,
+  "total_size_mb": 11.807519912719727,
+  "largest_files": [
+    {
+      "name": "template_gold_refinement_combined.pdf",
+      "size_mb": "4.70",
+      "category": "pdf",
+      "path": "pdf/template_gold_refinement_combined.pdf"
+    },
+    {
+      "name": "cover_visualization.png",
+      "size_mb": "1.71",
+      "category": "figures",
+      "path": "figures/cover_visualization.png"
+    },
+    {
+      "name": "claim_evidence_assay.png",
+      "size_mb": "0.67",
+      "category": "figures",
+      "path": "figures/claim_evidence_assay.png"
+    },
+    {
+      "name": "cover_visualization.svg",
+      "size_mb": "0.48",
+      "category": "figures",
+      "path": "figures/cover_visualization.svg"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.13",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.11",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.08",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.md"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.08",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.07",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "manuscript__03_results.html",
+      "size_mb": "0.04",
+      "category": "web",
+      "path": "web/manuscript__03_results.html"
+    }
+  ],
+  "missing_expected_files": [
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 5.049843788146973,
+    "web": 0.35702991485595703,
+    "slides": 0.0,
+    "figures": 6.264105796813965,
+    "data": 0.034229278564453125,
+    "reports": 0.1023111343383789,
+    "simulations": 0.0,
+    "llm": 0.0
+  },
+  "file_counts_by_type": {
+    ".md": 4,
+    ".log": 2,
+    ".aux": 1,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 1,
+    ".toc": 1,
+    ".bbl": 1,
+    ".pdf": 1,
+    ".html": 11,
+    ".svg": 13,
+    ".png": 13,
+    ".json": 13,
+    ".txt": 1
+  }
+}
