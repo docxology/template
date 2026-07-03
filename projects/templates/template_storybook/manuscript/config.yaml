@@ -12,8 +12,20 @@ authors:
 
 publication:
   github_repository: "docxology/template_storybook"
-  doi_status: "DOI forthcoming"
+  repository_url: "https://github.com/docxology/template_storybook"
+  doi: "10.5281/zenodo.21176000"
+  version_doi: "10.5281/zenodo.21176001"
+  version_record: "https://zenodo.org/records/21176001"
+  doi_status: "DOI published"
   year: "2026"
+  published_artifacts:
+    github: "https://github.com/docxology/template_storybook/releases/tag/v0.1.0"
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy"
+    software_heritage: "https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_storybook/"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_storybook"
+    osf: "https://osf.io/xbajh/"
+    netlify: "https://6a47fd2233010f4eb138cdcd--tranquil-kleicha-0c9203.netlify.app"
+    pypi: "https://test.pypi.org/project/template-storybook/0.1.0/"
 
 keywords:
   - "storybook"

@@ -45,7 +45,7 @@ pages:
     text: |
       A geometric fable of belonging, bracing, and reciprocal form
       Daniel Ari Friedman
-      DOI forthcoming
+      DOI 10.5281/zenodo.21176000
       template_storybook
   - number: 1
     slug: "publication_information"
@@ -60,7 +60,7 @@ pages:
       Primary artifact: output/pdf/the-shape-between.pdf
       License: MIT for template code and project materials.
       Author: Daniel Ari Friedman.
-      DOI: forthcoming.
+      DOI: 10.5281/zenodo.21176000.
       Story and images: illustrative fiction.
 
       Acknowledgements

@@ -87,6 +87,19 @@ def test_zenodo_and_github_are_published_rest_available(tmp_path: Path) -> None:
     assert report.published_count == 2
 
 
+def test_reserved_zenodo_doi_is_not_published(tmp_path: Path) -> None:
+    cfg = CONFIG_YAML.replace(
+        '  github_repository: "docxology/template_gold_refinement"\n',
+        '  github_repository: "docxology/template_gold_refinement"\n  doi_status: "DOI reserved"\n',
+    )
+    report = compile_publishing_status(_project(tmp_path, cfg))
+    by_name = {p.name: p for p in report.platforms}
+    assert by_name["zenodo"].state is PublicationState.RESERVED
+    assert by_name["zenodo"].reference == "https://doi.org/10.5281/zenodo.20931955"
+    assert by_name["github"].state is PublicationState.PUBLISHED
+    assert report.published_count == 1
+
+
 def test_published_override_upgrades_platform(tmp_path: Path) -> None:
     cid_url = "https://gateway.pinata.cloud/ipfs/bafyTEST"
     report = compile_publishing_status(_project(tmp_path), published={"ipfs_pinata": cid_url})

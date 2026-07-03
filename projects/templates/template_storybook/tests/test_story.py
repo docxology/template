@@ -22,9 +22,9 @@ def test_load_storybook_story_contract(project_root) -> None:
     assert all(page.text for page in spec.pages)
     assert "A geometric fable of belonging" in spec.pages[0].text
     assert "Daniel Ari Friedman" in spec.pages[0].text
-    assert "DOI forthcoming" in spec.pages[0].text
+    assert "DOI 10.5281/zenodo.21176000" in spec.pages[0].text
     assert "Daniel Ari Friedman" in spec.pages[1].text
-    assert "DOI: forthcoming" in spec.pages[1].text
+    assert "DOI: 10.5281/zenodo.21176000" in spec.pages[1].text
     assert "Synergetics" in spec.pages[1].text
     assert "tetrahedron inside the cube" in spec.page_by_number(6).text
     assert "struts that pushed and threads that pulled" in spec.page_by_number(10).text

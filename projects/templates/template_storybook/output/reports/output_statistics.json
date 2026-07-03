@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "1.29",
-      "total_size_bytes": 1354174,
+      "size_mb": "1.54",
+      "total_size_bytes": 1611117,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
-          "size_mb": "1.18",
+          "size_mb": "1.42",
           "path": "pdf/the-shape-between.pdf"
         },
         {
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 46,
       "size_mb": "0.46",
-      "total_size_bytes": 484309,
+      "total_size_bytes": 484306,
       "largest_files": [
         {
           "name": "02_architecture_slides.log",
@@ -97,23 +97,23 @@
     "figures": {
       "exists": true,
       "file_count": 14,
-      "size_mb": "1.11",
-      "total_size_bytes": 1168512,
+      "size_mb": "1.36",
+      "total_size_bytes": 1424680,
       "largest_files": [
         {
+          "name": "13_shared_home.png",
+          "size_mb": "0.13",
+          "path": "figures/storybook_pages/13_shared_home.png"
+        },
+        {
+          "name": "06_tetra_inside_cube.png",
+          "size_mb": "0.12",
+          "path": "figures/storybook_pages/06_tetra_inside_cube.png"
+        },
+        {
           "name": "10_tensegrity_lantern.png",
-          "size_mb": "0.10",
+          "size_mb": "0.12",
           "path": "figures/storybook_pages/10_tensegrity_lantern.png"
-        },
-        {
-          "name": "01_publication_information.png",
-          "size_mb": "0.10",
-          "path": "figures/storybook_pages/01_publication_information.png"
-        },
-        {
-          "name": "11_vector_garden.png",
-          "size_mb": "0.09",
-          "path": "figures/storybook_pages/11_vector_garden.png"
         }
       ],
       "extensions": {
@@ -138,13 +138,13 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.06",
-      "total_size_bytes": 66117,
+      "file_count": 14,
+      "size_mb": "0.07",
+      "total_size_bytes": 76979,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.05",
+          "size_mb": "0.06",
           "path": "reports/evidence_registry.json"
         },
         {
@@ -159,8 +159,8 @@
         }
       ],
       "extensions": {
-        ".json": 5,
-        ".txt": 1,
+        ".json": 9,
+        ".txt": 2,
         ".md": 3
       }
     },
@@ -189,32 +189,32 @@
       "extensions": {}
     }
   },
-  "total_files": 89,
-  "total_size_mb": 2.9800891876220703,
+  "total_files": 94,
+  "total_size_mb": 3.479785919189453,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
-      "size_mb": "1.18",
+      "size_mb": "1.42",
       "category": "pdf",
       "path": "pdf/the-shape-between.pdf"
     },
     {
+      "name": "13_shared_home.png",
+      "size_mb": "0.13",
+      "category": "figures",
+      "path": "figures/storybook_pages/13_shared_home.png"
+    },
+    {
+      "name": "06_tetra_inside_cube.png",
+      "size_mb": "0.12",
+      "category": "figures",
+      "path": "figures/storybook_pages/06_tetra_inside_cube.png"
+    },
+    {
       "name": "10_tensegrity_lantern.png",
-      "size_mb": "0.10",
+      "size_mb": "0.12",
       "category": "figures",
       "path": "figures/storybook_pages/10_tensegrity_lantern.png"
-    },
-    {
-      "name": "01_publication_information.png",
-      "size_mb": "0.10",
-      "category": "figures",
-      "path": "figures/storybook_pages/01_publication_information.png"
-    },
-    {
-      "name": "11_vector_garden.png",
-      "size_mb": "0.09",
-      "category": "figures",
-      "path": "figures/storybook_pages/11_vector_garden.png"
     },
     {
       "name": "02_architecture_slides.log",
@@ -235,16 +235,16 @@
       "path": "slides/03_story_and_graphics_slides.log"
     },
     {
+      "name": "evidence_registry.json",
+      "size_mb": "0.06",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
       "name": "_combined_manuscript.log",
       "size_mb": "0.05",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.log"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.05",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     },
     {
       "name": "template_storybook_combined.pdf",
@@ -255,12 +255,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.2914409637451172,
+    "pdf": 1.5364809036254883,
     "web": 0.04412841796875,
-    "slides": 0.46187305450439453,
-    "figures": 1.1143798828125,
+    "slides": 0.4618701934814453,
+    "figures": 1.3586807250976562,
     "data": 0.0052127838134765625,
-    "reports": 0.06305408477783203,
+    "reports": 0.07341289520263672,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.0
@@ -280,7 +280,7 @@
     ".vrb": 3,
     ".snm": 6,
     ".png": 14,
-    ".json": 6,
-    ".txt": 1
+    ".json": 10,
+    ".txt": 2
   }
 }

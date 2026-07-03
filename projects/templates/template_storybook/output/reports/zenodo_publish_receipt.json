@@ -1,0 +1,23 @@
+{
+  "concept_doi": "10.5281/zenodo.21176000",
+  "deposition_id": "21176001",
+  "github_release_url": "https://github.com/docxology/template_storybook/releases/tag/v0.1.0",
+  "pdf_sha256": "7fb0ed775db212cd9f4b5b578bef8900c9f925bc0c5cc047331eb6900679eeda",
+  "project": "templates/template_storybook",
+  "published": true,
+  "removed_draft_files": [],
+  "sandbox": false,
+  "tag": "v0.1.0",
+  "timestamp_utc": "2026-07-03T18:16:32Z",
+  "uploaded_files": [
+    "the-shape-between.pdf",
+    "Friedman_2026_Shape_7fb0ed77.pdf",
+    "storybook_manifest.json",
+    "validation_report.json",
+    "storybook_summary.md",
+    "CITATION.cff",
+    ".zenodo.json"
+  ],
+  "version_doi": "10.5281/zenodo.21176001",
+  "version_record": "https://zenodo.org/records/21176001"
+}

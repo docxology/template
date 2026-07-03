@@ -1,0 +1,32 @@
+{
+  "arxiv": {
+    "filename": "arxiv_submission_20260703.tar.gz",
+    "status": "prepared",
+    "tarball": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/arxiv_submission_20260703.tar.gz"
+  },
+  "ipfs_web3storage": {
+    "bundle_sha256": null,
+    "error": "Missing credential: WEB3_STORAGE_TOKEN. See docs/maintenance/archival-targets.md.",
+    "extra": {},
+    "identifier": null,
+    "provider": "ipfs_web3storage",
+    "status": "error",
+    "timestamp_utc": "2026-07-03T18:23:22Z",
+    "url": null
+  },
+  "project": "templates/template_storybook",
+  "software_heritage": {
+    "bundle_sha256": "c2437b6c9a6966aa486e3864f35bb887617bd00cea0c4c7957e9c24cbc43774b",
+    "error": null,
+    "extra": {
+      "repo_url": "https://github.com/docxology/template_storybook",
+      "save_request_status": "accepted"
+    },
+    "identifier": "2382636",
+    "provider": "software_heritage",
+    "status": "ok",
+    "timestamp_utc": "2026-07-03T18:23:22Z",
+    "url": "https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_storybook/"
+  },
+  "timestamp_utc": "2026-07-03T18:23:22Z"
+}

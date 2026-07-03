@@ -1,0 +1,70 @@
+{
+  "artifact": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
+  "live_checks": {
+    "github_pages": {
+      "build_status": "building",
+      "http_status": 404,
+      "pages_status": "building",
+      "status": "pending",
+      "timestamp_utc": "2026-07-03T18:30:17Z",
+      "url": "https://docxology.github.io/template_storybook/"
+    }
+  },
+  "manual_corrections": [
+    {
+      "action": "Restored docxology/template_gold_refinement gh-pages and redeployed storybook gh-pages explicitly.",
+      "template_gold_refinement_gh_pages_commit": "4009b1e92d278c2802f5e9f642d0385057eab24a",
+      "template_storybook_gh_pages_commit": "c9b2e72b54a413bae49b894bc90f07f8fee5fd42",
+      "timestamp_utc": "2026-07-03T18:21:51Z"
+    }
+  ],
+  "mode": "REAL UPLOAD",
+  "project": "templates/template_storybook",
+  "results": {
+    "cloudflare": {
+      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"/Users/4d/Library/Preferences/.wrangler/logs/wrangler-2026-07-03_18-19-19_226.log\"\n",
+      "status": "error",
+      "url": null
+    },
+    "github_pages": {
+      "commit": "c9b2e72b54a413bae49b894bc90f07f8fee5fd42",
+      "error": null,
+      "live_status": "pending_http_404_pages_building",
+      "manual_correction": "Corrected after stale GITHUB_REPO initially deployed to docxology/template_gold_refinement.",
+      "status": "ok",
+      "url": "https://docxology.github.io/template_storybook/"
+    },
+    "huggingface": {
+      "commit_url": "https://huggingface.co/datasets/ActiveInference/template_storybook/commit/90594292dc0e43b8ffc16ae56c8dca4fa96564da",
+      "error": null,
+      "status": "ok",
+      "url": "https://huggingface.co/datasets/ActiveInference/template_storybook"
+    },
+    "netlify": {
+      "error": null,
+      "status": "ok",
+      "url": "https://6a47fd2233010f4eb138cdcd--tranquil-kleicha-0c9203.netlify.app"
+    },
+    "osf": {
+      "error": null,
+      "node_id": "xbajh",
+      "status": "ok",
+      "url": "https://osf.io/xbajh/"
+    },
+    "pinata": {
+      "cid": "QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy",
+      "error": null,
+      "status": "ok",
+      "url": "https://gateway.pinata.cloud/ipfs/QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy"
+    },
+    "testpypi": {
+      "error": null,
+      "package": "template-storybook",
+      "retried_after": "Installed twine in the active uv environment.",
+      "status": "ok",
+      "url": "https://test.pypi.org/simple/template-storybook/",
+      "version": "0.1.0"
+    }
+  },
+  "timestamp_utc": "2026-07-03T18:19:24Z"
+}

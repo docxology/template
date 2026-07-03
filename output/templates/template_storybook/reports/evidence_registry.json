@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 136,
+  "fact_count": 151,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 89,
+    "artifact": 104,
     "citation": 1,
     "figure": 14,
     "number": 32
@@ -405,6 +405,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fuller1975synergetics"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission_20260703.tar.gz",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission_20260703.tar.gz"
     },
     {
       "active": true,
@@ -1200,6 +1212,126 @@
     },
     {
       "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/00_abstract_slides.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/00_abstract_slides.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/references.bib",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/references.bib"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/04_reproducibility_slides.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/04_reproducibility_slides.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/01_introduction_slides.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/01_introduction_slides.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/_combined_manuscript.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/_combined_manuscript.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/03_story_and_graphics_slides.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/03_story_and_graphics_slides.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/_slides_math_header.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/_slides_math_header.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/99_references_slides.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/99_references_slides.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/02_architecture_slides.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/02_architecture_slides.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/long_horizon_platform_receipts.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/long_horizon_platform_receipts.json"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-03T17:02:00+00:00",
       "kind": "artifact",
       "source": "filesystem",
@@ -1212,6 +1344,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/zenodo_publish_receipt.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/zenodo_publish_receipt.json"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-03T17:02:00+00:00",
       "kind": "artifact",
       "source": "filesystem",
@@ -1221,6 +1365,30 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "output/reports/output_statistics.txt"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T17:58:08+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/zenodo_reserved_doi.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/zenodo_reserved_doi.json"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/upload_receipts.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/upload_receipts.json"
     },
     {
       "active": true,
@@ -1281,6 +1449,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "output/reports/validation_report.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T18:24:23+00:00",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/software_heritage_origin.txt",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/software_heritage_origin.txt"
     },
     {
       "active": true,
@@ -1645,7 +1825,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 103,
+    "artifact": 118,
     "bibliography": 1,
     "generated_metric": 32
   }

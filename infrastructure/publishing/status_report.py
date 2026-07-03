@@ -52,6 +52,7 @@ BLOCK_END = "<!-- PUBLISHING-STATUS:END -->"
 
 _STATE_BADGE = {
     "published": "✅ published",
+    "reserved": "🔵 reserved",
     "available": "⚪ available",
     "planned": "🟡 planned",
 }
@@ -61,6 +62,7 @@ class PublicationState(str, Enum):
     """Durable publication state of an artifact on a given platform."""
 
     PUBLISHED = "published"  # a durable identifier exists (DOI, repo, release, CID)
+    RESERVED = "reserved"
     AVAILABLE = "available"  # adapter implemented + locally verifiable, not yet published here
     PLANNED = "planned"  # documented intent only, no live adapter
 
@@ -125,6 +127,7 @@ def _platform_state(
     platform: PlatformInfo,
     *,
     concept_doi: str | None,
+    doi_status: str | None,
     github_repo: str | None,
     repository_url: str | None,
     published: Mapping[str, str],
@@ -142,8 +145,9 @@ def _platform_state(
         return PublicationState.PUBLISHED, override, override
 
     if platform.name == "zenodo" and concept_doi:
+        state = PublicationState.RESERVED if _doi_is_reserved(doi_status) else PublicationState.PUBLISHED
         return (
-            PublicationState.PUBLISHED,
+            state,
             f"https://doi.org/{concept_doi}",
             concept_doi,
         )
@@ -158,6 +162,11 @@ def _platform_state(
     if platform.tier is PublishingTier.DOCUMENTED:
         return PublicationState.PLANNED, None, None
     return PublicationState.AVAILABLE, None, None
+
+
+def _doi_is_reserved(doi_status: str | None) -> bool:
+    normalized = (doi_status or "").strip().lower()
+    return "reserved" in normalized and "published" not in normalized
 
 
 def compile_publishing_status(
@@ -194,6 +203,7 @@ def compile_publishing_status(
 
     concept_doi = read_publication_doi(cfg_path)
     version_doi = read_publication_version_doi(cfg_path)
+    doi_status = (publication.get("doi_status") or "").strip() or None
     version_record = (publication.get("version_record") or "").strip() or None
     if version_doi and not version_record:
         try:
@@ -209,6 +219,7 @@ def compile_publishing_status(
         state, ref, label = _platform_state(
             platform,
             concept_doi=concept_doi,
+            doi_status=doi_status,
             github_repo=github_repo,
             repository_url=repository_url,
             published=published,
@@ -299,6 +310,7 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
 
     lines.append(
         "_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · "
+        "🔵 reserved (identifier reserved but not yet registered by final publication) · "
         "⚪ available (adapter implemented and locally verifiable) · 🟡 planned. "
         "This block is generated — edit `manuscript/config.yaml`, then regenerate with "
         "`uv run python -m infrastructure.publishing.status_report --project <path> --write`._"

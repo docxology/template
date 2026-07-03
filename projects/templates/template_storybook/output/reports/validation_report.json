@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-03T10:04:38.277041",
+  "timestamp": "2026-07-03T11:30:53.561755",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -30,7 +30,7 @@
           "pdf": {
             "exists": true,
             "files": 11,
-            "size_mb": 1.29,
+            "size_mb": 1.54,
             "readable": true,
             "optional": false
           },
@@ -51,7 +51,7 @@
           "figures": {
             "exists": true,
             "files": 14,
-            "size_mb": 1.11,
+            "size_mb": 1.36,
             "readable": true,
             "optional": false
           },
@@ -64,8 +64,8 @@
           },
           "reports": {
             "exists": true,
-            "files": 9,
-            "size_mb": 0.13,
+            "files": 14,
+            "size_mb": 0.07,
             "readable": true,
             "optional": false
           },
@@ -96,7 +96,7 @@
         "pdf": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "1.29",
+          "size_mb": "1.54",
           "largest_file": "the-shape-between.pdf"
         },
         "web": {
@@ -114,8 +114,8 @@
         "figures": {
           "exists": true,
           "file_count": 14,
-          "size_mb": "1.11",
-          "largest_file": "10_tensegrity_lantern.png"
+          "size_mb": "1.36",
+          "largest_file": "13_shared_home.png"
         },
         "data": {
           "exists": true,
@@ -125,8 +125,8 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "0.13",
+          "file_count": 14,
+          "size_mb": "0.07",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -154,12 +154,12 @@
         "slides": 46,
         "figures": 14,
         "data": 1,
-        "reports": 9,
+        "reports": 14,
         "simulations": 0,
         "llm": 0,
         "logs": 0
       },
-      "total_size_mb": 3.044466018676758,
+      "total_size_mb": 3.479785919189453,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -171,7 +171,7 @@
     },
     "pdf": {
       "files": 11,
-      "size_mb": 1.2914409637451172
+      "size_mb": 1.5364809036254883
     },
     "figures": {
       "files": 0,
