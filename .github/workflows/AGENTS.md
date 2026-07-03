@@ -183,8 +183,8 @@ action — not each job.
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Depends on:** `test-infra` + `test-project`
-- **Threshold:** Total import time for `infrastructure.core` + public project `src` modules from `infrastructure.project.public_scope` ≤ 5 seconds
-- **Per-module timing** reported to stdout for trend analysis
+- **Threshold:** each `infrastructure.core` or public project `src` cold import from `infrastructure.project.public_scope` must complete in ≤ 5 seconds
+- **Per-module timing** and the roster-dependent total are reported to stdout for trend analysis
 
 ### Quality Gates
 

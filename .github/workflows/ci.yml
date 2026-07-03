@@ -774,11 +774,10 @@ jobs:
           uv run python -c "
           import time
           import sys
-          import importlib
           from pathlib import Path
           from infrastructure.project.public_scope import public_project_names
 
-          THRESHOLD_SECONDS = 5.0
+          MAX_IMPORT_SECONDS = 5.0
           results = {}
 
           # Infrastructure core
@@ -789,18 +788,18 @@ jobs:
           except ImportError as e:
               print(f'SKIP infrastructure.core: {e}')
 
-          # Public project scope only; runtime discovery remains broader.
-          # project names contain '/' (e.g. 'templates/template_code_project'),
-          # which makes them invalid Python module identifiers. Use a subprocess
-          # with PYTHONPATH set to the project dir so 'import src' resolves
-          # correctly and wall-clock time is actually recorded.
           import subprocess
           import os
           projects = public_project_names(Path('.'))
           for project in projects:
-              project_dir = str(Path('.') / 'projects' / project)
+              project_path = Path('.') / 'projects' / project
+              project_dir = str(project_path)
+              project_src_dir = str(project_path / 'src')
               label = f'projects/{project}/src'
-              env = {**os.environ, 'PYTHONPATH': project_dir}
+              pythonpath = os.pathsep.join(
+                  part for part in [project_dir, project_src_dir, os.environ.get('PYTHONPATH', '')] if part
+              )
+              env = {**os.environ, 'PYTHONPATH': pythonpath}
               t0 = time.perf_counter()
               proc = subprocess.run(
                   [sys.executable, '-c', 'import src'],
@@ -816,10 +815,14 @@ jobs:
           print('Import timing:')
           for name, elapsed in results.items():
               print(f'  {elapsed:.3f}s  {name}')
-          print(f'Total: {total:.3f}s (threshold: {THRESHOLD_SECONDS}s)')
+          print(f'Total: {total:.3f}s (informational; public roster size dependent)')
+          print(f'Per-import threshold: {MAX_IMPORT_SECONDS}s')
 
-          if total > THRESHOLD_SECONDS:
-              print('ERROR: Import time exceeds threshold')
+          slow = {name: elapsed for name, elapsed in results.items() if elapsed > MAX_IMPORT_SECONDS}
+          if slow:
+              print('ERROR: One or more imports exceed threshold')
+              for name, elapsed in slow.items():
+                  print(f'  {elapsed:.3f}s  {name}')
               sys.exit(1)
           print('Performance check passed')
           "
