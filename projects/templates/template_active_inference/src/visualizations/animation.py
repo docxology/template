@@ -161,6 +161,36 @@ def write_animation_frame_deltas(project_root: Path) -> Path:
     return path
 
 
+def _live_animation_contract(payload: dict[str, Any]) -> dict[str, Any]:
+    frames = payload.get("frames") or []
+    rows = payload.get("rows") or []
+    return {
+        "frame_count": payload.get("frame_count"),
+        "delta_count": payload.get("delta_count"),
+        "frame_shapes": [
+            {
+                "frame_index": row.get("frame_index"),
+                "width": row.get("width"),
+                "height": row.get("height"),
+                "mode": row.get("mode"),
+            }
+            for row in frames
+        ],
+        "delta_pairs": [
+            {
+                "from_frame": row.get("from_frame"),
+                "to_frame": row.get("to_frame"),
+                "nonzero": bool(row.get("nonzero")),
+                "hash_changed": bool(row.get("hash_changed")),
+            }
+            for row in rows
+        ],
+        "all_frame_hashes_present": payload.get("all_frame_hashes_present"),
+        "all_adjacent_hashes_distinct": payload.get("all_adjacent_hashes_distinct"),
+        "all_nonzero": payload.get("all_nonzero"),
+    }
+
+
 def validate_animation_frame_deltas(project_root: Path) -> list[str]:
     """Return frame-delta manifest issues."""
     root = project_root.resolve()
@@ -201,15 +231,6 @@ def validate_animation_frame_deltas(project_root: Path) -> list[str]:
     ):
         issues.append("animation_frame_deltas.json has duplicate frame hashes")
     live = build_animation_frame_deltas(root)
-    stable_keys = (
-        "frame_count",
-        "delta_count",
-        "frames",
-        "rows",
-        "all_frame_hashes_present",
-        "all_adjacent_hashes_distinct",
-        "all_nonzero",
-    )
-    if payload and {key: payload.get(key) for key in stable_keys} != {key: live.get(key) for key in stable_keys}:
+    if payload and _live_animation_contract(payload) != _live_animation_contract(live):
         issues.append("animation_frame_deltas.json is stale relative to GIF frames")
     return issues

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 804
+Total documented definitions: 805
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -1113,7 +1113,8 @@ Total documented definitions: 804
 | 73 | `function` | `_perceptual_hash` | docstring | Return a deterministic 8x8 average hash for a frame. |
 | 85 | `function` | `build_animation_frame_deltas` | docstring | Compute a deterministic manifest proving adjacent GIF frames change. |
 | 155 | `function` | `write_animation_frame_deltas` | docstring | Write the frame-delta manifest for the deterministic animation track. |
-| 164 | `function` | `validate_animation_frame_deltas` | docstring | Return frame-delta manifest issues. |
+| 164 | `function` | `_live_animation_contract` | inventory fallback | Inventory fallback for function `_live_animation_contract` defined at `src/visualizations/animation.py:164`. |
+| 194 | `function` | `validate_animation_frame_deltas` | docstring | Return frame-delta manifest issues. |
 
 ## `src/visualizations/figure_helpers.py`
 

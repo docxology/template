@@ -97,6 +97,30 @@ def test_animation_extension_renders_distinct_trace_frames(project_root: Path) -
     assert validate_animation_frame_deltas(project_root) == []
 
 
+def test_animation_frame_delta_manifest_allows_live_platform_hash_drift(
+    monkeypatch,
+    project_root: Path,
+) -> None:
+    from simulation.graph_world import write_graph_world_artifacts
+    import visualizations.animation as animation
+
+    write_graph_world_artifacts(project_root)
+    animation.write_belief_trajectory_gif(project_root)
+    animation.write_animation_frame_deltas(project_root)
+    live = animation.build_animation_frame_deltas(project_root)
+    drifted_live = json.loads(json.dumps(live))
+    for idx, frame in enumerate(drifted_live["frames"], start=1):
+        frame["sha256"] = f"{idx:064x}"
+        frame["perceptual_hash"] = f"{idx:016x}"
+    for idx, row in enumerate(drifted_live["rows"]):
+        row["from_perceptual_hash"] = drifted_live["frames"][idx]["perceptual_hash"]
+        row["to_perceptual_hash"] = drifted_live["frames"][idx + 1]["perceptual_hash"]
+        row["hash_changed"] = True
+    monkeypatch.setattr(animation, "build_animation_frame_deltas", lambda project_root: drifted_live)
+
+    assert animation.validate_animation_frame_deltas(project_root) == []
+
+
 def test_animation_frame_delta_manifest_rejects_static_manifest(project_root: Path) -> None:
     from simulation.graph_world import write_graph_world_artifacts
     from visualizations.animation import (
