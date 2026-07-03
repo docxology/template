@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 38,
-  "bundle_hash": "dee518b52f88976555b277f1c376a3d03f5432370bcb89ef5c26efa7200f0ee0",
+  "bundle_hash": "77d4c078b8ae9b2e56e98624f77f04bd2af5120fd6912028742fe5dac67f44db",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -45,7 +45,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "c6705d754fa5646b338ba0a2c8acb2b3710996e86f4706010c8eee7a12fb377e",
+        "source_sha256": "405302d28e0e7062dc6c57b791c6768b06f6a112582bac05106c5e5facbd9aec",
         "status": "deferred"
       },
       {
@@ -57,7 +57,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "f6b6da974307986528043e78164ff17d73d0d0fe0d6713389f16557181707657",
+        "source_sha256": "dd1fb59295b115375a7cb4f683489878a6a69682d7f53f39c8092cc23419a645",
         "status": "deferred"
       },
       {
@@ -213,7 +213,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "8b13f1b7e3aaf474dbf98c66538422299ceb8db117368b55f643735ff703742d",
+        "source_sha256": "d06e3fd70a12d24bb4e04d59cba220da94a540f3f2885057c5aad25e3d565586",
         "status": "deferred"
       },
       {
@@ -465,7 +465,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "34872c950cd2f8de2fb52d044b4c4882b4f6f49848dee908ecd1f2227ab7fb3b",
+        "source_sha256": "a198e06f45bf61b1b02fb70f2d14eef859cc10812082088f65c2615d6ba64d4c",
         "status": "deferred"
       }
     ]
@@ -490,14 +490,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c6705d754fa5646b338ba0a2c8acb2b3710996e86f4706010c8eee7a12fb377e"
+      "source_sha256": "405302d28e0e7062dc6c57b791c6768b06f6a112582bac05106c5e5facbd9aec"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "f6b6da974307986528043e78164ff17d73d0d0fe0d6713389f16557181707657"
+      "source_sha256": "dd1fb59295b115375a7cb4f683489878a6a69682d7f53f39c8092cc23419a645"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -588,7 +588,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "8b13f1b7e3aaf474dbf98c66538422299ceb8db117368b55f643735ff703742d"
+      "source_sha256": "d06e3fd70a12d24bb4e04d59cba220da94a540f3f2885057c5aad25e3d565586"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -735,7 +735,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "34872c950cd2f8de2fb52d044b4c4882b4f6f49848dee908ecd1f2227ab7fb3b"
+      "source_sha256": "a198e06f45bf61b1b02fb70f2d14eef859cc10812082088f65c2615d6ba64d4c"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",

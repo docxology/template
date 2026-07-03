@@ -27,3 +27,9 @@ separate pytest processes and appends coverage into one final 90% gate. Use
 focused `-q` commands only for package-local development loops. The legacy
 single-process coverage run is available as `--monolithic-coverage` for
 diagnostics only.
+
+Standard pytest expects the committed gate-artifact snapshot under `output/` to
+be present and semantically current. It fails fast when the snapshot is stale
+instead of rebuilding the full research pipeline inside test collection. Set
+`TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD=1` only for an intentional local
+refresh run that will regenerate and review the tracked outputs.

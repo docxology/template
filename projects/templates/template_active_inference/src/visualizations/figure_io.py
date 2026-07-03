@@ -9,6 +9,8 @@ from typing import Any
 import matplotlib.pyplot as plt
 from PIL import Image
 
+_IMAGE_METRICS_CACHE: dict[tuple[Path, int, int], dict[str, object]] = {}
+
 
 def _normalize_rgb_extrema(raw: Any) -> tuple[tuple[int, int], ...]:
     if not raw:
@@ -21,7 +23,9 @@ def _normalize_rgb_extrema(raw: Any) -> tuple[tuple[int, int], ...]:
 
 def image_render_metrics(path: Path) -> dict[str, object]:
     """Return deterministic live PNG metrics used by render validators."""
-    if not path.is_file():
+    try:
+        stat = path.stat()
+    except FileNotFoundError:
         return {
             "exists": False,
             "width_px": 0,
@@ -31,6 +35,10 @@ def image_render_metrics(path: Path) -> dict[str, object]:
             "aspect_ratio": 0.0,
             "nonblank": False,
         }
+    key = (path.resolve(), int(stat.st_size), int(stat.st_mtime_ns))
+    cached = _IMAGE_METRICS_CACHE.get(key)
+    if cached is not None:
+        return dict(cached)
     channels: tuple[tuple[int, int], ...] = ()
     try:
         with Image.open(path) as image:
@@ -41,15 +49,17 @@ def image_render_metrics(path: Path) -> dict[str, object]:
         width, height, mode = 0, 0, ""
     aspect_ratio = float(width / height) if height else 0.0
     nonblank = any(low != high for low, high in channels)
-    return {
+    metrics = {
         "exists": path.is_file(),
         "width_px": int(width),
         "height_px": int(height),
         "mode": mode,
-        "size_bytes": path.stat().st_size if path.is_file() else 0,
+        "size_bytes": stat.st_size,
         "aspect_ratio": aspect_ratio,
         "nonblank": nonblank,
     }
+    _IMAGE_METRICS_CACHE[key] = dict(metrics)
+    return metrics
 
 
 def save_figure_png(

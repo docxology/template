@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "4.44",
-      "total_size_bytes": 4656278,
+      "total_size_bytes": 4657433,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 18,
       "size_mb": "0.56",
-      "total_size_bytes": 584742,
+      "total_size_bytes": 584886,
       "largest_files": [
         {
           "name": "index.html",
@@ -70,8 +70,8 @@
     "figures": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "3.78",
-      "total_size_bytes": 3968164,
+      "size_mb": "3.79",
+      "total_size_bytes": 3969529,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -97,9 +97,9 @@
     },
     "data": {
       "exists": true,
-      "file_count": 47,
+      "file_count": 48,
       "size_mb": "2.79",
-      "total_size_bytes": 2924414,
+      "total_size_bytes": 2925078,
       "largest_files": [
         {
           "name": "sheaf_section_status_matrix.json",
@@ -118,7 +118,7 @@
         }
       ],
       "extensions": {
-        ".json": 46,
+        ".json": 47,
         ".csv": 1
       }
     },
@@ -126,7 +126,7 @@
       "exists": true,
       "file_count": 35,
       "size_mb": "0.46",
-      "total_size_bytes": 477862,
+      "total_size_bytes": 477863,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -179,8 +179,8 @@
       }
     }
   },
-  "total_files": 138,
-  "total_size_mb": 12.027904510498047,
+  "total_files": 139,
+  "total_size_mb": 12.031079292297363,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
@@ -249,11 +249,11 @@
     "llm/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 4.440572738647461,
-    "web": 0.5576534271240234,
-    "figures": 3.7843360900878906,
-    "data": 2.788938522338867,
-    "reports": 0.45572471618652344,
+    "pdf": 4.44167423248291,
+    "web": 0.5577907562255859,
+    "figures": 3.785637855529785,
+    "data": 2.789571762084961,
+    "reports": 0.45572566986083984,
     "logs": 0.00067901611328125
   },
   "file_counts_by_type": {
@@ -269,7 +269,7 @@
     ".html": 17,
     ".png": 25,
     ".gif": 1,
-    ".json": 80,
+    ".json": 81,
     ".csv": 1,
     ".txt": 1,
     ".jsonl": 1

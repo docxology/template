@@ -9,7 +9,7 @@ uv run python scripts/generate_sheaf_tracks.py
 uv run python scripts/z_generate_manuscript_variables.py
 
 # Run tests
-uv run pytest projects/templates/template_active_inference/tests/ --cov=src --cov-fail-under=90
+uv run pytest tests/ --cov=src --cov-fail-under=90
 
 # Validation-only compose
 uv run python scripts/compose_manuscript.py --validate-only --strict

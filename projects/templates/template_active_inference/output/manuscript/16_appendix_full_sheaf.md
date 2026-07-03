@@ -51,7 +51,7 @@ pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy,
 
 <!-- sheaf-track:provenance -->
 
-The appendix provenance fragment points to `output/data/artifact_provenance.json`, the canonical artifact that records required toy artifact hashes, producer scripts, source commit, deterministic seeds, config digests, and 0 bundle rows.
+The appendix provenance fragment points to `output/data/artifact_provenance.json`, the canonical artifact that records required toy artifact hashes, producer scripts, source commit, deterministic seeds, config digests, and 5 bundle rows.
 
 <!-- sheaf-track:replay_matrix -->
 
@@ -62,7 +62,7 @@ The appendix provenance fragment points to `output/data/artifact_provenance.json
 The appendix counterexample fragment points to
 `output/reports/counterexample_matrix.json`, the expected-failure matrix that
 keeps promoted validation gates falsifiable. It currently records
-11 known-bad fixtures, and the hydrated pass flag is
+25 known-bad fixtures, and the hydrated pass flag is
 `1`, meaning those fixtures are expected to
 fail rather than sneak through a positive-control gate.
 

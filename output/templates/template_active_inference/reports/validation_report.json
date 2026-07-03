@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T06:47:48.316506",
+  "timestamp": "2026-06-26T07:09:56.461619",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -50,13 +50,13 @@
           "figures": {
             "exists": true,
             "files": 27,
-            "size_mb": 3.78,
+            "size_mb": 3.79,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 47,
+            "files": 48,
             "size_mb": 2.79,
             "readable": true,
             "optional": false
@@ -110,12 +110,12 @@
         "figures": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "3.78",
+          "size_mb": "3.79",
           "largest_file": "sheaf_layers_overview.png"
         },
         "data": {
           "exists": true,
-          "file_count": 47,
+          "file_count": 48,
           "size_mb": "2.79",
           "largest_file": "sheaf_section_status_matrix.json"
         },
@@ -146,11 +146,11 @@
         "pdf": 10,
         "web": 18,
         "figures": 27,
-        "data": 47,
+        "data": 48,
         "reports": 35,
         "logs": 1
       },
-      "total_size_mb": 12.027923583984375,
+      "total_size_mb": 12.03107738494873,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -164,15 +164,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 4.440572738647461
+      "size_mb": 4.44167423248291
     },
     "figures": {
       "files": 27,
-      "size_mb": 3.7843360900878906
+      "size_mb": 3.785637855529785
     },
     "data": {
-      "files": 47,
-      "size_mb": 2.788938522338867
+      "files": 48,
+      "size_mb": 2.789571762084961
     }
   },
   "summary": {

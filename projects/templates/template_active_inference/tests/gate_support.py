@@ -39,6 +39,7 @@ from visualizations.figures import generate_all_figures
 
 _BOOTSTRAPPED_ROOTS: set[Path] = set()
 _BOOTSTRAPPED_SIGNATURES: dict[Path, str] = {}
+_ALLOW_GATE_REBUILD_ENV = "TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD"
 
 _REQUIRED_GATE_ARTIFACTS: tuple[str, ...] = (
     "output/data/parameter_sweep.csv",
@@ -129,6 +130,56 @@ def _fixed_point_passes() -> int:
     except (TypeError, ValueError):
         return 1
     return max(1, value)
+
+
+def _gate_rebuild_allowed() -> bool:
+    raw = os.environ.get(_ALLOW_GATE_REBUILD_ENV, "")
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def gate_artifact_readiness_issues(project_root: Path) -> tuple[str, ...]:
+    issues: list[str] = []
+    missing = [rel for rel in _REQUIRED_GATE_ARTIFACTS if not (project_root / rel).is_file()]
+    if missing:
+        shown = ", ".join(missing[:10])
+        suffix = "" if len(missing) <= 10 else f", ... ({len(missing)} total)"
+        issues.append(f"missing required gate artifacts: {shown}{suffix}")
+        return tuple(issues)
+    try:
+        from gates.claim_ledger import validate_claim_ledger
+        from manuscript.sheaf.semantic import validate_semantic_gluing
+        from roadmap_tracks import validate_integration_audit_artifacts, validate_sheaf_track_artifacts
+
+        semantic_issues = validate_semantic_gluing(project_root)
+        animation_issues = validate_animation_frame_deltas(project_root)
+        integration_issues = validate_integration_audit_artifacts(project_root)
+        sheaf_issues = validate_sheaf_track_artifacts(project_root)
+        if semantic_issues:
+            issues.append(f"semantic gluing issues: {len(semantic_issues)}")
+        if animation_issues:
+            issues.append(f"animation frame-delta issues: {len(animation_issues)}")
+        if integration_issues:
+            issues.append(f"integration audit issues: {len(integration_issues)}")
+        if sheaf_issues:
+            issues.append(f"sheaf track issues: {len(sheaf_issues)}")
+        if not validate_claim_ledger(project_root):
+            issues.append("claim ledger validation failed")
+    except Exception as exc:
+        issues.append(f"readiness check raised {type(exc).__name__}: {exc}")
+    return tuple(issues)
+
+
+def _stale_gate_artifact_message(project_root: Path) -> str:
+    issues = gate_artifact_readiness_issues(project_root)
+    detail = "\n".join(f"- {issue}" for issue in issues) or "- readiness status unknown"
+    return (
+        "template_active_inference gate artifacts are not ready. Standard pytest "
+        "runs do not rebuild them because the cold rebuild is a long research "
+        "pipeline step, not a template-unit-test step. Refresh the tracked output "
+        f"snapshot explicitly with `{_ALLOW_GATE_REBUILD_ENV}=1` and the project "
+        "verification/generation commands, then rerun tests.\n"
+        f"{detail}"
+    )
 
 
 @contextmanager
@@ -280,22 +331,7 @@ def refresh_composed_gate_artifacts(project_root: Path) -> None:
 
 
 def _gate_artifacts_present(project_root: Path) -> bool:
-    if not _required_gate_artifacts_exist(project_root):
-        return False
-    try:
-        from gates.claim_ledger import validate_claim_ledger
-        from manuscript.sheaf.semantic import validate_semantic_gluing
-        from roadmap_tracks import validate_integration_audit_artifacts, validate_sheaf_track_artifacts
-
-        return (
-            not validate_semantic_gluing(project_root)
-            and not validate_animation_frame_deltas(project_root)
-            and not validate_integration_audit_artifacts(project_root)
-            and not validate_sheaf_track_artifacts(project_root)
-            and validate_claim_ledger(project_root)
-        )
-    except Exception:
-        return False
+    return not gate_artifact_readiness_issues(project_root)
 
 
 def _required_gate_artifacts_exist(project_root: Path) -> bool:
@@ -324,6 +360,9 @@ def ensure_gate_artifacts(project_root: Path) -> None:
         if signature:
             _BOOTSTRAPPED_SIGNATURES[root] = signature
         return
+
+    if not _gate_rebuild_allowed():
+        raise AssertionError(_stale_gate_artifact_message(root))
 
     run_analysis(project_root)
     if pymdp_available():

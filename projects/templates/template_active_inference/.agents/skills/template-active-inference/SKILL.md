@@ -23,8 +23,10 @@ Project-scoped skill for the in-repo exemplar at
 ## Quick Reference
 
 ```bash
+# From this project root
+uv run pytest tests --cov=src --cov-fail-under=90
+
 # From the repository root
-uv run pytest projects/templates/template_active_inference/tests --cov=projects/templates/template_active_inference/src --cov-fail-under=90
 uv run python scripts/02_run_analysis.py --project templates/template_active_inference
 uv run python scripts/03_render_pdf.py --project templates/template_active_inference
 uv run python scripts/04_validate_output.py --project templates/template_active_inference

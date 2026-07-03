@@ -98,6 +98,11 @@ def test_image_render_metrics_detects_blank_and_nonblank_png(tmp_path: Path) -> 
     assert nonblank_metrics["nonblank"] is True
     assert nonblank_metrics["aspect_ratio"] == 2.0
 
+    changed = Image.new("RGB", (81, 40), "white")
+    changed.putpixel((10, 10), (0, 0, 0))
+    changed.save(blank)
+    assert image_render_metrics(blank)["nonblank"] is True
+
 
 def test_figure_registry_and_markdown() -> None:
     root = Path(__file__).resolve().parents[1]

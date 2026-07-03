@@ -65,8 +65,10 @@ def pytest_sessionstart(session: pytest.Session) -> None:
             ensure_gate_artifacts(PROJECT_ROOT)
         finally:
             _restore_snapshots(snapshots)
-    except Exception:
+    except pytest.skip.Exception:
         pass
+    except AssertionError as exc:
+        pytest.exit(str(exc), returncode=1)
 
 
 # Tracked source files whose composed/regenerated content embeds live output/

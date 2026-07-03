@@ -4,14 +4,14 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 138
+Total Files: 139
 Total Size: 12.03 MB
 
 Files by Category:
   • pdf: 10 files (4.44 MB)
   • web: 18 files (0.56 MB)
-  • figures: 27 files (3.78 MB)
-  • data: 47 files (2.79 MB)
+  • figures: 27 files (3.79 MB)
+  • data: 48 files (2.79 MB)
   • reports: 35 files (0.46 MB)
   • logs: 1 files (0.00 MB)
 
@@ -28,7 +28,7 @@ Missing Expected Files:
   ⚠  llm/ directory
 
 File Types:
-  • .json: 80 file(s)
+  • .json: 81 file(s)
   • .png: 25 file(s)
   • .html: 17 file(s)
   • .md: 3 file(s)

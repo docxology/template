@@ -59,7 +59,7 @@
         "manuscript/17_conclusion.md",
         "manuscript/99_references.md"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "manuscript/00_00_sheaf_coverage.md": "0acb0659dde64e3b222d37623fc00c8621bb07776061c4944060873084afe8ad",
@@ -69,7 +69,7 @@
         "manuscript/05_methods_analytical.md": "a8236ef82f60f54946d1ce1a3459ebc7e29a005a91791a5380bfd0e56b30f069",
         "manuscript/06_methods_pymdp.md": "c9f5cd00dfc99b68abae4e643f74b2dc4f2170f3dff053a84542d641c72d8512",
         "manuscript/07_methods_lean.md": "cdf90f28941253de3f4545a9c2b9e2d504c54f41d0c9a62fdfcc48b11dd20c6d",
-        "manuscript/08_methods_sheaf.md": "a7525e8a0a3e919fe205d274a96aa346a55bf08f7d4aec728aee05d0177de495",
+        "manuscript/08_methods_sheaf.md": "b3466ad5931d82ae0b3040654340f9fe1d2d15da8f624f0bfe36f3e0119630a1",
         "manuscript/10_results_mi_sweep.md": "9c2459d28630e506e58a6e7fa411ed0fd37de86b299a56108a4898486c58cbd9",
         "manuscript/11_results_free_energy.md": "ebaaa2cde02862d2c7f950b8ea0de779cf4aebbaf737ec605cc7ffbae33d413b",
         "manuscript/12_results_si_tmaze.md": "0bbc79be70aac500cffbb1acda62e70518c3ba82f7170e341b5a73358bb47ea3",
@@ -93,7 +93,7 @@
         "output/data/parameter_sweep.csv",
         "output/reports/invariants.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/parameter_sweep.csv": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
@@ -123,7 +123,7 @@
         "output/reports/si_invariants.json",
         "output/reports/si_tmaze_run_report.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/pymdp_policy_posterior_grid.json": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
@@ -148,7 +148,7 @@
         "output/data/si_graph_world_summary.json",
         "output/data/si_graph_world_trace.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/si_graph_world_summary.json": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
@@ -166,7 +166,7 @@
       "hash_checked_artifacts": [
         "output/data/analysis_statistics.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/analysis_statistics.json": "d00535628dfa61a475a882f2c648a135d632c89571b0c5fc611b22cc3bd60ff6"
@@ -201,7 +201,7 @@
         "output/figures/sheaf_layers_overview.png",
         "output/figures/theorem_traceability_graph.png"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/sheaf_coverage_matrix.json": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230",
@@ -229,7 +229,7 @@
         "output/data/animation_frame_deltas.json",
         "output/figures/si_belief_trajectory.gif"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/animation_frame_deltas.json": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
@@ -247,7 +247,7 @@
       "hash_checked_artifacts": [
         "output/reports/reproducibility_replay.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/reports/reproducibility_replay.json": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4"
@@ -282,7 +282,7 @@
         "output/data/toy_benchmark_matrix.json",
         "output/reports/graph_world_invariants.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/analytical_assumption_index.json": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96",
@@ -322,7 +322,7 @@
         "output/reports/lean_graph_world_inventory.json",
         "output/reports/lean_theorem_inventory.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/gnn_roundtrip_report.json": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
@@ -375,13 +375,13 @@
         "output/reports/stale_artifact_report.json",
         "output/reports/visualization_quality_audit.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/cross_track_symbol_table.json": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
         "output/data/figure_source_map.json": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
         "output/data/manuscript_evidence_tables.json": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
-        "output/data/manuscript_token_provenance.json": "3afc9041ebd0139f4b824fa762049b69b7bda446ceaddac3f285d5756a6e65b7",
+        "output/data/manuscript_token_provenance.json": "41e94ded983339b6646881493ffbcd1138b638794dbc7ee8384f23cc6467b476",
         "output/data/statistical_visualization_bridge.json": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
         "output/data/validation_gate_index.json": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
         "output/reports/artifact_license_audit.json": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
@@ -454,10 +454,10 @@
         "output/reports/security_posture_audit.json",
         "output/reports/sheaf_render_log.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
-        "output/data/artifact_contract_index.json": "892395cfb71721d206dae2ae20d55fdb97e5ba7d5ec48b1352e3debf91d19897",
+        "output/data/artifact_contract_index.json": "fb9df1da5bc8b9f64631ded7d5f0fb432fe4f8ac4c2ece9dddf5beb56b4e5413",
         "output/data/evidence_field_index.json": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
         "output/data/proof_dependency_graph.json": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
         "output/data/scholarship_source_matrix.json": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
@@ -473,8 +473,8 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "63b986306c820b081bcd866cb09fbb6c0608f5dac416b6e4157467aae71f78ed",
-        "output/reports/release_bundle_manifest.json": "cad92e137f9085175a7dda09d6e57f68fe06e6cffac08e857b8e007bbce57e4e",
+        "output/reports/release_attestation.json": "c2ad4ff95446241bc7386d0a578a23d74a748edaa2e9f1605dcb511811653d28",
+        "output/reports/release_bundle_manifest.json": "00aa8aaf978d69cb4fc74a6a4ce6b55648b6bb3f434d3b13944c0a37f383b57c",
         "output/reports/security_posture_audit.json": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
         "output/reports/sheaf_render_log.json": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0"
       },
@@ -492,7 +492,7 @@
         "output/data/manuscript_variables.json",
         "output/reports/manuscript_staleness_report.json"
       ],
-      "input_config_hash": "97b53b7f67da4f523694cb80616757ca43a57de4eb825ba5e2a616e6499d2ff6",
+      "input_config_hash": "6a786e8010f4dd35718a0b50e019944353f943bc705e8e795f0adb590a69c87d",
       "matched": true,
       "output_hashes": {
         "output/data/manuscript_variables.json": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
