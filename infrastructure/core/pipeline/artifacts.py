@@ -82,7 +82,6 @@ def write_stage_artifact_manifest(
     """Write a stage-specific artifact manifest and return it."""
     output_dir = project_dir / "output"
     declared_paths = _declared_output_paths(repo_root, project_dir, contract)
-    previous_hashes = _previous_artifact_hashes(output_dir)
     entries: list[ArtifactManifestEntry] = []
     issues: list[str] = []
 
@@ -96,8 +95,6 @@ def write_stage_artifact_manifest(
                 continue
             relative_path = str(path.relative_to(project_dir))
             digest = compute_sha256(path)
-            if previous_hashes.get(relative_path) == digest:
-                continue
             contract_match = not declared_paths or any(_is_relative_to(path, declared) for declared in declared_paths)
             entries.append(
                 ArtifactManifestEntry(
@@ -174,21 +171,6 @@ def _entries_from_payload(payload: dict[str, object]) -> list[ArtifactManifestEn
                 )
             )
     return entries
-
-
-def _previous_artifact_hashes(output_dir: Path) -> dict[str, str]:
-    stage_dir = output_dir / ".pipeline" / "artifacts"
-    hashes: dict[str, str] = {}
-    if not stage_dir.exists():
-        return hashes
-    for manifest_path in sorted(stage_dir.glob("stage-*.json")):
-        try:
-            payload = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        for entry in _entries_from_payload(payload):
-            hashes[entry.path] = entry.sha256
-    return hashes
 
 
 def _declared_output_paths(repo_root: Path, project_dir: Path, contract: StageContract) -> tuple[Path, ...]:

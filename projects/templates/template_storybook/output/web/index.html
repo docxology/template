@@ -360,8 +360,8 @@ a:hover {
 <header id="title-block-header">
 <h1 class="title">The Shape Between: A Full-Page Illustrated Storybook
 Template</h1>
-<p class="subtitle">Character generation, symbolic page composition, and
-PDF assembly</p>
+<p class="subtitle">A geometric fable of belonging, bracing, and
+reciprocal form</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -372,7 +372,11 @@ class="toc-section-number">2</span> Introduction</a></li>
 <li><a href="#architecture" id="toc-architecture"><span
 class="toc-section-number">3</span> Architecture</a></li>
 <li><a href="#story-and-graphics" id="toc-story-and-graphics"><span
-class="toc-section-number">4</span> Story and Graphics</a></li>
+class="toc-section-number">4</span> Story and Graphics</a>
+<ul>
+<li><a href="#methods" id="toc-methods"><span
+class="toc-section-number">4.1</span> Methods</a></li>
+</ul></li>
 <li><a href="#reproducibility" id="toc-reproducibility"><span
 class="toc-section-number">5</span> Reproducibility</a></li>
 <li><a href="#references" id="toc-references"><span
@@ -383,11 +387,13 @@ class="toc-section-number">6</span> References</a></li>
 class="header-section-number">1</span> Abstract</h1>
 <p><code>template_storybook</code> demonstrates a public, standalone
 picture-book workflow in the research template repository. The bundled
-project renders a deterministic eleven-page storybook: a clear cover, a
-publication-and-acknowledgements page, and nine story pages in which a
-child tetrahedron raised by cubes meets a child cube raised by
-tetrahedra. The story uses a large reciprocal symbol and a
-tetrahedron-inside-cube stability spread to frame belonging without
+project renders a deterministic fourteen-page storybook subtitled <em>A
+geometric fable of belonging, bracing, and reciprocal form</em>: a clear
+cover, a publication-and-acknowledgements page, and twelve story pages
+in which a child tetrahedron raised by cubes meets a child cube raised
+by tetrahedra. The story uses a large reciprocal symbol, a
+tetrahedron-inside-cube stability spread, a shadow-projection lesson, a
+tensegrity lantern, and a vector garden to frame belonging without
 sameness: square and triangle families remain distinct while the space
 between them becomes navigable.</p>
 <p>The project separates story data, rendering logic, and orchestration.
@@ -442,14 +448,19 @@ class="header-section-number">4</span> Story and Graphics</h1>
 directly over the illustration with shadowed lettering; others use a
 translucent box when the scene is visually dense. The YAML
 <code>overlay_box</code> value controls that choice per page.</p>
+<h2 data-number="4.1" id="methods"><span
+class="header-section-number">4.1</span> Methods</h2>
 <p>The renderer uses simple geometric primitives: isometric cubes,
-shaded tetrahedra, family clusters, a curved reciprocal symbol, and
-deterministic star fields. The new stability page borrows from the
+shaded tetrahedra, family clusters, a curved reciprocal symbol,
+deterministic star fields, projected shadows, suspended tensegrity
+struts, and radial vector gardens. The stability page borrows from the
 Synergetics intuition that triangulated structure braces square space: a
 tetrahedron is drawn through four alternating cube corners so the cube
 becomes steadier without ceasing to be a cube [fuller1975synergetics].
-This gives forks a readable baseline. Replacing the story does not
-require editing Python; replacing the visual grammar does.</p>
+Later pages extend that grammar through projection, push-pull balance,
+and directional growth. This gives forks a readable baseline. Replacing
+the story does not require editing Python; replacing the visual grammar
+does.</p>
 <hr />
 <h1 data-number="5" id="reproducibility"><span
 class="header-section-number">5</span> Reproducibility</h1>
@@ -468,6 +479,6 @@ artifact.</p>
 class="header-section-number">6</span> References</h1>
 <p>The bundled story is illustrative fiction. The Synergetics reference
 grounds the tetrahedron-inside-cube design motif used in the stability
-page.</p>
+page and the later tensegrity/vector motifs.</p>
 </body>
 </html>

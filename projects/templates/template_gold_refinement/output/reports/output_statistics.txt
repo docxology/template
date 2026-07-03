@@ -4,37 +4,32 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 64
+Total Files: 76
 Total Size: 11.81 MB
 
 Files by Category:
-  • pdf: 10 files (5.05 MB)
+  • pdf: 10 files (5.09 MB)
   • web: 12 files (0.36 MB)
-  • figures: 27 files (6.26 MB)
-  • data: 3 files (0.03 MB)
-  • reports: 12 files (0.10 MB)
+  • figures: 27 files (6.19 MB)
+  • data: 2 files (0.03 MB)
+  • reports: 24 files (0.14 MB)
+  • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • template_gold_refinement_combined.pdf: 4.70 MB (pdf)
-  • cover_visualization.png: 1.71 MB (figures)
-  • claim_evidence_assay.png: 0.67 MB (figures)
+  • template_gold_refinement_combined.pdf: 4.74 MB (pdf)
+  • cover_visualization.png: 1.72 MB (figures)
+  • claim_evidence_assay.png: 0.65 MB (figures)
   • cover_visualization.svg: 0.48 MB (figures)
   • index.html: 0.13 MB (web)
 
-Missing Expected Files:
-  ⚠  slides/ directory
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-  ⚠  logs/ directory
-
 File Types:
+  • .json: 17 file(s)
   • .svg: 13 file(s)
   • .png: 13 file(s)
-  • .json: 13 file(s)
-  • .html: 11 file(s)
-  • .md: 4 file(s)
-  • .log: 2 file(s)
+  • .html: 12 file(s)
+  • .md: 7 file(s)
+  • .log: 3 file(s)
+  • .txt: 3 file(s)
   • .aux: 1 file(s)
   • .blg: 1 file(s)
   • .bib: 1 file(s)
-  • .tex: 1 file(s)

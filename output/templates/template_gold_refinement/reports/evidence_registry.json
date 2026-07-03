@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 281,
+  "fact_count": 291,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 78,
+    "artifact": 88,
     "citation": 47,
     "equation": 8,
     "figure": 29,
@@ -11,11 +11,11 @@
     "section": 10,
     "table": 7
   },
-  "omitted_fact_count": 81,
+  "omitted_fact_count": 91,
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stage_count",
       "source_field": "$.stage_count",
@@ -27,7 +27,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].order",
       "source_field": "$.stages[4].order",
@@ -39,7 +39,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/security_assay.py::build_security_assay",
       "source_field": "fact:security_assay_count",
@@ -51,7 +51,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stage_count (numeric variant)",
       "source_field": "$.stage_count",
@@ -63,7 +63,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].order (numeric variant)",
       "source_field": "$.stages[4].order",
@@ -75,7 +75,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/security_assay.py::build_security_assay (numeric variant)",
       "source_field": "fact:security_assay_count",
@@ -87,7 +87,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.final_purity",
       "source_field": "$.final_purity",
@@ -99,7 +99,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[4] (numeric variant)",
       "source_field": "$.purity_sequence[4]",
@@ -111,7 +111,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[5]",
       "source_field": "$.purity_sequence[5]",
@@ -123,7 +123,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].order",
       "source_field": "$.stages[0].order",
@@ -135,7 +135,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].output_purity (numeric variant)",
       "source_field": "$.stages[3].output_purity",
@@ -147,7 +147,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].input_purity (numeric variant)",
       "source_field": "$.stages[4].input_purity",
@@ -159,7 +159,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].output_purity",
       "source_field": "$.stages[4].output_purity",
@@ -171,55 +171,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.final_purity (numeric variant)",
-      "source_field": "$.final_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[5] (numeric variant)",
-      "source_field": "$.purity_sequence[5]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[0].order (numeric variant)",
-      "source_field": "$.stages[0].order",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[4].output_purity (numeric variant)",
-      "source_field": "$.stages[4].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.final_purity (numeric variant)",
       "source_field": "$.final_purity",
@@ -231,7 +183,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[5] (numeric variant)",
       "source_field": "$.purity_sequence[5]",
@@ -243,7 +195,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].order (numeric variant)",
       "source_field": "$.stages[0].order",
@@ -255,7 +207,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].output_purity (numeric variant)",
       "source_field": "$.stages[4].output_purity",
@@ -267,7 +219,55 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.final_purity (numeric variant)",
+      "source_field": "$.final_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[5] (numeric variant)",
+      "source_field": "$.purity_sequence[5]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[0].order (numeric variant)",
+      "source_field": "$.stages[0].order",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[4].output_purity (numeric variant)",
+      "source_field": "$.stages[4].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.total_purity_gain",
       "source_field": "$.total_purity_gain",
@@ -279,7 +279,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
       "source_field": "$.purity_sequence[3]",
@@ -291,7 +291,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
       "source_field": "$.stages[2].output_purity",
@@ -303,7 +303,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
       "source_field": "$.stages[3].input_purity",
@@ -315,7 +315,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.total_purity_gain (numeric variant)",
       "source_field": "$.total_purity_gain",
@@ -327,7 +327,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.total_purity_gain (numeric variant)",
       "source_field": "$.total_purity_gain",
@@ -339,7 +339,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[0]",
       "source_field": "$.purity_sequence[0]",
@@ -351,7 +351,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].input_purity",
       "source_field": "$.stages[0].input_purity",
@@ -363,31 +363,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[0] (numeric variant)",
-      "source_field": "$.purity_sequence[0]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "10%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[0].input_purity (numeric variant)",
-      "source_field": "$.stages[0].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "10%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[0] (numeric variant)",
       "source_field": "$.purity_sequence[0]",
@@ -399,7 +375,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].input_purity (numeric variant)",
       "source_field": "$.stages[0].input_purity",
@@ -411,7 +387,31 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[0] (numeric variant)",
+      "source_field": "$.purity_sequence[0]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "10%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[0].input_purity (numeric variant)",
+      "source_field": "$.stages[0].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "10%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[1]",
       "source_field": "$.purity_sequence[1]",
@@ -423,7 +423,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].output_purity",
       "source_field": "$.stages[0].output_purity",
@@ -435,7 +435,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].input_purity",
       "source_field": "$.stages[1].input_purity",
@@ -447,7 +447,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
       "source_field": "$.purity_sequence[1]",
@@ -459,7 +459,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
       "source_field": "$.stages[0].output_purity",
@@ -471,7 +471,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
       "source_field": "$.stages[1].input_purity",
@@ -483,43 +483,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
-      "source_field": "$.purity_sequence[1]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
-      "source_field": "$.stages[0].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
-      "source_field": "$.stages[1].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "37.5%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
       "source_field": "$.purity_sequence[1]",
@@ -531,7 +495,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
       "source_field": "$.stages[0].output_purity",
@@ -543,7 +507,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
       "source_field": "$.stages[1].input_purity",
@@ -555,7 +519,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
       "source_field": "$.purity_sequence[1]",
@@ -567,7 +531,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
       "source_field": "$.stages[0].output_purity",
@@ -579,7 +543,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
       "source_field": "$.stages[1].input_purity",
@@ -591,7 +555,43 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[1] (numeric variant)",
+      "source_field": "$.purity_sequence[1]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "37.5%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[0].output_purity (numeric variant)",
+      "source_field": "$.stages[0].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "37.5%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[1].input_purity (numeric variant)",
+      "source_field": "$.stages[1].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "37.5%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[2]",
       "source_field": "$.purity_sequence[2]",
@@ -603,7 +603,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].output_purity",
       "source_field": "$.stages[1].output_purity",
@@ -615,7 +615,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].input_purity",
       "source_field": "$.stages[2].input_purity",
@@ -627,7 +627,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[2] (numeric variant)",
       "source_field": "$.purity_sequence[2]",
@@ -639,7 +639,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].output_purity (numeric variant)",
       "source_field": "$.stages[1].output_purity",
@@ -651,7 +651,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].input_purity (numeric variant)",
       "source_field": "$.stages[2].input_purity",
@@ -663,43 +663,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[2] (numeric variant)",
-      "source_field": "$.purity_sequence[2]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "75"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[1].output_purity (numeric variant)",
-      "source_field": "$.stages[1].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "75"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[2].input_purity (numeric variant)",
-      "source_field": "$.stages[2].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "75"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[2] (numeric variant)",
       "source_field": "$.purity_sequence[2]",
@@ -711,7 +675,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].output_purity (numeric variant)",
       "source_field": "$.stages[1].output_purity",
@@ -723,7 +687,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].input_purity (numeric variant)",
       "source_field": "$.stages[2].input_purity",
@@ -735,7 +699,43 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[2] (numeric variant)",
+      "source_field": "$.purity_sequence[2]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "75"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[1].output_purity (numeric variant)",
+      "source_field": "$.stages[1].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "75"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[2].input_purity (numeric variant)",
+      "source_field": "$.stages[2].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "75"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3]",
       "source_field": "$.purity_sequence[3]",
@@ -747,7 +747,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity",
       "source_field": "$.stages[2].output_purity",
@@ -759,7 +759,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity",
       "source_field": "$.stages[3].input_purity",
@@ -771,7 +771,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
       "source_field": "$.purity_sequence[3]",
@@ -783,7 +783,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
       "source_field": "$.stages[2].output_purity",
@@ -795,7 +795,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
       "source_field": "$.stages[3].input_purity",
@@ -807,7 +807,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
       "source_field": "$.purity_sequence[3]",
@@ -819,7 +819,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
       "source_field": "$.stages[2].output_purity",
@@ -831,7 +831,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
       "source_field": "$.stages[3].input_purity",
@@ -843,43 +843,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
-      "source_field": "$.purity_sequence[3]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.67%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
-      "source_field": "$.stages[2].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.67%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
-      "source_field": "$.stages[3].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.67%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
       "source_field": "$.purity_sequence[3]",
@@ -891,7 +855,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
       "source_field": "$.stages[2].output_purity",
@@ -903,7 +867,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
       "source_field": "$.stages[3].input_purity",
@@ -915,7 +879,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
       "source_field": "$.purity_sequence[3]",
@@ -927,7 +891,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
       "source_field": "$.stages[2].output_purity",
@@ -939,7 +903,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
       "source_field": "$.stages[3].input_purity",
@@ -951,7 +915,43 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
+      "source_field": "$.purity_sequence[3]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "91.67%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
+      "source_field": "$.stages[2].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "91.67%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
+      "source_field": "$.stages[3].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "91.67%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[3] (numeric variant)",
       "source_field": "$.purity_sequence[3]",
@@ -963,7 +963,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].output_purity (numeric variant)",
       "source_field": "$.stages[2].output_purity",
@@ -975,7 +975,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].input_purity (numeric variant)",
       "source_field": "$.stages[3].input_purity",
@@ -987,7 +987,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[4]",
       "source_field": "$.purity_sequence[4]",
@@ -999,7 +999,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].output_purity",
       "source_field": "$.stages[3].output_purity",
@@ -1011,7 +1011,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].input_purity",
       "source_field": "$.stages[4].input_purity",
@@ -1023,43 +1023,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.purity_sequence[4] (numeric variant)",
-      "source_field": "$.purity_sequence[4]",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "99.9"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[3].output_purity (numeric variant)",
-      "source_field": "$.stages[3].output_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "99.9"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
-      "kind": "number",
-      "source": "output/data/refinery_results.json:$.stages[4].input_purity (numeric variant)",
-      "source_field": "$.stages[4].input_purity",
-      "source_path": "output/data/refinery_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "99.9"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.purity_sequence[4] (numeric variant)",
       "source_field": "$.purity_sequence[4]",
@@ -1071,7 +1035,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].output_purity (numeric variant)",
       "source_field": "$.stages[3].output_purity",
@@ -1083,7 +1047,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[4].input_purity (numeric variant)",
       "source_field": "$.stages[4].input_purity",
@@ -1095,7 +1059,43 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.purity_sequence[4] (numeric variant)",
+      "source_field": "$.purity_sequence[4]",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "99.9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[3].output_purity (numeric variant)",
+      "source_field": "$.stages[3].output_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "99.9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
+      "kind": "number",
+      "source": "output/data/refinery_results.json:$.stages[4].input_purity (numeric variant)",
+      "source_field": "$.stages[4].input_purity",
+      "source_path": "output/data/refinery_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "99.9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].order",
       "source_field": "$.stages[1].order",
@@ -1107,7 +1107,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[1].order (numeric variant)",
       "source_field": "$.stages[1].order",
@@ -1119,7 +1119,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].order",
       "source_field": "$.stages[2].order",
@@ -1131,7 +1131,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[2].order (numeric variant)",
       "source_field": "$.stages[2].order",
@@ -1143,7 +1143,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].order",
       "source_field": "$.stages[3].order",
@@ -1155,7 +1155,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "output/data/refinery_results.json:$.stages[3].order (numeric variant)",
       "source_field": "$.stages[3].order",
@@ -1167,7 +1167,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/formalisms.py::FORMALISMS.eq_token_digest",
       "source_field": "fact:token_digest_prefix_length",
@@ -1179,7 +1179,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/formalisms.py::FORMALISMS.eq_token_digest (numeric variant)",
       "source_field": "fact:token_digest_prefix_length",
@@ -1191,7 +1191,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/formalisms.py::FORMALISMS.eq_token_digest",
       "source_field": "fact:token_digest_base",
@@ -1203,7 +1203,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/formalisms.py::FORMALISMS.eq_token_digest (numeric variant)",
       "source_field": "fact:token_digest_base",
@@ -1215,7 +1215,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/integrity.py::build_integrity_dimensions",
       "source_field": "fact:integrity_dimension_count",
@@ -1227,7 +1227,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "number",
       "source": "src/integrity.py::build_integrity_dimensions (numeric variant)",
       "source_field": "fact:integrity_dimension_count",
@@ -1239,7 +1239,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_purity_functional",
@@ -1251,7 +1251,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_monotone_refinery",
@@ -1263,7 +1263,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_token_digest",
@@ -1275,7 +1275,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_claim_support",
@@ -1287,7 +1287,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_integrity_vector",
@@ -1299,7 +1299,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_certification_predicate",
@@ -1311,7 +1311,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "src/formalisms.py::FORMALISMS",
       "source_field": "fact:eq_adversarial_assay",
@@ -1323,7 +1323,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "equation",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -1335,7 +1335,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "src/figures/diagrams.py::generate_integrity_risk_matrix",
       "source_field": "fact:fig_integrity_risk_matrix",
@@ -1347,7 +1347,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/integrity_risk_matrix.png",
       "source_field": "",
@@ -1359,7 +1359,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/integrity_risk_matrix.svg",
       "source_field": "",
@@ -1371,7 +1371,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "src/figures/diagrams.py::generate_evidence_tier_ladder",
       "source_field": "fact:fig_evidence_tier_ladder",
@@ -1383,7 +1383,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/evidence_tier_ladder.svg",
       "source_field": "",
@@ -1395,7 +1395,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/evidence_tier_ladder.png",
       "source_field": "",
@@ -1407,7 +1407,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/token_density.svg",
       "source_field": "",
@@ -1419,7 +1419,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/token_density.png",
       "source_field": "",
@@ -1431,7 +1431,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/implementation_circuit.svg",
       "source_field": "",
@@ -1443,7 +1443,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/implementation_circuit.png",
       "source_field": "",
@@ -1455,7 +1455,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/purity_progression.svg",
       "source_field": "",
@@ -1467,7 +1467,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/purity_progression.png",
       "source_field": "",
@@ -1479,7 +1479,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/purity_claim_scatter.svg",
       "source_field": "",
@@ -1491,7 +1491,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/purity_claim_scatter.png",
       "source_field": "",
@@ -1503,7 +1503,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/formalism_traceability.svg",
       "source_field": "",
@@ -1515,7 +1515,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/formalism_traceability.png",
       "source_field": "",
@@ -1527,7 +1527,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/claim_evidence_assay.png",
       "source_field": "",
@@ -1539,7 +1539,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/claim_evidence_assay.svg",
       "source_field": "",
@@ -1551,7 +1551,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/cover_visualization.svg",
       "source_field": "",
@@ -1563,7 +1563,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/cover_visualization.png",
       "source_field": "",
@@ -1575,7 +1575,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/figure_registry.json",
       "source_field": "",
@@ -1587,7 +1587,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/integrity_gate_matrix.png",
       "source_field": "",
@@ -1599,7 +1599,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/integrity_gate_matrix.svg",
       "source_field": "",
@@ -1611,7 +1611,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/provenance_sankey.svg",
       "source_field": "",
@@ -1623,7 +1623,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/provenance_sankey.png",
       "source_field": "",
@@ -1635,7 +1635,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/karat_grading.png",
       "source_field": "",
@@ -1647,7 +1647,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/karat_grading.svg",
       "source_field": "",
@@ -1659,7 +1659,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/token_heatmap.png",
       "source_field": "",
@@ -1671,7 +1671,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "figure",
       "source": "output/figures/token_heatmap.svg",
       "source_field": "",
@@ -1683,7 +1683,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1695,7 +1695,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1707,7 +1707,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1719,7 +1719,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1731,7 +1731,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1743,7 +1743,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1755,7 +1755,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1767,7 +1767,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1779,7 +1779,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1791,7 +1791,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1803,7 +1803,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1815,7 +1815,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1827,7 +1827,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1839,7 +1839,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1851,7 +1851,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1863,7 +1863,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1875,7 +1875,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1887,7 +1887,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1899,7 +1899,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1911,7 +1911,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1923,7 +1923,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1935,7 +1935,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1947,7 +1947,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1959,7 +1959,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1971,7 +1971,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1983,7 +1983,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -1995,7 +1995,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2007,7 +2007,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2019,7 +2019,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2031,7 +2031,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2043,7 +2043,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2055,7 +2055,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2067,7 +2067,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2079,7 +2079,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2091,7 +2091,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2103,7 +2103,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2115,7 +2115,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2127,7 +2127,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2139,7 +2139,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2151,7 +2151,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2163,7 +2163,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2175,7 +2175,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2187,7 +2187,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2199,7 +2199,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2211,7 +2211,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2223,7 +2223,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2235,7 +2235,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -2247,7 +2247,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -2259,7 +2259,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -2271,7 +2271,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -2283,7 +2283,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -2295,7 +2295,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/02_methodology.md",
       "source_field": "",
@@ -2307,7 +2307,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/02_methodology.md",
       "source_field": "",
@@ -2319,7 +2319,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "table",
       "source": "manuscript/02_methodology.md",
       "source_field": "",
@@ -2331,7 +2331,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -2343,7 +2343,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/05_conclusion.md",
       "source_field": "",
@@ -2355,7 +2355,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/01_introduction.md",
       "source_field": "",
@@ -2367,7 +2367,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/00_abstract.md",
       "source_field": "",
@@ -2379,7 +2379,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/02_methodology.md",
       "source_field": "",
@@ -2391,7 +2391,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/06_reproducibility.md",
       "source_field": "",
@@ -2403,7 +2403,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-02T12:02:16+00:00",
+      "checked_at": "2026-07-03T16:59:24+00:00",
       "kind": "section",
       "source": "manuscript/04_discussion.md",
       "source_field": "",
@@ -2416,7 +2416,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 123,
+    "artifact": 133,
     "bibliography": 47,
     "claim_ledger": 17,
     "generated_metric": 94

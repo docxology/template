@@ -50,7 +50,7 @@ class TestHandleRequest:
             }
         )
         payload = json.loads(resp["result"]["content"][0]["text"])
-        assert len(payload["stages"]) == 10  # llm excluded
+        assert len(payload["stages"]) == 8
 
     def test_tools_call_list_operations(self) -> None:
         resp = handle_request(
@@ -83,7 +83,7 @@ class TestInvokeCli:
         out = invoke_cli("infrastructure.core.pipeline", ["describe-pipeline", "--format", "json"])
         assert out["exit_code"] == 0
         payload = json.loads(out["stdout"])
-        assert len(payload["stages"]) == 12
+        assert len(payload["stages"]) == 14
 
     def test_read_only_single_file_cli_is_reachable(self) -> None:
         # R7: a documented single-file CLI (read_only) runs via invoke_cli.
@@ -154,4 +154,4 @@ class TestServeLoop:
         assert by_id[1]["result"]["protocolVersion"] == PROTOCOL_VERSION
         assert "tools" in by_id[2]["result"]
         pipeline_payload = json.loads(by_id[3]["result"]["content"][0]["text"])
-        assert len(pipeline_payload["stages"]) == 12
+        assert len(pipeline_payload["stages"]) == 14

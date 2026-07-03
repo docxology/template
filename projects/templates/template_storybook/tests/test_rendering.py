@@ -50,6 +50,9 @@ def test_render_story_number_uses_configured_filename(isolated_project) -> None:
     path = render_story_number(isolated_project, 2)
     assert path.name == "02_square_house.png"
     assert path.is_file()
+    final_path = render_story_number(isolated_project, 13)
+    assert final_path.name == "13_shared_home.png"
+    assert final_path.is_file()
 
 
 def test_page_script_accepts_project_root(isolated_project, project_root) -> None:

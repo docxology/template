@@ -273,7 +273,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 281 source-tiered facts to the validation
+can report 291 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -292,7 +292,7 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| artifact | 123 | Generated artifacts exposed to readers |
+| artifact | 133 | Generated artifacts exposed to readers |
 | generated_metric | 94 | Numbers regenerated from project analysis |
 | bibliography | 47 | Reference records and citation metadata |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
@@ -329,11 +329,11 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 281.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 291.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 78 |
+| artifact | 88 |
 | citation | 47 |
 | equation | 8 |
 | figure | 29 |
@@ -348,16 +348,16 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06027576 | pass |
-| evidence_tier_ladder | yes | yes | 3348x1332 | 0.224 | 0.05620166 | pass |
-| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
-| implementation_circuit | yes | yes | 2966x1845 | 0.068 | 0.02235231 | pass |
-| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
-| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
-| purity_claim_scatter | yes | yes | 2340x1744 | 0.032 | 0.01428277 | pass |
-| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
-| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
-| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
+| claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
+| evidence_tier_ladder | yes | yes | 3339x1332 | 0.217 | 0.05471249 | pass |
+| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
+| implementation_circuit | yes | yes | 2966x1846 | 0.069 | 0.02257238 | pass |
+| integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1909 | 0.379 | 0.01892053 | pass |
+| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
+| purity_claim_scatter | yes | yes | 2347x1745 | 0.032 | 0.01429053 | pass |
+| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
+| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
+| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

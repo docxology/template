@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 09:26
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 10:01
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1119,16 +1119,43 @@ Package hyperref Info: Link coloring ON on input line 113.
 
 [1
 
-] (./_combined_manuscript.toc)
+] (./_combined_manuscript.toc
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.0pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.0pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.00092pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.00064pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.00046pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 9.99893pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 6.99925pt on input line 5.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 4.99947pt on input line 5.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 5.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 5.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+))
 \tf@toc=\write3
 \openout3 = `_combined_manuscript.toc'.
 
  [1]
-Underfull \hbox (badness 1377) in paragraph at lines 136--145
-\TU/lmtt/m/n/10 t e m p l a t e _ s t o r y b o o k \TU/lmr/m/n/10 demonstrates
- a public, standalone picture-book workflow in the research template
- []
-
 [2] [3] [4] [5] [6] [7] (./_combined_manuscript.bbl) [8
 
 ]
@@ -1139,11 +1166,11 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20629 strings out of 468168
- 376131 string characters out of 5432815
- 959274 words of memory out of 5000000
- 49128 multiletter control sequences out of 15000+600000
- 628429 words of font info for 56 fonts, out of 8000000 for 9000
+ 20722 strings out of 468168
+ 378676 string characters out of 5432815
+ 959337 words of memory out of 5000000
+ 49192 multiletter control sequences out of 15000+600000
+ 630202 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,5n,114p,1017b,386s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

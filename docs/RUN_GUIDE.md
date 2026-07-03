@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
-2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **12** stages including the opt-in bundle and archival contracts.
+2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **14** stages including the opt-in ebook, metadata, bundle, and archival contracts.
 
 ## Thin Orchestration Architecture
 
@@ -271,7 +271,7 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
 After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
 
-Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 12 stages total: 8 core, 2 optional LLM, and 2 opt-in bundle/archival stages.
+Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 14 stages total: 8 core, 2 optional LLM, 2 opt-in ebook/metadata, and 2 opt-in bundle/archival stages.
 
 ### Manuscript Menu Options
 
@@ -371,7 +371,7 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Full DAG (10 stages in pipeline.yaml; bash shows [0/9] clean + [1/9]–[9/9] tracked steps)
+./run.sh --pipeline          # Default full run (10 executed stages; pipeline.yaml declares 14 total)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 uv run python scripts/01_run_tests.py --infra-only          # Run infrastructure tests only
 uv run python scripts/01_run_tests.py --project-only        # Run project tests only
@@ -421,8 +421,10 @@ The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 The table above lists pipeline-position indices (0-based, as the executor sees them); the table below maps script *filename* prefixes to their high-level purpose:

@@ -57,7 +57,7 @@ def build_storybook_pdf(project_root: Path | str) -> RenderResult:
     page_width, page_height = letter
     canvas = Canvas(str(output_path), pagesize=letter, invariant=True)
     canvas.setTitle(spec.title)
-    canvas.setAuthor("Research Template Author")
+    canvas.setAuthor("Daniel Ari Friedman")
     canvas.setSubject(spec.subtitle)
     for path in image_paths:
         canvas.drawImage(str(path), 0, 0, width=page_width, height=page_height, preserveAspectRatio=False)

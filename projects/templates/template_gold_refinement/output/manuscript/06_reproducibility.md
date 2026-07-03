@@ -16,9 +16,9 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 | Category | Count |
 |----------|-------|
 | Figures | 26 |
-| Data files | 3 |
-| Reports | 12 |
-| **Total** | 41 |
+| Data files | 2 |
+| Reports | 21 |
+| **Total** | 49 |
 
 ## Regeneration commands
 

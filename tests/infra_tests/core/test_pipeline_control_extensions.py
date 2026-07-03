@@ -809,3 +809,29 @@ def test_stage_artifact_manifest_validates_latest_hash_per_path(tmp_path: Path) 
     validation = validate_artifact_manifest(aggregate, project_dir=project_dir)
 
     assert not any("changed artifact" in issue for issue in validation.issues)
+
+
+def test_stage_artifact_manifest_reemits_unchanged_artifacts(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    project_dir = repo_root / "projects" / "p"
+    output_file = project_dir / "output" / "data" / "result.json"
+    output_file.parent.mkdir(parents=True)
+    output_file.write_text('{"ok": true}\n', encoding="utf-8")
+
+    first = write_stage_artifact_manifest(
+        repo_root=repo_root,
+        project_dir=project_dir,
+        stage_num=4,
+        stage_name="Project Analysis",
+        contract=StageContract(output_artifacts=("projects/{project}/output/data/",)),
+    )
+    second = write_stage_artifact_manifest(
+        repo_root=repo_root,
+        project_dir=project_dir,
+        stage_num=5,
+        stage_name="PDF Rendering",
+        contract=StageContract(output_artifacts=("projects/{project}/output/data/",)),
+    )
+
+    assert [entry.path for entry in first.entries] == ["output/data/result.json"]
+    assert [entry.path for entry in second.entries] == ["output/data/result.json"]

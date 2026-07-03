@@ -2,5 +2,6 @@
 \contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
 \contentsline {section}{\numberline {3}Architecture}{4}{section.3}%
 \contentsline {section}{\numberline {4}Story and Graphics}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Methods}{5}{subsection.4.1}%
 \contentsline {section}{\numberline {5}Reproducibility}{6}{section.5}%
 \contentsline {section}{\numberline {6}References}{7}{section.6}%

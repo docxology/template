@@ -201,8 +201,10 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 ## Key Components

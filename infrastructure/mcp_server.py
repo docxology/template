@@ -15,7 +15,7 @@ the pure :func:`handle_request` function without any transport or SDK.
 Tools exposed:
 
 * ``list_operations`` — the machine-readable CLI operation catalog.
-* ``describe_pipeline`` — the 12-stage pipeline contract derived from pipeline.yaml.
+* ``describe_pipeline`` — the 14-stage pipeline contract derived from pipeline.yaml.
 * ``list_skills`` — discovered ``SKILL.md`` descriptors.
 * ``invoke_cli`` — run ``python -m infrastructure.<module> <args...>`` and return
   ``{exit_code, stdout, stderr}``. Restricted to ``infrastructure.*`` modules that
@@ -39,7 +39,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
-from infrastructure.core.pipeline.cli import DEFAULT_PIPELINE_YAML, stage_rows
+from infrastructure.core.pipeline.cli import CORE_ONLY_EXCLUDED_TAGS, DEFAULT_PIPELINE_YAML, stage_rows
 from infrastructure.skills.discovery import (
     discover_skills,
     skill_descriptors_as_json_serializable,
@@ -81,7 +81,7 @@ def _tool_list_operations(_args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _tool_describe_pipeline(args: dict[str, Any]) -> dict[str, Any]:
-    exclude = {"llm"} if args.get("core_only") else None
+    exclude = set(CORE_ONLY_EXCLUDED_TAGS) if args.get("core_only") else None
     rows = stage_rows(DEFAULT_PIPELINE_YAML, exclude_tags=exclude)
     return {"version": 1, "source": DEFAULT_PIPELINE_YAML.as_posix(), "stages": rows}
 
@@ -167,7 +167,12 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
         "Return the pipeline stage catalog derived from pipeline.yaml.",
         {
             "type": "object",
-            "properties": {"core_only": {"type": "boolean", "description": "Exclude LLM-tagged stages"}},
+            "properties": {
+                "core_only": {
+                    "type": "boolean",
+                    "description": "Exclude LLM-tagged and opt-in publishing/archive stages",
+                }
+            },
             "additionalProperties": False,
         },
     ),

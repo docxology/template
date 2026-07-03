@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 09:25
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 JUL 2026 10:01
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1497,7 +1497,10 @@ ut/slides/00_abstract_slides.nav) [1
 
 
 (/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/outp
-ut/slides/00_abstract_slides.vrb) [2
+ut/slides/00_abstract_slides.vrb
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 5.
+) [2
 
 ] [3
 
@@ -1521,11 +1524,11 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29241 strings out of 468168
- 590092 string characters out of 5432815
- 1140023 words of memory out of 5000000
- 57474 multiletter control sequences out of 15000+600000
- 628397 words of font info for 52 fonts, out of 8000000 for 9000
+ 29246 strings out of 468168
+ 590227 string characters out of 5432815
+ 1141023 words of memory out of 5000000
+ 57477 multiletter control sequences out of 15000+600000
+ 628405 words of font info for 53 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1103b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

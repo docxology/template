@@ -1,6 +1,6 @@
 storybook:
   title: "The Shape Between"
-  subtitle: "A full-page illustrated storybook about reciprocal belonging"
+  subtitle: "A geometric fable of belonging, bracing, and reciprocal form"
   output_pdf: "output/pdf/the-shape-between.pdf"
   page_width: 1275
   page_height: 1650
@@ -42,7 +42,11 @@ pages:
     scene: "cosmic_yinyang"
     overlay_box: false
     palette: ["#0b1026", "#f3e8d9", "#ffcf56", "#5ed6df"]
-    text: "A picture book about shape, family, and the strength hidden inside what seems not to fit."
+    text: |
+      A geometric fable of belonging, bracing, and reciprocal form
+      Daniel Ari Friedman
+      DOI forthcoming
+      template_storybook
   - number: 1
     slug: "publication_information"
     title: "Publication Information"
@@ -55,6 +59,8 @@ pages:
       Generated in the public research-template repository.
       Primary artifact: output/pdf/the-shape-between.pdf
       License: MIT for template code and project materials.
+      Author: Daniel Ari Friedman.
+      DOI: forthcoming.
       Story and images: illustrative fiction.
 
       Acknowledgements
@@ -109,13 +115,34 @@ pages:
     palette: ["#eef9ff", "#f5c84c", "#62c7d8", "#566a82"]
     text: "They built a bridge from shared edges: cube to tetrahedron, tetrahedron to cube, step after step until the valley no longer divided the map."
   - number: 9
+    slug: "shadow_school"
+    title: "The Shadow School"
+    scene: "shadow_school"
+    overlay_box: true
+    palette: ["#fff8e8", "#cdd8ea", "#2f3552", "#f5c84c"]
+    text: "At noon they visited the shadow school. Tessa turned and made triangles, kites, and arrows. Ciro turned and made squares, diamonds, and doors. The teacher smiled: every shape has more than one truth when light moves around it."
+  - number: 10
+    slug: "tensegrity_lantern"
+    title: "The Tensegrity Lantern"
+    scene: "tensegrity_lantern"
+    overlay_box: false
+    palette: ["#10182e", "#314a62", "#f5c84c", "#62c7d8"]
+    text: "That night they built a lantern from struts that pushed and threads that pulled. Nothing touched the way the grown-ups expected, yet the little star held itself in balance and floated over the valley."
+  - number: 11
+    slug: "vector_garden"
+    title: "The Vector Garden"
+    scene: "vector_garden"
+    overlay_box: true
+    palette: ["#edf8ef", "#b8d9c1", "#27364a", "#62c7d8"]
+    text: "In the morning, seeds sprouted along invisible arrows. Some grew toward corners, some toward peaks, and some grew between. Tessa and Ciro learned that home was not a box or a point; it was a pattern of directions that could keep growing."
+  - number: 12
     slug: "mega_symbol"
     title: "The Mega-Symbol"
     scene: "mega_symbol"
     overlay_box: true
     palette: ["#141421", "#f8f2e9", "#f5c84c", "#62c7d8"]
     text: "When both families crossed, the valley rose into a mega-symbol: square inside triangle, triangle inside square, dark carrying light, light carrying dark."
-  - number: 10
+  - number: 13
     slug: "shared_home"
     title: "The Shape Between"
     scene: "shared_home"

@@ -76,10 +76,10 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./secure_run.sh --steganography-only --project {project_name}
 ./secure_run.sh --steganography-only
 
-# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares two additional opt-in bundle/archival stages)
+# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares four additional opt-in ebook/metadata/bundle/archival stages)
 ./run.sh --pipeline
 
-# Core pipeline only (8 stages — LLM review and LLM translations excluded)
+# Core pipeline only (8 stages — LLM and opt-in stages excluded)
 uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
@@ -382,7 +382,7 @@ flowchart TB
 
 **Stage numbering (canonical phrasing — keep in sync with AGENTS.md and README.md):**
 
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **12 named stages**: 8 core stages, 2 optional LLM stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding the two LLM-tagged stages. Bundle and archival stages are declared for contracts but invoked separately when needed.
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **14 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, and archival stages are declared for contracts but invoked separately when needed.
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed (not counted as a numbered stage).
 
@@ -677,6 +677,8 @@ uv run python scripts/03_render_pdf.py --project {name}
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->

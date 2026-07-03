@@ -170,7 +170,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             # Apply flag-based filtering via tags. Long-horizon stages are
             # declared in pipeline.yaml for documentation and direct script
             # invocation, but are not part of the default executor path.
-            exclude_tags: set[str] = {"bundle", "archival"}
+            exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival"}
             if not include_llm or self.config.skip_llm:
                 exclude_tags.add("llm")
             if skip_clean:

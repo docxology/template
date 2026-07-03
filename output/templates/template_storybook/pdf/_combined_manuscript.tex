@@ -104,7 +104,7 @@
 \protected\def\breakseq#1{\seqsplit{#1}}
 \protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
 \title{The Shape Between: A Full-Page Illustrated Storybook Template}
-\author{Daniel Ari Friedman\\\footnotesize{Active Inference Institute}\\\footnotesize{\texttt{daniel@activeinference.institute}}\\\footnotesize{\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}}}
+\author{Daniel Ari Friedman\\\footnotesize{Active Inference Institute}\\\footnotesize{\texttt{daniel@activeinference.institute}}\\\footnotesize{\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}} \\ \footnotesize{DOI: DOI forthcoming}}
 \date{\today}
 
 \usepackage[margin=0.75in]{geometry}
@@ -117,7 +117,7 @@
 \vspace*{2cm}
 {\LARGE\bfseries The Shape Between: A Full-Page Illustrated Storybook Template\par}
 \vspace{0.75em}
-{\large Character generation, symbolic page composition, and PDF assembly\par}
+{\large A geometric fable of belonging, bracing, and reciprocal form\par}
 \vfill
 \makeatletter
 {\@author\par}
@@ -135,11 +135,13 @@
 
 \breaktt{template\_storybook} demonstrates a public, standalone
 picture-book workflow in the research template repository. The bundled
-project renders a deterministic eleven-page storybook: a clear cover, a
-publication-and-acknowledgements page, and nine story pages in which a
-child tetrahedron raised by cubes meets a child cube raised by
-tetrahedra. The story uses a large reciprocal symbol and a
-tetrahedron-inside-cube stability spread to frame belonging without
+project renders a deterministic fourteen-page storybook subtitled
+\emph{A geometric fable of belonging, bracing, and reciprocal form}: a
+clear cover, a publication-and-acknowledgements page, and twelve story
+pages in which a child tetrahedron raised by cubes meets a child cube
+raised by tetrahedra. The story uses a large reciprocal symbol, a
+tetrahedron-inside-cube stability spread, a shadow-projection lesson, a
+tensegrity lantern, and a vector garden to frame belonging without
 sameness: square and triangle families remain distinct while the space
 between them becomes navigable.
 
@@ -208,15 +210,19 @@ directly over the illustration with shadowed lettering; others use a
 translucent box when the scene is visually dense. The YAML
 \texttt{overlay\_box} value controls that choice per page.
 
+\subsection{Methods}\label{methods}
+
 The renderer uses simple geometric primitives: isometric cubes, shaded
-tetrahedra, family clusters, a curved reciprocal symbol, and
-deterministic star fields. The new stability page borrows from the
-Synergetics intuition that triangulated structure braces square space: a
-tetrahedron is drawn through four alternating cube corners so the cube
-becomes steadier without ceasing to be a cube
-\citep{fuller1975synergetics}. This gives forks a readable baseline.
-Replacing the story does not require editing Python; replacing the
-visual grammar does.
+tetrahedra, family clusters, a curved reciprocal symbol, deterministic
+star fields, projected shadows, suspended tensegrity struts, and radial
+vector gardens. The stability page borrows from the Synergetics
+intuition that triangulated structure braces square space: a tetrahedron
+is drawn through four alternating cube corners so the cube becomes
+steadier without ceasing to be a cube \citep{fuller1975synergetics}.
+Later pages extend that grammar through projection, push-pull balance,
+and directional growth. This gives forks a readable baseline. Replacing
+the story does not require editing Python; replacing the visual grammar
+does.
 
 \newpage
 
@@ -239,7 +245,7 @@ That manifest is the compact evidence surface for the primary artifact.
 
 The bundled story is illustrative fiction. The Synergetics reference
 grounds the tetrahedron-inside-cube design motif used in the stability
-page.
+page and the later tensegrity/vector motifs.
 
 
 

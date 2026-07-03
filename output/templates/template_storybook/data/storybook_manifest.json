@@ -1,7 +1,7 @@
 {
   "title": "The Shape Between",
-  "subtitle": "A full-page illustrated storybook about reciprocal belonging",
-  "page_count": 11,
+  "subtitle": "A geometric fable of belonging, bracing, and reciprocal form",
+  "page_count": 14,
   "characters": [
     {
       "id": "tessa",
@@ -98,13 +98,34 @@
     },
     {
       "number": 9,
+      "slug": "shadow_school",
+      "title": "The Shadow School",
+      "scene": "shadow_school",
+      "overlay_box": true
+    },
+    {
+      "number": 10,
+      "slug": "tensegrity_lantern",
+      "title": "The Tensegrity Lantern",
+      "scene": "tensegrity_lantern",
+      "overlay_box": false
+    },
+    {
+      "number": 11,
+      "slug": "vector_garden",
+      "title": "The Vector Garden",
+      "scene": "vector_garden",
+      "overlay_box": true
+    },
+    {
+      "number": 12,
       "slug": "mega_symbol",
       "title": "The Mega-Symbol",
       "scene": "mega_symbol",
       "overlay_box": true
     },
     {
-      "number": 10,
+      "number": 13,
       "slug": "shared_home",
       "title": "The Shape Between",
       "scene": "shared_home",
@@ -113,7 +134,7 @@
   ],
   "render": {
     "output_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
-    "page_count": 11,
+    "page_count": 14,
     "image_paths": [
       "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
       "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
@@ -124,8 +145,11 @@
       "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
       "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
       "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/09_mega_symbol.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/10_shared_home.png"
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/09_shadow_school.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/10_tensegrity_lantern.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/11_vector_garden.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/12_mega_symbol.png",
+      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/13_shared_home.png"
     ],
     "manifest_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/data/storybook_manifest.json",
     "summary_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/reports/storybook_summary.md"

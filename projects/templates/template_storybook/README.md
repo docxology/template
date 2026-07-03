@@ -5,7 +5,9 @@ every story page as a complete visual scene, then overlays text either directly
 on the art or inside a translucent reading box. The bundled story follows
 Tessa, a child tetrahedron raised in a family of cubes, and Ciro, a child cube
 raised in a tetrahedral family, as their mirrored homes meet through a large
-yin-yang-like symbol and a tetrahedron stabilizing the inside of a cube.
+yin-yang-like symbol, a tetrahedron stabilizing the inside of a cube, shadow
+projection, a tensegrity lantern, and a vector garden. Its subtitle is
+`A geometric fable of belonging, bracing, and reciprocal form`.
 
 ## When to use this template
 
@@ -19,7 +21,7 @@ research manuscript.
 
 - `output/figures/storybook_pages/*.png` - one full-page illustration per cover
   or story page
-- `output/pdf/the-shape-between.pdf` - the primary eleven-page storybook PDF
+- `output/pdf/the-shape-between.pdf` - the primary fourteen-page storybook PDF
 - `output/data/storybook_manifest.json` - validated cast, pages, and render paths
 - `output/reports/storybook_summary.md` - compact render summary
 
@@ -104,7 +106,7 @@ src/storybook/
         |
         v
 scripts/10_render_cover.py
-scripts/20_render_page_01.py ... scripts/29_render_page_10.py
+scripts/20_render_page_01.py ... scripts/32_render_page_13.py
 scripts/90_build_storybook_pdf.py
 ```
 

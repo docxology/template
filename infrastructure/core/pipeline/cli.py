@@ -1,6 +1,6 @@
 """CLI for introspecting the declarative pipeline definition.
 
-The 12-stage pipeline contract is the single source of truth in
+The 14-stage pipeline contract is the single source of truth in
 ``pipeline.yaml`` (see :mod:`infrastructure.core.pipeline.dag`), but until now
 that contract was only *re-described in prose* across ``CLAUDE.md``,
 ``AGENTS.md`` and ``README.md`` — so an agent automating the pipeline had to
@@ -14,7 +14,7 @@ This thin CLI derives a machine-readable stage catalog straight from the live
 and receive, per stage: name, the script or built-in method that runs it, its
 tags, whether it is optional (``allow_skip``)/skippable, its ``depends_on``
 edges, topological order, declared failure mode, and the contract's
-definition-of-done. ``--core-only`` mirrors the pipeline executor's tag filter.
+definition-of-done. ``--core-only`` mirrors the pipeline executor's core path.
 """
 
 from __future__ import annotations
@@ -53,9 +53,13 @@ def _quiet_dag_logging() -> Iterator[None]:
 
 
 DEFAULT_PIPELINE_YAML = Path(__file__).resolve().parent / "pipeline.yaml"
+OPT_IN_STAGE_TAGS = frozenset({"ebook", "metadata", "bundle", "archival"})
+CORE_ONLY_EXCLUDED_TAGS = frozenset({"llm", *OPT_IN_STAGE_TAGS})
 
 __all__ = [
+    "CORE_ONLY_EXCLUDED_TAGS",
     "DEFAULT_PIPELINE_YAML",
+    "OPT_IN_STAGE_TAGS",
     "build_parser",
     "describe_pipeline",
     "main",
@@ -129,7 +133,7 @@ def describe_pipeline(args: argparse.Namespace) -> int:
         logger.error("pipeline.yaml not found: %s", yaml_path)
         return 1
 
-    exclude = {"llm"} if getattr(args, "core_only", False) else None
+    exclude = set(CORE_ONLY_EXCLUDED_TAGS) if getattr(args, "core_only", False) else None
     rows = stage_rows(yaml_path, exclude_tags=exclude)  # stage_rows quiets dag logging internally
 
     if args.format == "json":
@@ -157,7 +161,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("describe-pipeline", help="Print the stage catalog derived from pipeline.yaml")
     p.add_argument("--format", choices=["json", "table"], default="json", help="Output format (default: json)")
-    p.add_argument("--core-only", action="store_true", help="Exclude LLM-tagged stages (mirrors --core-only runs)")
+    p.add_argument(
+        "--core-only",
+        action="store_true",
+        help="Exclude LLM-tagged and opt-in publishing/archive stages (mirrors --core-only runs)",
+    )
     p.add_argument("--yaml", default=None, help="Explicit pipeline.yaml path (overrides --project and default)")
     p.add_argument("--project", default=None, help="Prefer projects/<name>/pipeline.yaml if it exists")
     p.add_argument("--repo-root", default=".", help="Repository root for --project resolution (default: cwd)")

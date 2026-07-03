@@ -189,26 +189,42 @@ def _draw_family(draw: ImageDraw.ImageDraw, character: Character, centers: list[
 def _draw_cover_text(image: Image.Image, page: PageSpec) -> None:
     draw = ImageDraw.Draw(image, "RGBA")
     width, height = image.size
-    title_font = _font(106, bold=True)
-    subtitle_font = _font(43, bold=True)
-    small_font = _font(30)
+    title_font = _font(112, bold=True)
+    subtitle_font = _font(34, bold=True)
+    detail_font = _font(27)
+    small_font = _font(24, bold=True)
     title_lines = _wrapped_lines(page.title, 18)
-    subtitle_lines = _wrapped_lines(page.text, 38)
-    y = 92
+    info_lines = [line for line in page.text.splitlines() if line.strip()]
+    y = 86
     for line in title_lines:
         x = (width - _text_width(draw, line, title_font)) // 2
-        draw.text((x + 5, y + 5), line, font=title_font, fill=(10, 12, 24, 230))
+        draw.text((x + 6, y + 6), line, font=title_font, fill=(10, 12, 24, 235))
         draw.text((x, y), line, font=title_font, fill=(255, 249, 236, 255))
-        y += 116
-    y += 12
-    for line in subtitle_lines:
-        x = (width - _text_width(draw, line, subtitle_font)) // 2
-        draw.text((x + 3, y + 3), line, font=subtitle_font, fill=(10, 12, 24, 220))
-        draw.text((x, y), line, font=subtitle_font, fill=(255, 249, 236, 255))
-        y += 56
-    footer = "template_storybook"
-    x = (width - _text_width(draw, footer, small_font)) // 2
-    draw.text((x, height - 122), footer, font=small_font, fill=(35, 38, 55, 220))
+        y += 122
+    bar_top = height - 332
+    bar = (78, bar_top, width - 78, height - 72)
+    draw.rounded_rectangle(bar, radius=26, fill=(12, 16, 35, 222), outline=(255, 244, 210, 190), width=4)
+    draw.rectangle((110, bar_top + 30, 122, height - 104), fill=(245, 200, 76, 238))
+    draw.polygon(
+        ((160, bar_top + 68), (202, bar_top + 144), (118, bar_top + 144)),
+        fill=(245, 200, 76, 228),
+        outline=(255, 244, 210, 200),
+    )
+    draw.rectangle(
+        (166, bar_top + 168, 228, bar_top + 230),
+        fill=(98, 199, 216, 224),
+        outline=(255, 244, 210, 180),
+    )
+    text_x = 270
+    if info_lines:
+        subtitle = info_lines[0]
+        draw.text((text_x, bar_top + 42), subtitle, font=subtitle_font, fill=(255, 249, 236, 255))
+    for index, line in enumerate(info_lines[1:]):
+        prefix = "" if index == len(info_lines[1:]) - 1 else "  |  "
+        y_line = bar_top + 105 + index * 43
+        font = small_font if line == "template_storybook" else detail_font
+        fill = (245, 200, 76, 255) if line == "template_storybook" else (232, 244, 247, 245)
+        draw.text((text_x, y_line), f"{prefix}{line}", font=font, fill=fill)
 
 
 def _draw_publication_text(image: Image.Image, page: PageSpec) -> None:
@@ -269,6 +285,95 @@ def _draw_tetra_stability(draw: ImageDraw.ImageDraw, cx: int, cy: int, size: int
         x, y = point
         draw.ellipse((x - 18, y - 18, x + 18, y + 18), fill=(245, 200, 76, 255), outline=(39, 54, 74, 255), width=4)
     draw.polygon(tetra[:3], fill=(245, 200, 76, 42))
+
+
+def _draw_shadow_school(draw: ImageDraw.ImageDraw, width: int, height: int, tessa: Character, ciro: Character) -> None:
+    draw.ellipse((865, 130, 1045, 310), fill=(255, 218, 112, 210))
+    draw.polygon(((80, 1190), (width - 80, 1180), (width - 25, height), (25, height)), fill=(44, 52, 82, 88))
+    draw.rectangle((120, 1080, width - 120, 1125), fill=(255, 250, 240, 150))
+    _draw_character(draw, tessa, (360, 860), 185)
+    _draw_character(draw, ciro, (875, 870), 190)
+    draw.polygon(((175, 1185), (445, 1100), (575, 1215)), fill=(39, 54, 74, 95))
+    draw.polygon(((575, 1180), (770, 1090), (1015, 1180), (820, 1270)), fill=(39, 54, 74, 82))
+    for center, radius in [((300, 475), 52), ((525, 420), 38), ((790, 480), 48), ((990, 555), 32)]:
+        cx, cy = center
+        draw.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), outline=(255, 250, 240, 120), width=5)
+    draw.line((945, 245, 400, 785), fill=(255, 248, 210, 75), width=18)
+    draw.line((945, 245, 875, 795), fill=(255, 248, 210, 75), width=18)
+
+
+def _draw_tensegrity_lantern(
+    draw: ImageDraw.ImageDraw, width: int, height: int, tessa: Character, ciro: Character
+) -> None:
+    cx, cy = width // 2, 690
+    top = [
+        (
+            cx + int(math.cos(index * math.tau / 3 - math.pi / 2) * 220),
+            cy - 150 + int(math.sin(index * math.tau / 3 - math.pi / 2) * 88),
+        )
+        for index in range(3)
+    ]
+    bottom = [
+        (
+            cx + int(math.cos(index * math.tau / 3 + math.pi / 6) * 240),
+            cy + 185 + int(math.sin(index * math.tau / 3 + math.pi / 6) * 96),
+        )
+        for index in range(3)
+    ]
+    draw.ellipse(
+        (cx - 360, cy - 390, cx + 360, cy + 420), fill=(255, 220, 130, 32), outline=(255, 240, 180, 120), width=6
+    )
+    for ring in (top, bottom):
+        for start, end in zip(ring, ring[1:] + ring[:1], strict=True):
+            draw.line((*start, *end), fill=(98, 199, 216, 180), width=5)
+    for index, start in enumerate(top):
+        for end in (bottom[index], bottom[(index + 1) % 3]):
+            draw.line((*start, *end), fill=(98, 199, 216, 150), width=4)
+    rod_pairs = [
+        (top[0], bottom[1]),
+        (top[1], bottom[2]),
+        (top[2], bottom[0]),
+        ((top[0][0] + 48, top[0][1] + 34), (bottom[2][0] - 46, bottom[2][1] - 28)),
+        ((top[1][0] - 44, top[1][1] + 28), (bottom[0][0] + 46, bottom[0][1] - 32)),
+        ((top[2][0], top[2][1] + 44), (bottom[1][0], bottom[1][1] - 44)),
+    ]
+    for start, end in rod_pairs:
+        draw.line((*start, *end), fill=(245, 200, 76, 238), width=16)
+        draw.line((*start, *end), fill=(255, 244, 190, 155), width=5)
+    for point in top + bottom:
+        x, y = point
+        draw.ellipse((x - 18, y - 18, x + 18, y + 18), fill=(255, 244, 190, 255), outline=(18, 24, 46, 255), width=3)
+    draw.line((cx, 110, cx, cy - 398), fill=(255, 244, 190, 145), width=5)
+    draw.ellipse((cx - 82, cy - 80, cx + 82, cy + 84), fill=(255, 250, 210, 86))
+    draw.ellipse((cx - 28, cy - 26, cx + 28, cy + 30), fill=(255, 250, 210, 155))
+    _draw_character(draw, tessa, (245, 1135), 145)
+    _draw_character(draw, ciro, (1020, 1145), 150)
+
+
+def _draw_vector_garden(draw: ImageDraw.ImageDraw, width: int, height: int, tessa: Character, ciro: Character) -> None:
+    origin = (width // 2, 780)
+    directions = [
+        (origin[0], 330),
+        (930, 505),
+        (1035, 890),
+        (width // 2, 1145),
+        (240, 890),
+        (345, 505),
+    ]
+    for index, point in enumerate(directions):
+        draw.line((*origin, *point), fill=(39, 54, 74, 115), width=7)
+        px, py = point
+        if index % 2:
+            draw_cube(draw, (px, py), 84, "#62c7d8", "#4d2d73")
+        else:
+            draw_tetrahedron(draw, (px, py), 84, "#f5c84c", "#27364a")
+    for start, end in itertools.combinations(directions, 2):
+        if abs(directions.index(start) - directions.index(end)) in {1, 5}:
+            draw.line((*start, *end), fill=(255, 250, 240, 120), width=4)
+    draw.ellipse((origin[0] - 72, origin[1] - 72, origin[0] + 72, origin[1] + 72), fill=(255, 250, 240, 190))
+    draw.ellipse((origin[0] - 28, origin[1] - 28, origin[0] + 28, origin[1] + 28), fill=(39, 54, 74, 230))
+    _draw_character(draw, tessa, (310, 1265), 145)
+    _draw_character(draw, ciro, (965, 1265), 145)
 
 
 def _overlay_text(image: Image.Image, page: PageSpec) -> None:
@@ -381,6 +486,12 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
                 draw_tetrahedron(draw, (x, y), 86, "#f5c84c", "#27364a")
         _draw_character(draw, tessa, (260, 880), 190)
         _draw_character(draw, ciro, (1010, 850), 190)
+    elif page.scene == "shadow_school":
+        _draw_shadow_school(draw, width, height, tessa, ciro)
+    elif page.scene == "tensegrity_lantern":
+        _draw_tensegrity_lantern(draw, width, height, tessa, ciro)
+    elif page.scene == "vector_garden":
+        _draw_vector_garden(draw, width, height, tessa, ciro)
     elif page.scene == "mega_symbol":
         _draw_yinyang(draw, width // 2, 830, 560, _hex("#f8f2e9"), _hex("#141421"))
         draw_tetrahedron(draw, (width // 2 - 150, 765), 190, "#f5c84c", "#27364a")

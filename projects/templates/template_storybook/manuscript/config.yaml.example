@@ -1,6 +1,6 @@
 paper:
   title: "My Storybook Template Fork"
-  subtitle: "Full-page illustration and PDF assembly"
+  subtitle: "A full-page illustrated fable"
   version: "0.1.0"
 
 authors:
@@ -46,4 +46,7 @@ analysis:
     - "27_render_page_08.py"
     - "28_render_page_09.py"
     - "29_render_page_10.py"
+    - "30_render_page_11.py"
+    - "31_render_page_12.py"
+    - "32_render_page_13.py"
     - "90_build_storybook_pdf.py"

@@ -2,10 +2,12 @@
 
 `template_storybook` demonstrates a public, standalone picture-book workflow in
 the research template repository. The bundled project renders a deterministic
-eleven-page storybook: a clear cover, a publication-and-acknowledgements page,
-and nine story pages in which a child tetrahedron raised by cubes meets a child
-cube raised by tetrahedra. The story uses a large reciprocal symbol and a
-tetrahedron-inside-cube stability spread to frame belonging without sameness:
+fourteen-page storybook subtitled *A geometric fable of belonging, bracing, and
+reciprocal form*: a clear cover, a publication-and-acknowledgements page, and
+twelve story pages in which a child tetrahedron raised by cubes meets a child
+cube raised by tetrahedra. The story uses a large reciprocal symbol, a
+tetrahedron-inside-cube stability spread, a shadow-projection lesson, a
+tensegrity lantern, and a vector garden to frame belonging without sameness:
 square and triangle families remain distinct while the space between them
 becomes navigable.
 
@@ -78,13 +80,18 @@ the illustration with shadowed lettering; others use a translucent box when the
 scene is visually dense. The YAML `overlay_box` value controls that choice per
 page.
 
+## Methods
+
 The renderer uses simple geometric primitives: isometric cubes, shaded
-tetrahedra, family clusters, a curved reciprocal symbol, and deterministic star
-fields. The new stability page borrows from the Synergetics intuition that
+tetrahedra, family clusters, a curved reciprocal symbol, deterministic star
+fields, projected shadows, suspended tensegrity struts, and radial vector
+gardens. The stability page borrows from the Synergetics intuition that
 triangulated structure braces square space: a tetrahedron is drawn through four
 alternating cube corners so the cube becomes steadier without ceasing to be a
-cube [@fuller1975synergetics]. This gives forks a readable baseline. Replacing
-the story does not require editing Python; replacing the visual grammar does.
+cube [@fuller1975synergetics]. Later pages extend that grammar through
+projection, push-pull balance, and directional growth. This gives forks a
+readable baseline. Replacing the story does not require editing Python;
+replacing the visual grammar does.
 
 
 
@@ -115,4 +122,5 @@ manifest is the compact evidence surface for the primary artifact.
 # References
 
 The bundled story is illustrative fiction. The Synergetics reference grounds
-the tetrahedron-inside-cube design motif used in the stability page.
+the tetrahedron-inside-cube design motif used in the stability page and the
+later tensegrity/vector motifs.
