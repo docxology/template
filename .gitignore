@@ -210,6 +210,13 @@ projects/templates/*/.DS_Store
 **/.omo
 **/.omo/
 **/.omo/**
+
+# Netlify CLI local site-link/build state (created by `netlify dev`/`netlify link`).
+.netlify/
+.netlify
+**/.netlify
+**/.netlify/
+**/.netlify/**
 projects/*/*.egg-info/
 projects/*/src/*.egg-info/
 projects/templates/*/*.egg-info/
