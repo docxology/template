@@ -10,12 +10,15 @@ Keep this focused on book-scale structure, configurability, and validation.
 - Structural integrity is driven by `manuscript/config.yaml`, chapter stubs, figure generation, and manuscript-integrity tests.
 - Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: generated figure registry passes; evidence registry still reports 123 unsupported pedagogical numbers; artifact manifest reports advisory drift after single-stage regeneration.
-- 2026-06-25 coverage snapshot: 158 tests, 99.25% coverage. All of `textbook/`, `visualization/`, `mermaid/`, and utility modules covered. Remaining uncovered lines are all `# pragma: no cover` optional-dependency paths (Pillow, mmdc) or unreachable error-cleanup branches.
+- 2026-07-05 coverage snapshot: 174 tests, 98.25% coverage. Unified audit gate
+  (`textbook.audit.run_manuscript_audit`), unit intro contract (`intro_file` in
+  config), YAML-driven gallery (`gallery_specs.yaml`), strict audit CLI by default.
+- 2026-06-25 coverage snapshot: 158 tests, 99.25% coverage.
 
 ## Integrity and template-status gaps
 
 - Keep `manuscript/config.yaml` as the only source of truth for parts, chapters, appendices, labs, and question banks.
-- Add a generated scaffold audit that reports missing stubs, disabled chapters, orphan files, and stale figure references.
+- ✅ Structured scaffold audit via `textbook.audit.run_manuscript_audit` (orphan part markdown, unit intros, strict CLI).
 - Keep finished chapters clearly separated from fillable stubs.
 
 ## Configurable-surface gaps

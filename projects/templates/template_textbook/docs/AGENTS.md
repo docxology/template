@@ -28,15 +28,9 @@ thin `scripts/` orchestrators wire it into the reproducible pipeline.
 
 ## Status
 
-This exemplar is **local-only** (tracked in `template/` but not in
-`infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`). It is published
-standalone on Zenodo (concept DOI `10.5281/zenodo.20533125`). Promotion to a
-tracked **public** exemplar follows the checklist in the project-root
-[`../AGENTS.md`](../AGENTS.md) ("Promotion to a tracked public exemplar"):
-align manuscript figure references to the repo's generate-to-`output/` figure
-convention (working exemplars track zero manuscript figures), fix the
-`appendices/` relative-link paths, then register in `public_scope.py`, add the
-publication record, and re-run the combined public-projects coverage gate.
+This exemplar is a **tracked public canonical project** (see
+[`docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)).
+Published on Zenodo (concept DOI `10.5281/zenodo.20533125`).
 
 ## See also
 

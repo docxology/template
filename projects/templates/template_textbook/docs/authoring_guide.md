@@ -113,8 +113,8 @@ The scaffold is built to grow without drifting. To go big:
 - **Lean on the audit table.** `audit_textbook_quality.py` reports stub and word
   counts per chapter, so you always know which chapters are still skeletons and
   which are full — your burn-down for a large book.
-- **Run `--require-present` in CI** once the book is meant to be complete, so a
-  declared-but-empty chapter fails the build.
+- **Run the audit CLI in strict mode (default) in CI** once the book is meant to
+  be complete. Pass `--lenient` only for partial-tree progress checks.
 
 Because structure, numbering, references, glossary, and figure paths are all
 contract-checked from one config, a 1,000-page book obeys exactly the same rules

@@ -94,15 +94,11 @@ lab + question file is present, and prints a per-chapter stub-count / word-count
 progress table.
 
 ```bash
-# Report structure + fill progress (warns on missing files)
 uv run python scripts/audit_textbook_quality.py
-
-# Strict: fail (non-zero exit) if any declared chapter/lab/question is missing
-uv run python scripts/audit_textbook_quality.py --require-present
+uv run python scripts/audit_textbook_quality.py --lenient
 ```
 
-Use the progress table to track fill state as you author; use
-`--require-present` in CI once the book is meant to be complete. Together with
+Strict by default; pass `--lenient` only for partial-tree progress checks. Together with
 the integrity tests this is how you grow the book to hundreds of pages and stay
 confident the contract is still green — see the
 [authoring guide](authoring_guide.md).

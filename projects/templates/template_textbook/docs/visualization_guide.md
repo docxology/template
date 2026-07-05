@@ -51,9 +51,14 @@ uv run python scripts/generate_figures.py --output-dir <dir>
 ```
 
 [`scripts/generate_figures.py`](../scripts/generate_figures.py) is a thin
-orchestrator: it calls `generate_all_figures` and prints each output path for the
-pipeline manifest. It is one of the `analysis.scripts` in
-[`config.yaml`](../manuscript/config.yaml), so it runs during a normal build.
+orchestrator: it calls `generate_all_figures`, optionally
+`generate_gallery_figures` (into `output/figures/gallery/`), writes
+`figure_registry.json`, and prints each output path.
+
+### Format gallery: `gallery_specs.yaml`
+
+[`gallery_specs.yaml`](../src/visualization/gallery_specs.yaml) drives the appendix
+format gallery the same way `diagram_specs.yaml` drives Mermaid diagrams.
 
 ## Diagrams: `src/mermaid`
 
