@@ -17,18 +17,15 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import platform
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-
-import yaml
 
 try:
     from .composition import generate_token_plan
     from .config import load_gold_refinement_config
     from .evidence import build_evidence_registry
+    from .figures._common import figure_markdown_variables
     from .formalisms import (
         equation_labels,
         formalism_count,
@@ -44,6 +41,7 @@ try:
         integrity_owner_table_rows,
         integrity_summary_line,
     )
+    from .parsing import build_timestamp, load_json_object, load_manuscript_config
     from .purity import format_purity, purity_to_nines
     from .refinery import run_refinery
     from .security_assay import (
@@ -55,6 +53,7 @@ except ImportError:  # pragma: no cover
     from composition import generate_token_plan  # type: ignore[no-redef]
     from config import load_gold_refinement_config  # type: ignore[no-redef]
     from evidence import build_evidence_registry  # type: ignore[no-redef]
+    from figures._common import figure_markdown_variables  # type: ignore[no-redef]
     from formalisms import (  # type: ignore[no-redef]
         equation_labels,
         formalism_count,
@@ -70,6 +69,7 @@ except ImportError:  # pragma: no cover
         integrity_owner_table_rows,
         integrity_summary_line,
     )
+    from parsing import build_timestamp, load_json_object, load_manuscript_config  # type: ignore[no-redef]
     from purity import format_purity, purity_to_nines  # type: ignore[no-redef]
     from refinery import run_refinery  # type: ignore[no-redef]
     from security_assay import (  # type: ignore[no-redef]
@@ -83,26 +83,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def _build_timestamp() -> str:
-    """Build timestamp, honoring ``SOURCE_DATE_EPOCH`` for reproducible builds."""
-    epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
-    if epoch.isdigit():
-        return datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
 # --------------------------------------------------------------------------- #
 # I/O helpers — thin readers, no business logic
 # --------------------------------------------------------------------------- #
-
-
-def _load_config(project_root: Path) -> dict[str, Any]:
-    config_path = project_root / "manuscript" / "config.yaml"
-    if not config_path.exists():
-        logger.warning("Config file not found: %s", config_path)
-        return {}
-    with config_path.open("r") as f:
-        return yaml.safe_load(f) or {}
 
 
 def _compute_config_hash(project_root: Path) -> str:
@@ -128,14 +111,6 @@ def _count_output_artifacts(project_root: Path) -> dict[str, int]:
         else:
             counts[subdir] = 0
     return counts
-
-
-def _load_json_object(path: Path) -> dict[str, Any]:
-    if not path.exists():
-        return {}
-    with path.open("r") as f:
-        data = json.load(f)
-    return data if isinstance(data, dict) else {}
 
 
 def _shared_evidence_kind_rows(shared_evidence: dict[str, Any]) -> str:
@@ -256,7 +231,7 @@ def _add_config_variables(
     variables["ARTIFACT_TOTAL"] = str(sum(artifact_counts.values()))
 
     variables["CONFIG_HASH"] = _compute_config_hash(project_root)
-    variables["GENERATION_TIMESTAMP"] = _build_timestamp()
+    variables["GENERATION_TIMESTAMP"] = build_timestamp()
     variables["PYTHON_VERSION"] = platform.python_version()
 
     authors = config.get("authors", [])
@@ -269,47 +244,9 @@ def _add_config_variables(
 
 
 def _add_figure_variables(variables: dict[str, str], project_root: Path) -> None:
-    variables["FIGURE_PURITY_PROGRESSION"] = (
-        "![Purity progression across refinery stages](../output/figures/purity_progression.png)"
-        "{#fig:purity_progression}"
-    )
-    variables["FIGURE_KARAT_GRADING"] = (
-        "![Gold karat grading scale with refinery stage markers](../output/figures/karat_grading.png)"
-        "{#fig:karat_grading}"
-    )
-    variables["FIGURE_TOKEN_DENSITY"] = (  # nosec B105
-        "![Mega-madlib token distribution](../output/figures/token_density.png){#fig:token_density}"
-    )
-    variables["FIGURE_PROVENANCE_SANKEY"] = (
-        "![Provenance flow diagram](../output/figures/provenance_sankey.png){#fig:provenance_sankey}"
-    )
-    variables["FIGURE_PURITY_CLAIM_SCATTER"] = (
-        "![Purity vs claim support](../output/figures/purity_claim_scatter.png){#fig:purity_claim_scatter}"
-    )
-    variables["FIGURE_TOKEN_HEATMAP"] = (  # nosec B105
-        "![Token selection heatmap](../output/figures/token_heatmap.png){#fig:token_heatmap}"
-    )
-    variables["FIGURE_INTEGRITY_GATE_MATRIX"] = (
-        "![Integrity-gate matrix](../output/figures/integrity_gate_matrix.png){#fig:integrity_gate_matrix}"
-    )
-    variables["FIGURE_FORMALISM_TRACEABILITY"] = (
-        "![Formalism traceability](../output/figures/formalism_traceability.png){#fig:formalism_traceability}"
-    )
-    variables["FIGURE_IMPLEMENTATION_CIRCUIT"] = (
-        "![Gold-refinement implementation circuit](../output/figures/implementation_circuit.png)"
-        "{#fig:implementation_circuit}"
-    )
-    variables["FIGURE_CLAIM_EVIDENCE_ASSAY"] = (
-        "![Claim-evidence assay](../output/figures/claim_evidence_assay.png){#fig:claim_evidence_assay}"
-    )
-    variables["FIGURE_INTEGRITY_RISK_MATRIX"] = (
-        "![Scientific-integrity risk matrix](../output/figures/integrity_risk_matrix.png){#fig:integrity_risk_matrix}"
-    )
-    variables["FIGURE_EVIDENCE_TIER_LADDER"] = (
-        "![Evidence-tier ladder](../output/figures/evidence_tier_ladder.png){#fig:evidence_tier_ladder}"
-    )
+    variables.update(figure_markdown_variables())
 
-    figure_quality = _load_json_object(project_root / "output" / "reports" / "figure_quality_report.json")
+    figure_quality = load_json_object(project_root / "output" / "reports" / "figure_quality_report.json")
     figure_count = int(figure_quality.get("figure_count", 0) or 0)
     passing_count = int(figure_quality.get("passing_count", 0) or 0)
     registry_parity = bool(figure_quality.get("registry_parity", False))
@@ -403,7 +340,7 @@ def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any,
     variables["CLAIM_SUPPORT_STATUS"] = "passing" if claim_registry.is_passing else "failing"
     variables["CLAIM_SUPPORT_REGISTRY_PATH"] = "output/reports/claim_support_registry.json"
 
-    shared_evidence = _load_json_object(project_root / "output" / "reports" / "evidence_registry.json")
+    shared_evidence = load_json_object(project_root / "output" / "reports" / "evidence_registry.json")
     variables["SHARED_EVIDENCE_FACT_COUNT"] = str(shared_evidence.get("fact_count", 0))
     variables["SHARED_EVIDENCE_KIND_TABLE"] = _shared_evidence_kind_rows(shared_evidence)
     variables["SHARED_EVIDENCE_SCHEMA"] = str(shared_evidence.get("schema", "not generated"))
@@ -438,7 +375,9 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
         ``dict[str, str]`` with UPPERCASE_KEY → value mapping for
         ``{{TOKEN}}`` substitution.
     """
-    config = _load_config(project_root)
+    config = load_manuscript_config(project_root)
+    if not config:
+        logger.warning("Config file not found: %s", project_root / "manuscript" / "config.yaml")
     gr_config = load_gold_refinement_config(project_root)
     refinery_result = run_refinery()
 

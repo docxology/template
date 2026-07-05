@@ -1,0 +1,7 @@
+# Generated / runtime artefacts
+*.pyc
+__pycache__/
+*.log
+output/
+tmp/
+.env

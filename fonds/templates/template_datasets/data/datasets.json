@@ -1,0 +1,72 @@
+[
+  {
+    "id": "mnist-1998",
+    "name": "MNIST Handwritten Digits",
+    "version": "1.0",
+    "license": "CC0-1.0",
+    "description": "A database of 70,000 handwritten digit images (60k train, 10k test), 28x28 grayscale. The de facto benchmark for image classification.",
+    "url": "http://yann.lecun.com/exdb/mnist/",
+    "doi": null,
+    "size_gb": 0.05,
+    "format": ["binary", "idx"],
+    "tasks": ["image-classification"],
+    "tags": ["vision", "benchmark", "digits", "classic"],
+    "notes": "Original LeCun et al. (1998) split. Widely available via torchvision, TensorFlow Datasets, etc."
+  },
+  {
+    "id": "cifar10-2009",
+    "name": "CIFAR-10",
+    "version": "1.0",
+    "license": "MIT",
+    "description": "60,000 32x32 colour images in 10 classes (6,000 per class). 50k training and 10k test images. A standard benchmark for object recognition.",
+    "url": "https://www.cs.toronto.edu/~kriz/cifar.html",
+    "doi": "10.48550/arXiv.cs/0506064",
+    "size_gb": 0.17,
+    "format": ["binary", "pickle"],
+    "tasks": ["image-classification"],
+    "tags": ["vision", "benchmark", "objects", "classic"],
+    "notes": "Collected by Krizhevsky, Nair, Hinton (2009). Available via torchvision and Keras."
+  },
+  {
+    "id": "squad2-2018",
+    "name": "SQuAD 2.0",
+    "version": "2.0",
+    "license": "CC-BY-SA-4.0",
+    "description": "Stanford Question Answering Dataset v2.0 — 150k crowd-sourced question-answer pairs on Wikipedia articles, plus 50k unanswerable questions.",
+    "url": "https://rajpurkar.github.io/SQuAD-explorer/",
+    "doi": "10.48550/arXiv.1806.03822",
+    "size_gb": 0.04,
+    "format": ["json"],
+    "tasks": ["reading-comprehension", "question-answering"],
+    "tags": ["nlp", "qa", "benchmark", "wikipedia"],
+    "notes": "Rajpurkar et al. (2018). Use the 2.0 split for unanswerable-question evaluation."
+  },
+  {
+    "id": "imagenet-lsvrc-2012",
+    "name": "ImageNet Large Scale Visual Recognition Challenge 2012",
+    "version": "ILSVRC2012",
+    "license": "Custom (non-commercial research)",
+    "description": "1.2M training images across 1,000 synset classes, plus 50k validation and 100k test images. The dataset that catalysed the deep learning revolution.",
+    "url": "https://image-net.org/challenges/LSVRC/2012/",
+    "doi": "10.1007/s11263-015-0816-y",
+    "size_gb": 138.0,
+    "format": ["jpeg", "tar"],
+    "tasks": ["image-classification", "object-localization"],
+    "tags": ["vision", "benchmark", "large-scale", "classic"],
+    "notes": "Requires registration at image-net.org for download. Use torchvision.datasets.ImageNet after manual download. Non-commercial research license — check terms before use."
+  },
+  {
+    "id": "common-crawl-2023",
+    "name": "Common Crawl (2023-14 snapshot)",
+    "version": "2023-14",
+    "license": "Custom (open)",
+    "description": "Petabyte-scale web crawl corpus. The 2023-14 snapshot covers approximately 3.4 billion web pages. Widely used for pre-training large language models.",
+    "url": "https://commoncrawl.org/the-data/get-started/",
+    "doi": null,
+    "size_gb": 400000.0,
+    "format": ["warc", "wet", "wat"],
+    "tasks": ["language-modeling", "pre-training"],
+    "tags": ["nlp", "web", "large-scale", "pre-training"],
+    "notes": "Available on AWS S3 (s3://commoncrawl). Use cc_net or trafilatura for extraction and quality filtering. Requires careful deduplication and quality filtering before use in LLM training."
+  }
+]

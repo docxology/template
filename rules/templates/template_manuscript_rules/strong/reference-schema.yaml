@@ -1,0 +1,91 @@
+# reference-schema.yaml — Formal Reference Validation Schema
+#
+# Kind: strong
+# Enforcement: fail_on_violation
+#
+# This schema defines required fields and format constraints for every
+# reference entry in a manuscript's reference list.
+# A manuscript fails this gate if any reference violates the schema.
+
+rule:
+  name: reference_schema
+  kind: strong
+  description: "Formal reference validation schema"
+  applies_to: "manuscripts/*/references.*"
+  version: "1.0"
+
+  # Fields required on every reference entry
+  required_fields:
+    - key          # Unique citekey (e.g., Smith2021)
+    - authors      # List of author strings
+    - year         # Publication year (integer, 1000–2100)
+    - title        # Full title string, non-empty
+    - type         # One of: article, inproceedings, book, preprint, dataset, software, misc
+
+  # Fields required per reference type
+  type_constraints:
+    article:
+      required:
+        - journal
+        - volume
+        - pages
+      recommended:
+        - doi
+        - number
+
+    inproceedings:
+      required:
+        - booktitle
+        - pages
+      recommended:
+        - doi
+        - publisher
+
+    book:
+      required:
+        - publisher
+      recommended:
+        - isbn
+        - edition
+
+    preprint:
+      required:
+        - repository   # e.g., "arXiv"
+        - identifier   # e.g., "2301.00001"
+      recommended:
+        - url
+
+    dataset:
+      required:
+        - url
+      recommended:
+        - doi
+        - version
+
+    software:
+      required:
+        - url
+        - version
+      recommended:
+        - doi
+
+  # Format validation rules
+  format_rules:
+    year:
+      type: integer
+      min: 1000
+      max: 2100
+    doi:
+      pattern: "^10\\.\\d{4,}/\\S+"
+    url:
+      pattern: "^https?://"
+    key:
+      pattern: "^[A-Za-z][A-Za-z0-9_:-]*$"
+      max_length: 64
+
+  enforcement: "fail_on_violation"
+
+  rationale: >
+    Complete, well-formed references ensure reproducibility and allow
+    automated DOI verification. Missing required fields are a common source
+    of rejection at publication venues.

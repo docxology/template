@@ -24,8 +24,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv).")
     parser.add_argument(
         "--query",
-        default="active inference free energy principle",
-        help="Search query string",
+        default=None,
+        help="Search query string (defaults to manuscript/config.yaml project_config.search.query or term)",
     )
     parser.add_argument("--max-results", type=int, default=1000)
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_OUTPUT_DIR))

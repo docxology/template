@@ -1,0 +1,11 @@
+type: skill
+description: "Agent skill manifest — defines a reusable capability that an agent can invoke via a structured prompt template."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+creator: "docxology/template"
+license: "CC0-1.0"
+entrypoints:
+  - scripts/invoke.sh
+  - scripts/prompt.md

@@ -2,43 +2,26 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping, Sequence
-
-import yaml
+from typing import Any, Mapping
 
 try:
-    from .coercion import coerce_bool
+    from .parsing import (
+        as_bool as _as_bool,
+        as_float as _as_float,
+        as_str_tuple as _as_str_tuple,
+        load_yaml_dict,
+    )
 except ImportError:
-    from coercion import coerce_bool  # type: ignore[no-redef]
+    from parsing import (  # type: ignore[no-redef]
+        as_bool as _as_bool,
+        as_float as _as_float,
+        as_str_tuple as _as_str_tuple,
+        load_yaml_dict,
+    )
 
 
 def _load_domain_profile_data(project_root: Path) -> dict[str, Any]:
-    profile_path = project_root / "domain_profile.yaml"
-    if not profile_path.exists():
-        return {}
-    with profile_path.open("r", encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
-    return data if isinstance(data, dict) else {}
-
-
-def _as_str_tuple(value: Any) -> tuple[str, ...]:
-    if value is None:
-        return ()
-    if isinstance(value, str):
-        return tuple(part.strip() for part in value.split(",") if part.strip())
-    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
-        return tuple(str(item).strip() for item in value if str(item).strip())
-    return ()
-
-
-def _as_float(value: Any, default: float = 0.0) -> float:
-    if value is None:
-        return default
-    return float(value)
-
-
-def _as_bool(value: Any, default: bool = True, *, field_name: str) -> bool:
-    return coerce_bool(value, default=default, field_name=field_name)
+    return load_yaml_dict(project_root / "domain_profile.yaml")
 
 
 @dataclass(frozen=True)

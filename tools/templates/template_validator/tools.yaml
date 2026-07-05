@@ -1,0 +1,11 @@
+type: validator
+description: "Validation tool manifest — checks inputs and outputs against a JSON schema or rule-set and reports errors."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+creator: "docxology/template"
+license: "CC0-1.0"
+entrypoints:
+  - scripts/validate.sh
+  - scripts/schema.json

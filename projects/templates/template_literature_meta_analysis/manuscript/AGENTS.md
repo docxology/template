@@ -57,3 +57,5 @@ All computation lives in `src/manuscript/variables.py`. Do not add variables to 
 ## config.yaml as Single Source of Truth
 
 Add new hypotheses, subfield keywords, or search queries only in `config.yaml`. The Python modules load configuration via `configure_hypotheses()` and `configure_subfields()` at runtime — no Python source edits needed.
+
+Computed table tokens include `{{SUBFIELD_TABLE}}` and `{{HYPOTHESIS_TABLE}}` from `src/manuscript/variables/`.

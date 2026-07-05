@@ -1,0 +1,6 @@
+# Ignore generated artefacts within this rule set
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.log

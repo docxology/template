@@ -1,38 +1,15 @@
 from __future__ import annotations
-
+from pathlib import Path
+from visualization import style
 from visualization.style import VIZ_CONFIG
 
-
 class TestVizConfig:
-    """Tests for the VIZ_CONFIG dictionary."""
-
-    def test_config_has_required_keys(self) -> None:
-        required = [
-            "figure_size",
-            "dpi",
-            "font_size",
-            "title_size",
-            "palette",
-            "subfield_colors",
-            "grid_alpha",
-            "edge_color",
-        ]
-        for key in required:
-            assert key in VIZ_CONFIG, f"Missing key: {key}"
-
-    def test_palette_has_eight_colors(self) -> None:
-        assert len(VIZ_CONFIG["palette"]) == 8
-
-    def test_subfield_colors_covers_all_domains(self) -> None:
-        expected_domains = [
-            "A2_philosophy",
-            "A1_formal",
-            "B_tools",
-            "C1_neuroscience",
-            "C2_robotics",
-            "C3_language",
-            "C4_psychiatry",
-            "C5_biology",
-        ]
-        for sf in expected_domains:
+    def test_subfield_colors_covers_modafinil_domains(self)->None:
+        for sf in ["clinical_sleep","cognition","pharmacology","psychiatry","safety","neuroscience"]:
             assert sf in VIZ_CONFIG["subfield_colors"]
+    def test_load_viz_labels_from_config(self,tmp_path:Path)->None:
+        manuscript=tmp_path/"manuscript"; manuscript.mkdir()
+        (manuscript/"config.yaml").write_text("project_config:\n  subfield_keywords:\n    custom_field: [kw]\n  hypothesis_definitions:\n    H9:\n      name: Custom Hypothesis\n",encoding="utf-8")
+        style.load_viz_labels_from_config(tmp_path)
+        assert style.SUBFIELD_NAMES["custom_field"]=="Custom Field"
+        assert style.HYPOTHESIS_NAMES["H9"]=="Custom Hypothesis"

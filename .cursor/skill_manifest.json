@@ -562,6 +562,12 @@
       "cursor_at": "infrastructure/documentation/SKILL.md"
     },
     {
+      "name": "infrastructure-fonds",
+      "description": "Skill for the fonds module — discovery, validation, scope, and private-sidecar symlink sync for the top-level fonds/ directory (archival collection units such as bibliographies, contact registries, and dataset catalogs). Use when discovering fonds (discover_fonds), resolving a fond path (resolve_fond_root), validating fond structure (validate_fond_structure), building FondInfo dataclasses (build_fond_info), checking PUBLIC_FOND_NAMES for CI-safe scope (public_scope.py), syncing private lifecycle fonds into the template checkout (sync_private_fond_links / linking.py), checking whether a path is a managed fond symlink (is_managed_symlink), or adding new public fonds exemplars. Distinct from projects/ (executable research code); fonds are passive data stores requiring fonds.yaml + data/ (not src/ + tests/).",
+      "path": "infrastructure/fonds/SKILL.md",
+      "cursor_at": "infrastructure/fonds/SKILL.md"
+    },
+    {
       "name": "infrastructure-llm",
       "description": "Skill for the LLM infrastructure module providing local Large Language Model integration via Ollama. Covers client initialization, prompt templates, output validation, manuscript review generation, conversation context, and CLI usage. Use when querying LLMs, generating manuscript reviews, validating LLM outputs, or managing Ollama models.",
       "path": "infrastructure/llm/SKILL.md",
@@ -628,6 +634,12 @@
       "cursor_at": "infrastructure/reporting/SKILL.md"
     },
     {
+      "name": "infrastructure-rules",
+      "description": "Skill for the rules module — discovery, validation, scope, and private-sidecar symlink sync for the top-level rules/ directory (specifications include soft markdown guidelines and strong yaml/json formal constraints). Use when discovering rules (discover_rules), resolving a rule path (resolve_rule_root), validating rule structure (validate_rule_structure), building RuleInfo dataclasses (build_rule_info), checking PUBLIC_RULE_NAMES for CI-safe scope (public_scope.py), syncing private lifecycle rules into the template checkout (sync_private_rule_links / linking.py), checking whether a path is a managed rule symlink (is_managed_symlink), or adding new public rule exemplars. Distinct from projects/ (executable research code) and fonds/ (data resource pools); rules are passive specifications requiring rules.yaml + at least one of soft/ or strong/.",
+      "path": "infrastructure/rules/SKILL.md",
+      "cursor_at": "infrastructure/rules/SKILL.md"
+    },
+    {
       "name": "infrastructure-scientific",
       "description": "Skill for the scientific infrastructure module providing numerical stability checks, performance benchmarking, and independent improvement confirmation. Use when benchmarking functions, checking numerical stability, or confirming a candidate beats a baseline beyond the noise band.",
       "path": "infrastructure/scientific/SKILL.md",
@@ -662,6 +674,12 @@
       "description": "Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, hash manifests, metadata payloads, and document-wide overlay processing. Use this module to insert opt-in cryptographic and steganographic provenance data onto PDFs.",
       "path": "infrastructure/steganography/SKILL.md",
       "cursor_at": "infrastructure/steganography/SKILL.md"
+    },
+    {
+      "name": "infrastructure-tools",
+      "description": "Skill for the tools module — discovery, validation, scope, and private-sidecar symlink sync for the top-level tools/ directory (executable entry points such as scripts, skills, and agents stored as passive manifests with scripts/ directories). Use when discovering tools (discover_tools), resolving a tool path (resolve_tool_root), validating tool structure (validate_tool_structure), building ToolInfo dataclasses (build_tool_info), checking PUBLIC_TOOL_NAMES for CI-safe scope (public_scope.py), syncing private lifecycle tools into the template checkout (sync_private_tool_links / linking.py), checking whether a path is a managed tool symlink (is_managed_symlink), or adding new public tool exemplars. Distinct from projects/ (full research environments) and fonds/ (passive data stores requiring data/ instead of scripts/).",
+      "path": "infrastructure/tools/SKILL.md",
+      "cursor_at": "infrastructure/tools/SKILL.md"
     },
     {
       "name": "infrastructure-validation",

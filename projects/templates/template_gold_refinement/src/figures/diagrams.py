@@ -25,9 +25,11 @@ from ._common import (
     SOURCE_TIER_COLORS,
     STAGE_COLORS,
     _draw_labeled_digraph,
-    _ensure_output_dir,
+    _figure_output_dir,
+    _graph_positions,
     _load_json_object,
     _nines_score,
+    _render_digraph_figure,
     _save_figure,
     _style_axes,
 )
@@ -57,34 +59,19 @@ def generate_provenance_sankey(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    """Generate a Sankey-style flow diagram from ore through stages to certification.
-
-    Uses stacked bar segments to approximate a Sankey flow since matplotlib
-    does not have a built-in Sankey that handles the 5-stage flow elegantly.
-    """
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
-
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph, edge_widths = build_provenance_flow_graph()
-    positions = {node: (float(data.get("x", 0.0)), float(data.get("y", 0.0))) for node, data in graph.nodes(data=True)}
-
-    fig, ax = plt.subplots(figsize=(12, 4.8))
-    _draw_labeled_digraph(ax, graph, positions, node_size=2500, edge_widths=edge_widths, font_size=7.2)
-    ax.set_title("Provenance Flow: Ore to Nine-Nines Certification", fontsize=14, pad=18)
-    ax.text(
-        0.5,
-        -0.14,
-        "Edge width encodes stage purity gain; final node encodes nine-nines certification.",
-        transform=ax.transAxes,
-        ha="center",
-        va="center",
-        fontsize=8.5,
-        color="#334155",
+    return _render_digraph_figure(
+        output_dir,
+        filename="provenance_sankey.png",
+        graph=graph,
+        positions=_graph_positions(graph),
+        title="Provenance Flow: Ore to Nine-Nines Certification",
+        figsize=(12, 4.8),
+        edge_widths=edge_widths,
+        font_size=7.2,
+        subtitle="Edge width encodes stage purity gain; final node encodes nine-nines certification.",
     )
-
-    out_path = output_dir / "provenance_sankey.png"
-    return _save_figure(fig, out_path)
 
 
 def generate_purity_claim_scatter(
@@ -97,9 +84,7 @@ def generate_purity_claim_scatter(
     Each stage's output purity is plotted against the fraction of
     contribution claims that are supported at that stage's evidence level.
     """
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     result = run_refinery()
 
@@ -149,9 +134,7 @@ def generate_token_heatmap(
     Varies the seed from 0 to 20 and shows which index is selected
     for each lexicon category. Demonstrates seed sensitivity.
     """
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     cfg = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
 
@@ -211,9 +194,7 @@ def generate_integrity_gate_matrix(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     cfg = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
     rules = cfg.audit_rules or []
@@ -256,23 +237,21 @@ def generate_formalism_traceability(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
-
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph = build_formalism_traceability_graph()
-    positions = {node: (float(data.get("x", 0.0)), float(data.get("y", 0.0))) for node, data in graph.nodes(data=True)}
-
     formalism_count_for_height = sum(1 for _, data in graph.nodes(data=True) if data.get("kind") == "formalism")
-    fig, ax = plt.subplots(figsize=(14, max(5, 0.72 * formalism_count_for_height + 2)))
-    _draw_labeled_digraph(ax, graph, positions, node_size=2300, font_size=6.8)
-    ax.set_title("Formalism Traceability Graph", fontsize=14, pad=16)
-    ax.text(0.17, 0.95, "Formalism", transform=ax.transAxes, ha="center", fontsize=10, fontweight="bold")
-    ax.text(0.50, 0.95, "Equation label", transform=ax.transAxes, ha="center", fontsize=10, fontweight="bold")
-    ax.text(0.83, 0.95, "Source owner", transform=ax.transAxes, ha="center", fontsize=10, fontweight="bold")
-
-    out_path = output_dir / "formalism_traceability.png"
-    return _save_figure(fig, out_path)
+    return _render_digraph_figure(
+        output_dir,
+        filename="formalism_traceability.png",
+        graph=graph,
+        positions=_graph_positions(graph),
+        title="Formalism Traceability Graph",
+        figsize=(14, max(5, 0.72 * formalism_count_for_height + 2)),
+        node_size=2300,
+        font_size=6.8,
+        title_pad=16,
+        header_labels=((0.17, 0.95, "Formalism"), (0.50, 0.95, "Equation label"), (0.83, 0.95, "Source owner")),
+    )
 
 
 def generate_implementation_circuit(
@@ -280,28 +259,21 @@ def generate_implementation_circuit(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
-
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph = build_implementation_circuit_graph()
-    positions = {node: (float(data["x"]), float(data["y"])) for node, data in graph.nodes(data=True)}
-
-    fig, ax = plt.subplots(figsize=(12.5, 7.2))
-    _draw_labeled_digraph(ax, graph, positions, node_size=2600, font_size=7.4)
-    ax.set_title("Gold Refinement Implementation Circuit", fontsize=15, pad=18)
-
-    ax.text(
-        0.50,
-        0.04,
-        "A fork changes the left side first; generated artifacts and validators then prove whether the manuscript still refines.",
-        ha="center",
-        va="center",
-        fontsize=8.5,
-        color="#334155",
+    return _render_digraph_figure(
+        output_dir,
+        filename="implementation_circuit.png",
+        graph=graph,
+        positions=_graph_positions(graph),
+        title="Gold Refinement Implementation Circuit",
+        figsize=(12.5, 7.2),
+        node_size=2600,
+        font_size=7.4,
+        footer_text=(
+            "A fork changes the left side first; generated artifacts and validators then prove whether the manuscript still refines."
+        ),
     )
-    out_path = output_dir / "implementation_circuit.png"
-    return _save_figure(fig, out_path)
 
 
 def generate_claim_evidence_assay(
@@ -309,9 +281,7 @@ def generate_claim_evidence_assay(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)
@@ -380,9 +350,7 @@ def generate_integrity_risk_matrix(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)
@@ -469,9 +437,7 @@ def generate_evidence_tier_ladder(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    if output_dir is None:
-        output_dir = (project_root or Path(".")) / "output" / "figures"
-    _ensure_output_dir(output_dir)
+    output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)

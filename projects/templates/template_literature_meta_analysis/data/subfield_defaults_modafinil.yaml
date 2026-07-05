@@ -1,0 +1,46 @@
+subfields:
+  clinical_sleep:
+  - narcolepsy
+  - shift work
+  - obstructive sleep apnea
+  - excessive daytime sleepiness
+  - wakefulness
+  - hypersomnia
+  - sleep disorder
+  cognition:
+  - cognitive enhancement
+  - working memory
+  - attention
+  - executive function
+  - vigilance
+  - psychomotor
+  - neuroenhancement
+  pharmacology:
+  - pharmacokinetics
+  - dopamine transporter
+  - mechanism of action
+  - half-life
+  - metabolism
+  - cyp3a4
+  - bioavailability
+  psychiatry:
+  - depression
+  - adhd
+  - schizophrenia
+  - bipolar
+  - fatigue
+  - adjunctive
+  safety:
+  - adverse
+  - abuse potential
+  - dependence
+  - tolerability
+  - side effect
+  - stevens-johnson
+  neuroscience:
+  - orexin
+  - hypothalamus
+  - neuroimaging
+  - fmri
+  - eeg
+  - histamine

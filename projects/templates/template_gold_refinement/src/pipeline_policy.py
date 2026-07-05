@@ -2,53 +2,23 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Sequence
-
-import yaml
 
 try:
-    from .coercion import coerce_bool
+    from .parsing import (
+        as_bool as _as_bool,
+        as_float as _as_float,
+        as_int_tuple as _as_int_tuple,
+        as_str_tuple as _as_str_tuple,
+        load_manuscript_config as _load_project_config,
+    )
 except ImportError:
-    from coercion import coerce_bool  # type: ignore[no-redef]
-
-
-def _load_project_config(project_root: Path) -> dict[str, Any]:
-    config_path = project_root / "manuscript" / "config.yaml"
-    if not config_path.exists():
-        return {}
-    with config_path.open("r", encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
-    return data if isinstance(data, dict) else {}
-
-
-def _as_bool(value: Any, default: bool = False, *, field_name: str) -> bool:
-    return coerce_bool(value, default=default, field_name=field_name)
-
-
-def _as_str_tuple(value: Any) -> tuple[str, ...]:
-    if value is None:
-        return ()
-    if isinstance(value, str):
-        return tuple(part.strip() for part in value.split(",") if part.strip())
-    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
-        return tuple(str(item).strip() for item in value if str(item).strip())
-    return ()
-
-
-def _as_int_tuple(value: Any) -> tuple[int, ...]:
-    if value is None:
-        return ()
-    if isinstance(value, str):
-        return tuple(int(part.strip()) for part in value.split(",") if part.strip())
-    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
-        return tuple(int(item) for item in value if str(item).strip())
-    return ()
-
-
-def _as_float(value: Any, default: float = 0.0) -> float:
-    if value is None:
-        return default
-    return float(value)
+    from parsing import (  # type: ignore[no-redef]
+        as_bool as _as_bool,
+        as_float as _as_float,
+        as_int_tuple as _as_int_tuple,
+        as_str_tuple as _as_str_tuple,
+        load_manuscript_config as _load_project_config,
+    )
 
 
 @dataclass(frozen=True)

@@ -20,6 +20,7 @@ PROJECT_ROOT = bootstrap_project()
 from config import CORPUS_PATH as DEFAULT_CORPUS_PATH, DATA_DIR as DEFAULT_DATA_DIR
 from literature.corpus import Corpus
 from literature.evaluation import evaluate_corpus
+from literature.fixture_honesty import validate_fixture_honesty
 
 
 def parse_args() -> argparse.Namespace:
@@ -27,6 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--corpus", type=str, default=str(DEFAULT_CORPUS_PATH))
     parser.add_argument("--query", type=str, default=None)
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_DATA_DIR))
+    parser.add_argument("--fixture-honesty", action="store_true", help="Audit manuscript for undisclosed empirical claims on synthetic fixture corpora")
     parser.add_argument(
         "--log-level",
         default="INFO",
@@ -50,6 +52,14 @@ def main() -> None:
         sys.exit(1)
 
     corpus = Corpus.load(corpus_path)
+    if args.fixture_honesty:
+        manuscript_dir = PROJECT_ROOT / "manuscript"
+        violations = validate_fixture_honesty(manuscript_dir, corpus_path)
+        if violations:
+            for v in violations:
+                logger.error("Fixture honesty: %s:%s %s — %s", v.path, v.line, v.reason, v.excerpt)
+            sys.exit(1)
+        logger.info("Fixture honesty audit passed (%s)", manuscript_dir)
     results = evaluate_corpus(corpus, query=args.query)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

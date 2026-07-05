@@ -1,0 +1,21 @@
+conditions:
+  - name: default_integration
+    role: reference
+    description: "Default integration run loading all public exemplars."
+  - name: tools_first
+    role: proposed
+    description: "Integration run prioritizing tool discovery."
+  - name: rules_only
+    role: variant
+    description: "Ablation run testing rule validation without fonds data."
+metrics:
+  primary:
+    name: resources_loaded
+    direction: maximize
+protocol: "Run the full fonds/rules/tools integration demo with default settings across all three resource directories."
+expected_figures: []
+expected_tables: []
+baselines:
+  - default_integration
+ablations:
+  - rules_only

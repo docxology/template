@@ -1,0 +1,23 @@
+type: datasets
+description: "Dataset registry and metadata — exemplar template for cataloguing ML/AI datasets with provenance, licensing, and access information."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+  - datasets
+  - template
+creator: "docxology/template"
+license: "CC0-1.0"
+
+# Schema notes:
+#   data/datasets.yaml  — YAML list; source of truth
+#   data/datasets.json  — JSON mirror (kept in sync)
+#   Dedup key: `id` field (slug, e.g. mnist-2010)
+#
+# Required fields per dataset: id, name, version, license
+# Optional fields: description, url, doi, size_gb, format, tasks, tags, notes
+#
+# When adding datasets:
+#   1. Append to datasets.yaml
+#   2. Regenerate datasets.json (or update manually)
+#   3. Bump `version` here if the schema changes

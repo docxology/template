@@ -1,0 +1,9 @@
+# Local environment and caches
+__pycache__/
+*.py[cod]
+.DS_Store
+*.swp
+*.swo
+*~
+.venv
+.env

@@ -47,7 +47,7 @@ same forkability contract as the other exemplars.
 ## integrity and template-status gaps
 
 - [x] Add figure generation (purity progression, karat grading, token density)
-  to `src/figures.py`
+  to `src/figures/`
 - [x] Add steganography profile to `manuscript/config.yaml` when secure
   pipeline is needed
 - [x] Add LLM review enablement when Ollama is available
@@ -92,7 +92,7 @@ same forkability contract as the other exemplars.
 
 ### Phase 1: Figure generation and visualizations (complete)
 
-1. [x] Create `src/figures.py` with purity progression chart
+1. [x] Create `src/figures/` with purity progression chart
 2. [x] Add karat grading chart
 3. [x] Add token density chart
 4. [x] Write `figure_registry.json` from `generate_all_figures()`

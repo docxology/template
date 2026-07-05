@@ -1,0 +1,20 @@
+type: bibliography
+description: "Curated research bibliography — exemplar template for managing BibTeX references alongside a flat CSV export."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+  - bibliography
+  - template
+creator: "docxology/template"
+license: "CC0-1.0"
+
+# Schema notes:
+#   data/references.bib  — BibTeX source of truth; cite keys must be unique
+#   data/references.csv  — flat export; columns: key,type,title,author,year,journal,doi
+#   Dedup key: BibTeX cite key (first column in CSV)
+#
+# When adding entries:
+#   1. Add the BibTeX block to references.bib
+#   2. Append the corresponding row to references.csv
+#   3. Bump `version` here if the schema changes

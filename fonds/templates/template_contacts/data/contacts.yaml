@@ -1,0 +1,68 @@
+# template_contacts — exemplar contact list
+# Source of truth; keep contacts.json in sync.
+# Dedup key: id (unique slug)
+# Privacy: all entries below are fictional placeholder data.
+
+- id: alice-chen
+  name: "Alice Chen"
+  email: "alice.chen@example-university.edu"
+  affiliation: "Example University, Department of Computer Science"
+  role: collaborator
+  tags:
+    - machine-learning
+    - computer-vision
+    - representation-learning
+  orcid: "0000-0001-2345-6789"
+  website: "https://alice-chen.example-university.edu"
+  notes: "Primary collaborator on the vision-language project. Met at CVPR 2022."
+
+- id: bob-okafor
+  name: "Bob Okafor"
+  email: "b.okafor@research-institute.org"
+  affiliation: "Research Institute for AI Safety"
+  role: advisor
+  tags:
+    - ai-safety
+    - alignment
+    - interpretability
+  orcid: "0000-0002-3456-7890"
+  website: "https://research-institute.org/~bokafor"
+  notes: "PhD advisor. Expert in formal verification of neural networks."
+
+- id: carol-dmitrieva
+  name: "Carol Dmitrieva"
+  email: "carol.d@techcorp-labs.ai"
+  affiliation: "TechCorp AI Labs"
+  role: reviewer
+  tags:
+    - nlp
+    - large-language-models
+    - benchmarks
+  orcid: null
+  website: null
+  notes: "Reviewed our NeurIPS submission. Provided detailed feedback on evaluation methodology."
+
+- id: david-nakamura
+  name: "David Nakamura"
+  email: "dnakamura@globalconf.org"
+  affiliation: "Global Conference on Machine Learning (Program Committee)"
+  role: contact
+  tags:
+    - conferences
+    - program-committee
+  orcid: null
+  website: "https://globalconf.org"
+  notes: "Area chair for the theory track. Contact for paper submission queries."
+
+- id: eva-mbeki
+  name: "Eva Mbeki"
+  email: "eva.mbeki@open-datasets.io"
+  affiliation: "Open Datasets Foundation"
+  role: collaborator
+  tags:
+    - datasets
+    - data-curation
+    - open-science
+  orcid: "0000-0003-4567-8901"
+  website: "https://open-datasets.io/team/eva"
+  notes: "Leads the multilingual NLP dataset initiative. Co-author on datasets paper."

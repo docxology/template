@@ -1,0 +1,99 @@
+# section-schema.yaml — Formal Section Structure Schema
+#
+# Kind: strong
+# Enforcement: fail_on_violation
+#
+# This schema defines required sections, their order, and forbidden
+# section names for a research manuscript.
+# A manuscript fails this gate if the structure violates these constraints.
+
+rule:
+  name: section_schema
+  kind: strong
+  description: "Formal section structure schema"
+  applies_to: "manuscripts/*/manuscript.*"
+  version: "1.0"
+
+  # Sections that MUST be present (H1 or H2 headings)
+  required_sections:
+    - name: "Abstract"
+      level: 1            # Heading level (H1)
+      position: first     # Must be the first section
+      max_words: 300
+
+    - name: "Introduction"
+      level: 1
+      position: after:Abstract
+
+    - name: "Related Work"
+      level: 1
+      position: after:Introduction
+      aliases:
+        - "Background"
+        - "Prior Work"
+        - "Literature Review"
+
+    - name: "Methods"
+      level: 1
+      position: after:Related Work
+      aliases:
+        - "Methodology"
+        - "Approach"
+        - "Method"
+
+    - name: "Results"
+      level: 1
+      position: after:Methods
+      aliases:
+        - "Experiments"
+        - "Evaluation"
+        - "Experiments and Results"
+
+    - name: "Discussion"
+      level: 1
+      position: after:Results
+      aliases:
+        - "Analysis"
+
+    - name: "Conclusion"
+      level: 1
+      position: after:Discussion
+      aliases:
+        - "Conclusions"
+        - "Conclusion and Future Work"
+
+    - name: "References"
+      level: 1
+      position: last      # Must be the last main section
+
+  # Sections that MUST NOT appear (common mistakes)
+  forbidden_sections:
+    - "TODO"
+    - "FIXME"
+    - "PLACEHOLDER"
+    - "Draft"
+    - "Scratch"
+    - "Notes"             # Use an appendix instead
+
+  # Optional but recommended sections
+  recommended_sections:
+    - name: "Acknowledgements"
+      level: 1
+      position: before:References
+
+    - name: "Limitations"
+      level: 2
+      position: within:Discussion
+
+  # Structural constraints
+  constraints:
+    max_heading_depth: 3          # No H4 or deeper
+    abstract_must_be_unnumbered: true
+    references_must_be_unnumbered: true
+
+  enforcement: "fail_on_violation"
+
+  rationale: >
+    Consistent section structure makes papers easier to review and
+    matches reviewer expectations at major venues. Forbidden sections
+    prevent accidental inclusion of draft artefacts in submissions.

@@ -4,7 +4,7 @@ Targets uncovered paths identified by coverage analysis:
 - evidence.py: _check_evidence_source (#-style sources, missing files, missing symbols,
   ledger mismatch path)
 - dashboard.py: category rows rendered, evidence entries rendered
-- figures.py: project_root=None fallback, evidence registry load path
+- figures/: project_root=None fallback, evidence registry load path
 - manuscript_variables.py: SOURCE_DATE_EPOCH path, staleness detection paths
 - __init__.py: public API import coverage
 """
@@ -255,7 +255,7 @@ class TestDashboardWithPopulatedData:
 
 
 # ============================================================================
-# figures.py — None-output_dir/project_root paths + evidence load path
+# figures/ — None-output_dir/project_root paths + evidence load path
 # ============================================================================
 
 
@@ -427,22 +427,22 @@ class TestManuscriptVariablesStalenessDetection:
 
 
 class TestSourceDateEpoch:
-    """_build_timestamp honours SOURCE_DATE_EPOCH env variable."""
+    """build_timestamp honours SOURCE_DATE_EPOCH env variable."""
 
     def test_source_date_epoch_used(self, monkeypatch):
         """When SOURCE_DATE_EPOCH is set, timestamp is deterministic."""
         monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
-        from manuscript_variables import _build_timestamp  # type: ignore[attr-defined]
+        from parsing import build_timestamp  # type: ignore[attr-defined]
 
-        ts = _build_timestamp()
+        ts = build_timestamp()
         assert ts == "1970-01-01T00:00:00Z"
 
     def test_source_date_epoch_not_set_returns_current(self, monkeypatch):
         """When SOURCE_DATE_EPOCH is unset, timestamp matches current UTC roughly."""
         monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
-        from manuscript_variables import _build_timestamp  # type: ignore[attr-defined]
+        from parsing import build_timestamp  # type: ignore[attr-defined]
 
-        ts = _build_timestamp()
+        ts = build_timestamp()
         assert ts.endswith("Z")
         assert len(ts) == 20  # YYYY-MM-DDTHH:MM:SSZ
 

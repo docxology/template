@@ -1,0 +1,97 @@
+# manuscript/config.yaml
+# Pools, Rules, and Tools: A Template-Integrated Resource Architecture
+# Live configuration for the template_pools_rules_tools exemplar.
+
+paper:
+  title: "Pools, Rules, and Tools: A Template-Integrated Resource Architecture"
+  subtitle: "A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software"
+  short_title: "Pools, Rules, and Tools"
+  version: "1.0.0"
+  date: "2026-07-05"
+  keywords:
+    - research software engineering
+    - monorepo architecture
+    - reproducibility
+    - fonds
+    - governance rules
+    - tool discovery
+    - graceful degradation
+
+authors:
+  - name: "Research Template Author"
+    orcid: "0000-0002-0000-0001"
+    email: "author@research-template.org"
+    affiliation: "Active Inference Institute"
+    affiliation_short: "AII"
+    corresponding: true
+  - name: "Template Collaborator"
+    orcid: "0000-0002-0000-0002"
+    email: "collaborator@research-template.org"
+    affiliation: "Active Inference Institute"
+    affiliation_short: "AII"
+    corresponding: false
+
+publication:
+  doi: "10.5281/zenodo.template_pools_rules_tools"
+  github_repository: "docxology/template"
+  license: "CC-BY-4.0"
+  venue: "Journal of Open Source Software"
+  status: "preprint"
+  preprint_server: "arXiv"
+  preprint_id: "2026.00000"
+
+# Manuscript section toggles
+sections:
+  frontmatter: true
+  abstract: true
+  introduction: true
+  pools: true
+  rules: true
+  tools: true
+  integration: true
+  conclusion: true
+
+# Integration demo parameters
+integration:
+  rule_sets:
+    - template_project_rules
+    - template_manuscript_rules
+  tools:
+    - template_code_executor
+    - template_validator
+    - template_skill
+  fonds:
+    - template_bibliography
+    - template_contacts
+    - template_datasets
+
+# Figure registry — paths relative to manuscript/
+figures:
+  architecture_overview:
+    path: "figures/architecture_overview.png"
+    caption: "Three-layer resource architecture of template_pools_rules_tools. Fonds (left) provide read-only data pools; Rules (centre) provide governance constraints; Tools (right) provide executable entry points. The Integration layer (bottom) orchestrates all three."
+    label: "fig:architecture"
+    width: "0.9\\linewidth"
+  resource_counts:
+    path: "figures/resource_counts.png"
+    caption: "Runtime integration counts from manuscript_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run."
+    label: "fig:counts"
+    width: "0.75\\linewidth"
+  status_dashboard:
+    path: "figures/status_dashboard.png"
+    caption: "Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing."
+    label: "fig:pipeline"
+    width: "0.85\\linewidth"
+
+# Manuscript variable token paths
+manuscript_variables_path: "output/data/manuscript_variables.json"
+
+# Rendering options
+render:
+  engine: "pandoc"
+  bibliography_style: "chicago-author-date"
+  link_citations: true
+  number_sections: true
+  toc: true
+  toc_depth: 3
+  highlight_style: "tango"

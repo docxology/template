@@ -1,0 +1,23 @@
+type: contacts
+description: "Research contacts registry — exemplar template for managing collaborators, advisors, and institutional contacts."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+  - contacts
+  - template
+creator: "docxology/template"
+license: "CC0-1.0"
+
+# Schema notes:
+#   data/contacts.yaml  — YAML list; source of truth
+#   data/contacts.json  — JSON mirror (kept in sync)
+#   Dedup key: `id` field (slug, e.g. jane-doe)
+#
+# Required fields per contact: id, name, email
+# Optional fields: affiliation, role, tags, notes, orcid, website
+#
+# When adding contacts:
+#   1. Append to contacts.yaml
+#   2. Regenerate contacts.json (or update manually)
+#   3. Bump `version` here if the schema changes

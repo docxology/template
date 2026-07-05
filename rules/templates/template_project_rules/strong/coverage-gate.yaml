@@ -1,0 +1,46 @@
+# coverage-gate.yaml — Formal Coverage Threshold Constraints
+#
+# Kind: strong
+# Enforcement: fail_on_violation
+#
+# This schema defines minimum test-coverage thresholds.
+# All thresholds are percentages (0–100).
+# A project fails this gate if any threshold is not met.
+
+rule:
+  name: coverage_threshold
+  kind: strong
+  description: "Minimum test coverage thresholds"
+  applies_to: "projects/*/src/"
+  version: "1.0"
+
+  constraints:
+    # Infrastructure code (utilities, helpers, config loaders)
+    infrastructure: 60   # percentage — minimum acceptable
+
+    # Core project source code
+    project_src: 90      # percentage — minimum acceptable
+
+    # Public API surface (exported symbols)
+    public_api: 95       # percentage — minimum acceptable
+
+  # What to do when a threshold is violated
+  enforcement: "fail_on_violation"
+
+  # How to measure coverage
+  measurement:
+    tool: "pytest-cov"          # or "coverage.py", "nyc", "jacoco", etc.
+    report_format: "term-missing"
+    include:
+      - "src/**"
+    exclude:
+      - "src/**/__init__.py"
+      - "src/**/migrations/**"
+      - "src/**/tests/**"
+
+  # Human-readable rationale
+  rationale: >
+    High coverage reduces regression risk.
+    Infrastructure can tolerate lower thresholds because failures surface
+    quickly in integration. Public API requires the highest threshold because
+    breakage propagates to consumers.

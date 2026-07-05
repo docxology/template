@@ -1,0 +1,30 @@
+domain: integration_meta
+display_name: "Pools, Rules, and Tools Integration Exemplar"
+required_packages:
+  - pyyaml
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - source_existence
+  - fond_integrity
+  - tool_manifest
+  - rule_coverage
+figure_types: []
+citation_policy: curated_or_generated
+source_policy: "Read from public tracked fonds, tools, and rules exemplars; do not modify them."
+review_gates:
+  - source_existence
+  - fond_integrity
+artifact_expectations:
+  - output/data/manuscript_variables.json
+benchmark_rubric:
+  name: integration-readiness
+  dimensions:
+    - name: fond_loading
+      weight: 1.0
+    - name: rule_appliance
+      weight: 1.0
+    - name: tool_discovery
+      weight: 1.0
+llm_prompt_guidance: "Use generated integration results as the evidence source for manuscript variables; do not invent resource availability."

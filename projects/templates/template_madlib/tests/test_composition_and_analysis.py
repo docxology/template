@@ -6,13 +6,11 @@ from pathlib import Path
 
 import yaml
 
-from analysis import (
-    artifact_markdown_tables,
-    configured_field_counts,
-    configured_field_inventory,
-    generate_artifacts,
-    write_cover_overview_figure,
+from analysis import generate_artifacts
+from analysis_fields import configured_field_counts, configured_field_inventory
+from analysis_figures import (
     write_configured_field_matrix,
+    write_cover_overview_figure,
     write_field_origin_summary,
     write_provenance_trace_map,
     write_quality_gate_matrix,
@@ -21,6 +19,7 @@ from analysis import (
     write_token_density_figure,
     write_token_injection_flow_figure,
 )
+from markdown_tables import artifact_markdown_tables
 from composition import (
     build_authoring_obligation_table,
     build_audit_rule_table,

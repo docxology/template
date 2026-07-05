@@ -1,0 +1,11 @@
+type: code_executor
+description: "Generic code execution tool manifest — runs arbitrary code in a sandboxed context and returns structured output."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+creator: "docxology/template"
+license: "CC0-1.0"
+entrypoints:
+  - scripts/run.sh
+  - scripts/validate.sh

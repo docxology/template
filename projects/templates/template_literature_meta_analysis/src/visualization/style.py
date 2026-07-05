@@ -7,6 +7,10 @@ All visualization modules reference VIZ_CONFIG for consistent styling.
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import yaml
+
 VIZ_CONFIG: dict = {
     "figure_size": (12, 7),
     "dpi": 300,
@@ -30,14 +34,6 @@ VIZ_CONFIG: dict = {
         "psychiatry": "#CC79A7",
         "safety": "#009E73",
         "neuroscience": "#56B4E9",
-        "A1_formal": "#D55E00",
-        "A2_philosophy": "#0072B2",
-        "B_tools": "#E69F00",
-        "C1_neuroscience": "#CC79A7",
-        "C2_robotics": "#009E73",
-        "C3_language": "#000000",
-        "C4_psychiatry": "#56B4E9",
-        "C5_biology": "#F0E442",
     },
     "grid_alpha": 0.4,
     "edge_color": "#b0b0b0",
@@ -51,14 +47,6 @@ SUBFIELD_NAMES: dict[str, str] = {
     "psychiatry": "Psychiatry",
     "safety": "Safety",
     "neuroscience": "Neuroscience",
-    "A1_formal": "A1: Formal Theory",
-    "A2_philosophy": "A2: Philosophy",
-    "B_tools": "B: Tools & Translation",
-    "C1_neuroscience": "C1: Neuroscience",
-    "C2_robotics": "C2: Robotics",
-    "C3_language": "C3: Language",
-    "C4_psychiatry": "C4: Psychiatry",
-    "C5_biology": "C5: Biology",
 }
 
 # Human-readable hypothesis names for figure labels
@@ -72,6 +60,20 @@ HYPOTHESIS_NAMES: dict[str, str] = {
     "H7": "Domain Extension",
     "H8": "Residual Evidence",
 }
+
+
+def load_viz_labels_from_config(project_root: Path) -> None:
+    """Overlay subfield and hypothesis labels from manuscript config when present."""
+    config_path = project_root / "manuscript" / "config.yaml"
+    if not config_path.exists():
+        return
+    cfg = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    project_config = cfg.get("project_config", {})
+    for key in project_config.get("subfield_keywords") or {}:
+        SUBFIELD_NAMES[key] = key.replace("_", " ").title()
+    for hypothesis_id, hypothesis in (project_config.get("hypothesis_definitions") or {}).items():
+        if isinstance(hypothesis, dict) and hypothesis.get("name"):
+            HYPOTHESIS_NAMES[hypothesis_id] = str(hypothesis["name"])
 
 
 def apply_visual_style() -> None:

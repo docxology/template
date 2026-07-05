@@ -7,14 +7,14 @@ purity progression, token distribution, and evidence registry status.
 from __future__ import annotations
 
 import json
-import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 try:
+    from .parsing import build_timestamp as _build_timestamp
     from .refinery import run_refinery
 except ImportError:
+    from parsing import build_timestamp as _build_timestamp  # type: ignore[no-redef]
     from refinery import run_refinery  # type: ignore[no-redef]
 
 import logging
@@ -25,13 +25,6 @@ logger = logging.getLogger(__name__)
 def _esc(text: str) -> str:
     """Escape HTML special characters."""
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
-
-
-def _build_timestamp() -> str:
-    epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
-    if epoch.isdigit():
-        return datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _refinery_snapshot(result: Any) -> dict[str, Any]:

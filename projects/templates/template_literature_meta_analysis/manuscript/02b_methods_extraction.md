@@ -30,7 +30,7 @@ and named entities by offline, dependency-light extractors — no mandatory LLM.
 Term-frequency statistics drive a TF-IDF representation over a {{NUM_VOCAB_FEATURES}}-feature
 vocabulary. The most frequent terms in the corpus are: {{TOP_VOCAB_TERMS}}. These terms
 reflect the clinical, pharmacological, and cognitive vocabulary characteristic of the
-modafinil literature.
+{{SEARCH_TERM}} literature.
 
 ## Embeddings
 

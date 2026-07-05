@@ -9,13 +9,14 @@ handled gracefully and return an empty result set.
 from __future__ import annotations
 
 import logging
-import time
 import xml.etree.ElementTree as ET  # noqa: S405 — used only for type hints / ParseError
 from typing import Callable, Optional
 
 from defusedxml.ElementTree import fromstring as _safe_fromstring
 
 import requests
+
+from literature.http import request_with_retry
 
 from .models import Author, Paper
 
@@ -36,29 +37,6 @@ def _normalized_element_text(element: Optional[ET.Element]) -> str:
         return ""
     text = "".join(element.itertext())
     return " ".join(text.split())
-
-
-def _request_with_retry(
-    http: requests.Session,
-    url: str,
-    params: dict[str, object],
-    *,
-    delay_override: Optional[Callable[[float], None]] = None,
-    max_retries: int = MAX_RETRIES,
-) -> requests.Response:
-    sleep_fn = delay_override or time.sleep
-
-    for attempt in range(max_retries + 1):
-        try:
-            response = http.get(url, params=params, timeout=30)
-            response.raise_for_status()
-            return response
-        except requests.RequestException:
-            if attempt >= max_retries:
-                raise
-            sleep_fn(RETRY_BASE_SECONDS * (attempt + 1))
-
-    raise requests.HTTPError("PubMed retries exhausted")  # pragma: no cover
 
 
 def _parse_pubmed_article(xml_element: ET.Element) -> Paper:
@@ -120,10 +98,11 @@ def search_pubmed(
     http = session or requests.Session()
 
     try:
-        esearch_response = _request_with_retry(
+        esearch_response = request_with_retry(
             http,
+            "GET",
             esearch_url,
-            {
+            params={
                 "db": "pubmed",
                 "term": query,
                 "retmax": max_results,
@@ -158,10 +137,11 @@ def search_pubmed(
         papers: list[Paper] = []
         for start in range(0, len(pmids), EFETCH_BATCH_SIZE):
             batch = pmids[start : start + EFETCH_BATCH_SIZE]
-            efetch_response = _request_with_retry(
+            efetch_response = request_with_retry(
                 http,
+                "GET",
                 efetch_url,
-                {
+                params={
                     "db": "pubmed",
                     "id": ",".join(batch),
                     "retmode": "xml",

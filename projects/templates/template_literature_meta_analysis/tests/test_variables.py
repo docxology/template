@@ -389,7 +389,7 @@ class TestComputeVariables:
         """NUM_FIGURES defaults when figures/ doesn't exist."""
         (tmp_path / "corpus.jsonl").write_text("")
         variables = compute_variables(tmp_path)
-        assert variables["NUM_FIGURES"] == "16"
+        assert variables["NUM_FIGURES"] == "pending"
 
     def test_hypothesis_scores_dict_format(self, tmp_path):
         """Handle hypothesis scores in nested dict format."""
@@ -634,7 +634,7 @@ project_config:
         """NUM_VOCAB_FEATURES defaults to 500 when tfidf_data.json missing."""
         (tmp_path / "corpus.jsonl").write_text("")
         variables = compute_variables(tmp_path)
-        assert variables["NUM_VOCAB_FEATURES"] == "500"
+        assert variables["NUM_VOCAB_FEATURES"] == "pending"
 
     def test_tfidf_from_data(self, tmp_path):
         """NUM_VOCAB_FEATURES computed from tfidf_data.json feature_names."""

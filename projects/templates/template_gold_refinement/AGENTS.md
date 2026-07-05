@@ -13,7 +13,7 @@ manuscript composition via mega-madlib token injection.
 | Token selection (deterministic digest) | `src/composition.py` |
 | Source-owned equation registry | `src/formalisms.py` |
 | Scientific-integrity dimensions and evidence tiers | `src/integrity.py` |
-| Figure specs, layouts, SVG output, and quality report | `src/figures.py` |
+| Figure specs, layouts, SVG output, and quality report | `src/figures/` (`FIGURE_SPECS` in `_common.py`) |
 | Manuscript variable map | `src/manuscript_variables.py` |
 | Experiment parameters and metadata | `manuscript/config.yaml` |
 | Open follow-up scope | `TODO.md` |

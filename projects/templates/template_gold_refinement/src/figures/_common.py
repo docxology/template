@@ -10,7 +10,6 @@ All figures are deterministic (fixed seeds, no RNG) and headless-safe
 
 from __future__ import annotations
 
-import json
 import logging
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -18,12 +17,25 @@ from textwrap import fill
 from typing import Any, Literal
 
 import matplotlib
+import networkx as nx
+import numpy as np
+
+try:
+    from ..parsing import load_json_object as _load_json_object  # noqa: F401
+except ImportError:  # pragma: no cover - flat-layout fallback
+    import json
+
+    def _load_json_object(path: Path) -> dict[str, Any]:
+        if not path.exists():
+            return {}
+        with path.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+        return data if isinstance(data, dict) else {}
+
 
 matplotlib.use("Agg")  # headless-safe before pyplot import
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
-import networkx as nx
-import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -175,6 +187,54 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
 )
 
 FIGURE_SPEC_BY_NAME = {spec.name: spec for spec in FIGURE_SPECS}
+
+
+def figure_markdown_block(spec: FigureSpec) -> str:
+    return f"![{spec.caption}](../output/figures/{spec.path}){{#{spec.label}}}"
+
+
+def figure_markdown_variables() -> dict[str, str]:
+    return {f"FIGURE_{spec.name.upper()}": figure_markdown_block(spec) for spec in FIGURE_SPECS}
+
+
+def _graph_positions(graph: nx.DiGraph) -> dict[str, tuple[float, float]]:
+    return {node: (float(data.get("x", 0.0)), float(data.get("y", 0.0))) for node, data in graph.nodes(data=True)}
+
+
+def _figure_output_dir(output_dir: Path | None, *, project_root: Path | None) -> Path:
+    if output_dir is None:
+        output_dir = (project_root or Path(".")) / "output" / "figures"
+    return _ensure_output_dir(output_dir)
+
+
+def _render_digraph_figure(
+    output_dir: Path,
+    *,
+    filename: str,
+    graph: nx.DiGraph,
+    positions: dict[str, tuple[float, float]],
+    title: str,
+    figsize: tuple[float, float],
+    node_size: int = 2500,
+    edge_widths: list[float] | None = None,
+    font_size: float = 7.2,
+    subtitle: str | None = None,
+    header_labels: tuple[tuple[float, float, str], ...] | None = None,
+    footer_text: str | None = None,
+    title_pad: float = 18,
+) -> Path:
+    fig, ax = plt.subplots(figsize=figsize)
+    _draw_labeled_digraph(ax, graph, positions, node_size=node_size, edge_widths=edge_widths, font_size=font_size)
+    ax.set_title(title, fontsize=14, pad=title_pad)
+    if header_labels:
+        for x_pos, y_pos, label in header_labels:
+            ax.text(x_pos, y_pos, label, transform=ax.transAxes, ha="center", fontsize=10, fontweight="bold")
+    if subtitle:
+        ax.text(0.5, -0.14, subtitle, transform=ax.transAxes, ha="center", va="center", fontsize=8.5, color="#334155")
+    if footer_text:
+        ax.text(0.50, 0.04, footer_text, ha="center", va="center", fontsize=8.5, color="#334155")
+    return _save_figure(fig, output_dir / filename)
+
 
 SOURCE_TIER_COLORS = {
     "artifact": "#2a9d8f",
@@ -332,14 +392,6 @@ def _draw_labeled_digraph(
             bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.75, "pad": 0.3},
         )
     ax.axis("off")
-
-
-def _load_json_object(path: Path) -> dict[str, Any]:
-    if not path.exists():
-        return {}
-    with path.open("r") as f:
-        data = json.load(f)
-    return data if isinstance(data, dict) else {}
 
 
 def _quality_record(output_dir: Path, spec: FigureSpec) -> dict[str, Any]:

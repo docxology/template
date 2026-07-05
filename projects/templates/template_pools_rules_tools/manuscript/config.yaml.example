@@ -1,0 +1,38 @@
+# config.yaml.example — Forkable template for template_pools_rules_tools
+# Copy this file to config.yaml and fill in your own values.
+
+paper:
+  title: "Your Paper Title"
+  subtitle: "Your Subtitle"
+  version: "1.0.0"
+  date: ""  # Leave empty to auto-fill from pipeline
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "your@email.org"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: ""  # Fill after Zenodo deposit
+  github_repository: "your-org/your-repo"
+
+sections:
+  abstract: true
+  introduction: true
+  fonds: true
+  rules: true
+  tools: true
+  integration: true
+  conclusion: true
+
+integration:
+  rule_sets:
+    - template_project_rules   # Replace with your rule sets
+  tools:
+    - template_code_executor   # Replace with your tools
+  fonds:
+    - template_bibliography    # Replace with your fonds
+
+manuscript_variables_path: "output/data/manuscript_variables.json"

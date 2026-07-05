@@ -1,0 +1,12 @@
+type: manuscript
+description: "Manuscript-specific rules for research papers, reports, and documentation"
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+creator: "docxology/template"
+license: "CC0-1.0"
+rule_kinds:
+  soft: true   # Has soft/ directory with prompt-like guidelines
+  strong: true # Has strong/ directory with formal constraints
+scope: "manuscript"

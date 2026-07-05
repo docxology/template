@@ -98,6 +98,14 @@ class TestFigureSpecSubmodule:
     def test_spec_by_name_covers_every_spec(self):
         assert set(_common.FIGURE_SPEC_BY_NAME) == {s.name for s in _common.FIGURE_SPECS}
 
+    def test_figure_markdown_variables_derive_from_specs(self):
+        variables = _common.figure_markdown_variables()
+        assert len(variables) == len(_common.FIGURE_SPECS)
+        for spec in _common.FIGURE_SPECS:
+            key = f"FIGURE_{spec.name.upper()}"
+            assert key in variables
+            assert f"{{#{spec.label}}}" in variables[key]
+
 
 # --------------------------------------------------------------------------- #
 # _common.py: deterministic purity transform + palettes

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExampleDocument",
+  "description": "Example JSON schema for the template_validator exemplar. Replace with your domain schema.",
+  "type": "object",
+  "required": ["name", "version"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable name of the artefact."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "description": "Semantic version string (e.g. '1.0' or '1.0.0')."
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional human-readable description."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional list of classification tags."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional free-form metadata object.",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

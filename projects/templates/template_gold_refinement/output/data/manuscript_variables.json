@@ -1,8 +1,8 @@
 {
-  "ARTIFACT_DATA_FILES": "2",
+  "ARTIFACT_DATA_FILES": "3",
   "ARTIFACT_FIGURES": "26",
-  "ARTIFACT_REPORTS": "21",
-  "ARTIFACT_TOTAL": "49",
+  "ARTIFACT_REPORTS": "12",
+  "ARTIFACT_TOTAL": "41",
   "AUDIT_RULES_TABLE": "| Purity monotonicity | Purity must strictly increase from stage to stage | tests/test_refinery.py |\n| Token determinism | Same seed and lexicon must produce same token plan | tests/test_composition.py |\n| Token coverage | Every manuscript {{TOKEN}} must have a generated variable | tests/test_manuscript_variables.py |\n| Config validation | Invalid config must raise GoldRefinementConfigError | tests/test_config.py |\n| Figure generation | All figure generators must produce non-blank PNGs | tests/test_figures.py |\n| Integrity model coverage | Integrity dimensions must have unique IDs, owners, validators, and evidence surfaces | tests/test_integrity.py |\n| Scholarship boundary | Pre-1800 metallurgy citations must anchor framing and limitations without substituting for domain validation | prerender citation/evidence validation plus human source review |\n| Reporting-guideline boundary | Checklist-style completeness must not be represented as methodological validity or external reporting compliance | prerender citation/evidence validation plus human source review |\n| AI/template accountability | Tool assistance must not be represented as authorship or independent responsibility | authoring-contract source review plus publication-ethics citation check |\n| Executable-package identity | The manuscript must distinguish a regenerated local package from long-term archival preservation or universal executable-paper compliance | reproducibility source review plus output statistics and evidence-registry validation |\n| Security assay boundary | Security standards and scan phases must be represented as scoped guidance unless generated scan artifacts exist | tests/test_security_assay.py and manuscript source review |",
   "AUTHORING_BOUNDARY_TERM_1": "analogy boundary",
   "AUTHORING_BOUNDARY_TERM_2": "non-claim",

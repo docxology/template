@@ -7,23 +7,20 @@ import platform
 from datetime import datetime, timezone
 from pathlib import Path
 
-from analysis import artifact_markdown_tables, configured_field_counts, configured_field_inventory
-from composition import build_imrad_sections, section_title_variables
-from config import load_madlib_config
-from tokens import generate_token_plan
+from composition import section_title_variables
+from markdown_tables import artifact_markdown_tables_from_run
+from run import build_run
 
 
 def generate_variables(project_root: Path | str) -> dict[str, str]:
-    root = Path(project_root)
-    config = load_madlib_config(root)
-    plan = generate_token_plan(config)
-    sections = build_imrad_sections(config, plan)
-    tables = artifact_markdown_tables(root)
+    run = build_run(project_root)
+    config = run.config
+    plan = run.plan
+    tables = artifact_markdown_tables_from_run(run)
     titles = section_title_variables(config)
-    field_counts = configured_field_counts(config, configured_field_inventory(config, plan))
-
+    field_counts = run.field_counts
     variables: dict[str, str] = {
-        **sections,
+        **run.sections,
         **tables,
         **titles,
         "PROJECT_TITLE": config.title,

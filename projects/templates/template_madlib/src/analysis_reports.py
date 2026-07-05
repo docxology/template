@@ -4,59 +4,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from analysis_fields import configured_field_counts, configured_field_inventory
-from composition import (
-    build_authoring_obligation_table,
-    build_audit_rule_table,
-    build_configured_field_summary_table,
-    build_configured_field_table,
-    build_configuration_figure_markdown,
-    build_contribution_table,
-    build_design_principle_table,
-    build_evaluation_figure_markdown,
-    build_evaluation_criteria_table,
-    build_failure_mode_table,
-    build_methods_figure_markdown,
-    build_method_protocol_table,
-    build_pipeline_phase_table,
-    build_provenance_matrix_table,
-    build_quality_probe_table,
-    build_results_figure_markdown,
-    build_section_plan_table,
-    build_section_title_table,
-    build_token_inventory_table,
-)
-from config import MadlibConfig, load_madlib_config
-from tokens import TokenPlan, generate_token_plan
-
-
-def artifact_markdown_tables(project_root: Path | str) -> dict[str, str]:
-    config = load_madlib_config(project_root)
-    plan = generate_token_plan(config)
-    inventory = configured_field_inventory(config, plan)
-    counts = configured_field_counts(config, inventory)
-    return {
-        "AUTHORING_OBLIGATION_TABLE": build_authoring_obligation_table(config),
-        "AUDIT_RULE_TABLE": build_audit_rule_table(config),
-        "CONFIGURATION_FIGURES": build_configuration_figure_markdown(config),
-        "CONFIGURED_FIELD_FIGURES": build_configuration_figure_markdown(config),
-        "CONFIGURED_FIELD_SUMMARY_TABLE": build_configured_field_summary_table(counts),
-        "CONFIGURED_FIELD_TABLE": build_configured_field_table(inventory),
-        "CONTRIBUTION_TABLE": build_contribution_table(config),
-        "DESIGN_PRINCIPLE_TABLE": build_design_principle_table(config),
-        "EVALUATION_FIGURES": build_evaluation_figure_markdown(config),
-        "EVALUATION_CRITERIA_TABLE": build_evaluation_criteria_table(config),
-        "FAILURE_MODE_TABLE": build_failure_mode_table(config),
-        "METHODS_FIGURES": build_methods_figure_markdown(config),
-        "METHOD_PROTOCOL_TABLE": build_method_protocol_table(config),
-        "PIPELINE_PHASE_TABLE": build_pipeline_phase_table(config),
-        "PROVENANCE_MATRIX_TABLE": build_provenance_matrix_table(config, plan),
-        "QUALITY_PROBE_TABLE": build_quality_probe_table(config),
-        "RESULTS_FIGURES": build_results_figure_markdown(config),
-        "SECTION_PLAN_TABLE": build_section_plan_table(config, plan),
-        "SECTION_TITLE_TABLE": build_section_title_table(config),
-        "TOKEN_INVENTORY_TABLE": build_token_inventory_table(plan),
-    }
+from config import MadlibConfig
+from markdown_tables import artifact_markdown_tables
+from tokens import TokenPlan
 
 
 def _write_json(path: Path, payload: Any) -> None:
@@ -110,3 +60,11 @@ def _configured_field_summary_markdown(
             "",
         ]
     )
+
+
+__all__ = [
+    "_configured_field_summary_markdown",
+    "_summary_markdown",
+    "_write_json",
+    "artifact_markdown_tables",
+]

@@ -1,0 +1,53 @@
+# module-structure.yaml — Formal Module Structure Constraints
+#
+# Kind: strong
+# Enforcement: fail_on_violation
+#
+# This schema defines required directory/file layout patterns for modules.
+# A project fails this gate if the required structure is violated.
+
+rule:
+  name: module_structure
+  kind: strong
+  description: "Formal module structure constraints"
+  applies_to: "projects/*/src/"
+  version: "1.0"
+
+  required_layout:
+    # Every package directory must contain these files
+    per_package:
+      - "__init__.py"
+
+    # Every project src/ root must contain these top-level items
+    src_root:
+      - "py.typed"         # PEP 561 marker for typed packages
+      - "__init__.py"
+
+    # Test directories must mirror source layout
+    test_root:
+      pattern: "tests/"
+      must_mirror: "src/"  # tests/foo/ exists iff src/foo/ exists
+
+  forbidden_patterns:
+    # Patterns that must NOT appear anywhere under src/
+    - "**/*.pyc"
+    - "**/__pycache__/"
+    - "**/secrets.py"
+    - "**/credentials.py"
+    - "**/.env"
+
+  naming_conventions:
+    modules: "snake_case"        # e.g., my_module.py
+    classes: "PascalCase"        # enforced by linter, not this gate
+    constants_files: "UPPER_SNAKE_CASE"  # e.g., CONSTANTS.py allowed
+
+  max_depth:
+    # Source tree must not exceed this nesting depth
+    src: 4   # levels below src/
+
+  enforcement: "fail_on_violation"
+
+  rationale: >
+    Consistent module structure makes navigation predictable for humans
+    and automated tools alike. Forbidden patterns prevent accidental
+    credential or cache commits.
