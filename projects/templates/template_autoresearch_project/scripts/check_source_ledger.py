@@ -3,15 +3,12 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
+from _bootstrap import ensure_project_paths
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PROJECT_ROOT.parents[2]
-for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
-    path_text = str(path)
-    if path_text not in sys.path:
-        sys.path.insert(0, path_text)
+ensure_project_paths(PROJECT_ROOT)
 
 from src.source_ledger import (  # noqa: E402
     load_source_ledger,
@@ -31,7 +28,7 @@ def main() -> int:
         print(f"checked_age_{bucket}: {count}")
     issues = validate_source_ledger_contract(PROJECT_ROOT)
     for issue in issues:
-        print(f"source ledger issue: {issue}", file=sys.stderr)
+        print(f"source ledger issue: {issue}", file=__import__("sys").stderr)
     return 1 if issues else 0
 
 

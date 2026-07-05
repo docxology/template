@@ -6,12 +6,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from infrastructure.autoresearch import (
-    AutoResearchReport,
     build_autoresearch_plan,
     validate_autoresearch_plan,
     write_autoresearch_report,
 )
-from infrastructure.autoresearch.models import AutoResearchIssue
 from infrastructure.core.determinism import resolve_source_date_epoch
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
@@ -22,22 +20,22 @@ from .artifact_content import is_substantive_artifact
 from .config import AutoResearchLoopConfig, build_loop_config, load_human_review, load_manuscript_loop_settings
 from .loop_phases import (
     build_loop_context,
-    run_final_payload_and_visual_phase,
-    run_pre_readiness_visual_phase,
+    final_output_path_payload as _final_output_path_payload,
+    resolve_extrinsic_readiness,
+    run_method_contract_phase,
+    run_post_readiness_final_phases,
+    run_pre_extrinsic_phases,
     run_provisional_payload_phase,
-    run_settlement_manifest_phase,
 )
 from .ml.task import MLTaskResult, run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 from .writers import (
     relative_path,
-    write_artifact_manifest,
     write_core_loop_artifacts,
-    write_method_contract_artifacts,
     write_ml_task_artifacts,
-    write_research_object_manifest,
-    write_schema_manifest,
 )
+
+# Re-export phase helpers for tests and gate negative controls.
 
 __all__ = [
     "AutoResearchClaim",
@@ -120,9 +118,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         ml_result=ml_result,
     )
     run_provisional_payload_phase(ctx, provisional)
-    ctx.output_paths.extend(
-        write_method_contract_artifacts(project_root, config, generated_at=generated_at, ml_result=ml_result)
-    )
+    run_method_contract_phase(ctx)
 
     pre_readiness = _loop_result(
         project_name,
@@ -134,20 +130,9 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         output_paths=_final_output_path_payload(project_root, ctx.output_paths, config.required_artifacts),
         ml_result=ml_result,
     )
-    run_provisional_payload_phase(ctx, pre_readiness)
-    run_pre_readiness_visual_phase(ctx, pre_readiness)
-    ctx.output_paths.append(_write_readiness_manifest(project_root, ctx.output_paths))
-    ctx.output_paths.append(write_schema_manifest(project_root, ctx.output_paths, generated_at=generated_at))
-    ctx.output_paths.append(write_research_object_manifest(project_root, ctx.output_paths, generated_at=generated_at))
-    run_settlement_manifest_phase(ctx, pre_readiness, settlement_pass_count=2, write_final_manifest=False)
-    ctx.output_paths.append(_write_readiness_manifest(project_root, ctx.output_paths))
+    run_pre_extrinsic_phases(ctx, pre_readiness)
 
-    readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
-    if _only_changed_artifact_manifest_issues(readiness_post):
-        ctx.output_paths.append(_write_readiness_manifest(project_root, ctx.output_paths))
-        readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
-    readiness_valid = readiness_pre.valid and readiness_post.valid
-    readiness_report = _combine_readiness_reports(readiness_pre, readiness_post, plan.project_name)
+    readiness_valid, readiness_report = resolve_extrinsic_readiness(plan, project_root, ctx, readiness_pre)
     ctx.output_paths.extend(write_autoresearch_report(project_root, readiness_report))
     claims = build_claims(config, project_root)
 
@@ -161,8 +146,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         output_paths=_final_output_path_payload(project_root, ctx.output_paths, config.required_artifacts),
         ml_result=ml_result,
     )
-    run_final_payload_and_visual_phase(ctx, final)
-    run_settlement_manifest_phase(ctx, final, settlement_pass_count=3, write_final_manifest=True)
+    run_post_readiness_final_phases(ctx, final)
 
     return _loop_result(
         project_name,
@@ -250,49 +234,3 @@ def build_claims(config: AutoResearchLoopConfig, project_root: Path) -> tuple[Au
             )
         )
     return tuple(claims)
-
-
-def _final_output_path_payload(
-    project_root: Path, output_paths: list[Path], required_artifacts: tuple[str, ...]
-) -> tuple[str, ...]:
-    """Return stable output paths for the JSON loop payload."""
-    return tuple(
-        dict.fromkeys(
-            (
-                *(relative_path(project_root, path) for path in output_paths),
-                *(artifact for artifact in required_artifacts if (project_root / artifact).is_file()),
-            )
-        )
-    )
-
-
-def _combine_readiness_reports(
-    readiness_pre: AutoResearchReport,
-    readiness_post: AutoResearchReport,
-    project_name: str,
-) -> AutoResearchReport:
-    issues: list[AutoResearchIssue] = [*readiness_pre.issues, *readiness_post.issues]
-    valid = readiness_pre.valid and readiness_post.valid
-    plan = readiness_post.plan or readiness_pre.plan
-    return AutoResearchReport(
-        project_name=project_name,
-        valid=valid,
-        issues=tuple(issues),
-        plan=plan,
-    )
-
-
-def _only_changed_artifact_manifest_issues(report: AutoResearchReport) -> bool:
-    """Return true when readiness only needs a manifest checksum refresh."""
-    if report.valid or not report.issues:
-        return False
-    return all(
-        issue.code == "AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE" and issue.message.startswith("changed artifact:")
-        for issue in report.issues
-    )
-
-
-def _write_readiness_manifest(project_root: Path, output_paths: list[Path]) -> Path:
-    """Refresh the pre-readiness manifest after generated artifacts settle."""
-    manifest_path = write_artifact_manifest(project_root, output_paths, exclude_volatile=True)
-    return write_artifact_manifest(project_root, [*output_paths, manifest_path], exclude_volatile=True)

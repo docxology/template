@@ -441,6 +441,20 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     assert (project / "output" / "reports" / "evidence_registry_full.json").exists() is False
 
 
+def test_pre_extrinsic_phase_table_covers_manifest_settlement(
+    autoresearch_loop_result: AutoResearchLoopResult,
+) -> None:
+    """Pre-extrinsic phases run payload refresh, visuals, and settlement pass 2."""
+    from src.loop_phases import PRE_EXTRINSIC_PHASES
+
+    assert [handler.__name__ for handler in PRE_EXTRINSIC_PHASES] == [
+        "run_provisional_payload_phase",
+        "run_pre_readiness_visual_phase",
+        "run_pre_readiness_settlement_phase",
+    ]
+    assert autoresearch_loop_result.readiness_valid is True
+
+
 def test_phase_ledger_records_manifest_settlement_without_self_approval(
     project_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,

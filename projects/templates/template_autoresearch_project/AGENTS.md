@@ -108,7 +108,6 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 - Keep `autoresearch.yaml` stage names exact against `pipeline.yaml`.
 - Update `docs/` when changing configurable methods or output contracts.
 
-#
 ## Agent skill
 
 A Hermes/agentskills.io-compatible skill for this exemplar lives at

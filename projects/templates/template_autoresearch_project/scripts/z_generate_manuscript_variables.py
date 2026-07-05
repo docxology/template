@@ -4,15 +4,12 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
+from _bootstrap import ensure_project_paths
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PROJECT_ROOT.parents[2]
-for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
-    path_text = str(path)
-    if path_text not in sys.path:
-        sys.path.insert(0, path_text)
+ensure_project_paths(PROJECT_ROOT)
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree  # noqa: E402
 from src.manuscript_variables import compute_variables, write_manuscript_hydration_artifacts  # noqa: E402

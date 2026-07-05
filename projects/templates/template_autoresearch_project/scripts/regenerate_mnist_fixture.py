@@ -8,14 +8,11 @@ AutoResearch pipeline, tests, rendering, or validation.
 from __future__ import annotations
 
 from pathlib import Path
-import sys
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REPO_ROOT = PROJECT_ROOT.parents[2]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+from _bootstrap import ensure_project_paths
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+ensure_project_paths(PROJECT_ROOT)
 
 from src.ml.mnist_fixture import regenerate_mnist_fixture  # noqa: E402
 

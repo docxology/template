@@ -34,7 +34,7 @@ The claim, figure-quality, and benchmark gates all delegate to this predicate, s
 | **Schema conformance** | a tagged governance payload must satisfy its registered field/type contract | **HARD gate** — `write_schema_manifest` raises and aborts the loop on a nonconforming payload | `src/artifact_schemas` |
 | **Local integrity** | a present-but-empty required file → fail; the input MNIST fixture is cross-checked against its **committed declared** `npz_sha256` (external truth) | `status: "failed"` on any empty/mismatch/missing-declared-hash | `src/security.integrity_attestation_payload` |
 | **Evidence (default)** | a manuscript number that matches **no** generated artifact (fabrication) → error | pipeline "Evidence registry" check | `infrastructure/validation/evidence_registry` |
-| **Output-path self-report** | `output_paths` lists only artifacts that actually exist (no overclaim) and covers the `required_artifacts` contract | derived, existence-filtered | `src/loop._final_output_path_payload` |
+| **Output-path self-report** | `output_paths` lists only artifacts that actually exist (no overclaim) and covers the `required_artifacts` contract | derived, existence-filtered | `src/loop_phases.final_output_path_payload` |
 
 ## Configurability
 

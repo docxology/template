@@ -9,15 +9,25 @@ configuration, loop, artifact, and script execution paths.
 
 - `test_config.py` — manuscript settings, plan merge, and `parse_string_sequence`
 - `test_loop.py` — file-backed loop orchestration, declared stage status, clean
-  scaffold run against the real template repo root
+  scaffold run against the real template repo root, pre-extrinsic phase table
 - `test_reports.py` — markdown/CSV renderers and basic writer helpers
 - `test_writers.py` — `write_loop_payloads()` core + finalize wrapper
 - `test_manuscript_variables.py` — manuscript token hydration from loop outputs
 - `test_manuscript_tables.py` — registry-backed table builders
 - `test_figures.py` — figure registry and ML figure writers
 - `test_gate_negative_controls.py` — substance-binding negative controls for claims/benchmarks
+- `test_gate_improvements.py` — provenance, schema manifest, and governance conformance
 - `test_ml_task.py` — bounded ML task orchestration
-- `test_scripts.py` — thin script smoke tests
+- `test_security.py` — local security profile and attestation artifacts
+- `test_source_ledger.py` — citekey stability and source-ledger contract
+- `test_artifact_schemas.py` — generated JSON schema conformance
+- `test_models.py` — dataclass JSON serialization
+- `test_format_helpers.py` — manuscript token formatters and ML data validators
+- `test_edge_config.py` — config and MNIST task YAML edge cases
+- `test_edge_ledger.py` — source ledger validation edge cases
+- `test_edge_loop.py` — loop and loop_phases helper edge cases
+- `test_edge_gates.py` — benchmark, artifact substance, security render, research-object gates
+- `test_scripts.py` — thin script smoke tests (all four scripts)
 
 ## Commands
 

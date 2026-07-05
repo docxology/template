@@ -7,7 +7,7 @@ only parse arguments, resolve paths, and call these functions.
 
 | Area | Modules | Role |
 | --- | --- | --- |
-| Loop | `loop.py`, `loop_phases.py`, `writers/` | Orchestration; phased payload refresh; artifact I/O delegates to `writers/` submodules |
+| Loop | `loop.py`, `loop_phases.py`, `writers/` | Orchestration; `PRE_EXTRINSIC_PHASES` table; phased payload refresh; artifact I/O delegates to `writers/` submodules |
 | Writers | `writers/figure_dispatch.py`, `writers/benchmark.py`, `writers/{io,manifests,payloads}.py` | Figure dispatch from `figures.figure_specs`; benchmark grading; JSON/CSV/manifest I/O (`writers/__init__.py` facade) |
 | Figure specs | `figures/figure_specs.py` | Authoritative labels, methods, dispatch, `build_figure_registry_records` |
 | Figure registry metadata | `figures/figure_registry_metadata.py` | Per-label section/width/placement/generated_by/metadata (no filename/id) |
