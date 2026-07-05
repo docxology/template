@@ -38,3 +38,14 @@ def test_gallery_is_deterministic(tmp_path):
     p1 = gallery.histogram(tmp_path / "a")
     p2 = gallery.histogram(tmp_path / "b")
     assert p1.read_bytes() == p2.read_bytes()
+
+
+def test_load_specs_reads_yaml_catalogue():
+    specs = gallery.load_specs()
+    assert len(specs) == len(gallery.GALLERY)
+    assert specs[0]["name"] == "line"
+
+
+def test_render_gallery_entry_unknown_name(tmp_path):
+    with pytest.raises(ValueError, match="unknown gallery plot name"):
+        gallery.render_gallery_entry({"name": "not_a_plot"}, tmp_path)

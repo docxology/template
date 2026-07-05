@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import re
 
-from textbook.config import ChapterRef
+from textbook.config import ChapterRef, UnitIntroRef
 from textbook.constants import (
     CITATION_KEYS,
     GLOSSARY_ANCHORS,
@@ -25,7 +25,7 @@ from textbook.constants import (
     REQUIRED_TOKENS,
     STUB_MARKERS,
 )
-from textbook.toc import lab_label, question_label, section_label
+from textbook.toc import lab_label, question_label, section_label, unit_intro_label
 
 
 def _rotate(items: tuple[str, ...], seed: str, count: int) -> list[str]:
@@ -224,6 +224,34 @@ Linked chapter: [@{section_label(chapter)}].
 """
 
 
+def scaffold_unit_intro(intro: UnitIntroRef, chapters: list[ChapterRef]) -> str:
+    """Return a stub unit introduction for ``intro`` listing its chapters."""
+    chapter_lines = "\n".join(f"- *{chapter.title}* — [@{section_label(chapter)}]" for chapter in chapters)
+    label = unit_intro_label(intro.part_id)
+    return f"""# Part {intro.part_label}: {intro.part_title} {{#{label}}}
+
+<!-- STUB: write a 1-2 paragraph introduction to Part {intro.part_label}. -->
+This part covers **{intro.part_title.lower()}**. It contains the following chapters:
+
+{chapter_lines}
+
+> **How to use this part.** <!-- STUB: orient the reader; note prerequisites and how the chapters build on each other. -->
+"""
+
+
+def validate_unit_intro(text: str) -> list[str]:
+    """Return structural problems with a unit intro markdown file."""
+    issues: list[str] = []
+
+    if not re.search(r"^#\s+\S", text, flags=re.MULTILINE):
+        issues.append("missing H1 title")
+
+    if "[@sec:" not in text:
+        issues.append("missing at least one chapter cross-reference ([@sec:...])")
+
+    return issues
+
+
 def validate_chapter(text: str) -> list[str]:
     """Return structural problems with a chapter's markdown (empty == valid)."""
     issues: list[str] = []
@@ -274,5 +302,7 @@ __all__ = [
     "scaffold_chapter",
     "scaffold_lab",
     "scaffold_question_bank",
+    "scaffold_unit_intro",
     "validate_chapter",
+    "validate_unit_intro",
 ]

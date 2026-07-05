@@ -8,10 +8,40 @@ import pytest
 from textbook.config import (
     DEFAULT_MANUSCRIPT,
     ChapterRef,
+    UnitIntroRef,
+    declared_chapter_paths,
+    declared_unit_intro_paths,
     iter_chapters,
+    iter_unit_intros,
     load_config,
     validate_config,
 )
+
+
+def test_iter_unit_intros_default():
+    config = load_config()
+    intros = iter_unit_intros(config)
+    assert len(intros) == len(config["units"])
+    first = intros[0]
+    assert isinstance(first, UnitIntroRef)
+    assert first.file == "unit_intro.md"
+    assert first.path(DEFAULT_MANUSCRIPT).name == "unit_intro.md"
+
+
+def test_declared_paths_cover_real_manuscript():
+    config = load_config()
+    chapter_paths = declared_chapter_paths(DEFAULT_MANUSCRIPT, config)
+    intro_paths = declared_unit_intro_paths(DEFAULT_MANUSCRIPT, config)
+    assert all(path.exists() for path in chapter_paths)
+    assert all(path.exists() for path in intro_paths)
+
+
+def test_validate_config_rejects_bad_intro_file():
+    cfg = {
+        "book": {"title": "t"},
+        "units": [{"id": "p", "title": "P", "intro_file": "intro.txt", "chapters": [{"file": "a.md", "title": "A"}]}],
+    }
+    assert any("intro_file must end with .md" in issue for issue in validate_config(cfg))
 
 
 def test_load_default_config_has_units():

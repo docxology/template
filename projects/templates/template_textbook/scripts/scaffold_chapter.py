@@ -23,7 +23,7 @@ ensure_project_paths()
 
 def main() -> int:
     from textbook import content
-    from textbook.config import iter_chapters, load_config
+    from textbook.config import iter_chapters, iter_unit_intros, load_config
     from textbook_io import write_text_atomic
     from textbook_logging import get_logger
 
@@ -38,6 +38,22 @@ def main() -> int:
 
     written = 0
     skipped = 0
+    chapters_by_part: dict[str, list] = {}
+    for chapter in iter_chapters(config):
+        chapters_by_part.setdefault(chapter.part_id, []).append(chapter)
+
+    for intro in iter_unit_intros(config):
+        if args.part and intro.part_id != args.part:
+            continue
+        intro_path = intro.path(manuscript)
+        intro_text = content.scaffold_unit_intro(intro, chapters_by_part.get(intro.part_id, []))
+        if intro_path.exists() and not args.force:
+            skipped += 1
+        else:
+            write_text_atomic(intro_path, intro_text)
+            print(f"  ✓ {intro_path.relative_to(PROJECT_DIR)}")
+            written += 1
+
     for chapter in iter_chapters(config):
         if args.part and chapter.part_id != args.part:
             continue

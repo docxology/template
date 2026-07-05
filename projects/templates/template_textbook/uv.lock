@@ -988,16 +988,20 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
 ]
+visuals = [
+    { name = "pillow" },
+]
 
 [package.metadata]
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.7" },
     { name = "numpy", specifier = ">=1.24" },
+    { name = "pillow", marker = "extra == 'visuals'", specifier = ">=10.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "pyyaml", specifier = ">=6.0" },
 ]
-provides-extras = ["dev"]
+provides-extras = ["dev", "visuals"]
 
 [[package]]
 name = "tomli"

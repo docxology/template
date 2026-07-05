@@ -36,8 +36,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
    in `manuscript/references.bib` (`smith2020foundations`, `doe2019methods`,
    `lee2021systems`, `garcia2022dynamics`, `patel2018models`,
    `nguyen2023synthesis`, `kim2020data`, `brown2017principles`,
-   `wilson2021analysis`, `taylor2019theory`). Glossary links use the form
-   `**term** -> #gl:<anchor>` with anchors: `system`, `model`, `parameter`,
+   `wilson2021analysis`, `taylor2019theory`). Glossary links use
+   `[**term**](#gl:<anchor>)` with anchors: `system`, `model`, `parameter`,
    `variable`, `equilibrium`, `feedback`, `gradient`, `threshold`, `network`,
    `dynamics`, `emergence`, `regulation`, `boundary`, `state`, `observable`.
 
@@ -62,8 +62,8 @@ Before claiming a change is done:
       files by hand.
 - [ ] Do all `[@fig:]`/`[@tbl:]`/`[@eq:]`/`[@sec:]` references have matching
       definitions in the manuscript?
-- [ ] Does every `[@key]` resolve in `references.bib`, and every glossary
-      reference of the form `**term** -> #gl:anchor` use a known anchor?
+- [ ] Does every `[@key]` resolve in `references.bib`, and every glossary link
+      `[**term**](#gl:anchor)` use a known anchor?
 - [ ] Is the chapter still contract-complete (badge, blueprint, objectives,
       formalism, diagram, summary/terms/reading/practice)?
 - [ ] New figure or diagram? Regenerate with `scripts/generate_figures.py` /
@@ -100,16 +100,19 @@ Before claiming a change is done:
 - `src/textbook/content.py` — `scaffold_chapter` / `scaffold_lab` /
   `scaffold_question_bank` / `validate_chapter` / `count_stub_markers` /
   `count_words`.
-- `src/textbook/config.py` — `load_config`, `iter_chapters`, `validate_config`.
-- `src/textbook/toc.py` — numbering and labels.
+- `src/textbook/config.py` — `load_config`, `iter_chapters`, `iter_unit_intros`,
+  `validate_config`.
+- `src/textbook/toc.py` — numbering and labels (`unit_intro_label`, etc.).
+- `src/textbook/audit.py` — `run_manuscript_audit` (shared CLI + test gate).
 - `src/textbook/models.py` — worked formalisms (`logistic_growth`,
   `saturating_response`, `exponential_decay`, `half_life`, `linear_fit`,
   `descriptive_statistics`, `normalize_unit_interval`).
-- `src/visualization/`, `src/mermaid/` — deterministic figures and diagrams.
+- `src/visualization/` — deterministic figures (`plots.py`, YAML-driven
+  `gallery.py` + `gallery_specs.yaml`); `src/mermaid/` — diagrams.
 
 For monorepo-wide pipeline semantics, CI job names, and the two-layer
-architecture, see the root [`AGENTS.md`](https://github.com/docxology/template/blob/main/AGENTS.md) and
-[`CLAUDE.md`](https://github.com/docxology/template/blob/main/CLAUDE.md).
+architecture, see the root [`AGENTS.md`](../../../AGENTS.md) and
+[`CLAUDE.md`](../../../CLAUDE.md).
 
 ## Tracked public exemplar
 
@@ -122,7 +125,6 @@ into the repo's public-exemplar rosters — `"templates/template_textbook"` is i
 No registration steps are pending; do not re-edit those shared `infrastructure/`
 files for this project.
 
-#
 ## Agent skill
 
 A Hermes/agentskills.io-compatible skill for this exemplar lives at
@@ -130,6 +132,6 @@ A Hermes/agentskills.io-compatible skill for this exemplar lives at
 Load it when working inside this template to get when-to-use guidance,
 quick reference commands, and pitfalls.
 
-# Publishing
+## Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

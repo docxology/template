@@ -45,6 +45,11 @@ def chapter_number(config: dict[str, Any], part_id: str, file: str) -> int:
     raise KeyError(f"chapter not found: {part_id}/{file}")
 
 
+def unit_intro_label(part_id: str) -> str:
+    """Pandoc-crossref label for a unit introduction: ``sec:<part>_intro``."""
+    return f"sec:{part_id}_intro"
+
+
 def section_label(chapter: ChapterRef) -> str:
     """Pandoc-crossref label for a chapter heading: ``sec:<part>_<stem>``."""
     return f"sec:{chapter.part_id}_{chapter.stem}"
@@ -79,4 +84,5 @@ __all__ = [
     "question_bank_title",
     "question_label",
     "section_label",
+    "unit_intro_label",
 ]

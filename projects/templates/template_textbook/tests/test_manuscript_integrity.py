@@ -15,16 +15,32 @@ from infrastructure.validation.content import validate_images
 from infrastructure.validation.content.diagnostic_codes import MarkdownCode
 
 from textbook import content
-from textbook.config import iter_chapters, load_config, validate_config
+from textbook.config import iter_chapters, iter_unit_intros, load_config, validate_config
 from textbook.constants import CITATION_KEYS, GLOSSARY_ANCHORS
 
 MANUSCRIPT = Path(__file__).resolve().parent.parent / "manuscript"
 CONFIG = load_config(MANUSCRIPT)
 CHAPTERS = iter_chapters(CONFIG)
+UNIT_INTROS = iter_unit_intros(CONFIG)
 
 
 def test_config_is_valid():
     assert validate_config(CONFIG) == []
+
+
+def test_all_unit_intros_exist_and_validate():
+    missing = [intro.file for intro in UNIT_INTROS if not intro.path(MANUSCRIPT).exists()]
+    assert missing == [], f"missing unit intro files: {missing}"
+    for intro in UNIT_INTROS:
+        text = intro.path(MANUSCRIPT).read_text(encoding="utf-8")
+        assert content.validate_unit_intro(text) == [], f"{intro.file} failed validation"
+
+
+def test_no_orphan_part_markdown():
+    from textbook.audit import orphan_part_markdown_paths
+
+    orphans = orphan_part_markdown_paths(MANUSCRIPT, CONFIG)
+    assert orphans == [], f"orphan markdown under part directories: {orphans}"
 
 
 def test_all_chapters_exist_and_validate():

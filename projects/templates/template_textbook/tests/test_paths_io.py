@@ -184,10 +184,7 @@ def test_discover_template_root_returns_none_for_isolated_dir(tmp_path, monkeypa
     monkeypatch.delenv("TEMPLATE_TEXTBOOK_TEMPLATE_ROOT", raising=False)
     # tmp_path is a freshly created directory with no infrastructure/ ancestors.
     result = textbook_paths.discover_template_root(tmp_path)
-    # In CI / standalone checkout the result may still be None; inside the
-    # monorepo it will find the real root. Only assert the invariant.
-    if result is None:
-        assert textbook_paths.template_root() is None or True  # just confirm no crash
+    assert result is None or textbook_paths.is_template_root(result)
 
 
 def test_pad_png_missing_file_is_noop(tmp_path):

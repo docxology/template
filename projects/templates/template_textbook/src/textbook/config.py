@@ -12,6 +12,26 @@ DEFAULT_MANUSCRIPT = Path(__file__).resolve().parent.parent.parent / "manuscript
 
 
 @dataclass(frozen=True)
+class UnitIntroRef:
+    """One part/unit introduction file declared in config."""
+
+    part_id: str
+    part_label: str
+    part_title: str
+    directory: str
+    file: str
+
+    @property
+    def stem(self) -> str:
+        """Intro file stem (no ``.md``)."""
+        return self.file[:-3] if self.file.endswith(".md") else self.file
+
+    def path(self, manuscript_dir: Path) -> Path:
+        """Absolute path to the unit intro markdown file."""
+        return Path(manuscript_dir) / self.directory / self.file
+
+
+@dataclass(frozen=True)
 class ChapterRef:
     """One chapter located within the book structure."""
 
@@ -90,6 +110,37 @@ def iter_chapters(config: dict[str, Any], *, include_disabled: bool = False) -> 
     return chapters
 
 
+def iter_unit_intros(config: dict[str, Any]) -> list[UnitIntroRef]:
+    """Return declared unit introduction files from ``units`` blocks."""
+    intros: list[UnitIntroRef] = []
+    for part in unit_blocks(config):
+        intro_file = part.get("intro_file")
+        if not intro_file:
+            continue
+        part_id = part.get("id", "")
+        directory = part.get("directory", part_id)
+        intros.append(
+            UnitIntroRef(
+                part_id=part_id,
+                part_label=str(part.get("label", "")),
+                part_title=part.get("title", ""),
+                directory=directory,
+                file=str(intro_file),
+            )
+        )
+    return intros
+
+
+def declared_chapter_paths(manuscript_dir: Path, config: dict[str, Any]) -> list[Path]:
+    """Return every chapter path declared in config."""
+    return [chapter.path(manuscript_dir) for chapter in iter_chapters(config, include_disabled=True)]
+
+
+def declared_unit_intro_paths(manuscript_dir: Path, config: dict[str, Any]) -> list[Path]:
+    """Return every unit intro path declared in config."""
+    return [intro.path(manuscript_dir) for intro in iter_unit_intros(config)]
+
+
 def validate_config(config: dict[str, Any]) -> list[str]:
     """Return a list of human-readable structural problems (empty == valid)."""
     issues: list[str] = []
@@ -108,7 +159,7 @@ def validate_config(config: dict[str, Any]) -> list[str]:
     for index, part in enumerate(parts):
         pid = part.get("id")
         if not pid:
-            issues.append(f"parts[{index}] missing id")
+            issues.append(f"units[{index}] missing id")
             continue
         if pid in seen_ids:
             issues.append(f"duplicate part id: {pid}")
@@ -130,13 +181,20 @@ def validate_config(config: dict[str, Any]) -> list[str]:
             seen_files.add(key)
             if not chapter.get("title"):
                 issues.append(f"chapter {pid}/{file} missing title")
+        intro_file = part.get("intro_file")
+        if intro_file is not None and not str(intro_file).endswith(".md"):
+            issues.append(f"part {pid} intro_file must end with .md")
     return issues
 
 
 __all__ = [
     "ChapterRef",
     "DEFAULT_MANUSCRIPT",
+    "UnitIntroRef",
+    "declared_chapter_paths",
+    "declared_unit_intro_paths",
     "iter_chapters",
+    "iter_unit_intros",
     "load_config",
     "unit_blocks",
     "validate_config",

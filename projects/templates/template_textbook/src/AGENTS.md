@@ -16,7 +16,8 @@ algorithms, validation, or rendering.
 - **The contract is `textbook.constants`.** `CITATION_KEYS`, `GLOSSARY_ANCHORS`,
   `REQUIRED_SECTION_HEADINGS`, `REQUIRED_TOKENS`, and `STUB_MARKERS` define what a
   valid chapter must contain. `textbook.content.validate_chapter` enforces it and
-  `scripts/audit_textbook_quality.py` runs it as a gate.
+  `textbook.audit.run_manuscript_audit` (via `scripts/audit_textbook_quality.py`)
+  runs it as a gate.
 - **Determinism.** `models.py` is pure/numeric; `visualization/` and `mermaid/`
   produce byte-stable output (fixed seeds, fixed style). Do not introduce
   wall-clock, randomness without a seed, or environment-dependent output.
@@ -29,8 +30,9 @@ algorithms, validation, or rendering.
 
 ## Module map
 
-- `textbook/` — config, toc, content engine, constants, worked models.
-- `visualization/` — matplotlib figure generators (`plots.py`, `_scaffold.py`).
+- `textbook/` — config, toc, content engine, audit gate, constants, worked models.
+- `visualization/` — matplotlib figure generators (`plots.py`, YAML-driven
+  `gallery.py`, `registry.py`, `_scaffold.py`).
 - `mermaid/` — diagram specs (`diagram_specs.yaml`), `diagrams.py`, `renderer.py`.
 - `textbook_{paths,io,logging,visuals}.py` — shared utilities.
 

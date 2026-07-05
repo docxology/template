@@ -1,7 +1,7 @@
 """Figure gallery — a worked example of every common scientific plot type.
 
-Each function is deterministic (seeded RNG or closed-form data, headless Agg) and
-returns the saved PNG path. The companion appendix
+Plot catalogue lives in ``gallery_specs.yaml``; :data:`GALLERY` is built from that
+file at import time. The companion appendix
 ``manuscript/appendices/appendix_format_gallery.md`` embeds these so a future
 author can see — and copy — a working version of every chart they might need.
 
@@ -12,10 +12,12 @@ Path`` contract and register them in :data:`GALLERY`.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
+from typing import Any
 
 import numpy as np
+import yaml
 
 from textbook import models
 from textbook_logging import get_logger
@@ -23,6 +25,7 @@ from textbook_logging import get_logger
 from ._scaffold import BLUE, GRAY, GREEN, ORANGE, PURPLE, SERIES, VERMILLION, new_figure, save_figure
 
 logger = get_logger(__name__)
+SPECS_PATH = Path(__file__).resolve().parent / "gallery_specs.yaml"
 
 
 def _rng() -> np.random.Generator:
@@ -285,27 +288,54 @@ def multi_panel(output_dir: Path) -> Path:
     return save_figure(fig, output_dir, "gallery_multipanel")
 
 
-# Registry: name -> generator. Add new gallery plots here.
-GALLERY: tuple[tuple[str, Callable[[Path], Path]], ...] = (
-    ("line", line_plot),
-    ("scatter_fit", scatter_with_fit),
-    ("bar", bar_chart),
-    ("grouped_bar", grouped_bar),
-    ("hbar", horizontal_bar),
-    ("histogram", histogram),
-    ("box", box_plot),
-    ("violin", violin_plot),
-    ("heatmap", heatmap),
-    ("contour", contour_plot),
-    ("quiver", quiver_field),
-    ("step", step_plot),
-    ("stacked_area", stacked_area),
-    ("errorbar", errorbar_plot),
-    ("loglog", log_log_plot),
-    ("pie", pie_chart),
-    ("annotated", annotated_plot),
-    ("multipanel", multi_panel),
-)
+def load_specs(path: Path | None = None) -> list[dict[str, Any]]:
+    """Load gallery plot specifications from YAML."""
+    specs_path = Path(path) if path is not None else SPECS_PATH
+    data = yaml.safe_load(specs_path.read_text(encoding="utf-8"))
+    plots = data.get("plots", []) if isinstance(data, dict) else []
+    if not isinstance(plots, list):
+        raise ValueError("gallery_specs.yaml: 'plots' must be a list")
+    return plots
+
+
+_PLOT_RENDERERS: dict[str, Callable[[Path], Path]] = {
+    "line": line_plot,
+    "scatter_fit": scatter_with_fit,
+    "bar": bar_chart,
+    "grouped_bar": grouped_bar,
+    "hbar": horizontal_bar,
+    "histogram": histogram,
+    "box": box_plot,
+    "violin": violin_plot,
+    "heatmap": heatmap,
+    "contour": contour_plot,
+    "quiver": quiver_field,
+    "step": step_plot,
+    "stacked_area": stacked_area,
+    "errorbar": errorbar_plot,
+    "loglog": log_log_plot,
+    "pie": pie_chart,
+    "annotated": annotated_plot,
+    "multipanel": multi_panel,
+}
+
+
+def render_gallery_entry(spec: dict[str, Any], output_dir: Path) -> Path:
+    """Render one gallery plot declared in ``gallery_specs.yaml``."""
+    name = str(spec["name"])
+    renderer = _PLOT_RENDERERS.get(name)
+    if renderer is None:
+        raise ValueError(f"unknown gallery plot name: {name!r}")
+    return renderer(output_dir)
+
+
+def build_gallery_registry(specs: list[dict[str, Any]] | None = None) -> tuple[tuple[str, Callable[[Path], Path]], ...]:
+    """Return the name -> renderer registry from loaded specs."""
+    entries = specs if specs is not None else load_specs()
+    return tuple((str(spec["name"]), _PLOT_RENDERERS[str(spec["name"])]) for spec in entries)
+
+
+GALLERY: tuple[tuple[str, Callable[[Path], Path]], ...] = build_gallery_registry()
 
 
 def generate_gallery_figures(output_dir: Path) -> list[Path]:
@@ -317,9 +347,11 @@ def generate_gallery_figures(output_dir: Path) -> list[Path]:
 
 __all__ = [
     "GALLERY",
+    "SPECS_PATH",
     "annotated_plot",
     "bar_chart",
     "box_plot",
+    "build_gallery_registry",
     "contour_plot",
     "errorbar_plot",
     "generate_gallery_figures",
@@ -328,10 +360,12 @@ __all__ = [
     "histogram",
     "horizontal_bar",
     "line_plot",
+    "load_specs",
     "log_log_plot",
     "multi_panel",
     "pie_chart",
     "quiver_field",
+    "render_gallery_entry",
     "scatter_with_fit",
     "stacked_area",
     "step_plot",

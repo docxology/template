@@ -13,18 +13,19 @@ pattern for any new script.
 
 | Script | Delegates to | Output |
 | --- | --- | --- |
-| `generate_figures.py` | `visualization.plots.generate_all_figures` | `output/figures/` |
+| `generate_figures.py` | `visualization.plots.generate_all_figures`, optional `visualization.gallery.generate_gallery_figures`, `visualization.registry.write_figure_registry` | `output/figures/` |
 | `generate_diagrams.py` | `mermaid.diagrams.generate_all_diagrams` | `output/figures/mermaid/` |
 | `analysis.py` | `textbook.models` | `output/data/` (JSON) |
-| `scaffold_chapter.py` | `textbook.content`, `textbook.config.iter_chapters`, `textbook_io.write_text_atomic` | stub `.md` files under `manuscript/` |
-| `audit_textbook_quality.py` | `textbook.content.validate_chapter` + the contract in `textbook.constants` | stdout gate (exit non-zero on failure) |
+| `scaffold_chapter.py` | `textbook.content`, `textbook.config.iter_chapters` / `iter_unit_intros`, `textbook_io.write_text_atomic` | stub `.md` files under `manuscript/` |
+| `audit_textbook_quality.py` | `textbook.audit.run_manuscript_audit` | stdout gate (strict by default; `--lenient` optional) |
 
 ## Conventions
 
 - Print every produced path to stdout so the pipeline can collect a manifest.
 - Keep figures/data deterministic — fixed seeds, headless matplotlib (`MPLBACKEND=Agg`).
-- `audit_textbook_quality.py` is a real gate: it must exit non-zero when a
-  declared chapter is missing or fails structural validation. Do not soften it.
+- `audit_textbook_quality.py` is a real gate: strict by default (missing declared
+  files and orphan part markdown fail). Pass `--lenient` only when intentionally
+  auditing partial trees.
 - `scaffold_chapter.py` must not overwrite authored files unless `--force`.
 
 ## Do not touch

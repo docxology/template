@@ -3,7 +3,7 @@
 Authoring contract for the three chapters in this directory:
 `first_principles.md`, `building_blocks.md`, `structure_and_form.md`. Source of
 truth for the part and its chapter list is [`../config.yaml`](../config.yaml)
-(`parts:` → `part_I`); this file restates the per-chapter rules so an author or
+(`units:` → `part_I`); this file restates the per-chapter rules so an author or
 agent can fill a stub without leaving the directory. The repo-wide
 [Authoring Guide](../appendices/appendix_authoring_guide.md) is the long-form companion.
 

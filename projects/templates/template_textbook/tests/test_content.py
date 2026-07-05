@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from textbook.config import ChapterRef
+from textbook.config import ChapterRef, UnitIntroRef
 from textbook import content
 from textbook.constants import REQUIRED_SECTION_HEADINGS, REQUIRED_TOKENS
 
@@ -102,3 +102,27 @@ def test_validate_chapter_accepts_correct_figure_path():
     issues = content.validate_chapter(good_text)
     figure_path_issues = [i for i in issues if "figures" in i.lower()]
     assert figure_path_issues == []
+
+
+def _intro() -> UnitIntroRef:
+    return UnitIntroRef(
+        part_id="part_I",
+        part_label="I",
+        part_title="Fundamentals",
+        directory="part_I",
+        file="unit_intro.md",
+    )
+
+
+def test_scaffolded_unit_intro_passes_validation():
+    text = content.scaffold_unit_intro(_intro(), [_chapter()])
+    assert content.validate_unit_intro(text) == []
+    assert "sec:part_I_intro" in text
+    assert content.count_stub_markers(text) > 0
+
+
+def test_validate_unit_intro_requires_heading_and_cross_refs():
+    issues = content.validate_unit_intro("plain text")
+    joined = " ".join(issues)
+    assert "missing H1 title" in joined
+    assert "cross-reference" in joined

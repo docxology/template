@@ -158,6 +158,7 @@ units:
     title: "Orientation and Methods"
     label: "0"
     directory: part_0
+    intro_file: unit_intro.md
     chapters:
       - file: orientation.md
         title: "Orientation to the Field"
@@ -170,6 +171,7 @@ units:
     title: "Fundamentals"
     label: "I"
     directory: part_I
+    intro_file: unit_intro.md
     chapters:
       - file: first_principles.md
         title: "First Principles"
@@ -182,6 +184,7 @@ units:
     title: "Core Systems"
     label: "II"
     directory: part_II
+    intro_file: unit_intro.md
     chapters:
       - file: systems_overview.md
         title: "Systems Overview"
@@ -194,6 +197,7 @@ units:
     title: "Applications and Synthesis"
     label: "III"
     directory: part_III
+    intro_file: unit_intro.md
     chapters:
       - file: applied_models.md
         title: "Applied Models"

@@ -1,0 +1,41 @@
+# Data-driven gallery plot specifications.
+# Each entry maps to a renderer in `visualization.gallery`. Add plots here
+# rather than hard-coding the registry tuple so the catalogue is inspectable.
+
+plots:
+  - name: line
+    title: "Line plot — multiple series"
+  - name: scatter_fit
+    title: "Scatter with regression line"
+  - name: bar
+    title: "Bar chart"
+  - name: grouped_bar
+    title: "Grouped bar chart"
+  - name: hbar
+    title: "Horizontal bar chart"
+  - name: histogram
+    title: "Histogram"
+  - name: box
+    title: "Box plot"
+  - name: violin
+    title: "Violin plot"
+  - name: heatmap
+    title: "Heatmap"
+  - name: contour
+    title: "Contour plot"
+  - name: quiver
+    title: "Vector field (quiver)"
+  - name: step
+    title: "Step plot"
+  - name: stacked_area
+    title: "Stacked area"
+  - name: errorbar
+    title: "Error bars"
+  - name: loglog
+    title: "Log-log plot (power law)"
+  - name: pie
+    title: "Pie chart"
+  - name: annotated
+    title: "Annotated plot"
+  - name: multipanel
+    title: "Multi-panel composite figure"
