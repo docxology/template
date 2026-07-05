@@ -379,9 +379,12 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             total_duration = time.time() - pipeline_start
             self._telemetry.finalize(total_duration=total_duration)
 
+        self._finalize_pipeline_run(results, pipeline_start)
+        return results
+
+    def _finalize_pipeline_run(self, results, pipeline_start: float) -> None:
         self._write_pause_recommendations_report()
         self._write_run_lessons_report(results)
-        return results
 
     def _write_pause_recommendations_report(self) -> None:
         """Persist advisory SmartPause recommendations."""

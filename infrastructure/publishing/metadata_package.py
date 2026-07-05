@@ -1,6 +1,6 @@
 """ONIX 3.0, metadata.json, and EPUB 3.0 OPF metadata package generation.
 
-Given a :class:`PublicationMetadata` model this module produces three
+Given a :class:`EbookPublicationMetadata` model this module produces three
 machine-readable artefacts for ebook distribution and retail platform ingestion:
 
 * ``onix.xml``     — ONIX 3.0 XML feed (book trade standard)
@@ -12,11 +12,11 @@ machine-readable artefacts for ebook distribution and retail platform ingestion:
 Usage::
 
     from infrastructure.publishing.metadata_package import (
-        PublicationMetadata,
+        EbookPublicationMetadata,
         generate_metadata_package,
     )
 
-    meta = PublicationMetadata(
+    meta = EbookPublicationMetadata(
         title="My Research Ebook",
         authors=[{"name": "Jane Doe", "orcid": "0000-0001-2345-6789"}],
         isbn="978-3-16-148410-0",
@@ -50,7 +50,7 @@ def _serialize_xml(root: ET.Element) -> str:
 
 
 @dataclass
-class PublicationMetadata:
+class EbookPublicationMetadata:
     """Structured metadata for an ebook / printed publication.
 
     Attributes:
@@ -114,7 +114,7 @@ def _onix_subelement(parent: ET.Element, tag: str, text: str | None = None) -> E
     return el
 
 
-def generate_onix_xml(meta: PublicationMetadata) -> str:
+def generate_onix_xml(meta: EbookPublicationMetadata) -> str:
     """Generate an ONIX 3.0 XML string for *meta*.
 
     Follows the ONIX for Books International Standard 3.0 short-tag format.
@@ -258,7 +258,7 @@ def generate_onix_xml(meta: PublicationMetadata) -> str:
 # ── metadata.json generator ───────────────────────────────────────────────────
 
 
-def generate_metadata_json(meta: PublicationMetadata) -> dict[str, Any]:
+def generate_metadata_json(meta: EbookPublicationMetadata) -> dict[str, Any]:
     """Generate a portable ebook metadata dict for retail platform ingestion.
 
     The structure is compatible with:
@@ -357,7 +357,7 @@ _OPF_NS = "http://www.idpf.org/2007/opf"
 _DC_NS = "http://purl.org/dc/elements/1.1/"
 
 
-def generate_epub_opf(meta: PublicationMetadata) -> str:
+def generate_epub_opf(meta: EbookPublicationMetadata) -> str:
     """Generate an EPUB 3.0 OPF (Open Packaging Format) metadata skeleton.
 
     The returned XML string can be saved as ``content.opf`` inside an EPUB
@@ -458,13 +458,13 @@ def generate_epub_opf(meta: PublicationMetadata) -> str:
 
 
 def generate_metadata_package(
-    meta: PublicationMetadata,
+    meta: EbookPublicationMetadata,
     output_dir: Path,
 ) -> dict[str, Path]:
     """Generate all three metadata artefacts and write them to *output_dir*.
 
     Args:
-        meta: Populated :class:`PublicationMetadata` instance.
+        meta: Populated :class:`EbookPublicationMetadata` instance.
         output_dir: Directory to write artefacts into; created if missing.
 
     Returns:
@@ -499,8 +499,42 @@ def generate_metadata_package(
     }
 
 
+def ebook_metadata_from_config(config: dict[str, Any], project_slug: str) -> EbookPublicationMetadata:
+    paper = config.get("paper", {}) or {}
+    publication = config.get("publication", {}) or {}
+    meta_block = config.get("metadata", {}) or {}
+    authors: list[dict[str, str]] = []
+    for author in config.get("authors", []) or []:
+        if isinstance(author, dict):
+            authors.append(
+                {
+                    "name": author.get("name", ""),
+                    "orcid": author.get("orcid", ""),
+                    "email": author.get("email", ""),
+                }
+            )
+        elif isinstance(author, str):
+            authors.append({"name": author, "orcid": "", "email": ""})
+    description = config.get("abstract", "") if isinstance(config.get("abstract"), str) else ""
+    return EbookPublicationMetadata(
+        title=paper.get("title") or project_slug.replace("_", " ").title(),
+        subtitle=paper.get("subtitle", "") or "",
+        authors=authors,
+        doi=publication.get("doi", "") or "",
+        publisher=publication.get("publisher", "") or "",
+        description=description,
+        keywords=list(config.get("keywords", []) or []),
+        language=meta_block.get("language", "en") or "en",
+        license=meta_block.get("license", "Apache-2.0") or "Apache-2.0",
+    )
+
+
+PublicationMetadata = EbookPublicationMetadata
+
 __all__ = [
+    "EbookPublicationMetadata",
     "PublicationMetadata",
+    "ebook_metadata_from_config",
     "generate_metadata_package",
     "generate_onix_xml",
     "generate_metadata_json",

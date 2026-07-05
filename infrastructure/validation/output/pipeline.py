@@ -8,6 +8,8 @@ This module coordinates the validation stage by:
 """
 
 import json
+from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -55,6 +57,38 @@ logger = get_logger(__name__)
 # Resolve repository root once at module load.
 # This file lives at infrastructure/validation/output/pipeline.py → 4 parents up = repo root.
 _REPO_ROOT = Path(__file__).parent.parent.parent.parent
+
+
+@dataclass(frozen=True)
+class PipelineCheck:
+    name: str
+    run: Callable[[], bool]
+
+
+def _build_core_checks(project_name: str) -> list[PipelineCheck]:
+    checks = [
+        PipelineCheck("PDF validation", lambda: validate_pdfs(project_name)),
+        PipelineCheck("Transmission bookends", lambda: validate_transmission_bookends(project_name)),
+        PipelineCheck("Markdown validation", lambda: validate_manuscript_output_markdown(project_name)),
+    ]
+    if _prose_quality_enabled(project_name):
+        checks.append(PipelineCheck("Prose quality", lambda: validate_prose_quality(project_name)))
+    return checks
+
+
+def _run_registered_checks(checks: list[PipelineCheck]) -> list[tuple[str, bool]]:
+    results: list[tuple[str, bool]] = []
+    for i, check in enumerate(checks, 1):
+        try:
+            logger.info("  [%d/%d] Running %s...", i, len(checks), check.name)
+            passed = check.run()
+            status = "✅ PASSED" if passed else "⚠️  ISSUES"
+            logger.info("  [%d/%d] %s: %s", i, len(checks), check.name, status)
+            results.append((check.name, passed))
+        except Exception as exc:
+            logger.error("  [%d/%d] %s: ❌ FAILED - %s", i, len(checks), check.name, exc, exc_info=True)
+            results.append((check.name, False))
+    return results
 
 
 def _project_root(project_name: str) -> Path:
@@ -368,30 +402,10 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         load_existing=False,
     ).clear_report()
 
-    checks = [
-        ("PDF validation", lambda: validate_pdfs(project_name)),
-        ("Transmission bookends", lambda: validate_transmission_bookends(project_name)),
-        ("Markdown validation", lambda: validate_manuscript_output_markdown(project_name)),
-    ]
-    # Opt-in, report-only AI-writing prose gate (PROSE-GATE-WIRE-1). Appended
-    # only when enabled in config so disabled runs stay byte-identical.
-    if _prose_quality_enabled(project_name):
-        checks.append(("Prose quality", lambda: validate_prose_quality(project_name)))
-
-    results = []
-    figure_issues = []
+    checks = _build_core_checks(project_name)
+    results = _run_registered_checks(checks)
+    figure_issues: list[str] = []
     detailed_validation = None
-
-    for i, (check_name, check_fn) in enumerate(checks, 1):
-        try:
-            logger.info(f"  [{i}/{len(checks)}] Running {check_name}...")
-            result = check_fn()
-            status = "✅ PASSED" if result else "⚠️  ISSUES"
-            logger.info(f"  [{i}/{len(checks)}] {check_name}: {status}")
-            results.append((check_name, result))
-        except Exception as e:
-            logger.error(f"  [{i}/{len(checks)}] {check_name}: ❌ FAILED - {e}", exc_info=True)
-            results.append((check_name, False))
 
     project_root = _project_root(project_name)
     manuscript_dir = project_root / "manuscript"

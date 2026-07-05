@@ -11,6 +11,7 @@ from infrastructure.core.files.pdf_locator import find_combined_pdf as _find_com
 from infrastructure.core.logging.utils import get_logger, log_success
 
 from infrastructure.project.discovery import discover_projects
+from infrastructure.validation.output.layout import OPTIONAL_OUTPUT_SUBDIRS, OUTPUT_SUBDIR_NAMES
 
 
 class _DirectoryDetail(TypedDict, total=False):
@@ -419,25 +420,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
             "readable": False,
         }
 
-    expected_dirs = [
-        "pdf",
-        "web",
-        "slides",
-        "figures",
-        "data",
-        "reports",
-        "simulations",
-        "llm",
-        "logs",
-    ]
-    # Directories that are optional or populated later in the pipeline
-    optional_dirs = {
-        "llm",
-        "logs",
-        "simulations",
-    }  # LLM stage, logs, and simulations may be generated during pipeline
-
-    for subdir_name in expected_dirs:
+    for subdir_name in OUTPUT_SUBDIR_NAMES:
         subdir = output_dir / subdir_name
 
         if subdir.exists():
@@ -450,21 +433,21 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
                 "files": file_count,
                 "size_mb": round(total_size_mb, 2),
                 "readable": subdir.is_dir(),
-                "optional": subdir_name in optional_dirs,
+                "optional": subdir_name in OPTIONAL_OUTPUT_SUBDIRS,
             }
 
             # Only flag empty directories as suspicious if not optional
-            if file_count == 0 and subdir_name not in optional_dirs:
+            if file_count == 0 and subdir_name not in OPTIONAL_OUTPUT_SUBDIRS:
                 result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty")
         else:
             result["directory_structure"][subdir_name] = {
                 "exists": False,
                 "files": 0,
                 "size_mb": 0.0,
-                "optional": subdir_name in optional_dirs,
+                "optional": subdir_name in OPTIONAL_OUTPUT_SUBDIRS,
             }
             # Only add issue for required directories
-            if subdir_name not in optional_dirs:
+            if subdir_name not in OPTIONAL_OUTPUT_SUBDIRS:
                 result["issues"].append(f"Missing directory: {subdir_name}/")
 
     return result

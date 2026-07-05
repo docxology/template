@@ -44,7 +44,8 @@ from infrastructure.orchestration.secure_run import (
 from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
 from infrastructure.project.discovery import discover_projects
-from infrastructure.project.linking import SKIP_ENV_VAR, sync_private_project_links
+from infrastructure.orchestration.link_sync import maybe_sync_all_links
+from infrastructure.project.linking import sync_private_project_links
 
 
 def _default_repo_root() -> Path:
@@ -220,25 +221,15 @@ def _resolve_repo_root(ns: argparse.Namespace) -> Path:
 
 
 def _maybe_sync_links(repo_root: Path) -> None:
-    """Best-effort: sync private lifecycle project symlinks.
-
-    Runs on every CLI invocation so ``run.sh`` renders active projects as native
-    and keeps working/published/archive/other projects visible in non-rendered
-    mirrors.
-    Deliberately non-fatal: a missing/unreadable private repo must never break
-    the pipeline, so failures print a visible warning (not silently swallowed)
-    and the CLI continues. Disable with ``$TEMPLATE_SKIP_LINK_SYNC`` or when no
-    private root is present (the call is then a pure no-op).
-    """
-    if os.environ.get(SKIP_ENV_VAR):
-        return
+    """Best-effort: sync private lifecycle project symlinks (registry-driven)."""
     try:
-        result = sync_private_project_links(repo_root)
-    except (OSError, RuntimeError) as exc:  # fs hiccup / symlink loop — surface, don't crash CLI
+        results = maybe_sync_all_links(repo_root)
+    except (OSError, RuntimeError) as exc:
         print(f"[link-sync] warning: {exc}", file=sys.stderr)
         return
-    if result.changed:
-        print(f"[link-sync] {result.summary()}", file=sys.stderr)
+    for result in results:
+        if result.changed:
+            print(f"[link-sync] {result.summary()}", file=sys.stderr)
 
 
 def _cmd_link_projects(ns: argparse.Namespace) -> int:

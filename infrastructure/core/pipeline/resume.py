@@ -136,10 +136,12 @@ class PipelineResumeMixin(ABC):
             if not result.success or result.hitl_pause:
                 break
 
-        lesson_writer = getattr(self, "_write_run_lessons_report", None)
-        if callable(lesson_writer):
-            lesson_writer(resumed_results)
-
+        if getattr(self, "_telemetry", None) is not None:
+            total_duration = time.time() - pipeline_start
+            self._telemetry.finalize(total_duration=total_duration)
+        finalize = getattr(self, "_finalize_pipeline_run", None)
+        if callable(finalize):
+            finalize(resumed_results, pipeline_start)
         return resumed_results
 
     def _save_checkpoint(self, pipeline_start: float, last_stage: int, results: list[PipelineStageResult]) -> None:
