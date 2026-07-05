@@ -278,29 +278,22 @@ flowchart LR
 
 ## Development Commands
 
+The individual commands (test, generate figures, validate markdown, build pipeline) are
+the same ones already shown per-phase in [Step-by-Step Workflow](#step-by-step-workflow)
+above — see that section for the full development/validation/integration sequence.
+
+Two commands specific to this section, not covered above:
+
 ```bash
-# Install dependencies
+# Install dependencies (first-time setup)
 uv sync
 
-# Run tests with coverage
-uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing
-
-# Generate figures
-uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
-uv run python scripts/02_run_analysis.py --project template_code_project
-
-# Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
-
-# Build PDF pipeline
-uv run python scripts/execute_pipeline.py --project {name} --core-only
-
-# Clean all generated outputs (regeneratable)
-# Pipeline automatically handles cleanup
-
-# Check specific coverage
+# Check coverage with per-line detail (vs. the summary `coverage report` shown earlier)
 coverage report -m
 ```
+
+Cleaning outputs is automatic — the pipeline removes `output/` before regenerating it
+(see [Output Management](#output-management) below); there is no separate manual clean step.
 
 ## Output Management
 
@@ -316,21 +309,7 @@ This script:
 
 ### Output Directory Structure
 
-```mermaid
-graph TD
-    OUTPUT[output/] --> FIGS[figures<br/>PNG/MP4/SVG files]
-    OUTPUT --> DATA[data<br/>CSV/NPZ files]
-    OUTPUT --> PDFS[pdf<br/>Individual + Combined PDFs]
-    OUTPUT --> TEX[tex<br/>Exported LaTeX files]
-
-    classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef files fill:#fff3e0,stroke:#e65100,stroke-width:2px
-
-    class OUTPUT dir
-    class FIGS,DATA,PDFS,TEX files
-```
-
-All directories under `output/` are disposable and can be safely cleaned.
+Same layout as the [Output Structure diagram above](#output-structure-output) (`figures/`, `data/`, `pdf/`, `tex/`). All directories under `output/` are disposable and can be safely cleaned.
 
 ## Benefits of This Paradigm
 

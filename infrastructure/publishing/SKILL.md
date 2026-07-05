@@ -181,8 +181,9 @@ uv run python -m infrastructure.publishing.status_report --project <path> --chec
 `credential_check.py` is a read-only, non-destructive check that publishing
 credentials authenticate. It sends a single GET per platform and never writes,
 uploads, or prints token values. `PROBES` covers `github`, `huggingface_hub`,
-`osf`, `ipfs_pinata`, `zenodo`, `netlify`, and `cloudflare_pages`; `pypi` has no
-read-only endpoint and reports `no-endpoint`.
+`osf`, `ipfs_pinata`, `zenodo`, `netlify`, `cloudflare_pages`, `gumroad`,
+`leanpub`, and `stripe`; `pypi` has no read-only endpoint and reports
+`no-endpoint`.
 
 ```python
 from infrastructure.publishing.credential_check import check_all, format_results
@@ -236,7 +237,7 @@ readiness = validate_publication_readiness(markdown_files, pdf_files)  # both li
 checklist = create_submission_checklist(metadata)
 ```
 
-## Executable bundle (Stage 10)
+## Executable bundle (Stage 12)
 
 ```python
 from infrastructure.publishing.executable_bundle import bundle_project
@@ -244,9 +245,9 @@ from infrastructure.publishing.executable_bundle import bundle_project
 manifest_path = bundle_project(project_root, output_dir)
 ```
 
-## Multi-target archival (Stage 11)
+## Multi-target archival (Stage 13)
 
-`archival/` is a proper subpackage. The flat `archival.py` at the package root is a backwards-compat shim that re-exports the same surface.
+`archival/` is a proper subpackage. The flat `archival.py` shim that used to sit at the package root has been removed; `import infrastructure.publishing.archival` resolves directly to the package.
 
 ```python
 from infrastructure.publishing.archival import (
@@ -267,7 +268,7 @@ CLI dry-run:
 
 ```bash
 uv run python -m infrastructure.publishing.archival_cli \
-  --bundle output/template_code_project/executable_bundle \
+  --bundle output/templates/template_code_project/executable_bundle \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 ```
 

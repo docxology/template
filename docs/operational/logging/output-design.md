@@ -56,8 +56,8 @@ PERFORMANCE HIGHLIGHTS
 OUTPUT LOCATIONS
 --------------------------------------------------------------------------------
   Output PDF     : output/actinf_policy_entanglement_lean/actinf_policy_entanglement_lean_combined.pdf
-  Output PDF     : output/template_code_project/template_code_project_combined.pdf
-  Output PDF     : output/template_prose_project/template_prose_project_combined.pdf
+  Output PDF     : output/templates/template_code_project/template_code_project_combined.pdf
+  Output PDF     : output/templates/template_prose_project/template_prose_project_combined.pdf
 
 NEXT STEPS
 --------------------------------------------------------------------------------
@@ -72,11 +72,15 @@ This block is the canonical end-of-run summary. It is rendered by
 `format_multi_project_detailed_report` in
 [`infrastructure/reporting/multi_project_report.py`](../../../infrastructure/reporting/multi_project_report.py)
 (re-exported from
-[`infrastructure/core/pipeline/multi_project.py`](../../../infrastructure/core/pipeline/multi_project.py)),
-emitted by the orchestrator in
-[`infrastructure/orchestration/pipeline_runner.py`](../../../infrastructure/orchestration/pipeline_runner.py),
-and persisted verbatim to `docs/_generated/last-run-summary.md` after every
-multi-project run.
+[`infrastructure/core/pipeline/multi_project.py`](../../../infrastructure/core/pipeline/multi_project.py)).
+Both multi-project entry points print it to the console/log:
+[`infrastructure/orchestration/pipeline_runner.py`](../../../infrastructure/orchestration/pipeline_runner.py)
+(`run.sh --all-projects` / `python -m infrastructure.orchestration multi`) and
+`scripts/execute_multi_project.py`. **Only the latter** additionally persists
+it verbatim to `docs/_generated/last-run-summary.md`, via
+`write_last_run_summary` in `multi_project_report.py` (called from
+[`infrastructure/core/pipeline/multi_project_cli.py`](../../../infrastructure/core/pipeline/multi_project_cli.py));
+the `pipeline_runner.py` path does not write this file.
 
 ## Reference: per-project stages
 

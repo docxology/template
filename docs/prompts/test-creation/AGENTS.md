@@ -9,7 +9,7 @@ Agent skill `template-test-creation` — Tests under the no-mocks policy.
 | File | Role |
 | --- | --- |
 | [`SKILL.md`](SKILL.md) | Routable workflow (canonical) |
-- [`references/`](references/) — progressive-disclosure checklists
+| [`references/`](references/) | Progressive-disclosure checklists |
 
 ## Verification
 

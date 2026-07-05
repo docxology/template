@@ -54,10 +54,10 @@ Command-line interface that:
 uv run python scripts/04_validate_output.py --project template_code_project
 
 # Validate a specific PDF using CLI
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/template_code_project_combined.pdf
 
 # Validate with verbose output
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf --verbose
+uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/template_code_project_combined.pdf --verbose
 
 # Validate markdown files
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
@@ -200,7 +200,7 @@ Ensure you're running from the repository root:
 
 ```bash
 cd /path/to/template
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 ### "PDF file not found"
@@ -217,8 +217,8 @@ Or run the pipeline:
 # Standard build with validation
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
-# With options
-uv run python scripts/execute_pipeline.py --project {name} --core-only --verbose --log-file build.log
+# With verbose debug logging (LOG_LEVEL: 0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
+LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### High number of ?? issues

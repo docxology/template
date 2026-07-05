@@ -30,12 +30,17 @@ flowchart LR
     SRC --> DP[dashboard_payload.py · dashboard_panels.py]
     SRC --> VARS["manuscript_variables.py<br/>template variable substitution map"]
     SRC --> DOC[documentation.py<br/>API reference builder]
+    SRC --> PP[project_paths.py<br/>resolve_project_root]
+    SRC --> BS[benchmark_support.py<br/>infrastructure.benchmark demo]
     SRC --> AG[AGENTS.md · README.md · STYLE.md]
 
     CFG --> ANA
     CFG --> FIG
     CFG --> DASH
     CFG --> VARS
+    PP --> ANA
+    PP --> DASH
+    OPT --> BS
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -222,6 +227,22 @@ Shared helpers for figure generators: `project_root(caller)`, `get_logger`, `exp
 Key fields: `step_sizes`, `quadratic_A`, `quadratic_b`, `initial_point`, `max_iterations`,
 `tolerance`, `convergence_tolerance`, `stability_starting_points`, `stability_step_sizes`,
 `benchmark_dimensions`. Helpers: `A_array()`, `b_array()`, `to_optimizer_sweep_config()`.
+
+### project_paths.py
+
+`resolve_project_root(package_name)` — resolves the exemplar's project root from
+the caller's module (falls back to `Path(__file__).resolve().parent.parent`).
+`project_output_dirs(project_root=None)` — returns the standard `output/{figures,data,reports,web}`
+directory map used across `analysis/`, `figures/`, and `dashboard.py`.
+
+### benchmark_support.py
+
+Thin domain helper demonstrating `infrastructure.benchmark` from inside the
+exemplar: times the pure `quadratic_function` across a fixed, deterministic
+set of input sizes, turns the timing facts into boolean rubric checks, and
+scores them through the real `infrastructure.benchmark` rubric API.
+Orchestration (writing reports/figures) lives in `scripts/`; this module only
+computes.
 
 #### load_experiment_config (function)
 

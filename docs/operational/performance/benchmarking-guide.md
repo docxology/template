@@ -22,7 +22,7 @@ Benchmark when:
 
 ### Built-in Profiling
 
-**Function-level:** Use `@profile` decorator from `infrastructure.core.runtime.function_profiler`
+**Function-level:** Use the `@monitor_performance(...)` decorator from `infrastructure.core.runtime.function_profiler`
 
 ```python
 from infrastructure.core.runtime.function_profiler import monitor_performance
@@ -83,16 +83,18 @@ logger.info(f"Computation took {elapsed:.3f}s")
 
 ## 3. Benchmark Structure
 
-Place benchmarks in `tests/benchmarks/` or use `pytest-benchmark` for regression testing.
+The repo's own microbenchmarks live in `tests/infra_tests/benchmark/` (see §12
+for the exact convention: `@pytest.mark.bench`, `pytest-benchmark`, opt-in
+only). Follow the same convention for new project-level benchmarks.
 
 ### Example Benchmark Test
 
 ```python
-# tests/benchmarks/test_optimizer_performance.py
+# tests/infra_tests/benchmark/test_optimizer_performance.py
 import pytest
-import time
 from src.optimizer import gradient_descent
 
+@pytest.mark.bench
 def test_gradient_descent_performance(benchmark):
     """Benchmark gradient descent convergence speed."""
     result = benchmark(
@@ -109,7 +111,7 @@ def test_gradient_descent_performance(benchmark):
 Run with:
 
 ```bash
-uv run pytest tests/benchmarks/ --benchmark-only
+uv run pytest tests/infra_tests/benchmark/ -m bench --benchmark-only
 ```
 
 ---
@@ -121,7 +123,7 @@ Infrastructure automatically tracks:
 - **Stage duration** (wall time)
 - **Peak memory** (RSS if psutil available)
 - **CPU usage** (% if psutil available)
-- **Function hotspots** (decorated with `@profile`)
+- **Function hotspots** (decorated with `@monitor_performance`)
 
 Metrics appear in:
 
@@ -159,17 +161,16 @@ Metrics appear in:
 
 ## 7. Regression Detection
 
-Add benchmark tests to CI to catch performance regressions:
-
-```yaml
-# .github/workflows/benchmark.yml
-- name: Run benchmarks
-  run: |
-    uv run pytest tests/benchmarks/ --benchmark-save=baseline
-- name: Compare to baseline
-  run: |
-    uv run pytest tests/benchmarks/ --benchmark-compare=baseline --benchmark-compare-fail=mean:10%
-```
+The real CI integration is the `performance:` job in
+[`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml) (there is no
+separate `benchmark.yml`). Today it is **informational only, never blocking**:
+a hard import-time threshold check (`MAX_IMPORT_SECONDS = 5.0`, fails the job
+if exceeded) followed by the §12 microbench suite run with `|| true` and
+uploaded as the `bench-results` artifact for manual trend comparison — there
+is no `--benchmark-save`/`--benchmark-compare-fail` gate wired up yet. To add
+a hard regression gate, extend that job with `pytest-benchmark`'s
+`--benchmark-save=baseline` / `--benchmark-compare-fail=mean:10%` flags against
+a committed baseline.
 
 ---
 

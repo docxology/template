@@ -257,10 +257,10 @@ x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}
 
 #### Referencing Equations
 
-To refer to an equation elsewhere:
+**Use Pandoc bracket-cite syntax to refer to an equation, not raw `\eqref{}`** — `[@eq:label]` is the canonical, portable form (see [Manuscript Semantics](manuscript-semantics.md) for the full rule set):
 
 ```markdown
-Using the quadratic formula \eqref{eq:quadratic}, we can solve...
+Using the quadratic formula [@eq:quadratic], we can solve...
 ```
 
 ### Common Math Symbols
@@ -289,35 +289,30 @@ When creating a section heading, add a label:
 
 #### Reference Sections
 
-To refer to a section:
+**Use `[@sec:label]`, not raw `\ref{}` or a Markdown filename link** — this is the one syntax that stays stable across PDF, HTML, and EPUB output:
 
 ```markdown
-As described in Section \ref{sec:methodology}, we collected...
+As described in [@sec:methodology], we collected...
 
-The data collection process (Section \ref{sec:data_collection}) involved...
+The data collection process ([@sec:data_collection]) involved...
 ```
 
 ### Adding Figures
 
-Even though you're not generating figures yet, you can reference existing ones:
+Even though you're not generating figures yet, you can reference existing ones. **Use Pandoc's image syntax with a `{#fig:label}` attribute, not a raw LaTeX `figure` environment** — this is what every exemplar manuscript in this repo actually uses, and it renders correctly in PDF, HTML, and EPUB alike:
 
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../output/figures/convergence_plot.png}
-\caption{Example visualization showing convergence behavior}
-\label{fig:example}
-\end{figure}
+![Example visualization showing convergence behavior.](../output/figures/convergence_plot.png){#fig:example width=80%}
 
-Figure \ref{fig:example} demonstrates the algorithm's performance.
+[@fig:example] demonstrates the algorithm's performance.
 ```
 
 **Figure Anatomy**:
 
-- `[h]` - Place here (h = here, t = top, b = bottom)
-- `width=0.8\textwidth` - 80% of text width
-- `caption{}` - Description below figure
-- `label{}` - Unique name for referencing
+- `![caption](path)` - Pandoc image syntax; the caption appears below the figure in the PDF and as alt text in HTML/EPUB
+- `width=80%` - 80% of text width
+- `{#fig:example}` - Unique label for cross-referencing
+- `[@fig:example]` - Cross-reference (parenthetical); use bare `@fig:example` for a narrative reference ("Figure 3 shows…")
 
 ### Example
 
@@ -344,13 +339,13 @@ The iterative update follows:
 x_{k+1} = x_k - \alpha_k \nabla f(x_k)
 \end{equation}
 
-As shown in Equation \eqref{eq:update}, we use gradient descent with
+As shown in [@eq:update], we use gradient descent with
 step size $\alpha_k$.
 
 ## Convergence Analysis
 
-From equations \eqref{eq:objective} and \eqref{eq:update}, we can prove
-convergence under standard assumptions (see Section \ref{sec:results}).
+From [@eq:objective] and [@eq:update], we can prove
+convergence under standard assumptions (see [@sec:results]).
 ```
 
 ---
@@ -491,12 +486,12 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-3. **Cite in manuscript**:
+3. **Cite in manuscript** (Pandoc bracket-cite syntax — never raw `\cite{}`, which breaks HTML/EPUB rendering; see [Manuscript Semantics](manuscript-semantics.md)):
 
    ```markdown
-   Recent advances \cite{smith2020climate} demonstrate...
+   Recent advances [@smith2020climate] demonstrate...
 
-   For review, see \cite{jones2019ai}.
+   For review, see [@jones2019ai].
    ```
 
 4. **Rebuild to see citations**

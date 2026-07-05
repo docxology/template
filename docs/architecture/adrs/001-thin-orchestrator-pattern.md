@@ -26,7 +26,7 @@ Scripts must be **thin wrappers** that import logic from `infrastructure/` modul
 - **Reusability:** Infrastructure functions are callable from multiple scripts
 - **Clarity:** Easy to locate implementation — always in `src/` or `infrastructure/`
 - **Agent routing:** Cursor/Claude can map skills to actual modules via SKILL.md
-- **Scripts become simple** — "prove: thing is to orchestrate"
+- **Scripts become simple** — their only job is to orchestrate
 - **Faster onboarding:** new contributors know where to look
 
 ### Negative

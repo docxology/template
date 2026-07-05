@@ -12,11 +12,16 @@ environments, rendered outputs, or stale package metadata.
 | Bounded AutoResearch loop with evidence/artifact gates | [`template_autoresearch_project`](../../projects/templates/template_autoresearch_project/) | [`STANDALONE.md`](../../projects/templates/template_autoresearch_project/STANDALONE.md) |
 | Coordination-mechanism ablations for agent teams | [`template_autoscientists`](../../projects/templates/template_autoscientists/) | [`STANDALONE.md`](../../projects/templates/template_autoscientists/STANDALONE.md) |
 | Code-driven computational research | [`template_code_project`](../../projects/templates/template_code_project/) | [`STANDALONE.md`](../../projects/templates/template_code_project/STANDALONE.md) |
+| Exploratory data analysis notebook over a tested library | [`template_eda_notebook`](../../projects/templates/template_eda_notebook/) | [`STANDALONE.md`](../../projects/templates/template_eda_notebook/STANDALONE.md) |
 | Analogical manuscript composition with mega-madlib token injection | [`template_gold_refinement`](../../projects/templates/template_gold_refinement/) | [`AGENTS.md`](../../projects/templates/template_gold_refinement/AGENTS.md) |
+| Reproducible literature meta-analysis (multi-engine retrieval, de-dup, bibliometrics) | [`template_literature_meta_analysis`](../../projects/templates/template_literature_meta_analysis/) | [`STANDALONE.md`](../../projects/templates/template_literature_meta_analysis/STANDALONE.md) |
 | Conditional token-injection manuscripts | [`template_madlib`](../../projects/templates/template_madlib/) | [`STANDALONE.md`](../../projects/templates/template_madlib/STANDALONE.md) |
+| Controlled-method specification DSL with staged validation gates | [`template_methods_paper`](../../projects/templates/template_methods_paper/) | [`STANDALONE.md`](../../projects/templates/template_methods_paper/STANDALONE.md) |
 | Data-driven newspaper or print-layout engine | [`template_newspaper`](../../projects/templates/template_newspaper/) | [`STANDALONE.md`](../../projects/templates/template_newspaper/STANDALONE.md) |
 | Manuscript-focused prose review | [`template_prose_project`](../../projects/templates/template_prose_project/) | [`STANDALONE.md`](../../projects/templates/template_prose_project/STANDALONE.md) |
+| Literature-search -> BibTeX -> LLM-synthesis pipeline | [`template_search_project`](../../projects/templates/template_search_project/) | [`STANDALONE.md`](../../projects/templates/template_search_project/STANDALONE.md) |
 | Self-improvement-agent fixture/live harness | [`template_sia`](../../projects/templates/template_sia/) | [`STANDALONE.md`](../../projects/templates/template_sia/STANDALONE.md) |
+| Full-page illustrated storybook PDF | [`template_storybook`](../../projects/templates/template_storybook/) | [`STANDALONE.md`](../../projects/templates/template_storybook/STANDALONE.md) |
 | Meta-research over a template-like checkout | [`template_template`](../../projects/templates/template_template/) | [`STANDALONE.md`](../../projects/templates/template_template/STANDALONE.md) |
 | Book-length fillable scaffold | [`template_textbook`](../../projects/templates/template_textbook/) | [`STANDALONE.md`](../../projects/templates/template_textbook/STANDALONE.md) |
 

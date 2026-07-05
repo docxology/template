@@ -11,6 +11,7 @@ Discovered by `infrastructure.skills` via root `docs/prompts` in `DEFAULT_SKILL_
 | Directory | Skill `name` | Purpose |
 | --- | --- | --- |
 | [`SKILL.md`](SKILL.md) | `template-workflows` | Hub router |
+| [`startup/`](startup/SKILL.md) | `template-startup` | Fresh-clone install, core-pipeline run, structured PASS/FAIL validation |
 | [`deep-research/`](deep-research/SKILL.md) | `template-deep-research` | Research intake, source discovery, fact-checking |
 | [`academic-paper/`](academic-paper/SKILL.md) | `template-academic-paper` | Paper planning, drafting, revision, formatting |
 | [`academic-paper-reviewer/`](academic-paper-reviewer/SKILL.md) | `template-academic-paper-reviewer` | Read-only peer review and re-review |

@@ -22,8 +22,8 @@ Type checking and linting are blocking in CI and in the default pre-commit hook 
 
 Install hooks after `uv sync` so local runs mirror CI:
 
-- **Commit stage** (`pre-commit`): Ruff + mypy on public CI source paths (blocking)
-- **Pre-push stage** (`pre-push`): no-mocks check, short pytest smoke, Bandit (`bandit.yaml`), skills manifest + `__all__` export audit
+- **Commit stage** (`pre-commit`): Ruff + mypy on public CI source paths, plus the skill-reachability gate (blocking)
+- **Pre-push stage** (`pre-push`): generated-artifact + tracked-project guards, no-mocks check, short pytest smoke, docs-drift + public-AGENTS contract guard, Bandit (`bandit.yaml`), skills manifest, operations manifest, and `__all__` export audit
 
 ### Setup
 
@@ -49,12 +49,16 @@ See [`.pre-commit-config.yaml`](../../.pre-commit-config.yaml) for the authorita
 
 | Hook | Stage | Notes |
 |------|-------|-------|
-| `ruff` / `ruff-format` | pre-commit | Public CI source paths |
-| `mypy` | pre-commit | Public CI source paths |
-| `verify-no-mocks` | pre-push | Blocks mock imports in tests |
-| `pre-push-quick` | pre-push | Short pytest smoke + tracked-project guards |
-| `bandit` | pre-push | Security scan per `bandit.yaml` |
-| `skills-check` / `all-exports-check` | pre-push | Manifest and re-export hygiene |
+| `ruff-ci` | pre-commit, manual | `ruff check --fix` + `ruff format` on public CI source paths |
+| `mypy-ci` | pre-commit, manual | mypy on public CI source paths |
+| `skill-reachability-check` | pre-commit, manual | Docs front-door links + generated skills-index completeness |
+| `pre-push-quick` | pre-push, manual | Generated-artifact + tracked-project guards, `verify_no_mocks.py`, and `tests/infra_tests/git_hook_smoke/` pytest smoke |
+| `docs-contract-guard` | pre-push, manual | `check_template_drift.py --strict` + public-`AGENTS.md` no-personal-memory contract test |
+| `bandit-quick` | pre-push, manual | Bandit MEDIUM+ per `bandit.yaml` (mirrors the CI `security` job) |
+| `skills-check` | pre-push, manual | Skill manifest (`.cursor/skill_manifest.json`) freshness |
+| `operations-check` | pre-push, manual | Operations manifest (`.cursor/operations_manifest.json`) freshness |
+| `all-exports-check` | pre-push, manual | `__all__` re-export audit |
+| `bandit-low` | manual only | Strict LOW+MEDIUM+HIGH Bandit pass against the `bandit.yaml` allow-list |
 
 ## Coverage Gates
 

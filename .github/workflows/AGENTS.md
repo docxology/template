@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>14 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
+    W --> CI[ci.yml<br/>15 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
 
@@ -39,7 +39,7 @@ flowchart LR
 
 ### Job Graph
 
-`health` depends on **`lint`** only (informational). `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+`health` depends on **`lint`** only (informational). `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
 
 ```mermaid
 flowchart TB
@@ -53,6 +53,7 @@ flowchart TB
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
+    VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>per-project: 12 exemplars × py3.10/py3.12 = 24 ubuntu jobs<br/>01_run_tests.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
@@ -66,7 +67,7 @@ flowchart TB
     classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef info fill:#334155,stroke:#0f172a,color:#fff
     class DET,DETP,LINT,VNM gate
-    class TI,TP,FL,SHW matrix
+    class TI,TR,TP,FL,SHW matrix
     class VAL,SEC,DL,PERF,ACTLINT terminal
     class HEALTH info
 ```
@@ -127,6 +128,13 @@ action — not each job.
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
 - **Codecov upload:** On Python 3.12 / ubuntu-latest only to avoid duplicate reports
+
+#### 4b. Regression Tier — claim-binding pins (`test-regression`)
+
+- **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
+- **Sync:** `uv sync --group rendering --group monitoring`.
+- **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
+- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job.
 
 #### 5. Project Tests (`test-project`)
 

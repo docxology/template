@@ -568,7 +568,7 @@ vim projects/templates/template_code_project/scripts/my_figure.py
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # 6. View result (top-level output after copy outputs)
-open output/template_code_project/pdf/template_code_project_combined.pdf
+open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 **Advanced workflow with validation**:

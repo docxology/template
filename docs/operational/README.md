@@ -11,6 +11,8 @@
 | [`build/`](build/) | Build system, dependencies, CI/CD | [README.md](build/README.md), build-system.md, dependency-management.md, ci-cd-integration.md |
 | [`config/`](config/) | Configuration, checkpoints, performance | configuration.md, checkpoint-resume.md, performance-optimization.md |
 | [`logging/`](logging/) | Logging system (Python, Bash, patterns) | README.md (full guide), python-logging.md, bash-logging.md |
+| [`performance/`](performance/) | Benchmarking | README.md, benchmarking-guide.md |
+| [`scripts/`](scripts/) | Operational scripts | rotate-logs.sh |
 | [`troubleshooting/`](troubleshooting/) | Issue resolution and recovery | README.md (flowchart), common-errors.md, llm-review.md |
 
 ## Top-Level Guides
@@ -31,7 +33,8 @@
 | Configure logging | [logging/](logging/) |
 | System configuration | [config/configuration.md](config/configuration.md) |
 | Resume a failed pipeline | [config/checkpoint-resume.md](config/checkpoint-resume.md) |
-| Optimize performance | [config/performance-optimization.md](config/performance-optimization.md) |
+| Optimize performance (config knobs) | [config/performance-optimization.md](config/performance-optimization.md) |
+| Benchmark a function/module | [performance/benchmarking-guide.md](performance/benchmarking-guide.md) |
 | First time setup? | [config-wizard.md](config-wizard.md) · [CLAUDE.md](../../CLAUDE.md) |
 | Deploy with Docker? | [docker.md](docker.md) |
 | Incident response? | [runbook.md](runbook.md) |

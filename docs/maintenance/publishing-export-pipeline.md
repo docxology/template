@@ -98,13 +98,20 @@ artifacts. Each stage writes to `projects/<name>/output/`:
 | Stage 10: EPUB/MOBI | `output/ebook/` | `<name>.epub`, `<name>.mobi` |
 | Stage 11: Metadata package | `output/metadata/` | `onix.xml`, `metadata.json`, `content.opf` |
 
-Stage 10 and Stage 11 are opt-in stages (tagged `bundle` and `archival`
-respectively). Invoke them explicitly:
+Stage 10 and Stage 11 are opt-in stages (tagged `ebook` and `metadata`
+respectively; both are filtered out of default pipeline runs — see
+`infrastructure/core/pipeline/pipeline.yaml`). Invoke them explicitly:
 
 ```bash
-uv run python scripts/08_executable_bundle.py --project templates/<name>
-uv run python scripts/09_archive_publication.py --project templates/<name>
+uv run python scripts/11_ebook_generation.py --project templates/<name>
+uv run python scripts/12_metadata_package.py --project templates/<name>
 ```
+
+(Stage 12 Executable Bundle and Stage 13 Archival Publication — tagged
+`bundle` and `archival` — are the separate `08_executable_bundle.py` /
+`09_archive_publication.py` scripts; see
+[`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) and
+[`archival-targets.md`](archival-targets.md).)
 
 ### scripts/publish/export_for_publishing.py
 
@@ -275,7 +282,7 @@ The pipeline has not been run, or outputs were cleaned. Run:
 
 For EPUB/MOBI (Stage 10):
 ```bash
-uv run python scripts/08_executable_bundle.py --project templates/<name>
+uv run python scripts/11_ebook_generation.py --project templates/<name>
 ```
 
 ### "Project not found: 'my_book'"
@@ -331,7 +338,7 @@ uv run docpub distribute --platform gumroad --update
 
 - [`scripts/publish/export_for_publishing.py`](../../scripts/publish/export_for_publishing.py) — the bridge script
 - [`scripts/publish/README.md`](../../scripts/publish/README.md) — quick-start guide
-- [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) — Stage 10 design
-- [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 11)
+- [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) — Stage 12 design (file kept its original name)
+- [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 13)
 - [`private-projects-repo.md`](private-projects-repo.md) — private-projects sidecar contract
 - [`infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md) — publishing infrastructure

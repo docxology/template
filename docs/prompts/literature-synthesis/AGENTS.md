@@ -9,7 +9,7 @@ Agent skill `template-literature-synthesis` — LLM prompt blocks for literature
 | File | Role |
 | --- | --- |
 | [`SKILL.md`](SKILL.md) | Routable workflow (canonical) |
-- [`references/`](references/) — progressive-disclosure checklists
+| [`references/`](references/) | Progressive-disclosure checklists |
 
 ## Verification
 

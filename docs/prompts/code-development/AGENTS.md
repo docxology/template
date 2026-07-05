@@ -9,7 +9,7 @@ Agent skill `template-code-development` — Standards-compliant code in infrastr
 | File | Role |
 | --- | --- |
 | [`SKILL.md`](SKILL.md) | Routable workflow (canonical) |
-- [`references/`](references/) — progressive-disclosure checklists
+| [`references/`](references/) | Progressive-disclosure checklists |
 
 ## Verification
 

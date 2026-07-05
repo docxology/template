@@ -54,7 +54,7 @@
 4. **View the result**
 
    ```bash
-   open output/template_code_project/pdf/01_abstract.pdf  # Individual section PDFs
+   open output/templates/template_code_project/pdf/01_abstract.pdf  # Individual section PDFs
    ```
 
 **Expected Result**: Professional PDF with your content formatted
@@ -646,7 +646,7 @@ def test_process_negative():
 2. **Or create `.env` file**
 
    ```bash
-   cp .env.template .env
+   cp infrastructure/config/.env.template .env
    vim .env
    ```
 
@@ -796,7 +796,9 @@ def test_process_negative():
 - [ ] Documentation updated
 - [ ] Thin orchestrator pattern followed
 - [ ] Commit messages clear
-- [ ] PR description **See Also**: [Contributing Guide](../development/contributing.md) | [Code of Conduct](../development/code-of-conduct.md)
+- [ ] PR description
+
+**See Also**: [Contributing Guide](../development/contributing.md) | [Code of Conduct](../development/code-of-conduct.md)
 
 ---
 

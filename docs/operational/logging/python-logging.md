@@ -56,8 +56,8 @@ with log_operation("Processing data", logger):
     process_data()
     # Automatically logs start, completion, and duration
 
-# Silent operation (no completion message)
-with log_operation_silent("Quick check", logger):
+# Silent operation (suppress the completion message, e.g. for a quick check)
+with log_operation("Quick check", logger, log_completion=False):
     quick_check()
 
 # Operation with spinner (for long-running operations)
@@ -89,7 +89,7 @@ def process_file(filename: str) -> bool:
 ## Utility Functions
 
 ```python
-from utils import log_header, log_progress, log_success
+from infrastructure.core.logging.utils import log_header, log_progress, log_success
 
 # Section headers
 log_header("STAGE 01: Setup", logger)
@@ -124,7 +124,7 @@ Output:
 
 ```python
 from pathlib import Path
-from utils import setup_logger
+from infrastructure.core.logging.utils import setup_logger
 
 log_file = Path("output/logs/build.log")
 logger = setup_logger(__name__, log_file=log_file)
@@ -179,8 +179,13 @@ export NO_EMOJI=1
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
-from utils import get_logger, log_header, log_success
+# Real pattern used by scripts/00_setup_environment.py and siblings:
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from scripts import ensure_repo_root_on_path  # noqa: E402
+
+ensure_repo_root_on_path()
+
+from infrastructure.core.logging.utils import get_logger, log_header, log_success  # noqa: E402
 
 logger = get_logger(__name__)
 
@@ -229,7 +234,7 @@ def process_file(file_path: Path) -> dict:
 
 ```python
 # Setup
-from utils import get_logger, log_operation, log_success
+from infrastructure.core.logging.utils import get_logger, log_operation, log_success
 logger = get_logger(__name__)
 
 # Levels

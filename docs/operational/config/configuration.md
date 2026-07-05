@@ -404,7 +404,3 @@ The registry is process-local. Tests should call
 
 
 
-
-
-
-

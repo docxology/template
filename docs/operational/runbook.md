@@ -16,16 +16,15 @@ This runbook defines standard operating procedures for maintaining the Research 
 
 ### System Status Check
 
-Run the pipeline help to verify the environment is functional, or launch the interactive menu:
+Run the pipeline help to confirm `uv`/Python resolve and the orchestrator CLI loads, or run the standalone health check for a fuller readiness signal:
 
 ```bash
-./run.sh --help
+./run.sh --help        # argparse usage: pipeline/multi/secure/menu/list-projects/link-projects/schema
+bash scripts/health-check.sh   # Python, uv, Ollama, disk space, repo structure — see Health Check Script below
 ```
 
-**Expected output:**
-- Python version and environment status
-- Ollama service status (indicator: `●` = running, `✗` = stopped)
-- Recent log locations (projects/*/output/logs/)
+**Expected output (`--help`):** argparse usage text listing the subcommands above; a non-zero exit or traceback means `uv`/Python/the orchestrator package is broken.
+**Expected output (`health-check.sh`):** a `✅`/`⚠️`/`❌` line per check (Python, uv, Ollama, disk space, Docker, repo structure), ending `=== All checks passed ===` on success.
 
 If Ollama is not running, start it:
 
@@ -216,40 +215,40 @@ Conduct a tabletop or partial recovery drill monthly to ensure procedures work.
 
 **Symptom:** Hermes agent is unresponsive, timeouts, or returns errors.
 
+Hermes is an external agent-skill-discovery tool this repo integrates with (see
+`.agents/skills/` per template, CLAUDE.md's "Discoverable per-template skills"
+section) — this repo does not ship a `template` CLI or a bundled Hermes
+doctor/restart command. Diagnose and restart Hermes using its own
+documentation/CLI; the steps below are limited to what this repo can inspect.
+
 **Remediation:**
 
 ```bash
 # 1. Check Hermes process status
 ps aux | grep -i hermes | grep -v grep
 
-# 2. Run the Hermes doctor tool to diagnose and repair
-template hermes doctor
+# 2. Check Hermes' own logs (path depends on your Hermes install)
+tail -50 ~/.hermes/logs/hermes.log
 
-# 3. If still unresponsive, restart Hermes
-template hermes restart
+# 3. Restart Hermes per its own documentation, then re-verify this repo's
+#    pipeline is unaffected (Hermes is not required for ./run.sh):
+./run.sh --help
 ```
 
 **Recovery flow:**
 
 ```mermaid
 flowchart TD
-    A[Hermes Unresponsive] --> B{Run template hermes doctor}
-    B --> C[Diagnosis Complete?]
-    C -->|Yes| D{Issue Identified?}
-    D -->|Config Error| E[Fix Configuration]
-    D -->|Stale Process| F[Kill & Restart]
-    D -->|Network Issue| G[Check Network/API]
-    E --> H[Restart Hermes]
-    F --> H
-    G --> H
-    H --> I[Verify with ./run.sh --help]
-    I --> J[✅ Resolved]
-```
-
-If the doctor tool fails, consult the logs:
-
-```bash
-tail -50 ~/.hermes/logs/hermes.log
+    A[Hermes Unresponsive] --> B[Check process + Hermes logs]
+    B --> C{Issue Identified?}
+    C -->|Config Error| D[Fix Hermes configuration]
+    C -->|Stale Process| E[Kill and restart via Hermes' own tooling]
+    C -->|Network Issue| F[Check Network/API]
+    D --> G[Restart Hermes]
+    E --> G
+    F --> G
+    G --> H[Verify this repo is unaffected: ./run.sh --help]
+    H --> I[Resolved]
 ```
 
 ### Port Conflicts
@@ -345,23 +344,18 @@ curl -s http://localhost:11434/api/tags | jq .models 2>/dev/null || echo "Ollama
 # Restart Ollama service
 pkill ollama
 ollama serve &
-
-# If using OpenRouter/Hermes proxy, check that endpoint
-curl -s http://localhost:8000/health || echo "Hermes proxy down"
 ```
 
-**Workaround:** Skip LLM stages and run core pipeline:
+**Workaround:** Skip LLM stages and run the core pipeline instead (no other
+env var disables LLM stages — `--core-only` is the supported switch):
 
 ```bash
 ./run.sh --core-only --project <name> --pipeline
 ```
 
-Or disable LLM workflows globally:
-
-```bash
-export FEP_LEAN_GAUSS_WORKFLOWS=0
-./run.sh --project template_code_project --pipeline
-```
+Note: `FEP_LEAN_GAUSS_WORKFLOWS` (set in `run.sh`) controls the OpenGauss/Lean
+session workflows, not LLM review/translation — do not use it as an LLM
+on/off switch.
 
 ---
 

@@ -259,14 +259,14 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 # - Final deliverables copied to output/
 # - No critical errors
 
-# 3. Verify outputs
+# 3. Verify outputs (output/ is keyed by the *qualified* project name)
 ls -la output/                    # Top-level deliverables
-ls -la output/template_code_project/pdf/template_code_project_combined.pdf
-ls -la output/template_code_project/slides/
-ls -la output/template_code_project/web/
+ls -la output/templates/template_code_project/pdf/template_code_project_combined.pdf
+ls -la output/templates/template_code_project/slides/
+ls -la output/templates/template_code_project/web/
 
 # 4. Open manuscript
-open output/template_code_project/pdf/template_code_project_combined.pdf
+open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 **Expected result:** Professional PDF manuscript with all content properly rendered.

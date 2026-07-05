@@ -34,7 +34,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>14 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
+    WF --> WF_CI[ci.yml<br/>15 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
 
@@ -55,7 +55,7 @@ flowchart TB
 
 **Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 
-**14 jobs total; 2 are conditional, gated by the `detect` job's outputs
+**15 jobs total; 2 are conditional, gated by the `detect` job's outputs
 (`needs.detect.outputs.*`) — NOT a job-level `hashFiles()` (that is invalid
 in a job `if:` and rejects the whole workflow at parse).**
 
@@ -69,12 +69,13 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
-| 9 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — 12 exemplars × 2 Python = 24 cells |
-| 10 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
-| 11 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
-| 12 | `security` | Security Scan | lint | 3.12 | ubuntu |
-| 13 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
-| 14 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
+| 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.12 | ubuntu |
+| 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — 12 exemplars × 2 Python = 24 cells |
+| 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
+| 12 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
+| 13 | `security` | Security Scan | lint | 3.12 | ubuntu |
+| 14 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
+| 15 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
 
 **Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), and **`scripts/check_tracked_projects.py`** — the **confidentiality guard** that fails CI if any project outside `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` is git-tracked (this is a public repo; confidential/rotating projects are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 

@@ -41,7 +41,7 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 | | |
 | --- | --- |
 | **Contract** | Static type checking of the public CI source paths from `infrastructure.project.public_scope`. Strict mode where feasible. Catches type errors before runtime without traversing local-only private symlinks. |
-| **Current implementation** | `mypy --strict` (community). Runs over the public CI source set returned by `uv run python -m infrastructure.project.public_scope source-paths` (do not hard-code a file count — it drifts as the tree grows). |
+| **Current implementation** | `mypy` (community) with a custom progressive-strictness config — **not** blanket `--strict`. Base config sets `disallow_untyped_defs = false`; specific modules (`infrastructure.core.health_check`, `infrastructure.core.exceptions`, `infrastructure.rendering.*`) opt into `disallow_untyped_defs = true`, while several `infrastructure.*` packages remain under `ignore_errors = true` pending narrowing (see `[tool.mypy.overrides]` in `pyproject.toml` for the current list). Runs over the public CI source set returned by `uv run python -m infrastructure.project.public_scope source-paths` (do not hard-code a file count — it drifts as the tree grows). |
 | **Configuration location** | `pyproject.toml` under `[tool.mypy]` |
 | **Possible successors** | `pyright`/`pylance` (Microsoft, faster but different inference rules), `ty` (Astral, ~2026, faster), `pyrefly` (Meta). |
 | **Migration path** | Type checkers DO NOT have perfectly compatible inference. Migration requires running both old and new for a transition period and fixing the delta in either inference or annotations. Allocate at least one focused day. Update `.pre-commit-config.yaml`, CI, and `CLAUDE.md`. |

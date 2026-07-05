@@ -26,4 +26,4 @@ If an academic text is found later, you can inspect its internal metadata struct
 
 ## See Also
 
-- **[Security Index](../security/README.md)** — Security policies and procedures
+- **[Security Index](README.md)** — Security policies and procedures

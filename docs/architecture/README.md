@@ -20,6 +20,7 @@ The `architecture/` directory contains detailed documentation about the system a
 | [`decision-tree.md`](decision-tree.md) | Decision tree for code placement | Developers |
 | [`migration-from-flat.md`](migration-from-flat.md) | Migration from a flat repo layout | Maintainers |
 | [`testing-strategy.md`](testing-strategy.md) | Testing strategy and coverage | Developers |
+| [`capability-surfaces.md`](capability-surfaces.md) | The agent-operable contract: discover, invoke, compose, verify | AI agents, developers |
 
 ## Quick Navigation
 
@@ -41,8 +42,4 @@ The `architecture/` directory contains detailed documentation about the system a
 
 - [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-
-
-
-
 

@@ -212,7 +212,7 @@ Add to `.env` or export in your CI environment. The `Dockerfile` already sets `M
 | `OLLAMA_HOST` | `http://localhost:11434` | Ollama server URL |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars sent to LLM (`0` = unlimited) |
 | `LLM_REVIEW_TIMEOUT` | `300` | Timeout per review in seconds |
-| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens per LLM response |
+| `LLM_LONG_MAX_TOKENS` | `16384` | Maximum tokens per LLM response |
 
 ---
 
@@ -229,11 +229,11 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama serve &
 
 # Pull a model
-ollama pull llama3.2
+ollama pull gemma3:4b
 
 # Then run LLM stages
-./run.sh --reviews
-./run.sh --translations
+uv run python scripts/06_llm_review.py --project template_code_project --reviews-only
+uv run python scripts/06_llm_review.py --project template_code_project --translations-only
 ```
 
 ---

@@ -10,7 +10,7 @@ For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-sh
 > the discovery predicate by itself. No infrastructure changes are needed for a
 > structurally valid project.
 >
-> **Typed-subfolder Lifecycle**: Projects live in typed subfolders under `projects/`: `projects/templates/` (the git-tracked public exemplars, rendered), `projects/active/` (hot-seat render set, symlinked from the private repo, rendered), and the non-rendered mirrors `projects/working/`, `projects/published/`, `projects/archive/`, and `projects/other/`. Only `projects/templates/*` and `projects/active/*` are discovered and rendered. See [_generated/COUNTS.md](../_generated/COUNTS.md).
+> **Typed-subfolder Lifecycle**: Projects live in typed subfolders under `projects/`: `projects/templates/` (the git-tracked public exemplars, rendered), `projects/active/` (hot-seat render set, symlinked from the private repo, rendered), and the non-rendered mirrors `projects/working/`, `projects/ongoing/` (long-lived, no publication target), `projects/published/`, `projects/archive/`, and `projects/other/`. Only `projects/templates/*` and `projects/active/*` are discovered and rendered. See [_generated/COUNTS.md](../_generated/COUNTS.md).
 >
 > **Decision memory**: Follow [`docs/rules/memory_and_decision_records.md`](../rules/memory_and_decision_records.md). Use `WHY:` comments for surprising local choices, project `TODO.md` / `ISA.md` for active plans and invariants, ADRs for structural template rules, generated docs for volatile counts/rosters, and negative-control tests for new verifier-like gates.
 

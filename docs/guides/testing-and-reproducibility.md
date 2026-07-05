@@ -622,7 +622,7 @@ Use the infrastructure validation module to verify output integrity programmatic
 from infrastructure.validation import verify_output_integrity
 from pathlib import Path
 
-report = verify_output_integrity(Path("output/template_code_project"))
+report = verify_output_integrity(Path("output/templates/template_code_project"))
 if report.overall_integrity:
     print("All integrity checks passed")
 else:

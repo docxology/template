@@ -19,6 +19,11 @@ The `development/` directory contains documentation for contributing to the proj
 | [`testing-guide.md`](testing/testing-guide.md) | Testing framework guide | Developers |
 | [`testing-with-credentials.md`](testing/testing-with-credentials.md) | Testing with external service credentials | Developers |
 | [`coverage-gaps.md`](coverage-gaps.md) | Test coverage gap analysis | Developers |
+| [`contribution-map.md`](contribution-map.md) | Pre-contribution overlap check and shape routing | Contributors |
+| [`optional-dependencies.md`](optional-dependencies.md) | Optional dependency capability matrix | Developers |
+| [`no-mocks-http-testing.md`](no-mocks-http-testing.md) | No-mocks HTTP testing with `pytest-httpserver` | Developers |
+| [`code-review-checklist.md`](code-review-checklist.md) | Eight-criterion review checklist | Reviewers |
+| [`validation_gates.md`](validation_gates.md) | Validation gate stages and enforcement | Developers |
 
 ## Quick Navigation
 

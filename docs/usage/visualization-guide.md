@@ -95,6 +95,15 @@ ref = manager.generate_reference("fig:convergence")
 # Returns: \ref{fig:convergence}
 ```
 
+**Caveat:** `FigureManager.generate_reference()` and `generate_latex_figure_block()`
+emit raw LaTeX (`\ref{}`, `\begin{figure}`), not the Pandoc bracket-cite
+syntax (`[@fig:name]`, `![caption](path){#fig:name}`) that the actual render
+pipeline and every exemplar manuscript use (see
+[Manuscript Semantics](../guides/manuscript-semantics.md)). This utility is
+not wired into the default pipeline — do not use its output directly in
+manuscript source; write `[@fig:name]` and `![...](path){#fig:name}` by hand
+instead.
+
 ## Best Practices
 
 1. **Use consistent styling** - Apply publication style to all figures

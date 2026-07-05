@@ -10,6 +10,7 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 
 | Say something like… | Skill |
 | --- | --- |
+| "Set up the repo from a fresh clone" | [startup/SKILL.md](startup/SKILL.md) |
 | "Pipeline failed at PDF render for template_code_project" | [pipeline-debugging/SKILL.md](pipeline-debugging/SKILL.md) |
 | "Full repo audit for active projects" | [comprehensive-assessment/SKILL.md](comprehensive-assessment/SKILL.md) |
 | "Research this topic and build a verified corpus" | [deep-research/SKILL.md](deep-research/SKILL.md) |
@@ -59,6 +60,7 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 | --- | --- |
 | [infrastructure-module/](infrastructure-module/SKILL.md) | New `infrastructure/*` packages |
 | [documentation-creation/](documentation-creation/SKILL.md) | AGENTS.md / README.md for a directory |
+| [startup/](startup/SKILL.md) | Fresh-clone install + core-pipeline validation, structured PASS/FAIL |
 | [validation-quality/](validation-quality/SKILL.md) | Validation CLI and gates |
 | [comprehensive-assessment/](comprehensive-assessment/SKILL.md) | Wide audit |
 | [reproducibility-audit/](reproducibility-audit/SKILL.md) | Determinism before release |

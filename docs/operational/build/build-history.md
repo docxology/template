@@ -53,11 +53,13 @@ The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only`
 | ----- | ------ | ----- |
 | 0 | built-in clean | pre-step |
 | 1 | `00_setup_environment.py` | Environment setup |
-| 2 | `01_run_tests.py` | Infrastructure + project tests |
-| 3 | `02_run_analysis.py` | Project analysis |
-| 4 | `03_render_pdf.py` | PDF rendering |
-| 5 | `04_validate_output.py` | Output validation |
-| 6–7 | `06_llm_review.py` | LLM review / translations (optional) |
+| 2 | `01_run_tests.py --infra-only` | Infrastructure tests |
+| 3 | `01_run_tests.py --project-only` | Project tests |
+| 4 | `02_run_analysis.py` | Project analysis |
+| 5 | `03_render_pdf.py` | PDF rendering |
+| 6 | `04_validate_output.py` | Output validation |
+| 7 | `06_llm_review.py --reviews-only` | LLM Scientific Review (optional) |
+| 8 | `06_llm_review.py --translations-only` | LLM Translations (optional) |
 | 9 | `05_copy_outputs.py` | Copy deliverables |
 | — | `07_generate_executive_report.py` | Multi-project only (not a numbered DAG stage) |
 

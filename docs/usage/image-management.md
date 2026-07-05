@@ -4,6 +4,14 @@
 
 This guide covers automatic image insertion, captioning, and cross-referencing in markdown files.
 
+**Caveat:** `ImageManager`/`FigureManager`/`MarkdownIntegration` (below) generate
+raw LaTeX (`\ref{}`, `\begin{figure}`) and are not wired into the default
+render pipeline, which uses Pandoc image syntax (`![caption](path){#fig:name}`)
+and bracket-cite cross-references (`[@fig:name]`) exclusively — see
+[Manuscript Semantics](../guides/manuscript-semantics.md). Write manuscript
+figures and references by hand in the Pandoc form; treat this module as a
+legacy utility, not the manuscript-authoring convention.
+
 ## Image Manager
 
 The `ImageManager` class handles automatic insertion of figures into markdown files:
@@ -137,7 +145,9 @@ errors = image_manager.validate_figures(markdown_file)
 
 **Symptom**: Figures render but wrong location in PDF
 
-**Solution**: Ensure relative paths are correct - use `output/figures/` not `../output/figures/`
+**Solution**: Ensure relative paths are correct — manuscript source paths are
+relative to `manuscript/`, so use `../output/figures/` not `output/figures/`
+(see [Manuscript Semantics](../guides/manuscript-semantics.md)).
 
 ## See Also
 

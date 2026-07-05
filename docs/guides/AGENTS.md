@@ -8,6 +8,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 
 | File | Skill Levels | Audience |
 |------|-------------|----------|
+| `startup-and-setup.md` | Levels 1-3 | Copy-pasteable install + validation procedure (humans and agents) |
 | `getting-started.md` | Levels 1-3 | New users and content creators |
 | `figures-and-analysis.md` | Levels 4-6 | Researchers adding figures and automation |
 | `testing-and-reproducibility.md` | Levels 7-9 | Developers implementing TDD workflow |
@@ -20,6 +21,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `llm-integration-guide.md` | Levels 11-12 | AI-assisted research: Ollama setup, LLM review, templates, programmatic usage |
 | `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX CLI; APA/MLA helpers) |
 | `secure-research-guide.md` | Level 11 | PDF steganography: watermarks, QR codes, SHA-256 hashing, provenance |
+| `zenodo-doi-strategy.md` | Levels 11-12 | Concept vs version DOI strategy for repeat Zenodo releases |
 | `fork-an-exemplar.md` | All levels | Fork-readiness walkthrough for canonical exemplars |
 | `literature-workflow-guide.md` | Levels 7-12 | Literature search → references workflow |
 | `manuscript-semantics.md` | All levels | Canonical manuscript semantics & syntax |

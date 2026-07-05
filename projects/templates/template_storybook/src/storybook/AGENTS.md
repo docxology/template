@@ -2,6 +2,8 @@
 
 This package owns the storybook exemplar's domain logic.
 
+- `models.py` declares the frozen dataclasses shared across the package:
+  `Character`, `PageSpec`, `StorybookSpec`, `RenderResult`.
 - `characters.py` validates and constructs symbolic shape-family characters.
 - `story.py` loads `content/story.yaml` and produces manifest metadata.
 - `illustration.py` renders full-page raster scenes and text overlays.

@@ -166,6 +166,26 @@ def render_menu(current_project: str) -> str:
     lines.append(
         "       use  p  to switch project  ·  i  for current name  ·  q  to quit.",
     )
+    lines.append("")
+
+    # Opt-in workflows — not reachable via a menu key; invoked directly.
+    lines.append(_section_header("OTHER WORKFLOWS", "opt-in, run directly (not in this menu)"))
+    lines.append("")
+    lines.append("  Secure + watermark  | ./secure_run.sh --project <name>            (steganography PDF)")
+    lines.append("  Steganography only  | ./secure_run.sh --steganography-only        (re-watermark, no re-render)")
+    lines.append("  Ebook formats       | uv run python scripts/11_ebook_generation.py --project <name>")
+    lines.append("  Metadata package    | uv run python scripts/12_metadata_package.py --project <name>")
+    lines.append("  Executable bundle   | uv run python scripts/08_executable_bundle.py --project <name>")
+    lines.append(
+        "  Archival deposit    | uv run python scripts/09_archive_publication.py --project <name>  (dry-run by default)"
+    )
+    lines.append(
+        "  Full release        | uv run python scripts/publish_project_release.py --project <name> --repo owner/repo"
+    )
+    lines.append("  Credential check    | uv run python -m infrastructure.publishing.credential_check --env-file .env")
+    lines.append("  Reproducible matrix | uv run python scripts/run_matrix.py                (reads run.config)")
+    lines.append("  Repro bundle        | uv run python scripts/10_repro_bundle.py build <name>")
+    lines.append("  See docs/guides/publishing-guide.md and docs/maintenance/archival-targets.md for details.")
     return "\n".join(lines)
 
 

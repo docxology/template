@@ -28,8 +28,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |
 | `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers |
-| `archival.py` | Backwards-compat shim — re-exports `archival/` subpackage surface (Stage 11) |
-| `executable_bundle.py` | Stage 10 executable bundle |
+| `executable_bundle.py` | Stage 12 executable bundle |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` — central adapter registry |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results` — read-only, non-destructive verification that publishing credentials authenticate |
@@ -45,7 +44,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | [`arxiv/`](arxiv/) | Local arXiv tarball preparation — `prepare_arxiv_submission` |
 | [`pypi/`](pypi/) | PyPI / TestPyPI distribution — `PyPIAdapter`, `build_dist`, `upload_dist`, `check_dist`, `verify_install` |
 | [`static_site/`](static_site/) | Static-site hosting adapters — `GitHubPagesAdapter`, `CloudflarePagesAdapter`, `NetlifyAdapter`, `get_adapter()` |
-| [`archival/`](archival/) | Multi-target long-horizon archival providers — `ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider` (proper subpackage; flat `archival.py` retained for backwards compat) |
+| [`archival/`](archival/) | Multi-target long-horizon archival providers — `ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider` (proper subpackage; the flat `archival.py` shim was removed once it became the sole source of truth) |
 
 ### pypi/ — PyPI / TestPyPI publishing
 
@@ -115,7 +114,7 @@ print(result.status, result.url)
 
 ### archival/ — Multi-target archival subpackage
 
-`infrastructure.publishing.archival` is now a proper subpackage (previously a single flat file). The flat `archival.py` at the package root is retained as a backwards-compatible shim that re-exports the same public surface.
+`infrastructure.publishing.archival` is now a proper subpackage (previously a single flat file). The flat `archival.py` shim at the package root has been removed; `import infrastructure.publishing.archival` resolves directly to the package.
 
 | Symbol | Module | Role |
 | --- | --- | --- |
@@ -221,7 +220,7 @@ CLI flags: `--project` (required), `--config`, `--readme`, `--write`, `--check`,
 
 | Symbol | Role |
 | --- | --- |
-| `PROBES` | Probe catalogue (`PlatformProbe` tuple): github, huggingface_hub, osf, ipfs_pinata, zenodo, netlify, cloudflare_pages, plus pypi (no endpoint) |
+| `PROBES` | Probe catalogue (`PlatformProbe` tuple): github, huggingface_hub, osf, ipfs_pinata, zenodo, netlify, cloudflare_pages, gumroad, leanpub, stripe, plus pypi (no endpoint) |
 | `run_probe(probe, env, *, override_base=None)` | Probe one platform → `ProbeResult`; `override_base` redirects scheme+host for tests |
 | `check_all(env=None, *, only=None, override_base=None)` | Probe every catalogued platform with credentials present; `env` defaults to `os.environ` |
 | `format_results(results)` | Human-readable summary table |
@@ -260,8 +259,8 @@ from infrastructure.publishing.upload_runner import UploadTargets, run_uploads, 
 
 targets = UploadTargets(
     project_root=Path("projects/templates/template_gold_refinement"),
-    pdf=Path("output/template_gold_refinement/pdf/template_gold_refinement_combined.pdf"),
-    web_dir=Path("output/template_gold_refinement/web"),
+    pdf=Path("output/templates/template_gold_refinement/pdf/template_gold_refinement_combined.pdf"),
+    web_dir=Path("output/templates/template_gold_refinement/web"),
     hf_repo_id="ActiveInference/template_gold_refinement",
     github_repo="owner/template_gold_refinement",
     osf_title="Gold Refinement",
@@ -276,7 +275,6 @@ print(run.mode, run.ok, run.results)
 | --- | --- |
 | `platforms.py` | Re-exports `publish_to_zenodo`, `create_github_release`, `prepare_arxiv_submission` |
 | `api.py` | Re-exports `ZenodoClient`, `ZenodoConfig`, `DepositionResult`, `REQUEST_TIMEOUT` |
-| `archival.py` | Re-exports the `archival/` subpackage public surface |
 | `pypi_release.py` | Re-exports `run_test_pypi_release` from `pypi/` |
 
 Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code. Shims are retained intentionally so existing imports and tests keep working; do not add logic to shim modules.
@@ -293,7 +291,6 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `huggingface/` | `HuggingFaceHubAdapter`, `HuggingFaceConfig`, `HuggingFaceResult`, `HFRepoType` | `HUGGINGFACE_TOKEN` / `HF_TOKEN` |
 | `osf/` | `OSFAdapter`, `OSFConfig`, `OSFResult` | `OSF_TOKEN` |
 | `archival/` | `archive_publication`, `load_credentials`, `ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider` | `ZENODO_API_TOKEN`, `PINATA_JWT`, `WEB3_STORAGE_TOKEN` |
-| `archival.py` | backwards-compat shim — same surface as `archival/` above | same as `archival/` |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms`, `get_platform`, `first_class_platforms`, `documented_platforms`, `PublishingTier`, `PlatformInfo` | — |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current`, `PublishingStatusReport`, `PlatformStatus`, `PublicationState` | — (reads `manuscript/config.yaml`) |
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results`, `PlatformProbe`, `ProbeResult` | per-platform tokens (read-only probes) |
@@ -474,7 +471,7 @@ cross_links = DepositCrossLinks(
 )
 description = build_deposit_description(
     abstract_source=Path("projects/templates/template_prose_project/manuscript/00_abstract.md"),
-    variables_path=Path("output/template_prose_project/data/manuscript_variables.json"),
+    variables_path=Path("output/templates/template_prose_project/data/manuscript_variables.json"),
     cross_links=cross_links,
     override_text=None,  # or publication.zenodo_description from config
 )

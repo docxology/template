@@ -16,6 +16,7 @@ Technical specification for the template project's source code package.
 | `figure_pipeline_stages.py` | Pipeline DAG PNG | `generate_pipeline_stages` |
 | `figure_module_inventory.py` | Module inventory bar chart | `generate_module_inventory` |
 | `figure_comparative_matrix.py` | Comparative matrix data + PNG | `comparative_feature_matrix_data`, `generate_comparative_feature_matrix` |
+| `paths.py` | Repo-root discovery for thin scripts | `locate_repo_root` |
 
 ## Data Classes
 

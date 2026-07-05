@@ -59,7 +59,7 @@ Failure to disclose makes this feature a surveillance tool. **Don't do that.** T
 - **Probably survives:** PDF/A conversion, font subsetting, simple metadata-strip tools that target obvious metadata fields (provenance is also embedded in less-obvious places)
 - **Does not reliably survive:** print-to-PDF, Ghostscript re-rendering, OCR + retypesetting, screenshot-based copying, deliberate metadata sanitization with a tool designed for that purpose, conversion to a different format (HTML, EPUB, etc.) and back
 
-If you need robustness against the second list, you have a different problem and this is not the right tool. Consider claim-level cryptographic provenance instead (the long-term direction this repo is moving in — see Stage 10 design at [`docs/maintenance/stage-10-executable-bundle.md`](../../docs/maintenance/stage-10-executable-bundle.md)).
+If you need robustness against the second list, you have a different problem and this is not the right tool. Consider claim-level cryptographic provenance instead (the long-term direction this repo is moving in — see the Stage 12 executable-bundle design at [`docs/maintenance/stage-10-executable-bundle.md`](../../docs/maintenance/stage-10-executable-bundle.md)).
 
 ## Cryptographic primitives
 

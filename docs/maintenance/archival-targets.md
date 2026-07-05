@@ -52,9 +52,10 @@ The current publishing pipeline produces some of these; the rest are the gap thi
 
 ## Implementation
 
-The code lives at `infrastructure/publishing/archival.py` (driven by the
-opt-in Stage 11 wrapper `scripts/09_archive_publication.py`). The public entry
-point is `archive_publication()`:
+The code lives at `infrastructure/publishing/archival/` (`providers.py`,
+`orchestrate.py`, `models.py`; driven by the opt-in Stage 13 wrapper
+`scripts/09_archive_publication.py`). The public entry point is
+`archive_publication()`:
 
 ```python
 def archive_publication(
@@ -127,8 +128,8 @@ The verification step is part of `STATUS.md` row "Publishing" — refresh quarte
 
 ## Status
 
-Implemented as the opt-in Stage 11 archival path. `archive_publication()` and
-its provider classes live in `infrastructure/publishing/archival.py`; invoke via
+Implemented as the opt-in Stage 13 archival path. `archive_publication()` and
+its provider classes live in `infrastructure/publishing/archival/`; invoke via
 `scripts/09_archive_publication.py` (dry-run by default — pass `--commit` plus
 `--providers` for real deposits; see the CLAUDE.md quick-reference). See
 [`MAINTAINERS.md`](../../MAINTAINERS.md) for the `infrastructure/publishing/` owner.

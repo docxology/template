@@ -33,3 +33,9 @@ Do not introduce cycles across these layers.
 | `visualization/figure_runner.py` | `04_generate_figures.py` | Figure generation and registry writing |
 | `manuscript/variables.py` | `05_inject_variables.py` | Token computation and manuscript hydration |
 | `literature/fulltext_assessment.py` | `06_fulltext_assessment.py` | Full-text availability report |
+
+## Support Modules
+
+| Module | Used by | Role |
+| --- | --- | --- |
+| `config_loader.py` | `literature/search_runner.py`, `knowledge_graph/kg_runner.py` | YAML config loading (`load_search_config`, `load_kg_config`) shared across runners |

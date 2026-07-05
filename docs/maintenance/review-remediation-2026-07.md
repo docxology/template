@@ -97,6 +97,9 @@ regress to "N/A μs".
 
 ## Open — High
 
+> R1 was shipped in the second pass above; retained for provenance. Nothing
+> in this section is currently open.
+
 ### R1 · Wire the claim-binding regression tier into CI — ✅ SHIPPED
 The 15-exemplar / 55-test regression tier is the repo's anti-fabrication
 harness, but no CI job or pre-push hook runs it — `docs/maintenance/regression-testing.md`
@@ -112,7 +115,12 @@ enforced. The infra CI job runs `tests/infra_tests/`, not `tests/`.
 
 ## Open — Medium
 
-### R2 · Scope skills discovery + `infrastructure.skills check` to tracked paths
+> All of R2–R9, R11, R12 were shipped in the second/third passes above (see
+> `## Shipped 2026-07-02` sections); the detailed entries below are retained
+> for provenance per that section's note. **R10 is the only item in this
+> repo-wide list still genuinely open.**
+
+### R2 · Scope skills discovery + `infrastructure.skills check` to tracked paths — ✅ SHIPPED
 `infrastructure/skills/discovery.py` `DEFAULT_SKILL_SEARCH_ROOTS` includes a
 bare `"projects"`, so `discover_skills` walks untracked local dirs
 (`projects/codomyrmex` → ~270 private skill names) — the documented
@@ -125,7 +133,7 @@ Same class as the drift-gate fix already shipped, but the fix regenerates
   `python -m infrastructure.skills check` exits 0 and the manifest contains
   zero non-tracked skill names (`git ls-files` intersection).
 
-### R3 · Give the `.agents/skills` exemplar lane gate coverage
+### R3 · Give the `.agents/skills` exemplar lane gate coverage — ✅ SHIPPED
 The 15 `projects/templates/*/.agents/skills/*/SKILL.md` (the Hermes/agentskills
 lane) are excluded from every discovery/validation surface; yesterday's
 YAML-quoting regression in one of them would not have been caught. Do **not**
@@ -135,7 +143,7 @@ intentional, CLAUDE.md:159-166) — add a dedicated validation test.
   frontmatter and asserts required keys + that referenced commands exist; it
   fails when a SKILL.md frontmatter is malformed.
 
-### R4 · Bandit `exclude_dirs` denylist → tracked-scope
+### R4 · Bandit `exclude_dirs` denylist → tracked-scope — ✅ SHIPPED
 `bandit.yaml` `exclude_dirs` is a hand-maintained name denylist that has already
 drifted from `NON_RENDERED_SUBDIRS` (`projects/ongoing` missing), so the
 pre-push security gate scans thousands of local-only files.
@@ -146,7 +154,7 @@ pre-push security gate scans thousands of local-only files.
   reports 0 findings from that project; `exclude_dirs` matches
   `NON_RENDERED_SUBDIRS` or the denylist is removed in favor of a tracked scope.
 
-### R5 · mypy strict-typing debt (make the config honest and shrink it)
+### R5 · mypy strict-typing debt (make the config honest and shrink it) — ✅ SHIPPED
 `pyproject.toml` sets `disallow_untyped_defs=false` globally and `ignore_errors=true`
 for 8 `infrastructure.*` packages (≈46% of infra files); `mypy --strict infrastructure`
 reports 5 real errors in 3 files. STATUS.md was corrected this session to stop
@@ -155,7 +163,7 @@ claiming `--strict`; the remaining work is to burn down the overrides.
   `ignore_errors` list with `mypy` (CI config) still green; STATUS.md reflects
   the reduced override count.
 
-### R6 · De-duplicate verbatim helper bodies in infrastructure
+### R6 · De-duplicate verbatim helper bodies in infrastructure — ✅ SHIPPED
 AST-hash scan found `_get_session` ×5 and `_iter_files` ×3 in publishing
 adapters, 4 numeric-cell helpers copied between `evidence_registry.py` and
 `evidence_registry_collectors.py`, plus `_rel` ×3, `_read_json_object` ×3,
@@ -164,7 +172,7 @@ adapters, 4 numeric-cell helpers copied between `evidence_registry.py` and
   AST-hash duplicate scan reports 0 for those names; all touched-module tests
   green and coverage floors held.
 
-### R7 · Operations catalog + MCP reach single-file CLIs
+### R7 · Operations catalog + MCP reach single-file CLIs — ✅ SHIPPED
 `operation_registry` treats a package as invocable iff it has `__main__.py`, so
 documented single-file CLIs (`infrastructure.core.health`,
 `infrastructure.project.public_scope`, `documentation.generate_glossary_cli`,
@@ -175,7 +183,7 @@ claim.
   `invoke_cli` accepts them; the capability-surfaces doc's reachability claim is
   true by probe.
 
-### R8 · arXiv submission tarball completeness (or honest naming)
+### R8 · arXiv submission tarball completeness (or honest naming) — ✅ SHIPPED
 `prepare_arxiv_submission` globs `.tex/.bib/.cls/.bst` from `manuscript/`, but
 template manuscripts are Markdown compiled to `.tex` at render time, so the
 tarball ships only `references.bib`. Not wired into any pipeline (tests only),
@@ -185,7 +193,7 @@ so nothing auto-ships it — but the README presents it as upload-ready.
   "references-only" artifact; a test asserts the tarball contents match the
   documented promise.
 
-### R9 · Repro bundle declares real outputs for all 15 exemplars
+### R9 · Repro bundle declares real outputs for all 15 exemplars — ✅ SHIPPED
 `scripts/10_repro_bundle.py build` yields a manifest with **no** `output-artifact`
 entries for 5/15 exemplars (`template_active_inference`,
 `template_literature_meta_analysis`, and 3 others) — it "verifies" zero
@@ -202,7 +210,7 @@ byte-identically.
   byte-identical (timings moved out of the tracked file, or timestamp pinned via
   the existing deterministic helper à la steganography).
 
-### R11 · OSF uploader idempotency (real-publish hardening)
+### R11 · OSF uploader idempotency (real-publish hardening) — ✅ SHIPPED
 `upload_osf` builds `OSFConfig(title=...)` with no `node_id`, so every
 `--commit` re-run creates a duplicate OSF node. (Bounded to the opt-in publish
 path; safe-fix but deferred to the publishing-hardening batch.)
@@ -210,7 +218,7 @@ path; safe-fix but deferred to the publishing-hardening batch.)
   `upload_osf` → `_resolve_targets`); a second `--commit` updates the existing
   node; a dry-run test asserts the node id is passed through.
 
-### R12 · README GitHub-anchor deep links
+### R12 · README GitHub-anchor deep links — ✅ SHIPPED
 README "Choose Your Path" links to `AGENTS.md#core-architecture` /
 `#configuration-system`, but those headings are emoji-prefixed, so GitHub's
 slugger produces different anchors and the links dangle. The repo renders on
@@ -221,33 +229,36 @@ GitHub (no mkdocs `attr_list`), so `{#custom-id}` is not a fix.
 
 ## Open — Low
 
-### R13 · Split `infrastructure/rendering/_pdf_title_page.py` (774/800 lines)
+> All of R13–R18 were shipped in the second/third passes above; retained for
+> provenance. Nothing in this section is currently open.
+
+### R13 · Split `infrastructure/rendering/_pdf_title_page.py` (774/800 lines) — ✅ SHIPPED
 Largest Layer-1 module, 26 lines from the advisory WARN threshold. Pre-emptive;
 no defect on HEAD.
 - **Acceptance**: module < 700 lines after extracting a cohesive helper group;
   `module_line_count_check` still green; rendering tests + byte-stable output.
 
-### R14 · `docs/documentation-index.md` completeness
+### R14 · `docs/documentation-index.md` completeness — ✅ SHIPPED
 Index omits ~11 substantive tracked docs. The overclaim was softened this
 session ("curated map"); optionally re-add the missing entries to restore it as
 a near-complete inventory.
 - **Acceptance**: the 11 named docs appear in the index, or the doc explicitly
   states its curation scope.
 
-### R15 · Pin the `uv` bootstrap installer
+### R15 · Pin the `uv` bootstrap installer — ✅ SHIPPED
 `scripts/shell_bootstrap.sh` pipes an unpinned `https://astral.sh/uv/install.sh`
 to `sh` automatically from `run.sh`/`secure_run.sh` — a floating remote installer
 against the repo's pin-everything posture.
 - **Acceptance**: the installer URL is version-pinned (e.g. `UV_VERSION`), or
   the auto-install prompts before piping remote script to a shell.
 
-### R16 · Always-on shell-injection bandit sweep
+### R16 · Always-on shell-injection bandit sweep — ✅ SHIPPED
 The MEDIUM+ bandit gate passes constant-string `shell=True` (B602/B604/B605 are
 LOW); the LOW sweep is manual-only and excludes `projects/`.
 - **Acceptance**: a `-t B602,B604,B605,B609 --severity-level low` pass over all
   three trees runs in the CI security job + pre-push hook.
 
-### R17 · Correct the bandit B603 justification comment
+### R17 · Correct the bandit B603 justification comment — ✅ SHIPPED
 `bandit.yaml` B603 says run-varying inputs are "validated by
 `infrastructure.core.security`." That module *does* exist (the review's
 "module missing" evidence was refuted), but the argv-building call sites are
@@ -258,7 +269,7 @@ wrong, so verify the real control per call site before editing.)*
 - **Acceptance**: the B603 comment names the actual control and cites a real
   symbol that a grep confirms exists.
 
-### R18 · MCP `invoke_cli` capability tiering
+### R18 · MCP `invoke_cli` capability tiering — ✅ SHIPPED
 `invoke_cli` exposes credentialed/paid/network-mutating CLIs with full env
 inheritance and no read-only vs mutating tier. Design-level hardening for the
 agent surface.

@@ -48,7 +48,7 @@ from infrastructure.steganography import embed_steganography
 from pathlib import Path
 
 # All techniques enabled with defaults
-embed_steganography(Path("output/template_code_project/pdf/template_code_project_combined.pdf"))
+embed_steganography(Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf"))
 # Creates: template_code_project_combined_steganography.pdf + .hashes.json
 ```
 
@@ -68,7 +68,7 @@ config = SteganographyConfig(
 
 processor = SteganographyProcessor(config)
 output = processor.process(
-    Path("output/template_code_project/pdf/template_code_project_combined.pdf"),
+    Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf"),
     title="My Research Paper",
     authors=["Daniel Ari Friedman"],
 )
@@ -136,8 +136,8 @@ uv run python -c "
 import hashlib, json
 from pathlib import Path
 
-pdf = Path('output/template_code_project/pdf/code_project_combined.pdf')
-manifest = Path('output/template_code_project/pdf/code_project_combined.hashes.json')
+pdf = Path('output/templates/template_code_project/pdf/template_code_project_combined.pdf')
+manifest = Path('output/templates/template_code_project/pdf/template_code_project_combined.hashes.json')
 
 computed = hashlib.sha256(pdf.read_bytes()).hexdigest()
 expected = json.loads(manifest.read_text())['hashes']['sha256']

@@ -23,6 +23,11 @@ LaTeX). These docs are decade-scale planning, not day-of operations.
 | [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) | Container + lockfile + agent-runnable manifest design |
 | [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle + symlink-sync contract |
 | [`local-only-template-exemplars.md`](local-only-template-exemplars.md) | LOCAL_ONLY_TEMPLATE_NAMES and promoting an exemplar to the public set |
+| [`doc-mega-decomposition.md`](doc-mega-decomposition.md) | Policy for guides above 800 lines (P1 watch, not a CI failure) |
+| [`software-heritage-archival.md`](software-heritage-archival.md) | Which docxology public repos are submitted to Software Heritage, and how to finish/verify |
+| [`publishing-readiness.md`](publishing-readiness.md) | Per-platform upload readiness across the full publishing surface |
+| [`publishing-export-pipeline.md`](publishing-export-pipeline.md) | Two-repo publication workflow: `template/` → `docxology/publishing` |
+| [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Adversarial-review remediation plan — open design/multi-step items |
 
 ## When to edit
 

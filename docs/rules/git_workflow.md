@@ -4,6 +4,17 @@
 
 Standardized Git workflow ensures clean history, easy collaboration, and reliable deployments. All changes must follow these standards.
 
+> **Note on code examples below**: the branch naming, commit-message, and PR
+> conventions in this guide are this repo's actual standards. The `black` /
+> `isort` / `flake8` / bare `mypy .` / `pytest --cov-fail-under=70` snippets in
+> the "Custom Git Hooks" and "Integration with CI/CD" sections are **generic,
+> illustrative** git-tooling patterns, not this repo's actual gate — this repo
+> uses **Ruff** (not Black/isort/flake8) and real coverage floors of **60%
+> infra / 90% project** (not 70%). See [`code_style.md`](code_style.md) and
+> the real [`.pre-commit-config.yaml`](../../.pre-commit-config.yaml) /
+> [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) for what
+> actually runs.
+
 ## Branch Strategy
 
 ### Main Branches

@@ -284,6 +284,7 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/documentation/` - Figure management, API docs, glossary generation
 - `infrastructure/llm/` - Local LLM integration (Ollama) for reviews and translations
 - `infrastructure/logrotate.d/` - Log rotation configs for pipeline and agent logs
+- `infrastructure/mcp_server.py` - stdio MCP server exposing repo operations/pipeline/skills as tools
 - `infrastructure/methods/` - Methods orchestration (DAG contracts, methods prose, artifacts, evidence)
 - `infrastructure/orchestration/` - Pipeline/multi-project/secure CLI entrypoints (`python -m infrastructure.orchestration`)
 - `infrastructure/project/` - Multi-project discovery and management

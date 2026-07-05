@@ -87,7 +87,7 @@ The content lists describe what each slot is *for* if you choose to add it.
 
 **Cross-references:**
 
-- References experimental results (Section \ref{sec:experimental_results})
+- References experimental results ([@sec:experimental_results])
 
 ### 2. **09_appendix.md** (Main Section)
 
@@ -102,8 +102,8 @@ The content lists describe what each slot is *for* if you choose to add it.
 
 **Cross-references:**
 
-- References equations from methodology (e.g., \eqref{eq:convergence})
-- References figures from results (e.g., \ref{fig:convergence_plot})
+- References equations from methodology (e.g., [@eq:convergence])
+- References figures from results (e.g., [@fig:convergence_plot])
 
 ### 3. **S01_supplemental_methods.md** (Supplemental Section)
 
@@ -119,8 +119,8 @@ The content lists describe what each slot is *for* if you choose to add it.
 
 **Cross-references:**
 
-- References main methodology (Section \ref{sec:methodology})
-- References main equations (e.g., \eqref{eq:update})
+- References main methodology ([@sec:methodology])
+- References main equations (e.g., [@eq:update])
 
 ### 4. **S02_supplemental_results.md** (Supplemental Section)
 
@@ -136,8 +136,8 @@ The content lists describe what each slot is *for* if you choose to add it.
 
 **Cross-references:**
 
-- References main results (Section \ref{sec:experimental_results})
-- References main figures (e.g., \ref{fig:convergence_plot})
+- References main results ([@sec:experimental_results])
+- References main figures (e.g., [@fig:convergence_plot])
 
 ---
 
@@ -283,7 +283,7 @@ vim manuscript/S03_supplemental_figures.md
 # Extended visualizations...
 
 # Reference from main text
-# See \ref{sec:supplemental_figures} for additional figures.
+# See [@sec:supplemental_figures] for additional figures.
 
 # Build and verify
 uv run python scripts/execute_pipeline.py --project {name} --core-only
@@ -316,30 +316,33 @@ python -m infrastructure.documentation.generate_glossary_cli → manuscript/98_s
 
 ## 🔍 Cross-Referencing
 
+All cross-references use Pandoc bracket-cite syntax `[@sec:label]` — never
+raw `\ref{}` (see [Manuscript Semantics](../guides/manuscript-semantics.md)).
+
 ### Main ↔ Main
 
 ```markdown
-As described in Section \ref{sec:methodology}...
+As described in [@sec:methodology]...
 ```
 
 ### Main → Supplemental
 
 ```markdown
-Extended details in Section \ref{sec:supplemental_methods}...
-Additional results in \ref{sec:supplemental_results}...
+Extended details in [@sec:supplemental_methods]...
+Additional results in [@sec:supplemental_results]...
 ```
 
 ### Supplemental → Main
 
 ```markdown
-Building on the framework from Section \ref{sec:methodology}...
+Building on the framework from [@sec:methodology]...
 ```
 
 ### Any → Glossary/References
 
 ```markdown
-See API reference in \ref{sec:glossary}...
-Citations in \ref{sec:references}...
+See API reference in [@sec:glossary]...
+Citations in [@sec:references]...
 ```
 
 ---

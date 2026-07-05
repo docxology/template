@@ -97,7 +97,7 @@ classDiagram
 ### Basic Exception
 
 ```python
-from exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 if not is_valid(data):
     raise ValidationError("Validation failed")
@@ -106,7 +106,7 @@ if not is_valid(data):
 ### With Context
 
 ```python
-from exceptions import raise_with_context, FileNotFoundError
+from infrastructure.core.exceptions import raise_with_context, FileNotFoundError
 
 if not path.exists():
     raise_with_context(
@@ -120,7 +120,7 @@ if not path.exists():
 ### Chain Exceptions
 
 ```python
-from exceptions import chain_exceptions, BuildError
+from infrastructure.core.exceptions import chain_exceptions, BuildError
 
 try:
     compile_latex()
@@ -156,7 +156,7 @@ except TemplateError as e:
 ### Configuration Errors
 
 ```python
-from exceptions import ConfigurationError, MissingConfigurationError
+from infrastructure.core.exceptions import ConfigurationError, MissingConfigurationError
 
 # Missing configuration
 raise MissingConfigurationError(
@@ -174,7 +174,7 @@ raise InvalidConfigurationError(
 ### Validation Errors
 
 ```python
-from exceptions import ValidationError, MarkdownValidationError
+from infrastructure.core.exceptions import ValidationError, MarkdownValidationError
 
 # Markdown validation
 raise MarkdownValidationError(
@@ -192,7 +192,7 @@ raise DataValidationError(
 ### Build Errors
 
 ```python
-from exceptions import BuildError, CompilationError
+from infrastructure.core.exceptions import BuildError, CompilationError
 
 # Compilation failure
 raise CompilationError(
@@ -211,7 +211,7 @@ raise ScriptExecutionError(
 
 ```python
 from infrastructure.core.logging.utils import get_logger
-from exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 logger = get_logger(__name__)
 
@@ -285,7 +285,7 @@ def run_pipeline() -> int:
 ### Utility Functions
 
 ```python
-from exceptions import format_file_context
+from infrastructure.core.exceptions import format_file_context
 
 # Format file context
 context = format_file_context("data.csv", line=42)
@@ -294,26 +294,6 @@ raise ValidationError("Error at line", context=context)
 
 ## See Also
 
-- [Logging Guide](../operational/logging/)
+- [Logging Guide](logging/)
 - [Testing Guide](../development/testing/testing-guide.md)
 - [API Reference](../reference/api-reference.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

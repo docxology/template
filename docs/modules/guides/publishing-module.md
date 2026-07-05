@@ -30,8 +30,8 @@
 | `release_workflow.py` | Unified GitHub + Zenodo + re-render orchestration |
 | `release_workflow_zenodo.py` | Reserve-first DOI phase and Zenodo publish paths |
 | `platforms.py`, `api.py` | Backwards-compatible re-exports |
-| `executable_bundle.py` | Stage 10 executable bundle (`bundle_project`) |
-| `archival.py` | Stage 11 multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |
+| `executable_bundle.py` | Stage 12 executable bundle (`bundle_project`) |
+| `archival/` | Stage 13 multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |
 | `scripts/publish_project_release.py` | Thin orchestrator for unified release (opt-in) |
 | `scripts/publish/upload_gold_refinement.py` | Thin CLI over `upload_runner` (worked example) |
@@ -222,7 +222,8 @@ for r in results:
 ```
 
 The `PROBES` catalogue covers `github`, `huggingface_hub`, `osf`, `ipfs_pinata`,
-`zenodo`, `netlify`, and `cloudflare_pages`. `pypi` has no read-only endpoint, so it
+`zenodo`, `netlify`, `cloudflare_pages`, and the monetization-adjacent platforms
+`gumroad`, `leanpub`, and `stripe`. `pypi` has no read-only endpoint, so it
 reports `no-endpoint` (its token is validated at upload time). `run_probe(probe, env,
 *, override_base=None)` accepts an `override_base` to redirect the host for tests.
 
@@ -355,8 +356,8 @@ uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $Z
 uv run python -m infrastructure.publishing.publish_cli \
   --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 
-# Archival dry-run (Stage 11)
-uv run python scripts/09_archive_publication.py --project template_code_project
+# Archival dry-run (Stage 13)
+uv run python scripts/09_archive_publication.py --project templates/template_code_project
 
 # Unified GitHub + Zenodo + DOI release (opt-in)
 uv run python scripts/publish_project_release.py \

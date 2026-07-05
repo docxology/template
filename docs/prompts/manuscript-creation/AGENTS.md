@@ -9,7 +9,7 @@ Agent skill `template-manuscript-creation` — Scaffold manuscript and project f
 | File | Role |
 | --- | --- |
 | [`SKILL.md`](SKILL.md) | Routable workflow (canonical) |
-- [`references/`](references/) — progressive-disclosure checklists
+| [`references/`](references/) | Progressive-disclosure checklists |
 
 ## Verification
 

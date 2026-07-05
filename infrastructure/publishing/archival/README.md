@@ -1,6 +1,6 @@
 # Archival publishing
 
-Multi-target mirror for long-horizon redundancy (Stage 11). See
+Multi-target mirror for long-horizon redundancy (Stage 13). See
 [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md)
 for provider rationale and threat scenarios.
 
@@ -63,7 +63,7 @@ uv run python -m infrastructure.publishing.archival_cli \
   --commit
 ```
 
-Pipeline stage: `uv run python scripts/09_archive_publication.py --project <name>` (expects Stage 10 bundle).
+Pipeline stage: `uv run python scripts/09_archive_publication.py --project <name>` (expects Stage 12 bundle).
 
 ## Import path
 
@@ -74,5 +74,5 @@ update old imports to the subpackage.
 ## Related
 
 - [`AGENTS.md`](AGENTS.md) — module internals, file list, provider protocol
-- [`../executable_bundle.py`](../executable_bundle.py) — `bundle_project()` for Stage 10
+- [`../executable_bundle.py`](../executable_bundle.py) — `bundle_project()` for Stage 12
 - [`../zenodo/`](../zenodo/) — canonical Zenodo HTTP client used by `ZenodoProvider`

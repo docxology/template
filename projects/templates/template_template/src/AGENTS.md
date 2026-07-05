@@ -18,7 +18,13 @@ src/
     ├── introspection.py
     ├── metrics.py
     ├── inject_metrics.py
-    └── architecture_viz.py
+    ├── architecture_viz.py
+    ├── viz_palette.py
+    ├── paths.py
+    ├── figure_architecture_overview.py
+    ├── figure_pipeline_stages.py
+    ├── figure_module_inventory.py
+    └── figure_comparative_matrix.py
 ```
 
 ## Where to look

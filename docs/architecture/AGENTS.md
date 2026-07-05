@@ -14,6 +14,8 @@ Technical guide for `docs/architecture/` — system architecture, design pattern
 | `migration-from-flat.md` | Migration guide from flat project structure |
 | `testing-strategy.md` | Testing strategy and coverage architecture |
 | `discovery-export-synthesis.md` | Discovery → Export → Synthesis three-module architecture |
+| `capability-surfaces.md` | How an AI agent discovers, invokes, composes, and verifies every capability the repo exposes |
+| `adrs/` | Architecture Decision Records (ADR-000 through ADR-005) — see [`adrs/README.md`](adrs/README.md) |
 
 ## Key Conventions
 

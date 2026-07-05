@@ -50,11 +50,22 @@ flowchart TB
     INFRA --> REF[reference<br/>citation BibTeX I/O · verification reference-existence gate]
     INFRA --> REP[reporting<br/>pipeline reports]
     INFRA --> STEG[steganography<br/>secure PDF post-processing]
+    INFRA --> AUTO[autoresearch<br/>deterministic research loops]
+    INFRA --> BENCH[benchmark<br/>timing · resource summaries]
+    INFRA --> CFG[config<br/>repo-wide configuration]
+    INFRA --> DOCKER[docker<br/>containerization settings]
+    INFRA --> DR[doctor<br/>repo health diagnostics]
+    INFRA --> METH[methods<br/>DAG contracts · methods prose]
+    INFRA --> ORCH[orchestration<br/>pipeline/multi-project/secure CLI]
+    INFRA --> PROJ[project<br/>multi-project discovery]
+    INFRA --> PROSE[prose<br/>prose-manuscript analysis]
+    INFRA --> SIA[sia<br/>self-improvement harness]
+    INFRA --> SK[skills<br/>SKILL.md discovery]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     class INFRA root
-    class CORE,VAL,DOC,PUB,LLM,REND,SCI,SEARCH,REF,REP,STEG pkg
+    class CORE,VAL,DOC,PUB,LLM,REND,SCI,SEARCH,REF,REP,STEG,AUTO,BENCH,CFG,DOCKER,DR,METH,ORCH,PROJ,PROSE,SIA,SK pkg
 ```
 
 **Key Characteristics:**
@@ -259,32 +270,22 @@ from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ### [LAYER 1] Infrastructure Structure
 
+For the full module roster, see the [Layer 1 diagram above](#layer-1-infrastructure-generic-build--validation-tools) —
+not repeated here to avoid maintaining the same 22-module list twice. What's new at this
+level of detail is the convention-file layout inside each module:
+
 ```mermaid
 flowchart TB
     INFRA[infrastructure<br/>Layer 1 · importable packages<br/>see COUNTS.md]
-    INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
-    INFRA --> CORE[core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry]
-    INFRA --> DOC[documentation<br/>figure manager · glossary gen]
-    INFRA --> DOCTOR[doctor<br/>repo health checks]
-    INFRA --> LLM[llm<br/>Ollama integration · prompts]
-    INFRA --> ORCH[orchestration<br/>pipeline runner · menu]
-    INFRA --> PROJ[project<br/>multi-project discovery]
-    INFRA --> PROSE[prose<br/>markdown analysis]
-    INFRA --> PUB[publishing<br/>Zenodo · arXiv · GitHub]
-    INFRA --> REND[rendering<br/>PDF · HTML · slides · DOCX · EPUB]
-    INFRA --> REP[reporting<br/>pipeline · executive reports]
-    INFRA --> SCI[scientific<br/>numerical stability · benchmarking]
-    INFRA --> SK[skills<br/>SKILL.md discovery]
-    INFRA --> STEG[steganography<br/>PDF hardening]
-    INFRA --> VAL[validation<br/>PDF · markdown · integrity · audit]
-    INFRA --> SEARCH[search<br/>literature search]
-    INFRA --> REF[reference<br/>citation BibTeX I/O · verification reference-existence gate]
+    INFRA --> ONE["&lt;any module&gt;/"]
+    ONE --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
+    INFRA --> ROOT[mcp_server.py<br/>top-level stdio MCP server]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef meta fill:#0f766e,stroke:#0f172a,color:#fff
     class INFRA root
-    class CORE,DOC,DOCTOR,LLM,ORCH,PROJ,PROSE,PUB,REND,REP,SCI,SK,STEG,VAL,SEARCH,REF pkg
+    class ONE,ROOT pkg
     class META meta
 ```
 
@@ -507,57 +508,10 @@ flowchart TB
 
 ## Testing Strategy
 
-### Infrastructure Tests (`tests/infra_tests/`)
-
-- Verify build orchestration works
-- Test validation logic
-- Check file integrity checking
-- Validate PDF generation
-- No dependency on scientific code
-
-**Command:**
-
-```bash
-uv run pytest tests/infra_tests/ --cov=infrastructure
-```
-
-### [LAYER 2] Project Tests (projects/{name}/tests/)
-
-- Test algorithms correctness
-- Verify statistical computations
-- Check data processing
-- Validate visualization output
-- No dependency on build infrastructure
-
-**Command:**
-
-```bash
-uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
-```
-
-### Integration Tests (tests/integration/)
-
-- End-to-end pipeline validation
-- Script execution testing
-- Layer interaction verification
-- Output completeness checking
-
-**Command:**
-
-```bash
-uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
-```
-
-### Full Test Suite
-
-```bash
-# Local all-project union gate (75%); CI project jobs enforce each exemplar's own 90% floor
-uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=75
-
-# Generate coverage report
-uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
-open htmlcov/index.html
-```
+Test organization, per-layer commands, and coverage gates are documented once,
+canonically, in **[Testing Strategy](testing-strategy.md)** — see that file for
+`tests/infra_tests/`, `projects/{name}/tests/`, `tests/integration/`, and the
+full-suite/coverage-report commands.
 
 ---
 
@@ -652,36 +606,8 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 ## Troubleshooting
 
-### Import Errors
-
-**Error:** `ModuleNotFoundError: No module named 'project.src'`
-
-**Solution:** Ensure tests/conftest.py includes projects/{name}/ on path:
-
-```python
-import sys
-sys.path.insert(0, os.path.join(repo_root, "projects", project_name))
-```
-
-### Layer Violations
-
-**Error:** Infrastructure module imports from project
-
-**Solution:** Refactor to remove dependency or move code to appropriate layer
-
-**Check:**
-
-```bash
-# Find infrastructure imports of project code
-grep -r "from projects\." infrastructure/
-grep -r "import projects\." infrastructure/
-```
-
-### Mixed Concerns
-
-**Error:** Build logic in project module
-
-**Solution:** Move to infrastructure layer or extract into separate module
+Import errors, layer violations, and mixed-concerns fixes are documented once,
+canonically, in **[Testing Strategy § Troubleshooting](testing-strategy.md#troubleshooting)**.
 
 ---
 

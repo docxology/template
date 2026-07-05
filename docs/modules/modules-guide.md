@@ -93,7 +93,7 @@ pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
 uv run python scripts/04_validate_output.py --project template_code_project
 
 # Manual integrity check on final deliverables tree
-uv run python -m infrastructure.validation.cli integrity output/template_code_project/
+uv run python -m infrastructure.validation.cli integrity output/templates/template_code_project/
 ```
 
 ---

@@ -171,33 +171,6 @@ All other Layer 2 documentation defaults to this exemplar. See `docs/_generated/
 
 ---
 
-## Module: visualization
-
-Publication-quality figure generation with consistent styling.
-
-### Classes
-
-#### `VisualizationEngine`
-
-Engine for generating publication-quality figures.
-
-**Methods:**
-
-- `create_figure(nrows, ncols, figsize, **kwargs)` - Create figure with subplots
-- `save_figure(figure, filename, formats, dpi)` - Save figure in multiple formats
-- `apply_publication_style(ax, title, xlabel, ylabel, grid, legend)` - Apply styling
-
-**Example:**
-
-```python
-from visualization import VisualizationEngine
-engine = VisualizationEngine(style="publication", output_dir="output/figures")
-fig, ax = engine.create_figure()
-engine.save_figure(fig, "my_figure", formats=["png", "pdf"])
-```
-
----
-
 ## Module: figure_manager
 
 Automatic figure numbering, caption generation, and cross-referencing.

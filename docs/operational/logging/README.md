@@ -17,63 +17,73 @@
 
 ## Architecture
 
-### Two-Level Logging System
+### One Shared Logging Layer, Used Two Ways
 
-1. **Infrastructure Logging** (`infrastructure.core.logging.utils`)
-   - Logging utilities
-   - Environment-based configuration
-   - Context managers and decorators
-   - Progress tracking and resource monitoring
-
-2. **Project Logging** (`projects/*/src/utils/logging.py`)
-   - Standardized interface for projects
-   - Simple, consistent API
-   - Graceful fallback when infrastructure unavailable
-   - Seamless integration with infrastructure logging
+1. **Infrastructure logging** (`infrastructure.core.logging.utils`) — the single
+   source of truth. `get_logger(name)` returns a standard `logging.Logger`
+   configured with the template's handlers/formatters; module-level functions
+   (`log_success`, `log_stage`, `log_progress`, `log_operation`, …) add the
+   pipeline-specific conventions on top of that logger.
+2. **Project usage** — `src/` modules import `get_logger` (and whichever
+   convenience functions they need) directly from
+   `infrastructure.core.logging.utils`. There is no separate
+   `projects/*/src/utils/logging.py` shim; projects that want to avoid a hard
+   `infrastructure.*` import at the top of `src/` (some exemplars keep `src/`
+   infrastructure-independent) instead write a small local `get_logger()`
+   wrapper that tries the infrastructure import and falls back to a bare
+   `logging.getLogger(name)` on `ImportError` — see
+   `projects/templates/template_code_project/src/_runtime.py` for a worked
+   example of that pattern.
 
 ---
 
 ## Quick Start
 
-### For Projects
+### Everyday project usage
 
 ```python
-# Import the standardized logger
-from utils.logging import get_logger
+from infrastructure.core.logging.utils import get_logger, log_success, log_progress, log_stage
 
-# Get a logger for your module
 log = get_logger(__name__)
 
-# Basic logging
+# Basic logging (log is a standard logging.Logger)
 log.info("Starting analysis")
-log.success("Analysis completed!")
 log.error("Something went wrong")
 
-# Progress tracking
-log.progress(50, 100, "Processing data")
-log.stage(2, 5, "Data Analysis")
-
-# Context managers
-with log.operation("Running simulation"):
-    # Your simulation code
-    pass
+# Convenience functions add pipeline conventions on top of the same logger
+log_success("Analysis completed!", log)
+log_progress(50, 100, "Processing data", log)
+log_stage(2, 5, "Data Analysis", log)
 ```
 
-### For Infrastructure Code
+### Context managers and decorators
 
 ```python
-# Use the full infrastructure logging
-from infrastructure.core.logging.utils import get_logger, log_operation
+from infrastructure.core.logging.utils import get_logger, log_operation, log_timing, log_function_call
 
 log = get_logger(__name__)
 
-# Advanced logging features
-with log_operation("Complex operation", log):
-    # Operation code
-    pass
+# Logs start/completion/failure automatically
+with log_operation("Running simulation", log):
+    run_simulation()
 
-# Resource monitoring
-log.resource_usage("After data processing")
+# Logs only elapsed time
+with log_timing("Complex calculation", log):
+    complex_calculation()
+
+# Decorator: logs call/return/duration at DEBUG level
+@log_function_call(log)
+def process_batch(items):
+    ...
+```
+
+### Resource monitoring
+
+```python
+from infrastructure.core.logging.utils import get_logger, log_live_resource_usage
+
+log = get_logger(__name__)
+log_live_resource_usage("After data processing", log)
 ```
 
 ### Shell Scripts
@@ -96,7 +106,7 @@ log_error "Error occurred"
 | Variable | Values | Default | Description |
 |----------|--------|---------|-------------|
 | `LOG_LEVEL` | 0,1,2,3 | 1 | 0=DEBUG, 1=INFO, 2=WARNING, 3=ERROR |
-| `NO_EMOJI` | true/false | false | Disable emoji in output |
+| `NO_EMOJI` | true/false | false | Disable emoji in output (emoji is also auto-disabled whenever stdout isn't a TTY, e.g. piped/redirected output, regardless of this variable) |
 | `STRUCTURED_LOGGING` | true/false | false | Enable JSON structured logging |
 | `LOG_TERMINAL_VERBOSE` | true/false | false | Restore full `[ts] [LEVEL] name:` prefix on console (matches file format) — see [output-design.md](output-design.md) |
 
@@ -132,37 +142,44 @@ log.error("Error messages for failures")
 log.critical("Critical system failures")
 ```
 
-### Specialized Methods
+### Specialized Functions
+
+These are free functions (not logger methods) — pass the logger explicitly, or
+omit it to fall back to a module-named logger:
 
 ```python
+from infrastructure.core.logging.utils import (
+    log_success, log_header, log_progress, log_stage, log_substep,
+)
+
 # Success confirmation
-log.success("Operation completed successfully")
+log_success("Operation completed successfully", log)
 
 # Section headers
-log.header("=== ANALYSIS RESULTS ===")
+log_header("=== ANALYSIS RESULTS ===", log)
 
 # Progress indicators
-log.progress(current=50, total=100, task="Processing data")
+log_progress(current=50, total=100, task="Processing data", logger=log)
 
 # Pipeline stages
-log.stage(stage_num=2, total_stages=5, stage_name="Data Analysis")
+log_stage(stage_num=2, total_stages=5, stage_name="Data Analysis", logger=log)
 
 # Sub-operations
-log.substep("Loading dataset...")
-log.substep("Running validation...")
+log_substep("Loading dataset...", log)
+log_substep("Running validation...", log)
 ```
 
 ### Context Managers
 
 ```python
-# Operation timing and status
-with log.operation("Data preprocessing"):
-    # Code that gets timed and logged
+from infrastructure.core.logging.utils import log_operation, log_timing
+
+# Operation start/completion/failure logging
+with log_operation("Data preprocessing", log):
     preprocess_data()
 
 # Simple timing only
-with log.timing("Complex calculation"):
-    # Code that gets timed
+with log_timing("Complex calculation", log):
     complex_calculation()
 ```
 
@@ -184,11 +201,14 @@ log.info("This goes to both console and file")
 ### Resource Monitoring
 
 ```python
+from infrastructure.core.logging.utils import log_live_resource_usage
+
 # Log current system resource usage
-log.resource_usage("After memory-intensive operation")
+log_live_resource_usage("After memory-intensive operation", log)
 ```
 
-Output includes CPU usage, memory usage, and system load.
+Output includes process memory (RSS) and CPU percent. Requires `psutil`;
+degrades to a DEBUG-level skip message when it isn't installed.
 
 ### Structured Logging
 
@@ -230,7 +250,7 @@ log.error("File not found")       # Not an error if handled
 
 ```python
 # ✅ GOOD: Use context managers for clear operations
-with log.operation("Data analysis pipeline"):
+with log_operation("Data analysis pipeline", log):
     load_data()
     process_data()
     save_results()
@@ -258,46 +278,32 @@ except Exception as e:
 
 ## API Reference
 
-### ProjectLogger Class
+`get_logger()` returns a standard `logging.Logger` — there is no custom
+`ProjectLogger` class. `debug`/`info`/`warning`/`error`/`critical` are the
+logger's own stdlib methods; everything pipeline-specific is a free function
+in `infrastructure.core.logging.utils` that takes the logger as its last
+argument (or defaults to a module-named logger when omitted).
 
 ```python
-class ProjectLogger:
-    """Standardized logging interface for projects."""
+def get_logger(name: str) -> logging.Logger:
+    """Return a logger configured with the template's standard handlers."""
 
-    def __init__(self, name: str, level: Optional[int] = None)
-    def debug(self, message: str, *args, **kwargs) -> None
-    def info(self, message: str, *args, **kwargs) -> None
-    def warning(self, message: str, *args, **kwargs) -> None
-    def error(self, message: str, *args, **kwargs) -> None
-    def critical(self, message: str, *args, **kwargs) -> None
+def setup_logger(name: str, level: int | None = None, log_file: Path | str | None = None) -> logging.Logger:
+    """Configure and return a logger with console handler and optional file handler."""
 
-    # Specialized methods
-    def success(self, message: str) -> None
-    def header(self, message: str) -> None
-    def progress(self, current: int, total: int, task: str = "") -> None
-    def stage(self, stage_num: int, total_stages: int, stage_name: str) -> None
-    def substep(self, message: str) -> None
+# Specialized functions (infrastructure.core.logging.utils / pipeline_logging)
+def log_success(message: str, logger: logging.Logger | None = None) -> None: ...
+def log_header(message: str, logger: logging.Logger | None = None) -> None: ...
+def log_progress(current: int, total: int, task: str, logger: logging.Logger | None = None) -> None: ...
+def log_stage(stage_num: int, total_stages: int, stage_name: str, logger: logging.Logger | None = None) -> None: ...
+def log_substep(message: str, logger: logging.Logger | None = None) -> None: ...
+def log_live_resource_usage(stage_name: str = "", logger: logging.Logger | None = None) -> None: ...
 
-    # Context managers
-    def operation(self, operation: str, level: int = logging.INFO) -> ContextManager
-    def timing(self, label: str) -> ContextManager
-
-    # Resource monitoring
-    def resource_usage(self, stage_name: str = "") -> None
-```
-
-### Convenience Functions
-
-```python
-def get_logger(name: str, level: Optional[int] = None) -> ProjectLogger:
-    """Get a standardized logger for projects."""
-
-def get_project_logger(name: str, level: Optional[int] = None) -> ProjectLogger:
-    """Alias for get_logger."""
-
-def setup_project_logging(name: str, level: Optional[int] = None,
-                         log_file: Optional[str] = None) -> ProjectLogger:
-    """Set up project logging with optional file output."""
+# Context managers / decorator
+def log_operation(operation: str, logger: logging.Logger | None = None, level: int = logging.INFO,
+                   min_duration_to_log: float = 0.1, log_completion: bool = True) -> ContextManager[None]: ...
+def log_timing(label: str, logger: logging.Logger | None = None) -> ContextManager[None]: ...
+def log_function_call(logger: logging.Logger | None = None) -> Callable: ...  # decorator factory
 ```
 
 ---
@@ -327,14 +333,26 @@ grep -i error output/{project_name}/logs/pipeline.log
 
 ## Fallback Behavior
 
-The project logging system includes graceful fallback when infrastructure is unavailable:
+There is no shared fallback shim — projects that want `src/` to stay
+infrastructure-independent write a small local wrapper that tries the
+infrastructure import and falls back to a bare stdlib logger on
+`ImportError`. Real example:
+[`template_code_project/src/_runtime.py`](../../../projects/templates/template_code_project/src/_runtime.py):
 
 ```python
-# If infrastructure import fails, falls back to basic logging
-from utils.logging import get_logger  # Still works!
+def get_logger(module_name: str | None = None) -> logging.Logger:
+    try:
+        from infrastructure.core.logging.utils import get_logger as infra_get_logger
 
-log = get_logger(__name__)  # Uses basic Python logging
-log.info("This still works")  # Basic functionality preserved
+        return infra_get_logger(module_name or __name__)
+    except ImportError:
+        logger = logging.getLogger(module_name or __name__)
+        if not logger.handlers:
+            handler = logging.StreamHandler()
+            handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+            logger.addHandler(handler)
+            logger.setLevel(logging.INFO)
+        return logger
 ```
 
 ---
@@ -380,11 +398,11 @@ def test_logging_no_errors():
 
     # These should not raise exceptions
     log.info("Test message")
-    log.success("Success message")
-    log.progress(50, 100, "Test progress")
+    log_success("Success message", log)
+    log_progress(50, 100, "Test progress", log)
 
     # Context managers should work
-    with log.operation("Test operation"):
+    with log_operation("Test operation", log):
         pass
 ```
 

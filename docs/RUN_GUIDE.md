@@ -267,6 +267,20 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
   Tip: chain stage digits (e.g. 234 = analyze -> render -> validate); comma or space also work.
        use  p  to switch project  ·  i  for current name  ·  q  to quit.
+
+  -- OTHER WORKFLOWS - opt-in, run directly (not in this menu) -------------
+
+  Secure + watermark  | ./secure_run.sh --project <name>            (steganography PDF)
+  Steganography only  | ./secure_run.sh --steganography-only        (re-watermark, no re-render)
+  Ebook formats       | uv run python scripts/11_ebook_generation.py --project <name>
+  Metadata package    | uv run python scripts/12_metadata_package.py --project <name>
+  Executable bundle   | uv run python scripts/08_executable_bundle.py --project <name>
+  Archival deposit    | uv run python scripts/09_archive_publication.py --project <name>  (dry-run by default)
+  Full release        | uv run python scripts/publish_project_release.py --project <name> --tag vX --repo owner/repo
+  Credential check    | uv run python -m infrastructure.publishing.credential_check --env-file .env
+  Reproducible matrix | uv run python scripts/run_matrix.py                (reads run.config)
+  Repro bundle        | uv run python scripts/10_repro_bundle.py build <name>
+  See docs/guides/publishing-guide.md and docs/maintenance/archival-targets.md for details.
 ```
 
 After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
@@ -641,7 +655,7 @@ Ensure Ollama is running:
 ollama serve
 
 # Install a model (if needed)
-ollama pull llama3-gradient
+ollama pull gemma3:4b
 ```
 
 ## See Also

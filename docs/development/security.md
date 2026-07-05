@@ -22,7 +22,7 @@ Use GitHub's private vulnerability reporting:
 If private reporting is unavailable, contact the maintainer through the
 [`docxology`](https://github.com/docxology) GitHub profile.
 
-You can expect an acknowledgement within a few days. Include a safe contact
+You can expect an acknowledgement within 48 hours. Include a safe contact
 route in the report if you need follow-up outside the GitHub advisory thread.
 
 ### 📋 **What to Include**
@@ -100,7 +100,7 @@ The public maintainer account is
 through GitHub private vulnerability reporting, with release notes and security
 advisories used for public disclosure after a fix is available.
 
-For project security practices and development guidelines, see **[`contributing.md`](../development/contributing.md)** and **[`code-of-conduct.md`](../development/code-of-conduct.md)**.
+For project security practices and development guidelines, see **[`contributing.md`](contributing.md)** and **[`code-of-conduct.md`](code-of-conduct.md)**.
 
 ---
 

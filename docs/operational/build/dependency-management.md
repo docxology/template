@@ -47,7 +47,6 @@ Dependencies are defined in `pyproject.toml`:
 ```toml
 [project]
 name = "research-project-template"
-version = "3.3.1"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.22",
@@ -72,12 +71,14 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
+default-groups = ["dev", "rendering", "discopy", "steganography"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
-members = [
-    "projects/code_project"
-]
+# Currently empty in this repo — no project directory is registered as an
+# active uv workspace member; add an entry here only if a project needs its
+# own pyproject.toml resolved together with the root.
+members = []
 ```
 
 ### Using uv with Commands
@@ -534,16 +535,16 @@ uv sync --group dev --group test
 
 ### Default Dependency Groups
 
-The `[tool.uv]` section supports a `default-groups` key that controls which dependency groups are installed by `uv sync` without explicit `--group` flags:
+The `[tool.uv]` section supports a `default-groups` key that controls which dependency groups are installed by `uv sync` without explicit `--group` flags. The current root value is:
 
 ```toml
 [tool.uv]
-default-groups = ["dev", "monitoring"]
+default-groups = ["dev", "rendering", "discopy", "steganography"]
 ```
 
-This ensures that optional dependencies like `psutil` (in the `monitoring` group) are always available in the root `.venv`. Without this, `uv sync` only installs the base `dependencies` and `dev` group.
+`monitoring` (which carries `psutil`) is **not** in `default-groups` — it's opt-in via `uv sync --group monitoring`, used to mirror CI extras locally. Without any `default-groups` entry at all, `uv sync` only installs the base `dependencies`.
 
-> **Important:** Projects with their own `.venv` (e.g., `projects/code_project/.venv`) do NOT inherit root-level dependencies. Infrastructure code that runs inside project-local venvs must use resilient import patterns:
+> **Important:** Projects with their own `.venv` (e.g., `projects/templates/template_code_project/.venv`) do NOT inherit root-level dependencies. Infrastructure code that runs inside project-local venvs must use resilient import patterns:
 
 ```python
 # Resilient import for optional dependencies
@@ -671,15 +672,14 @@ The template now supports uv workspaces for multi-project dependency management.
 
 ### Workspace Configuration
 
-The root `pyproject.toml` defines the workspace:
+The root `pyproject.toml` defines the workspace (currently no members registered — `members` is opt-in per project):
 
 ```toml
 [tool.uv.workspace]
-members = [
-    "projects/code_project"
-]
+members = []
 exclude = [
     "projects/*/output",
+    "projects/*/*/output",
     "output"
 ]
 ```

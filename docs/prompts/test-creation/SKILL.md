@@ -21,7 +21,7 @@ metadata:
 
 ## Natural invoke
 
-- "Add tests for projects/templates/template_code_project/src/optimization.py"
+- "Add tests for projects/templates/template_code_project/src/optimizer.py"
 - "Raise coverage on infrastructure/validation to pass 60% gate"
 - "Test this CLI with subprocess, no mocks"
 

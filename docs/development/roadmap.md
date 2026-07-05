@@ -5,11 +5,17 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-06-13 (package and latest published release at
-`v3.4.0`). Measured metrics defer to
+**Last verified:** 2026-07-05 (package and latest published release at
+`v3.5.1`, tagged 2026-06-26; `v3.5.0` tagged the same day). Measured metrics defer to
 [`TO-DO.md`](../../TO-DO.md) and
 [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)
 unless this file is re-measured.
+
+> **v3.5.0 / v3.5.1 note:** `pyproject.toml` and the git tag history confirm
+> both releases shipped, but `CHANGELOG.md` has not yet been updated with
+> versioned entries for them (its `## [Unreleased]` section is the closest
+> available detail as of this check). Treat the `v3.4.0` entry below as the
+> last fully itemized release until `CHANGELOG.md` is reconciled.
 
 ## Completed Releases
 

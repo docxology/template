@@ -10,6 +10,7 @@ workflow skill.
 | --- | --- |
 | [`evals/evals.json`](evals/evals.json) | Benchmark cases and expectation metadata. |
 | [`scripts/run_eval_harness.py`](scripts/run_eval_harness.py) | Main CLI for full runs, baseline pinning, and comparisons. |
+| [`scripts/grade_eval_output.py`](scripts/grade_eval_output.py) | Grader CLI shim (grade an existing response without re-running the harness). |
 | [`scripts/skill_eval/`](scripts/skill_eval/) | Importable harness implementation. |
 | [`baseline/benchmark.json`](baseline/benchmark.json) | Pinned comparison baseline when present. |
 | [`latest/`](latest/) | Regenerated local run output. |

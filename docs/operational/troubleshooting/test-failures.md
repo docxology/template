@@ -10,10 +10,10 @@
 
 ```bash
 # Run single test
-uv run pytest projects/templates/template_code_project/tests/test_example.py::test_add_numbers -v
+uv run pytest projects/templates/template_code_project/tests/test_optimizer.py::TestQuadraticFunction::test_simple_quadratic -v
 
 # Check imports
-python -c "from example import add_numbers; print('OK')"
+uv run python -c "import sys; sys.path.insert(0, 'projects/templates/template_code_project/src'); from optimizer import quadratic_function; print('OK')"
 
 # Verify test data
 ls -la tests/test_data/
@@ -155,8 +155,8 @@ uv run pytest tests/ -m integration
 **Diagnostic:**
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_example.py::test_add_numbers -v
-python -c "from example import add_numbers; print('OK')"
+uv run pytest projects/templates/template_code_project/tests/test_optimizer.py::TestQuadraticFunction::test_simple_quadratic -v
+uv run python -c "import sys; sys.path.insert(0, 'projects/templates/template_code_project/src'); from optimizer import quadratic_function; print('OK')"
 ls -la tests/test_data/
 ```
 
@@ -172,7 +172,7 @@ uv run pytest projects/templates/template_code_project/tests/test_file.py::test_
 uv run pytest projects/templates/template_code_project/tests/test_file.py::test_function -vv -s
 
 # Check specific module coverage
-uv run pytest projects/templates/template_code_project/tests/test_file.py --cov=projects.template_code_project.src.module_name --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/test_file.py --cov=projects/templates/template_code_project/src --cov-report=term-missing
 
 # Parallel execution
 uv run pytest tests/ -n auto

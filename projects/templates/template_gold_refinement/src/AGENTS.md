@@ -10,8 +10,11 @@ evidence; `formalisms.py` owns equation-backed formal claims; `integrity.py`
 owns source-tiered risk and evidence models; `pipeline_policy.py` owns the
 secure-pipeline and optional LLM-review gates; `domain_adapter.py` translates
 domain metrics into the refinery purity scale; the `figures/` package owns all technical
-visualization specs and quality reports; and `manuscript_variables.py`
-generates all `{{TOKEN}}` values.
+visualization specs and quality reports; `manuscript_variables.py`
+generates all `{{TOKEN}}` values; `coercion.py` normalizes loosely-typed config
+values; `cover_visualization.py` renders the cover art; `dashboard.py` builds
+the self-contained HTML metrics dashboard; and `security_assay.py` models
+threat/standard/evidence-surface security-assay records.
 
 ## Layer Contract
 
@@ -34,6 +37,10 @@ in `scripts/` (thin orchestrators).
 | `domain_adapter.py` | Domain metric translation and stage-remap profile loading |
 | `figures/` | Figure subpackage: `_common` (specs + helpers), `graphs` (DiGraph builders), `charts` (bar/line charts), `diagrams` (graph/matrix diagrams), `registry` (registry + quality report + all-figures orchestrator); facade `__init__` preserves the public API |
 | `manuscript_variables.py` | Generates all `{{TOKEN}}` values for manuscript injection |
+| `coercion.py` | Loosely-typed config-value coercion (`coerce_bool` and siblings) |
+| `cover_visualization.py` | Renders the project's cover art from `figures/_common` specs and integrity/formalism data |
+| `dashboard.py` | Self-contained HTML dashboard: refinery metrics, purity progression, token distribution, evidence-registry status |
+| `security_assay.py` | `SecurityAssayRecord` — threat / standard / evidence-surface / validator / claim-boundary rows |
 
 ## Key Design Rules
 

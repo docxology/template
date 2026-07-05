@@ -107,9 +107,10 @@ uv run python -m infrastructure.publishing.credential_check --only github zenodo
 ```
 
 The probe catalogue (`PROBES`) covers `github`, `huggingface_hub`, `osf`,
-`ipfs_pinata`, `zenodo`, `netlify`, and `cloudflare_pages`. `pypi` reports
-`no-endpoint` — it has no read-only identity endpoint, so its token is only
-validated at upload time. Each result is `pass`, `fail`, `skipped` (no
+`ipfs_pinata`, `zenodo`, `netlify`, `cloudflare_pages`, and the
+monetization-adjacent platforms `gumroad`, `leanpub`, and `stripe`. `pypi`
+reports `no-endpoint` — it has no read-only identity endpoint, so its token is
+only validated at upload time. Each result is `pass`, `fail`, `skipped` (no
 credential set), or `no-endpoint`. The CLI **exits non-zero if any present
 credential fails**, so it works as a pre-release gate.
 
@@ -151,7 +152,7 @@ metadata = PublicationMetadata(
 # High-level publish
 result = publish_to_zenodo(
     metadata,
-    [Path("output/template_code_project/pdf/template_code_project_combined.pdf")],
+    [Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")],
     access_token="your_token",
     sandbox=True,
     # base_url=...  # optional; used by tests against pytest-httpserver
@@ -207,7 +208,7 @@ url = create_github_release(
     tag_name="v1.0.0",
     release_name="Initial Release",
     description="First public release.",
-    assets=[Path("output/template_code_project/pdf/template_code_project_combined.pdf")],
+    assets=[Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")],
     token="ghp_...",
     repo="owner/repo",
 )
@@ -399,6 +400,14 @@ publication matrix so the external checks report live GitHub and Zenodo status.
 
 End-to-end smoke test against **production** Zenodo and a disposable public GitHub repo, recorded on 2026-05-27. Exemplar `template_prose_project` was used; `publication.doi` was restored to empty after the run. Re-check the external URLs before citing this table as current live evidence.
 
+**Path note:** the commands below use the bare slug `template_prose_project`,
+which was correct the day this test ran. The very next day (2026-05-28) the
+repo adopted the 5-folder project lifecycle and moved exemplars under
+`projects/templates/`; `resolve_combined_pdf()` and the release workflow do
+not auto-qualify a bare slug, so reproducing this today requires
+`--project templates/template_prose_project`. Left verbatim below as the
+historical record of what was actually run.
+
 | Artifact | URL / ID |
 | --- | --- |
 | GitHub repo | https://github.com/docxology/template-release-smoke |
@@ -438,7 +447,7 @@ uv run python scripts/publish_project_release.py \
   --release-name "Template release smoke v0.2.0 (integration test — do not cite)"
 ```
 
-When GitHub was already published, `--skip-github` or `--skip-zenodo` can split phases. Receipt: `output/template_prose_project/release_bundle/RELEASE_RECEIPT.json`.
+When GitHub was already published, `--skip-github` or `--skip-zenodo` can split phases. Receipt: `output/templates/template_prose_project/release_bundle/RELEASE_RECEIPT.json`.
 
 **Phase C — v0.3.0 versioned release** (2026-05-27, new PAT + concept-DOI resolution fix):
 
@@ -624,10 +633,10 @@ uv run python -m infrastructure.publishing.transmission_page_check \
 ```
 
 
-## Executable bundle (Stage 10)
+## Executable bundle (Stage 12)
 
 ```bash
-uv run python scripts/08_executable_bundle.py --project template_code_project
+uv run python scripts/08_executable_bundle.py --project templates/template_code_project
 ```
 
 ```python
@@ -647,21 +656,28 @@ print(bundle_path)
 
 ---
 
-## Multi-target archival (Stage 11)
+## Multi-target archival (Stage 13)
 
 Dry-run via pipeline stage (graceful skip if bundle missing):
 
 ```bash
-uv run python scripts/09_archive_publication.py --project template_code_project
+uv run python scripts/09_archive_publication.py --project templates/template_code_project
 ```
 
 Direct CLI (dry-run by default):
 
 ```bash
 uv run python -m infrastructure.publishing.archival_cli \
-  --bundle output/template_code_project/executable_bundle \
+  --bundle output/templates/template_code_project/executable_bundle \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 ```
+
+Note: `08_executable_bundle.py` and `09_archive_publication.py` look up
+`projects/<project>` and `output/<project>/...` directly (they do not
+auto-qualify a bare exemplar name the way the `python -m
+infrastructure.orchestration` CLI does) — pass the qualified slug
+(`templates/<name>`, `working/<name>`, …) or the bare name resolves to a
+missing path and the stage gracefully skips.
 
 Add `--commit` to perform real deposits (requires credentials — see [`archival/README.md`](../../infrastructure/publishing/archival/README.md)).
 
@@ -676,10 +692,11 @@ platform is captured (never raised) so a batch always completes.
 
 - Core uploaders (`CORE_UPLOADERS`, run by default): `pinata`, `huggingface`,
   `osf`, `testpypi`.
-- Opt-in uploaders (`OPTIONAL_UPLOADERS`): `github`, `netlify`, `cloudflare` —
-  these create a real GitHub release/tag or need the `netlify`/`wrangler` CLIs,
-  so `select_jobs(..., include_github=True, include_static=True)` must opt them
-  in.
+- Opt-in uploaders (`OPTIONAL_UPLOADERS`): `github`, `netlify`, `cloudflare`,
+  `github_pages` — these create a real GitHub release/tag or need the
+  `netlify`/`wrangler` CLIs, so `select_jobs(..., include_github=True,
+  include_static=True)` must opt them in (`include_github` gates `github`;
+  `include_static` gates `netlify`, `cloudflare`, and `github_pages` together).
 
 The `template_gold_refinement` exemplar ships a thin CLI over this module at
 `scripts/publish/upload_gold_refinement.py`:
@@ -704,7 +721,8 @@ uv run python scripts/publish/upload_gold_refinement.py --commit \
 ```
 
 The script loads the repo-root `.env`, requires the rendered combined PDF
-(`output/pdf/template_gold_refinement_combined.pdf` — build it with
+(`projects/templates/template_gold_refinement/output/pdf/template_gold_refinement_combined.pdf`
+— build it with
 `./run.sh --project templates/template_gold_refinement --pipeline --core-only`),
 and writes a JSON receipt to
 `output/templates/template_gold_refinement/upload_receipts.json`.
@@ -812,7 +830,7 @@ from infrastructure.publishing import (
 # Check if everything is ready. The function takes two list[Path] arguments
 # (manuscript markdown + rendered PDFs) and returns a plain dict.
 markdown_files = sorted(Path("projects/templates/template_code_project/manuscript").glob("*.md"))
-pdf_files = sorted(Path("output/template_code_project/pdf").glob("*.pdf"))
+pdf_files = sorted(Path("output/templates/template_code_project/pdf").glob("*.pdf"))
 readiness = validate_publication_readiness(markdown_files, pdf_files)
 print(f"Ready: {readiness['ready_for_publication']} (score {readiness['completeness_score']})")
 for issue in readiness["missing_elements"]:
@@ -823,7 +841,7 @@ checklist = create_submission_checklist(metadata)
 
 # Bundle metadata + files for submission: create_publication_package(output_dir, metadata)
 package = create_publication_package(
-    Path("output/template_code_project/publication/"),
+    Path("output/templates/template_code_project/publication/"),
     metadata,
 )
 ```

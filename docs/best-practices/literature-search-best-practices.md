@@ -143,7 +143,9 @@ so abstracts-first lets you bail out early on bad-quality returns.
 * **Pin seeds** — `OllamaClientConfig(seed=42, temperature=0.0)` makes
   synthesis reproducible.
 * **Quote citation keys in the prompt** — the LLM's output mentioning
-  `\\cite{kingma2014adam}` is downstream-resolvable; bare titles are not.
+  `[@kingma2014adam]` (Pandoc bracket-cite syntax, the manuscript convention —
+  see [Manuscript Semantics](../guides/manuscript-semantics.md)) is
+  downstream-resolvable; bare titles are not.
 
 ## Failure Modes to Watch
 

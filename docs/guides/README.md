@@ -14,6 +14,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 
 | File | Purpose | Skill Level |
 |------|---------|-------------|
+| [`startup-and-setup.md`](startup-and-setup.md) | Install + validation procedure, copy-pasteable for humans and agents | Beginner |
 | [`getting-started.md`](getting-started.md) | Basic usage guide (Levels 1-3) | Beginner |
 | [`figures-and-analysis.md`](figures-and-analysis.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
 | [`testing-and-reproducibility.md`](testing-and-reproducibility.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
@@ -26,6 +27,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`llm-integration-guide.md`](llm-integration-guide.md) | AI-assisted research with Ollama (LLM review, translation) | Expert |
 | [`publishing-guide.md`](publishing-guide.md) | Publishing workflow (DOI, Zenodo, arXiv, citations) | Expert |
 | [`secure-research-guide.md`](secure-research-guide.md) | PDF watermarking, provenance, and integrity | Expert |
+| [`zenodo-doi-strategy.md`](zenodo-doi-strategy.md) | Concept vs version DOI strategy for repeat Zenodo releases | Expert |
 | [`manuscript-semantics.md`](manuscript-semantics.md) | **Canonical** manuscript syntax & semantics — Pandoc citations `[@key]`, cross-refs `[@eq:/@fig:/@sec:]`, `{{TOKEN}}` substitution, preamble. Read before authoring any manuscript. | All levels |
 | [`fork-an-exemplar.md`](fork-an-exemplar.md) | Fork-readiness walkthrough for canonical exemplars | All levels |
 | [`literature-workflow-guide.md`](literature-workflow-guide.md) | Literature discovery → export → synthesis (Ollama-assisted) | Expert |

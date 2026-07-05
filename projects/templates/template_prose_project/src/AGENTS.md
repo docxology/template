@@ -19,6 +19,7 @@ manuscript directory and the project's configuration.
 | `figures.py` | `plot_section_word_counts`, `plot_readability_metrics`, `plot_citation_density`, `generate_all_figures`. Scripts load typed reports via `infrastructure.prose.report.load_report_json`. |
 | `manuscript_variables.py` | `load_report_payload`, `compute_variables`, `substitute_in_text`, `write_variables` for abstract substitution. |
 | `report.py` | `write_review_report` — assemble the markdown review. |
+| `prose_facade.py` | Project-owned report Protocols (`ManuscriptReportLike`, `FileReportLike`, …) plus `render_outline` — decouples `src/` from `infrastructure.prose` internals. |
 
 ## Module graph
 
@@ -30,11 +31,15 @@ flowchart LR
     MV[manuscript_variables.py]
     REP[report.py<br/>write_review_report]
     INIT[__init__.py<br/>re-exports]
+    PF[prose_facade.py<br/>report Protocols]
 
     CFG --> PIPE
     PIPE --> REP
     PIPE -. ManuscriptReport .-> FIG
     PIPE -. ManuscriptReport .-> MV
+    PIPE --> PF
+    FIG --> PF
+    REP --> PF
     INIT -. exposes .-> CFG
     INIT -. exposes .-> PIPE
     INIT -. exposes .-> FIG

@@ -114,14 +114,14 @@ When a future idea is reviewed, answer in this order:
 
 ## Current live signals
 
-Last refreshed: 2026-06-27.
+Last refreshed: 2026-07-05.
 
 - GitHub issues: `0` open via `gh-axi issue list --limit 30`.
 - GitHub PRs: `1` open, Dependabot PR #32 for `actions/checkout` `7.0.0`.
-- Public source scope: `infrastructure` plus 13 public exemplar `src` trees via
+- Public source scope: `infrastructure` plus 16 public exemplar `src` trees via
   `uv run python -m infrastructure.project.public_scope source-paths`.
-- Skills catalog: 56 entries via `uv run python -m infrastructure.skills list-json`.
-- Operations catalog: 18 entries via
+- Skills catalog: 57 entries via `uv run python -m infrastructure.skills list-json`.
+- Operations catalog: 31 entries via
   `uv run python -m infrastructure.skills operations-list-json`.
 - Package version and latest GitHub release: `3.5.1` / `v3.5.1`.
 

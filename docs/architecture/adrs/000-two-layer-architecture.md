@@ -37,7 +37,7 @@ Adopt a **two-layer architecture**:
 ### Positive
 
 - Single source of truth for each algorithm
-- Scripts become simple — "prove: thing is to orchestrate"
+- Scripts become simple — their only job is to orchestrate
 - Faster onboarding: new contributors know where to look
 - Testability: algorithms in `src/` can be unit tested directly
 

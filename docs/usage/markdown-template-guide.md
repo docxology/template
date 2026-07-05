@@ -25,12 +25,13 @@ The template demonstrates an academic paper structure organized as numbered mark
 
 ### Section References
 
-Use `\ref{sec:section_name}` to reference sections:
+Use `[@sec:section_name]` to reference sections — never raw `\ref{}` or a
+Markdown filename link (see [Manuscript Semantics](../guides/manuscript-semantics.md)):
 
 ```markdown
 # Introduction {#sec:introduction}
 
-The methodology described in Section \ref{sec:methodology} shows...
+The methodology described in [@sec:methodology] shows...
 ```
 
 **Available section labels:**
@@ -43,14 +44,14 @@ The methodology described in Section \ref{sec:methodology} shows...
 
 ### Equation References
 
-Use `\eqref{eq:equation_name}` to reference equations:
+Use `[@eq:equation_name]` to reference equations — never raw `\eqref{}`:
 
 ```markdown
-\begin{equation}\label{eq:convergence}
+$$
 \|x_k - x^*\| \leq C \rho^k
-\end{equation}
+$$ {#eq:convergence}
 
-The convergence rate \eqref{eq:convergence} shows...
+The convergence rate [@eq:convergence] shows...
 ```
 
 **Key equations in the template:**
@@ -69,17 +70,12 @@ The convergence rate \eqref{eq:convergence} shows...
 
 ### Figure References
 
-Use `\ref{fig:figure_name}` to reference figures:
+Use `[@fig:figure_name]` to reference figures — never raw `\ref{}`:
 
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../output/figures/experimental_setup.png}
-\caption{Experimental setup diagram}
-\label{fig:experimental_setup}
-\end{figure}
+![Experimental setup diagram.](../output/figures/experimental_setup.png){#fig:experimental_setup width=80%}
 
-Figure \ref{fig:experimental_setup} shows the pipeline...
+[@fig:experimental_setup] shows the pipeline...
 ```
 
 **Available figures:**
@@ -93,26 +89,30 @@ Figure \ref{fig:experimental_setup} shows the pipeline...
 
 ### Table References
 
-Use `\ref{tab:table_name}` to reference tables:
+Use `[@tbl:table_name]` to reference tables — never raw `\ref{}`:
 
 ```markdown
 | Metric | Value | Unit |
 |--------|-------|------|
 | Performance | 23.7% | improvement |
 
-Table \ref{tab:performance_summary} shows...
+: Performance summary. {#tbl:performance_summary}
+
+[@tbl:performance_summary] shows...
 ```
 
-## LaTeX Features Demonstrated
+## Equations and Cross-References
 
-### Equation Environments
+### Equation Forms
 
-The template shows proper use of LaTeX equation environments:
+The template supports two equivalent forms for a labelled display equation —
+the pure-Pandoc form is preferred; the raw-LaTeX `equation` environment also
+works because pandoc-crossref picks up `\label{}`:
 
 ```markdown
-\begin{equation}\label{eq:example}
+$$
 f(x) = \sum_{i=1}^{n} w_i \phi_i(x)
-\end{equation}
+$$ {#eq:example}
 ```
 
 ### Mathematical Notation
@@ -129,10 +129,10 @@ Examples of mathematical notation used:
 Demonstrates various cross-reference patterns:
 
 ```markdown
-- Section references: Section \ref{sec:methodology}
-- Equation references: \eqref{eq:convergence}
-- Figure references: Figure \ref{fig:convergence_plot}
-- Multiple references: equations \eqref{eq:objective} through \eqref{eq:convergence}
+- Section references: [@sec:methodology]
+- Equation references: [@eq:convergence]
+- Figure references: [@fig:convergence_plot]
+- Multiple references: [@eq:objective] through [@eq:convergence]
 ```
 
 ## Figure Generation
@@ -181,15 +181,11 @@ Figures are automatically saved to:
 
 ### Integration
 
-Figures are referenced in markdown using relative paths:
+Figures are referenced in markdown using relative paths, Pandoc image syntax,
+and a `{#fig:name}` attribute:
 
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../output/figures/figure_name.png}
-\caption{Figure caption}
-\label{fig:figure_name}
-\end{figure}
+![Figure caption.](../output/figures/figure_name.png){#fig:figure_name width=80%}
 ```
 
 ## Validation System
@@ -252,22 +248,22 @@ Generated outputs include:
 ### Writing New Sections
 
 1. **Add section label**: `# Section Title {#sec:section_name}`
-2. **Use descriptive equation labels**: `\label{eq:descriptive_name}`
-3. **Reference previous content**: Use `\ref{}` and `\eqref{}`
-4. **Include figures**: Reference generated figures with `\ref{fig:name}`
+2. **Use descriptive equation labels**: `{#eq:descriptive_name}`
+3. **Reference previous content**: Use `[@sec:name]` and `[@eq:name]` — never raw `\ref{}`/`\eqref{}`
+4. **Include figures**: Reference generated figures with `[@fig:name]`
 
 ### Adding Equations
 
-1. **Use equation environment**: `\begin{equation}\label{eq:name}...\end{equation}`
+1. **Use a labelled display block**: `$$ ... $$ {#eq:name}` (or `\begin{equation}\label{eq:name}...\end{equation}`)
 2. **Choose descriptive labels**: Avoid generic names like `eq:1`
-3. **Reference consistently**: Use `\eqref{eq:name}` throughout
+3. **Reference consistently**: Use `[@eq:name]` throughout — never `\eqref{}`
 
 ### Creating Figures
 
 1. **Generate with scripts**: Use scripts in `projects/{name}/scripts/` directory
 2. **Use projects/{name}/src/ methods**: Import and use tested methods from `projects/{name}/src/` modules
 3. **Save to output**: Place in `output/figures/`
-4. **Reference properly**: Use `\ref{fig:name}` in markdown
+4. **Reference properly**: Use `[@fig:name]` in markdown — never `\ref{}`
 5. **Include data**: Save both figures and data files
 
 ## Customization
@@ -282,7 +278,7 @@ Generated outputs include:
 ### Modifying Equations
 
 1. Update equation content and labels
-2. Update all references using `\eqref{}`
+2. Update all references using `[@eq:name]`
 3. Ensure label uniqueness across document
 
 ### Extending Figures
@@ -312,7 +308,7 @@ Generated outputs include:
 
 ### Reference Shows ??
 
-**Symptom**: `\ref{sec:label}` shows `??` in PDF
+**Symptom**: `[@sec:label]` shows `??` in PDF
 
 **Solution**: Check label exists - search for `{#sec:label_name}` in manuscript files
 

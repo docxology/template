@@ -6,8 +6,8 @@ The PDF rendering pipeline uses **two cooperating tools**:
 
 | Tool | Role | Activated by |
 |------|------|--------------|
-| Pandoc with `--natbib` | Converts `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`, ~line 39) |
-| `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | Same file (line 246) — auto-detected on `PATH` |
+| Pandoc with `--natbib` | Converts `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`, ~line 22) |
+| `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | Same file (~line 72) — auto-detected on `PATH` |
 
 Because these tools cooperate, **all citations must use Pandoc bracket-cite syntax** and **all cross-references must use Pandoc-crossref syntax**. Raw `\cite{}` and `\ref{}` work in PDF but break HTML / EPUB rendering and clutter the source.
 

@@ -22,6 +22,8 @@ metadata:
 
 For Pandoc-crossref `@fig:` / `[@key]` exemplars, see [`docs/guides/manuscript-semantics.md`](../../guides/manuscript-semantics.md). This skill is for **YAML registry + inline tokens**.
 
+> **Convention, not built-in infrastructure.** `refs/labels.yaml` and `[[FIG:]]`/`[[THMREF:]]`/`[[VAR:]]` tokens are a project-authored convention, not a dedicated parser in `infrastructure/`: no current public exemplar under `projects/templates/` uses this style (all ship Pandoc-crossref), and there is no `labels.yaml`-specific validator. Validation for a project that adopts this convention still runs through the generic `infrastructure.validation.cli markdown`/`prerender` checks below plus project-local test coverage the project author writes — token expansion is the project's own `manuscript_variables.py`-style substitution, not a shared registry engine.
+
 ## Natural invoke
 
 - "Audit [[FIG:]] tokens in actinf_policy_entanglement_lean manuscript"

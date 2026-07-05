@@ -47,6 +47,9 @@ Forwarded by `./secure_run.sh` to the Python `secure` subcommand (including `--d
 
 # Skip infrastructure tests during pipeline phase (passed through to runner)
 ./secure_run.sh --project template_code_project --skip-infra
+
+# Validate optional Kmyth/TPM tooling only; no rendering or sealing
+./secure_run.sh --validate-kmyth --project template_code_project
 ```
 
 There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--steganography-only` already runs the pipeline before steganography.
@@ -61,6 +64,7 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 | `--core-only` | Omit LLM-tagged stages during pipeline phase. |
 | `--resume` | Resume pipeline from checkpoint (pipeline phase only). |
 | `--deterministic` | Parsed by the Python `secure` subcommand ([`infrastructure/orchestration/cli.py`](../../infrastructure/orchestration/cli.py)): sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
+| `--validate-kmyth` | Validates optional Kmyth/TPM tooling from the effective secure-run configuration and exits without rendering or sealing PDFs; skips both the pipeline and steganography phases. |
 
 ### Deterministic / reproducible mode
 

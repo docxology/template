@@ -52,6 +52,7 @@ without copying ARS prompt content, schemas, or scripts.
 | Skill | Modes | Primary handoff |
 | --- | --- | --- |
 | `template-workflows` | `router` | selected child skill |
+| `template-startup` | `install`, `validate` | pipeline debugging, reproducibility audit, comprehensive assessment |
 | `template-comprehensive-assessment` | `full-audit` | validation, claim verification, reproducibility |
 | `template-pipeline-debugging` | `stage-triage`, `resume` | validation or reproducibility |
 | `template-reproducibility-audit` | `double-run`, `release-readiness` | claim verification |

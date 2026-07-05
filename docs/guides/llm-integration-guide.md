@@ -87,7 +87,7 @@ client = LLMClient(OllamaClientConfig(default_model="gemma3:4b"))
 
 # Extract manuscript text from a rendered PDF
 text, _ = extract_manuscript_text(
-    Path("output/template_code_project/pdf/template_code_project_combined.pdf")
+    Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
 )
 
 # Generate a structured quality review

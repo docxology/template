@@ -18,6 +18,8 @@ Technical guide for `docs/development/` — contribution guidelines, testing, se
 | `no-mocks-http-testing.md` | No-mocks HTTP testing with `pytest-httpserver` |
 | `code-review-checklist.md` | Eight-criterion review checklist |
 | `validation_gates.md` | Validation gate stages and enforcement |
+| `contribution-map.md` | Pre-contribution overlap check, contribution-shape routing, current live repo signals |
+| `optional-dependencies.md` | Capability matrix for optional dependency groups and their gating behavior |
 
 ## Key Conventions
 

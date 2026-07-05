@@ -89,6 +89,6 @@ Running `--core-only` excludes stages with the `llm` tag (leaving eight core sta
 
 - [`infrastructure/core/pipeline/dag.py`](../../../infrastructure/core/pipeline/dag.py) — DAG engine
 - [`infrastructure/core/pipeline/pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml) — Default definition
-- [`infrastructure/AGENTS.md`](../../../infrastructure/AGENTS.md#core-module) — Pipeline module docs
+- [`infrastructure/core/AGENTS.md`](../../../infrastructure/core/AGENTS.md) — Pipeline module docs
 - [`docs/RUN_GUIDE.md`](../../RUN_GUIDE.md) — User-facing stage guide
 - [`core/workflow.md`](../../core/workflow.md) — Workflow explanation

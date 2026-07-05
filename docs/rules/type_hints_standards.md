@@ -395,26 +395,38 @@ class Node:
 ### mypy Static Type Checking
 
 ```bash
-# Check types in public CI source paths
+# Check types in public CI source paths — this is the actual CI gate
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
-
-# Strict mode (recommended)
-uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy --strict
 
 # Check specific file
 uv run mypy infrastructure/core/test_runner.py
 ```
 
-### Configuration (mypy.ini)
+**Do not run bare `mypy --strict` and expect a clean result** — the repo does
+not hold itself to blanket strict mode. `--strict` against the current public
+CI source paths reports 75 errors across 24 files (verified). The real CI gate
+is a custom progressive-strictness config: a permissive base
+(`disallow_untyped_defs = false`), specific modules opted into
+`disallow_untyped_defs = true` (`infrastructure.core.health_check`,
+`infrastructure.core.exceptions`, `infrastructure.rendering.*`), and several
+`infrastructure.*` packages still under `ignore_errors = true` pending
+narrowing — see `[tool.mypy]` in `pyproject.toml` (not a separate `mypy.ini`)
+for the authoritative, current list.
 
-```ini
-[mypy]
-python_version = 3.11
-warn_return_any = True
-warn_unused_configs = True
-disallow_untyped_defs = True
-disallow_incomplete_defs = True
-check_untyped_defs = True
+### Configuration (`pyproject.toml` → `[tool.mypy]`)
+
+```toml
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # tightened per-module via [[tool.mypy.overrides]]
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+explicit_package_bases = true
 ```
 
 ### Ignoring Type Checks

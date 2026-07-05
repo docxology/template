@@ -337,7 +337,7 @@ sudo apt-get install -y texlive-latex-base texlive-xetex pandoc
 uv sync
 
 # Configure credentials
-cp .env.example .env
+cp infrastructure/config/.env.template .env
 nano .env  # Add your credentials
 
 # Run tests
@@ -355,7 +355,7 @@ brew install pandoc
 uv sync
 
 # Configure credentials
-cp .env.example .env
+cp infrastructure/config/.env.template .env
 nano .env  # Add your credentials
 
 # Run tests
@@ -372,7 +372,7 @@ uv run pytest tests/
 uv sync
 
 # Configure credentials
-copy .env.example .env
+copy infrastructure\config\.env.template .env
 notepad .env  # Add your credentials
 
 # Run tests

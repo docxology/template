@@ -501,7 +501,7 @@ uv run python scripts/06_llm_review.py --reviews-only
 
 **Symptoms:**
 ```
-✗ Input exceeds context window: 300000 chars > 262144 limit
+✗ Input exceeds context window: 300000 chars > 131072 limit
 ✗ Truncating input to fit context window
 ```
 

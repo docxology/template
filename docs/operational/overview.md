@@ -5,7 +5,7 @@ This directory contains runbooks, maintenance procedures, configuration tools, a
 ## Scope
 
 - **Deployment** — Docker-based containerization and local development setup
-- **Configuration** — Interactive wizard for environment validation and setup
+- **Configuration** — Documented setup steps for environment validation (there is no separate interactive wizard CLI; see [`config-wizard.md`](config-wizard.md))
 - **Maintenance** — Log rotation, dependency updates, backup strategies
 - **Incident Response** — Runbook for daily, weekly, and monthly operational tasks
 

@@ -31,7 +31,6 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
 | `prompts/` | Agent workflow skills — hub [`prompts/SKILL.md`](prompts/SKILL.md); see [prompts/AGENTS.md](prompts/AGENTS.md) |
-| `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
 | `rules/` | Contributor norms — expanded standards; repo-root [`.cursorrules`](../.cursorrules) is the Cursor-facing summary |
 | `streams/` | Timestamped notes for livestreams and recorded talks |

@@ -157,7 +157,7 @@ Migration involves adapting your existing project structure to match the templat
    ```markdown
    # Update references
    # Old: See Section 2
-   # New: See \ref{sec:methodology}
+   # New: See [@sec:methodology]
    ```
 
 4. **Set up build system:**
@@ -354,7 +354,7 @@ mv methods.md projects/my_project/manuscript/03_methodology.md
 ```markdown
 # Update reference format
 # Old: See Section 2
-# New: See \ref{sec:methodology}
+# New: See [@sec:methodology]
 
 # Add section labels
 # Introduction {#sec:introduction}
@@ -409,7 +409,7 @@ uv run pytest projects/my_project/tests/ --cov=projects/my_project/src
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Verify outputs (exemplar layout)
-ls -la output/template_code_project/pdf/
+ls -la output/templates/template_code_project/pdf/
 ```
 
 ## Common Migration Challenges
@@ -465,8 +465,8 @@ uv run pytest projects/my_project/tests/ --cov=projects/my_project/src --cov-rep
 ```markdown
 # Update to template format
 # Add section labels: {#sec:section_name}
-# Update cross-references: \ref{sec:section_name}
-# Use equation environments: \begin{equation}...\end{equation}
+# Update cross-references: [@sec:section_name]
+# Use labelled equations: $$ ... $$ {#eq:name} (or \begin{equation}\label{eq:name}...\end{equation})
 ```
 
 ## Data Preservation

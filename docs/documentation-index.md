@@ -195,9 +195,9 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`, `published/`, `other/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
-- **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 11 archival providers
+- **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 13 archival providers
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/ci_local.sh`)
-- **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 10 executable bundle design
+- **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 12 executable bundle design (file predates the Ebook/Metadata stage insertion; kept its original name)
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
 - **[maintenance/review-remediation-2026-07.md](maintenance/review-remediation-2026-07.md)** - Multi-lens review remediation plan (R1–R18 items with acceptance lines)
@@ -389,7 +389,6 @@ flowchart TB
     DOCS --> PROMPTS[prompts]
     DOCS --> SEC[security]
     DOCS --> STREAMS[streams]
-    DOCS --> AUDIT[audit]
     DOCS --> RULES[rules]
     DOCS --> GEN[_generated]
     OP --> OP_CFG[operational config]

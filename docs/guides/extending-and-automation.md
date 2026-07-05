@@ -331,7 +331,7 @@ if __name__ == '__main__':
     main()
 ```
 
-**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 14 jobs, including the detect and detect-projects gates, actionlint, lint, the informational health report, verify-no-mocks, infra and project test matrices, validation, security, docs lint, performance, and the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) documented in [`.github/AGENTS.md`](../../.github/AGENTS.md). Study it as a reference for your own CI setup.
+**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 15 jobs, including the detect and detect-projects gates, actionlint, lint, the informational health report, verify-no-mocks, infra/project/regression test matrices, validation, security, docs lint, performance, and the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) documented in [`.github/AGENTS.md`](../../.github/AGENTS.md). Study it as a reference for your own CI setup.
 
 ---
 

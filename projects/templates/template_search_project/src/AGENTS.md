@@ -18,6 +18,12 @@ Domain glue only: configuration, pipeline orchestration over `infrastructure/`, 
 | [`figures.py`](figures.py) | Matplotlib summaries from search results |
 | [`manuscript_variables.py`](manuscript_variables.py) | ``compute_variables``, ``write_resolved_manuscript_tree`` — JSON + ``output/manuscript/`` for render |
 | [`analysis.py`](analysis.py) | Custom `scripts/review` stage hooks; `validate_bibliography_completeness` unions all `manuscript/*.bib`; `validate_variables_resolved` prefers `output/manuscript/` when present |
+| [`composition.py`](composition.py) | `compose_literature_review` — thin-orchestrator body for `scripts/s_compose_literature_review.py` |
+| [`dashboard.py`](dashboard.py) | Interactive search-coverage dashboard payload/panels — body for `scripts/zzz_build_dashboard.py` |
+| [`deep_search_cli.py`](deep_search_cli.py) | `run_deep_search_cli` — CLI-orchestration body for `scripts/run_deep_search.py` |
+| [`search_pipeline_cli.py`](search_pipeline_cli.py) | `run_search_pipeline_cli` — CLI-orchestration body for `scripts/run_search_pipeline.py` |
+| [`search_invariants.py`](search_invariants.py) | Pure-compute coverage invariants over `output/deep_search/aggregate.json` and `output/corpus.json` |
+| [`review_report.py`](review_report.py) | `generate_review_report` — inventory/documentation/bibliography audits, body for `scripts/zz_generate_review_report.py` |
 
 ## Contracts
 

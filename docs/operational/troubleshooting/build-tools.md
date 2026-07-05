@@ -204,17 +204,18 @@ Normal - pypdf gracefully handles malformed PDF objects.
 **Diagnosis:**
 
 ```bash
-# Check labels exist
-grep -r '\label{' projects/<name>/manuscript/
+# Check labels exist (Pandoc-crossref attribute syntax, e.g. {#sec:name}, {#fig:name})
+grep -rn '{#sec:\|{#fig:\|{#eq:\|{#tbl:' projects/<name>/manuscript/
 
-grep -r '\ref{' projects/<name>/manuscript/
+# Check the bracketed reference is present ([@sec:name], [@fig:name], ...)
+grep -rn '\[@sec:\|\[@fig:\|\[@eq:\|\[@tbl:' projects/<name>/manuscript/
 ```
 
 **Solutions:**
 
-1. Ensure label defined: `\label{sec:name}` after section heading
-2. Check reference matches: `\ref{sec:name}` matches label
-3. Rebuild (multiple passes needed): `uv run python scripts/execute_pipeline.py --project {name} --core-only`
+1. Ensure the label is defined: `# Heading {#sec:name}` (section) or `![caption](path){#fig:name}` (figure).
+2. Check the reference matches: `[@sec:name]` must match the label exactly — never raw LaTeX `\ref{}`/`\label{}`, which breaks HTML/EPUB output (see [manuscript-semantics.md](../../guides/manuscript-semantics.md)).
+3. Rebuild: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ---
 

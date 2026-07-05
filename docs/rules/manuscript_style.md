@@ -4,6 +4,8 @@
 
 This guide provides formatting standards for writing research manuscripts in the `projects/{name}/manuscript/` directory. All manuscript content must follow these standards to ensure consistency, proper rendering, and correct cross-referencing.
 
+**Canonical syntax reference:** [`docs/guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) is the single source of truth for manuscript Markdown semantics. The PDF pipeline runs Pandoc with `--natbib` (converts `[@key]` to natbib citation commands) plus the `pandoc-crossref` filter (resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references). Raw `\cite{}` and `\ref{}` work in PDF-only output but **break HTML / EPUB rendering** and are never used in any real exemplar manuscript — this guide teaches the Pandoc-native syntax throughout.
+
 ## Lists
 
 ### Ordered Lists (Numbered)
@@ -110,19 +112,9 @@ For list items with multiple paragraphs, indent subsequent paragraphs.
 2. Second item.
 ```
 
-### Lists in LaTeX vs Markdown
+### Always Use Markdown Lists
 
-- **Markdown lists** are converted to LaTeX `itemize` or `enumerate` environments during PDF rendering
-- **LaTeX lists** can be used directly in markdown for more control:
-
-  ```latex
-  \begin{itemize}
-  \item First item
-  \item Second item
-  \end{itemize}
-  ```
-
-**Best Practice:** Use Markdown lists for simplicity; use LaTeX lists only when specific formatting is required.
+Pandoc converts Markdown `-`/`1.` lists to the correct output-format construct automatically (LaTeX `itemize`/`enumerate` for PDF, `<ul>`/`<ol>` for HTML/EPUB). **Do not write raw `\begin{itemize}`/`\begin{enumerate}` in manuscript Markdown** — it renders correctly in PDF but produces broken or literal output in HTML/EPUB, the same portability problem raw `\cite{}`/`\ref{}` cause. There is no legitimate case in this pipeline for a hand-written LaTeX list environment inside `manuscript/*.md`.
 
 ## Equations
 
@@ -152,9 +144,17 @@ $\nabla f(x_k)$, where $k$ is the iteration index.
 
 ### Display Equations
 
-Use the `equation` environment for standalone equations that should be centered and numbered.
+Use a standalone, numbered block for equations that should be centered, numbered, and cross-referenced.
 
-**Syntax:**
+**Preferred syntax — pure Pandoc:**
+
+```markdown
+$$
+f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
+$$ {#eq:objective}
+```
+
+**Also acceptable — raw-LaTeX `equation` environment (pandoc-crossref still resolves the label):**
 
 ```markdown
 \begin{equation}
@@ -162,6 +162,8 @@ Use the `equation` environment for standalone equations that should be centered 
 f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
 \end{equation}
 ```
+
+Both forms number correctly and both labels resolve via `[@eq:objective]`. Prefer the `$$ … $$ {#eq:label}` form for new content — it's shorter and doesn't imply a LaTeX-only dependency.
 
 **When to Use:**
 
@@ -175,10 +177,9 @@ f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
 ```markdown
 The optimization problem we solve is:
 
-\begin{equation}
-\label{eq:optimization}
+$$
 \min_{x \in \mathcal{X}} f(x) \quad \text{subject to} \quad g_i(x) \leq 0, \quad i = 1, \ldots, m
-\end{equation}
+$$ {#eq:optimization}
 
 where $\mathcal{X}$ is the feasible set.
 ```
@@ -190,142 +191,120 @@ All important equations must have descriptive labels.
 **Naming Convention:**
 
 - Prefix: `eq:`
-- Format: `eq:descriptive_name`
+- Format: `{#eq:descriptive_name}` (or `\label{eq:descriptive_name}` inside a raw `equation` environment)
 - Use lowercase with underscores
 - Be descriptive, not generic
 
 **Good Examples:**
 
 ```markdown
-\label{eq:objective}
-\label{eq:convergence_rate}
-\label{eq:update_rule}
-\label{eq:adaptive_step_size}
+{#eq:objective}
+{#eq:convergence_rate}
+{#eq:update_rule}
+{#eq:adaptive_step_size}
 ```
 
 **Bad Examples:**
 
 ```markdown
-\label{eq:1}           # Too generic
-\label{eq:eq1}         # Redundant prefix
-\label{eq:MyEquation}  # Inconsistent case
+{#eq:1}           # Too generic
+{#eq:eq1}         # Redundant prefix
+{#eq:MyEquation}  # Inconsistent case
 ```
 
 ### Equation References
 
-Reference equations using `\eqref{}` command.
+**Reference equations with `[@eq:label]`, never `\eqref{}` or `\ref{}`.** The bracketed cross-reference form renders as "eq. 1" (or "Equation 1" with `cleveref`) in every output format; `\eqref{}` requires LaTeX-only output and breaks HTML/EPUB.
 
 **Syntax:**
 
 ```markdown
-As shown in \eqref{eq:objective}, the objective function...
-The convergence rate \eqref{eq:convergence} demonstrates...
+As shown in [@eq:objective], the objective function...
+The convergence rate [@eq:convergence] demonstrates...
 ```
 
 **Placement:**
 
-- Before punctuation: "Equation \eqref{eq:name} shows..."
-- In parentheses: "The result (see \eqref{eq:name}) indicates..."
-- As part of sentence: "Using \eqref{eq:name}, we derive..."
+- Before punctuation: "Equation [@eq:name] shows..."
+- In parentheses: "The result (see [@eq:name]) indicates..."
+- As part of sentence: "Using [@eq:name], we derive..."
+- Narrative form: "@eq:name shows that..." (no brackets — reads as "Equation 1 shows that...")
 
 ### Multi-Line Equations
 
-For equations spanning multiple lines, use `align` or `split` environments.
+For equations spanning multiple lines, use `align` or `split` environments — pandoc-crossref resolves labels on these the same way as a plain `equation` block.
 
 **Align Environment (multiple equations):**
 
 ```markdown
 \begin{align}
-\label{eq:system}
 x_{k+1} &= x_k - \alpha_k \nabla f(x_k) \\
 y_{k+1} &= y_k + \beta_k (x_k - x_{k-1})
-\end{align}
+\end{align} {#eq:system}
 ```
 
 **Split Environment (single equation, multiple lines):**
 
 ```markdown
-\begin{equation}
+$$
 \begin{split}
-\label{eq:complex}
 f(x) &= \sum_{i=1}^{n} w_i \phi_i(x) \\
      &\quad + \lambda \sum_{j=1}^{m} |x_j| \\
      &\quad + \gamma \|x\|^2
 \end{split}
-\end{equation}
+$$ {#eq:complex}
 ```
 
 ### Numbering Conventions
 
-- Equations are automatically numbered by LaTeX
+- Equations are automatically numbered by `pandoc-crossref`
 - Numbering is sequential throughout the document
-- Supplemental sections use separate numbering (S1, S2, etc.)
+- Supplemental sections use separate numbering (S1, S2, etc.) if the project configures a supplement prefix
 
 ### DO NOT Use
 
-**Never use these for display math:**
+**Never place a display-math delimiter inline in the middle of a running prose sentence:**
 
 ```markdown
-Prose $$ f(x) = x^2 $$     # ❌ BAD: inline display delimiter
-\[ f(x) = x^2 \]          # ❌ BAD: raw bracket display math
+Prose $$ f(x) = x^2 $$ continues here.     # ❌ BAD: breaks paragraph flow
 ```
 
-**Always use:**
+**Always give a display equation its own block, with a label:**
 
 ```markdown
-\begin{equation}
-\label{eq:name}
+$$
 f(x) = x^2
-\end{equation}
+$$ {#eq:name}
 ```
 
 ## Figures
 
-### Figure Placement
+Manuscript figures use standard Pandoc image syntax — never a raw `\begin{figure}...\end{figure}`/`\includegraphics{}` block. Pandoc converts a labeled image to a numbered, captioned figure in every output format (PDF, HTML, EPUB); a hand-written LaTeX figure environment only works in PDF.
 
-Use placement specifiers to control figure location.
-
-**Options:**
-
-- `[h]` - Here (current position, if possible)
-- `[t]` - Top of page
-- `[b]` - Bottom of page
-- `[H]` - Here (force current position, requires `float` package)
-- `[!htbp]` - Try here, then top, then bottom, then separate page
-
-**Syntax:**
+### Figure Syntax
 
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../output/figures/figure_name.png}
-\caption{Descriptive caption explaining the figure.}
-\label{fig:figure_name}
-\end{figure}
+![Descriptive caption explaining the figure.](../output/figures/figure_name.png){#fig:figure_name width=80%}
 ```
 
-**Best Practice:** Use `[h]` for most figures; use `[t]` or `[b]` if figure is large.
+- The bracketed text `[...]` is the caption.
+- The parenthesized path `(...)` is the image path.
+- The brace attributes `{#fig:label width=...}` carry the cross-reference label and sizing.
 
 ### Figure Sizing
 
-Control figure size using `width` or `height` parameters.
+Control figure size with the `width` (or `height`) attribute — a fraction of the text width, not a raw `\includegraphics[width=...\textwidth]` command.
 
 **Common Sizes:**
 
 ```markdown
-width=0.5\textwidth   # Half page width
-width=0.8\textwidth   # 80% page width (most common)
-width=0.9\textwidth   # 90% page width
-width=\textwidth      # Full page width
+{#fig:name width=50%}   # Half page width
+{#fig:name width=80%}   # 80% page width (most common)
+{#fig:name width=90%}   # 90% page width
+{#fig:name width=100%}  # Full page width
 ```
 
-**Syntax:**
-
-```markdown
-\includegraphics[width=0.8\textwidth]{../output/figures/figure.png}
-```
-
-**Best Practice:** Use `0.8\textwidth` for most figures to leave margins.
+**Best Practice:** Use `width=80%` for most figures to leave margins.
 
 ### Figure Paths
 
@@ -339,20 +318,20 @@ All figures must use relative paths from the manuscript directory.
 
 **Requirements:**
 
-- Paths are relative to `projects/{name}/manuscript/`
+- Paths are relative to `projects/{name}/manuscript/` (Pandoc resolves them via `--resource-path`)
 - Figures are stored in `projects/{name}/output/figures/`
 - Use forward slashes (`/`) even on Windows
-- Include file extension (`.png`, `.pdf`, `.jpg`)
+- Include file extension (`.png` preferred for archival stability)
 
 **Example:**
 
 ```markdown
-\includegraphics[width=0.9\textwidth]{../output/figures/convergence_plot.png}
+![Convergence plot showing objective value vs iteration.](../output/figures/convergence_plot.png){#fig:convergence width=90%}
 ```
 
 ### Figure Captions
 
-Captions must be descriptive and sentences.
+Captions must be descriptive and complete sentences. They appear under the figure in the PDF **and as alt text in HTML/EPUB output**, so they must be self-contained — never "see above" or content that depends on the figure being visible.
 
 **Format:**
 
@@ -364,17 +343,17 @@ Captions must be descriptive and sentences.
 **Good Examples:**
 
 ```markdown
-\caption{Algorithm convergence comparison showing performance improvement over baseline methods.}
-\caption{Experimental setup diagram illustrating the data processing pipeline.}
-\caption{Scalability analysis demonstrating $O(n \log n)$ computational complexity.}
+![Algorithm convergence comparison showing performance improvement over baseline methods.](../output/figures/convergence.png){#fig:convergence}
+![Experimental setup diagram illustrating the data processing pipeline.](../output/figures/setup.png){#fig:setup}
+![Scalability analysis demonstrating $O(n \log n)$ computational complexity.](../output/figures/scalability.png){#fig:scalability}
 ```
 
 **Bad Examples:**
 
 ```markdown
-\caption{convergence plot}                    # Too brief, not a sentence
-\caption{Figure showing results}              # Vague, doesn't describe content
-\caption{Results.}                            # Incomplete sentence
+![convergence plot](../output/figures/convergence.png){#fig:convergence}      # Too brief, not a sentence
+![Figure showing results](../output/figures/results.png){#fig:results}       # Vague, doesn't describe content
+![Results.](../output/figures/results.png){#fig:results}                     # Incomplete sentence
 ```
 
 ### Figure Labels
@@ -384,137 +363,83 @@ All figures must have descriptive labels.
 **Naming Convention:**
 
 - Prefix: `fig:`
-- Format: `fig:descriptive_name`
+- Format: `{#fig:descriptive_name}`
 - Use lowercase with underscores
 - Match filename when possible
 
 **Good Examples:**
 
 ```markdown
-\label{fig:convergence_plot}
-\label{fig:experimental_setup}
-\label{fig:scalability_analysis}
-\label{fig:ablation_study}
+{#fig:convergence_plot}
+{#fig:experimental_setup}
+{#fig:scalability_analysis}
+{#fig:ablation_study}
 ```
 
 **Bad Examples:**
 
 ```markdown
-\label{fig:1}              # Too generic
-\label{fig:figure1}        # Redundant prefix
-\label{fig:MyFigure}       # Inconsistent case
+{#fig:1}              # Too generic
+{#fig:figure1}        # Redundant prefix
+{#fig:MyFigure}       # Inconsistent case
 ```
 
 ### Figure References
 
-Reference figures using `\ref{}` command.
+**Reference figures using `[@fig:label]`, never `\ref{}`.**
 
 **Syntax:**
 
 ```markdown
-As shown in Figure \ref{fig:convergence_plot}, the algorithm...
-The experimental setup (Figure \ref{fig:experimental_setup}) includes...
+As shown in [@fig:convergence_plot], the algorithm...
+The experimental setup ([@fig:experimental_setup]) includes...
 ```
 
 **Placement:**
 
-- Capitalize "Figure" when starting a sentence
-- Use lowercase "figure" in the middle of a sentence
-- Place reference before the figure when possible
+- Capitalize "Figure" when starting a sentence (with `cleveref`/`--number-sections`, `[@fig:name]` renders as "Fig. 3" or "Figure 3" depending on style; write prose so capitalization reads naturally either way)
+- Place reference before or after the figure as the narrative requires
 
 **Examples:**
 
 ```markdown
-Figure \ref{fig:convergence_plot} shows the convergence behavior.
-The results, shown in figure \ref{fig:results}, demonstrate...
-As illustrated in \ref{fig:setup}, the system includes...
+[@fig:convergence_plot] shows the convergence behavior.
+The results, shown in [@fig:results], demonstrate...
+As illustrated in [@fig:setup], the system includes...
 ```
 
-### Figure Formatting
+### Supported Formats
 
-**Centering:**
-
-```markdown
-\begin{figure}[h]
-\centering
-% ... includegraphics ...
-\end{figure}
-```
-
-**Supported Formats:**
-
-- PNG (recommended for plots)
+- PNG (recommended for plots — archival stability, 300 dpi, colourblind-safe palette)
 - PDF (recommended for vector graphics)
 - JPG/JPEG (for photographs)
 
-**Best Practice:** Use PNG for plots and diagrams; use PDF for vector graphics.
-
 ## Tables
 
-### Table Environment
+Manuscript tables use Pandoc pipe-tables with a caption line — never a raw `\begin{table}...\begin{tabular}...\end{table}` block. Pipe-tables render correctly in PDF, HTML, and EPUB; a hand-written LaTeX table only works in PDF.
 
-Use the `table` environment for all tables.
-
-**Basic Syntax:**
+### Table Syntax
 
 ```markdown
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|r|}
-\hline
-\textbf{Column 1} & \textbf{Column 2} & \textbf{Column 3} \\
-\hline
-Row 1, Col 1 & Row 1, Col 2 & Row 1, Col 3 \\
-Row 2, Col 1 & Row 2, Col 2 & Row 2, Col 3 \\
-\hline
-\end{tabular}
-\caption{Descriptive caption explaining the table.}
-\label{tab:table_name}
-\end{table}
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Row 1, Col 1 | Row 1, Col 2 | Row 1, Col 3 |
+| Row 2, Col 1 | Row 2, Col 2 | Row 2, Col 3 |
+
+: Descriptive caption explaining the table. {#tbl:table_name}
 ```
 
-### Tabular Formatting
+The caption line (`: <caption text> {#tbl:label}`) goes **directly below the table, no blank line in between** — that's what attaches it to the table for numbering.
 
-**Column Alignment:**
+### Column Alignment
 
-- `l` - Left-aligned
-- `c` - Center-aligned
-- `r` - Right-aligned
-- `|` - Vertical border
+Pipe-table alignment is set with colons in the header separator row, not a LaTeX `l`/`c`/`r`/`|` column-spec string.
 
 **Examples:**
 
 ```markdown
-\begin{tabular}{lcr}           % Left, center, right (no borders)
-\begin{tabular}{|l|c|r|}        % With vertical borders
-\begin{tabular}{ll}             % Two left-aligned columns
-\begin{tabular}{|c|c|c|c|}      % Four centered columns with borders
-```
-
-### Table Borders
-
-**Horizontal Borders:**
-
-- `\hline` - Full-width horizontal line
-- Place before first row and after last row
-- Use between header and data rows
-
-**Vertical Borders:**
-
-- `|` in column specification
-- Use sparingly for clarity
-
-**Example:**
-
-```markdown
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Method} & \textbf{Accuracy} & \textbf{Time (s)} \\
-\hline
-Baseline & 0.85 & 10.2 \\
-Our Method & 0.92 & 8.5 \\
-\hline
-\end{tabular}
+| Left | Center | Right |
+|:-----|:------:|------:|
 ```
 
 ### Table Captions
@@ -523,15 +448,15 @@ Follow the same caption guidelines as figures.
 
 **Format:**
 
-- Descriptive and sentences
+- Descriptive and complete sentences
 - Start with capital letter
 - End with period
-- Place above table (before `\label`)
+- Place directly below the table body, as the `: caption {#tbl:label}` line
 
 **Example:**
 
 ```markdown
-\caption{Performance comparison showing accuracy and execution time for different methods.}
+: Performance comparison showing accuracy and execution time for different methods. {#tbl:performance_comparison}
 ```
 
 ### Table Labels
@@ -540,101 +465,82 @@ All tables must have descriptive labels.
 
 **Naming Convention:**
 
-- Prefix: `tab:`
-- Format: `tab:descriptive_name`
+- Prefix: `tbl:`
+- Format: `{#tbl:descriptive_name}`
 - Use lowercase with underscores
 
 **Good Examples:**
 
 ```markdown
-\label{tab:performance_comparison}
-\label{tab:dataset_summary}
-\label{tab:hyperparameter_settings}
+{#tbl:performance_comparison}
+{#tbl:dataset_summary}
+{#tbl:hyperparameter_settings}
 ```
 
 ### Table References
 
-Reference tables using `\ref{}` command.
+**Reference tables using `[@tbl:label]`, never `\ref{tab:name}` or a hardcoded "Table 1".**
 
 **Syntax:**
 
 ```markdown
-Table \ref{tab:performance_comparison} shows...
-The results (see Table \ref{tab:results}) indicate...
+[@tbl:performance_comparison] shows...
+The results (see [@tbl:results]) indicate...
 ```
 
-**Placement:**
+### Dynamic Table Bodies
 
-- Capitalize "Table" when starting a sentence
-- Use lowercase "table" in the middle of a sentence
+For table rows generated from analysis output rather than hand-typed, use a `{{TOKEN}}` placeholder inside the table body — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/manuscript/03_results.md) (`RESULT_TABLE_ROWS`) for a real example. Never hardcode a number that changes with `config.yaml` or an analysis re-run.
 
-### Markdown Tables vs LaTeX Tables
+### Complex Tables (merged cells)
 
-**Markdown Tables:**
-
-- Simple tables with basic formatting
-- Converted to LaTeX during rendering
-- Limited formatting options
-
-**LaTeX Tables:**
-
-- Full control over formatting
-- Support for complex layouts
-- Required for multirow/multicolumn
-
-**Best Practice:** Use LaTeX tables for publication-quality formatting; use Markdown tables only for simple data.
-
-### Complex Tables
-
-For tables with merged cells, use `multirow` and `multicolumn` packages.
-
-**Example:**
-
-```markdown
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Method}} & \multicolumn{2}{c|}{\textbf{Performance}} \\
-\cline{2-3}
-& Accuracy & Time (s) \\
-\hline
-Baseline & 0.85 & 10.2 \\
-Our Method & 0.92 & 8.5 \\
-\hline
-\end{tabular}
-\caption{Complex table with merged cells.}
-\label{tab:complex}
-\end{table}
-```
+Pandoc pipe-tables cannot express merged cells (`multirow`/`multicolumn`). No current public exemplar needs this; if a project genuinely requires it, a raw LaTeX `table`/`tabular` block is a PDF-only escape hatch — document the HTML/EPUB degradation explicitly in the project's own manuscript `AGENTS.md` if you use it, and prefer restructuring the table (e.g., a second small pipe-table, or splitting one wide column) over reaching for `multirow` first.
 
 ## Citations
 
 ### Citation Format
 
-Use `\cite{}` command for citations.
+**Use Pandoc bracket-cite syntax, never `\cite{}`, `\citep{}`, or `\citet{}`.** Pandoc emits the correct LaTeX citation command automatically under `--natbib` at render time; hand-writing `\cite{}` in the Markdown source works in PDF only and breaks HTML/EPUB.
 
 **Basic Syntax:**
 
 ```markdown
-According to recent research \cite{author2023}, this method...
-The algorithm \cite{kingma2014} demonstrates...
+According to recent research [@author2023], this method...
+The algorithm [@kingma2014] demonstrates...
+```
+
+**Narrative form** (author name reads as part of the sentence):
+
+```markdown
+@kingma2014 demonstrated that...
+```
+
+**Suppressed-author form** (year/number only, e.g. after the author was just named):
+
+```markdown
+Kingma and Ba [-@kingma2014] later extended this to...
 ```
 
 ### Multiple Citations
 
-Cite multiple sources using comma-separated keys.
+Cite multiple sources semicolon-separated inside one bracket pair.
 
 **Syntax:**
 
 ```markdown
-\cite{key1,key2,key3}
+[@key1; @key2; @key3]
 ```
 
 **Example:**
 
 ```markdown
-Previous work \cite{boyd2004, nesterov2018, kingma2014} has shown...
+Previous work [@boyd2004; @nesterov2018; @kingma2014] has shown...
+```
+
+### Citations With a Locator
+
+```markdown
+[@knuth1997, pp. 42-45]
 ```
 
 ### Citation Placement
@@ -644,14 +550,14 @@ Place citations before punctuation marks.
 **Correct:**
 
 ```markdown
-The method works well \cite{author2023}.
-Previous research \cite{key1,key2} has demonstrated this.
+The method works well [@author2023].
+Previous research [@key1; @key2] has demonstrated this.
 ```
 
 **Incorrect:**
 
 ```markdown
-The method works well.\cite{author2023}  # ❌ After punctuation
+The method works well.[@author2023]  # ❌ After punctuation
 ```
 
 ### Citation Keys
@@ -660,9 +566,9 @@ Citation keys are case-sensitive and must match entries in `references.bib`.
 
 **Requirements:**
 
-- Keys are defined in `projects/{name}/manuscript/references.bib`
+- Keys are defined in `projects/{name}/manuscript/references.bib` (Pandoc merges every `manuscript/*.bib`, so a project with a supplemental bib file like `references_deep.bib` just drops it alongside)
 - Use exact key spelling (case-sensitive)
-- Keys typically follow pattern: `authorYYYY` or `authorYYYYkeyword`
+- Keys typically follow the auto-generator convention `<surname><year><titleword>` — e.g. `boyd2004convex`, `kingma2014adam`
 
 **Example:**
 
@@ -678,18 +584,10 @@ Citation keys are case-sensitive and must match entries in `references.bib`.
 **Usage:**
 
 ```markdown
-The Adam optimizer \cite{kingma2014} provides...
+The Adam optimizer [@kingma2014] provides...
 ```
 
-### Bibliography Style
-
-The system uses `plainnat` style, which produces numbered citations `[1]`, `[2]`, etc.
-
-**Output Format:**
-
-- Citations appear as `[1]`, `[2]`, `[3]` in text
-- Bibliography is numbered and sorted
-- Multiple citations: `[1,2,3]` or `[1-3]`
+An undefined key surfaces as `[?]` in the rendered PDF and as a warning in the build log — this is the fastest way to spot a typo'd or missing citation.
 
 ## Section Headings
 
@@ -703,6 +601,8 @@ Use consistent heading levels to maintain document structure.
 - `##` - Subsection (e.g., "Experimental Setup", "Results")
 - `###` - Subsubsection (e.g., "Convergence Analysis", "Ablation Studies")
 - `####` - Paragraph-level heading (use sparingly)
+
+**Never manually number a heading** (e.g. `## 2.1 Search`) — write the plain heading text and let Pandoc's `--number-sections` apply the prefix automatically; a manual prefix collides with autonumbering and produces "2 2.1 Search" in the rendered output.
 
 **Example:**
 
@@ -718,7 +618,7 @@ Use consistent heading levels to maintain document structure.
 
 ### Section Labels
 
-All main sections and important subsections should have labels.
+**Every top-level section heading carries a `{#sec:<short_name>}` label.** This enables `[@sec:methodology]` cross-references that stay stable under section reordering.
 
 **Naming Convention:**
 
@@ -737,23 +637,18 @@ All main sections and important subsections should have labels.
 
 ### Section References
 
-Reference sections using `\ref{}` command.
+**Reference sections using `[@sec:label]`, never `\ref{}` and never a Markdown filename link** (`[see methodology](02_methodology.md)` resolves in an editor but not in the rendered PDF).
 
 **Syntax:**
 
 ```markdown
-As described in Section \ref{sec:methodology}...
-The results (see \ref{sec:results}) show...
+As described in [@sec:methodology]...
+The results (see [@sec:results]) show...
 ```
-
-**Placement:**
-
-- Capitalize "Section" when starting a sentence
-- Use lowercase "section" in the middle of a sentence
 
 ### Numbering
 
-Section numbering is automatic in LaTeX.
+Section numbering is automatic via Pandoc's `--number-sections`.
 
 - Main sections: 1, 2, 3, ...
 - Subsections: 1.1, 1.2, 2.1, ...
@@ -781,49 +676,27 @@ Maintain consistent heading structure across all manuscript files.
 
 Use for emphasis, technical terms, or variable names in text.
 
-**Markdown:**
-
 ```markdown
 The *optimization variable* $x$ represents...
-```
-
-**LaTeX:**
-
-```markdown
-The \textit{optimization variable} $x$ represents...
 ```
 
 ### Bold
 
 Use for strong emphasis or key terms.
 
-**Markdown:**
-
 ```markdown
 The **key contribution** of this work is...
-```
-
-**LaTeX:**
-
-```markdown
-The \textbf{key contribution} of this work is...
 ```
 
 ### Code
 
 Use for code, function names, or technical terms.
 
-**Markdown:**
-
 ```markdown
 The function `calculate_average()` computes...
 ```
 
-**LaTeX:**
-
-```markdown
-The function \texttt{calculate\_average()} computes...
-```
+Prefer Markdown backtick-code over raw `\texttt{}` — Pandoc converts backtick spans to the correct monospace construct in every output format. Raw `\texttt{}` does appear inside math-mode expressions in a couple of exemplars (e.g. a piecewise-definition table cell), which is fine — that's LaTeX math syntax, not a manuscript-formatting escape hatch.
 
 ### Inline Code in Equations
 
@@ -837,7 +710,7 @@ The function $f(\texttt{x})$ where $\texttt{x}$ is a vector...
 
 ### Special Characters
 
-Escape special LaTeX characters when needed.
+Escape special LaTeX characters when they appear in ordinary prose text (not inside `$...$` math mode, where most of these are meaningful operators).
 
 **Common Escaping:**
 
@@ -851,67 +724,51 @@ Escape special LaTeX characters when needed.
 
 ## Cross-Referencing Patterns
 
+All cross-references use Pandoc-crossref bracket syntax — `[@sec:]`, `[@eq:]`, `[@fig:]`, `[@tbl:]` — never `\ref{}` or `\eqref{}`.
+
 ### Section → Section
 
-Reference other sections using `\ref{sec:name}`.
-
-**Examples:**
-
 ```markdown
-As discussed in Section \ref{sec:methodology}...
-The experimental setup (Section \ref{sec:experimental_setup}) includes...
-See \ref{sec:results} for detailed analysis.
+As discussed in [@sec:methodology]...
+The experimental setup ([@sec:experimental_setup]) includes...
+See [@sec:results] for detailed analysis.
 ```
 
 ### Section → Equation
 
-Reference equations using `\eqref{eq:name}`.
-
-**Examples:**
-
 ```markdown
-The objective function \eqref{eq:objective} defines...
-Using \eqref{eq:convergence}, we can show...
-As shown in equation \eqref{eq:update}, the algorithm...
+The objective function [@eq:objective] defines...
+Using [@eq:convergence], we can show...
+As shown in [@eq:update], the algorithm...
 ```
 
 ### Section → Figure
 
-Reference figures using `\ref{fig:name}`.
-
-**Examples:**
-
 ```markdown
-Figure \ref{fig:convergence_plot} shows...
-The results (see Figure \ref{fig:results}) demonstrate...
-As illustrated in \ref{fig:setup}, the system...
+[@fig:convergence_plot] shows...
+The results (see [@fig:results]) demonstrate...
+As illustrated in [@fig:setup], the system...
 ```
 
 ### Section → Table
 
-Reference tables using `\ref{tab:name}`.
-
-**Examples:**
-
 ```markdown
-Table \ref{tab:performance_comparison} summarizes...
-The data (Table \ref{tab:dataset}) shows...
-See \ref{tab:results} for statistics.
+[@tbl:performance_comparison] summarizes...
+The data ([@tbl:dataset]) shows...
+See [@tbl:results] for statistics.
 ```
 
 ### Multiple References
 
-Combine multiple references in a single sentence.
-
-**Examples:**
+Combine multiple references in a single sentence — each gets its own bracket pair.
 
 ```markdown
-The methodology (Section \ref{sec:methodology}) and results
-(Section \ref{sec:results}) demonstrate...
+The methodology ([@sec:methodology]) and results
+([@sec:results]) demonstrate...
 
-Equations \eqref{eq:objective} and \eqref{eq:optimization} define...
+Equations [@eq:objective] and [@eq:optimization] define...
 
-Figures \ref{fig:convergence} and \ref{fig:scalability} show...
+Figures [@fig:convergence] and [@fig:scalability] show...
 ```
 
 ### Reference Placement in Sentences
@@ -921,18 +778,18 @@ Place references naturally within sentences.
 **Good Examples:**
 
 ```markdown
-The algorithm described in Section \ref{sec:methodology} achieves
-the convergence rate shown in \eqref{eq:convergence}.
+The algorithm described in [@sec:methodology] achieves
+the convergence rate shown in [@eq:convergence].
 
-As shown in Figure \ref{fig:results}, the method outperforms
-baselines (see Table \ref{tab:comparison}).
+As shown in [@fig:results], the method outperforms
+baselines (see [@tbl:comparison]).
 ```
 
 **Bad Examples:**
 
 ```markdown
-The algorithm. See Section \ref{sec:methodology}.  # ❌ Fragmented
-Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
+The algorithm. See [@sec:methodology].  # ❌ Fragmented
+[@fig:results]. Shows results.          # ❌ Fragmented
 ```
 
 ## Best Practices
@@ -944,51 +801,46 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 - Use descriptive names, not numbers
 - Be consistent across document
 - Use lowercase with underscores
-- Match content purpose (eq:, fig:, tab:, sec:)
+- Match content purpose (`eq:`, `fig:`, `tbl:`, `sec:`)
 
 **Good:**
 
 ```markdown
-\label{eq:convergence_rate}
-\label{fig:experimental_setup}
-\label{tab:performance_comparison}
-\label{sec:methodology}
+{#eq:convergence_rate}
+{#fig:experimental_setup}
+{#tbl:performance_comparison}
+{#sec:methodology}
 ```
 
 **Bad:**
 
 ```markdown
-\label{eq:1}
-\label{fig:figure1}
-\label{tab:table}
-\label{sec:sec1}
+{#eq:1}
+{#fig:figure1}
+{#tbl:table}
+{#sec:sec1}
 ```
 
 ### Reference Validation
 
 **Before Building:**
 
-- Verify all `\ref{}` and `\eqref{}` targets exist
+- Verify every `[@eq:]`, `[@fig:]`, `[@tbl:]`, `[@sec:]` target has a matching label somewhere in the manuscript
 - Check label spelling matches exactly
 - Ensure all figures/tables/equations have labels
 - Run validation: `uv run python -m infrastructure.validation.cli markdown manuscript/`
 
 ### Figure/Table Placement Guidelines
 
-**Placement Strategy:**
-
-- Place figures/tables near first reference
-- Use `[h]` for most cases
-- Use `[t]` or `[b]` for large figures
-- Avoid `[H]` unless necessary (can cause layout issues)
+Pandoc places figures and tables at their position in the source flow (float behavior is controlled by the renderer's LaTeX template, not by a per-figure placement specifier in the Markdown). Place the figure/table Markdown block near its first reference in the prose.
 
 ### Equation Numbering Strategy
 
 **Numbering Guidelines:**
 
-- Number all equations that are referenced
+- Give a label (`{#eq:label}`) to every equation that's referenced
 - Number key results and definitions
-- Don't number trivial or obvious equations
+- Don't label trivial or obvious inline equations
 - Use consistent labeling across sections
 
 ### Citation Management
@@ -996,7 +848,7 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 **Best Practices:**
 
 - Add all citations to `references.bib` first
-- Use consistent key naming (authorYYYY)
+- Use consistent key naming (`authorYYYY` or `authorYYYYkeyword`)
 - Verify keys match exactly (case-sensitive)
 - Keep bibliography file organized
 
@@ -1010,13 +862,12 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 Prose $$ f(x) = x^2 $$ continues here.
 ```
 
-**Always:**
+**Always give it its own labeled block:**
 
 ```markdown
-\begin{equation}
-\label{eq:name}
+$$
 f(x) = x^2
-\end{equation}
+$$ {#eq:name}
 ```
 
 ### Missing Labels
@@ -1024,18 +875,17 @@ f(x) = x^2
 **Never:**
 
 ```markdown
-\begin{equation}
+$$
 f(x) = x^2
-\end{equation}
+$$
 ```
 
 **Always:**
 
 ```markdown
-\begin{equation}
-\label{eq:name}
+$$
 f(x) = x^2
-\end{equation}
+$$ {#eq:name}
 ```
 
 ### Incorrect Path References
@@ -1043,14 +893,14 @@ f(x) = x^2
 **Never:**
 
 ```markdown
-\includegraphics{figures/figure.png}           # ❌ Wrong path
-\includegraphics{output/figures/figure.png}   # ❌ Wrong path
+![caption](figures/figure.png){#fig:name}           # ❌ Wrong path — missing ../output
+![caption](output/figures/figure.png){#fig:name}     # ❌ Wrong path — missing ../
 ```
 
 **Always:**
 
 ```markdown
-\includegraphics{../output/figures/figure.png}  # ✅ Correct relative path
+![caption](../output/figures/figure.png){#fig:name}  # ✅ Correct relative path
 ```
 
 ### Case-Sensitive Citation Keys
@@ -1058,26 +908,43 @@ f(x) = x^2
 **Never:**
 
 ```markdown
-\cite{Kingma2014}  # ❌ Wrong case
-\cite{kingma2014}  # ✅ Correct case
+[@Kingma2014]  # ❌ Wrong case
 ```
 
-**Always:** Match exact case from `references.bib`.
+**Always:**
+
+```markdown
+[@kingma2014]  # ✅ Correct case, matches references.bib exactly
+```
 
 ### Inconsistent Label Naming
 
 **Never:**
 
 ```markdown
-\label{eq:Objective}      # ❌ Inconsistent case
-\label{eq:objective_func} # ❌ Inconsistent style
-\label{eq:obj}           # ❌ Too abbreviated
+{#eq:Objective}      # ❌ Inconsistent case
+{#eq:objective_func} # ❌ Inconsistent style
+{#eq:obj}             # ❌ Too abbreviated
 ```
 
 **Always:**
 
 ```markdown
-\label{eq:objective}      # ✅ Consistent, descriptive
+{#eq:objective}      # ✅ Consistent, descriptive
+```
+
+### Raw LaTeX Cross-References
+
+**Never** use `\ref{}`, `\eqref{}`, or `\cite{}` in manuscript Markdown — they render in PDF-only output and break HTML/EPUB.
+
+```markdown
+As shown in Figure \ref{fig:convergence}...   # ❌ PDF-only, breaks HTML/EPUB
+```
+
+**Always use the bracket cross-reference form:**
+
+```markdown
+As shown in [@fig:convergence]...             # ✅ Works in every output format
 ```
 
 ## Examples
@@ -1085,38 +952,26 @@ f(x) = x^2
 ### Figure Example
 
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\textwidth]{../output/figures/convergence_plot.png}
-\caption{Algorithm convergence comparison showing performance improvement
+![Algorithm convergence comparison showing performance improvement
 over baseline methods. The plot demonstrates exponential convergence
-with rate $\rho \approx 0.85$.}
-\label{fig:convergence_plot}
-\end{figure}
+with rate $\rho \approx 0.85$.](../output/figures/convergence_plot.png){#fig:convergence_plot width=90%}
 
-As shown in Figure \ref{fig:convergence_plot}, our method achieves
+As shown in [@fig:convergence_plot], our method achieves
 faster convergence than existing approaches.
 ```
 
 ### Table Example
 
 ```markdown
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Method} & \textbf{Accuracy} & \textbf{Time (s)} \\
-\hline
-Baseline & 0.85 & 10.2 \\
-Our Method & 0.92 & 8.5 \\
-\hline
-\end{tabular}
-\caption{Performance comparison showing accuracy and execution time
-for different optimization methods.}
-\label{tab:performance_comparison}
-\end{table}
+| Method | Accuracy | Time (s) |
+|--------|:--------:|:--------:|
+| Baseline | 0.85 | 10.2 |
+| Our Method | 0.92 | 8.5 |
 
-Table \ref{tab:performance_comparison} demonstrates that our method
+: Performance comparison showing accuracy and execution time
+for different optimization methods. {#tbl:performance_comparison}
+
+[@tbl:performance_comparison] demonstrates that our method
 achieves higher accuracy with reduced computation time.
 ```
 
@@ -1125,18 +980,18 @@ achieves higher accuracy with reduced computation time.
 ```markdown
 The optimization problem we solve is:
 
-\begin{equation}
-\label{eq:optimization}
+$$
 \min_{x \in \mathcal{X}} f(x) \quad \text{subject to} \quad g_i(x) \leq 0, \quad i = 1, \ldots, m
-\end{equation}
+$$ {#eq:optimization}
 
 where $\mathcal{X}$ is the feasible set and $g_i(x)$ are constraint
-functions. The solution to \eqref{eq:optimization} is obtained using
-the iterative algorithm described in Section \ref{sec:algorithm}.
+functions. The solution to [@eq:optimization] is obtained using
+the iterative algorithm described in [@sec:algorithm].
 ```
 
 ## See Also
 
+- [docs/guides/manuscript-semantics.md](../guides/manuscript-semantics.md) - Canonical single source of truth for manuscript syntax
 - [docs/usage/style-guide.md](../usage/style-guide.md) - User-facing manuscript style guide (equations, figures, captions, tables)
 - [projects/templates/template_code_project/manuscript/](../../projects/templates/template_code_project/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown and cross-referencing guide

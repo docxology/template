@@ -87,7 +87,7 @@ graph TD
     end
 
     subgraph Archival["Long-horizon Archival"]
-        BUNDLE[bundle_project<br/>Stage 10 executable bundle]
+        BUNDLE[bundle_project<br/>Stage 12 executable bundle]
         ARCHIVE[archive_publication<br/>Multi-target mirror]
     end
 
@@ -177,9 +177,9 @@ uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $Z
 uv run python -m infrastructure.publishing.publish_cli \
   --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 
-# Archival dry-run (Stage 11; default is safe -- no real deposits)
+# Archival dry-run (Stage 13; default is safe -- no real deposits)
 uv run python -m infrastructure.publishing.archival_cli \
-  --bundle output/template_code_project/executable_bundle \
+  --bundle output/templates/template_code_project/executable_bundle \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 
 # Compile per-platform publishing status into a project README (regenerable block).
@@ -234,8 +234,8 @@ from infrastructure.publishing.upload_runner import (
 
 targets = UploadTargets(
     project_root=Path("projects/templates/template_gold_refinement"),
-    pdf=Path("output/template_gold_refinement/pdf/template_gold_refinement_combined.pdf"),
-    web_dir=Path("output/template_gold_refinement/web"),
+    pdf=Path("output/templates/template_gold_refinement/pdf/template_gold_refinement_combined.pdf"),
+    web_dir=Path("output/templates/template_gold_refinement/web"),
     hf_repo_id="ActiveInference/template_gold_refinement",
     github_repo="owner/repo",
     osf_title="Template Gold Refinement",

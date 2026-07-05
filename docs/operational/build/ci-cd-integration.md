@@ -295,7 +295,7 @@ env:
 
 ## Caching Strategies
 
-Upstream CI relies on **`astral-sh/setup-uv@v8.1.0` `enable-cache`** against **`**/uv.lock`**. Sections below illustrate manual cache blocks for other setups.
+Upstream CI relies on **`astral-sh/setup-uv` `enable-cache`** against **`**/uv.lock`**, pinned in the shared [`.github/actions/setup-python-env`](../../../.github/actions/setup-python-env/action.yml) composite action (not inlined per-job) — check that file for the current pinned SHA/version rather than hardcoding it here. Sections below illustrate manual cache blocks for other setups.
 
 ### Dependency Caching
 

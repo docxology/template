@@ -47,7 +47,7 @@
 
 ### **Q: How do I add cross-references between documents?**
 
-**A:** The template includes a cross-referencing system that automatically generates links between markdown files. See `markdown-template-guide.md` for detailed instructions.
+**A:** The template includes a cross-referencing system that automatically generates links between markdown files. See [`markdown-template-guide.md`](../usage/markdown-template-guide.md) for detailed instructions.
 
 ### **Q: What if I don't need PDF generation?**
 
@@ -118,7 +118,7 @@
 
 ### **Q: How do I contribute improvements back to the template?**
 
-**A:** Fork the repository, make your improvements, and submit a pull request. See `contributing.md` for detailed guidelines.
+**A:** Fork the repository, make your improvements, and submit a pull request. See [`contributing.md`](../development/contributing.md) for detailed guidelines.
 
 ### **Q: Can I use this template commercially?**
 

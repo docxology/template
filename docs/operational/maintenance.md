@@ -20,8 +20,8 @@ The system generates logs in multiple locations:
 
 | Log Type | Location | Retention |
 |----------|----------|-----------|
-| Pipeline logs | `projects/*/output/logs/` | 30 days rotated, 90 days archived |
-| Hermes agent logs | `~/.hermes/logs/` | 30 days rotated, 1 year archived |
+| Pipeline logs | `projects/*/output/logs/` | Deleted after 90 days (`DAYS_PROJECT` in `rotate-logs.sh`) — no intermediate archive step |
+| Hermes agent logs | `~/.hermes/logs/` | Compressed + moved to `~/.hermes/logs/archive/` after 30 days (`DAYS_HERMES`); archived logs are kept indefinitely unless manually pruned |
 | Docker logs | `docker compose logs` | Managed by Docker daemon (configure log driver) |
 
 ### Rotation Configuration
@@ -54,7 +54,7 @@ sudo logrotate -d /etc/logrotate.d/template  # test dry-run
 If system logrotate is unavailable, use the provided script:
 
 ```bash
-./docs/operational/scripts/rotate-logs.sh
+bash docs/operational/scripts/rotate-logs.sh
 ```
 
 **Script behavior:**
@@ -156,6 +156,7 @@ log show --predicate 'eventMessage contains "I/O error"' --last 7d
 
 ```bash
 # Monthly: log directory sizes for trend analysis
+mkdir -p docs/operational/audit
 du -sh ~/.hermes .cache output > docs/operational/audit/disk-usage-$(date +%Y-%m).txt
 ```
 
