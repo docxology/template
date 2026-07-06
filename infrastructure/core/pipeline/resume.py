@@ -91,6 +91,7 @@ class PipelineResumeMixin(ABC):
 
         # Rebuild stage list based on configured pipeline type (clean always skipped on resume)
         stages = self._build_stage_list(include_llm=not self.config.skip_llm, skip_clean=True)
+        self._current_stage_count = len(stages)
 
         # Convert prior results into PipelineStageResult objects for reporting continuity
         resumed_results: list[PipelineStageResult] = []
@@ -136,12 +137,14 @@ class PipelineResumeMixin(ABC):
             if not result.success or result.hitl_pause:
                 break
 
-        if getattr(self, "_telemetry", None) is not None:
-            total_duration = time.time() - pipeline_start
-            self._telemetry.finalize(total_duration=total_duration)
         finalize = getattr(self, "_finalize_pipeline_run", None)
         if callable(finalize):
-            finalize(resumed_results, pipeline_start)
+            finalize(pipeline_start, resumed_results)
+        else:
+            lesson_writer = getattr(self, "_write_run_lessons_report", None)
+            if callable(lesson_writer):
+                lesson_writer(resumed_results)
+
         return resumed_results
 
     def _save_checkpoint(self, pipeline_start: float, last_stage: int, results: list[PipelineStageResult]) -> None:
@@ -180,5 +183,5 @@ class PipelineResumeMixin(ABC):
             pipeline_start_time=pipeline_start,
             last_stage_completed=last_stage,
             stage_results=checkpoint_results,
-            total_stages=self.config.total_stages,
+            total_stages=getattr(self, "_current_stage_count", None) or self.config.total_stages,
         )

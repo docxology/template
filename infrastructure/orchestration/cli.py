@@ -44,7 +44,11 @@ from infrastructure.orchestration.secure_run import (
 from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
 from infrastructure.project.discovery import discover_projects
-from infrastructure.orchestration.link_sync import maybe_sync_all_links
+from infrastructure.orchestration.link_sync import (
+    maybe_sync_all_links,
+    print_link_sync_result,
+    print_link_sync_results,
+)
 from infrastructure.project.linking import sync_private_project_links
 
 
@@ -221,15 +225,13 @@ def _resolve_repo_root(ns: argparse.Namespace) -> Path:
 
 
 def _maybe_sync_links(repo_root: Path) -> None:
-    """Best-effort: sync private lifecycle project symlinks (registry-driven)."""
+    """Best-effort: sync private lifecycle symlinks for all registered domains."""
     try:
         results = maybe_sync_all_links(repo_root)
     except (OSError, RuntimeError) as exc:
         print(f"[link-sync] warning: {exc}", file=sys.stderr)
         return
-    for result in results:
-        if result.changed:
-            print(f"[link-sync] {result.summary()}", file=sys.stderr)
+    print_link_sync_results(results)
 
 
 def _cmd_link_projects(ns: argparse.Namespace) -> int:
@@ -239,15 +241,7 @@ def _cmd_link_projects(ns: argparse.Namespace) -> int:
         prune=not ns.no_prune,
         dry_run=ns.dry_run,
     )
-    print(result.summary())
-    for name in result.created:
-        print(f"  + {name}")
-    for name in result.updated:
-        print(f"  ~ {name}")
-    for name in result.removed:
-        print(f"  - {name}")
-    for name in result.skipped:
-        print(f"  . {name}")
+    print_link_sync_result(result, stream=sys.stdout)
     return 0
 
 

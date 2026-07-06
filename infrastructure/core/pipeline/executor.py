@@ -366,6 +366,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
         """Execute pipeline stages."""
+        self._current_stage_count = len(stages)
         results: list[PipelineStageResult] = []
         pipeline_start = time.time()
         self._load_incremental_manifest()
@@ -375,14 +376,14 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             if not result.success or result.hitl_pause:
                 break
 
+        self._finalize_pipeline_run(pipeline_start, results)
+        return results
+
+    def _finalize_pipeline_run(self, pipeline_start: float, results: list[PipelineStageResult]) -> None:
+        """Shared post-run finalization for fresh and resumed pipeline paths."""
         if self._telemetry is not None:
             total_duration = time.time() - pipeline_start
             self._telemetry.finalize(total_duration=total_duration)
-
-        self._finalize_pipeline_run(results, pipeline_start)
-        return results
-
-    def _finalize_pipeline_run(self, results, pipeline_start: float) -> None:
         self._write_pause_recommendations_report()
         self._write_run_lessons_report(results)
 
