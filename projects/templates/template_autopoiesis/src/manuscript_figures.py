@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import matplotlib
@@ -140,6 +141,45 @@ def fig_product_space_annotation(project_root: Path, out_dir: Path) -> Path:
     ax.set_title(f"Grammar product space (seed={grammar.seed})")
     fig.tight_layout()
     out = out_dir / "fig_product_space.png"
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+    print(f"  ✓ {out.name}")
+    return out
+
+
+def fig_coverage_by_module(coverage_full_json: Path, out_dir: Path) -> Path:
+    """Horizontal bar chart of real per-module branch coverage.
+
+    Reads the persisted ``coverage.json`` written by
+    ``measure_test_summary(..., full_report_out=...)`` — never invents
+    per-module numbers. Modules below the repo's 90% floor are drawn in a
+    distinct warning color so the figure is honest about known gaps rather
+    than only showing the passing aggregate.
+    """
+    data = json.loads(Path(coverage_full_json).read_text())
+    rows = [(path, entry["summary"]["percent_covered"]) for path, entry in data["files"].items()]
+    # Shorten paths to "module" or "primitives/module" relative to src/.
+    short_rows = []
+    for path, pct in rows:
+        parts = Path(path).parts
+        idx = parts.index("src") if "src" in parts else 0
+        short = "/".join(parts[idx + 1 :])
+        short_rows.append((short, pct))
+    short_rows.sort(key=lambda r: r[1])
+
+    names = [r[0] for r in short_rows]
+    pcts = [r[1] for r in short_rows]
+    colors = ["#dc2626" if p < 90 else "#0d9488" for p in pcts]
+
+    fig, ax = plt.subplots(figsize=(8, max(3, 0.28 * len(names))))
+    ax.barh(names, pcts, color=colors)
+    ax.axvline(90, color="#334155", linestyle="--", linewidth=1)
+    ax.text(90.5, len(names) - 0.5, "90% floor", fontsize=8, color="#334155", va="top")
+    ax.set_xlim(0, 105)
+    ax.set_xlabel("Branch coverage (%)")
+    ax.set_title("Per-module test coverage (real, measured this build)")
+    fig.tight_layout()
+    out = out_dir / "fig_coverage_by_module.png"
     fig.savefig(out, dpi=150)
     plt.close(fig)
     print(f"  ✓ {out.name}")

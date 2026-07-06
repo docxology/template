@@ -52,8 +52,8 @@
 - All structural evidence must pass
 
 ### P8 — Reserved slot honesty ✅
-- `generate_variables` reports PRODUCT_SIZE, EFFECTIVE_PRODUCT_SIZE, NOMINAL_OVER_EFFECTIVE
-- Abstract explicitly reports inflation factor
+- `generate_variables` reports PRODUCT_SIZE, EFFECTIVE_PRODUCT_SIZE, RESERVED_SLOT_COUNT
+- Abstract explicitly reports both nominal and effective sizes
 
 ### P9 — Property-based testing ✅
 - Hypothesis: grammar product, expand determinism, double materialize, verify clean/tamper

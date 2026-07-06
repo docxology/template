@@ -2,7 +2,10 @@
 % (forwarded to pandoc as `-V geometry:`). Do not declare \geometry{...} here —
 % a second declaration would clash with the pandoc-emitted geometry package.
 \usepackage{fancyhdr}
-\usepackage[colorlinks=true, linkcolor=teal, urlcolor=teal, citecolor=teal]{hyperref}
+% hyperref options forwarded via PassOptionsToPackage to avoid an option clash
+% with the \PassOptionsToPackage{unicode}{hyperref} that pandoc injects at the
+% top of the generated .tex file.
+\PassOptionsToPackage{colorlinks=true, linkcolor=teal, urlcolor=teal, citecolor=teal}{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}

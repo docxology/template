@@ -14,7 +14,7 @@ All improvement items A–E are **resolved and closed** as of Wave 9.
 ## B — Reserved slot accounting ✅ CLOSED
 
 **Problem:** The nominal product size was reported without the effective size or inflation factor.
-**Resolution:** `generate_variables` now emits `PRODUCT_SIZE`, `EFFECTIVE_PRODUCT_SIZE`, `RESERVED_SLOT_COUNT`, and `NOMINAL_OVER_EFFECTIVE`. The abstract uses these tokens. `test_manuscript_variables.py` asserts exact values.
+**Resolution:** `generate_variables` now emits `PRODUCT_SIZE`, `EFFECTIVE_PRODUCT_SIZE`, and `RESERVED_SLOT_COUNT`. The abstract uses these tokens. `test_manuscript_variables.py` asserts exact values.
 
 ---
 

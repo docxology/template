@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-from src.manuscript_variables import generate_variables, save_variables, _md_table
+from src.manuscript_variables import generate_variables, measure_test_summary, save_variables, _md_table
 
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -58,6 +58,19 @@ def test_save_load_roundtrip(tmp_path):
     assert loaded["EFFECTIVE_PRODUCT_SIZE"] == v["EFFECTIVE_PRODUCT_SIZE"]
 
 
+def test_generate_variables_defaults_test_tokens_to_pending():
+    """No fabricated literal — an un-sourced run reports 'pending', not a fake number."""
+    v = generate_variables(PROJECT_ROOT)
+    assert v["TEST_COUNT"] == "pending"
+    assert v["COVERAGE_PCT"] == "pending"
+
+
+def test_generate_variables_uses_supplied_real_numbers():
+    v = generate_variables(PROJECT_ROOT, test_count=42, coverage_pct="87.50")
+    assert v["TEST_COUNT"] == 42
+    assert v["COVERAGE_PCT"] == "87.50"
+
+
 def test_honesty_manifest_tokens():
     """HONESTY_STRUCTURAL_COUNT=4 (there are 4 domain-specific claims), HONESTY_DOMAIN_COUNT=0."""
     # The honesty manifest in src/honesty.py has STRUCTURAL_EVIDENCE with 6 keys, not 4.
@@ -67,6 +80,35 @@ def test_honesty_manifest_tokens():
     assert len(v["GRAMMAR_HASH"]) == 16
     # Product size should be > effective product size
     assert v["PRODUCT_SIZE"] > v["EFFECTIVE_PRODUCT_SIZE"]
+
+
+# ---------------------------------------------------------------------------
+# measure_test_summary — run against a synthetic project, never this suite
+# (calling it on PROJECT_ROOT from inside PROJECT_ROOT's own suite would
+# recursively re-invoke pytest on the tests directory currently executing).
+# ---------------------------------------------------------------------------
+
+
+def test_measure_test_summary_on_synthetic_passing_project(tmp_path):
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "__init__.py").write_text("")
+    (tmp_path / "src" / "adder.py").write_text("def add(a, b):\n    return a + b\n")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_adder.py").write_text(
+        "from src.adder import add\n\n\ndef test_add():\n    assert add(1, 2) == 3\n"
+    )
+    test_count, coverage_pct = measure_test_summary(tmp_path)
+    assert test_count == 1
+    assert float(coverage_pct) == 100.0
+
+
+def test_measure_test_summary_returns_pending_on_no_tests(tmp_path):
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "__init__.py").write_text("")
+    (tmp_path / "tests").mkdir()
+    test_count, coverage_pct = measure_test_summary(tmp_path)
+    assert test_count == "pending"
+    assert coverage_pct == "pending"
 
 
 # ---------------------------------------------------------------------------

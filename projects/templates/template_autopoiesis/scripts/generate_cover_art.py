@@ -24,6 +24,7 @@ def main():
         out_path=out,
         title="Autopoietic Project Generation",
         subtitle="A combinatoric grammar for deterministic project synthesis",
+        grammar_hash=grammar.grammar_hash,
     )
     print(f"Cover art written to {out}")
 

@@ -229,3 +229,32 @@ def test_segments_count_richer():
     segs = build_ring_geometry(("optimization", "dynamics", "statistics"))
     assert len(segs) == 3
     assert segs[0].domain == "optimization"
+
+
+# ---------------------------------------------------------------------------
+# QR seal (grammar_hash) — the branch that runs in production via
+# scripts/generate_cover_art.py, exercised directly here for the first time.
+# ---------------------------------------------------------------------------
+
+
+def test_render_cover_with_grammar_hash_creates_file(tmp_path):
+    out = tmp_path / "sealed.png"
+    render_cover(domains=KNOWN_DOMAINS, seed=42, out_path=out, grammar_hash="deadbeef12345678")
+    assert out.exists()
+
+
+def test_render_cover_with_grammar_hash_larger_than_without(tmp_path):
+    """The QR seal adds visible content, so the sealed image is not byte-identical to the unsealed one."""
+    out_plain = tmp_path / "plain.png"
+    out_sealed = tmp_path / "sealed.png"
+    render_cover(domains=KNOWN_DOMAINS, seed=42, out_path=out_plain, grammar_hash=None)
+    render_cover(domains=KNOWN_DOMAINS, seed=42, out_path=out_sealed, grammar_hash="deadbeef12345678")
+    assert out_plain.read_bytes() != out_sealed.read_bytes()
+
+
+def test_render_cover_with_grammar_hash_byte_stable(tmp_path):
+    out1 = tmp_path / "sealed1.png"
+    out2 = tmp_path / "sealed2.png"
+    render_cover(domains=KNOWN_DOMAINS, seed=42, out_path=out1, grammar_hash="deadbeef12345678")
+    render_cover(domains=KNOWN_DOMAINS, seed=42, out_path=out2, grammar_hash="deadbeef12345678")
+    assert out1.read_bytes() == out2.read_bytes()

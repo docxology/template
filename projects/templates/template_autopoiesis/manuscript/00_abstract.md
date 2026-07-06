@@ -20,11 +20,11 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    A[5 domains] --> P[Product space]
-    B[2 dep modes] --> P
-    C[3 reserved slots] --> R[Reserved — excluded from effective size]
-    P --> EPS[Effective product: {{EFFECTIVE_PRODUCT_SIZE}} cells]
-    P --> TPS[Total product: {{PRODUCT_SIZE}} cells]
+    A[primitive_domain: 5] --> EP[Effective product: {{EFFECTIVE_PRODUCT_SIZE}} cells]
+    T[track: 3] --> EP
+    S[section_set: 3] --> EP
+    EP --> TP[Total product: {{PRODUCT_SIZE}} cells]
+    R[3 reserved slots, 2 options each] --> TP
 ```
 
 - **Domain count**: {{DOMAIN_COUNT}}

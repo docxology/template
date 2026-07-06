@@ -244,3 +244,82 @@ def test_verify_seal_with_seal_json(tmp_path):
     assert names["seal_exists"] is True
     assert names["seal_parseable"] is True
     assert names["seal_has_spec_hash"] is True
+
+
+# ---------------------------------------------------------------------------
+# verify_child with malformed provenance.json — lines 32-34
+# ---------------------------------------------------------------------------
+
+
+def test_verify_child_malformed_provenance(tmp_path):
+    """verify_child with garbage JSON in provenance.json hits the except branch."""
+    prov_path = tmp_path / "provenance.json"
+    prov_path.write_text("{this is not valid json!!!")  # malformed
+    report = verify_child(tmp_path)
+    assert not report.all_passed
+    names = {c.name: c.passed for c in report.checks}
+    assert names["provenance_exists"] is True
+    assert names["provenance_parseable"] is False
+
+
+# ---------------------------------------------------------------------------
+# verify_seal with malformed seal.json — line 87
+# ---------------------------------------------------------------------------
+
+
+def test_verify_seal_malformed_seal_json(tmp_path):
+    """verify_seal with garbage JSON in seal.json hits the seal_parseable=False branch."""
+    seal_path = tmp_path / "seal.json"
+    seal_path.write_text("{not valid json at all")
+    report = verify_seal(tmp_path)
+    names = {c.name: c.passed for c in report.checks}
+    assert names["seal_exists"] is True
+    assert names["seal_parseable"] is False
+
+
+def test_verify_seal_with_spec_hash(tmp_path):
+    """verify_seal with a seal.json that has spec_hash hits the positive branch."""
+    seal = {"spec_hash": "deadbeef" * 8}
+    (tmp_path / "seal.json").write_text(json.dumps(seal))
+    report = verify_seal(tmp_path)
+    names = {c.name: c.passed for c in report.checks}
+    assert names["seal_exists"] is True
+    assert names["seal_parseable"] is True
+    assert names["seal_has_spec_hash"] is True
+
+
+def test_verify_seal_without_spec_hash(tmp_path):
+    """verify_seal with a seal.json missing spec_hash hits the negative branch."""
+    seal = {"tree_hash": "abc", "seed": 0}
+    (tmp_path / "seal.json").write_text(json.dumps(seal))
+    report = verify_seal(tmp_path)
+    names = {c.name: c.passed for c in report.checks}
+    assert names["seal_exists"] is True
+    assert names["seal_parseable"] is True
+    assert names["seal_has_spec_hash"] is False
+
+
+# ---------------------------------------------------------------------------
+# verify_child_full — missing provenance triggers the except branch at 114-122
+# ---------------------------------------------------------------------------
+
+
+def test_verify_child_full_missing_provenance(tmp_path):
+    """verify_child_full with no provenance.json: prov_path.exists() is False, skip schema check."""
+    report = verify_child_full(tmp_path)
+    assert not report.all_passed
+    names = {c.name for c in report.checks if not c.passed}
+    assert "provenance_exists" in names
+    # schema_version_correct should NOT be in checks (provenance doesn't exist)
+    all_names = {c.name for c in report.checks}
+    assert "schema_version_correct" not in all_names
+
+
+def test_verify_child_full_malformed_provenance_skips_schema(tmp_path):
+    """verify_child_full with malformed provenance skips schema check (except branch)."""
+    prov_path = tmp_path / "provenance.json"
+    prov_path.write_text("{broken json!")
+    report = verify_child_full(tmp_path)
+    # The except in verify_child_full means schema_version_correct is skipped (pass)
+    all_names = {c.name for c in report.checks}
+    assert "schema_version_correct" not in all_names

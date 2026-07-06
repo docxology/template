@@ -34,7 +34,7 @@ Standalone usage is documented in [`STANDALONE.md`](STANDALONE.md).
 
 ---
 
-> **Status:** 410 tests · coverage in [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) · Public exemplar · DOI forthcoming
+> **Status:** 422 tests · 90.62% branch coverage · Public exemplar · DOI forthcoming
 
 ---
 

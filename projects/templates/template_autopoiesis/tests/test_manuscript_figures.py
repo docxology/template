@@ -1,6 +1,7 @@
 """Tests for manuscript figure writers (src/manuscript_figures.py)."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,7 @@ import pytest
 from src.grammar import KNOWN_DOMAINS
 from src.manuscript_figures import (
     _teal_slate_palette,
+    fig_coverage_by_module,
     fig_domain_coverage,
     fig_product_space_annotation,
     fig_stacked_product,
@@ -64,6 +66,36 @@ def test_fig_domain_coverage_covers_every_known_domain(tmp_path):
         "signal",
         "graph",
     }
+
+
+def _write_fake_coverage_json(path: Path, module_pcts: dict[str, float]) -> None:
+    files = {
+        f"/repo/projects/templates/template_autopoiesis/src/{name}": {"summary": {"percent_covered": pct}}
+        for name, pct in module_pcts.items()
+    }
+    path.write_text(json.dumps({"files": files}))
+
+
+def test_fig_coverage_by_module_writes_png(tmp_path):
+    cov_json = tmp_path / "coverage_full.json"
+    _write_fake_coverage_json(cov_json, {"cli.py": 75.28, "grammar.py": 94.29, "cover_art.py": 100.0})
+    out_dir = tmp_path / "figures"
+    out_dir.mkdir()
+    out = fig_coverage_by_module(cov_json, out_dir)
+    assert out == out_dir / "fig_coverage_by_module.png"
+    assert out.exists()
+    assert out.stat().st_size > 100
+
+
+def test_fig_coverage_by_module_sorts_lowest_first(tmp_path):
+    cov_json = tmp_path / "coverage_full.json"
+    _write_fake_coverage_json(cov_json, {"a.py": 51.0, "b.py": 100.0, "c.py": 88.0})
+    out_dir = tmp_path / "figures"
+    out_dir.mkdir()
+    data = json.loads(cov_json.read_text())
+    pcts = sorted(entry["summary"]["percent_covered"] for entry in data["files"].values())
+    assert pcts == [51.0, 88.0, 100.0]
+    fig_coverage_by_module(cov_json, out_dir)
 
 
 def test_generate_manuscript_figures_writes_all_three(template_root, tmp_path):

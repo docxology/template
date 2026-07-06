@@ -52,11 +52,11 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 ## Grammar Description
 
 Defined in `manuscript/config.yaml` under `autopoiesis:`:
-- `seed`: 1618033
-- `slots`: domain (5), tracks (3), section_set (3), figure_profile (3, reserved), qr_profile (4, reserved), integrity_profile (4, reserved)
-- Nominal product: 5×3×3×3×4×4 = 2160
+- `seed`: 42
+- `slots`: primitive_domain (5), track (3), section_set (3), figure_profile (2, reserved), qr_profile (2, reserved), integrity_profile (2, reserved)
+- Nominal product: 5×3×3×2×2×2 = 360
 - Effective product: 5×3×3 = 45 (reserved slots excluded)
-- Grammar hash: 16-char SHA-256 prefix of canonical JSON
+- Grammar hash: 16-char SHA-256 prefix of canonical JSON (re-derive from `load_grammar()` — do not hard-code)
 
 ---
 
@@ -115,9 +115,9 @@ uv run pytest projects/templates/template_autopoiesis/tests/ --cov=projects/temp
 ## Key Metadata
 
 - **Coverage target**: 90% (`fail_under=90`)
-- **Test count**: 410 tests
-- **Coverage**: 90.17%
-- **Grammar seed**: 1618033
+- **Test count**: 422 tests (measured live by `measure_test_summary()`)
+- **Coverage**: 90.62% (measured live — see `output/data/manuscript_variables.json`)
+- **Grammar seed**: 42
 - **Domains**: optimization, dynamics, statistics, signal, graph
 - **Reserved slots**: figure_profile, qr_profile, integrity_profile
 - **Schema version**: `autopoiesis/spec/1`

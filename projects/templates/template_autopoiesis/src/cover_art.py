@@ -10,6 +10,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 import matplotlib
 
@@ -17,6 +18,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
+
+from src.sealing import qr_matrix
 
 
 # ---------------------------------------------------------------------------
@@ -110,8 +113,15 @@ def render_cover(
     author: str = "template_autopoiesis",
     figsize: tuple[float, float] = (8, 8),
     dpi: int = 150,
+    grammar_hash: Optional[str] = None,
 ) -> Path:
-    """Render the cover art to *out_path* and return the resolved Path."""
+    """Render the cover art to *out_path* and return the resolved Path.
+
+    If *grammar_hash* is provided, a small QR-code seal encoding the hash is
+    drawn in the bottom-right corner of the image along with a text label.
+    When *grammar_hash* is ``None`` (default) no QR seal is drawn, preserving
+    backward-compatible output.
+    """
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -195,6 +205,54 @@ def render_cover(
         zorder=6,
     )
     ax.add_patch(seal_circle)
+
+    # QR seal: encode grammar_hash as a small pixel grid (bottom-right area)
+    if grammar_hash is not None:
+        matrix = qr_matrix(grammar_hash)
+        n_cells = len(matrix)
+        # Target size in data-coordinate units; position bottom-right
+        qr_size = 0.55  # total width/height of QR block in axes coords
+        cell_size = qr_size / n_cells
+        # Anchor: top-left corner of QR block
+        qr_left = 0.95
+        qr_top = -1.55
+        for row_idx, row in enumerate(matrix):
+            for col_idx, cell in enumerate(row):
+                x0 = qr_left + col_idx * cell_size
+                y0 = qr_top - row_idx * cell_size
+                facecolor = "#0f172a" if cell else "#f8fafc"
+                rect = mpatches.Rectangle(
+                    (x0, y0 - cell_size),
+                    cell_size,
+                    cell_size,
+                    linewidth=0,
+                    facecolor=facecolor,
+                    zorder=7,
+                )
+                ax.add_patch(rect)
+        # QR border
+        qr_border = mpatches.Rectangle(
+            (qr_left, qr_top - qr_size),
+            qr_size,
+            qr_size,
+            linewidth=0.6,
+            edgecolor="#475569",
+            facecolor="none",
+            zorder=8,
+        )
+        ax.add_patch(qr_border)
+        # Hash label below QR code
+        ax.text(
+            qr_left + qr_size / 2,
+            qr_top - qr_size - 0.06,
+            grammar_hash,
+            ha="center",
+            va="top",
+            fontsize=5.5,
+            color="#64748b",
+            fontfamily="monospace",
+            zorder=8,
+        )
 
     # Center text: seed
     ax.text(

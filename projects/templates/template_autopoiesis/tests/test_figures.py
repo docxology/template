@@ -6,7 +6,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.figures import render_primitive_figure, build_figure_registry
+from src.figures import (
+    _first_plottable_array,
+    _scalar_summary_lines,
+    render_primitive_figure,
+    build_figure_registry,
+)
 from src.grammar import KNOWN_DOMAINS
 from src.primitives import collect_primitives
 
@@ -65,6 +70,37 @@ def test_render_single_element_array(tmp_path):
     out = tmp_path / "single.png"
     path = render_primitive_figure("single_arr", np.array([3.14]), out)
     assert path.exists()
+
+
+def test_render_multi_element_array_plots(tmp_path):
+    """A plain array with >1 elements takes the line-plot branch, not the summary branch."""
+    out = tmp_path / "plotted.png"
+    path = render_primitive_figure("multi_arr", np.array([1.0, 2.0, 3.0, 4.0]), out)
+    assert path.exists()
+    assert path.stat().st_size > 100
+
+
+def test_first_plottable_array_from_list():
+    """A plain Python list (not ndarray) is coerced and ravelled."""
+    result = _first_plottable_array([1.0, 2.0, 3.0])
+    assert result is not None
+    assert list(result) == [1.0, 2.0, 3.0]
+
+
+def test_first_plottable_array_from_tuple():
+    result = _first_plottable_array((4.0, 5.0))
+    assert result is not None
+    assert list(result) == [4.0, 5.0]
+
+
+def test_first_plottable_array_empty_list_returns_none():
+    assert _first_plottable_array([]) is None
+
+
+def test_scalar_summary_lines_generic_repr_fallback():
+    """A value that is neither int/float/complex/ndarray/dict falls back to repr()."""
+    lines = _scalar_summary_lines("just a plain string")
+    assert lines == [repr("just a plain string")[:80]]
 
 
 # ---------------------------------------------------------------------------
