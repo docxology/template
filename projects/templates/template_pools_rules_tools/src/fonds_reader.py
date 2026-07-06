@@ -91,7 +91,7 @@ def read_bibliography_fond(
         bib_text = bib_path.read_text(encoding="utf-8")
         with csv_path.open(encoding="utf-8") as fh:
             csv_rows: list[dict[str, str]] = list(csv.DictReader(fh))
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, UnicodeDecodeError, yaml.YAMLError, csv.Error) as exc:
         logger.warning("bibliography fond: read error — %s", exc)
         return None
 
@@ -134,7 +134,7 @@ def read_contacts_fond(
     try:
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
         contacts: list[object] = yaml.safe_load(contacts_path.read_text(encoding="utf-8")) or []
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
         logger.warning("contacts fond: read error — %s", exc)
         return None
 
@@ -173,7 +173,7 @@ def read_datasets_fond(
     try:
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
         datasets: list[object] = yaml.safe_load(datasets_path.read_text(encoding="utf-8")) or []
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
         logger.warning("datasets fond: read error — %s", exc)
         return None
 

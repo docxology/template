@@ -32,7 +32,8 @@ authors:
     corresponding: false
 
 publication:
-  doi: "10.5281/zenodo.template_pools_rules_tools"
+  doi: ""
+  version_doi: ""
   github_repository: "docxology/template"
   license: "CC-BY-4.0"
   venue: "Journal of Open Source Software"

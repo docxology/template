@@ -79,7 +79,7 @@ def load_soft_rules(
         try:
             content = md_file.read_text(encoding="utf-8")
             results.append(SoftRuleEntry(filename=md_file.name, content=content))
-        except Exception as exc:  # noqa: BLE001
+        except (OSError, UnicodeDecodeError) as exc:
             logger.warning("soft rules: could not read %s — %s", md_file, exc)
 
     return results
@@ -115,7 +115,7 @@ def load_strong_rules(
         try:
             schema: object = yaml.safe_load(yaml_file.read_text(encoding="utf-8"))
             results.append(StrongRuleEntry(filename=yaml_file.name, schema=schema))
-        except Exception as exc:  # noqa: BLE001
+        except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
             logger.warning("strong rules: could not parse %s — %s", yaml_file, exc)
 
     return results
@@ -159,7 +159,7 @@ def validate_against_rules(
     if manifest_path.exists():
         try:
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-        except Exception as exc:  # noqa: BLE001
+        except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
             warnings.append(f"rules.yaml parse error: {exc}")
     else:
         warnings.append(f"rules.yaml not found at {manifest_path}")

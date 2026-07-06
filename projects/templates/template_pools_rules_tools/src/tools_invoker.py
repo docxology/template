@@ -69,7 +69,7 @@ def discover_tools(*, templates_root: pathlib.Path | None = None) -> list[ToolEn
         if manifest_path.exists():
             try:
                 manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-            except Exception as exc:  # noqa: BLE001
+            except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
                 logger.warning("tools_invoker: could not parse %s — %s", manifest_path, exc)
         else:
             logger.warning("tools_invoker: no tools.yaml in %s", tool_dir)
@@ -99,7 +99,7 @@ def get_tool_entrypoints(
 
     try:
         raw: object = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
         logger.warning("get_tool_entrypoints: parse error — %s", exc)
         return []
 
