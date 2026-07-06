@@ -145,8 +145,10 @@ def test_ising_mi_saturation_from_sweep() -> None:
 
 
 def test_variable_helpers_handle_missing_optional_inputs(tmp_path: Path) -> None:
+    from json_io import load_json
+
     assert manuscript_variables._ising_mi_saturation_from_sweep([]) == 0.0
-    assert manuscript_variables._load_json(tmp_path / "missing.json") == {}
+    assert load_json(tmp_path / "missing.json") == {}
     assert manuscript_variables._pipeline_track_count(tmp_path) == 0
     assert manuscript_variables._gnn_spec_version(tmp_path) == ""
 
