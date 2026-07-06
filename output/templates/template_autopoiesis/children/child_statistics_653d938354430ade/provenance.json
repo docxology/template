@@ -1,0 +1,33 @@
+{
+  "files": [
+    "analysis.py",
+    "figures.py",
+    "manuscript/00_abstract.md",
+    "manuscript/01_introduction.md",
+    "manuscript/03_results.md",
+    "manuscript/06_limitations.md",
+    "primitives/__init__.py",
+    "primitives/base.py",
+    "primitives/statistics.py",
+    "pyproject.toml",
+    "tests/__init__.py",
+    "tests/test_analysis.py"
+  ],
+  "schema_version": "autopoiesis/provenance/1",
+  "spec": {
+    "deps": [],
+    "grammar_hash": "a43c11e0f90c7d78",
+    "primitive_domain": "statistics",
+    "schema_version": "autopoiesis/spec/1",
+    "seed": 42,
+    "selections": {
+      "figure_profile": "full",
+      "integrity_profile": "sha256",
+      "primitive_domain": "statistics",
+      "qr_profile": "off",
+      "section_set": "standard",
+      "track": "analytical"
+    }
+  },
+  "tree_hash": "71fb4644eab4c943fb4ed9cdb7624eb13369cdf2d25ca8b6c35b34788d89c7f3"
+}

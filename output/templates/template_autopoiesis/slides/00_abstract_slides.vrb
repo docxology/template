@@ -1,0 +1,52 @@
+\frametitle{Abstract}
+\protect\phantomsection\label{abstract}
+\breaktt{template\_autopoiesis} is a combinatoric grammar that
+\textbf{deterministically generates whole runnable projects}. Given a
+single integer seed and a grammar of orthogonal slots, the system
+produces a fully-materialized child project --- complete with kernel
+source, tests, analysis entry-point, and a manuscript stub --- whose
+every byte is traceable to that seed.
+
+\begin{block}{Generation pipeline}
+\protect\phantomsection\label{generation-pipeline}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{flowchart LR}
+\NormalTok{    G[Grammar\textbackslash{}nconfig.yaml] {-}{-}\textgreater{} E[Expand\textbackslash{}nseed → Spec]}
+\NormalTok{    E {-}{-}\textgreater{} M[Materialize\textbackslash{}nSpec → Child]}
+\NormalTok{    M {-}{-}\textgreater{} V[Verify\textbackslash{}ntree{-}hash check]}
+\NormalTok{    V {-}{-}\textgreater{} S[Seal\textbackslash{}nQR provenance]}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Grammar product space}
+\protect\phantomsection\label{grammar-product-space}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{flowchart TB}
+\NormalTok{    A[primitive\_domain: 5] {-}{-}\textgreater{} EP[Effective product: 45 cells]}
+\NormalTok{    T[track: 3] {-}{-}\textgreater{} EP}
+\NormalTok{    S[section\_set: 3] {-}{-}\textgreater{} EP}
+\NormalTok{    EP {-}{-}\textgreater{} TP[Total product: 360 cells]}
+\NormalTok{    R[3 reserved slots, 2 options each] {-}{-}\textgreater{} TP}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Domain count}: 5
+\item
+  \textbf{Effective product size}: 45
+\item
+  \textbf{Total product size}: 360
+\item
+  \textbf{Reserved slots}: 3
+  (\breaktt{figure\_profile,\ qr\_profile,\ integrity\_profile})
+\item
+  \textbf{Grammar hash}: \breaktt{f84a8f9dbcb18e37}
+\item
+  \textbf{Tests}: 493 · \textbf{Coverage}: 96.28\%
+\end{itemize}
+\end{block}

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_results.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h2 id="results">Results</h2>
+<h3 id="grammar-product-space">Grammar product space</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Slot</th>
+<th>Options</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>primitive_domain</td>
+<td>5</td>
+<td>optimization, dynamics, statistics, signal, graph</td>
+</tr>
+<tr>
+<td>track</td>
+<td>3</td>
+<td>analytical, empirical, hybrid</td>
+</tr>
+<tr>
+<td>section_set</td>
+<td>3</td>
+<td>minimal, standard, extended</td>
+</tr>
+<tr>
+<td>figure_profile</td>
+<td>2</td>
+<td>minimal, full</td>
+</tr>
+<tr>
+<td>qr_profile</td>
+<td>2</td>
+<td>off, on</td>
+</tr>
+<tr>
+<td>integrity_profile</td>
+<td>2</td>
+<td>sha256, merkle</td>
+</tr>
+</tbody>
+</table>
+<figure id="fig:stacked_product">
+<img src="../figures/fig_stacked_product.png" style="width:85.0%"
+data-fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."
+alt="Options per grammar slot, stacked. Each band is one slot’s contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below." />
+<figcaption aria-hidden="true">Options per grammar slot, stacked. Each
+band is one slot’s contribution to the total product size; three bands
+are reserved (presentational/sealing) and are excluded from the
+effective product space discussed below.</figcaption>
+</figure>
+<ul>
+<li><strong>Total product size</strong>: 360 cells</li>
+<li><strong>Effective product size</strong> (reserved slots excluded):
+45 cells</li>
+<li><strong>Reserved slots</strong> (3):
+<code>figure_profile, qr_profile, integrity_profile</code></li>
+</ul>
+<figure id="fig:product_space">
+<img src="../figures/fig_product_space.png" style="width:80.0%"
+data-fig-alt="Bar chart comparing total, effective, and reserved-only grammar product space."
+alt="Total, effective, and reserved-only product size for the grammar at seed=42, generated by fig_product_space_annotation (src/manuscript_figures.py) directly from Grammar.product_size / Grammar.effective_product_size — not hand-typed." />
+<figcaption aria-hidden="true">Total, effective, and reserved-only
+product size for the grammar at seed=42, generated by
+<code>fig_product_space_annotation</code>
+(<code>src/manuscript_figures.py</code>) directly from
+<code>Grammar.product_size</code> /
+<code>Grammar.effective_product_size</code> — not
+hand-typed.</figcaption>
+</figure>
+<p>Every row in the table above is a <code>GrammarSlot</code> parsed
+from <code>manuscript/config.yaml</code> by <code>parse_grammar()</code>
+(<code>src/grammar.py</code>). Each slot contributes a multiplicative
+factor to <code>Grammar.product_size</code>, which is the raw
+cross-product of all option counts — not an estimate, but the literal
+<code>n *= len(s.options)</code> accumulation over every slot. The
+<code>Grammar.grammar_hash</code> property serialises the seed, every
+slot name, and every option list into a canonical JSON string
+(<code>canonical()</code>) and takes the first sixteen hex characters of
+its SHA-256 digest — <code>f84a8f9dbcb18e37</code> for the grammar as
+currently checked into this project. Any edit to a slot’s option list,
+the addition or removal of a slot, or a change to the seed changes this
+hash deterministically; it is not a version string maintained by
+hand.</p>
+<p>The six slots split into two categories. Three are
+<em>content-determining</em>: <code>primitive_domain</code> selects
+which of the five kernel modules described below is copied into the
+child project, <code>track</code> selects the manuscript’s analytical
+posture (<code>analytical</code>, <code>empirical</code>, or
+<code>hybrid</code>), and <code>section_set</code> selects which subset
+of manuscript sections is rendered (<code>minimal</code>,
+<code>standard</code>, or <code>extended</code>). The remaining three —
+<code>figure_profile</code>, <code>qr_profile</code>, and
+<code>integrity_profile</code> — are declared in
+<code>RESERVED_SLOTS</code> (<code>src/grammar.py</code>) and govern
+only <em>presentational and sealing</em> behaviour: how many figures are
+generated, whether the sealed payload is rendered as a QR PNG, and
+whether the provenance hash is a flat SHA-256 or a Merkle root over
+per-file hashes (<code>src/integrity.py::merkle_root</code>). None of
+the three reserved slots changes which primitive kernel runs or what its
+output is, which is exactly why
+<code>Grammar.effective_product_size</code> — the number that matters
+when asking “how many <em>scientifically distinct</em> children can this
+grammar produce” — divides the reserved slots back out. The ratio
+between the total and effective product sizes above is, by construction,
+the product of the three reserved slots’ own option counts; no other
+slot is capable of changing that ratio.</p>
+<h3 id="effective-slot-breakdown">Effective slot breakdown</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Slot</th>
+<th>Options</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>primitive_domain</td>
+<td>5</td>
+<td>optimization, dynamics, statistics, signal, graph</td>
+</tr>
+<tr>
+<td>track</td>
+<td>3</td>
+<td>analytical, empirical, hybrid</td>
+</tr>
+<tr>
+<td>section_set</td>
+<td>3</td>
+<td>minimal, standard, extended</td>
+</tr>
+</tbody>
+</table>
+<p><code>grammar.effective_slots</code> (<code>src/grammar.py</code>) is
+exactly <code>grammar.slots</code> filtered against
+<code>RESERVED_SLOTS</code> — the same list rendered in the previous
+section, minus the three sealing/presentation dimensions. This is the
+space a reviewer should reason about when asking whether the grammar is
+a meaningful generator rather than a combinatorial trick that multiplies
+unrelated toggles: 5 primitive domains times three narrative tracks
+times three section-set sizes is the actual space of scientifically
+distinguishable children this template can emit.</p>
+<h3 id="the-five-primitive-domains">The five primitive domains</h3>
+<figure id="fig:domain_coverage">
+<img src="../figures/fig_domain_coverage.png" style="width:85.0%"
+data-fig-alt="Five colored bars, one per primitive domain."
+alt="The five primitive domains, type-colored: optimization, dynamics, statistics, signal, graph." />
+<figcaption aria-hidden="true">The five primitive domains, type-colored:
+<code>optimization</code>, <code>dynamics</code>,
+<code>statistics</code>, <code>signal</code>,
+<code>graph</code>.</figcaption>
+</figure>
+<p>Each domain in
+<code>- optimization - dynamics - statistics - signal - graph</code> is
+a Python module under <code>src/primitives/</code> exporting a
+<code>PRIMITIVES: tuple[PrimitiveSpec, ...]</code> collected by
+<code>collect_primitives()</code>
+(<code>src/primitives/__init__.py</code>). A <code>PrimitiveSpec</code>
+(<code>src/primitives/base.py</code>) bundles a callable kernel, an
+example input, an expected output (or <code>None</code> when the check
+is structural rather than a fixed value), a numerical tolerance, and —
+for five of the eight kernels — a <code>negative_control</code> callable
+whose entire purpose is to fail the primary kernel’s own success
+criterion. <code>collect_primitives()</code> returns exactly the five
+domains named above
+(<code>test_collect_primitives_expected_modules</code>) and a total of
+eight primitive kernels across them
+(<code>test_total_primitive_count</code>): two in
+<code>optimization</code>, one in <code>dynamics</code>, one in
+<code>statistics</code>, two in <code>signal</code>, and two in
+<code>graph</code>.</p>
+<p><strong>Optimization.</strong> <code>gradient_descent</code>
+(<code>src/primitives/optimization.py</code>) runs explicit gradient
+descent on the convex quadratic <code>f(x) = 0.5 (x-c)^T A (x-c)</code>,
+whose gradient is <code>A(x-c)</code>. Because the problem is convex
+quadratic, its analytic minimiser is known in closed form —
+<code>x* = c</code>, computed independently by the sibling kernel
+<code>analytic_minimizer</code> — so the iterative and closed-form
+solutions can be cross-checked against each other rather than against a
+single hardcoded expectation. On the example input (a diagonal
+<code>A</code>, <code>c = (1, -1)</code>, 200 steps at learning rate
+0.1) the two agree to within <code>1e-4</code>. The domain’s negative
+control, <code>_negative_control_wrong_sign</code>, is the same loop
+with the gradient step’s sign flipped (<code>x = x + lr * grad</code>
+instead of <code>x = x - lr * grad</code>); this turns descent into
+ascent and diverges away from <code>c</code> instead of converging to
+it, giving the mutation gate (see Honesty Contract) something to detect
+if the sign were ever silently restored to “wrong.”</p>
+<p><strong>Dynamics.</strong> <code>damped_oscillator</code>
+(<code>src/primitives/dynamics.py</code>) integrates the damped harmonic
+oscillator ODE <code>x'' + 2*zeta*omega*x' + omega^2*x = 0</code> with
+explicit Euler stepping, and separately computes the closed-form
+under-damped envelope <code>x0 * exp(-zeta*omega*t)</code>. The test
+suite does not merely check that the two arrays are close; it checks
+four independent structural properties of the same trajectory: the
+numerical amplitude stays inside the analytical envelope plus a 5%
+Euler-error tolerance
+(<code>test_damped_oscillator_amplitude_bounded_by_envelope</code>), the
+envelope itself is monotonically non-increasing
+(<code>test_damped_oscillator_envelope_monotone_decreasing</code>),
+heavy damping drives the trajectory near zero by the end of the run
+(<code>test_damped_oscillator_decays_to_near_zero</code>), and the
+initial condition is reproduced exactly. The negative control,
+<code>_zero_damping_control</code>, re-runs the same integrator with
+<code>zeta</code> forced to zero; its envelope is flat at
+<code>x0</code> rather than decaying, and
+<code>test_zero_damping_envelope_flat</code> checks that flatness
+directly — so a broken damping term that decayed regardless of the
+damping value would be caught, not just a broken damping term that fails
+to decay at all.</p>
+<p><strong>Statistics.</strong> <code>ols_fit</code>
+(<code>src/primitives/statistics.py</code>) solves ordinary least
+squares via the normal equations,
+<code>beta_hat = (X^T X)^{-1} X^T y</code>, solved with
+<code>numpy.linalg.solve</code> rather than an explicit matrix inverse.
+The example input is synthetic, not observational: fifty rows with an
+intercept column and one Gaussian covariate
+(<code>rng = np.random.default_rng(42)</code>), a fixed true coefficient
+vector <code>beta = (2.0, -3.0)</code>, and additive noise scaled to
+<code>0.1</code> standard deviations. Because the data-generating
+coefficients are known by construction, recovery is checked directly —
+<code>test_ols_fit_recovers_beta</code> requires the estimated and true
+beta to agree within Euclidean distance <code>0.1</code> — alongside an
+R² floor of <code>0.95</code> and a near-zero mean residual. The
+negative control, <code>_shuffled_control</code>, permutes the
+<code>y</code> labels with an independently seeded generator
+(<code>rng = np.random.default_rng(0)</code>) before fitting; breaking
+the true <code>X</code>-<code>y</code> correspondence this way is
+asserted to drop R² below <code>0.5</code>
+(<code>test_shuffled_control_poor_r_squared</code>), giving a concrete,
+falsifiable bound on how badly a shuffled fit <em>should</em>
+perform.</p>
+<p><strong>Signal.</strong> This domain carries two kernels validated by
+structural properties rather than fixed target arrays, since
+<code>expected=None</code> for both. <code>dft</code> computes the
+Discrete Fourier Transform directly as a matrix-vector product against
+the exponential basis matrix <code>exp(-2j*pi*k*n/N)</code> — an
+explicit <code>O(N^2)</code> construction, not a call into
+<code>numpy.fft</code>. Its correctness is checked by Parseval’s theorem
+(<code>sum(|X[k]|^2) == N * sum(|x[n]|^2)</code> to within a relative
+tolerance of <code>1e-6</code>) and by recovering the correct dominant
+frequency bin (index 5, positive or negative) from a pure 5 Hz sinusoid
+sampled at 64 points. <code>convolve_known</code> wraps
+<code>numpy.convolve</code> with a fixed three-tap smoothing kernel,
+<code>[0.25, 0.5, 0.25]</code>; its own test suite checks that smoothing
+cannot increase variance
+(<code>test_convolve_known_smoothing_reduces_variance</code>). Its
+negative control, <code>_identity_kernel_convolve</code>, substitutes
+the identity kernel <code>[1.0]</code> under <code>mode="same"</code>,
+which by the definition of convolution must reproduce the input signal
+exactly (<code>atol=1e-12</code>) — a stronger, algebraically-derived
+check than an arbitrary “looks different” comparison.</p>
+<p><strong>Graph.</strong> <code>bfs_distances</code>
+(<code>src/primitives/graph.py</code>) computes shortest-path distances
+on a fixed five-node undirected graph (<code>A</code>–<code>E</code>,
+encoded as an adjacency dict) via a plain breadth-first queue. Because
+the graph is fixed and small, the expected distances from source
+<code>A</code> are enumerable by hand and are asserted exactly:
+<code>{A: 0, B: 1, C: 1, D: 2, E: 3}</code>, with tolerance
+<code>0.0</code>. Its negative control,
+<code>_disconnected_control</code>, replaces the adjacency of the source
+node with an empty list, collapsing the reachable set to the source
+alone — a graph-structural way of breaking the primitive rather than
+perturbing a numeric input. <code>pagerank</code> runs the standard
+power-iteration update with damping <code>0.85</code> over 50
+iterations, redistributing dangling nodes’ rank mass evenly rather than
+dropping it. It has no single fixed expected output — rank values depend
+on iteration count and are not hand-derivable — so it is instead
+validated by three invariants any correct PageRank computation must
+satisfy regardless of the specific graph: ranks sum to <code>1.0</code>
+within <code>1e-6</code>, every node in the graph receives a rank entry,
+and every rank is strictly positive (ensured by the
+<code>(1-damping)/n</code> teleportation floor added at every
+iteration).</p>
+<p>Across the five domains, five of the eight primitives carry an
+explicit negative control; the remaining three
+(<code>analytic_minimizer</code>, <code>dft</code>, and
+<code>pagerank</code>) are validated purely through cross-checks against
+an independent computation or through algebraic invariants (Parseval’s
+theorem, PageRank’s stochastic-normalization property) that a broken
+implementation would be unlikely to satisfy by accident. This mirrors
+the property-based testing tradition [claessen2000quickcheck;
+maciver2019hypothesis]: rather than asserting a single hand-picked
+input/output pair, the suite asserts properties that must hold across a
+class of inputs — the same style used at the grammar level in
+<code>tests/test_property_invariants.py</code>, where
+<code>hypothesis</code>-generated seeds are used to check, for every
+seed drawn, that <code>product_size</code> really is the product of
+option counts and that <code>effective_product_size</code> does not
+exceed it.</p>
+<h3 id="exemplar-generation">Exemplar generation</h3>
+<p>Running
+<code>uv run python scripts/autopoiesis.py expand --seed 42</code>
+produces a spec with <code>primitive_domain</code> deterministically
+selected from the grammar.</p>
+<p>All 5 domains successfully materialize runnable child projects. Each
+child project:</p>
+<ol type="1">
+<li>Contains a <code>primitives/</code> package with the selected
+kernel.</li>
+<li>Runs <code>analysis.py</code> without error.</li>
+<li>Has a <code>provenance.json</code> that passes
+<code>verify_child</code>.</li>
+<li>Passes all child-level smoke tests.</li>
+</ol>
+<h3 id="test-results">Test results</h3>
+<ul>
+<li><strong>Test count</strong>: 493</li>
+<li><strong>Coverage</strong>: 96.28%</li>
+<li><strong>Grammar hash</strong>: <code>f84a8f9dbcb18e37</code></li>
+</ul>
+<p>Both the test count and coverage percentage above are produced by
+<code>measure_test_summary()</code>
+(<code>src/manuscript_variables.py</code>), which shells out to this
+project’s own <code>pytest</code> + <code>coverage</code> run
+(<code>--cov-branch</code>, matching the repository-root branch-coverage
+methodology) against <code>tests/</code> and <code>src/</code> and
+parses the real <code>passed</code> count and <code>coverage.json</code>
+totals from that subprocess. There is no fallback literal: if the
+subprocess fails, times out, or its output fails to parse, both fields
+resolve to the string <code>"pending"</code> rather than a
+plausible-looking number — the same discipline that governs every other
+numeric token in this manuscript.</p>
+<figure id="fig:coverage_by_module">
+<img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
+data-fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."
+alt="Real, per-module branch coverage from the same measurement run that produces 493/96.28 above — not an aggregate alone. Any module below the repository’s 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement." />
+<figcaption aria-hidden="true">Real, per-module branch coverage from the
+same measurement run that produces 493/96.28 above — not an aggregate
+alone. Any module below the repository’s 90% floor would be drawn in red
+rather than smoothed into the headline percentage; none is, in this
+measurement.</figcaption>
+</figure>
+<p>The aggregate 96.28% is a mean weighted by statement and branch
+count, not a uniform floor — <span class="citation"
+data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>
+shows the real spread. As of this measurement every module clears the
+90% line; <code>common.py</code> and <code>cover_art.py</code> sit at
+100% and <code>figures.py</code> at 98.41% after closing what were, in
+an earlier draft of this manuscript, the three lowest-coverage modules
+(see <code>CHANGELOG.md</code>’s Wave 10 entry for the specific branches
+that were untested and the tests added to close them); every module
+under <code>src/primitives/</code> and the honesty/integrity core sit at
+or near 100%. Both the aggregate number and this per-module breakdown
+are read from the same persisted
+<code>output/data/coverage_full.json</code> — a single generator run,
+not two separately-computed views that could silently drift apart. This
+is a snapshot, not a permanent state: coverage moves as tests are added
+or code changes, and <span class="citation"
+data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>
+should be regenerated (<code>stage_02_analysis.py</code>) rather than
+trusted from a prior render whenever that question matters.</p>
+</body>
+</html>

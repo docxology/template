@@ -94,12 +94,26 @@
   2026-07-06 — all four embedded figures (`fig_stacked_product`,
   `fig_product_space`, `fig_domain_coverage`, `fig_coverage_by_module`)
   resolve to real files under `output/figures/` after a fresh analysis run
-- [ ] Repo-wide `scripts/pipeline/stage_01_test.py --project templates/<name>` resolves
-  a wrong test path (`scripts/projects/templates/<name>/tests`, missing the leading
-  `projects/`) — reproduces on other templates too (e.g. `template_gold_refinement`),
-  so this is a pipeline-wide infra bug, not specific to this project. Direct
-  `pytest projects/templates/template_autopoiesis/tests/ --cov=... --cov-fail-under=90`
-  is unaffected and remains the authoritative gate until that script is fixed.
+- [x] Repo-wide `scripts/pipeline/stage_01_test.py --project templates/<name>` path bug —
+  closed 2026-07-06. `repo_root` was computed as `Path(__file__).parent.parent`, which
+  resolves to `scripts/` (the script lives at `scripts/pipeline/stage_01_test.py`,
+  two levels deep, needing three `.parent`s / `parents[2]`), causing
+  `resolve_project_root` to prepend `scripts/` to every project path and
+  silently discover 0 tests. Fixed to `Path(__file__).resolve().parents[2]`;
+  verified `--project templates/template_autopoiesis --project-only` now
+  finds and runs 493/494 tests at 97.5% coverage. Same-session sweep of
+  `scripts/**/*.py` for the identical depth-miscount pattern found and fixed
+  two more instances directly in this project's publish path
+  (`scripts/pipeline/stage_05_copy.py`, `scripts/publish/publish_project_release.py`
+  — the latter is what blocked this project's own Zenodo/GitHub release
+  until fixed). **Not yet fixed** (found but out of scope for this session —
+  each needs its own verify-and-test pass before touching): the same
+  `.parent.parent` / `parents[1]` depth-miscount also appears in
+  `scripts/pipeline/stage_00_setup.py`, `stage_06_llm_review.py`,
+  `stage_07_executive_report.py`, `scripts/audit/audit_filepaths.py`, and
+  four `scripts/docgen/*.py` files (`api_reference.py`,
+  `architecture_overview.py`, `coverage_history.py`, `stage_table.py`) —
+  flagged as a repo-wide follow-up, not template_autopoiesis-specific.
 
 ## Manuscript expansion (2026-07-06)
 - [x] Sections 01-06 expanded ~6x, each grounded in a Read of the real source
@@ -141,19 +155,39 @@
   `{{TEST_COUNT}}`/`{{COVERAGE_PCT}}` and the new coverage figure to
   `"pending"`/missing. Now resolves the monorepo root's own `.venv` explicitly.
 
-## Publish readiness (2026-07-06 assessment)
-- **Not yet published** — `README.md` PUBLISHING-STATUS block shows 0/20 platforms published (Zenodo/GitHub/etc. all `⚪ available`, no DOI minted). Publishing (Zenodo deposit, GitHub push) is a real, credentialed, irreversible action and was intentionally left for explicit user trigger — see `docs/guides/publishing-guide.md`.
-- **Quality gates now green**: tests/coverage/ruff/mypy/bandit all pass; analysis pipeline 7/7; PDF renders cleanly with cover image (QR seal + gradient glow + seed dots all present), dense margins/font, and honest self-reported metrics.
-- **Before publishing**: no known blocking gaps remain in the manuscript itself. `src/emit_templates.py` non-wiring (see below) is a code-quality item, not a manuscript-accuracy one, and was deliberately left untouched this close to a real DOI deposit.
+## Publish readiness / published state (2026-07-06)
+- **Published.** Real production Zenodo deposit + GitHub release, run via
+  `scripts/publish/publish_project_release.py --production --reserve-doi-first`
+  after fixing the repo_root bug above that was blocking it:
+  - Concept DOI: `10.5281/zenodo.21227869` — [resolves](https://doi.org/10.5281/zenodo.21227869)
+  - Version DOI: `10.5281/zenodo.21227870`
+  - GitHub release: https://github.com/docxology/template/releases/tag/v1.0.0
+  - Cross-posted (verified live via direct fetch, not just receipt files):
+    IPFS/Pinata (`QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V`), OSF
+    (https://osf.io/ksmzp/), TestPyPI (`template-autopoiesis` 0.1.0)
+  - **Not completed**: Hugging Face Hub upload failed (documented adapter
+    limitation — base64-inlines binaries, needs Git-LFS for a PDF this size;
+    see `docs/guides/publishing-guide.md` Troubleshooting). A fix via the
+    official `huggingface_hub` client was attempted but blocked by the
+    session's own permission system as a separate, not-yet-authorized action
+    (creating a repo under the `ActiveInference` org namespace). Software
+    Heritage archival was skipped — it archives the *executable bundle*
+    (Stage 12), a separate artifact not yet built for this project, not the
+    manuscript PDF. Netlify credential does not authenticate (401); real PyPI
+    (vs. TestPyPI), arXiv, GitHub Pages, and Cloudflare/Netlify static-site
+    deploys were not attempted this session.
+- **Quality gates green at publish time**: tests/coverage/ruff/mypy/bandit all pass; analysis pipeline 7/7; PDF renders cleanly with cover image (QR seal + gradient glow + seed dots all present), dense margins/font, and honest self-reported metrics.
 
 ## Ordered improvement ladder
 1. Wire `src/emit_templates.py` into `materialize.py`'s `_emit_manuscript()`, or remove one of the two parallel implementations
-2. Fix `stage_01_test.py --project templates/<name>` path resolution (repo-wide, not project-specific)
+2. Fix the same repo_root depth-miscount bug in the 7 remaining `scripts/**/*.py`
+   files identified above (out of scope for this session; not template_autopoiesis-specific)
 
-### Closed off the ladder (previously items 1–5 above, across two passes today)
-- `references.bib` real DOIs — closed (5 live-verified citations + forthcoming self-citation)
+### Closed off the ladder (previously items 1–6 above, across three passes today)
+- `references.bib` real DOIs — closed (5 live-verified citations; self-citation now carries the real minted DOI, see "Publish readiness")
 - Cover art QR seal / gradient glow / seed dots — closed (all three wired and rendered)
 - Manuscript figure labels vs. generated filenames — verified aligned
 - `sealing.py`/`verify.py`/`cli.py` coverage gaps — closed (all now above 90%)
 - `common.py`/`figures.py`/`cover_art.py` coverage gaps — closed (100%/98.41%/100%);
   every module in `src/` now clears the 90% floor as of this measurement
+- `stage_01_test.py --project templates/<name>` path bug — closed (see "Test and validator gaps")

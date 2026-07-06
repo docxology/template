@@ -82,7 +82,7 @@ def main() -> int:
 
     log_header(f"STAGE 05: Copy Outputs (Project: {args.project})", logger)
 
-    repo_root = Path(__file__).parent.parent
+    repo_root = Path(__file__).resolve().parents[2]
     project_root = resolve_project_root(repo_root, args.project)
     output_dir = repo_root / "output" / args.project
 

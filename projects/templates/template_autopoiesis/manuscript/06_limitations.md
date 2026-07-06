@@ -146,13 +146,14 @@ gap is now closed by `tests/test_cover_art.py::test_render_cover_with_grammar_ha
 added this session (see "Coverage is uneven across modules" below).
 
 Separately, for most of this project's life `manuscript/references.bib` held
-a single self-referential `friedman2026autopoiesis` entry noting the DOI is
+a single self-referential `friedman2026autopoiesis` entry noting the DOI was
 forthcoming, while `99_references.md` carried a hand-written, uncited list
 alongside it — a citation without a resolvable BibTeX entry is exactly the
 kind of unverifiable claim this project's honesty contract exists to catch.
-That gap is now closed: `references.bib` carries five real, live-verified
-external citations plus the one legitimately-forthcoming self-citation
-(`references.bib`'s own DOI cannot exist before this manuscript is deposited;
-see `TODO.md`), and `99_references.md` annotates each entry against the
+That gap is now closed twice over: `references.bib` carries five real,
+live-verified external citations, and following this project's own Zenodo
+deposit the self-citation's DOI (`10.5281/zenodo.21227869`, verified by a
+live `curl` against `doi.org` before being written into the entry) is real
+rather than forthcoming. `99_references.md` annotates each entry against the
 section that relies on it rather than listing citations independent of the
 bibliography.

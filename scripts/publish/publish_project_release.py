@@ -22,7 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
-ensure_repo_root_on_path()
+_REPO_ROOT = ensure_repo_root_on_path()
 
 from infrastructure.core.credentials import ensure_dotenv_loaded  # noqa: E402
 from infrastructure.core.exceptions import MetadataError, PublishingError  # noqa: E402
@@ -119,7 +119,7 @@ def main(argv: list[str] | None = None) -> int:
     # An explicit `export` (or --*-token flag) still wins.
     ensure_dotenv_loaded()
 
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = _REPO_ROOT
     sandbox = not args.production
 
     if resolve_combined_pdf(repo_root, args.project) is None:

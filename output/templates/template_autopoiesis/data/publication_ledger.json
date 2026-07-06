@@ -1,0 +1,16 @@
+{
+  "releases": [
+    {
+      "doi": "10.5281/zenodo.21227870",
+      "dry_run": false,
+      "github_release_url": "https://github.com/docxology/template/releases/tag/v1.0.0",
+      "github_repo": "docxology/template",
+      "pairing_valid": true,
+      "pdf_sha256": "fd5b5d2692f09e1827da30c1986b19a33ac839f99e1702d53a6c712686a3fbf0",
+      "sandbox": false,
+      "tag": "v1.0.0",
+      "timestamp": "2026-07-06T21:09:39.371302+00:00"
+    }
+  ],
+  "schema": "template-publication-ledger-v1"
+}

@@ -149,7 +149,15 @@ def main() -> int:
     # Log resource usage at start
     log_live_resource_usage("Test stage start", logger)
 
-    repo_root = Path(__file__).parent.parent
+    # NOTE: ``scripts/`` is *not* the repo root — this script lives at
+    # ``scripts/pipeline/stage_01_test.py`` (two levels deep).  Use the same
+    # ``parents[2]`` resolution as the sys.path bootstrap on line 27 so
+    # ``resolve_project_root`` gets the real repo root, not ``scripts/``.
+    # The old ``Path(__file__).parent.parent`` resolved to ``scripts/``,
+    # which made ``resolve_project_root`` prepend ``scripts/`` to every
+    # project path (e.g. ``scripts/projects/templates/<name>/tests``),
+    # causing 0 tests discovered for all templates.
+    repo_root = Path(__file__).resolve().parents[2]
     strict = not args.non_strict
 
     # If the default placeholder project is selected but isn't a runnable project,

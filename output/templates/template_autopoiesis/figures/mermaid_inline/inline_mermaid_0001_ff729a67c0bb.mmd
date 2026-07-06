@@ -1,0 +1,5 @@
+flowchart LR
+    G["Grammar<br/>config.yaml"] --> E["Expand<br/>seed → Spec"]
+    E --> M["Materialize<br/>Spec → Child"]
+    M --> V["Verify<br/>tree-hash check"]
+    V --> S["Seal<br/>QR provenance"]
