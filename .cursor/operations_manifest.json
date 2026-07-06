@@ -242,6 +242,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.fonds.linking",
+      "invocation": "python -m infrastructure.fonds.linking",
+      "source_path": "infrastructure/fonds/linking.py",
+      "purpose": "Symlink private lifecycle fonds into the template checkout.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.llm.cli",
       "invocation": "python -m infrastructure.llm.cli",
       "source_path": "infrastructure/llm/cli/__main__.py",
@@ -673,6 +682,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.rules.linking",
+      "invocation": "python -m infrastructure.rules.linking",
+      "source_path": "infrastructure/rules/linking.py",
+      "purpose": "Symlink private lifecycle rules into the template checkout.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.search.deep_research",
       "invocation": "python -m infrastructure.search.deep_research",
       "source_path": "infrastructure/search/deep_research/cli.py",
@@ -934,6 +952,15 @@
         "write_operations_manifest",
         "write_skill_manifest"
       ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.tools.linking",
+      "invocation": "python -m infrastructure.tools.linking",
+      "source_path": "infrastructure/tools/linking.py",
+      "purpose": "Symlink private lifecycle tools into the template checkout.",
+      "subcommands": [],
+      "exports": [],
       "effect": "read_only"
     },
     {
