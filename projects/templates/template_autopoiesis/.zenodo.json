@@ -1,0 +1,29 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for Autopoietic Project Generation.",
+  "keywords": [
+    "autopoiesis",
+    "combinatoric grammar",
+    "deterministic generation",
+    "project synthesis",
+    "reproducible research",
+    "infrastructure automation"
+  ],
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21227869",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
+  "title": "Autopoietic Project Generation",
+  "upload_type": "software",
+  "version": "1.0.0"
+}

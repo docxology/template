@@ -1,0 +1,40 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 101
+Total Size: 2.72 MB
+
+Files by Category:
+  • pdf: 10 files (0.74 MB)
+  • web: 10 files (0.33 MB)
+  • slides: 65 files (1.20 MB)
+  • figures: 10 files (0.33 MB)
+  • data: 4 files (0.13 MB)
+  • reports: 2 files (0.00 MB)
+
+Largest Files:
+  • template_autopoiesis_combined.pdf: 0.47 MB (pdf)
+  • 03_results_slides.pdf: 0.20 MB (slides)
+  • cover_art.png: 0.15 MB (figures)
+  • coverage_full.json: 0.13 MB (data)
+  • index.html: 0.12 MB (web)
+
+Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
+  ⚠  logs/ directory
+
+File Types:
+  • .log: 10 file(s)
+  • .tex: 10 file(s)
+  • .aux: 9 file(s)
+  • .toc: 9 file(s)
+  • .pdf: 9 file(s)
+  • .html: 9 file(s)
+  • .nav: 8 file(s)
+  • .vrb: 8 file(s)
+  • .snm: 8 file(s)
+  • .png: 7 file(s)

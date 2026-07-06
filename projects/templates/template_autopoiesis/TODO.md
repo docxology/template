@@ -177,6 +177,32 @@
     (vs. TestPyPI), arXiv, GitHub Pages, and Cloudflare/Netlify static-site
     deploys were not attempted this session.
 - **Quality gates green at publish time**: tests/coverage/ruff/mypy/bandit all pass; analysis pipeline 7/7; PDF renders cleanly with cover image (QR seal + gradient glow + seed dots all present), dense margins/font, and honest self-reported metrics.
+- **Abstract revised and re-published as v1.0.1** (2026-07-06): `00_abstract.md`
+  rewritten from a one-sentence lede + bare diagrams/bullets into three real
+  prose paragraphs (what it does, the three usually-unverified claims made
+  structurally checkable, the result summary), verified live in both the
+  re-rendered PDF and the Zenodo deposit description. New version DOI
+  `10.5281/zenodo.21229620` (concept DOI unchanged); GitHub release v1.0.1.
+- **Standalone repo created**: https://github.com/docxology/template_autopoiesis
+  (public, mirrors this project's own directory content — source of truth
+  remains the monorepo per `docs/guides/publishing-guide.md`). Has its own
+  v1.0.1 release with the same PDF/DOI. `publication.github_repository` and
+  `CITATION.cff`'s `repository-code` both point here now, matching the
+  `template_gold_refinement`/`template_madlib` convention.
+- **Found: tag-namespace collision with `.github/workflows/release.yml`.**
+  This repo runs an automated, repo-wide release-notes bot (generic name
+  "Research Project Template vX.Y.Z", auto-generated changelog body) that
+  shares the same bare-semver tag namespace (`v1.0.0`, `v1.0.1`, ...) as
+  per-project releases created by `publish_project_release.py`. It silently
+  overwrote both this project's GitHub release names/bodies (verified via
+  `gh release view v1.0.0`/`v1.0.1` showing the bot's generic content, not
+  the abstract/DOI content the publish script wrote) — though the uploaded
+  PDF assets were untouched. The Zenodo record itself (the actual DOI-bearing
+  durable artifact) is unaffected. **Follow-up recommendation, not applied
+  this session**: future per-project releases on `docxology/template` should
+  use a project-scoped tag (e.g. `template_autopoiesis-v1.0.0`) to avoid this
+  collision, or the standalone repo (which has no such bot) should be treated
+  as the canonical place for per-project GitHub releases.
 
 ## Ordered improvement ladder
 1. Wire `src/emit_templates.py` into `materialize.py`'s `_emit_manuscript()`, or remove one of the two parallel implementations

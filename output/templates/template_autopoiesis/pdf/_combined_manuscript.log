@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  6 JUL 2026 14:14
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  6 JUL 2026 16:11
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1206,9 +1206,9 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
  [1]
 [2] [3] [4]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <9> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 652.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 676.
  [5]
-Underfull \hbox (badness 1178) in paragraph at lines 705--719
+Underfull \hbox (badness 1178) in paragraph at lines 729--743
 []\TU/lmr/m/n/9 Two auxiliary functions extend \TU/lmtt/m/n/9 expand \TU/lmr/m/
 n/9 to families of children rather than one: \TU/lmtt/m/n/9 d e r i v e _ s e e
  d ( b a s e _ s e e d ,   i n d e x ) \TU/lmr/m/n/9 hashes
@@ -1223,7 +1223,7 @@ File: ../figures/fig_product_space.png Graphic file (type bmp)
 File: ../figures/fig_domain_coverage.png Graphic file (type bmp)
 <../figures/fig_domain_coverage.png>
 
-Underfull \hbox (badness 1308) in paragraph at lines 1087--1109
+Underfull \hbox (badness 1308) in paragraph at lines 1111--1133
 []\TU/lmr/bx/n/9 Dynamics. \TU/lmtt/m/n/9 d a m p e d _ o s c i l l a t o r \TU
 /lmr/m/n/9 (\TU/lmtt/m/n/9 s r c / p r i m i t i v e s / d y n a m i c s . p y\
 TU/lmr/m/n/9 ) integrates the damped harmonic oscillator ODE \TU/lmtt/m/n/9 x[]
@@ -1236,10 +1236,10 @@ File: ../figures/fig_coverage_by_module.png Graphic file (type bmp)
  [10] [11]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1357.
+(hyperref)                removing `subscript' on input line 1381.
 
 [12] [13]
-Overfull \hbox (93.06427pt too wide) in paragraph at lines 1604--1617
+Overfull \hbox (93.06427pt too wide) in paragraph at lines 1628--1641
 []\TU/lmr/bx/n/9 Selection. \TU/lmr/m/n/9 For every grammar slot, \TU/lmtt/m/n/
 9 s r c / e x p a n d . p y : : _ d i g e s t _ i n d e x ( ) \TU/lmr/m/n/9 bui
 lds the key \TU/lmtt/m/n/9 f"{seed}\x1f{slot_name}\x1f{ordinal}\x1f{[],[].join(

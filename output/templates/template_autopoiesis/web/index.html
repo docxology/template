@@ -616,11 +616,33 @@ class="toc-section-number">8</span> References</a></li>
 <h2 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h2>
 <p><code>template_autopoiesis</code> is a combinatoric grammar that
-<strong>deterministically generates whole runnable projects</strong>.
-Given a single integer seed and a grammar of orthogonal slots, the
-system produces a fully-materialized child project — complete with
-kernel source, tests, analysis entry-point, and a manuscript stub —
-whose every byte is traceable to that seed.</p>
+<strong>deterministically generates whole runnable projects</strong> —
+not files or snippets, but complete, independently testable child
+repositories with their own kernel source, tests, analysis entry point,
+and manuscript. A single integer seed plus a grammar of orthogonal slots
+(primitive domain, analytical track, section set, and three
+presentation/provenance slots) selects one child from a combinatoric
+product space of 360 nominal (45 content-distinct) configurations, via a
+SHA-256 digest of the seed and slot identity — with no random-number
+generator anywhere in the expansion path.</p>
+<p>Project generators routinely claim completeness, determinism, and
+traceability without making any of the three independently checkable.
+This exemplar treats each claim as a structural property to verify
+rather than a rhetorical one to assert: <code>verify_child()</code>
+recomputes a tree hash from the files actually on disk and compares it
+against the recorded provenance, rather than trusting a value the same
+run wrote down; a honesty manifest inspects the live source AST to
+confirm every claim in this manuscript resolves to a real function in a
+real file; and a per-domain mutation gate checks that the acceptance
+tests reject a constant-success stub before trusting that they accept
+the real kernel. The same discipline governs this document itself —
+every number below is substituted at render time from a live measurement
+rather than hand-typed as a literal.</p>
+<p>Across 5 heterogeneous primitive domains (- optimization - dynamics -
+statistics - signal - graph), 493 tests exercise both fixed ground-truth
+checks and Hypothesis-driven property invariants at 96.28% branch
+coverage, with an explicit negative control per domain distinguishing
+the real kernel from a deliberately-wrong one.</p>
 <h3 data-number="1.1" id="generation-pipeline"><span
 class="header-section-number">1.1</span> Generation pipeline</h3>
 <pre class="mermaid"><code>flowchart LR

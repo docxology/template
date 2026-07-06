@@ -1,6 +1,6 @@
 # template_autopoiesis
 
-> **Public exemplar** — DOI forthcoming
+> **Public exemplar** — [DOI: 10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869)
 
 A combinatoric **grammar** that deterministically generates whole runnable projects — `src/`, `tests/`, `scripts/`, and `manuscript/` — one level past a manuscript generator.
 
@@ -124,22 +124,22 @@ Verified by `test_materialize.py::test_materialize_tree_hash_stable` and `test_p
 
 Concept DOI: [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869) | Version DOI: [10.5281/zenodo.21227870](https://zenodo.org/records/21227870) | Repository: —
 
-Publishing surface — 20 platforms, 2 published:
+Publishing surface — 20 platforms, 4 published:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
 | zenodo | first-class | ✅ published | [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869) | `ZENODO_API_TOKEN` |
-| github | first-class | ✅ published | [docxology/template](https://github.com/docxology/template) | `GITHUB_TOKEN` |
+| github | first-class | ✅ published | [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
 | pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
-| ipfs_pinata | first-class | ⚪ available | — | `PINATA_JWT` |
+| ipfs_pinata | first-class | ✅ published | [https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V](https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V) | `PINATA_JWT` |
 | ipfs_web3storage | first-class | ⚪ available | — | `WEB3_STORAGE_TOKEN` |
 | software_heritage | first-class | ⚪ available | — | — |
 | github_pages | first-class | ⚪ available | — | `GITHUB_TOKEN` |
 | cloudflare_pages | first-class | ⚪ available | — | `CLOUDFLARE_API_TOKEN` |
 | netlify | first-class | ⚪ available | — | `NETLIFY_AUTH_TOKEN` |
 | huggingface_hub | first-class | ⚪ available | — | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
-| osf | first-class | ⚪ available | — | `OSF_TOKEN` |
+| osf | first-class | ✅ published | [https://osf.io/ksmzp/](https://osf.io/ksmzp/) | `OSF_TOKEN` |
 | amazon_kdp | documented | 🟡 planned | — | `AMAZON_KDP_EMAIL`, `AMAZON_KDP_PASSWORD` |
 | google_play_books | documented | 🟡 planned | — | `GOOGLE_PLAY_BOOKS_SERVICE_ACCOUNT_JSON` |
 | gumroad | documented | 🟡 planned | — | `GUMROAD_ACCESS_TOKEN` |

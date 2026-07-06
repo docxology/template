@@ -10,6 +10,17 @@
       "sandbox": false,
       "tag": "v1.0.0",
       "timestamp": "2026-07-06T21:09:39.371302+00:00"
+    },
+    {
+      "doi": "10.5281/zenodo.21229620",
+      "dry_run": false,
+      "github_release_url": "https://github.com/docxology/template/releases/tag/v1.0.1",
+      "github_repo": "docxology/template",
+      "pairing_valid": true,
+      "pdf_sha256": "84145371f10c7ee97a75c53d78917d247fd6bd987d2c1764ee437b6fbdef8f51",
+      "sandbox": false,
+      "tag": "v1.0.1",
+      "timestamp": "2026-07-06T23:10:55.550063+00:00"
     }
   ],
   "schema": "template-publication-ledger-v1"
