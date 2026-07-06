@@ -95,6 +95,8 @@ output/templates/*
 !output/templates/template_active_inference/**
 !output/templates/template_autoresearch_project/
 !output/templates/template_autoresearch_project/**
+!output/templates/template_autopoiesis/
+!output/templates/template_autopoiesis/**
 !output/templates/template_autoscientists/
 !output/templates/template_autoscientists/**
 !output/templates/template_code_project/
@@ -171,6 +173,8 @@ projects/templates/*
 !projects/templates/template_active_inference/**
 !projects/templates/template_autoresearch_project/
 !projects/templates/template_autoresearch_project/**
+!projects/templates/template_autopoiesis/
+!projects/templates/template_autopoiesis/**
 !projects/templates/template_madlib/
 !projects/templates/template_madlib/**
 !projects/templates/template_sia/

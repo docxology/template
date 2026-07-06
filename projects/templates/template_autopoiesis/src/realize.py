@@ -50,7 +50,7 @@ def run_analysis_stage(child_root: Path) -> dict[str, object]:
             "stderr": proc.stderr,
             "returncode": proc.returncode,
         }
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001  # child stage failures are surfaced as dict errors
         return {"success": False, "error": str(exc)}
 
 

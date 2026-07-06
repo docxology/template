@@ -29,7 +29,7 @@ def verify_child(child_root: str | Path) -> CheckReport:
 
     try:
         prov = json.loads(prov_path.read_text())
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001  # malformed provenance is a check failure
         checks.append(CheckResult("provenance_parseable", False, str(exc)))
         return CheckReport(child_root=str(child_root), checks=tuple(checks))
 
@@ -118,7 +118,7 @@ def verify_child_full(
                         f"expected {PROVENANCE_SCHEMA_VERSION}, got {schema}",
                     )
                 )
-        except Exception:
+        except Exception:  # noqa: BLE001  # schema probe is best-effort when provenance is corrupt
             pass
 
     return CheckReport(child_root=str(child_root), checks=tuple(all_checks))
