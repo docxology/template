@@ -46,7 +46,7 @@ def read_qr_matrix(matrix: list[list[bool]]) -> str:
         results = pyzbar.decode(img)
         if results:
             return str(results[0].data.decode())
-    except Exception:  # noqa: BLE001  # optional pyzbar decode path
+    except Exception:  # noqa: BLE001  # safety net: optional pyzbar decode path
         pass
     return ""
 
@@ -65,7 +65,7 @@ def qr_image(data: str, box_size: int = 10, border: int = 4) -> Any:
         qr.add_data(data)
         qr.make(fit=True)
         return qr.make_image(image_factory=PilImage)
-    except Exception:  # noqa: BLE001  # optional qrcode/PIL stack
+    except Exception:  # noqa: BLE001  # safety net: optional qrcode/PIL stack
         return None
 
 
@@ -110,7 +110,7 @@ def embed_qr(base_image: Any, qr_img: Any, position: tuple[int, int] = (0, 0)) -
     """Embed *qr_img* into *base_image* at *position* and return the composite."""
     try:
         base_image.paste(qr_img, position)
-    except Exception:  # noqa: BLE001  # paste failures keep base image
+    except Exception:  # noqa: BLE001  # safety net: paste failures keep base image
         pass
     return base_image
 
@@ -132,5 +132,5 @@ def embed_semi_transparent(
         base_rgba = base_image.convert("RGBA")
         base_rgba.paste(qr_rgba, position, qr_rgba)
         return base_rgba.convert("RGB")
-    except Exception:  # noqa: BLE001  # optional PIL alpha compositing
+    except Exception:  # noqa: BLE001  # safety net: optional PIL alpha compositing
         return base_image

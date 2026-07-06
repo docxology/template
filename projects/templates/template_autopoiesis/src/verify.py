@@ -29,7 +29,7 @@ def verify_child(child_root: str | Path) -> CheckReport:
 
     try:
         prov = json.loads(prov_path.read_text())
-    except Exception as exc:  # noqa: BLE001  # malformed provenance is a check failure
+    except Exception as exc:  # noqa: BLE001  # safety net: malformed provenance is a check failure
         checks.append(CheckResult("provenance_parseable", False, str(exc)))
         return CheckReport(child_root=str(child_root), checks=tuple(checks))
 
@@ -85,7 +85,7 @@ def verify_seal(child_root: str | Path) -> CheckReport:
                 checks.append(CheckResult("seal_has_spec_hash", True))
             else:
                 checks.append(CheckResult("seal_has_spec_hash", False, "missing spec_hash"))
-        except Exception as exc:  # noqa: BLE001  # pragma: no cover  # seal is optional
+        except Exception as exc:  # noqa: BLE001  # pragma: no cover  # safety net: seal is optional
             checks.append(CheckResult("seal_parseable", False, str(exc)))
 
     return CheckReport(child_root=str(child_root), checks=tuple(checks))
@@ -118,7 +118,7 @@ def verify_child_full(
                         f"expected {PROVENANCE_SCHEMA_VERSION}, got {schema}",
                     )
                 )
-        except Exception:  # noqa: BLE001  # schema probe is best-effort when provenance is corrupt
+        except Exception:  # noqa: BLE001  # safety net: schema probe when provenance is corrupt
             pass
 
     return CheckReport(child_root=str(child_root), checks=tuple(all_checks))
