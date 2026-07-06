@@ -1,0 +1,17 @@
+# domain_profile.yaml — template_autopoiesis
+domain: "autopoiesis"
+display_name: "Autopoietic Project Generator"
+required_packages: ["numpy", "matplotlib", "pyyaml", "qrcode", "pillow"]
+preferred_outputs: ["generated-child-project", "manuscript-pdf", "seal-provenance"]
+validation_gates: ["pytest-cov-90", "recompute-verify", "mutation-meta-gate"]
+figure_types: ["product-decomposition", "slot-landscape", "domain-primitives", "verify-checks", "claim-taxonomy"]
+citation_policy: "self-describing — no external citations fabricate"
+llm_prompt_guidance: ""
+review_gates: ["cross-vendor-forge-audit"]
+source_policy: "thin-orchestrator — business logic in src/ only"
+artifact_expectations:
+  - "materialized-child: src/tests/scripts/manuscript"
+  - "sealed-output: QR-overlaid figures, stego PDF, provenance manifest"
+benchmark_rubric: null
+stage_mappings: []
+analogy_boundary: null

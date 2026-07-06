@@ -1,0 +1,26 @@
+conditions:
+  - name: "grammar-expand-verify"
+    role: "reference"
+    description: "Seeded deterministic expansion + recompute verification"
+  - name: "materialize-child"
+    role: "reference"
+    description: "Byte-stable child project emission"
+  - name: "mutation-meta-gate"
+    role: "variant"
+    description: "Constant run_analysis stub must FAIL every child domain"
+  - name: "tamper-detection"
+    role: "variant"
+    description: "Verify fails when child file is tampered or deleted"
+metrics:
+  primary:
+    name: "determinism"
+    direction: "maximize"
+protocol: "Grammar->expand->materialize->verify; 5 domains, 3 tracks, 3 section_sets"
+expected_figures:
+  - "fig:product_decomposition"
+  - "fig:slot_landscape"
+  - "fig:domain_primitives"
+  - "fig:verify_checks"
+  - "fig:claim_taxonomy"
+ablations:
+  - "no-mutation-gate: remove the mutation meta-gate, verify child suites pass green-by-construction"

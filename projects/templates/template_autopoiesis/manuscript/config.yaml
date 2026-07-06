@@ -1,0 +1,71 @@
+# Autopoietic Project Generation: Manuscript Configuration
+# This file is the live source-of-truth for paper metadata and grammar spec.
+
+paper:
+  title: "Autopoietic Project Generation"
+  subtitle: "A Combinatoric Grammar for Deterministic Runnable Project Synthesis"
+  version: "1.0.0"
+  date: "2026-07-05"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+keywords:
+  - "autopoiesis"
+  - "combinatoric grammar"
+  - "deterministic generation"
+  - "project synthesis"
+  - "reproducible research"
+  - "infrastructure automation"
+
+metadata:
+  license: "MIT"
+
+# ── Autopoiesis grammar ───────────────────────────────────────────────────────
+# This block is parsed by src/grammar.py::load_grammar().
+# seed: master integer seed for all deterministic selections.
+# slots: each entry has name (str) and options (list[str]).
+#   Reserved slots (figure_profile, qr_profile, integrity_profile) are excluded
+#   from the effective product size.
+# deps: list of vendorable infrastructure modules (see VENDORABLE_DEPS).
+#
+# Effective product size = 5 (primitive_domain) × 3 (track) × 3 (section_set) = 45
+# Total product size = 5 × 3 × 3 × 2 × 2 × 2 = 360
+
+autopoiesis:
+  seed: 42
+  slots:
+    - name: primitive_domain
+      options:
+        - optimization
+        - dynamics
+        - statistics
+        - signal
+        - graph
+    - name: track
+      options:
+        - analytical
+        - empirical
+        - hybrid
+    - name: section_set
+      options:
+        - minimal
+        - standard
+        - extended
+    - name: figure_profile
+      options:
+        - minimal
+        - full
+    - name: qr_profile
+      options:
+        - "off"
+        - "on"
+    - name: integrity_profile
+      options:
+        - sha256
+        - merkle
+  deps: []

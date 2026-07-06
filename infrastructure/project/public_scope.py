@@ -19,6 +19,7 @@ from infrastructure.project.project_info import ProjectInfo
 PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_active_inference",
     "templates/template_autoresearch_project",
+    "templates/template_autopoiesis",
     "templates/template_code_project",
     "templates/template_eda_notebook",
     "templates/template_literature_meta_analysis",

@@ -1,0 +1,32 @@
+[project]
+name = "template_autopoiesis"
+version = "0.1.0"
+description = "Autopoietic project generator: combinatoric specification, infrastructure realization, and recompute-verified provenance"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "pyyaml",
+    "qrcode",
+    "pillow",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "hypothesis",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "scripts/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true

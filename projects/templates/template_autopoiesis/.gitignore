@@ -1,0 +1,12 @@
+# template_autopoiesis root gitignore — inherits parent repo's rules.
+# Local caches and generated outputs that should not be tracked.
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+output/
+benchmarks/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/

@@ -1,0 +1,44 @@
+paper:
+  title: "Your Project Title"
+  subtitle: "Your Subtitle"
+  version: "0.1.0"
+  cover:
+    image: "figures/cover.png"
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "you@example.com"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi_status: "forthcoming"
+
+keywords:
+  - "your"
+  - "keywords"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+
+analysis:
+  scripts:
+    - 01_generate_manuscript_assets.py
+    - generate_cover_art.py
+    - z_generate_manuscript_variables.py
+
+autopoiesis:
+  seed: 42
+  slots:
+    domain: [optimization, dynamics, statistics, signal, graph]
+  deps:
+    glossary_gen: vendor
+    logging: template
