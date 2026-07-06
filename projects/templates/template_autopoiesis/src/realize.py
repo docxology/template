@@ -4,6 +4,7 @@ This module provides helper functions for orchestrating the full pipeline
 on a materialized child project.  Heavy steps (Chrome PDF rendering) are
 gated behind availability checks.
 """
+
 from __future__ import annotations
 
 import subprocess

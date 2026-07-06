@@ -1,4 +1,5 @@
 """Manuscript variable generation for template_autopoiesis."""
+
 from __future__ import annotations
 
 import json
@@ -48,17 +49,11 @@ def generate_variables(project_root: str | Path) -> dict[str, Any]:
     variables["GRAMMAR_SEED"] = grammar.seed
 
     # Slot table
-    slot_rows = [
-        [s.name, str(len(s.options)), ", ".join(s.options)]
-        for s in grammar.slots
-    ]
+    slot_rows = [[s.name, str(len(s.options)), ", ".join(s.options)] for s in grammar.slots]
     variables["SLOT_TABLE"] = _md_table(["Slot", "Options", "Values"], slot_rows)
 
     # Effective slot table (excludes reserved)
-    eff_rows = [
-        [s.name, str(len(s.options)), ", ".join(s.options)]
-        for s in grammar.effective_slots
-    ]
+    eff_rows = [[s.name, str(len(s.options)), ", ".join(s.options)] for s in grammar.effective_slots]
     variables["EFFECTIVE_SLOT_TABLE"] = _md_table(["Slot", "Options", "Values"], eff_rows)
 
     # Test / coverage info (static claims)
@@ -68,9 +63,7 @@ def generate_variables(project_root: str | Path) -> dict[str, Any]:
     return variables
 
 
-def save_variables(
-    variables: dict[str, Any], out_path: str | Path
-) -> Path:
+def save_variables(variables: dict[str, Any], out_path: str | Path) -> Path:
     """Write *variables* as JSON to *out_path*."""
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)

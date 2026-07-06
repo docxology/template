@@ -1,4 +1,5 @@
 """Signal primitives: DFT and convolution."""
+
 from __future__ import annotations
 
 import numpy as np

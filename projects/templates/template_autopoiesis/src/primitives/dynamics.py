@@ -1,4 +1,5 @@
 """Dynamics primitives: damped harmonic oscillator."""
+
 from __future__ import annotations
 
 import numpy as np

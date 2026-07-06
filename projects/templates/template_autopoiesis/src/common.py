@@ -1,4 +1,5 @@
 """Shared dataclasses and utilities for template_autopoiesis."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

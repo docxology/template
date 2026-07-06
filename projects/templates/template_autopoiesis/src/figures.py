@@ -3,6 +3,7 @@
 Provides domain-agnostic figure rendering on top of primitive kernel outputs,
 plus a figure registry builder used by the manuscript pipeline.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -41,6 +42,7 @@ def render_primitive_figure(
 ) -> Path:
     """Render a figure from a primitive result and save to *out_path*."""
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -55,8 +57,7 @@ def render_primitive_figure(
         ax.set_ylabel("value")
     else:
         summary = _scalar_summary_lines(result)
-        ax.text(0.5, 0.5, "\n".join(summary), ha="center", va="center",
-                transform=ax.transAxes, fontsize=12)
+        ax.text(0.5, 0.5, "\n".join(summary), ha="center", va="center", transform=ax.transAxes, fontsize=12)
         ax.axis("off")
 
     ax.set_title(title or name)

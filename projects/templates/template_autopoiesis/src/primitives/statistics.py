@@ -1,4 +1,5 @@
 """Statistics primitives: ordinary least squares regression."""
+
 from __future__ import annotations
 
 import numpy as np

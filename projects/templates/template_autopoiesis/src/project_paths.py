@@ -1,4 +1,5 @@
 """Project output directory helpers for template_autopoiesis."""
+
 from __future__ import annotations
 
 from pathlib import Path

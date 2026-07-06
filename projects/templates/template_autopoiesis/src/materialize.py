@@ -5,6 +5,7 @@ directory under *out_root*.  The generated project can run its own tests,
 produce figures, and render a manuscript — all without requiring the parent
 template infrastructure at runtime.
 """
+
 from __future__ import annotations
 
 import json
@@ -53,11 +54,7 @@ def child_name(spec: Spec) -> str:
 
 def _rewrite_kernel_imports(code: str) -> str:
     """Rewrite 'from src.primitives' imports to local 'from primitives'."""
-    return code.replace(
-        "from src.primitives", "from primitives"
-    ).replace(
-        "from .primitives", "from primitives"
-    )
+    return code.replace("from src.primitives", "from primitives").replace("from .primitives", "from primitives")
 
 
 # ---------------------------------------------------------------------------
@@ -168,9 +165,7 @@ def _vendor_test_file(module: str) -> str:
         """)
 
 
-def _resolve_deps(
-    spec: Spec, template_root: Path
-) -> tuple[dict[str, str], dict[str, str]]:
+def _resolve_deps(spec: Spec, template_root: Path) -> tuple[dict[str, str], dict[str, str]]:
     """Resolve dependency vendoring.
 
     Returns (tree_additions, vendoring_manifest).
@@ -234,11 +229,8 @@ def _provenance_diagram(spec: Spec) -> str:
 
 
 def _results_body(spec: Spec) -> str:
-    return (
-        f"## Results\n\n"
-        f"Domain: **{spec.primitive_domain}**\n\n"
-        f"Spec hash: `{spec.spec_hash}`\n\n"
-        + _results_diagram(spec)
+    return f"## Results\n\nDomain: **{spec.primitive_domain}**\n\nSpec hash: `{spec.spec_hash}`\n\n" + _results_diagram(
+        spec
     )
 
 
@@ -397,9 +389,7 @@ def materialize(
 
     # Compute tree hash
     content_hashes = {k: v for k, v in written.items()}
-    th = tree_hash_from_content_hashes(
-        {k: v for k, v in content_hashes.items()}
-    )
+    th = tree_hash_from_content_hashes({k: v for k, v in content_hashes.items()})
 
     # Provenance record
     provenance = {

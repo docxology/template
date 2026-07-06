@@ -3,6 +3,7 @@
 Each Spec is a complete, reproducible description of a generated child project.
 The seed + grammar hash together uniquely determine every selection made.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -90,6 +91,7 @@ def expand(grammar: Grammar, seed: Optional[int] = None) -> Spec:
     # If no primitive_domain slot exists, fall back to first known domain
     if not primitive_domain:
         from .grammar import KNOWN_DOMAINS
+
         primitive_domain = KNOWN_DOMAINS[0]
 
     return Spec(

@@ -1,4 +1,5 @@
 """Graph primitives: BFS distances and PageRank."""
+
 from __future__ import annotations
 
 from collections import deque

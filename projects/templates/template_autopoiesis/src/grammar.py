@@ -5,6 +5,7 @@ be generated.  Each *slot* names a dimension of variation and its allowed
 options; the cross product of all slot options (minus reserved slots) is the
 *effective product size*.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -72,9 +73,7 @@ class GrammarSlot:
             raise GrammarError(f"GrammarSlot '{self.name}' must have ≥1 option")
         dupes = {o for o in self.options if self.options.count(o) > 1}
         if dupes:
-            raise GrammarError(
-                f"GrammarSlot '{self.name}' has duplicate options: {dupes}"
-            )
+            raise GrammarError(f"GrammarSlot '{self.name}' has duplicate options: {dupes}")
 
 
 @dataclass(frozen=True)
@@ -128,9 +127,7 @@ class Grammar:
         """JSON-stable canonical representation used for hashing."""
         obj = {
             "seed": self.seed,
-            "slots": [
-                {"name": s.name, "options": list(s.options)} for s in self.slots
-            ],
+            "slots": [{"name": s.name, "options": list(s.options)} for s in self.slots],
             "deps": list(self.deps),
         }
         return json.dumps(obj, sort_keys=True, separators=(",", ":"))
@@ -165,9 +162,7 @@ def parse_grammar(block: dict, source_path: Optional[str] = None) -> Grammar:
     raw_deps = block.get("deps", [])
     for d in raw_deps:
         if d not in VENDORABLE_DEPS:
-            raise GrammarError(
-                f"Unknown dep '{d}'. Known: {VENDORABLE_DEPS}"
-            )
+            raise GrammarError(f"Unknown dep '{d}'. Known: {VENDORABLE_DEPS}")
 
     return Grammar(
         seed=seed,

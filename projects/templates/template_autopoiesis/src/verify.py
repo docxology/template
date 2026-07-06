@@ -4,6 +4,7 @@ Verification works by recomputing the tree hash from the live files and
 comparing against the recorded provenance.  A "full" verification also
 re-expands the spec from the grammar and confirms all selections match.
 """
+
 from __future__ import annotations
 
 import json
@@ -48,9 +49,7 @@ def verify_child(child_root: str | Path) -> CheckReport:
             missing.append(rel)
 
     if missing:
-        checks.append(
-            CheckResult("all_files_present", False, f"Missing: {missing[:3]}")
-        )
+        checks.append(CheckResult("all_files_present", False, f"Missing: {missing[:3]}"))
     else:
         checks.append(CheckResult("all_files_present", True))
 
@@ -108,6 +107,7 @@ def verify_child_full(
             prov = json.loads(prov_path.read_text())
             schema = prov.get("schema_version", "")
             from .materialize import PROVENANCE_SCHEMA_VERSION
+
             if schema == PROVENANCE_SCHEMA_VERSION:
                 all_checks.append(CheckResult("schema_version_correct", True))
             else:

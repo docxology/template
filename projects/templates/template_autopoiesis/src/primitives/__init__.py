@@ -4,6 +4,7 @@ Provides collect_primitives() which returns a mapping from domain name to a
 tuple of PrimitiveSpec objects.  Each PrimitiveSpec encapsulates a callable
 kernel, example inputs, expected outputs, tolerances, and negative controls.
 """
+
 from __future__ import annotations
 
 from .base import PrimitiveSpec

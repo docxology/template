@@ -3,6 +3,7 @@
 Provides lightweight wrappers around qrcode (and optionally PIL) for embedding
 spec hashes and provenance pointers into image payloads.
 """
+
 from __future__ import annotations
 
 import json
@@ -21,7 +22,7 @@ def qr_matrix(data: str) -> list[list[bool]]:
     stub (checkerboard) so tests run without the optional dependency.
     """
     try:
-        import qrcode  
+        import qrcode
 
         qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L)
         qr.add_data(data)
@@ -36,13 +37,11 @@ def qr_matrix(data: str) -> list[list[bool]]:
 def read_qr_matrix(matrix: list[list[bool]]) -> str:
     """Attempt to decode a QR matrix back to a string (best-effort)."""
     try:
-        from pyzbar import pyzbar  
-        from PIL import Image  
+        from pyzbar import pyzbar
+        from PIL import Image
         import numpy as np
 
-        arr = (
-            (1 - np.array(matrix, dtype=np.uint8)) * 255
-        )  # black on white
+        arr = (1 - np.array(matrix, dtype=np.uint8)) * 255  # black on white
         img = Image.fromarray(arr)
         results = pyzbar.decode(img)
         if results:
@@ -55,8 +54,8 @@ def read_qr_matrix(matrix: list[list[bool]]) -> str:
 def qr_image(data: str, box_size: int = 10, border: int = 4) -> Any:
     """Return a PIL Image of the QR code for *data*, or None on failure."""
     try:
-        import qrcode  
-        from qrcode.image.pil import PilImage  
+        import qrcode
+        from qrcode.image.pil import PilImage
 
         qr = qrcode.QRCode(
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -124,7 +123,7 @@ def embed_semi_transparent(
 ) -> Any:
     """Embed *qr_img* semi-transparently into *base_image*."""
     try:
-        from PIL import Image  
+        from PIL import Image
 
         qr_rgba = qr_img.convert("RGBA")
         r, g, b, a = qr_rgba.split()

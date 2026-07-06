@@ -1,4 +1,5 @@
 """CLI entry point for template_autopoiesis."""
+
 from __future__ import annotations
 
 import argparse
@@ -79,15 +80,17 @@ def cmd_honesty(args: argparse.Namespace) -> None:
 
     project_root = args.project_root or _get_project_root()
     manifest = verify_honesty(project_root)
-    print(json.dumps(
-        {
-            "evidence": manifest.evidence,
-            "missing_calls": manifest.missing_calls,
-            "unsupported_claims": manifest.unsupported_claims,
-            "all_passed": manifest.all_passed,
-        },
-        indent=2,
-    ))
+    print(
+        json.dumps(
+            {
+                "evidence": manifest.evidence,
+                "missing_calls": manifest.missing_calls,
+                "unsupported_claims": manifest.unsupported_claims,
+                "all_passed": manifest.all_passed,
+            },
+            indent=2,
+        )
+    )
     sys.exit(0 if manifest.all_passed else 1)
 
 

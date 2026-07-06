@@ -4,6 +4,7 @@ Renders a pure-matplotlib ouroboros ring with domain labels, seed dots,
 gradient glow, and publication metadata.  The image is deterministic given
 the same grammar seed and domain list.
 """
+
 from __future__ import annotations
 
 import math
@@ -11,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -30,8 +32,14 @@ DOMAIN_COLORS = {
 }
 
 FALLBACK_COLORS = [
-    "#0d9488", "#1d4ed8", "#7c3aed", "#db2777", "#d97706",
-    "#059669", "#2563eb", "#9333ea",
+    "#0d9488",
+    "#1d4ed8",
+    "#7c3aed",
+    "#db2777",
+    "#d97706",
+    "#059669",
+    "#2563eb",
+    "#9333ea",
 ]
 
 
@@ -123,8 +131,12 @@ def render_cover(
         glow_r = ring_r + ring_width * 0.5 + layer * 0.04
         glow_alpha = 0.04
         glow_circle = mpatches.Circle(
-            (0, 0), glow_r, fill=False, linewidth=ring_width * 20 / layer,
-            edgecolor="#60a5fa", alpha=glow_alpha,
+            (0, 0),
+            glow_r,
+            fill=False,
+            linewidth=ring_width * 20 / layer,
+            edgecolor="#60a5fa",
+            alpha=glow_alpha,
         )
         ax.add_patch(glow_circle)
 
@@ -146,13 +158,19 @@ def render_cover(
         lx = label_r * math.cos(mid_theta)
         ly = label_r * math.sin(mid_theta)
         ax.text(
-            lx, ly, seg.domain,
-            ha="center", va="center",
-            fontsize=10, color=seg.color,
+            lx,
+            ly,
+            seg.domain,
+            ha="center",
+            va="center",
+            fontsize=10,
+            color=seg.color,
             fontweight="bold",
             bbox=dict(
-                facecolor="#1e293b", edgecolor=seg.color,
-                boxstyle="round,pad=0.2", alpha=0.8,
+                facecolor="#1e293b",
+                edgecolor=seg.color,
+                boxstyle="round,pad=0.2",
+                alpha=0.8,
             ),
             zorder=5,
         )
@@ -168,42 +186,72 @@ def render_cover(
 
     # Seal ring (thin outer border)
     seal_circle = mpatches.Circle(
-        (0, 0), ring_r + ring_width / 2 + 0.04,
-        fill=False, linewidth=1.2, edgecolor="#94a3b8", alpha=0.6, zorder=6,
+        (0, 0),
+        ring_r + ring_width / 2 + 0.04,
+        fill=False,
+        linewidth=1.2,
+        edgecolor="#94a3b8",
+        alpha=0.6,
+        zorder=6,
     )
     ax.add_patch(seal_circle)
 
     # Center text: seed
     ax.text(
-        0, 0.12, f"seed={seed}",
-        ha="center", va="center", fontsize=9, color="#94a3b8",
+        0,
+        0.12,
+        f"seed={seed}",
+        ha="center",
+        va="center",
+        fontsize=9,
+        color="#94a3b8",
         fontfamily="monospace",
     )
     ax.text(
-        0, -0.12, f"{len(domains)} domains",
-        ha="center", va="center", fontsize=9, color="#64748b",
+        0,
+        -0.12,
+        f"{len(domains)} domains",
+        ha="center",
+        va="center",
+        fontsize=9,
+        color="#64748b",
     )
 
     # Title
     ax.text(
-        0, 1.75, title,
-        ha="center", va="center", fontsize=14, color="#f8fafc",
+        0,
+        1.75,
+        title,
+        ha="center",
+        va="center",
+        fontsize=14,
+        color="#f8fafc",
         fontweight="bold",
     )
 
     # Subtitle rule
     ax.plot([-1.2, 1.2], [1.58, 1.58], color="#334155", linewidth=1.0, zorder=2)
     ax.text(
-        0, 1.48, subtitle,
-        ha="center", va="center", fontsize=8, color="#94a3b8",
+        0,
+        1.48,
+        subtitle,
+        ha="center",
+        va="center",
+        fontsize=8,
+        color="#94a3b8",
         style="italic",
     )
 
     # Author separator
     ax.plot([-0.6, 0.6], [-1.72, -1.72], color="#334155", linewidth=0.8, zorder=2)
     ax.text(
-        0, -1.85, author,
-        ha="center", va="center", fontsize=9, color="#64748b",
+        0,
+        -1.85,
+        author,
+        ha="center",
+        va="center",
+        fontsize=9,
+        color="#64748b",
         fontfamily="monospace",
     )
 

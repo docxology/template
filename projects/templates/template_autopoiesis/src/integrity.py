@@ -1,4 +1,5 @@
 """Integrity hashing utilities for template_autopoiesis."""
+
 from __future__ import annotations
 
 import hashlib

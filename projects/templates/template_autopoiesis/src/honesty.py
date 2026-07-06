@@ -6,6 +6,7 @@ structural evidence in the source code.  This module:
   2. Scans prose for unsupported quantitative claims.
   3. Returns a manifest that can be checked in tests.
 """
+
 from __future__ import annotations
 
 import ast
@@ -43,11 +44,7 @@ class HonestyManifest:
 
     @property
     def all_passed(self) -> bool:
-        return (
-            all(self.evidence.values())
-            and not self.missing_calls
-            and not self.unsupported_claims
-        )
+        return all(self.evidence.values()) and not self.missing_calls and not self.unsupported_claims
 
 
 # ---------------------------------------------------------------------------
@@ -116,8 +113,6 @@ def verify_honesty(
         for md_file in ms_dir.glob("*.md"):
             text = md_file.read_text()
             for m in _UNSUPPORTED_CLAIM_PATTERN.finditer(text):
-                manifest.unsupported_claims.append(
-                    f"{md_file.name}:{m.start()}: '{m.group()}'"
-                )
+                manifest.unsupported_claims.append(f"{md_file.name}:{m.start()}: '{m.group()}'")
 
     return manifest
