@@ -11,7 +11,6 @@ import tempfile
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 

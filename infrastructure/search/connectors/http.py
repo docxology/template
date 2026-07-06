@@ -154,7 +154,7 @@ class ConnectorHttpClient:
         last_exc: Exception | None = None
         for attempt in range(self.max_retries + 1):
             try:
-                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # nosec B310 — URLs are hard-coded to known public science APIs (OpenAlex, arXiv, etc.)
                     return resp.read()  # type: ignore[return-value]
             except urllib.error.HTTPError as exc:
                 if exc.code in _RETRYABLE_STATUSES and attempt < self.max_retries:

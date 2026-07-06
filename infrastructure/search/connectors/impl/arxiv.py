@@ -78,7 +78,7 @@ class ArxivConnector:
 
     def _parse_feed(self, text: str, opts: SearchOptions) -> list[ConnectorHit]:
         try:
-            root = ET.fromstring(text)
+            root = ET.fromstring(text)  # nosec B314 — arXiv Atom XML from hard-coded HTTPS endpoint, not untrusted input
         except ET.ParseError as exc:
             raise ConnectorError(f"Invalid arXiv Atom feed: {exc}") from exc
 

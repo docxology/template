@@ -438,6 +438,46 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.provenance",
+      "invocation": "python -m infrastructure.provenance",
+      "source_path": "infrastructure/provenance/cli.py",
+      "purpose": "CLI for the provenance DAG — ``record``, ``list``, ``query``, and ``review`` subcommands.",
+      "subcommands": [
+        {
+          "name": "list",
+          "help": "List provenance nodes"
+        },
+        {
+          "name": "record-artifact",
+          "help": "Record an artifact node"
+        },
+        {
+          "name": "review",
+          "help": "Review provenance DAG for issues"
+        }
+      ],
+      "exports": [
+        "ArtifactNode",
+        "ClaimNode",
+        "Edge",
+        "EdgeRelation",
+        "NodeKind",
+        "ProvenanceNode",
+        "RunNode",
+        "SourceNode",
+        "node_from_dict",
+        "Provenance",
+        "Finding",
+        "Review",
+        "ReviewResult",
+        "Severity",
+        "review_provenance_store",
+        "ProvenanceConfig",
+        "load_provenance_config"
+      ],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.publishing",
       "invocation": "python -m infrastructure.publishing",
       "source_path": "infrastructure/publishing/cli.py",
@@ -688,6 +728,49 @@
       "purpose": "Symlink private lifecycle rules into the template checkout.",
       "subcommands": [],
       "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.search.connectors",
+      "invocation": "python -m infrastructure.search.connectors",
+      "source_path": "infrastructure/search/connectors/cli.py",
+      "purpose": "CLI for the connector registry — ``list-dbs`` and ``search`` subcommands.",
+      "subcommands": [
+        {
+          "name": "list-dbs",
+          "help": "List all registered connectors"
+        },
+        {
+          "name": "search",
+          "help": "Search a connector"
+        }
+      ],
+      "exports": [
+        "CatalogEntry",
+        "Connector",
+        "ConnectorDomain",
+        "ConnectorError",
+        "ConnectorHit",
+        "FetchOptions",
+        "SearchOptions",
+        "ConnectorHttpClient",
+        "ConnectorHttpError",
+        "ConnectorRegistry",
+        "ConnectorSearchConfig",
+        "load_connector_search_config",
+        "ArxivConnector",
+        "BiorxivConnector",
+        "CrossrefConnector",
+        "EuropePMCConnector",
+        "OpenAlexConnector",
+        "PDBConnector",
+        "SemanticScholarConnector",
+        "UniProtConnector",
+        "get_registry",
+        "reset_registry",
+        "list_connectors",
+        "search_connector"
+      ],
       "effect": "read_only"
     },
     {
