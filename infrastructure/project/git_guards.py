@@ -6,12 +6,39 @@ import fnmatch
 import subprocess
 from pathlib import Path
 
+from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES
+from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES
 
 # Derived from PUBLIC_PROJECT_NAMES — the single roster source of truth — so it
 # can never drift from the public exemplar roster. (Before 2026-06-10 this was a
 # hand-maintained literal.)
 ALLOWED_PROJECT_DIRS: tuple[str, ...] = tuple(f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES)
+
+ALLOWED_FONDS_TOPLEVEL_FILES: frozenset[str] = frozenset(
+    {
+        "fonds/AGENTS.md",
+        "fonds/README.md",
+    }
+)
+ALLOWED_FOND_DIRS: tuple[str, ...] = tuple(f"fonds/{name}/" for name in PUBLIC_FOND_NAMES)
+
+ALLOWED_RULES_TOPLEVEL_FILES: frozenset[str] = frozenset(
+    {
+        "rules/AGENTS.md",
+        "rules/README.md",
+    }
+)
+ALLOWED_RULE_DIRS: tuple[str, ...] = tuple(f"rules/{name}/" for name in PUBLIC_RULE_NAMES)
+
+ALLOWED_TOOLS_TOPLEVEL_FILES: frozenset[str] = frozenset(
+    {
+        "tools/AGENTS.md",
+        "tools/README.md",
+    }
+)
+ALLOWED_TOOL_DIRS: tuple[str, ...] = tuple(f"tools/{name}/" for name in PUBLIC_TOOL_NAMES)
 
 # Navigation docs that may live directly under projects/ or the public
 # projects/templates/ directory. This is an EXPLICIT allowlist, not a wildcard:
@@ -93,8 +120,50 @@ def is_public_template_output_path(path: str) -> bool:
 
 
 def offending_tracked_projects(repo_root: Path) -> list[str]:
+    return _offending_tracked_paths(
+        repo_root,
+        path_prefix="projects/",
+        allowed_toplevel=ALLOWED_PROJECTS_TOPLEVEL_FILES,
+        allowed_dirs=ALLOWED_PROJECT_DIRS,
+    )
+
+
+def offending_tracked_fonds(repo_root: Path) -> list[str]:
+    return _offending_tracked_paths(
+        repo_root,
+        path_prefix="fonds/",
+        allowed_toplevel=ALLOWED_FONDS_TOPLEVEL_FILES,
+        allowed_dirs=ALLOWED_FOND_DIRS,
+    )
+
+
+def offending_tracked_rules(repo_root: Path) -> list[str]:
+    return _offending_tracked_paths(
+        repo_root,
+        path_prefix="rules/",
+        allowed_toplevel=ALLOWED_RULES_TOPLEVEL_FILES,
+        allowed_dirs=ALLOWED_RULE_DIRS,
+    )
+
+
+def offending_tracked_tools(repo_root: Path) -> list[str]:
+    return _offending_tracked_paths(
+        repo_root,
+        path_prefix="tools/",
+        allowed_toplevel=ALLOWED_TOOLS_TOPLEVEL_FILES,
+        allowed_dirs=ALLOWED_TOOL_DIRS,
+    )
+
+
+def _offending_tracked_paths(
+    repo_root: Path,
+    *,
+    path_prefix: str,
+    allowed_toplevel: frozenset[str],
+    allowed_dirs: tuple[str, ...],
+) -> list[str]:
     proc = subprocess.run(
-        ["git", "ls-files", "-z", "projects/"],
+        ["git", "ls-files", "-z", path_prefix],
         cwd=repo_root,
         check=True,
         capture_output=True,
@@ -103,9 +172,9 @@ def offending_tracked_projects(repo_root: Path) -> list[str]:
     offenders: list[str] = []
     for path in paths:
         normalized = path.replace("\\", "/")
-        if ALLOWED_PROJECTS_TOPLEVEL.match(normalized):
+        if normalized in allowed_toplevel:
             continue
-        if any(normalized.startswith(prefix) for prefix in ALLOWED_PROJECT_DIRS):
+        if any(normalized.startswith(prefix) for prefix in allowed_dirs):
             continue
         offenders.append(normalized)
     return sorted(offenders)

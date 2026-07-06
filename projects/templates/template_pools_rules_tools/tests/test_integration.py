@@ -29,10 +29,9 @@ _FONDS_OK = (
     and (get_fonds_root() / "template_datasets" / "fonds.yaml").exists()
 )
 
-_RULES_OK = (
-    (get_rules_root() / "template_project_rules" / "rules.yaml").exists()
-    and (get_rules_root() / "template_manuscript_rules" / "rules.yaml").exists()
-)
+_RULES_OK = (get_rules_root() / "template_project_rules" / "rules.yaml").exists() and (
+    get_rules_root() / "template_manuscript_rules" / "rules.yaml"
+).exists()
 
 _TOOLS_OK = get_tools_root().is_dir()
 
@@ -40,6 +39,7 @@ _TOOLS_OK = get_tools_root().is_dir()
 # ---------------------------------------------------------------------------
 # Structural tests (always run — no resource required)
 # ---------------------------------------------------------------------------
+
 
 class TestRunIntegrationDemoStructure:
     def test_returns_dict(self):
@@ -95,6 +95,7 @@ class TestRunIntegrationDemoStructure:
 # Fonds integration
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(not _FONDS_OK, reason="One or more fond exemplars not present")
 class TestIntegrationFonds:
     def test_all_fonds_loaded(self):
@@ -118,6 +119,7 @@ class TestIntegrationFonds:
 # Rules integration
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(not _RULES_OK, reason="One or more rule sets not present")
 class TestIntegrationRules:
     def test_rules_sets_ok(self):
@@ -136,6 +138,7 @@ class TestIntegrationRules:
 # ---------------------------------------------------------------------------
 # Tools integration
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not _TOOLS_OK, reason="tools/templates/ not present")
 class TestIntegrationTools:

@@ -36,3 +36,19 @@ integration:
     - template_bibliography    # Replace with your fonds
 
 manuscript_variables_path: "output/data/manuscript_variables.json"
+
+figures:
+  architecture_overview:
+    path: "figures/architecture_overview.png"
+    caption: "Architecture overview figure path placeholder."
+    label: "fig:architecture"
+    width: "0.9\\linewidth"
+
+render:
+  engine: "pandoc"
+  bibliography_style: "chicago-author-date"
+  link_citations: true
+  number_sections: true
+  toc: true
+  toc_depth: 3
+  highlight_style: "tango"

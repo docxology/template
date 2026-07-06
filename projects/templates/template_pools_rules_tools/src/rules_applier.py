@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 # Repo-root resolution
 # ---------------------------------------------------------------------------
 
+
 def _repo_root() -> pathlib.Path:
     return pathlib.Path(__file__).resolve().parents[4]
 
@@ -52,7 +53,12 @@ get_rules_root = _rules_root
 # Soft rules
 # ---------------------------------------------------------------------------
 
-def load_soft_rules(rule_set_name: str) -> list[SoftRuleEntry]:
+
+def load_soft_rules(
+    rule_set_name: str,
+    *,
+    templates_root: pathlib.Path | None = None,
+) -> list[SoftRuleEntry]:
     """Load all soft rule files from a rule set's ``soft/`` directory.
 
     Each entry in the returned list has:
@@ -62,7 +68,8 @@ def load_soft_rules(rule_set_name: str) -> list[SoftRuleEntry]:
 
     Returns an empty list if the rule set or its ``soft/`` directory is absent.
     """
-    soft_dir = _rules_root() / rule_set_name / "soft"
+    rules_root = templates_root if templates_root is not None else _rules_root()
+    soft_dir = rules_root / rule_set_name / "soft"
     if not soft_dir.is_dir():
         logger.warning("soft rules: directory not found — %s", soft_dir)
         return []
@@ -82,7 +89,12 @@ def load_soft_rules(rule_set_name: str) -> list[SoftRuleEntry]:
 # Strong rules
 # ---------------------------------------------------------------------------
 
-def load_strong_rules(rule_set_name: str) -> list[StrongRuleEntry]:
+
+def load_strong_rules(
+    rule_set_name: str,
+    *,
+    templates_root: pathlib.Path | None = None,
+) -> list[StrongRuleEntry]:
     """Load all strong rule YAML files from a rule set's ``strong/`` directory.
 
     Each entry has:
@@ -92,7 +104,8 @@ def load_strong_rules(rule_set_name: str) -> list[StrongRuleEntry]:
 
     Returns an empty list if the rule set or its ``strong/`` directory is absent.
     """
-    strong_dir = _rules_root() / rule_set_name / "strong"
+    rules_root = templates_root if templates_root is not None else _rules_root()
+    strong_dir = rules_root / rule_set_name / "strong"
     if not strong_dir.is_dir():
         logger.warning("strong rules: directory not found — %s", strong_dir)
         return []
@@ -112,9 +125,12 @@ def load_strong_rules(rule_set_name: str) -> list[StrongRuleEntry]:
 # Validation helper
 # ---------------------------------------------------------------------------
 
+
 def validate_against_rules(
     rule_set_name: str,
     context: dict[str, object] | None = None,
+    *,
+    templates_root: pathlib.Path | None = None,
 ) -> RuleSetResult:
     """Load and report on all rules for the given rule set.
 
@@ -137,7 +153,8 @@ def validate_against_rules(
     _ = context or {}  # reserved for future semantic validation
     warnings: list[str] = []
 
-    manifest_path = _rules_root() / rule_set_name / "rules.yaml"
+    rules_root = templates_root if templates_root is not None else _rules_root()
+    manifest_path = rules_root / rule_set_name / "rules.yaml"
     manifest: object | None = None
     if manifest_path.exists():
         try:
@@ -147,8 +164,8 @@ def validate_against_rules(
     else:
         warnings.append(f"rules.yaml not found at {manifest_path}")
 
-    soft = load_soft_rules(rule_set_name)
-    strong = load_strong_rules(rule_set_name)
+    soft = load_soft_rules(rule_set_name, templates_root=templates_root)
+    strong = load_strong_rules(rule_set_name, templates_root=templates_root)
 
     if manifest is None and not soft and not strong:
         status = "missing"
@@ -174,6 +191,7 @@ def validate_against_rules(
 # ---------------------------------------------------------------------------
 # Convenience loaders
 # ---------------------------------------------------------------------------
+
 
 def load_all_project_rules() -> AllRulesResult:
     """Load all rules from ``template_project_rules``.

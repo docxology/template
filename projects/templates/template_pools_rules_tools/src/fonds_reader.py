@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 # Repo-root resolution
 # ---------------------------------------------------------------------------
 
+
 def _repo_root() -> pathlib.Path:
     """Return the repository root (4 levels above this file)."""
     return pathlib.Path(__file__).resolve().parents[4]
@@ -57,8 +58,11 @@ get_fonds_root = _fonds_root
 # Bibliography fond
 # ---------------------------------------------------------------------------
 
+
 def read_bibliography_fond(
     fond_name: str = "template_bibliography",
+    *,
+    templates_root: pathlib.Path | None = None,
 ) -> BibliographyFondResult | None:
     """Read the bibliography fond manifest and data files.
 
@@ -70,7 +74,8 @@ def read_bibliography_fond(
 
     Returns ``None`` if the fond directory or any required file is missing.
     """
-    fond_dir = _fonds_root() / fond_name
+    fond_root = templates_root if templates_root is not None else _fonds_root()
+    fond_dir = fond_root / fond_name
 
     manifest_path = fond_dir / "fonds.yaml"
     bib_path = fond_dir / "data" / "references.bib"
@@ -101,8 +106,11 @@ def read_bibliography_fond(
 # Contacts fond
 # ---------------------------------------------------------------------------
 
+
 def read_contacts_fond(
     fond_name: str = "template_contacts",
+    *,
+    templates_root: pathlib.Path | None = None,
 ) -> ContactsFondResult | None:
     """Read the contacts fond manifest and data file.
 
@@ -113,7 +121,8 @@ def read_contacts_fond(
 
     Returns ``None`` if the fond directory or any required file is missing.
     """
-    fond_dir = _fonds_root() / fond_name
+    fond_root = templates_root if templates_root is not None else _fonds_root()
+    fond_dir = fond_root / fond_name
     manifest_path = fond_dir / "fonds.yaml"
     contacts_path = fond_dir / "data" / "contacts.yaml"
 
@@ -124,9 +133,7 @@ def read_contacts_fond(
 
     try:
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-        contacts: list[object] = (
-            yaml.safe_load(contacts_path.read_text(encoding="utf-8")) or []
-        )
+        contacts: list[object] = yaml.safe_load(contacts_path.read_text(encoding="utf-8")) or []
     except Exception as exc:  # noqa: BLE001
         logger.warning("contacts fond: read error — %s", exc)
         return None
@@ -138,8 +145,11 @@ def read_contacts_fond(
 # Datasets fond
 # ---------------------------------------------------------------------------
 
+
 def read_datasets_fond(
     fond_name: str = "template_datasets",
+    *,
+    templates_root: pathlib.Path | None = None,
 ) -> DatasetsFondResult | None:
     """Read the datasets fond manifest and data file.
 
@@ -150,7 +160,8 @@ def read_datasets_fond(
 
     Returns ``None`` if the fond directory or any required file is missing.
     """
-    fond_dir = _fonds_root() / fond_name
+    fond_root = templates_root if templates_root is not None else _fonds_root()
+    fond_dir = fond_root / fond_name
     manifest_path = fond_dir / "fonds.yaml"
     datasets_path = fond_dir / "data" / "datasets.yaml"
 
@@ -161,9 +172,7 @@ def read_datasets_fond(
 
     try:
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-        datasets: list[object] = (
-            yaml.safe_load(datasets_path.read_text(encoding="utf-8")) or []
-        )
+        datasets: list[object] = yaml.safe_load(datasets_path.read_text(encoding="utf-8")) or []
     except Exception as exc:  # noqa: BLE001
         logger.warning("datasets fond: read error — %s", exc)
         return None
@@ -174,6 +183,7 @@ def read_datasets_fond(
 # ---------------------------------------------------------------------------
 # Combined loader
 # ---------------------------------------------------------------------------
+
 
 def read_all_fonds() -> AllFondsResult:
     """Read all three public tracked fonds and return consolidated data.
@@ -212,9 +222,7 @@ def count_summary(all_fonds: AllFondsResult | None = None) -> FondsSummary:
     bib_entries = len(bib["csv_rows"]) if bib is not None else 0
     contacts_count = len(contacts_fond["contacts"]) if contacts_fond is not None else 0
     datasets_count = len(datasets_fond["datasets"]) if datasets_fond is not None else 0
-    fonds_loaded = sum(
-        1 for v in (bib, contacts_fond, datasets_fond) if v is not None
-    )
+    fonds_loaded = sum(1 for v in (bib, contacts_fond, datasets_fond) if v is not None)
 
     return FondsSummary(
         bibliography_entries=bib_entries,

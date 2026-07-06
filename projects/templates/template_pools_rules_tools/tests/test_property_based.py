@@ -19,6 +19,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 try:
     from hypothesis import assume, given, settings
     from hypothesis import strategies as st
+
     _HYPOTHESIS_AVAILABLE = True
 except ImportError:
     _HYPOTHESIS_AVAILABLE = False
@@ -69,6 +70,7 @@ _arbitrary_st = st.text(min_size=0, max_size=80)
 # Property: fonds functions never raise for any fond_name input
 # ---------------------------------------------------------------------------
 
+
 @given(fond_name=_name_st)
 @settings(max_examples=30, deadline=5000)
 def test_read_bibliography_fond_never_raises(fond_name: str):
@@ -94,6 +96,7 @@ def test_read_datasets_fond_never_raises(fond_name: str):
 # ---------------------------------------------------------------------------
 # Property: bibliography fond returns None or TypedDict-compatible shape
 # ---------------------------------------------------------------------------
+
 
 @given(fond_name=_name_st)
 @settings(max_examples=25, deadline=5000)
@@ -132,6 +135,7 @@ def test_datasets_fond_shape_when_not_none(fond_name: str):
 # Property: load_soft_rules always returns list (never None, never raises)
 # ---------------------------------------------------------------------------
 
+
 @given(rule_set_name=_name_st)
 @settings(max_examples=30, deadline=5000)
 def test_load_soft_rules_always_returns_list(rule_set_name: str):
@@ -149,6 +153,7 @@ def test_load_strong_rules_always_returns_list(rule_set_name: str):
 # ---------------------------------------------------------------------------
 # Property: load_soft_rules entries always have filename + content keys
 # ---------------------------------------------------------------------------
+
 
 @given(rule_set_name=_name_st)
 @settings(max_examples=25, deadline=5000)
@@ -175,14 +180,19 @@ def test_load_strong_rules_entries_have_required_keys(rule_set_name: str):
 # Property: validate_against_rules always returns expected keys
 # ---------------------------------------------------------------------------
 
+
 @given(rule_set_name=_name_st)
 @settings(max_examples=25, deadline=5000)
 def test_validate_against_rules_never_raises(rule_set_name: str):
     result = validate_against_rules(rule_set_name)
     assert isinstance(result, dict)
     required_keys = {
-        "rule_set", "manifest", "soft_rules_count", "strong_rules_count",
-        "status", "warnings",
+        "rule_set",
+        "manifest",
+        "soft_rules_count",
+        "strong_rules_count",
+        "status",
+        "warnings",
     }
     assert required_keys <= set(result.keys()), (
         f"Missing keys: {required_keys - set(result.keys())}"
@@ -208,6 +218,7 @@ def test_validate_against_rules_counts_are_non_negative(rule_set_name: str):
 # Property: tools_invoker functions never raise for arbitrary tool names
 # ---------------------------------------------------------------------------
 
+
 @given(tool_name=_name_st)
 @settings(max_examples=25, deadline=5000)
 def test_get_tool_entrypoints_always_returns_list(tool_name: str):
@@ -231,6 +242,7 @@ def test_validate_tool_scripts_exist_always_returns_dict(tool_name: str):
 # Property: read_all_fonds always returns dict with three keys
 # ---------------------------------------------------------------------------
 
+
 def test_read_all_fonds_always_returns_three_keys():
     """read_all_fonds is not parameterised, but always returns exactly three keys."""
     result = read_all_fonds()
@@ -241,6 +253,7 @@ def test_read_all_fonds_always_returns_three_keys():
 # ---------------------------------------------------------------------------
 # Property: load_all_project_rules / load_all_manuscript_rules return correct shape
 # ---------------------------------------------------------------------------
+
 
 def test_load_all_project_rules_returns_soft_and_strong():
     result = load_all_project_rules()
@@ -264,6 +277,7 @@ def test_load_all_manuscript_rules_returns_soft_and_strong():
 # Property: integration demo never raises (single call — covers end-to-end)
 # ---------------------------------------------------------------------------
 
+
 def test_integration_demo_never_raises():
     """run_integration_demo must return a structured dict without raising."""
     result = run_integration_demo()
@@ -278,8 +292,11 @@ def test_integration_demo_summary_shape():
     result = run_integration_demo()
     summary = result["summary"]
     required = {
-        "fonds_loaded", "rules_sets_ok", "rules_sets_total",
-        "tools_discovered", "tools_valid",
+        "fonds_loaded",
+        "rules_sets_ok",
+        "rules_sets_total",
+        "tools_discovered",
+        "tools_valid",
     }
     assert required <= set(summary.keys()), (
         f"Missing summary keys: {required - set(summary.keys())}"
@@ -300,9 +317,7 @@ def test_integration_demo_fonds_has_expected_sub_keys():
 def test_integration_demo_rules_have_status_keys():
     result = run_integration_demo()
     for rule_set_name, rule_result in result["rules"].items():
-        assert "status" in rule_result, (
-            f"{rule_set_name}: 'status' key missing"
-        )
+        assert "status" in rule_result, f"{rule_set_name}: 'status' key missing"
         assert rule_result["status"] in {"ok", "partial", "missing"}, (
             f"{rule_set_name}: unexpected status {rule_result['status']!r}"
         )

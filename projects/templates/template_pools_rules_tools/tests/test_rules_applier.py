@@ -40,6 +40,7 @@ _MANUSCRIPT_STRONG = _MANUSCRIPT_RULES_DIR / "strong"
 # load_soft_rules
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(
     not _PROJECT_SOFT.is_dir(),
     reason="template_project_rules/soft/ not present",
@@ -85,6 +86,7 @@ def test_load_soft_rules_missing_returns_empty():
 # ---------------------------------------------------------------------------
 # load_strong_rules
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(
     not _PROJECT_STRONG.is_dir(),
@@ -156,6 +158,7 @@ def test_load_strong_rules_missing_returns_empty():
 # validate_against_rules
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(
     not _PROJECT_RULES_DIR.is_dir(),
     reason="template_project_rules/ not present",
@@ -195,6 +198,7 @@ def test_validate_missing_rule_set_returns_missing_status():
 # Edge cases: empty strong/ directory
 # ---------------------------------------------------------------------------
 
+
 class TestEmptyStrongDirectory:
     """strong/ exists but contains no YAML files → empty list, no exception."""
 
@@ -202,6 +206,7 @@ class TestEmptyStrongDirectory:
         # Simulate a rule-set that has a strong/ dir with no YAML files
         # We do this by monkey-patching the rules root temporarily.
         import src.rules_applier as ra
+
         rule_set = "test_empty_strong"
         strong_dir = tmp_path / rule_set / "strong"
         strong_dir.mkdir(parents=True)
@@ -219,6 +224,7 @@ class TestEmptyStrongDirectory:
 
     def test_empty_soft_dir_returns_empty_list(self, tmp_path: pathlib.Path):
         import src.rules_applier as ra
+
         rule_set = "test_empty_soft"
         soft_dir = tmp_path / rule_set / "soft"
         soft_dir.mkdir(parents=True)
@@ -239,20 +245,20 @@ class TestEmptyStrongDirectory:
 # Edge cases: malformed YAML files
 # ---------------------------------------------------------------------------
 
+
 class TestMalformedYAML:
     """Malformed YAML strong rules should be skipped with a warning, not raise."""
 
     def test_malformed_yaml_is_skipped(self, tmp_path: pathlib.Path):
         import src.rules_applier as ra
+
         rule_set = "test_malformed"
         strong_dir = tmp_path / rule_set / "strong"
         strong_dir.mkdir(parents=True)
         # Write invalid YAML (unclosed brace)
         (strong_dir / "bad.yaml").write_text("rule: {name: foo, broken: \n")
         # Write a valid YAML rule alongside
-        (strong_dir / "good.yaml").write_text(
-            "rule:\n  name: valid_rule\n  kind: strong\n"
-        )
+        (strong_dir / "good.yaml").write_text("rule:\n  name: valid_rule\n  kind: strong\n")
 
         original_root = ra._rules_root  # noqa: SLF001
         ra._rules_root = lambda: tmp_path  # type: ignore[assignment]
@@ -267,6 +273,7 @@ class TestMalformedYAML:
 
     def test_all_malformed_yaml_returns_empty_list(self, tmp_path: pathlib.Path):
         import src.rules_applier as ra
+
         rule_set = "test_all_malformed"
         strong_dir = tmp_path / rule_set / "strong"
         strong_dir.mkdir(parents=True)
@@ -287,11 +294,13 @@ class TestMalformedYAML:
 # Edge cases: deeply nested rule structures
 # ---------------------------------------------------------------------------
 
+
 class TestDeeplyNestedRuleStructures:
     """load_strong_rules must handle YAML with arbitrary nesting depth."""
 
     def test_deeply_nested_schema_is_loaded(self, tmp_path: pathlib.Path):
         import src.rules_applier as ra
+
         rule_set = "test_nested"
         strong_dir = tmp_path / rule_set / "strong"
         strong_dir.mkdir(parents=True)
@@ -328,6 +337,7 @@ class TestDeeplyNestedRuleStructures:
 
     def test_soft_rule_with_large_content_is_loaded(self, tmp_path: pathlib.Path):
         import src.rules_applier as ra
+
         rule_set = "test_large_soft"
         soft_dir = tmp_path / rule_set / "soft"
         soft_dir.mkdir(parents=True)
@@ -350,6 +360,7 @@ class TestDeeplyNestedRuleStructures:
 # ---------------------------------------------------------------------------
 # load_all_project_rules and load_all_manuscript_rules signatures
 # ---------------------------------------------------------------------------
+
 
 class TestLoadAllProjectRules:
     def test_returns_dict(self):
@@ -399,6 +410,7 @@ class TestLoadAllManuscriptRules:
     def test_never_raises_when_manuscript_rules_absent(self, tmp_path: pathlib.Path):
         """Even when the manuscript rules dir is completely absent, no exception."""
         import src.rules_applier as ra
+
         original_root = ra._rules_root  # noqa: SLF001
         ra._rules_root = lambda: tmp_path  # type: ignore[assignment]
         try:
@@ -408,4 +420,3 @@ class TestLoadAllManuscriptRules:
             assert result["strong"] == []
         finally:
             ra._rules_root = original_root  # type: ignore[assignment]
-

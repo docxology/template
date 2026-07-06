@@ -111,6 +111,8 @@ output/templates/*
 !output/templates/template_methods_paper/**
 !output/templates/template_newspaper/
 !output/templates/template_newspaper/**
+!output/templates/template_pools_rules_tools/
+!output/templates/template_pools_rules_tools/**
 !output/templates/template_prose_project/
 !output/templates/template_prose_project/**
 !output/templates/template_search_project/
@@ -177,6 +179,8 @@ projects/templates/*
 !projects/templates/template_template/**
 !projects/templates/template_newspaper/
 !projects/templates/template_newspaper/**
+!projects/templates/template_pools_rules_tools/
+!projects/templates/template_pools_rules_tools/**
 !projects/templates/template_textbook/
 !projects/templates/template_textbook/**
 !projects/templates/template_autoscientists/
@@ -191,8 +195,45 @@ projects/templates/*
 !projects/templates/template_search_project/**
 !projects/templates/template_storybook/
 !projects/templates/template_storybook/**
+!projects/templates/template_pools_rules_tools/
+!projects/templates/template_pools_rules_tools/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
+
+# fonds/: only public template fonds under fonds/templates/ are tracked.
+fonds/*
+!fonds/*.md
+!fonds/templates/
+fonds/templates/*
+!fonds/templates/template_bibliography/
+!fonds/templates/template_bibliography/**
+!fonds/templates/template_contacts/
+!fonds/templates/template_contacts/**
+!fonds/templates/template_datasets/
+!fonds/templates/template_datasets/**
+
+# rules/: only public template rules under rules/templates/ are tracked.
+rules/*
+!rules/*.md
+!rules/templates/
+rules/templates/*
+!rules/templates/template_manuscript_rules/
+!rules/templates/template_manuscript_rules/**
+!rules/templates/template_project_rules/
+!rules/templates/template_project_rules/**
+
+# tools/: only public template tools under tools/templates/ are tracked.
+tools/*
+!tools/*.md
+!tools/templates/
+tools/templates/*
+!tools/templates/template_code_executor/
+!tools/templates/template_code_executor/**
+!tools/templates/template_skill/
+!tools/templates/template_skill/**
+!tools/templates/template_validator/
+!tools/templates/template_validator/**
+
 # Local code-intelligence indexes and agent scratch state stay ignored even
 # under the public template allowlists above.
 .codegraph/

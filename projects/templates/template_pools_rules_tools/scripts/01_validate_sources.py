@@ -95,9 +95,7 @@ def main() -> int:
                 f"missing={len(v['missing'])}"
             )
             if not v["valid"]:
-                errors.append(
-                    f"tool {tool['name']}: missing scripts {v['missing']}"
-                )
+                errors.append(f"tool {tool['name']}: missing scripts {v['missing']}")
 
     print()
     if errors:

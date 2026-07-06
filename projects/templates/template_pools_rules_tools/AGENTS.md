@@ -8,6 +8,9 @@ for directory-specific rules.
 
 ## Purpose
 
+Ground truth for integration counts lives in `output/data/manuscript_variables.json`;
+configuration is owned by `manuscript/config.yaml`.
+
 This exemplar shows how a project reads from the three top-level resource
 directories:
 

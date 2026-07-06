@@ -15,7 +15,11 @@ from infrastructure.tools.tools_info import ToolInfo
 
 #: Canonical roster of git-tracked public exemplar tool names.
 #: Each entry is qualified as ``<program>/<name>`` (e.g. ``templates/template_code_executor``).
-PUBLIC_TOOL_NAMES: tuple[str, ...] = ("templates/template_code_executor",)
+PUBLIC_TOOL_NAMES: tuple[str, ...] = (
+    "templates/template_code_executor",
+    "templates/template_skill",
+    "templates/template_validator",
+)
 
 
 def public_tool_infos(repo_root: Path | str) -> list[ToolInfo]:

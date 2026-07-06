@@ -46,9 +46,7 @@ def generate_manuscript_variables() -> dict[str, object]:
         "STRONG_RULES_MANUSCRIPT": (
             results["rules"].get("template_manuscript_rules", {}).get("strong_rules_count", 0)
         ),
-        "TOOL_NAMES": ", ".join(
-            t["name"] for t in results["tools"]
-        ),
+        "TOOL_NAMES": ", ".join(t["name"] for t in results["tools"]),
     }
 
     return variables

@@ -47,6 +47,7 @@ _DATASETS_FONDS = _DATASETS_DIR / "fonds.yaml"
 # bibliography fond
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(
     not (_BIB_YAML.exists() and _BIB_BIB.exists() and _BIB_CSV.exists()),
     reason="template_bibliography fond files not present",
@@ -104,6 +105,7 @@ class TestBibliographyFond:
 # contacts fond
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(
     not (_CONTACTS_FONDS.exists() and _CONTACTS_YAML.exists()),
     reason="template_contacts fond files not present",
@@ -150,6 +152,7 @@ class TestContactsFond:
 # ---------------------------------------------------------------------------
 # datasets fond
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(
     not (_DATASETS_FONDS.exists() and _DATASETS_YAML.exists()),
@@ -198,6 +201,7 @@ class TestDatasetsFond:
 # Edge cases: corrupted CSV handling
 # ---------------------------------------------------------------------------
 
+
 class TestCorruptedCSVHandling:
     """read_bibliography_fond must return None when the CSV is corrupted."""
 
@@ -218,6 +222,7 @@ class TestCorruptedCSVHandling:
 
     def test_binary_garbage_in_csv_returns_none(self, tmp_path: pathlib.Path):
         import src.fonds_reader as fr
+
         # Write raw binary that is not valid UTF-8
         fond_dir = tmp_path / "template_bibliography"
         (fond_dir / "data").mkdir(parents=True)
@@ -237,6 +242,7 @@ class TestCorruptedCSVHandling:
     def test_valid_csv_is_parsed_correctly(self, tmp_path: pathlib.Path):
         """Sanity-check: a well-formed CSV round-trips through DictReader."""
         import src.fonds_reader as fr
+
         csv_content = "key,type,title,author,year\nsmith2024,article,A Title,Smith,2024\n"
         self._make_bib_fond(tmp_path, csv_content=csv_content)
 
@@ -255,20 +261,20 @@ class TestCorruptedCSVHandling:
 # Edge cases: empty CSV handling
 # ---------------------------------------------------------------------------
 
+
 class TestEmptyCSVHandling:
     """An empty CSV file (header-only or truly empty) must not cause a crash."""
 
     def test_header_only_csv_returns_empty_list(self, tmp_path: pathlib.Path):
         """CSV with only a header row → csv_rows should be []."""
         import src.fonds_reader as fr
+
         fond_dir = tmp_path / "template_bibliography"
         (fond_dir / "data").mkdir(parents=True)
         (fond_dir / "fonds.yaml").write_text("type: bibliography\nversion: 1.0\n")
         (fond_dir / "data" / "references.bib").write_text("@article{x,}\n")
         # Header-only CSV — DictReader returns no rows
-        (fond_dir / "data" / "references.csv").write_text(
-            "key,type,title,author,year\n"
-        )
+        (fond_dir / "data" / "references.csv").write_text("key,type,title,author,year\n")
 
         original_root = fr._fonds_root  # noqa: SLF001
         fr._fonds_root = lambda: tmp_path  # type: ignore[assignment]
@@ -282,6 +288,7 @@ class TestEmptyCSVHandling:
     def test_completely_empty_csv_returns_empty_list(self, tmp_path: pathlib.Path):
         """Truly empty CSV → csv_rows == []."""
         import src.fonds_reader as fr
+
         fond_dir = tmp_path / "template_bibliography"
         (fond_dir / "data").mkdir(parents=True)
         (fond_dir / "fonds.yaml").write_text("type: bibliography\nversion: 1.0\n")
@@ -302,11 +309,13 @@ class TestEmptyCSVHandling:
 # Edge cases: missing data directory handling
 # ---------------------------------------------------------------------------
 
+
 class TestMissingDataDirectoryHandling:
     """When the fond's data/ subdirectory is absent, return None gracefully."""
 
     def test_missing_data_dir_bibliography_returns_none(self, tmp_path: pathlib.Path):
         import src.fonds_reader as fr
+
         fond_dir = tmp_path / "template_bibliography"
         fond_dir.mkdir(parents=True)
         # Write only fonds.yaml — no data/ subdir
@@ -323,6 +332,7 @@ class TestMissingDataDirectoryHandling:
 
     def test_missing_data_dir_contacts_returns_none(self, tmp_path: pathlib.Path):
         import src.fonds_reader as fr
+
         fond_dir = tmp_path / "template_contacts"
         fond_dir.mkdir(parents=True)
         (fond_dir / "fonds.yaml").write_text("type: contacts\nversion: 1.0\n")
@@ -337,6 +347,7 @@ class TestMissingDataDirectoryHandling:
 
     def test_missing_data_dir_datasets_returns_none(self, tmp_path: pathlib.Path):
         import src.fonds_reader as fr
+
         fond_dir = tmp_path / "template_datasets"
         fond_dir.mkdir(parents=True)
         (fond_dir / "fonds.yaml").write_text("type: datasets\nversion: 1.0\n")
@@ -352,6 +363,7 @@ class TestMissingDataDirectoryHandling:
     def test_completely_absent_fonds_root_returns_none(self, tmp_path: pathlib.Path):
         """When the entire fonds root is missing, every reader returns None."""
         import src.fonds_reader as fr
+
         ghost_root = tmp_path / "does_not_exist"
         original_root = fr._fonds_root  # noqa: SLF001
         fr._fonds_root = lambda: ghost_root  # type: ignore[assignment]
@@ -366,6 +378,7 @@ class TestMissingDataDirectoryHandling:
 # ---------------------------------------------------------------------------
 # read_all_fonds consolidated loader
 # ---------------------------------------------------------------------------
+
 
 class TestReadAllFonds:
     def test_returns_dict(self):
@@ -387,4 +400,3 @@ class TestReadAllFonds:
         """read_all_fonds must not raise regardless of file system state."""
         result = read_all_fonds()
         assert isinstance(result, dict)
-

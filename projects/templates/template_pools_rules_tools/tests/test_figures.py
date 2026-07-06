@@ -19,6 +19,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
 try:
     import matplotlib  # noqa: F401
+
     _MATPLOTLIB_AVAILABLE = True
 except ImportError:
     _MATPLOTLIB_AVAILABLE = False
@@ -43,6 +44,7 @@ if _MATPLOTLIB_AVAILABLE:
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _assert_png(path: pathlib.Path) -> None:
     """Assert that *path* exists, is a file, and looks like a PNG."""
     assert path.exists(), f"Expected figure at {path}"
@@ -54,6 +56,7 @@ def _assert_png(path: pathlib.Path) -> None:
 # ---------------------------------------------------------------------------
 # generate_architecture_overview
 # ---------------------------------------------------------------------------
+
 
 class TestGenerateArchitectureOverview:
     def test_creates_file(self, tmp_path: pathlib.Path):
@@ -69,9 +72,7 @@ class TestGenerateArchitectureOverview:
         assert result.name == "architecture_overview.png"
 
     def test_custom_filename(self, tmp_path: pathlib.Path):
-        result = generate_architecture_overview(
-            output_dir=tmp_path, filename="my_arch.png"
-        )
+        result = generate_architecture_overview(output_dir=tmp_path, filename="my_arch.png")
         assert result.name == "my_arch.png"
         _assert_png(result)
 
@@ -86,6 +87,7 @@ class TestGenerateArchitectureOverview:
 # ---------------------------------------------------------------------------
 # generate_resource_counts
 # ---------------------------------------------------------------------------
+
 
 class TestGenerateResourceCounts:
     def test_creates_file(self, tmp_path: pathlib.Path):
@@ -112,9 +114,7 @@ class TestGenerateResourceCounts:
 
     def test_zero_value_counts(self, tmp_path: pathlib.Path):
         """All-zero values should produce a valid (flat) bar chart."""
-        result = generate_resource_counts(
-            counts={"A": 0, "B": 0}, output_dir=tmp_path
-        )
+        result = generate_resource_counts(counts={"A": 0, "B": 0}, output_dir=tmp_path)
         _assert_png(result)
 
     def test_output_dir_created_if_absent(self, tmp_path: pathlib.Path):
@@ -127,6 +127,7 @@ class TestGenerateResourceCounts:
 # ---------------------------------------------------------------------------
 # generate_status_dashboard
 # ---------------------------------------------------------------------------
+
 
 class TestGenerateStatusDashboard:
     def test_creates_file(self, tmp_path: pathlib.Path):
@@ -157,16 +158,12 @@ class TestGenerateStatusDashboard:
 
     def test_single_component(self, tmp_path: pathlib.Path):
         """Edge case: single component should not divide-by-zero."""
-        result = generate_status_dashboard(
-            statuses={"solo": "ok"}, output_dir=tmp_path
-        )
+        result = generate_status_dashboard(statuses={"solo": "ok"}, output_dir=tmp_path)
         _assert_png(result)
 
     def test_unknown_status_string(self, tmp_path: pathlib.Path):
         """Unknown status values should fall back to neutral colour, not raise."""
-        result = generate_status_dashboard(
-            statuses={"comp": "unknown_status"}, output_dir=tmp_path
-        )
+        result = generate_status_dashboard(statuses={"comp": "unknown_status"}, output_dir=tmp_path)
         _assert_png(result)
 
     def test_output_dir_created_if_absent(self, tmp_path: pathlib.Path):
@@ -179,6 +176,7 @@ class TestGenerateStatusDashboard:
 # ---------------------------------------------------------------------------
 # all_figures
 # ---------------------------------------------------------------------------
+
 
 class TestAllFigures:
     def test_returns_dict(self, tmp_path: pathlib.Path):
@@ -205,3 +203,34 @@ class TestAllFigures:
         assert not nested.exists()
         all_figures(output_dir=nested)
         assert nested.is_dir()
+
+    def test_all_figures_accepts_string_output_dir(self, tmp_path: pathlib.Path):
+        result = all_figures(output_dir=str(tmp_path))
+        assert isinstance(result, dict)
+        for path in result.values():
+            assert path is not None
+            _assert_png(path)
+
+
+class TestGenerateStatusDashboardIntegrationResult:
+    def test_uses_integration_result_statuses(self, tmp_path: pathlib.Path):
+        class StatusCarrier:
+            statuses = {"Bibliography Fond": "partial", "Contacts Fond": "missing"}
+
+        result = generate_status_dashboard(
+            integration_result=StatusCarrier(),
+            output_dir=tmp_path,
+        )
+        _assert_png(result)
+
+
+class TestDefaultOutputDirectory:
+    def test_generate_architecture_overview_uses_default_dir(
+        self, tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        from src import figures as figures_mod
+
+        monkeypatch.setattr(figures_mod, "_default_output_dir", lambda: tmp_path / "default")
+        result = generate_architecture_overview()
+        _assert_png(result)
+        assert result.parent == tmp_path / "default"

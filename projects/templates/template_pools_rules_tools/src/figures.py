@@ -3,8 +3,13 @@
 Public API
 ----------
 generate_architecture_overview(output_dir=None, filename="architecture_overview.png")
-generate_resource_counts(output_dir=None, filename="resource_counts.png", counts=None, data=None)
-generate_status_dashboard(output_dir=None, filename="status_dashboard.png", statuses=None, integration_result=None)
+generate_resource_counts(output_dir=None, filename="resource_counts.png", counts=None, _data=None)
+generate_status_dashboard(
+    output_dir=None,
+    filename="status_dashboard.png",
+    statuses=None,
+    integration_result=None,
+)
 all_figures(output_dir=None, integration_result=None) -> dict[str, Path]
 generate_all_figures(...)  -- alias for all_figures
 
@@ -24,10 +29,11 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 try:
     import matplotlib
+
     matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
     import matplotlib.patches as mpatches
-    from matplotlib.gridspec import GridSpec
+    import matplotlib.pyplot as plt
+
     _MPL_AVAILABLE = True
 except ImportError:
     _MPL_AVAILABLE = False
@@ -62,6 +68,7 @@ STATUS_LABELS: dict[str, str] = {
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _ensure_dir(path: pathlib.Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
@@ -93,6 +100,7 @@ def _save(fig: Any, dest: pathlib.Path) -> pathlib.Path:
 # Figure 1: Architecture Overview — three-panel diagram
 # ---------------------------------------------------------------------------
 
+
 def generate_architecture_overview(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "architecture_overview.png",
@@ -103,26 +111,45 @@ def generate_architecture_overview(
 
     dest = _resolve_output(output_dir, filename)
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.5), facecolor=BG)
-    titles_fonds_rules_tools = ("Fonds (Data Pools)", "Rules (Specifications)", "Tools (Entrypoints)")
+    panel_titles = (
+        "Fonds (Data Pools)",
+        "Rules (Specifications)",
+        "Tools (Entrypoints)",
+    )
 
     for ax, title, entries, color in zip(
-        axes, titles_fonds_rules_tools,
+        axes,
+        panel_titles,
         [
             [("Bibliography", 8), ("Contacts", 5), ("Datasets", 5)],
             [("Project Rules", 4), ("Manuscript Rules", 4)],
             [("Code Executor", 2), ("Validator", 2), ("Skill", 2)],
         ],
         [BLUE, TEAL, BLUE_LIGHT],
+        strict=True,
     ):
         ax.set_facecolor(WHITE)
         ax.set_title(title, fontsize=11, fontweight="bold", color=color, pad=12)
         labels_vals = [e[0] for e in entries]
         widths_vals = [e[1] for e in entries]
         y_pos = range(len(labels_vals))
-        bars = ax.barh(y_pos, widths_vals, height=0.55, color=color, edgecolor="white", linewidth=0.5)
-        for bar, val in zip(bars, widths_vals):
-            ax.text(bar.get_width() + 0.3, bar.get_y() + bar.get_height() / 2,
-                    str(val), va="center", fontsize=9, color=NEUTRAL)
+        bars = ax.barh(
+            y_pos,
+            widths_vals,
+            height=0.55,
+            color=color,
+            edgecolor="white",
+            linewidth=0.5,
+        )
+        for bar, val in zip(bars, widths_vals, strict=True):
+            ax.text(
+                bar.get_width() + 0.3,
+                bar.get_y() + bar.get_height() / 2,
+                str(val),
+                va="center",
+                fontsize=9,
+                color=NEUTRAL,
+            )
         ax.set_yticks(list(y_pos))
         ax.set_yticklabels(labels_vals, fontsize=9)
         ax.tick_params(axis="x", colors=NEUTRAL, labelsize=8)
@@ -131,8 +158,13 @@ def generate_architecture_overview(
         ax.grid(axis="x", color=GRID, linewidth=0.4)
 
     fig.text(0.5, -0.02, "Resource Counts by Category", ha="center", fontsize=10, color=NEUTRAL)
-    fig.suptitle("Research Resource Architecture: Fonds × Rules × Tools",
-                 fontsize=14, fontweight="bold", color="#0f172a", y=1.02)
+    fig.suptitle(
+        "Research Resource Architecture: Fonds × Rules × Tools",
+        fontsize=14,
+        fontweight="bold",
+        color="#0f172a",
+        y=1.02,
+    )
     fig.tight_layout(pad=2)
     return _save(fig, dest)
 
@@ -141,11 +173,12 @@ def generate_architecture_overview(
 # Figure 2: Resource Counts — horizontal bar chart
 # ---------------------------------------------------------------------------
 
+
 def generate_resource_counts(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "resource_counts.png",
     counts: dict[str, int] | None = None,
-    data: Any = None,
+    _data: Any = None,
 ) -> pathlib.Path | None:
     """Generate a bar chart of resource counts."""
     if not _MPL_AVAILABLE:
@@ -160,15 +193,28 @@ def generate_resource_counts(
 
     names = list(counts.keys())
     vals = list(counts.values())
-    colors_list = [BLUE, TEAL, BLUE_LIGHT, NEUTRAL, TEAL_LIGHT][:len(names)]
+    colors_list = [BLUE, TEAL, BLUE_LIGHT, NEUTRAL, TEAL_LIGHT][: len(names)]
 
     bars = ax.bar(names, vals, color=colors_list, edgecolor="white", linewidth=1.2, width=0.55)
-    for bar, val in zip(bars, vals):
-        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.15,
-                str(val), ha="center", fontsize=11, fontweight="bold", color=NEUTRAL)
+    for bar, val in zip(bars, vals, strict=True):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.15,
+            str(val),
+            ha="center",
+            fontsize=11,
+            fontweight="bold",
+            color=NEUTRAL,
+        )
 
     ax.set_ylabel("Count", fontsize=10, color=NEUTRAL)
-    ax.set_title("Discovered Resources by Category", fontsize=13, fontweight="bold", color="#0f172a", pad=12)
+    ax.set_title(
+        "Discovered Resources by Category",
+        fontsize=13,
+        fontweight="bold",
+        color="#0f172a",
+        pad=12,
+    )
     ax.tick_params(colors=NEUTRAL, labelsize=9)
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="y", color=GRID, linewidth=0.4)
@@ -180,6 +226,7 @@ def generate_resource_counts(
 # ---------------------------------------------------------------------------
 # Figure 3: Status Dashboard — component validation status
 # ---------------------------------------------------------------------------
+
 
 def generate_status_dashboard(
     output_dir: str | pathlib.Path | None = None,
@@ -202,6 +249,8 @@ def generate_status_dashboard(
             "Validator": "ok",
             "Skill": "ok",
         }
+    if integration_result is not None and hasattr(integration_result, "statuses"):
+        statuses = integration_result.statuses
 
     dest = _resolve_output(output_dir, filename)
     n = len(statuses)
@@ -213,18 +262,46 @@ def generate_status_dashboard(
     colors_strip = [STATUS_COLORS.get(s, NEUTRAL) for s in statuses.values()]
     y_pos = range(n)
 
-    bars = ax.barh(y_pos, [1] * n, height=0.65, color=colors_strip, edgecolor="white", linewidth=0.8)
-    for bar, name, st in zip(bars, names, statuses.values()):
+    bars = ax.barh(
+        y_pos,
+        [1] * n,
+        height=0.65,
+        color=colors_strip,
+        edgecolor="white",
+        linewidth=0.8,
+    )
+    for bar, name, st in zip(bars, names, statuses.values(), strict=True):
         label = STATUS_LABELS.get(st, st)
-        ax.text(0.02, bar.get_y() + bar.get_height() / 2, name,
-                va="center", fontsize=9, fontweight="bold", color="white")
-        ax.text(0.98, bar.get_y() + bar.get_height() / 2, label,
-                va="center", ha="right", fontsize=8, color="white", alpha=0.85)
+        ax.text(
+            0.02,
+            bar.get_y() + bar.get_height() / 2,
+            name,
+            va="center",
+            fontsize=9,
+            fontweight="bold",
+            color="white",
+        )
+        ax.text(
+            0.98,
+            bar.get_y() + bar.get_height() / 2,
+            label,
+            va="center",
+            ha="right",
+            fontsize=8,
+            color="white",
+            alpha=0.85,
+        )
 
     ax.set_yticks(list(y_pos))
     ax.set_yticklabels([""] * n)
     ax.set_xlim(0, 1)
-    ax.set_title("Component Validation Status", fontsize=13, fontweight="bold", color="#0f172a", pad=12)
+    ax.set_title(
+        "Component Validation Status",
+        fontsize=13,
+        fontweight="bold",
+        color="#0f172a",
+        pad=12,
+    )
     ax.tick_params(colors=NEUTRAL, labelsize=8)
     ax.spines[:].set_visible(False)
     ax.set_xticks([])
@@ -246,10 +323,11 @@ def generate_status_dashboard(
 # Wrapper
 # ---------------------------------------------------------------------------
 
+
 def all_figures(
     output_dir: str | pathlib.Path | None = None,
     integration_result: Any = None,
-) -> dict[str, pathlib.Path] | None:
+) -> dict[str, pathlib.Path | None] | None:
     """Generate all three figures and return a dict of {name: path}.
 
     Returns None if matplotlib is unavailable.

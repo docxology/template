@@ -2,6 +2,12 @@
 
 **Pools, Rules, and Tools: A Template-Integrated Resource Architecture**
 
+Run via the template monorepo from the repository root with `uv run python scripts/…`
+or project-local scripts under `projects/templates/template_pools_rules_tools/scripts/`.
+Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` for forkable
+configuration. Preserve template integrity when forking this exemplar into a
+standalone checkout.
+
 A meta-project exemplar demonstrating the integration of three top-level resource directories:
 
 | Directory | Role |

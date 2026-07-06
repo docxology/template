@@ -13,7 +13,6 @@ from __future__ import annotations
 import pathlib
 from typing import TypedDict
 
-
 __all__ = [
     # Fonds
     "BibliographyFondResult",
@@ -40,6 +39,7 @@ __all__ = [
 # ---------------------------------------------------------------------------
 # Fonds TypedDicts
 # ---------------------------------------------------------------------------
+
 
 class BibliographyFondResult(TypedDict):
     """Returned by ``read_bibliography_fond()`` on success."""
@@ -84,6 +84,7 @@ class FondsSummary(TypedDict):
 # Rules TypedDicts
 # ---------------------------------------------------------------------------
 
+
 class SoftRuleEntry(TypedDict):
     """One entry from ``load_soft_rules()``."""
 
@@ -124,6 +125,7 @@ class AllRulesResult(TypedDict):
 # Tools TypedDicts
 # ---------------------------------------------------------------------------
 
+
 class ToolValidationResult(TypedDict):
     """Returned by ``validate_tool_scripts_exist()``."""
 
@@ -154,6 +156,7 @@ class ToolEntryWithValidation(TypedDict):
 # Integration TypedDicts
 # ---------------------------------------------------------------------------
 
+
 class IntegrationSummary(TypedDict):
     """High-level roll-up inside ``IntegrationResult``."""
 
@@ -182,4 +185,4 @@ class FigureDataRow(TypedDict):
     label: str
     count: int
     category: str  # "fond" | "rule_set" | "tool"
-    status: str    # "ok" | "partial" | "missing" | "valid" | "invalid"
+    status: str  # "ok" | "partial" | "missing" | "valid" | "invalid"

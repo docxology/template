@@ -48,7 +48,11 @@ def main() -> int:
     printable = {
         "summary": summary,
         "rules_statuses": {
-            k: {"status": v["status"], "soft": v["soft_rules_count"], "strong": v["strong_rules_count"]}
+            k: {
+                "status": v["status"],
+                "soft": v["soft_rules_count"],
+                "strong": v["strong_rules_count"],
+            }
             for k, v in results["rules"].items()
         },
         "tools": [

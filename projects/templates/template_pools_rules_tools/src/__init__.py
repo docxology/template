@@ -1,5 +1,11 @@
 """template_pools_rules_tools — public API."""
 
+from .figures import (
+    all_figures,
+    generate_architecture_overview,
+    generate_resource_counts,
+    generate_status_dashboard,
+)
 from .fonds_reader import (
     count_summary,
     get_fonds_root,
@@ -8,6 +14,7 @@ from .fonds_reader import (
     read_contacts_fond,
     read_datasets_fond,
 )
+from .integration import generate_figure_data, run_integration_demo
 from .rules_applier import (
     get_rules_root,
     load_all_manuscript_rules,
@@ -22,13 +29,6 @@ from .tools_invoker import (
     get_tool_entrypoints,
     get_tools_root,
     validate_tool_scripts_exist,
-)
-from .integration import generate_figure_data, run_integration_demo
-from .figures import (
-    generate_architecture_overview,
-    generate_resource_counts,
-    generate_status_dashboard,
-    all_figures,
 )
 from .types import (
     AllFondsResult,
@@ -72,6 +72,11 @@ __all__ = [
     # Integration
     "run_integration_demo",
     "generate_figure_data",
+    # Figures
+    "all_figures",
+    "generate_architecture_overview",
+    "generate_resource_counts",
+    "generate_status_dashboard",
     # Types
     "AllFondsResult",
     "AllRulesResult",

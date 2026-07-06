@@ -14,7 +14,7 @@
       "qualified_name": "templates/template_autoresearch_project",
       "title": "template_autoresearch_project",
       "use_when": "Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates.",
-      "test_file_count": 17,
+      "test_file_count": 20,
       "coverage_floor": 90
     },
     {
@@ -38,7 +38,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 51,
+      "test_file_count": 53,
       "coverage_floor": 90
     },
     {
@@ -55,6 +55,14 @@
       "title": "The Triplicate — `template_newspaper`",
       "use_when": "Use this template when you need **data-driven, large-format print layout**: multi-page broadsheets/tabloids with precise column geometry, typography-first constraints, and strict content/engine separation (YAML editions in `content/`, pure-Python ReportLab engine in `src/`).",
       "test_file_count": 10,
+      "coverage_floor": 90
+    },
+    {
+      "name": "template_pools_rules_tools",
+      "qualified_name": "templates/template_pools_rules_tools",
+      "title": "template_pools_rules_tools",
+      "use_when": "Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science.",
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {
@@ -78,7 +86,7 @@
       "qualified_name": "templates/template_gold_refinement",
       "title": "Gold Refinement — Metallurgical Manuscript Composition Exemplar",
       "use_when": "Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection.",
-      "test_file_count": 21,
+      "test_file_count": 23,
       "coverage_floor": 90
     },
     {
@@ -126,7 +134,7 @@
       "qualified_name": "templates/template_textbook",
       "title": "The Template Textbook — Modular, Fillable Book Scaffold",
       "use_when": "Use this template for **book-length manuscripts**: parts → chapters → labs → question banks declared in a single `config.yaml`, with auto-numbering, deterministic figure/diagram generation, and structural-contract tests that keep hundreds of pages from drifting.",
-      "test_file_count": 9,
+      "test_file_count": 10,
       "coverage_floor": 90
     }
   ]

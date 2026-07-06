@@ -34,6 +34,7 @@ _VALIDATOR_MANIFEST = _VALIDATOR_DIR / "tools.yaml"
 # discover_tools
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(
     not _TOOLS_TEMPLATES.is_dir(),
     reason="tools/templates/ not present",
@@ -70,6 +71,7 @@ class TestDiscoverTools:
 # get_tool_entrypoints
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(
     not _CODE_EXECUTOR_MANIFEST.exists(),
     reason="template_code_executor/tools.yaml not present",
@@ -105,6 +107,7 @@ def test_get_tool_entrypoints_missing_returns_empty():
 # ---------------------------------------------------------------------------
 # validate_tool_scripts_exist
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(
     not _CODE_EXECUTOR_MANIFEST.exists(),
