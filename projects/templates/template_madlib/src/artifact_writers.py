@@ -6,8 +6,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from analysis_reports import _configured_field_summary_markdown, _summary_markdown, _write_json
-from run import MadlibRun
+from .analysis_reports import _configured_field_summary_markdown, _summary_markdown, _write_json
+from .run import MadlibRun
 
 __all__ = ["JsonArtifactSpec", "ReportArtifactSpec", "write_core_artifacts"]
 

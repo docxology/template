@@ -3,10 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from analysis_fields import configured_field_counts, configured_field_inventory
-from composition import build_imrad_sections
-from config import MadlibConfig, load_madlib_config
-from tokens import TokenPlan, generate_token_plan
+from .analysis_fields import configured_field_counts, configured_field_inventory
+from .composition import build_imrad_sections
+from .config import MadlibConfig, load_madlib_config
+from .tokens import TokenPlan, generate_token_plan
 
 
 @dataclass(frozen=True)

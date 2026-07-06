@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from composition_helpers import (
+from .composition_helpers import (
     _comma_join,
     _disabled_section_body,
     _phase_sentence,
     _protocol_sentence,
     _sentence_list,
 )
-from config import MadlibConfig, SECTION_KEYS
-from tokens import TokenPlan
+from .config import MadlibConfig, SECTION_KEYS
+from .tokens import TokenPlan
 
 
 def build_imrad_sections(config: MadlibConfig, token_plan: TokenPlan) -> dict[str, str]:

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from config import MadlibConfig
-from tokens import TokenPlan
+from .config import MadlibConfig
+from .tokens import TokenPlan
 
 
 def configured_field_inventory(config: MadlibConfig, plan: TokenPlan) -> list[dict[str, str]]:

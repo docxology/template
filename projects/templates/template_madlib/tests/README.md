@@ -1,10 +1,12 @@
 # Tests
 
+Tests import project code as `src.<module>` (see `tests/conftest.py` and `pyproject.toml` `pythonpath`). Do not use mocks.
+
 | File | Focus |
 | --- | --- |
-| `test_config.py` | Config schema, expanded manuscript/design/phase/evaluation/probe/failure/authoring/visualization controls, explicit/default origins, defaults, and validation failures. |
-| `test_tokens.py` | Deterministic token selection, seed sensitivity, category sensitivity, and provenance. |
-| `test_composition_and_analysis.py` | Section composition, generated Methods body concepts, generated Markdown tables, design/phase/evaluation/probe/failure/authoring rows, configured-field inventory, expanded method-surface declarations, review-packet and fork-migration declarations, artifact JSON, cover config, figure registry, and nonblank generated figures. |
+| `test_config.py` | Config schema, visualization controls, explicit/default origins, defaults, validation failures, and extended loader edge cases. |
+| `test_tokens.py` | Deterministic token selection, digest invariants, provenance, and TokenPlan property coverage. |
+| `test_composition_and_analysis.py` | Section composition, tables, configured-field inventory, artifact JSON, figure registry, disabled-visualization branches, `analysis_fields`, and `src` public API surface. |
 | `test_manuscript_variables.py` | Token map, title/table/figure variables, manuscript cross-reference, and hydration script. |
 
 Run:

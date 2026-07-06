@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from config import MethodStep, PipelinePhase
+from .config import MethodStep, PipelinePhase
 
 
 def _disabled_section_body(section: str) -> str:

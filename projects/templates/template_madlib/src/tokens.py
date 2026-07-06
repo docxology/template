@@ -4,7 +4,7 @@ import hashlib
 from collections import Counter
 from dataclasses import asdict, dataclass
 
-from config import MadlibConfig, SlotSpec
+from .config import MadlibConfig, SlotSpec
 
 
 @dataclass(frozen=True)

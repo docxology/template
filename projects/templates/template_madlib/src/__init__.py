@@ -1,4 +1,4 @@
-from config import (
+from .config import (
     AuthoringObligation,
     DesignPrinciple,
     EvaluationCriterion,
@@ -12,7 +12,7 @@ from config import (
     VisualizationConfig,
     load_madlib_config,
 )
-from tokens import TokenChoice, TokenPlan, generate_token_plan
+from .tokens import TokenChoice, TokenPlan, generate_token_plan
 
 __all__ = [
     "EvaluationCriterion",

@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from composition_figures import (
+from .composition_figures import (
     build_configuration_figure_markdown,
     build_evaluation_figure_markdown,
     build_methods_figure_markdown,
     build_results_figure_markdown,
 )
-from composition_helpers import _comma_join, _disabled_section_body, _figure_markdown
-from composition_sections import build_imrad_sections, section_title_variables
-from composition_tables import (
+from .composition_helpers import _comma_join, _disabled_section_body, _figure_markdown
+from .composition_sections import build_imrad_sections, section_title_variables
+from .composition_tables import (
     build_authoring_obligation_table,
     build_audit_rule_table,
     build_configured_field_summary_table,

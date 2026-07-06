@@ -6,8 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from config import load_madlib_config
-from manuscript_variables import _build_timestamp, generate_variables, save_variables
+from src.config import load_madlib_config
+from src.manuscript_variables import _build_timestamp, generate_variables, save_variables
 
 DOC_ONLY = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")

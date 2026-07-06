@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from composition import (
+from .composition import (
     build_authoring_obligation_table,
     build_audit_rule_table,
     build_configured_field_summary_table,
@@ -23,7 +23,7 @@ from composition import (
     build_section_title_table,
     build_token_inventory_table,
 )
-from run import MadlibRun, build_run
+from .run import MadlibRun, build_run
 
 
 def artifact_markdown_tables(project_root: Path | str) -> dict[str, str]:

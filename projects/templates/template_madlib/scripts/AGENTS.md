@@ -6,9 +6,9 @@ Do not add Madlib business logic here. Put schema parsing in `src/config.py`, to
 
 | Script | Calls |
 | --- | --- |
-| `_bootstrap.py` | Shared `sys.path` setup for project `src/` imports. |
-| `01_generate_madlib_artifacts.py` | `analysis.generate_artifacts` |
-| `z_generate_manuscript_variables.py` | `manuscript_variables.generate_variables` plus shared injection |
+| `_bootstrap.py` | Adds project root and repo root to `sys.path` for `from src…` imports. |
+| `01_generate_madlib_artifacts.py` | `src.analysis.generate_artifacts` |
+| `z_generate_manuscript_variables.py` | `src.manuscript_variables.generate_variables` plus shared injection |
 
 Scripts may report generated method evidence, but they must not define the method protocol, figure registry, review-packet contract, or fork-migration obligations. Protocol rows, phases, probes, failure modes, audit rules, contribution claims, and review surfaces belong in `manuscript/config.yaml` plus project-local `src/`.
 

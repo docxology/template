@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
-from analysis_figures import (
+from .analysis_figures import (
     _figure_registry_entry,
     write_configured_field_matrix,
     write_field_origin_summary,
@@ -15,15 +15,25 @@ from analysis_figures import (
     write_section_token_allocation_figure,
     write_token_injection_flow_figure,
 )
-from config import MadlibConfig
-from tokens import TokenPlan
+from .config import MadlibConfig
+from .tokens import TokenPlan
 
 
 class FigureRun(Protocol):
-    config: MadlibConfig
-    plan: TokenPlan
-    field_inventory: list[dict[str, str]]
-    field_counts: dict[str, int]
+    @property
+    def config(self) -> MadlibConfig: ...
+
+    @property
+    def plan(self) -> TokenPlan: ...
+
+    @property
+    def field_inventory(self) -> list[dict[str, str]]: ...
+
+    @property
+    def field_counts(self) -> dict[str, int]: ...
+
+
+FigureWriter = Callable[[FigureRun, Path], Path]
 
 
 @dataclass(frozen=True)
@@ -37,8 +47,6 @@ class ConditionalFigureSpec:
     alt: str
     markdown_group: str
 
-
-FigureWriter = Callable[[FigureRun, Path], None]
 
 CONDITIONAL_FIGURE_SPECS: tuple[ConditionalFigureSpec, ...] = (
     ConditionalFigureSpec(

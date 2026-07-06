@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from config import MadlibConfig
-from markdown_tables import artifact_markdown_tables
-from tokens import TokenPlan
+from .config import MadlibConfig
+from .markdown_tables import artifact_markdown_tables
+from .tokens import TokenPlan
 
 
 def _write_json(path: Path, payload: Any) -> None:

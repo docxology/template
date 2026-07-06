@@ -7,9 +7,9 @@ import platform
 from datetime import datetime, timezone
 from pathlib import Path
 
-from composition import section_title_variables
-from markdown_tables import artifact_markdown_tables_from_run
-from run import build_run
+from .composition import section_title_variables
+from .markdown_tables import artifact_markdown_tables_from_run
+from .run import build_run
 
 
 def generate_variables(project_root: Path | str) -> dict[str, str]:

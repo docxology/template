@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-from composition_helpers import _comma_join
-from config import MadlibConfig, SECTION_KEYS
-from tokens import TokenPlan
+from .composition_helpers import _comma_join
+from .config import MadlibConfig, SECTION_KEYS
+from .tokens import TokenPlan
 
 
 def build_section_plan_table(config: MadlibConfig, token_plan: TokenPlan) -> str:

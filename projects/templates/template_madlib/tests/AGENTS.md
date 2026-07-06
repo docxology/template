@@ -1,6 +1,6 @@
 # tests
 
-Tests use real YAML configs, files, figures, and subprocesses. Do not use mocks.
+Tests import project code as `src.<module>` (see `tests/conftest.py`). Do not use mocks.
 
 Coverage must stay at or above 90% for `src/`:
 
