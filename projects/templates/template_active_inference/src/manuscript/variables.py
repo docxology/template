@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 from analytical.hyperparameters import load_hyperparameters
+from contracts.artifact_contract import VARIABLE_ARTIFACTS
+from json_io import load_json
 from analytical.sweep_io import read_parameter_sweep
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS
 from manuscript.invariant_counts import load_invariant_counts
@@ -61,16 +62,6 @@ def _policy_goal_counts_by_mode(policy_data: dict[str, Any]) -> dict[str, int]:
         if mode in counts and bool(run.get("goal_reached")):
             counts[mode] += 1
     return counts
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.exists():
-        return {}
-    try:
-        data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return data
 
 
 def _pipeline_track_count(project_root: Path) -> int:
@@ -181,64 +172,9 @@ def _dirichlet_token_values() -> dict[str, Any]:
     }
 
 
-VARIABLE_ARTIFACTS: dict[str, str] = {
-    "policy": "output/data/si_policy_comparison.json",
-    "posterior": "output/data/pymdp_policy_posterior_grid.json",
-    "runtime": "output/reports/pymdp_runtime_diagnostics.json",
-    "graph": "output/data/si_graph_world_summary.json",
-    "graph_topology_traces": "output/data/si_graph_world_topology_traces.json",
-    "provenance": "output/data/artifact_provenance.json",
-    "replay": "output/reports/reproducibility_replay.json",
-    "counterexample": "output/reports/counterexample_matrix.json",
-    "sensitivity": "output/data/sensitivity_sweep.json",
-    "uncertainty": "output/data/uncertainty_summary.json",
-    "benchmark": "output/data/toy_benchmark_matrix.json",
-    "model_checking": "output/reports/model_checking_witnesses.json",
-    "lean_graph": "output/reports/lean_graph_world_inventory.json",
-    "interop": "output/data/interop_roundtrip_report.json",
-    "adversarial": "output/reports/adversarial_audit.json",
-    "semantic": "output/data/sheaf_gluing_certificate.json",
-    "dependency": "output/data/validation_dependency_graph.json",
-    "stale": "output/reports/stale_artifact_report.json",
-    "manuscript_staleness": "output/reports/manuscript_staleness_report.json",
-    "figure_source": "output/data/figure_source_map.json",
-    "visualization_quality": "output/reports/visualization_quality_audit.json",
-    "statistical_bridge": "output/data/statistical_visualization_bridge.json",
-    "scope": "output/reports/scope_boundary_audit.json",
-    "gate_index": "output/data/validation_gate_index.json",
-    "section_status": "output/data/sheaf_section_status_matrix.json",
-    "render_log": "output/reports/sheaf_render_log.json",
-    "claim_audit": "output/reports/claim_evidence_audit.json",
-    "token_provenance": "output/data/manuscript_token_provenance.json",  # nosec B105
-    "cross_symbol": "output/data/cross_track_symbol_table.json",
-    "assumption": "output/data/analytical_assumption_index.json",
-    "animation_delta": "output/data/animation_frame_deltas.json",
-    "replay_matrix": "output/reports/replay_matrix.json",
-    "track_lane": "output/data/track_lane_matrix.json",
-    "artifact_contract": "output/data/artifact_contract_index.json",
-    "track_scope": "output/data/track_improvement_scope.json",
-    "blocked_scope": "output/reports/blocked_scope_manifest.json",
-    "evidence_fields": "output/data/evidence_field_index.json",
-    "release_bundle": "output/reports/release_bundle_manifest.json",
-    "theorem_traceability": "output/data/theorem_traceability_matrix.json",
-    "artifact_diffoscope": "output/reports/artifact_diffoscope.json",
-    "proof_extraction": "output/data/proof_extraction_index.json",
-    "state_space_catalog": "output/data/state_space_catalog.json",
-    "causal_ablation": "output/data/causal_ablation_matrix.json",
-    "artifact_license": "output/reports/artifact_license_audit.json",
-    "release_notes": "output/reports/release_notes_evidence.json",
-    "scholarship": "output/data/scholarship_source_matrix.json",
-    "security_posture": "output/reports/security_posture_audit.json",
-    "proof_dependency": "output/data/proof_dependency_graph.json",
-    "state_transition": "output/data/state_transition_table.json",
-    "ablation_sensitivity": "output/reports/ablation_sensitivity_report.json",
-    "release_attestation": "output/reports/release_attestation.json",
-}
-
-
 def _load_variable_artifacts(root: Path) -> dict[str, dict[str, Any]]:
     """Load optional generated artifacts used by manuscript tokens."""
-    return {name: _load_json(root / rel_path) for name, rel_path in VARIABLE_ARTIFACTS.items()}
+    return {name: load_json(root / rel_path) for name, rel_path in VARIABLE_ARTIFACTS.items()}
 
 
 def _core_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
@@ -582,8 +518,8 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
         raise FileNotFoundError(f"missing analysis artifact: {sweep_path}")
 
     sweep_rows = read_parameter_sweep(sweep_path)
-    si_data = _load_json(si_summary)
-    stats_data = _load_json(stats_path)
+    si_data = load_json(si_summary)
+    stats_data = load_json(stats_path)
     artifacts = _load_variable_artifacts(root)
     policy_data = artifacts["policy"]
     posterior_data = artifacts["posterior"]
@@ -645,7 +581,72 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     from manuscript.sheaf.counts import structural_counts
 
     counts = structural_counts(root)
-    context = locals()
+    context = {
+        "root": root,
+        "hp": hp,
+        "pymdp_cfg": pymdp_cfg,
+        "sweep_rows": sweep_rows,
+        "inv_passed": inv_passed,
+        "inv_total": inv_total,
+        "sweep_stats": sweep_stats,
+        "si_data": si_data,
+        "stats_data": stats_data,
+        "si_stats": si_stats,
+        "mean_entropy": mean_entropy,
+        "policy_summary": policy_summary,
+        "policy_goal_by_mode": policy_goal_by_mode,
+        "counts": counts,
+        "posterior_data": posterior_data,
+        "runtime_data": runtime_data,
+        "graph_data": graph_data,
+        "graph_topology_traces": graph_topology_traces,
+        "provenance_data": provenance_data,
+        "replay_data": replay_data,
+        "counterexample_data": counterexample_data,
+        "sensitivity_data": sensitivity_data,
+        "uncertainty_data": uncertainty_data,
+        "benchmark_data": benchmark_data,
+        "model_checking_data": model_checking_data,
+        "lean_graph_data": lean_graph_data,
+        "interop_data": interop_data,
+        "adversarial_data": adversarial_data,
+        "semantic_data": semantic_data,
+        "dependency_data": dependency_data,
+        "stale_data": stale_data,
+        "manuscript_staleness_data": manuscript_staleness_data,
+        "figure_source_data": figure_source_data,
+        "visualization_quality_data": visualization_quality_data,
+        "statistical_bridge_data": statistical_bridge_data,
+        "scope_data": scope_data,
+        "gate_index_data": gate_index_data,
+        "section_status_data": section_status_data,
+        "render_log_data": render_log_data,
+        "claim_audit_data": claim_audit_data,
+        "token_provenance_data": token_provenance_data,
+        "cross_symbol_data": cross_symbol_data,
+        "assumption_data": assumption_data,
+        "animation_delta_data": animation_delta_data,
+        "replay_matrix_data": replay_matrix_data,
+        "track_lane_data": track_lane_data,
+        "artifact_contract_data": artifact_contract_data,
+        "track_scope_data": track_scope_data,
+        "blocked_scope_data": blocked_scope_data,
+        "evidence_fields_data": evidence_fields_data,
+        "release_bundle_data": release_bundle_data,
+        "theorem_traceability_data": theorem_traceability_data,
+        "artifact_diffoscope_data": artifact_diffoscope_data,
+        "proof_extraction_data": proof_extraction_data,
+        "state_space_catalog_data": state_space_catalog_data,
+        "causal_ablation_data": causal_ablation_data,
+        "artifact_license_data": artifact_license_data,
+        "release_notes_data": release_notes_data,
+        "scholarship_data": scholarship_data,
+        "security_posture_data": security_posture_data,
+        "proof_dependency_data": proof_dependency_data,
+        "state_transition_data": state_transition_data,
+        "ablation_sensitivity_data": ablation_sensitivity_data,
+        "release_attestation_data": release_attestation_data,
+    }
     variables: dict[str, Any] = {}
     for build_tokens in VARIABLE_TOKEN_BUILDERS:
         variables.update(build_tokens(context))

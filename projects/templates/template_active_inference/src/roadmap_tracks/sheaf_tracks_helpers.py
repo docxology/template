@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -87,19 +86,9 @@ def _remove_legacy_artifacts(root: Path) -> None:
 
 
 def _refresh_hydrated_manuscript(root: Path) -> None:
-    """Refresh hydrated manuscript copies so semantic staleness gates converge."""
-    from manuscript.hydrate import write_resolved_manuscript
-    from manuscript.sheaf import compose_all_sections
-    from manuscript.variables import generate_variables
-    from roadmap_tracks.integration_audit import write_manuscript_staleness_report
+    from manuscript.refresh import ManuscriptRefreshPhase, refresh_manuscript_pipeline
 
-    variables_path = root / "output" / "data" / "manuscript_variables.json"
-    variables_path.parent.mkdir(parents=True, exist_ok=True)
-    compose_all_sections(root)
-    variables = generate_variables(root, require_analysis_outputs=False)
-    variables_path.write_text(json.dumps(variables, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    write_resolved_manuscript(root, variables)
-    write_manuscript_staleness_report(root)
+    refresh_manuscript_pipeline(root, require_analysis_outputs=False, phase=ManuscriptRefreshPhase.POST_COMPOSE)
 
 
 def _canonical_artifact_rows(root: Path, context: _ProvenanceContext | None = None) -> list[dict[str, Any]]:

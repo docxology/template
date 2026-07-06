@@ -3,15 +3,11 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
-from typing import Any, cast
+from typing import cast
 
 
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
+from json_io import write_json as _write_json
 
 
 def _sha256(path: Path) -> str:
@@ -31,26 +27,12 @@ def _refresh_animation_outputs(root: Path) -> dict[str, Path]:
 
 
 def _refresh_hydrated_manuscript(root: Path, *, require_analysis_outputs: bool) -> dict[str, Path]:
-    from manuscript.hydrate import write_resolved_manuscript
-    from manuscript.sheaf import compose_all_sections
-    from manuscript.variables import generate_variables
-    from roadmap_tracks.integration_audit import write_manuscript_staleness_report
+    from manuscript.refresh import settle_manuscript_artifacts
 
-    data_dir = root / "output" / "data"
-    variables_path = data_dir / "manuscript_variables.json"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    variables = generate_variables(root, require_analysis_outputs=require_analysis_outputs)
-    variables_path.write_text(json.dumps(variables, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    compose_all_sections(root)
-    variables = generate_variables(root, require_analysis_outputs=require_analysis_outputs)
-    variables_path.write_text(json.dumps(variables, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    resolved_dir = write_resolved_manuscript(root, variables)
-    staleness_path = write_manuscript_staleness_report(root)
-    return {
-        "variables": variables_path,
-        "resolved_manuscript": resolved_dir,
-        "staleness": staleness_path,
-    }
+    return cast(
+        dict[str, Path],
+        settle_manuscript_artifacts(root, require_analysis_outputs=require_analysis_outputs),
+    )
 
 
 def _write_semantic_core(root: Path) -> dict[str, Path]:
