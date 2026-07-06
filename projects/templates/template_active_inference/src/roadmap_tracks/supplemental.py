@@ -14,28 +14,15 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from json_io import load_json as _load_json
+from json_io import write_json as _write_json
+
 SUPPLEMENTAL_ARTIFACTS: dict[str, str] = {
     "proof_dependency_graph": "output/data/proof_dependency_graph.json",
     "state_transition_table": "output/data/state_transition_table.json",
     "ablation_sensitivity_report": "output/reports/ablation_sensitivity_report.json",
     "release_attestation": "output/reports/release_attestation.json",
 }
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    try:
-        data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
-        return {}
-    return data if isinstance(data, dict) else {}
-
-
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
 
 
 def _sha256(path: Path) -> str:

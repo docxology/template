@@ -23,9 +23,21 @@ private data, or nondeterministic research behavior.
 
 ## Modules
 
-- `toy_sweep.py` - finite toy sweeps, uncertainty summaries, benchmark matrices,
-  policy grids, graph-world invariants, state-space catalogs, causal-ablation
-  matrices, and deterministic figure/hash reports.
+- `toy_sweep.py` - facade over the split modules below: keeps
+  `write_toy_sweep_artifacts` / `validate_toy_sweep_artifacts` and re-exports the
+  builders, helpers, and schema constants so existing
+  `from roadmap_tracks.toy_sweep import ...` imports stay stable.
+- `toy_sweep_types.py` - schema constants and tolerances (`TOY_SWEEP_SCHEMA`,
+  `ASSUMPTION_INDEX_SCHEMA`, `EXPECTED_ASSUMPTION_EQUATIONS`,
+  `OBSERVABLE_RESIDUAL_TOLERANCE`).
+- `toy_sweep_helpers.py` - closed-form observable helpers
+  (`_same_state_probability`, `_posterior_correlation`, `_joint_entropy`,
+  `_marginal_entropy`) over `analytical.bernoulli_toy`.
+- `toy_sweep_builders.py` - deterministic `build_*` builders
+  (`build_analytical_observable_sweep` through `build_causal_ablation_matrix`)
+  for finite toy sweeps, uncertainty summaries, benchmark matrices, policy grids,
+  graph-world topology sweeps/traces/invariants, state-space catalogs, and
+  causal-ablation matrices; reads JSON via `from json_io import load_json`.
 - `formal_interop.py` - GNN, ontology, Lean, model-checking, and interop
   witness artifacts plus proof extraction.
 - `integration_audit.py` - validation dependency graph, producer completeness,

@@ -9,13 +9,14 @@ imports continue to resolve unchanged.
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from json_io import load_json as _load_json
+from json_io import write_json as _write_json  # noqa: F401  (re-exported for integration_audit)
 from roadmap_tracks.row_aggregates import all_rows
 
 TOKEN_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.[0-9]+f)?\}\}")
@@ -23,19 +24,6 @@ TOKEN_MATCH_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.(\d+)f)?\}\}")
 SELF_PRODUCER = "generate_integration_audit.py"
 LATE_HYDRATION_PRODUCER = "z_generate_manuscript_variables.py"
 SHEAF_TRACK_PRODUCER = "generate_sheaf_tracks.py"
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    return data
-
-
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
 
 
 def _sha256(path: Path) -> str:

@@ -7,6 +7,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from json_io import write_json as _write_json
+
 SECURITY_POSTURE_SCHEMA = "template_active_inference.security_posture_audit.v1"
 
 SOURCE_SENTINEL = "project_source_tree"
@@ -187,12 +189,6 @@ SECURITY_CONTROLS: tuple[dict[str, Any], ...] = (
         "mitigation": "production use must add identity, device posture, workload identity, logging, and IR gates",
     },
 )
-
-
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
 
 
 def _scan_paths(root: Path) -> list[Path]:

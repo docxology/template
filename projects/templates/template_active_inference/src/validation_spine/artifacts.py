@@ -16,6 +16,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from json_io import load_json_strict as _load_json
+
 CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/parameter_sweep.csv": "run_analytical_sweep.py",
     "output/data/si_tmaze_summary.json": "simulate_si_tmaze.py",
@@ -87,13 +89,6 @@ def _file_fingerprint(path: Path) -> tuple[bool, int, str]:
     if not sha256:
         return False, 0, ""
     return True, metadata.st_size, sha256
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    return data
 
 
 def _configured_analysis_scripts(root: Path) -> list[str]:

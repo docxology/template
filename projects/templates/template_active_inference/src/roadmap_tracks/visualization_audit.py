@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-import json
 import re
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+from json_io import load_json as _load_json
+from json_io import write_json as _write_json
 
 from .integration_audit_artifacts import ALLOWED_CLAIM_LANES
 from .visualization_contract import build_auxiliary_visualization_inventory, build_style_contract
@@ -39,19 +41,6 @@ STATISTICAL_SOURCE_ARTIFACTS = {
     "output/reports/si_invariants.json",
     "output/reports/pymdp_runtime_diagnostics.json",
 }
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    return data
-
-
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
 
 
 def _word_count(text: str) -> int:

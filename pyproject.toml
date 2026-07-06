@@ -355,8 +355,33 @@ ignore_errors = true
 module = "projects.template_prose_project.*"
 ignore_errors = true
 
+# template_active_inference lives under projects/templates/ and uses a src/
+# layout with top-level imports (conftest puts src/ on sys.path). With
+# explicit_package_bases, mypy resolves its modules under the project namespace
+# *and* as flat top-level names, so both forms are relaxed here. The old
+# `projects.template_active_inference.*` string never matched the real
+# projects/templates/ path. Mirrors the template_literature_meta_analysis and
+# template_search_project pattern (only infrastructure is held type-strict).
 [[tool.mypy.overrides]]
-module = "projects.template_active_inference.*"
+module = [
+    "projects.template_active_inference.*",
+    "projects.templates.template_active_inference.*",
+    "analysis.*",
+    "analytical.*",
+    "contracts.*",
+    "gates.*",
+    "gnn.*",
+    "invariants.*",
+    "json_io",
+    "json_io.*",
+    "manuscript.*",
+    "ontology.*",
+    "orchestration.*",
+    "roadmap_tracks.*",
+    "simulation.*",
+    "validation_spine.*",
+    "visualizations.*",
+]
 ignore_errors = true
 
 # template_literature_meta_analysis uses a src/ layout with top-level imports

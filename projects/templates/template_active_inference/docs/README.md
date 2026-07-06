@@ -20,6 +20,8 @@ and adversarial audit) composed into a sheaf manuscript.
   hashes, section bindings, and per-figure claim lanes in
   `output/data/figure_source_map.json` and
   `output/reports/visualization_quality_audit.json`.
+- `thermo-nuclear-code-quality-review.md` — completed maintainability backlog
+  (shared JSON I/O helpers, test-speed ergonomics, mypy override correction).
 - See the project root `README.md` for the overview and `AGENTS.md` for agent
   guidance; per-directory `README.md`/`AGENTS.md` pairs document each component.
 

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -11,21 +10,12 @@ from ontology.bindings import (
     load_section_ontology,
 )
 
+from json_io import load_json_strict as _load_json
 from manuscript.sheaf.semantic_maps import SEMANTIC_RESTRICTION_LANES
 
 
 def _rel(root: Path, path: Path) -> str:
     return path.resolve().relative_to(root).as_posix()
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    try:
-        data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"malformed JSON artifact: {path}") from exc
-    return data
 
 
 def _configured_analysis_scripts(root: Path) -> list[str]:

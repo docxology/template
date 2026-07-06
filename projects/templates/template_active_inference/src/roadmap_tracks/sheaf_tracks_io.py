@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import json
 import subprocess
 from functools import lru_cache
 from pathlib import Path
@@ -12,15 +11,11 @@ from typing import Any
 
 import yaml
 
-
-def _load_json(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    try:
-        data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        return {}
-    return data
+# Re-exported for the sheaf-track builder modules that import ``_load_json`` /
+# ``_write_json`` from this module; the canonical implementations live in
+# ``json_io`` so read/write behaviour stays identical across the package.
+from json_io import load_json as _load_json
+from json_io import write_json as _write_json  # noqa: F401  (re-exported for sheaf_tracks_write)
 
 
 @lru_cache(maxsize=256)
@@ -59,12 +54,6 @@ def _bridge_reference_section_status(row: dict[str, Any]) -> tuple[bool, bool]:
         "visualization" in set(bindings.get(section) or []) for section in sections
     )
     return sheaf_bound, visualization_bound
-
-
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
 
 
 def _sha256(path: Path) -> str:

@@ -51,6 +51,34 @@ The composer *performs* gluing; `laws.py` *verifies the axioms it assumes*, turn
 
 `emit_coverage_artifacts` writes `output/data/sheaf_coverage_matrix.json` only. Heatmap PNG and coverage page come from `ensure_coverage_artifacts` during `generate_all_figures` (or CLI `--coverage-heatmap`). Sheaf figure implementation: [`../../visualizations/figures_sheaf.py`](../../visualizations/figures_sheaf.py).
 
+## Semantic gluing modules
+
+The semantic gluing certificate — cross-track disagreement checks the structural
+sheaf laws do not cover, plus the JSON certificate and its writers/validators —
+is split into focused modules. `semantic.py` is the public entrypoint;
+`semantic_core.py` is a backward-compatible facade re-exporting the same names so
+existing `from manuscript.sheaf.semantic_core import X` imports keep working.
+
+| Module | Public API | Depends on (intra-package) |
+| --- | --- | --- |
+| `semantic_maps.py` | `SEMANTIC_SCHEMA`, `SEMANTIC_RESTRICTION_LANES`, `ARTIFACT_PRODUCERS`, `ARTIFACT_GATES`, `ARTIFACT_CONSUMERS` | — (leaf constants) |
+| `semantic_restrictions.py` | `_load_json`, `_configured_analysis_scripts`, `_gnn_symbols`, `_lean_status`, `_policy_comparison_restrictions`, `_policy_posterior_restrictions`, `_runtime_diagnostics_restrictions`, `_graph_world_restrictions`, `_pymdp_hash_restrictions`, `_animation_frame_count`, `_restriction_lane_assignments`, `_restriction_lane_summaries`, `_proof_obligation_rows`, `_expected_symbol_gaps`, `_section_ontology_symbols` | `semantic_maps` |
+| `semantic_evidence.py` | `build_evidence_crosswalk`, `build_validation_dependency_graph`, `validate_configured_artifact_producers`, `SEMANTIC_ARTIFACT_SOURCE_PATHS`, `SEMANTIC_PAYLOAD_PATHS`, `_section_records`, `_claim_records`, `_semantic_artifact_sources`, `_semantic_payloads`, `_semantic_track_rows`, `_semantic_shared_symbols`, `_canonical_restriction_snapshot` | `coverage`, `semantic_maps`, `semantic_restrictions` |
+| `semantic_issues.py` | `semantic_gluing_issues(project_root) -> list[str]` | `coverage`, `semantic_evidence`, `semantic_restrictions` |
+| `semantic_refresh.py` | `_refresh_hydrated_manuscript`, `_refresh_artifact_contract_outputs`, `_refresh_animation_outputs` | — (late imports only) |
+| `semantic_certificate.py` | `build_semantic_gluing_certificate`, `write_semantic_gluing_certificate` | `coverage`, `semantic_evidence`, `semantic_issues`, `semantic_maps`, `semantic_refresh`, `semantic_restrictions` |
+| `semantic_gluing_outputs.py` | `write_semantic_gluing_outputs`, `validate_semantic_gluing`, `_stable_artifact_graph`, `_stable_certificate_fields`, `_semantic_lane_summary_issues` | `semantic_certificate`, `semantic_evidence`, `semantic_issues`, `semantic_maps`, `semantic_refresh`, `semantic_restrictions` |
+| `semantic_core.py` | facade re-exporting the public surface above | `semantic_certificate`, `semantic_evidence`, `semantic_gluing_outputs`, `semantic_issues` |
+| `semantic.py` | public entrypoint (`__all__` for the sheaf package) | `semantic_core`, `semantic_maps` |
+
+Cross-module imports sit at the top of each file. Late (in-function) imports are
+used only to break genuine cycles with `roadmap_tracks.*`, `validation_spine`,
+`gates.*`, `visualizations.animation`, `manuscript.refresh`, and
+`manuscript.sheaf.status`, matching the pre-split behavior. `_semantic_payloads`
+reads payloads through `json_io.load_json` (missing/invalid → `{}`), while
+`semantic_issues` / `validate_semantic_gluing` keep `semantic_restrictions._load_json`
+(fail-closed on malformed JSON) for the inputs they gate on.
+
 ## Commands
 
 ```bash

@@ -9,6 +9,8 @@ from typing import Any
 
 import yaml
 
+from json_io import write_json as _write_json
+
 SCHOLARSHIP_SCHEMA = "template_active_inference.scholarship_source_matrix.v1"
 
 EXPECTED_SCHOLARSHIP_KEYS: tuple[str, ...] = (
@@ -249,12 +251,6 @@ def _load_yaml(path: Path) -> dict[str, Any]:
         return {}
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     return data if isinstance(data, dict) else {}
-
-
-def _write_json(path: Path, payload: dict[str, Any]) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
 
 
 def _bib_entries(root: Path) -> dict[str, str]:

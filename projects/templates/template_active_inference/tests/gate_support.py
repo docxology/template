@@ -42,10 +42,7 @@ _BOOTSTRAPPED_SIGNATURES: dict[Path, str] = {}
 _ALLOW_GATE_REBUILD_ENV = "TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD"
 
 from contracts.artifact_contract import REQUIRED_GATE_ARTIFACTS as _REQUIRED_GATE_ARTIFACTS
-
-
-def _write_json(path: Path, payload: dict) -> None:
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+from json_io import write_json
 
 
 def _required_gate_artifacts_signature(project_root: Path) -> str | None:
@@ -128,7 +125,7 @@ def temporary_json_mutation(path: Path, mutate: Callable[[dict], None]) -> Itera
     original = path.read_text(encoding="utf-8")
     payload = json.loads(original)
     mutate(payload)
-    _write_json(path, payload)
+    write_json(path, payload)
     try:
         yield payload
     finally:

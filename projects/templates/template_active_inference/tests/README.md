@@ -29,6 +29,35 @@ computations and fixed seeds rather than mocks.
 - `test_support_modules.py`, `gates/` — `validate_manuscript` /
   `validate_outputs` / `build_lean` gates and negatives.
 
+## Fast iteration
+
+Install the dev extras (adds `pytest-xdist` for parallelism) once:
+
+```bash
+uv sync --extra dev
+```
+
+Skip the heavy end-to-end gate families while iterating on a change:
+
+```bash
+uv run pytest tests/ -m "not long_running" -q
+```
+
+Analytical-track modules hold no shared project state, so they are safe to run
+in parallel in isolation:
+
+```bash
+uv run pytest tests/test_free_energy.py tests/test_bernoulli_toy.py \
+  tests/test_decomposition.py tests/test_joint_dist.py -n auto -q
+```
+
+Do **not** run the generated-artifact gates (`tests/gates/`,
+`test_roadmap_promotion.py`, `test_track_consolidation_*.py`,
+`test_simulation_invariants.py`) under `-n auto`: they mutate and restore shared
+`manuscript/` and `output/` files, so parallel workers race on the same paths.
+Run those serially (the default), then use `-n auto` only for the analytical and
+other state-free modules above.
+
 ## Slow full-suite gates
 
 The 2026-06-12 full run
