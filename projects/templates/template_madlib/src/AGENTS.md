@@ -6,12 +6,19 @@ The `src/` package is the project-local generation engine. Keep it free of `infr
 | --- | --- |
 | `config.py` | Validate `manuscript/config.yaml` `madlib:` settings, including expanded manuscript-structure, design-principle, phase, evaluation, QA-probe, failure-mode, authoring-obligation, cover/visualization, and explicit/default-origin controls. |
 | `tokens.py` | Expand slot declarations into deterministic token choices. |
-| `composition.py` | Build conditional manuscript section bodies, Markdown evidence tables, and figure Markdown groups. |
-| `analysis.py` | Thin orchestrator: `generate_artifacts` loads config, builds the token plan, and delegates to `analysis_fields`/`analysis_figures`/`analysis_reports`, returning the artifact-path map. |
-| `analysis_fields.py` | Build the configured-field inventory and explicit/default origin counts from config plus token plan. |
-| `analysis_figures.py` | Write the nine figure PNGs (cover overview plus eight interior figures) and the `figure_registry.json` entries. |
-| `analysis_reports.py` | Write the JSON data artifacts and the Markdown summary/configured-field reports. |
-| `manuscript_variables.py` | Emit the flat `{{TOKEN}}` map consumed by manuscript injection. |
+| `run.py` | `MadlibRun` session plus `build_run()` — single load of config, token plan, sections, and field inventory for artifact and variable generation. |
+| `composition.py` | Thin re-export facade over the split composition modules (stable import surface for tests and callers). |
+| `composition_helpers.py` | Shared prose helpers, disabled-section bodies, figure markdown fragments. |
+| `composition_tables.py` | Markdown evidence tables (protocol, phases, probes, audit, fields, tokens, …). |
+| `composition_sections.py` | Conditional IMRAD section bodies and section title variables. |
+| `composition_figures.py` | Figure-group markdown for Methods, Results, Configuration, and Evaluation sections. |
+| `figure_specs.py` | Declarative conditional figure registry; drives PNG writes and markdown groups from config. |
+| `markdown_tables.py` | `artifact_markdown_tables()` for report-oriented table bundles (used by variables path). |
+| `analysis.py` | Orchestrates `build_run()`, writes JSON/report/figure artifacts, returns artifact path map. Public export: `generate_artifacts` only. |
+| `analysis_fields.py` | Configured-field inventory and explicit/default origin counts. |
+| `analysis_figures.py` | Cover and interior figure PNG writers plus figure registry rows. |
+| `analysis_reports.py` | JSON data artifacts and Markdown summary/configured-field reports. |
+| `manuscript_variables.py` | Flat `{{TOKEN}}` map via `build_run()` and `markdown_tables` (no import from `analysis`). |
 
 Add tests for every schema or generation change before changing manuscript shells. Keep prose composition deterministic and sourced from config, token plan, or generated artifact state.
 

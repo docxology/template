@@ -33,10 +33,9 @@ uv run python scripts/05_copy_outputs.py --project templates/template_madlib
 
 ## Pitfalls
 
-- **Keep scripts thin.** Business logic belongs in `src/` or shared
-  `infrastructure/`, not in `scripts/`.
-- **No mocks.** All tests must use real data, real files, and real
-  computation.
+- **Keep scripts thin.** Business logic belongs in `src/` modules (`run.py`, `composition_*`, `figure_specs`, `analysis_*`), not in `scripts/`.
+- **Import surface.** Prefer `composition.py` re-exports in tests; edit split modules for body/table/figure changes.
+- **No mocks.** All tests must use real data, real files, and real computation.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
 - **Run from the repo root.** Commands assume the template monorepo root

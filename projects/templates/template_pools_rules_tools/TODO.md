@@ -12,8 +12,8 @@ Forward-only backlog for the pools/rules/tools integration exemplar.
 
 ## Integrity and template-status gaps
 
-- [ ] Verify test coverage ≥ 90% on `src/` (`uv run pytest --cov=src --cov-fail-under=90`)
-- [ ] Confirm all `pytest.mark.skipif` guards have accurate file-path checks
+- [x] Verify test coverage ≥ 90% on `src/` (`uv run pytest --cov=src --cov-fail-under=90`)
+- [x] Confirm all `pytest.mark.skipif` guards have accurate file-path checks
 
 ## Configurable-surface gaps
 
@@ -21,7 +21,7 @@ Forward-only backlog for the pools/rules/tools integration exemplar.
 
 ## Documentation and signposting gaps
 
-- [ ] Add `.agents/skills/template-pools-rules-tools/SKILL.md` Hermes skill
+- [x] Add `.agents/skills/template-pools-rules-tools/SKILL.md` Hermes skill
 
 ## Test and validator gaps
 

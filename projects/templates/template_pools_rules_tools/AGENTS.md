@@ -80,3 +80,10 @@ them). All `src/` functions use graceful fallbacks:
 - `rules/AGENTS.md` — rule conventions
 - `tools/AGENTS.md` — tool conventions
 - `projects/AGENTS.md` — project lifecycle rules
+
+## Agent skill
+
+A Hermes/agentskills.io-compatible skill for this exemplar lives at
+[`.agents/skills/template-pools-rules-tools/SKILL.md`](.agents/skills/template-pools-rules-tools/SKILL.md).
+Load it when working inside this template to get when-to-use guidance,
+quick reference commands, and pitfalls.
