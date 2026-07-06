@@ -9,7 +9,7 @@ same forkability contract as the older exemplars.
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_madlib/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90`
 - Generated artifacts come from `scripts/01_generate_madlib_artifacts.py` and `scripts/z_generate_manuscript_variables.py`.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Publication evidence: standalone GitHub repository `docxology/template_madlib`, concept DOI `10.5281/zenodo.20786638`, and version DOI `10.5281/zenodo.20932025`.
 - **Coverage: 99.93% (146 tests)** as of the package-import refactor. All branches in `config.py`, composition modules, `tokens.py`, `analysis*.py`, `artifact_writers.py`, `manuscript_variables.py`, and `__init__.py` are covered.
 

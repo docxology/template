@@ -100,7 +100,7 @@ Diagrams above are selective. These packages also exist under `infrastructure/` 
 ```mermaid
 flowchart TD
     subgraph "📋 Project Scripts"
-        ANALYSIS[scripts/02_run_analysis.py<br/>Data processing & figures]
+        ANALYSIS[scripts/pipeline/stage_02_analysis.py<br/>Data processing & figures]
         FIGURES["projects/{name}/scripts/<analysis>.py<br/>Thin orchestrators"]
     end
 

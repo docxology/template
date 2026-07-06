@@ -505,10 +505,10 @@ print('projects/templates/template_code_project/output/data/analysis_data.csv')
 
 ### Understanding the Build Pipeline
 
-The pipeline orchestrator (`scripts/execute_pipeline.py`) orchestrates everything:
+The pipeline orchestrator (`scripts/runner/execute_pipeline.py`) orchestrates everything:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 **What happens**:
@@ -565,7 +565,7 @@ uv run pytest projects/templates/template_code_project/tests/test_my_module.py -
 vim projects/templates/template_code_project/scripts/my_figure.py
 
 # 5. Run build
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # 6. View result (top-level output after copy outputs)
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf
@@ -575,14 +575,14 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 
 ```bash
 # 1. Full rebuild with validation (recommended — core pipeline, eight stages with --core-only)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
-# uv run python scripts/execute_pipeline.py --project {name} --core-only
+# uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 # uv run python scripts/pipeline/stage_04_validate.py
 ```
 

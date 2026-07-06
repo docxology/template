@@ -91,8 +91,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_literature_meta_analysis --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_literature_meta_analysis
-uv run python scripts/05_copy_outputs.py --project templates/template_literature_meta_analysis
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_literature_meta_analysis
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_literature_meta_analysis
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -127,7 +127,7 @@ configure the optional full-text and embedding stages.
 
 The pipeline writes all artifacts under `output/` (corpus JSONL, analysis JSON,
 figures, rendered manuscript) — everything there is disposable and regenerable. The
-**validate** stage (`scripts/04_validate_output.py` / stage 04) checks the rendered
+**validate** stage (`scripts/pipeline/stage_04_validate.py` / stage 04) checks the rendered
 output, and the project test suite plus the ≥90 % coverage gate validate `src/`
 before any figures or manuscript numbers are trusted.
 

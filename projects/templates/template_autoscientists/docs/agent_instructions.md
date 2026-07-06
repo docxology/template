@@ -16,4 +16,4 @@
 1. Edit coordination logic in `src/coordination/`.
 2. Regenerate ablation results: `uv run python scripts/run_ablation.py`.
 3. Verify: `uv run pytest tests/ --cov=src --cov-fail-under=90`.
-4. Regenerate outputs: `uv run python scripts/02_run_analysis.py --project templates/template_autoscientists`.
+4. Regenerate outputs: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_autoscientists`.

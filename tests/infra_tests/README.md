@@ -5,8 +5,8 @@ Infrastructure tests cover the reusable modules under `infrastructure/`. They us
 ## Coverage
 
 ```bash
-uv run python scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke
-uv run python scripts/01_run_tests.py --infra-only --infra-scope full
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html --cov-fail-under=60
 uv run pytest tests/infra_tests/ -m "not requires_ollama"
 ```

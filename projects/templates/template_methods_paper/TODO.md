@@ -7,7 +7,7 @@ ideas.
 ## Current validation evidence
 
 - Project tests and coverage: `uv run pytest template_methods_paper/tests --cov=template_methods_paper/src --cov-fail-under=90`
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Code quality: `uv run ruff check template_methods_paper/src/` and `uv run mypy template_methods_paper/src/` must both pass clean.
 - Determinism: `tests/test_compiler.py::test_compile_method_is_deterministic` recompiles the same `Method` five times and asserts a single `plan_hash`.
 - Coverage floor: ≥90% on `src/`; live test count and achieved coverage are tracked in `docs/_generated/COUNTS.md` (not hardcoded here).

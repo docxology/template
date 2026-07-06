@@ -15,16 +15,16 @@ For contribution workflow, see [`CONTRIBUTING.md`](CONTRIBUTING.md). For per-sub
 | Subsystem | Path / entry | Owner | Notes |
 | --- | --- | --- | --- |
 | Pipeline orchestration | `infrastructure/orchestration/`, `./run.sh`, `./secure_run.sh` | Daniel | Default DAG, secure subcommand, multi-project modes |
-| Test runner & CI gates | `scripts/01_run_tests.py`, `tests/infra_tests/`, `.github/workflows/ci.yml` | Daniel | Coverage floors, no-mocks policy, public scope |
+| Test runner & CI gates | `scripts/pipeline/stage_01_test.py`, `tests/infra_tests/`, `.github/workflows/ci.yml` | Daniel | Coverage floors, no-mocks policy, public scope |
 | PDF / multi-format rendering | `infrastructure/rendering/` | Daniel | Combined PDF, slides, HTML, DOCX, EPUB |
 | Output validation | `infrastructure/validation/` | Daniel | Markdown, PDF, prerender, evidence registry |
-| Publishing & Zenodo | `infrastructure/publishing/`, `scripts/publish_project_release.py` | Daniel | Split concept/version DOI layout — [`docs/guides/zenodo-doi-strategy.md`](docs/guides/zenodo-doi-strategy.md) |
+| Publishing & Zenodo | `infrastructure/publishing/`, `scripts/publish/publish_project_release.py` | Daniel | Split concept/version DOI layout — [`docs/guides/zenodo-doi-strategy.md`](docs/guides/zenodo-doi-strategy.md) |
 | Steganography | `infrastructure/steganography/`, `./secure_run.sh` | Daniel | Post-render PDF hardening |
 | LLM stages (optional) | `infrastructure/llm/`, Stages 7–8 | Daniel | Local Ollama draft assistance |
-| Project discovery & confidentiality | `infrastructure/project/`, `scripts/check_tracked_projects.py` | Daniel | Public exemplars only in git; private lifecycle repo |
-| Template drift & exemplar contracts | `infrastructure/project/drift/`, `scripts/check_template_drift.py` | Daniel | `PUBLIC_PROJECT_NAMES` alignment |
+| Project discovery & confidentiality | `infrastructure/project/`, `scripts/audit/check_tracked_projects.py` | Daniel | Public exemplars only in git; private lifecycle repo |
+| Template drift & exemplar contracts | `infrastructure/project/drift/`, `scripts/audit/check_template_drift.py` | Daniel | `PUBLIC_PROJECT_NAMES` alignment |
 | Regression / claim-binding tests | `tests/regression/` | Daniel | Scaffold — see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md) |
-| Generated facts & doc index | `docs/_generated/`, `scripts/generate_active_projects_doc.py`, `scripts/lint_docs.py` | Daniel | Do not hand-edit scripted outputs except maintained snapshots noted in [`docs/_generated/README.md`](docs/_generated/README.md) |
+| Generated facts & doc index | `docs/_generated/`, `scripts/docgen/active_projects.py`, `scripts/audit/lint_docs.py` | Daniel | Do not hand-edit scripted outputs except maintained snapshots noted in [`docs/_generated/README.md`](docs/_generated/README.md) |
 | Public exemplar projects | `projects/templates/template_*` | Daniel | Tracked exemplars — roster in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) and [`projects/AGENTS.md`](projects/AGENTS.md) |
 
 ## Escalation

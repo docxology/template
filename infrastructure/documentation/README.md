@@ -210,7 +210,7 @@ for md_path, errors in validation_results.items():
 | **markdown_integration.py** | Section-aware figure placement | `MarkdownIntegration` | Manuscript structure management |
 | **glossary_gen.py** | API documentation from source | `build_api_index()`, `generate_markdown_table()` | Automatic glossary generation |
 | **generate_glossary_cli.py** | CLI for glossary generation | `main()` | Pipeline integration script |
-| **architecture_overview.py** | One-page architecture diagram from live repo state | `build_architecture_mermaid()`, `render_architecture_svg()` | Driven by `scripts/generate_architecture_overview.py` |
+| **architecture_overview.py** | One-page architecture diagram from live repo state | `build_architecture_mermaid()`, `render_architecture_svg()` | Driven by `scripts/docgen/architecture_overview.py` |
 | **active_projects_doc.py** | Render the authoritative public active-projects doc | `render_active_projects_doc()`, `write_active_projects_doc()` | Generates `docs/_generated/active_projects.md` |
 | **publication_records.py** | Load/render project publication metadata (DOIs, archives) | `PublicationRecord`, `load_publication_records()`, `render_publication_records_doc()`, `refresh_external_records()` | Publication doc + GitHub README block |
 
@@ -413,13 +413,13 @@ uv run python infrastructure/documentation/generate_glossary_cli.py
 The documentation module integrates with the build pipeline:
 
 ```bash
-# scripts/02_run_analysis.py - Figure generation and registration
-uv run python scripts/02_run_analysis.py --project project
+# scripts/pipeline/stage_02_analysis.py - Figure generation and registration
+uv run python scripts/pipeline/stage_02_analysis.py --project project
 # - Runs project figure generation scripts
 # - Registers generated figures automatically
 
-# scripts/03_render_pdf.py - Documentation generation
-uv run python scripts/03_render_pdf.py --project project
+# scripts/pipeline/stage_03_render.py - Documentation generation
+uv run python scripts/pipeline/stage_03_render.py --project project
 # - Generates API glossary
 # - Updates manuscript with current documentation
 ```
@@ -666,7 +666,7 @@ For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.m
 - `stage_table.inject_stage_table(md_path, table)` - Replace the block
   between `<!-- BEGIN:STAGE_TABLE -->` / `<!-- END:STAGE_TABLE -->`
   in a Markdown file (idempotent)
-- Driver: [`scripts/generate_stage_table_doc.py`](../../scripts/generate_stage_table_doc.py)
+- Driver: [`scripts/docgen/stage_table.py`](../../scripts/docgen/stage_table.py)
   updates `README.md`, `.github/README.md`, `scripts/AGENTS.md`,
   `docs/RUN_GUIDE.md`, and `docs/core/workflow.md` in lockstep
 
@@ -681,7 +681,7 @@ For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.m
 - `api_reference_gen.inject_api_reference(md_path, content)` - Replace
   the block between `<!-- BEGIN:API_REFERENCE -->` /
   `<!-- END:API_REFERENCE -->` (idempotent).
-- Driver: [`scripts/generate_api_reference_doc.py`](../../scripts/generate_api_reference_doc.py)
+- Driver: [`scripts/docgen/api_reference.py`](../../scripts/docgen/api_reference.py)
   with `--write` (apply) and `--check` (CI gate) flags. Target:
   [`docs/reference/api-reference.md`](../../docs/reference/api-reference.md).
   Drift fails the `validate` job in `.github/workflows/ci.yml`.

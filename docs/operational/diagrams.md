@@ -39,7 +39,7 @@ flowchart LR
     F --> H[Copy outputs]
 ```
 
-Use `./run.sh --pipeline` or `scripts/execute_pipeline.py`; `--core-only` skips LLM-tagged stages.
+Use `./run.sh --pipeline` or `scripts/runner/execute_pipeline.py`; `--core-only` skips LLM-tagged stages.
 
 ## Log rotation pipeline
 

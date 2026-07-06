@@ -17,7 +17,7 @@ interfaces.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_template \
   --dest projects/working/my_template_meta_project \
   --new-name my_template_meta_project

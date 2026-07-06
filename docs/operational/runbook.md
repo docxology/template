@@ -20,7 +20,7 @@ Run the pipeline help to confirm `uv`/Python resolve and the orchestrator CLI lo
 
 ```bash
 ./run.sh --help        # argparse usage: pipeline/multi/secure/menu/list-projects/link-projects/schema
-bash scripts/health-check.sh   # Python, uv, Ollama, disk space, repo structure — see Health Check Script below
+bash scripts/shell/health-check.sh   # Python, uv, Ollama, disk space, repo structure — see Health Check Script below
 ```
 
 **Expected output (`--help`):** argparse usage text listing the subcommands above; a non-zero exit or traceback means `uv`/Python/the orchestrator package is broken.
@@ -367,7 +367,7 @@ A one-liner to quickly verify system readiness:
 ./run.sh --help && echo "✅ OK" || echo "❌ FAIL"
 ```
 
-Or as a standalone check script `scripts/health-check.sh`:
+Or as a standalone check script `scripts/shell/health-check.sh`:
 
 ```bash
 #!/usr/bin/env bash
@@ -411,13 +411,13 @@ echo "=== All checks passed ==="
 Make it executable:
 
 ```bash
-chmod +x scripts/health-check.sh
+chmod +x scripts/shell/health-check.sh
 ```
 
 Integrate into CI or run manually before starting work:
 
 ```bash
-./scripts/health-check.sh
+./scripts/shell/health-check.sh
 ```
 
 ---

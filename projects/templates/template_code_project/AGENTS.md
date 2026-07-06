@@ -13,7 +13,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
 
-Enforced by `check_project_src_infrastructure_boundary` via `scripts/check_template_drift.py --strict` and `manuscript/layer_contract.yaml`.
+Enforced by `check_project_src_infrastructure_boundary` via `scripts/audit/check_template_drift.py --strict` and `manuscript/layer_contract.yaml`.
 
 ## Overview
 
@@ -44,7 +44,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Production publishing (`docxology/template_code_project`)
 
-Double publish (Zenodo + GitHub) via `scripts/publish_project_release.py`. Manuscript config enables transmission bookends, steganography profile documentation, and metadata-driven deposit filenames (`Author_2026_Convergence_{hash8}.pdf` — local working PDF remains `template_code_project_combined.pdf`).
+Double publish (Zenodo + GitHub) via `scripts/publish/publish_project_release.py`. Manuscript config enables transmission bookends, steganography profile documentation, and metadata-driven deposit filenames (`Author_2026_Convergence_{hash8}.pdf` — local working PDF remains `template_code_project_combined.pdf`).
 
 Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
 

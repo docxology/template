@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
-2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **14** stages including the opt-in ebook, metadata, bundle, and archival contracts.
+2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **14** stages including the opt-in ebook, metadata, bundle, and archival contracts.
 
 ## Thin Orchestration Architecture
 
@@ -172,7 +172,7 @@ preview link changes, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 ./run.sh --all-projects --pipeline
 
 # Alternative orchestrator (all projects)
-uv run python scripts/execute_multi_project.py
+uv run python scripts/runner/execute_multi_project.py
 ```
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
@@ -399,13 +399,13 @@ uv run python scripts/pipeline/stage_06_llm_review.py --translations-only   # LL
 ./run.sh --help
 ```
 
-## Entry Point 2: Python Orchestrator (`scripts/execute_pipeline.py`)
+## Entry Point 2: Python Orchestrator (`scripts/runner/execute_pipeline.py`)
 
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
 # Core pipeline (8 DAG stages in default pipeline.yaml — excludes LLM-tagged stages)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 **Features**:
@@ -414,14 +414,14 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 - No LLM-tagged stages (`06_llm_review.py` / `07_generate_executive_report.py` are not part of `--core-only`; `07` is for multi-project executive reporting)
 - No LLM dependencies required for `--core-only`
 - Suitable for automated environments
-- Checkpoint/resume support: `uv run python scripts/execute_pipeline.py --project {name} --core-only --resume`
+- Checkpoint/resume support: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --resume`
 
 ### Core Pipeline Stages + Executive Reporting
 
 The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
@@ -464,7 +464,7 @@ The table above lists pipeline-position indices (0-based, as the executor sees t
 | `./run.sh --pipeline` | Full DAG (**10** stages in default `pipeline.yaml`) | Optional | Manuscript pipeline with LLM stages present in the graph |
 | `./run.sh --secure-run` | Same as `./secure_run.sh` via argv shaping | Optional | Secure subcommand from the main thin shell |
 | `./secure_run.sh` | Full/core DAG + steganography | Optional | Dedicated secure entry; always `uv sync --group steganography` |
-| `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core DAG (**8** stages; LLM stages omitted) | None | Core pipeline, CI/CD automation |
+| `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` | Core DAG (**8** stages; LLM stages omitted) | None | Core pipeline, CI/CD automation |
 | `uv run python scripts/runner/run_matrix.py` | Exactly the (project, stage) pairs declared in `run.config` | Per stage | **Reproducible subset runs** across several projects |
 
 ## Entry Point 3: Reproducible Run Matrix (`scripts/runner/run_matrix.py`)
@@ -520,7 +520,7 @@ reference private `working/` projects); only `run.config.example.yaml` is tracke
 
 
 # Run core pipeline (Python)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Individual Stage Execution

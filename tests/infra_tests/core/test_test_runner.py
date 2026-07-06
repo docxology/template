@@ -250,7 +250,7 @@ def test_default_fail_under_constant_matches_repo_threshold() -> None:
 def test_stage01_public_projects_flag_is_documented_in_help() -> None:
     """The Stage 01 CLI exposes public-scope all-projects validation."""
     proc = subprocess.run(  # noqa: S603
-        [sys.executable, "scripts/01_run_tests.py", "--help"],
+        [sys.executable, "scripts/pipeline/stage_01_test.py", "--help"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -265,7 +265,7 @@ def test_stage01_public_projects_flag_is_documented_in_help() -> None:
 def test_stage01_public_projects_requires_all_projects_mode() -> None:
     """The public-scope flag is not silently ignored on the wrong command."""
     proc = subprocess.run(  # noqa: S603
-        [sys.executable, "scripts/01_run_tests.py", "--public-projects"],
+        [sys.executable, "scripts/pipeline/stage_01_test.py", "--public-projects"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,

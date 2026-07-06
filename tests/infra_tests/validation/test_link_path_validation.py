@@ -185,7 +185,7 @@ class TestValidateFilePathsInCode:
         (tmp_path / "scripts").mkdir()
         (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
         md_file = project_root / "README.md"
-        content = "```bash\nuv run python scripts/03_render_pdf.py --project template_demo\n```"
+        content = "```bash\nuv run python scripts/pipeline/stage_03_render.py --project template_demo\n```"
 
         issues = validate_file_paths_in_code(content, md_file, tmp_path)
 
@@ -196,7 +196,7 @@ class TestValidateFilePathsInCode:
         (tmp_path / "scripts").mkdir()
         (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
         md_file = tmp_path / "projects" / "README.md"
-        content = "```bash\nuv run python scripts/03_render_pdf.py --project template_demo\n```"
+        content = "```bash\nuv run python scripts/pipeline/stage_03_render.py --project template_demo\n```"
 
         issues = validate_file_paths_in_code(content, md_file, tmp_path)
 

@@ -95,11 +95,11 @@ uv run python projects/templates/template_search_project/scripts/z_generate_manu
 
 ### Phase 4 — Render the Combined PDF
 
-**Script**: `scripts/03_render_pdf.py` at the **repository root** (not inside `projects/`).
+**Script**: `scripts/pipeline/stage_03_render.py` at the **repository root** (not inside `projects/`).
 
 **Command**:
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_search_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_search_project
 ```
 
 **Inputs**: `output/manuscript/*.md` (resolved) + `manuscript/config.yaml` + `manuscript/preamble.md` + every `manuscript/*.bib`.
@@ -123,11 +123,11 @@ uv run python scripts/03_render_pdf.py --project templates/template_search_proje
 
 ### Phase 5 — Promote, Review, and Report
 
-**Scripts** (root-level): `scripts/05_copy_outputs.py`. Project-local: `scripts/zz_generate_review_report.py` and the `scripts/review` CLI directory.
+**Scripts** (root-level): `scripts/pipeline/stage_05_copy.py`. Project-local: `scripts/zz_generate_review_report.py` and the `scripts/review` CLI directory.
 
 **Commands**:
 ```bash
-uv run python scripts/05_copy_outputs.py --project templates/template_search_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_search_project
 uv run python projects/templates/template_search_project/scripts/zz_generate_review_report.py
 ```
 

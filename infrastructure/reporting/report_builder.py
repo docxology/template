@@ -110,7 +110,7 @@ def generate_summary_report(repo_root: Path | None = None) -> dict[str, Any]:
             "slow_tests_included": True,
             "ollama_tests_included": True,
             "ollama_server_available": _is_ollama_available(),
-            "test_command": "scripts/01_run_tests.py --include-slow --include-ollama-tests --verbose",  # noqa: E501
+            "test_command": "scripts/pipeline/stage_01_test.py --include-slow --include-ollama-tests --verbose",  # noqa: E501
             "active_projects": active_projects,
         },
         "files_generated": [

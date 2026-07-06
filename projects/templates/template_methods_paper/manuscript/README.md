@@ -47,7 +47,7 @@ graph TD
 # From repository root
 uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 ## AI Agent Directives

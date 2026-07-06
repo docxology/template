@@ -3,7 +3,7 @@
 # Restore Test Script
 # Verifies that a backup can be restored successfully (non-destructive test).
 #
-# Usage: ./scripts/restore-test.sh [remote-host] [snapshot-name]
+# Usage: ./scripts/shell/restore-test.sh [remote-host] [snapshot-name]
 #   Restores to /tmp/restore-test-<snapshot> and verifies file counts.
 ################################################################################
 

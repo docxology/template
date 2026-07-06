@@ -42,7 +42,7 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 
 ### Build Pipeline
 
-Automated sequence of operations orchestrated by `scripts/execute_pipeline.py` using the declared DAG in `infrastructure/core/pipeline/pipeline.yaml`.
+Automated sequence of operations orchestrated by `scripts/runner/execute_pipeline.py` using the declared DAG in `infrastructure/core/pipeline/pipeline.yaml`.
 
 **Core pipeline** (`--core-only`): Clean Output Directories → Environment Setup → Infrastructure Tests → Project Tests → Project Analysis → PDF Rendering → Output Validation → Copy Outputs (8 stages).
 **Full pipeline** (default): adds LLM Scientific Review and LLM Translations stages (10 total).
@@ -322,7 +322,7 @@ LaTeX-based cross-referencing that automatically numbers and links sections, equ
 
 Another name for [Build Pipeline](#build-pipeline). The sequence from tests to final PDF.
 
-**Script**: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
+**Script**: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
 
 ### Reproducibility
 

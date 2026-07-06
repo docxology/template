@@ -87,8 +87,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_autoresearch_project --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_autoresearch_project
-uv run python scripts/05_copy_outputs.py --project templates/template_autoresearch_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_autoresearch_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_autoresearch_project
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -312,7 +312,7 @@ the full validation registry. Full fact serialization is opt-in with
 ## Tests
 
 ```bash
-uv run python scripts/01_run_tests.py --project templates/template_autoresearch_project --project-only --quiet
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_autoresearch_project --project-only --quiet
 ```
 
 <!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->

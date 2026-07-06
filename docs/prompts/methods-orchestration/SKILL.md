@@ -48,7 +48,7 @@ metadata:
 ```bash
 uv run python -m infrastructure.methods plan --project <project> --format markdown
 uv run python -m infrastructure.methods plan --project <project> --format json --check
-uv run python scripts/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 uv run pytest tests/infra_tests/methods -q
 ```

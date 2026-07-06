@@ -13,7 +13,7 @@ Agent skill `template-pipeline-debugging` — DAG stage failure triage and repro
 ## Verification
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 ```
 
 ## See also

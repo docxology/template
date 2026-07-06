@@ -67,7 +67,7 @@ The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only`
 
 ```bash
 # Core pipeline (8 stages — no LLM)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Full pipeline (default 10-stage core+LLM path)
 ./run.sh --pipeline --project {name}

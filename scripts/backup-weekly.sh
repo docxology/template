@@ -4,7 +4,7 @@
 # Backs up the .cache directory (excluding transient tmp files).
 # Intended to be run weekly via cron.
 #
-# Usage: ./scripts/backup-weekly.sh [remote-host]
+# Usage: ./scripts/shell/backup-weekly.sh [remote-host]
 ################################################################################
 
 set -euo pipefail

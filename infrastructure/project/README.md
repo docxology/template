@@ -186,7 +186,7 @@ flowchart TB
 The project module integrates with the analysis pipeline:
 
 ```python
-# scripts/02_run_analysis.py uses project discovery
+# scripts/pipeline/stage_02_analysis.py uses project discovery
 from infrastructure.project import discover_projects
 
 def run_analysis_pipeline():
@@ -203,7 +203,7 @@ def run_analysis_pipeline():
 Project tests are executed through the test pipeline:
 
 ```python
-# scripts/01_run_tests.py uses project validation
+# scripts/pipeline/stage_01_test.py uses project validation
 from infrastructure.project import validate_project_structure
 
 def run_project_tests(project_name: str):

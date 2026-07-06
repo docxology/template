@@ -173,7 +173,7 @@ uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 Use `uv run` for reproducibility:
 
 - Tests: `uv run python scripts/pipeline/stage_01_test.py --project <name>`
-- Pipeline: `uv run python scripts/execute_pipeline.py --project <name> --core-only`
+- Pipeline: `uv run python scripts/runner/execute_pipeline.py --project <name> --core-only`
 - Interactive: `./run.sh`
 - Specific test: `uv run pytest path/to/test.py::test_name -q`
 

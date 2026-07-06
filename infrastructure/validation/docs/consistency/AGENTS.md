@@ -19,7 +19,7 @@ Python modules backing `check_*` functions re-exported from [`../consistency_lin
 
 ```bash
 uv run pytest tests/infra_tests/validation/docs/test_consistency_lint.py -q
-uv run python scripts/lint_docs.py --consistency-only
+uv run python scripts/audit/lint_docs.py --consistency-only
 ```
 
 ## See also

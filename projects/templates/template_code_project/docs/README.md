@@ -55,7 +55,7 @@ project, mirror these invariants — they are what the repo's gates enforce:
 | Invariant | Where it's taught | How it's enforced |
 |---|---|---|
 | Thin-orchestrator: `scripts/` only I/O + orchestration, logic in `src/`/`infrastructure/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
-| Zero mocks: real data, `tmp_path`, `pytest-httpserver` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/verify_no_mocks.py` |
+| Zero mocks: real data, `tmp_path`, `pytest-httpserver` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
 | `manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
 | Deterministic outputs (fixed seeds); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
@@ -64,7 +64,7 @@ project, mirror these invariants — they are what the repo's gates enforce:
 
 ```bash
 NEW=my_project
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest "projects/working/$NEW" \
   --new-name "$NEW"
@@ -75,7 +75,7 @@ cd "projects/working/$NEW"
 # 4. Replace manuscript/*.md with your narrative; keep {{TOKEN}} + figure-label conventions
 # 5. Point scripts/ at your src/ functions (thin orchestrators only)
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
-uv run python scripts/execute_pipeline.py --project "working/$NEW" --core-only
+uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --core-only
 ```
 
 Then the project is discovered automatically (`discover_projects()`); the

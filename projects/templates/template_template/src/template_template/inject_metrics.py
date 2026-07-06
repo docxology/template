@@ -4,7 +4,7 @@ Reads a ``metrics.json`` file produced by ``generate_manuscript_metrics.py``
 and performs ``${variable}`` substitution in every numbered manuscript chapter,
 writing the rendered versions to a specified output directory.
 
-The pipeline hook in ``scripts/03_render_pdf.py`` automatically picks up the
+The pipeline hook in ``scripts/pipeline/stage_03_render.py`` automatically picks up the
 rendered files from ``output/manuscript/`` if that directory is populated.
 
 Public API:

@@ -76,7 +76,7 @@ This block is the canonical end-of-run summary. It is rendered by
 Both multi-project entry points print it to the console/log:
 [`infrastructure/orchestration/pipeline_runner.py`](../../../infrastructure/orchestration/pipeline_runner.py)
 (`run.sh --all-projects` / `python -m infrastructure.orchestration multi`) and
-`scripts/execute_multi_project.py`. **Only the latter** additionally persists
+`scripts/runner/execute_multi_project.py`. **Only the latter** additionally persists
 it verbatim to `docs/_generated/last-run-summary.md`, via
 `write_last_run_summary` in `multi_project_report.py` (called from
 [`infrastructure/core/pipeline/multi_project_cli.py`](../../../infrastructure/core/pipeline/multi_project_cli.py));

@@ -31,12 +31,12 @@ tree instead of copying volatile literals into prose.
 ## Public Commands
 
 ```bash
-uv run python scripts/generate_counts.py --check
-uv run python scripts/generate_counts.py --write
-uv run python scripts/generate_active_projects_doc.py
-uv run python scripts/generate_api_reference_doc.py --check
-uv run python scripts/generate_architecture_overview.py
-uv run python scripts/generate_publication_records_doc.py
+uv run python scripts/docgen/counts.py --check
+uv run python scripts/docgen/counts.py --write
+uv run python scripts/docgen/active_projects.py
+uv run python scripts/docgen/api_reference.py --check
+uv run python scripts/docgen/architecture_overview.py
+uv run python scripts/docgen/publication_records.py
 ```
 
 ## Tests
@@ -46,7 +46,7 @@ uv run pytest tests/infra_tests/documentation -q
 uv run pytest tests/infra_tests/test_check_template_drift.py -q
 ```
 
-Run `uv run python scripts/check_template_drift.py --strict` after changing any
+Run `uv run python scripts/audit/check_template_drift.py --strict` after changing any
 long-lived docs, generated-doc producers, or hardcoded-count policy.
 
 ## Change Checklist

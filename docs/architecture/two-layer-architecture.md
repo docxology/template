@@ -343,7 +343,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    START(["User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only"]) --> CLEAN["STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build"]
+    START(["User runs:<br/>uv run python scripts/runner/execute_pipeline.py --project {name} --core-only"]) --> CLEAN["STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build"]
     CLEAN --> STAGE00["STAGE 00: LAYER 1<br/>Environment Setup<br/>- Validate Python, dependencies<br/>- Check build tools"]
 
     STAGE00 --> PHASE1["PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infra_tests<br/>- Run projects/{name}/tests<br/>- Run tests/integration<br/>- Validate coverage requirements<br/>Report: LAYER-1-INFRASTRUCTURE Running"]
@@ -501,7 +501,7 @@ flowchart TB
    - Include usage examples
 
 5. **Integrate with build pipeline:**
-   - Update scripts/execute_pipeline.py if needed
+   - Update scripts/runner/execute_pipeline.py if needed
    - Update infrastructure modules if applicable
 
 ---
@@ -599,7 +599,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
    ```bash
    uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 ---

@@ -27,10 +27,10 @@ Project-scoped skill for the in-repo exemplar at
 uv run pytest tests --cov=src --cov-fail-under=90
 
 # From the repository root
-uv run python scripts/02_run_analysis.py --project templates/template_active_inference
-uv run python scripts/03_render_pdf.py --project templates/template_active_inference
-uv run python scripts/04_validate_output.py --project templates/template_active_inference
-uv run python scripts/05_copy_outputs.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_active_inference
 ```
 
 ## Pitfalls

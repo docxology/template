@@ -13,13 +13,13 @@ does not re-execute `methods_analysis.py`).
 ```bash
 uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 Or re-run the full pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
 ```
 
 ## `MethodValidationError: method '...' failed validation`
@@ -135,7 +135,7 @@ combined-PDF render shells out to `mmdc`, which needs a pinned
 
 ```bash
 npx --yes puppeteer browsers install chrome-headless-shell
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 CI provisions it; a fresh clone does not. See

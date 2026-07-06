@@ -153,7 +153,7 @@ def _artifact_manifest_relpath(repo_root: Path, project_dir: Path) -> str | None
 def _reproduce_commands(project_name: str) -> list[str]:
     """Exact, deterministic reproduction commands for *project_name*."""
     return [
-        f"uv run python scripts/execute_pipeline.py --project {project_name} --core-only",
+        f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only",
     ]
 
 

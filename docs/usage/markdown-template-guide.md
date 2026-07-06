@@ -224,7 +224,7 @@ This:
 
 ### Pipeline
 
-The pipeline orchestrator (`scripts/execute_pipeline.py`):
+The pipeline orchestrator (`scripts/runner/execute_pipeline.py`):
 
 1. **Runs tests** with coverage requirements (90% project, 60% infra)
 2. **Executes scripts** to generate figures and data (validating projects/{name}/src/ integration)
@@ -344,7 +344,7 @@ This template enforces the **thin orchestrator pattern** where:
 - **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
 - **`projects/{name}/tests/`** ensures coverage of `projects/{name}/src/` functionality
-- **`scripts/execute_pipeline.py`** orchestrates the declared DAG pipeline
+- **`scripts/runner/execute_pipeline.py`** orchestrates the declared DAG pipeline
 
 ### Script Requirements
 

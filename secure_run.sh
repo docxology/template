@@ -25,8 +25,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=scripts/shell_bootstrap.sh
-source "$SCRIPT_DIR/scripts/shell_bootstrap.sh"
+# shellcheck source=scripts/shell/shell_bootstrap.sh
+source "$SCRIPT_DIR/scripts/shell/shell_bootstrap.sh"
 
 setup_orchestration_sandbox_env
 cd "$SCRIPT_DIR"

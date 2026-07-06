@@ -29,7 +29,7 @@ def test_text_mentions_stage_by_canonical_name() -> None:
 
 
 def test_text_mentions_stage_by_script() -> None:
-    text = "Isolate with scripts/02_run_analysis.py --project foo"
+    text = "Isolate with scripts/pipeline/stage_02_analysis.py --project foo"
     assert sv.text_mentions_stage(text, "Project Analysis")
 
 

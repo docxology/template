@@ -12,8 +12,8 @@ moment the committed doc drifts.
 
 Usage::
 
-    uv run python scripts/generate_counts.py --write   # apply
-    uv run python scripts/generate_counts.py --check    # CI, no write
+    uv run python scripts/docgen/counts.py --write   # apply
+    uv run python scripts/docgen/counts.py --check    # CI, no write
 
 Exit codes:
     0: write succeeded (``--write``) or doc in sync (``--check``).

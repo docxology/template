@@ -62,7 +62,7 @@ on stage 4.
 
 ## "Pre-render validation failed (undefined citations)"
 
-**Symptom:** `scripts/03_render_pdf.py` or
+**Symptom:** `scripts/pipeline/stage_03_render.py` or
 `python -m infrastructure.validation.cli prerender …` stops with many
 `BIBTEX.UNDEFINED_KEY` errors for keys that exist in `references_deep.bib`.
 

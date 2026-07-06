@@ -20,7 +20,7 @@ The generic project template implements a **unified test-driven development para
 - **Source code** implements mathematical functionality
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `projects/{name}/src/` methods
-- **`scripts/execute_pipeline.py`** orchestrates the declarative DAG pipeline
+- **`scripts/runner/execute_pipeline.py`** orchestrates the declarative DAG pipeline
 
 ## Workflow Diagram
 
@@ -75,7 +75,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes the pipeline stages sequentially, ensuring coherence between all components:
+The `scripts/runner/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes the pipeline stages sequentially, ensuring coherence between all components:
 
 ### 1. Code Validation Phase
 
@@ -138,7 +138,7 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run pipeline** - Use `uv run python scripts/execute_pipeline.py --project {name} --core-only` to validate coherence
+5. **Run pipeline** - Use `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` to validate coherence
 
 ## Step-by-Step Workflow
 
@@ -174,7 +174,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 
 ```bash
 # Run the core pipeline (no LLM stages)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -187,7 +187,7 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 ### Canonical stage table (generated)
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
@@ -388,7 +388,7 @@ The workflow enforces a **thin orchestrator pattern** where:
 - **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
 - **`projects/{name}/tests/`** ensures coverage of all functionality
-- **`scripts/execute_pipeline.py`** orchestrates the entire pipeline
+- **`scripts/runner/execute_pipeline.py`** orchestrates the entire pipeline
 
 This ensures:
 

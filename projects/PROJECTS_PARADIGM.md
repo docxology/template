@@ -96,7 +96,7 @@ for project in projects:
 
 ```bash
 # Infrastructure runs each project's tests independently
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 # - Validates project structure
 # - Runs project tests with coverage:
 #   uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
@@ -108,7 +108,7 @@ uv run python scripts/01_run_tests.py --project {name}
 
 ```bash
 # Infrastructure discovers and executes each project's scripts
-uv run python scripts/02_run_analysis.py --project {name}
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}
 # - Finds all scripts in projects/{name}/scripts/
 # - Sets PYTHONPATH: repo_root + infrastructure/ + project/src/
 # - Executes each script with proper environment
@@ -119,7 +119,7 @@ uv run python scripts/02_run_analysis.py --project {name}
 
 ```bash
 # Infrastructure renders each project's manuscript independently
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 # - Validates markdown in projects/{name}/manuscript/
 # - Combines sections using project-specific config.yaml
 # - Generates LaTeX with project-specific references.bib
@@ -180,7 +180,7 @@ The standalone project paradigm requires alignment with the repository root **[`
 
 ```bash
 # Run tests via orchestrator (one pytest invocation per discovered project):
-uv run python scripts/01_run_tests.py --project-only --all-projects
+uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects
 
 # Manual coverage spot-check — replace NAME with an active project (never aggregate glob SRC paths):
 uv run pytest projects/templates/template_code_project/tests/ \
@@ -223,13 +223,13 @@ Every standalone project must comply with development standards documented under
 
 ```bash
 # Infrastructure validates compliance during pipeline
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 # ✓ Tests pass with 90%+ coverage
 # ✓ No mock methods detected
 # ✓ Type hints validated
 # ✓ Documentation completeness checked
 
-uv run python scripts/04_validate_output.py --project {name}
+uv run python scripts/pipeline/stage_04_validate.py --project {name}
 # ✓ PDF integrity verified
 # ✓ Markdown references resolved
 # ✓ File integrity maintained
@@ -393,7 +393,7 @@ flowchart LR
 
 ```bash
 # Each project renders independently
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 # - Uses projects/{name}/manuscript/config.yaml
 # - Processes projects/{name}/manuscript/references.bib
 # - Generates projects/{name}/output/pdf/
@@ -450,7 +450,7 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ```bash
 # Infrastructure operates on project independently
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 
 # Result: Complete analysis pipeline executed
 # - Tests validate analysis algorithms
@@ -569,7 +569,7 @@ For a one-off render, keep the project under `working/` and run an explicit
 qualified command such as:
 
 ```bash
-uv run python scripts/03_render_pdf.py --project working/{name}
+uv run python scripts/pipeline/stage_03_render.py --project working/{name}
 ```
 
 To include a private project in default discovery and the normal `run.sh` menu,

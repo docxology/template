@@ -30,10 +30,10 @@ Load this skill when you need to:
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/health-check.sh` | Pre-flight check (Python, uv, disk, Docker, repo) |
-| `scripts/ci_local.sh` | Local CI reproduction |
-| `scripts/shell_bootstrap.sh` | uv bootstrap + sandbox env vars |
-| `scripts/bash_utils.sh` | Shared helpers (do not source directly in pipeline) |
+| `scripts/shell/health-check.sh` | Pre-flight check (Python, uv, disk, Docker, repo) |
+| `scripts/shell/ci_local.sh` | Local CI reproduction |
+| `scripts/shell/shell_bootstrap.sh` | uv bootstrap + sandbox env vars |
+| `scripts/shell/bash_utils.sh` | Shared helpers (do not source directly in pipeline) |
 
 ## Pitfalls
 

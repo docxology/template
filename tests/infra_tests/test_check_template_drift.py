@@ -1,4 +1,4 @@
-"""Tests for `scripts/check_template_drift.py`.
+"""Tests for `scripts/audit/check_template_drift.py`.
 
 The drift checker is the audit-as-gate that converts the May 2026
 template-hardening audit findings into a recurring CI check. A gate
@@ -71,7 +71,7 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
 
 ## Run via the template monorepo
 
-Use `uv run python scripts/02_run_analysis.py --project templates/fake_project`.
+Use `uv run python scripts/pipeline/stage_02_analysis.py --project templates/fake_project`.
 
 ## When to use this template
 
@@ -108,7 +108,7 @@ Configuration lives in `manuscript/config.yaml`; outputs are regenerated, not ed
 
 ## Commands
 
-Run the monorepo pipeline with `uv run python scripts/02_run_analysis.py --project templates/fake_project`.
+Run the monorepo pipeline with `uv run python scripts/pipeline/stage_02_analysis.py --project templates/fake_project`.
 
 ## Contracts
 

@@ -52,14 +52,14 @@ flowchart TB
 
 3. **Render PDF** — converts the manuscript to PDF via Pandoc/LaTeX.
    ```bash
-   uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+   uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
    ```
    **Outputs**: `pdf/`, `web/`
 
 4. **Copy final deliverables** — copies PDF and figures to the repo-level output
    tree (used by CI).
    ```bash
-   uv run python scripts/05_copy_outputs.py --project templates/template_eda_notebook
+   uv run python scripts/pipeline/stage_05_copy.py --project templates/template_eda_notebook
    ```
 
 ## Version-Control Policy

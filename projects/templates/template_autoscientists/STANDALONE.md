@@ -16,7 +16,7 @@ system.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_autoscientists \
   --dest projects/working/my_autoscientists \
   --new-name my_autoscientists

@@ -93,8 +93,8 @@ stages:
 
   # Opt-in science/provenance stages (skipped in --core-only and default runs).
   # Invoke directly when needed:
-  #   uv run python scripts/08_connector_search.py --project <name>
-  #   uv run python scripts/09_provenance_record.py --project <name> --stage "Connector Search"
+  #   uv run python scripts/pipeline/stage_08_connector_search.py --project <name>
+  #   uv run python scripts/pipeline/stage_09_provenance_record.py --project <name> --stage "Connector Search"
 
   - name: Connector Search
     script: 08_connector_search.py
@@ -205,10 +205,10 @@ stages:
   # docs/maintenance/archival-targets.md for rationale.
   #
   # Invoke directly when needed:
-  #   uv run python scripts/11_ebook_generation.py --project <name>
-  #   uv run python scripts/12_metadata_package.py --project <name>
-  #   uv run python scripts/08_executable_bundle.py --project <name>
-  #   uv run python scripts/09_archive_publication.py --project <name>
+  #   uv run python scripts/pipeline/stage_11_ebook.py --project <name>
+  #   uv run python scripts/pipeline/stage_12_metadata.py --project <name>
+  #   uv run python scripts/runner/bundle_executable.py --project <name>
+  #   uv run python scripts/runner/archive_publication.py --project <name>
 
   - name: Ebook Generation
     script: 11_ebook_generation.py

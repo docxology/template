@@ -16,7 +16,7 @@ market panels, and a raster-verifiable PDF edition.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_newspaper \
   --dest projects/working/my_newspaper \
   --new-name my_newspaper

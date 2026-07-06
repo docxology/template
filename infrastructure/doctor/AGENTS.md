@@ -136,7 +136,7 @@ situation the safety contract is designed to refuse.
 * `infrastructure/core/health.py` — CI gate runner (mypy, ruff,
   bandit, no-mocks). Complementary; doctor diagnoses local state and
   produces structured remediations.
-* `scripts/health-check.sh` — bash pre-flight check. Overlap with
+* `scripts/shell/health-check.sh` — bash pre-flight check. Overlap with
   `DOC1xx` family; the doctor's findings are richer and machine-readable.
 * `infrastructure/validation/` — content validators (PDFs, markdown).
   Doctor does **not** validate output contents; that remains

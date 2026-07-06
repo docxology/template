@@ -130,15 +130,15 @@ Pipeline runs default to `--hitl-mode full-auto`. Other modes are:
 Non-interactive commands:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command status
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command history
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command context
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command validate-response --response-file /tmp/response.json
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command respond --response-file /tmp/response.json
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command guide --hitl-stage 6 --message "Check citations."
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command approve --message "Ready."
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command reject --message "Citation drift."
-uv run python scripts/execute_pipeline.py --project template_code_project --hitl-command resume --message "Continue."
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command status
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command history
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command context
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command validate-response --response-file /tmp/response.json
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command respond --response-file /tmp/response.json
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command guide --hitl-stage 6 --message "Check citations."
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command approve --message "Ready."
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command reject --message "Citation drift."
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --hitl-command resume --message "Continue."
 ```
 
 State is written under `projects/{project}/output/hitl/`. Resuming execution

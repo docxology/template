@@ -13,7 +13,7 @@ The module exposes three pure functions and one I/O-driven collector:
   invocations (no mocks; raises ``RuntimeError`` if the CLI is missing).
 
 Two driver modes are supported by the orchestrator script
-``scripts/generate_coverage_history.py``:
+``scripts/docgen/coverage_history.py``:
 
 * ``--from-dir=PATH`` — read every ``coverage-*.xml`` under ``PATH``.
 * ``--from-gh`` — call :func:`collect_history_via_gh` (requires the GitHub
@@ -259,7 +259,7 @@ def build_history_markdown(
         "# Coverage history",
         "",
         "This file is **generated** by",
-        "`scripts/generate_coverage_history.py`. Do not edit by hand.",
+        "`scripts/docgen/coverage_history.py`. Do not edit by hand.",
         "",
         f"Last verified: {anchor.isoformat()}",
         f"Rolling window: {days} day(s) — {cutoff.isoformat()} → {anchor.isoformat()}",
@@ -276,9 +276,9 @@ def build_history_markdown(
         "## Regenerate",
         "",
         "```bash",
-        "uv run python scripts/generate_coverage_history.py --from-dir=<dir>",
+        "uv run python scripts/docgen/coverage_history.py --from-dir=<dir>",
         "# or, with `gh` authenticated:",
-        "uv run python scripts/generate_coverage_history.py --from-gh --days=30",
+        "uv run python scripts/docgen/coverage_history.py --from-gh --days=30",
         "```",
         "",
     ]

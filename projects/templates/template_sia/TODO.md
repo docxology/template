@@ -9,7 +9,7 @@ This template must stay honest about fixture replay versus live subprocess runs.
 - Project tests and coverage: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`
   - 2026-06-25: 64 tests, 99.52% coverage (was 41 tests, 94.25%).
 - Default loop execution replays recorded fixtures; `--live-sia` is bounded but does not apply code mutations.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - ruff + mypy: both clean on `src/` (fixed unused `y_off` variable, unused `numpy` import, and `FancyArrowPatch` explicit kwargs for mypy compliance).
 - Stage 04 warning snapshot, 2026-06-20: figure registry and artifact manifest pass; evidence registry still reports unsupported illustrative `85%` and `90%` manuscript thresholds.
 

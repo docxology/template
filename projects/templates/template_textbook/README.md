@@ -81,8 +81,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_textbook --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_textbook
-uv run python scripts/05_copy_outputs.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_textbook
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -228,7 +228,7 @@ Dual-licensed: **code** (`src/`, `scripts/`, `tests/`) under **Apache-2.0**
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_textbook/tests/ --cov=projects/templates/template_textbook/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
 

@@ -18,7 +18,7 @@ remaining fork-friendly.
 ## Validation
 
 ```bash
-uv run python scripts/lint_docs.py --links-only --json
+uv run python scripts/audit/lint_docs.py --links-only --json
 ```
 
 ## See Also

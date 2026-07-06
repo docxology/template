@@ -4,10 +4,10 @@
 Thin orchestrator over :mod:`infrastructure.core.pipeline.run_matrix`. The
 deterministic, version-controllable alternative to the interactive menu:
 
-    uv run python scripts/run_matrix.py                 # uses ./run.config
-    uv run python scripts/run_matrix.py --config my.yaml
-    uv run python scripts/run_matrix.py --dry-run        # print the plan, run nothing
-    uv run python scripts/run_matrix.py --fail-fast      # stop at first failure
+    uv run python scripts/runner/run_matrix.py                 # uses ./run.config
+    uv run python scripts/runner/run_matrix.py --config my.yaml
+    uv run python scripts/runner/run_matrix.py --dry-run        # print the plan, run nothing
+    uv run python scripts/runner/run_matrix.py --fail-fast      # stop at first failure
 
 Exit code is 0 only if every (project, stage) step succeeded.
 """

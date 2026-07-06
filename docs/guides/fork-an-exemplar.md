@@ -35,7 +35,7 @@ Measured test counts and coverage live in
 From the repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/my_project \
   --new-name my_project

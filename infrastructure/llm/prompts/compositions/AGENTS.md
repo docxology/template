@@ -118,7 +118,7 @@ re-read disk. Call `loader.clear_cache()` to invalidate.
 
 ## Integration in the Pipeline
 
-The LLM review scripts (e.g. `scripts/06_llm_review.py`) construct prompts via
+The LLM review scripts (e.g. `scripts/pipeline/stage_06_llm_review.py`) construct prompts via
 `PromptComposer.compose_template()` and may call `add_retry_prompt()` on a second
 pass if the first LLM response is rejected by the validation layer. The composition
 content is prepended so it appears before the manuscript text in the final prompt.

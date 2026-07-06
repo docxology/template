@@ -5,7 +5,7 @@ thin-orchestrator rules on root and project scripts.
 
 ## Entry points
 
-- `scripts/check_template_drift.py` — CLI wrapper
+- `scripts/audit/check_template_drift.py` — CLI wrapper
 - `infrastructure.project.drift.run_drift_checks()` — programmatic API
 
 ## Detectors
@@ -47,7 +47,7 @@ them; they are caught (if at all) by other gates or not at all:
 - **Extended mock primitives in project tests.** The drift mock check uses a
   narrower pattern set than `infrastructure.validation.output.no_mock_enforcer`
   (`validate_no_mocks`). The authoritative, broadest no-mocks enforcement is
-  `scripts/verify_no_mocks.py`, which scans the repo `tests/` tree **plus**
+  `scripts/audit/verify_no_mocks.py`, which scans the repo `tests/` tree **plus**
   every public exemplar's `tests/` directory.
 - **External URL liveness / markdown anchors.** `cross_link_lint` strips
   anchors and skips `http(s)` links entirely; link reachability is not checked.

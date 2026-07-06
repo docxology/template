@@ -15,5 +15,5 @@
 ## Workflow
 
 1. Edit lexicon or section structure in `manuscript/config.yaml`.
-2. Run the analysis stage: `uv run python scripts/02_run_analysis.py --project templates/template_madlib`.
+2. Run the analysis stage: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_madlib`.
 3. Verify: `uv run pytest tests/ --cov=src --cov-fail-under=90`.

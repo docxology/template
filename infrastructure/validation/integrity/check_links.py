@@ -142,7 +142,7 @@ def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], tota
             logger.info(f"   • {title}: {count} issues")
 
     logger.info("\n🔧 Next steps: Run the audit script to generate detailed fix recommendations:")
-    logger.info("   python scripts/audit_filepaths.py")
+    logger.info("   python scripts/audit/audit_filepaths.py")
 
     return 1
 

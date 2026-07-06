@@ -9,7 +9,7 @@ focused on preserving the repository-introspection contract.
 - Project tests and coverage: `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`
 - Current: **125 tests, 99.36% coverage** (up from 89 tests / 91.62% baseline).
 - Public/private confidentiality behavior is exercised by the project test suite.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: figure registry passes; evidence registry reports 56 unsupported generated-count or percentage tokens; artifact manifest reports advisory drift after single-stage regeneration.
 
 ## Integrity and template-status gaps

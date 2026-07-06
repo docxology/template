@@ -98,7 +98,7 @@ uv run python scripts/generate_cover_art.py
 uv run python scripts/z_generate_manuscript_variables.py
 
 # Full pipeline (from repo root)
-uv run python scripts/execute_pipeline.py --project templates/template_autopoiesis --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_autopoiesis --core-only
 ```
 
 > **Chrome / Puppeteer note:** PDF rendering uses the shared `infrastructure/rendering` pipeline and requires Chrome/Chromium. Child projects render their own tests only — PDF rendering of child manuscripts is not supported.

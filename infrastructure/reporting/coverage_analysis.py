@@ -133,15 +133,17 @@ def format_failure_suggestions(
     if test_suite == "infrastructure":
         suggestions.append("    - Run individual failing tests: pytest tests/infra_tests/<test_file> -v")
         suggestions.append("    - Debug with full traceback: pytest tests/infra_tests/<test_file> -s --tb=long")
-        suggestions.append("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
-        suggestions.append("    - Check test environment: python3 scripts/00_setup_environment.py")
+        suggestions.append(
+            "    - Run infrastructure tests only: python3 scripts/pipeline/stage_01_test.py --infrastructure-only"
+        )
+        suggestions.append("    - Check test environment: python3 scripts/pipeline/stage_00_setup.py")
     else:
         suggestions.append(f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v")
         suggestions.append(
             f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long"
         )
         suggestions.append(
-            f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only"
+            f"    - Run project tests only: python3 scripts/pipeline/stage_01_test.py --project {project_name} --project-only"
         )
         suggestions.append(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
 

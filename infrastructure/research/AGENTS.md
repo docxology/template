@@ -48,14 +48,14 @@ print(stage.template_commands)
 | BibTeX export | `infrastructure.search.literature.cli` | `... to-bibtex '...' --output projects/{name}/manuscript/references.bib` |
 | Web/semantic search | `infrastructure.search.exa` | `uv run python -m infrastructure.search.exa search '...'` |
 | Deep research | `infrastructure.search.deep_research` | `uv run python -m infrastructure.search.deep_research submit ...` |
-| Pipeline execution | `scripts/execute_pipeline.py` | `uv run python scripts/execute_pipeline.py --project {name}` |
+| Pipeline execution | `scripts/runner/execute_pipeline.py` | `uv run python scripts/runner/execute_pipeline.py --project {name}` |
 | Provenance DAG | `infrastructure.provenance` | `uv run python -m infrastructure.provenance record run ...` |
-| Output validation | `scripts/04_validate_output.py` | `uv run python scripts/04_validate_output.py --project {name}` |
+| Output validation | `scripts/pipeline/stage_04_validate.py` | `uv run python scripts/pipeline/stage_04_validate.py --project {name}` |
 
 ## Boundaries
 
 - This module is **read-only infrastructure** — it defines workflows, it does
-  not execute them. Execution happens via `scripts/execute_pipeline.py` and
+  not execute them. Execution happens via `scripts/runner/execute_pipeline.py` and
   the numbered `scripts/NN_*.py` orchestrators.
 - No autonomous self-approval loops. Every paid compute step requires explicit
   user approval (see "Cost Approval" in `prompts/research_workflow.md`).

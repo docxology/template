@@ -6,10 +6,10 @@ The `tests/` tree covers infrastructure modules and integration behavior. Projec
 
 ```bash
 # Pipeline infrastructure smoke contract
-uv run python scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
 
 # Infrastructure tests (≥60% coverage floor)
-uv run python scripts/01_run_tests.py --infra-only --infra-scope full
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
 
 # Project tests — control positive exemplar (≥90% coverage floor)
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90

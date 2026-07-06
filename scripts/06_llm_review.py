@@ -13,9 +13,9 @@ Stage 06 of the pipeline orchestration (reviews and translations) - uses
 local Ollama LLM for manuscript analysis and review generation.
 
 CLI Usage:
-- python3 scripts/06_llm_review.py                # Run both reviews and translations
-- python3 scripts/06_llm_review.py --reviews-only # Run only English scientific reviews
-- python3 scripts/06_llm_review.py --translations-only # Run only translations
+- python3 scripts/pipeline/stage_06_llm_review.py                # Run both reviews and translations
+- python3 scripts/pipeline/stage_06_llm_review.py --reviews-only # Run only English scientific reviews
+- python3 scripts/pipeline/stage_06_llm_review.py --translations-only # Run only translations
 
 Exit codes:
     0: LLM review/translation completed successfully

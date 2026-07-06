@@ -150,7 +150,7 @@ Promoted copy (used by CI for artifact upload):
 output/template_prose_project/template_prose_project_combined.pdf
 ```
 
-The promotion step is `scripts/05_copy_outputs.py --project template_prose_project`.
+The promotion step is `scripts/pipeline/stage_05_copy.py --project template_prose_project`.
 
 ## Common pitfalls
 

@@ -11,7 +11,7 @@ uv run pytest projects/templates/template_autoresearch_project/tests/ -q
 Pipeline parity:
 
 ```bash
-uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only
+uv run python scripts/pipeline/stage_01_test.py --project template_autoresearch_project --project-only
 ```
 
 ## Coverage

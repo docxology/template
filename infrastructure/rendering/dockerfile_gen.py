@@ -152,10 +152,10 @@ def build_compose_yaml(project_name: str) -> str:
         "      - MPLBACKEND=Agg\n"
         "  tests:\n"
         f"    image: template-bundle-{project_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run python scripts/01_run_tests.py --project {project_name}"]\n'
+        f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_01_test.py --project {project_name}"]\n'
         "  render:\n"
         f"    image: template-bundle-{project_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run python scripts/03_render_pdf.py --project {project_name}"]\n'
+        f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_03_render.py --project {project_name}"]\n'
         "  verify:\n"
         f"    image: template-bundle-{project_name}:latest\n"
         f'    command: ["bash", "-lc", "uv run pytest tests/regression/projects/{project_name} -v"]\n'

@@ -165,7 +165,7 @@ export DOI="10.5281/zenodo.12345678"  # Optional
 
 ```bash
 # Pipeline automatically handles cleanup
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### 3. Customize Further
@@ -297,7 +297,7 @@ After configuring, ensure:
 
 ### Common Issues
 
-1. **Permission denied**: Make script executable with `chmod +x scripts/execute_pipeline.py`
+1. **Permission denied**: Make script executable with `chmod +x scripts/runner/execute_pipeline.py`
 2. **Script not found**: Ensure you're in the project root directory
 3. **Build failures**: Check that all dependencies are installed
 4. **Markdown errors**: Validate markdown files after editing

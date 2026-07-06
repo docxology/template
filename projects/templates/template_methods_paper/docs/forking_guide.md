@@ -11,7 +11,7 @@
 uv sync
 
 # 1. Clean-copy the exemplar to your new project name
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_methods_paper \
   --dest projects/working/my_methods_project \
   --new-name my_methods_project
@@ -50,7 +50,7 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 |---|---|---|
 | REQUIRED — pipeline gate | `src/methods_dsl/*.py`, `src/__init__.py`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `scripts/methods_analysis.py`, `scripts/z_generate_manuscript_variables.py` | The analysis entry point and the token-injection step this template demonstrates |
-| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/check_template_drift.py`; update them when code changes |
+| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py`; update them when code changes |
 
 ## Concrete first steps after fork
 
@@ -84,7 +84,7 @@ list it compiles, exports, and tallies into `compiled_plans.json` and
 ### 5. Run the drift checker before pushing
 
 ```bash
-uv run python scripts/check_template_drift.py --strict
+uv run python scripts/audit/check_template_drift.py --strict
 ```
 
 ## Common friction points (and fixes)

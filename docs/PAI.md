@@ -113,7 +113,7 @@ projects = discover_projects(repo_root)
 ./run.sh --pipeline
 
 # Core pipeline (no LLM stages)
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 
 # Specific project
 ./run.sh --project template_code_project --pipeline

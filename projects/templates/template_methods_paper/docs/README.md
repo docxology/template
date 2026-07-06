@@ -54,7 +54,7 @@ what the repo's gates enforce:
 | Invariant | Where it's taught | How it's enforced |
 |---|---|---|
 | Thin orchestrator: `scripts/` only calls `src/`; gate/compile logic stays in `src/methods_dsl/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/methods_dsl/` infra-import scan |
-| Zero mocks: real `Method` fixtures / `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/verify_no_mocks.py` |
+| Zero mocks: real `Method` fixtures / `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` |
 | `manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
 | Deterministic outputs (stable `plan_hash`); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
@@ -63,7 +63,7 @@ what the repo's gates enforce:
 
 ```bash
 NEW=my_methods_project
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_methods_paper \
   --dest "projects/working/$NEW" --new-name "$NEW"
 cd "projects/working/$NEW"

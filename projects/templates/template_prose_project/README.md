@@ -75,8 +75,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_prose_project --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_prose_project
-uv run python scripts/05_copy_outputs.py --project templates/template_prose_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_prose_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_prose_project
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -171,7 +171,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 Full end-to-end (tests → analysis → render → validate → copy):
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_prose_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_prose_project --core-only
 ```
 
 ## Configuration
@@ -242,7 +242,7 @@ of the orchestrator scripts.
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
 

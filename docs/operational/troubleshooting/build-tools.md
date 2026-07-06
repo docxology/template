@@ -113,7 +113,7 @@ tail -150 projects/{name}/output/pdf/_combined_manuscript.log | grep -A2 -B2 "gr
 1. Generate missing figures: `uv run python scripts/pipeline/stage_02_analysis.py`
 2. Verify graphicx package: `grep "usepackage{graphicx}" projects/{name}/output/pdf/_combined_manuscript.tex`
 3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' projects/{name}/manuscript/*.md`
-4. Run full rebuild: `uv run python scripts/execute_pipeline.py --project {name} --core-only --clean`
+4. Run full rebuild: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --clean`
 
 ---
 
@@ -215,7 +215,7 @@ grep -rn '\[@sec:\|\[@fig:\|\[@eq:\|\[@tbl:' projects/<name>/manuscript/
 
 1. Ensure the label is defined: `# Heading {#sec:name}` (section) or `![caption](path){#fig:name}` (figure).
 2. Check the reference matches: `[@sec:name]` must match the label exactly — never raw LaTeX `\ref{}`/`\label{}`, which breaks HTML/EPUB output (see [manuscript-semantics.md](../../guides/manuscript-semantics.md)).
-3. Rebuild: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
+3. Rebuild: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
 
 ---
 

@@ -16,8 +16,8 @@ The generators currently live at the `scripts/` root level:
 
 ```bash
 # Run from repo root
-uv run python scripts/generate_stage_table_doc.py
-uv run python scripts/generate_api_reference_doc.py --check
+uv run python scripts/docgen/stage_table.py
+uv run python scripts/docgen/api_reference.py --check
 ```
 
 Output goes to `docs/_generated/`.

@@ -33,22 +33,22 @@ class StageDispatch:
 # and so ``--stage clean`` silently ran *setup* and cleaned nothing. Single-stage
 # dispatch only covers stages backed by a runnable script.
 STAGE_DISPATCH: Final[dict[str, StageDispatch]] = {
-    "setup": StageDispatch("scripts/00_setup_environment.py"),
+    "setup": StageDispatch("scripts/pipeline/stage_00_setup.py"),
     "infra_tests": StageDispatch(
-        "scripts/01_run_tests.py",
+        "scripts/pipeline/stage_01_test.py",
         ("--infra-only", "--verbose", "--infra-scope", "pipeline-smoke"),
     ),
-    "project_tests": StageDispatch("scripts/01_run_tests.py", ("--project-only", "--verbose")),
-    "tests": StageDispatch("scripts/01_run_tests.py", ("--verbose", "--infra-scope", "pipeline-smoke")),
-    "analysis": StageDispatch("scripts/02_run_analysis.py"),
-    "render_pdf": StageDispatch("scripts/03_render_pdf.py"),
-    "validate": StageDispatch("scripts/04_validate_output.py"),
-    "copy": StageDispatch("scripts/05_copy_outputs.py"),
-    "llm_reviews": StageDispatch("scripts/06_llm_review.py", ("--reviews-only",)),
-    "llm_translations": StageDispatch("scripts/06_llm_review.py", ("--translations-only",)),
-    "executive_report": StageDispatch("scripts/07_generate_executive_report.py"),
-    "ebook_generation": StageDispatch("scripts/11_ebook_generation.py"),
-    "metadata_package": StageDispatch("scripts/12_metadata_package.py"),
+    "project_tests": StageDispatch("scripts/pipeline/stage_01_test.py", ("--project-only", "--verbose")),
+    "tests": StageDispatch("scripts/pipeline/stage_01_test.py", ("--verbose", "--infra-scope", "pipeline-smoke")),
+    "analysis": StageDispatch("scripts/pipeline/stage_02_analysis.py"),
+    "render_pdf": StageDispatch("scripts/pipeline/stage_03_render.py"),
+    "validate": StageDispatch("scripts/pipeline/stage_04_validate.py"),
+    "copy": StageDispatch("scripts/pipeline/stage_05_copy.py"),
+    "llm_reviews": StageDispatch("scripts/pipeline/stage_06_llm_review.py", ("--reviews-only",)),
+    "llm_translations": StageDispatch("scripts/pipeline/stage_06_llm_review.py", ("--translations-only",)),
+    "executive_report": StageDispatch("scripts/pipeline/stage_07_executive_report.py"),
+    "ebook_generation": StageDispatch("scripts/pipeline/stage_11_ebook.py"),
+    "metadata_package": StageDispatch("scripts/pipeline/stage_12_metadata.py"),
 }
 
 MENU_KEY_TO_STAGE: Final[dict[str, str]] = {

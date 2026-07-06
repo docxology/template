@@ -64,7 +64,7 @@ def _load_dotenv_fallback(env_file: Path | None = None) -> None:
 def ensure_dotenv_loaded(env_file: Path | None = None) -> None:
     """Load the repository ``.env`` into ``os.environ`` once, best-effort.
 
-    CLI entrypoints such as ``scripts/publish_project_release.py`` read tokens
+    CLI entrypoints such as ``scripts/publish/publish_project_release.py`` read tokens
     via ``os.getenv``, but nothing loads ``.env`` for them — so a token that
     lives only in ``.env`` (e.g. ``ZENODO_PROD_TOKEN``) is invisible until the
     user manually ``export``s it. This helper closes that gap: it prefers

@@ -101,7 +101,7 @@ ls -1 projects/{name}/output/reports/.history/
 jq . "$(ls -1t projects/{name}/output/reports/.history/telemetry-*.json | head -1)"
 
 # Override retention for a single run
-TELEMETRY_KEEP=25 uv run python scripts/execute_pipeline.py --project {name} --core-only
+TELEMETRY_KEEP=25 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 The rotation function is `infrastructure.core.telemetry.retention.rotate`
@@ -184,10 +184,10 @@ Reports are automatically generated during pipeline execution:
 
 ```bash
 # Single project - generates all reports
-uv run python scripts/execute_pipeline.py --project project
+uv run python scripts/runner/execute_pipeline.py --project project
 
 # Multi-project - generates all reports + executive summary
-uv run python scripts/execute_multi_project.py
+uv run python scripts/runner/execute_multi_project.py
 ```
 
 ### Manual Generation
@@ -385,7 +385,7 @@ grep -i "failed to generate report" projects/{name}/output/logs/pipeline.log
 jq . projects/{name}/output/reports/pipeline_report.json
 
 # Regenerate report
-uv run python scripts/execute_pipeline.py --project project --stage validate
+uv run python scripts/runner/execute_pipeline.py --project project --stage validate
 ```
 
 ## Best Practices

@@ -240,7 +240,7 @@ is_valid, issues, details = validate_review_quality(
 
 ## Integration with the Review Pipeline
 
-The full pipeline is orchestrated by `pipeline_runner.py`, invoked from `scripts/06_llm_review.py`. The canonical flow:
+The full pipeline is orchestrated by `pipeline_runner.py`, invoked from `scripts/pipeline/stage_06_llm_review.py`. The canonical flow:
 
 ```python
 from infrastructure.llm.review import select_and_start_ollama_model

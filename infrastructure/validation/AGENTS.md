@@ -38,7 +38,7 @@ uv run python -m infrastructure.validation.cli prerender projects/templates/temp
 uv run python -m infrastructure.validation.cli integrity projects/templates/template_code_project/output
 uv run python scripts/gates/module_line_count_check.py
 uv run python scripts/gates/security_scan.py
-uv run python scripts/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
 ```
 
 ## Tests
@@ -55,10 +55,10 @@ or project-native validator named by that project’s `AGENTS.md`.
 
 - Add or update a focused test for every new validator rule.
 - Keep diagnostic messages stable enough for `jq`/`rg` users.
-- Update `docs/_generated/COUNTS.md` only through `scripts/generate_counts.py`
+- Update `docs/_generated/COUNTS.md` only through `scripts/docgen/counts.py`
   when counts or gate facts change.
 - Run strict drift checks after changing docs/gates:
-  `uv run python scripts/check_template_drift.py --strict`.
+  `uv run python scripts/audit/check_template_drift.py --strict`.
 
 ## See Also
 

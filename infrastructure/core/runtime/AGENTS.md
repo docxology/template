@@ -12,7 +12,7 @@ The `infrastructure/core/runtime/` package contains runtime helpers for environm
 - `checkpoint.py` - pipeline checkpointing
 - `environment.py` - environment validation
 - `env_deps.py` - dependency helpers
-- `setup_checks.py` - Stage 0 orchestration: `sync_workspace_dependencies`, `validate_project_discovery`, `run_optional_setup_hook` (used by `scripts/00_setup_environment.py`)
+- `setup_checks.py` - Stage 0 orchestration: `sync_workspace_dependencies`, `validate_project_discovery`, `run_optional_setup_hook` (used by `scripts/pipeline/stage_00_setup.py`)
 - `eta.py` - ETA helpers
 - `function_profiler.py` - function profiling
 - `health_check.py` - health checks

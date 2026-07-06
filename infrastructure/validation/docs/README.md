@@ -11,7 +11,7 @@ Repository documentation scanning, quality, completeness, discovery, and accurac
 - `scan_scope.py` — shared exclusions for local/generated trees (`output/`, `_generated/`, `_skill-eval/`, …)
 - `mermaid_lint.py` — fenced Mermaid validation through `mmdc`
 - `cross_link_lint.py` — relative Markdown link validation and link-cycle detection
-- `lint_runner.py` — CI docs lint orchestration (used by verification checks and `scripts/lint_docs.py`)
+- `lint_runner.py` — CI docs lint orchestration (used by verification checks and `scripts/audit/lint_docs.py`)
 - `public_audit.py` — advisory public documentation RedTeam audit and AST-backed def/class report
 - `consistency_lint.py` — module counts, ghost projects, command conventions, stale shell-bootstrap contracts
 - `doc_pair_lint.py` — permanent-template `AGENTS.md` / `README.md` coverage
@@ -26,7 +26,7 @@ See [`AGENTS.md`](AGENTS.md) for the delegation table (`docs_lint`, `markdown_va
 
 ## Advisory audit
 
-Use `uv run python scripts/audit_documentation.py --format markdown` for a
+Use `uv run python scripts/audit/audit_documentation.py --format markdown` for a
 source-backed advisory report over public docs, generated-fact grounding,
 verifier negative-control claims, and Python `def` / `class` documentation
 coverage. This does not replace the blocking `lint_docs.py` gate.

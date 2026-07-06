@@ -50,7 +50,7 @@ uv run python scripts/generate_sheaf_tracks.py
 uv run python scripts/z_generate_manuscript_variables.py
 ```
 
-Then compose/render or validate as needed. `scripts/05_copy_outputs.py --project
+Then compose/render or validate as needed. `scripts/pipeline/stage_05_copy.py --project
 templates/template_active_inference` is the root-copy step from the parent
 template checkout when copied-root output parity matters.
 

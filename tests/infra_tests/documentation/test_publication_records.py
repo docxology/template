@@ -84,7 +84,7 @@ def test_rendered_publication_docs_include_every_public_record(tmp_path: Path) -
         assert f"`{name}`" in generated
         assert f"../projects/{name}/" in readme_block
     assert "Do not edit by hand" in generated
-    assert "scripts/generate_publication_records_doc.py --refresh-external" in generated
+    assert "scripts/docgen/publication_records.py --refresh-external" in generated
 
 
 def test_monorepo_only_publication_path_is_not_checked_as_standalone_repo(tmp_path: Path) -> None:

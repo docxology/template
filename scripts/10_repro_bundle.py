@@ -6,8 +6,8 @@ only wires the repository root onto ``sys.path`` and forwards CLI arguments.
 
 Usage::
 
-    uv run python scripts/10_repro_bundle.py build <project> [--out dir]
-    uv run python scripts/10_repro_bundle.py verify <manifest>
+    uv run python scripts/runner/repro_bundle.py build <project> [--out dir]
+    uv run python scripts/runner/repro_bundle.py verify <manifest>
 """
 
 from __future__ import annotations

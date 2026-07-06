@@ -26,10 +26,10 @@ hard-coded here.
 | Latest published release | `v3.5.1` (GitHub release; tag exists locally) | `gh-axi release list --limit 10`, `git tag --list "v3.5*"` |
 | Public source scope | `infrastructure` plus 12 public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | Link the generated roster; do not copy it here | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
-| Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/generate_counts.py --write`) |
+| Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/docgen/counts.py --write`) |
 | Open GitHub PRs | 1 open: Dependabot PR #32 (`actions/checkout` 7.0.0) | `gh-axi pr list --limit 20` |
-| Docs lint status | links-only, consistency-only, and doc-pairs rerun during the 2026-06-27 docs pass; current failures are in active literature-meta-analysis, active-inference `.omo`, and in-progress publishing lanes | `uv run python scripts/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
-| Mermaid lint status | not rerun in the contributor-strategy docs pass | `uv run python scripts/lint_docs.py --mermaid-only --quiet --json` |
+| Docs lint status | links-only, consistency-only, and doc-pairs rerun during the 2026-06-27 docs pass; current failures are in active literature-meta-analysis, active-inference `.omo`, and in-progress publishing lanes | `uv run python scripts/audit/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
+| Mermaid lint status | not rerun in the contributor-strategy docs pass | `uv run python scripts/audit/lint_docs.py --mermaid-only --quiet --json` |
 | Release verification baseline | `v3.5.1` is the latest GitHub release, but the current local tree is dirty; do not treat this snapshot as release readiness | `gh-axi release view v3.5.1`, `git status --short --branch` |
 
 ---

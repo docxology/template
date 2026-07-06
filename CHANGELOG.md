@@ -342,7 +342,7 @@ closeout. All gates green; no mocks; tests added with each change.
 
 ### Added
 
-- 🧭 **Reproducible run matrix (`run.config`)** — `scripts/run_matrix.py` +
+- 🧭 **Reproducible run matrix (`run.config`)** — `scripts/runner/run_matrix.py` +
   `infrastructure/core/pipeline/run_matrix.py`: a deterministic project × stage
   matrix runner (resolves projects, orders stages canonically), the
   version-controllable alternative to the interactive menu. `run.config.example.yaml`
@@ -351,7 +351,7 @@ closeout. All gates green; no mocks; tests added with each change.
   threads a reproducible build timestamp through xelatex `/CreationDate`,
   manuscript `GENERATION_TIMESTAMP`, and data `generated_at` (opt-in via
   `TEMPLATE_DETERMINISTIC`/`SOURCE_DATE_EPOCH`; no-op otherwise) for byte-stable outputs.
-- 🔢 **Generated `COUNTS.md` + CI `--check`** — `scripts/generate_counts.py` +
+- 🔢 **Generated `COUNTS.md` + CI `--check`** — `scripts/docgen/counts.py` +
   `infrastructure/documentation/counts_doc.py` derive the canonical counts from
   the live tree, closing the long-standing doc-drift loop (`canonical_facts.md`
   was the one `_generated/` file with no generator). Renamed `canonical_facts.md`→`COUNTS.md`.
@@ -427,7 +427,7 @@ closeout. All gates green; no mocks; tests added with each change.
   producer/consumer/validator/claim/artifact graph assembled from the real stage DAG,
   with a query API and byte-stable JSON (EVIDENCE-GRAPH-1).
 - 📦 **Reproduction bundle** (`infrastructure/publishing/repro_bundle.py`,
-  `scripts/10_repro_bundle.py`) — deterministic repro manifest (lockfile, artifact
+  `scripts/runner/repro_bundle.py`) — deterministic repro manifest (lockfile, artifact
   hashes, canonical-facts pointer, repro command) plus a fail-closed verifier (REPRO-BUNDLE-1).
 - 📊 **Release-readiness dashboard** (`infrastructure/reporting/release_readiness.py`) —
   local, no-network report aggregating docs-lint, coverage/test facts, pipeline
@@ -603,7 +603,7 @@ gate in the "Live state snapshot" table of `TO-DO.md` is green via
 - **MED1 — Multi-project parallel execution.** New
   `infrastructure/core/pipeline/multi_project_parallel.py` exposes
   `run_projects_in_parallel(...)`. CLI flags `--parallel` and
-  `--max-workers=N` added to `scripts/execute_multi_project.py`
+  `--max-workers=N` added to `scripts/runner/execute_multi_project.py`
   (default remains serial — backwards compatible). Per-worker
   stdout/stderr is redirected via `os.dup2` into each workspace's
   `…/output/logs/pipeline.log` under the configured projects root (no
@@ -622,7 +622,7 @@ gate in the "Live state snapshot" table of `TO-DO.md` is green via
   `infrastructure/reporting/coverage_history.py` with
   `parse_coverage_xml`, `collect_history_from_dir`,
   `collect_history_via_gh`, `build_history_markdown`. Driver:
-  `scripts/generate_coverage_history.py` (offline `--from-dir` and
+  `scripts/docgen/coverage_history.py` (offline `--from-dir` and
   online `--from-gh` modes). Generated
   `docs/_generated/coverage_history.md` includes a 30-day rolling
   table + ASCII sparkline. CI uploads `coverage-history` artefact. 15
@@ -638,7 +638,7 @@ gate in the "Live state snapshot" table of `TO-DO.md` is green via
 | `bandit -ll -c bandit.yaml` | ✅ 0 HIGH / 0 MEDIUM / 0 LOW |
 | `verify_no_mocks.py` | ✅ no mocks |
 | `infrastructure.skills check_all_exports` | ✅ 0 violations |
-| `scripts/lint_docs.py` | ✅ mermaid + links + consistency |
+| `scripts/audit/lint_docs.py` | ✅ mermaid + links + consistency |
 | Stage-table + API-reference + architecture generators | ✅ idempotent |
 | `uv run pytest tests/infra_tests/` (no LLM, no bench) | ✅ all pass |
 
@@ -683,7 +683,7 @@ command (linked in that table).
   `.pre-commit-config.yaml` mirror CI gates locally.
 - **M6 — Architecture overview generator.** New
   `infrastructure/documentation/architecture_overview.py` +
-  `scripts/generate_architecture_overview.py` produce
+  `scripts/docgen/architecture_overview.py` produce
   `docs/_generated/architecture_overview.{mmd,svg}` from live infra and
   workspace-root discovery (layout only; no workspace contents).
 - **M7 — Roadmap freshness.** Re-baselined
@@ -692,7 +692,7 @@ command (linked in that table).
   `docs/audit/archived/` scaffold added.
 - **MED1 — Stage-table single source of truth.** New
   `infrastructure/documentation/stage_table.py` +
-  `scripts/generate_stage_table_doc.py` inject a deterministic
+  `scripts/docgen/stage_table.py` inject a deterministic
   Markdown table from `infrastructure/core/pipeline/pipeline.yaml`
   into 5 docs via `<!-- BEGIN:STAGE_TABLE --> … <!-- END:STAGE_TABLE -->`
   markers.
@@ -705,10 +705,10 @@ command (linked in that table).
   shell loop over discovered test directories out of
   `.github/workflows/ci.yml#test-project` into a tested infrastructure
   function. CI workflow now calls
-  `scripts/01_run_tests.py --project-only --all-projects`.
+  `scripts/pipeline/stage_01_test.py --project-only --all-projects`.
 - **MED4 — Documentation linter.** New
   `infrastructure/validation/docs/{mermaid_lint,cross_link_lint,consistency_lint}.py`
-  + `scripts/lint_docs.py` + new `docs-lint` CI job. Detects
+  + `scripts/audit/lint_docs.py` + new `docs-lint` CI job. Detects
   parallelogram-syntax abuse, broken cross-links (with inline-code
   spans correctly excluded), and stale "N Python packages" claims.
 - **MED5 — `__all__` audit.** New
@@ -722,7 +722,7 @@ command (linked in that table).
   Informational CI step + `bench-results.json` artefact upload.
 - **MED7 — API-reference auto-generation.** New
   `infrastructure/documentation/api_reference_gen.py` +
-  `scripts/generate_api_reference_doc.py` walk every `__all__` and
+  `scripts/docgen/api_reference.py` walk every `__all__` and
   inject a generated symbol catalogue into
   `docs/reference/api-reference.md`. CI `--check` gate.
 
@@ -730,7 +730,7 @@ command (linked in that table).
 
 - `infrastructure/core/analysis_pipeline.py` (Stage-02 runner) was
   silently overwritten during parallel edits; restored, plus its
-  7-test no-mocks suite, plus re-thinned `scripts/02_run_analysis.py`.
+  7-test no-mocks suite, plus re-thinned `scripts/pipeline/stage_02_analysis.py`.
 
 ### Quality gates (v0.7.0, all enforced)
 
@@ -742,7 +742,7 @@ command (linked in that table).
 | `bandit -ll -c bandit.yaml` | ✅ 0 HIGH / 0 MEDIUM / 0 LOW |
 | `pip-audit` | ✅ blocking |
 | `infrastructure.skills.check_all_exports` | ✅ 0 violations |
-| `scripts/lint_docs.py` | ✅ 0 issues across mermaid + links + consistency |
+| `scripts/audit/lint_docs.py` | ✅ 0 issues across mermaid + links + consistency |
 | Stage-table & API-reference generators | ✅ idempotent |
 | `uv run pytest tests/infra_tests/` (no LLM, no bench) | ✅ 5347 passed |
 

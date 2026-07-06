@@ -1,4 +1,4 @@
-"""Tests for scripts/09_provenance_record.py.
+"""Tests for scripts/pipeline/stage_09_provenance_record.py.
 
 No mocks. Uses real subprocess calls and direct main() invocation.
 """

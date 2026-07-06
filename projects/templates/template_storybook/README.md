@@ -71,10 +71,10 @@ To regenerate this exemplar from the public monorepo:
 git clone https://github.com/docxology/template
 cd template
 uv sync
-uv run python scripts/02_run_analysis.py --project templates/template_storybook
-uv run python scripts/03_render_pdf.py --project templates/template_storybook
-uv run python scripts/04_validate_output.py --project templates/template_storybook
-uv run python scripts/05_copy_outputs.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_storybook
 ```
 
 ## Quick start
@@ -82,14 +82,14 @@ uv run python scripts/05_copy_outputs.py --project templates/template_storybook
 From the repository root:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook
 open projects/templates/template_storybook/output/pdf/the-shape-between.pdf
 ```
 
 Render through the manuscript pipeline as well:
 
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_storybook
 ```
 
 ## How it works

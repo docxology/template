@@ -13,7 +13,7 @@
 uv sync
 
 # 1. Clean-copy the exemplar to your new project name
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_prose_project \
   --dest projects/working/my_review_project \
   --new-name my_review_project
@@ -70,7 +70,7 @@ AESTHETIC path is convention only. The full inventory lives in
 |---|---|---|
 | REQUIRED — pipeline gate | All `src/*.py`, all `tests/test_*.py`, `tests/conftest.py` (pins `MPLBACKEND=Agg`), `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `scripts/run_prose_pipeline.py`, `scripts/y_generate_prose_figures.py`, `scripts/z_generate_manuscript_variables.py` | Subprocess-tested in `tests/test_scripts.py`; the alphabetical prefix (none / `y_` / `z_`) is an ordering hint |
-| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md`, `scripts/00_preflight.py`, `manuscript/config.yaml.example` | Drift detected only by `scripts/check_template_drift.py` and audits |
+| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md`, `scripts/00_preflight.py`, `manuscript/config.yaml.example` | Drift detected only by `scripts/audit/check_template_drift.py` and audits |
 
 ## Concrete first steps after fork
 
@@ -109,7 +109,7 @@ The loader rejects unknown YAML keys and enforces invariants
 
 ### 4. Run the drift checker before pushing
 ```bash
-uv run python scripts/check_template_drift.py
+uv run python scripts/audit/check_template_drift.py
 ```
 20 unit tests in
 [`tests/infra_tests/test_check_template_drift.py`](../../../../tests/infra_tests/test_check_template_drift.py)
@@ -140,4 +140,4 @@ than editorial, fork that one instead.
 - [`testing_philosophy.md`](testing_philosophy.md) — zero-mock standard
 - [`rendering_pipeline.md`](rendering_pipeline.md) — 4-phase pipeline
 - [`faq.md`](faq.md) — recurring questions
-- [`../../../scripts/check_template_drift.py`](../../../../scripts/check_template_drift.py) — the drift checker
+- [`../../../scripts/audit/check_template_drift.py`](../../../../scripts/audit/check_template_drift.py) — the drift checker

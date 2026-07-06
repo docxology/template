@@ -195,7 +195,7 @@ if not model:
 ### Pipeline Integration
 
 ```python
-# scripts/06_llm_review.py
+# scripts/pipeline/stage_06_llm_review.py
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
     select_best_model

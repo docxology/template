@@ -48,7 +48,7 @@ test it.
 | `z_*` | Final stage; depends on everything above. | `z_generate_manuscript_variables.py` |
 
 The alphabetical prefixes (`y_`, `z_`) are **human-readable hints** for
-manual invocation order. The canonical pipeline (`scripts/execute_pipeline.py`
+manual invocation order. The canonical pipeline (`scripts/runner/execute_pipeline.py`
 at repo root) enforces ordering via its stage definitions, not via
 filename. A forker introducing a new script that should run between
 analysis and figures should name it `y_<verb>.py`.

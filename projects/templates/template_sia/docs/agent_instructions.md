@@ -23,7 +23,7 @@ Read this file before modifying any file in this project.
 Before submitting changes:
 
 ```bash
-uv run python scripts/01_run_tests.py --project templates/template_sia --project-only
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
 uv run python -m infrastructure.sia.cli validate projects/templates/template_sia/tasks/mini_classify
-uv run python scripts/check_template_drift.py --strict --project templates/template_sia
+uv run python scripts/audit/check_template_drift.py --strict --project templates/template_sia
 ```

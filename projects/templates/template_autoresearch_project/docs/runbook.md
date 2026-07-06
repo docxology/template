@@ -75,8 +75,8 @@ required artifact contract.
 Targeted checks:
 
 ```bash
-uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
-uv run python scripts/02_run_analysis.py --project template_autoresearch_project
+uv run python scripts/pipeline/stage_01_test.py --project template_autoresearch_project --project-only --quiet
+uv run python scripts/pipeline/stage_02_analysis.py --project template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli plan --project template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli benchmark --project template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues

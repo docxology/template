@@ -53,7 +53,7 @@ The harness exposes two validation surfaces:
 
 ```bash
 uv run pytest projects/templates/template_sia/tests/ -m "not requires_ollama" -v
-uv run python scripts/01_run_tests.py --project templates/template_sia --project-only
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
 ```
 
 ## See also

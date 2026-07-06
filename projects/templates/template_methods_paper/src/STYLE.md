@@ -95,7 +95,7 @@ plan_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 `src/__init__.py` re-exports the full public API from `src.methods_dsl`, so
 callers can write `from src import compile_method`. The export set is kept in
 sync with `src/methods_dsl/__init__.py` — drift is caught by
-`scripts/check_template_drift.py`'s `__all___doc_drift` rule:
+`scripts/audit/check_template_drift.py`'s `__all___doc_drift` rule:
 
 ```python
 __all__ = [

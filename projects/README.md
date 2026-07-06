@@ -46,7 +46,7 @@ validation commands and infrastructure dependencies are exemplar-specific; read
 the chosen exemplar's `STANDALONE.md`. This is a public repo: only the public
 canonical exemplars under `templates/` are tracked; every other lifecycle folder
 under `projects/` remains local-only and is blocked by
-`scripts/check_tracked_projects.py` in pre-push + CI. Examples in this
+`scripts/audit/check_tracked_projects.py` in pre-push + CI. Examples in this
 documentation default to
 `projects/templates/template_code_project/` unless a doc explicitly compares
 projects.
@@ -158,7 +158,7 @@ Projects under `projects/working/` and `projects/archive/` are **preserved but n
 mv ../projects/working/myproject ../projects/archive/myproject
 
 # Run a non-rendered working project explicitly from this checkout
-uv run python scripts/03_render_pdf.py --project working/myproject
+uv run python scripts/pipeline/stage_03_render.py --project working/myproject
 
 # To enter default discovery, restore it through optional sidecar active/
 mv ../projects/working/myproject ../projects/active/myproject
@@ -273,51 +273,51 @@ is_valid, message = validate_project_structure(Path("projects/templates/template
 # Returns: (True, "Valid project structure")
 ```
 
-### 🧪 **Test Execution** (`scripts/01_run_tests.py`)
+### 🧪 **Test Execution** (`scripts/pipeline/stage_01_test.py`)
 
 ```bash
 # Runs project-specific tests with infrastructure orchestration
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 
 # Infrastructure validates structure, then runs:
 # uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
-### ⚙️ **Analysis Scripts** (`scripts/02_run_analysis.py`)
+### ⚙️ **Analysis Scripts** (`scripts/pipeline/stage_02_analysis.py`)
 
 ```bash
 # Discovers and executes project scripts
-uv run python scripts/02_run_analysis.py --project {name}
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}
 
 # Infrastructure finds and runs:
 # projects/{name}/scripts/analysis_pipeline.py
 # projects/{name}/scripts/generate_figures.py
 ```
 
-### 📄 **PDF Rendering** (`scripts/03_render_pdf.py`)
+### 📄 **PDF Rendering** (`scripts/pipeline/stage_03_render.py`)
 
 ```bash
 # Renders project manuscript using infrastructure.rendering
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 # Infrastructure processes:
 # projects/{name}/manuscript/*.md -> PDF with figures
 ```
 
-### ✅ **Quality Validation** (`scripts/04_validate_output.py`)
+### ✅ **Quality Validation** (`scripts/pipeline/stage_04_validate.py`)
 
 ```bash
 # Validates project outputs using infrastructure.validation
-uv run python scripts/04_validate_output.py --project {name}
+uv run python scripts/pipeline/stage_04_validate.py --project {name}
 
 # Checks PDF integrity, markdown references, file integrity
 ```
 
-### 📋 **Output Management** (`scripts/05_copy_outputs.py`)
+### 📋 **Output Management** (`scripts/pipeline/stage_05_copy.py`)
 
 ```bash
 # Organizes final deliverables
-uv run python scripts/05_copy_outputs.py --project {name}
+uv run python scripts/pipeline/stage_05_copy.py --project {name}
 
 # Copies from projects/{name}/output/ to output/{name}/
 ```
@@ -420,7 +420,7 @@ flowchart TB
 
 ```bash
 # Copy an existing project as a starting point without caches or outputs
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/myresearch \
   --new-name myresearch
@@ -515,10 +515,10 @@ uv run python scripts/maintenance/manage_workspace.py update
 ./run.sh --project myresearch --pipeline
 
 # Run individual stages
-uv run python scripts/01_run_tests.py --project myresearch
-uv run python scripts/02_run_analysis.py --project myresearch
-uv run python scripts/03_render_pdf.py --project myresearch
-uv run python scripts/04_validate_output.py --project myresearch
+uv run python scripts/pipeline/stage_01_test.py --project myresearch
+uv run python scripts/pipeline/stage_02_analysis.py --project myresearch
+uv run python scripts/pipeline/stage_03_render.py --project myresearch
+uv run python scripts/pipeline/stage_04_validate.py --project myresearch
 ```
 
 ### Command Line - All Projects
@@ -643,7 +643,7 @@ own project-level contracts.
 
 ```bash
 # Run tests across all projects (prefer per-project invocation to avoid conftest collisions)
-uv run python scripts/01_run_tests.py --project-only --all-projects
+uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects
 
 # Check public template source paths
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
@@ -703,7 +703,7 @@ manuscript-variable hydration, and thin project scripts.
 
 ```bash
 # Pipeline execution
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 ```
 
 ## Creating New Projects
@@ -712,7 +712,7 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 
 ```bash
 # Copy an existing project as template
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/my_research \
   --new-name my_research
@@ -782,7 +782,7 @@ for p in projects:
 ls -la projects/archive/
 
 # If found in archive, either render explicitly or resume it through sidecar working/
-uv run python scripts/03_render_pdf.py --project archive/myproject
+uv run python scripts/pipeline/stage_03_render.py --project archive/myproject
 mv ../projects/archive/myproject ../projects/working/myproject
 
 # Verify project structure is valid
@@ -873,7 +873,7 @@ EOF
 
 # Make executable and run via infrastructure
 chmod +x projects/myproject/scripts/analysis_pipeline.py
-uv run python scripts/02_run_analysis.py --project myproject
+uv run python scripts/pipeline/stage_02_analysis.py --project myproject
 ```
 
 ### "Test coverage below 90%"
@@ -909,7 +909,7 @@ uv run python -m infrastructure.validation.cli markdown projects/myproject/manus
 uv run python -m infrastructure.validation.cli pdf projects/myproject/output/pdf/
 
 # Render with verbose output
-LOG_LEVEL=0 uv run python scripts/03_render_pdf.py --project myproject
+LOG_LEVEL=0 uv run python scripts/pipeline/stage_03_render.py --project myproject
 ```
 
 ## See Also

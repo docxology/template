@@ -16,7 +16,7 @@ evidence and conservative live-claim boundaries.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_sia \
   --dest projects/working/my_sia \
   --new-name my_sia

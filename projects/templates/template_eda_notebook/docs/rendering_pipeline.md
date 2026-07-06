@@ -50,11 +50,11 @@ uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 
 ### 2. PDF render
 
-**Script**: `scripts/03_render_pdf.py` (at the repository root, **not** inside
+**Script**: `scripts/pipeline/stage_03_render.py` (at the repository root, **not** inside
 `projects/`)
 
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
 **Inputs**: `manuscript/*.md` + `manuscript/config.yaml` + `manuscript/preamble.md`
@@ -73,10 +73,10 @@ versions of each section, all under `output/`.
 
 ### 3. Copy deliverables
 
-**Script**: `scripts/05_copy_outputs.py` (at the repository root)
+**Script**: `scripts/pipeline/stage_05_copy.py` (at the repository root)
 
 ```bash
-uv run python scripts/05_copy_outputs.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_eda_notebook
 ```
 
 **Output**: final PDF and figures copied to the repo-level
@@ -111,7 +111,7 @@ under `output/pdf/` for the specific error.
 
 ### Slides not generated
 
-**Cause**: `scripts/03_render_pdf.py` needs Pandoc with Beamer support.
+**Cause**: `scripts/pipeline/stage_03_render.py` needs Pandoc with Beamer support.
 
 ```bash
 pandoc --version

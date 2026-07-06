@@ -81,8 +81,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_autoscientists --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_autoscientists
-uv run python scripts/05_copy_outputs.py --project templates/template_autoscientists
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_autoscientists
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_autoscientists
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -138,7 +138,7 @@ uv run pytest projects/templates/template_autoscientists/tests \
 project name — a bare name fails environment setup:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_autoscientists --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_autoscientists --core-only
 ```
 
 ## The language-model plug-in seam
@@ -180,4 +180,4 @@ manuscript under [`manuscript/`](manuscript/) for the full write-up.
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_autoscientists/tests/ --cov=projects/templates/template_autoscientists/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.

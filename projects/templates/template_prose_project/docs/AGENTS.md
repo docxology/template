@@ -137,7 +137,7 @@ viable project.
 | `manuscript/config.yaml.example` | AESTHETIC | Documentation; forkers copy → `config.yaml` |
 | `manuscript/AGENTS.md` | AESTHETIC | Agent guide; pipeline never reads it (and the substitution pass deliberately skips it) |
 | `docs/*.md` | AESTHETIC | Agent + human documentation; no gate parses these |
-| `docs/style_guide.md`, `docs/agent_instructions.md`, etc. | AESTHETIC (load-bearing for *agents*, not pipelines) | Drift detected only by audits; aspire to convert to a gate (see TIER L proposal `scripts/check_template_drift.py`) |
+| `docs/style_guide.md`, `docs/agent_instructions.md`, etc. | AESTHETIC (load-bearing for *agents*, not pipelines) | Drift detected only by audits; aspire to convert to a gate (see TIER L proposal `scripts/audit/check_template_drift.py`) |
 | `src/STYLE.md`, `tests/PATTERNS.md`, `scripts/CONVENTIONS.md` | AESTHETIC | Sibling-parity files; no automated enforcement |
 | `src/AGENTS.md`, `tests/AGENTS.md`, `scripts/AGENTS.md` | AESTHETIC | Per-subdir agent guides |
 | `pyproject.toml` | REQUIRED | Coverage gate config, pytest options, dependency declarations |

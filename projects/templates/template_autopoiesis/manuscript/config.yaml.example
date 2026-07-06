@@ -22,6 +22,9 @@ keywords:
 metadata:
   license: "MIT"
   language: "en"
+  # Denser page layout; forwarded to pandoc as `-V geometry:`. Pair with a
+  # \changefontsize declaration in preamble.md for a matching font rescale.
+  geometry: "a4paper,margin=0.25in"
 
 render:
   formats:

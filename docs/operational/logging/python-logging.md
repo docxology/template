@@ -40,7 +40,7 @@ export LOG_LEVEL=1  # INFO (default)
 export LOG_LEVEL=2  # WARN
 export LOG_LEVEL=3  # ERROR (least verbose)
 
-LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --project {name} --core-only
+LOG_LEVEL=0 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ---
@@ -109,7 +109,7 @@ log_success("All files processed", logger)
 ```bash
 # Enable JSON logging
 export STRUCTURED_LOGGING=true
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 Output:

@@ -49,7 +49,7 @@ The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) 
 
 Coverage gates: 90% for `projects/{name}/src/`, 60% for `infrastructure/` (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)). Full stage reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
 
-Run: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
+Run: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
 
 ## Key Principles
 

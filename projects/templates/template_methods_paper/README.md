@@ -40,9 +40,9 @@ To regenerate this exemplar from the public monorepo:
 git clone https://github.com/docxology/template
 cd template
 uv sync
-uv run python scripts/execute_pipeline.py --project templates/template_methods_paper --core-only
-uv run python scripts/04_validate_output.py --project templates/template_methods_paper
-uv run python scripts/05_copy_outputs.py --project templates/template_methods_paper
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_methods_paper
 ```
 
 ## Tests, outputs, and validation
@@ -62,7 +62,7 @@ example method, a step-count figure, and gate/trust-chain reports) and
 prints each path for manifest collection. Validate a run with stage 04:
 
 ```bash
-uv run python scripts/04_validate_output.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_methods_paper
 ```
 
 ## Configuration
@@ -184,4 +184,4 @@ for the library API.
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest template_methods_paper/tests --cov=template_methods_paper/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.

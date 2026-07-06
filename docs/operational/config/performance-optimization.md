@@ -131,7 +131,7 @@ Monitor memory consumption:
 
 ```bash
 # Check memory usage during pipeline
-/usr/bin/time -v uv run python scripts/execute_pipeline.py --project {name} --core-only
+/usr/bin/time -v uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Monitor continuously
 watch -n 1 'ps aux | grep python'
@@ -191,7 +191,7 @@ Typical pipeline execution times:
 
 ```bash
 # Profile entire pipeline
-uv run python -m cProfile -o pipeline.prof scripts/execute_pipeline.py --project {name} --core-only
+uv run python -m cProfile -o pipeline.prof scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Analyze profile
 uv run python -m pstats pipeline.prof
@@ -208,7 +208,7 @@ uv run python -m cProfile -o stage.prof scripts/pipeline/stage_03_render.py
 
 ```bash
 # Memory profiler
-uv run python -m memory_profiler scripts/execute_pipeline.py --project {name} --core-only
+uv run python -m memory_profiler scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ## Caching Strategies
@@ -322,7 +322,7 @@ grep "Completed in" projects/{name}/output/*.log | awk '{print $NF}'
 
 ## See Also
 
-- [`scripts/execute_pipeline.py`](../../../scripts/execute_pipeline.py) - Performance tracking implementation
+- [`scripts/runner/execute_pipeline.py`](../../../scripts/runner/execute_pipeline.py) - Performance tracking implementation
 - [`infrastructure/core/pipeline/stage_monitor.py`](../../../infrastructure/core/pipeline/stage_monitor.py) - Stage timing and progress tracking
 - [`infrastructure/core/runtime/function_profiler.py`](../../../infrastructure/core/runtime/function_profiler.py) - Function-level profiling utilities
 - [Troubleshooting](../troubleshooting/) - Performance troubleshooting

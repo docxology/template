@@ -57,7 +57,7 @@ Get started immediately with this **[research project template](https://github.c
 
 ```bash
 # Clean all outputs and regenerate everything
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### **🧪 Running Tests**
@@ -86,10 +86,10 @@ export PROJECT_TITLE="Your Project Title"
 uv sync
 
 # Run pipeline
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Run pipeline (includes cleanup)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### **📊 Development Workflow**
@@ -104,7 +104,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # 4. Build pipeline
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 **See [Copypasta — Outreach](copypasta-outreach.md)** for social media posts, forum
@@ -147,7 +147,7 @@ quick links section, and feature comparison table — moved there (with correcte
 - [ ] Click **[Use this template](https://github.com/docxology/template)** on GitHub
 - [ ] Clone your new repository
 - [ ] Run `uv sync` to install dependencies
-- [ ] Execute `uv run python scripts/execute_pipeline.py --project {name} --core-only` to test the pipeline
+- [ ] Execute `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` to test the pipeline
 
 ### **🔧 Customization Steps**
 

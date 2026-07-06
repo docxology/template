@@ -18,10 +18,10 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ru
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 # Docs / API surface (when touching docs or infrastructure package exports):
-# uv run python scripts/lint_docs.py
-# uv run python scripts/generate_api_reference_doc.py --check
+# uv run python scripts/audit/lint_docs.py
+# uv run python scripts/docgen/api_reference.py --check
 ```
 
 See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and security commands.
@@ -40,8 +40,8 @@ See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and sec
 - [ ] **Project Coverage**: ≥ 90% (as reported by CI)
 - [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
 - [ ] **Skill manifest** (if `infrastructure/**/SKILL.md` changed): Ran `uv run python -m infrastructure.skills write` and included `.cursor/skill_manifest.json` in the PR.
-- [ ] **Docs lint** (if `docs/`, `.github/**/*.md`, or root `*.md` changed): Ran `uv run python scripts/lint_docs.py`.
-- [ ] **API reference** (if `infrastructure/**/__init__.py` `__all__` changed): Ran `uv run python scripts/generate_api_reference_doc.py --check` (or `--write` and committed output).
+- [ ] **Docs lint** (if `docs/`, `.github/**/*.md`, or root `*.md` changed): Ran `uv run python scripts/audit/lint_docs.py`.
+- [ ] **API reference** (if `infrastructure/**/__init__.py` `__all__` changed): Ran `uv run python scripts/docgen/api_reference.py --check` (or `--write` and committed output).
 - [ ] **fep_lean CI** (only if `projects/fep_lean/**` changed): The **`fep_lean (gauss + lake)`** job runs when `projects/fep_lean/lean/lean-toolchain` exists; otherwise it is skipped. Confirm expectations for forks without Lean/Open Gauss.
 
 ---
@@ -61,16 +61,16 @@ Select stages that changed or need verification (matches `./run.sh` / [`docs/RUN
 | Stage | Primary path | Role |
 | :--- | :--- | :--- |
 | [ ] **0 — Clean** | `infrastructure/core/files/cleanup.py`, `infrastructure/core/pipeline/` | Pre-step output cleanup |
-| [ ] **1 — Setup** | `scripts/00_setup_environment.py` | Env verification |
-| [ ] **2 — Infra tests** | `scripts/01_run_tests.py`, `tests/infra_tests/` | Infrastructure suite |
-| [ ] **3 — Project tests** | `scripts/01_run_tests.py`, `projects/*/tests/` | Project suite |
-| [ ] **4 — Analysis** | `scripts/02_run_analysis.py`, `projects/*/scripts/` | Analysis scripts |
-| [ ] **5 — Render** | `scripts/03_render_pdf.py` | PDF / multi-format render |
-| [ ] **6 — Validate** | `scripts/04_validate_output.py`, `infrastructure/validation/` | Output QA |
-| [ ] **7 — LLM review** | `scripts/06_llm_review.py` | Reviews (Ollama) |
-| [ ] **8 — LLM translations** | `scripts/06_llm_review.py` | Translations (Ollama) |
-| [ ] **9 — Copy** | `scripts/05_copy_outputs.py` | Deliverables → `output/` |
-| [ ] **Executive report** | `scripts/07_generate_executive_report.py` | Multi-project summary |
+| [ ] **1 — Setup** | `scripts/pipeline/stage_00_setup.py` | Env verification |
+| [ ] **2 — Infra tests** | `scripts/pipeline/stage_01_test.py`, `tests/infra_tests/` | Infrastructure suite |
+| [ ] **3 — Project tests** | `scripts/pipeline/stage_01_test.py`, `projects/*/tests/` | Project suite |
+| [ ] **4 — Analysis** | `scripts/pipeline/stage_02_analysis.py`, `projects/*/scripts/` | Analysis scripts |
+| [ ] **5 — Render** | `scripts/pipeline/stage_03_render.py` | PDF / multi-format render |
+| [ ] **6 — Validate** | `scripts/pipeline/stage_04_validate.py`, `infrastructure/validation/` | Output QA |
+| [ ] **7 — LLM review** | `scripts/pipeline/stage_06_llm_review.py` | Reviews (Ollama) |
+| [ ] **8 — LLM translations** | `scripts/pipeline/stage_06_llm_review.py` | Translations (Ollama) |
+| [ ] **9 — Copy** | `scripts/pipeline/stage_05_copy.py` | Deliverables → `output/` |
+| [ ] **Executive report** | `scripts/pipeline/stage_07_executive_report.py` | Multi-project summary |
 
 ---
 

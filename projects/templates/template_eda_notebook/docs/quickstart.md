@@ -61,7 +61,7 @@ action.
 ## Render the Publication PDF
 
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
 ## View Results
@@ -92,6 +92,6 @@ uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
 |---|---|
 | Run tests | `uv run pytest projects/templates/template_eda_notebook/tests -v` |
 | Run analysis | `uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py` |
-| Render PDF | `uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook` |
-| Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project templates/template_eda_notebook` |
+| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook` |
+| Copy final deliverables | `uv run python scripts/pipeline/stage_05_copy.py --project templates/template_eda_notebook` |
 | Clean outputs | `rm -rf projects/templates/template_eda_notebook/output/` |

@@ -87,8 +87,8 @@ citation.
 To build the book from the repository root:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_textbook
-uv run python scripts/03_render_pdf.py    --project templates/template_textbook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_03_render.py    --project templates/template_textbook
 ```
 
 or run the full pipeline with `./run.sh`. See [`README.md`](README.md) for the

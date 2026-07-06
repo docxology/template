@@ -132,7 +132,7 @@ work behind a configuration knob and test both branches with real inputs.
 A green exit code is **not** proof the suite ran. Two failure modes have
 bitten this stack; both are now guarded, but the rule stands:
 
-1. **Zero collected = not a pass.** `scripts/01_run_tests.py --project
+1. **Zero collected = not a pass.** `scripts/pipeline/stage_01_test.py --project
    template_prose_project` resolves the interpreter from a per-project
    `.venv`. A `.venv` created by `uv venv` without `uv sync` lacks
    `pytest`, so pytest collects nothing and a naive scorer reports

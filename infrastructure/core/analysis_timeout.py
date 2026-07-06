@@ -1,4 +1,4 @@
-"""Per-script subprocess timeout for Stage 02 (``scripts/02_run_analysis.py``).
+"""Per-script subprocess timeout for Stage 02 (``scripts/pipeline/stage_02_analysis.py``).
 
 Default is **2 hours** per discovered analysis script — enough for long Hermes +
 Lean batches (e.g. ``fep_lean``). Override with ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` or

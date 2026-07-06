@@ -272,4 +272,4 @@ uv run python -m infrastructure.publishing.archival_cli \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 ```
 
-See [`archival/README.md`](archival/README.md) and `scripts/09_archive_publication.py`.
+See [`archival/README.md`](archival/README.md) and `scripts/runner/archive_publication.py`.

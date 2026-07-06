@@ -13,5 +13,5 @@ The repository Stage-02 command runs the configured list in
 `manuscript/config.yaml`:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook
 ```

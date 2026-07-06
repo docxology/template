@@ -61,7 +61,7 @@ resolves every `{{TOKEN}}` in `manuscript/*.md`.
 ## Render the Publication PDF
 
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 ## View Results
@@ -97,6 +97,6 @@ uv run python scripts/03_render_pdf.py --project templates/template_methods_pape
 | Run tests | `uv run pytest projects/templates/template_methods_paper/tests -v` |
 | Run analysis | `uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py` |
 | Generate manuscript variables | `uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py` |
-| Render PDF | `uv run python scripts/03_render_pdf.py --project templates/template_methods_paper` |
-| Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project templates/template_methods_paper` |
+| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper` |
+| Copy final deliverables | `uv run python scripts/pipeline/stage_05_copy.py --project templates/template_methods_paper` |
 | Clean outputs | `rm -rf projects/templates/template_methods_paper/output/` |

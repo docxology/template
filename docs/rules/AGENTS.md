@@ -76,7 +76,7 @@ The template provides **two pipeline orchestrators** with different scope:
 - **Features**: Interactive menu, research templates, LLM reviews, translations
 - **When to use**: Full builds, LLM features needed
 
-**Python Orchestrator (`uv run python scripts/execute_pipeline.py`)**
+**Python Orchestrator (`uv run python scripts/runner/execute_pipeline.py`)**
 
 - **Use for**: Core or full pipeline, programmatic execution (`--core-only` skips LLM stages)
 - **Stages**: Default **core** run is **eight** executor stages (clean outputs, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). With `--skip-infra`, infrastructure tests are omitted (seven stages). Full pipeline adds LLM review and translations before copy; see [`executor.py`](../../infrastructure/core/pipeline/executor.py) (`PipelineExecutor._build_stage_list`).

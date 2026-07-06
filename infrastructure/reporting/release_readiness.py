@@ -4,7 +4,7 @@ Consolidates a single release-readiness view from artifacts that *already* exist
 on disk — no network calls, no git invocation, no wall-clock reads. Every input
 is a local JSON/Markdown file produced by the rest of the pipeline:
 
-* **Docs lint** — the JSON payload of ``scripts/lint_docs.py --json`` (the shape
+* **Docs lint** — the JSON payload of ``scripts/audit/lint_docs.py --json`` (the shape
   emitted by :func:`infrastructure.validation.docs.lint_runner.emit_json_report`),
   passed as a file path via ``docs_lint_json``.
 * **Coverage / test facts** — parsed from ``docs/_generated/COUNTS.md``.
@@ -563,7 +563,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--docs-lint-json",
         type=Path,
         default=None,
-        help="Path to a `scripts/lint_docs.py --json` snapshot to fold in.",
+        help="Path to a `scripts/audit/lint_docs.py --json` snapshot to fold in.",
     )
     parser.add_argument(
         "--generated-at",

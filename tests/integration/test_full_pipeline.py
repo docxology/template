@@ -1,6 +1,6 @@
 """End-to-end pipeline integration tests with structured log assertions.
 
-Executes scripts/execute_pipeline.py against a minimal test project and
+Executes scripts/runner/execute_pipeline.py against a minimal test project and
 validates completion using structured JSON log output. All tests use real
 implementations — no mocks or fakes.
 """

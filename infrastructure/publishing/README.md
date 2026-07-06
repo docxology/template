@@ -190,7 +190,7 @@ uv run python -m infrastructure.publishing.status_report \
 uv run python -m infrastructure.publishing.status_report \
   --project projects/templates/template_gold_refinement --check
 # Enforced (not just documented): infrastructure.project.drift.check_publishing_status_block_current
-# runs this same check for every exemplar inside `scripts/check_template_drift.py --strict`,
+# runs this same check for every exemplar inside `scripts/audit/check_template_drift.py --strict`,
 # which is wired into CI (.github/workflows/ci.yml) and the pre-push hook -- a stale or
 # missing block fails the gate, it does not silently rot.
 
@@ -258,7 +258,7 @@ Pass `only=[...]` to `select_jobs()` to restrict the run to named platforms, and
 ```bash
 # Academic publishing
 export ZENODO_TOKEN="your-token"          # Zenodo production (cli.py publish-zenodo; publish_project_release.py fallback)
-export ZENODO_SANDBOX_TOKEN="your-token"  # Zenodo sandbox (scripts/publish_project_release.py)
+export ZENODO_SANDBOX_TOKEN="your-token"  # Zenodo sandbox (scripts/publish/publish_project_release.py)
 export ZENODO_API_TOKEN="your-token"      # Archival Zenodo provider
 
 # Code hosting / releases

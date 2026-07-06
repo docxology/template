@@ -56,10 +56,10 @@ real deposits.
 
 ```bash
 # Dry-run (default)
-uv run python scripts/09_archive_publication.py --project {name}
+uv run python scripts/runner/archive_publication.py --project {name}
 
 # Real deposits (requires credentials)
-uv run python scripts/09_archive_publication.py \
+uv run python scripts/runner/archive_publication.py \
   --project {name} \
   --providers zenodo software_heritage ipfs_pinata \
   --commit

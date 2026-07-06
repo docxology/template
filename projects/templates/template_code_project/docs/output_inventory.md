@@ -28,13 +28,13 @@ Paths in the table are relative to `projects/templates/template_code_project/`.
 | `output/reports/validation_report.json` | Pipeline validation summary | `infrastructure.validation.verify_output_integrity` | 6 — Validate Output |
 | `output/manuscript/*.md` | Token-substituted manuscript sections (renderer input) | `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` called from `scripts/z_generate_manuscript_variables.py` | 4 — Run Analysis (post-stage) |
 | `output/citations/*.{bib,apa,mla}` | Citation metadata in 3 formats | `generate_citations_from_metadata()` in `src/analysis/` | 4 — Run Analysis |
-| `output/pdf/template_code_project_combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/03_render_pdf.py` | 5 — Render PDF |
+| `output/pdf/template_code_project_combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/pipeline/stage_03_render.py` | 5 — Render PDF |
 | `output/slides/<section>.pdf` | Per-section Beamer slides (no Mermaid → no Chrome required) | `infrastructure/rendering/pdf_renderer.py` | 5 — Render PDF |
 | `output/web/*.html` | HTML version of each section | `infrastructure/rendering` | 5 — Render PDF |
 | `output/pdf/_combined_manuscript.{tex,aux,log}` | LaTeX intermediates | `xelatex` via Pandoc | 5 — Render PDF |
-| `output/logs/*.log` | Per-stage pipeline logs | `scripts/execute_pipeline.py` | every stage |
+| `output/logs/*.log` | Per-stage pipeline logs | `scripts/runner/execute_pipeline.py` | every stage |
 
-The repo-level `output/templates/template_code_project/` (written by `scripts/05_copy_outputs.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report.
+The repo-level `output/templates/template_code_project/` (written by `scripts/pipeline/stage_05_copy.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report.
 
 ## Adding a New Output File
 
@@ -44,7 +44,7 @@ The repo-level `output/templates/template_code_project/` (written by `scripts/05
    - **Reports** → `src/dashboard.py` or `infrastructure.reporting.*`
 2. Append a row to the table above naming the file, role, generator, and pipeline stage.
 3. If the new artifact is consumed by the manuscript, add a `{{TOKEN}}` to `src/manuscript_variables.py::generate_variables()` and reference it in the appropriate `manuscript/*.md` section.
-4. Re-run the pipeline (`./run.sh --pipeline --project templates/template_code_project --core-only` or `uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only`) and confirm the new file appears.
+4. Re-run the pipeline (`./run.sh --pipeline --project templates/template_code_project --core-only` or `uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only`) and confirm the new file appears.
 
 ## Regeneration Sequence
 
@@ -61,16 +61,16 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 
 # 4. Render PDF (produces pdf/, slides/, web/)
-uv run python scripts/03_render_pdf.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 
 # 5. Copy final deliverables to repo-level output/ (stage 9)
-uv run python scripts/05_copy_outputs.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
 
 Or, equivalently, the full pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
 ```
 
 ## See Also

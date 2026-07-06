@@ -7,9 +7,9 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 - Project tests and coverage:
   `uv run pytest projects/templates/template_storybook/tests/ --cov=projects/templates/template_storybook/src --cov-fail-under=90`
 - Stage-02 storybook render:
-  `uv run python scripts/02_run_analysis.py --project templates/template_storybook`
+  `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook`
 - Stage-03 manuscript render:
-  `uv run python scripts/03_render_pdf.py --project templates/template_storybook`
+  `uv run python scripts/pipeline/stage_03_render.py --project templates/template_storybook`
 
 ## Integrity and template-status gaps
 

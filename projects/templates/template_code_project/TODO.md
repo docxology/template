@@ -8,7 +8,7 @@ exemplar. Keep this file focused on template status, not general feature ideas.
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_code_project/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90`
 - Stage 02 analysis must write `output/data/optimization_results.csv` before strict manuscript-variable generation.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: PDF, markdown, output structure, figure registry, evidence registry, and design overlays pass; artifact manifest reports advisory drift after single-stage regeneration.
 - Code quality: `uv run ruff check projects/templates/template_code_project/src/` and `uv run mypy projects/templates/template_code_project/src/` must both pass clean.
 - Coverage floor: 231 tests, ≥97.65% coverage on `src/`; live count in `docs/_generated/COUNTS.md`.

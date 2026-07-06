@@ -10,7 +10,7 @@ the standard subprocess contract used by Stage-02:
 * Per-script timeout from ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` (default 7200s).
 * Sub-stage progress reporting with EMA-based ETA.
 
-This module exists so that ``scripts/02_run_analysis.py`` can stay a thin
+This module exists so that ``scripts/pipeline/stage_02_analysis.py`` can stay a thin
 orchestrator that only parses CLI arguments and dispatches here.
 """
 

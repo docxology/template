@@ -48,7 +48,7 @@
 
    ```bash
    # Run core pipeline (eight stages with --core-only; see RUN_GUIDE.md)
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 4. **View the result**
@@ -95,7 +95,7 @@
 4. **Rebuild manuscript**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 5. **Reference from other sections**
@@ -249,7 +249,7 @@
 4. **Rebuild**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -581,7 +581,7 @@ def test_process_negative():
 
    ```bash
    # Standard core build (eight executor stages by default; no LLM)
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
    # Or use unified interactive menu
    ./run.sh
@@ -669,7 +669,7 @@ def test_process_negative():
 4. **Generate with custom metadata**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 **Applied To**:
@@ -714,7 +714,7 @@ def test_process_negative():
 4. **Rebuild**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 **Naming Convention**:
@@ -769,7 +769,7 @@ def test_process_negative():
 
    ```bash
    # Core pipeline (eight stages with --core-only)
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
    # Or use unified interactive menu
    ./run.sh

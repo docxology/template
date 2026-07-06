@@ -72,7 +72,7 @@ Stages below mirror `pipeline.yaml` (executor-topological order—not strict num
 | LLM Translations | `06_llm_review.py --translations-only` | Optional translations | Skippable |
 | Copy Outputs | `05_copy_outputs.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
 
-`scripts/07_generate_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
+`scripts/pipeline/stage_07_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
 
 ## Steganographic Performance
 

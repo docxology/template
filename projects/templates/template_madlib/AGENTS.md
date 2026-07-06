@@ -31,9 +31,9 @@ Decision memory and verifier hardening follow [`../../../docs/rules/memory_and_d
 
 ```bash
 uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90
-uv run python scripts/02_run_analysis.py --project templates/template_madlib
-uv run python scripts/03_render_pdf.py --project templates/template_madlib
-uv run python scripts/04_validate_output.py --project templates/template_madlib
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_madlib
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_madlib
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_madlib
 ```
 
 A clean validation run should report figure registry, evidence registry, design overlays, and artifact manifest as passed.

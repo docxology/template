@@ -67,8 +67,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_madlib --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_madlib
-uv run python scripts/05_copy_outputs.py --project templates/template_madlib
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_madlib
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_madlib
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -160,7 +160,7 @@ claim ledger.
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 Output Markdown, PDF, HTML, slides, figures, reports, and copied deliverables are disposable. Regenerate them through Stages 02-05 after source edits; do not hand-edit `output/` artifacts to make a method or documentation claim pass review.
 

@@ -19,7 +19,7 @@ to tested, deterministic code rather than asserted in prose.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_methods_paper \
   --dest projects/working/my_methods_paper \
   --new-name my_methods_paper

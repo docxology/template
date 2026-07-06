@@ -90,7 +90,7 @@ frame[column] = pd.to_numeric(frame[column], errors="coerce")
 `src/__init__.py` re-exports the public API from the `src.eda` subpackage,
 so callers can write `from src import load_dataset`. The export set is kept
 in sync with `src/__init__.py` — drift is caught by
-`scripts/check_template_drift.py`'s `__all___doc_drift` rule:
+`scripts/audit/check_template_drift.py`'s `__all___doc_drift` rule:
 
 ```python
 __all__ = [

@@ -167,7 +167,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ),
         (
             "no-mocks",
-            ["uv", "run", "python", "scripts/verify_no_mocks.py"],
+            ["uv", "run", "python", "scripts/audit/verify_no_mocks.py"],
         ),
         (
             "all-exports",
@@ -182,7 +182,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ),
         (
             "docs-lint",
-            ["uv", "run", "python", "scripts/lint_docs.py", "--quiet"],
+            ["uv", "run", "python", "scripts/audit/lint_docs.py", "--quiet"],
         ),
         (
             "stage-table",
@@ -190,7 +190,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "uv",
                 "run",
                 "python",
-                "scripts/generate_stage_table_doc.py",
+                "scripts/docgen/stage_table.py",
             ],
         ),
         (
@@ -199,7 +199,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "uv",
                 "run",
                 "python",
-                "scripts/generate_api_reference_doc.py",
+                "scripts/docgen/api_reference.py",
                 "--check",
             ],
         ),
@@ -229,7 +229,7 @@ GATE_NAMES: tuple[str, ...] = tuple(name for name, _ in build_gate_specs(Path(".
 def _stage_table_passed(returncode: int, combined_output: str) -> bool:
     """Decide whether the stage-table gate passed.
 
-    ``scripts/generate_stage_table_doc.py`` is idempotent: it exits 0 in
+    ``scripts/docgen/stage_table.py`` is idempotent: it exits 0 in
     both ``no-op`` and ``would-update`` cases. For health-check purposes
     the gate must fail when the script reports any pending updates, so
     we scan its output for drift — but ``Would update 0`` is the

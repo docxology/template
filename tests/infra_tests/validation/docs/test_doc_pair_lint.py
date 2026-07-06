@@ -119,7 +119,7 @@ def test_lint_docs_doc_pairs_only_json() -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            "scripts/lint_docs.py",
+            "scripts/audit/lint_docs.py",
             "--doc-pairs-only",
             "--quiet",
             "--json",

@@ -2,7 +2,7 @@
 ################################################################################
 # Tests for bash_utils.sh functions
 #
-# This script tests the utility functions in scripts/bash_utils.sh
+# This script tests the utility functions in scripts/shell/bash_utils.sh
 # Run with: bash tests/integration/test_bash_utils.sh
 ################################################################################
 
@@ -14,7 +14,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # Source the utilities we're testing (avoid redeclaration errors)
 if [[ -z "${RED:-}" ]]; then
-    source "$REPO_ROOT/scripts/bash_utils.sh"
+    source "$REPO_ROOT/scripts/shell/bash_utils.sh"
 fi
 
 # Test counters

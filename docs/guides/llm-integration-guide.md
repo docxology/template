@@ -30,7 +30,7 @@ The simplest way to use LLM features is through the pipeline:
 ./run.sh --pipeline  # Select your project, LLM stages run automatically
 
 # Or via the core pipeline
-uv run python scripts/execute_pipeline.py --project template_code_project
+uv run python scripts/runner/execute_pipeline.py --project template_code_project
 # Stage 06 (LLM Review) runs if Ollama is available
 ```
 

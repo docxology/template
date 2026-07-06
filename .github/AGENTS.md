@@ -16,7 +16,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 Public exemplar GitHub/Zenodo records are generated into [`.github/README.md`](README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) from [`../docs/_generated/publication_records.md`](../docs/_generated/publication_records.md). Refresh them with:
 
 ```bash
-uv run python scripts/generate_publication_records_doc.py --refresh-external
+uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
 ## Directory Structure
@@ -77,13 +77,13 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 14 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
 | 15 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
 
-**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), and **`scripts/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
+**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/audit/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), and **`scripts/audit/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/docgen/api_reference.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
 Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
 
-The `verify-no-mocks` job runs [`scripts/verify_no_mocks.py`](../scripts/verify_no_mocks.py) at the repository root (not under `.github/`).
+The `verify-no-mocks` job runs [`scripts/audit/verify_no_mocks.py`](../scripts/audit/verify_no_mocks.py) at the repository root (not under `.github/`).
 
 ### Stale Workflow (`workflows/stale.yml`)
 
@@ -200,7 +200,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ru
 # Run tests locally (mirror CI)
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
 # Security scan locally (mirror CI)

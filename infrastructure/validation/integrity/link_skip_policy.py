@@ -103,7 +103,7 @@ PATH_SKIP_KEYWORDS: frozenset[str] = frozenset(
         "scripts/│",
         "scripts/tests",
         "projects/templates/template_code_project/:",
-        "scripts/03_render_pdf.py;",
+        "scripts/pipeline/stage_03_render.py;",
         "data_quality",
         "infrastructure/[module_name",
         "06_fulltext_assessment",

@@ -76,8 +76,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_sia --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_sia
-uv run python scripts/05_copy_outputs.py --project templates/template_sia
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_sia
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_sia
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -89,7 +89,7 @@ infrastructure, pipeline stages, or cross-template validation.
 ```bash
 uv run python projects/templates/template_sia/scripts/run_sia_loop.py
 uv run python projects/templates/template_sia/scripts/z_generate_manuscript_variables.py
-uv run python scripts/01_run_tests.py --project templates/template_sia --project-only
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
 ```
 
 Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
@@ -114,7 +114,7 @@ Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
 

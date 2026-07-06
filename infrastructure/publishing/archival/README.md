@@ -63,7 +63,7 @@ uv run python -m infrastructure.publishing.archival_cli \
   --commit
 ```
 
-Pipeline stage: `uv run python scripts/09_archive_publication.py --project <name>` (expects Stage 12 bundle).
+Pipeline stage: `uv run python scripts/runner/archive_publication.py --project <name>` (expects Stage 12 bundle).
 
 ## Import path
 

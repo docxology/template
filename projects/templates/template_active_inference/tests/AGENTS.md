@@ -31,7 +31,7 @@ diagnostics only.
 The root project-test stage skips `long_running` tests by default, even when
 `--include-slow` is set, so template CI and local smoke loops do not rerun every
 deep negative-control regeneration. Use
-`uv run python scripts/01_run_tests.py --project templates/template_active_inference --project-only --include-slow --include-long-running`
+`uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference --project-only --include-slow --include-long-running`
 for an intentional deep gate refresh.
 
 Standard pytest expects the committed gate-artifact snapshot under `output/` to

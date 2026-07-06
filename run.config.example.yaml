@@ -1,8 +1,8 @@
 # run.config — reproducible project × stage run matrix (example).
 #
 # Copy to `run.config` at the repo root and edit. Run with:
-#     uv run python scripts/run_matrix.py            # executes this matrix
-#     uv run python scripts/run_matrix.py --dry-run  # print the plan only
+#     uv run python scripts/runner/run_matrix.py            # executes this matrix
+#     uv run python scripts/runner/run_matrix.py --dry-run  # print the plan only
 #
 # This is the deterministic, version-controllable alternative to the interactive
 # menu: it pins exactly which stages run for exactly which projects, in canonical

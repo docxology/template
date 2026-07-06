@@ -34,7 +34,7 @@ as verified success.
 ```bash
 uv run python -m infrastructure.reporting.evidence_graph build templates/template_code_project --json /tmp/evidence_graph.json
 uv run python -m infrastructure.reporting.release_readiness --repo-root . --out output/release_readiness.md
-uv run python scripts/execute_multi_project.py --public-projects
+uv run python scripts/runner/execute_multi_project.py --public-projects
 ```
 
 ## Tests
@@ -44,7 +44,7 @@ uv run pytest tests/infra_tests/reporting -q
 ```
 
 For changes that touch project test execution, also run the relevant
-`scripts/01_run_tests.py` mode because `pipeline_test_runner.py` controls the
+`scripts/pipeline/stage_01_test.py` mode because `pipeline_test_runner.py` controls the
 project output lock used by pipeline stages.
 
 ## Change Checklist

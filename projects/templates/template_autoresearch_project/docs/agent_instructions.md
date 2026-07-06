@@ -20,7 +20,7 @@
 2. Add manuscript tokens in `src/manuscript/manuscript_tokens_*.py`.
 3. Register any new figure in the figure registry.
 4. Run: `uv run pytest tests/ --cov=src --cov-fail-under=90`.
-5. Run the bounded ML pipeline: `uv run python scripts/02_run_analysis.py --project templates/template_autoresearch_project`.
+5. Run the bounded ML pipeline: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_autoresearch_project`.
 6. Validate: `uv run python -m infrastructure.validation.evidence_registry ...`.
 
 ## Critical references

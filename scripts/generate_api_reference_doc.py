@@ -9,8 +9,8 @@ and injects it between ``<!-- BEGIN:API_REFERENCE -->`` /
 
 Usage::
 
-    uv run python scripts/generate_api_reference_doc.py --check    # CI
-    uv run python scripts/generate_api_reference_doc.py --write    # apply
+    uv run python scripts/docgen/api_reference.py --check    # CI
+    uv run python scripts/docgen/api_reference.py --write    # apply
 
 Exit codes:
     0: Up-to-date (``--check``) or write succeeded (``--write``).
@@ -95,7 +95,7 @@ def main(argv: list[str] | None = None) -> int:
     if new_text == current:
         log_success(f"API reference is up-to-date ({len(packages)} packages).", logger)
         return 0
-    logger.error("API reference is stale. Run: uv run python scripts/generate_api_reference_doc.py --write")
+    logger.error("API reference is stale. Run: uv run python scripts/docgen/api_reference.py --write")
     return 1
 
 

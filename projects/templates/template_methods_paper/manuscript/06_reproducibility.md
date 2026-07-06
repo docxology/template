@@ -22,13 +22,13 @@ uv run pytest projects/templates/template_methods_paper/tests \
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 
 # 4. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 Or, end to end via the orchestrated pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
 ```
 
 ## Generated artifact registry

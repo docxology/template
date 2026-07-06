@@ -156,7 +156,7 @@ ax.set_title(f"Average: {avg}")
 
 ### 3. **Integration with Build System**
 
-The `scripts/execute_pipeline.py` orchestrator automatically:
+The `scripts/runner/execute_pipeline.py` orchestrator automatically:
 
 1. **Runs tests** with coverage requirements (ensuring infrastructure and project code work)
 2. **Executes project scripts** (validating projects/{name}/src/ integration)
@@ -309,7 +309,7 @@ The thin orchestrator pattern has been successfully implemented, establishing a 
 
 **Master Orchestrator:**
 
-- **`scripts/execute_pipeline.py`** orchestrates the declared DAG pipeline
+- **`scripts/runner/execute_pipeline.py`** orchestrates the declared DAG pipeline
 
 This architecture ensures:
 

@@ -51,7 +51,7 @@ def test_committed_manifest_in_sync_with_fresh_build() -> None:
     committed = (REPO_ROOT / MANIFEST_RELATIVE_PATH).read_text(encoding="utf-8")
     fresh = json.dumps(build_template_manifest(REPO_ROOT), indent=2, ensure_ascii=False) + "\n"
     assert committed == fresh, (
-        f"{MANIFEST_RELATIVE_PATH} is stale — run `uv run python scripts/generate_exemplar_roster_doc.py`"
+        f"{MANIFEST_RELATIVE_PATH} is stale — run `uv run python scripts/docgen/exemplar_roster.py`"
     )
 
 
@@ -106,5 +106,5 @@ def test_committed_doc_in_sync_with_fresh_render() -> None:
     committed = (REPO_ROOT / DOC_RELATIVE_PATH).read_text(encoding="utf-8")
     fresh = render_roster_markdown(collect_entries(REPO_ROOT))
     assert committed == fresh, (
-        f"{DOC_RELATIVE_PATH} is stale — run `uv run python scripts/generate_exemplar_roster_doc.py`"
+        f"{DOC_RELATIVE_PATH} is stale — run `uv run python scripts/docgen/exemplar_roster.py`"
     )

@@ -176,7 +176,7 @@ first_class = list_platforms(tier=PublishingTier.FIRST_CLASS)
 
 `infrastructure.publishing.status_report` turns the platform registry (which platforms exist) plus a project's `manuscript/config.yaml` (what has been published) into a compact, regenerable Markdown block for the project README. The committed block encodes only **durable** publication state — DOIs, repository, and release identifiers from config — never machine-specific credential presence (that is `credential_check.py`'s job). The block is delimited by stable HTML-comment markers so it can be rewritten without disturbing surrounding prose.
 
-Every `projects/templates/*` exemplar carries this block under a `## Publication and rendering` heading (rolled out 2026-06-30). It is **enforced, not just conventional**: `infrastructure.project.drift.checks_exemplar.check_publishing_status_block_current` runs `status_report_is_current()` for every exemplar inside `scripts/check_template_drift.py`, which CI and the pre-push hook run with `--strict` — a missing or stale block fails the gate.
+Every `projects/templates/*` exemplar carries this block under a `## Publication and rendering` heading (rolled out 2026-06-30). It is **enforced, not just conventional**: `infrastructure.project.drift.checks_exemplar.check_publishing_status_block_current` runs `status_report_is_current()` for every exemplar inside `scripts/audit/check_template_drift.py`, which CI and the pre-push hook run with `--strict` — a missing or stale block fails the gate.
 
 | Symbol | Role |
 | --- | --- |
@@ -298,7 +298,7 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `executable_bundle.py` | `bundle_project` | — |
 | `cli.py` | `main`, `publish_zenodo_command`, `extract_metadata_command`, ... | `--token`, `ZENODO_PROD_TOKEN`, `ZENODO_TOKEN` |
 | `publish_cli.py` | `main` | `--token`, `--repo`, `--tag`, `--name` |
-| `scripts/publish_project_release.py` | `run_release_workflow` (via thin script) | `--project`, `--tag`, `--repo`, GitHub + Zenodo tokens |
+| `scripts/publish/publish_project_release.py` | `run_release_workflow` (via thin script) | `--project`, `--tag`, `--repo`, GitHub + Zenodo tokens |
 | `archival_cli.py` | `main`, `_build_providers` | `--commit` for real deposits |
 | `citations.py` | `generate_citation_*`, `format_authors_apa`, `format_authors_mla` | — |
 | `pypi_release.py` | `run_test_pypi_release` (manual TestPyPI gate; not pytest) — shim for `pypi/` | `TEST_PYPI_API_TOKEN` via `scripts/publish/test_pypi.py` |
@@ -487,14 +487,14 @@ github_body = build_github_release_body(
 Thin orchestrator (opt-in; not part of the default pipeline DAG):
 
 ```bash
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project template_code_project \
   --tag v2.0.0 \
   --repo owner/template \
   --dry-run
 
 # Production Zenodo after render pipeline:
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project template_code_project \
   --tag v2.0.0 \
   --repo owner/template \
@@ -540,7 +540,7 @@ Only durable identifiers belong here — never credential presence, which is vol
 Environment variables:
 
 - `ZENODO_TOKEN` / `ZENODO_PROD_TOKEN` — Zenodo API (CLI, production release workflow, and direct `publish_to_zenodo` calls)
-- `ZENODO_SANDBOX_TOKEN` — sandbox token for `scripts/publish_project_release.py`
+- `ZENODO_SANDBOX_TOKEN` — sandbox token for `scripts/publish/publish_project_release.py`
 - `ZENODO_API_TOKEN` — archival Zenodo provider
 - `GITHUB_TOKEN` — GitHub releases and GitHub Pages deployment
 - `PYPI_TOKEN` — PyPI production upload (`pypi/` subpackage; `__token__` username)

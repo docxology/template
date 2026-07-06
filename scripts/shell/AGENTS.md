@@ -23,13 +23,13 @@ scripts.  The shell scripts currently live at the root of `scripts/` or in the
 
 ```bash
 # System health check
-bash scripts/health-check.sh
+bash scripts/shell/health-check.sh
 
 # Local CI
-bash scripts/ci_local.sh
+bash scripts/shell/ci_local.sh
 
 # Backup
-bash scripts/backup-daily.sh
+bash scripts/shell/backup-daily.sh
 ```
 
 ## See also

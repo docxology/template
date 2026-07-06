@@ -98,11 +98,11 @@ De-duplication is by `canonical_id` (priority `doi > arxiv_id > s2_id > openalex
 
 ## Render the Publication PDF
 
-Run this one **from the repository root** (`scripts/03_render_pdf.py` is a repo-level
+Run this one **from the repository root** (`scripts/pipeline/stage_03_render.py` is a repo-level
 orchestrator, distinct from the project's own `scripts/03_build_knowledge_graph.py`):
 
 ```bash
-uv run python scripts/03_render_pdf.py --project template_literature_meta_analysis
+uv run python scripts/pipeline/stage_03_render.py --project template_literature_meta_analysis
 ```
 
 Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/template_literature_meta_analysis_combined.pdf`
@@ -134,5 +134,5 @@ Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/temp
 | Knowledge graph (optional, Ollama) | `uv run python scripts/03_build_knowledge_graph.py --max-papers 25` |
 | Generate figures | `uv run python scripts/04_generate_figures.py` |
 | Inject manuscript variables | `uv run python scripts/05_inject_variables.py` |
-| Render PDF | `uv run python scripts/03_render_pdf.py --project template_literature_meta_analysis` |
+| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project template_literature_meta_analysis` |
 | Clean outputs | `rm -rf projects/templates/template_literature_meta_analysis/output/` |

@@ -70,7 +70,7 @@ figure-data preparer in `src/eda/figures.py`:
    ```
 4. **Render PDF** from the repository root:
    ```bash
-   uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+   uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
    ```
 5. **Verify figures and the summary table appear** in the rendered PDF.
 

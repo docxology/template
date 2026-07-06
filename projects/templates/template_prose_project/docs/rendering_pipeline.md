@@ -109,12 +109,12 @@ to a non-empty string before Phase 3. Unresolved tokens render literally.
 
 ### Phase 3 — Render PDF
 
-**Script**: `scripts/03_render_pdf.py` (at repository root, **not** inside
+**Script**: `scripts/pipeline/stage_03_render.py` (at repository root, **not** inside
 `projects/`).
 
 **Command**:
 ```bash
-uv run python scripts/03_render_pdf.py --project template_prose_project
+uv run python scripts/pipeline/stage_03_render.py --project template_prose_project
 ```
 
 **Inputs**: `output/manuscript/*.md` (substituted) + `manuscript/config.yaml`
@@ -140,11 +140,11 @@ uv run python scripts/03_render_pdf.py --project template_prose_project
 
 ### Phase 4 — Copy Final Deliverables
 
-**Script**: `scripts/05_copy_outputs.py` (at repository root).
+**Script**: `scripts/pipeline/stage_05_copy.py` (at repository root).
 
 **Command**:
 ```bash
-uv run python scripts/05_copy_outputs.py --project template_prose_project
+uv run python scripts/pipeline/stage_05_copy.py --project template_prose_project
 ```
 
 **Output**: Final PDF and figures copied to

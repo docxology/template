@@ -412,8 +412,8 @@ def format_audit_markdown(audit: PublicDocumentationAudit, *, max_findings: int 
     lines = [
         "# Public Documentation RedTeam Audit",
         "",
-        "This report is advisory. Blocking checks remain in `scripts/lint_docs.py` and",
-        "`scripts/check_template_drift.py`; this surface inventories documentation and",
+        "This report is advisory. Blocking checks remain in `scripts/audit/lint_docs.py` and",
+        "`scripts/audit/check_template_drift.py`; this surface inventories documentation and",
         "highlights likely false-certification risks for follow-up hardening.",
         "",
         "## Inventory",

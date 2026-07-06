@@ -451,7 +451,7 @@ def _load_evaluation_criteria(value: Any) -> tuple[EvaluationCriterion, ...]:
             EvaluationCriterion(
                 name="Render readiness",
                 target="PDF, HTML, slides, figure registry, evidence registry, and design overlays pass.",
-                evidence="scripts/04_validate_output.py",
+                evidence="scripts/pipeline/stage_04_validate.py",
                 gate="validation",
             ),
         )

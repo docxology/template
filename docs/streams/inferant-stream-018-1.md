@@ -24,7 +24,7 @@
 | Python deps | `uv sync` from repo root |
 | Full PDF path | `pandoc` + `xelatex` on PATH (see [RUN_GUIDE.md](../RUN_GUIDE.md) if installs fail) |
 | LLM stages | Optional; local endpoint (e.g. Ollama) if you want reviews/translations live |
-| Shorter run | `uv run python scripts/execute_pipeline.py --project <name> --core-only` skips LLM stages |
+| Shorter run | `uv run python scripts/runner/execute_pipeline.py --project <name> --core-only` skips LLM stages |
 
 **Host cue:** *“Type `1` if you’re here for the pipeline, `2` for stego, `3` for both — I’ll weight the demo.”*
 
@@ -74,7 +74,7 @@
 | 0:52 | Quality gates + docs map |
 | 0:62 | Paper pointer + Q&A |
 
-Adjust spacing if you run **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** for a shorter middle act.
+Adjust spacing if you run **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** for a shorter middle act.
 
 ---
 

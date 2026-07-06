@@ -54,7 +54,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 
 ### Template Drift (`drift/`)
 
-- `run_drift_checks(repo_root, projects)` - exemplar doc/code drift battery (used by `scripts/check_template_drift.py`)
+- `run_drift_checks(repo_root, projects)` - exemplar doc/code drift battery (used by `scripts/audit/check_template_drift.py`)
 - `Finding`, `Report` - structured drift findings
 - `check_project_scripts` / `check_repo_scripts` (`orchestrator.py`) - AST thin-orchestrator enforcement
 - Line-count gate: `infrastructure.validation.line_count.scan_project_scripts` (via `scripts/gates/module_line_count_check.py`)
@@ -81,7 +81,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `offending_tracked_projects(repo_root)` — non-exemplar paths tracked under `projects/`
 - `tracked_generated_artifacts(repo_root)` — committed files under disposable `output/` trees
 - `is_generated_artifact_path(path)` — path classifier for generated outputs
-- Used by `scripts/check_tracked_projects.py` and `scripts/check_tracked_generated_artifacts.py`
+- Used by `scripts/audit/check_tracked_projects.py` and `scripts/audit/check_tracked_generated_artifacts.py`
 
 ### CodeGraph Local Integration (`codegraph.py`)
 
@@ -111,7 +111,7 @@ skip_combined_pytest = true  # omit from combined multi-project pytest union
 ### Project Setup Hook (`setup_hook.py`)
 
 A project may ship an optional one-time bootstrap script that is executed
-during Stage 0 (`scripts/00_setup_environment.py`). Common uses: install a
+during Stage 0 (`scripts/pipeline/stage_00_setup.py`). Common uses: install a
 toolchain (e.g. Lean/elan), prime a model cache, fetch a dataset.
 
 **Public API:**
@@ -397,7 +397,7 @@ A project is invalid if:
 
 ```bash
 # Clean-copy the default template project
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/myresearch \
   --new-name myresearch

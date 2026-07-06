@@ -28,7 +28,7 @@ Flags:
     --only NAMES        Restrict to a subset (pinata huggingface osf testpypi github netlify cloudflare).
     --include-github    Include a GitHub release (off by default -- upload_runner's github job
                          uses a fixed smoke-test tag, not a real versioned release; prefer
-                         scripts/publish_project_release.py for an actual release).
+                         scripts/publish/publish_project_release.py for an actual release).
     --include-static    Include Netlify + Cloudflare static-site deploys.
 
 A JSON receipt is written to output/templates/<name>/upload_receipts.json.

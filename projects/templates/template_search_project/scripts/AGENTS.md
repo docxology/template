@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Thin orchestrators executed in **lexicographic order** by `scripts/02_run_analysis.py`. No business logic beyond CLI and paths.
+Thin orchestrators executed in **lexicographic order** by `scripts/pipeline/stage_02_analysis.py`. No business logic beyond CLI and paths.
 
 ## Execution order (analysis stage)
 

@@ -24,7 +24,7 @@ statistics-heavy literature *meta-analysis* over a fixed topic, see
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_search_project \
   --dest projects/working/my_search_project \
   --new-name my_search_project

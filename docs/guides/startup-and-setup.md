@@ -96,7 +96,7 @@ The canonical non-LLM pipeline run against `template_code_project`. This validat
 
 **Equivalent explicit form:**
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
 ```
 
 **Expected stage log (abbreviated):**
@@ -270,7 +270,7 @@ Check which lines are uncovered and add tests for them.
 ```bash
 # Run with debug logging
 export LOG_LEVEL=0
-uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
 ```
 
 ### `pre-commit` not found after `uv sync`

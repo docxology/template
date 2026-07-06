@@ -8,8 +8,8 @@ Run from the template repository root:
 
 ```bash
 uv run pytest projects/templates/template_literature_meta_analysis/tests/   --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90
-uv run python scripts/check_template_drift.py --strict --project templates/template_literature_meta_analysis
-uv run python scripts/generate_exemplar_roster_doc.py --check
+uv run python scripts/audit/check_template_drift.py --strict --project templates/template_literature_meta_analysis
+uv run python scripts/docgen/exemplar_roster.py --check
 ```
 
 Live test counts and coverage snapshots belong in `../../../docs/_generated/COUNTS.md`.

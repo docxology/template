@@ -4,13 +4,13 @@
 
 ```bash
 # Tests
-uv run python scripts/01_run_tests.py --project templates/template_sia --project-only
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
 
 # Analysis only
-uv run python scripts/02_run_analysis.py --project templates/template_sia
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_sia
 
 # Core pipeline (tests → analysis → PDF → validate → copy)
-uv run python scripts/execute_pipeline.py --project templates/template_sia --core-only --skip-infra
+uv run python scripts/runner/execute_pipeline.py --project templates/template_sia --core-only --skip-infra
 ```
 
 ## From project directory

@@ -110,7 +110,7 @@ uv run python scripts/pipeline/stage_01_test.py --project {name}
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 # Test the build pipeline
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### 4. **Submit a Pull Request**

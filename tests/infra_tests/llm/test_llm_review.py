@@ -1,4 +1,4 @@
-"""Tests for scripts/06_llm_review.py - LLM Manuscript Review orchestrator.
+"""Tests for scripts/pipeline/stage_06_llm_review.py - LLM Manuscript Review orchestrator.
 
 Tests cover:
 - ReviewMetrics, ManuscriptInputMetrics, SessionMetrics dataclasses

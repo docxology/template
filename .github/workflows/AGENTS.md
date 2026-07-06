@@ -111,7 +111,7 @@ action — not each job.
 #### 3. Verify No Mocks Policy (`verify-no-mocks`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **Script:** [`scripts/verify_no_mocks.py`](../../scripts/verify_no_mocks.py) (repository root)
+- **Script:** [`scripts/audit/verify_no_mocks.py`](../../scripts/audit/verify_no_mocks.py) (repository root)
 - **Policy:** Absolutely no `MagicMock`, `mocker.patch`, `unittest.mock` in test files
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
@@ -142,7 +142,7 @@ action — not each job.
 - **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × each public exemplar in [`../../docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) (`templates/template_*`) = **24 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
-- **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
+- **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
 - **Codecov upload:** On Python 3.12 only
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
@@ -161,7 +161,7 @@ action — not each job.
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Steps:**
   1. `infrastructure.validation.cli markdown projects/*/manuscript/` — validates all active project manuscripts
-  2. `scripts/generate_api_reference_doc.py --check` — API reference drift gate
+  2. `scripts/docgen/api_reference.py --check` — API reference drift gate
   3. Dynamic project import check — imports the public project source paths from `infrastructure.project.public_scope`
 
 #### 8. Security Scan (`security`)
@@ -178,7 +178,7 @@ action — not each job.
 - **External tools (real, not mocked):**
   - `mmdc` (mermaid-cli) — `npm install -g @mermaid-js/mermaid-cli`
   - `chrome-headless-shell` — `npx puppeteer browsers install chrome-headless-shell`, exported via `CHROME_EXECUTABLE_PATH`
-- **Linters (thin orchestrator [`scripts/lint_docs.py`](../../scripts/lint_docs.py)):**
+- **Linters (thin orchestrator [`scripts/audit/lint_docs.py`](../../scripts/audit/lint_docs.py)):**
   1. **Mermaid** — every fenced \`\`\`mermaid block in `docs/`, `infrastructure/`, `.github/`, `scripts/`, and root `*.md` is rendered with the real `mmdc` binary. Failure exits non-zero.
   2. **Cross-links** — every relative Markdown link must resolve on disk; fenced and inline-code spans are skipped.
   3. **Consistency** — `N Python (sub)packages` claims must match the live count under `infrastructure/`; rotating project names (`fep_lean`, `cogant`, …) must be conditionally framed in long-lived docs.
@@ -258,7 +258,7 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
 #   uv sync --group monitoring
 # or full explicit parity: uv sync --group rendering --group monitoring --group discopy
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
 # fep_lean only — requires gauss, lake, lean on PATH (see that project's tests/AGENTS.md when present)
@@ -297,7 +297,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ru
 uv run pytest tests/infra_tests/ -v --tb=long -s
 
 # Project tests — prefer the orchestrator (runs one pytest per project; avoids conftest/package collisions):
-uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 
 # Advanced / blanket globs — running **all** `projects/*/tests/` in **one** pytest process can fail when multiple projects ship `tests/conftest` packages with identical names; use per-project directories instead.
 

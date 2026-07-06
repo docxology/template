@@ -16,7 +16,7 @@ should trace to a tested function rather than living in a notebook cell.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_eda_notebook \
   --dest projects/working/my_eda_project \
   --new-name my_eda_project

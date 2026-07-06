@@ -32,8 +32,8 @@ uv run python projects/templates/template_pools_rules_tools/scripts/01_validate_
 uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py
 uv run python projects/templates/template_pools_rules_tools/scripts/03_generate_manuscript.py
 
-uv run python scripts/02_run_analysis.py --project templates/template_pools_rules_tools
-uv run python scripts/03_render_pdf.py --project templates/template_pools_rules_tools
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_pools_rules_tools
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_pools_rules_tools
 ```
 
 ## Pitfalls

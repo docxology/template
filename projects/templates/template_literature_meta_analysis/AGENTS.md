@@ -51,9 +51,9 @@ Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it 
 
 ```bash
 uv run pytest projects/templates/template_literature_meta_analysis/tests/   --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90
-uv run python scripts/check_template_drift.py --strict --project templates/template_literature_meta_analysis
-uv run python scripts/generate_exemplar_roster_doc.py --check
-uv run python scripts/check_tracked_projects.py
+uv run python scripts/audit/check_template_drift.py --strict --project templates/template_literature_meta_analysis
+uv run python scripts/docgen/exemplar_roster.py --check
+uv run python scripts/audit/check_tracked_projects.py
 ```
 
 Run the focused stage tests for the part you changed. For broad source/doc changes, run the project coverage gate plus the repo public-scope drift and guard checks.

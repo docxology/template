@@ -60,7 +60,7 @@ def _stage_table_caption(yaml_link: str) -> str:
     return (
         "<!-- This block is generated from "
         f"[`{_PIPELINE_YAML_REL}`]({yaml_link}) "
-        "by `scripts/generate_stage_table_doc.py`. Do not hand-edit. "
+        "by `scripts/docgen/stage_table.py`. Do not hand-edit. "
         "Stage indices are **0-based positions in the YAML** and intentionally do "
         "**not** match the `scripts/NN_*.py` numeric prefixes "
         "(for example, stage 9 runs `05_copy_outputs.py`). -->"

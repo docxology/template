@@ -6,7 +6,7 @@ Thin orchestrator — all logic lives in
 
 Run from repository root::
 
-    uv run python scripts/generate_architecture_overview.py
+    uv run python scripts/docgen/architecture_overview.py
 """
 
 from __future__ import annotations

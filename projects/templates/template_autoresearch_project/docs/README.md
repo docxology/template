@@ -21,7 +21,7 @@ Primary command:
 Useful direct checks:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_autoresearch_project
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli validate --project templates/template_autoresearch_project --fail-on-issues
 uv run python -m pytest projects/templates/template_autoresearch_project/tests -q
 ```

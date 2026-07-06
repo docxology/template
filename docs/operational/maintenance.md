@@ -212,7 +212,7 @@ rsync -av --exclude='tmp/*' \
 **On-demand full backup:**
 
 ```bash
-./scripts/backup-full.sh  # includes all three dirs with snapshots
+./scripts/shell/backup-full.sh  # includes all three dirs with snapshots
 ```
 
 ### Retention & Rotation
@@ -265,11 +265,11 @@ All maintenance scripts live in `scripts/` or `docs/operational/scripts/`:
 
 | Script | Purpose | Frequency |
 |--------|---------|-----------|
-| `scripts/health-check.sh` | Quick system readiness check | Daily |
+| `scripts/shell/health-check.sh` | Quick system readiness check | Daily |
 | `scripts/shell/backup-daily.sh` | Daily `~/.hermes` backup | Daily (cron) |
-| `scripts/backup-weekly.sh` | Weekly `.cache` backup | Weekly (cron) |
+| `scripts/shell/backup-weekly.sh` | Weekly `.cache` backup | Weekly (cron) |
 | `docs/operational/scripts/rotate-logs.sh` | Log rotation | Monthly (cron) |
-| `scripts/restore-test.sh` | Validate backup restorability | Monthly |
+| `scripts/shell/restore-test.sh` | Validate backup restorability | Monthly |
 
 ---
 
@@ -301,7 +301,7 @@ For detailed procedures and the full script, see [Runbook - Health Check Script]
 
 Run once per week (typically at the start of the work week).
 
-- **Full multi-project pipeline:** `./run.sh --all-projects --pipeline` (or `uv run python scripts/execute_multi_project.py`) to confirm every active project still builds end-to-end.
+- **Full multi-project pipeline:** `./run.sh --all-projects --pipeline` (or `uv run python scripts/runner/execute_multi_project.py`) to confirm every active project still builds end-to-end.
 
 ### Gate Duration Monitoring {#gate-duration-monitoring}
 
@@ -335,7 +335,7 @@ For detailed procedures, see [Runbook - Monthly Operations](../operational/runbo
 Run quarterly to verify that backups can actually be restored — not merely that they exist.
 
 1. Restore the most recent backup (see [Backup Strategy](#backup-strategy) and [Verification](#backup-verification)) into a scratch location.
-2. Run the health check (`./run.sh --help && echo OK`) and a smoke pipeline (`uv run python scripts/execute_pipeline.py --project template_code_project --core-only`) against the restored tree.
+2. Run the health check (`./run.sh --help && echo OK`) and a smoke pipeline (`uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only`) against the restored tree.
 3. Record restore time and any gaps; file follow-ups for anything that did not restore cleanly.
 
 ---

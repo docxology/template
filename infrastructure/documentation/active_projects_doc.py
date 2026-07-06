@@ -44,7 +44,7 @@ def render_active_projects_doc(repo_root: Path, generated_at: datetime | None = 
             "Regenerate after adding, removing, or renaming projects:",
             "",
             "```bash",
-            "uv run python scripts/generate_active_projects_doc.py",
+            "uv run python scripts/docgen/active_projects.py",
             "```",
             "",
         ]

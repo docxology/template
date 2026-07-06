@@ -32,6 +32,6 @@ template/
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage
 ```
-See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/generate_active_projects_doc.py`).
+See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/docgen/active_projects.py`).
 
 

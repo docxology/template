@@ -7,7 +7,7 @@
 
 ```bash
 NEW=my_sia_task
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_sia \
   --dest "projects/working/$NEW" \
   --new-name "$NEW"

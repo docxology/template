@@ -6,7 +6,7 @@ description: >
   tracing artifact ancestry, recording reviewer findings.
   CLI: python -m infrastructure.provenance {record,link,query,list,review}.
   Config: set in projects/{name}/manuscript/config.yaml `provenance:` block.
-  Orchestrator: scripts/09_provenance_record.py --project {name} --stage NAME
+  Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME
 ---
 
 # Provenance DAG
@@ -56,10 +56,10 @@ uv run python -m infrastructure.provenance review <artifact-id> --note "Needs ci
 
 ```bash
 # Record provenance for a named project and pipeline stage
-uv run python scripts/09_provenance_record.py --project my_project --stage analysis
+uv run python scripts/pipeline/stage_09_provenance_record.py --project my_project --stage analysis
 
 # Record with custom artifact paths
-uv run python scripts/09_provenance_record.py \
+uv run python scripts/pipeline/stage_09_provenance_record.py \
     --project my_project \
     --stage render \
     --artifacts output/manuscript.pdf

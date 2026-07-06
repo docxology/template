@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI surface tests for `scripts/execute_pipeline.py` (fast, no heavy stages)."""
+"""CLI surface tests for `scripts/runner/execute_pipeline.py` (fast, no heavy stages)."""
 
 from __future__ import annotations
 

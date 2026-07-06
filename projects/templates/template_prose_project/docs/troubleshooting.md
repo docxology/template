@@ -141,7 +141,7 @@ npx --yes puppeteer browsers install chrome-headless-shell
 Then re-run only the render stage to confirm:
 
 ```bash
-uv run python scripts/03_render_pdf.py --project template_prose_project
+uv run python scripts/pipeline/stage_03_render.py --project template_prose_project
 # expect: "✅ Generated combined PDF: template_prose_project_combined.pdf"
 ```
 
@@ -152,7 +152,7 @@ prerequisite — see [rendering_pipeline.md](rendering_pipeline.md#prerequisite-
 
 ### "Tests report PASSED but ran 0 tests / 0.0% coverage"
 
-**Symptom:** `scripts/01_run_tests.py --project template_prose_project`
+**Symptom:** `scripts/pipeline/stage_01_test.py --project template_prose_project`
 prints `Project: ✓ PASSED (0/0 tests, 0.0% coverage)` and exits 0, while the
 documented direct command runs all tests at full coverage.
 

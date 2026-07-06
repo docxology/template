@@ -16,7 +16,7 @@ a reproducible AutoResearch loop rather than a free-form agent demo.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_autoresearch_project \
   --dest projects/working/my_autoresearch_project \
   --new-name my_autoresearch_project

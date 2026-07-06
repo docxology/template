@@ -1,4 +1,4 @@
-"""Tests for scripts/08_connector_search.py.
+"""Tests for scripts/pipeline/stage_08_connector_search.py.
 
 No mocks. Uses real subprocess calls and real filesystem behaviour.
 """

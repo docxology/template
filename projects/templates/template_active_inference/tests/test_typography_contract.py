@@ -47,7 +47,7 @@ def test_declared_typography_reaches_emitted_tex() -> None:
     both appear verbatim in the rendered .tex. Skipped only when no render exists yet.
     """
     if not _EMITTED_TEX.is_file():
-        pytest.skip("no rendered _combined_manuscript.tex yet — run scripts/03_render_pdf.py")
+        pytest.skip("no rendered _combined_manuscript.tex yet — run scripts/pipeline/stage_03_render.py")
     tex = _EMITTED_TEX.read_text(encoding="utf-8")
     config = yaml.safe_load(CONFIG.read_text())
     geometry = (config.get("metadata") or {}).get("geometry", "")

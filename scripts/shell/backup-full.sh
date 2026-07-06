@@ -4,7 +4,7 @@
 # Backs up all critical directories: ~/.hermes, .cache, output
 # Used for major milestones or pre-upgrade snapshots.
 #
-# Usage: ./scripts/backup-full.sh [remote-host] [snapshot-name]
+# Usage: ./scripts/shell/backup-full.sh [remote-host] [snapshot-name]
 #   snapshot-name defaults to YYYY-MM-DD
 ################################################################################
 
@@ -38,6 +38,6 @@ done
 
 echo ""
 echo "✅ Full backup ${SNAPSHOT} completed: $(date)" | tee -a "${LOG}"
-echo "To restore: ./scripts/restore-test.sh ${REMOTE} ${SNAPSHOT}"
+echo "To restore: ./scripts/shell/restore-test.sh ${REMOTE} ${SNAPSHOT}"
 
 exit 0

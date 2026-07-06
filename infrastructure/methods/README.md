@@ -14,4 +14,4 @@ uv run python -m infrastructure.methods plan --project templates/template_code_p
 ```
 
 The package is read-only. It reports missing methods/evidence surfaces; pipeline
-execution still lives in `scripts/execute_pipeline.py` and stage scripts.
+execution still lives in `scripts/runner/execute_pipeline.py` and stage scripts.

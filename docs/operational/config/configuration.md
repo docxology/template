@@ -75,7 +75,7 @@ which:
 ```bash
 # Keep the last 25 telemetry reports per project
 export TELEMETRY_KEEP=25
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 ```
 
 The function is idempotent: re-running it without a new live report
@@ -152,7 +152,7 @@ the `--resume` CLI flag.
 **Usage:**
 ```bash
 # Resume from checkpoint
-uv run python scripts/execute_pipeline.py --project {name} --core-only --resume
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --resume
 ```
 
 ### Retry Configuration
@@ -270,7 +270,7 @@ export AUTHOR_EMAIL="jane@example.edu"
 export PROJECT_TITLE="My Research Project"
 
 # Run pipeline
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Verbose Debugging
@@ -280,14 +280,14 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 export LOG_LEVEL=0
 
 # Run with detailed output
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Resume from Checkpoint
 
 ```bash
 # Pipeline will resume from last successful stage (CLI flag, not an env var)
-uv run python scripts/execute_pipeline.py --project {name} --core-only --resume
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --resume
 ```
 
 ### Performance Monitoring — Configuration Examples
@@ -300,7 +300,7 @@ Control archive retention with `TELEMETRY_KEEP` (see
 ```bash
 # Keep more telemetry history, then run
 export TELEMETRY_KEEP=25
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ## Configuration Validation

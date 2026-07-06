@@ -84,7 +84,7 @@ def check_forkability_contract(project_root: Path, report: Report, project: str)
                 "unsafe_fork_copy",
                 (
                     f"{_rel(md, project_root)} recommends raw recursive copy near "
-                    f"{match.group(0)!r}; use scripts/copy_exemplar.py or rsync exclusions"
+                    f"{match.group(0)!r}; use scripts/audit/copy_exemplar.py or rsync exclusions"
                 ),
             )
         for match in _UNSAFE_RSYNC_RE.finditer(text):
@@ -94,7 +94,7 @@ def check_forkability_contract(project_root: Path, report: Report, project: str)
                 "unsafe_fork_copy",
                 (
                     f"{_rel(md, project_root)} recommends rsync without exclusions near "
-                    f"{match.group(0)!r}; use scripts/copy_exemplar.py or rsync exclusions"
+                    f"{match.group(0)!r}; use scripts/audit/copy_exemplar.py or rsync exclusions"
                 ),
             )
 

@@ -18,7 +18,7 @@
 1. Edit introspection logic in `src/template_template/introspection.py`.
 2. Regenerate metrics: `uv run python scripts/generate_manuscript_metrics.py`.
 3. Regenerate figures: `uv run python scripts/generate_architecture_viz.py`.
-4. Run all stages: `uv run python scripts/02_run_analysis.py --project templates/template_template`.
+4. Run all stages: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_template`.
 5. Verify: `uv run pytest tests/ --cov=src --cov-fail-under=90`.
 
 ## Critical references

@@ -59,7 +59,7 @@ Build a **claim inventory** first (numbered, file:line, class: number, compariso
 
 ```bash
 uv sync
-uv run python scripts/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
 uv run pytest projects/<project>/tests/ --cov=projects/<project>/src --cov-fail-under=90 -q
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 uv run python -m infrastructure.validation.cli evidence projects/<project> --manuscript-dir projects/<project>/manuscript --fail-on-issues

@@ -80,7 +80,7 @@ mv projects/working/{name}/ projects/archive/{name}/
 mv projects/archive/{name}/ projects/working/{name}/
 
 # Render explicitly from the template checkout
-uv run python scripts/03_render_pdf.py --project working/{name}
+uv run python scripts/pipeline/stage_03_render.py --project working/{name}
 ```
 
 ## Multi-Project Pipeline Usage

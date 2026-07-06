@@ -9,7 +9,7 @@ about template status, validation depth, and forkability.
 - Project tests and coverage: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`
   - 120 tests · 100% branch coverage as of 2026-06-25
 - Prose analysis is offline by default and uses real markdown and BibTeX fixtures.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: PDF, markdown, output structure, figure registry, evidence registry, and design overlays pass; artifact manifest reports advisory drift after single-stage regeneration.
 - ruff + mypy: clean on all 8 src/ files.
 

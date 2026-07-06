@@ -39,7 +39,7 @@ renderers without owning validation policy or project analysis.
 ## Public Commands
 
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 uv run python -m infrastructure.validation.cli prerender projects/templates/template_code_project/manuscript --repo-root .
 uv run python -m infrastructure.rendering.latex_package_validator
 uv run python -m infrastructure.rendering.cli pdf manuscript.tex
@@ -56,7 +56,7 @@ uv run pytest projects/templates/template_textbook/tests/test_mermaid.py -q
 
 Use `-m 'not requires_latex'` only when verifying code paths that do not need a
 local TeX engine. If rendering behavior changes, run at least one real
-`scripts/03_render_pdf.py` command for a public exemplar.
+`scripts/pipeline/stage_03_render.py` command for a public exemplar.
 
 ## Failure Triage
 

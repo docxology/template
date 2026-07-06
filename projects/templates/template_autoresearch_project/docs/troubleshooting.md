@@ -7,5 +7,5 @@
 | Token `{{METRIC}}` appears raw | Variable not injected in `manuscript_variables.py` | Add the variable binding and re-run `z_generate_manuscript_variables.py` |
 | Evidence registry validation fails | `claim_ledger.yaml` references a non-existent artifact | Update the `artifact_path` to the real output location |
 | Human review required but absent | `human_review.yaml` missing or incomplete | Create the review file with `approved: false` as a baseline |
-| Security artifacts missing | Security stage not run | Run `scripts/02_run_analysis.py` which writes local security profile |
+| Security artifacts missing | Security stage not run | Run `scripts/pipeline/stage_02_analysis.py` which writes local security profile |
 | Figure registry missing entries | New figure added without updating `manuscript_variables.py` | Add figure variable, update tests, re-run analysis |

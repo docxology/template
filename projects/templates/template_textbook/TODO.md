@@ -8,7 +8,7 @@ Keep this focused on book-scale structure, configurability, and validation.
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_textbook/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_textbook/tests/ --cov=projects/templates/template_textbook/src --cov-fail-under=90`
 - Structural integrity is driven by `manuscript/config.yaml`, chapter stubs, figure generation, and manuscript-integrity tests.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: generated figure registry passes; evidence registry still reports 123 unsupported pedagogical numbers; artifact manifest reports advisory drift after single-stage regeneration.
 - 2026-07-05 coverage snapshot: 174 tests, 98.25% coverage. Unified audit gate
   (`textbook.audit.run_manuscript_audit`), unit intro contract (`intro_file` in

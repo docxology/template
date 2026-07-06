@@ -21,12 +21,12 @@ Paths in the table are relative to `projects/templates/template_methods_paper/`.
 | `output/figures/step_counts.png` | Steps per example method (bar chart) | `scripts/methods_analysis.py` (matplotlib) | 4 — Run Analysis |
 | `output/data/manuscript_variables.json` | Every resolved `{{TOKEN}}` value | `src/manuscript_variables.py::generate_variables()` via `scripts/z_generate_manuscript_variables.py` | 4 — Run Analysis (post) |
 | `output/reports/validation_report.json` | Pipeline validation summary | `infrastructure.validation.verify_output_integrity` | 6 — Validate Output |
-| `output/pdf/*combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/03_render_pdf.py` | 5 — Render PDF |
+| `output/pdf/*combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/pipeline/stage_03_render.py` | 5 — Render PDF |
 | `output/web/*.html` | HTML version of each section | `infrastructure/rendering` | 5 — Render PDF |
-| `output/logs/*.log` | Per-stage pipeline logs | `scripts/execute_pipeline.py` | every stage |
+| `output/logs/*.log` | Per-stage pipeline logs | `scripts/runner/execute_pipeline.py` | every stage |
 
 The repo-level `output/templates/template_methods_paper/` (written by
-`scripts/05_copy_outputs.py`) is the public-facing deliverables tree consumed
+`scripts/pipeline/stage_05_copy.py`) is the public-facing deliverables tree consumed
 by CI artifact upload.
 
 ## Adding a New Output File
@@ -55,10 +55,10 @@ uv run python projects/templates/template_methods_paper/scripts/methods_analysis
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 
 # 4. Render PDF (produces pdf/, web/)
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 
 # 5. Copy final deliverables to repo-level output/
-uv run python scripts/05_copy_outputs.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_methods_paper
 ```
 
 ## See Also

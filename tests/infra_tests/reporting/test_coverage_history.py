@@ -223,7 +223,7 @@ def test_collect_history_from_dir_skips_malformed(tmp_path: Path) -> None:
 
 
 def test_driver_from_dir_writes_valid_markdown(tmp_path: Path) -> None:
-    """Run scripts/generate_coverage_history.py --from-dir end-to-end."""
+    """Run scripts/docgen/coverage_history.py --from-dir end-to-end."""
     artefacts = tmp_path / "artefacts"
     artefacts.mkdir()
     # Anchor the synthetic CI timestamp to "now - 2 days" so the data

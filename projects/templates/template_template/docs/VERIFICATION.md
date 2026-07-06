@@ -56,8 +56,8 @@ Run from repo root with `projects/templates/template_template/src` on `PYTHONPAT
 ## 5. Full Pipeline (optional)
 
 ```bash
-uv run python scripts/02_run_analysis.py --project template_template
-uv run python scripts/03_render_pdf.py --project template_template
+uv run python scripts/pipeline/stage_02_analysis.py --project template_template
+uv run python scripts/pipeline/stage_03_render.py --project template_template
 ```
 
 ## Quick Checklist

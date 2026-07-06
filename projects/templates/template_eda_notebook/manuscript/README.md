@@ -42,7 +42,7 @@ graph TD
 ```bash
 # From repository root
 uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
-uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
 ## AI Agent Directives

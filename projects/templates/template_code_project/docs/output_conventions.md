@@ -64,19 +64,19 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 4. **Render PDF** — converts substituted markdown to PDF via Pandoc/LaTeX.
    ```bash
-   uv run python scripts/03_render_pdf.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
    ```
    **Outputs**: `pdf/`, `slides/`, `web/`
 
 5. **Copy final deliverables** — copies PDF and figures to `output/templates/template_code_project/` (used by CI).
    ```bash
-   uv run python scripts/05_copy_outputs.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
    ```
    **Outputs**: final deliverables at repository-level `output/templates/template_code_project/`
 
 ## Version-Control Policy
 
-- **Project `output/` is tracked for this public exemplar** when files stay below the 50 MB public output ceiling. Curated public deliverables are also copied to the repo-level `output/templates/template_code_project/` tree by `scripts/05_copy_outputs.py`.
+- **Project `output/` is tracked for this public exemplar** when files stay below the 50 MB public output ceiling. Curated public deliverables are also copied to the repo-level `output/templates/template_code_project/` tree by `scripts/pipeline/stage_05_copy.py`.
 
 - **Do not edit files in `output/` manually** — changes will be overwritten on the next pipeline run.
 

@@ -287,7 +287,7 @@ saved_files = save_validation_report(validation_results, Path("output/reports"))
 
 Generates a static `docs/_generated/coverage_history.md` with a 30-day rolling
 table and ASCII sparklines per suite. Imported from a thin orchestrator at
-`scripts/generate_coverage_history.py`.
+`scripts/docgen/coverage_history.py`.
 
 - `CoveragePoint` — frozen dataclass: `(date, suite, percentage, lines_covered, lines_total)`
 - `parse_coverage_xml(path) -> CoveragePoint` — Cobertura XML → point (uses `defusedxml`)
@@ -308,9 +308,9 @@ All reports are generated in multiple formats:
 
 The reporting module is automatically integrated into:
 
-- `scripts/execute_pipeline.py` - Generates pipeline report at end
-- `scripts/01_run_tests.py` - Generates test reports
-- `scripts/04_validate_output.py` - Generates validation reports
+- `scripts/runner/execute_pipeline.py` - Generates pipeline report at end
+- `scripts/pipeline/stage_01_test.py` - Generates test reports
+- `scripts/pipeline/stage_04_validate.py` - Generates validation reports
 
 Reports are saved to `project/output/reports/` by default.
 

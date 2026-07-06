@@ -10,9 +10,9 @@ between ``<!-- BEGIN:STAGE_TABLE -->`` / ``<!-- END:STAGE_TABLE -->``
 markers in each target file.
 
 Usage:
-    uv run python scripts/generate_stage_table_doc.py            # preview only
-    uv run python scripts/generate_stage_table_doc.py --write    # apply changes
-    uv run python scripts/generate_stage_table_doc.py --write README.md
+    uv run python scripts/docgen/stage_table.py            # preview only
+    uv run python scripts/docgen/stage_table.py --write    # apply changes
+    uv run python scripts/docgen/stage_table.py --write README.md
 
 Exit codes:
     0: Success (always, in both preview and write modes)

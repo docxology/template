@@ -13,7 +13,7 @@ The `infrastructure/validation/docs/` package contains repository documentation 
 - `scan_scope.py` - shared exclusions for local/generated trees (`output/`, `_generated/`, `_skill-eval/`, …)
 - `mermaid_lint.py` - fenced Mermaid validation through `mmdc`
 - `cross_link_lint.py` - relative Markdown link validation and link-cycle detection
-- `lint_runner.py` - CI docs lint orchestration (used by verification checks and `scripts/lint_docs.py`)
+- `lint_runner.py` - CI docs lint orchestration (used by verification checks and `scripts/audit/lint_docs.py`)
 - `public_audit.py` - advisory public documentation RedTeam audit; inventories docs, generated-fact grounding, verifier negative-control claims, and `def`/`class` documentation coverage
 - `consistency_lint.py` - facade re-exporting consistency checks (module counts, ghost projects, command conventions, doc imports, stale shell-bootstrap contracts)
 - `consistency/` - implementation package for consistency linters
@@ -39,7 +39,7 @@ Stub statuses such as `basic_validation_passed` and `manual_testing_required` ar
 
 ## Advisory RedTeam audit
 
-`scripts/audit_documentation.py` emits `public_audit.py` reports in Markdown or
+`scripts/audit/audit_documentation.py` emits `public_audit.py` reports in Markdown or
 JSON. The audit reuses `doc_roots()` and shared scan exclusions, then adds
 advisory findings for stale project roster/count prose, verifier claims without
 nearby negative controls, missing decision-memory rule links, and public

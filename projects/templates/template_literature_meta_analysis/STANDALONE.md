@@ -20,7 +20,7 @@ meta-analysis whose every manuscript number is computed from committed artifacts
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_literature_meta_analysis \
   --dest projects/working/my_meta_analysis \
   --new-name my_meta_analysis

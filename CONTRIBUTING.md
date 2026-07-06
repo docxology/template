@@ -15,12 +15,12 @@ pointer; the authoritative guides live under `docs/`.
 
 These are gates, not suggestions — see the docs above for the rationale:
 
-- **No mocks.** Tests use real data and computation (`scripts/verify_no_mocks.py`).
+- **No mocks.** Tests use real data and computation (`scripts/audit/verify_no_mocks.py`).
 - **Thin-orchestrator pattern.** Business logic lives in `infrastructure/` or `projects/<name>/src/`; `scripts/` only orchestrate.
-- **Coverage.** Infrastructure ≥ 60%; each public exemplar project job ≥ 90% on its own `src/`. The local all-project orchestrator (`scripts/01_run_tests.py --project-only --all-projects --public-projects`) also enforces a 75% combined-union floor for release-style sweeps.
+- **Coverage.** Infrastructure ≥ 60%; each public exemplar project job ≥ 90% on its own `src/`. The local all-project orchestrator (`scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects`) also enforces a 75% combined-union floor for release-style sweeps.
 - **Type hints + `__all__`** on public infrastructure APIs (`mypy`, `check-all-exports`).
 - **Conventional commits**; run `pre-commit` locally (`ruff`, `mypy`, `bandit`, the pre-push gates).
-- **Confidentiality.** This is a public repo: only the public exemplars listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) are tracked. Never commit any other project under `projects/` — `scripts/check_tracked_projects.py` blocks it in the pre-push hook and CI.
+- **Confidentiality.** This is a public repo: only the public exemplars listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) are tracked. Never commit any other project under `projects/` — `scripts/audit/check_tracked_projects.py` blocks it in the pre-push hook and CI.
 
 ## Citation
 

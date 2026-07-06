@@ -116,7 +116,7 @@ run. To change what a generated file contains, change the **generator**:
   `scripts/methods_analysis.py`, then re-run the script.
 - To change the rendered PDF → modify the `manuscript/*.md` source, then
   re-render via `scripts/z_generate_manuscript_variables.py` and
-  `scripts/03_render_pdf.py`.
+  `scripts/pipeline/stage_03_render.py`.
 
 See [`output_conventions.md`](output_conventions.md).
 

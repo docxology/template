@@ -15,7 +15,7 @@ Enable via:
 
 or run standalone:
 
-    uv run python scripts/09_archive_publication.py --project <name>
+    uv run python scripts/runner/archive_publication.py --project <name>
 
 Exit codes:
     0: All requested providers returned ok (or dry-run)
@@ -73,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not bundle_dir.exists():
         logger.warning(
-            "Bundle not found at %s — run scripts/08_executable_bundle.py first. Exiting 2 (graceful skip).",
+            "Bundle not found at %s — run scripts/runner/bundle_executable.py first. Exiting 2 (graceful skip).",
             bundle_dir,
         )
         sys.exit(2)

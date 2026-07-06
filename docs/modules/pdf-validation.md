@@ -16,7 +16,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 2. **CLI Interface** (`infrastructure/validation/cli/main.py`): Command-line interface
 3. **Orchestrator** (`scripts/pipeline/stage_04_validate.py`): Pipeline integration
 4. **Tests** ([`tests/infra_tests/validation/test_pdf_validator.py`](../../tests/infra_tests/validation/test_pdf_validator.py)): coverage with data
-5. **Integration** (`scripts/execute_pipeline.py`): validation stage after render (see [RUN_GUIDE.md](../RUN_GUIDE.md); script `04_validate_output.py` maps to pipeline “validate”)
+5. **Integration** (`scripts/runner/execute_pipeline.py`): validation stage after render (see [RUN_GUIDE.md](../RUN_GUIDE.md); script `04_validate_output.py` maps to pipeline “validate”)
 
 ## Components
 
@@ -69,7 +69,7 @@ The core pipeline runs validation after PDF render via `04_validate_output.py`:
 
 ```bash
 # Full core pipeline (includes validation after render)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Or use the interactive menu
 ./run.sh
@@ -208,17 +208,17 @@ uv run python -m infrastructure.validation.cli pdf output/templates/template_cod
 Generate PDFs first:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 Or run the pipeline:
 
 ```bash
 # Standard build with validation
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # With verbose debug logging (LOG_LEVEL: 0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
-LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --project {name} --core-only
+LOG_LEVEL=0 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### High number of ?? issues

@@ -69,9 +69,9 @@ repos:
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
-            uv run python scripts/check_tracked_generated_artifacts.py &&
-            uv run python scripts/check_tracked_all.py &&
-            uv run python scripts/verify_no_mocks.py &&
+            uv run python scripts/audit/check_tracked_generated_artifacts.py &&
+            uv run python scripts/audit/check_tracked_all.py &&
+            uv run python scripts/audit/verify_no_mocks.py &&
             uv run pytest tests/infra_tests/git_hook_smoke/
             -q --maxfail=1 --import-mode=importlib
         language: system
@@ -96,7 +96,7 @@ repos:
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
-            uv run python scripts/check_template_drift.py --strict &&
+            uv run python scripts/audit/check_template_drift.py --strict &&
             uv run pytest
             tests/infra_tests/test_docs_discovery_consistency.py::test_root_agents_is_public_repo_contract_not_personal_memory
             -q --import-mode=importlib

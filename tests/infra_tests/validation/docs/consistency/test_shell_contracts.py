@@ -27,7 +27,7 @@ def test_command_convention_bare_pytest_in_bash_is_flagged(tmp_path: Path) -> No
 
 def test_command_convention_bare_python3_in_sh_is_flagged(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(repo / "docs" / "g.md", "```sh\npython3 scripts/01_run_tests.py\n```\n")
+    write_doc(repo / "docs" / "g.md", "```sh\npython3 scripts/pipeline/stage_01_test.py\n```\n")
     issues = check_command_conventions(repo)
     assert len(issues) == 1
     assert "python3" in issues[0].detail

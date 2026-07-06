@@ -124,7 +124,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if resolve_combined_pdf(repo_root, args.project) is None:
         logger.error(
-            "Combined PDF not found for %s. Run scripts/03_render_pdf.py first.",
+            "Combined PDF not found for %s. Run scripts/pipeline/stage_03_render.py first.",
             args.project,
         )
         return 2

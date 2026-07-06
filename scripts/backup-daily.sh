@@ -4,7 +4,7 @@
 # Backs up critical Hermes configuration and state (~/.hermes).
 # Intended to be run daily via cron.
 #
-# Usage: ./scripts/backup-daily.sh [remote-host]
+# Usage: ./scripts/shell/backup-daily.sh [remote-host]
 #   remote-host defaults to 'backup' (must be SSH-configurable)
 ################################################################################
 

@@ -202,15 +202,17 @@ def _stage_verification_commands(stage: StageDefinition, project_name: str) -> t
         spacer = " " if args else ""
         commands = [f"uv run python scripts/{stage.script}{spacer}{args} --project {project_name}"]
         if stage_key:
-            commands.append(f"uv run python scripts/execute_pipeline.py --project {project_name} --stage {stage_key}")
+            commands.append(
+                f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}"
+            )
         return tuple(commands)
     fallback_key = stage_key or stage.name.lower().replace(" ", "_")
-    return (f"uv run python scripts/execute_pipeline.py --project {project_name} --stage {fallback_key}",)
+    return (f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {fallback_key}",)
 
 
 def _validation_commands(project_name: str) -> tuple[str, ...]:
     return (
-        f"uv run python scripts/execute_pipeline.py --project {project_name} --core-only",
+        f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only",
         f"uv run python -m infrastructure.validation.cli prerender projects/{project_name}/manuscript --repo-root .",
         f"uv run python -m infrastructure.validation.cli integrity projects/{project_name}/output",
     )

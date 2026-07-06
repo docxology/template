@@ -515,7 +515,7 @@ issues are found. Use `--strict` when invoking it as a quality gate.
 
 ### output/pipeline.py
 
-Pipeline-stage output validation orchestrator (`scripts/04_validate_output.py`).
+Pipeline-stage output validation orchestrator (`scripts/pipeline/stage_04_validate.py`).
 
 #### validate_manuscript_output_markdown (function)
 ```python

@@ -40,7 +40,7 @@ public-scope, and regression tests continue to reference the public exemplars in
 
 - Infrastructure code is held to the repository coverage floor in `tests/infra_tests/`.
 - Integration tests should confirm the pipeline and shell entry points remain wired correctly.
-- The project pipeline uses a curated `pipeline-smoke` infrastructure subset for speed; the full infrastructure coverage gate remains explicit (`scripts/01_run_tests.py --infra-only --infra-scope full`).
+- The project pipeline uses a curated `pipeline-smoke` infrastructure subset for speed; the full infrastructure coverage gate remains explicit (`scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`).
 
 ## Documentation Expectations
 
@@ -51,7 +51,7 @@ public-scope, and regression tests continue to reference the public exemplars in
 
 **Canonical:** Run **one pytest process per** `projects/<name>/tests/` tree. Use
 `infrastructure.core.test_runner.run_per_project_pytest` (from
-[`scripts/01_run_tests.py`](../scripts/01_run_tests.py)), or invoke
+[`scripts/pipeline/stage_01_test.py`](../scripts/pipeline/stage_01_test.py)), or invoke
 `uv run pytest projects/<name>/tests/` for a single workspace. The local
 `--project-only --all-projects` orchestrator can merge coverage with
 `--cov-append`; CI `test-project` runs each public exemplar in its own matrix

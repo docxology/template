@@ -155,10 +155,10 @@ jobs:
         run: uv run python -m infrastructure.skills check-all-exports
 
       - name: Reject tracked generated artifacts
-        run: uv run python scripts/check_tracked_generated_artifacts.py
+        run: uv run python scripts/audit/check_tracked_generated_artifacts.py
 
       - name: Confidentiality guard — only public template resources tracked
-        run: uv run python scripts/check_tracked_all.py
+        run: uv run python scripts/audit/check_tracked_all.py
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the
@@ -223,7 +223,7 @@ jobs:
         run: uv sync
 
       - name: Verify no mock usage in tests
-        run: uv run python scripts/verify_no_mocks.py
+        run: uv run python scripts/audit/verify_no_mocks.py
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2b — Setup hook on Windows (conditional smoke)
@@ -382,7 +382,7 @@ jobs:
     # Each public exemplar runs in its OWN parallel job, so wall-clock is the
     # slowest single project (~active_inference) instead of the ~45 min sequential
     # sum of all public exemplars. Each job enforces that project's own 90% floor via
-    # ``scripts/01_run_tests.py --project`` (authoritative per CLAUDE.md), which
+    # ``scripts/pipeline/stage_01_test.py --project`` (authoritative per CLAUDE.md), which
     # also removes the old code_project/fep_lean conftest plugin-name collision
     # (every project is already isolated in its own job). py3.10 (floor) + py3.12
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
@@ -421,7 +421,7 @@ jobs:
           PYTHONPATH: .
         run: |
           set -euo pipefail
-          uv run python scripts/01_run_tests.py \
+          uv run python scripts/pipeline/stage_01_test.py \
             --project "${{ matrix.project }}" --project-only --include-slow
 
       - name: Upload project coverage to Codecov
@@ -566,29 +566,29 @@ jobs:
 
       - name: Verify api-reference.md is in sync with __all__
         # Auto-generated from each `infrastructure/<pkg>/__init__.py` `__all__`
-        # by `scripts/generate_api_reference_doc.py`. Drift fails the build;
+        # by `scripts/docgen/api_reference.py`. Drift fails the build;
         # regenerate locally with `--write` and commit the result.
-        run: uv run python scripts/generate_api_reference_doc.py --check
+        run: uv run python scripts/docgen/api_reference.py --check
 
       - name: Verify exemplar_roster.md is in sync with the live roster
         # Auto-generated from the public exemplar roster by
-        # `scripts/generate_exemplar_roster_doc.py`. Adding a test file to an
+        # `scripts/docgen/exemplar_roster.py`. Adding a test file to an
         # exemplar changes its row; without this gate the committed roster
         # drifted silently and was only caught by the full infra pytest run.
         # Drift fails the build; regenerate locally and commit the result.
-        run: uv run python scripts/generate_exemplar_roster_doc.py --check
+        run: uv run python scripts/docgen/exemplar_roster.py --check
 
       - name: Verify COUNTS.md is in sync with the live tree
-        # Auto-generated from live repo state by `scripts/generate_counts.py`
+        # Auto-generated from live repo state by `scripts/docgen/counts.py`
         # (tracked infrastructure .py count, project/publishing test-collection
         # totals, exemplar roster, module list). Replaces the formerly
         # hand-maintained COUNTS.md whose drift was chased across ~40
         # commits. Drift fails the build; regenerate locally with `--write` and
         # commit the result.
-        run: uv run python scripts/generate_counts.py --check
+        run: uv run python scripts/docgen/counts.py --check
 
       - name: Verify publication_records.md is in sync with public metadata
-        run: uv run python scripts/generate_publication_records_doc.py --check
+        run: uv run python scripts/docgen/publication_records.py --check
 
       - name: Verify project imports
         env:
@@ -742,10 +742,10 @@ jobs:
           echo "Resolved chrome at: $CHROME_PATH"
 
       - name: Run docs linters (mermaid + cross-links + consistency + doc pairs)
-        run: uv run python scripts/lint_docs.py --quiet
+        run: uv run python scripts/audit/lint_docs.py --quiet
 
       - name: Check template exemplar drift (strict — dead links gate)
-        run: uv run python scripts/check_template_drift.py --strict
+        run: uv run python scripts/audit/check_template_drift.py --strict
 
       - name: Skill-reachability gate (front-door links + index completeness)
         run: uv run python scripts/gates/skill_reachability_check.py
@@ -851,7 +851,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          uv run python scripts/generate_coverage_history.py --from-gh --days=30 || true
+          uv run python scripts/docgen/coverage_history.py --from-gh --days=30 || true
 
       - name: Upload coverage history dashboard
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

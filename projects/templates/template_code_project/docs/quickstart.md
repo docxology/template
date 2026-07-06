@@ -52,7 +52,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 Convert the manuscript to a PDF with LaTeX:
 
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 ```
 
 Final PDF: `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`
@@ -84,6 +84,6 @@ Final PDF: `projects/templates/template_code_project/output/pdf/template_code_pr
 | Run tests | `uv run pytest projects/templates/template_code_project/tests/ -v` |
 | Run analysis | `uv run python projects/templates/template_code_project/scripts/optimization_analysis.py` |
 | Hydrate manuscript variables | `uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
-| Render PDF | `uv run python scripts/03_render_pdf.py --project templates/template_code_project` |
-| Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project templates/template_code_project` |
+| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project` |
+| Copy final deliverables | `uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project` |
 | Clean outputs | `rm -rf projects/templates/template_code_project/output/` |

@@ -476,7 +476,7 @@ done
 # Ensure all projects build
 for project in */; do
     cd "$project"
-    uv run python scripts/execute_pipeline.py --project "$project" --core-only || echo "$project failed"
+    uv run python scripts/runner/execute_pipeline.py --project "$project" --core-only || echo "$project failed"
     cd ..
 done
 ```
@@ -613,7 +613,7 @@ for project in */; do
     cp -r "$TEMPLATE_DIR/scripts/" scripts/
 
     # Test
-    uv run python scripts/execute_pipeline.py --project "$project" --core-only || echo "Failed: $project"
+    uv run python scripts/runner/execute_pipeline.py --project "$project" --core-only || echo "Failed: $project"
 
     cd ..
 done

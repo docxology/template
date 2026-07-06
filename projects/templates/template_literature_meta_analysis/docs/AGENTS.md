@@ -24,8 +24,8 @@ This directory documents how to work on the `template_literature_meta_analysis` 
 
 ```bash
 uv run pytest projects/templates/template_literature_meta_analysis/tests/   --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90 -q
-uv run python scripts/check_template_drift.py --strict --project templates/template_literature_meta_analysis
-uv run python scripts/generate_exemplar_roster_doc.py --check
+uv run python scripts/audit/check_template_drift.py --strict --project templates/template_literature_meta_analysis
+uv run python scripts/docgen/exemplar_roster.py --check
 ```
 
 If a numeric or roster-shaped claim drifts, move it to a generator or link `../../../../docs/_generated/COUNTS.md` / `../../../../docs/_generated/active_projects.md`.

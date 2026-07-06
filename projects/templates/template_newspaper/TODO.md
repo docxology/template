@@ -9,7 +9,7 @@ honestly bounded as a template.
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_newspaper/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_newspaper/tests/ --cov=projects/templates/template_newspaper/src --cov-fail-under=90`
 - Newspaper PDF generation stays in Stage 02 scripts; the repository manuscript PDF is the standard Stage 03 artifact.
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: all hard validators pass; evidence registry records one non-failing README number warning; artifact manifest reports advisory drift after single-stage regeneration.
 - Test suite: 136 tests, 99.81% branch coverage (2026-06-25 deep review). Up from 53 tests, 94.37%.
   - New test files: `test_components.py`, `test_furniture.py`

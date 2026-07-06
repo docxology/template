@@ -13,7 +13,7 @@
 uv sync
 
 # 1. Clean-copy the exemplar to your new project name
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/my_project \
   --new-name my_project
@@ -32,7 +32,7 @@ that **only** the public canonical exemplars listed in
 [`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)
 under `projects/` are ever git-tracked. Your fork (`projects/working/my_project/`)
 is local-only and won't be pushed to the public repo even if you `git
-add -f` it — `scripts/check_tracked_projects.py` blocks the push in
+add -f` it — `scripts/audit/check_tracked_projects.py` blocks the push in
 `pre-push-quick`. Read [`../../../../CLAUDE.md`](../../../../CLAUDE.md)
 "CONFIDENTIALITY INVARIANT" for the full fence.
 
@@ -58,7 +58,7 @@ the short version:
 |---|---|---|
 | REQUIRED — pipeline gate | `src/optimizer.py` and `invariants.py` (math primitives), all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`, all `scripts/*.py` | May import `infrastructure.*`; exercised by the end-to-end pipeline run |
-| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/check_template_drift.py` and audits; aspire to update them when code changes |
+| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py` and audits; aspire to update them when code changes |
 
 ## Concrete first steps after fork
 
@@ -91,7 +91,7 @@ belongs in `scripts/` instead.
 
 ### 4. Run the drift checker before pushing
 ```bash
-uv run python scripts/check_template_drift.py
+uv run python scripts/audit/check_template_drift.py
 ```
 The checker runs 9 detectors against the public canonical exemplars; while
 forks are not yet covered, the gate will still flag any global drift
@@ -122,4 +122,4 @@ numerical, fork that one instead.
 - [`testing_philosophy.md`](testing_philosophy.md) — zero-mock standard
 - [`output_inventory.md`](output_inventory.md) — producer/consumer graph
 - [`troubleshooting.md`](troubleshooting.md) — symptom-driven fixes
-- [`../../../scripts/check_template_drift.py`](../../../../scripts/check_template_drift.py) — the drift checker
+- [`../../../scripts/audit/check_template_drift.py`](../../../../scripts/audit/check_template_drift.py) — the drift checker

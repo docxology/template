@@ -71,7 +71,7 @@ Install the headless Chrome dependency used by Mermaid rendering, then rerun:
 
 ```bash
 npx --yes puppeteer browsers install chrome-headless-shell
-uv run python scripts/03_render_pdf.py --project templates/template_literature_meta_analysis
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis
 ```
 
 ## Tests Collect Zero Files

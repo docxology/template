@@ -14,7 +14,7 @@ public/private task splits. Implements contracts inspired by
 ```bash
 uv run python -m infrastructure.sia.cli validate projects/templates/template_sia/tasks/mini_classify
 uv run python -m infrastructure.sia.cli inspect-run RUN_SUMMARY_JSON [--json]
-uv run python scripts/02_run_analysis.py --project templates/template_sia
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_sia
 ```
 
 ## Public API

@@ -2,31 +2,44 @@
 
 ## Purpose
 
-This subdirectory (currently a stub) is the planned home for documentation
-generation scripts that write to `docs/_generated/` and update in-place doc
-blocks.  The scripts currently live at the root of `scripts/` but are candidates
-for migration here.
+Thin orchestrators that write to `docs/_generated/` and refresh in-place doc
+marker blocks. Each script delegates to `infrastructure.documentation.*` or
+related modules.
 
-## Planned scripts (currently at scripts/ root)
+## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `generate_active_projects_doc.py` | Derived active-project inventory |
-| `generate_api_reference_doc.py` | API reference from `__all__` (CI `validate --check`) |
-| `generate_architecture_overview.py` | Architecture `.mmd`/`.svg` from live state |
-| `generate_coverage_history.py` | Coverage-history page from CI artefacts |
-| `generate_counts.py` | Line/module count stats |
-| `generate_stage_table_doc.py` | Canonical pipeline stage table (marker block) |
-| `generate_exemplar_roster_doc.py` | Public exemplar roster doc |
-| `generate_publication_records_doc.py` | Publication-records doc |
+| `active_projects.py` | Derived active-project inventory |
+| `api_reference.py` | API reference from `__all__` (CI `validate --check`) |
+| `architecture_overview.py` | Architecture `.mmd`/`.svg` from live state |
+| `coverage_history.py` | Coverage-history page from CI artefacts |
+| `counts.py` | Line/module count stats (`docs/_generated/COUNTS.md`) |
+| `stage_table.py` | Canonical pipeline stage table (marker block) |
+| `exemplar_roster.py` | Public exemplar roster doc |
+| `publication_records.py` | Publication-records doc |
 
-## Usage (from scripts/ root)
+## Bootstrap pattern
+
+Each script uses `parents[2]` to reach the repo root from `scripts/docgen/`:
+
+```python
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts import ensure_repo_root_on_path
+ensure_repo_root_on_path()
+```
+
+## Usage
 
 ```bash
-uv run python scripts/generate_stage_table_doc.py
-uv run python scripts/generate_api_reference_doc.py --check
-uv run python scripts/generate_active_projects_doc.py
+uv run python scripts/docgen/stage_table.py
+uv run python scripts/docgen/api_reference.py --check
+uv run python scripts/docgen/active_projects.py
+uv run python scripts/docgen/counts.py --write
 ```
+
+Root-level `scripts/generate_*.py` filenames remain as backward-compatible shims
+where present; prefer the paths above in docs and CI.
 
 ## See also
 

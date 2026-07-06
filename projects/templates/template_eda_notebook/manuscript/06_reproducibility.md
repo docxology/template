@@ -17,7 +17,7 @@ uv run pytest projects/templates/template_eda_notebook/tests \
     --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
 
 # 3. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
 ## Generated artifact registry

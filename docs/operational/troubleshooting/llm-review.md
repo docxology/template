@@ -232,7 +232,7 @@ uv run python scripts/pipeline/stage_03_render.py
    uv run python scripts/pipeline/stage_03_render.py
 
    # Or run full pipeline up to PDF stage
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 2. **Verify PDF location:**

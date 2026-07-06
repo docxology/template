@@ -28,7 +28,7 @@ keywords:
 publication:
   # Intended standalone GitHub repo for the double-publication (GitHub + Zenodo).
   # The repo + Zenodo deposit are created by a maintainer via
-  # `scripts/publish_project_release.py`; `doi` / `version_doi` / `version_record`
+  # `scripts/publish/publish_project_release.py`; `doi` / `version_doi` / `version_record`
   # are written back here on the first deposit. Until then this exemplar ships
   # in-repo and the generated publication table lists it as not-yet-deposited.
   github_repository: "docxology/template_newspaper"

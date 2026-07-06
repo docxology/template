@@ -1,7 +1,7 @@
 """PIPELINE-INCR-FLAG-1: ``--incremental`` CLI flag wiring.
 
 These tests prove the opt-in incremental feature is reachable from the two
-documented entrypoints (``scripts/execute_pipeline.py`` and
+documented entrypoints (``scripts/runner/execute_pipeline.py`` and
 ``python -m infrastructure.orchestration pipeline``) and that
 ``PipelineConfig.incremental.enabled`` is ``True`` only when the flag is passed.
 
@@ -130,7 +130,7 @@ def test_orchestration_runner_incremental_with_core_only(monkeypatch, tmp_path) 
 
 def test_execute_pipeline_help_advertises_incremental() -> None:
     result = subprocess.run(
-        [sys.executable, "scripts/execute_pipeline.py", "--help"],
+        [sys.executable, "scripts/runner/execute_pipeline.py", "--help"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,

@@ -27,10 +27,10 @@ Load this skill when you need to regenerate derived documentation:
 ## Scripts (currently at scripts/ root)
 
 ```bash
-uv run python scripts/generate_stage_table_doc.py
-uv run python scripts/generate_api_reference_doc.py [--check]
-uv run python scripts/generate_active_projects_doc.py
-uv run python scripts/generate_architecture_overview.py
+uv run python scripts/docgen/stage_table.py
+uv run python scripts/docgen/api_reference.py [--check]
+uv run python scripts/docgen/active_projects.py
+uv run python scripts/docgen/architecture_overview.py
 ```
 
 ## Pitfalls

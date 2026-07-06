@@ -148,7 +148,7 @@ the time `mutate()` is called.
   bandit, no-mocks, docs-lint) as subprocesses; complementary, not
   redundant. Doctor diagnoses local repo state; `health` runs the
   quality gates.
-* `scripts/health-check.sh` — pre-flight tooling check (uv, Python,
+* `scripts/shell/health-check.sh` — pre-flight tooling check (uv, Python,
   Docker, disk). Doctor's `DOC1xx` family covers the same surface but
   produces structured findings with optional remediation.
 

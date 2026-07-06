@@ -13,7 +13,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `plugins.py` - **opt-in** schema-validated plugin stages (PLUGIN-STAGES-1). DEFAULT-OFF: no `projects/{name}/pipeline_plugins.yaml` → no plugin stages merged. Declarations validated via :func:`load_plugin_stages` / :func:`merge_plugin_stages`; malformed entries raise :class:`PluginStageError`. Executor lazy-imports this module only when a project declares plugins. Tests: `tests/infra_tests/core/pipeline/test_plugins.py`.
 - `multi_project.py` - multi-project orchestration (serial)
 - `multi_project_parallel.py` - bounded-parallel multi-project orchestration
-- `multi_project_cli.py` - CLI for `scripts/execute_multi_project.py` (serial + `--parallel`)
+- `multi_project_cli.py` - CLI for `scripts/runner/execute_multi_project.py` (serial + `--parallel`)
   via `concurrent.futures.ProcessPoolExecutor`. Public entry point:
   `run_projects_in_parallel(...) -> ParallelRunResult`. Worker count defaults
   to `min(N_projects, os.cpu_count() or 1)` and is overridable by the

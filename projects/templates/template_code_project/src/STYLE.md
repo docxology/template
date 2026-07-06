@@ -147,7 +147,7 @@ the conftest path setup first.
 
 `src/__init__.py` re-exports the public API. The actual export set (kept
 in sync with `__init__.py` — drift is caught by
-`scripts/check_template_drift.py`'s `__all___doc_drift` rule):
+`scripts/audit/check_template_drift.py`'s `__all___doc_drift` rule):
 
 ```python
 """template_code_project — gradient descent optimization research exemplar."""

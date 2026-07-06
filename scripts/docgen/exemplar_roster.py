@@ -5,8 +5,8 @@ Thin orchestrator: all logic lives in ``infrastructure.project.exemplar_roster``
 
 Usage::
 
-    uv run python scripts/generate_exemplar_roster_doc.py          # write the doc
-    uv run python scripts/generate_exemplar_roster_doc.py --check  # verify, no write
+    uv run python scripts/docgen/exemplar_roster.py          # write the doc
+    uv run python scripts/docgen/exemplar_roster.py --check  # verify, no write
 
 ``--check`` exits non-zero if any public exemplar README lacks the
 ``## When to use this template`` section (beyond pinned known exceptions) or

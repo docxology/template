@@ -27,7 +27,7 @@ Each stage below names a real entry point. The `scripts/0N_*.py` orchestrators, 
 
 When you *do* want the whole chain, the orchestrator wraps it:
 
-- **Single project:** `uv run python scripts/execute_pipeline.py --project {name}` (or `python -m infrastructure.orchestration pipeline --project {name}`); `--core-only` drops the two LLM stages.
+- **Single project:** `uv run python scripts/runner/execute_pipeline.py --project {name}` (or `python -m infrastructure.orchestration pipeline --project {name}`); `--core-only` drops the two LLM stages.
 - **Reproducible subset matrix:** `uv run python scripts/runner/run_matrix.py` reads `run.config` and pins exactly which stages run for exactly which projects. Valid stage tokens: `setup, infra_tests, project_tests, tests, analysis, render_pdf, validate, copy, llm_reviews, llm_translations, executive_report`. See [`../../run.config.example.yaml`](../../run.config.example.yaml).
 - **Multi-project / secure:** `python -m infrastructure.orchestration multi` and `python -m infrastructure.orchestration secure`.
 

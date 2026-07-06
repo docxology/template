@@ -147,7 +147,7 @@ The content lists describe what each slot is *for* if you choose to add it.
 
 #### `discover_manuscript_files()` function
 
-The render pipeline (driven by `scripts/pipeline/stage_03_render.py` / `scripts/execute_pipeline.py`)
+The render pipeline (driven by `scripts/pipeline/stage_03_render.py` / `scripts/runner/execute_pipeline.py`)
 delegates section discovery and ordering to the Python function
 `discover_manuscript_files()`, which buckets and sorts sections by prefix:
 
@@ -266,7 +266,7 @@ vim manuscript/07_limitations.md
 # Content here...
 
 # Build and verify
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 **Result:** Section appears between 06_conclusion.md and 08_acknowledgments.md.
@@ -286,7 +286,7 @@ vim manuscript/S03_supplemental_figures.md
 # See [@sec:supplemental_figures] for additional figures.
 
 # Build and verify
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 **Result:** Section appears after S02 and before glossary (98).

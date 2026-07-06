@@ -46,13 +46,13 @@ for stage in ResearchWorkflow.stages():
 
 ```bash
 # Run research workflow scaffolding for a named project
-uv run python scripts/10_research_workflow.py --project my_project
+uv run python scripts/pipeline/stage_10_research_workflow.py --project my_project
 
 # Run only specific stages
-uv run python scripts/10_research_workflow.py --project my_project --stages SCOPE,LITERATURE
+uv run python scripts/pipeline/stage_10_research_workflow.py --project my_project --stages SCOPE,LITERATURE
 
 # Generate stage prompts without executing
-uv run python scripts/10_research_workflow.py --project my_project --dry-run
+uv run python scripts/pipeline/stage_10_research_workflow.py --project my_project --dry-run
 ```
 
 ## Config Integration

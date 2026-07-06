@@ -188,7 +188,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             "A hydrated manuscript could pass local source tests but fail render or output validation.",
             4,
             4,
-            "scripts/03_render_pdf.py and scripts/04_validate_output.py",
+            "scripts/pipeline/stage_03_render.py and scripts/pipeline/stage_04_validate.py",
             "template pipeline render and validate stages",
             "template pipeline",
             "validation",

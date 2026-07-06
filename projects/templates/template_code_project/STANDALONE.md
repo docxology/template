@@ -16,7 +16,7 @@ analysis outputs, figures, and project-local tests.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/my_code_project \
   --new-name my_code_project

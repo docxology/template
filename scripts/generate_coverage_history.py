@@ -14,8 +14,8 @@ Two collection modes:
 
 Run from repository root::
 
-    uv run python scripts/generate_coverage_history.py --from-dir=./_artefacts
-    uv run python scripts/generate_coverage_history.py --from-gh --days=30
+    uv run python scripts/docgen/coverage_history.py --from-dir=./_artefacts
+    uv run python scripts/docgen/coverage_history.py --from-gh --days=30
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 # Bootstrap: add repo root so ``infrastructure`` and ``scripts`` are importable
-# when this file is run directly (``python scripts/generate_coverage_history.py``).
+# when this file is run directly (``python scripts/docgen/coverage_history.py``).
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 

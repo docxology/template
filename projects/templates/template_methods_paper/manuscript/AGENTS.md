@@ -80,7 +80,7 @@ figure is produced by the thin analysis script from compiled-plan data in
    ```
 4. **Render PDF** from the repository root:
    ```bash
-   uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+   uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
    ```
 5. **Verify the compiled-plan table and figure** appear in the rendered PDF.
 

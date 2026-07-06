@@ -13,7 +13,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 USAGE=$(cat <<'EOF'
-Usage: scripts/ci_local.sh [OPTIONS]
+Usage: scripts/shell/ci_local.sh [OPTIONS]
 
 Reproduce CI locally to validate changes before pushing.
 
@@ -25,11 +25,11 @@ OPTIONS:
   -h, --help           Show this help
 
 Examples:
-  scripts/ci_local.sh                       # Run full default workflow
-  scripts/ci_local.sh -j lint               # Run only the lint job
-  scripts/ci_local.sh -j tests-ubuntu-py311 # Run only one matrix entry
-  scripts/ci_local.sh --dryrun              # Show plan without running
-  scripts/ci_local.sh --no-act              # Force pure-Python fallback
+  scripts/shell/ci_local.sh                       # Run full default workflow
+  scripts/shell/ci_local.sh -j lint               # Run only the lint job
+  scripts/shell/ci_local.sh -j tests-ubuntu-py311 # Run only one matrix entry
+  scripts/shell/ci_local.sh --dryrun              # Show plan without running
+  scripts/shell/ci_local.sh --no-act              # Force pure-Python fallback
 
 Pure-Python fallback (when act unavailable) runs:
   - ruff check + format
@@ -37,7 +37,7 @@ Pure-Python fallback (when act unavailable) runs:
   - bandit security scan
   - infra + project pytest with coverage gates
   - pre-commit hooks (all stages, including pre-push)
-  - confidentiality check (scripts/check_tracked_projects.py)
+  - confidentiality check (scripts/audit/check_tracked_projects.py)
 EOF
 )
 
@@ -124,7 +124,7 @@ Pure-Python fallback available steps (act not available):
   - security    (bandit)
   - tests       (infra + project pytest with coverage)
   - precommit   (all pre-commit stages including pre-push)
-  - confid      (scripts/check_tracked_projects.py)
+  - confid      (scripts/audit/check_tracked_projects.py)
 EOF
   exit 0
 fi
@@ -161,7 +161,7 @@ if [[ -z "$JOB" || "$JOB" == "tests" ]]; then
   echo "[ci_local] === Tests (infra + project) ==="
   # Try template_code_project first; user can override via $TEMPLATE_CI_PROJECT
   PROJECT="${TEMPLATE_CI_PROJECT:-template_code_project}"
-  uv run python scripts/01_run_tests.py --project "$PROJECT"
+  uv run python scripts/pipeline/stage_01_test.py --project "$PROJECT"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "precommit" ]]; then
@@ -176,7 +176,7 @@ fi
 
 if [[ -z "$JOB" || "$JOB" == "confid" ]]; then
   echo "[ci_local] === Confidentiality check ==="
-  uv run python scripts/check_tracked_projects.py
+  uv run python scripts/audit/check_tracked_projects.py
 fi
 
 echo

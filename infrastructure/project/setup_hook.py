@@ -8,7 +8,7 @@ analysis scripts:
 
 The hook is discovered by :func:`find_setup_hook` and invoked by
 :func:`run_project_setup_hook` from the Stage 0 / Stage 1 setup script
-(``scripts/00_setup_environment.py``). On Windows, only the ``.py`` form is
+(``scripts/pipeline/stage_00_setup.py``). On Windows, only the ``.py`` form is
 honoured; ``.sh`` hooks are skipped with a warning because POSIX shells are
 not guaranteed to be available.
 

@@ -16,7 +16,7 @@ the fork should preserve auditable editorial checks.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_prose_project \
   --dest projects/working/my_prose_project \
   --new-name my_prose_project

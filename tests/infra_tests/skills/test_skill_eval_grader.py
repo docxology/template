@@ -44,7 +44,7 @@ Run infrastructure.validation.cli on manuscript.
 
 PROJECT_ANALYSIS_EXCERPT = """
 Name the failing stage (Project Analysis).
-Isolate via scripts/02_run_analysis.py --project template_code_project.
+Isolate via scripts/pipeline/stage_02_analysis.py --project template_code_project.
 Reproduce the first real error from stderr.
 """
 

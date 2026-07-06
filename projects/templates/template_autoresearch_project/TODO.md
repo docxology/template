@@ -145,7 +145,7 @@ behavior; use tiny local fixtures instead.
   modules keep reviews and tests tractable.
 - **Smallest next step:** add a short TODO closure note whenever a source module
   crosses the warning threshold and name the intended split target.
-- **Acceptance:** `uv run python scripts/check_template_drift.py --strict`
+- **Acceptance:** `uv run python scripts/audit/check_template_drift.py --strict`
   stays clean for the exemplar.
 - **Out of scope:** splitting modules preemptively when they are still coherent.
 

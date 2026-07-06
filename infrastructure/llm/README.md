@@ -14,7 +14,7 @@ ollama serve
 ollama pull gemma3:4b
 
 # Run manuscript review
-uv run python scripts/06_llm_review.py --project template_code_project --reviews-only
+uv run python scripts/pipeline/stage_06_llm_review.py --project template_code_project --reviews-only
 ```
 
 The local LLM workflow assumes a running Ollama daemon on `http://localhost:11434`.

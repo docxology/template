@@ -21,7 +21,7 @@ surface is the **Layer-1 infrastructure** (`infrastructure/`), the
 orchestration **scripts** (`scripts/`), and the CI/CD configuration
 (`.github/workflows/`). Per-project trees under `projects/` outside the
 public canonical exemplars are **local-only and never published** (enforced by
-`scripts/check_tracked_projects.py`); do not report issues about
+`scripts/audit/check_tracked_projects.py`); do not report issues about
 non-published local project content here.
 
 ## Supported versions & hardening

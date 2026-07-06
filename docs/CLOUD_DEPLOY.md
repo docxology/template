@@ -146,7 +146,7 @@ for operational shell scripts that source that file directly (backup/health tool
 ### Core pipeline (no LLM stages — suitable for CI/CD)
 
 ```bash
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Specific project

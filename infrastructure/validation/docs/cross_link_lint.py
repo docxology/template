@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 # Project dirs that are tracked in this PUBLIC repo. Everything else under
 # projects/ — including the non-rendered typed subfolders (working/published/
 # archive/other) holding confidential / rotating WIP — is intentionally absent
-# from a clean checkout (enforced by .gitignore + scripts/check_tracked_projects.py).
+# from a clean checkout (enforced by .gitignore + scripts/audit/check_tracked_projects.py).
 # Docs may legitimately reference those as "optional / restore-when-needed", so a
 # link into one of those areas is "absent by design", NOT a broken link.
 _TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)

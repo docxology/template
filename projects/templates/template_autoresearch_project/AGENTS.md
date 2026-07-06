@@ -85,7 +85,7 @@ SBOM claim, and no runtime security monitoring are part of the default exemplar.
 
 ```bash
 ./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
-uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only
+uv run python scripts/pipeline/stage_01_test.py --project template_autoresearch_project --project-only
 uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues
 ```
 
@@ -119,4 +119,4 @@ quick reference commands, and pitfalls.
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
 - `manuscript/config.yaml` uses split DOIs: `publication.doi` (concept), `version_doi`, `version_record`
-- Current release/DOI records are generated in [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md); release with `uv run python scripts/publish_project_release.py --project template_autoresearch_project --tag <vX.Y.Z> --repo docxology/template_autoresearch_project` after choosing the intended tag from `paper.version`.
+- Current release/DOI records are generated in [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md); release with `uv run python scripts/publish/publish_project_release.py --project template_autoresearch_project --tag <vX.Y.Z> --repo docxology/template_autoresearch_project` after choosing the intended tag from `paper.version`.

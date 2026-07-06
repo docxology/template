@@ -61,7 +61,7 @@ autonomous hidden approval loop.
 ## Verification commands
 
 ```bash
-uv run python scripts/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
 uv run python -m infrastructure.validation.cli evidence projects/<project> --fail-on-issues
 uv run python -m infrastructure.reference.verification verify projects/<project>/manuscript/references.bib --live --as-of-year <year> --fail-on-issues
 uv run python -m infrastructure.validation.cli prose-quality projects/<project>/manuscript

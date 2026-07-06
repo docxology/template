@@ -16,7 +16,7 @@ rather than a finished domain manuscript.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_textbook \
   --dest projects/working/my_textbook \
   --new-name my_textbook

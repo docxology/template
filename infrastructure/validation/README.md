@@ -110,22 +110,22 @@ flowchart LR
 ```mermaid
 flowchart TD
     subgraph BuildIntegration["Build Pipeline Integration"]
-        A[Build Pipeline<br/>scripts/03_render_pdf.py]
+        A[Build Pipeline<br/>scripts/pipeline/stage_03_render.py]
         B[Generate PDF<br/>Render manuscript]
         C["Validate PDF<br/>validate_pdf_rendering"]
         D["Check Issues<br/>Review validation report"]
         E{PDF Valid?}
-        F[Continue Pipeline<br/>scripts/04_validate_output.py]
+        F[Continue Pipeline<br/>scripts/pipeline/stage_04_validate.py]
         G[Fail Build<br/>Stop with error]
     end
 
     subgraph QualityGates["Quality Gates"]
-        H[Quality Gates<br/>scripts/04_validate_output.py]
+        H[Quality Gates<br/>scripts/pipeline/stage_04_validate.py]
         I["Integrity Check<br/>verify_output_integrity"]
         J["Completeness Check<br/>validate_output_structure"]
         K["Cross-Ref Validation<br/>verify_cross_references"]
         L{All Valid?}
-        M[Copy Outputs<br/>scripts/05_copy_outputs.py]
+        M[Copy Outputs<br/>scripts/pipeline/stage_05_copy.py]
         N[Report Issues<br/>Generate validation report]
     end
 
@@ -404,16 +404,16 @@ uv run python -m infrastructure.validation.cli.main links --repo-root docs/
 The validation module is automatically integrated into the build pipeline:
 
 ```bash
-# scripts/03_render_pdf.py - Post-rendering validation
-uv run python scripts/03_render_pdf.py --project project
+# scripts/pipeline/stage_03_render.py - Post-rendering validation
+uv run python scripts/pipeline/stage_03_render.py --project project
 # Automatically validates generated PDFs
 
-# scripts/04_validate_output.py - Quality assurance
-uv run python scripts/04_validate_output.py --project project
+# scripts/pipeline/stage_04_validate.py - Quality assurance
+uv run python scripts/pipeline/stage_04_validate.py --project project
 # Runs integrity and quality checks
 
-# scripts/05_copy_outputs.py - Final validation
-uv run python scripts/05_copy_outputs.py --project project
+# scripts/pipeline/stage_05_copy.py - Final validation
+uv run python scripts/pipeline/stage_05_copy.py --project project
 # Validates copied outputs match originals
 ```
 

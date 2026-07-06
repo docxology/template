@@ -15,7 +15,7 @@ git clone https://github.com/docxology/template.git
 uv sync
 
 # Run build
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Daily Workflow Commands
@@ -36,7 +36,7 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 ### Build Pipeline Commands
 ```bash
 # pipeline execution
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # With specific stage
 uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
@@ -85,7 +85,7 @@ vim projects/templates/template_code_project/manuscript/07_new_section.md
 echo "# New Section {#sec:new_section}" > projects/templates/template_code_project/manuscript/07_new_section.md
 
 # 3. Rebuild
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Add a New Figure
@@ -209,7 +209,7 @@ Reference it: \ref{fig:my_figure}
 1. **Always run tests first**: `uv run pytest projects/templates/template_code_project/tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
-4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --project {name} --core-only` executes all stages
+4. **Run pipeline**: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` executes all stages
 5. **Pipeline stages**: Core `--core-only` run is **eight** stages by default (clean through copy); see [RUN_GUIDE.md](../RUN_GUIDE.md)
 6. **Read build logs**: Check `projects/{name}/output/logs/pipeline.log` for errors
 7. **Individual stages**: Run `uv run python scripts/0X_stage_name.py --project {name}` for specific stages

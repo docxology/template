@@ -30,7 +30,7 @@ what keeps that exploration reproducible, covered, and reusable.
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via
-`scripts/check_template_drift.py --strict` and
+`scripts/audit/check_template_drift.py --strict` and
 [`manuscript/layer_contract.yaml`](manuscript/layer_contract.yaml).
 
 ## Configuration as the source of truth

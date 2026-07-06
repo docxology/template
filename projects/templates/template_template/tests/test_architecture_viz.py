@@ -76,19 +76,19 @@ def _sample_stages() -> list[PipelineStage]:
             number=0,
             name="Setup",
             script_name="00_setup_environment.py",
-            script_path=REPO_ROOT / "scripts/00_setup_environment.py",
+            script_path=REPO_ROOT / "scripts/pipeline/stage_00_setup.py",
         ),
         PipelineStage(
             number=1,
             name="Run Tests",
             script_name="01_run_tests.py",
-            script_path=REPO_ROOT / "scripts/01_run_tests.py",
+            script_path=REPO_ROOT / "scripts/pipeline/stage_01_test.py",
         ),
         PipelineStage(
             number=2,
             name="Run Analysis",
             script_name="02_run_analysis.py",
-            script_path=REPO_ROOT / "scripts/02_run_analysis.py",
+            script_path=REPO_ROOT / "scripts/pipeline/stage_02_analysis.py",
         ),
     ]
 

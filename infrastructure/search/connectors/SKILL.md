@@ -5,7 +5,7 @@ description: >
   Use for: literature review, biology database queries, protein/PDB searches.
   CLI: python -m infrastructure.search.connectors {list-dbs,search}.
   Config: set queries in projects/{name}/manuscript/config.yaml `connector_search:` block.
-  Orchestrator: scripts/08_connector_search.py --project {name}
+  Orchestrator: scripts/pipeline/stage_08_connector_search.py --project {name}
 ---
 
 # Scientific Connector Registry
@@ -70,10 +70,10 @@ uv run python -m infrastructure.search.connectors search "membrane" --domain bio
 
 ```bash
 # Run connector search for a named project
-uv run python scripts/08_connector_search.py --project my_project
+uv run python scripts/pipeline/stage_08_connector_search.py --project my_project
 
 # Dry-run to see what would be searched
-uv run python scripts/08_connector_search.py --project my_project --dry-run
+uv run python scripts/pipeline/stage_08_connector_search.py --project my_project --dry-run
 ```
 
 ## Config Integration

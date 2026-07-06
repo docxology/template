@@ -54,10 +54,10 @@ Complements [manuscript-claim-verification](../manuscript-claim-verification/SKI
 
 ```bash
 uv sync
-uv run python scripts/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
 uv run python projects/<project>/scripts/z_generate_manuscript_variables.py
 git stash --include-untracked -- output/<project> 2>/dev/null || true
-uv run python scripts/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
 git status --porcelain output/<project>
 uv run python scripts/pipeline/stage_01_test.py --project <project>
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .

@@ -12,7 +12,7 @@ coverage.
 - Keep generated/local exclusion behavior aligned with
   `infrastructure.validation.docs.scan_scope`.
 - When adding a docs linter, add tests here and expose the linter through
-  `scripts/lint_docs.py` when it belongs in the CI docs gate.
+  `scripts/audit/lint_docs.py` when it belongs in the CI docs gate.
 - Do not use mocks for filesystem or subprocess paths; use `tmp_path` and real
   CLI invocations.
 
@@ -20,7 +20,7 @@ coverage.
 
 ```bash
 uv run pytest tests/infra_tests/validation/docs/ -q
-uv run python scripts/lint_docs.py --doc-pairs-only --json
+uv run python scripts/audit/lint_docs.py --doc-pairs-only --json
 ```
 
 ## See Also

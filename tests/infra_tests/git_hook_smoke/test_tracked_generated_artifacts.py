@@ -34,7 +34,7 @@ def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            "scripts/check_tracked_generated_artifacts.py",
+            "scripts/audit/check_tracked_generated_artifacts.py",
             "--repo-root",
             str(_repo_root()),
         ],

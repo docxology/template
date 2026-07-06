@@ -73,7 +73,7 @@ uv run pytest tests/infra_tests/ \
   -m "not requires_ollama"
 
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
 # Security (mirror CI — ignores file + bandit.yaml)

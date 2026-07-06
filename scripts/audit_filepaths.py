@@ -5,7 +5,7 @@ This script coordinates audit operations using modular infrastructure validation
 It provides a unified interface for auditing filepaths, references, and documentation accuracy.
 
 Usage:
-    python scripts/audit_filepaths.py [--output OUTPUT_FILE] [--format FORMAT] [--verbose]
+    python scripts/audit/audit_filepaths.py [--output OUTPUT_FILE] [--format FORMAT] [--verbose]
 
 Options:
     --output OUTPUT_FILE    Save report to specified file (default: docs/audit/filepath-audit-report.md)
@@ -14,9 +14,9 @@ Options:
     --project PROJECT      Audit specific project only (default: all projects)
 
 Examples:
-    python scripts/audit_filepaths.py
-    python scripts/audit_filepaths.py --output my_audit.md --verbose
-    python scripts/audit_filepaths.py --format json --output audit.json
+    python scripts/audit/audit_filepaths.py
+    python scripts/audit/audit_filepaths.py --output my_audit.md --verbose
+    python scripts/audit/audit_filepaths.py --format json --output audit.json
 """
 
 from __future__ import annotations
@@ -49,10 +49,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python scripts/audit_filepaths.py
-  python scripts/audit_filepaths.py --output docs/audit/my_audit.md --verbose
-  python scripts/audit_filepaths.py --format json --output audit_results.json
-  python scripts/audit_filepaths.py --project project
+  python scripts/audit/audit_filepaths.py
+  python scripts/audit/audit_filepaths.py --output docs/audit/my_audit.md --verbose
+  python scripts/audit/audit_filepaths.py --format json --output audit_results.json
+  python scripts/audit/audit_filepaths.py --project project
         """,
     )
 

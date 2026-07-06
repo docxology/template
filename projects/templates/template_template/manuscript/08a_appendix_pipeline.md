@@ -24,4 +24,4 @@
 | Executable Bundle | `08_executable_bundle.py` | project tree + outputs | container bundle manifest | opt-in (`bundle` tag) |
 | Archival Publication | `09_archive_publication.py` | bundle + deliverables | archival deposit manifest | opt-in (`archival` tag) |
 
-`scripts/07_generate_executive_report.py` is invoked **outside** this DAG whenever `execute_multi_project.py` aggregates pipelines—supplying cross-project KPI dashboards absent from lone-project checkpoints.
+`scripts/pipeline/stage_07_executive_report.py` is invoked **outside** this DAG whenever `execute_multi_project.py` aggregates pipelines—supplying cross-project KPI dashboards absent from lone-project checkpoints.

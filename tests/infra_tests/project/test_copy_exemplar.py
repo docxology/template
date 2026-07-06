@@ -189,7 +189,7 @@ def test_documented_script_path_runs_from_repo_root(tmp_path: Path) -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            "scripts/copy_exemplar.py",
+            "scripts/audit/copy_exemplar.py",
             "--source",
             "templates/template_code_project",
             "--dest",

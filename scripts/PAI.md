@@ -12,5 +12,5 @@ The template pipeline remains separate from the local PAI daemon. PAI v5 operati
 - **Project Discovery**: Scripts use `infrastructure.project.discovery` to find and execute project-specific code.
 
 ## 🤖 Agent Guidelines
-- **Usage**: Use these scripts to run tasks (e.g., `uv run python scripts/01_run_tests.py`).
+- **Usage**: Use these scripts to run tasks (e.g., `uv run python scripts/pipeline/stage_01_test.py`).
 - **New Stages**: If adding a pipeline stage, ensure it follows the `XX_name.py` naming convention and supports the `--project` flag.

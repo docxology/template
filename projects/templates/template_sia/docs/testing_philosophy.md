@@ -41,7 +41,7 @@ execution in CI.
 
 ```bash
 # Default CI-equivalent (from repo root)
-uv run python scripts/01_run_tests.py --project templates/template_sia --project-only
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
 
 # From project directory
 uv run --extra dev pytest tests -m "not requires_ollama" --cov=src --cov-fail-under=90

@@ -26,7 +26,7 @@ def test_active_projects_doc_matches_discovery() -> None:
     """docs/_generated/active_projects.md exactly matches public project scope."""
     root = _repo_root()
     doc_path = root / "docs" / "_generated" / "active_projects.md"
-    assert doc_path.is_file(), f"Missing {doc_path}; run scripts/generate_active_projects_doc.py"
+    assert doc_path.is_file(), f"Missing {doc_path}; run scripts/docgen/active_projects.py"
 
     text = doc_path.read_text(encoding="utf-8")
     discovered = set(public_project_names(root))
@@ -40,7 +40,7 @@ def test_active_projects_doc_matches_discovery() -> None:
     # template projects.  The second assertion below catches that gap.
     assert documented == discovered, (
         "active_projects.md drifted from public project scope; "
-        "run uv run python scripts/generate_active_projects_doc.py\n"
+        "run uv run python scripts/docgen/active_projects.py\n"
         f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
     )
 
@@ -65,7 +65,7 @@ def test_publication_records_doc_matches_public_scope() -> None:
     doc_path = root / "docs" / "_generated" / "publication_records.md"
     assert doc_path.is_file(), (
         "Missing publication records doc; run "
-        "uv run python scripts/generate_publication_records_doc.py --refresh-external"
+        "uv run python scripts/docgen/publication_records.py --refresh-external"
     )
 
     text = doc_path.read_text(encoding="utf-8")
@@ -74,7 +74,7 @@ def test_publication_records_doc_matches_public_scope() -> None:
 
     assert documented == discovered, (
         "publication_records.md drifted from public project scope; "
-        "run uv run python scripts/generate_publication_records_doc.py --refresh-external\n"
+        "run uv run python scripts/docgen/publication_records.py --refresh-external\n"
         f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
     )
 
@@ -94,7 +94,7 @@ def test_github_readme_publication_block_matches_public_scope() -> None:
     documented = set(re.findall(r"\.\./projects/([a-z0-9_]+/[a-z0-9_]+)/", match.group("block")))
     assert documented == discovered, (
         ".github/README.md publication table drifted from public project scope; "
-        "run uv run python scripts/generate_publication_records_doc.py --refresh-external\n"
+        "run uv run python scripts/docgen/publication_records.py --refresh-external\n"
         f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
     )
 

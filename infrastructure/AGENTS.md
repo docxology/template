@@ -48,9 +48,9 @@ agent-facing documentation. Project-specific science stays in
 ```bash
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run ruff check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
-uv run python scripts/check_template_drift.py --strict
-uv run python scripts/check_tracked_projects.py
-uv run python scripts/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/audit/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
 uv run python scripts/gates/module_line_count_check.py
 uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills check-all-exports

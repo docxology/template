@@ -1,7 +1,7 @@
 # Quickstart
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_storybook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook
 open projects/templates/template_storybook/output/pdf/the-shape-between.pdf
 ```
 

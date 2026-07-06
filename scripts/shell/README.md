@@ -13,7 +13,7 @@ The shell scripts currently live at the `scripts/` root level:
 ## Usage
 
 ```bash
-bash scripts/health-check.sh
-bash scripts/ci_local.sh
-bash scripts/backup-daily.sh
+bash scripts/shell/health-check.sh
+bash scripts/shell/ci_local.sh
+bash scripts/shell/backup-daily.sh
 ```

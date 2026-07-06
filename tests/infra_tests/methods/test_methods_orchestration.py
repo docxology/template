@@ -31,7 +31,7 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
     assert analysis.gate == "experiment_method_design"
     assert "projects/templates/template_code_project/src/" in analysis.input_artifacts
     assert "projects/templates/template_code_project/scripts/" in analysis.input_artifacts
-    assert any("scripts/02_run_analysis.py" in command for command in analysis.verification_commands)
+    assert any("scripts/pipeline/stage_02_analysis.py" in command for command in analysis.verification_commands)
 
     render = by_name["PDF Rendering"]
     assert render.depends_on == ("Project Analysis",)
@@ -113,7 +113,7 @@ def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> Non
     assert "Project Analysis" in markdown
     assert "artifact_manifest.json" in markdown
     assert "evidence_registry.json" in markdown
-    assert "uv run python scripts/execute_pipeline.py --project template_autoresearch_project --core-only" in markdown
+    assert "uv run python scripts/runner/execute_pipeline.py --project template_autoresearch_project --core-only" in markdown
 
 
 def test_validation_reports_missing_method_section(tmp_path: Path) -> None:

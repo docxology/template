@@ -11,7 +11,7 @@
 uv sync
 
 # 1. Clean-copy the exemplar to your new project name
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_eda_notebook \
   --dest projects/working/my_eda_project \
   --new-name my_eda_project
@@ -48,7 +48,7 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 |---|---|---|
 | REQUIRED — pipeline gate | `src/eda/*.py`, `src/__init__.py`, `data/measurements.csv`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `scripts/eda_analysis.py`, `notebooks/eda_walkthrough.ipynb` | The analysis entry point and the archetype this template demonstrates |
-| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/check_template_drift.py`; update them when code changes |
+| AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py`; update them when code changes |
 
 ## Concrete first steps after fork
 
@@ -82,7 +82,7 @@ and writes to `output/`.
 ### 5. Run the drift checker before pushing
 
 ```bash
-uv run python scripts/check_template_drift.py --strict
+uv run python scripts/audit/check_template_drift.py --strict
 ```
 
 ## Common friction points (and fixes)

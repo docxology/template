@@ -179,7 +179,7 @@ def prepare_release_bundle(
     if pdf_source is None:
         raise PublishingError(
             f"Combined PDF not found for {request.project_name}. "
-            "Run the render pipeline first (scripts/03_render_pdf.py)."
+            "Run the render pipeline first (scripts/pipeline/stage_03_render.py)."
         )
 
     config_path = resolve_config_path(request.repo_root, request.project_name)

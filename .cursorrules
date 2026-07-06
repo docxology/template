@@ -13,7 +13,7 @@ Use this file together with **[README.md](README.md)** (onboarding),
 | Pipeline stages, validation, multi-project rules, deep TOC | [AGENTS.md](AGENTS.md) |
 | Directory-specific APIs and conventions | `AGENTS.md` / `README.md` within that subdirectory (each `projects/<name>/manuscript/` has its own `AGENTS.md`) |
 | Public project names (`infrastructure.project.public_scope`) | [docs/_generated/active_projects.md](docs/_generated/active_projects.md) |
-| Live counts and coverage claims | [docs/_generated/COUNTS.md](docs/_generated/COUNTS.md) (refresh via measured `pytest` + [`scripts/generate_active_projects_doc.py`](scripts/generate_active_projects_doc.py); see [`docs/_generated/README.md`](docs/_generated/README.md)) |
+| Live counts and coverage claims | [docs/_generated/COUNTS.md](docs/_generated/COUNTS.md) (refresh via measured `pytest` + [`scripts/docgen/active_projects.py`](scripts/docgen/active_projects.py); see [`docs/_generated/README.md`](docs/_generated/README.md)) |
 
 ## Architecture (non-negotiable)
 
@@ -49,7 +49,7 @@ Use this file together with **[README.md](README.md)** (onboarding),
 - Prefer **registry-backed** manuscript figures, equations, and variables over hard-coded
   numbers in prose when the project defines injectors.
 - After adding, removing, or moving any folder under `projects/`, regenerate
-  `docs/_generated/active_projects.md`: `uv run python scripts/generate_active_projects_doc.py`.
+  `docs/_generated/active_projects.md`: `uv run python scripts/docgen/active_projects.py`.
 - Keep stage numbering and pipeline phrasing aligned across README, CLAUDE, AGENTS, and
   `infrastructure/core/pipeline/pipeline.yaml`.
 - Touch only files and behaviour the user requested; avoid drive-by refactors.

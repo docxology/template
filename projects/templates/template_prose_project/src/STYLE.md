@@ -150,7 +150,7 @@ of the public contract.
 
 `src/__init__.py` re-exports the public API. The current set (kept in
 sync with the actual file — drift in this listing is caught by
-`scripts/check_template_drift.py`'s `__init___export_drift` rule):
+`scripts/audit/check_template_drift.py`'s `__init___export_drift` rule):
 
 ```python
 from .config import ProjectConfig, load_project_config

@@ -1,5 +1,7 @@
 # AGENTS.md — template_autopoiesis
 
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md).
+
 ## Overview
 
 `template_autopoiesis` is a combinatoric project generator. It uses a grammar to deterministically emit complete child projects from a seeded expansion. The architecture is: grammar → spec → materialize → verify → seal.

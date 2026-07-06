@@ -53,10 +53,10 @@ uv run python -m infrastructure.search.literature.cli to-bibtex \
 uv run python -m infrastructure.search.exa answer 'your query'
 
 # Run the full project pipeline
-uv run python scripts/execute_pipeline.py --project {name}
+uv run python scripts/runner/execute_pipeline.py --project {name}
 
 # Run only the analysis stage
-uv run python scripts/02_run_analysis.py --project {name}
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}
 
 # Record a provenance node
 uv run python -m infrastructure.provenance record run \

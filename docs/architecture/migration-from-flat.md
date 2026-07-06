@@ -74,7 +74,7 @@ mkdir -p projects/{name}/manuscript
 
 ```bash
 uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ```
 
 ## Post-Migration Checklist

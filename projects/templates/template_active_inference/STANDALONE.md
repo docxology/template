@@ -17,7 +17,7 @@ registry with local validation.
 From the template repository root:
 
 ```bash
-uv run python scripts/copy_exemplar.py \
+uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_active_inference \
   --dest projects/working/my_active_inference \
   --new-name my_active_inference
@@ -55,7 +55,7 @@ uv run python scripts/validate_outputs.py
 Template-root only, the public exemplar gate remains:
 
 ```bash
-uv run python scripts/01_run_tests.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference
 ```
 
 ## Intentional Non-Standalone Dependencies

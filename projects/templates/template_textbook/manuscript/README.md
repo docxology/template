@@ -54,10 +54,10 @@ The PDF is built, not typeset by hand. From the repository root:
 
 ```bash
 # 1. Generate figures and diagrams (the analysis stage; deterministic)
-uv run python scripts/02_run_analysis.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_textbook
 
 # 2. Render the manuscript to PDF (Pandoc + pandoc-crossref, multiple passes)
-uv run python scripts/03_render_pdf.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_textbook
 ```
 
 Or run the full pipeline interactively with `./run.sh`. The renderer reads

@@ -81,7 +81,7 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ### Using the Pipeline
 
 ```bash
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 ```
 
 ### Validating Outputs

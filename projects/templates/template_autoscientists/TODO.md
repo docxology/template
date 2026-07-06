@@ -8,7 +8,7 @@ Keep completed work out of this file once the proof artifacts and tests exist.
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_autoscientists/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_autoscientists/tests/ --cov=projects/templates/template_autoscientists/src --cov-fail-under=90`
   - Current: **111 tests, 100.00% coverage** (as of 2026-06-25 deep-review pass)
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: figure registry passes after generated `output/figures/figure_registry.json`; evidence registry still reports 10 unsupported numeric tokens; artifact manifest remains advisory-drifted after single-stage regeneration.
 - Live Hermes path stays opt-in through the `requires_ollama` test marker and is not part of the default render gate.
 

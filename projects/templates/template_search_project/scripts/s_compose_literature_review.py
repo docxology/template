@@ -36,7 +36,7 @@ Execution order: this script must run **before**
 ``z_generate_manuscript_variables.py`` (which copies
 ``manuscript/`` → ``output/manuscript/``). The filename prefix ``s_``
 keeps it sorted after ``run_*`` and before ``y_*``/``z_*`` in
-``scripts/02_run_analysis.py`` lexicographic discovery.
+``scripts/pipeline/stage_02_analysis.py`` lexicographic discovery.
 
 All composition logic (parsing, validation, markdown assembly, artifact
 writing) lives in ``src.composition.compose_literature_review`` — this

@@ -77,8 +77,8 @@ cd template
 uv sync
 export SOURCE_DATE_EPOCH=1782345600  # 2026-06-25T00:00:00Z, matching manuscript/config.yaml
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_gold_refinement
-uv run python scripts/05_copy_outputs.py --project templates/template_gold_refinement
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_gold_refinement
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_gold_refinement
 ```
 
 Keep `SOURCE_DATE_EPOCH` set when refreshing tracked public outputs so dashboard
@@ -190,7 +190,7 @@ See [AGENTS.md](AGENTS.md) for technical documentation.
 - Copy-and-customize configuration: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
 - Project validation: `uv run pytest projects/templates/template_gold_refinement/tests/ --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
 

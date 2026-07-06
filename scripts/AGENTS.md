@@ -2,74 +2,67 @@
 
 ## Purpose
 
-The `scripts/` directory contains thin, generic orchestrators for the build pipeline. They coordinate stage execution and reporting, but they do not implement project-specific analysis, rendering, or validation logic.
+The `scripts/` directory contains thin, generic orchestrators for the build pipeline.
+Business logic lives in `infrastructure/` or `projects/{name}/src/`. Scripts are
+grouped by role under subpackages; root-level filenames remain as backward-compatible
+shims where noted in each subpackage's `AGENTS.md`.
 
-## Current Entry Points
+## Subpackage layout
 
-**Pipeline orchestrators (numbered stages + runners):**
+| Subpackage | AGENTS | Role |
+| --- | --- | --- |
+| [`pipeline/`](pipeline/AGENTS.md) | stage orchestrators (`stage_00_setup.py` … `stage_12_metadata.py`) |
+| [`runner/`](runner/AGENTS.md) | `execute_pipeline.py`, `execute_multi_project.py`, `run_matrix.py`, bundle/archive/repro runners |
+| [`audit/`](audit/AGENTS.md) | docs lint, drift, mock checks, tracked-resource guards |
+| [`docgen/`](docgen/AGENTS.md) | `docs/_generated/` regenerators |
+| [`shell/`](shell/AGENTS.md) | `run.sh` bootstrap, backup, local CI |
+| [`publish/`](publish/AGENTS.md) | release and publishing helpers |
+| [`gates/`](gates/AGENTS.md) | opt-in quality gates |
+| [`maintenance/`](maintenance/AGENTS.md) | workspace and local maintenance |
 
-- `00_setup_environment.py` - environment and dependency validation
-- `01_run_tests.py` - infrastructure and project test orchestration
-- `02_run_analysis.py` - project-script discovery and execution
-- `03_render_pdf.py` - manuscript rendering orchestration
-- `04_validate_output.py` - output validation orchestration
-- `05_copy_outputs.py` - output copying orchestration
-- `06_llm_review.py` - LLM review and translation orchestration
-- `07_generate_executive_report.py` - multi-project executive reporting
-- `11_ebook_generation.py` - ebook generation orchestration (EPUB, MOBI, DOCX; opt-in `ebook` tag)
-- `12_metadata_package.py` - metadata package generation (ONIX XML, metadata.json, OPF; opt-in `metadata` tag)
-- `10_repro_bundle.py` - reproduction-bundle build/verify (`infrastructure.publishing.repro_bundle`)
-- `execute_pipeline.py` - single-project pipeline runner
-- `execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
-- `run_matrix.py` - reproducible project × stage matrix runner (`infrastructure.core.pipeline.run_matrix`); reads `run.config`, resolves projects + orders stages canonically, runs each via `execute_single_stage`. Deterministic alternative to the interactive menu.
+## Current Entry Points (canonical paths)
 
-**Derived-doc generators (write `docs/_generated/` and in-place doc blocks):**
+**Pipeline stages** — prefer `scripts/pipeline/stage_*.py`:
 
-- `generate_active_projects_doc.py` - derived active-project inventory
-- `generate_api_reference_doc.py` - API reference from `__all__` (CI `validate --check`)
-- `generate_architecture_overview.py` - architecture `.mmd`/`.svg` from live state
-- `generate_coverage_history.py` - coverage-history page from CI artefacts
-- `generate_stage_table_doc.py` - canonical pipeline stage table (marker block)
-- `generate_exemplar_roster_doc.py` - public exemplar roster doc (`infrastructure.project.exemplar_roster`)
-- `generate_publication_records_doc.py` - publication-records doc (`infrastructure.documentation.publication_records`)
+- `pipeline/stage_00_setup.py` - environment and dependency validation
+- `pipeline/stage_01_test.py` - infrastructure and project test orchestration
+- `pipeline/stage_02_analysis.py` - project-script discovery and execution
+- `pipeline/stage_03_render.py` - manuscript rendering orchestration
+- `pipeline/stage_04_validate.py` - output validation orchestration
+- `pipeline/stage_05_copy.py` - output copying orchestration
+- `pipeline/stage_06_llm_review.py` - LLM review and translation orchestration
+- `pipeline/stage_07_executive_report.py` - multi-project executive reporting
+- `pipeline/stage_08_connector_search.py` - opt-in connector search
+- `pipeline/stage_09_provenance_record.py` - opt-in provenance recording
+- `pipeline/stage_10_research_workflow.py` - opt-in research workflow
+- `pipeline/stage_11_ebook.py` - ebook generation (opt-in `ebook` tag)
+- `pipeline/stage_12_metadata.py` - metadata package (opt-in `metadata` tag)
 
-**Quality gates / audits:**
+**Runners:**
 
-- `lint_docs.py` - thin CLI over `infrastructure.validation.docs.lint_runner.run_docs_lint`
-- `audit_documentation.py` - advisory RedTeam documentation audit over public docs and def/class surfaces
-- `verify_no_mocks.py` - mock-usage checker
-- `audit_filepaths.py` - repository filepath audit
-- `check_tracked_generated_artifacts.py` - git-index hygiene guard for generated outputs (untracked helper; exercised by `tests/infra_tests/git_hook_smoke/`)
-- `check_template_drift.py` - thin CLI over `infrastructure.project.drift` for exemplar doc/code drift
-- `gates/module_line_count_check.py` - line-count gate via `infrastructure.validation.line_count` (infra/scripts + `projects/*/scripts/`)
-- `check_tracked_projects.py` - confidentiality guard via `infrastructure.project.git_guards`
-- `08_executable_bundle.py` - bundle stage via `infrastructure.publishing.executable_bundle`
-- `09_archive_publication.py` - multi-target archival stage via `infrastructure.publishing.archival`
-- `publish_project_release.py` - unified GitHub + Zenodo release via `infrastructure.publishing.release_workflow` (opt-in)
+- `runner/execute_pipeline.py` - single-project pipeline runner
+- `runner/execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
+- `runner/run_matrix.py` - reproducible project × stage matrix runner
+- `runner/bundle_executable.py` - executable bundle stage (opt-in `bundle` tag)
+- `runner/archive_publication.py` - multi-target archival stage (opt-in `archival` tag)
+- `runner/repro_bundle.py` - reproduction-bundle build/verify
 
-**Maintenance helpers (now under [`maintenance/`](maintenance/) — see [`maintenance/AGENTS.md`](maintenance/AGENTS.md)):**
+**Derived-doc generators** (`docgen/`):
 
-- `maintenance/setup_pre_commit.py` - install and validate pre-commit hooks
-- `maintenance/manage_workspace.py` - workspace helper (status, per-project deps)
-- `maintenance/show_project_info.py` - standalone project metadata CLI; **not** invoked by `run.sh` (the menu's `i` key prints only the current project name)
-- `maintenance/organize_executive_outputs.py` - executive output organizer
-- `maintenance/batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
-- `maintenance/render_working_projects.py` - batch core pipeline for `projects/working/` WIP trees
-- `maintenance/rerender_working_pdfs.py` - re-render working-project PDFs via subprocess over the 03/05 render/copy stages
-- `maintenance/merge_test_supplements.py` - merge supplementary test results (`infrastructure.validation.test_supplements`)
-- `maintenance/codegraph_local.py` - optional local CodeGraph command/scope helper via `infrastructure.project.codegraph`
+- `docgen/active_projects.py`, `docgen/api_reference.py`, `docgen/architecture_overview.py`
+- `docgen/coverage_history.py`, `docgen/stage_table.py`, `docgen/exemplar_roster.py`
+- `docgen/publication_records.py`, `docgen/counts.py`
 
-**Local CI (shell):**
+**Quality gates / audits** (`audit/`):
 
-- `ci_local.sh` - local CI reproduction (`act` when available, otherwise a pure-Python CI fallback; see [`../docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md))
+- `audit/lint_docs.py`, `audit/audit_documentation.py`, `audit/verify_no_mocks.py`
+- `audit/audit_filepaths.py`, `audit/check_template_drift.py`
+- `audit/check_tracked_*` guards, `audit/copy_exemplar.py`
+- `gates/module_line_count_check.py` - line-count gate via `infrastructure.validation.line_count`
 
-**Backup / operations (shell):**
+**Publishing** — `publish/publish_project_release.py` (opt-in unified release)
 
-- `backup-daily.sh`, `backup-weekly.sh`, `backup-full.sh` - rsync backup tiers
-- `restore-test.sh` - non-destructive backup-restore verification
-- `health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
-- `shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` / `secure_run.sh`
-- `bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by root entry points)
+**Local CI (shell)** — `shell/ci_local.sh`, `shell/shell_bootstrap.sh`, `shell/bash_utils.sh`
 
 > **Unified health command** — every quality gate listed below (mypy,
 > ruff, ruff-format, bandit, `verify_no_mocks.py`,
@@ -84,30 +77,30 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 
 The canonical pipeline-stage table (rendered from
 [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml)
-by `scripts/generate_stage_table_doc.py`):
+by `scripts/docgen/stage_table.py`):
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
-| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
-| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **1** Environment Setup | `pipeline/stage_00_setup.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `pipeline/stage_02_analysis.py` | `core` | hard fail |
+| **5** PDF Rendering | `pipeline/stage_03_render.py` | `core` | hard fail |
+| **6** Output Validation | `pipeline/stage_04_validate.py` | `core` | warning + report |
+| **7** LLM Scientific Review | `pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **8** LLM Translations | `pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **9** Copy Outputs | `pipeline/stage_05_copy.py` | `core` | soft fail |
+| **10** Ebook Generation | `pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
+| **11** Metadata Package | `pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **12** Executable Bundle | `runner/bundle_executable.py` | `bundle` | soft fail |
+| **13** Archival Publication | `runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
-`execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, `executive_report`, `ebook_generation`, and `metadata_package`.
+`runner/execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, `executive_report`, `ebook_generation`, and `metadata_package`.
 
 ## Public Types
 

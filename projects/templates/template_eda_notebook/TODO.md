@@ -7,7 +7,7 @@ general feature ideas.
 ## Current validation evidence
 
 - Project tests and coverage: `uv run pytest projects/templates/template_eda_notebook/tests --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90`
-- Repo drift gate: `uv run python scripts/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Code quality: `uv run ruff check projects/templates/template_eda_notebook/src/` and `uv run mypy projects/templates/template_eda_notebook/src/` must both pass clean.
 - Notebook binding: `tests/test_notebook.py` checks the walkthrough is valid nbformat, binds to `src.__all__`, and carries no logic in cells.
 - Coverage floor: ≥90% on `src/`; live test count and achieved coverage are tracked in `docs/_generated/COUNTS.md` (not hardcoded here).

@@ -94,7 +94,7 @@ sudo tlmgr install multirow cleveref doi newunicodechar
 uv run python -m infrastructure.rendering.latex_package_validator
 
 # Or run as part of pipeline (automatic)
-uv run python scripts/03_render_pdf.py
+uv run python scripts/pipeline/stage_03_render.py
 ```
 
 **Common issues**:
@@ -239,7 +239,7 @@ graph TD
     subgraph EntryPoints["Entry Points"]
         MANAGER_API["RenderManager API<br/>Python programmatic access<br/>render_all, render_pdf, …"]
         CLI_INTERFACE[CLI Interface<br/>Command-line tools<br/>uv run python -m infrastructure.rendering.cli]
-        PIPELINE_INTEGRATION[Pipeline Integration<br/>scripts/03_render_pdf.py<br/>Automatic rendering in build]
+        PIPELINE_INTEGRATION[Pipeline Integration<br/>scripts/pipeline/stage_03_render.py<br/>Automatic rendering in build]
     end
 
     subgraph CoreEngine["Core Rendering Engine"]
@@ -502,7 +502,7 @@ uv run python -m infrastructure.rendering.latex_package_validator
 The rendering module is deeply integrated with the build pipeline:
 
 ```bash
-# scripts/03_render_pdf.py automatically:
+# scripts/pipeline/stage_03_render.py automatically:
 # 1. Discovers manuscript files
 # 2. Validates LaTeX packages
 # 3. Generates title page from config.yaml
@@ -510,7 +510,7 @@ The rendering module is deeply integrated with the build pipeline:
 # 5. Handles figure path resolution
 # 6. Performs cross-reference resolution
 
-uv run python scripts/03_render_pdf.py --project {project_name}
+uv run python scripts/pipeline/stage_03_render.py --project {project_name}
 ```
 
 ### Pipeline Data Flow
@@ -829,7 +829,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
    }
    ```
 
-4. Run full build: `uv run python scripts/execute_pipeline.py --core-only`
+4. Run full build: `uv run python scripts/runner/execute_pipeline.py --core-only`
 
 ### Figures not appearing in PDF
 
@@ -848,7 +848,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 2. **Generate missing figures**:
 
    ```bash
-   uv run python scripts/02_run_analysis.py
+   uv run python scripts/pipeline/stage_02_analysis.py
    ```
 
 3. **Verify figures are in correct location**:

@@ -185,7 +185,7 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
    ```bash
    # Run all stages
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
    # Or use unified interactive menu
    ./run.sh
@@ -223,7 +223,7 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
    ```bash
    # Run pipeline (includes multiple LaTeX passes)
-   uv run python scripts/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
    ```
 
 ### Coverage Below 100%
@@ -247,7 +247,7 @@ To verify everything works on your system:
 
 ```bash
 # 1. Run pipeline (all 10 stages)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh

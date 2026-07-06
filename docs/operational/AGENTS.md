@@ -79,7 +79,7 @@ uv sync
 uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
 
 # Full / core pipeline
-uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
 
 # Individual stages
 uv run python scripts/pipeline/stage_01_test.py

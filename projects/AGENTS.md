@@ -19,7 +19,7 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **Coverage**: 90% minimum for `projects/{name}/src/` code
 - **Policy**: No mocks - all tests use data and computations
 - **Execution**: Can run independently via `uv run pytest projects/{name}/tests/`
-- **Infrastructure Integration**: Orchestrated by `scripts/01_run_tests.py`
+- **Infrastructure Integration**: Orchestrated by `scripts/pipeline/stage_01_test.py`
 
 ### 🧠 **Methods**: Business Logic Isolation (No Cross-Project Imports)
 
@@ -39,7 +39,7 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 
 ## Permanent Canonical Exemplars
 
-Seventeen projects under `projects/templates/` are **permanent canonical exemplars**: `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, and `template_textbook`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/check_tracked_projects.py`. Authoritative names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). **CONFIDENTIALITY INVARIANT (public repo):** every other path under `projects/` (the `active/` hot-seat set, the `working/`/`published/`/`archive/`/`other/` lifecycle folders) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover Active Inference multi-track research, computational, exploratory data analysis on tabular data, metallurgical gold-refining analogy for manuscript composition with mega-madlib token injection, literature meta-analysis, conditional token-injection with QA probes and an authoring contract, a controlled-method specification DSL with staged validation and deterministic compilation (informed by BPL), prose-review, deterministic AutoResearch, AutoScientists coordination-mechanism testbed, newspaper layout/typography, SIA self-improvement harness (fixture replay by default), full-page storybook illustration/PDF assembly, the autopoietic meta-template, the modular fillable textbook scaffold, literature-search + LLM synthesis, and fonds/rules/tools resource-pool integration:
+Seventeen projects under `projects/templates/` are **permanent canonical exemplars**: `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, and `template_textbook`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/audit/check_tracked_projects.py`. Authoritative names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). **CONFIDENTIALITY INVARIANT (public repo):** every other path under `projects/` (the `active/` hot-seat set, the `working/`/`published/`/`archive/`/`other/` lifecycle folders) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover Active Inference multi-track research, computational, exploratory data analysis on tabular data, metallurgical gold-refining analogy for manuscript composition with mega-madlib token injection, literature meta-analysis, conditional token-injection with QA probes and an authoring contract, a controlled-method specification DSL with staged validation and deterministic compilation (informed by BPL), prose-review, deterministic AutoResearch, AutoScientists coordination-mechanism testbed, newspaper layout/typography, SIA self-improvement harness (fixture replay by default), full-page storybook illustration/PDF assembly, the autopoietic meta-template, the modular fillable textbook scaffold, literature-search + LLM synthesis, and fonds/rules/tools resource-pool integration:
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
@@ -86,7 +86,7 @@ documentation inventories:
   governs `WHY:` comments, ADR escalation, project TODO/ISA notes, local memory,
   failure autopsies, selective ignorance, and RedTeam-style negative controls.
 
-When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/templates/template_code_project/` unless the doc explicitly compares project shapes. For one-glance differentiation ("copy THIS template when…"), see the generated [`docs/_generated/exemplar_roster.md`](../docs/_generated/exemplar_roster.md) — built from each README's `## When to use this template` section by `scripts/generate_exemplar_roster_doc.py` and kept in sync by `tests/infra_tests/project/test_exemplar_roster.py`.
+When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/templates/template_code_project/` unless the doc explicitly compares project shapes. For one-glance differentiation ("copy THIS template when…"), see the generated [`docs/_generated/exemplar_roster.md`](../docs/_generated/exemplar_roster.md) — built from each README's `## When to use this template` section by `scripts/docgen/exemplar_roster.py` and kept in sync by `tests/infra_tests/project/test_exemplar_roster.py`.
 
 ## Rendered vs Non-Rendered Subfolders
 
@@ -271,11 +271,11 @@ assert is_valid  # (True, "Valid project structure")
 - `validate_project_structure(project_dir)` - Checks required directories exist
 - `get_project_metadata(project_dir)` - Extracts metadata from pyproject.toml/config.yaml
 
-### 🧪 **Test Execution** (`scripts/01_run_tests.py`)
+### 🧪 **Test Execution** (`scripts/pipeline/stage_01_test.py`)
 
 ```bash
 # Execute project tests via infrastructure
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 
 # Infrastructure performs:
 # 1. Validates project structure
@@ -292,11 +292,11 @@ uv run python scripts/01_run_tests.py --project {name}
 - Runs pytest with coverage collection
 - Fails pipeline if coverage below 90% for project code
 
-### ⚙️ **Analysis Execution** (`scripts/02_run_analysis.py`)
+### ⚙️ **Analysis Execution** (`scripts/pipeline/stage_02_analysis.py`)
 
 ```bash
 # Execute project analysis scripts via infrastructure
-uv run python scripts/02_run_analysis.py --project {name}
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}
 
 # Infrastructure discovers and runs:
 # - projects/{name}/scripts/analysis_pipeline.py
@@ -311,11 +311,11 @@ uv run python scripts/02_run_analysis.py --project {name}
 4. Executes each script in order with proper environment
 5. Collects outputs to `projects/{name}/output/`
 
-### 📄 **Manuscript Rendering** (`scripts/03_render_pdf.py`)
+### 📄 **Manuscript Rendering** (`scripts/pipeline/stage_03_render.py`)
 
 ```bash
 # Render project manuscript via infrastructure
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 # Infrastructure processes:
 # - Validates markdown references and structure
@@ -334,11 +334,11 @@ uv run python scripts/03_render_pdf.py --project {name}
 5. **PDF Compilation**: XeLaTeX rendering with bibliography processing
 6. **Quality Validation**: PDF integrity checks via `infrastructure.validation`
 
-### ✅ **Quality Validation** (`scripts/04_validate_output.py`)
+### ✅ **Quality Validation** (`scripts/pipeline/stage_04_validate.py`)
 
 ```bash
 # Validate project outputs via infrastructure
-uv run python scripts/04_validate_output.py --project {name}
+uv run python scripts/pipeline/stage_04_validate.py --project {name}
 
 # Infrastructure validates:
 # - PDF rendering quality (no unresolved references)
@@ -353,11 +353,11 @@ uv run python scripts/04_validate_output.py --project {name}
 - **Markdown Validation**: Image references, cross-references, equation labels
 - **Integrity Validation**: File checksums, data consistency, academic standards
 
-### 📋 **Output Management** (`scripts/05_copy_outputs.py`)
+### 📋 **Output Management** (`scripts/pipeline/stage_05_copy.py`)
 
 ```bash
 # Organize final deliverables via infrastructure
-uv run python scripts/05_copy_outputs.py --project {name}
+uv run python scripts/pipeline/stage_05_copy.py --project {name}
 
 # Infrastructure operations:
 # - Cleans root-level output/ directories (keeps only project folders)
@@ -609,7 +609,7 @@ flowchart LR
 
 ### Final Directory (`output/{name}/`)
 
-**Copied by `scripts/05_copy_outputs.py`:**
+**Copied by `scripts/pipeline/stage_05_copy.py`:**
 
 ```mermaid
 flowchart LR
@@ -682,7 +682,7 @@ pattern, no-mocks policy, and coverage requirements (60% infrastructure, 90%
 project `src/`). Check each `STANDALONE.md` before claiming a fork is
 infrastructure-free.
 
-Authoritative project names: `docs/_generated/active_projects.md` (regenerate with `uv run python scripts/generate_active_projects_doc.py`).
+Authoritative project names: `docs/_generated/active_projects.md` (regenerate with `uv run python scripts/docgen/active_projects.py`).
 
 - **Ruff formatting and lint**: Applied consistently across exemplar projects ✅
 - **Import organization**: Standard library, third-party, local imports properly organized ✅
@@ -697,7 +697,7 @@ Authoritative project names: `docs/_generated/active_projects.md` (regenerate wi
 
 ```bash
 # Canonical — one pytest process per project (avoids tests/conftest.py basename collisions):
-uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 
 # Manual single-workspace example:
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
@@ -902,7 +902,7 @@ uv run pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-fail-
 
 **Symptoms:**
 
-- `scripts/02_run_analysis.py` reports "No analysis scripts found"
+- `scripts/pipeline/stage_02_analysis.py` reports "No analysis scripts found"
 - Optional `scripts/` directory missing or empty
 
 **Solutions:**
@@ -980,7 +980,7 @@ uv run python -m infrastructure.validation.cli markdown projects/myproject/manus
 uv run python -m infrastructure.validation.cli pdf projects/myproject/output/pdf/
 
 # Render with verbose logging
-LOG_LEVEL=0 uv run python scripts/03_render_pdf.py --project myproject
+LOG_LEVEL=0 uv run python scripts/pipeline/stage_03_render.py --project myproject
 
 # Check LaTeX compilation logs
 ls projects/myproject/output/pdf/*_compile.log
@@ -1009,9 +1009,9 @@ ls projects/myproject/output/pdf/*_compile.log
 **Infrastructure Operations:**
 
 ```bash
-uv run python scripts/01_run_tests.py --project template_code_project
-uv run python scripts/02_run_analysis.py --project template_code_project
-uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project template_code_project
 ```
 
 ### Area handbook (archived: `projects/archive/area_handbook/`)
@@ -1024,9 +1024,9 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 
 ```bash
 # After moving the project back to projects/area_handbook/
-uv run python scripts/01_run_tests.py --project area_handbook
-uv run python scripts/02_run_analysis.py --project area_handbook
-uv run python scripts/03_render_pdf.py --project area_handbook
+uv run python scripts/pipeline/stage_01_test.py --project area_handbook
+uv run python scripts/pipeline/stage_02_analysis.py --project area_handbook
+uv run python scripts/pipeline/stage_03_render.py --project area_handbook
 ```
 
 ## See Also

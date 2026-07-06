@@ -73,8 +73,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_code_project --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_code_project
-uv run python scripts/05_copy_outputs.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -90,7 +90,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 # Run tests
 uv run pytest projects/templates/template_code_project/tests/ -v
 
-# View final deliverables (after scripts/05_copy_outputs.py)
+# View final deliverables (after scripts/pipeline/stage_05_copy.py)
 ls -la output/templates/template_code_project/
 ```
 
@@ -116,7 +116,7 @@ npx --yes puppeteer browsers install chrome-headless-shell
 
 Without it the **PDF Rendering** stage fails while slides still render — see
 [`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering-fails-mmdc-could-not-find-chrome).
-Full end-to-end: `uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only`.
+Full end-to-end: `uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only`.
 
 ## Dependencies
 
@@ -250,4 +250,4 @@ See [AGENTS.md](AGENTS.md) for technical documentation.
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/check_template_drift.py --strict`.
+- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.

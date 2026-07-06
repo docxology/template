@@ -82,9 +82,9 @@ numbers.
 ```bash
 uv run pytest projects/templates/template_gold_refinement/tests/ \
   --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90
-uv run python scripts/02_run_analysis.py --project templates/template_gold_refinement
-uv run python scripts/03_render_pdf.py --project templates/template_gold_refinement
-uv run python scripts/04_validate_output.py --project templates/template_gold_refinement
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_gold_refinement
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_gold_refinement
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_gold_refinement
 uv run python -m infrastructure.validation.cli prerender \
   projects/templates/template_gold_refinement/manuscript --repo-root .
 uv run python -m infrastructure.validation.cli evidence \

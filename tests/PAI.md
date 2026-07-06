@@ -13,5 +13,5 @@ Repo tests validate the research template, not the local PAI daemon. PAI v5 smok
 - **Isolation**: Infrastructure tests should not depend on specific project content.
 
 ## 🤖 Agent Guidelines
-- **Running**: Use `scripts/01_run_tests.py` (runs both infra and project tests) or `uv run pytest tests/infra_tests/`.
-- **Verification**: Use `scripts/verify_no_mocks.py` to ensure compliance.
+- **Running**: Use `scripts/pipeline/stage_01_test.py` (runs both infra and project tests) or `uv run pytest tests/infra_tests/`.
+- **Verification**: Use `scripts/audit/verify_no_mocks.py` to ensure compliance.

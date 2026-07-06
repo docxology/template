@@ -38,7 +38,7 @@ Performance benchmarking spans problem dimensions $d \in \{{{CONFIG_BENCHMARK_DI
 
 ## Pipeline ordering
 
-Typical `template_code_project` analysis order (see `scripts/02_run_analysis.py` discovery) is:
+Typical `template_code_project` analysis order (see `scripts/pipeline/stage_02_analysis.py` discovery) is:
 
 1. `optimization_analysis.py` — writes `output/data/optimization_results.csv`, `output/figures/*.png`, and JSON reports under `output/reports/`.
 2. `z_generate_manuscript_variables.py` — reads the CSV and YAML, emits `output/data/manuscript_variables.json`, and writes substituted copies to `output/manuscript/` for rendering.

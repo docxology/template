@@ -350,7 +350,7 @@ project name from `docs/_generated/publication_records.md`, not the short leaf
 name.
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/<name> --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/<name> --core-only
 uv run python scripts/publish/publish_project_release.py \
   --project templates/<name> \
   --tag vX.Y.Z \
@@ -524,7 +524,7 @@ Dual-row integrity strip (`output/figures/transmission_integrity_strip.png`): ro
 **`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/templates/template_code_project/manuscript/config.yaml`. Example production release (choose a tag from `paper.version`; keep `publication.doi` as the concept DOI and let the publish flow update `version_doi` / `version_record`):
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
 ./secure_run.sh --steganography-only --project templates/template_code_project --deterministic
 uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \

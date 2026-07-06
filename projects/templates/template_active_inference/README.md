@@ -79,8 +79,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_active_inference --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_active_inference
-uv run python scripts/05_copy_outputs.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_active_inference
 ```
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
@@ -191,7 +191,7 @@ uv run python scripts/run_full_verification.py
 From repo root:
 
 ```bash
-uv run python scripts/01_run_tests.py --project templates/template_active_inference
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference
 ./run.sh --project templates/template_active_inference --pipeline --core-only
 ```
 

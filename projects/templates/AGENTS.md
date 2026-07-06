@@ -5,7 +5,7 @@
 `projects/templates/` contains the seventeen public canonical exemplar projects for
 the template repository. This directory is public and tracked; private,
 rotating, archived, active, or search-only project work belongs outside this
-subtree and is guarded by `.gitignore`, `scripts/check_tracked_projects.py`, and
+subtree and is guarded by `.gitignore`, `scripts/audit/check_tracked_projects.py`, and
 `infrastructure.project.public_scope`.
 
 Nearest child `AGENTS.md` files are authoritative for template-specific rules.
@@ -124,16 +124,16 @@ Run from the repository root:
 ```bash
 uv run pytest projects/templates/<name>/tests --cov=projects/templates/<name>/src --cov-fail-under=90
 uv run python -m infrastructure.validation.cli prerender projects/templates/<name>/manuscript --repo-root .
-uv run python scripts/execute_pipeline.py --project templates/<name> --core-only
-uv run python scripts/02_run_analysis.py --project templates/<name>
-uv run python scripts/03_render_pdf.py --project templates/<name>
-uv run python scripts/04_validate_output.py --project templates/<name>
-uv run python scripts/05_copy_outputs.py --project templates/<name>
-uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects
-uv run python scripts/check_template_drift.py --strict
-uv run python scripts/check_tracked_projects.py
-uv run python scripts/generate_exemplar_roster_doc.py --check
-uv run python scripts/generate_counts.py --check
+uv run python scripts/runner/execute_pipeline.py --project templates/<name> --core-only
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/<name>
+uv run python scripts/pipeline/stage_03_render.py --project templates/<name>
+uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>
+uv run python scripts/pipeline/stage_05_copy.py --project templates/<name>
+uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/audit/check_tracked_projects.py
+uv run python scripts/docgen/exemplar_roster.py --check
+uv run python scripts/docgen/counts.py --check
 uv run python -m infrastructure.skills check
 ```
 

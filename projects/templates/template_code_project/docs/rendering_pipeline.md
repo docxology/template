@@ -82,11 +82,11 @@ uv run python projects/templates/template_code_project/scripts/z_generate_manusc
 
 ### PDF render
 
-**Script**: `scripts/03_render_pdf.py` (at repository root, **not** inside `projects/`)
+**Script**: `scripts/pipeline/stage_03_render.py` (at repository root, **not** inside `projects/`)
 
 **Command**:
 ```bash
-uv run python scripts/03_render_pdf.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 ```
 
 **Inputs**: `output/manuscript/*.md` (substituted) + `manuscript/config.yaml` + `manuscript/preamble.md` + `manuscript/references.bib`
@@ -113,11 +113,11 @@ Zenodo and GitHub uploads use a metadata-driven basename from `publication.depos
 
 ### Copy deliverables
 
-**Script**: `scripts/05_copy_outputs.py` (at repository root)
+**Script**: `scripts/pipeline/stage_05_copy.py` (at repository root)
 
 **Command**:
 ```bash
-uv run python scripts/05_copy_outputs.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
 
 **Output**: Final PDF and figures copied to `output/templates/template_code_project/` at the repository root (used by CI artifact upload and the multi-project executive report).
@@ -178,7 +178,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 
 **Symptom**: `output/slides/` is empty or missing sections.
 
-**Cause**: `scripts/03_render_pdf.py` requires Pandoc with Beamer support. Check `pandoc --version`.
+**Cause**: `scripts/pipeline/stage_03_render.py` requires Pandoc with Beamer support. Check `pandoc --version`.
 
 **Fix**:
 ```bash
