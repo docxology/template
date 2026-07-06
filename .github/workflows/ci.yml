@@ -157,8 +157,8 @@ jobs:
       - name: Reject tracked generated artifacts
         run: uv run python scripts/check_tracked_generated_artifacts.py
 
-      - name: Confidentiality guard — only template projects tracked
-        run: uv run python scripts/check_tracked_projects.py
+      - name: Confidentiality guard — only public template resources tracked
+        run: uv run python scripts/check_tracked_all.py
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the

@@ -70,7 +70,7 @@ repos:
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
             uv run python scripts/check_tracked_generated_artifacts.py &&
-            uv run python scripts/check_tracked_projects.py &&
+            uv run python scripts/check_tracked_all.py &&
             uv run python scripts/verify_no_mocks.py &&
             uv run pytest tests/infra_tests/git_hook_smoke/
             -q --maxfail=1 --import-mode=importlib
