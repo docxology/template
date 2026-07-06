@@ -66,7 +66,7 @@ class TestLiteratureSearchScript:
         mod = _load_script_module("literature_search", SCRIPTS_DIR / "01_literature_search.py")
         with _argv(["01_literature_search.py"]):
             args = mod.parse_args()
-        assert "active inference" in args.query
+        assert args.query is None
         assert args.max_results == 1000
         assert args.resume is True
 

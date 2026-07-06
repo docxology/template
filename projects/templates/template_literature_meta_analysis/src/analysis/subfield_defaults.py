@@ -1,20 +1,22 @@
-"""Load default subfield keyword definitions from committed YAML."""
+"""Subfield default exports and modafinil keyword seed data."""
 
 from __future__ import annotations
+
 from pathlib import Path
+
 import yaml
+
+from analysis.subfield_registry import GENERIC_DEFAULT_SUBFIELDS
+
+DEFAULT_SUBFIELDS: dict[str, dict] = GENERIC_DEFAULT_SUBFIELDS
 
 _DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "subfield_defaults_modafinil.yaml"
 
 
-def load_default_subfields() -> dict[str, dict]:
+def load_modafinil_subfield_keywords() -> dict[str, list[str]]:
     with open(_DATA_PATH, encoding="utf-8") as handle:
         data = yaml.safe_load(handle) or {}
     raw = data.get("subfields") or {}
-    out: dict[str, dict] = {}
-    for name, keywords in raw.items():
-        out[name] = {"keywords": [str(k) for k in keywords]} if isinstance(keywords, list) else keywords
-    return out
-
-
-DEFAULT_SUBFIELDS: dict[str, dict] = load_default_subfields()
+    return {
+        name: [str(keyword) for keyword in keywords] for name, keywords in raw.items() if isinstance(keywords, list)
+    }
