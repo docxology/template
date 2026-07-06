@@ -14,7 +14,8 @@ agent-facing documentation. Project-specific science stays in
 | Run or inspect the pipeline | `core/pipeline/`, `orchestration/`, `scripts/` | `run.sh` delegates into `infrastructure.orchestration`; stage semantics live in `core/pipeline/pipeline.yaml`. |
 | Validate manuscripts and outputs | `validation/` | CLI entry point: `uv run python -m infrastructure.validation.cli ...`. |
 | Render PDFs, slides, web, DOCX, EPUB | `rendering/` | Rendering preflight may import validation leaves, not broad validators. |
-| Project roster, sidecar links, git guards | `project/` | Public scope comes from `project.public_scope`; private mirrors are local-only. |
+| Project roster, sidecar links, git guards | `project/` | Public scope comes from `project.public_scope`; private mirrors are local-only. Sidecar sync for all four top-level trees is registered in `orchestration/link_sync.py`. |
+| Resource pools (fonds, rules, tools) | `fonds/`, `rules/`, `tools/` | Passive data pools, governance rules, and invocable tools mirror `projects/` with git-tracked `templates/*` exemplars. |
 | Reports and release readiness | `reporting/` | Local evidence dashboards only; network publication is outside release-readiness aggregation. |
 | Generated docs and live counts | `documentation/` | `COUNTS.md`, active projects, API reference, publication records. |
 | Methods orchestration | `methods/` | Read-only mapping of pipeline contracts, methods prose, artifacts, evidence, validation commands. |

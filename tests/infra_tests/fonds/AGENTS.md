@@ -12,7 +12,7 @@ files instead of mocks.
 
 ## Files
 
-- `test_discovery.py` — coverage of fonds discovery, minimal valid fond
+- `test_discovery.py` — coverage of fonds discovery (`discover_fonds`, `resolve_fond_root`), minimal valid fond
   structure, `fonds.yaml` parsing, and `offending_tracked_fonds()` guard logic
 
 ## Running

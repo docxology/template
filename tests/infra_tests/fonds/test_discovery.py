@@ -38,13 +38,20 @@ def _make_fond(path: Path) -> Path:
 
 def test_discover_fonds_finds_public_templates() -> None:
     import subprocess
+
     try:
-        repo_root = Path(subprocess.run(["git","rev-parse","--show-toplevel"],["], capture_output=True, check=True).stdout.decode().strip())
-    except Exception:
-        pytest.skip("no git")
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            check=True,
+        )
+        repo_root = Path(result.stdout.decode().strip())
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pytest.skip("git not available or not inside a git repo")
     names = {f.qualified_name for f in discover_fonds(repo_root)}
     for expected in PUBLIC_FOND_NAMES:
         assert expected in names
+
 
 def test_discover_fonds_skips_working_and_archive(tmp_path: Path) -> None:
     _make_fond(tmp_path / "fonds/working/secret")
@@ -53,16 +60,24 @@ def test_discover_fonds_skips_working_and_archive(tmp_path: Path) -> None:
     names = {f.name for f in discover_fonds(tmp_path)}
     assert "secret" not in names and "old" not in names and "visible" in names
 
+
 def test_resolve_fond_root_returns_path_for_public_exemplar() -> None:
     import subprocess
+
     try:
-        repo_root = Path(subprocess.run(["git","rev-parse","--show-toplevel"], capture_output=True, check=True).stdout.decode().strip())
-    except Exception:
-        pytest.skip("no git")
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            check=True,
+        )
+        repo_root = Path(result.stdout.decode().strip())
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pytest.skip("git not available or not inside a git repo")
     if not PUBLIC_FOND_NAMES:
         pytest.skip("no fonds")
     resolved = resolve_fond_root(repo_root, PUBLIC_FOND_NAMES[0])
     assert resolved.is_dir() and (resolved / "fonds.yaml").is_file()
+
 
 def test_public_fond_names_is_tuple() -> None:
     """PUBLIC_FOND_NAMES must be a tuple (not a list or set)."""

@@ -161,6 +161,10 @@ orchestrator:
 | `00_setup_environment.py` | `infrastructure.core.runtime.environment`, `setup_checks`, `env_deps` | |
 | `maintenance/show_project_info.py` | `infrastructure.project.info.collect_project_info` | Standalone CLI; not invoked by `run.sh` (the menu's `i` key prints only the current project name). |
 | `check_tracked_projects.py` | `infrastructure.project.git_guards.offending_tracked_projects` | |
+| `check_tracked_fonds.py` | `infrastructure.project.git_guards.offending_tracked_fonds` | |
+| `check_tracked_rules.py` | `infrastructure.project.git_guards.offending_tracked_rules` | |
+| `check_tracked_tools.py` | `infrastructure.project.git_guards.offending_tracked_tools` | |
+| `check_tracked_all.py` | all four `offending_tracked_*` guards | CI lint + pre-push |
 | `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards.tracked_generated_artifacts` | |
 | `maintenance/codegraph_local.py` | `infrastructure.project.codegraph` | Optional local-only index helper; never a pipeline dependency |
 | `08_executable_bundle.py` | `infrastructure.publishing.executable_bundle.bundle_project` | |
