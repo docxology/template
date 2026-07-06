@@ -91,6 +91,40 @@ stages:
       gate: "experiment_method_design"
       rollback_to: "Project Tests"
 
+  # Opt-in science/provenance stages (skipped in --core-only and default runs).
+  # Invoke directly when needed:
+  #   uv run python scripts/08_connector_search.py --project <name>
+  #   uv run python scripts/09_provenance_record.py --project <name> --stage "Connector Search"
+
+  - name: Connector Search
+    script: 08_connector_search.py
+    depends_on: [Project Analysis]
+    tags: [science]
+    allow_skip: true
+    failure_mode: skipped if not configured
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/config.yaml"]
+      output_artifacts: ["projects/{project}/output/data/connector_search/"]
+      definition_of_done: "Connector search completes or gracefully exits 2 when not configured; each configured connector returns results or an error."
+      failure_code: "CONNECTOR_SEARCH_FAILED"
+      retry_policy: 1
+      rollback_to: "Project Analysis"
+
+  - name: Provenance Record
+    script: 09_provenance_record.py
+    args: [--stage, Connector Search]
+    depends_on: [Connector Search]
+    tags: [provenance]
+    allow_skip: true
+    failure_mode: skipped if not configured
+    contract:
+      input_artifacts: ["projects/{project}/output/"]
+      output_artifacts: [".provenance/graph.json"]
+      definition_of_done: "Pipeline stage artifacts are recorded as provenance nodes, or the stage is gracefully skipped when provenance is not configured."
+      failure_code: "PROVENANCE_RECORD_FAILED"
+      retry_policy: 0
+      rollback_to: "Connector Search"
+
   - name: PDF Rendering
     script: 03_render_pdf.py
     depends_on: [Project Analysis]
