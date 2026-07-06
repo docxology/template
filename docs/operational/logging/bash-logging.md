@@ -14,7 +14,7 @@ patterns below in backup, health-check, and other operational shell scripts.
 
 ```bash
 # Source the logging utilities (operational scripts only)
-source scripts/bash_utils.sh
+source scripts/shell/bash_utils.sh
 
 # Basic logging functions
 log_success "Operation completed successfully"
@@ -108,7 +108,7 @@ log_info "This appears in both terminal and log file"
 
 ```bash
 # Standard error handling with troubleshooting
-if ! uv run python scripts/03_render_pdf.py; then
+if ! uv run python scripts/pipeline/stage_03_render.py; then
     log_pipeline_error "PDF Rendering" "PDF generation failed" $? \
         "Check LaTeX installation" \
         "Verify manuscript files exist" \

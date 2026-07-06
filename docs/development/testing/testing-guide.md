@@ -13,19 +13,19 @@
 ```bash
 # Run the selected project pipeline test contract:
 # focused infrastructure smoke + project coverage suite
-uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 
 # Run tests with verbose output (shows all test names)
-uv run python scripts/01_run_tests.py --project template_code_project --verbose
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project --verbose
 
 # Run the full coverage-bearing infrastructure gate
-uv run python scripts/01_run_tests.py --infra-only --infra-scope full
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
 
 # Run only the focused infrastructure smoke contract used by project pipelines
-uv run python scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
 
 # Run including slow tests
-uv run python scripts/01_run_tests.py --include-slow --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --include-slow --project template_code_project
 
 # Run specific test suite
 uv run pytest tests/infra_tests/ -v
@@ -57,7 +57,7 @@ By default, pytest deselects slow, benchmark, private-project, and external-fixt
 
 ```bash
 # Normal test run
-uv run python scripts/01_run_tests.py
+uv run python scripts/pipeline/stage_01_test.py
 
 # pytest directly uses the same marker selection from pyproject.toml
 uv run pytest tests/
@@ -69,7 +69,7 @@ To include slow tests when needed:
 
 ```bash
 # Include slow tests in orchestrator
-uv run python scripts/01_run_tests.py --include-slow
+uv run python scripts/pipeline/stage_01_test.py --include-slow
 
 # Run only slow tests (useful for LLM testing)
 uv run pytest -m slow
@@ -98,7 +98,7 @@ def test_llm_query(ollama_test_server):
 
 ## Test Reporting
 
-The test orchestrator (`scripts/01_run_tests.py`) generates structured reports:
+The test orchestrator (`scripts/pipeline/stage_01_test.py`) generates structured reports:
 
 - **JSON Report**: `projects/{name}/output/reports/test_results.json`
   - Test counts (passed/failed/skipped)

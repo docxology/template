@@ -28,6 +28,9 @@ Reference for Layer-1 infrastructure modules.
 | **Rendering** | Multi-format output | PDF, HTML, slides, poster, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |
 | **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | **Search** | Literature backends | Discovery, caches, full-text helpers, Exa web API | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |
+| **Search / Connectors** | Scientific DB connector registry | OpenAlex, arXiv, Semantic Scholar, CrossRef, Europe PMC, bioRxiv, UniProt, PDB | [`infrastructure/search/connectors/`](../../infrastructure/search/connectors/) |
+| **Provenance** | Content-addressed provenance DAG | Artifact lineage, content hashing, DAG recording, audit trail | [`infrastructure/provenance/AGENTS.md`](../../infrastructure/provenance/AGENTS.md) |
+| **Research** | Research workflow prompts | Workflow scaffolding, research-phase prompts, stage orchestration | [`infrastructure/research/AGENTS.md`](../../infrastructure/research/AGENTS.md) |
 | **Reference** | Bibliographic utilities | BibTeX models, parser/writer, verification | [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) |
 | **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
 | **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
@@ -90,7 +93,7 @@ pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
 
 ```bash
 # Validate outputs for a project (after render / copy)
-uv run python scripts/04_validate_output.py --project template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project template_code_project
 
 # Manual integrity check on final deliverables tree
 uv run python -m infrastructure.validation.cli integrity output/templates/template_code_project/

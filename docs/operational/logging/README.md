@@ -89,7 +89,7 @@ log_live_resource_usage("After data processing", log)
 ### Shell Scripts
 
 ```bash
-source scripts/bash_utils.sh
+source scripts/shell/bash_utils.sh
 
 log_success "Operation completed"
 log_info "General information"

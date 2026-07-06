@@ -57,7 +57,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Start[uv sync] --> S0[scripts/00_setup_environment.py]
+    Start[uv sync] --> S0[scripts/pipeline/stage_00_setup.py]
     S0 --> OK{Checks pass?}
     OK -->|Yes| RS[./run.sh --help]
     OK -->|No| Fix[Fix deps / paths]

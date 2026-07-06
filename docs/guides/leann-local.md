@@ -78,9 +78,9 @@ from the public repository confidentiality boundary.
 ## Guardrails
 
 - `.gitignore` ignores `.leann/` at the root and nested project levels.
-- `scripts/check_tracked_generated_artifacts.py` rejects tracked `.leann/*`
+- `scripts/audit/check_tracked_generated_artifacts.py` rejects tracked `.leann/*`
   files even if someone force-adds them.
-- `scripts/check_tracked_projects.py` remains the separate guard for tracked
+- `scripts/audit/check_tracked_projects.py` remains the separate guard for tracked
   non-template project paths.
 - Search hits are discovery aids only; cite template source artifacts, not LEANN
   index output, in manuscript or publication claims.
@@ -89,6 +89,6 @@ Run the relevant guard slice after changing this guide or local-index policy:
 
 ```bash
 uv run pytest tests/infra_tests/project/test_git_guards.py -q
-uv run python scripts/check_tracked_generated_artifacts.py
-uv run python scripts/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_tracked_projects.py
 ```

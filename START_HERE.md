@@ -162,7 +162,7 @@ This runs 8 stages (clean → setup → infra tests → project tests → analys
 
 ```bash
 # Run the output validator
-uv run python scripts/04_validate_output.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
 
 # Open the PDF (macOS)
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf
@@ -211,7 +211,7 @@ For the machine-readable agent skill, see [`docs/prompts/startup/SKILL.md`](docs
 
 ```
 infrastructure/     Layer 1: generic build, validation, rendering, publishing
-scripts/            Pipeline stage entry points (00–09)
+scripts/            Stage orchestrators (pipeline/, runner/, audit/, docgen/, shell/, publish/)
 tests/              Infrastructure test suite
 projects/templates/ Public canonical exemplars (tracked in git)
 projects/working/   Private working projects (local-only, symlinked from sidecar)

@@ -7,7 +7,7 @@ Local source fields come from `infrastructure.project.public_scope`, each public
 Regenerate:
 
 ```bash
-uv run python scripts/generate_publication_records_doc.py --refresh-external
+uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
 ## Public Exemplar Publication Matrix

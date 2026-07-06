@@ -33,7 +33,7 @@
 | `executable_bundle.py` | Stage 12 executable bundle (`bundle_project`) |
 | `archival/` | Stage 13 multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |
-| `scripts/publish_project_release.py` | Thin orchestrator for unified release (opt-in) |
+| `scripts/publish/publish_project_release.py` | Thin orchestrator for unified release (opt-in) |
 | `scripts/publish/upload_gold_refinement.py` | Thin CLI over `upload_runner` (worked example) |
 
 ---
@@ -357,10 +357,10 @@ uv run python -m infrastructure.publishing.publish_cli \
   --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 
 # Archival dry-run (Stage 13)
-uv run python scripts/09_archive_publication.py --project templates/template_code_project
+uv run python scripts/runner/archive_publication.py --project templates/template_code_project
 
 # Unified GitHub + Zenodo + DOI release (opt-in)
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project template_code_project --tag v1.0.0 --repo owner/repo --dry-run
 
 # Read-only credential check (never prints token values; exits 1 if any present credential fails)

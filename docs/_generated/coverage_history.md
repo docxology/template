@@ -1,7 +1,7 @@
 # Coverage history
 
 This file is **generated** by
-`scripts/generate_coverage_history.py`. Do not edit by hand.
+`scripts/docgen/coverage_history.py`. Do not edit by hand.
 
 > **Status: empty locally — populated in CI from `gh` artefacts.** The table
 > below contains **no coverage values**: this snapshot was produced without any
@@ -57,7 +57,7 @@ Suites observed: (none)
 ## Regenerate
 
 ```bash
-uv run python scripts/generate_coverage_history.py --from-dir=<dir>
+uv run python scripts/docgen/coverage_history.py --from-dir=<dir>
 # or, with `gh` authenticated:
-uv run python scripts/generate_coverage_history.py --from-gh --days=30
+uv run python scripts/docgen/coverage_history.py --from-gh --days=30
 ```

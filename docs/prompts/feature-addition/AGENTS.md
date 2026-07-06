@@ -14,7 +14,7 @@ Agent skill `template-feature-addition` — Cross-layer features spanning src, s
 ## Verification
 
 ```bash
-uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 ```
 
 ## See also

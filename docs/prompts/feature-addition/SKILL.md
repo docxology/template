@@ -54,7 +54,7 @@ metadata:
 ## Verification commands
 
 ```bash
-uv run python scripts/01_run_tests.py --project <project>
+uv run python scripts/pipeline/stage_01_test.py --project <project>
 uv run python scripts/execute_pipeline.py --project <project> --core-only
 ```
 

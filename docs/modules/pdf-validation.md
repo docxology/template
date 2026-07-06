@@ -14,7 +14,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 
 1. **Business Logic** (`infrastructure/validation/content/pdf_validator.py`): Core validation algorithms
 2. **CLI Interface** (`infrastructure/validation/cli/main.py`): Command-line interface
-3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
+3. **Orchestrator** (`scripts/pipeline/stage_04_validate.py`): Pipeline integration
 4. **Tests** ([`tests/infra_tests/validation/test_pdf_validator.py`](../../tests/infra_tests/validation/test_pdf_validator.py)): coverage with data
 5. **Integration** (`scripts/execute_pipeline.py`): validation stage after render (see [RUN_GUIDE.md](../RUN_GUIDE.md); script `04_validate_output.py` maps to pipeline “validate”)
 
@@ -51,7 +51,7 @@ Command-line interface that:
 
 ```bash
 # Validate outputs for one project (PDFs, markdown, integrity under projects/{name}/output/)
-uv run python scripts/04_validate_output.py --project template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project template_code_project
 
 # Validate a specific PDF using CLI
 uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/template_code_project_combined.pdf
@@ -77,7 +77,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 `04_validate_output.py` alone does **not** clean or re-render; it checks existing artifacts under `projects/{name}/output/` (and related paths) for the given `--project`.
 
-**Note**: Run validation before release builds. To iterate quickly you can run individual stages (e.g. `scripts/03_render_pdf.py`) directly without the full pipeline.
+**Note**: Run validation before release builds. To iterate quickly you can run individual stages (e.g. `scripts/pipeline/stage_03_render.py`) directly without the full pipeline.
 
 ### Sample Output
 
@@ -176,7 +176,7 @@ Following TDD principles:
 1. Write tests first in `tests/infra_tests/validation/`
 2. Implement business logic in `infrastructure/validation/content/pdf_validator.py`
 3. Create CLI interface in `infrastructure/validation/cli/main.py`
-4. Integrate into build pipeline via `scripts/04_validate_output.py`
+4. Integrate into build pipeline via `scripts/pipeline/stage_04_validate.py`
 5. Verify test coverage requirements met
 
 ## Future Enhancements

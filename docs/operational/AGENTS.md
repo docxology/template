@@ -63,7 +63,7 @@ flowchart TB
   [`infrastructure/docker/`](../../infrastructure/docker/); see
   [`docker.md`](docker.md).
 - **Environment setup** — [`config-wizard.md`](config-wizard.md)
-  (`uv sync`, `scripts/00_setup_environment.py`).
+  (`uv sync`, `scripts/pipeline/stage_00_setup.py`).
 - **Scripts** — [`scripts/rotate-logs.sh`](scripts/rotate-logs.sh) automates log
   rotation per the logrotate configuration.
 - All guides include cross-references to related documentation.
@@ -76,17 +76,17 @@ flowchart TB
 
 # Install deps and validate workspace
 uv sync
-uv run python scripts/00_setup_environment.py --project template_code_project
+uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
 
 # Full / core pipeline
 uv run python scripts/execute_pipeline.py --project template_code_project --core-only
 
 # Individual stages
-uv run python scripts/01_run_tests.py
-uv run python scripts/03_render_pdf.py
+uv run python scripts/pipeline/stage_01_test.py
+uv run python scripts/pipeline/stage_03_render.py
 
 # Debug with verbose logging
-LOG_LEVEL=0 uv run python scripts/03_render_pdf.py
+LOG_LEVEL=0 uv run python scripts/pipeline/stage_03_render.py
 
 # Docker (from repo root; compose file is under infrastructure/docker/)
 docker compose -f infrastructure/docker/docker-compose.yml --profile dev up -d

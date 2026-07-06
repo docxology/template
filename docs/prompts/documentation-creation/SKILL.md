@@ -42,7 +42,7 @@ metadata:
 
 5. **Tone** — understated; show not tell; trim non-semantic adjectives.
 
-6. **Validate** — `uv run python scripts/lint_docs.py` when touching many md files.
+6. **Validate** — `uv run python scripts/audit/lint_docs.py` when touching many md files.
 
 ## Deliverables
 
@@ -51,7 +51,7 @@ metadata:
 ## Verification commands
 
 ```bash
-uv run python scripts/lint_docs.py
+uv run python scripts/audit/lint_docs.py
 # Spot-check links mentioned in docs resolve
 ```
 

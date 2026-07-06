@@ -147,7 +147,7 @@ The content lists describe what each slot is *for* if you choose to add it.
 
 #### `discover_manuscript_files()` function
 
-The render pipeline (driven by `scripts/03_render_pdf.py` / `scripts/execute_pipeline.py`)
+The render pipeline (driven by `scripts/pipeline/stage_03_render.py` / `scripts/execute_pipeline.py`)
 delegates section discovery and ordering to the Python function
 `discover_manuscript_files()`, which buckets and sorts sections by prefix:
 

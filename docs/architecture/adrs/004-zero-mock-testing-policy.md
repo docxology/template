@@ -24,7 +24,7 @@ This policy applies to both `infrastructure/` and `projects/*/tests/` code.
 
 ## Enforcement
 
-- `scripts/verify_no_mocks.py` scans for `mock`, `MagicMock`, `patch`, `unittest.mock` in test files
+- `scripts/audit/verify_no_mocks.py` scans for `mock`, `MagicMock`, `patch`, `unittest.mock` in test files
 - Reviewer checklist in `rules/AGENTS.md` includes "no mocks" verification
 - Tests use `pytest-httpserver` for HTTP endpoints and `tempfile.TemporaryDirectory` for file I/O
 
@@ -45,6 +45,6 @@ This policy applies to both `infrastructure/` and `projects/*/tests/` code.
 ## References
 
 - [`development/testing/`](../../development/testing/) — Test infrastructure utilities
-- [`scripts/verify_no_mocks.py`](../../../scripts/verify_no_mocks.py) — Mock detection script
+- [`scripts/audit/verify_no_mocks.py`](../../../scripts/audit/verify_no_mocks.py) — Mock detection script
 - [`development/testing/testing-guide.md`](../../development/testing/testing-guide.md) — Testing standards
 - [`rules/AGENTS.md`](../../rules/AGENTS.md) — Development rules with no-mock clause

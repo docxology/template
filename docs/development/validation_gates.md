@@ -14,7 +14,7 @@ Before submitting a pull request or merging changes, contributors should ensure 
 | **Type Checking (MyPy)** | Catch type errors on public CI paths | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run mypy` | Required (pre-commit + CI) |
 | **Linting & Formatting (Ruff)** | Enforce style & fix common issues | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff check --fix` | Required (pre-commit + CI) |
 | **Coverage Thresholds** | Ensure sufficient test coverage | `uv run pytest --cov=...` | Required |
-| **No Mocks Policy** | Validate real-only testing | `uv run python scripts/verify_no_mocks.py` | Required (pre-push + CI) |
+| **No Mocks Policy** | Validate real-only testing | `uv run python scripts/audit/verify_no_mocks.py` | Required (pre-push + CI) |
 
 Type checking and linting are blocking in CI and in the default pre-commit hook stage when you install hooks locally.
 

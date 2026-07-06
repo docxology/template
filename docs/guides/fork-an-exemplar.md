@@ -72,7 +72,7 @@ Every public exemplar now ships:
 
 The copied path under `projects/working/` is local-only. Only public exemplars
 under `projects/templates/` are tracked in this public repository; the guard in
-[`scripts/check_tracked_projects.py`](../../scripts/check_tracked_projects.py)
+[`scripts/audit/check_tracked_projects.py`](../../scripts/audit/check_tracked_projects.py)
 blocks accidental commits of non-template project trees.
 
 ## Validate the fork
@@ -85,7 +85,7 @@ uv run pytest projects/working/<name>/tests/ \
   --cov=projects/working/<name>/src --cov-fail-under=90
 ```
 
-`uv run python scripts/check_template_drift.py --strict` validates the canonical
+`uv run python scripts/audit/check_template_drift.py --strict` validates the canonical
 public exemplars under `projects/templates/`; run it before changing upstream
 exemplars, not as proof that an arbitrary `projects/working/<name>/` fork is
 schema-complete.

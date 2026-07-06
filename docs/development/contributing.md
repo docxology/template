@@ -104,7 +104,7 @@ git checkout -b fix/issue-description
 ### 3. **Test Your Changes**
 ```bash
 # Run the full test suite
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 
 # Check coverage
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html

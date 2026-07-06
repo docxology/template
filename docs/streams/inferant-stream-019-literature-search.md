@@ -122,5 +122,5 @@ flowchart LR
 ## See Also
 
 * [`docs/architecture/discovery-export-synthesis.md`](../architecture/discovery-export-synthesis.md)
-* Literature modules audit, 2026-05-01 (retired point-in-time snapshot; use `scripts/lint_docs.py` for current state)
+* Literature modules audit, 2026-05-01 (retired point-in-time snapshot; use `scripts/audit/lint_docs.py` for current state)
 * [`docs/best-practices/literature-search-best-practices.md`](../best-practices/literature-search-best-practices.md)

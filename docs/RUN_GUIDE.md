@@ -16,7 +16,7 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 ```mermaid
 flowchart TB
     UI["User Interface<br/>run.sh / secure_run.sh → infrastructure.orchestration"]
-    ORCH["Orchestration Layer<br/>scripts/00_*.py … scripts/07_*.py → infrastructure<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
+    ORCH["Orchestration Layer<br/>scripts/pipeline/stage_NN_*.py … scripts/07_*.py → infrastructure<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
     LOGIC["Business Logic<br/>infrastructure/ (reusable) + projects/&lt;name&gt;/src/ (custom)"]
 
     UI -- delegates to --> ORCH
@@ -42,7 +42,7 @@ flowchart TB
 
 **Layer 2: Stage Scripts (Thin Orchestrators)**
 
-- **`scripts/00_*.py`–`scripts/09_*.py`**: Import from `infrastructure/` for business logic (numbered entry points; script numbers are not pipeline stage indices — `00`–`05` cover the core stages, `06_llm_review.py` backs the two `[llm]` stages, `07_generate_executive_report.py` runs in multi-project mode, and `08_executable_bundle.py`/`09_archive_publication.py` back the opt-in `[bundle]`/`[archival]` stages 10-11, which are declared in `pipeline.yaml` but excluded from default runs)
+- **`scripts/pipeline/stage_NN_*.py`–`scripts/09_*.py`**: Import from `infrastructure/` for business logic (numbered entry points; script numbers are not pipeline stage indices — `00`–`05` cover the core stages, `06_llm_review.py` backs the two `[llm]` stages, `07_generate_executive_report.py` runs in multi-project mode, and `08_executable_bundle.py`/`09_archive_publication.py` back the opt-in `[bundle]`/`[archival]` stages 10-11, which are declared in `pipeline.yaml` but excluded from default runs)
 - **`projects/{name}/scripts/*.py`**: Import from `projects/{name}/src/` for business logic
 - **Purpose**: Stage-specific coordination and I/O handling
 
@@ -55,14 +55,14 @@ Live test and coverage totals: [`docs/_generated/COUNTS.md`](_generated/COUNTS.m
 | Stage (default full run) | Root orchestrator | Primary infrastructure modules | Typical project script |
 | --- | --- | --- | --- |
 | 0 Clean outputs | built-in (`PipelineExecutor`) | `infrastructure.core.files` | — |
-| 1 Environment setup | `scripts/00_setup_environment.py` | `infrastructure.project.discovery` | — |
-| 2 Infrastructure tests | `scripts/01_run_tests.py --infra-only` | `infrastructure.core.test_runner` | — |
-| 3 Project tests | `scripts/01_run_tests.py --project-only` | `infrastructure.core.test_runner` | — |
-| 4 Project analysis | `scripts/02_run_analysis.py` | `infrastructure.core.pipeline` | `projects/templates/<name>/scripts/*.py` |
-| 5 PDF rendering | `scripts/03_render_pdf.py` | `infrastructure.rendering` | optional `render_*.py` in project |
-| 6 Output validation | `scripts/04_validate_output.py` | `infrastructure.validation` | — |
-| 7–8 LLM stages | `scripts/06_llm_review.py` | `infrastructure.llm` | — |
-| 9 Copy outputs | `scripts/05_copy_outputs.py` | `infrastructure.core.files` | — |
+| 1 Environment setup | `scripts/pipeline/stage_00_setup.py` | `infrastructure.project.discovery` | — |
+| 2 Infrastructure tests | `scripts/pipeline/stage_01_test.py --infra-only` | `infrastructure.core.test_runner` | — |
+| 3 Project tests | `scripts/pipeline/stage_01_test.py --project-only` | `infrastructure.core.test_runner` | — |
+| 4 Project analysis | `scripts/pipeline/stage_02_analysis.py` | `infrastructure.core.pipeline` | `projects/templates/<name>/scripts/*.py` |
+| 5 PDF rendering | `scripts/pipeline/stage_03_render.py` | `infrastructure.rendering` | optional `render_*.py` in project |
+| 6 Output validation | `scripts/pipeline/stage_04_validate.py` | `infrastructure.validation` | — |
+| 7–8 LLM stages | `scripts/pipeline/stage_06_llm_review.py` | `infrastructure.llm` | — |
+| 9 Copy outputs | `scripts/pipeline/stage_05_copy.py` | `infrastructure.core.files` | — |
 
 Qualified discovery names (`templates/<name>`, `active/<name>`) resolve under
 `projects/` via `infrastructure.project.discovery`.
@@ -79,10 +79,10 @@ graph TD
     B --> C[infrastructure.orchestration]
     C --> D[PipelineRunner]
     D --> E[PipelineExecutor]
-    E --> F[scripts/00_setup_environment.py]
-    E --> G[scripts/01_run_tests.py]
-    E --> H[scripts/02_run_analysis.py]
-    E --> I[scripts/03_render_pdf.py]
+    E --> F[scripts/pipeline/stage_00_setup.py]
+    E --> G[scripts/pipeline/stage_01_test.py]
+    E --> H[scripts/pipeline/stage_02_analysis.py]
+    E --> I[scripts/pipeline/stage_03_render.py]
 
     F --> J[infrastructure.core.runtime.environment]
     G --> K[infrastructure.reporting.pipeline_test_runner]
@@ -106,7 +106,7 @@ graph TD
 **Correct: thin orchestrator pattern**
 
 ```python
-# scripts/03_render_pdf.py (orchestrator)
+# scripts/pipeline/stage_03_render.py (orchestrator)
 from infrastructure.rendering import RenderManager
 
 def run_render_pipeline():
@@ -118,7 +118,7 @@ def run_render_pipeline():
 **Incorrect: violates architecture**
 
 ```python
-# scripts/03_render_pdf.py (WRONG - implements logic)
+# scripts/pipeline/stage_03_render.py (WRONG - implements logic)
 def render_pdf_to_tex(content):
     # Business logic in orchestrator - WRONG!
     lines = content.split('\n')
@@ -177,7 +177,7 @@ uv run python scripts/execute_multi_project.py
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
 
-`run.sh` is a thin bootstrap shell: it sources `scripts/shell_bootstrap.sh`,
+`run.sh` is a thin bootstrap shell: it sources `scripts/shell/shell_bootstrap.sh`,
 then `exec uv run python -m infrastructure.orchestration`. Bare `./run.sh`
 opens the interactive menu; `uv run` syncs the workspace on demand. Invocations
 with pipeline flags also run `uv sync` when `.venv` is missing.
@@ -189,8 +189,8 @@ For pipeline + steganography, use `./secure_run.sh --project <name>` or
 ### `shell_bootstrap.sh` (shared bootstrap)
 
 Both [`run.sh`](../run.sh) and [`secure_run.sh`](../secure_run.sh) source
-[`scripts/shell_bootstrap.sh`](../scripts/shell_bootstrap.sh) only — not
-[`scripts/bash_utils.sh`](../scripts/bash_utils.sh) (operational backup/health scripts).
+[`scripts/shell/shell_bootstrap.sh`](../scripts/shell/shell_bootstrap.sh) only — not
+[`scripts/shell/bash_utils.sh`](../scripts/shell/bash_utils.sh) (operational backup/health scripts).
 
 | Helper | Role |
 | --- | --- |
@@ -272,14 +272,14 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
   Secure + watermark  | ./secure_run.sh --project <name>            (steganography PDF)
   Steganography only  | ./secure_run.sh --steganography-only        (re-watermark, no re-render)
-  Ebook formats       | uv run python scripts/11_ebook_generation.py --project <name>
-  Metadata package    | uv run python scripts/12_metadata_package.py --project <name>
-  Executable bundle   | uv run python scripts/08_executable_bundle.py --project <name>
-  Archival deposit    | uv run python scripts/09_archive_publication.py --project <name>  (dry-run by default)
-  Full release        | uv run python scripts/publish_project_release.py --project <name> --tag vX --repo owner/repo
+  Ebook formats       | uv run python scripts/pipeline/stage_11_ebook.py --project <name>
+  Metadata package    | uv run python scripts/pipeline/stage_12_metadata.py --project <name>
+  Executable bundle   | uv run python scripts/runner/bundle_executable.py --project <name>
+  Archival deposit    | uv run python scripts/runner/archive_publication.py --project <name>  (dry-run by default)
+  Full release        | uv run python scripts/publish/publish_project_release.py --project <name> --tag vX --repo owner/repo
   Credential check    | uv run python -m infrastructure.publishing.credential_check --env-file .env
-  Reproducible matrix | uv run python scripts/run_matrix.py                (reads run.config)
-  Repro bundle        | uv run python scripts/10_repro_bundle.py build <name>
+  Reproducible matrix | uv run python scripts/runner/run_matrix.py                (reads run.config)
+  Repro bundle        | uv run python scripts/runner/repro_bundle.py build <name>
   See docs/guides/publishing-guide.md and docs/maintenance/archival-targets.md for details.
 ```
 
@@ -387,13 +387,13 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 # Core Build Operations
 ./run.sh --pipeline          # Default full run (10 executed stages; pipeline.yaml declares 14 total)
 ./run.sh --pipeline --resume # Resume from last checkpoint
-uv run python scripts/01_run_tests.py --infra-only          # Run infrastructure tests only
-uv run python scripts/01_run_tests.py --project-only        # Run project tests only
-uv run python scripts/03_render_pdf.py --project {name}      # Render PDF manuscript only
+uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
+uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only
+uv run python scripts/pipeline/stage_03_render.py --project {name}      # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-uv run python scripts/06_llm_review.py --reviews-only        # LLM manuscript review only (English)
-uv run python scripts/06_llm_review.py --translations-only   # LLM translations only
+uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only        # LLM manuscript review only (English)
+uv run python scripts/pipeline/stage_06_llm_review.py --translations-only   # LLM translations only
 
 # Show help
 ./run.sh --help
@@ -465,9 +465,9 @@ The table above lists pipeline-position indices (0-based, as the executor sees t
 | `./run.sh --secure-run` | Same as `./secure_run.sh` via argv shaping | Optional | Secure subcommand from the main thin shell |
 | `./secure_run.sh` | Full/core DAG + steganography | Optional | Dedicated secure entry; always `uv sync --group steganography` |
 | `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core DAG (**8** stages; LLM stages omitted) | None | Core pipeline, CI/CD automation |
-| `uv run python scripts/run_matrix.py` | Exactly the (project, stage) pairs declared in `run.config` | Per stage | **Reproducible subset runs** across several projects |
+| `uv run python scripts/runner/run_matrix.py` | Exactly the (project, stage) pairs declared in `run.config` | Per stage | **Reproducible subset runs** across several projects |
 
-## Entry Point 3: Reproducible Run Matrix (`scripts/run_matrix.py`)
+## Entry Point 3: Reproducible Run Matrix (`scripts/runner/run_matrix.py`)
 
 The deterministic, version-controllable alternative to the interactive menu.
 A top-level `run.config` (YAML) declares a matrix of **projects × stages** — the
@@ -477,10 +477,10 @@ how they are listed, so a given `run.config` reproduces the same run every time.
 
 ```bash
 # Uses ./run.config (or run.config.yaml). See run.config.example.yaml.
-uv run python scripts/run_matrix.py
-uv run python scripts/run_matrix.py --dry-run     # print the resolved plan, run nothing
-uv run python scripts/run_matrix.py --fail-fast   # stop at the first failing stage
-uv run python scripts/run_matrix.py --config path/to/other.yaml
+uv run python scripts/runner/run_matrix.py
+uv run python scripts/runner/run_matrix.py --dry-run     # print the resolved plan, run nothing
+uv run python scripts/runner/run_matrix.py --fail-fast   # stop at the first failing stage
+uv run python scripts/runner/run_matrix.py --config path/to/other.yaml
 ```
 
 `run.config` schema (see [`run.config.example.yaml`](../run.config.example.yaml)):
@@ -528,16 +528,16 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 Individual stages can also be run directly via Python:
 
 ```bash
-uv run python scripts/00_setup_environment.py            # Setup environment
-uv run python scripts/01_run_tests.py --project {name}   # Run tests only
-uv run python scripts/01_run_tests.py --project {name} --verbose  # Run tests with verbose output
-uv run python scripts/02_run_analysis.py --project {name}       # Run project scripts
-uv run python scripts/03_render_pdf.py --project {name}         # Render PDFs only
-uv run python scripts/04_validate_output.py --project {name}    # Validate outputs only
-uv run python scripts/05_copy_outputs.py --project {name}       # Copy final deliverables
-uv run python scripts/06_llm_review.py --project {name}         # LLM manuscript review
-uv run python scripts/06_llm_review.py --project {name} --reviews-only     # Reviews only
-uv run python scripts/06_llm_review.py --project {name} --translations-only # Translations only
+uv run python scripts/pipeline/stage_00_setup.py            # Setup environment
+uv run python scripts/pipeline/stage_01_test.py --project {name}   # Run tests only
+uv run python scripts/pipeline/stage_01_test.py --project {name} --verbose  # Run tests with verbose output
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}       # Run project scripts
+uv run python scripts/pipeline/stage_03_render.py --project {name}         # Render PDFs only
+uv run python scripts/pipeline/stage_04_validate.py --project {name}    # Validate outputs only
+uv run python scripts/pipeline/stage_05_copy.py --project {name}       # Copy final deliverables
+uv run python scripts/pipeline/stage_06_llm_review.py --project {name}         # LLM manuscript review
+uv run python scripts/pipeline/stage_06_llm_review.py --project {name} --reviews-only     # Reviews only
+uv run python scripts/pipeline/stage_06_llm_review.py --project {name} --translations-only # Translations only
 ```
 
 ## Exit Codes

@@ -136,7 +136,7 @@ uv run pytest tests/infra_tests/ \
 ### Check PDF output
 ```bash
 # Validate the PDF (content + references)
-uv run python scripts/04_validate_output.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
 
 # Open the PDF
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf   # macOS
@@ -170,7 +170,7 @@ Run the gates that CI runs. These confirm the repo is in a publishable state.
 
 ```bash
 # Thin-orchestrator drift check
-uv run python scripts/check_template_drift.py --strict
+uv run python scripts/audit/check_template_drift.py --strict
 
 # Module line count gate
 uv run python scripts/gates/module_line_count_check.py
@@ -179,7 +179,7 @@ uv run python scripts/gates/module_line_count_check.py
 uv run python -m infrastructure.core.health
 
 # Doc linter
-uv run python scripts/lint_docs.py
+uv run python scripts/audit/lint_docs.py
 ```
 
 **Expected:** All exit 0. Any non-zero output is a real failure.
@@ -213,8 +213,8 @@ After completing all phases, confirm every item:
 - [ ] `./run.sh --pipeline --project templates/template_code_project --core-only` exits 0
 - [ ] `uv run pytest projects/templates/template_code_project/tests/ --cov=... --cov-fail-under=90` passes
 - [ ] `output/templates/template_code_project/pdf/template_code_project_combined.pdf` exists
-- [ ] `uv run python scripts/04_validate_output.py --project templates/template_code_project` exits 0
-- [ ] `uv run python scripts/check_template_drift.py --strict` exits 0
+- [ ] `uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project` exits 0
+- [ ] `uv run python scripts/audit/check_template_drift.py --strict` exits 0
 
 If all items are checked: the system is fully operational. Proceed to your actual work.
 

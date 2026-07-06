@@ -33,5 +33,5 @@ Current entries:
 Regenerate after adding, removing, or renaming projects:
 
 ```bash
-uv run python scripts/generate_active_projects_doc.py
+uv run python scripts/docgen/active_projects.py
 ```

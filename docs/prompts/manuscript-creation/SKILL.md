@@ -54,13 +54,13 @@ metadata:
 ## Deliverables
 
 - Full `projects/<name>/` tree or delta from brief
-- How to run: `uv run pytest projects/<name>/tests/ --cov=...` and `uv run python scripts/01_run_tests.py --project <name>`
+- How to run: `uv run pytest projects/<name>/tests/ --cov=...` and `uv run python scripts/pipeline/stage_01_test.py --project <name>`
 
 ## Verification commands
 
 ```bash
 uv sync
-uv run python scripts/01_run_tests.py --project <name>
+uv run python scripts/pipeline/stage_01_test.py --project <name>
 uv run python -m infrastructure.validation.cli markdown projects/<name>/manuscript/
 ```
 

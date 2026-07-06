@@ -179,7 +179,7 @@ export NO_EMOJI=1
 from pathlib import Path
 import sys
 
-# Real pattern used by scripts/00_setup_environment.py and siblings:
+# Real pattern used by scripts/pipeline/stage_00_setup.py and siblings:
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 

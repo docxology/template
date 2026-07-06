@@ -246,7 +246,7 @@ over the `.env` value. GitHub tokens are commonly supplied live instead:
 
 ```bash
 # Dry-run: bundle + receipt only
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
   --tag v2.0.0 \
   --repo owner/template \
@@ -256,13 +256,13 @@ uv run python scripts/publish_project_release.py \
 export GITHUB_TOKEN=...
 export GITHUB_REPO=owner/template
 export ZENODO_SANDBOX_TOKEN=...
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
   --tag v2.0.0 \
   --repo owner/template
 
 # New Zenodo version when publication.doi is already set
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
   --tag v2.0.1 \
   --repo owner/template \
@@ -270,7 +270,7 @@ uv run python scripts/publish_project_release.py \
 
 # Production first release with a DOI-bearing deposited PDF
 export ZENODO_PROD_TOKEN=...
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
   --tag v2.0.0 \
   --repo owner/template \
@@ -317,9 +317,9 @@ should produce or point at a Zenodo software version under that concept DOI.
 
    ```bash
    rg -n "version =|version:" pyproject.toml CITATION.cff
-   uv run python scripts/generate_counts.py --check
-   uv run python scripts/check_tracked_projects.py
-   uv run python scripts/check_tracked_generated_artifacts.py
+   uv run python scripts/docgen/counts.py --check
+   uv run python scripts/audit/check_tracked_projects.py
+   uv run python scripts/audit/check_tracked_generated_artifacts.py
    ```
 
    `pyproject.toml` and root `CITATION.cff` should name the release version;
@@ -335,7 +335,7 @@ should produce or point at a Zenodo software version under that concept DOI.
 
    ```bash
    gh-axi release view vX.Y.Z --repo docxology/template
-   uv run python scripts/generate_publication_records_doc.py --refresh-external
+   uv run python scripts/docgen/publication_records.py --refresh-external
    ```
 
    Also open `https://zenodo.org/records/19140303/latest`; it should redirect to
@@ -351,13 +351,13 @@ name.
 
 ```bash
 uv run python scripts/execute_pipeline.py --project templates/<name> --core-only
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/<name> \
   --tag vX.Y.Z \
   --repo docxology/<name> \
   --production \
   --new-version
-uv run python scripts/generate_publication_records_doc.py --refresh-external
+uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
 For a first standalone exemplar release, use `--reserve-doi-first` instead of
@@ -381,8 +381,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/<name> --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/<name>
-uv run python scripts/05_copy_outputs.py --project templates/<name>
+uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>
+uv run python scripts/pipeline/stage_05_copy.py --project templates/<name>
 ```
 
 The standalone repositories are publication mirrors for source, DOI metadata,
@@ -428,7 +428,7 @@ export GITHUB_TOKEN="$(gh auth token)"
 export GITHUB_REPO=docxology/template-release-smoke
 export ZENODO_PROD_TOKEN=...   # from .env; never commit
 
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project template_prose_project \
   --tag v0.1.0-release-smoke \
   --repo docxology/template-release-smoke \
@@ -439,7 +439,7 @@ uv run python scripts/publish_project_release.py \
 **Phase B — versioned release** (after `publication.doi` was set from Phase A):
 
 ```bash
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project template_prose_project \
   --tag v0.2.0-release-smoke \
   --repo docxology/template-release-smoke \
@@ -452,7 +452,7 @@ When GitHub was already published, `--skip-github` or `--skip-zenodo` can split 
 **Phase C — v0.3.0 versioned release** (2026-05-27, new PAT + concept-DOI resolution fix):
 
 ```bash
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project template_prose_project \
   --tag v0.3.0-release-smoke \
   --repo docxology/template-release-smoke \
@@ -526,14 +526,14 @@ Dual-row integrity strip (`output/figures/transmission_integrity_strip.png`): ro
 ```bash
 uv run python scripts/execute_pipeline.py --project templates/template_code_project --core-only
 ./secure_run.sh --steganography-only --project templates/template_code_project --deterministic
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
   --tag vX.Y.Z \
   --repo docxology/template_code_project \
   --release-name "Convergence Analysis of Gradient Descent Optimization (vX.Y.Z)" \
   --production \
   --new-version   # when publication.doi is already set from a prior mint
-uv run python scripts/03_render_pdf.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 ```
 
 Current production records: see the generated live matrix in [`../_generated/publication_records.md`](../_generated/publication_records.md) and each exemplar's `manuscript/config.yaml` (`publication.doi` = concept DOI for citations and PDF cover; `publication.version_doi` = latest deposit).
@@ -636,7 +636,7 @@ uv run python -m infrastructure.publishing.transmission_page_check \
 ## Executable bundle (Stage 12)
 
 ```bash
-uv run python scripts/08_executable_bundle.py --project templates/template_code_project
+uv run python scripts/runner/bundle_executable.py --project templates/template_code_project
 ```
 
 ```python
@@ -661,7 +661,7 @@ print(bundle_path)
 Dry-run via pipeline stage (graceful skip if bundle missing):
 
 ```bash
-uv run python scripts/09_archive_publication.py --project templates/template_code_project
+uv run python scripts/runner/archive_publication.py --project templates/template_code_project
 ```
 
 Direct CLI (dry-run by default):

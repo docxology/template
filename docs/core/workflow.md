@@ -164,7 +164,7 @@ uv run pytest
 
 # Generate figures and data
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
-uv run python scripts/02_run_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
 
 # Validate markdown integrity
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/

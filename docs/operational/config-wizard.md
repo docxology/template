@@ -14,7 +14,7 @@ There is no separate `template config wizard` CLI in this repository. Use the st
 3. Run pipeline stage 0 (environment validation):
 
    ```bash
-   uv run python scripts/00_setup_environment.py --project template_code_project
+   uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
    ```
 
    Replace `template_code_project` with your [`projects/`](../../projects/) directory name when applicable.

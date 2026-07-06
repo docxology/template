@@ -42,14 +42,14 @@ Profile results appear in pipeline telemetry and can be aggregated.
 For deeper analysis:
 
 ```bash
-uv run python -m cProfile -o profile.out scripts/02_run_analysis.py --project template_code_project
+uv run python -m cProfile -o profile.out scripts/pipeline/stage_02_analysis.py --project template_code_project
 uv run python -m pstats profile.out
 ```
 
 Or use `snakeviz` for visualization:
 
 ```bash
-uv run python scripts/02_run_analysis.py --profile
+uv run python scripts/pipeline/stage_02_analysis.py --profile
 snakeviz profile.prof
 ```
 
@@ -60,7 +60,7 @@ snakeviz profile.prof
 Use `memray` (optional) for memory allocation tracking:
 
 ```bash
-uv run memray run -o memray.bin scripts/02_run_analysis.py --project template_code_project
+uv run memray run -o memray.bin scripts/pipeline/stage_02_analysis.py --project template_code_project
 uv run memray flamegraph memray.bin
 ```
 
@@ -180,7 +180,7 @@ When pipeline slows down:
 
 1. Check `output/<project>/reports/telemetry.json` for slowest stages
 2. Enable verbose logging: `LOG_LEVEL=DEBUG ./run.sh --pipeline`
-3. Profile stage script directly: `uv run python -m cProfile -o stage.prof scripts/02_run_analysis.py`
+3. Profile stage script directly: `uv run python -m cProfile -o stage.prof scripts/pipeline/stage_02_analysis.py`
 4. Look for I/O blocking, large data serialization, or unnecessary re-reads
 
 ---
@@ -190,7 +190,7 @@ When pipeline slows down:
 Use `tracemalloc` or `memray` to detect growing allocations:
 
 ```bash
-uv run python -X tracemalloc=25 scripts/02_run_analysis.py --project template_code_project
+uv run python -X tracemalloc=25 scripts/pipeline/stage_02_analysis.py --project template_code_project
 # Or with memray as above
 ```
 

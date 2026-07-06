@@ -13,7 +13,7 @@ Agent skill `template-manuscript-claim-verification` — Triple-check manuscript
 ## Verification
 
 ```bash
-uv run python scripts/lint_docs.py --consistency-only
+uv run python scripts/audit/lint_docs.py --consistency-only
 ```
 
 ## See also

@@ -59,7 +59,7 @@ Work through:
 uv sync
 uv run pytest projects/<project>/tests/ --cov=projects/<project>/src --cov-fail-under=90 -q
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -q
-uv run python scripts/01_run_tests.py --project <project>
+uv run python scripts/pipeline/stage_01_test.py --project <project>
 uv run python -m infrastructure.validation.cli markdown projects/<project>/manuscript/
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 ```

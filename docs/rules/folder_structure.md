@@ -32,7 +32,7 @@ projects should mirror that layout when they need the full docs/style pattern.
 
 The two-mandatory-file (AGENTS.md + README.md) rule is universal. The
 specialization files above are recommended at the `src/`/`tests/`/`scripts/`
-level. The drift checker (`scripts/check_template_drift.py`,
+level. The drift checker (`scripts/audit/check_template_drift.py`,
 `missing_canonical_file` detector) gates the mandatory files; the
 specialization files are AESTHETIC and enforced by audit only.
 

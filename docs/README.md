@@ -2,7 +2,7 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Forking the template?** Start here: the code and prose exemplars each ship a 5-minute walkthrough at [`projects/templates/template_code_project/docs/forking_guide.md`](../projects/templates/template_code_project/docs/forking_guide.md) (numerical research) and [`projects/templates/template_prose_project/docs/forking_guide.md`](../projects/templates/template_prose_project/docs/forking_guide.md) (editorial review). The Active Inference exemplar is documented at [`projects/templates/template_active_inference/README.md`](../projects/templates/template_active_inference/README.md). The AutoResearch exemplar is documented at [`projects/templates/template_autoresearch_project/README.md`](../projects/templates/template_autoresearch_project/README.md). The meta-template exemplar is documented at [`projects/templates/template_template/README.md`](../projects/templates/template_template/README.md). The drift checker that gates your fork against the template's contract is [`scripts/check_template_drift.py`](../scripts/check_template_drift.py) (run `uv run python scripts/check_template_drift.py` from the repo root).
+**Forking the template?** Start here: the code and prose exemplars each ship a 5-minute walkthrough at [`projects/templates/template_code_project/docs/forking_guide.md`](../projects/templates/template_code_project/docs/forking_guide.md) (numerical research) and [`projects/templates/template_prose_project/docs/forking_guide.md`](../projects/templates/template_prose_project/docs/forking_guide.md) (editorial review). The Active Inference exemplar is documented at [`projects/templates/template_active_inference/README.md`](../projects/templates/template_active_inference/README.md). The AutoResearch exemplar is documented at [`projects/templates/template_autoresearch_project/README.md`](../projects/templates/template_autoresearch_project/README.md). The meta-template exemplar is documented at [`projects/templates/template_template/README.md`](../projects/templates/template_template/README.md). The drift checker that gates your fork against the template's contract is [`scripts/audit/check_template_drift.py`](../scripts/audit/check_template_drift.py) (run `uv run python scripts/audit/check_template_drift.py` from the repo root).
 
 **Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md) | [Canonical Facts](_generated/COUNTS.md)
 
@@ -134,7 +134,7 @@ graph TD
 | Understand modules | [`modules/modules-guide.md`](modules/modules-guide.md) |
 | Best practices | [`best-practices/best-practices.md`](best-practices/best-practices.md) |
 | Security policies | [`security/README.md`](security/README.md) |
-| Validate docs | [`../scripts/lint_docs.py`](../scripts/lint_docs.py) |
+| Validate docs | [`../scripts/audit/lint_docs.py`](../scripts/audit/lint_docs.py) |
 
 ## Topic routing (canonical → deep dives)
 

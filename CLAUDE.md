@@ -21,13 +21,13 @@ This is a research project template with a test-driven development workflow, aut
 | Task | Command |
 | --- | --- |
 | Interactive menu | `./run.sh` |
-| Reproducible run matrix (project × stage; preferred over the menu for repeatable subset runs) | `cp run.config.example.yaml run.config` first (the CLI errors without one), then `uv run python scripts/run_matrix.py` (reads `run.config`; `--dry-run` to preview, `--fail-fast` to stop on first failure; see [`run.config.example.yaml`](run.config.example.yaml)) |
+| Reproducible run matrix (project × stage; preferred over the menu for repeatable subset runs) | `cp run.config.example.yaml run.config` first (the CLI errors without one), then `uv run python scripts/runner/run_matrix.py` (reads `run.config`; `--dry-run` to preview, `--fail-fast` to stop on first failure; see [`run.config.example.yaml`](run.config.example.yaml)) |
 | Secure workflow via main shell (`secure` subcommand) | `./run.sh --secure-run` |
 | Full pipeline | `./run.sh --pipeline` |
-| Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |
-| Incremental pipeline (opt-in stage skipping) | `uv run python scripts/execute_pipeline.py --project {name} --incremental` (also `python -m infrastructure.orchestration pipeline --project {name} --incremental`; default off) |
-| Project pipeline tests | `uv run python scripts/01_run_tests.py --project {name}` |
-| Full infrastructure gate | `uv run python scripts/01_run_tests.py --infra-only --infra-scope full` |
+| Core pipeline (no LLM) | `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` |
+| Incremental pipeline (opt-in stage skipping) | `uv run python scripts/runner/execute_pipeline.py --project {name} --incremental` (also `python -m infrastructure.orchestration pipeline --project {name} --incremental`; default off) |
+| Project pipeline tests | `uv run python scripts/pipeline/stage_01_test.py --project {name}` |
+| Full infrastructure gate | `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
 | Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`, `steganography`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
@@ -37,15 +37,15 @@ This is a research project template with a test-driven development workflow, aut
 | Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
 | Pre-push hooks | `pre-commit run --hook-stage pre-push --all-files` |
-| Local CI reproduction (act + fallback) | `./scripts/ci_local.sh` (added 2026-05-20; see [`docs/maintenance/ci-local.md`](docs/maintenance/ci-local.md)) |
-| Executable bundle (opt-in Stage 10) | `uv run python scripts/08_executable_bundle.py --project {name}` |
-| Archive publication dry-run (opt-in Stage 11) | `uv run python scripts/09_archive_publication.py --project {name}` |
-| Archive publication real deposit | `uv run python scripts/09_archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
-| Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
-| Reproduction bundle (single / all public exemplars) | `uv run python scripts/10_repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
+| Local CI reproduction (act + fallback) | `./scripts/shell/ci_local.sh` (added 2026-05-20; see [`docs/maintenance/ci-local.md`](docs/maintenance/ci-local.md)) |
+| Executable bundle (opt-in Stage 10) | `uv run python scripts/runner/bundle_executable.py --project {name}` |
+| Archive publication dry-run (opt-in Stage 11) | `uv run python scripts/runner/archive_publication.py --project {name}` |
+| Archive publication real deposit | `uv run python scripts/runner/archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
+| Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
+| Reproduction bundle (single / all public exemplars) | `uv run python scripts/runner/repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
 | Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (55 claim-binding tests plus a public-roster pin; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
-| Repo-wide doc linter | `uv run python scripts/lint_docs.py` |
-| Exemplar drift checker | `uv run python scripts/check_template_drift.py` (add `--strict` for focused gates) |
+| Repo-wide doc linter | `uv run python scripts/audit/lint_docs.py` |
+| Exemplar drift checker | `uv run python scripts/audit/check_template_drift.py` (add `--strict` for focused gates) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
 | CodeGraph local commands | `uv run python scripts/maintenance/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
 | LEANN local semantic retrieval | Optional user-level companion only; see [`docs/guides/leann-local.md`](docs/guides/leann-local.md) |
@@ -80,7 +80,7 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./run.sh --pipeline
 
 # Core pipeline only (8 stages — LLM and opt-in stages excluded)
-uv run python scripts/execute_pipeline.py --project {project_name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
 ./run.sh --pipeline --resume
@@ -93,7 +93,7 @@ uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 
 ```bash
 # Run all tests (infrastructure + project)
-uv run python scripts/01_run_tests.py --project {project_name}
+uv run python scripts/pipeline/stage_01_test.py --project {project_name}
 
 # Infrastructure tests only (60% coverage minimum)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
@@ -173,7 +173,7 @@ uv run python -m infrastructure.skills check
 ./run.sh --all-projects --pipeline
 
 # Run all projects with core pipeline only
-uv run python scripts/execute_multi_project.py --no-llm
+uv run python scripts/runner/execute_multi_project.py --no-llm
 
 # List available projects
 uv run python -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
@@ -207,7 +207,7 @@ path under `projects/` — optional `active/` hot-seat render set, the `working/
 `ongoing/`, and `archive/` sidecar mirrors, optional legacy `published/` and `other/`
 lifecycle folders — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
-`scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push
+`scripts/audit/check_tracked_projects.py` fails the CI `lint` job and the pre-push
 `pre-push-quick` hook on any non-template tracked project (a `git add -f`
 cannot slip past it).
 
@@ -238,7 +238,7 @@ an explicit qualified command such as `--project working/<name>` (see
 #### Layer 1: Infrastructure (Generic, Reusable)
 
 - `infrastructure/` - Generic build and validation tools
-- `scripts/` - Entry point orchestrators (00-07)
+- `scripts/` - Subdirectory-organized stage orchestrators (`pipeline/`, `runner/`, `audit/`, `docgen/`, `shell/`, `publish/`)
 - `tests/` - Infrastructure test suite
 
 #### Layer 2: Projects (Domain-Specific)
@@ -296,6 +296,9 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/scientific/` - Scientific computing best practices and benchmarking
 - `infrastructure/sia/` - Self-improvement harness (task layout, fixture replay, evaluation runner)
 - `infrastructure/search/` - Literature search and reference discovery
+- `infrastructure/search/connectors/` - Scientific Connector Registry (OpenAlex, arXiv, Semantic Scholar, CrossRef, Europe PMC, bioRxiv, UniProt, PDB); `python -m infrastructure.search.connectors list-dbs` / `search`
+- `infrastructure/provenance/` - Content-addressed provenance DAG; immutable artifact tracking and lineage
+- `infrastructure/research/` - Research workflow prompt templates (question refinement, gap analysis, synthesis)
 - `infrastructure/skills/` - Programmatic AI skill discovery and manifest generation
 - `infrastructure/steganography/` - Cryptographic PDF watermarking and verification
 - `infrastructure/validation/` - PDF, output, and markdown integrity validation
@@ -319,7 +322,7 @@ Discovery renders only `projects/templates/*` and optional `projects/active/*` (
 **Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
 **Backburner / archived projects:** in the private repo's `working/` and `archive/` folders.
 
-To render a private working project: sync links, then run an explicit qualified command such as `uv run python scripts/03_render_pdf.py --project working/<name>`.
+To render a private working project: sync links, then run an explicit qualified command such as `uv run python scripts/pipeline/stage_03_render.py --project working/<name>`.
 To retire one: move it from sidecar `working/` to sidecar `archive/`.
 
 ### Standard Project Layout
@@ -405,7 +408,7 @@ flowchart TB
 - **Infrastructure**: 60% minimum (measured baseline → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - **Projects (per-project standalone)**: 90% minimum. Exemplar measured coverage → [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md). Per-project gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90`.
   - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
-- **Combined-union public-project gate**: 75% (`scripts/01_run_tests.py --project-only --all-projects --public-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project in the checkout and may include rotating private symlinks. Per-project floors are unchanged and remain authoritative.
+- **Combined-union public-project gate**: 75% (`scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project in the checkout and may include rotating private symlinks. Per-project floors are unchanged and remain authoritative.
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 
@@ -413,7 +416,7 @@ flowchart TB
 
 ```bash
 # All tests
-uv run python scripts/01_run_tests.py --project {project_name}
+uv run python scripts/pipeline/stage_01_test.py --project {project_name}
 
 # With coverage report
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
@@ -634,7 +637,7 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 
 ```bash
 export LOG_LEVEL=0  # Enable debug logging
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 ```
 
 ## Documentation Resources
@@ -664,7 +667,7 @@ uv run python scripts/03_render_pdf.py --project {name}
 
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |

@@ -28,22 +28,22 @@ docker info >/dev/null     # should succeed
 
 ```bash
 # Run the full default workflow (everything on push to main)
-./scripts/ci_local.sh
+./scripts/shell/ci_local.sh
 
 # Run a specific job (job IDs match .github/workflows/ci.yml)
-./scripts/ci_local.sh -j lint
-./scripts/ci_local.sh -j test-infra
-./scripts/ci_local.sh -j test-project
-./scripts/ci_local.sh -j security
+./scripts/shell/ci_local.sh -j lint
+./scripts/shell/ci_local.sh -j test-infra
+./scripts/shell/ci_local.sh -j test-project
+./scripts/shell/ci_local.sh -j security
 
 # Dry-run (show what would execute without running)
-./scripts/ci_local.sh --dryrun
+./scripts/shell/ci_local.sh --dryrun
 
 # List all available jobs
-./scripts/ci_local.sh --list
+./scripts/shell/ci_local.sh --list
 ```
 
-See [`scripts/ci_local.sh`](../../scripts/ci_local.sh) for the wrapper details.
+See [`scripts/shell/ci_local.sh`](../../scripts/shell/ci_local.sh) for the wrapper details.
 
 ## What about macOS jobs?
 
@@ -103,14 +103,14 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 # Tests
-uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 
 # Pre-commit (all stages)
 pre-commit run --all-files
 pre-commit run --hook-stage pre-push --all-files
 
 # Confidentiality check
-uv run python scripts/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_projects.py
 ```
 
 This is what `ci_local.sh` falls back to if `act` isn't present.
@@ -128,11 +128,11 @@ The act-tested local reproduction means CI portability is **already proved** at 
 
 ## Status
 
-`scripts/ci_local.sh` is created 2026-05-20. The act path is the default; pure-Python fallback covers the case where Docker is unavailable.
+`scripts/shell/ci_local.sh` is created 2026-05-20. The act path is the default; pure-Python fallback covers the case where Docker is unavailable.
 
 ## Related
 
 - [`README.md`](README.md) — guide hub
-- [`scripts/ci_local.sh`](../../scripts/ci_local.sh) — the wrapper
+- [`scripts/shell/ci_local.sh`](../../scripts/shell/ci_local.sh) — the wrapper
 - [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) — the workflow being reproduced
 - [`.github/AGENTS.md`](../../.github/AGENTS.md) — CI job names + thresholds

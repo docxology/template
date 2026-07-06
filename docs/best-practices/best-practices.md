@@ -269,7 +269,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or validate outputs directly
-uv run python scripts/04_validate_output.py
+uv run python scripts/pipeline/stage_04_validate.py
 ```
 
 ## Collaboration

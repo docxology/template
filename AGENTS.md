@@ -69,13 +69,13 @@ Generic, Layer-1 facts for working in this repository.
 
 - **Manuscript variables are injected, not hand-authored.** Per-project metrics, counts, and variables come from `output/data/manuscript_variables.json` at render time. For `template_code_project`, the default pipeline calls `generate_variables(..., require_analysis_outputs=True)` via `scripts/z_generate_manuscript_variables.py` and fails when `output/data/optimization_results.csv` is absent; pass `--allow-draft` only for intentional early drafts. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py`.
 - **Validation & rendering pitfalls.** Content-validation diagnostics use stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`); every new `DiagnosticEvent` must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters. Fast manuscript pre-flight: `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .`. Multi-pass PDF rendering continues when pass 1 wrote output despite recoverable `Missing $` errors so later passes resolve forward references. Mermaid: unquoted `//` line comments; stadium nodes `[/label/]` close with `/]`; combined-PDF Mermaid via Chrome headless or `mmdc`, else verbatim figure fallback. `FIGURE_WIDTH_*` values must be bare fractions (e.g. `0.9`); the alt-text comment belongs before `\begin{figure}`; prefer inline `$...$` over `\(...\)` in Markdown list items.
-- **Entry points & gates.** `run.sh` and `secure_run.sh` source only [`scripts/shell_bootstrap.sh`](scripts/shell_bootstrap.sh); menu and argparse live in `infrastructure.orchestration`. [`scripts/bash_utils.sh`](scripts/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Exemplar doc/code drift: `scripts/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` on `PUBLIC_PROJECT_NAMES` (`--project`, `--strict`). Layer 1 module size: `scripts/gates/module_line_count_check.py` and `uv run python -m infrastructure.core.health` (`module-line-count`). Opt-in gates under `scripts/gates/` report `status: "skipped"` under `skipped_tools` when tools are missing. `bandit.yaml` `exclude_dirs` skips rotating/private trees so CI stays strict on `infrastructure/`, `scripts/`, and public exemplars.
+- **Entry points & gates.** `run.sh` and `secure_run.sh` source only [`scripts/shell/shell_bootstrap.sh`](scripts/shell/shell_bootstrap.sh); menu and argparse live in `infrastructure.orchestration`. [`scripts/shell/bash_utils.sh`](scripts/shell/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Exemplar doc/code drift: `scripts/audit/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` on `PUBLIC_PROJECT_NAMES` (`--project`, `--strict`). Layer 1 module size: `scripts/gates/module_line_count_check.py` and `uv run python -m infrastructure.core.health` (`module-line-count`). Opt-in gates under `scripts/gates/` report `status: "skipped"` under `skipped_tools` when tools are missing. `bandit.yaml` `exclude_dirs` skips rotating/private trees so CI stays strict on `infrastructure/`, `scripts/`, and public exemplars.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
 `.gitignore` ignores `projects/*` and negates **only** the public canonical exemplar trees under `projects/templates/` (plus the repo-level `projects/*.md` docs). The public exemplar roster is derived from `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` and documented in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md); do not hand-maintain a second allowlist in prose. Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; the simplified sidecar normally has `working/` and `archive/`, with optional `ongoing/` (long-lived projects with no publication target) plus legacy `active/`, `published/`, and `other/` folders still supported by the linker. `run.sh`/`infrastructure.orchestration` sync existing lifecycle folders into matching typed subfolders under `projects/`: `working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, and optional `active/*` → `projects/active/*` (rendered). Only `projects/templates/*` and optional `projects/active/*` are discovered/rendered by default.
 
-Every path under `projects/` other than `templates/` — especially the local-only `working/`, `archive/`, optional `active/`, `published/`, `other/` mirrors — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
+Every path under `projects/` other than `templates/` — especially the local-only `working/`, `archive/`, optional `active/`, `published/`, `other/` mirrors — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/audit/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
 
 Operational gotchas: running **all** `projects/*/tests/` in **one** pytest process fails when projects each ship `tests/conftest` under the `tests.conftest` package name — run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage), or follow `.github/workflows/ci.yml`. `resolve_project_root` accepts a qualified `<subfolder>/<name>` path (e.g. `templates/template_code_project`, `active/demo`) and resolves it directly under `projects/`. For a bare name it prefers `projects/active/<name>/` (the hot seat) when that tree has project markers, then `projects/working/<name>/`, then a flat standalone `projects/<name>/`, falling back to `projects/active/<name>/` for error messages.
 
@@ -196,7 +196,7 @@ Projects under `projects/working/`, `projects/ongoing/`, and `projects/archive/`
 
 **Retiring in the sidecar:** Move `working/{name}/` → `archive/{name}/`
 **Resuming in the sidecar:** Move `archive/{name}/` → `working/{name}/`
-**Explicit render:** From the template checkout, run `uv run python scripts/03_render_pdf.py --project working/{name}` after `link-projects`.
+**Explicit render:** From the template checkout, run `uv run python scripts/pipeline/stage_03_render.py --project working/{name}` after `link-projects`.
 
 Projects are automatically discovered when a deliberately restored sidecar
 `active/{name}` entry is synced into `projects/active/{name}`. Normal sidecar
@@ -297,7 +297,7 @@ Each directory contains documentation for easy navigation:
 
 **Ongoing projects** live under [`projects/ongoing/`](projects/ongoing/) when present — long-lived work with no publication target, not discovered or executed by default. Render one explicitly with a qualified project name such as `ongoing/<name>`. The roster rotates every checkout and is deliberately **not** hard-coded here: run `ls projects/ongoing/` for the live set.
 
-**Archived projects** live under [`projects/archive/`](projects/archive/) when present, but the roster is checkout-specific and is not discovered or executed by default. Resume by moving them back to sidecar `working/`, render explicitly with `archive/<name>` when appropriate, or deliberately restore through optional sidecar `active/` for default discovery. Use `ls projects/archive/` for local inspection. The authoritative list of rendered projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/generate_active_projects_doc.py`.
+**Archived projects** live under [`projects/archive/`](projects/archive/) when present, but the roster is checkout-specific and is not discovered or executed by default. Resume by moving them back to sidecar `working/`, render explicitly with `archive/<name>` when appropriate, or deliberately restore through optional sidecar `active/` for default discovery. Use `ls projects/archive/` for local inspection. The authoritative list of rendered projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/docgen/active_projects.py`.
 
 ### Documentation Directories
 
@@ -471,7 +471,7 @@ Environment variables are supported as an alternative configuration method and t
 vim projects/{name}/manuscript/config.yaml
 
 # Build with config file values
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 ```
 
 #### Using Environment Variables
@@ -483,19 +483,19 @@ export AUTHOR_EMAIL="jane.smith@university.edu"
 export AUTHOR_ORCID="0000-0000-0000-1234"
 export DOI="10.5281/zenodo.12345678"  # Optional
 
-uv run python scripts/03_render_pdf.py
+uv run python scripts/pipeline/stage_03_render.py
 ```
 
 #### Verbose Logging
 
 ```bash
 export LOG_LEVEL=0  # Show all debug messages
-uv run python scripts/03_render_pdf.py
+uv run python scripts/pipeline/stage_03_render.py
 ```
 
 ### Runtime Configuration
 
-Configuration is read at runtime by `scripts/03_render_pdf.py` and applied to:
+Configuration is read at runtime by `scripts/pipeline/stage_03_render.py` and applied to:
 
 - PDF metadata (title, author, date)
 - LaTeX document properties
@@ -610,7 +610,7 @@ steganography:
 - **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
 - **`./run.sh --secure-run`**: Forwards to the `secure` orchestration subcommand (same Python CLI as bare `./run.sh`; use when you want argv shaping from the main shell).
 - **`./secure_run.sh`**: Ensures steganography extras (`uv sync --group steganography`), then `python -m infrastructure.orchestration secure`. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
-- **`uv run python scripts/execute_pipeline.py --project {name} --core-only`**: Core DAG only — **8** stages in default [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) (LLM-tagged stages excluded); no LLM dependencies.
+- **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`**: Core DAG only — **8** stages in default [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) (LLM-tagged stages excluded); no LLM dependencies.
 
 ### Pipeline Stages
 
@@ -629,15 +629,15 @@ steganography:
 
 **Opt-in long-horizon stages** (added 2026-05-20; NOT in default core or `--core-only` runs — enable via `--tags ebook`, `--tags metadata`, `--tags bundle`, or `--tags archival`):
 
-10. **Ebook Generation** (`scripts/11_ebook_generation.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/11_ebook_generation.py --project <name>`.
-11. **Metadata Package** (`scripts/12_metadata_package.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/12_metadata_package.py --project <name>`.
-12. **Executable Bundle** (`scripts/08_executable_bundle.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project, parallel to PDF as the durable artifact. Design: [`docs/maintenance/stage-10-executable-bundle.md`](docs/maintenance/stage-10-executable-bundle.md).
-13. **Archival Publication** (`scripts/09_archive_publication.py`, tag `archival`) — Mirror the executable bundle to multiple independent archival targets (Zenodo, Software Heritage, IPFS via Pinata/Web3.Storage). Defaults to dry-run; pass `--commit` to actually deposit. Design: [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md).
+10. **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
+11. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
+12. **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project, parallel to PDF as the durable artifact. Design: [`docs/maintenance/stage-10-executable-bundle.md`](docs/maintenance/stage-10-executable-bundle.md).
+13. **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to multiple independent archival targets (Zenodo, Software Heritage, IPFS via Pinata/Web3.Storage). Defaults to dry-run; pass `--commit` to actually deposit. Design: [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md).
 
 **Infrastructure Tests Behavior:**
 
-- **Single project pipeline mode**: Stage 2 runs `scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke`, a focused real suite for DAG execution, advisory controls, evidence/profile/benchmark extension points, doc invariants, and tracked-artifact guards. This keeps project rebuilds fast without hiding the full repo gate.
-- **Full infrastructure gate**: Run `uv run python scripts/01_run_tests.py --infra-only --infra-scope full` (or the direct pytest command in the verification guide) for the coverage-bearing repository suite.
+- **Single project pipeline mode**: Stage 2 runs `scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke`, a focused real suite for DAG execution, advisory controls, evidence/profile/benchmark extension points, doc invariants, and tracked-artifact guards. This keeps project rebuilds fast without hiding the full repo gate.
+- **Full infrastructure gate**: Run `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full` (or the direct pytest command in the verification guide) for the coverage-bearing repository suite.
 - **Multi-project mode** (`--all-projects`): Infrastructure tests run **once** for all projects at the start, then are **skipped** for individual project executions to avoid redundant testing. This is shown in logs as "Running infrastructure tests once for all projects..." followed by "Skipping stage: Infrastructure Tests" for each project.
 
 **Multi-Project Executive Reporting** (`--all-projects` mode only):
@@ -654,28 +654,28 @@ steganography:
 
 ```bash
 # Environment setup
-uv run python scripts/00_setup_environment.py --project {name}
+uv run python scripts/pipeline/stage_00_setup.py --project {name}
 
 # Test execution (combined infra + project)
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 
 # Project analysis scripts
-uv run python scripts/02_run_analysis.py --project {name}
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}
 
 # PDF rendering
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 # Output validation
-uv run python scripts/04_validate_output.py --project {name}
+uv run python scripts/pipeline/stage_04_validate.py --project {name}
 
 # Copy outputs
-uv run python scripts/05_copy_outputs.py --project {name}
+uv run python scripts/pipeline/stage_05_copy.py --project {name}
 
 # LLM manuscript review (optional, requires Ollama)
-uv run python scripts/06_llm_review.py --project {name}
+uv run python scripts/pipeline/stage_06_llm_review.py --project {name}
 
 # Generate executive report (multi-project only)
-uv run python scripts/07_generate_executive_report.py --project {name}
+uv run python scripts/pipeline/stage_07_executive_report.py --project {name}
 ```
 
 **Validation Tools:**
@@ -735,7 +735,7 @@ See `docs/_generated/COUNTS.md` for current status from live test runs.
 
 ```bash
 # Run via orchestrator
-uv run python scripts/01_run_tests.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project {name}
 
 # Manual with reports
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
@@ -868,7 +868,7 @@ Tests follow the **thin orchestrator pattern** principles:
 
 ```bash
 # All tests via orchestrator (recommended)
-uv run python scripts/01_run_tests.py
+uv run python scripts/pipeline/stage_01_test.py
 
 # Specific test file
 uv run pytest projects/{name}/tests/test_example.py -v
@@ -1122,6 +1122,12 @@ All advanced modules follow the **thin orchestrator pattern**:
 - **Testing** ensuring reliability
 - **Documentation** for each module's functionality
 
+**Additional opt-in modules:**
+
+- **Scientific Connector Registry** (`infrastructure/search/connectors/`) — uniform `Connector` protocol over 8 science databases; `python -m infrastructure.search.connectors list-dbs` / `search` — see [`infrastructure/search/connectors/AGENTS.md`](infrastructure/search/connectors/AGENTS.md)
+- **Provenance DAG** (`infrastructure/provenance/`) — content-addressed artifact tracking and lineage — see [`infrastructure/provenance/AGENTS.md`](infrastructure/provenance/AGENTS.md)
+- **Research prompts** (`infrastructure/research/`) — reusable LLM prompt templates for research workflows — see [`infrastructure/research/AGENTS.md`](infrastructure/research/AGENTS.md)
+
 **Testing Coverage:** measured per module in [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md); suite locations under `tests/infra_tests/`.
 
 - ✅ **Security** — `tests/infra_tests/core/`
@@ -1168,7 +1174,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_comb
 
 ```bash
 # Ensure coverage requirements met for both suites
-uv run python scripts/01_run_tests.py
+uv run python scripts/pipeline/stage_01_test.py
 
 # Or run individually with coverage reports
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
@@ -1216,7 +1222,7 @@ paths in the project docs, not in this root manual.
 
 ```bash
 # Run scripts individually to debug
-uv run python scripts/02_run_analysis.py --project {name}
+uv run python scripts/pipeline/stage_02_analysis.py --project {name}
 
 # Check import errors
 uv run python -c "import importlib; importlib.import_module('projects.{name}.src')"
@@ -1296,7 +1302,7 @@ brew install --cask mactex
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=0
-uv run python scripts/03_render_pdf.py --project {name}
+uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 # Run with debug output
 uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf --verbose
@@ -1372,11 +1378,11 @@ The pipeline includes automatic checkpointing for resume capability:
 
 ```bash
 # Resume from last checkpoint
-uv run python scripts/execute_pipeline.py --project {name} --core-only --resume
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --resume
 ./run.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
-uv run python scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ./run.sh --pipeline
 ```
 
@@ -1490,7 +1496,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |

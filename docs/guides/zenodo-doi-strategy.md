@@ -10,7 +10,7 @@ Zenodo mints two DOI roles for every deposit series:
 | **Concept DOI** | Stable citation identifier | Always-latest redirect | **`publication.doi`** |
 | **Version DOI** | Immutable record for one deposit | Specific Zenodo record | **`publication.version_doi`** |
 
-When `version_doi` is declared in `manuscript/config.yaml`, `scripts/publish_project_release.py` (via `update_publication_after_zenodo_deposit`) updates **only** `version_doi` and `version_record` on re-deposit. It does **not** overwrite `publication.doi`, so the cover page and citation files keep the concept DOI.
+When `version_doi` is declared in `manuscript/config.yaml`, `scripts/publish/publish_project_release.py` (via `update_publication_after_zenodo_deposit`) updates **only** `version_doi` and `version_record` on re-deposit. It does **not** overwrite `publication.doi`, so the cover page and citation files keep the concept DOI.
 
 ## Config layout
 
@@ -35,7 +35,7 @@ Rendering reads **`publication.doi` only** for the PDF title page and suggested 
 The source-bound matrix lives in [`../_generated/publication_records.md`](../_generated/publication_records.md). It is generated from `infrastructure.project.public_scope`, each public exemplar's `manuscript/config.yaml`, `CITATION.cff`, and `.zenodo.json`; when refreshed with `--refresh-external`, it also records current GitHub release and Zenodo Records API observations. Do not copy the DOI table into this guide.
 
 ```bash
-uv run python scripts/generate_publication_records_doc.py --refresh-external
+uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
 ## Workflow
@@ -57,7 +57,7 @@ flowchart TD
 
 1. Set `publication.doi` to the **concept** DOI before the first release (or leave empty until first mint, then split on second deposit).
 2. Add `version_doi:` to `config.yaml` when adopting the split layout (all public exemplars use it).
-3. Run `uv run python scripts/publish_project_release.py --project {name} --tag vX.Y.Z --repo docxology/{name}`.
+3. Run `uv run python scripts/publish/publish_project_release.py --project {name} --tag vX.Y.Z --repo docxology/{name}`.
 4. After deposit, verify `version_doi` / `version_record` updated and `doi` unchanged.
 5. Sync `CITATION.cff`, `.zenodo.json`, and GitHub release notes (concept + version DOI + PDF SHA-256).
 
@@ -66,7 +66,7 @@ flowchart TD
 When the combined PDF must show the minted DOI on the cover **before** the first public deposit, use the reserve-first path documented in [`publishing-guide.md`](publishing-guide.md):
 
 ```bash
-uv run python scripts/publish_project_release.py \
+uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
   --tag v1.0.0 \
   --repo docxology/template_code_project \
@@ -94,7 +94,7 @@ Reserve-first is for **first releases** only unless `--new-version` is explicitl
 
 ## Drift detection
 
-`scripts/check_template_drift.py` runs `check_publication_metadata_consistency` on public exemplars (see [`infrastructure/project/drift/checks.py`](../../infrastructure/project/drift/checks.py)).
+`scripts/audit/check_template_drift.py` runs `check_publication_metadata_consistency` on public exemplars (see [`infrastructure/project/drift/checks.py`](../../infrastructure/project/drift/checks.py)).
 
 ## Related API
 

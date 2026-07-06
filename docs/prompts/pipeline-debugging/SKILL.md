@@ -41,7 +41,7 @@ metadata:
 
 2. **Isolate** — run that stage's underlying command directly (pytest target, analysis script, validation CLI, renderer). Use `--resume` to skip good upstream stages while iterating.
 
-3. **Classify** — dependency/uv gap, missing system tool (LaTeX/pandoc-crossref), nondeterministic input, coverage gate, undefined citation/cross-ref, thin-orchestrator violation (logic in `scripts/` not `src/`), or logic bug. When **Project Analysis** completes in under a second with no figures, treat as import/dependency failure and isolate via `scripts/02_run_analysis.py`. Trace where bad state **enters**; fix at ingestion.
+3. **Classify** — dependency/uv gap, missing system tool (LaTeX/pandoc-crossref), nondeterministic input, coverage gate, undefined citation/cross-ref, thin-orchestrator violation (logic in `scripts/` not `src/`), or logic bug. When **Project Analysis** completes in under a second with no figures, treat as import/dependency failure and isolate via `scripts/pipeline/stage_02_analysis.py`. Trace where bad state **enters**; fix at ingestion.
 
 4. **Fix minimally** — re-run full pipeline green; confirm `--resume` shows no upstream regression. Update `projects/<n>/AGENTS.md` / `README.md` if the failure mode was non-obvious.
 
@@ -58,7 +58,7 @@ uv sync
 uv run python scripts/execute_pipeline.py --project <project>
 uv run python scripts/execute_pipeline.py --project <project> --resume
 uv run python scripts/execute_pipeline.py --project <project> --core-only
-uv run python scripts/01_run_tests.py --project <project>
+uv run python scripts/pipeline/stage_01_test.py --project <project>
 uv run pytest projects/<project>/tests/ --cov=projects/<project>/src --cov-fail-under=90 -q
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 uv run python -m infrastructure.validation.cli pdf output/<project>/pdf/

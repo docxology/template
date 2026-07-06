@@ -21,7 +21,7 @@ those are refreshed by scripts and are exempt.
 
 | Path | Lines | Suggested leaf topics |
 | --- | ---: | --- |
-| [`docs/reference/api-reference.md`](../reference/api-reference.md) | 3245 | Generated — no split; refresh via `scripts/generate_api_reference_doc.py` |
+| [`docs/reference/api-reference.md`](../reference/api-reference.md) | 3245 | Generated — no split; refresh via `scripts/docgen/api_reference.py` |
 | [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md) | 1145 | LaTeX math · citations · figures · accessibility |
 | [`docs/guides/figures-and-analysis.md`](../guides/figures-and-analysis.md) | 860 | Registry figures · analysis scripts · manifest hooks |
 | [`docs/rules/llm_standards.md`](../rules/llm_standards.md) | 800 | Prompt hygiene · Ollama workflow · review templates |
@@ -37,6 +37,6 @@ those are refreshed by scripts and are exempt.
 
 After splitting:
 
-1. Run `uv run python scripts/lint_docs.py`.
+1. Run `uv run python scripts/audit/lint_docs.py`.
 2. Update hub links in [`docs/documentation-index.md`](../documentation-index.md).
-3. Refresh measured counts: `uv run python scripts/generate_counts.py --write`.
+3. Refresh measured counts: `uv run python scripts/docgen/counts.py --write`.

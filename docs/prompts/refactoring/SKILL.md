@@ -52,7 +52,7 @@ metadata:
 ```bash
 uv run pytest <affected-test-path> -v
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python scripts/01_run_tests.py --project <project>  # when project scope
+uv run python scripts/pipeline/stage_01_test.py --project <project>  # when project scope
 ```
 
 ## When NOT to use

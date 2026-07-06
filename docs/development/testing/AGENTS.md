@@ -19,4 +19,4 @@ Developer-facing testing workflow and policies:
 ### See also
 
 - [`docs/rules/testing_standards.md`](../../rules/testing_standards.md)
-- [`scripts/01_run_tests.py`](../../../scripts/01_run_tests.py)
+- [`scripts/pipeline/stage_01_test.py`](../../../scripts/pipeline/stage_01_test.py)

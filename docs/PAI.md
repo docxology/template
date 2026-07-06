@@ -126,7 +126,7 @@ uv run python scripts/execute_pipeline.py --project template_code_project --core
 
 ```bash
 # Always run tests before changes
-uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 
 # Validate markdown (exemplar path)
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
@@ -172,10 +172,10 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 ## Constraints
 
 - **No Legacy** — Legacy methods are actively removed.
-- **Real Tests** — No mocks allowed. Verified by `scripts/verify_no_mocks.py`.
+- **Real Tests** — No mocks allowed. Verified by `scripts/audit/verify_no_mocks.py`.
 - **Thin Orchestrators** — Scripts must not contain business logic.
 - **Coverage** — Infrastructure ≥ 60%, Projects ≥ 90%.
-- **Shell bootstrap** — `run.sh` / `secure_run.sh` source `scripts/shell_bootstrap.sh`
+- **Shell bootstrap** — `run.sh` / `secure_run.sh` source `scripts/shell/shell_bootstrap.sh`
   (`ensure_uv`, sandbox env vars); conditional `uv sync` is internal to `run.sh`, not an exported env var.
 
 ---

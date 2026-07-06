@@ -23,7 +23,7 @@ Just cloned the repo? Do this:
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
-**Thin-orchestrator gates:** `uv run python scripts/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
+**Thin-orchestrator gates:** `uv run python scripts/audit/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
 
 **Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration). For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
 
@@ -193,7 +193,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) after substantive changes.*
 
-**Choosing an exemplar:** every exemplar README opens with a `## When to use this template` section, and the generated differentiation map in [`docs/_generated/exemplar_roster.md`](docs/_generated/exemplar_roster.md) collects them into one "copy THIS when…" table (regenerate with `uv run python scripts/generate_exemplar_roster_doc.py`; sync is test-enforced).
+**Choosing an exemplar:** every exemplar README opens with a `## When to use this template` section, and the generated differentiation map in [`docs/_generated/exemplar_roster.md`](docs/_generated/exemplar_roster.md) collects them into one "copy THIS when…" table (regenerate with `uv run python scripts/docgen/exemplar_roster.py`; sync is test-enforced).
 
 The permanent exemplars share the same core layout and verification checklist. The code/prose exemplars also carry the 12-file project `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`). New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars) for the full comparison.
 
@@ -219,8 +219,8 @@ git clone https://github.com/docxology/template
 cd template
 uv sync
 ./run.sh --project templates/template_code_project --pipeline --core-only
-uv run python scripts/04_validate_output.py --project templates/template_code_project
-uv run python scripts/05_copy_outputs.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
 
 Replace `template_code_project` with any public exemplar name from the table
@@ -240,7 +240,7 @@ autonomous agents.
 > canonical exemplars above (under `projects/templates/`) are git-tracked/pushed
 > — `.gitignore` ignores `projects/*` and negates only `projects/templates/`. Any
 > other project you add under `projects/` (research, client, or confidential work)
-> stays **local-only and is never committed**; `scripts/check_tracked_projects.py`
+> stays **local-only and is never committed**; `scripts/audit/check_tracked_projects.py`
 > blocks any accidental commit in the pre-push hook and CI.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
@@ -344,7 +344,7 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 [`docs/core/architecture.md`](docs/core/architecture.md). In short:
 
 - **Entry points:** `./run.sh` (interactive or `--pipeline`) and
-  `uv run python scripts/execute_pipeline.py --project <name> [--core-only]`;
+  `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`;
   numbered orchestrators under `scripts/` include `00_*.py` through `07_*.py` (setup → copy, LLM, executive report — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
@@ -468,8 +468,8 @@ No mocks — tests use real data, real files, `pytest-httpserver` for HTTP. The
 project pipeline runs a focused `pipeline-smoke` infrastructure contract plus
 the selected project's full coverage suite, so ordinary renders do not rerun
 the entire repository test matrix. Run the full infrastructure gate explicitly
-with `uv run python scripts/01_run_tests.py --infra-only --infra-scope full`;
-run a project suite with `uv run python scripts/01_run_tests.py --project-only
+with `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`;
+run a project suite with `uv run python scripts/pipeline/stage_01_test.py --project-only
 --project <name>`. Per-suite commands and coverage report flags are documented in
 [`tests/AGENTS.md`](tests/AGENTS.md) and
 [`docs/development/testing/testing-guide.md`](docs/development/testing/testing-guide.md);
@@ -485,12 +485,12 @@ Working outputs: `projects/{name}/output/` (disposable). Final deliverables:
 ## 🔍 How It Works
 
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
-`uv run python scripts/execute_pipeline.py --project <name> [--core-only]`.
+`uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`.
 
 > **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **14 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, and archival stages are declared for contracts but invoked separately when needed.
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |

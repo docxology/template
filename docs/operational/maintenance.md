@@ -179,7 +179,7 @@ du -sh ~/.hermes .cache output > docs/operational/audit/disk-usage-$(date +%Y-%m
 
 ### Backup Commands
 
-**Daily backup script (`scripts/backup-daily.sh`):**
+**Daily backup script (`scripts/shell/backup-daily.sh`):**
 
 ```bash
 #!/usr/bin/env bash
@@ -266,7 +266,7 @@ All maintenance scripts live in `scripts/` or `docs/operational/scripts/`:
 | Script | Purpose | Frequency |
 |--------|---------|-----------|
 | `scripts/health-check.sh` | Quick system readiness check | Daily |
-| `scripts/backup-daily.sh` | Daily `~/.hermes` backup | Daily (cron) |
+| `scripts/shell/backup-daily.sh` | Daily `~/.hermes` backup | Daily (cron) |
 | `scripts/backup-weekly.sh` | Weekly `.cache` backup | Weekly (cron) |
 | `docs/operational/scripts/rotate-logs.sh` | Log rotation | Monthly (cron) |
 | `scripts/restore-test.sh` | Validate backup restorability | Monthly |

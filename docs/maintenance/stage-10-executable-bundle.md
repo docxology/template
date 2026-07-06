@@ -1,6 +1,6 @@
 # Stage 10 — Executable Bundle (opt-in stage)
 
-> Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `bundle` / `archival` tags out of default runs; invoke `scripts/08_executable_bundle.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
+> Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `bundle` / `archival` tags out of default runs; invoke `scripts/runner/bundle_executable.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
 >
 > **Naming note:** this guide and its filename predate the later insertion of
 > the Ebook Generation and Metadata Package stages into `pipeline.yaml`
@@ -121,11 +121,11 @@ The declared Executable Bundle stage depends on PDF rendering and is filtered ou
 
 Implemented pieces:
 
-1. `scripts/08_executable_bundle.py` builds `output/<project>/executable_bundle/`.
+1. `scripts/runner/bundle_executable.py` builds `output/<project>/executable_bundle/`.
 2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
 3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`.
 4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
-5. `scripts/09_archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path.
+5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path.
 
 Remaining hardening:
 

@@ -24,7 +24,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 
 # Generate figures only
-uv run python scripts/02_run_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
 
 # Validate markdown
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
@@ -39,11 +39,11 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # With specific stage
-uv run python scripts/00_setup_environment.py --project template_code_project
-uv run python scripts/01_run_tests.py --project template_code_project
-uv run python scripts/02_run_analysis.py --project template_code_project
-uv run python scripts/03_render_pdf.py --project template_code_project
-uv run python scripts/04_validate_output.py --project template_code_project
+uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project template_code_project
 
 # Validate PDFs (after copy stage or use project working tree)
 uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/template_code_project_combined.pdf
@@ -169,7 +169,7 @@ Reference it: \ref{fig:my_figure}
 | **Coverage below gate** | `uv run pytest --cov=projects/templates/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
-| **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |
+| **Figures missing** | Run `uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project` first |
 | **References show ??** | Check label spelling and existence |
 | **Project not discovered** | Ensure the directory is under `projects/`, has `src/` with Python files, and has `tests/`; add `manuscript/config.yaml` before rendering |
 | **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-root-venv)) |

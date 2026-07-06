@@ -108,7 +108,7 @@ uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills check-contracts
 uv run pytest tests/infra_tests/skills -q
 uv run python docs/prompts/_skill-eval/scripts/run_eval_harness.py --write-review --fail-under 0.96
-uv run python scripts/lint_docs.py
+uv run python scripts/audit/lint_docs.py
 ```
 
 ## When NOT to use

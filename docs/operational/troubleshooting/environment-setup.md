@@ -119,7 +119,7 @@ uv --version
 ```bash
 export MPLBACKEND=Agg
 export MPLCONFIGDIR=/tmp/matplotlib
-uv run python scripts/02_run_analysis.py
+uv run python scripts/pipeline/stage_02_analysis.py
 ```
 
 ---

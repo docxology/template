@@ -4,12 +4,12 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 
 | File | Source |
 |------|--------|
-| [active_projects.md](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
-| [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/generate_architecture_overview.py` |
-| [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
-| [COUNTS.md](COUNTS.md) | **Generated** — `uv run python scripts/generate_counts.py` (`--check` in CI, `--write` to refresh); measured infra counts, pytest collection totals, package roster |
+| [active_projects.md](active_projects.md) | **Generated** — `uv run python scripts/docgen/active_projects.py` |
+| [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
+| [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/docgen/coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
+| [COUNTS.md](COUNTS.md) | **Generated** — `uv run python scripts/docgen/counts.py` (`--check` in CI, `--write` to refresh); measured infra counts, pytest collection totals, package roster |
 | [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |
-| [publication_records.md](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `scripts/generate_publication_records_doc.py --refresh-external` |
+| [publication_records.md](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `scripts/docgen/publication_records.py --refresh-external` |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
 | [last-run-summary.md](last-run-summary.md) | **Generated** — auto-written by `infrastructure.core.pipeline.multi_project` on every `./run.sh --pipeline` invocation (best-effort). Schema: [`../operational/logging/output-design.md`](../operational/logging/output-design.md) |
 | `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |
@@ -26,22 +26,22 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 **Public active projects** — after changing tracked template project directories under `projects/`:
 
 ```bash
-uv run python scripts/generate_active_projects_doc.py
+uv run python scripts/docgen/active_projects.py
 ```
 
 **Coverage history** — refreshed automatically by the `performance` job on `main` (informational, never blocks). Locally:
 
 ```bash
 # Offline: parse a directory of coverage-*.xml files
-uv run python scripts/generate_coverage_history.py --from-dir=./_artefacts --days=30
+uv run python scripts/docgen/coverage_history.py --from-dir=./_artefacts --days=30
 
 # Online: pull last N days of CI artefacts via the GitHub CLI (needs `gh auth login`)
-uv run python scripts/generate_coverage_history.py --from-gh --days=30
+uv run python scripts/docgen/coverage_history.py --from-gh --days=30
 ```
 
 **Canonical factsheet** — when CI gates, project counts, publishing tests, or public exemplar coverage changes, re-run the measurements cited in [`COUNTS.md`](COUNTS.md) and edit that file so numbers stay ground-truthed.
 
-**Publication records matrix** — when citing repository/DOI publication status, re-run `uv run python scripts/generate_publication_records_doc.py --refresh-external`; do not hand-edit [`publication_records.md`](publication_records.md).
+**Publication records matrix** — when citing repository/DOI publication status, re-run `uv run python scripts/docgen/publication_records.py --refresh-external`; do not hand-edit [`publication_records.md`](publication_records.md).
 
 **Skills index** — after adding/removing `SKILL.md` descriptors:
 

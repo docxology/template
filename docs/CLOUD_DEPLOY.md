@@ -118,7 +118,7 @@ uv sync --group rendering --group monitoring
 ## 5. Project-Level Dependencies
 
 Some projects maintain their own virtual environment in `projects/{name}/.venv`. The pipeline handles
-this automatically via `scripts/00_setup_environment.py`. To set one up manually:
+this automatically via `scripts/pipeline/stage_00_setup.py`. To set one up manually:
 
 ```bash
 cd projects/my_research
@@ -130,7 +130,7 @@ Stage scripts resolve the test/analysis interpreter via
 `infrastructure.core.runtime._python_env.resolve_test_python()` (project `.venv`
 when present and valid, otherwise the workspace interpreter). Root entry points
 (`run.sh`, `secure_run.sh`) use `uv run python -m infrastructure.orchestration`.
-The `get_python_cmd()` helper in `scripts/bash_utils.sh` is the supported path
+The `get_python_cmd()` helper in `scripts/shell/bash_utils.sh` is the supported path
 for operational shell scripts that source that file directly (backup/health tooling).
 
 ---
@@ -166,12 +166,12 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 Use `--project template_code_project` (or your active project name; see [_generated/active_projects.md](_generated/active_projects.md)):
 
 ```bash
-uv run python scripts/00_setup_environment.py --project template_code_project
-uv run python scripts/01_run_tests.py --project template_code_project
-uv run python scripts/02_run_analysis.py --project template_code_project
-uv run python scripts/03_render_pdf.py --project template_code_project
-uv run python scripts/04_validate_output.py --project template_code_project
-uv run python scripts/05_copy_outputs.py --project template_code_project
+uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project template_code_project
+uv run python scripts/pipeline/stage_05_copy.py --project template_code_project
 ```
 
 ---
@@ -232,8 +232,8 @@ ollama serve &
 ollama pull gemma3:4b
 
 # Then run LLM stages
-uv run python scripts/06_llm_review.py --project template_code_project --reviews-only
-uv run python scripts/06_llm_review.py --project template_code_project --translations-only
+uv run python scripts/pipeline/stage_06_llm_review.py --project template_code_project --reviews-only
+uv run python scripts/pipeline/stage_06_llm_review.py --project template_code_project --translations-only
 ```
 
 ---
@@ -339,10 +339,10 @@ The root `.venv` is created by `uv sync`. If it's missing, run:
 uv sync
 ```
 
-Project-level venvs are set up by `scripts/00_setup_environment.py`. Run stage 0 manually:
+Project-level venvs are set up by `scripts/pipeline/stage_00_setup.py`. Run stage 0 manually:
 
 ```bash
-uv run python scripts/00_setup_environment.py
+uv run python scripts/pipeline/stage_00_setup.py
 ```
 
 ---

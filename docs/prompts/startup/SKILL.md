@@ -142,7 +142,7 @@ uv run pytest projects/templates/template_code_project/tests/ \
 ls output/templates/template_code_project/pdf/template_code_project_combined.pdf
 
 # Validate content
-uv run python scripts/04_validate_output.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
 
 # Optional: open
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf   # macOS
@@ -155,7 +155,7 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 ### Step 7: Run repo gates
 
 ```bash
-uv run python scripts/check_template_drift.py --strict
+uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/gates/module_line_count_check.py
 uv run python -m infrastructure.core.health
 ```
@@ -192,7 +192,7 @@ Do not declare PASS unless every step is ✅. A partial PASS is a FAIL.
 
 ### Stage 1 (Environment Setup) fails
 ```bash
-uv run python scripts/00_setup_environment.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_00_setup.py --project templates/template_code_project
 ```
 Read the error. Usually a missing system tool or wrong Python version.
 

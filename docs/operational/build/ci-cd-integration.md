@@ -29,7 +29,7 @@ Upstream CI is **`name: CI`** in [`.github/workflows/ci.yml`](../../../.github/w
 High-signal behavioral anchors:
 
 1. **`test-infra`** — `uv sync --group rendering --group monitoring`; Ubuntu + macOS × Python 3.10–3.12; **≥ 60 %** on `infrastructure/`. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
-2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.12, and invokes `scripts/01_run_tests.py --project <name> --project-only --include-slow`. Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run or `--cov-append` in current CI.
+2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.12, and invokes `scripts/pipeline/stage_01_test.py --project <name> --project-only --include-slow`. Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run or `--cov-append` in current CI.
 3. **`fep-lean`** — Runs **only when** the `detect` job reports `needs.detect.outputs.fep_lean == 'true'`. The workflow deliberately avoids job-level `hashFiles()` because that context is invalid in a job `if:`.
 4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)
 
@@ -73,7 +73,7 @@ jobs:
 
 ## Automated Testing
 
-This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). CI runs each public exemplar in its own matrix job; the local `scripts/01_run_tests.py --project-only --all-projects` path is the one that merges project coverage with `--cov-append`. Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
+This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). CI runs each public exemplar in its own matrix job; the local `scripts/pipeline/stage_01_test.py --project-only --all-projects` path is the one that merges project coverage with `--cov-append`. Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
 
 ### Test Execution
 
@@ -134,7 +134,7 @@ steps:
 
 ### Optional PDF CI workflow (**not shipped** in default template)
 
-Upstream PDF output is driven by `./run.sh` / `scripts/03_render_pdf.py` locally. The **`pdf-build.yml`** path referenced here is **an example schema**—add something like this under `.github/workflows/` on a fork **only if** CI PDF fits your LaTeX/pandoc budget:
+Upstream PDF output is driven by `./run.sh` / `scripts/pipeline/stage_03_render.py` locally. The **`pdf-build.yml`** path referenced here is **an example schema**—add something like this under `.github/workflows/` on a fork **only if** CI PDF fits your LaTeX/pandoc budget:
 
 ```yaml
 name: PDF Generation
@@ -196,7 +196,7 @@ Replace `{name}` with a discovered project slug (consult [`docs/_generated/activ
 ```yaml
 - name: Validate PDFs
   run: |
-    uv run python scripts/04_validate_output.py --project {name}
+    uv run python scripts/pipeline/stage_04_validate.py --project {name}
 
     # Check for errors
     if [ $? -ne 0 ]; then

@@ -44,7 +44,7 @@ The repository uses typed subfolders under `projects/` to manage projects at dif
 
 ```bash
 # Render a WIP project explicitly without moving it into default discovery
-uv run python scripts/03_render_pdf.py --project working/my_paper
+uv run python scripts/pipeline/stage_03_render.py --project working/my_paper
 
 # Retire a private sidecar project
 mv ../projects/working/{name} ../projects/archive/{name}
@@ -289,10 +289,10 @@ done
 
 ```bash
 # Run the public-project test orchestrator (one pytest per public exemplar; 75% union gate)
-uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects
+uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects
 
 # Include every locally discovered project, including private symlinked workspaces
-uv run python scripts/01_run_tests.py --project-only --all-projects
+uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects
 
 # Run the full multi-project pipeline
 ./run.sh --all-projects --pipeline
@@ -331,7 +331,7 @@ done
 - scripts/custom_analysis.py - Project-specific analysis
 
 ## Modified Files
-- scripts/03_render_pdf.py - Added custom validation step
+- scripts/pipeline/stage_03_render.py - Added custom validation step
 
 ## Additional Dependencies
 - scipy>=1.10 - For advanced analysis
@@ -343,8 +343,8 @@ done
 
 ```bash
 # Before template updates
-git diff template-repo/scripts/03_render_pdf.py \
-          scripts/03_render_pdf.py
+git diff template-repo/scripts/pipeline/stage_03_render.py \
+          scripts/pipeline/stage_03_render.py
 
 # Review changes
 # Apply selectively
@@ -548,7 +548,7 @@ done
 cat projects/<name>/output/logs/pipeline.log
 
 # 2. Run analysis stage standalone to see errors:
-uv run python scripts/02_run_analysis.py --project <name>
+uv run python scripts/pipeline/stage_02_analysis.py --project <name>
 
 # 3. Run first analysis script directly with root Python:
 .venv/bin/python projects/<name>/scripts/01_*.py

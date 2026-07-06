@@ -242,7 +242,7 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 **Prevention**:
 
-- Always test pipeline stage scripts standalone: `uv run python scripts/02_run_analysis.py --project <name>`
+- Always test pipeline stage scripts standalone: `uv run python scripts/pipeline/stage_02_analysis.py --project <name>`
 - Check that all imports resolve before committing.
 - Use `__all__` in `__init__.py` to make the public API explicit.
 
@@ -378,10 +378,10 @@ After creating your project, verify each pipeline stage:
 
 ```bash
 # 1. Tests pass
-uv run python scripts/01_run_tests.py --project <name>
+uv run python scripts/pipeline/stage_01_test.py --project <name>
 
 # 2. Analysis scripts execute
-uv run python scripts/02_run_analysis.py --project <name>
+uv run python scripts/pipeline/stage_02_analysis.py --project <name>
 
 # 3. Full pipeline
 ./run.sh  # Select your project, then option 9

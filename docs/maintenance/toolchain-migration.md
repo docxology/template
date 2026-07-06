@@ -24,8 +24,8 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 | **Contract** | Reproducible dependency resolution from a lockfile; isolated virtual environments per project; fast install. |
 | **Current implementation** | `uv` (Astral, since ~2024). Replaces poetry/pip-tools/PDM/Hatch. Used via `uv sync`, `uv run`, `uvx`, `uv lock`. |
 | **Lockfile format** | `uv.lock` (uv-specific TOML format) |
-| **Fallback** | Generate `requirements.txt` from `uv export` and commit it periodically. This is the "runs even if uv vanishes" insurance — see `scripts/ci_local.sh`. |
-| **Migration path** | If a successor (`pdm`, future tool, etc.) becomes dominant: (a) verify it can consume `pyproject.toml` (PEP 621 standard, so likely yes); (b) generate its lockfile alongside `uv.lock` for one release; (c) update `run.sh`, `scripts/00_setup_environment.py`, `.github/workflows/ci.yml`, and `.pre-commit-config.yaml` to use the new tool; (d) keep `uv.lock` as a legacy artifact for one major version, then remove. |
+| **Fallback** | Generate `requirements.txt` from `uv export` and commit it periodically. This is the "runs even if uv vanishes" insurance — see `scripts/shell/ci_local.sh`. |
+| **Migration path** | If a successor (`pdm`, future tool, etc.) becomes dominant: (a) verify it can consume `pyproject.toml` (PEP 621 standard, so likely yes); (b) generate its lockfile alongside `uv.lock` for one release; (c) update `run.sh`, `scripts/pipeline/stage_00_setup.py`, `.github/workflows/ci.yml`, and `.pre-commit-config.yaml` to use the new tool; (d) keep `uv.lock` as a legacy artifact for one major version, then remove. |
 
 ## Linting + formatting
 

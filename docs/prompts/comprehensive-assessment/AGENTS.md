@@ -13,7 +13,7 @@ Agent skill `template-comprehensive-assessment` — Full checkout audit with mea
 ## Verification
 
 ```bash
-uv run python scripts/check_template_drift.py
+uv run python scripts/audit/check_template_drift.py
 ```
 
 ## See also

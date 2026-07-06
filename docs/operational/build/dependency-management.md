@@ -104,10 +104,10 @@ Execute Python scripts directly with `uv run python`:
 
 ```bash
 # Run pipeline scripts
-uv run python scripts/00_setup_environment.py
-uv run python scripts/01_run_tests.py
-uv run python scripts/02_run_analysis.py
-uv run python scripts/03_render_pdf.py
+uv run python scripts/pipeline/stage_00_setup.py
+uv run python scripts/pipeline/stage_01_test.py
+uv run python scripts/pipeline/stage_02_analysis.py
+uv run python scripts/pipeline/stage_03_render.py
 
 # Stage commands should be invoked from the repository root
 ```
@@ -115,7 +115,7 @@ uv run python scripts/03_render_pdf.py
 ### Shell Entrypoint Bootstrap
 
 Root shell entrypoints such as `./run.sh` and `./secure_run.sh` source
-[`scripts/shell_bootstrap.sh`](../../../scripts/shell_bootstrap.sh), which
+[`scripts/shell/shell_bootstrap.sh`](../../../scripts/shell/shell_bootstrap.sh), which
 checks for `uv` and sets up the repository command environment before handing
 off to the Python orchestration layer. Direct documentation examples should
 still use `uv run python` or `uv run pytest`.

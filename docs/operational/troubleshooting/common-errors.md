@@ -176,7 +176,7 @@ LLM stages are gated; if you don't want them, run `execute_pipeline.py` with
 
 ## CI / GitHub Actions failures
 
-**Symptom:** PR check `lint` fails on `scripts/check_tracked_projects.py`.
+**Symptom:** PR check `lint` fails on `scripts/audit/check_tracked_projects.py`.
 
 You added a non-template project under `projects/` and tried to push.
 Per the [private-projects-repo contract](../../maintenance/private-projects-repo.md),

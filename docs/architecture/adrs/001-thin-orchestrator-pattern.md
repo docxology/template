@@ -15,7 +15,7 @@ Scripts must be **thin wrappers** that import logic from `infrastructure/` modul
 ### Enforcement
 
 - Code reviews check for business logic in scripts
-- `scripts/verify_no_mocks.py` ensures no mock usage; similar checks could be added for orchestrator purity
+- `scripts/audit/verify_no_mocks.py` ensures no mock usage; similar checks could be added for orchestrator purity
 - The "thin orchestrator" pattern is enforced by convention and the project's AGENTS.md documentation
 
 ## Consequences
@@ -40,7 +40,7 @@ Scripts must be **thin wrappers** that import logic from `infrastructure/` modul
 Good — thin script:
 
 ```python
-# scripts/02_run_analysis.py
+# scripts/pipeline/stage_02_analysis.py
 from projects.template_code_project.src.optimizer import gradient_descent
 from infrastructure.scientific.benchmarking import benchmark_function
 

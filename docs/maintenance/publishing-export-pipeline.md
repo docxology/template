@@ -103,8 +103,8 @@ respectively; both are filtered out of default pipeline runs — see
 `infrastructure/core/pipeline/pipeline.yaml`). Invoke them explicitly:
 
 ```bash
-uv run python scripts/11_ebook_generation.py --project templates/<name>
-uv run python scripts/12_metadata_package.py --project templates/<name>
+uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
+uv run python scripts/pipeline/stage_12_metadata.py --project templates/<name>
 ```
 
 (Stage 12 Executable Bundle and Stage 13 Archival Publication — tagged
@@ -282,7 +282,7 @@ The pipeline has not been run, or outputs were cleaned. Run:
 
 For EPUB/MOBI (Stage 10):
 ```bash
-uv run python scripts/11_ebook_generation.py --project templates/<name>
+uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
 ```
 
 ### "Project not found: 'my_book'"

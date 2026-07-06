@@ -77,15 +77,15 @@ scope verifier; it delegates all behavior to the package module.
 ## Guardrails
 
 - `.gitignore` ignores `.codegraph/` at the root and nested project levels.
-- `scripts/check_tracked_generated_artifacts.py` rejects tracked
+- `scripts/audit/check_tracked_generated_artifacts.py` rejects tracked
   `.codegraph/*` files even if someone force-adds them.
-- `scripts/check_tracked_projects.py` remains the separate confidentiality
+- `scripts/audit/check_tracked_projects.py` remains the separate confidentiality
   guard for tracked project paths.
 
 Run the relevant guard slice after changing this integration:
 
 ```bash
 uv run pytest tests/infra_tests/project/test_codegraph.py tests/infra_tests/project/test_git_guards.py -q
-uv run python scripts/check_tracked_generated_artifacts.py
-uv run python scripts/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_tracked_projects.py
 ```

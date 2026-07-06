@@ -52,7 +52,7 @@ uv run pytest tests/
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Rebuild PDFs (run stage 3 only)
-uv run python scripts/03_render_pdf.py
+uv run python scripts/pipeline/stage_03_render.py
 ```
 
 ---

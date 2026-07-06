@@ -17,7 +17,7 @@ accepted.
 |---|-----------|---------------------|--------------------|
 | 1 | **Clarity** | Module purpose obvious from `__init__.py` docstring; public APIs documented; no dead code. | Reviewer reading + `ruff` (E/W/D rules where enabled). |
 | 2 | **Composability** | No sibling-to-sibling coupling; cross-cutting concerns flow *up* through `infrastructure/core/`. No circular imports. | `import-linter` patterns + reviewer judgement. |
-| 3 | **Functionality (SSOT)** | Business logic lives **only** in `infrastructure/` or `projects/<name>/src/`. Scripts and tests never re-implement it. | [Thin-orchestrator ADR](../architecture/adrs/001-thin-orchestrator-pattern.md) + `scripts/verify_no_mocks.py`-style reviewer scan. |
+| 3 | **Functionality (SSOT)** | Business logic lives **only** in `infrastructure/` or `projects/<name>/src/`. Scripts and tests never re-implement it. | [Thin-orchestrator ADR](../architecture/adrs/001-thin-orchestrator-pattern.md) + `scripts/audit/verify_no_mocks.py`-style reviewer scan. |
 | 4 | **Testability / Tested** | Coverage gates met (infra **60%**, project **90%**). No mocks. Deterministic seeds. tmp_path for I/O. `pytest-httpserver` for HTTP. | `uv run pytest --cov-fail-under=...` + [Zero-mock ADR](../architecture/adrs/004-zero-mock-testing-policy.md). |
 | 5 | **Validation** | Inputs validated at the system boundary (CLI, public function). No hard-coded host paths. Narrow `except` (not bare `except Exception`). | `bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` + reviewer. |
 | 6 | **Documentation** | Module has a guide in `docs/modules/guides/<module>-module.md`. Public functions have docstrings. Changes to architecture have an ADR. | `infrastructure/validation/docs/` linters + reviewer. |
@@ -57,7 +57,7 @@ uvx ruff check --fix $SRC tests/ scripts/
 uvx ruff format $SRC tests/ scripts/
 uv run mypy $SRC
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
-uv run python scripts/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 uv run pytest projects/<name>/tests/ --cov=projects/<name>/src --cov-fail-under=90
 pre-commit run --all-files

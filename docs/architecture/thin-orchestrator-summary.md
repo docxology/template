@@ -34,7 +34,7 @@ flowchart TB
 
 | Ring | Location | Imports infrastructure? |
 | --- | --- | --- |
-| Pipeline | `scripts/00_*.py` … `infrastructure.orchestration` | Yes — generic orchestration |
+| Pipeline | `scripts/pipeline/stage_NN_*.py` … `infrastructure.orchestration` | Yes — generic orchestration |
 | Project scripts | `projects/templates/<name>/scripts/` | Yes — thin coordinators |
 | Project `src/` | `projects/templates/<name>/src/` | No (standalone exemplars); harness adapters documented in `manuscript/layer_contract.yaml` |
 
@@ -61,7 +61,7 @@ Root-level scripts in `scripts/` are **maximally thin orchestrators** that:
 - Handle I/O and orchestration only
 - Work with ANY project structure
 
-**Example**: `scripts/01_run_tests.py` imports `parse_pytest_output()` from `infrastructure.reporting.pytest_output_parser` and `generate_test_report()` from `infrastructure.reporting.report_generator`, not implementing them locally.
+**Example**: `scripts/pipeline/stage_01_test.py` imports `parse_pytest_output()` from `infrastructure.reporting.pytest_output_parser` and `generate_test_report()` from `infrastructure.reporting.report_generator`, not implementing them locally.
 
 ### Project Scripts (projects/{name}/scripts/)
 
@@ -119,7 +119,7 @@ Project-specific scripts in `projects/{name}/scripts/` are thin orchestrators th
 ### 1. **Root Script Import Pattern (scripts/)**
 
 ```python
-# scripts/01_run_tests.py - Root orchestrator
+# scripts/pipeline/stage_01_test.py - Root orchestrator
 from infrastructure.reporting.pipeline_test_runner import (
     INFRASTRUCTURE_TEST_SCOPES,
     execute_test_pipeline,
@@ -201,7 +201,7 @@ The `scripts/execute_pipeline.py` orchestrator automatically:
 ### ✅ **Correct: Root Script Using Infrastructure**
 
 ```python
-# scripts/01_run_tests.py - Root orchestrator
+# scripts/pipeline/stage_01_test.py - Root orchestrator
 from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 
 # Use infrastructure methods for business logic
@@ -222,7 +222,7 @@ avg = calculate_average([1, 2, 3, 4, 5])
 ### ❌ **Incorrect: Implementing Business Logic in Root Scripts**
 
 ```python
-# scripts/01_run_tests.py - DON'T implement parsing logic
+# scripts/pipeline/stage_01_test.py - DON'T implement parsing logic
 def parse_test_output(stdout, stderr, exit_code):
     # This should be in infrastructure.reporting.pytest_output_parser
     results = {'passed': 0, 'failed': 0}
@@ -240,14 +240,14 @@ Automated gates prevent regression into fat orchestrators:
 | Gate | Location | Scope | Thresholds |
 | --- | --- | --- | --- |
 | **Line count** | `infrastructure/validation/line_count.py` via `scripts/gates/module_line_count_check.py` | `infrastructure/`, `scripts/`, `projects/*/scripts/` | infra/scripts: warn 800 / fail 950; project scripts: warn 150 / fail 250 |
-| **Thin orchestrator drift** | `infrastructure/project/drift/orchestrator.py` via `scripts/check_template_drift.py` | `scripts/**/*.py`, exemplar `projects/*/scripts/` | ERROR when ≥200 lines + ≥3 non-trivial functions or embedded numpy/matplotlib/scipy blocks |
+| **Thin orchestrator drift** | `infrastructure/project/drift/orchestrator.py` via `scripts/audit/check_template_drift.py` | `scripts/**/*.py`, exemplar `projects/*/scripts/` | ERROR when ≥200 lines + ≥3 non-trivial functions or embedded numpy/matplotlib/scipy blocks |
 | **Repo scanner advisory** | `infrastructure/validation/repo/scanner.py` | whole repo | warns when scripts lack `infrastructure/` or `src/` imports |
 
 Run locally:
 
 ```bash
 uv run python scripts/gates/module_line_count_check.py
-uv run python scripts/check_template_drift.py --strict
+uv run python scripts/audit/check_template_drift.py --strict
 uv run python -m infrastructure.core.health
 ```
 

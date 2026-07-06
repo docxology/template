@@ -587,12 +587,12 @@ def test_process_negative():
    ./run.sh
 
    # Run individual stage scripts (each requires --project {name})
-   uv run python scripts/00_setup_environment.py --project {name}
-   uv run python scripts/01_run_tests.py --project {name}
-   uv run python scripts/02_run_analysis.py --project {name}
-   uv run python scripts/03_render_pdf.py --project {name}
-   uv run python scripts/04_validate_output.py --project {name}
-   uv run python scripts/05_copy_outputs.py --project {name}
+   uv run python scripts/pipeline/stage_00_setup.py --project {name}
+   uv run python scripts/pipeline/stage_01_test.py --project {name}
+   uv run python scripts/pipeline/stage_02_analysis.py --project {name}
+   uv run python scripts/pipeline/stage_03_render.py --project {name}
+   uv run python scripts/pipeline/stage_04_validate.py --project {name}
+   uv run python scripts/pipeline/stage_05_copy.py --project {name}
    # Optional: LLM (06), executive report (07) — see RUN_GUIDE.md
    ```
 

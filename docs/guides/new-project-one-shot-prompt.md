@@ -57,7 +57,7 @@ One-shot deliverables (do all in one pass):
 3. Tests that prove core behavior and meet coverage.
 4. At least one scripts/*.py orchestrator if the manuscript or pipeline expects figures/data (optional if the idea is purely non-computational — state that explicitly in the manuscript and skip scripts).
 5. Manuscript markdown + config.yaml metadata (title, authors placeholder OK) coherent with the code and tests.
-6. Short note in project README.md: how to run uv run pytest projects/<PROJECT_SLUG>/tests/ --cov=projects/<PROJECT_SLUG>/src --cov-fail-under=90 and how uv run python scripts/01_run_tests.py --project <PROJECT_SLUG> applies.
+6. Short note in project README.md: how to run uv run pytest projects/<PROJECT_SLUG>/tests/ --cov=projects/<PROJECT_SLUG>/src --cov-fail-under=90 and how uv run python scripts/pipeline/stage_01_test.py --project <PROJECT_SLUG> applies.
 
 Project idea — append only below this line (do not edit text above):
 

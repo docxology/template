@@ -194,7 +194,7 @@ so nothing auto-ships it — but the README presents it as upload-ready.
   documented promise.
 
 ### R9 · Repro bundle declares real outputs for all 15 exemplars — ✅ SHIPPED
-`scripts/10_repro_bundle.py build` yields a manifest with **no** `output-artifact`
+`scripts/runner/repro_bundle.py build` yields a manifest with **no** `output-artifact`
 entries for 5/15 exemplars (`template_active_inference`,
 `template_literature_meta_analysis`, and 3 others) — it "verifies" zero
 artifacts.
@@ -246,7 +246,7 @@ a near-complete inventory.
   states its curation scope.
 
 ### R15 · Pin the `uv` bootstrap installer — ✅ SHIPPED
-`scripts/shell_bootstrap.sh` pipes an unpinned `https://astral.sh/uv/install.sh`
+`scripts/shell/shell_bootstrap.sh` pipes an unpinned `https://astral.sh/uv/install.sh`
 to `sh` automatically from `run.sh`/`secure_run.sh` — a floating remote installer
 against the repo's pin-everything posture.
 - **Acceptance**: the installer URL is version-pinned (e.g. `UV_VERSION`), or

@@ -147,8 +147,8 @@ LLM features are used in two pipeline stages:
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
-| 06 | `scripts/06_llm_review.py` | Executive summary + quality review |
-| 06 | `scripts/06_llm_review.py` | Abstract translations (if configured) |
+| 06 | `scripts/pipeline/stage_06_llm_review.py` | Executive summary + quality review |
+| 06 | `scripts/pipeline/stage_06_llm_review.py` | Abstract translations (if configured) |
 
 Both stages are **skippable** — the pipeline succeeds without Ollama.
 

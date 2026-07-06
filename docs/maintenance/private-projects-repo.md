@@ -53,7 +53,7 @@ The normal sidecar workflow is explicit rendering of `working/<name>` projects:
 ```bash
 uv run python -m infrastructure.orchestration link-projects --dry-run
 uv run python -m infrastructure.orchestration link-projects
-uv run python scripts/03_render_pdf.py --project working/<name>
+uv run python scripts/pipeline/stage_03_render.py --project working/<name>
 uv run python scripts/maintenance/rerender_working_pdfs.py --project <name>
 ```
 
@@ -76,7 +76,7 @@ cannot be mislinked. Disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 1. **Physical separation** — confidential content lives only in the private repo.
 2. **Symlink boundary** — git refuses to stage content beyond a symbolic link.
 3. **`.gitignore`** — `projects/*` ignored except public exemplars + root docs.
-4. **`scripts/check_tracked_projects.py`** — fails CI/pre-push if anything but
+4. **`scripts/audit/check_tracked_projects.py`** — fails CI/pre-push if anything but
    public exemplars is tracked under `projects/`.
 
 ## Self-versioned projects

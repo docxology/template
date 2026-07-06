@@ -250,11 +250,11 @@ def function_name(arg: str) -> str:
 
 Infrastructure modules are integrated into the build pipeline through:
 
-1. **Setup** (`scripts/00_setup_environment.py`) - Environment validation
-2. **Testing** (`scripts/01_run_tests.py`) - Infrastructure and project tests
-3. **Analysis** (`scripts/02_run_analysis.py`) - Project script discovery and execution
-4. **PDF Rendering** (`scripts/03_render_pdf.py`) - Document generation
-5. **Validation** (`scripts/04_validate_output.py`) - Quality assurance
+1. **Setup** (`scripts/pipeline/stage_00_setup.py`) - Environment validation
+2. **Testing** (`scripts/pipeline/stage_01_test.py`) - Infrastructure and project tests
+3. **Analysis** (`scripts/pipeline/stage_02_analysis.py`) - Project script discovery and execution
+4. **PDF Rendering** (`scripts/pipeline/stage_03_render.py`) - Document generation
+5. **Validation** (`scripts/pipeline/stage_04_validate.py`) - Quality assurance
 
 **Pipeline Entry Points**: Two orchestrators available:
 

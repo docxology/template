@@ -196,13 +196,13 @@ Generate specific reports independently:
 
 ```bash
 # Validation report only
-uv run python scripts/04_validate_output.py --project project
+uv run python scripts/pipeline/stage_04_validate.py --project project
 
 # Output statistics only
-uv run python scripts/05_copy_outputs.py --project project
+uv run python scripts/pipeline/stage_05_copy.py --project project
 
 # Executive report only
-uv run python scripts/07_generate_executive_report.py
+uv run python scripts/pipeline/stage_07_executive_report.py
 ```
 
 ## Interpreting Reports
@@ -364,7 +364,7 @@ uv sync
 **Solutions**:
 ```bash
 # Re-run specific stage
-uv run python scripts/04_validate_output.py --project project
+uv run python scripts/pipeline/stage_04_validate.py --project project
 
 # Check for errors in logs
 grep -i "failed to generate report" projects/{name}/output/logs/pipeline.log

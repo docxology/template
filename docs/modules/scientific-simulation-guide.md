@@ -352,7 +352,7 @@ generation workflow (there is no repo-level `generate_scientific_figures.py`):
 4. Insert figures with captions automatically
 5. Update cross-references
 
-These scripts are executed automatically by `scripts/02_run_analysis.py`
+These scripts are executed automatically by `scripts/pipeline/stage_02_analysis.py`
 (Stage 4); see the [`template_code_project`](../../projects/templates/template_code_project/scripts/optimization_analysis.py)
 exemplar for the canonical pattern.
 
@@ -365,7 +365,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 
 The scientific simulation system integrates seamlessly with the existing build pipeline:
 
-1. **Scripts are automatically executed** by `scripts/02_run_analysis.py` (Stage 4)
+1. **Scripts are automatically executed** by `scripts/pipeline/stage_02_analysis.py` (Stage 4)
 2. **Figures are generated** in `output/figures/`
 3. **Figures are registered** in `output/figures/figure_registry.json`
 4. **Figures can be automatically inserted** into markdown files

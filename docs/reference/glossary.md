@@ -14,7 +14,7 @@
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: see `pyproject.toml` `[project].version` / the latest git tag for the current package version
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`COUNTS.md`](../_generated/COUNTS.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
-- **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/00_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
+- **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/pipeline/stage_NN_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
 
 ---
 
@@ -274,7 +274,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 Automated checking of generated PDFs for rendering issues, unresolved references, and structural problems.
 
-**Command**: `uv run python scripts/04_validate_output.py` or `uv run python -m infrastructure.validation.cli pdf <path>`
+**Command**: `uv run python scripts/pipeline/stage_04_validate.py` or `uv run python -m infrastructure.validation.cli pdf <path>`
 
 **Checks**: Unresolved references (??), missing citations, warnings, errors
 
@@ -421,7 +421,7 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 
 **Status**: Run `uv run pytest tests/infra_tests/ projects/<name>/tests/ --collect-only` to count tests on your checkout.
 
-**Run**: `uv run python scripts/01_run_tests.py --project <name>` (or separate infra/project pytest invocations; see [RUN_GUIDE.md](../RUN_GUIDE.md))
+**Run**: `uv run python scripts/pipeline/stage_01_test.py --project <name>` (or separate infra/project pytest invocations; see [RUN_GUIDE.md](../RUN_GUIDE.md))
 
 **See**: [tests/AGENTS.md](../../tests/AGENTS.md)
 
@@ -489,7 +489,7 @@ Automated checking of various aspects: tests, markdown, PDFs, coverage, etc.
 
 - Test validation (pytest)
 - Markdown validation (`infrastructure.validation.cli markdown`)
-- PDF validation (scripts/04_validate_output.py)
+- PDF validation (scripts/pipeline/stage_04_validate.py)
 - Coverage validation (pyproject.toml `[tool.coverage.*]`)
 
 **See**: [Build Pipeline](#build-pipeline)

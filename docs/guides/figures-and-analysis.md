@@ -79,7 +79,7 @@ The template includes example scripts:
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Or run all project scripts via the pipeline stage
-uv run python scripts/02_run_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
 ```
 
 **What they demonstrate**:
@@ -583,7 +583,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
 # uv run python scripts/execute_pipeline.py --project {name} --core-only
-# uv run python scripts/04_validate_output.py
+# uv run python scripts/pipeline/stage_04_validate.py
 ```
 
 ### Creating Custom Build Scripts
