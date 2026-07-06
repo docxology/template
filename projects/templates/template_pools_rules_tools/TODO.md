@@ -25,10 +25,10 @@ Forward-only backlog for the pools/rules/tools integration exemplar.
 
 ## Test and validator gaps
 
-- [ ] Add strong-rule semantic evaluation beyond structural parsing
+- [x] Add strong-rule semantic evaluation beyond structural parsing
 
 ## Ordered improvement ladder
 
 1. Add a fourth fond type (e.g. `template_models`) once the fond exemplar exists
-2. Extend `rules_applier.py` to evaluate strong rules programmatically
-3. Add `scripts/04_validate_strong_rules.py` gate
+2. [x] Extend `rules_applier.py` to evaluate strong rules programmatically (`strong_rule_evaluator.py`)
+3. [x] Add `scripts/04_validate_strong_rules.py` gate

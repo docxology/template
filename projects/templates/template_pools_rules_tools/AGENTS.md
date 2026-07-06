@@ -40,6 +40,7 @@ write back to `fonds/`, `rules/`, or `tools/` from project code.
 |---|---|
 | `src/fonds_reader.py` | Reads `fonds/templates/template_bibliography`, `template_contacts`, `template_datasets` |
 | `src/rules_applier.py` | Loads `rules/templates/template_project_rules` and `template_manuscript_rules` |
+| `src/strong_rule_evaluator.py` | Semantic evaluation of strong rule YAML against a runtime context dict |
 | `src/tools_invoker.py` | Discovers `tools/templates/template_code_executor` and other tool manifests |
 | `src/integration.py` | Orchestrates all three into a combined demo result dict |
 
@@ -59,6 +60,7 @@ uv run pytest projects/templates/template_pools_rules_tools/tests/ -v \
 uv run python projects/templates/template_pools_rules_tools/scripts/01_validate_sources.py
 uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py
 uv run python projects/templates/template_pools_rules_tools/scripts/03_generate_manuscript.py
+uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py
 ```
 
 ---

@@ -23,6 +23,10 @@ from .rules_applier import (
     load_strong_rules,
     validate_against_rules,
 )
+from .strong_rule_evaluator import (
+    evaluate_strong_rules,
+    load_rule_context_from_project,
+)
 from .tools_invoker import (
     discover_tools,
     discover_tools_with_validation,
@@ -63,6 +67,8 @@ __all__ = [
     "load_all_project_rules",
     "load_all_manuscript_rules",
     "get_rules_root",
+    "evaluate_strong_rules",
+    "load_rule_context_from_project",
     # Tools invoker
     "discover_tools",
     "discover_tools_with_validation",

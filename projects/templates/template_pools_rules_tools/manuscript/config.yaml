@@ -41,6 +41,22 @@ publication:
   preprint_server: "arXiv"
   preprint_id: "2026.00000"
 
+# Strong-rule semantic validation context (see scripts/04_validate_strong_rules.py)
+strong_rules:
+  canonical_sections:
+    - Abstract
+    - Introduction
+    - Related Work
+    - Methods
+    - Results
+    - Discussion
+    - Conclusion
+    - References
+  coverage:
+    infrastructure: 60
+    project_src: 90
+    public_api: 95
+
 # Manuscript section toggles
 sections:
   frontmatter: true

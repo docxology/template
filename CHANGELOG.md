@@ -11,6 +11,12 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+### 2026-07-05 — template_pools_rules_tools promoted to public exemplar
+- `template_pools_rules_tools` moved from local development to `projects/templates/` as 17th public exemplar
+- Registered in `public_scope.py`, `.gitignore` negations, `projects/AGENTS.md`, `projects/templates/AGENTS.md`, root `README.md`
+- Demonstrates fonds/rules/tools resource-pool integration (passive data pools + governance rule sets + executable tool entry points)
+- See `projects/templates/template_pools_rules_tools/AGENTS.md` for per-project contract
+
 - 🧹 **Deferred review-refactor batch (2026-07-02)** — implemented the remaining
   plan items via worktree-isolated parallel agents, centrally re-verified (full
   infra suite green, health 11/11). **R5**: fixed every `mypy --strict

@@ -18,6 +18,21 @@ publication:
   doi: ""  # Fill after Zenodo deposit
   github_repository: "your-org/your-repo"
 
+strong_rules:
+  canonical_sections:
+    - Abstract
+    - Introduction
+    - Related Work
+    - Methods
+    - Results
+    - Discussion
+    - Conclusion
+    - References
+  coverage:
+    infrastructure: 60
+    project_src: 90
+    public_api: 95
+
 sections:
   abstract: true
   introduction: true
