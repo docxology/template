@@ -19,6 +19,20 @@ produce the same manuscript.
 
 Compose emits `{{token}}` placeholders. `scripts/z_generate_manuscript_variables.py` resolves them into `output/manuscript/` (fail-closed).
 
+## Refresh pipeline
+
+After compose or late artifact writes, call
+[`refresh.py`](refresh.py):
+
+| Function | When |
+| --- | --- |
+| `refresh_manuscript_pipeline(ManuscriptRefreshPhase.PRE_COMPOSE)` | Before manuscript composition when upstream artifacts changed |
+| `refresh_manuscript_pipeline(ManuscriptRefreshPhase.POST_COMPOSE)` | After compose when semantic outputs need settling |
+| `settle_manuscript_artifacts(root)` | Hash/settle contract artifacts after final writes (fixed-point track) |
+
+Used by `roadmap_tracks/fixed_point.py`, `sheaf_tracks_helpers.py`, and
+`manuscript/sheaf/semantic_core.py` instead of duplicated local helpers.
+
 ## Editing workflow
 
 1. Edit fragments under `manuscript/sections/imrad/` and `manuscript/sheaf/manifest.yaml`.

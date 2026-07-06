@@ -31,7 +31,8 @@ hand-authored prose.
 | Simulation/SI harness | [`src/simulation/AGENTS.md`](src/simulation/AGENTS.md) | pymdp config/runtime, SI T-maze, graph-world traces, deterministic run logs. |
 | GNN parsing/concordance | [`src/gnn/AGENTS.md`](src/gnn/AGENTS.md) | Parser/model/concordance for `gnn/*.gnn.md`. |
 | Ontology bindings | [`src/ontology/AGENTS.md`](src/ontology/AGENTS.md) | Nested `terms:` flattening and cross-track naming contract. |
-| Output gates | [`src/gates/AGENTS.md`](src/gates/AGENTS.md) | Validation facade, manuscript/output checks, claim ledger, Lean gate. |
+| Output gates | [`src/gates/AGENTS.md`](src/gates/AGENTS.md) | Validation facade, output/manuscript checks, claim ledger, Lean gate. |
+| Artifact paths (SSOT) | [`src/contracts/AGENTS.md`](src/contracts/AGENTS.md) | Promoted/variable/gate artifact path registry. |
 | Promoted roadmap artifacts | [`src/roadmap_tracks/AGENTS.md`](src/roadmap_tracks/AGENTS.md) | Toy sweep, formal interop, integration audit, canonical sheaf tracks. |
 | Visual outputs | [`src/visualizations/AGENTS.md`](src/visualizations/AGENTS.md) | Figure registry/style/generator contracts. |
 | Thin orchestration scripts | [`scripts/AGENTS.md`](scripts/AGENTS.md) | Scripts delegate business logic to `src/`. |

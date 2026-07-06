@@ -10,7 +10,10 @@ proven to reject bad input, not just accept good input.
 | --- | --- |
 | [`validation.py`](validation.py) | Public facade: `validate_outputs`, `validate_manuscript`, `build_lean` |
 | [`artifact_manifest.py`](artifact_manifest.py) | `REQUIRED_OUTPUTS` SSOT for output gate checks |
-| [`output_checks.py`](output_checks.py) | Pipeline artifact existence + SI schema checks |
+| [`output_checks.py`](output_checks.py) | Thin dispatcher: composes simulation, spine, promoted, and figure checks |
+| [`output_checks_simulation.py`](output_checks_simulation.py) | SI/pymdp schema checks; `add_log_check` (always sets `si_log_present`) |
+| [`output_checks_spine.py`](output_checks_spine.py) | Validation-spine artifact checks |
+| [`output_checks_promoted.py`](output_checks_promoted.py) | Promoted artifact schema checks; `set_experiment_plan_metrics` |
 | [`manuscript_checks.py`](manuscript_checks.py) | Sheaf manifest, tokens, hydration, layers markers |
 | [`claim_ledger.py`](claim_ledger.py) | Claim ledger vs on-disk artifacts (`data/claim_ledger.yaml` required) |
 | [`lean.py`](lean.py) | Conditional `lake build` when `lean/lakefile.lean` exists |
