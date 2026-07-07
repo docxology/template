@@ -15,6 +15,7 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0",
+    "matplotlib>=3.7.0",
 ]
 
 [project.optional-dependencies]
@@ -23,6 +24,7 @@ dev = [
     "pytest-cov>=4.1.0",
     "mypy>=1.8.0",
     "types-PyYAML>=6.0",
+    "hypothesis>=6.100.0",
 ]
 
 [tool.pytest.ini_options]

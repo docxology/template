@@ -20,7 +20,7 @@ from typing import TypedDict
 import yaml
 
 from .rules_applier import load_strong_rules
-from .types import StrongRuleEntry
+from .type_defs import StrongRuleEntry
 
 __all__ = [
     "StrongRuleViolation",

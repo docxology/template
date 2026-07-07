@@ -16,7 +16,7 @@ import pathlib
 
 import yaml
 
-from .types import (
+from .type_defs import (
     AllFondsResult,
     BibliographyFondResult,
     ContactsFondResult,

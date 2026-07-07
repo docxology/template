@@ -12,7 +12,7 @@ import pathlib
 
 import yaml
 
-from .types import ToolEntry, ToolEntryWithValidation, ToolValidationResult
+from .type_defs import ToolEntry, ToolEntryWithValidation, ToolValidationResult
 
 __all__ = [
     "discover_tools",

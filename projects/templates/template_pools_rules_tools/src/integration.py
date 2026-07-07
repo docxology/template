@@ -17,7 +17,7 @@ from .fonds_reader import (
 )
 from .rules_applier import validate_against_rules
 from .tools_invoker import discover_tools, validate_tool_scripts_exist
-from .types import (
+from .type_defs import (
     AllFondsResult,
     BibliographyFondResult,
     ContactsFondResult,

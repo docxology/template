@@ -13,7 +13,7 @@ import pathlib
 
 import yaml
 
-from .types import (
+from .type_defs import (
     AllRulesResult,
     RuleSetResult,
     SoftRuleEntry,

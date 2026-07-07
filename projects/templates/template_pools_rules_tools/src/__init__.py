@@ -34,7 +34,7 @@ from .tools_invoker import (
     get_tools_root,
     validate_tool_scripts_exist,
 )
-from .types import (
+from .type_defs import (
     AllFondsResult,
     AllRulesResult,
     BibliographyFondResult,

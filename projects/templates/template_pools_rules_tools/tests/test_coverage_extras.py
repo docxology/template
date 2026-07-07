@@ -197,7 +197,7 @@ def test_validate_tool_scripts_exist_missing_entrypoint(tmp_path: pathlib.Path) 
 
 def test_count_summary_with_explicit_fonds() -> None:
     from src.fonds_reader import count_summary
-    from src.types import AllFondsResult, BibliographyFondResult, ContactsFondResult
+    from src.type_defs import AllFondsResult, BibliographyFondResult, ContactsFondResult
 
     all_fonds = AllFondsResult(
         bibliography=BibliographyFondResult(manifest={}, bib_text="", csv_rows=[{}, {}]),
@@ -242,7 +242,7 @@ def test_read_datasets_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path) ->
 
 def test_generate_figure_data_builds_rows() -> None:
     from src.integration import generate_figure_data
-    from src.types import (
+    from src.type_defs import (
         AllFondsResult,
         FigureDataRow,
         IntegrationResult,

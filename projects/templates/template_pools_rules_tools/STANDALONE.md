@@ -54,7 +54,7 @@ my_project/
 │           └── tools.yaml
 └── src/
     ├── __init__.py
-    ├── types.py
+    ├── type_defs.py
     ├── fonds_reader.py
     ├── rules_applier.py
     ├── tools_invoker.py
