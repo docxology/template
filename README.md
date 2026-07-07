@@ -396,7 +396,7 @@ narrative + benefits:
 - **Markdown-to-PDF pipeline** with cross-referenced manuscripts and figure
   integration ([`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md),
   [`docs/modules/pdf-validation.md`](docs/modules/pdf-validation.md)).
-- **Validated build system** with 14 declared stages, a default 10-stage
+- **Validated build system** with 16 declared stages, a default 10-stage
   core+LLM path, an 8-stage `--core-only` path, and CI gates
   ([`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md)).
 - **Generic + reusable** — drop the same `infrastructure/` into any project that
@@ -489,7 +489,7 @@ Working outputs: `projects/{name}/output/` (disposable). Final deliverables:
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
 `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`.
 
-> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **14 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, and archival stages are declared for contracts but invoked separately when needed.
+> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->

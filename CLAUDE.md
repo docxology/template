@@ -392,7 +392,7 @@ flowchart TB
 
 ## Pipeline Stages
 
-### Full Pipeline (default 10-stage path; 14 declared stages)
+### Full Pipeline (default 10-stage path; 16 declared stages)
 
 0. **Clean Output Directories** - Remove previous outputs for a fresh run
 1. **Environment Setup** - Validate dependencies, discover projects
@@ -407,7 +407,7 @@ flowchart TB
 
 **Stage numbering (canonical phrasing — keep in sync with AGENTS.md and README.md):**
 
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **14 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, and archival stages are declared for contracts but invoked separately when needed.
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed (not counted as a numbered stage).
 

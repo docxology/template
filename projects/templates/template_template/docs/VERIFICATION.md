@@ -68,7 +68,7 @@ uv run python scripts/pipeline/stage_03_render.py --project template_template
 | Figures | 4 PNG files in `output/figures/` |
 | Metrics | Valid JSON; pipeline keys present |
 | Manuscript | No unresolved `${` in numbered chapters |
-| Introspection | 14 declared stages, 8 core-only |
+| Introspection | 16 declared stages, 8 core-only |
 
 ## Common Issues
 
