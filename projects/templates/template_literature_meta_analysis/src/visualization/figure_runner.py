@@ -146,9 +146,14 @@ def generate_all_figures(args: argparse.Namespace) -> list[str]:
         except Exception as exc:  # noqa: BLE001 -- safety net: one figure group must not abort the batch
             logger.error("Citation network figures skipped: %s", exc)
 
+    # hypothesis_dashboard.png is referenced unconditionally by
+    # manuscript/03_results_hypothesis.md, and plot_hypothesis_dashboard is
+    # explicitly designed to render a "no scores available" placeholder when
+    # given an empty mapping (offline/no-LLM default run, before the optional
+    # knowledge-graph stage has populated hypothesis_scores.json). Always call
+    # it so the figure file exists regardless of whether that data is present.
     scores_data = _load_json(input_dir / "hypothesis_scores.json", logger)
-    if scores_data:
-        generated_paths.append(str(plot_hypothesis_dashboard(scores_data, output_dir / "hypothesis_dashboard.png")))
+    generated_paths.append(str(plot_hypothesis_dashboard(scores_data, output_dir / "hypothesis_dashboard.png")))
 
     trends_data = _load_json(input_dir / "hypothesis_trends.json", logger)
     if trends_data:

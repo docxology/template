@@ -21,7 +21,13 @@ scripts/
 
 ## Execution Order
 
-Scripts **must** run in numbered order because each stage depends on the outputs of prior stages:
+Scripts are numbered by role, but numeric order is **not** run order: `05_inject_variables.py`
+assembles the final manuscript from every other stage's output (including `06`'s
+`fulltext_assessment.json`, which `00_abstract.md` renders unconditionally), so it must run
+*last* among the analysis scripts. The authoritative run order lives in
+`manuscript/config.yaml`'s `analysis.scripts` list (`02`, `04`, `06`, `07`, `08`, then `05`);
+`01` and `03` are network/Ollama-gated and excluded from the default offline/CI list (run them
+explicitly per the note in `manuscript/config.yaml`).
 
 | Script | Inputs | Outputs | Dependencies |
 |--------|--------|---------|--------------|
@@ -29,9 +35,10 @@ Scripts **must** run in numbered order because each stage depends on the outputs
 | `02` | `corpus.jsonl` | `subfield_classification.json`, `temporal_analysis.json`, `tfidf_data.json`, `topics.json`, `citation_network.json`, `citation_graph.gml` | `01` |
 | `03` | `corpus.jsonl` | `nanopublications.jsonl`, `nanopublications.trig`, `hypothesis_scores.json`, `hypothesis_trends.json`, `assertion_summary.json` | `01`, Ollama (optional) |
 | `04` | All `output/data/*.json`, `citation_graph.gml` | `output/figures/*.png`, `figure_registry.json` | `02`, `03` |
-| `05` | `output/data/*.json`, `manuscript/*.md` | `output/manuscript/*.md` (rendered) | `02`, `03` |
 | `06` | `corpus.jsonl` | `fulltext_assessment.json` | `01` |
 | `07` | `corpus.jsonl` | `output/data/literature_evaluation.json` | `01` |
+| `08` | provider config | `deep_research_replay.json` | none |
+| `05` | `output/data/*.json` (incl. `06`'s `fulltext_assessment.json`), `manuscript/*.md` | `output/manuscript/*.md` (rendered) | `02`, `03`, `06` |
 
 ## Script Details
 

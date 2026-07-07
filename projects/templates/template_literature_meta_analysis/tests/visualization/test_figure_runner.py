@@ -158,8 +158,12 @@ def test_generate_all_figures_missing_inputs(tmp_path: Path) -> None:
 
     args = argparse.Namespace(input_dir=str(input_dir), output_dir=str(output_dir), dpi=100)
     paths = generate_all_figures(args)
-    assert paths == []
+    # hypothesis_dashboard.png is always generated (with a placeholder when no
+    # scores are available) because manuscript/03_results_hypothesis.md
+    # references it unconditionally, even in the offline/no-LLM default run.
+    assert paths == [str(output_dir / "hypothesis_dashboard.png")]
     assert output_dir.exists()
+    assert (output_dir / "hypothesis_dashboard.png").exists()
 
 
 def test_generate_all_figures_skips_invalid_gml(tmp_path: Path) -> None:
@@ -172,7 +176,9 @@ def test_generate_all_figures_skips_invalid_gml(tmp_path: Path) -> None:
 
     args = argparse.Namespace(input_dir=str(input_dir), output_dir=str(output_dir), dpi=100)
     paths = generate_all_figures(args)
-    assert paths == []
+    # hypothesis_dashboard.png is always generated (placeholder when no scores
+    # are available); the citation-network figures are the ones skipped here.
+    assert paths == [str(output_dir / "hypothesis_dashboard.png")]
 
 
 def test_generate_all_figures_tfidf_single_row_skips_pca(tmp_path: Path) -> None:
@@ -264,7 +270,9 @@ def test_generate_all_figures_skips_zero_node_citation_network(tmp_path: Path) -
 
     args = argparse.Namespace(input_dir=str(input_dir), output_dir=str(output_dir), dpi=100)
     paths = generate_all_figures(args)
-    assert paths == []
+    # hypothesis_dashboard.png is always generated (placeholder when no scores
+    # are available); the citation-network figures are skipped for 0 nodes.
+    assert paths == [str(output_dir / "hypothesis_dashboard.png")]
 
 
 def test_generate_all_figures_assertion_summary_zero_total(tmp_path: Path) -> None:
