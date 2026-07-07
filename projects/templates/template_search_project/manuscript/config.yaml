@@ -141,7 +141,12 @@ deep_search:
   sources:
     - "arxiv"
     - "crossref"
-    - "paperclip"               # gracefully degrades on missing key or 405
+    # 'paperclip' intentionally omitted from the default: PaperclipBackend
+    # construction raises RuntimeError (fail-fast, by design and tested in
+    # tests/test_deep_search.py) when PAPERCLIP_API_KEY is unset, and that
+    # exception aborts backend construction before arxiv/crossref run too.
+    # Add "paperclip" here only alongside a real PAPERCLIP_API_KEY (see
+    # .env.example) — it does not gracefully degrade.
   year_min: null
   year_max: null
   crossref_mailto: "you@example.org"
