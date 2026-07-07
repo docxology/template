@@ -1,0 +1,14 @@
+# Top-level output/ subdirectory names to preserve across pipeline Stage 0
+# "Clean Output Directories" runs. One name per line; blank lines and lines
+# starting with # are ignored. Read by
+# infrastructure.core.files.cleanup._load_output_preserve_manifest.
+#
+# This project's own test suite (tests/gate_support.py, documented in
+# tests/AGENTS.md) treats output/data, output/figures, and output/reports as
+# a committed golden-fixture snapshot the tests check against — not
+# disposable pipeline output. A default pipeline run must not silently wipe
+# them; set TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD=1 for an intentional
+# refresh instead (see tests/AGENTS.md).
+data
+figures
+reports

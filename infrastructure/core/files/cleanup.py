@@ -68,6 +68,29 @@ def clean_output_directory(output_dir: Path) -> None:
         raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
 
 
+_OUTPUT_PRESERVE_MANIFEST_NAME = ".pipeline_preserve_output_dirs"
+
+
+def _load_output_preserve_manifest(project_dir: Path) -> frozenset[str]:
+    """Return top-level output/ subdirectory names a project wants preserved across cleans.
+
+    Reads an opt-in, project-local manifest file (one directory name per
+    line, ``#``-comments and blank lines ignored). Absent by default — a
+    project must explicitly declare that part of its output/ is a committed
+    golden-fixture snapshot consumed by its own test suite rather than
+    disposable, regenerable pipeline output.
+    """
+    manifest_path = project_dir / _OUTPUT_PRESERVE_MANIFEST_NAME
+    if not manifest_path.is_file():
+        return frozenset()
+    names = {
+        line.strip()
+        for line in manifest_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
+    return frozenset(names)
+
+
 def clean_output_directories(repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None) -> None:
     """Clean output directories for a fresh pipeline start.
 
@@ -107,8 +130,11 @@ def clean_output_directories(repo_root: Path, project_name: str = "project", sub
         Path("data") / "nanopublications.trig",
     }
 
+    project_dir = repo_root / "projects" / project_name
+    preserved_subtree_names = _load_output_preserve_manifest(project_dir)
+
     output_dirs = [
-        repo_root / "projects" / project_name / "output",
+        project_dir / "output",
         repo_root / "output" / project_name,
     ]
 
@@ -118,7 +144,7 @@ def clean_output_directories(repo_root: Path, project_name: str = "project", sub
         if output_dir.exists():
             logger.info(f"  Cleaning {relative_path}/...")
             archive_output_logs(output_dir)
-            clean_output_dir_contents(output_dir, preserved_relative_paths)
+            clean_output_dir_contents(output_dir, preserved_relative_paths, preserved_subtree_names)
         else:
             logger.info(f"  Creating {relative_path}/...")
 

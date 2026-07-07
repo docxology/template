@@ -81,17 +81,34 @@ def archive_output_logs(output_dir: Path) -> None:
         logger.info(f"  Archived {archived_count} log file(s) to logs/archive/")
 
 
-def clean_output_dir_contents(output_dir: Path, preserved_relative_paths: set[Path]) -> None:
+def clean_output_dir_contents(
+    output_dir: Path,
+    preserved_relative_paths: set[Path],
+    preserved_subtree_names: frozenset[str] = frozenset(),
+) -> None:
     """Remove all contents of output_dir except .checkpoints and preserved paths.
 
     Paths in preserved_relative_paths are relative to output_dir.
     The .checkpoints directory is always kept to support pipeline resume.
+
+    Args:
+        preserved_subtree_names: Top-level subdirectory names (e.g. ``"data"``)
+            to skip wholesale, same treatment as ``.checkpoints``. For a
+            project whose test suite treats output/ as a committed
+            golden-fixture snapshot rather than disposable pipeline output
+            (declared via a project-local preserve manifest — see
+            ``clean_output_directories``), this avoids a fresh pipeline run
+            silently deleting fixtures the test suite expects to find.
     """
     for item in output_dir.iterdir():
         if item.is_dir():
             # Preserve .checkpoints directory to maintain pipeline resume capability
             if item.name == ".checkpoints":
                 logger.debug(f"  Preserving {item.name}/ directory for checkpoint resume")
+                continue
+
+            if item.name in preserved_subtree_names:
+                logger.debug(f"  Preserving {item.name}/ directory (project preserve manifest)")
                 continue
 
             # Check if this subdirectory contains any preserved files
