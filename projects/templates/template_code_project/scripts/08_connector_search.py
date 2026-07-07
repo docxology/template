@@ -19,37 +19,47 @@ PROJECT_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO_ROOT))
 
+import yaml  # noqa: E402
+
 from infrastructure.core.logging.utils import get_logger  # noqa: E402
 from infrastructure.search.connectors.config import load_connector_search_config  # noqa: E402
-from infrastructure.search.connectors import search_connector  # noqa: E402
+from infrastructure.search.connectors import list_connectors, search_connector  # noqa: E402
 
 logger = get_logger(__name__)
 
 
 def main() -> int:
+    connector_search_config_path = PROJECT_DIR / "connector_search.yaml"
+    if not connector_search_config_path.exists():
+        logger.info("[skip] no connector_search.yaml — connector search not configured for this project")
+        return 0
+
     cfg = load_connector_search_config(PROJECT_DIR)
+    connector_ids = cfg.enabled_connectors or [entry.name for entry in list_connectors()]
 
-    if not cfg.enabled:
-        logger.info("[skip] connector_search disabled in config — set connector_search.enabled: true to run")
+    manuscript_config_path = PROJECT_DIR / "manuscript" / "config.yaml"
+    queries: list[str] = []
+    if manuscript_config_path.exists():
+        manuscript_cfg = yaml.safe_load(manuscript_config_path.read_text(encoding="utf-8")) or {}
+        queries = [str(k) for k in manuscript_cfg.get("keywords", [])]
+
+    if not queries:
+        logger.warning("[skip] manuscript/config.yaml has no keywords — no queries to run")
         return 0
 
-    if not cfg.connectors:
-        logger.warning("[skip] connector_search.connectors is empty — no queries configured")
-        return 0
-
-    output_dir = PROJECT_DIR / cfg.output_dir
+    output_dir = PROJECT_DIR / "output" / "data" / "connector_search"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     all_results: dict[str, list[dict]] = {}
-    for connector_id, queries in cfg.connectors.items():
+    for connector_id in connector_ids:
         logger.info(f"Running connector '{connector_id}' with {len(queries)} queries")
         connector_results: list[dict] = []
         for query in queries:
             try:
                 hits = search_connector(
+                    connector_id,
                     query,
-                    connector_id=connector_id,
-                    max_results=cfg.max_results,
+                    max_results=cfg.default_max_results,
                 )
                 for hit in hits:
                     connector_results.append({

@@ -81,11 +81,11 @@ def main() -> int:
         logger.info("[skip] provenance disabled in config — set provenance.enabled: true to record")
         return 0
 
-    store_path = PROJECT_DIR / cfg.store_path
+    store_path = cfg.dag_path(PROJECT_DIR)
 
     # Record a node for this pipeline invocation
     stage_key = "pipeline_run"
-    label = cfg.stage_labels.get(stage_key, "Pipeline Run")
+    label = "Pipeline Run"
     node_hash = _record_node(store_path, stage=stage_key, label=label)
     logger.info(f"Provenance node recorded: {node_hash[:12]}… → {store_path}")
     return 0
