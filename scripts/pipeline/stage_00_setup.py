@@ -43,6 +43,7 @@ from infrastructure.core.runtime.setup_checks import (
     validate_project_discovery,
 )
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.project_paths import resolve_project_root
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -64,8 +65,10 @@ def main() -> int:
 
     repo_root = Path(__file__).resolve().parents[2]
 
-    # Clean coverage files to ensure clean state for subsequent test runs
-    clean_coverage_files(repo_root)
+    # Clean coverage files to ensure clean state for subsequent test runs.
+    # Scoped to this project's own directory — a repo-wide clean would delete
+    # OTHER concurrently-running projects' live coverage databases.
+    clean_coverage_files(repo_root, scope_dir=resolve_project_root(repo_root, args.project))
 
     checks = [
         ("Python version", lambda: check_python_version()),

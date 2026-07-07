@@ -197,7 +197,7 @@ def _run_project_tests_impl(
     start_time = time.time()
     project_root = resolve_project_root(repo_root, project_name)
 
-    clean_coverage_files(repo_root)
+    clean_coverage_files(repo_root, scope_dir=project_root)
 
     testing_config = get_testing_config(repo_root)
     declared_floor = project_declared_coverage_floor(project_root)

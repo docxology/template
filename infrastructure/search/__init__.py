@@ -10,60 +10,24 @@ This package hosts independent **search interfaces**, each in its own subpackage
   endpoint (``search``, ``contents``, ``answer``, ``find_similar``).
 * :mod:`infrastructure.search.deep_research` — provider-neutral orchestration
   over OpenAI and Gemini deep research surfaces with lazy SDK adapters.
+* :mod:`infrastructure.search.connectors` — the Scientific Connector Registry
+  (OpenAlex, arXiv, Semantic Scholar, CrossRef, Europe PMC, bioRxiv, UniProt,
+  PDB), independent of the literature/exa/deep_research subpackages above.
 
 The literature side is the discovery half of the citation workflow; see
 :mod:`infrastructure.reference.citation` for the export side. Importing this
-package is side-effect free — the Exa client reads ``EXA_API_KEY`` only when you
-call :meth:`infrastructure.search.exa.ExaClient.from_env`.
+package (or any one subpackage, e.g. ``infrastructure.search.connectors``) is
+side-effect free and does not import the other subpackages' third-party
+dependencies (``defusedxml``, Exa/OpenAI/Gemini SDKs) — each name below is
+resolved lazily on first attribute access via :pep:`562`. The Exa client reads
+``EXA_API_KEY`` only when you call
+:meth:`infrastructure.search.exa.ExaClient.from_env`.
 """
 
-from infrastructure.search.exa import ExaClient, ExaConfig, ExaError
-from infrastructure.search.deep_research import (
-    DEFAULT_GEMINI_AGENT,
-    DEFAULT_OPENAI_MODEL,
-    DeepResearchAnalysis,
-    DeepResearchCitation,
-    DeepResearchClient,
-    DeepResearchConfig,
-    DeepResearchJobHandle,
-    DeepResearchMCPServer,
-    DeepResearchReportBundle,
-    DeepResearchRequest,
-    DeepResearchResult,
-    DeepResearchSources,
-    DeepResearchProjectContext,
-    GeminiDeepResearchError,
-    GeminiDeepResearchProvider,
-    OpenAIDeepResearchError,
-    OpenAIDeepResearchProvider,
-    build_gemini_payload,
-    build_gemini_tools,
-    build_project_deep_research_request,
-    build_openai_payload,
-    build_openai_tools,
-    collect_project_context,
-    save_deep_research_result,
-    save_deep_research_results,
-)
-from infrastructure.search.literature import (
-    AbstractFetcher,
-    ArxivBackend,
-    BackendError,
-    CrossrefBackend,
-    FetchResult,
-    FulltextFetcher,
-    LiteratureClient,
-    LocalBackend,
-    Paper,
-    PaperclipBackend,
-    SearchBackend,
-    SearchCache,
-    SearchQuery,
-    SearchResult,
-    enrich_papers,
-    merge_papers,
-    write_corpus,
-)
+from __future__ import annotations
+
+import importlib
+from typing import Any
 
 __all__ = [
     "Paper",
@@ -114,3 +78,76 @@ __all__ = [
     "save_deep_research_result",
     "save_deep_research_results",
 ]
+
+# Maps each re-exported name to the submodule that actually defines it.
+# Resolved on demand via __getattr__ so importing this package (a prerequisite
+# for `infrastructure.search.connectors`, which shares none of these names)
+# never eagerly pulls in exa/deep_research/literature and their dependencies.
+_EXPORT_SOURCES: dict[str, str] = {
+    name: "infrastructure.search.literature"
+    for name in (
+        "Paper",
+        "SearchQuery",
+        "SearchResult",
+        "merge_papers",
+        "SearchBackend",
+        "LocalBackend",
+        "CrossrefBackend",
+        "ArxivBackend",
+        "PaperclipBackend",
+        "BackendError",
+        "LiteratureClient",
+        "SearchCache",
+        "AbstractFetcher",
+        "FulltextFetcher",
+        "FetchResult",
+        "enrich_papers",
+        "write_corpus",
+    )
+}
+_EXPORT_SOURCES.update({name: "infrastructure.search.exa" for name in ("ExaClient", "ExaConfig", "ExaError")})
+_EXPORT_SOURCES.update(
+    {
+        name: "infrastructure.search.deep_research"
+        for name in (
+            "DEFAULT_GEMINI_AGENT",
+            "DEFAULT_OPENAI_MODEL",
+            "DeepResearchAnalysis",
+            "DeepResearchCitation",
+            "DeepResearchClient",
+            "DeepResearchConfig",
+            "DeepResearchJobHandle",
+            "DeepResearchMCPServer",
+            "DeepResearchReportBundle",
+            "DeepResearchRequest",
+            "DeepResearchResult",
+            "DeepResearchSources",
+            "DeepResearchProjectContext",
+            "GeminiDeepResearchError",
+            "GeminiDeepResearchProvider",
+            "OpenAIDeepResearchError",
+            "OpenAIDeepResearchProvider",
+            "build_gemini_payload",
+            "build_gemini_tools",
+            "build_project_deep_research_request",
+            "build_openai_payload",
+            "build_openai_tools",
+            "collect_project_context",
+            "save_deep_research_result",
+            "save_deep_research_results",
+        )
+    }
+)
+
+
+def __getattr__(name: str) -> Any:
+    module_path = _EXPORT_SOURCES.get(name)
+    if module_path is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(importlib.import_module(module_path), name)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    return sorted(__all__)

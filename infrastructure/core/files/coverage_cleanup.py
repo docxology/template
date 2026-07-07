@@ -12,15 +12,25 @@ from infrastructure.core.logging.utils import get_logger, log_success
 logger = get_logger(__name__)
 
 
-def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> bool:
+def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, scope_dir: Path | None = None) -> bool:
     """Clean coverage database files to prevent corruption.
 
     Removes coverage database files that can become corrupted during parallel
     test execution or when tests are interrupted.
 
     Args:
-        repo_root: Repository root directory
+        repo_root: Repository root directory. Used to compute the relative
+            labels reported to the caller, and as the search root when
+            *scope_dir* is not given.
         patterns: List of file patterns to clean (default: coverage-related files)
+        scope_dir: Restrict the search to this directory (and its
+            descendants) instead of the whole repository — pass the specific
+            project's root whenever the caller is about to run one project's
+            tests. Without this, the default recursive repo-wide glob deletes
+            OTHER concurrently-running projects' live coverage databases
+            (observed in practice: a project's own passing test run reported
+            "Total coverage: 0.00%" because a sibling project's pipeline
+            invocation had just unlinked its mid-write ``.coverage.project``).
 
     Returns:
         True if cleanup successful, False otherwise
@@ -31,6 +41,8 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
             "**/.coverage.*",  # Lock files and temporary coverage files (recursive)
             "**/coverage_*.json",  # JSON coverage reports (recursive)
         ]
+
+    search_root = scope_dir if scope_dir is not None else repo_root
 
     logger.info("Cleaning coverage database files...")
 
@@ -56,7 +68,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
             if "*" in pattern:
                 # Glob pattern - search for matching files recursively
                 glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
-                for file_path in repo_root.glob(glob_pattern):
+                for file_path in search_root.glob(glob_pattern):
                     label = str(file_path.relative_to(repo_root))
                     removed, locked = _remove_file(file_path, label)
                     if removed:
@@ -65,7 +77,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
                         locked_files.append(locked)
             else:
                 # Exact filename
-                file_path = repo_root / pattern
+                file_path = search_root / pattern
                 if file_path.exists():
                     removed, locked = _remove_file(file_path, file_path.name)
                     if removed:

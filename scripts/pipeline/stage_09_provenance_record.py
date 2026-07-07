@@ -28,9 +28,7 @@ from infrastructure.provenance import (  # noqa: E402
     Provenance,
     RunNode,
     ArtifactNode,
-    Edge,
     EdgeRelation,
-    NodeKind,
 )
 
 logger = get_logger(__name__)
@@ -84,18 +82,15 @@ def main() -> int:
         store_path = str(project_dir / ".provenance" / "graph.json")
 
     # Record the run node
-    store = Provenance.with_path(store_path)
+    store = Provenance.with_path(Path(store_path).parent, filename=Path(store_path).name)
     run = store.record(
-        RunNode(
-            id="",
-            kind=NodeKind.RUN,
+        RunNode.create(
             label=args.label or f"Pipeline: {args.stage}",
-            tool=args.stage,
-            session_id=args.project,
-            inputs={"project": args.project},
+            command=args.stage,
+            metadata={"project": args.project},
         )
     )
-    logger.info(f"Recorded run node: {run.id}")
+    logger.info(f"Recorded run node: {run.node_id}")
 
     # Record outputs if glob given
     if args.outputs:
@@ -104,20 +99,14 @@ def main() -> int:
             p = Path(path_str)
             if p.is_file():
                 art = store.record(
-                    ArtifactNode(
-                        id="",
-                        kind=NodeKind.ARTIFACT,
+                    ArtifactNode.create(
                         label=p.name,
                         path=str(p.relative_to(project_dir)),
-                        artifact_type="output",
-                        content_hash=None,
-                        size=p.stat().st_size,
+                        size_bytes=p.stat().st_size,
                     )
                 )
-                store.link(
-                    Edge(from_id=run.id, to_id=art.id, relation=EdgeRelation.PRODUCED)
-                )
-                logger.info(f"  Produced: {p.name} ({art.id})")
+                store.link(run.node_id, art.node_id, EdgeRelation.produced_by)
+                logger.info(f"  Produced: {p.name} ({art.node_id})")
 
     log_success(f"Provenance recorded for stage: {args.stage}")
     return 0

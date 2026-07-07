@@ -52,3 +52,26 @@ class TestCleanCoverageFiles:
         """Test that the function always returns a boolean."""
         result = clean_coverage_files(tmp_path)
         assert isinstance(result, bool)
+
+    def test_scope_dir_leaves_sibling_projects_untouched(self, tmp_path):
+        """A scope_dir restricts cleanup to one project, sparing sibling projects.
+
+        Regression test: clean_coverage_files(repo_root) used to glob
+        recursively from repo_root regardless of which project was under
+        test, deleting OTHER concurrently-running projects' live coverage
+        databases. scope_dir must confine the search to the given directory.
+        """
+        project_a = tmp_path / "projects" / "project_a"
+        project_b = tmp_path / "projects" / "project_b"
+        project_a.mkdir(parents=True)
+        project_b.mkdir(parents=True)
+        own_coverage = project_a / ".coverage.project"
+        own_coverage.write_text("own data")
+        sibling_coverage = project_b / ".coverage.project"
+        sibling_coverage.write_text("sibling data")
+
+        result = clean_coverage_files(tmp_path, scope_dir=project_a)
+
+        assert result is True
+        assert not own_coverage.exists()
+        assert sibling_coverage.exists()
