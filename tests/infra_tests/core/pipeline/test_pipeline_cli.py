@@ -13,14 +13,16 @@ from infrastructure.core.pipeline.cli import (
 
 
 class TestStageRows:
-    def test_default_pipeline_has_fourteen_declared_stages(self) -> None:
+    def test_default_pipeline_has_sixteen_declared_stages(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML)
-        assert len(rows) == 14
+        assert len(rows) == 16
         names = [r["name"] for r in rows]
         assert names[0] == "Clean Output Directories"
         assert "LLM Scientific Review" in names
         assert "Ebook Generation" in names
         assert "Metadata Package" in names
+        assert "Connector Search" in names
+        assert "Provenance Record" in names
 
     def test_rows_are_topologically_ordered(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML)
@@ -31,7 +33,7 @@ class TestStageRows:
 
     def test_explicit_tag_filter_excludes_llm(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML, exclude_tags={"llm"})
-        assert len(rows) == 12
+        assert len(rows) == 14
         assert all("llm" not in r["tags"] for r in rows)
 
     def test_rows_expose_contract_fields(self) -> None:
@@ -65,20 +67,20 @@ class TestCli:
         assert rc == 0
         payload = json.loads(capsys.readouterr().out)  # must parse: no log pollution on stdout
         assert payload["version"] == 1
-        assert len(payload["stages"]) == 14
+        assert len(payload["stages"]) == 16
 
     def test_list_stages_alias(self, capsys) -> None:
         rc = pipeline_cli_main(["list-stages", "--format", "json"])
         assert rc == 0
         payload = json.loads(capsys.readouterr().out)
-        assert len(payload["stages"]) == 14
+        assert len(payload["stages"]) == 16
 
     def test_table_output(self, capsys) -> None:
         rc = pipeline_cli_main(["describe-pipeline", "--format", "table"])
         assert rc == 0
         out = capsys.readouterr().out
         assert "Clean Output Directories" in out
-        assert "14 stage(s)" in out
+        assert "16 stage(s)" in out
 
     def test_core_only_flag(self, capsys) -> None:
         rc = pipeline_cli_main(["describe-pipeline", "--format", "json", "--core-only"])

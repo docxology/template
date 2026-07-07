@@ -167,10 +167,12 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if yaml_path is not None:
             dag = PipelineDAG.from_yaml(yaml_path)
 
-            # Apply flag-based filtering via tags. Long-horizon stages are
-            # declared in pipeline.yaml for documentation and direct script
-            # invocation, but are not part of the default executor path.
-            exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival"}
+            # Apply flag-based filtering via tags. Long-horizon and opt-in
+            # science/provenance stages are declared in pipeline.yaml for
+            # documentation and direct script invocation (see the comment
+            # directly above the "Connector Search" stage there), but are
+            # not part of the default executor path.
+            exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival", "science", "provenance"}
             if not include_llm or self.config.skip_llm:
                 exclude_tags.add("llm")
             if skip_clean:

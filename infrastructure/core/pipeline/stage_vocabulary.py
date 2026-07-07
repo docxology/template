@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-_OPT_IN_TAGS = frozenset({"ebook", "metadata", "bundle", "archival"})
+_OPT_IN_TAGS = frozenset({"ebook", "metadata", "bundle", "archival", "science", "provenance"})
 
 # Informal tokens → canonical stage name (from pipeline.yaml + single_stage.py keys).
 _STAGE_ALIAS_TO_CANONICAL: dict[str, str] = {

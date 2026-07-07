@@ -53,7 +53,7 @@ def _quiet_dag_logging() -> Iterator[None]:
 
 
 DEFAULT_PIPELINE_YAML = Path(__file__).resolve().parent / "pipeline.yaml"
-OPT_IN_STAGE_TAGS = frozenset({"ebook", "metadata", "bundle", "archival"})
+OPT_IN_STAGE_TAGS = frozenset({"ebook", "metadata", "bundle", "archival", "science", "provenance"})
 CORE_ONLY_EXCLUDED_TAGS = frozenset({"llm", *OPT_IN_STAGE_TAGS})
 
 __all__ = [
