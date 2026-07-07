@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_integration.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:integration">Integration: Unified Pipeline and Token
+Injection</h1>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p>The three resource layers described in <span class="citation"
+data-cites="sec:pools">@sec:pools</span>, <span class="citation"
+data-cites="sec:rules">@sec:rules</span>, and <span class="citation"
+data-cites="sec:tools">@sec:tools</span> are orchestrated by a single
+function in <code>src/integration.py</code>. The
+<code>run_integration_demo()</code> function calls all three subsystems
+in a defined order, collects their results into a structured dictionary,
+and writes summary counts to
+<code>output/data/manuscript_variables.json</code> for injection into
+this manuscript at render time. <span class="citation"
+data-cites="fig:architecture">@fig:architecture</span> illustrates the
+complete architecture.</p>
+<pre><code>run_integration_demo()
+  ├── read_bibliography_fond()       → {&quot;manifest&quot;: ..., &quot;bibtex&quot;: ..., &quot;csv_rows&quot;: [...]}
+  ├── read_contacts_fond()           → {&quot;manifest&quot;: ..., &quot;contacts&quot;: [...]}
+  ├── read_datasets_fond()           → {&quot;manifest&quot;: ..., &quot;datasets&quot;: [...]}
+  ├── validate_against_rules(&quot;template_project_rules&quot;)    → {&quot;status&quot;: &quot;ok&quot;, ...}
+  ├── validate_against_rules(&quot;template_manuscript_rules&quot;) → {&quot;status&quot;: &quot;ok&quot;, ...}
+  ├── discover_tools()               → [{&quot;name&quot;: ..., &quot;manifest&quot;: ...}, ...]
+  └── validate_tool_scripts_exist(&lt;each tool&gt;)            → {&quot;status&quot;: &quot;ok&quot;, ...}</code></pre>
+<p>The function returns a top-level dict with keys <code>fonds</code>,
+<code>rules</code>, <code>tools</code>, and <code>summary</code>. The
+<code>summary</code> sub-dict provides the counts that populate
+manuscript tokens.</p>
+<h2 id="manuscript-variable-tokens">Manuscript Variable Tokens</h2>
+<p>The token injection system bridges the integration pipeline and the
+manuscript prose. Tokens use double-brace syntax:
+<code>{{integration.fonds_loaded}}</code> expands to the integer count
+of fonds successfully loaded during the most recent integration run.
+Tokens are resolved by <code>scripts/03_generate_manuscript.py</code>,
+which reads <code>output/data/manuscript_variables.json</code> and
+substitutes each token before the manuscript is passed to the rendering
+engine.</p>
+<p>The current <code>manuscript_variables.json</code> contains the
+following summary values (see <span class="citation"
+data-cites="fig:counts">@fig:counts</span> for a visual
+representation):</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{{integration.fonds_loaded}}</code></td>
+<td>{{integration.fonds_loaded}}</td>
+</tr>
+<tr>
+<td><code>{{integration.rules_sets_ok}}</code></td>
+<td>{{integration.rules_sets_ok}}</td>
+</tr>
+<tr>
+<td><code>{{integration.tools_discovered}}</code></td>
+<td>{{integration.tools_discovered}}</td>
+</tr>
+<tr>
+<td><code>{{integration.bib_entries}}</code></td>
+<td>{{integration.bib_entries}}</td>
+</tr>
+</tbody>
+</table>
+<p>This table is itself token-injected: the values shown are those
+produced by the pipeline, not hard-coded by the manuscript author. If
+the pipeline results change — for example, because a new fond is added —
+re-running <code>scripts/03_generate_manuscript.py</code> updates the
+manuscript automatically, without manual editing. This property is
+central to reproducibility: the manuscript’s quantitative claims are
+always consistent with the code that generated them
+[Stodden2016enhancing].</p>
+<h2 id="methods-the-script-pipeline">Methods: The Script Pipeline</h2>
+<p>Three thin orchestration scripts govern the integration workflow
+(<span class="citation"
+data-cites="fig:pipeline">@fig:pipeline</span>):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Script</th>
+<th>Purpose</th>
+<th>Key output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scripts/01_validate_sources.py</code></td>
+<td>Validate presence and well-formedness of all resources</td>
+<td>Console report</td>
+</tr>
+<tr>
+<td><code>scripts/02_run_integration.py</code></td>
+<td>Run <code>run_integration_demo()</code> and print JSON summary</td>
+<td>Console JSON</td>
+</tr>
+<tr>
+<td><code>scripts/03_generate_manuscript.py</code></td>
+<td>Write <code>output/data/manuscript_variables.json</code></td>
+<td>JSON file</td>
+</tr>
+</tbody>
+</table>
+<p>Each script is ≤ 50 lines, imports all business logic from
+<code>src/</code>, and uses <code>argparse</code> for optional flags.
+This thin-orchestrator pattern [Wilson2014best] ensures that all
+testable logic is in <code>src/</code> at ≥ 90% coverage, while the
+scripts themselves remain readable without a test suite.</p>
+<h2 id="resilience-design">Resilience Design</h2>
+<p>The integration layer enforces resilience at three levels,
+corresponding to the three failure modes a monorepo integration pipeline
+encounters:</p>
+<ol type="1">
+<li><p><strong>Resource absence</strong>: A fond, rule set, or tool
+directory may not yet exist if the resource was created by a parallel
+agent that has not yet completed. All three reader modules return
+<code>None</code> or empty collections in this case, and
+<code>run_integration_demo()</code> reports the missing resource in the
+<code>summary</code> dict without raising.</p></li>
+<li><p><strong>Schema malformation</strong>: A manifest may be present
+but contain invalid YAML or missing required fields. Readers catch
+<code>yaml.YAMLError</code> and return a degraded result
+(<code>status="partial"</code> in rule validation; <code>None</code> in
+fond reading) rather than propagating the parse error.</p></li>
+<li><p><strong>Script absence</strong>: A tool may declare entrypoints
+in its manifest that have not yet been created.
+<code>validate_tool_scripts_exist()</code> detects this at discovery
+time and returns <code>status="partial"</code> with a list of missing
+script paths, so the pipeline can report the defect without attempting
+to invoke a non-existent script.</p></li>
+</ol>
+<p>This three-level resilience design reflects the principle that
+shared-resource pipelines should fail <em>informatively</em> rather than
+<em>catastrophically</em> — surfacing the cause of incompleteness in
+structured output that downstream consumers can act on
+[Taschuk2017ten].</p>
+<h2 id="test-coverage">Test Coverage</h2>
+<p>The four <code>src/</code> modules are covered by 38 tests across
+four test files in <code>tests/</code>. Tests use real file paths, real
+YAML files, and real BibTeX content rather than mocks, ensuring that
+coverage numbers reflect genuine code paths through the
+resource-discovery logic. The current coverage report shows ≥ 90% line
+coverage for all four modules. The
+<code>tests/test_integration.py</code> suite includes an end-to-end test
+that calls <code>run_integration_demo()</code> and asserts that the
+<code>summary</code> dict contains the expected keys with non-negative
+integer values — a contract test that verifies the token injection
+pipeline’s data source.</p>
+</body>
+</html>

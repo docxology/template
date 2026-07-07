@@ -1,0 +1,9 @@
+\frametitle{Rules and Manuscript Variables}
+\protect\phantomsection\label{rules-and-manuscript-variables}
+Strong rule validation counts are injected into the manuscript through
+the token system. The token \texttt{\{\{integration.rules\_sets\_ok\}\}}
+expands to the count of rule sets that returned \texttt{status="ok"}
+during the integration run. This creates a verifiable link between the
+pipeline's actual behaviour and the manuscript's claims --- the
+manuscript cannot assert successful validation without the pipeline
+having actually succeeded.

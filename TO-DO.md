@@ -14,23 +14,23 @@ This file tracks live work after the `v3.5.1` release (latest published release:
 
 ## Live state snapshot
 
-Refreshed on **2026-06-27** on branch `main` during the contributor-strategy
-docs pass. Re-run the
-commands in the **Source** column before copying any number into prose; live
-counts belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), not
-hard-coded here.
+Rows below are refreshed independently — check each row's own as-of date, not
+a single blanket date for the whole table. Re-run the commands in the
+**Source** column before copying any number into prose; live counts belong in
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), not hard-coded here.
 
 | Gate or surface | Current value | Source |
 | --- | --- | --- |
-| Package version | `3.5.1` | `pyproject.toml#[project].version` |
-| Latest published release | `v3.5.1` (GitHub release; tag exists locally) | `gh-axi release list --limit 10`, `git tag --list "v3.5*"` |
-| Public source scope | `infrastructure` plus 12 public exemplar `src/` trees | `uv run python -m infrastructure.project.public_scope source-paths` |
+| Package version | `3.5.1` (as of 2026-06-27, not reverified) | `pyproject.toml#[project].version` |
+| Latest published release | `v3.5.1` (GitHub release; tag exists locally) (as of 2026-06-27, not reverified) | `gh-axi release list --limit 10`, `git tag --list "v3.5*"` |
+| Public source scope | `infrastructure` plus 18 public exemplar `src/` trees (as of 2026-07-07, EXEMPLAR-AUDIT-2026-07-07) | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Public exemplars | Link the generated roster; do not copy it here | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) |
 | Canonical generated facts | Importable infrastructure packages, infrastructure Python-module count, project-scope + publishing test collections, and per-exemplar coverage — all live-derived; do not hard-code here | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) (regenerate with `uv run python scripts/docgen/counts.py --write`) |
-| Open GitHub PRs | 1 open: Dependabot PR #32 (`actions/checkout` 7.0.0) | `gh-axi pr list --limit 20` |
-| Docs lint status | links-only, consistency-only, and doc-pairs rerun during the 2026-06-27 docs pass; current failures are in active literature-meta-analysis, active-inference `.omo`, and in-progress publishing lanes | `uv run python scripts/audit/lint_docs.py --links-only --quiet --json`, `--consistency-only`, `--doc-pairs-only` |
-| Mermaid lint status | not rerun in the contributor-strategy docs pass | `uv run python scripts/audit/lint_docs.py --mermaid-only --quiet --json` |
-| Release verification baseline | `v3.5.1` is the latest GitHub release, but the current local tree is dirty; do not treat this snapshot as release readiness | `gh-axi release view v3.5.1`, `git status --short --branch` |
+| Open GitHub PRs | 1 open: Dependabot PR #32 (`actions/checkout` 7.0.0) (as of 2026-06-27, not reverified) | `gh-axi pr list --limit 20` |
+| Health gate status | `uv run python -m infrastructure.core.health`: 11/11 PASS (as of 2026-07-07, EXEMPLAR-AUDIT-2026-07-07 — was 9/11, docs-lint + api-reference FAIL, fixed this session) | `uv run python -m infrastructure.core.health` |
+| Docs lint status | 0 findings (as of 2026-07-07, EXEMPLAR-AUDIT-2026-07-07 — the 2026-06-27 "active literature-meta-analysis / active-inference / publishing lanes" failures were resolved by an intervening session; not independently reverified against that specific claim, only that the gate is currently clean) | `uv run python -m infrastructure.core.health --gates=docs-lint`, or `uv run python scripts/audit/lint_docs.py --quiet` |
+| Mermaid lint status | rolled into the docs-lint row above as of 2026-07-07 | `uv run python scripts/audit/lint_docs.py --mermaid-only --quiet --json` |
+| Release verification baseline | `v3.5.1` is the latest GitHub release, but the current local tree is dirty; do not treat this snapshot as release readiness (as of 2026-06-27, not reverified) | `gh-axi release view v3.5.1`, `git status --short --branch` |
 
 ---
 
@@ -38,6 +38,47 @@ hard-coded here.
 
 Keep this section short. Details live in release notes or archived audits.
 
+- **EXEMPLAR-AUDIT-2026-07-07 — deep repo review + all 18 public exemplars verified (2026-07-07, [Unreleased]):**
+  parallel per-exemplar audit (docs sync, thin-orchestrator composability,
+  manuscript config, CI wiring) across all 18 `projects/templates/*`, plus a
+  repo-wide gate sweep. Fixed: (1) `infrastructure/validation/docs/consistency/import_resolution.py`
+  had a real bug — a trailing comment containing its own `(...)` truncated
+  multi-line import accumulation early, false-flagging `fonds/rules/tools/connectors`
+  `SKILL.md` as "unparseable" (2 new regression tests added); (2) `infrastructure/provenance/SKILL.md`
+  documented an entirely fictional API (`ProvenanceStore`, `ProvenanceEdge`,
+  `ReviewRecord`, a config-driven `provenance:` block) — rewritten against the
+  real `Provenance`/`ArtifactNode`/`RunNode`/`Edge` API and live-verified end
+  to end; (3) **critical**: `scripts/pipeline/stage_10_research_workflow.py`
+  raised `ImportError` on every invocation, including `--help` — it imported
+  a `WORKFLOW_STAGES` symbol and called `ResearchWorkflow.describe()`/`.stage()`
+  as classmethods, none of which exist on the real (instance-based, lowercase
+  stage names) API; had zero test coverage despite `tests/infra_tests/research/AGENTS.md`
+  claiming otherwise — fixed and given a full regression suite; (4) `infrastructure/research/{AGENTS,README,SKILL}.md`
+  `WORKFLOW_STAGES`/`WorkflowConfig` import drift fixed, with the larger
+  aspirational 7-stage-with-subagents design (vs. the simpler implemented one)
+  flagged inline rather than invented away; (5) `template_autopoiesis` was
+  missing the `.agents/skills/template-autopoiesis/SKILL.md` its own `TODO.md`
+  claimed as done — created; (6) doc-overclaims fixed in `template_search_project/README.md`
+  (paperclip source claimed to "degrade gracefully"; it fail-fasts by design)
+  and `template_pools_rules_tools/README.md` (stale `src/`/`scripts/`/`tests/`
+  structure tree); (7) `INDEX.md` (a HumOS-side nested-checkout bookkeeping
+  file, not part of this repo's own content) gitignored — was untracked but
+  not ignored, a public-repo hygiene risk, and a `docs-lint` false-positive.
+  `./run.sh` health went FAIL (docs-lint + stale api-reference) → PASS 11/11.
+  (8) **critical, CI-breaking:** `uv run pytest tests/regression/` — the
+  claim-binding tier CI actually runs — could not even collect;
+  `template_madlib`'s regression-pin loader assumed a bare-import `src/`
+  layout that stopped being true when the module was split into files with
+  real relative imports. Fixed via the same `spec_from_file_location`
+  alias-exec pattern `_autoscientists_src` already uses; while fixing it,
+  found and refreshed 3 stale `template_template` regression pins
+  (14→16 pipeline stages, 16→18 exemplar roster, 23→28 modules — organic
+  repo growth since the 2026-07-01 pin date). `tests/regression/`: 0
+  collectible → 55 passed. See **EXEMPLAR-AUDIT-FOLLOWUP-1** below for
+  two lower-risk composability findings deferred rather than risking a
+  same-session refactor of exemplar business logic, plus 8 pre-existing
+  `tests/infra_tests/` failures (stale hardcoded counts, same class as the
+  pins above) noted but not fixed this session.
 - **SECURITY-AUDIT-1 — pip-audit exemption re-baselined (2026-07-03, [Unreleased]):**
   added `PYSEC-2026-597` to `.github/pip-audit-ignore.txt` for `nltk 3.9.4`
   after `pip-audit` reported no fixed version. Acceptance evidence: exemption is
@@ -217,6 +258,88 @@ Keep this section short. Details live in release notes or archived audits.
 ---
 
 ## Active backlog
+
+### EXEMPLAR-AUDIT-FOLLOWUP-1 — thin-orchestrator violations in two exemplars
+
+- **Source:** EXEMPLAR-AUDIT-2026-07-07 (see "Recently shipped"), refuted-tested
+  by a live re-probe agent — both confirmed real on HEAD `646bb15`.
+- **`template_autoscientists/scripts/hermes_proposer.py` — FALSE POSITIVE,
+  refuted 2026-07-07 on deeper investigation, no fix needed:** the original
+  finding ("implements real business logic — prompt construction, live LLM
+  query, JSON-reply parsing — directly in `scripts/`") missed that
+  `src/agents.py`'s own module docstring documents this placement as
+  intentional: `HermesProposer` lives in `scripts/hermes_proposer.py`
+  specifically **so `src/` stays infrastructure-free** (no live-Ollama/LLM
+  import in the deterministic, always-tested core); `src/__init__.py` lazily
+  re-exports it via `__getattr__`. Both the original audit agent and its
+  independent refutation agent missed this documented rationale — a live
+  Gate-J example of a finding that looked real from the outside but wasn't,
+  caught only by reading the sibling module's own docstring before acting.
+- **`template_code_project/scripts/09_provenance_record.py`** (medium
+  severity): reimplements a content-addressed DAG store inline instead of
+  using `infrastructure.provenance.Provenance`, producing an incompatible
+  on-disk schema from the repo's own provenance module. **Acceptance:**
+  either (a) migrate the script to call `infrastructure.provenance.Provenance`
+  directly (preferred — matches `scripts/pipeline/stage_09_provenance_record.py`'s
+  pattern), or (b) if the inline schema is intentional (e.g. this exemplar
+  predates the shared module), document why in the script's docstring and add
+  a regression test pinning the on-disk schema so it can't silently drift
+  further.
+- Deferred rather than fixed same-session: `template_code_project`'s finding
+  was fixed in iteration 8b (see "Recently shipped" below);
+  `template_autoscientists`'s was refuted — `src/agents.py`'s own docstring
+  documents `HermesProposer` living in `scripts/` as intentional (keeps
+  `src/` infrastructure-free of live-Ollama deps). No further action needed.
+- **New finding (iteration 8b, not fixed):** the "combined coverage gate"
+  step of `uv run python scripts/pipeline/stage_01_test.py --project-only
+  --all-projects --public-projects` (75% union-coverage floor) fails with
+  `No source for code: '.../pytest-<N>/test_run_project_tests_fail_wh0/iso_project/src/__init__.py'`
+  — reproducible from a clean checkout, unrelated to any of this session's
+  edits. Root cause (not fully traced): `template_search_project/tests/test_analysis.py::test_run_project_tests_fail_when_pytest_errors`
+  spawns a real `pytest` subprocess against a `tmp_path`-scoped isolated
+  fixture project to test `run_project_tests()`; that subprocess appears to
+  write coverage data into a file the parent's "combined coverage gate"
+  later tries to combine, referencing a source path that no longer exists
+  once `tmp_path` is torn down. All 18 projects' own per-project gates pass;
+  only this aggregate union-coverage step is affected. Needs someone to trace
+  `infrastructure.core.test_runner`'s combine step and confirm whether
+  `COVERAGE_FILE`/`COV_CORE_DATAFILE` env vars are leaking into the
+  subprocess, or scope the subprocess's coverage data file explicitly.
+- **Fixed this session — CI-breaking, not just dormant:** `uv run pytest
+  tests/regression/` (wired into `.github/workflows/ci.yml`, the claim-binding
+  tier from R1) could not even **collect** on clean HEAD `646bb15` —
+  `tests/regression/projects/template_madlib/tables/test_configuration_counts_claims.py`
+  raised `ImportError: attempted relative import with no known parent
+  package`. Root cause: its `_load_src_package()` loader assumed
+  `template_madlib/src` used bare intra-package imports (`from config import
+  ...`) and exec'd each submodule as a standalone top-level module — stale
+  relative to the actual source, which has used ordinary relative imports
+  (`from .config import ...`) throughout since the module was split into
+  multiple files. Fixed by switching to the same `spec_from_file_location`
+  alias-exec pattern `_autoscientists_src` already uses correctly. Also found
+  (once collection succeeded) 3 stale regression pins in
+  `tests/regression/pinned_values/template_template.json` — `pipeline_stages_declared`
+  (14→16), `public_exemplar_roster_count` (16→18), `module_count` (23→28,
+  outside its ±2 band) — legitimate organic repo growth since the 2026-07-01
+  pin date, re-derived live and refreshed with `refreshed_on`/`refresh_reason`
+  provenance fields (no prior precedent for a pin refresh in this repo; a
+  convention worth adopting for future refreshes). `uv run pytest
+  tests/regression/` now: 55 passed.
+- **Also confirmed pre-existing (not introduced this session, verified via
+  `git stash` against clean HEAD `646bb15`), part of the "tested" pillar gap,
+  not fixed this session:** 8 `tests/infra_tests/` failures with stale
+  hardcoded expectations — `test_single_stage.py::test_known_stage_key_is_mapped`
+  expects a render script named `*03_render_pdf.py`, actual is
+  `stage_03_render.py`; `test_mcp_server.py::TestInvokeCli::test_invokes_registered_cli`
+  hardcodes `len(stages) == 14`, actual is 16; plus `test_stage_registry.py`
+  (×2), `test_methods_orchestration.py` (×2),
+  `test_mcp_server.py::TestServeLoop::test_real_subprocess_stdio`,
+  `test_xml_parser_policy.py`, and
+  `test_repro_determinism.py::test_every_public_exemplar_declares_output_artifact`
+  (`template_autopoiesis`/`template_pools_rules_tools` repro manifests declare
+  no present output-artifact). Same class of self-pinned-hardcoded-count
+  drift as the `template_template` pins above; none investigated deeply
+  enough this session to safely fix.
 
 ### REVIEW-2026-07-02 — Multi-lens review remediation backlog
 

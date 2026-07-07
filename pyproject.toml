@@ -52,6 +52,11 @@ dependencies = [
   "scipy>=1.15.3",
   "textstat>=0.7.13",
   "jsonschema>=4.0.0",
+  # defusedxml: infrastructure/search/connectors parses XML/Atom feeds from
+  # external APIs (arXiv, etc.) — the repo's XML parser policy
+  # (tests/infra_tests/validation/test_xml_parser_policy.py) requires
+  # defusedxml over stdlib xml.etree.ElementTree to avoid XXE-class issues.
+  "defusedxml>=0.7.1",
 ]
 
 

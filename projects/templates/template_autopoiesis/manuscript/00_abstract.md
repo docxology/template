@@ -42,6 +42,8 @@ flowchart LR
 ### Grammar product space
 
 ```mermaid
+%% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
+%% (src/manuscript_variables.py) injected at render time, not literal mermaid
 flowchart TB
     A[primitive_domain: 5] --> EP[Effective product: {{EFFECTIVE_PRODUCT_SIZE}} cells]
     T[track: 3] --> EP

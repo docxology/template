@@ -11,15 +11,28 @@ research infrastructure.
 ## Public API
 
 ```python
-from infrastructure.research import ResearchWorkflow, ResearchStage, WORKFLOW_STAGES
+from infrastructure.research import ResearchWorkflow, ResearchStage
+
+workflow = ResearchWorkflow()
 
 # Markdown rendering of the full workflow (for agent context)
-md = ResearchWorkflow.describe()
+md = workflow.describe()
 
-# Access individual stages
-stage = ResearchWorkflow.stage("LITERATURE")
-print(stage.template_commands)
+# Access individual stages (implemented stage names: scope, survey,
+# hypothesise, experiment, validate, review, write — see Note below)
+stage = workflow.stage("survey")
+print(stage.description)
 ```
+
+> **Note (doc/code drift, tracked for follow-up):** the table below and the
+> rest of this file describe a richer OpenScience-ported 7-stage design
+> (SCOPE/LITERATURE/REASON/DESIGN/COMPUTE/SYNTHESIZE/WRITE with per-stage
+> sub-agent fan-out counts and template commands). The implemented
+> `ResearchWorkflow`/`ResearchStage` in `workflow.py` is a simpler 7-stage
+> descriptive model (`scope, survey, hypothesise, experiment, validate,
+> review, write` — no `parallel_subagents` or `template_commands` fields).
+> Treat the table and provenance-integration examples below as design intent,
+> not a verified API surface, until reconciled.
 
 ## Workflow Stages
 

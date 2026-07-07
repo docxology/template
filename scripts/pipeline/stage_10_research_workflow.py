@@ -8,7 +8,7 @@ a specific stage.
 Usage::
 
     uv run python scripts/pipeline/stage_10_research_workflow.py --project <name> --describe
-    uv run python scripts/pipeline/stage_10_research_workflow.py --project <name> --stage SCOPE
+    uv run python scripts/pipeline/stage_10_research_workflow.py --project <name> --stage survey
 
 Exit codes:
     0: Workflow description or stage validation completed.
@@ -26,7 +26,7 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success  # noqa: E402
-from infrastructure.research import ResearchWorkflow, WORKFLOW_STAGES  # noqa: E402
+from infrastructure.research import ResearchWorkflow  # noqa: E402
 
 logger = get_logger(__name__)
 
@@ -37,10 +37,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Research Workflow Stage")
     parser.add_argument("--project", default="project", help="Project name in projects/")
     parser.add_argument("--describe", action="store_true", help="Print full workflow description")
-    parser.add_argument("--stage", default=None, help="Workflow stage name (SCOPE, LITERATURE, etc.)")
+    parser.add_argument(
+        "--stage",
+        default=None,
+        help=f"Workflow stage name ({', '.join(ResearchWorkflow.STAGE_NAMES)})",
+    )
     args = parser.parse_args()
 
     log_header(f"STAGE 10: Research Workflow (Project: {args.project})", logger)
+
+    workflow = ResearchWorkflow()
 
     # Check if research workflow is configured
     project_dir = Path.cwd() / "projects" / args.project
@@ -61,34 +67,31 @@ def main() -> int:
         return 2
 
     if args.describe:
-        description = ResearchWorkflow.describe()
-        print(description)
+        print(workflow.describe())
         log_success("Workflow description printed")
         return 0
 
     if args.stage:
-        stage = ResearchWorkflow.stage(args.stage.upper())
-        if stage is None:
-            valid = ", ".join(s.name for s in WORKFLOW_STAGES)
-            logger.error(f"Unknown stage '{args.stage}'. Valid: {valid}")
+        try:
+            stage = workflow.stage(args.stage.lower())
+        except KeyError as e:
+            logger.error(str(e))
             return 1
-        logger.info(f"Stage {stage.order}: {stage.name}")
-        logger.info(f"  Required: {stage.required}")
-        logger.info(f"  Sub-agent: {stage.subagent or 'none'}")
-        logger.info(f"  Parallel sub-agents: {stage.parallel_subagents}")
-        logger.info(f"  Outputs: {', '.join(stage.outputs)}")
-        if stage.template_commands:
-            logger.info("  Template commands:")
-            for cmd in stage.template_commands:
-                logger.info(f"    $ {cmd}")
+        logger.info(f"Stage {stage.order}: {stage.name} ({stage.label})")
+        logger.info(f"  Description: {stage.description}")
+        logger.info(f"  Status: {stage.status.value}")
+        logger.info(f"  Inputs: {', '.join(stage.inputs) or 'none'}")
+        logger.info(f"  Outputs: {', '.join(stage.outputs) or 'none'}")
+        if stage.gate:
+            logger.info(f"  Gate: {stage.gate}")
         log_success(f"Stage {stage.name} details")
         return 0
 
     # Default: show summary
-    logger.info(f"Research workflow has {len(WORKFLOW_STAGES)} stages")
-    for s in WORKFLOW_STAGES:
-        required = "required" if s.required else "optional"
-        logger.info(f"  {s.order}. {s.name} ({required})")
+    stages = workflow.all_stages()
+    logger.info(f"Research workflow has {len(stages)} stages")
+    for s in stages:
+        logger.info(f"  {s.order}. {s.name} ({s.status.value})")
     log_success("Workflow summary")
     return 0
 

@@ -22,24 +22,31 @@ hand-copying a number from the rendered manuscript.
 
 No mocks: real deterministic objects only, in line with the repo no-mock policy.
 
-Import-isolation note (madlib-specific): unlike the other exemplars,
-``template_madlib``'s ``src`` package uses *bare* intra-package imports
-(``from config import ...``) rather than relative imports, and it ships
-``config`` / ``tokens`` / ``analysis`` / ``manuscript_variables`` submodule
-names that also exist in other exemplars. A plain
-``spec_from_file_location`` alias exec (the autoscientists shape) raises
-``ModuleNotFoundError: No module named 'config'`` here. So ``_load_src_package``
-loads the bare submodules in dependency order with ``src/`` temporarily on
-``sys.path``, re-homes them under a project-unique ``_madlib_src.`` alias, and
-pops the bare names back out of ``sys.modules`` afterward — keeping the real
-tested functions in scope (no mocks) and staying collision-free regardless of
-collection order, exactly as the ``_autoscientists_src`` alias does for its
-relative-import package.
+Import-isolation note: ``template_madlib``'s ``src`` package uses ordinary
+relative intra-package imports (``from .config import ...``), the same shape
+as the other exemplars, and it ships ``config`` / ``tokens`` / ``analysis`` /
+``manuscript_variables`` submodule names that also exist in other exemplars'
+``src`` packages. ``_load_src_package`` therefore uses the same
+``spec_from_file_location`` alias-exec pattern as ``_autoscientists_src``:
+register ``src/__init__.py`` under a project-unique ``_madlib_src`` key in
+``sys.modules`` *before* executing it (with ``submodule_search_locations``
+pointing at ``src/``) so every relative import inside the package — and
+inside submodules imported afterward via ``_madlib_src.<name>`` — resolves
+against the alias, not the bare top-level name, and stays collision-free
+regardless of collection order.
+
+(A prior version of this loader assumed ``template_madlib/src`` used *bare*
+intra-package imports and execed each submodule as a standalone top-level
+module — that assumption was stale relative to the actual source, which has
+used relative imports throughout since the module was split into multiple
+files, so the bare-exec approach raised ``ImportError: attempted relative
+import with no known parent package`` and could not even collect.)
 """
 
 from __future__ import annotations
 
 import importlib
+import importlib.util
 from pathlib import Path
 import sys
 from types import ModuleType
@@ -54,58 +61,39 @@ SRC_DIR = PROJECT_ROOT / "src"
 
 _PKG_ALIAS = "_madlib_src"
 
-# Bare intra-package submodule names this exemplar defines, in dependency order
-# (``config`` is the leaf; ``manuscript_variables`` is the root). These names
-# would collide with other exemplars' top-level modules if left in
-# ``sys.modules``, so the loader below cleans them up after exec.
-_BARE_SUBMODULES = (
-    "config",
-    "tokens",
-    "composition",
-    "analysis_fields",
-    "analysis_figures",
-    "analysis_reports",
-    "analysis",
-    "manuscript_variables",
-)
-
 
 def _load_src_package() -> ModuleType:
     """Load this exemplar's ``src`` package under a project-unique alias.
 
-    ``template_madlib``'s ``src`` uses bare intra-package imports, so a plain
-    aliased ``spec_from_file_location`` exec fails (``No module named
-    'config'``). Instead: temporarily put ``src/`` on ``sys.path``, import the
-    bare submodules in dependency order, re-home each under the
-    ``_madlib_src.`` alias namespace, then pop the bare names back out of
-    ``sys.modules`` so they cannot collide with any other exemplar's
-    same-named module in the shared pytest session.
+    Every public exemplar ships a top-level ``src`` package, so a bare
+    ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
+    once a second project's regression test joins the same pytest session.
+    Registering ``src/__init__.py`` under a namespaced key *before* executing
+    it (with ``submodule_search_locations`` set) lets every relative import
+    inside the package — and inside submodules imported afterward via
+    ``_madlib_src.<name>`` — resolve against the alias, keeping the real
+    tested functions in scope (no mocks) and staying collision-free
+    regardless of collection order.
     """
 
     if _PKG_ALIAS in sys.modules:
         return sys.modules[_PKG_ALIAS]
-
-    saved = {name: sys.modules.pop(name, None) for name in _BARE_SUBMODULES}
-    sys.path.insert(0, str(SRC_DIR))
-    try:
-        package = ModuleType(_PKG_ALIAS)
-        package.__path__ = [str(SRC_DIR)]  # type: ignore[attr-defined]
-        for name in _BARE_SUBMODULES:
-            module = importlib.import_module(name)
-            setattr(package, name, module)
-            sys.modules[f"{_PKG_ALIAS}.{name}"] = module
-        sys.modules[_PKG_ALIAS] = package
-        return package
-    finally:
-        sys.path.remove(str(SRC_DIR))
-        for name in _BARE_SUBMODULES:
-            sys.modules.pop(name, None)
-            if saved[name] is not None:
-                sys.modules[name] = saved[name]
+    src_init = SRC_DIR / "__init__.py"
+    spec = importlib.util.spec_from_file_location(
+        _PKG_ALIAS,
+        src_init,
+        submodule_search_locations=[str(SRC_DIR)],
+    )
+    assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
+    package = importlib.util.module_from_spec(spec)
+    sys.modules[_PKG_ALIAS] = package
+    spec.loader.exec_module(package)
+    return package
 
 
 def _submodule(name: str) -> ModuleType:
-    return getattr(_load_src_package(), name)
+    _load_src_package()
+    return importlib.import_module(f"{_PKG_ALIAS}.{name}")
 
 
 generate_variables = _submodule("manuscript_variables").generate_variables

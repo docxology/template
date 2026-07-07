@@ -1,0 +1,22 @@
+{
+  "project_name": "templates/template_pools_rules_tools",
+  "total_events": 1,
+  "errors": 1,
+  "warnings": 0,
+  "events": [
+    {
+      "severity": "ERROR",
+      "category": "RenderingError",
+      "message": "Missing LaTeX package: cleveref",
+      "code": null,
+      "file_path": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/projects/templates/template_pools_rules_tools/output/pdf/_combined_manuscript.tex",
+      "line_number": null,
+      "fix_suggestion": "Missing LaTeX package: cleveref",
+      "context": {
+        "package": "cleveref",
+        "source": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/projects/templates/template_pools_rules_tools/output/pdf/_combined_manuscript.tex",
+        "log_file": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/projects/templates/template_pools_rules_tools/output/pdf/_combined_manuscript.log"
+      }
+    }
+  ]
+}

@@ -19,12 +19,12 @@ def test_stage_dispatch_covers_menu_keys() -> None:
 
 def test_render_pdf_maps_to_expected_script() -> None:
     script, *_args = script_argv_for_stage("render_pdf")
-    assert script.endswith("03_render_pdf.py")
+    assert script.endswith("stage_03_render.py")
 
 
 def test_tests_stage_includes_infra_smoke_scope() -> None:
     script, *args = script_argv_for_stage("tests")
-    assert script.endswith("01_run_tests.py")
+    assert script.endswith("stage_01_test.py")
     assert "--infra-scope" in args
     assert "pipeline-smoke" in args
 

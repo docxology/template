@@ -7,7 +7,9 @@ Queries the arXiv Atom/OpenSearch API
 from __future__ import annotations
 
 import re
-import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element
+
+import defusedxml.ElementTree as ET
 
 from infrastructure.search.connectors.http import ConnectorHttpClient, ConnectorHttpError
 from infrastructure.search.connectors.types import (
@@ -78,7 +80,7 @@ class ArxivConnector:
 
     def _parse_feed(self, text: str, opts: SearchOptions) -> list[ConnectorHit]:
         try:
-            root = ET.fromstring(text)  # nosec B314 — arXiv Atom XML from hard-coded HTTPS endpoint, not untrusted input
+            root = ET.fromstring(text)
         except ET.ParseError as exc:
             raise ConnectorError(f"Invalid arXiv Atom feed: {exc}") from exc
 
@@ -97,7 +99,7 @@ class ArxivConnector:
         return hits
 
     @staticmethod
-    def _parse_entry(entry: ET.Element) -> ConnectorHit | None:
+    def _parse_entry(entry: Element) -> ConnectorHit | None:
         id_elem = entry.find("atom:id", _NS)
         if id_elem is None or not id_elem.text:
             return None

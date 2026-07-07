@@ -11,6 +11,39 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+### 2026-07-07 — deep repo review; all 18 public exemplars verified; two CI-breaking bugs fixed
+- `infrastructure.core.health`: 9/11 → 11/11 PASS. Fixed a real bug in
+  `infrastructure/validation/docs/consistency/import_resolution.py` (a
+  trailing comment's balanced `(...)` truncated multi-line import
+  accumulation early, false-flagging `fonds`/`rules`/`tools`/`connectors`
+  `SKILL.md` as unparseable) — 2 new regression tests added.
+- Rewrote `infrastructure/provenance/SKILL.md` against the real
+  `Provenance`/`ArtifactNode`/`RunNode`/`Edge` API (previously documented an
+  entirely fictional `ProvenanceStore`/`ProvenanceEdge`/`ReviewRecord` API and
+  a config block nothing reads); every example live-verified.
+- **Critical, fixed:** `scripts/pipeline/stage_10_research_workflow.py` raised
+  `ImportError` on every invocation, including `--help` — stale
+  `WORKFLOW_STAGES` import and classmethod calls against an API that no
+  longer exists. Fixed; added a full regression suite (previously zero
+  coverage despite `tests/infra_tests/research/AGENTS.md` claiming
+  otherwise).
+- **Critical, fixed:** `uv run pytest tests/regression/` (CI-wired
+  claim-binding tier) could not collect at all — `template_madlib`'s
+  regression-pin loader assumed a stale bare-import `src/` layout. Fixed by
+  adopting the working `_autoscientists_src` alias-exec pattern; refreshed 3
+  stale `template_template` pins found once collection was unblocked
+  (14→16 pipeline stages, 16→18 exemplar roster, 23→28 modules).
+- Fixed doc overclaims: `template_search_project/README.md` (paperclip
+  source claimed to degrade gracefully; it fail-fasts by design),
+  `template_pools_rules_tools/README.md` (stale structure tree), and created
+  `template_autopoiesis/.agents/skills/template-autopoiesis/SKILL.md` (its
+  own `TODO.md` had checked this off as done though it never existed).
+- Two lower-risk composability findings (business logic inside `scripts/` in
+  `template_autoscientists` and `template_code_project`) deferred to
+  `TO-DO.md` `EXEMPLAR-AUDIT-FOLLOWUP-1` with acceptance lines.
+- See `TO-DO.md` "Recently shipped → EXEMPLAR-AUDIT-2026-07-07" for full
+  detail and evidence.
+
 ### 2026-07-05 — template_pools_rules_tools promoted to public exemplar
 - `template_pools_rules_tools` moved from local development to `projects/templates/` as 17th public exemplar
 - Registered in `public_scope.py`, `.gitignore` negations, `projects/AGENTS.md`, `projects/templates/AGENTS.md`, root `README.md`

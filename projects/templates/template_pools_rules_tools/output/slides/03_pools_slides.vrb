@@ -1,0 +1,30 @@
+\frametitle{The \texttt {fonds\_reader} Module}
+\protect\phantomsection\label{the-fonds_reader-module}
+The \breaktt{src/fonds\_reader.py} module provides three reader functions
+--- one per fond type --- plus a convenience aggregator:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ src.fonds\_reader }\ImportTok{import}\NormalTok{ (}
+\NormalTok{    read\_bibliography\_fond,}
+\NormalTok{    read\_contacts\_fond,}
+\NormalTok{    read\_datasets\_fond,}
+\NormalTok{    read\_all\_fonds,}
+\NormalTok{)}
+
+\NormalTok{bib      }\OperatorTok{=}\NormalTok{ read\_bibliography\_fond()   }\CommentTok{\# dict | None}
+\NormalTok{contacts }\OperatorTok{=}\NormalTok{ read\_contacts\_fond()       }\CommentTok{\# dict | None}
+\NormalTok{datasets }\OperatorTok{=}\NormalTok{ read\_datasets\_fond()       }\CommentTok{\# dict | None}
+\NormalTok{all\_fonds }\OperatorTok{=}\NormalTok{ read\_all\_fonds()          }\CommentTok{\# \{"bibliography": ..., "contacts": ..., "datasets": ...\}}
+\end{Highlighting}
+\end{Shaded}
+
+Each reader resolves the repository root from
+\texttt{pathlib.Path(\_\_file\_\_).resolve().parents{[}4{]}} and uses a
+\texttt{try/except} block that catches both \breaktt{FileNotFoundError}
+and \texttt{yaml.YAMLError}. Returning \texttt{None} on failure rather
+than raising ensures that the integration pipeline degrades gracefully
+when a fond has not yet been populated by a parallel agent
+\breakseq{[@Taschuk2017ten]}. In the current run,
+\{\{integration.fonds\_loaded\}\} of 3 expected fonds were successfully
+loaded (see @fig:counts).

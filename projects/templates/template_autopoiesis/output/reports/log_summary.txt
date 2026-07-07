@@ -1,0 +1,12 @@
+
+LOG ANALYSIS: pipeline.log
+============================================================
+
+Total Lines: 2
+
+Message Breakdown:
+  DEBUG: 1
+  ERROR: 1
+
+Recent Errors (1):
+  • [2026-07-07 06:55:04,098] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 6: PDF Renderin

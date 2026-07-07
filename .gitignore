@@ -1,3 +1,10 @@
+# Local host-environment bookkeeping (e.g. HumOS's own nested-checkout
+# index note) — never part of this repo's own public content; must never be
+# tracked/pushed. Untracked-but-not-ignored here previously tripped the
+# docs-lint ghost-project check as a false alarm for the outer monorepo's
+# own bucket path.
+/INDEX.md
+
 # Python
 __pycache__/
 *.py[cod]

@@ -1,0 +1,16 @@
+{
+  "artifact_manifest_hash": "4405e28336f7c7181b42c931b2cae01f2be2494a76c6f063aa121a8abe9e7efb",
+  "artifacts": {
+    "output/reports/test_results.json": "a8d96afb33ea0988a6bfe3f9022d9c8d02a038be98c5f8f4af65fa30913f288f",
+    "output/reports/test_results.md": "a9d4d91ec161904713a57699638c8b4645546f0c88be9ad9c8bbb5ba76c72891"
+  },
+  "evidence_fact_count": 0,
+  "path": "output/reports/snapshots/stage-04-project-tests.json",
+  "stage_name": "Project Tests",
+  "stage_num": 4,
+  "timestamp": "2026-07-07T13:52:36+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

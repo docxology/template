@@ -41,6 +41,25 @@ def _module_member_exists(module: str, name: str) -> bool:
         return False
 
 
+def _strip_line_comment(line: str) -> str:
+    """Strip a trailing ``# ...`` comment for paren-balance purposes only.
+
+    Doc examples routinely annotate each imported name with an inline
+    comment such as ``PUBLIC_FOND_NAMES,  # ('templates/x', ...)`` — a
+    balanced paren pair *inside the comment* must not be mistaken for the
+    import statement's own closing paren, or multi-line accumulation stops
+    one line too early and the truncated fragment fails to parse.
+    """
+    idx = line.find("#")
+    return line if idx == -1 else line[:idx]
+
+
+def _needs_continuation(stmt: str) -> bool:
+    """True if ``stmt`` is an incomplete multi-line import (unbalanced parens or `\\` EOL)."""
+    balance_check = "\n".join(_strip_line_comment(ln) for ln in stmt.splitlines())
+    return ("(" in balance_check and ")" not in balance_check) or stmt.rstrip().endswith("\\")
+
+
 def _resolve_import_statement(stmt: str) -> str | None:
     """Return an error string if an ``infrastructure`` import does not resolve, else None."""
     try:
@@ -106,7 +125,7 @@ def check_doc_imports_resolve(repo_root: Path) -> list[Inconsistency]:
                 if _IMPORT_START_RE.match(line):
                     stmt = line
                     j = i
-                    while ("(" in stmt and ")" not in stmt) or stmt.rstrip().endswith("\\"):
+                    while _needs_continuation(stmt):
                         j += 1
                         if j >= len(body_lines):
                             break

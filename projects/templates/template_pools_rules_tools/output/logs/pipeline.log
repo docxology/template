@@ -1,0 +1,2 @@
+[2026-07-07 06:52:08,080] [DEBUG] Set up log file handler: /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/projects/templates/template_pools_rules_tools/output/logs/pipeline.log
+[2026-07-07 06:52:50,492] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 6: PDF Rendering — Check stage logs for details

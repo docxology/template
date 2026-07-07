@@ -30,23 +30,33 @@ This project shows agents and developers how to:
 ```
 template_pools_rules_tools/
 ├── src/
-│   ├── fonds_reader.py       # Read fonds from fonds/templates/
-│   ├── rules_applier.py      # Load and apply rules from rules/templates/
-│   ├── tools_invoker.py      # Discover tools from tools/templates/
-│   └── integration.py        # Integration orchestrator
+│   ├── type_defs.py           # All TypedDict definitions — edit here first
+│   ├── fonds_reader.py        # Read fonds from fonds/templates/
+│   ├── rules_applier.py       # Load and apply soft rules from rules/templates/
+│   ├── strong_rule_evaluator.py  # Evaluate strong (hard-constraint) rules
+│   ├── tools_invoker.py       # Discover tools from tools/templates/
+│   ├── integration.py         # Integration orchestrator; generate_figure_data()
+│   ├── figures.py             # Figure generation for the manuscript
+│   └── __init__.py            # Re-exports all public symbols
 ├── scripts/
-│   ├── 01_validate_sources.py    # Validate all sources exist and are well-formed
-│   ├── 02_run_integration.py     # Run the full integration demo
-│   └── 03_generate_manuscript.py # Generate manuscript variables
+│   ├── 01_validate_sources.py       # Validate all sources exist and are well-formed
+│   ├── 02_run_integration.py        # Run the full integration demo
+│   ├── 03_generate_manuscript.py    # Generate manuscript variables
+│   └── 04_validate_strong_rules.py  # Validate strong-rule compliance
 ├── tests/
 │   ├── test_fonds_reader.py
 │   ├── test_rules_applier.py
+│   ├── test_strong_rule_evaluator.py
 │   ├── test_tools_invoker.py
-│   └── test_integration.py
+│   ├── test_integration.py
+│   ├── test_figures.py
+│   ├── test_property_based.py
+│   └── test_coverage_extras.py
 └── manuscript/
-    ├── config.yaml
-    ├── 01_abstract.md … 07_conclusion.md
-    └── references.bib
+    ├── config.yaml, config.yaml.example
+    ├── 00_frontmatter.md … 07_conclusion.md
+    ├── preamble.md, references.bib
+    └── figures/
 ```
 
 ## Quick Start

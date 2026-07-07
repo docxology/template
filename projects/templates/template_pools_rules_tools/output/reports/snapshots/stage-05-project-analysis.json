@@ -1,0 +1,17 @@
+{
+  "artifact_manifest_hash": "54796018a622791754bccc506e4c61d1635d3b5456b1a591c221c6784d8babcf",
+  "artifacts": {
+    "output/data/manuscript_variables.json": "347990c481111eec25985d506a401e23720843a0ca417bdd8d85b026abb790f1",
+    "output/reports/test_results.json": "a8d96afb33ea0988a6bfe3f9022d9c8d02a038be98c5f8f4af65fa30913f288f",
+    "output/reports/test_results.md": "a9d4d91ec161904713a57699638c8b4645546f0c88be9ad9c8bbb5ba76c72891"
+  },
+  "evidence_fact_count": 0,
+  "path": "output/reports/snapshots/stage-05-project-analysis.json",
+  "stage_name": "Project Analysis",
+  "stage_num": 5,
+  "timestamp": "2026-07-07T13:52:37+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

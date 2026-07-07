@@ -1,0 +1,225 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Conclusion}\label{sec:conclusion}
+
+\begin{frame}[fragile,allowframebreaks]{Summary}
+\protect\phantomsection\label{summary}
+This paper has presented \breaktt{template\_pools\_rules\_tools}, a
+meta-project exemplar demonstrating how research software projects
+embedded in a monorepo can integrate three categories of shared
+resources --- data pools (fonds), governance rules, and executable tools
+--- without tight coupling to any specific resource instance. The key
+contributions are:
+
+\begin{enumerate}
+\item
+  \textbf{A four-module architecture} (\texttt{fonds\_reader},
+  \texttt{rules\_applier}, \texttt{tools\_invoker},
+  \texttt{integration}) that provides a canonical pattern for
+  resource-aware project code in the template repository. Each module is
+  independently testable and independently deployable.
+\item
+  \textbf{A typed manifest convention} (\texttt{fonds.yaml},
+  \texttt{rules.yaml}, \texttt{tools.yaml}) that makes resource
+  capabilities explicit and checkable at pipeline initialisation time,
+  shifting failure detection from runtime to startup --- a significant
+  improvement for reproducibility \breakseq{[@Wilson2014best]}.
+\item
+  \textbf{A token injection pipeline} that links manuscript prose to
+  integration runtime statistics through \texttt{\{\{integration.*\}\}}
+  tokens, ensuring that quantitative claims in the manuscript are always
+  generated by the pipeline rather than authored manually. In the
+  current run this covered \{\{integration.fonds\_loaded\}\} fonds,
+  \{\{integration.rules\_sets\_ok\}\} rule sets,
+  \{\{integration.tools\_discovered\}\} tools, and
+  \{\{integration.bib\_entries\}\} bibliography entries.
+\item
+  \textbf{A three-level resilience design} --- resource absence, schema
+  malformation, and script absence --- that allows the pipeline to
+  degrade gracefully and report failures informatively rather than
+  crashing, consistent with best practices for robust research software
+  \breakseq{[@Taschuk2017ten]}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Design Decisions Revisited}
+\protect\phantomsection\label{design-decisions-revisited}
+Several design decisions deserve emphasis as lessons for future exemplar
+authors:
+
+\textbf{Repo-root-relative discovery} is non-negotiable in a forkable
+monorepo. Any hard-coded absolute path or working-directory assumption
+will fail when the repository is cloned to a different location. The
+\texttt{pathlib.Path(\_\_file\_\_).resolve().parents{[}N{]}} idiom used
+throughout \texttt{src/} ensures that discovery works from any working
+directory.
+
+\textbf{Graceful fallbacks over exceptions} is the correct trade-off for
+a resource-consumption layer. The alternative --- raising
+\breaktt{FileNotFoundError} when a fond is missing --- would make the
+integration pipeline fragile to the ordering of parallel agent writes.
+Returning \texttt{None} and logging a warning allows the pipeline to
+produce a complete, if partial, result dict that downstream consumers
+can reason about.
+
+\textbf{Real-file tests over mocks} is required for a template exemplar.
+Mocks can pass tests while the real discovery logic is silently broken.
+Tests that use real file paths exercise the full path-resolution chain
+and catch regressions that mocks would miss.
+
+\textbf{Thin orchestration scripts} keep the scripts directory readable
+and focus all testable logic in \texttt{src/}. A script that does more
+than parse arguments, call a \texttt{src/} function, and write output is
+accumulating business logic that belongs elsewhere.
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Future Directions}
+\protect\phantomsection\label{future-directions}
+The three-layer architecture described here is deliberately extensible.
+The most natural extension is a fourth resource category:
+\textbf{models}
+(\texttt{models/\textless{}scope\textgreater{}/\textless{}name\textgreater{}/})
+for pre-trained machine learning models and their inference scripts. The
+pattern would follow exactly the same manifest-and-reader design, with
+\texttt{models.yaml} declaring type, version, and entrypoints, and a
+\texttt{models\_loader} module providing \breaktt{discover\_models()} and
+\breaktt{validate\_model\_files\_exist()}. Adding this layer to
+\breaktt{template\_pools\_rules\_tools} would require only a new reader
+module and a new section in the integration orchestrator --- the
+existing architecture places no constraints on the number of resource
+categories.
+
+A second direction is \textbf{cross-fond validation}: checking that cite
+keys used in a project's \breaktt{manuscript/references.bib} are a subset
+of those available in \breaktt{fonds/templates/template\_bibliography/}.
+This would require a small cross-reference function in the integration
+module and would strengthen the reproducibility guarantee by ensuring
+that manuscript citations always trace back to curated, shared sources.
+
+The exemplar is ready to fork. A project team wishing to adopt this
+architecture need only copy the four \texttt{src/} modules, update the
+resource directory paths in each reader, and replace the exemplar
+fond/rules/tool names with their own.
+\end{frame}
+
+\end{document}

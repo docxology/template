@@ -142,7 +142,7 @@ for row in rows:
 
 ```bash
 # From the project root (standalone copy):
-pytest tests/ -v --cov=src --cov-fail-under=90
+pytest tests/ -v --cov=src --cov-fail-under=90  # noqa: docs-lint — standalone pip/venv workflow, no uv-managed interpreter here
 ```
 
 ---

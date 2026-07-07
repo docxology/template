@@ -1,0 +1,12 @@
+\frametitle{Test Coverage}
+\protect\phantomsection\label{test-coverage}
+The four \texttt{src/} modules are covered by 38 tests across four test
+files in \texttt{tests/}. Tests use real file paths, real YAML files,
+and real BibTeX content rather than mocks, ensuring that coverage
+numbers reflect genuine code paths through the resource-discovery logic.
+The current coverage report shows ≥ 90\% line coverage for all four
+modules. The \breaktt{tests/test\_integration.py} suite includes an
+end-to-end test that calls \breaktt{run\_integration\_demo()} and asserts
+that the \texttt{summary} dict contains the expected keys with
+non-negative integer values --- a contract test that verifies the token
+injection pipeline's data source.

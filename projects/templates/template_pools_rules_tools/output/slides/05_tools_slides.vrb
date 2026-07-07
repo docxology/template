@@ -1,0 +1,13 @@
+\frametitle{Tool Discovery and Reproducibility}
+\protect\phantomsection\label{tool-discovery-and-reproducibility}
+The tools layer contributes to reproducibility by making the
+\emph{availability} of computational capabilities explicit and
+checkable. A project that hard-codes a path to a tool script becomes
+brittle when the repository is reorganised. By contrast, a project that
+calls \breaktt{discover\_tools()} and checks
+\breaktt{validate\_tool\_scripts\_exist()} will detect missing
+entrypoints at pipeline initialisation time and report them clearly,
+rather than failing silently at execution time
+\breakseq{[@Stodden2016enhancing]}. This shift from implicit to explicit
+dependency declaration is a key design principle of the template
+architecture (see @fig:architecture).

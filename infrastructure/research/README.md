@@ -7,15 +7,17 @@ prompt text for the template/ research infrastructure. Ported and adapted from
 ## Overview
 
 ```python
-from infrastructure.research import ResearchWorkflow, WORKFLOW_STAGES
+from infrastructure.research import ResearchWorkflow
+
+workflow = ResearchWorkflow()
 
 # Print a markdown rendering of all seven stages
-print(ResearchWorkflow.describe())
+print(workflow.describe())
 
-# Access a specific stage
-stage = ResearchWorkflow.stage("LITERATURE")
-print(stage.parallel_subagents)   # 5
-print(stage.template_commands)    # list of uv run ... commands
+# Access a specific stage (implemented names: scope, survey, hypothesise,
+# experiment, validate, review, write — see the drift note under "Public API")
+stage = workflow.stage("survey")
+print(stage.description)
 ```
 
 ## Seven-Stage Workflow
@@ -67,11 +69,22 @@ uv run python -m infrastructure.provenance record run \
 
 ```python
 from infrastructure.research import (
-    ResearchStage,     # dataclass: one workflow stage
-    ResearchWorkflow,  # class: STAGES list + describe() + stage()
-    WORKFLOW_STAGES,   # list[ResearchStage]: convenience alias
+    ResearchStage,          # dataclass: one workflow stage (name/label/description/inputs/outputs/gate/status/order)
+    ResearchWorkflow,       # instance API: workflow.stage(name), workflow.all_stages(), workflow.describe()
+    StageStatus,            # enum: pending/in_progress/complete status per stage
+    ResearchWorkflowConfig, # parsed config.yaml `research_workflow:` block
 )
 ```
+
+> **Doc/code drift (tracked for follow-up):** there is no module-level
+> `WORKFLOW_STAGES` export — use `ResearchWorkflow().all_stages()` instead.
+> The "Seven-Stage Workflow" table above (SCOPE/LITERATURE/REASON/DESIGN/
+> COMPUTE/SYNTHESIZE/WRITE, with per-stage sub-agent fan-out) describes an
+> OpenScience-ported design richer than what `ResearchStage` actually
+> implements (`scope, survey, hypothesise, experiment, validate, review,
+> write` — no `parallel_subagents`/`template_commands` fields). Treat the
+> table and the "Provenance Integration" `record run`/`evidence add` CLI
+> examples below as design intent, not a verified API surface.
 
 ## Provenance Integration
 

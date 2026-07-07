@@ -63,6 +63,44 @@ def test_doc_import_multiline_parenthesised(tmp_path: Path) -> None:
     assert len(issues) == 1 and issues[0].category == "doc-import"
 
 
+def test_doc_import_comment_with_parens_does_not_truncate(tmp_path: Path) -> None:
+    """A trailing comment containing its own '(...)' must not stop multi-line accumulation early.
+
+    Regression for the fonds/rules/tools/connectors SKILL.md false-positive: a
+    line like ``get_logger,  # existing (used everywhere)`` has a balanced
+    paren pair inside the comment, which previously satisfied the naive
+    ``")" not in stmt`` continuation check and truncated the import before its
+    real closing paren, reporting a spurious "unparseable import".
+    """
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "docs" / "g.md",
+        "```python\n"
+        "from infrastructure.core.logging.utils import (\n"
+        "    get_logger,            # existing (used everywhere)\n"
+        "    get_log_level_from_env,  # returns configured level\n"
+        ")\n"
+        "```\n",
+    )
+    assert check_doc_imports_resolve(repo) == []
+
+
+def test_doc_import_comment_parens_still_flags_real_bad_symbol(tmp_path: Path) -> None:
+    """The comment-parens fix must not mask a genuinely bad symbol name."""
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "docs" / "g.md",
+        "```python\n"
+        "from infrastructure.core.logging.utils import (\n"
+        "    NoSuchLogger,           # existing (used everywhere)\n"
+        ")\n"
+        "```\n",
+    )
+    issues = check_doc_imports_resolve(repo)
+    assert len(issues) == 1
+    assert "NoSuchLogger" in issues[0].detail
+
+
 def test_tests_dir_is_in_scope_blind_spot_closed(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
     write_doc(

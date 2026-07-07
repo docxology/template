@@ -1,0 +1,10 @@
+[project]
+name = "child_optimization"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy", "matplotlib", "pyyaml"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

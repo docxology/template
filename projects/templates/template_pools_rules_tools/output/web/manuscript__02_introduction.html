@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="introduction">Introduction</h1>
+<h2 id="motivation">Motivation</h2>
+<p>Modern research software repositories increasingly adopt monorepo
+designs in which multiple projects share a common set of curated
+resources. A monorepo consolidates source code, documentation, datasets,
+and governance artefacts under one version-controlled root, enabling
+atomic cross-project changes and a single source of truth for shared
+data [Fowler2002patterns]. The practical benefit is significant: a
+bibliography updated once in
+<code>fonds/templates/template_bibliography/</code> is immediately
+available to every project that discovers it at runtime, without any
+per-project copy.</p>
+<p>Three categories of shared resource appear consistently across
+research template repositories:</p>
+<ol type="1">
+<li><strong>Data pools (fonds)</strong>: curated reference sets —
+bibliographies, contact registries, dataset catalogues — that projects
+query but must never mutate.</li>
+<li><strong>Governance rules</strong>: machine-readable constraint
+schemas and human-readable style guidelines that projects load to
+validate their own outputs.</li>
+<li><strong>Executable tools</strong>: script-based entry points that
+projects invoke to run computations, validate artefacts, or call
+external agents.</li>
+</ol>
+<p>Without a canonical integration pattern for consuming these
+resources, projects face a dilemma: they can hard-code discovery paths
+(creating fragile, repo-root-sensitive logic) or skip resource
+consumption entirely (forfeiting the monorepo’s collaborative benefits).
+Neither outcome is acceptable in a public, forkable template repository
+intended to demonstrate best practices [Wilson2014best].</p>
+<h2 id="contribution">Contribution</h2>
+<p>This paper introduces <code>template_pools_rules_tools</code>, a
+<strong>meta-project exemplar</strong> that resolves this dilemma with a
+four-module architecture (<span class="citation"
+data-cites="fig:architecture">@fig:architecture</span>). Each module
+handles one resource category plus a fourth orchestration module:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Resource category</th>
+<th>Key function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/fonds_reader.py</code></td>
+<td>Data pools</td>
+<td><code>read_all_fonds()</code></td>
+</tr>
+<tr>
+<td><code>src/rules_applier.py</code></td>
+<td>Governance rules</td>
+<td><code>validate_against_rules()</code></td>
+</tr>
+<tr>
+<td><code>src/tools_invoker.py</code></td>
+<td>Executable tools</td>
+<td><code>discover_tools()</code></td>
+</tr>
+<tr>
+<td><code>src/integration.py</code></td>
+<td>All three</td>
+<td><code>run_integration_demo()</code></td>
+</tr>
+</tbody>
+</table>
+<p>The architecture obeys three design invariants:</p>
+<ul>
+<li><strong>Read-only resource access</strong>: no module writes to
+<code>fonds/</code>, <code>rules/</code>, or <code>tools/</code>. The
+Layer Contract in <code>AGENTS.md</code> enforces this at code-review
+time.</li>
+<li><strong>Repo-root-relative discovery</strong>: all path resolution
+uses <code>pathlib.Path(__file__).resolve().parents[N]</code> so that
+scripts work from any working directory.</li>
+<li><strong>Graceful degradation</strong>: every reader catches
+<code>FileNotFoundError</code> and <code>yaml.YAMLError</code>, logs a
+warning, and returns a safe empty value. The pipeline never raises on a
+missing resource.</li>
+</ul>
+<h2 id="paper-organisation">Paper Organisation</h2>
+<p>The remainder of this paper is structured as follows. <span
+class="citation" data-cites="sec:pools">@sec:pools</span> describes the
+fond layer and the <code>fonds_reader</code> module. <span
+class="citation" data-cites="sec:rules">@sec:rules</span> describes the
+rules layer and the <code>rules_applier</code> module. <span
+class="citation" data-cites="sec:tools">@sec:tools</span> describes the
+tool layer and the <code>tools_invoker</code> module. <span
+class="citation" data-cites="sec:integration">@sec:integration</span>
+presents the unified integration pipeline, the manuscript variable token
+system, and a discussion of resilience design. <span class="citation"
+data-cites="sec:conclusion">@sec:conclusion</span> summarises key
+findings and future directions.</p>
+<p>The architecture overview in <span class="citation"
+data-cites="fig:architecture">@fig:architecture</span> provides a visual
+map of these relationships. Runtime statistics collected during
+integration are visualised in <span class="citation"
+data-cites="fig:counts">@fig:counts</span>.</p>
+</body>
+</html>

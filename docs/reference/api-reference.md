@@ -2685,449 +2685,183 @@ Container for numerical stability test results.
 
 ### `AbstractFetcher`
 
-*class — defined in `infrastructure.search.literature.fulltext`*
-
-```python
-class AbstractFetcher(*, http_client: HttpClient | None=None, cache_dir: Path | str | None=None, timeout: float=15.0, arxiv_base_url: str | None=None)
-```
-
-Populate :attr:`Paper.abstract` for records that lack one.
+*symbol — defined in `infrastructure.search`*
 
 ### `ArxivBackend`
 
-*class — defined in `infrastructure.search.literature.arxiv_backend`*
-
-```python
-class ArxivBackend(*, http_client: HttpClient | None=None, base_url: str | None=None, timeout: float=15.0, max_retries: int=3, retry_base_delay: float=3.0, sleeper: Callable[[float], None]=time.sleep)
-```
-
-arXiv export API. Returns Atom XML; we parse it locally.
+*symbol — defined in `infrastructure.search`*
 
 ### `BackendError`
 
-*class — defined in `infrastructure.search.literature.base`*
-
-```python
-class BackendError(RuntimeError)
-```
-
-Raised by a backend when the request itself fails (network, parse).
+*symbol — defined in `infrastructure.search`*
 
 ### `build_gemini_payload`
 
-*function — defined in `infrastructure.search.deep_research.gemini`*
-
-```python
-build_gemini_payload(request: DeepResearchRequest, *, agent: str | None=None) -> dict[str, Any]
-```
-
-Build the Interactions API payload without touching the SDK.
+*symbol — defined in `infrastructure.search`*
 
 ### `build_gemini_tools`
 
-*function — defined in `infrastructure.search.deep_research.gemini`*
-
-```python
-build_gemini_tools(request: DeepResearchRequest) -> list[dict[str, Any]]
-```
-
-Translate provider-neutral source controls into Gemini deep research tools.
+*symbol — defined in `infrastructure.search`*
 
 ### `build_openai_payload`
 
-*function — defined in `infrastructure.search.deep_research.openai`*
-
-```python
-build_openai_payload(request: DeepResearchRequest, *, model: str | None=None) -> dict[str, Any]
-```
-
-Build the Responses API payload without touching the SDK.
+*symbol — defined in `infrastructure.search`*
 
 ### `build_openai_tools`
 
-*function — defined in `infrastructure.search.deep_research.openai`*
-
-```python
-build_openai_tools(request: DeepResearchRequest) -> list[dict[str, Any]]
-```
-
-Translate provider-neutral source controls into OpenAI deep research tools.
+*symbol — defined in `infrastructure.search`*
 
 ### `build_project_deep_research_request`
 
-*function — defined in `infrastructure.search.deep_research.project_context`*
-
-```python
-build_project_deep_research_request(project_root: str | Path, query: str, *, request: DeepResearchRequest | None=None, max_files: int=DEFAULT_MAX_FILES, max_chars_per_file: int=DEFAULT_MAX_CHARS_PER_FILE, max_total_chars: int=DEFAULT_MAX_TOTAL_CHARS, max_manuscript_chars_per_file: int=DEFAULT_MAX_MANUSCRIPT_CHARS_PER_FILE) -> DeepResearchRequest
-```
-
-Create a deep research request preloaded with project context.
+*symbol — defined in `infrastructure.search`*
 
 ### `collect_project_context`
 
-*function — defined in `infrastructure.search.deep_research.project_context`*
-
-```python
-collect_project_context(project_root: str | Path, *, max_files: int=DEFAULT_MAX_FILES, max_chars_per_file: int=DEFAULT_MAX_CHARS_PER_FILE, max_total_chars: int=DEFAULT_MAX_TOTAL_CHARS, max_manuscript_chars_per_file: int=DEFAULT_MAX_MANUSCRIPT_CHARS_PER_FILE) -> DeepResearchProjectContext
-```
-
-Collect a bounded context bundle from a project tree.
+*symbol — defined in `infrastructure.search`*
 
 ### `CrossrefBackend`
 
-*class — defined in `infrastructure.search.literature.crossref_backend`*
-
-```python
-class CrossrefBackend(*, http_client: HttpClient | None=None, base_url: str | None=None, mailto: str | None=None, timeout: float=15.0)
-```
-
-Crossref REST API (no auth required).
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchAnalysis`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchAnalysis
-```
-
-Tooling and execution controls.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchCitation`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchCitation
-```
-
-Normalized citation metadata.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchClient`
 
-*class — defined in `infrastructure.search.deep_research.client`*
-
-```python
-class DeepResearchClient
-```
-
-Dispatches deep research jobs to the best available provider.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchConfig`
 
-*class — defined in `infrastructure.search.deep_research.config`*
-
-```python
-class DeepResearchConfig
-```
-
-Environment-backed deep research settings.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchJobHandle`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchJobHandle
-```
-
-Opaque provider job handle returned after submission.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchMCPServer`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchMCPServer
-```
-
-Remote MCP server specification.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchProjectContext`
 
-*class — defined in `infrastructure.search.deep_research.project_context`*
-
-```python
-class DeepResearchProjectContext
-```
-
-Packed project context suitable for provider prompts.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchReportBundle`
 
-*class — defined in `infrastructure.search.deep_research.artifacts`*
-
-```python
-class DeepResearchReportBundle
-```
-
-Filesystem locations for a saved deep research result.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchRequest`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchRequest
-```
-
-Provider-neutral deep research request.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchResult`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchResult
-```
-
-Normalized terminal result returned after polling a job.
+*symbol — defined in `infrastructure.search`*
 
 ### `DeepResearchSources`
 
-*class — defined in `infrastructure.search.deep_research.models`*
-
-```python
-class DeepResearchSources
-```
-
-Source controls for a deep research job.
+*symbol — defined in `infrastructure.search`*
 
 ### `DEFAULT_GEMINI_AGENT`
 
-*constant — defined in `infrastructure.search.deep_research.config`*
-
-```python
-DEFAULT_GEMINI_AGENT = 'deep-research-preview-04-2026'
-```
+*symbol — defined in `infrastructure.search`*
 
 ### `DEFAULT_OPENAI_MODEL`
 
-*constant — defined in `infrastructure.search.deep_research.config`*
-
-```python
-DEFAULT_OPENAI_MODEL = 'o3-deep-research'
-```
+*symbol — defined in `infrastructure.search`*
 
 ### `enrich_papers`
 
-*function — defined in `infrastructure.search.literature.fulltext`*
-
-```python
-enrich_papers(papers: Iterable[Paper], *, abstracts: AbstractFetcher | None=None, fulltext: FulltextFetcher | None=None, force: bool=False) -> list[FetchResult]
-```
-
-Run the configured fetchers over *papers* in order (abstract first).
+*symbol — defined in `infrastructure.search`*
 
 ### `ExaClient`
 
-*class — defined in `infrastructure.search.exa.client`*
-
-```python
-class ExaClient(config: ExaConfig, *, http_client: ExaHttpClient | None=None)
-```
-
-Thin, dependency-injected client for the Exa REST API.
+*symbol — defined in `infrastructure.search`*
 
 ### `ExaConfig`
 
-*class — defined in `infrastructure.search.exa.config`*
-
-```python
-class ExaConfig
-```
-
-Immutable Exa client configuration.
+*symbol — defined in `infrastructure.search`*
 
 ### `ExaError`
 
-*class — defined in `infrastructure.search.exa.errors`*
-
-```python
-class ExaError(message: str, *, status: int | None=None, body: str | None=None)
-```
-
-Raised when an Exa request fails (transport, non-2xx status, or parse).
+*symbol — defined in `infrastructure.search`*
 
 ### `FetchResult`
 
-*class — defined in `infrastructure.search.literature.fulltext`*
-
-```python
-class FetchResult
-```
-
-Outcome of a fetch operation.
+*symbol — defined in `infrastructure.search`*
 
 ### `FulltextFetcher`
 
-*class — defined in `infrastructure.search.literature.fulltext`*
-
-```python
-class FulltextFetcher(*, http_client: HttpClient | None=None, cache_dir: Path | str | None=None, timeout: float=60.0, max_chars: int | None=200000)
-```
-
-Populate :attr:`Paper.fulltext` from PDF / HTML sources.
+*symbol — defined in `infrastructure.search`*
 
 ### `GeminiDeepResearchError`
 
-*class — defined in `infrastructure.search.deep_research.gemini`*
-
-```python
-class GeminiDeepResearchError(RuntimeError)
-```
-
-Raised when the Gemini deep research adapter cannot run.
+*symbol — defined in `infrastructure.search`*
 
 ### `GeminiDeepResearchProvider`
 
-*class — defined in `infrastructure.search.deep_research.gemini`*
-
-```python
-class GeminiDeepResearchProvider(*, api_key: str | None, agent: str=DEFAULT_GEMINI_AGENT)
-```
-
-Lazy SDK wrapper around the Gemini Interactions API.
+*symbol — defined in `infrastructure.search`*
 
 ### `LiteratureClient`
 
-*class — defined in `infrastructure.search.literature.client`*
-
-```python
-class LiteratureClient(backends: Iterable[SearchBackend], *, cache: SearchCache | None=None)
-```
-
-Run a :class:`SearchQuery` across multiple :class:`SearchBackend`s.
+*symbol — defined in `infrastructure.search`*
 
 ### `LocalBackend`
 
-*class — defined in `infrastructure.search.literature.local_backend`*
-
-```python
-class LocalBackend(corpus_path: Path | str)
-```
-
-Search a JSON corpus on disk.
+*symbol — defined in `infrastructure.search`*
 
 ### `merge_papers`
 
-*function — defined in `infrastructure.search.literature.models`*
-
-```python
-merge_papers(papers: Iterable[Paper]) -> list[Paper]
-```
-
-Deduplicate *papers* by canonical key, keeping the highest-scored copy.
+*symbol — defined in `infrastructure.search`*
 
 ### `OpenAIDeepResearchError`
 
-*class — defined in `infrastructure.search.deep_research.openai`*
-
-```python
-class OpenAIDeepResearchError(RuntimeError)
-```
-
-Raised when the OpenAI deep research adapter cannot run.
+*symbol — defined in `infrastructure.search`*
 
 ### `OpenAIDeepResearchProvider`
 
-*class — defined in `infrastructure.search.deep_research.openai`*
-
-```python
-class OpenAIDeepResearchProvider(*, api_key: str | None, model: str=DEFAULT_OPENAI_MODEL)
-```
-
-Lazy SDK wrapper around the OpenAI Responses API.
+*symbol — defined in `infrastructure.search`*
 
 ### `Paper`
 
-*class — defined in `infrastructure.search.literature.models`*
-
-```python
-class Paper
-```
-
-A normalised literature-search result.
+*symbol — defined in `infrastructure.search`*
 
 ### `PaperclipBackend`
 
-*class — defined in `infrastructure.search.literature.paperclip_backend`*
-
-```python
-class PaperclipBackend(*, api_key: str, http_client: HttpClient | None=None, base_url: str | None=None, timeout: float=30.0)
-```
-
-Paperclip (paperclip.gxl.ai) HTTP backend.
+*symbol — defined in `infrastructure.search`*
 
 ### `save_deep_research_result`
 
-*function — defined in `infrastructure.search.deep_research.artifacts`*
-
-```python
-save_deep_research_result(project_root: str | Path, result: DeepResearchResult, *, request: DeepResearchRequest | None=None, report_name: str | None=None) -> DeepResearchReportBundle
-```
-
-Write a single deep research result under ``output/reports/deep_research``.
+*symbol — defined in `infrastructure.search`*
 
 ### `save_deep_research_results`
 
-*function — defined in `infrastructure.search.deep_research.artifacts`*
-
-```python
-save_deep_research_results(project_root: str | Path, results: Mapping[str, DeepResearchResult], *, request: DeepResearchRequest | None=None) -> dict[str, DeepResearchReportBundle]
-```
-
-Write all provider reports and a small index file.
+*symbol — defined in `infrastructure.search`*
 
 ### `SearchBackend`
 
-*class — defined in `infrastructure.search.literature.base`*
-
-```python
-class SearchBackend(abc.ABC)
-```
-
-Abstract base class for literature-search backends.
+*symbol — defined in `infrastructure.search`*
 
 ### `SearchCache`
 
-*class — defined in `infrastructure.search.literature.cache`*
-
-```python
-class SearchCache(cache_dir: Path | str, *, ttl_seconds: int | None=None)
-```
-
-JSON-file cache for :class:`SearchResult` objects.
+*symbol — defined in `infrastructure.search`*
 
 ### `SearchQuery`
 
-*class — defined in `infrastructure.search.literature.models`*
-
-```python
-class SearchQuery
-```
-
-A literature search request.
+*symbol — defined in `infrastructure.search`*
 
 ### `SearchResult`
 
-*class — defined in `infrastructure.search.literature.models`*
-
-```python
-class SearchResult
-```
-
-The aggregate response to a :class:`SearchQuery`.
+*symbol — defined in `infrastructure.search`*
 
 ### `write_corpus`
 
-*function — defined in `infrastructure.search.literature.fulltext`*
-
-```python
-write_corpus(papers: Iterable[Paper], path: Path | str) -> Path
-```
-
-Persist a list of (possibly enriched) papers as a JSON corpus file.
+*symbol — defined in `infrastructure.search`*
 
 ## Package: `infrastructure.sia`
 

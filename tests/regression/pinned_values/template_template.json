@@ -40,14 +40,18 @@
   },
   "pipeline_stages_declared": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
-    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (14)",
-    "value": 14,
+    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (16)",
+    "value": 16,
     "abs_tolerance": 0,
     "verifier_function": "template_template.introspection.build_infrastructure_report",
     "verifier_args": {"repo_root": ".", "read": "pipeline_stages_declared"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
-    "pinned_at_commit": "691d6ebf"
+    "pinned_at_commit": "691d6ebf",
+    "refreshed_on": "2026-07-07",
+    "refreshed_by": "EXEMPLAR-AUDIT-2026-07-07",
+    "refresh_commit": "646bb159",
+    "refresh_reason": "Live re-derivation via template_template.introspection.build_infrastructure_report found 16, not the pinned 14 (frozen tolerance 0) — pipeline.yaml legitimately grew 2 stages since 2026-07-01; manuscript AGENTS.md prose also referenced the stale literal 14 and was not updated here (out of scope for a pin refresh)."
   },
   "pipeline_stages_default_full": {
     "manuscript_section": "manuscript/00_abstract.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
@@ -74,23 +78,31 @@
   "public_exemplar_roster_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
     "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
-    "value": 16,
+    "value": 18,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.project.public_scope.public_project_names",
     "verifier_args": {"repo_root": ".", "read": "len"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
-    "pinned_at_commit": "691d6ebf"
+    "pinned_at_commit": "691d6ebf",
+    "refreshed_on": "2026-07-07",
+    "refreshed_by": "EXEMPLAR-AUDIT-2026-07-07",
+    "refresh_commit": "646bb159",
+    "refresh_reason": "public_project_names() returns 18 (template_autoscientists and template_pools_rules_tools were added to PUBLIC_PROJECT_NAMES since the 2026-07-01 pin at 16)."
   },
   "module_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",
     "claim_text": "a Two-Layer Architecture that separates ${module_count} infrastructure subdirectories ... All ${module_count} enumerated subdirectories carry Tier-1/README.md and Tier-2/AGENTS.md coverage",
-    "value": 23,
+    "value": 28,
     "abs_tolerance": 2,
     "verifier_function": "template_template.introspection.discover_infrastructure_modules",
     "verifier_args": {"repo_root": ".", "read": "len"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
-    "pinned_at_commit": "691d6ebf"
+    "pinned_at_commit": "691d6ebf",
+    "refreshed_on": "2026-07-07",
+    "refreshed_by": "EXEMPLAR-AUDIT-2026-07-07",
+    "refresh_commit": "646bb159",
+    "refresh_reason": "discover_infrastructure_modules() returns 28, outside the ±2 drift band around the 2026-07-01 pin of 23 — organic infrastructure/ growth over 6 days, not a broken-discovery signal (0 or halved). Band re-centered on the live count."
   }
 }

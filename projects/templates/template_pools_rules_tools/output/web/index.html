@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Pools, Rules, and Tools: A Template-Integrated Resource
+Architecture</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: 100vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 390px;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: red;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Pools, Rules, and Tools: A Template-Integrated
+Resource Architecture</h1>
+<p class="subtitle">A Meta-Project Demonstrating Fonds, Rules, and Tools
+Integration in Research Software</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a
+href="#pools-rules-and-tools-a-template-integrated-resource-architecture"
+id="toc-pools-rules-and-tools-a-template-integrated-resource-architecture"><span
+class="toc-section-number">1</span> Pools, Rules, and Tools: A
+Template-Integrated Resource Architecture</a>
+<ul>
+<li><a href="#author-contributions" id="toc-author-contributions"><span
+class="toc-section-number">1.1</span> Author Contributions</a></li>
+<li><a href="#acknowledgements" id="toc-acknowledgements"><span
+class="toc-section-number">1.2</span> Acknowledgements</a></li>
+<li><a href="#data-availability" id="toc-data-availability"><span
+class="toc-section-number">1.3</span> Data Availability</a></li>
+<li><a href="#competing-interests" id="toc-competing-interests"><span
+class="toc-section-number">1.4</span> Competing Interests</a></li>
+</ul></li>
+<li><a href="#abstract" id="toc-abstract"><span
+class="toc-section-number">2</span> Abstract</a></li>
+<li><a href="#introduction" id="toc-introduction"><span
+class="toc-section-number">3</span> Introduction</a>
+<ul>
+<li><a href="#motivation" id="toc-motivation"><span
+class="toc-section-number">3.1</span> Motivation</a></li>
+<li><a href="#contribution" id="toc-contribution"><span
+class="toc-section-number">3.2</span> Contribution</a></li>
+<li><a href="#paper-organisation" id="toc-paper-organisation"><span
+class="toc-section-number">3.3</span> Paper Organisation</a></li>
+</ul></li>
+<li><a href="#sec:pools" id="toc-sec:pools"><span
+class="toc-section-number">4</span> Pools: Fonds as Passive Data
+Resources</a>
+<ul>
+<li><a href="#what-is-a-fond" id="toc-what-is-a-fond"><span
+class="toc-section-number">4.1</span> What Is a Fond?</a></li>
+<li><a href="#the-three-template-fonds"
+id="toc-the-three-template-fonds"><span
+class="toc-section-number">4.2</span> The Three Template Fonds</a>
+<ul>
+<li><a href="#template_bibliography"
+id="toc-template_bibliography"><span
+class="toc-section-number">4.2.1</span>
+<code>template_bibliography</code></a></li>
+<li><a href="#template_contacts" id="toc-template_contacts"><span
+class="toc-section-number">4.2.2</span>
+<code>template_contacts</code></a></li>
+<li><a href="#template_datasets" id="toc-template_datasets"><span
+class="toc-section-number">4.2.3</span>
+<code>template_datasets</code></a></li>
+</ul></li>
+<li><a href="#the-fonds.yaml-manifest"
+id="toc-the-fonds.yaml-manifest"><span
+class="toc-section-number">4.3</span> The <code>fonds.yaml</code>
+Manifest</a></li>
+<li><a href="#the-fonds_reader-module"
+id="toc-the-fonds_reader-module"><span
+class="toc-section-number">4.4</span> The <code>fonds_reader</code>
+Module</a></li>
+<li><a href="#resilience-by-design" id="toc-resilience-by-design"><span
+class="toc-section-number">4.5</span> Resilience by Design</a></li>
+</ul></li>
+<li><a href="#sec:rules" id="toc-sec:rules"><span
+class="toc-section-number">5</span> Rules: Soft and Strong
+Governance</a>
+<ul>
+<li><a href="#the-role-of-governance-rules"
+id="toc-the-role-of-governance-rules"><span
+class="toc-section-number">5.1</span> The Role of Governance
+Rules</a></li>
+<li><a href="#soft-rules-style-and-process-guidelines"
+id="toc-soft-rules-style-and-process-guidelines"><span
+class="toc-section-number">5.2</span> Soft Rules: Style and Process
+Guidelines</a></li>
+<li><a href="#strong-rules-hard-constraints"
+id="toc-strong-rules-hard-constraints"><span
+class="toc-section-number">5.3</span> Strong Rules: Hard
+Constraints</a></li>
+<li><a href="#the-two-template-rule-sets"
+id="toc-the-two-template-rule-sets"><span
+class="toc-section-number">5.4</span> The Two Template Rule Sets</a>
+<ul>
+<li><a href="#template_project_rules"
+id="toc-template_project_rules"><span
+class="toc-section-number">5.4.1</span>
+<code>template_project_rules</code></a></li>
+<li><a href="#template_manuscript_rules"
+id="toc-template_manuscript_rules"><span
+class="toc-section-number">5.4.2</span>
+<code>template_manuscript_rules</code></a></li>
+</ul></li>
+<li><a href="#the-rules_applier-module"
+id="toc-the-rules_applier-module"><span
+class="toc-section-number">5.5</span> The <code>rules_applier</code>
+Module</a></li>
+<li><a href="#rules-and-manuscript-variables"
+id="toc-rules-and-manuscript-variables"><span
+class="toc-section-number">5.6</span> Rules and Manuscript
+Variables</a></li>
+</ul></li>
+<li><a href="#sec:tools" id="toc-sec:tools"><span
+class="toc-section-number">6</span> Tools: Executable Entry Points</a>
+<ul>
+<li><a href="#what-is-a-tool" id="toc-what-is-a-tool"><span
+class="toc-section-number">6.1</span> What Is a Tool?</a></li>
+<li><a href="#the-tools.yaml-manifest"
+id="toc-the-tools.yaml-manifest"><span
+class="toc-section-number">6.2</span> The <code>tools.yaml</code>
+Manifest</a></li>
+<li><a href="#the-three-template-tools"
+id="toc-the-three-template-tools"><span
+class="toc-section-number">6.3</span> The Three Template Tools</a>
+<ul>
+<li><a href="#template_code_executor"
+id="toc-template_code_executor"><span
+class="toc-section-number">6.3.1</span>
+<code>template_code_executor</code></a></li>
+<li><a href="#template_validator" id="toc-template_validator"><span
+class="toc-section-number">6.3.2</span>
+<code>template_validator</code></a></li>
+<li><a href="#template_skill" id="toc-template_skill"><span
+class="toc-section-number">6.3.3</span>
+<code>template_skill</code></a></li>
+</ul></li>
+<li><a href="#the-tools_invoker-module"
+id="toc-the-tools_invoker-module"><span
+class="toc-section-number">6.4</span> The <code>tools_invoker</code>
+Module</a></li>
+<li><a href="#tool-discovery-and-reproducibility"
+id="toc-tool-discovery-and-reproducibility"><span
+class="toc-section-number">6.5</span> Tool Discovery and
+Reproducibility</a></li>
+</ul></li>
+<li><a href="#sec:integration" id="toc-sec:integration"><span
+class="toc-section-number">7</span> Integration: Unified Pipeline and
+Token Injection</a>
+<ul>
+<li><a href="#architecture-overview"
+id="toc-architecture-overview"><span
+class="toc-section-number">7.1</span> Architecture Overview</a></li>
+<li><a href="#manuscript-variable-tokens"
+id="toc-manuscript-variable-tokens"><span
+class="toc-section-number">7.2</span> Manuscript Variable
+Tokens</a></li>
+<li><a href="#methods-the-script-pipeline"
+id="toc-methods-the-script-pipeline"><span
+class="toc-section-number">7.3</span> Methods: The Script
+Pipeline</a></li>
+<li><a href="#resilience-design" id="toc-resilience-design"><span
+class="toc-section-number">7.4</span> Resilience Design</a></li>
+<li><a href="#test-coverage" id="toc-test-coverage"><span
+class="toc-section-number">7.5</span> Test Coverage</a></li>
+</ul></li>
+<li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
+class="toc-section-number">8</span> Conclusion</a>
+<ul>
+<li><a href="#summary" id="toc-summary"><span
+class="toc-section-number">8.1</span> Summary</a></li>
+<li><a href="#design-decisions-revisited"
+id="toc-design-decisions-revisited"><span
+class="toc-section-number">8.2</span> Design Decisions
+Revisited</a></li>
+<li><a href="#future-directions" id="toc-future-directions"><span
+class="toc-section-number">8.3</span> Future Directions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 data-number="1"
+id="pools-rules-and-tools-a-template-integrated-resource-architecture"><span
+class="header-section-number">1</span> Pools, Rules, and Tools: A
+Template-Integrated Resource Architecture</h1>
+<p><strong>A Meta-Project Demonstrating Fonds, Rules, and Tools
+Integration in Research Software</strong></p>
+<hr />
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Authors</strong></td>
+<td>Research Template Author¹, Template Collaborator¹</td>
+</tr>
+<tr>
+<td><strong>Affiliation</strong></td>
+<td>¹ Active Inference Institute</td>
+</tr>
+<tr>
+<td><strong>Correspondence</strong></td>
+<td>author@research-template.org</td>
+</tr>
+<tr>
+<td><strong>Version</strong></td>
+<td>1.0.0</td>
+</tr>
+<tr>
+<td><strong>Date</strong></td>
+<td>2026-07-05</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>CC-BY-4.0</td>
+</tr>
+<tr>
+<td><strong>Repository</strong></td>
+<td><a
+href="https://github.com/docxology/template">docxology/template</a></td>
+</tr>
+<tr>
+<td><strong>DOI</strong></td>
+<td>10.5281/zenodo.template_pools_rules_tools</td>
+</tr>
+<tr>
+<td><strong>Keywords</strong></td>
+<td>research software engineering, monorepo architecture,
+reproducibility, fonds, governance rules, tool discovery, graceful
+degradation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 data-number="1.1" id="author-contributions"><span
+class="header-section-number">1.1</span> Author Contributions</h2>
+<p><strong>Research Template Author</strong>: Conceptualisation,
+architecture design, module implementation (<code>fonds_reader</code>,
+<code>rules_applier</code>, <code>tools_invoker</code>,
+<code>integration</code>), manuscript writing (all sections),
+validation.</p>
+<p><strong>Template Collaborator</strong>: Manuscript review, test suite
+design, exemplar resource authoring (fonds, rules, tools).</p>
+<h2 data-number="1.2" id="acknowledgements"><span
+class="header-section-number">1.2</span> Acknowledgements</h2>
+<p>The authors thank the Active Inference Institute for hosting the
+public template repository and providing the infrastructure within which
+this exemplar was developed. The design of the three-layer resource
+architecture draws inspiration from the Unix philosophy [Raymond2003art]
+and the enterprise application patterns documented by
+[Fowler2002patterns].</p>
+<h2 data-number="1.3" id="data-availability"><span
+class="header-section-number">1.3</span> Data Availability</h2>
+<p>All source code, configuration files, and exemplar resources
+described in this paper are available in the public template repository
+at <a href="https://github.com/docxology/template"
+class="uri">https://github.com/docxology/template</a> under the
+<code>projects/templates/template_pools_rules_tools/</code> path. The
+integration pipeline is fully reproducible from source using
+<code>uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py</code>
+from the repository root. Generated manuscript variables are stored in
+<code>output/data/manuscript_variables.json</code> and injected at
+render time.</p>
+<h2 data-number="1.4" id="competing-interests"><span
+class="header-section-number">1.4</span> Competing Interests</h2>
+<p>The authors declare no competing interests.</p>
+<hr />
+<h1 data-number="2" id="abstract"><span
+class="header-section-number">2</span> Abstract</h1>
+<p>Research software repositories in monorepo configurations accumulate
+three categories of shared resources that individual projects must
+consume without re-implementing discovery logic: <strong>data
+pools</strong> (bibliographies, contacts, datasets), <strong>governance
+rules</strong> (style guides, coverage thresholds, citation schemas),
+and <strong>executable tools</strong> (code executors, validators, skill
+invocations). Without a canonical integration pattern, projects either
+duplicate discovery logic or silently ignore resources that fail to load
+— both outcomes degrade reproducibility and collaborative cohesion
+[Wilson2014best; Taschuk2017ten].</p>
+<p>This paper presents <code>template_pools_rules_tools</code>, a
+meta-project exemplar that demonstrates how a single project can
+programmatically discover, validate, and exercise all three resource
+categories with zero tight coupling to any specific resource instance.
+The exemplar comprises four Python modules — <code>fonds_reader</code>,
+<code>rules_applier</code>, <code>tools_invoker</code>, and
+<code>integration</code> — plus three thin orchestration scripts and a
+fully token-injected manuscript pipeline.</p>
+<p>The architecture (fig. <strong>¿fig:architecture?</strong>) separates
+<em>resource ownership</em> from <em>resource consumption</em>.
+Resources live in top-level <code>fonds/</code>, <code>rules/</code>,
+and <code>tools/</code> directories and are never modified by consumers.
+Each resource exposes a typed manifest (<code>fonds.yaml</code>,
+<code>rules.yaml</code>, <code>tools.yaml</code>) that the corresponding
+reader module uses for discovery and validation. All readers implement
+graceful fallbacks: they return <code>None</code> or empty collections
+when a resource is absent, log a warning via the standard library
+<code>logging</code> module, and allow the integration pipeline to
+continue.</p>
+<p>In a representative pipeline run, the integration demo loaded
+{{integration.fonds_loaded}} fonds, validated
+{{integration.rules_sets_ok}} rule sets, discovered
+{{integration.tools_discovered}} tools, and processed
+{{integration.bib_entries}} bibliography entries — all reported as
+structured JSON that populates manuscript variable tokens at render
+time. Tests covering the four <code>src/</code> modules achieve ≥90%
+line coverage and use real file paths rather than mocks, ensuring that
+reported counts are genuine.</p>
+<p>The <code>template_pools_rules_tools</code> exemplar provides a
+reference implementation that any project in the template repository can
+consult when designing its own resource-consumption layer.</p>
+<p><strong>Keywords:</strong> research software engineering, monorepo
+architecture, reproducibility, fonds, governance rules, tool discovery,
+graceful degradation</p>
+<hr />
+<h1 data-number="3" id="introduction"><span
+class="header-section-number">3</span> Introduction</h1>
+<h2 data-number="3.1" id="motivation"><span
+class="header-section-number">3.1</span> Motivation</h2>
+<p>Modern research software repositories increasingly adopt monorepo
+designs in which multiple projects share a common set of curated
+resources. A monorepo consolidates source code, documentation, datasets,
+and governance artefacts under one version-controlled root, enabling
+atomic cross-project changes and a single source of truth for shared
+data [Fowler2002patterns]. The practical benefit is significant: a
+bibliography updated once in
+<code>fonds/templates/template_bibliography/</code> is immediately
+available to every project that discovers it at runtime, without any
+per-project copy.</p>
+<p>Three categories of shared resource appear consistently across
+research template repositories:</p>
+<ol type="1">
+<li><strong>Data pools (fonds)</strong>: curated reference sets —
+bibliographies, contact registries, dataset catalogues — that projects
+query but must never mutate.</li>
+<li><strong>Governance rules</strong>: machine-readable constraint
+schemas and human-readable style guidelines that projects load to
+validate their own outputs.</li>
+<li><strong>Executable tools</strong>: script-based entry points that
+projects invoke to run computations, validate artefacts, or call
+external agents.</li>
+</ol>
+<p>Without a canonical integration pattern for consuming these
+resources, projects face a dilemma: they can hard-code discovery paths
+(creating fragile, repo-root-sensitive logic) or skip resource
+consumption entirely (forfeiting the monorepo’s collaborative benefits).
+Neither outcome is acceptable in a public, forkable template repository
+intended to demonstrate best practices [Wilson2014best].</p>
+<h2 data-number="3.2" id="contribution"><span
+class="header-section-number">3.2</span> Contribution</h2>
+<p>This paper introduces <code>template_pools_rules_tools</code>, a
+<strong>meta-project exemplar</strong> that resolves this dilemma with a
+four-module architecture (fig. <strong>¿fig:architecture?</strong>).
+Each module handles one resource category plus a fourth orchestration
+module:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Resource category</th>
+<th>Key function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/fonds_reader.py</code></td>
+<td>Data pools</td>
+<td><code>read_all_fonds()</code></td>
+</tr>
+<tr>
+<td><code>src/rules_applier.py</code></td>
+<td>Governance rules</td>
+<td><code>validate_against_rules()</code></td>
+</tr>
+<tr>
+<td><code>src/tools_invoker.py</code></td>
+<td>Executable tools</td>
+<td><code>discover_tools()</code></td>
+</tr>
+<tr>
+<td><code>src/integration.py</code></td>
+<td>All three</td>
+<td><code>run_integration_demo()</code></td>
+</tr>
+</tbody>
+</table>
+<p>The architecture obeys three design invariants:</p>
+<ul>
+<li><strong>Read-only resource access</strong>: no module writes to
+<code>fonds/</code>, <code>rules/</code>, or <code>tools/</code>. The
+Layer Contract in <code>AGENTS.md</code> enforces this at code-review
+time.</li>
+<li><strong>Repo-root-relative discovery</strong>: all path resolution
+uses <code>pathlib.Path(__file__).resolve().parents[N]</code> so that
+scripts work from any working directory.</li>
+<li><strong>Graceful degradation</strong>: every reader catches
+<code>FileNotFoundError</code> and <code>yaml.YAMLError</code>, logs a
+warning, and returns a safe empty value. The pipeline never raises on a
+missing resource.</li>
+</ul>
+<h2 data-number="3.3" id="paper-organisation"><span
+class="header-section-number">3.3</span> Paper Organisation</h2>
+<p>The remainder of this paper is structured as follows. sec. <a
+href="#sec:pools">4</a> describes the fond layer and the
+<code>fonds_reader</code> module. sec. <a href="#sec:rules">5</a>
+describes the rules layer and the <code>rules_applier</code> module.
+sec. <a href="#sec:tools">6</a> describes the tool layer and the
+<code>tools_invoker</code> module. sec. <a href="#sec:integration">7</a>
+presents the unified integration pipeline, the manuscript variable token
+system, and a discussion of resilience design. sec. <a
+href="#sec:conclusion">8</a> summarises key findings and future
+directions.</p>
+<p>The architecture overview in fig. <strong>¿fig:architecture?</strong>
+provides a visual map of these relationships. Runtime statistics
+collected during integration are visualised in
+fig. <strong>¿fig:counts?</strong>.</p>
+<hr />
+<h1 data-number="4" id="sec:pools"><span
+class="header-section-number">4</span> Pools: Fonds as Passive Data
+Resources</h1>
+<h2 data-number="4.1" id="what-is-a-fond"><span
+class="header-section-number">4.1</span> What Is a Fond?</h2>
+<p>A <strong>fond</strong> is a versioned, read-only data pool that any
+project in the repository can consume without modifying. The term evokes
+the culinary concept of a concentrated stock — a stable base that
+enriches whatever is built on top of it. Fonds live under the top-level
+<code>fonds/&lt;scope&gt;/&lt;name&gt;/</code> directory, each
+containing a manifest file (<code>fonds.yaml</code>), a
+<code>data/</code> subdirectory, and optional documentation. This
+architecture separates <em>data ownership</em> from <em>data usage</em>:
+research projects in <code>projects/</code> are consumers, not
+producers, of fond data. The separation prevents the accretion of
+project-specific mutations in shared resources — a recurring source of
+reproducibility failures in collaborative research software
+[Wilson2014best].</p>
+<p>The three-layer taxonomy (bibliography, contacts, datasets) maps to
+the three most common categories of curated research data: citable
+literature, human collaboration networks, and input/output datasets.
+Each category carries its own schema enforced by
+<code>rules/templates/template_manuscript_rules</code>.</p>
+<h2 data-number="4.2" id="the-three-template-fonds"><span
+class="header-section-number">4.2</span> The Three Template Fonds</h2>
+<h3 data-number="4.2.1" id="template_bibliography"><span
+class="header-section-number">4.2.1</span>
+<code>template_bibliography</code></h3>
+<p>The <code>template_bibliography</code> fond is a curated reference
+library stored in two formats: a BibTeX file
+(<code>data/references.bib</code>) as source of truth, and a flat CSV
+export (<code>data/references.csv</code>) for programmatic querying.
+Deduplication is enforced on the cite key (the primary CSV column). The
+collection spans foundational machine-learning works — the transformer
+architecture [Vaswani2017attention], early convolutional network
+research [LeCun1998gradient], and large-scale language model
+pre-training [Brown2020gpt3] — alongside software-engineering references
+on best practices [Wilson2014best] and robust software design
+[Taschuk2017ten]. In the current integration run, the fond contains
+<strong>{{integration.bib_entries}} entries</strong>.</p>
+<p>The bibliography fond illustrates the <em>registry pattern</em>
+[Fowler2002patterns]: a single authoritative list is maintained
+centrally, and all projects reference it rather than keeping private
+copies. This guarantees citation consistency across all exemplar
+manuscripts.</p>
+<h3 data-number="4.2.2" id="template_contacts"><span
+class="header-section-number">4.2.2</span>
+<code>template_contacts</code></h3>
+<p>The <code>template_contacts</code> fond holds a registry of research
+collaborators, advisors, and reviewers. Each entry is a YAML object with
+required fields <code>id</code> (a unique slug), <code>name</code>, and
+<code>email</code>, plus optional fields <code>affiliation</code>,
+<code>role</code>, <code>orcid</code>, <code>website</code>, and
+<code>notes</code>. The YAML file (<code>data/contacts.yaml</code>) is
+the source of truth; a JSON mirror (<code>data/contacts.json</code>)
+supports consumers that prefer JSON deserialization. Deduplication is
+enforced on the <code>id</code> field at validation time.</p>
+<h3 data-number="4.2.3" id="template_datasets"><span
+class="header-section-number">4.2.3</span>
+<code>template_datasets</code></h3>
+<p>The <code>template_datasets</code> fond catalogs dataset metadata:
+provenance, licensing, format, size, access URLs, and research tasks. It
+intentionally stores <em>metadata only</em> — no actual data binaries
+are committed to the repository. This design aligns with the principle
+that version control systems should track configuration and metadata
+rather than large binary artefacts [Kluyver2016jupyter]. Dataset entries
+require <code>id</code>, <code>name</code>, <code>version</code>, and
+<code>license</code> fields. Exemplar entries reference classic
+benchmarks such as MNIST (introduced in [LeCun1998gradient]) and
+large-scale corpora used in language-model research [Brown2020gpt3].</p>
+<h2 data-number="4.3" id="the-fonds.yaml-manifest"><span
+class="header-section-number">4.3</span> The <code>fonds.yaml</code>
+Manifest</h2>
+<p>Every fond root must contain a <code>fonds.yaml</code> manifest with
+at minimum three fields:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> bibliography</span><span class="co">   # bibliography | contacts | datasets</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Human-readable description of the fond&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">curated</span><span class="kw">,</span><span class="at"> exemplar</span><span class="kw">]</span></span></code></pre></div>
+<p>The <code>type</code> field governs which reader function is
+appropriate and what schema the <code>data/</code> directory is expected
+to follow. The <code>version</code> field is incremented whenever the
+schema changes, enabling consumers to detect and handle schema drift
+without silent failures.</p>
+<h2 data-number="4.4" id="the-fonds_reader-module"><span
+class="header-section-number">4.4</span> The <code>fonds_reader</code>
+Module</h2>
+<p>The <code>src/fonds_reader.py</code> module provides three reader
+functions — one per fond type — plus a convenience aggregator:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.fonds_reader <span class="im">import</span> (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    read_bibliography_fond,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    read_contacts_fond,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    read_datasets_fond,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    read_all_fonds,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>bib      <span class="op">=</span> read_bibliography_fond()   <span class="co"># dict | None</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>contacts <span class="op">=</span> read_contacts_fond()       <span class="co"># dict | None</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>datasets <span class="op">=</span> read_datasets_fond()       <span class="co"># dict | None</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>all_fonds <span class="op">=</span> read_all_fonds()          <span class="co"># {&quot;bibliography&quot;: ..., &quot;contacts&quot;: ..., &quot;datasets&quot;: ...}</span></span></code></pre></div>
+<p>Each reader resolves the repository root from
+<code>pathlib.Path(__file__).resolve().parents[4]</code> and uses a
+<code>try/except</code> block that catches both
+<code>FileNotFoundError</code> and <code>yaml.YAMLError</code>.
+Returning <code>None</code> on failure rather than raising ensures that
+the integration pipeline degrades gracefully when a fond has not yet
+been populated by a parallel agent [Taschuk2017ten]. In the current run,
+{{integration.fonds_loaded}} of 3 expected fonds were successfully
+loaded (see fig. <strong>¿fig:counts?</strong>).</p>
+<h2 data-number="4.5" id="resilience-by-design"><span
+class="header-section-number">4.5</span> Resilience by Design</h2>
+<p>The fond layer enforces resilience at two levels. At the
+<strong>structural</strong> level, readers tolerate missing fonds
+entirely. At the <strong>schema</strong> level, the manifest version
+field allows consumers to check compatibility before processing data.
+This two-level approach means a fond can evolve its schema without
+breaking existing consumers that have not yet been updated: the consumer
+detects the version mismatch and either adapts or skips, rather than
+crashing silently on malformed data.</p>
+<hr />
+<h1 data-number="5" id="sec:rules"><span
+class="header-section-number">5</span> Rules: Soft and Strong
+Governance</h1>
+<h2 data-number="5.1" id="the-role-of-governance-rules"><span
+class="header-section-number">5.1</span> The Role of Governance
+Rules</h2>
+<p>Research software projects make dozens of implicit governance
+decisions: what test-coverage threshold is acceptable, how manuscript
+sections should be ordered, which citation fields are mandatory. Left
+implicit, these decisions drift silently across projects in a monorepo,
+eroding the consistency that makes the repository valuable as a public
+exemplar. The rules layer makes governance explicit, versioned, and
+machine-enforceable.</p>
+<p>A <strong>rule set</strong> in the template repository is a directory
+under <code>rules/&lt;scope&gt;/&lt;name&gt;/</code> containing a typed
+manifest (<code>rules.yaml</code>) and two subdirectories of rule
+files:</p>
+<pre><code>&lt;name&gt;/
+├── rules.yaml       — manifest (type, scope, version, rule_kinds)
+├── soft/            — Markdown guideline files (human-readable, prompt-like)
+└── strong/          — YAML constraint schemas (machine-enforceable)</code></pre>
+<p>This two-tier architecture reflects the distinction between
+<em>guidance</em> (which humans follow approximately) and
+<em>constraints</em> (which pipelines enforce precisely) — a distinction
+also recognised in enterprise application architecture
+[Fowler2002patterns].</p>
+<h2 data-number="5.2" id="soft-rules-style-and-process-guidelines"><span
+class="header-section-number">5.2</span> Soft Rules: Style and Process
+Guidelines</h2>
+<p>Soft rules are Markdown files in <code>soft/</code>. They encode
+preferences and conventions that cannot easily be expressed as boolean
+constraints but that human reviewers and AI agents can apply
+contextually. Examples include:</p>
+<ul>
+<li><strong>Style preferences</strong>: “Prefer active voice in
+manuscript sections.” “Use <code>\module{}</code> macros for all code
+identifiers.”</li>
+<li><strong>Process guidelines</strong>: “Tag pull requests with a
+review-stage label before requesting review.” “Update
+<code>TODO.md</code> before closing an issue.”</li>
+<li><strong>Citation conventions</strong>: “Cite primary sources rather
+than textbooks where possible.”</li>
+</ul>
+<p>Soft rules are treated as guidance: deviations surface as suggestions
+in code review and manuscript audit reports, not as pipeline blockers.
+This makes the soft layer suitable for evolving preferences that should
+not break automated checks.</p>
+<h2 data-number="5.3" id="strong-rules-hard-constraints"><span
+class="header-section-number">5.3</span> Strong Rules: Hard
+Constraints</h2>
+<p>Strong rules are YAML files in <code>strong/</code>. Each file
+defines one named constraint:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rule</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> coverage-gate</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kind</span><span class="kw">:</span><span class="at"> strong</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Minimum test coverage threshold for src/ modules.&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">applies_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;projects/*/src/&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enforcement</span><span class="kw">:</span><span class="at"> fail_on_violation</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">constraints</span><span class="kw">:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">minimum_line_coverage</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">minimum_branch_coverage</span><span class="kw">:</span><span class="at"> </span><span class="dv">80</span></span></code></pre></div>
+<p>The <code>enforcement: fail_on_violation</code> field signals that a
+pipeline must halt and report when this rule is violated. Strong rules
+are suitable for invariants that, if broken, indicate a genuine defect
+rather than a style preference: coverage below 90% means tests are
+missing; a manuscript section without an abstract means the document is
+incomplete.</p>
+<h2 data-number="5.4" id="the-two-template-rule-sets"><span
+class="header-section-number">5.4</span> The Two Template Rule Sets</h2>
+<h3 data-number="5.4.1" id="template_project_rules"><span
+class="header-section-number">5.4.1</span>
+<code>template_project_rules</code></h3>
+<p>This rule set governs software projects throughout the template
+repository. Its strong rules currently comprise:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>File</th>
+<th>Constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strong/coverage-gate.yaml</code></td>
+<td>Minimum line coverage 90%, branch coverage 80% for
+<code>src/</code></td>
+</tr>
+<tr>
+<td><code>strong/module-structure.yaml</code></td>
+<td>Required directory layout: <code>src/</code>, <code>tests/</code>,
+<code>scripts/</code>, <code>manuscript/</code></td>
+</tr>
+</tbody>
+</table>
+<p>Its soft rules provide guidance on code style, commit message
+conventions, and pull-request labelling.</p>
+<h3 data-number="5.4.2" id="template_manuscript_rules"><span
+class="header-section-number">5.4.2</span>
+<code>template_manuscript_rules</code></h3>
+<p>This rule set governs research manuscripts. Its strong rules
+comprise:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>File</th>
+<th>Constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strong/reference-schema.yaml</code></td>
+<td>Required BibTeX fields and cite-key format constraints</td>
+</tr>
+<tr>
+<td><code>strong/section-schema.yaml</code></td>
+<td>Required manuscript sections, ordering, and minimum word counts</td>
+</tr>
+</tbody>
+</table>
+<p>In the current pipeline run, <strong>{{integration.rules_sets_ok}} of
+2 rule sets</strong> validated successfully
+(fig. <strong>¿fig:counts?</strong>).</p>
+<h2 data-number="5.5" id="the-rules_applier-module"><span
+class="header-section-number">5.5</span> The <code>rules_applier</code>
+Module</h2>
+<p>The <code>src/rules_applier.py</code> module exposes three
+functions:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.rules_applier <span class="im">import</span> (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    load_soft_rules,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    load_strong_rules,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    validate_against_rules,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>soft   <span class="op">=</span> load_soft_rules(<span class="st">&quot;template_project_rules&quot;</span>)    <span class="co"># list[dict]</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>strong <span class="op">=</span> load_strong_rules(<span class="st">&quot;template_project_rules&quot;</span>)  <span class="co"># list[dict]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> validate_against_rules(<span class="st">&quot;template_project_rules&quot;</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># → {&quot;status&quot;: &quot;ok&quot; | &quot;partial&quot; | &quot;missing&quot;, &quot;soft_count&quot;: N, &quot;strong_count&quot;: N}</span></span></code></pre></div>
+<p><code>validate_against_rules()</code> performs two checks: (1) the
+<code>rules.yaml</code> manifest is parseable YAML; (2) every rule file
+in <code>soft/</code> and <code>strong/</code> is parseable YAML. It
+returns a status of <code>"ok"</code> when both checks pass,
+<code>"partial"</code> when the manifest exists but some rule files are
+missing or malformed, and <code>"missing"</code> when the rule set
+directory is absent entirely. This graduated status enables the
+integration pipeline to distinguish between a rule set that has not yet
+been created (acceptable during active development) and one that is
+present but broken (actionable defect).</p>
+<h2 data-number="5.6" id="rules-and-manuscript-variables"><span
+class="header-section-number">5.6</span> Rules and Manuscript
+Variables</h2>
+<p>Strong rule validation counts are injected into the manuscript
+through the token system. The token
+<code>{{integration.rules_sets_ok}}</code> expands to the count of rule
+sets that returned <code>status="ok"</code> during the integration run.
+This creates a verifiable link between the pipeline’s actual behaviour
+and the manuscript’s claims — the manuscript cannot assert successful
+validation without the pipeline having actually succeeded.</p>
+<hr />
+<h1 data-number="6" id="sec:tools"><span
+class="header-section-number">6</span> Tools: Executable Entry
+Points</h1>
+<h2 data-number="6.1" id="what-is-a-tool"><span
+class="header-section-number">6.1</span> What Is a Tool?</h2>
+<p>A <strong>tool</strong> in the template repository is a directory
+under <code>tools/&lt;scope&gt;/&lt;name&gt;/</code> that packages one
+or more executable scripts behind a typed manifest
+(<code>tools.yaml</code>). Tools provide the third layer of the resource
+architecture: where fonds supply static data and rules supply governance
+constraints, tools supply <em>behaviour</em> — computations, validation
+runs, and agent skill invocations that projects can trigger without
+re-implementing the underlying logic.</p>
+<p>The tools layer deliberately mirrors the Unix philosophy of small,
+composable utilities that communicate through standard interfaces
+[Raymond2003art]. Each tool declares its entrypoints (shell scripts),
+its invocation contract (stdin/stdout/exit-code semantics), and its
+capabilities (type, version, tags) in a single manifest file. Consumers
+invoke tools through the <code>tools_invoker</code> module without
+needing to understand the tool’s implementation details — a textbook
+application of the Facade pattern [Gamma1994design].</p>
+<h2 data-number="6.2" id="the-tools.yaml-manifest"><span
+class="header-section-number">6.2</span> The <code>tools.yaml</code>
+Manifest</h2>
+<p>Every tool root must contain a <code>tools.yaml</code> manifest with
+the following fields:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> code_executor | validator | skill | agent | renderer</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Human-readable description of the tool&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0.0&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">curated</span><span class="kw">,</span><span class="at"> exemplar</span><span class="kw">,</span><span class="at"> production</span><span class="kw">,</span><span class="at"> experimental</span><span class="kw">]</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">creator</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;org/repo&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">license</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Apache-2.0&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">entrypoints</span><span class="kw">:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scripts/run.sh</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scripts/validate.sh</span></span></code></pre></div>
+<p>The <code>type</code> field determines the invocation contract the
+consumer should expect. The <code>entrypoints</code> list names the
+scripts that must exist on disk; the <code>tools_invoker</code> module
+validates their presence at discovery time rather than at invocation
+time, making failures visible early in the pipeline rather than at
+runtime.</p>
+<h2 data-number="6.3" id="the-three-template-tools"><span
+class="header-section-number">6.3</span> The Three Template Tools</h2>
+<h3 data-number="6.3.1" id="template_code_executor"><span
+class="header-section-number">6.3.1</span>
+<code>template_code_executor</code></h3>
+<p>A generic code execution tool that accepts a JSON payload on standard
+input and returns execution results as JSON. The invocation contract
+is:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Entrypoint</th>
+<th>stdin</th>
+<th>stdout</th>
+<th>exit code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scripts/run.sh</code></td>
+<td><code>{"code": str, "language": str}</code></td>
+<td><code>{"exit_code": int, "stdout": str, "stderr": str}</code></td>
+<td>0 = success</td>
+</tr>
+<tr>
+<td><code>scripts/validate.sh</code></td>
+<td>—</td>
+<td>Human-readable validation report</td>
+<td>0 = valid</td>
+</tr>
+</tbody>
+</table>
+<p>The code executor exemplifies tools that wrap a computational
+capability. The JSON-in/JSON-out contract makes it easily composable
+with pipeline orchestrators and agent frameworks.</p>
+<h3 data-number="6.3.2" id="template_validator"><span
+class="header-section-number">6.3.2</span>
+<code>template_validator</code></h3>
+<p>A JSON Schema validation tool. It reads a target document and a
+schema from disk and reports validation results in human-readable form.
+The entrypoint <code>scripts/validate.sh</code> exits 0 when the
+document is valid and non-zero with a detailed error message otherwise.
+The validator tool is used in the project pipeline to validate
+<code>manuscript_variables.json</code> against its expected schema
+before manuscript rendering.</p>
+<h3 data-number="6.3.3" id="template_skill"><span
+class="header-section-number">6.3.3</span>
+<code>template_skill</code></h3>
+<p>An agent skill invocation tool that wraps a Hermes-compatible skill
+definition. The entrypoint <code>scripts/invoke.sh</code> accepts a
+prompt string on standard input and returns the agent response as text.
+This tool type bridges the repository’s tool architecture with external
+agent frameworks, demonstrating that the same manifest-and-entrypoint
+pattern applies equally to computational tools and AI agents.</p>
+<h2 data-number="6.4" id="the-tools_invoker-module"><span
+class="header-section-number">6.4</span> The <code>tools_invoker</code>
+Module</h2>
+<p>The <code>src/tools_invoker.py</code> module provides three public
+functions:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.tools_invoker <span class="im">import</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    discover_tools,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    get_tool_entrypoints,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    validate_tool_scripts_exist,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>tools <span class="op">=</span> discover_tools()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># → [{&quot;name&quot;: &quot;template_code_executor&quot;, &quot;manifest&quot;: {...}}, ...]</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> get_tool_entrypoints(<span class="st">&quot;template_code_executor&quot;</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># → [&quot;scripts/run.sh&quot;, &quot;scripts/validate.sh&quot;]</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> validate_tool_scripts_exist(<span class="st">&quot;template_code_executor&quot;</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># → {&quot;status&quot;: &quot;ok&quot; | &quot;partial&quot; | &quot;missing&quot;, &quot;missing_scripts&quot;: [...]}</span></span></code></pre></div>
+<p><code>discover_tools()</code> scans <code>tools/templates/</code> for
+subdirectories containing a parseable <code>tools.yaml</code> and
+returns a list of discovery records. It silently skips directories
+without a manifest rather than raising, ensuring that
+partially-completed tool directories do not block the pipeline.</p>
+<p><code>validate_tool_scripts_exist()</code> iterates over the
+manifest’s <code>entrypoints</code> list and checks each path against
+the filesystem. It returns a structured result distinguishing between
+tools that are fully ready (<code>"ok"</code>), partially configured
+(<code>"partial"</code> — some scripts missing), and entirely absent
+(<code>"missing"</code>). In the current integration run,
+<strong>{{integration.tools_discovered}} tools</strong> were discovered
+(fig. <strong>¿fig:counts?</strong>), all with valid manifests.</p>
+<h2 data-number="6.5" id="tool-discovery-and-reproducibility"><span
+class="header-section-number">6.5</span> Tool Discovery and
+Reproducibility</h2>
+<p>The tools layer contributes to reproducibility by making the
+<em>availability</em> of computational capabilities explicit and
+checkable. A project that hard-codes a path to a tool script becomes
+brittle when the repository is reorganised. By contrast, a project that
+calls <code>discover_tools()</code> and checks
+<code>validate_tool_scripts_exist()</code> will detect missing
+entrypoints at pipeline initialisation time and report them clearly,
+rather than failing silently at execution time [Stodden2016enhancing].
+This shift from implicit to explicit dependency declaration is a key
+design principle of the template architecture (see
+fig. <strong>¿fig:architecture?</strong>).</p>
+<hr />
+<h1 data-number="7" id="sec:integration"><span
+class="header-section-number">7</span> Integration: Unified Pipeline and
+Token Injection</h1>
+<h2 data-number="7.1" id="architecture-overview"><span
+class="header-section-number">7.1</span> Architecture Overview</h2>
+<p>The three resource layers described in sec. <a
+href="#sec:pools">4</a>, sec. <a href="#sec:rules">5</a>, and sec. <a
+href="#sec:tools">6</a> are orchestrated by a single function in
+<code>src/integration.py</code>. The <code>run_integration_demo()</code>
+function calls all three subsystems in a defined order, collects their
+results into a structured dictionary, and writes summary counts to
+<code>output/data/manuscript_variables.json</code> for injection into
+this manuscript at render time. fig. <strong>¿fig:architecture?</strong>
+illustrates the complete architecture.</p>
+<pre><code>run_integration_demo()
+  ├── read_bibliography_fond()       → {&quot;manifest&quot;: ..., &quot;bibtex&quot;: ..., &quot;csv_rows&quot;: [...]}
+  ├── read_contacts_fond()           → {&quot;manifest&quot;: ..., &quot;contacts&quot;: [...]}
+  ├── read_datasets_fond()           → {&quot;manifest&quot;: ..., &quot;datasets&quot;: [...]}
+  ├── validate_against_rules(&quot;template_project_rules&quot;)    → {&quot;status&quot;: &quot;ok&quot;, ...}
+  ├── validate_against_rules(&quot;template_manuscript_rules&quot;) → {&quot;status&quot;: &quot;ok&quot;, ...}
+  ├── discover_tools()               → [{&quot;name&quot;: ..., &quot;manifest&quot;: ...}, ...]
+  └── validate_tool_scripts_exist(&lt;each tool&gt;)            → {&quot;status&quot;: &quot;ok&quot;, ...}</code></pre>
+<p>The function returns a top-level dict with keys <code>fonds</code>,
+<code>rules</code>, <code>tools</code>, and <code>summary</code>. The
+<code>summary</code> sub-dict provides the counts that populate
+manuscript tokens.</p>
+<h2 data-number="7.2" id="manuscript-variable-tokens"><span
+class="header-section-number">7.2</span> Manuscript Variable Tokens</h2>
+<p>The token injection system bridges the integration pipeline and the
+manuscript prose. Tokens use double-brace syntax:
+<code>{{integration.fonds_loaded}}</code> expands to the integer count
+of fonds successfully loaded during the most recent integration run.
+Tokens are resolved by <code>scripts/03_generate_manuscript.py</code>,
+which reads <code>output/data/manuscript_variables.json</code> and
+substitutes each token before the manuscript is passed to the rendering
+engine.</p>
+<p>The current <code>manuscript_variables.json</code> contains the
+following summary values (see fig. <strong>¿fig:counts?</strong> for a
+visual representation):</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{{integration.fonds_loaded}}</code></td>
+<td>{{integration.fonds_loaded}}</td>
+</tr>
+<tr>
+<td><code>{{integration.rules_sets_ok}}</code></td>
+<td>{{integration.rules_sets_ok}}</td>
+</tr>
+<tr>
+<td><code>{{integration.tools_discovered}}</code></td>
+<td>{{integration.tools_discovered}}</td>
+</tr>
+<tr>
+<td><code>{{integration.bib_entries}}</code></td>
+<td>{{integration.bib_entries}}</td>
+</tr>
+</tbody>
+</table>
+<p>This table is itself token-injected: the values shown are those
+produced by the pipeline, not hard-coded by the manuscript author. If
+the pipeline results change — for example, because a new fond is added —
+re-running <code>scripts/03_generate_manuscript.py</code> updates the
+manuscript automatically, without manual editing. This property is
+central to reproducibility: the manuscript’s quantitative claims are
+always consistent with the code that generated them
+[Stodden2016enhancing].</p>
+<h2 data-number="7.3" id="methods-the-script-pipeline"><span
+class="header-section-number">7.3</span> Methods: The Script
+Pipeline</h2>
+<p>Three thin orchestration scripts govern the integration workflow
+(fig. <strong>¿fig:pipeline?</strong>):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Script</th>
+<th>Purpose</th>
+<th>Key output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scripts/01_validate_sources.py</code></td>
+<td>Validate presence and well-formedness of all resources</td>
+<td>Console report</td>
+</tr>
+<tr>
+<td><code>scripts/02_run_integration.py</code></td>
+<td>Run <code>run_integration_demo()</code> and print JSON summary</td>
+<td>Console JSON</td>
+</tr>
+<tr>
+<td><code>scripts/03_generate_manuscript.py</code></td>
+<td>Write <code>output/data/manuscript_variables.json</code></td>
+<td>JSON file</td>
+</tr>
+</tbody>
+</table>
+<p>Each script is ≤ 50 lines, imports all business logic from
+<code>src/</code>, and uses <code>argparse</code> for optional flags.
+This thin-orchestrator pattern [Wilson2014best] ensures that all
+testable logic is in <code>src/</code> at ≥ 90% coverage, while the
+scripts themselves remain readable without a test suite.</p>
+<h2 data-number="7.4" id="resilience-design"><span
+class="header-section-number">7.4</span> Resilience Design</h2>
+<p>The integration layer enforces resilience at three levels,
+corresponding to the three failure modes a monorepo integration pipeline
+encounters:</p>
+<ol type="1">
+<li><p><strong>Resource absence</strong>: A fond, rule set, or tool
+directory may not yet exist if the resource was created by a parallel
+agent that has not yet completed. All three reader modules return
+<code>None</code> or empty collections in this case, and
+<code>run_integration_demo()</code> reports the missing resource in the
+<code>summary</code> dict without raising.</p></li>
+<li><p><strong>Schema malformation</strong>: A manifest may be present
+but contain invalid YAML or missing required fields. Readers catch
+<code>yaml.YAMLError</code> and return a degraded result
+(<code>status="partial"</code> in rule validation; <code>None</code> in
+fond reading) rather than propagating the parse error.</p></li>
+<li><p><strong>Script absence</strong>: A tool may declare entrypoints
+in its manifest that have not yet been created.
+<code>validate_tool_scripts_exist()</code> detects this at discovery
+time and returns <code>status="partial"</code> with a list of missing
+script paths, so the pipeline can report the defect without attempting
+to invoke a non-existent script.</p></li>
+</ol>
+<p>This three-level resilience design reflects the principle that
+shared-resource pipelines should fail <em>informatively</em> rather than
+<em>catastrophically</em> — surfacing the cause of incompleteness in
+structured output that downstream consumers can act on
+[Taschuk2017ten].</p>
+<h2 data-number="7.5" id="test-coverage"><span
+class="header-section-number">7.5</span> Test Coverage</h2>
+<p>The four <code>src/</code> modules are covered by 38 tests across
+four test files in <code>tests/</code>. Tests use real file paths, real
+YAML files, and real BibTeX content rather than mocks, ensuring that
+coverage numbers reflect genuine code paths through the
+resource-discovery logic. The current coverage report shows ≥ 90% line
+coverage for all four modules. The
+<code>tests/test_integration.py</code> suite includes an end-to-end test
+that calls <code>run_integration_demo()</code> and asserts that the
+<code>summary</code> dict contains the expected keys with non-negative
+integer values — a contract test that verifies the token injection
+pipeline’s data source.</p>
+<hr />
+<h1 data-number="8" id="sec:conclusion"><span
+class="header-section-number">8</span> Conclusion</h1>
+<h2 data-number="8.1" id="summary"><span
+class="header-section-number">8.1</span> Summary</h2>
+<p>This paper has presented <code>template_pools_rules_tools</code>, a
+meta-project exemplar demonstrating how research software projects
+embedded in a monorepo can integrate three categories of shared
+resources — data pools (fonds), governance rules, and executable tools —
+without tight coupling to any specific resource instance. The key
+contributions are:</p>
+<ol type="1">
+<li><p><strong>A four-module architecture</strong>
+(<code>fonds_reader</code>, <code>rules_applier</code>,
+<code>tools_invoker</code>, <code>integration</code>) that provides a
+canonical pattern for resource-aware project code in the template
+repository. Each module is independently testable and independently
+deployable.</p></li>
+<li><p><strong>A typed manifest convention</strong>
+(<code>fonds.yaml</code>, <code>rules.yaml</code>,
+<code>tools.yaml</code>) that makes resource capabilities explicit and
+checkable at pipeline initialisation time, shifting failure detection
+from runtime to startup — a significant improvement for reproducibility
+[Wilson2014best].</p></li>
+<li><p><strong>A token injection pipeline</strong> that links manuscript
+prose to integration runtime statistics through
+<code>{{integration.*}}</code> tokens, ensuring that quantitative claims
+in the manuscript are always generated by the pipeline rather than
+authored manually. In the current run this covered
+{{integration.fonds_loaded}} fonds, {{integration.rules_sets_ok}} rule
+sets, {{integration.tools_discovered}} tools, and
+{{integration.bib_entries}} bibliography entries.</p></li>
+<li><p><strong>A three-level resilience design</strong> — resource
+absence, schema malformation, and script absence — that allows the
+pipeline to degrade gracefully and report failures informatively rather
+than crashing, consistent with best practices for robust research
+software [Taschuk2017ten].</p></li>
+</ol>
+<h2 data-number="8.2" id="design-decisions-revisited"><span
+class="header-section-number">8.2</span> Design Decisions Revisited</h2>
+<p>Several design decisions deserve emphasis as lessons for future
+exemplar authors:</p>
+<p><strong>Repo-root-relative discovery</strong> is non-negotiable in a
+forkable monorepo. Any hard-coded absolute path or working-directory
+assumption will fail when the repository is cloned to a different
+location. The <code>pathlib.Path(__file__).resolve().parents[N]</code>
+idiom used throughout <code>src/</code> ensures that discovery works
+from any working directory.</p>
+<p><strong>Graceful fallbacks over exceptions</strong> is the correct
+trade-off for a resource-consumption layer. The alternative — raising
+<code>FileNotFoundError</code> when a fond is missing — would make the
+integration pipeline fragile to the ordering of parallel agent writes.
+Returning <code>None</code> and logging a warning allows the pipeline to
+produce a complete, if partial, result dict that downstream consumers
+can reason about.</p>
+<p><strong>Real-file tests over mocks</strong> is required for a
+template exemplar. Mocks can pass tests while the real discovery logic
+is silently broken. Tests that use real file paths exercise the full
+path-resolution chain and catch regressions that mocks would miss.</p>
+<p><strong>Thin orchestration scripts</strong> keep the scripts
+directory readable and focus all testable logic in <code>src/</code>. A
+script that does more than parse arguments, call a <code>src/</code>
+function, and write output is accumulating business logic that belongs
+elsewhere.</p>
+<h2 data-number="8.3" id="future-directions"><span
+class="header-section-number">8.3</span> Future Directions</h2>
+<p>The three-layer architecture described here is deliberately
+extensible. The most natural extension is a fourth resource category:
+<strong>models</strong>
+(<code>models/&lt;scope&gt;/&lt;name&gt;/</code>) for pre-trained
+machine learning models and their inference scripts. The pattern would
+follow exactly the same manifest-and-reader design, with
+<code>models.yaml</code> declaring type, version, and entrypoints, and a
+<code>models_loader</code> module providing
+<code>discover_models()</code> and
+<code>validate_model_files_exist()</code>. Adding this layer to
+<code>template_pools_rules_tools</code> would require only a new reader
+module and a new section in the integration orchestrator — the existing
+architecture places no constraints on the number of resource
+categories.</p>
+<p>A second direction is <strong>cross-fond validation</strong>:
+checking that cite keys used in a project’s
+<code>manuscript/references.bib</code> are a subset of those available
+in <code>fonds/templates/template_bibliography/</code>. This would
+require a small cross-reference function in the integration module and
+would strengthen the reproducibility guarantee by ensuring that
+manuscript citations always trace back to curated, shared sources.</p>
+<p>The exemplar is ready to fork. A project team wishing to adopt this
+architecture need only copy the four <code>src/</code> modules, update
+the resource directory paths in each reader, and replace the exemplar
+fond/rules/tool names with their own.</p>
+</body>
+</html>

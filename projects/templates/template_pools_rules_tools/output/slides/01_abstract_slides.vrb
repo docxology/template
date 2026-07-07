@@ -1,0 +1,49 @@
+\frametitle{Abstract}
+Research software repositories in monorepo configurations accumulate
+three categories of shared resources that individual projects must
+consume without re-implementing discovery logic: \textbf{data pools}
+(bibliographies, contacts, datasets), \textbf{governance rules} (style
+guides, coverage thresholds, citation schemas), and \textbf{executable
+tools} (code executors, validators, skill invocations). Without a
+canonical integration pattern, projects either duplicate discovery logic
+or silently ignore resources that fail to load --- both outcomes degrade
+reproducibility and collaborative cohesion \breakseq{[@Wilson2014best;
+@Taschuk2017ten]}.
+
+This paper presents \breaktt{template\_pools\_rules\_tools}, a
+meta-project exemplar that demonstrates how a single project can
+programmatically discover, validate, and exercise all three resource
+categories with zero tight coupling to any specific resource instance.
+The exemplar comprises four Python modules --- \texttt{fonds\_reader},
+\texttt{rules\_applier}, \texttt{tools\_invoker}, and
+\texttt{integration} --- plus three thin orchestration scripts and a
+fully token-injected manuscript pipeline.
+
+The architecture (@fig:architecture) separates \emph{resource ownership}
+from \emph{resource consumption}. Resources live in top-level
+\texttt{fonds/}, \texttt{rules/}, and \texttt{tools/} directories and
+are never modified by consumers. Each resource exposes a typed manifest
+(\texttt{fonds.yaml}, \texttt{rules.yaml}, \texttt{tools.yaml}) that the
+corresponding reader module uses for discovery and validation. All
+readers implement graceful fallbacks: they return \texttt{None} or empty
+collections when a resource is absent, log a warning via the standard
+library \texttt{logging} module, and allow the integration pipeline to
+continue.
+
+In a representative pipeline run, the integration demo loaded
+\{\{integration.fonds\_loaded\}\} fonds, validated
+\{\{integration.rules\_sets\_ok\}\} rule sets, discovered
+\{\{integration.tools\_discovered\}\} tools, and processed
+\{\{integration.bib\_entries\}\} bibliography entries --- all reported
+as structured JSON that populates manuscript variable tokens at render
+time. Tests covering the four \texttt{src/} modules achieve ≥90\% line
+coverage and use real file paths rather than mocks, ensuring that
+reported counts are genuine.
+
+The \breaktt{template\_pools\_rules\_tools} exemplar provides a reference
+implementation that any project in the template repository can consult
+when designing its own resource-consumption layer.
+
+\textbf{Keywords:} research software engineering, monorepo architecture,
+reproducibility, fonds, governance rules, tool discovery, graceful
+degradation

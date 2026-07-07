@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_abstract.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="abstract">Abstract</h1>
+<p>Research software repositories in monorepo configurations accumulate
+three categories of shared resources that individual projects must
+consume without re-implementing discovery logic: <strong>data
+pools</strong> (bibliographies, contacts, datasets), <strong>governance
+rules</strong> (style guides, coverage thresholds, citation schemas),
+and <strong>executable tools</strong> (code executors, validators, skill
+invocations). Without a canonical integration pattern, projects either
+duplicate discovery logic or silently ignore resources that fail to load
+— both outcomes degrade reproducibility and collaborative cohesion
+[Wilson2014best; Taschuk2017ten].</p>
+<p>This paper presents <code>template_pools_rules_tools</code>, a
+meta-project exemplar that demonstrates how a single project can
+programmatically discover, validate, and exercise all three resource
+categories with zero tight coupling to any specific resource instance.
+The exemplar comprises four Python modules — <code>fonds_reader</code>,
+<code>rules_applier</code>, <code>tools_invoker</code>, and
+<code>integration</code> — plus three thin orchestration scripts and a
+fully token-injected manuscript pipeline.</p>
+<p>The architecture (<span class="citation"
+data-cites="fig:architecture">@fig:architecture</span>) separates
+<em>resource ownership</em> from <em>resource consumption</em>.
+Resources live in top-level <code>fonds/</code>, <code>rules/</code>,
+and <code>tools/</code> directories and are never modified by consumers.
+Each resource exposes a typed manifest (<code>fonds.yaml</code>,
+<code>rules.yaml</code>, <code>tools.yaml</code>) that the corresponding
+reader module uses for discovery and validation. All readers implement
+graceful fallbacks: they return <code>None</code> or empty collections
+when a resource is absent, log a warning via the standard library
+<code>logging</code> module, and allow the integration pipeline to
+continue.</p>
+<p>In a representative pipeline run, the integration demo loaded
+{{integration.fonds_loaded}} fonds, validated
+{{integration.rules_sets_ok}} rule sets, discovered
+{{integration.tools_discovered}} tools, and processed
+{{integration.bib_entries}} bibliography entries — all reported as
+structured JSON that populates manuscript variable tokens at render
+time. Tests covering the four <code>src/</code> modules achieve ≥90%
+line coverage and use real file paths rather than mocks, ensuring that
+reported counts are genuine.</p>
+<p>The <code>template_pools_rules_tools</code> exemplar provides a
+reference implementation that any project in the template repository can
+consult when designing its own resource-consumption layer.</p>
+<p><strong>Keywords:</strong> research software engineering, monorepo
+architecture, reproducibility, fonds, governance rules, tool discovery,
+graceful degradation</p>
+</body>
+</html>

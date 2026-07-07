@@ -19,4 +19,4 @@ def test_known_stage_key_is_mapped() -> None:
     from infrastructure.core.pipeline.stage_registry import STAGE_DISPATCH
 
     assert "render_pdf" in STAGE_DISPATCH
-    assert STAGE_DISPATCH["render_pdf"].script.endswith("03_render_pdf.py")
+    assert STAGE_DISPATCH["render_pdf"].script.endswith("stage_03_render.py")

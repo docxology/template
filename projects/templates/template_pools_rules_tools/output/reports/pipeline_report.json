@@ -1,0 +1,339 @@
+{
+  "timestamp": "2026-07-07T06:52:50.502561",
+  "total_duration": 42.40215992927551,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.004271030426025391,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.3516087532043457,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 0,
+      "duration": 9.182845115661621,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 18.62274932861328,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 1.2958548069000244,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 1,
+      "duration": 12.944830894470215,
+      "timestamp": "",
+      "completed": true,
+      "status": "failed",
+      "context": {}
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 4,
+        "size_mb": "0.12",
+        "total_size_bytes": 130362,
+        "largest_files": [
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.05",
+            "path": "pdf/_combined_manuscript.tex"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.03",
+            "path": "pdf/_combined_manuscript.md"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.03",
+            "path": "pdf/_combined_manuscript.log"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 2,
+          ".tex": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 10,
+        "size_mb": "0.19",
+        "total_size_bytes": 196244,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.07",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.03",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "manuscript__05_tools.html",
+            "size_mb": "0.02",
+            "path": "web/manuscript__05_tools.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 9
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 65,
+        "size_mb": "0.90",
+        "total_size_bytes": 948686,
+        "largest_files": [
+          {
+            "name": "04_rules_slides.log",
+            "size_mb": "0.07",
+            "path": "slides/04_rules_slides.log"
+          },
+          {
+            "name": "06_integration_slides.log",
+            "size_mb": "0.07",
+            "path": "slides/06_integration_slides.log"
+          },
+          {
+            "name": "02_introduction_slides.log",
+            "size_mb": "0.07",
+            "path": "slides/02_introduction_slides.log"
+          }
+        ],
+        "extensions": {
+          ".snm": 8,
+          ".aux": 8,
+          ".log": 8,
+          ".vrb": 8,
+          ".toc": 8,
+          ".tex": 9,
+          ".pdf": 8,
+          ".nav": 8
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "data": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 320,
+        "largest_files": [
+          {
+            "name": "manuscript_variables.json",
+            "size_mb": "0.00",
+            "path": "data/manuscript_variables.json"
+          }
+        ],
+        "extensions": {
+          ".json": 1
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 15,
+        "size_mb": "0.01",
+        "total_size_bytes": 13315,
+        "largest_files": [
+          {
+            "name": "telemetry.json",
+            "size_mb": "0.00",
+            "path": "reports/telemetry.json"
+          },
+          {
+            "name": "artifact_manifest.json",
+            "size_mb": "0.00",
+            "path": "reports/artifact_manifest.json"
+          },
+          {
+            "name": "telemetry.txt",
+            "size_mb": "0.00",
+            "path": "reports/telemetry.txt"
+          }
+        ],
+        "extensions": {
+          ".json": 10,
+          ".jsonl": 1,
+          ".txt": 1,
+          ".md": 3
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 334,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 96,
+    "total_size_mb": 1.2295351028442383,
+    "largest_files": [
+      {
+        "name": "index.html",
+        "size_mb": "0.07",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "04_rules_slides.log",
+        "size_mb": "0.07",
+        "category": "slides",
+        "path": "slides/04_rules_slides.log"
+      },
+      {
+        "name": "06_integration_slides.log",
+        "size_mb": "0.07",
+        "category": "slides",
+        "path": "slides/06_integration_slides.log"
+      },
+      {
+        "name": "02_introduction_slides.log",
+        "size_mb": "0.07",
+        "category": "slides",
+        "path": "slides/02_introduction_slides.log"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.05",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.03",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.md"
+      },
+      {
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.03",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.03",
+        "category": "web",
+        "path": "web/_combined_manuscript.md"
+      },
+      {
+        "name": "manuscript__05_tools.html",
+        "size_mb": "0.02",
+        "category": "web",
+        "path": "web/manuscript__05_tools.html"
+      },
+      {
+        "name": "manuscript_variables.json",
+        "size_mb": "0.00",
+        "category": "data",
+        "path": "data/manuscript_variables.json"
+      }
+    ],
+    "missing_expected_files": [
+      "template_pools_rules_tools_combined.pdf"
+    ],
+    "sizes_by_category": {
+      "pdf": 0.12432289123535156,
+      "web": 0.18715286254882812,
+      "slides": 0.9047374725341797,
+      "figures": 0.0,
+      "data": 0.00030517578125,
+      "reports": 0.012698173522949219,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.0003185272216796875
+    },
+    "file_counts_by_type": {
+      ".md": 5,
+      ".log": 11,
+      ".tex": 10,
+      ".html": 9,
+      ".snm": 8,
+      ".aux": 8,
+      ".vrb": 8,
+      ".toc": 8,
+      ".pdf": 8,
+      ".nav": 8,
+      ".json": 11,
+      ".jsonl": 1,
+      ".txt": 1
+    },
+    "log_file": {
+      "exists": true,
+      "size": 334,
+      "path": "output/logs/pipeline.log"
+    }
+  }
+}

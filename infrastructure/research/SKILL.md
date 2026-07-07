@@ -78,11 +78,20 @@ research_workflow:
 
 ```python
 from infrastructure.research import (
-    ResearchWorkflow,   # Main class — describe / prompt / stages
-    ResearchStage,      # Stage descriptor: index, name, description, prompt_template
-    WorkflowConfig,     # Parsed config.yaml `research_workflow:` block
+    ResearchWorkflow,        # instance API — workflow.stage(name) / all_stages() / describe()
+    ResearchStage,           # Stage descriptor: name, label, description, inputs, outputs, gate, status, order
+    ResearchWorkflowConfig,  # Parsed config.yaml `research_workflow:` block
 )
 ```
+
+> **Doc/code drift (tracked for follow-up):** the "Stages" table, `.prompt()`,
+> `.stages()`, `.render()`, and `.record_output()` calls elsewhere in this
+> file describe an OpenScience-ported design (uppercase SCOPE/LITERATURE/...
+> stage names, per-stage sub-agent fan-out and prompt templates) that
+> `ResearchWorkflow`/`ResearchStage` do not implement — the real stage names
+> are lowercase (`scope, survey, hypothesise, experiment, validate, review,
+> write`) and there is no `.prompt()`/`.stages()`/`.render()` API. Treat
+> those sections as design intent, not a verified API surface.
 
 ## Stage Prompt Generation
 

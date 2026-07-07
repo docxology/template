@@ -1,0 +1,13 @@
+{
+  "FONDS_LOADED": 3,
+  "RULES_SETS_OK": 2,
+  "RULES_SETS_TOTAL": 2,
+  "TOOLS_DISCOVERED": 3,
+  "TOOLS_VALID": 3,
+  "BIB_ENTRIES": 8,
+  "CONTACTS_COUNT": 5,
+  "DATASETS_COUNT": 5,
+  "STRONG_RULES_PROJECT": 2,
+  "STRONG_RULES_MANUSCRIPT": 2,
+  "TOOL_NAMES": "template_code_executor, template_skill, template_validator"
+}

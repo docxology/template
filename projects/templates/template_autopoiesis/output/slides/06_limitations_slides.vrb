@@ -1,0 +1,196 @@
+\frametitle{Limitations}
+\protect\phantomsection\label{limitations}
+This section states what the exemplar does \emph{not} do, alongside what
+it does. Coverage and test-count figures are not restated as literal
+numbers here --- those live only in the \texttt{493} / \texttt{96.28}
+tokens, resolved at render time from a live measurement
+(\breaktt{src/manuscript\_variables.py::measure\_test\_summary}), not
+hand-typed.
+
+\begin{block}{Reserved slots are excluded from the effective product
+space}
+\protect\phantomsection\label{reserved-slots-are-excluded-from-the-effective-product-space}
+The grammar declares six slots, but \texttt{materialize()} only branches
+on three of them --- \breaktt{primitive\_domain}, \texttt{track},
+\texttt{section\_set}. The remaining 3
+(\breaktt{figure\_profile,\ qr\_profile,\ integrity\_profile}) are parsed
+and contribute to \texttt{spec\_hash} like any other slot, but
+\breaktt{manuscript\_figures.py}, \texttt{sealing.py}, and
+\texttt{integrity.py} are unconditionally exercised regardless of
+\texttt{figure\_profile}, \texttt{qr\_profile}, or
+\breaktt{integrity\_profile} --- those modules do not currently branch on
+the reserved slots' selected option. The practical consequence: distinct
+seeds can produce a nominally distinct \texttt{spec\_hash} while
+materializing byte-identical children, since only three slots vary
+output. That inflation, 360 nominal vs.~45 effective, is disclosed
+rather than hidden: \breaktt{generate\_variables}
+(\breaktt{src/manuscript\_variables.py}) exposes both
+\texttt{PRODUCT\_SIZE} and \breaktt{EFFECTIVE\_PRODUCT\_SIZE} as separate
+tokens, so nowhere in this manuscript can the larger, nominal number be
+quoted without the smaller, effective one appearing beside it. Wiring
+the reserved slots into \texttt{materialize()} is an open item, not a
+claimed capability.
+\end{block}
+
+\begin{block}{No child-PDF rendering in CI}
+\protect\phantomsection\label{no-child-pdf-rendering-in-ci}
+\breaktt{realize.py::render\_child\_manuscript()} writes manuscript stubs
+for a generated child but does not invoke Pandoc or Chrome. Absent a
+full rendering toolchain --- the default posture in CI --- it returns
+\texttt{\{"success":\ False,\ "reason":\ "Chrome/Pandoc\ rendering\ not\ available\ in\ child\ context",\ ...\}}
+rather than raising or silently skipping. Verifying a child's
+\emph{files} (\texttt{verify\_child} / \breaktt{verify\_child\_full}) is
+decoupled from verifying that its manuscript renders; only the former is
+tested here.
+\end{block}
+
+\begin{block}{Within-platform guarantee only}
+\protect\phantomsection\label{within-platform-guarantee-only}
+Determinism is derived from \texttt{hashlib.sha256} over Python strings
+(\texttt{expand.py}'s seed/slot/ordinal/options digest, and
+\breaktt{integrity.py::tree\_hash\_from\_content\_hashes} over file
+contents), which is itself platform-independent. But the surrounding
+pipeline --- file iteration order ahead of \texttt{sorted()}
+normalization, path-separator handling, the specific CPython minor
+version running \texttt{materialize()} --- is not independently fuzzed
+across platforms in this suite. What is actually tested is determinism
+within one CPython version on one OS, a narrower claim than the
+cross-platform, bit-for-bit reproducibility discussed in the
+reproducible-builds literature \breakseq{[@reproducible\_builds]}. A second CI
+leg that materializes the same seed on a second OS/Python and diffs tree
+hashes would close this gap; it does not currently exist.
+\end{block}
+
+\begin{block}{Grammar does not self-modify}
+\protect\phantomsection\label{grammar-does-not-self-modify}
+The autopoiesis metaphor is figurative. Maturana and Varela's
+operational sense of autopoiesis is a system that continuously
+regenerates its own constitutive components through its own operation
+\breakseq{[@maturana\_varela\_1980]}. Here the grammar
+(\breaktt{manuscript/config.yaml}) is fixed input;
+\texttt{parse\_grammar} and \texttt{expand} are pure functions of that
+input plus a seed; no code path feeds a materialized child back into the
+grammar or rewrites \texttt{src/grammar.py}. Children are causally
+downstream of the grammar --- the reverse direction does not occur in
+the current codebase. The name is a provocation about what genuine
+self-production would require, not a claim this exemplar achieves it.
+\end{block}
+
+\begin{block}{Integrity verification checks self-consistency, not
+tamper-proofing}
+\protect\phantomsection\label{integrity-verification-checks-self-consistency-not-tamper-proofing}
+\texttt{verify\_child} recomputes a tree hash from the files
+\emph{listed inside} \texttt{provenance.json} and compares it against
+the \texttt{tree\_hash} field stored in that same file
+(\texttt{src/verify.py}, \breaktt{src/materialize.py}). Both the manifest
+and the expected hash are self-reported at materialization time; nothing
+external anchors them. An actor who can rewrite \texttt{provenance.json}
+can edit its \texttt{files} list and recompute a matching hash from
+whatever content they choose, and \texttt{verify\_child} would report a
+match --- it only checks internal consistency, not consistency against
+something outside the child's own directory
+\breakseq{[@merkle\_tree\_provenance]}. \texttt{verify\_seal} similarly checks
+the shape of an optional \texttt{seal.json} written by the same run it
+would need to audit. This detects accidental post-generation drift, the
+tested use case; it is not a defense against deliberate tampering with
+write access. Also worth naming precisely:
+\breaktt{tree\_hash\_from\_content\_hashes} sorts
+\breaktt{path:content\_hash} pairs and hashes their concatenation once
+--- a flat manifest digest, not a hierarchical Merkle tree with per-file
+inclusion proofs. \texttt{integrity.py} separately defines
+\texttt{merkle\_root}, an actual pairwise-reduction tree, but
+\texttt{materialize()}/\texttt{verify()} call the flat function, not
+that one.
+\end{block}
+
+\begin{block}{Coverage is uneven across modules, not uniform (though
+every module now clears the floor)}
+\protect\phantomsection\label{coverage-is-uneven-across-modules-not-uniform-though-every-module-now-clears-the-floor}
+Two earlier drafts of this section each named a different below-floor
+trio --- first \texttt{sealing.py}/\texttt{verify.py}/\texttt{cli.py},
+then, after those were hardened,
+\texttt{common.py}/\texttt{figures.py}/\texttt{cover\_art.py}. As of
+this measurement no module sits below the 90\% branch-coverage line
+(\breakseq{[@fig:coverage\_by\_module]}): dedicated tests were added for
+\texttt{common.py}'s \texttt{trunc()} clipping branch and
+\breaktt{CheckReport.failed} (\breaktt{tests/test\_common.py}, new this
+session), \texttt{figures.py}'s \texttt{list}/\texttt{tuple} input
+branch of \breaktt{\_first\_plottable\_array}, the generic
+\texttt{repr()} fallback in \breaktt{\_scalar\_summary\_lines}, and the
+array-plotting branch of \breaktt{render\_primitive\_figure}
+(\breaktt{tests/test\_figures.py}), and \texttt{cover\_art.py}'s QR-seal
+drawing branch (\breaktt{tests/test\_cover\_art.py},
+\breaktt{test\_render\_cover\_with\_grammar\_hash\_*}) --- the same
+branch identified above as running in production but previously
+untested.
+
+Smaller residual gaps remain in modules that are otherwise well above
+the floor: \texttt{sealing.py}'s \texttt{read\_qr\_matrix}
+\texttt{pyzbar}-decode path is untested since \texttt{pyzbar} is not
+installed here; \texttt{verify.py}'s schema-version and malformed-JSON
+\texttt{except} branches are not independently exercised;
+\texttt{cli.py}'s \texttt{cmd\_materialize}/\texttt{cmd\_verify} have no
+end-to-end CLI-level test, though the library functions they wrap are
+covered elsewhere in \breaktt{test\_materialize.py} and
+\breaktt{test\_integrity\_and\_verify.py}; \texttt{honesty.py} itself
+sits closest to the floor at just above 90\%. None of these pull the
+aggregate below the 90\% floor (\breaktt{-\/-cov-fail-under=90}), and the
+aggregate 96.28 alone would obscure exactly where the remaining, smaller
+gaps live --- which is the reason this section, and
+\breakseq{[@fig:coverage\_by\_module]}, exist as a per-module view rather than
+trusting one headline number. Property-based tests
+(\breaktt{tests/test\_property\_invariants.py}, Hypothesis) and a
+stress/edge suite (\breaktt{tests/test\_stress\_edge\_cases.py}) cover
+invariants like boundary seeds and all-reserved-slot configurations
+\breakseq{[@claessen2000quickcheck; @maciver2019hypothesis]}, but generated
+inputs are not a substitute for direct tests of the specific branches
+named above.
+
+This whole section is itself evidence for a point made elsewhere in this
+manuscript: a coverage ranking is a measurement, not a fact about the
+code --- each of its two prior versions was accurate when written and
+became false as soon as new tests shipped. Readers should treat any
+specific module name and percentage in this document as dated to its
+stated measurement, and re-run \breaktt{stage\_02\_analysis.py} for the
+current ranking rather than trust a prior render.
+\end{block}
+
+\begin{block}{Cover art now includes the QR seal, but that code path is
+untested}
+\protect\phantomsection\label{cover-art-now-includes-the-qr-seal-but-that-code-path-is-untested}
+An earlier draft of this section reported that the title-page cover
+image omitted the originally envisioned QR seal, gradient glow, and
+seed-derived dot placement. That is no longer accurate and is corrected
+here rather than left to silently drift:
+\breaktt{scripts/generate\_cover\_art.py} now calls
+\breaktt{render\_cover(...,\ grammar\_hash=grammar.grammar\_hash)}, and
+\breaktt{src/cover\_art.py} draws all three elements unconditionally
+except the QR seal, which is drawn whenever \texttt{grammar\_hash} is
+not \texttt{None} --- the shipped \breaktt{paper.cover.image}
+(\breaktt{output/figures/cover\_art.png}) is generated by exactly this
+call, so the rendered title page carries a real gradient glow, real
+seed-derived dot scatter, and a real QR-style pixel grid encoding
+\breaktt{f84a8f9dbcb18e37} with the hash printed as a text label beneath
+it. An earlier draft of this section also noted that no test called
+\texttt{render\_cover} with an explicit \texttt{grammar\_hash=}, leaving
+the QR-drawing branch (\breaktt{src/cover\_art.py}, the
+\breaktt{if\ grammar\_hash\ is\ not\ None:} block) exercised in
+production but untested; that gap is now closed by
+\breaktt{tests/test\_cover\_art.py::test\_render\_cover\_with\_grammar\_hash\_*},
+added this session (see ``Coverage is uneven across modules'' below).
+
+Separately, for most of this project's life
+\breaktt{manuscript/references.bib} held a single self-referential
+\breaktt{friedman2026autopoiesis} entry noting the DOI was forthcoming,
+while \breaktt{99\_references.md} carried a hand-written, uncited list
+alongside it --- a citation without a resolvable BibTeX entry is exactly
+the kind of unverifiable claim this project's honesty contract exists to
+catch. That gap is now closed twice over: \texttt{references.bib}
+carries five real, live-verified external citations, and following this
+project's own Zenodo deposit the self-citation's DOI
+(\breaktt{10.5281/zenodo.21227869}, verified by a live \texttt{curl}
+against \texttt{doi.org} before being written into the entry) is real
+rather than forthcoming. \breaktt{99\_references.md} annotates each entry
+against the section that relies on it rather than listing citations
+independent of the bibliography.
+\end{block}

@@ -599,7 +599,7 @@
     },
     {
       "name": "provenance-dag",
-      "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, tracing artifact ancestry, recording reviewer findings. CLI: python -m infrastructure.provenance {record,link,query,list,review}. Config: set in projects/{name}/manuscript/config.yaml `provenance:` block. Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
+      "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, querying edges between recorded nodes, running a DAG-wide review pass. CLI: python -m infrastructure.provenance {list,record-artifact,review}. Library: infrastructure.provenance.Provenance (record/link/get/list/query). Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
       "path": "infrastructure/provenance/SKILL.md",
       "cursor_at": "infrastructure/provenance/SKILL.md"
     },

@@ -1,0 +1,14 @@
+\frametitle{Paper Organisation}
+\protect\phantomsection\label{paper-organisation}
+The remainder of this paper is structured as follows. @sec:pools
+describes the fond layer and the \texttt{fonds\_reader} module.
+@sec:rules describes the rules layer and the \texttt{rules\_applier}
+module. @sec:tools describes the tool layer and the
+\texttt{tools\_invoker} module. @sec:integration presents the unified
+integration pipeline, the manuscript variable token system, and a
+discussion of resilience design. @sec:conclusion summarises key findings
+and future directions.
+
+The architecture overview in @fig:architecture provides a visual map of
+these relationships. Runtime statistics collected during integration are
+visualised in @fig:counts.

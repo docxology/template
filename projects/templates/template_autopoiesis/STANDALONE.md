@@ -36,7 +36,7 @@ Optional infrastructure modules (logging, glossary_gen, figure_manager, etc.) ar
 ```bash
 # From the template_autopoiesis project directory:
 pip install numpy matplotlib pyyaml qrcode pillow
-pytest tests/ -q
+pytest tests/ -q  # noqa: docs-lint — standalone pip/venv workflow, no uv-managed interpreter here
 
 # To generate a child project:
 python scripts/autopoiesis.py materialize --out-root /tmp/children

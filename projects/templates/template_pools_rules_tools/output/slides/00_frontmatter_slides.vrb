@@ -1,0 +1,11 @@
+\frametitle{Data Availability}
+\protect\phantomsection\label{data-availability}
+All source code, configuration files, and exemplar resources described
+in this paper are available in the public template repository at
+\url{https://github.com/docxology/template} under the
+\breaktt{projects/templates/template\_pools\_rules\_tools/} path. The
+integration pipeline is fully reproducible from source using
+\breaktt{uv\ run\ python\ projects/templates/template\_pools\_rules\_tools/scripts/02\_run\_integration.py}
+from the repository root. Generated manuscript variables are stored in
+\breaktt{output/data/manuscript\_variables.json} and injected at render
+time.

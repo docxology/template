@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "347990c481111eec25985d506a401e23720843a0ca417bdd8d85b026abb790f1",
+      "size_bytes": 320,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-07-07T13:52:37+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "a8d96afb33ea0988a6bfe3f9022d9c8d02a038be98c5f8f4af65fa30913f288f",
+      "size_bytes": 613,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-07-07T13:52:37+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "a9d4d91ec161904713a57699638c8b4645546f0c88be9ad9c8bbb5ba76c72891",
+      "size_bytes": 293,
+      "stage_name": "Project Analysis",
+      "stage_num": 5,
+      "timestamp": "2026-07-07T13:52:37+00:00"
+    }
+  ],
+  "issues": []
+}
