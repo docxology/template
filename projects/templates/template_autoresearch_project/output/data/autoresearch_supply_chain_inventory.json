@@ -17,7 +17,7 @@
       "id": "generated-002",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "52d9f89aff4522d0c5371e6f5446bcee252b01ef91fcf97bc08b3090aa55b57c",
+      "sha256": "18d146c1712cd66da0c8dd4cce24bcafd18c00e2744c1d45ee455b80864d3a46",
       "size_bytes": 4437
     },
     {
@@ -25,7 +25,7 @@
       "id": "generated-003",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "5e4d40d04064a4753bf568b274a77084372ebbe6bb74202307d28803ed8294f0",
+      "sha256": "63f52672c93a606b183eef48242e8190eb2fa2659fda0dd3ede0bb012427b6d0",
       "size_bytes": 15988
     },
     {
@@ -33,15 +33,15 @@
       "id": "generated-004",
       "path": "output/data/autoresearch_plan.json",
       "required": true,
-      "sha256": "2891049254c9c84ab5e7869841da3dbdd8b6b2899606fcfbff60f31b7a23ec12",
-      "size_bytes": 17361
+      "sha256": "22e05049f64a6acf932fe5b5fc5c96b19ae4238cac7428bfc4d441b2638067ad",
+      "size_bytes": 19427
     },
     {
       "exists": true,
       "id": "generated-005",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "b98a38c3711a3be26aaef63c6c8312a90e4c9fbff2d523ec90f3f2eec7f059f0",
+      "sha256": "8128856d03368d5066e35b242c15648f45f73fe100f4e90df928ba17d6f14735",
       "size_bytes": 16042
     },
     {
@@ -49,7 +49,7 @@
       "id": "generated-006",
       "path": "output/data/autoresearch_stage_matrix.csv",
       "required": true,
-      "sha256": "fa5aeb54737a9366fc11e361aa8a533495818b133fe7ca0925cb6b39a257c043",
+      "sha256": "c055ba96454a7592b9c8da7ef1b708c40d6a6df84eebd91f7efde35eeebcd6d9",
       "size_bytes": 749
     },
     {
@@ -65,7 +65,7 @@
       "id": "generated-008",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "8520ddce6304941e7d799960ce1264b05e8efa189d08f14ef238692d7a1cecda",
+      "sha256": "abb0043490cc96bd957d536ae1d35fec391efe88d86da2879bffd038f67bee0c",
       "size_bytes": 621
     },
     {
@@ -73,7 +73,7 @@
       "id": "generated-009",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "0b576ee160240e6184aa1611da2b81d388eabac64fce493f6eec0e599c71c899",
+      "sha256": "be5e6c48ee3383c6e874cc67931684ebf450ae0a892e101f6281b491c73c45e9",
       "size_bytes": 16041
     },
     {
@@ -81,7 +81,7 @@
       "id": "generated-010",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "8f2e59922240edf6d36383f07b7ee5871801e01c4f2ed7c766303fee52bf204d",
+      "sha256": "d531a999d891234de3fc3060dd4b38aaa744da1391429db20ca737b3c419d6fc",
       "size_bytes": 1117
     },
     {
@@ -89,7 +89,7 @@
       "id": "generated-011",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "fdc253d1f79eaa832e5e7184a8258e058c8cb6953db8bf5cab0458736175625d",
+      "sha256": "c1d212ec92b70f1cf1ac267cafcaaad0f3305d3b2dc01976a066d75c27d49047",
       "size_bytes": 5233
     },
     {
@@ -137,7 +137,7 @@
       "id": "generated-017",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "39b8a60a873958bf2c4f65e32c50e1ad2e7f64e58f8ddb994b133fdc26de58e9",
+      "sha256": "de449de1367404f30b92dadb02336da3db06a0aecdad200e11ab303058427028",
       "size_bytes": 570872
     },
     {
@@ -281,7 +281,7 @@
       "id": "generated-035",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "bc41d41f0778ce034dd0b5e68405be39664ebf6688279d6d8d190d7f0aafd53b",
+      "sha256": "d8e9ae46326c9e3b6e3cbc0e95e61d8ee5b366c7c90ac11937491e1203408605",
       "size_bytes": 669
     },
     {
@@ -497,7 +497,7 @@
       "id": "generated-062",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "5e4d40d04064a4753bf568b274a77084372ebbe6bb74202307d28803ed8294f0",
+      "sha256": "63f52672c93a606b183eef48242e8190eb2fa2659fda0dd3ede0bb012427b6d0",
       "size_bytes": 15988
     },
     {
@@ -505,7 +505,7 @@
       "id": "generated-063",
       "path": "output/reports/autoresearch_loop.md",
       "required": true,
-      "sha256": "c2884b63c942526da18f3032e460441bf5aa134a06b913f2149c7031b4fdb0db",
+      "sha256": "1f30ccff7966ef5483f036a7d7c96037980b61f1d1ea7b9bec3407493eede7f0",
       "size_bytes": 1983
     },
     {
@@ -537,8 +537,8 @@
       "id": "generated-067",
       "path": "output/reports/evidence_registry.json",
       "required": true,
-      "sha256": "dda3aa5a182695d1c8be2fe55e8ef31dee1b343c4f777210a239aa0f0829f41e",
-      "size_bytes": 90334
+      "sha256": "deb37f79aaf17a4859f3dcdbff2088210a9d45fe64fddb7ce4355a178bcfa9e9",
+      "size_bytes": 90387
     },
     {
       "exists": true,
@@ -557,23 +557,23 @@
       "size_bytes": 1687
     }
   ],
-  "generated_at": "2026-06-28T03:54:03+00:00",
+  "generated_at": "2026-07-07T21:35:46+00:00",
   "inputs": [
     {
       "exists": true,
       "id": "root_pyproject",
-      "path": "/Users/4d/Documents/GitHub/template/pyproject.toml",
+      "path": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/pyproject.toml",
       "required": false,
-      "sha256": "98f8d9591b4fbb57f5f714e2219d67c36bf2fb4f01cf3a0a6c50e346d588b1b3",
-      "size_bytes": 15985
+      "sha256": "83b9190ded110907f8ea124d2c079d25770cb06ee855369549d774bc0be7a3ed",
+      "size_bytes": 17542
     },
     {
       "exists": true,
       "id": "root_uv_lock",
-      "path": "/Users/4d/Documents/GitHub/template/uv.lock",
+      "path": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/uv.lock",
       "required": false,
-      "sha256": "412de45b1548cee2ad8c279c92989f2ad728b209cbdcd321fd934391eaeb4108",
-      "size_bytes": 798807
+      "sha256": "e2b346c8f4804ed80badd44da22c5ed337cb0d49a49c8b65174f92013f657a8a",
+      "size_bytes": 819930
     },
     {
       "exists": true,
@@ -668,8 +668,8 @@
       "id": "manuscript_config",
       "path": "manuscript/config.yaml",
       "required": true,
-      "sha256": "6b450f0c6b686ec75d7e9cfeffe55b3057f1e4c30be4971567e0bd19f1837fc5",
-      "size_bytes": 2507
+      "sha256": "0b86e028dbdba35347733f021adecd7b183ea86e6fdb2e40692fe8263a2e600b",
+      "size_bytes": 3154
     }
   ],
   "inventory_type": "SBOM-style local dependency and artifact inventory",

@@ -11,7 +11,7 @@ exemplar. Keep this file focused on template status, not general feature ideas.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Stage 04 warning snapshot, 2026-06-20: PDF, markdown, output structure, figure registry, evidence registry, and design overlays pass; artifact manifest reports advisory drift after single-stage regeneration.
 - Code quality: `uv run ruff check projects/templates/template_code_project/src/` and `uv run mypy projects/templates/template_code_project/src/` must both pass clean.
-- Coverage floor: 231 tests, ≥97.65% coverage on `src/`; live count in `docs/_generated/COUNTS.md`.
+- Coverage floor: ≥90% on `src/` (`pyproject.toml`); live test count + measured coverage percentage → [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) (per Rule 2, [`docs/agent_instructions.md`](docs/agent_instructions.md) — do not hardcode either number here, both drift faster than this file).
 
 ## Recent improvements (2026-06)
 

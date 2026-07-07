@@ -82,7 +82,7 @@ projects/templates/template_template/output/
 │   ├── module_inventory.png          # Figure 3
 │   └── comparative_feature_matrix.png # Figure 4
 ├── manuscript/
-│   ├── 01_abstract.md               # Rendered (no ${} tokens)
+│   ├── 00_abstract.md               # Rendered (no ${} tokens)
 │   ├── 02_introduction.md
 │   ├── 03a_architecture.md
 │   ├── ...                          # 21 files total

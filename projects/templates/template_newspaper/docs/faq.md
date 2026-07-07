@@ -19,8 +19,14 @@ Yes. The `pages:` list in `content/edition.yaml` sets the count; the engine
 adapts. The "12-page" figure is just this edition's roster.
 
 **Can I use color?**
-The template is monochrome (newsprint). You can set `spot_color` and extend the
-palette in `typography.py`, but the figures are designed grayscale.
+The editorial type is monochrome (newsprint) by design, and the halftone scenes
+and charts in `figures.py` are grayscale. But the engine fully supports color:
+any `figure`/`ad graphic` `path` can point at an RGB PNG (the shipped
+`ad_bakery`/`ad_realty`/`ad_grocery`/`ad_festival` graphics are procedural color
+examples), the display-ad system (`components.ad_flowables`) is fully color-capable
+(background tint, accent, border), and `render.spot_color: true` prints the
+nameplate and section labels in a spot color. See `docs/syntax_guide.md` →
+"Color & spot color".
 
 **Where does the newspaper PDF come from in the pipeline?**
 Stage 02 (analysis), via `scripts/`. Stage 03 separately renders the descriptive

@@ -135,7 +135,7 @@ that reads `pending` until stage 03 runs.
 
 | Stage | Script | Reads | Writes | Notes |
 |---|---|---|---|---|
-| 1 | `01_literature_search.py` | config | `output/data/corpus.jsonl` | 5-engine dispatch + cross-engine de-dup; `--clear-corpus --no-resume` for a fresh run |
+| 1 | `01_literature_search.py` | config | `output/data/corpus.jsonl` | 7-engine dispatch + cross-engine de-dup; `--clear-corpus --no-resume` for a fresh run |
 | 2 | `02_meta_analysis_pipeline.py` | corpus | subfield/temporal/tfidf/topics/citation JSON + `citation_graph.gml` | deterministic (seeded) |
 | 3 | `03_build_knowledge_graph.py` | corpus | nanopublications (JSONL + RDF/TriG), hypothesis scores | **optional** — needs Ollama; `--max-papers N` to sample |
 | 4 | `04_generate_figures.py` | stage-2/3 JSON | up to 12 PNGs in `output/figures/` | KG-dependent figures skip gracefully if 03 didn't run |
@@ -154,7 +154,7 @@ engines merges.
 | `subfield_keywords` (add/rename/remove buckets) | nothing | ✅ `{{SUBFIELD_TABLE}}` + subfield figures adapt |
 | `hypothesis_definitions` | nothing (run stage 03 for live scores) | ✅ `{{HYPOTHESIS_TABLE}}` adapts |
 | `paper.title` / `keywords` | nothing | ✅ |
-| Add a **new** computed number to the prose | add the token to `src/manuscript/variables.py::compute_variables` **and** reference `{{NEW_TOKEN}}` | ⚠️ unresolved tokens make stage 5 fail loudly |
+| Add a **new** computed number to the prose | add the token to `src/manuscript/variables/compute.py::compute_variables` **and** reference `{{NEW_TOKEN}}` | ⚠️ unresolved tokens make stage 5 fail loudly |
 | Add a **new search engine** | add a client in `src/literature/`, register it in `search_runner.py`, add an `engines:` toggle | ⚠️ code + test |
 
 ## Token discipline (why stage 5 fails loudly)

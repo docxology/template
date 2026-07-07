@@ -13,7 +13,7 @@ wires engine functions to the filesystem; all logic lives in `src/newspaper/`.
 ```bash
 python scripts/00_preflight.py
 python scripts/10_generate_figures.py
-python scripts/20_render_newspaper.py            # add --strict to fail on over-set
+python scripts/20_render_newspaper.py            # fails on over-set by default; --allow-overset to downgrade to a warning
 ```
 
 They run standalone (dev) and under `./run.sh --project templates/template_newspaper --pipeline`.

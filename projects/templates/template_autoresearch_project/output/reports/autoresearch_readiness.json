@@ -151,7 +151,7 @@
         "output/reports/evidence_registry.json",
         "manuscript/source_ledger.yaml"
       ],
-      "source_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project/autoresearch.yaml",
+      "source_path": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/projects/templates/template_autoresearch_project/autoresearch.yaml",
       "stage_gates": [
         "Project Tests",
         "Project Analysis",
@@ -176,7 +176,7 @@
     ],
     "experiment_protocol": "Load the local balanced small MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass.",
     "project_name": "template_autoresearch_project",
-    "project_root": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project",
+    "project_root": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template/projects/templates/template_autoresearch_project",
     "quality_checks": [
       "domain_profile",
       "experiment_plan",
@@ -190,7 +190,7 @@
       "ai_disclosure",
       "security_profile"
     ],
-    "repo_root": "/Users/4d/Documents/GitHub/template",
+    "repo_root": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template",
     "required_artifacts": [
       "output/data/autoresearch_plan.json",
       "output/data/autoresearch_loop.json",
@@ -356,6 +356,21 @@
         ]
       },
       {
+        "definition_of_done": "Connector search completes or gracefully exits 2 when not configured; each configured connector returns results or an error.",
+        "depends_on": [
+          "Project Analysis"
+        ],
+        "failure_code": "CONNECTOR_SEARCH_FAILED",
+        "gate": null,
+        "input_artifacts": [
+          "projects/{project}/manuscript/config.yaml"
+        ],
+        "name": "Connector Search",
+        "output_artifacts": [
+          "projects/{project}/output/data/connector_search/"
+        ]
+      },
+      {
         "definition_of_done": "Manuscript renders to a structurally valid PDF artifact.",
         "depends_on": [
           "Project Analysis"
@@ -372,6 +387,21 @@
         ]
       },
       {
+        "definition_of_done": "Pipeline stage artifacts are recorded as provenance nodes, or the stage is gracefully skipped when provenance is not configured.",
+        "depends_on": [
+          "Connector Search"
+        ],
+        "failure_code": "PROVENANCE_RECORD_FAILED",
+        "gate": null,
+        "input_artifacts": [
+          "projects/{project}/output/"
+        ],
+        "name": "Provenance Record",
+        "output_artifacts": [
+          ".provenance/graph.json"
+        ]
+      },
+      {
         "definition_of_done": "Output, figure, markdown, and evidence checks produce a validation report.",
         "depends_on": [
           "PDF Rendering"
@@ -385,6 +415,21 @@
         "name": "Output Validation",
         "output_artifacts": [
           "projects/{project}/output/reports/"
+        ]
+      },
+      {
+        "definition_of_done": "EPUB, MOBI, and DOCX ebook files are generated or the stage is gracefully skipped when the combined markdown is absent.",
+        "depends_on": [
+          "PDF Rendering"
+        ],
+        "failure_code": "EBOOK_GENERATION_FAILED",
+        "gate": null,
+        "input_artifacts": [
+          "projects/{project}/output/"
+        ],
+        "name": "Ebook Generation",
+        "output_artifacts": [
+          "projects/{project}/output/ebook/"
         ]
       },
       {
@@ -466,6 +511,21 @@
         "name": "Archival Publication",
         "output_artifacts": [
           "projects/{project}/output/archive/"
+        ]
+      },
+      {
+        "definition_of_done": "ONIX XML, metadata.json, and OPF skeleton are written to output/metadata/ or the stage is gracefully skipped when config.yaml is absent.",
+        "depends_on": [
+          "Copy Outputs"
+        ],
+        "failure_code": "METADATA_PACKAGE_FAILED",
+        "gate": null,
+        "input_artifacts": [
+          "projects/{project}/manuscript/config.yaml"
+        ],
+        "name": "Metadata Package",
+        "output_artifacts": [
+          "projects/{project}/output/metadata/"
         ]
       }
     ]

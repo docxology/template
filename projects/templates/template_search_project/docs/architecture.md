@@ -77,7 +77,7 @@ The `pipeline.py` module is the *only* place that touches
 parameters or reads it from disk. This keeps the rest of the project
 testable without `pytest-httpserver`.
 
-## Why six analysis scripts?
+## Why seven analysis scripts?
 
 The infrastructure pipeline runner discovers and executes every `*.py`
 script in `scripts/` (excluding `_`-prefixed files) in **alphabetical
@@ -96,8 +96,13 @@ order**. We exploit this:
    `results.json` and (when present) the deep-search aggregate to substitute
    `{{TOKEN}}` markers and copy the resolved markdown / `*.bib` into
    `output/manuscript/`.
-6. `zz_generate_review_report.py` — runs last; aggregates per-stage review
+6. `zz_generate_review_report.py` — runs sixth; aggregates per-stage review
    outputs into a single human-readable report.
+7. `zzz_build_dashboard.py` — runs last (`zzz` sorts after `zz`); consumes the
+   corpus and deep-search aggregate JSON to write an interactive
+   search-coverage dashboard (`output/web/dashboard.html`), a payload JSON
+   (`output/data/dashboard_payload.json`), and plaintext invariant reports
+   (`output/reports/dashboard_*.txt`).
 
 This means a contributor adding a new analysis stage only needs to drop
 in a new script with a name that sorts at the right point — no edits to

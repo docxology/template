@@ -44,6 +44,7 @@ flowchart TB
     SCR_DIR --> SC2[y_generate_search_figures.py]
     SCR_DIR --> SC3[z_generate_manuscript_variables.py]
     SCR_DIR --> SC4[zz_generate_review_report.py]
+    SCR_DIR --> SC5[zzz_build_dashboard.py]
     SCR_DIR --> SCR_REV[review<br/>configurable gate]
 
     MAN_DIR --> M_CFG[config.yaml<br/>single source of truth]
@@ -60,7 +61,7 @@ flowchart TB
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     classDef gen fill:#7c2d12,stroke:#0f172a,color:#fff
     class ROOT,SRC_DIR,TESTS_DIR,SCR_DIR,MAN_DIR,DATA_DIR,DOCS_DIR,OUT_DIR dir
-    class S_CFG,S_PIPE,S_DEEP,S_SYN,S_FIG,S_MV,S_REP,S_AN,S_DOT,SC0,SC1,SCS,SC2,SC3,SC4,SCR_REV,T_LIST code
+    class S_CFG,S_PIPE,S_DEEP,S_SYN,S_FIG,S_MV,S_REP,S_AN,S_DOT,SC0,SC1,SCS,SC2,SC3,SC4,SC5,SCR_REV,T_LIST code
     class M_CFG,M_PRE,M_SECTIONS,D_CORPUS,D_FILES,META doc
     class M_BIB gen
 ```

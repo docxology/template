@@ -23,7 +23,7 @@ flowchart TB
     P --> META[pyproject.toml · README.md ·<br/>AGENTS.md · .gitignore]
     P --> OVERLAY[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
-    SRC --> SRC_F[config.py · pipeline/ · figures.py ·<br/>manuscript_variables.py · report.py]
+    SRC --> SRC_F[config.py · pipeline/ · figures.py ·<br/>manuscript_variables.py · report.py ·<br/>prose_facade.py]
     SC --> SC_F[run_prose_pipeline.py ·<br/>y_generate_prose_figures.py ·<br/>z_generate_manuscript_variables.py]
     M --> M_F[config.yaml · preamble.md ·<br/>00_abstract → 06_reproducibility.md ·<br/>99_references.md · references.bib]
 

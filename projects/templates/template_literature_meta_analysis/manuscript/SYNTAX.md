@@ -6,8 +6,8 @@ directory. Sections are rendered with `pandoc` + `pandoc-crossref`.
 ## Variable injection
 
 Dynamic numbers are written as `{{UPPERCASE_TOKEN}}` and replaced at render time by
-`src/manuscript/variables.py` (driven by `scripts/05_inject_variables.py`). Every
-token used in prose must be produced by the variables module, or the render fails —
+`src/manuscript/variables/` (driven by `scripts/05_inject_variables.py`). Every
+token used in prose must be produced by the variables package, or the render fails —
 never hand-type a computed number.
 
 ## Citations

@@ -15,6 +15,7 @@ flowchart TB
         FIG["src/figures.py<br/>matplotlib renderers"]
         MV["src/manuscript_variables.py<br/>abstract substitution"]
         REP["src/report.py<br/>markdown review report"]
+        PF["src/prose_facade.py<br/>report Protocols · render_outline · parse_bib_keys"]
     end
 
     subgraph SCR [Thin orchestrators]
@@ -33,7 +34,7 @@ flowchart TB
     classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
     classDef sc fill:#7c2d12,stroke:#0f172a,color:#fff
     class PROSE,REF l1
-    class CFG,PIPE,FIG,MV,REP l2
+    class CFG,PIPE,FIG,MV,REP,PF l2
     class S1,S2,S3 sc
 ```
 

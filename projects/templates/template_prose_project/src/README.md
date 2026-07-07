@@ -9,9 +9,11 @@ flowchart LR
     PIPE --> REP[report.py<br/>write_review_report]
     PIPE -. ManuscriptReport .-> FIG[figures.py]
     PIPE -. ManuscriptReport .-> MV[manuscript_variables.py]
+    PF[prose_facade.py<br/>report Protocols] --> REP
+    PF -. parse_bib_keys .-> PIPE
 
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class CFG,PIPE,REP,FIG,MV code
+    class CFG,PIPE,REP,FIG,MV,PF code
 ```
 
 ## Quick start
@@ -43,5 +45,6 @@ write_review_report(
 | `figures.py` | `plot_section_word_counts`, `plot_readability_metrics`, `plot_citation_density`, `generate_all_figures`. |
 | `manuscript_variables.py` | `ManuscriptVariables`, `load_report_payload`, `compute_variables`, `substitute_in_text`, `write_variables`. |
 | `report.py` | `write_review_report`. |
+| `prose_facade.py` | `ManuscriptReportLike`, `FileReportLike`, `ProseMetricsLike`, `QualityReportLike`, `StructureReportLike`, `render_outline`, `parse_bib_keys`. |
 
 See [AGENTS.md](AGENTS.md) for invariants and the editing checklist.

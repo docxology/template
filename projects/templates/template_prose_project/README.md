@@ -104,10 +104,12 @@ flowchart LR
     CFG[manuscript/config.yaml] --> READ[src/pipeline/ · read manuscript]
     READ --> PROSE[infrastructure.prose<br/>metrics · structure · quality]
     READ --> BIB[infrastructure.reference<br/>BibTeX validation]
+    PF[src/prose_facade.py<br/>parse_bib_keys · render_outline] --> CHECKS
     PROSE --> CHECKS[evaluate threshold checks]
     BIB --> CHECKS
     CHECKS --> JSON[manuscript_report.json<br/>checks.json]
     CHECKS --> RPT[src/report.py<br/>review_report.md]
+    PF --> RPT
     PROSE --> FIG[src/figures.py<br/>word counts · readability ·<br/>citation density PNGs]
     JSON --> MV[src/manuscript_variables.py<br/>variable token substitution]
     MV --> SUB[output/manuscript/*.md<br/>tokens resolved]
@@ -116,7 +118,7 @@ flowchart LR
     classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef out fill:#7c2d12,stroke:#0f172a,color:#fff
     class CFG io
-    class READ,PROSE,BIB,CHECKS,MV proc
+    class READ,PROSE,BIB,CHECKS,MV,PF proc
     class JSON,RPT,FIG,SUB out
 ```
 
@@ -188,6 +190,10 @@ Every knob lives in `manuscript/config.yaml`:
 | `bibliography` | `references_path` | `manuscript/references.bib` | Path to BibTeX file. |
 | `bibliography` | `fail_on_missing` | `true` | Fail if a cited `[@key]` is not in the bib. |
 | `bibliography` | `fail_on_unused` | `false` | Fail if a bib entry is never cited. |
+| `report` | `output_path` | `output/review_report.md` | Where `write_review_report` writes the markdown review. |
+| `report` | `include_per_file_table` | `true` | Include the per-file words/sentences/FRE/FKGL/Fog table. |
+| `report` | `include_outline` | `true` | Include the per-file heading outline section. |
+| `report` | `include_quality_flags` | `true` | Include the long-sentence/passive/hedge quality-flags section. |
 
 ## Agentic research overlays
 
@@ -213,6 +219,7 @@ experiments, mutate prompts, or run autonomous review agents.
 * `src/figures.py` — matplotlib renderers (no business logic).
 * `src/manuscript_variables.py` — abstract substitution variables.
 * `src/report.py` — markdown review-report assembly.
+* `src/prose_facade.py` — project-owned report Protocols (`ManuscriptReportLike`, `FileReportLike`, …) plus `render_outline` and `parse_bib_keys`; decouples `src/` from `infrastructure.prose`/`infrastructure.reference` internals.
 * `scripts/run_prose_pipeline.py` — thin orchestrator.
 * `scripts/y_generate_prose_figures.py` — figure stage.
 * `scripts/z_generate_manuscript_variables.py` — variable-hydration stage.

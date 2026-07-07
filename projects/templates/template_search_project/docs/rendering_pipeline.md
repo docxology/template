@@ -147,8 +147,8 @@ The review CLI (`scripts/review`) reads `review_config.yaml` to enable / disable
 | `variables_resolved` | `src/analysis.py::validate_variables_resolved` |
 | `output_integrity` | `infrastructure.validation.cli integrity` |
 | `test_suite_health` | pytest + coverage subprocess |
-| `infrastructure_usage` | `infrastructure.usage.cli` |
-| `determinism_check` | second pipeline run + diff |
+| `infrastructure_usage` | `src/analysis.py::audit_infrastructure_imports` (subprocess) |
+| `determinism_check` | `src/analysis.py::check_determinism_artifacts` — inspects cache/run_summary/seed/temperature (no re-run) |
 
 ## `config.yaml` Controls
 

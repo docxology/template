@@ -53,11 +53,30 @@ Tests for formatting utilities:
 - `build_module_inventory_table()` generates valid Markdown tables
 - `build_manuscript_metrics_dict()` returns all expected keys
 
+### `test_confidentiality.py` — Public/Private Discovery Boundary
+
+Negative-control tests proving the confidentiality invariant holds:
+
+- `discover_projects()` only ever returns public canonical exemplars plus this
+  meta-project itself
+- No private/rotating project name (from the non-rendered
+  `working`/`published`/`archive`/`other` typed subfolders) ever reaches
+  serialized metrics or the rendered manuscript
+
+### `test_edge_cases.py` — Error Branches and Fallbacks
+
+Zero-mock coverage for previously-uncovered branches identified from coverage
+reports: OSError handling in `count_test_functions`, missing-`docs/` fallbacks,
+`save_metrics_json`, the sibling-repo fallback in `resolve_template_repo_root`
+and `paths.locate_repo_root`, `ImportError` branches in
+`discover_infrastructure_modules`, malformed-YAML handling, and
+`public_only=False` discovery.
+
 ## Coverage Target
 
 - **Project source**: 90%+ coverage for `projects/templates/template_template/src/`
 - **Enforcement**: The pipeline halts at Stage 01 if coverage drops below threshold
-- **Current**: 75 tests, all passing
+- **Current**: 130 tests across 5 files, all passing (re-verify via `grep -c "^\s*def test_" tests/test_*.py`)
 
 ## Running Tests
 
@@ -76,7 +95,7 @@ PYTHONPATH=. uv run pytest projects/templates/template_template/tests/test_meta.
 ## Adding New Tests
 
 1. Create `test_<module>.py` in `projects/templates/template_template/tests/`
-2. Import from `template.<module>` (the `src/` is on `PYTHONPATH` via conftest)
+2. Import from `template_template.<module>` (the `src/` is on `PYTHONPATH` via conftest)
 3. Use real data — no mocks, no fakes, no stubs
 4. Assert against real repository state
 5. Update `docs/VERIFICATION.md` test count if changed

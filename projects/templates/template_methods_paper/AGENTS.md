@@ -67,7 +67,7 @@ readers without driving it.
 
 ```bash
 # From the repository root — run the methods analysis pipeline (thin orchestrator)
-uv run python template_methods_paper/scripts/methods_analysis.py
+uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
 # Writes output/data/*, output/reports/*, and output/figures/step_counts.png
 ```
 
@@ -75,8 +75,8 @@ uv run python template_methods_paper/scripts/methods_analysis.py
 
 ```bash
 # Run project tests with the 90% coverage gate (configuration source of truth: pyproject.toml)
-uv run pytest template_methods_paper/tests \
-    --cov=template_methods_paper/src --cov-fail-under=90
+uv run pytest projects/templates/template_methods_paper/tests \
+    --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
 ```
 
 Live test count and achieved coverage:

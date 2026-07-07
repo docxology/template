@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -50,6 +51,19 @@ def measure_test_summary(
     python = str(repo_root_python) if repo_root_python.is_file() else sys.executable
     with tempfile.TemporaryDirectory() as tmp:
         cov_json = Path(tmp) / "coverage.json"
+        # Isolate coverage so this inner pytest never inherits or pollutes the
+        # parent process's COVERAGE_FILE. When run inside the multi-project
+        # union gate (``stage_01_test.py --all-projects --public-projects``) the
+        # parent sets COVERAGE_FILE to the shared aggregate data file; without
+        # an isolated value, this subprocess would append a trace for the
+        # synthetic fixture project's ``src/__init__.py`` (under a tmp_path that
+        # is torn down) into that shared file, and the later ``coverage report``
+        # would fail with "No source for code: .../src/__init__.py". Pointing
+        # COVERAGE_FILE at a private, discarded file severs that leak; this
+        # function only reads its own percentage from the JSON report.
+        isolated_env = os.environ.copy()
+        isolated_env["COVERAGE_FILE"] = str(Path(tmp) / ".coverage.iso")
+        isolated_env.pop("COV_CORE_DATAFILE", None)
         try:
             result = subprocess.run(
                 [
@@ -66,6 +80,7 @@ def measure_test_summary(
                 capture_output=True,
                 text=True,
                 timeout=120,
+                env=isolated_env,
             )
             match = _PASSED_RE.search(result.stdout)
             if not match or not cov_json.is_file():

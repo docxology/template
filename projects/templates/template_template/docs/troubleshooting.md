@@ -8,4 +8,4 @@
 | Slide output missing | Slide renderer not invoked | Run `03_render_pdf.py` with slides config enabled |
 | Comparative matrix empty | `figure_comparative_matrix.py` failed to find exemplar data | Check that `discover_projects()` returns the expected list |
 | Web output missing | HTML render not configured | Check `manuscript/config.yaml` for web output settings |
-| `check_documentation_contract.py` fails | Manuscript sections have drifted from expected structure | Run `compose_manuscript.py --validate-only --strict` to get diagnostic IDs |
+| `check_template_drift.py --strict` fails | This exemplar's structure or claims drifted from the live repo scan | Run from repo root: `uv run python scripts/audit/check_template_drift.py --strict` and address the reported drift |

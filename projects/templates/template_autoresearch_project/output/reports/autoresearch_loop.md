@@ -14,7 +14,7 @@
 
 ## Stages
 
-- `plan`: declared - Declared 12 pipeline stage contract(s).
+- `plan`: declared - Declared 16 pipeline stage contract(s).
 - `gate`: declared - Declared exact stage-gate names from autoresearch.yaml.
 - `experiment`: declared - Ran the fixed-seed bounded ML-loop candidate evaluation.
 - `evidence`: declared - Declared local domain, experiment, pipeline, and output evidence targets.

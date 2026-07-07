@@ -27,15 +27,17 @@ flowchart TB
     OUT --> DATA[data/<br/>per-method exports + compiled_plans.json]
     OUT --> REP[reports/<br/>gate_report.json · trust_chain_report.json]
     OUT --> PDF[pdf/<br/>Final compiled PDF]
+    OUT --> SLIDES[slides/<br/>Per-section Beamer decks]
     OUT --> WEB[web/<br/>HTML version of the manuscript]
     OUT --> MAN[manuscript/<br/>TOKEN-resolved markdown tree]
 
-    DATA --> DATA_F["pbspreparation_ worklist/csv/mmd/json ·<br/>sensorcalibrationsweep_ worklist/csv/mmd/json ·<br/>compiled_plans.json · manuscript_variables.json"]
+    DATA --> DATA_F["pbspreparation_ worklist/csv/mmd/json ·<br/>sensorcalibrationsweep_ worklist/csv/mmd/json ·<br/>compiled_plans.json · manuscript_variables.json ·<br/>publication_ledger.json"]
+    REP --> REP_F["gate_report.json · trust_chain_report.json ·<br/>validation_report.json/.md · artifact_manifest.json ·<br/>diagnostics.json · evidence_registry.json"]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    class OUT,FIG,DATA,REP,PDF,WEB,MAN d
-    class DATA_F f
+    class OUT,FIG,DATA,REP,PDF,SLIDES,WEB,MAN d
+    class DATA_F,REP_F f
 ```
 
 ## Regeneration Sequence
@@ -60,11 +62,13 @@ flowchart TB
    ```
    **Outputs**: `data/manuscript_variables.json`, `manuscript/` (resolved tree)
 
-4. **Render PDF** — converts the manuscript to PDF via Pandoc/LaTeX.
+4. **Render PDF** — converts the manuscript to PDF via Pandoc/LaTeX (and, when
+   `render.formats.slides: true` in `manuscript/config.yaml`, per-section
+   Beamer decks).
    ```bash
    uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
    ```
-   **Outputs**: `pdf/`, `web/`
+   **Outputs**: `pdf/`, `slides/`, `web/`
 
 5. **Copy final deliverables** — copies PDF and figures to the repo-level
    output tree (used by CI).

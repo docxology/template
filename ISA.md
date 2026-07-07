@@ -1,9 +1,15 @@
 ---
 project: humos-template
-task: Iteration 8b — user asked to "comprehensively proceed with all improvements and additions and pushes to main": clear the 3 remaining DEFERRED-VERIFY items (2 composability refactors, 8 stale-count infra tests) then commit and push
-effort: E5
-phase: complete
-progress: 139/140 (1 residual DEFERRED-VERIFY — combined-coverage-gate subprocess leak, tracked in TO-DO, not fixed)
+task: "Iteration 9 — user asked to deeply review projects/templates for completeness/accuracy, with especial emphasis on updating template_active_inference's workflow documentation"
+effort: E4
+phase: observe
+progress: 0/50
+iteration: 9-semantic-doc-accuracy-and-active-inference-workflow
+baseline_head_iter9: 1a983de2ddacce2d4674501ea6dee033d950c813
+baseline_dirty_iter9: 64 files modified/untracked at session start, all pre-existing regenerated output/ artifacts and unrelated infra edits (git status --short), not introduced this session
+prior_task_iter8b: Iteration 8b — user asked to "comprehensively proceed with all improvements and additions and pushes to main": clear the 3 remaining DEFERRED-VERIFY items (2 composability refactors, 8 stale-count infra tests) then commit and push
+prior_phase_iter8b: complete
+prior_progress_iter8b: 139/140 (1 residual DEFERRED-VERIFY — combined-coverage-gate subprocess leak, tracked in TO-DO, not fixed)
 iteration: 8b-comprehensive-completion-and-push
 baseline_head_iter8: 646bb159e1619421117b95b0d9b7ee192ee7f6c8
 baseline_dirty_iter8: 24 untracked stray "(1)"-suffixed Finder-duplicate files under template_active_inference/template_search_project output dirs, plus untracked INDEX.md — pre-existing, not introduced this session
@@ -414,7 +420,90 @@ a durable, acceptance-lined plan.
   logic under time pressure — left as an honest, precisely-scoped residual
   finding rather than a vague "known issue."
 
-## Goal (iteration 7)
+## Goal (iteration 9)
+
+Every one of the 18 `projects/templates/*` public exemplars receives a
+semantic (not just structural) documentation-accuracy pass — README/AGENTS.md/
+SKILL.md/docs narrative checked against what the code and configs actually do,
+not just drift/lint schema conformance (already green per iteration 8b and
+re-confirmed on current HEAD at OBSERVE) — with `template_active_inference`'s
+workflow-facing documentation (`docs/agent_instructions.md` `## Workflow`,
+`SKILL.md` Quick Reference, `AGENTS.md` pipeline narrative) receiving the
+deepest scrutiny per the user's explicit "especially" emphasis. Findings are
+HEAD-probed (Gate J) before being fixed; fixes are additive/corrective only
+(no destructive rewrites of accurate content); global gates stay green after
+every edit.
+
+## Criteria (iteration 9)
+
+- [ ] ISC-202: `template_active_inference` — semantic doc pass: README/AGENTS.md narrative cross-checked against actual `scripts/`, `src/`, `tracks.yaml` contents; findings recorded.
+- [ ] ISC-203: `template_active_inference` — confirmed findings fixed (or explicitly deferred with reason); re-verified via `check_template_drift.py --project templates/template_active_inference --strict`.
+- [ ] ISC-204: `template_autopoiesis` — semantic doc pass complete; findings recorded.
+- [ ] ISC-205: `template_autopoiesis` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-206: `template_autoresearch_project` — semantic doc pass complete; findings recorded.
+- [ ] ISC-207: `template_autoresearch_project` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-208: `template_autoscientists` — semantic doc pass complete; findings recorded.
+- [ ] ISC-209: `template_autoscientists` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-210: `template_code_project` — semantic doc pass complete; findings recorded.
+- [ ] ISC-211: `template_code_project` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-212: `template_eda_notebook` — semantic doc pass complete; findings recorded.
+- [ ] ISC-213: `template_eda_notebook` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-214: `template_gold_refinement` — semantic doc pass complete; findings recorded.
+- [ ] ISC-215: `template_gold_refinement` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-216: `template_literature_meta_analysis` — semantic doc pass complete; findings recorded.
+- [ ] ISC-217: `template_literature_meta_analysis` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-218: `template_madlib` — semantic doc pass complete; findings recorded.
+- [ ] ISC-219: `template_madlib` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-220: `template_methods_paper` — semantic doc pass complete; findings recorded.
+- [ ] ISC-221: `template_methods_paper` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-222: `template_newspaper` — semantic doc pass complete; findings recorded.
+- [ ] ISC-223: `template_newspaper` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-224: `template_pools_rules_tools` — semantic doc pass complete; findings recorded.
+- [ ] ISC-225: `template_pools_rules_tools` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-226: `template_prose_project` — semantic doc pass complete; findings recorded.
+- [ ] ISC-227: `template_prose_project` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-228: `template_search_project` — semantic doc pass complete; findings recorded.
+- [ ] ISC-229: `template_search_project` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-230: `template_sia` — semantic doc pass complete; findings recorded.
+- [ ] ISC-231: `template_sia` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-232: `template_storybook` — semantic doc pass complete; findings recorded.
+- [ ] ISC-233: `template_storybook` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-234: `template_template` — semantic doc pass complete; findings recorded.
+- [ ] ISC-235: `template_template` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-236: `template_textbook` — semantic doc pass complete; findings recorded.
+- [ ] ISC-237: `template_textbook` — confirmed findings fixed or deferred; drift-clean after edit.
+- [ ] ISC-238: `template_active_inference` `docs/agent_instructions.md` `## Workflow` section reviewed against the actual multi-track pipeline (GNN, pymdp simulation, sheaf manuscript, Lean gates, ontology, roadmap tracks) — is it complete, or does it only describe a subset?
+- [ ] ISC-239: `template_active_inference` `docs/agent_instructions.md` `## Workflow` section rewritten (if gap confirmed) to name every track/regeneration step an agent actually needs, with the exact commands.
+- [ ] ISC-240: `template_active_inference` `SKILL.md` Quick Reference commands (`stage_02`..`stage_05`) verified to be current against `scripts/pipeline/` — no stale script names.
+- [ ] ISC-241: `template_active_inference` `AGENTS.md` pipeline/workflow narrative cross-checked against `docs/agent_instructions.md` for consistency (no contradicting regeneration order).
+- [ ] ISC-242: `template_active_inference` `tracks.yaml` / `manuscript/sheaf/tracks.yaml` existence and the claimed regeneration order (toy-sweep → formal-interop → integration-audit → sheaf → variables) verified against the real file.
+- [ ] ISC-243: `template_active_inference` nested `ISA.md` (project-local, distinct from repo-root `ISA.md`) checked for stale workflow claims tied to this session's changes.
+- [ ] ISC-244: `check_template_drift.py --project all --strict` exits 0 after all iteration-9 edits.
+- [ ] ISC-245: `lint_docs.py` exits 0 (cross-links/consistency/doc-pairs) after all iteration-9 edits.
+- [ ] ISC-246: `template_active_inference` project test suite (`uv run pytest projects/templates/template_active_inference/tests --cov=projects/templates/template_active_inference/src --cov-fail-under=90`, run from repo root) still passes after doc edits (docs-only changes shouldn't touch this, but confirmed not assumed).
+- [ ] ISC-247: Full `git diff` of this session's changes reviewed — confirms only documentation files touched, no `output/` or `src/` business logic edited.
+- [ ] ISC-248: Antecedent: baseline `git rev-parse HEAD` + `git status --short` captured before any iteration-9 edit.
+- [ ] ISC-249: Anti: no existing accurate documentation content deleted or degraded — every edit is additive or a corrected inaccuracy, verified via `git diff` per file.
+- [ ] ISC-250: Anti: no fabricated command/path/claim introduced — every new sentence in a doc edit traces to a real, probed file or command output (Gate E discipline).
+- [ ] ISC-251: Anti: no `git push` executed without explicit user authorization this turn (iteration 8b's push required the literal phrase "comprehensively proceed... pushes to main"; this turn's request does not contain that authorization).
+
+## Test Strategy (iteration 9)
+
+| ISC range | Type | Check | Tool |
+|---|---|---|---|
+| ISC-202..237 (per-project pairs) | documentation semantic accuracy | agent reads README/AGENTS.md/SKILL.md/docs against actual code/config, dispatched via parallel Workflow agents | `Workflow` tool (agents use `Read`/`Grep`/`Edit`) |
+| ISC-238..243 (active_inference deep-dive) | workflow-doc completeness/accuracy | targeted read of `docs/agent_instructions.md`, `SKILL.md`, `AGENTS.md`, `tracks.yaml`, nested `ISA.md` vs. actual multi-track source tree | `Read`, `Grep`, `Bash` |
+| ISC-244..247 (global re-verify) | regression | re-run drift + lint + project test suite + diff review after edits | `Bash` |
+| ISC-248..251 (process/anti) | process integrity | git snapshot diff, destructive-edit check, fabrication check, push-authorization check | `Bash`, `Grep` |
+
+## Decisions (iteration 9, 2026-07-07)
+
+- **Toolchain-Auth Probe (Gate H) re-confirmed at OBSERVE:** session boot-time warning states `codex` is authenticated via a ChatGPT account, which 401s on GPT-5.x slugs — Forge and Cato are unavailable this run exactly as iteration 8 found. Per Rule 2a: `forge_unavailable: true`, `cato_unavailable: true`, `substituted: inline-RedTeam-QuickAttack-per-finding` (QuickAttack-weight, not full ParallelAnalysis like iteration 8's 18-project structural sweep — this iteration's edits are bounded, additive documentation corrections, not architecture changes). Anvil remains available as the non-Anthropic delegation producer.
+- **Redundancy check against iteration 8/8b (Gate J):** before scaffolding new ISCs, re-ran `check_template_drift.py --project all --strict` and `scripts/audit/lint_docs.py` fresh on current HEAD — both still exit clean, confirming iteration 8b's structural/functional verification (ISC-62..201) is still valid and does not need to be re-run. This iteration deliberately does NOT duplicate that ISC set; it adds a complementary semantic-documentation-accuracy layer the structural gates don't check (a doc section can be schema-valid and drift-clean while being stale or incomplete prose).
+- **ISC floor show-your-math:** 50 ISCs at E4 (soft floor 128). Iteration 8 already produced 139 structural ISCs across this identical 18-template roster in this same project ISA; stacking a second full-floor-sized ISC set for a narrower semantic-only pass would be padding, not signal. Scoped to what iteration 9 actually adds.
+- **"/workflows" trailing token, resolved:** grepped for a literal `workflows/` directory or a `## Workflows` (plural) section across every template — none exists anywhere in this repo's convention (confirmed: no template ships a `workflows/` dir; skill `SKILL.md` files have no `## Workflows` section — that's a PAI-skill convention, not this repo's). The one literal match for "workflow" as a documented section is `template_active_inference/docs/agent_instructions.md`'s `## Workflow` (singular) — treated as the intended referent for "the active_inference template's /workflows," consistent with iteration 7/8's precedent of using `Workflow` (the tool) for fan-out plus reading the user's literal words for the target artifact.
+- **Scope boundary:** "ensure all templates complete and accurate" is read as the semantic-documentation layer defined above, not a repeat of iteration 8's full test/coverage/composability sweep (already current per the redundancy check above). If a per-project agent surfaces a functional (non-documentation) defect, it is recorded as a finding and fixed if safe, but the primary deliverable is documentation accuracy.
+
 
 Every remaining review-plan refactor (R5–R10, R13, R14, R18) is implemented in
 worktree-isolated parallel agents, reconciled into the main checkout as its own

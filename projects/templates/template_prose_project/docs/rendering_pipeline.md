@@ -168,6 +168,10 @@ Every knob lives in `projects/templates/template_prose_project/manuscript/config
 | `bibliography.references_path` | Path to BibTeX file | `parse_bibfile` in `src/pipeline/checks.py` |
 | `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline/checks.py` |
 | `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline/checks.py` |
+| `report.output_path` | Where the markdown review report is written | `write_review_report` in `src/report.py` |
+| `report.include_per_file_table` | Toggle the per-file words/sentences/FRE/FKGL/Fog table | `write_review_report` in `src/report.py` |
+| `report.include_outline` | Toggle the per-file heading outline section | `write_review_report` in `src/report.py` (via `render_outline` in `src/prose_facade.py`) |
+| `report.include_quality_flags` | Toggle the long-sentence/passive/hedge quality-flags section | `write_review_report` in `src/report.py` |
 
 ## Troubleshooting
 

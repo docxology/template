@@ -15,11 +15,13 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/cli.py` | CLI entry point: `enumerate`, `expand`, `sample`, `materialize`, `verify`, `honesty` |
 | `src/common.py` | Shared dataclasses: `CheckResult`, `CheckReport`, `trunc()` |
 | `src/cover_art.py` | Ouroboros ring cover art: `render_cover()`, `branch_segments()`, `build_ring_geometry()` |
+| `src/emit_templates.py` | `@@KEY@@`-templated child file bodies: template strings + substitution from a `Spec` |
 | `src/expand.py` | Deterministic grammar expansion: `expand()`, `enumerate_all()`, `sample()`, `derive_seed()` |
 | `src/figures.py` | Figure rendering: `render_primitive_figure()`, `build_figure_registry()` |
 | `src/grammar.py` | Grammar parsing: `parse_grammar()`, `load_grammar()`, `force_domain()` |
 | `src/honesty.py` | Honesty manifest: `build_manifest()`, `verify_honesty()`, `STRUCTURAL_EVIDENCE` |
 | `src/integrity.py` | Integrity hashing: `sha256_text()`, `sha256_bytes()`, `tree_hash_from_content_hashes()`, `merkle_root()` |
+| `src/manuscript_figures.py` | Manuscript figure writers: renders `fig_coverage_by_module` for the exemplar |
 | `src/manuscript_variables.py` | Manuscript token generation: `generate_variables()`, `save_variables()` |
 | `src/materialize.py` | Child project writer: `materialize()`, `child_name()`, `_build_tree()` |
 | `src/primitives/__init__.py` | Registry: `collect_primitives()` |
@@ -67,6 +69,9 @@ Defined in `manuscript/config.yaml` under `autopoiesis:`:
 uv run python scripts/autopoiesis.py expand
 uv run python scripts/autopoiesis.py materialize
 uv run python scripts/autopoiesis.py verify output/children/child_DOMAIN_HASH
+uv run python scripts/autopoiesis.py honesty
+uv run python scripts/autopoiesis.py enumerate
+uv run python scripts/autopoiesis.py sample --count 10
 uv run python scripts/realize_archetypes.py
 uv run python scripts/realize_child_full.py
 uv run python scripts/01_generate_manuscript_assets.py
@@ -86,8 +91,11 @@ uv run pytest projects/templates/template_autopoiesis/tests/ --cov=projects/temp
 | Test file | Count | What it covers |
 |---|---|---|
 | `test_grammar_and_expand.py` | ~55 | Grammar parsing, slot validation, product sizes, expand, enumerate_all, sample, derive_seed |
+| `test_common.py` | ~7 | `CheckResult`, `CheckReport`, `trunc()` |
 | `test_materialize.py` | ~18 | Materialize structure, byte stability, tree hash, clean=True, provenance format |
 | `test_integrity_and_verify.py` | ~32 | sha256_text/bytes, tree_hash, merkle_root, verify on clean/tampered/missing/added |
+| `test_emit_templates.py` | ~22 | Template string coverage per child file, `@@KEY@@` substitution from `Spec` |
+| `test_manuscript_figures.py` | ~9 | `fig_coverage_by_module` rendering, data shape, output path |
 | `test_primitives_dynamics.py` | ~12 | damped_oscillator known output, envelope bound, negative control, PRIMITIVES |
 | `test_primitives_graph.py` | ~14 | bfs_distances exact distances, pagerank sum-to-one, negative control, PRIMITIVES |
 | `test_primitives_optimization.py` | ~12 | gradient_descent convergence, trajectory shape, analytic_minimizer, negative control |
@@ -115,8 +123,8 @@ uv run pytest projects/templates/template_autopoiesis/tests/ --cov=projects/temp
 ## Key Metadata
 
 - **Coverage target**: 90% (`fail_under=90`)
-- **Test count**: 422 tests (measured live by `measure_test_summary()`)
-- **Coverage**: 90.62% (measured live — see `output/data/manuscript_variables.json`)
+- **Test count**: 493 tests (measured live by `measure_test_summary()` — see `output/data/manuscript_variables.json`; counts drift upward release to release as tests are added, treat as the value at last render)
+- **Coverage**: 96.28% (measured live — see `output/data/manuscript_variables.json`)
 - **Grammar seed**: 42
 - **Domains**: optimization, dynamics, statistics, signal, graph
 - **Reserved slots**: figure_profile, qr_profile, integrity_profile

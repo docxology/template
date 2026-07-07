@@ -13,7 +13,7 @@ linear flow from a search term to a rendered manuscript.
 | **Analysis** | `src/analysis/` | Descriptive stats + meta-report, entities, embeddings, topics, temporal trends, citation network | analysis test classes |
 | **Knowledge graph** (optional) | `src/knowledge_graph/` | Assertion extraction, hypothesis scoring, RDF/TriG nanopublications (LLM-gated) | KG test classes |
 | **Visualization** | `src/visualization/` | Headless matplotlib figures from analysis JSON | figure test classes |
-| **Manuscript** | `src/manuscript/variables.py` | Compute `{{TOKEN}}` values; inject into manuscript sections | `TestComputeVariables`, `TestInjectVariables` |
+| **Manuscript** | `src/manuscript/variables/` | Compute `{{TOKEN}}` values; inject into manuscript sections | `TestComputeVariables`, `TestInjectVariables` |
 
 ## Data flow
 
@@ -27,7 +27,7 @@ config.yaml (term) ─→ search_runner ─→ corpus.jsonl (deduped Paper recor
   citation network)                                               nanopublications — optional)
         └─────────────────────────────────┼───────────────────────────────┘
                                           ▼
-                          manuscript/variables.py ─→ injected manuscript ─→ PDF/HTML
+                          manuscript/variables/ ─→ injected manuscript ─→ PDF/HTML
 ```
 
 Offline, `corpus.jsonl` is seeded from the committed synthetic fixture

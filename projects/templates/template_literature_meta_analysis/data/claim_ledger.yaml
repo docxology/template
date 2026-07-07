@@ -15,7 +15,7 @@ claims:
     artifact_path: manuscript/config.yaml
   - claim_id: enabled-retrieval-engine-count
     kind: number
-    value: 5
+    value: 7
     source: projects/templates/template_literature_meta_analysis/manuscript/config.yaml project_config.search.engines
     source_tier: project_config
     freshness: active

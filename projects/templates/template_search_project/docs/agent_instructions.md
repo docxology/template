@@ -113,7 +113,7 @@ search:
 llm:
   enabled: false        # no Ollama dependency
 deep_search:
-  enabled: false        # opt-in
+  enabled: true          # runs by default; sources: [arxiv, crossref] (live network, no key required)
 ```
 
 Tests assume these defaults. When changing them, also update `tests/test_readme_config_consistency.py`.

@@ -31,7 +31,7 @@ Fallback when the helper is unavailable (rsync with explicit exclusions):
 rsync -a \
   --exclude '.venv/' --exclude '.pytest_cache/' --exclude '.ruff_cache/' \
   --exclude 'htmlcov/' --exclude 'output/' --exclude 'rendered/' --exclude '*.egg-info/' \
-  template_methods_paper/ projects/working/my_methods_paper/
+  projects/templates/template_methods_paper/ projects/working/my_methods_paper/
 ```
 
 ## Required Post-Fork Edits
@@ -60,8 +60,8 @@ uv run python projects/working/my_methods_paper/scripts/methods_analysis.py
 For the public exemplar:
 
 ```bash
-uv run pytest template_methods_paper/tests \
-  --cov=template_methods_paper/src --cov-fail-under=90
+uv run pytest projects/templates/template_methods_paper/tests \
+  --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
 ```
 
 ## Standalone By Design

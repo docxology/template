@@ -99,6 +99,7 @@ content/story.yaml
         |
         v
 src/storybook/
+  models.py        frozen dataclasses shared across the package: Character, PageSpec, StorybookSpec, RenderResult
   characters.py    cast generation and shape-family validation
   story.py         YAML loader and manifest metadata
   illustration.py  procedural full-page scenes and text overlays

@@ -1,4 +1,4 @@
-# AGENTS: `src/template/` — Template Core Modules
+# AGENTS: `src/template_template/` — Template Core Modules
 
 Technical specification for the template project's source code package.
 

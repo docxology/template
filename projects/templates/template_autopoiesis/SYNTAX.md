@@ -43,11 +43,11 @@ The `parse_grammar()` function normalizes both forms.
 | Slot name | Options | Reserved? |
 |---|---|---|
 | `primitive_domain` | optimization, dynamics, statistics, signal, graph | No |
-| `tracks` | 1, 2, 3 | No |
-| `section_set` | imrad, extended, spec | No |
-| `figure_profile` | mermaid_only, mermaid_plus_plots, full | **Yes** |
-| `qr_profile` | figure, page, both, full_encode | **Yes** |
-| `integrity_profile` | sha256, sha256_512, sha512_merkle, merkle_kmyth | **Yes** |
+| `track` | analytical, empirical, hybrid | No |
+| `section_set` | minimal, standard, extended | No |
+| `figure_profile` | minimal, full | **Yes** |
+| `qr_profile` | off, on | **Yes** |
+| `integrity_profile` | sha256, merkle | **Yes** |
 
 Reserved slots are included in the nominal product size but are not varied in the effective product space.
 

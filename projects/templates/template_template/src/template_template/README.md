@@ -5,7 +5,7 @@ Repository-aware analysis functions that programmatically examine the Docxology 
 ## Quick Start
 
 ```python
-from template import build_infrastructure_report
+from template_template import build_infrastructure_report
 from pathlib import Path
 
 report = build_infrastructure_report(Path("/path/to/repo"))

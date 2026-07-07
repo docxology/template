@@ -24,7 +24,9 @@ file.
 - LLM synthesis (`llm.enabled`) defaults to `false` so tests and CI never
   require an Ollama server.
 - `deep_search` is enabled by default and exercises the multi-keyword
-  arXiv/Crossref/Paperclip fan-out with graceful per-backend degradation.
+  arXiv/Crossref fan-out. Paperclip is fail-fast (not graceful) when
+  `PAPERCLIP_API_KEY` is unset and is deliberately omitted from the default
+  `sources` list; add it only alongside a real key.
 
 ## Integrity and template-status gaps
 

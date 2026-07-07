@@ -19,7 +19,7 @@ modules and is imported by `scripts/02_meta_analysis_pipeline.py`.
   and `avg_out_degree` separately using `graph.in_degree()` / `graph.out_degree()`. Do not
   simplify to `num_edges / num_nodes` — that is only correct for undirected graphs.
 - **CAGR as fraction**: `temporal_analysis.estimate_growth_rate()` returns `cagr` as a decimal
-  fraction (e.g. `0.17` for 17%). `variables.py` multiplies by 100 for display. Never output
+  fraction (e.g. `0.17` for 17%). `variables/compute.py` multiplies by 100 for display. Never output
   CAGR already multiplied — it would double-inflate the percentage.
 
 ## Key Algorithms

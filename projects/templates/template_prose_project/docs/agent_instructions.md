@@ -35,8 +35,9 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 The test suite covers `tests/test_config.py`, `tests/test_figures.py`,
 `tests/test_manuscript_variables.py`, `tests/test_pipeline.py`,
-`tests/test_pipeline_integration.py`, `tests/test_report.py`, and
-`tests/test_scripts.py`. Live test count + achieved coverage are tracked in
+`tests/test_pipeline_integration.py`, `tests/test_prose_facade.py`,
+`tests/test_report.py`, and `tests/test_scripts.py`. Live test count +
+achieved coverage are tracked in
 [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) —
 do not hardcode either number in prose. The gate is **90%**
 (`fail_under = 90` in the project's own `pyproject.toml` and at the root
@@ -68,7 +69,8 @@ sub-module level inside `src/`:
 |---|---|---|
 | `src/pipeline/` | **Yes** — the primary infra-operations entry point | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
 | `src/figures.py` | **Yes** — `infrastructure.prose.ManuscriptReport` (top-level type only) | Must not re-implement analysis — plot only over a typed report |
-| `src/report.py` | **Yes** — `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
+| `src/report.py` | **Yes** — via `src.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
+| `src/prose_facade.py` | **No** — zero `infrastructure` imports by design | Project-owned report Protocols plus `render_outline`/`parse_bib_keys`; decouples `src/` from `infrastructure.prose`/`infrastructure.reference` internals |
 | `src/manuscript_variables.py` | **Yes** — `load_report_payload` for raw JSON; calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline/`; rendering helpers are pure delegations to infrastructure |
 | `scripts/y_generate_prose_figures.py` | **Yes** — `infrastructure.prose.report.load_report_json` rehydrates a typed `ManuscriptReport` before calling `src/figures.py` | No inline analysis logic |
 | `src/config.py` | No | Pure YAML loading + dataclasses |

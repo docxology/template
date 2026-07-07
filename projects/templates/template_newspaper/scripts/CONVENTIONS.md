@@ -10,5 +10,6 @@
   else stdlib.
 - **Artifacts:** write only under `output/`. Emit a machine-readable report
   (`output/data/*.json`) alongside human output.
-- **Failure:** loud and non-zero; `--strict` promotes soft warnings (over-set) to
-  failures.
+- **Failure:** loud and non-zero; `20_render_newspaper.py` fails on over-set by
+  default (`--allow-overset` downgrades it to a warning). Its `--strict` flag is
+  deprecated and now a no-op, kept only for backward compatibility.

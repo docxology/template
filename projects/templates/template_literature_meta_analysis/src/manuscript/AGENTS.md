@@ -2,7 +2,8 @@
 
 ## Overview
 
-Single module (`variables.py`) that reads all pipeline output JSONs and produces a complete
+Package (`variables/`: `compute.py`, `context.py`, `formatters.py`, `inject.py`, `io.py`,
+`registry.py`, `extractors/`) that reads all pipeline output JSONs and produces a complete
 `dict[str, str]` of template variables. Called by `scripts/05_inject_variables.py`.
 
 ## Invariants Agents Must Preserve

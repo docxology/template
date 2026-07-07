@@ -9,7 +9,7 @@ self-contained package.
 
 `template_pools_rules_tools` reads from three sibling resource directories
 (`fonds/`, `rules/`, `tools/`) and returns typed, structured results. It is
-primarily an exemplar for the [template repository](https://github.com/nousresearch/template)
+primarily an exemplar for the [template repository](https://github.com/docxology/template)
 but the `src/` package is fully forkable.
 
 ---

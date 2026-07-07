@@ -332,6 +332,7 @@ def build_union_pytest_command(
     pytest_args: list[str] = [
         str(tests_dir),
         f"--cov={cov_target}",
+        "--cov-branch",
         "--cov-report=term-missing",
         f"--timeout={timeout}",
         "--durations=10",

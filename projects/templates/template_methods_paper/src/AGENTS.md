@@ -97,8 +97,8 @@ print(to_worklist_markdown(plan))          # human-readable numbered steps
 uv run pytest projects/templates/template_methods_paper/tests \
     --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
 
-# Single class
-uv run pytest projects/templates/template_methods_paper/tests -k "TestRunAllGates"
+# Single function (flat function-style tests — no test classes; see docs/testing_philosophy.md)
+uv run pytest projects/templates/template_methods_paper/tests -k "test_run_all_gates"
 ```
 
 ## API Reference

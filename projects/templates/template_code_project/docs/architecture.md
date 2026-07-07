@@ -58,7 +58,7 @@ graph TD
 | `infrastructure.scientific.stability` | `src/analysis/` | `check_numerical_stability()` across starting-point / step-size grid |
 | `infrastructure.scientific.benchmarking` | `src/analysis/` | `benchmark_function()` across problem dimensions |
 | `infrastructure.core.logging.utils` | `scripts/*.py` | `get_logger(__name__)` for structured log output |
-| `infrastructure.core.progress` | `src/analysis/` | `PipelineProgress` progress bars for long-running loops |
+| `infrastructure.core.progress` | `src/analysis/` | `ProgressBar` progress bars for long-running loops |
 | `infrastructure.reporting` | `src/analysis/`, `src/dashboard.py` | HTML dashboard generation, pipeline metrics |
 | `infrastructure.validation` | `src/analysis/` | Output integrity checks on generated figures and CSV |
 

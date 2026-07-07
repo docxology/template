@@ -23,23 +23,29 @@ test the boundary directly.
 
 Files (`projects/templates/template_prose_project/tests/`):
 
-- `test_config.py` — covers `src/config.py` typed YAML loader (approximately 5 tests).
-- `test_figures.py` — covers `src/figures.py` matplotlib renderers (approximately 6 tests).
+- `test_config.py` — covers `src/config.py` typed YAML loader (23 tests).
+- `test_figures.py` — covers `src/figures.py` matplotlib renderers (6 tests).
 - `test_manuscript_variables.py` — covers `src/manuscript_variables.py`
-  substitution (approximately 9 tests).
+  substitution (11 tests).
 - `test_pipeline.py` — covers `src/pipeline/` checks and
-  `run_prose_pipeline` (~35 tests across `TestRunProsePipeline`,
+  `run_prose_pipeline` (44 tests across `TestRunProsePipeline`,
   `TestOptionalChecks`, `TestCheckUnits` (covers every `_check_<name>` in
   isolation — `_check_grade_level`, `_check_citation_density`,
   `_check_no_skipped_levels`, `_check_h1_per_file`, `_check_bibliography`),
   `TestCitationExtractionViaPipeline`, `TestProseRunArtifacts`,
   `TestCheckResult`, `TestLongSentenceThresholdWired`).
 - `test_pipeline_integration.py` — runs the bundled `manuscript/` end-to-end
-  against `run_prose_pipeline` (approximately 1 test).
+  against `run_prose_pipeline` (1 test).
+- `test_prose_facade.py` — covers `src/prose_facade.py` report Protocols,
+  `render_outline`, and `parse_bib_keys` (16 tests).
 - `test_report.py` — covers `src/report.py::write_review_report`
-  (approximately 7 tests).
+  (15 tests).
 - `test_scripts.py` — invokes the three orchestrator scripts via
-  `subprocess.run` (approximately 3 tests).
+  `subprocess.run` (4 tests).
+
+These per-file counts are a point-in-time snapshot (last verified against
+`--collect-only`); the authoritative live number is always
+`docs/_generated/COUNTS.md` or a fresh `--collect-only` run, not this prose.
 
 **Live test count + achieved coverage:** see
 [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)
@@ -116,7 +122,8 @@ Before submitting any test, verify all boxes are checked:
 The zero-mock constraint is self-enforcing when the architecture is correct:
 
 - **`src/config.py`, `src/manuscript_variables.py`, `src/figures.py`,
-  `src/report.py`** — pure modules → testable with real data.
+  `src/report.py`, `src/prose_facade.py`** — pure modules → testable with
+  real data.
 - **`src/pipeline/`** — orchestrates `infrastructure.prose` and
   `infrastructure.reference.citation` → testable with real Markdown and
   real BibTeX in `tmp_path`.

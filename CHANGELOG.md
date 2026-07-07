@@ -11,6 +11,36 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+### 2026-07-07 (cont.) — aggregate union-coverage gate fixed
+
+- **Coverage-combine gate fixed (was a known open residual):**
+  `scripts/pipeline/stage_01_test.py --project-only --all-projects
+  --public-projects` (75% union-coverage floor) previously failed with
+  `No source for code: '.../pytest-<N>/.../iso_project/src/__init__.py'`
+  and/or `Can't combine branch coverage data with statement data`, making
+  the combined gate unreproducible on a clean checkout. Two independent
+  root causes, both fixed:
+  1. **Branch/statement mismatch.** `infrastructure/core/pytest_orchestration.py::build_union_pytest_command`
+     did not force a branch setting, so projects with `branch = true` in
+     their own `[tool.coverage.run]` wrote branch coverage while others
+     wrote statement-only; `coverage report` on the appended aggregate
+     then aborted. Fix: pass `--cov-branch` uniformly on every
+     per-project command (matches the authoritative repo-root gate).
+  2. **tmp_path fixture leak.** Two helper functions spawn inner `pytest`
+     subprocesses that inherited the parent aggregate's
+     `COVERAGE_FILE=.coverage.project` and wrote a torn-down `tmp_path`
+     source into the shared file:
+     `template_search_project/src/analysis.py::run_project_tests` and
+     `template_autopoiesis/src/manuscript_variables.py::measure_test_summary`.
+     Both now isolate their inner subprocess's `COVERAGE_FILE` to a
+     private, discarded file (the functions only read their own
+     percentage from the JSON report, so isolation is safe).
+  Verified: the exact failing command now reports "Combined coverage gate
+  passed (>= 75%)". Ruff + mypy clean on the 4 changed files; the affected
+  unit tests (`test_run_project_tests_pass`,
+  `test_run_project_tests_fail_when_pytest_errors`,
+  `test_measure_test_summary_on_synthetic_passing_project`) pass.
+
 ### 2026-07-07 — deep repo review; all 18 public exemplars verified; two CI-breaking bugs fixed
 - `infrastructure.core.health`: 9/11 → 11/11 PASS. Fixed a real bug in
   `infrastructure/validation/docs/consistency/import_resolution.py` (a

@@ -7,8 +7,10 @@ that `scripts/05_inject_variables.py` substitutes into `{{VAR}}` placeholders in
 
 ## Module
 
-### `variables.py`
-Single entry point: `compute_variables(output_dir: Path) -> dict[str, str]`.
+### `variables/`
+Package entry point: `compute_variables(output_dir: Path) -> dict[str, str]` (in `variables/compute.py`,
+re-exported from `variables/__init__.py`). Submodules: `context.py`, `formatters.py`, `inject.py`,
+`io.py`, `registry.py`, and per-source `extractors/`.
 
 Reads from `output_dir/` (or `output_dir/data/`):
 | JSON file | Variables computed |
@@ -22,10 +24,13 @@ Reads from `output_dir/` (or `output_dir/data/`):
 | `tfidf_data.json` | `NUM_VOCAB_FEATURES`, `NUM_TOPICS` |
 | `output/figures/` | `NUM_FIGURES` |
 
-Hypothesis short aliases H1–H8 map to full IDs:
+Hypothesis short aliases H1–H8 map to full IDs. This project's `manuscript/config.yaml`
+`hypothesis_definitions` only names H1–H6 (modafinil-specific: Wakefulness Efficacy,
+Cognitive Enhancement, Low Abuse Liability, Dopaminergic Mechanism, Off-label Psychiatric
+Utility, Tolerability); H7/H8 fall back to the domain-neutral `STANDARD_HYPOTHESES` IDs in
+`knowledge_graph.hypothesis` whenever a config doesn't define them:
 ```
-Hypotheses (H1, H2, ...) and their names/scope are defined in manuscript/config.yaml
-H5=SCALABILITY       H6=CLINICAL_UTILITY H7=MORPHOGENESIS           H8=LANGUAGE_AIF
+H5=SCALABILITY       H6=CLINICAL_UTILITY H7=BIOLOGICAL_BASIS       H8=DOMAIN_GENERALIZATION
 ```
 
 All numeric variables are formatted as strings ready for LaTeX insertion:
@@ -43,10 +48,10 @@ variables = compute_variables(Path("output"))
 rendered = inject_variables(source_text, variables, filename="03_results_hypothesis.md")
 ```
 
-## Infrastructure Import Fallback
+## Shared Logger
 
-`variables.py` attempts `from infrastructure.core.logging.utils import get_logger` and
-falls back to `logging.getLogger` if running outside the template monorepo. This ensures
-the module works both in standalone mode and when PYTHONPATH includes the template root.
+`variables/_logging.py` exposes a single module-level `logger = logging.getLogger(__name__)`
+that every submodule imports (`from manuscript.variables._logging import logger`), so log
+output is consistently namespaced across the package.
 
 See [AGENTS.md](AGENTS.md) for agent-specific constraints.

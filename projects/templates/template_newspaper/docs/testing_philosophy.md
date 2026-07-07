@@ -17,7 +17,8 @@ the render *contract* are covered by `pytest`:
   trim with **no over-set page**, and a synthetic minimal edition exercises every
   template branch.
 
-~95% line coverage; the gate is 85%.
+Coverage runs ~99% branch coverage as of the 2026-06-25 deep review (up from
+~95% at 53 tests); the enforced gate (`fail_under` in `pyproject.toml`) is 90%.
 
 ## 2. Appearance — visual, mandatory
 

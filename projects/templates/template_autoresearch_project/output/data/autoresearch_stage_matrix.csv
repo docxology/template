@@ -1,5 +1,5 @@
 stage,status,evidence,suggested_action
-plan,declared,Declared 12 pipeline stage contract(s).,review generated reports
+plan,declared,Declared 16 pipeline stage contract(s).,review generated reports
 gate,declared,Declared exact stage-gate names from autoresearch.yaml.,review generated reports
 experiment,declared,Ran the fixed-seed bounded ML-loop candidate evaluation.,review generated reports
 evidence,declared,"Declared local domain, experiment, pipeline, and output evidence targets.",review generated reports

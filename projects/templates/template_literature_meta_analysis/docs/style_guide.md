@@ -21,7 +21,7 @@ Use real `Paper` objects, JSON/JSONL fixtures, `tmp_path`, and `pytest-httpserve
 
 ## Documentation And Claims
 
-- Name exact producers: `src/analysis/pipeline_runner.py`, `src/literature/search_runner.py`, `src/manuscript/variables.py`, etc.
+- Name exact producers: `src/analysis/pipeline_runner.py`, `src/literature/search_runner.py`, `src/manuscript/variables/`, etc.
 - Link generated repo facts instead of hardcoding counts.
 - Label synthetic fixture outputs as synthetic.
 - Do not claim a live bibliometric result unless the corpus came from a live retrieval run and artifacts were regenerated.

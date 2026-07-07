@@ -6,7 +6,10 @@ same forkability contract as the other exemplars.
 
 ## Current validation evidence
 
-- 310 tests pass at 91.40% coverage on `src/` (90% gate enforced)
+- Tests pass at coverage above the 90% gate on `src/`; run
+  `uv run pytest tests/ --cov=src --cov-fail-under=90` for the current live
+  count and percentage rather than trusting a number here (last spot-checked:
+  317 tests, ~92% coverage)
 - Ruff lint clean on `src/`, `tests/`, and `scripts/`
 - Mypy type-check clean on `src/`
 - Refinery pipeline runs end-to-end: ore (9K) → nine-nines certification

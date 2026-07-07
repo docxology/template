@@ -27,11 +27,11 @@ reports numerical results from running an algorithm, see
 
 ```bash
 # Run the methods analysis pipeline (compiles, validates, exports artifacts + a figure)
-uv run python template_methods_paper/scripts/methods_analysis.py
+uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
 
 # View outputs
-ls -la template_methods_paper/output/figures/
-cat template_methods_paper/output/data/compiled_plans.json
+ls -la projects/templates/template_methods_paper/output/figures/
+cat projects/templates/template_methods_paper/output/data/compiled_plans.json
 ```
 
 To regenerate this exemplar from the public monorepo:
@@ -51,8 +51,8 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_met
 is not proof — confirm tests collected > 0 and coverage ≥ 90%:
 
 ```bash
-uv run pytest template_methods_paper/tests \
-  --cov=template_methods_paper/src --cov-fail-under=90
+uv run pytest projects/templates/template_methods_paper/tests \
+  --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
 # live baseline: docs/_generated/COUNTS.md
 ```
 
@@ -183,5 +183,5 @@ for the library API.
 - Forward backlog: [`TODO.md`](TODO.md).
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
-- Project validation: `uv run pytest template_methods_paper/tests --cov=template_methods_paper/src --cov-fail-under=90`.
+- Project validation: `uv run pytest projects/templates/template_methods_paper/tests --cov=projects/templates/template_methods_paper/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.

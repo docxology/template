@@ -1,6 +1,6 @@
 {
   "claim_boundary": "Phase ledger records deterministic artifact-settlement order only; it is not runtime autonomy, self-approval, or external workflow certification.",
-  "generated_at": "2026-06-28T03:54:03+00:00",
+  "generated_at": "2026-07-07T21:35:46+00:00",
   "phases": [
     {
       "artifact_group": "readiness",
@@ -75,14 +75,14 @@
     {
       "artifact_group": "schema",
       "description": "write generated JSON schema-version manifest",
-      "observed_artifact_count": 2,
+      "observed_artifact_count": 1,
       "order": 11,
       "phase": "schema_manifest"
     },
     {
       "artifact_group": "packaging",
       "description": "write local research-object manifest",
-      "observed_artifact_count": 2,
+      "observed_artifact_count": 1,
       "order": 12,
       "phase": "research_object_manifest"
     },
@@ -96,14 +96,14 @@
     {
       "artifact_group": "schema",
       "description": "refresh schema manifest after final payload updates",
-      "observed_artifact_count": 2,
+      "observed_artifact_count": 1,
       "order": 14,
       "phase": "final_schema_manifest"
     },
     {
       "artifact_group": "packaging",
       "description": "refresh local research-object manifest",
-      "observed_artifact_count": 2,
+      "observed_artifact_count": 1,
       "order": 15,
       "phase": "final_research_object_manifest"
     },

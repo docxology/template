@@ -141,6 +141,16 @@ Stage 03 renders PDF, HTML, and slides from the hydrated manuscript. Stage 04 ve
 
 ## Boundaries
 
+This exemplar demonstrates configuration-driven token injection, not
+natural-language quality or domain scholarship: random word substitution
+against a seeded lexicon does not create scholarship, and the generated
+manuscript is not a claim of empirically validated or reader-ready
+content on its own. Forks that add domain claims need additional domain
+validators and claim-ledger entries before they can claim domain
+evidence (see the Method Protocol Contract above). The scope stops at
+deterministic token planning, section allocation, and evidence-table
+generation from `manuscript/config.yaml`; it does not evaluate or assert
+the truth of the substituted content itself.
 
 ## Variants
 

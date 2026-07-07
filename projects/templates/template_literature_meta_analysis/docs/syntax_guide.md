@@ -18,7 +18,7 @@ Do not hardcode figure, table, or section numbers.
 
 ## Manuscript Tokens
 
-Use `{{TOKEN_NAME}}` for values computed from config and generated artifacts. The authoritative token list is the return value of `src/manuscript/variables.py::compute_variables()` plus the manuscript-token tests.
+Use `{{TOKEN_NAME}}` for values computed from config and generated artifacts. The authoritative token list is the return value of `src/manuscript/variables/compute.py::compute_variables()` plus the manuscript-token tests.
 
 Common token families:
 

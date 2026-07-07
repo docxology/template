@@ -9,7 +9,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/05_in
 rg "\{\{" projects/templates/template_literature_meta_analysis/output/manuscript
 ```
 
-If a token remains, add it to `src/manuscript/variables.py` and cover it in `tests/test_variables.py`.
+If a token remains, add it to `src/manuscript/variables/compute.py` and cover it in `tests/test_variables.py`.
 
 ## Missing `corpus.jsonl`
 

@@ -89,9 +89,10 @@ uv run python projects/templates/template_search_project/scripts/run_search_pipe
 
 # ── Deep search (multi-keyword) ─────────────────────────────────────
 # Reads `deep_search:` block from config.yaml. Each keyword runs its
-# own search (max 10 by default), every paper is fully enriched
-# (abstract + fulltext), and each paper gets a multi-section LLM
-# reading note. See manuscript/07_deep_search.md for details.
+# own search (max 100 by default, see the Configuration table below),
+# every paper is fully enriched (abstract + fulltext), and each paper
+# gets a multi-section LLM reading note. See manuscript/07_deep_search.md
+# for details.
 uv run python projects/templates/template_search_project/scripts/run_deep_search.py --enable
 
 # Override keyword list from the CLI:
@@ -121,6 +122,8 @@ flowchart TB
     OUT --> RS[run_summary.json]
     OUT --> FIG[/figures/]
     OUT --> DATA[/data/]
+    OUT --> WEB[/web/]
+    OUT --> REPORTS[/reports/]
 
     SR --> SR_RES[results.json]
     SR --> SR_C[/cache/search_HASH.json/]
@@ -136,6 +139,10 @@ flowchart TB
     FIG --> F3[score_distribution.png]
 
     DATA --> MV[manuscript_variables.json]
+    DATA --> DP[dashboard_payload.json]
+
+    WEB --> DASH[dashboard.html]
+    REPORTS --> DR[dashboard_*.txt]
 
     MAN[/manuscript/]
     MAN --> BIB[references.bib · references_deep.bib<br/>merged at PDF render]
@@ -143,8 +150,8 @@ flowchart TB
     classDef dir fill:#0f172a,stroke:#0f172a,color:#fff
     classDef file fill:#0f766e,stroke:#0f172a,color:#fff
     classDef bib fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class OUT,SR,CC,LD,FIG,DATA,MAN dir
-    class SR_RES,SR_C,CC_A,CC_P,LD_S,LD_PP,CORP,ELOG,RR,RS,F1,F2,F3,MV file
+    class OUT,SR,CC,LD,FIG,DATA,WEB,REPORTS,MAN dir
+    class SR_RES,SR_C,CC_A,CC_P,LD_S,LD_PP,CORP,ELOG,RR,RS,F1,F2,F3,MV,DP,DASH,DR file
     class BIB bib
 ```
 
@@ -240,7 +247,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 * `src/report.py` — final markdown assembly.
 * `scripts/run_deep_search.py`, `scripts/run_search_pipeline.py` — thin orchestrators. **No business logic.**
 * `scripts/s_compose_literature_review.py` — composes `S01_literature_review.md` from the deep-search outputs (runs after `run_*` and before `y_*`/`z_*`).
-* `scripts/y_generate_search_figures.py`, `scripts/z_generate_manuscript_variables.py`, `scripts/zz_generate_review_report.py` — project-analysis stage chain (lexicographic order).
+* `scripts/y_generate_search_figures.py`, `scripts/z_generate_manuscript_variables.py`, `scripts/zz_generate_review_report.py`, `scripts/zzz_build_dashboard.py` — project-analysis stage chain (lexicographic order); the dashboard stage runs last and writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, and `output/reports/dashboard_*.txt`.
 * `tests/` — real-data tests; LLM tested with a deterministic local callable.
 * Per-folder pointers: [`docs/README.md`](docs/README.md), [`manuscript/README.md`](manuscript/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`scripts/README.md`](scripts/README.md).
 

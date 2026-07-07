@@ -8,7 +8,7 @@
 
 - Topic: `Deterministic bounded AutoResearch for a small MNIST neural-network task`
 - Domain: `autoresearch`
-- Stages: 12
+- Stages: 16
 - Quality checks: domain_profile, experiment_plan, pipeline_contracts, evidence_registry, artifact_manifest, thin_orchestrators, method_contracts, review_gates, benchmark_tasks, ai_disclosure, security_profile
 
 No readiness issues were found.

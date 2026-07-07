@@ -17,11 +17,17 @@ The project imports from infrastructure but never modifies it.
 
 ```
 src/template_template/
-├── __init__.py           # Public API surface
-├── introspection.py      # Repository analysis engine
-├── architecture_viz.py   # Figure generation (matplotlib)
-├── metrics.py            # Metric formatting + token dict
-└── inject_metrics.py     # ${variable} substitution
+├── __init__.py                       # Public API surface
+├── introspection.py                  # Repository analysis engine
+├── architecture_viz.py               # Figure orchestrator (calls figure_* modules below)
+├── figure_architecture_overview.py   # Two-layer overview figure
+├── figure_pipeline_stages.py         # Pipeline stages figure
+├── figure_module_inventory.py        # Module inventory figure
+├── figure_comparative_matrix.py      # Comparative feature matrix figure + data
+├── viz_palette.py                    # Shared palette + drawing helpers
+├── paths.py                          # Repository root discovery (`locate_repo_root`)
+├── metrics.py                        # Metric formatting + token dict
+└── inject_metrics.py                 # ${variable} substitution
 ```
 
 ### `introspection.py`
@@ -36,7 +42,7 @@ Exports:
 
 `InfrastructureReport` properties:
 
-- `pipeline_stages_declared` — YAML stage count (14)
+- `pipeline_stages_declared` — YAML stage count (16 as of 2026-07-07; live re-derived, see `manuscript/AGENTS.md`)
 - `pipeline_stages_default_full` — default full run (10)
 - `pipeline_stages_core_only` — `--core-only` (8)
 

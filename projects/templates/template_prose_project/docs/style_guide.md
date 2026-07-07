@@ -70,7 +70,8 @@ types, pure helpers, and operations as needed; logic must stay in
 | `src/config.py` | (does not currently import infrastructure) | re-implement YAML parsing or schema validation |
 | `src/pipeline/` | `infrastructure.prose.{ManuscriptReport, analyze_manuscript, write_report}`, `infrastructure.reference.citation.parse_bibfile` | I/O outside the documented `write_outputs=True` branch |
 | `src/figures.py` | `infrastructure.prose.ManuscriptReport` (top-level type only) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
-| `src/report.py` | `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | `analyze_*`, `parse_*`, `write_*` |
+| `src/report.py` | `src.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper, no infrastructure import) | `analyze_*`, `parse_*`, `write_*` |
+| `src/prose_facade.py` | (does not import infrastructure — project-owned report Protocols plus `render_outline`/`parse_bib_keys`, deliberately decoupled from `infrastructure.prose`/`infrastructure.reference`) | call into `infrastructure.*`; re-implement `infrastructure.reference.citation.parse_bibfile` (its `parse_bib_keys` is a deliberately minimal cross-check helper, not a replacement) |
 | `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) and `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline/`, delegates writes to infrastructure |
 | `scripts/y_generate_prose_figures.py` | `infrastructure.prose.report.load_report_json` → typed `ManuscriptReport` for `src/figures.py` | inline analysis logic |
 | `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.config`, `src.report` | inline analysis logic, regex over prose, BibTeX parsing |

@@ -45,7 +45,7 @@ Manuscript source files use double-brace placeholders of the form `{{<NAME>}}` w
 - `topics.json` → `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}`
 - Hardcoded → `{{NUM_FIGURES}}` (= 16)
 
-All computation lives in `src/manuscript/variables.py`. Do not add variables to scripts directly.
+All computation lives in `src/manuscript/variables/` (see `compute.py` and `extractors/`). Do not add variables to scripts directly.
 
 ## Section Ordering Conventions
 

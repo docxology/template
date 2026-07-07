@@ -1,7 +1,7 @@
 {
   "claim_boundary": "Schemas version generated governance payload shapes; payloads of schemas with a registered field contract are checked for field/type conformance; exemptions are generic tables.",
   "contracted_schema_count": 9,
-  "generated_at": "2026-06-28T03:54:03+00:00",
+  "generated_at": "2026-07-07T21:35:46+00:00",
   "generic_table_exemptions": [
     {
       "path": "output/data/autoresearch_claims.json",

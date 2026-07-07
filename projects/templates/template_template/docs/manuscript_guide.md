@@ -10,7 +10,7 @@ The template meta-project manuscript is a 21-file, modular Markdown document tha
 
 | File | Section | Content |
 |------|---------|---------|
-| `01_abstract.md` | Abstract | Dense single-paragraph summary |
+| `00_abstract.md` | Abstract | Dense single-paragraph summary |
 | `02_introduction.md` | §1 Introduction | Reproducibility crisis, related work, gap analysis |
 
 ### Methods (5 files)
@@ -75,7 +75,7 @@ This manuscript uses `${variable}` tokens that are replaced with live values dur
 | Token | Meaning |
 |-------|---------|
 | `${module_count}` | Infrastructure subpackages discovered live |
-| `${pipeline_stages_declared}` | YAML contract stage count (14) |
+| `${pipeline_stages_declared}` | YAML contract stage count (16 as of 2026-07-07; live re-derived) |
 | `${pipeline_stages_default_full}` | Default full run (10) |
 | `${pipeline_stages_core_only}` | `--core-only` run (8) |
 | `${stage_count}` | Numbered `scripts/NN_*.py` files only |

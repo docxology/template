@@ -21,7 +21,7 @@
 3. Register any new figure in the figure registry.
 4. Run: `uv run pytest tests/ --cov=src --cov-fail-under=90`.
 5. Run the bounded ML pipeline: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_autoresearch_project`.
-6. Validate: `uv run python -m infrastructure.validation.evidence_registry ...`.
+6. Validate: `uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues`.
 
 ## Critical references
 

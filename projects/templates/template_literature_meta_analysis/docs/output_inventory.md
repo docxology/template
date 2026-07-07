@@ -19,7 +19,7 @@ Paths are relative to `projects/templates/template_literature_meta_analysis/`. E
 | `output/data/assertion_summary.json` | Assertion type and hypothesis counts | `src/knowledge_graph/kg_runner.py` |
 | `output/figures/*.png` | Publication figures | `src/visualization/figure_runner.py` via `scripts/04_generate_figures.py` |
 | `output/figures/figure_registry.json` | Figure registry for downstream docs/rendering | `src/visualization/figure_runner.py` |
-| `output/manuscript/*.md` | Token-resolved manuscript sources | `src/manuscript/variables.py` via `scripts/05_inject_variables.py` |
+| `output/manuscript/*.md` | Token-resolved manuscript sources | `src/manuscript/variables/` via `scripts/05_inject_variables.py` |
 | `output/fulltext/` | Optional full-text availability/download artifacts | `scripts/06_fulltext_assessment.py` |
 
 When adding an artifact, update this table, add or update tests for the producer, and document whether the manuscript consumes it.

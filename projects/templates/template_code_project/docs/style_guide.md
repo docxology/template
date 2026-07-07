@@ -79,7 +79,9 @@ def run_experiment(alpha, x0):
 **Correct** — `scripts/` calls `src/` for the math:
 ```python
 # GOOD — import and call the tested function
-from projects.template_code_project.src.optimizer import gradient_descent, make_quadratic_problem
+# (matches real usage: tests/test_optimizer.py, scripts/optimization_analysis.py;
+# enabled by conftest.py adding the project root to sys.path)
+from src.optimizer import gradient_descent, make_quadratic_problem
 
 def run_experiment(alpha, A, b, x0):
     obj, grad = make_quadratic_problem(A=A, b=b)

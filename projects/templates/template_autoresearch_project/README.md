@@ -266,6 +266,8 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/data/manuscript_variables.json`
 - `output/data/manuscript_variable_provenance.json`
 - `output/data/manuscript_figure_blocks.json`
+- `output/data/publication_ledger.json` — release-stage; written by `write_transmission_bookends()` when `manuscript/config.yaml`'s `publication.transmission_bookends.enabled` is `true` (see [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md))
+- `output/data/transmission_manifest.json` — release-stage; see `publication.transmission_bookends` above
 - `output/figures/autoresearch_stage_matrix.png`
 - `output/figures/ml_candidate_scores.png`
 - `output/figures/ml_confusion_matrix.png`
@@ -291,6 +293,8 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/figures/autoresearch_closure_flow.png`
 - `output/figures/autoresearch_security_control_matrix.png`
 - `output/figures/autoresearch_integrity_chain.png`
+- `output/figures/transmission_integrity_strip.png` — release-stage; see `publication.transmission_bookends` note above
+- `output/figures/transmission_pairing.png` — release-stage; see `publication.transmission_bookends` note above
 - `output/figures/figure_registry.json`
 - `output/reports/autoresearch_loop.json`
 - `output/reports/autoresearch_loop.md`

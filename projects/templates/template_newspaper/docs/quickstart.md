@@ -46,7 +46,7 @@ descriptive `manuscript/`.
 
 ```bash
 python -m pytest                  # full suite
-python -m pytest --cov=newspaper  # ~95%
+python -m pytest --cov=newspaper  # ~99% branch coverage (gate: 90%)
 mypy src/newspaper                # clean
 ruff check src scripts tests      # clean
 ```

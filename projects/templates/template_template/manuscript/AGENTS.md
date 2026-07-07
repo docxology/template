@@ -8,7 +8,7 @@ Self-referential publication describing `template/`; sources live under `project
 
 | File | Section |
 |------|---------|
-| `01_abstract.md` | Abstract |
+| `00_abstract.md` | Abstract |
 | `02_introduction.md` | Introduction |
 | `03a_architecture.md` | Methods: Architecture |
 | `03b_pipeline.md` | Methods: Pipeline DAG + orchestrators (`run.sh` / secure path) |

@@ -139,7 +139,7 @@ Result: **355** project-scope infrastructure tests collected and **634** publish
 | `template_autopoiesis` | 493 | 96.41 % |
 | `template_autoresearch_project` | 220 | 92.81 % |
 | `template_autoscientists` | 87 | 99.60 % |
-| `template_code_project` | 197 | 96.96 % |
+| `template_code_project` | 236 | 98.78 % |
 | `template_eda_notebook` | 62 | 100.00 % |
 | `template_gold_refinement` | 248 | 97.55 % |
 | `template_literature_meta_analysis` | 772 | 96.74 % |

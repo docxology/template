@@ -40,7 +40,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_lit
 
 ## Common Failures
 
-- Literal `{{TOKEN}}`: rerun `scripts/05_inject_variables.py`; if still present, add the token in `src/manuscript/variables.py` and test it.
+- Literal `{{TOKEN}}`: rerun `scripts/05_inject_variables.py`; if still present, add the token in `src/manuscript/variables/compute.py` and test it.
 - Missing figure: rerun `scripts/04_generate_figures.py --dpi 300` and check `output/figures/figure_registry.json`.
 - Citation error: check `manuscript/references.bib` and the generated `_combined_manuscript.log`.
 - Mermaid/Chrome error: install `chrome-headless-shell` as described in the root rendering docs, then rerun `scripts/pipeline/stage_03_render.py`.

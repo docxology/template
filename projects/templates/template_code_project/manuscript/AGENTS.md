@@ -52,7 +52,7 @@ grep -r "{{" projects/templates/template_code_project/output/manuscript/ 2>/dev/
   || echo "All tokens resolved"
 ```
 
-See [`../docs/syntax_guide.md`](../docs/syntax_guide.md) for the complete token reference table (28 tokens).
+See [`../docs/syntax_guide.md`](../docs/syntax_guide.md) for an illustrative token reference table — it is a subset that may lag behind the code, per that file's own disclaimer. The authoritative source of truth is the return value of `src/manuscript_variables.py::generate_variables()`; the live cross-reference test `tests/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated` is what actually gates completeness.
 
 ## Figure Protocol
 

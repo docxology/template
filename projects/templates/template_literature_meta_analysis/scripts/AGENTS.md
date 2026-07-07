@@ -14,7 +14,7 @@ scripts/
 ├── 02_meta_analysis_pipeline.py  # → analysis/pipeline_runner.py
 ├── 03_build_knowledge_graph.py   # → knowledge_graph/kg_runner.py
 ├── 04_generate_figures.py        # → visualization/figure_runner.py
-├── 05_inject_variables.py        # → manuscript/variables.py
+├── 05_inject_variables.py        # → manuscript/variables/
 ├── 06_fulltext_assessment.py     # → literature/fulltext_assessment.py
 └── __pycache__/                  # Python bytecode cache (gitignored)
 ```

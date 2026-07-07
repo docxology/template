@@ -38,9 +38,12 @@ rsync -a \
 
 ## Validation Commands
 
+From the template repository root after copying into `projects/working/`:
+
 ```bash
-uv run pytest tests/ --cov=src --cov-fail-under=90
-uv run python scripts/90_build_storybook_pdf.py
+uv run pytest projects/working/my_storybook/tests/ \
+  --cov=projects/working/my_storybook/src --cov-fail-under=90
+uv run python projects/working/my_storybook/scripts/90_build_storybook_pdf.py
 ```
 
 ## What Not To Claim

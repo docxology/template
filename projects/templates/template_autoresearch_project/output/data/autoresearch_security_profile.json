@@ -2,7 +2,7 @@
   "claim_scope": "Local research-artifact integrity evidence for this deterministic public exemplar",
   "enabled": true,
   "external_signing": false,
-  "generated_at": "2026-06-28T03:54:03+00:00",
+  "generated_at": "2026-07-07T21:35:46+00:00",
   "integrity_algorithm": "sha256",
   "mode": "local_deterministic",
   "network_policy": "default_offline",

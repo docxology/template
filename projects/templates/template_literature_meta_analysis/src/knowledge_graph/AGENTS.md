@@ -18,8 +18,10 @@ operation in the pipeline — use incremental mode (the default) whenever possib
   all existing nanopublications.
 - **Score range**: `score_hypothesis()` returns a value in [−1, +1]. A return of `0.0` is
   ambiguous (no assertions OR balanced evidence). Always check assertion counts.
-- **Hypothesis ID order**: `STANDARD_HYPOTHESES` list order determines H1–H8 aliases in
-  `variables.py`. Do not reorder without updating the alias mapping.
+- **Hypothesis ID order**: `STANDARD_HYPOTHESES` list order determines H1–H8 aliases, computed
+  automatically by `_config_key_to_id()` in `hypothesis.py` and consumed (not defined) by
+  `src/manuscript/variables/extractors/hypotheses.py`. Do not reorder `STANDARD_HYPOTHESES`
+  without checking downstream alias expectations.
 - **No mock policy**: Tests must use real `Assertion` objects and real score computations.
 
 ## LLM Extraction Workflow
@@ -48,12 +50,13 @@ Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled.
 
 ## Adding a New Hypothesis
 
-1. Add a `Hypothesis` object to `STANDARD_HYPOTHESES` in `hypothesis.py`.
+1. Add a `Hypothesis` object to `STANDARD_HYPOTHESES` in `hypothesis.py`. The H9 alias is
+   derived automatically from its ordinal position by `_config_key_to_id()` — no manual
+   alias mapping to edit.
 2. Add the corresponding URI to `HYPOTHESIS_CATEGORIES` in `schema.py`.
-3. Add the H-alias mapping (`"H9"` → new ID) in `src/manuscript/variables.py`.
-4. Add keyword/description definitions in `manuscript/config.yaml` under `project_config.hypothesis_definitions`.
-5. Regenerate nanopublications via `--clear-assertions` (new hypothesis won't have assertions otherwise).
-6. Update `manuscript/03_results_hypothesis.md` with a new row in the evidence table.
+3. Add keyword/description definitions in `manuscript/config.yaml` under `project_config.hypothesis_definitions`.
+4. Regenerate nanopublications via `--clear-assertions` (new hypothesis won't have assertions otherwise).
+5. Update `manuscript/03_results_hypothesis.md` with a new row in the evidence table.
 
 ## Known Limitations
 

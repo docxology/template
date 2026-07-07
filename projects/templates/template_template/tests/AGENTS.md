@@ -6,12 +6,12 @@ Technical specification for the template project test infrastructure.
 
 | File | Test Count | Coverage Target |
 |------|-----------:|-----------------|
-| `test_meta.py` | 52 tests | 90%+ on `introspection.py`, `inject_metrics.py` |
-| `test_metrics.py` | 11 tests | `metrics.py` helpers and integration sanity |
+| `test_meta.py` | 63 tests | 90%+ on `introspection.py`, `inject_metrics.py` |
+| `test_metrics.py` | 13 tests | `metrics.py` helpers and integration sanity |
 | `test_architecture_viz.py` | 6 tests | `architecture_viz.py` matrix/data and PNG generation |
-| `test_confidentiality.py` | 11 tests | Public/private project discovery boundary |
-| `test_edge_cases.py` | 45 tests | Edge cases, error branches, sibling fallback, YAML errors |
-| **Total** | **125 tests** | **≥90% (see [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md))** |
+| `test_confidentiality.py` | 9 tests | Public/private project discovery boundary |
+| `test_edge_cases.py` | 39 tests | Edge cases, error branches, sibling fallback, YAML errors |
+| **Total** | **130 tests** | **≥90% (see [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md))** |
 
 ## Test Classes (`test_meta.py`)
 
@@ -20,9 +20,13 @@ Technical specification for the template project test infrastructure.
 | `TestDiscoverInfrastructureModules` | 8 | Module discovery, sorting, `__init__.py` presence |
 | `TestDiscoverProjects` | 7 | Project workspace detection, config loading |
 | `TestCountPipelineStages` | 7 | Stage enumeration, sequential numbering |
+| `TestLoadPipelineStagesFromYaml` | 4 | YAML stage parsing, tags/method/failure_mode fields |
+| `TestResolveTemplateRepoRoot` | 1 | Layer-1 repo root resolution from a project path |
+| `TestEnumerateNumberedScripts` | 2 | `scripts/NN_*.py` enumeration |
 | `TestAnalyzeCoverageConfig` | 5 | Config parsing, threshold extraction |
-| `TestBuildInfrastructureReport` | 9 | Aggregated report, computed properties |
-| `TestInjectMetrics` | 13 | `load_metrics`, `render_chapter`, `render_all_chapters`, round-trip |
+| `TestBuildInfrastructureReport` | 10 | Aggregated report, computed properties |
+| `TestInjectMetrics` | 17 | `load_metrics`, `render_chapter`, `render_all_chapters`, round-trip |
+| `TestSelfDescriptionPins` | 2 | Self-introspection pins (this project appears in its own report) |
 
 ## Test Classes (`test_edge_cases.py`)
 
@@ -35,6 +39,7 @@ Technical specification for the template project test infrastructure.
 | `TestDiscoverInfrastructureModulesImportError` | 2 | ImportError branch + `__all__` contract verification |
 | `TestProjectAnalysisFromWorkspaceEdgeCases` | 3 | Missing config, non-numbered chapters, malformed YAML |
 | `TestDiscoverProjectsPublicOnlyFalse` | 2 | `public_only=False` + workspace-without-config skip |
+| `TestCandidateWorkspacesFlatChild` | 3 | Flat (non-typed-subfolder) workspace children under `projects/` |
 | `TestAnalyzeTestCoverageConfigYAMLError` | 2 | YAML parse error returns None; no-testing-key defaults |
 | `TestBuildInfrastructureReportVersionFallback` | 2 | Version populated; minimal-repo produces valid report |
 | `TestRenderChapterOSError` | 1 | OSError propagates from `render_chapter` |
@@ -58,14 +63,16 @@ patching `sys.modules` (violates the zero-mock policy):
 
 | Line | Branch | Why Unreachable |
 |------|--------|-----------------|
-| 149 | `dir()` fallback for modules without `__all__` | All real infrastructure modules define `__all__` |
-| 186→194 | `if manuscript_dir.is_dir():` False branch | Logically impossible: `config.yaml` exists only inside `manuscript/` |
-| 407–408 | ImportError for `infrastructure.__version__` | `infrastructure` is always installed and importable in this repo |
+| ~161 | `dir()` fallback for modules without `__all__` | All real infrastructure modules define `__all__` |
+| ~198 | `if manuscript_dir.is_dir():` False branch | Logically impossible: `config.yaml` exists only inside `manuscript/` |
+| ~418–419 | ImportError for `infrastructure.__version__` | `infrastructure` is always installed and importable in this repo |
+
+(Line numbers drift as `introspection.py` grows; re-check with `grep -n` before citing exact numbers.)
 
 ## Patterns
 
 - **Zero-Mock**: All tests run against the real repository filesystem
-- **`REPO_ROOT`**: Computed as `Path(__file__).parent.parent.parent.parent` (4 levels up)
+- **`REPO_ROOT`**: Resolved by `helpers.resolve_template_repo_root()` — walks parents of `tests/` until `infrastructure/` + `pyproject.toml` are found (typically 4 levels up), falling back to a `template` sibling
 - **`PROJECT_DIR`**: Template project root (`Path(__file__).parent.parent`)
 - **Assertions**: Minimum-count checks (≥8 modules, ≥2 projects, ≥5 stages) for forward compatibility
 - **Negative controls**: `test_confidentiality.py` and `test_edge_cases.py` both include

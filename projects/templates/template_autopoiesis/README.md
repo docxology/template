@@ -86,6 +86,9 @@ uv run python scripts/autopoiesis.py materialize --out-root output/children
 # Verify a child
 uv run python scripts/autopoiesis.py verify output/children/child_optimization_XXXX
 
+# Check the falsifiable honesty manifest (this template's headline feature)
+uv run python scripts/autopoiesis.py honesty
+
 # Realize one child per domain (smoke test)
 uv run python scripts/realize_archetypes.py
 

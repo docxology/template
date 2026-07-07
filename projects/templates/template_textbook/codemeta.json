@@ -3,7 +3,7 @@
   "@type": "SoftwareSourceCode",
   "name": "template_textbook",
   "description": "Modular, fillable textbook scaffold: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone under src/, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine.",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "https://spdx.org/licenses/Apache-2.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
@@ -20,13 +20,14 @@
   ],
   "author": [
     {
+      "@id": "https://orcid.org/0000-0001-6232-9096",
       "@type": "Person",
-      "givenName": "Research Template",
-      "familyName": "Author",
-      "email": "author@research-template.org",
+      "givenName": "Daniel Ari",
+      "familyName": "Friedman",
+      "email": "daniel@activeinference.institute",
       "affiliation": {
         "@type": "Organization",
-        "name": "Research Template Project"
+        "name": "Active Inference Institute"
       }
     }
   ],

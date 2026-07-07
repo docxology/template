@@ -32,7 +32,7 @@ Live test counts and coverage snapshots belong in `../../../../docs/_generated/C
 - `src/analysis/` owns bibliometrics, TF-IDF, topics, embeddings, entities, and temporal metrics.
 - `src/knowledge_graph/` owns optional LLM extraction, hypothesis scoring, and nanopublications.
 - `src/visualization/` owns headless matplotlib figure generation.
-- `src/manuscript/variables.py` owns `{{TOKEN}}` values.
+- `src/manuscript/variables/` owns `{{TOKEN}}` values.
 - `scripts/` are thin stage orchestrators.
 
 Generated `output/` files are tracked as public release artifacts when they

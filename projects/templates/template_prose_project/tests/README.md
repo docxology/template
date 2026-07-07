@@ -24,6 +24,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 | `test_figures.py` | Matplotlib renderers; round-trip JSON loader. |
 | `test_manuscript_variables.py` | `compute_variables`, `substitute_in_text`. |
 | `test_report.py` | Markdown review-report assembly. |
+| `test_prose_facade.py` | Report Protocols, `render_outline`, `parse_bib_keys`. |
 | `test_scripts.py` | Real `subprocess.run` against the orchestrator scripts. |
 
 ## Conventions

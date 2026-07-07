@@ -9,6 +9,7 @@ the stage functions testable in isolation.
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -364,7 +365,22 @@ def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageRe
         f"--cov-fail-under={min_coverage}",
         "-q",
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
+    # Isolate this subprocess's coverage so it never inherits or pollutes the
+    # parent process's COVERAGE_FILE. When run inside the multi-project union
+    # gate (``stage_01_test.py --all-projects --public-projects``), the parent
+    # sets COVERAGE_FILE to the shared aggregate data file and appends every
+    # project's trace into it. Without an isolated data file, the inner pytest
+    # would write its own ``--cov=src`` trace (for the isolated iso_project
+    # fixture under a tmp_path that is torn down) into that shared file, and
+    # the later aggregate ``coverage report`` would fail with
+    # "No source for code: .../iso_project/src/__init__.py" because the
+    # fixture directory no longer exists. Pointing COVERAGE_FILE at a private,
+    # discarded file severs that leak; this function only reads its own
+    # coverage percent from stdout, so the isolated file is never consumed.
+    isolated_env = os.environ.copy()
+    isolated_env["COVERAGE_FILE"] = str(project_root / ".coverage.iso")
+    isolated_env.pop("COV_CORE_DATAFILE", None)
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root, env=isolated_env)
 
     coverage_match = re.search(r"TOTAL\s+\S+\s+\S+\s+(\d+)%", result.stdout)
     coverage = int(coverage_match.group(1)) if coverage_match else None

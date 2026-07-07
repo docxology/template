@@ -2,7 +2,8 @@
 
 Get up and running with the `template_literature_meta_analysis` exemplar in ~5 minutes. This
 template performs a full, reproducible literature review for a **single search term** across
-five academic search engines, then de-duplicates, analyzes, and visualizes the corpus. The
+seven academic search engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
+ChinaRxiv), then de-duplicates, analyzes, and visualizes the corpus. The
 bundled default term is **`modafinil`**; change one config key to re-target any topic.
 
 ## Prerequisites

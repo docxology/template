@@ -22,7 +22,14 @@ The variables script must not import `infrastructure.rendering` package init. Us
 
 ## `Unknown config key 'sia'`
 
-Ensure `src/loop_config.py` registers `register_project_schema_extension("template_sia", {"sia": dict})`.
+Expected and harmless when this warning comes from the generic
+`infrastructure.core.config` loader validating `manuscript/config.yaml`
+directly (e.g. via ad hoc scripts or the shared config CLI). `src/loop_config.py`
+reads the `sia:` block itself with a private YAML helper and never registers
+the key with `register_project_schema_extension` — no such call exists in
+this project. To make the shared loader recognize `sia` and silence the
+warning, register the extension (mirroring the pattern in
+`template_gold_refinement/tests/test_config.py`): `register_project_schema_extension("template_sia", {"sia": dict})`.
 
 ## Analysis: missing `run_summary.json`
 

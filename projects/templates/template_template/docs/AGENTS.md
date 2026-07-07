@@ -22,17 +22,25 @@ projects/templates/template_template/
 ├── src/template_template/         # Domain logic (Layer 2)
 │   ├── __init__.py                # Public API (generate_all_architecture_figures)
 │   ├── introspection.py           # Repository analysis engine
-│   ├── architecture_viz.py        # Matplotlib figure generators
+│   ├── architecture_viz.py        # Figure orchestrator (calls figure_* modules)
+│   ├── figure_architecture_overview.py  # Two-layer overview figure
+│   ├── figure_pipeline_stages.py        # Pipeline stages figure
+│   ├── figure_module_inventory.py       # Module inventory figure
+│   ├── figure_comparative_matrix.py     # Comparative feature matrix figure + data
+│   ├── viz_palette.py             # Shared palette + drawing helpers
+│   ├── paths.py                   # Repository root discovery (`locate_repo_root`)
 │   ├── metrics.py                 # Metric formatting utilities
 │   └── inject_metrics.py          # ${variable} → value substitution
 ├── scripts/                       # Thin Orchestrators (Stage 02)
 │   ├── generate_architecture_viz.py   # Figure generation orchestrator
 │   └── generate_manuscript_metrics.py # Metrics + variable injection orchestrator
-├── tests/                         # Test suite (75 tests, 90%+ coverage)
+├── tests/                         # Test suite (130 tests, 90%+ coverage)
 │   ├── conftest.py                # Shared fixtures (repo root path)
 │   ├── test_meta.py               # Introspection + figure + integration tests
 │   ├── test_architecture_viz.py   # Visualization output tests
-│   └── test_metrics.py            # Metric formatting + table builder tests
+│   ├── test_metrics.py            # Metric formatting + table builder tests
+│   ├── test_confidentiality.py    # Public/private discovery boundary (negative controls)
+│   └── test_edge_cases.py         # Error branches, fallbacks, and previously-uncovered paths
 ├── manuscript/                    # 21 Markdown chapters + references.bib
 ├── docs/                          # This directory
 ├── output/                        # Generated artifacts (figures, PDFs, data)
@@ -53,7 +61,7 @@ projects/templates/template_template/
 | Module | Key Exports | Purpose |
 |--------|-------------|---------|
 | `introspection` | `build_infrastructure_report()`, `InfrastructureReport`, `PipelineStage` | Analyze the live repository structure |
-| `architecture_viz` | `create_architecture_overview()`, `create_pipeline_diagram()`, `create_module_inventory()`, `create_comparative_matrix()` | Generate 4 publication-quality figures |
+| `architecture_viz` | `generate_architecture_overview()`, `generate_pipeline_stages()`, `generate_module_inventory()`, `generate_comparative_feature_matrix()` | Generate 4 publication-quality figures |
 | `metrics` | `format_count()`, `build_module_inventory_table()`, `build_manuscript_metrics_dict()` | Format metrics for manuscript injection |
 | `inject_metrics` | `render_all_chapters()` | Substitute `${variable}` tokens in manuscript chapters |
 

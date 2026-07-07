@@ -237,7 +237,7 @@
     },
     "topic": "Deterministic bounded AutoResearch for a small MNIST neural-network task"
   },
-  "generated_at": "2026-06-28T03:54:03+00:00",
+  "generated_at": "2026-07-07T21:35:46+00:00",
   "metrics": {
     "readiness_valid": true,
     "required_artifact_count": 78,
@@ -344,16 +344,16 @@
     "output/data/manuscript_variable_provenance.json",
     "output/data/manuscript_figure_blocks.json",
     "output/reports/artifact_manifest.json",
+    "output/data/autoresearch_phase_ledger.json",
     "output/data/autoresearch_schema_manifest.json",
     "output/data/research_object_manifest.json",
-    "output/data/autoresearch_phase_ledger.json",
     "output/reports/autoresearch_readiness.json",
     "output/reports/autoresearch_readiness.md"
   ],
   "project_name": "template_autoresearch_project",
   "stage_results": [
     {
-      "evidence": "Declared 12 pipeline stage contract(s).",
+      "evidence": "Declared 16 pipeline stage contract(s).",
       "name": "plan",
       "status": "declared",
       "suggested_action": "review generated reports"

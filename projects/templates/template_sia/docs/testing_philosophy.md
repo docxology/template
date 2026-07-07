@@ -36,6 +36,11 @@ execution in CI.
 | `test_generation_records.py` | Run summary parsing |
 | `test_reference_agent.py` | Task reference agent |
 | `test_src_reference_agent.py` | `src/reference_agent.py` unit paths |
+| `test_artifact_manifest.py` | Artifact manifest writer |
+| `test_figures.py` | Registry-backed figures |
+| `test_gate_negative_controls.py` | Negative controls for SIA artifact validation (verifier-like gates must actually fail on bad input) |
+| `test_manuscript_variables.py` | Manuscript variable hydration |
+| `test_scripts.py` | Subprocess tests for project analysis scripts |
 
 ## Commands
 

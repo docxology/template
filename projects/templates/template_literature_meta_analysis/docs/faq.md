@@ -18,7 +18,7 @@ Add a client under `src/literature/`, make its base URL injectable, test it with
 
 ## How do I add a manuscript variable?
 
-Add the value in `src/manuscript/variables.py`, add or update a test in `tests/test_variables.py`, then reference `{{TOKEN}}` in manuscript source and rerun `scripts/05_inject_variables.py`.
+Add the value in `src/manuscript/variables/compute.py` (or the relevant extractor under `src/manuscript/variables/extractors/`), add or update a test in `tests/test_variables.py`, then reference `{{TOKEN}}` in manuscript source and rerun `scripts/05_inject_variables.py`.
 
 ## Which generated files can be committed?
 

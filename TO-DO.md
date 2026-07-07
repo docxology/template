@@ -13,26 +13,6 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
 
 ## Active backlog
 
-### EXEMPLAR-AUDIT-FOLLOWUP-1 — aggregate union-coverage gate leak
-
-- **Source:** EXEMPLAR-AUDIT-2026-07-07 (see `CHANGELOG.md` "2026-07-07").
-- **Open finding (not fixed):** the "combined coverage gate" step of
-  `uv run python scripts/pipeline/stage_01_test.py --project-only
-  --all-projects --public-projects` (75% union-coverage floor) fails with
-  `No source for code: '.../pytest-<N>/test_run_project_tests_fail_wh0/iso_project/src/__init__.py'`
-  — reproducible from a clean checkout, unrelated to any of that session's
-  edits. Root cause (not fully traced): `template_search_project/tests/test_analysis.py::test_run_project_tests_fail_when_pytest_errors`
-  spawns a real `pytest` subprocess against a `tmp_path`-scoped isolated
-  fixture project to test `run_project_tests()`; that subprocess appears to
-  write coverage data into a file the parent's "combined coverage gate"
-  later tries to combine, referencing a source path that no longer exists
-  once `tmp_path` is torn down. All 18 projects' own per-project gates pass;
-  only this aggregate union-coverage step is affected.
-- **Acceptance:** trace `infrastructure.core.test_runner`'s combine step and
-  confirm whether `COVERAGE_FILE`/`COV_CORE_DATAFILE` env vars are leaking
-  into the subprocess, or scope the subprocess's coverage data file
-  explicitly. Then re-run the aggregate command and confirm it exits 0.
-
 ### REVIEW-2026-07-02 — Multi-lens review remediation backlog
 
 - **Source:** a 9-dimension adversarial review (43 findings confirmed
