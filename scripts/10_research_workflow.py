@@ -11,13 +11,13 @@ import warnings
 from pathlib import Path
 
 warnings.warn(
-    "scripts/pipeline/stage_10_research_workflow.py is deprecated. "
+    "scripts/10_research_workflow.py is deprecated. "
     "Use scripts/pipeline/stage_10_research_workflow.py instead.",
     DeprecationWarning,
     stacklevel=1,
 )
 print(
-    "DEPRECATION: scripts/pipeline/stage_10_research_workflow.py has moved to scripts/pipeline/stage_10_research_workflow.py",
+    "DEPRECATION: scripts/10_research_workflow.py has moved to scripts/pipeline/stage_10_research_workflow.py",
     file=sys.stderr,
 )
 

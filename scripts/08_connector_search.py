@@ -11,13 +11,13 @@ import warnings
 from pathlib import Path
 
 warnings.warn(
-    "scripts/pipeline/stage_08_connector_search.py is deprecated. "
+    "scripts/08_connector_search.py is deprecated. "
     "Use scripts/pipeline/stage_08_connector_search.py instead.",
     DeprecationWarning,
     stacklevel=1,
 )
 print(
-    "DEPRECATION: scripts/pipeline/stage_08_connector_search.py has moved to scripts/pipeline/stage_08_connector_search.py",
+    "DEPRECATION: scripts/08_connector_search.py has moved to scripts/pipeline/stage_08_connector_search.py",
     file=sys.stderr,
 )
 

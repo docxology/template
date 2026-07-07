@@ -11,13 +11,13 @@ import warnings
 from pathlib import Path
 
 warnings.warn(
-    "scripts/pipeline/stage_09_provenance_record.py is deprecated. "
+    "scripts/09_provenance_record.py is deprecated. "
     "Use scripts/pipeline/stage_09_provenance_record.py instead.",
     DeprecationWarning,
     stacklevel=1,
 )
 print(
-    "DEPRECATION: scripts/pipeline/stage_09_provenance_record.py has moved to scripts/pipeline/stage_09_provenance_record.py",
+    "DEPRECATION: scripts/09_provenance_record.py has moved to scripts/pipeline/stage_09_provenance_record.py",
     file=sys.stderr,
 )
 
