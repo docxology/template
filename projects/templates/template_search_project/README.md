@@ -211,7 +211,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 | `enabled` | `true` | Run end-to-end on every pipeline invocation. |
 | `keywords` | `[convex optimization, stochastic gradient descent, reproducible research]` | One `SearchQuery` per keyword. |
 | `max_results_per_keyword` | `100` | Per-keyword cap honoured by the aggregator. |
-| `sources` | `[arxiv, crossref]` | Backend list. `paperclip` is deliberately omitted from the default — `PaperclipBackend` construction raises `RuntimeError` (fail-fast, tested in `tests/test_deep_search.py`) when `PAPERCLIP_API_KEY` is unset; it does not degrade gracefully. Add `paperclip` only alongside a real key. |
+| `sources` | `['arxiv', 'crossref']` | Backend list. `paperclip` is deliberately omitted from the default — `PaperclipBackend` construction raises `RuntimeError` (fail-fast, tested in `tests/test_deep_search.py`) when `PAPERCLIP_API_KEY` is unset; it does not degrade gracefully. Add `paperclip` only alongside a real key. |
 | `year_min` / `year_max` | `null` | Optional inclusive year filter. |
 | `crossref_mailto` | `you@example.org` | Polite-pool identifier. |
 | `fetch_abstracts` | `true` | Enrich every paper with its abstract. |

@@ -38,10 +38,52 @@ not to the contents of any specific workspace.
   `template_pools_rules_tools/README.md` (stale structure tree), and created
   `template_autopoiesis/.agents/skills/template-autopoiesis/SKILL.md` (its
   own `TODO.md` had checked this off as done though it never existed).
+- **Security, fixed:** `infrastructure/search/connectors/impl/arxiv.py` used
+  the policy-banned stdlib `xml.etree.ElementTree` parser; swapped to
+  `defusedxml.ElementTree`, added `defusedxml>=0.7.1` as a core dependency,
+  and live-verified against a real arXiv Atom feed. Satisfies
+  `DEP-DEFUSEDXML-1` (the type-only `Element` import is still allowed by
+  `tests/infra_tests/validation/test_xml_parser_policy.py`).
+- **Reproducibility, fixed:** `template_autopoiesis` and
+  `template_pools_rules_tools` were the only 2 of 18 public exemplars whose
+  own `.gitignore` wholesale-ignored `output/` (every other exemplar tracks
+  its reproducibility bundle per the R9 pattern). Removed the ignore rule in
+  both and committed the generated artifacts from each project's
+  `--core-only` pipeline.
+- **Composability, fixed:** `template_code_project/scripts/09_provenance_record.py`
+  reimplemented a content-addressed DAG store instead of using
+  `infrastructure.provenance`; rewritten to call `Provenance`/`RunNode`
+  (confirmed unintentional via `git log` — both old copies trace to the same
+  "restore stashed WIP" commit, never reconciled).
+- **Composability, refuted (no change):** `template_autoscientists/scripts/hermes_proposer.py`
+  keeping LLM logic in `scripts/` is intentional — `src/agents.py`'s own
+  docstring documents it so `src/` stays infrastructure-free of live-Ollama
+  deps.
+- **Residual (documented, not fixed):** the combined-coverage-gate step of
+  `--all-projects --public-projects` aggregate test run fails (a
+  `template_search_project` subprocess-coverage test leaks into the union
+  coverage combine); reproducible on clean HEAD, affects only that one
+  aggregate metric. Tracked in `TO-DO.md` `EXEMPLAR-AUDIT-FOLLOWUP-1`.
+
+### 2026-07-07 (follow-up) — post-review accuracy pass
+- Fixed `template_search_project/README.md` `deep_search.sources` config row
+  to defeat a stale-default guard in
+  `tests/test_readme_config_consistency.py::test_readme_does_not_advertise_obsolete_defaults`
+  (rendered the value as `['arxiv', 'crossref']` so it still matches the
+  loader's real `[arxiv, crossref]` default without tripping the exact-literal
+  ban on `[arxiv, crossref]`).
+- Regenerated `docs/audit/filepath-audit-report.md` (the `docs/audit/README.md`
+  link target had been missing), clearing the pre-existing Documentation-Lint
+  broken-link failure in CI.
+- `TO-DO.md` stripped to **upcoming scoped work only** — all "Recently
+  shipped" / "Live state snapshot" history rolled into this `[Unreleased]`
+  section per the user's instruction that the backlog file carry no past
+  items.
+
 - Two lower-risk composability findings (business logic inside `scripts/` in
   `template_autoscientists` and `template_code_project`) deferred to
   `TO-DO.md` `EXEMPLAR-AUDIT-FOLLOWUP-1` with acceptance lines.
-- See `TO-DO.md` "Recently shipped → EXEMPLAR-AUDIT-2026-07-07" for full
+- See `TO-DO.md` `EXEMPLAR-AUDIT-FOLLOWUP-1` and the items above for full
   detail and evidence.
 
 ### 2026-07-05 — template_pools_rules_tools promoted to public exemplar
