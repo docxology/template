@@ -104,12 +104,18 @@ class InfrastructureReport:
 
     @property
     def pipeline_stages_default_full(self) -> int:
-        opt_in_tags = {"bundle", "archival", "ebook", "metadata"}
+        # Mirrors infrastructure/core/pipeline/pipeline.yaml's own comments: the
+        # executor filters "bundle"/"archival"/"ebook"/"metadata" tagged stages
+        # out of default runs (opt-in long-horizon stages), and separately the
+        # "science"/"provenance" tagged stages are documented there as
+        # "Opt-in science/provenance stages (skipped in --core-only and default
+        # runs)". All six tags are excluded from the default full-run count.
+        opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
         return sum(1 for stage in self.pipeline_stages if opt_in_tags.isdisjoint(stage.tags))
 
     @property
     def pipeline_stages_core_only(self) -> int:
-        opt_in_tags = {"bundle", "archival", "ebook", "metadata"}
+        opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
         return sum(
             1
             for stage in self.pipeline_stages

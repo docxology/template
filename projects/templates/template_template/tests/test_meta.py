@@ -157,10 +157,16 @@ class TestCountPipelineStages:
         assert len(stages) >= 5, f"Expected ≥5 stages, got {len(stages)}"
 
     def test_stages_are_sequential(self):
+        """Numbers must never regress; the root ``scripts/`` directory legitimately
+        reuses a numeric prefix across alternate/opt-in stage scripts (e.g.
+        ``08_connector_search.py`` and ``08_executable_bundle.py`` are different,
+        independently-tagged pipeline stages that happen to share "08" — see
+        ``infrastructure/core/pipeline/pipeline.yaml``), so strictly-increasing
+        is not the real invariant. Non-decreasing (filename sort order) is."""
         stages = count_pipeline_stages(REPO_ROOT / "scripts")
         numbers = [s.number for s in stages]
         for i in range(1, len(numbers)):
-            assert numbers[i] > numbers[i - 1], f"Stages not sequential: {numbers}"
+            assert numbers[i] >= numbers[i - 1], f"Stages not non-decreasing: {numbers}"
 
     def test_stage_zero_is_setup(self):
         stages = count_pipeline_stages(REPO_ROOT / "scripts")
