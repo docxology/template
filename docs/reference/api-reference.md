@@ -605,6 +605,58 @@ class MarkdownIntegration(manuscript_dir: Path | None=None, figure_manager: Figu
 
 Integrates figures and references into markdown files.
 
+## Package: `infrastructure.fonds`
+
+### `build_fond_info`
+
+*function — defined in `infrastructure.fonds.fonds_info`*
+
+```python
+build_fond_info(fond_dir: Path, program: str='') -> FondInfo
+```
+
+Build a FondInfo from a validated fond directory.
+
+### `discover_fonds`
+
+*function — defined in `infrastructure.fonds.discovery`*
+
+```python
+discover_fonds(repo_root: Path | str) -> list[FondInfo]
+```
+
+Discover all valid fonds in the fonds/ directory.
+
+### `FondInfo`
+
+*class — defined in `infrastructure.fonds.fonds_info`*
+
+```python
+class FondInfo
+```
+
+Information about a discovered fond.
+
+### `resolve_fond_root`
+
+*function — defined in `infrastructure.fonds.discovery`*
+
+```python
+resolve_fond_root(repo_root: Path | str, fond_name: str) -> Path
+```
+
+Resolve a fond directory by qualified name.
+
+### `validate_fond_structure`
+
+*function — defined in `infrastructure.fonds.validation`*
+
+```python
+validate_fond_structure(fond_dir: Path) -> tuple[bool, str]
+```
+
+Validate that fond has the required structure.
+
 ## Package: `infrastructure.llm`
 
 ### `generate_review_with_metrics`
@@ -1280,6 +1332,176 @@ write_report(report: ManuscriptReport, output_path: Path | str) -> Path
 ```
 
 Persist *report* as pretty-printed JSON.
+
+## Package: `infrastructure.provenance`
+
+### `ArtifactNode`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class ArtifactNode(NodeBase)
+```
+
+Provenance node for a file or dataset artifact.
+
+### `ClaimNode`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class ClaimNode(NodeBase)
+```
+
+Provenance node for a scientific claim or assertion.
+
+### `Edge`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class Edge
+```
+
+A directed edge between two provenance nodes.
+
+### `EdgeRelation`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class EdgeRelation(str, Enum)
+```
+
+Directed relationship type between two provenance nodes.
+
+### `Finding`
+
+*class — defined in `infrastructure.provenance.review`*
+
+```python
+class Finding
+```
+
+A single review finding attached to a provenance node.
+
+### `load_provenance_config`
+
+*function — defined in `infrastructure.provenance.config`*
+
+```python
+load_provenance_config(project_dir: Path | str) -> ProvenanceConfig
+```
+
+Load optional ``provenance.yaml`` from *project_dir*.
+
+### `node_from_dict`
+
+*function — defined in `infrastructure.provenance.models`*
+
+```python
+node_from_dict(data: dict[str, Any]) -> ProvenanceNode
+```
+
+Deserialise a node from a plain dictionary.
+
+### `NodeKind`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class NodeKind(str, Enum)
+```
+
+Classification of a provenance node.
+
+### `Provenance`
+
+*class — defined in `infrastructure.provenance.store`*
+
+```python
+class Provenance(path: Path)
+```
+
+Persistent provenance DAG store.
+
+### `ProvenanceConfig`
+
+*class — defined in `infrastructure.provenance.config`*
+
+```python
+class ProvenanceConfig
+```
+
+Runtime configuration for the provenance DAG.
+
+### `ProvenanceNode`
+
+*constant — defined in `infrastructure.provenance.models`*
+
+```python
+ProvenanceNode = ArtifactNode | RunNode | SourceNode | ClaimNode
+```
+
+### `Review`
+
+*class — defined in `infrastructure.provenance.review`*
+
+```python
+class Review()
+```
+
+Accumulator for provenance review findings.
+
+### `review_provenance_store`
+
+*function — defined in `infrastructure.provenance.review`*
+
+```python
+review_provenance_store(store: Any) -> ReviewResult
+```
+
+Run a standard review pass over a :class:`~Provenance` store.
+
+### `ReviewResult`
+
+*class — defined in `infrastructure.provenance.review`*
+
+```python
+class ReviewResult
+```
+
+Aggregated result of a review pass.
+
+### `RunNode`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class RunNode(NodeBase)
+```
+
+Provenance node for a pipeline run or script execution.
+
+### `Severity`
+
+*class — defined in `infrastructure.provenance.review`*
+
+```python
+class Severity(str, Enum)
+```
+
+Severity level for a review finding.
+
+### `SourceNode`
+
+*class — defined in `infrastructure.provenance.models`*
+
+```python
+class SourceNode(NodeBase)
+```
+
+Provenance node for an external data source or reference.
 
 ## Package: `infrastructure.publishing`
 
@@ -2273,6 +2495,110 @@ write_output_statistics_reports(project_output_dir: Path, stats: dict[str, Any])
 
 Write text and JSON output statistics reports under ``output/reports``.
 
+## Package: `infrastructure.research`
+
+### `load_research_workflow_config`
+
+*function — defined in `infrastructure.research.config`*
+
+```python
+load_research_workflow_config(project_dir: Path | str) -> ResearchWorkflowConfig
+```
+
+Load optional ``research_workflow.yaml`` from *project_dir*.
+
+### `ResearchStage`
+
+*class — defined in `infrastructure.research.workflow`*
+
+```python
+class ResearchStage
+```
+
+A single stage in a research workflow.
+
+### `ResearchWorkflow`
+
+*class — defined in `infrastructure.research.workflow`*
+
+```python
+class ResearchWorkflow(stages: list[ResearchStage] | None=None)
+```
+
+Seven-stage research workflow plan.
+
+### `ResearchWorkflowConfig`
+
+*class — defined in `infrastructure.research.config`*
+
+```python
+class ResearchWorkflowConfig
+```
+
+Runtime configuration for the research workflow.
+
+### `StageStatus`
+
+*class — defined in `infrastructure.research.workflow`*
+
+```python
+class StageStatus(str, Enum)
+```
+
+Execution status of a research stage.
+
+## Package: `infrastructure.rules`
+
+### `build_rule_info`
+
+*function — defined in `infrastructure.rules.rules_info`*
+
+```python
+build_rule_info(rule_dir: Path, program: str='') -> RuleInfo
+```
+
+Build a RuleInfo from a validated rule directory.
+
+### `discover_rules`
+
+*function — defined in `infrastructure.rules.discovery`*
+
+```python
+discover_rules(repo_root: Path | str) -> list[RuleInfo]
+```
+
+Discover all valid rules in the rules/ directory.
+
+### `resolve_rule_root`
+
+*function — defined in `infrastructure.rules.discovery`*
+
+```python
+resolve_rule_root(repo_root: Path | str, rule_name: str) -> Path
+```
+
+Resolve a rule directory by qualified name.
+
+### `RuleInfo`
+
+*class — defined in `infrastructure.rules.rules_info`*
+
+```python
+class RuleInfo
+```
+
+Information about a discovered rule.
+
+### `validate_rule_structure`
+
+*function — defined in `infrastructure.rules.validation`*
+
+```python
+validate_rule_structure(rule_dir: Path) -> tuple[bool, str]
+```
+
+Validate that a rule directory has the required structure.
+
 ## Package: `infrastructure.scientific`
 
 ### `benchmark_function`
@@ -3228,6 +3554,58 @@ validate_kmyth_installation(*, binary_dir: str | Path | None=None, source_dir: s
 ```
 
 Validate that Kmyth source and command-line tools are available.
+
+## Package: `infrastructure.tools`
+
+### `build_tool_info`
+
+*function — defined in `infrastructure.tools.tools_info`*
+
+```python
+build_tool_info(tool_dir: Path, program: str='') -> ToolInfo
+```
+
+Build a ToolInfo from a validated tool directory.
+
+### `discover_tools`
+
+*function — defined in `infrastructure.tools.discovery`*
+
+```python
+discover_tools(repo_root: Path | str) -> list[ToolInfo]
+```
+
+Discover all valid tools in the tools/ directory.
+
+### `resolve_tool_root`
+
+*function — defined in `infrastructure.tools.discovery`*
+
+```python
+resolve_tool_root(repo_root: Path | str, tool_name: str) -> Path
+```
+
+Resolve a tool directory by qualified name.
+
+### `ToolInfo`
+
+*class — defined in `infrastructure.tools.tools_info`*
+
+```python
+class ToolInfo
+```
+
+Information about a discovered tool.
+
+### `validate_tool_structure`
+
+*function — defined in `infrastructure.tools.validation`*
+
+```python
+validate_tool_structure(tool_dir: Path) -> tuple[bool, str]
+```
+
+Validate that a tool has the required structure.
 
 ## Package: `infrastructure.validation`
 

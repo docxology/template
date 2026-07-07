@@ -75,7 +75,9 @@ Generic, Layer-1 facts for working in this repository.
 
 `.gitignore` ignores `projects/*` and negates **only** the public canonical exemplar trees under `projects/templates/` (plus the repo-level `projects/*.md` docs). The public exemplar roster is derived from `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` and documented in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md); do not hand-maintain a second allowlist in prose. Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; the simplified sidecar normally has `working/` and `archive/`, with optional `ongoing/` (long-lived projects with no publication target) plus legacy `active/`, `published/`, and `other/` folders still supported by the linker. `run.sh`/`infrastructure.orchestration` sync existing lifecycle folders into matching typed subfolders under `projects/`: `working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, and optional `active/*` → `projects/active/*` (rendered). Only `projects/templates/*` and optional `projects/active/*` are discovered/rendered by default.
 
-Every path under `projects/` other than `templates/` — especially the local-only `working/`, `archive/`, optional `active/`, `published/`, `other/` mirrors — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/audit/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
+Every path under `projects/` other than `templates/` — especially the local-only `working/`, `archive/`, optional `active/`, `published/`, `other/` mirrors — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/audit/check_tracked_all.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
+
+The same invariant covers three sibling top-level resource-pool directories — `fonds/`, `rules/`, `tools/` (each analogous to `projects/`: only their `templates/` subfolder is git-tracked, `working/`/`archive/` are LOCAL-ONLY, and each gets the same `run.sh`/`infrastructure.orchestration` sidecar auto-sync, independently overridable via `TEMPLATE_FONDS_ROOT`/`TEMPLATE_SKIP_FOND_LINK_SYNC`, `TEMPLATE_RULES_ROOT`/`TEMPLATE_SKIP_RULE_LINK_SYNC`, `TEMPLATE_TOOLS_ROOT`/`TEMPLATE_SKIP_TOOL_LINK_SYNC`). `scripts/audit/check_tracked_all.py` runs all four confidentiality checks (`offending_tracked_projects/fonds/rules/tools` in `infrastructure/project/git_guards.py`) in one pass; the narrower `scripts/audit/check_tracked_projects.py` still runs standalone but is no longer wired into CI or pre-commit.
 
 Operational gotchas: running **all** `projects/*/tests/` in **one** pytest process fails when projects each ship `tests/conftest` under the `tests.conftest` package name — run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage), or follow `.github/workflows/ci.yml`. `resolve_project_root` accepts a qualified `<subfolder>/<name>` path (e.g. `templates/template_code_project`, `active/demo`) and resolves it directly under `projects/`. For a bare name it prefers `projects/active/<name>/` (the hot seat) when that tree has project markers, then `projects/working/<name>/`, then a flat standalone `projects/<name>/`, falling back to `projects/active/<name>/` for error messages.
 
@@ -278,6 +280,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | [AGENTS.md](projects/templates/template_code_project/AGENTS.md) | [README.md](projects/templates/template_code_project/README.md) | Code-centric exemplar (canonical, always present) |
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | [AGENTS.md](projects/templates/template_prose_project/AGENTS.md) | [README.md](projects/templates/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
 | [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | [AGENTS.md](projects/templates/template_active_inference/AGENTS.md) | [README.md](projects/templates/template_active_inference/README.md) | Active Inference multi-track exemplar (canonical, always present) |
+| [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) | [AGENTS.md](projects/templates/template_autopoiesis/AGENTS.md) | [README.md](projects/templates/template_autopoiesis/README.md) | Combinatoric-grammar project-generation exemplar (canonical, always present) |
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | [AGENTS.md](projects/templates/template_autoresearch_project/AGENTS.md) | [README.md](projects/templates/template_autoresearch_project/README.md) | AutoResearch exemplar (canonical, always present) |
 | [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | [AGENTS.md](projects/templates/template_autoscientists/AGENTS.md) | [README.md](projects/templates/template_autoscientists/README.md) | AutoScientists coordination-mechanism testbed exemplar (canonical, always present) |
 | [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) | [AGENTS.md](projects/templates/template_eda_notebook/AGENTS.md) | [README.md](projects/templates/template_eda_notebook/README.md) | EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs (canonical, always present) |
@@ -286,6 +289,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_madlib/`](projects/templates/template_madlib/) | [AGENTS.md](projects/templates/template_madlib/AGENTS.md) | [README.md](projects/templates/template_madlib/README.md) | Conditional token-injection manuscript exemplar with QA probes and authoring contract (canonical, always present) |
 | [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) | [AGENTS.md](projects/templates/template_methods_paper/AGENTS.md) | [README.md](projects/templates/template_methods_paper/README.md) | Methods-paper exemplar — controlled-method specification DSL, staged validation, deterministic compilation, informed by BPL (canonical, always present) |
 | [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) | [AGENTS.md](projects/templates/template_newspaper/AGENTS.md) | [README.md](projects/templates/template_newspaper/README.md) | Newspaper layout-engine exemplar (canonical, always present) |
+| [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) | [AGENTS.md](projects/templates/template_pools_rules_tools/AGENTS.md) | [README.md](projects/templates/template_pools_rules_tools/README.md) | Fonds/rules/tools resource-pool integration exemplar (canonical, always present) |
 | [`projects/templates/template_sia/`](projects/templates/template_sia/) | [AGENTS.md](projects/templates/template_sia/AGENTS.md) | [README.md](projects/templates/template_sia/README.md) | SIA harness exemplar (canonical, always present) |
 | [`projects/templates/template_storybook/`](projects/templates/template_storybook/) | [AGENTS.md](projects/templates/template_storybook/AGENTS.md) | [README.md](projects/templates/template_storybook/README.md) | Full-page illustrated storybook exemplar (canonical, always present) |
 | [`projects/templates/template_template/`](projects/templates/template_template/) | [AGENTS.md](projects/templates/template_template/AGENTS.md) | [README.md](projects/templates/template_template/README.md) | Meta-template exemplar (canonical, always present) |
@@ -1505,15 +1509,17 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 | **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 <!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->

@@ -16,6 +16,8 @@ metrics:
     name: "determinism"
     direction: "maximize"
 protocol: "Grammar->expand->materialize->verify; 5 domains, 3 tracks, 3 section_sets"
+baselines:
+  - grammar-expand-verify
 expected_figures:
   - "fig:product_decomposition"
   - "fig:slot_landscape"

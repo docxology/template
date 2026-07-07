@@ -30,9 +30,11 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
 - [`templates/template_active_inference/`](templates/template_active_inference/) — Active Inference multi-track exemplar (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`templates/template_autopoiesis/`](templates/template_autopoiesis/) — combinatoric grammar generating whole runnable child projects (src/tests/scripts/manuscript) from a seed
 - [`templates/template_eda_notebook/`](templates/template_eda_notebook/) — EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs
 - [`templates/template_madlib/`](templates/template_madlib/) — conditional token-injection manuscript generator with QA probes and authoring contract
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
+- [`templates/template_pools_rules_tools/`](templates/template_pools_rules_tools/) — fonds/rules/tools resource-pool integration exemplar
 - [`templates/template_search_project/`](templates/template_search_project/) — literature-search pipeline with auto-populated BibTeX and optional local LLM synthesis
 - [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
 - [`templates/template_storybook/`](templates/template_storybook/) — full-page illustrated storybook PDF exemplar
@@ -73,6 +75,8 @@ projects.
 | [`template_storybook`](templates/template_storybook/) | Full-page illustrated storybook PDF | yes (`src/storybook/*`) | n/a | yes (full-page story art) | see canonical facts | see canonical facts |
 | [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
 | [`template_textbook`](templates/template_textbook/) | Book-length scaffold with labs/question banks | yes (`src/textbook/*`) | no (curated) | deterministic figures/diagrams | see canonical facts | see canonical facts |
+| [`template_autopoiesis`](templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects from a seed | yes (`src/grammar.py`, `src/expand.py`, `src/materialize.py`) | no (curated, 5 live-verified) | yes (4 figures) | see canonical facts | see canonical facts |
+| [`template_pools_rules_tools`](templates/template_pools_rules_tools/) | Fonds/rules/tools resource-pool integration | yes (`src/fonds_reader.py`, `src/rules_applier.py`, `src/tools_invoker.py`) | no (curated) | no | see canonical facts | see canonical facts |
 
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
@@ -174,6 +178,7 @@ between lifecycle folders instead of committing it here.
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
 | `templates/template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
+| `templates/template_autopoiesis/` | Combinatoric-grammar project-generation exemplar | see canonical facts | see canonical facts |
 | `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
 | `templates/template_gold_refinement/` | Gold-refining analogy exemplar (ore → nine-nines, mega-madlib token injection) | see canonical facts | see canonical facts |
 | `templates/template_literature_meta_analysis/` | Generic literature meta-analysis exemplar (multi-engine retrieval, de-dup, full-text, embeddings) | see canonical facts | see canonical facts |
@@ -184,6 +189,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_madlib/` | Conditional token-injection manuscript exemplar | see canonical facts | see canonical facts |
 | `templates/template_methods_paper/` | Methods-paper exemplar (controlled-method specification DSL) | see canonical facts | see canonical facts |
 | `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
+| `templates/template_pools_rules_tools/` | Fonds/rules/tools resource-pool integration exemplar | see canonical facts | see canonical facts |
 | `templates/template_search_project/` | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | `templates/template_sia/` | SIA self-improvement harness exemplar | see canonical facts | see canonical facts |
 | `templates/template_storybook/` | Full-page illustrated storybook PDF exemplar | see canonical facts | see canonical facts |
@@ -945,6 +951,7 @@ infrastructure compliance:
 ### 🎯 **Permanent Exemplars**
 
 - **template_active_inference**: Active Inference multi-track exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_autopoiesis**: Combinatoric-grammar project-generation exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoscientists**: AutoScientists coordination exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
@@ -954,6 +961,7 @@ infrastructure compliance:
 - **template_madlib**: Conditional token-injection manuscript exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_methods_paper**: Methods-paper exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_newspaper**: Newspaper layout exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_pools_rules_tools**: Fonds/rules/tools resource-pool integration exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_search_project**: Literature-search exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_sia**: SIA harness exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

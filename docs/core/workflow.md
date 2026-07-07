@@ -196,15 +196,17 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 | **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 ## Key Components

@@ -185,6 +185,7 @@ uv run python -c "from infrastructure.project.discovery import discover_projects
 exemplars — all under the git-tracked `projects/templates/` typed subfolder — are
 ever git-tracked/pushed:
 - [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) — Active Inference multi-track template (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) — combinatoric grammar that deterministically generates whole runnable child projects (src/tests/scripts/manuscript), one level past a manuscript generator
 - [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) — deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives)
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
@@ -194,6 +195,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract
 - [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) — methods paper template: a tested controlled-method specification DSL (staged validation gates, deterministic compilation), informed by BPL (Biology Programming Language) as an upstream domain language
 - [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
+- [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) — meta-project exemplar demonstrating integration of the `fonds/`, `rules/`, and `tools/` top-level resource-pool directories
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
 - [`projects/templates/template_search_project/`](projects/templates/template_search_project/) — literature-search → BibTeX → LLM-synthesis template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
@@ -207,9 +209,18 @@ path under `projects/` — optional `active/` hot-seat render set, the `working/
 `ongoing/`, and `archive/` sidecar mirrors, optional legacy `published/` and `other/`
 lifecycle folders — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
-`scripts/audit/check_tracked_projects.py` fails the CI `lint` job and the pre-push
+`scripts/audit/check_tracked_all.py` fails the CI `lint` job and the pre-push
 `pre-push-quick` hook on any non-template tracked project (a `git add -f`
 cannot slip past it).
+
+**The same invariant covers three sibling top-level resource-pool directories:**
+`fonds/`, `rules/`, and `tools/` (each analogous to `projects/` — only their
+`templates/` subfolder is git-tracked; `working/`/`archive/` are LOCAL-ONLY).
+`scripts/audit/check_tracked_all.py` runs all four confidentiality checks
+(`offending_tracked_projects/fonds/rules/tools` in
+`infrastructure/project/git_guards.py`) in one pass — it superseded the
+narrower `scripts/audit/check_tracked_projects.py` (still runnable standalone,
+but no longer wired into CI or pre-commit).
 
 Private work lives outside this public repo, usually at the sibling
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`/`../projects` sidecar. The current simplified
@@ -230,6 +241,13 @@ long-lived docs.
 **Backburner & archived projects:** remain non-rendered unless rendered through
 an explicit qualified command such as `--project working/<name>` (see
 [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)).
+
+**The same auto-sync runs for `fonds/`, `rules/`, and `tools/` on every
+`run.sh` / orchestration invocation** (`infrastructure/orchestration/link_sync.py`),
+each independently overridable/skippable: `TEMPLATE_FONDS_ROOT` /
+`TEMPLATE_SKIP_FOND_LINK_SYNC`, `TEMPLATE_RULES_ROOT` /
+`TEMPLATE_SKIP_RULE_LINK_SYNC`, `TEMPLATE_TOOLS_ROOT` /
+`TEMPLATE_SKIP_TOOL_LINK_SYNC`.
 
 ## Architecture
 
@@ -282,6 +300,7 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/docker/` - Docker containerization settings and configuration
 - `infrastructure/doctor/` - Repository health diagnostics and self-check tooling
 - `infrastructure/documentation/` - Figure management, API docs, glossary generation
+- `infrastructure/fonds/` - Stable resource pools (bibliographies, contacts, datasets); discovery/validation/public-scope/sidecar-sync analog of `infrastructure/project/` for `fonds/`
 - `infrastructure/llm/` - Local LLM integration (Ollama) for reviews and translations
 - `infrastructure/logrotate.d/` - Log rotation configs for pipeline and agent logs
 - `infrastructure/mcp_server.py` - stdio MCP server exposing repo operations/pipeline/skills as tools
@@ -293,6 +312,7 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/reference/` - Citation and reference-management utilities
 - `infrastructure/rendering/` - Multi-format rendering (PDF, HTML, slides)
 - `infrastructure/reporting/` - Pipeline reporting and error aggregation
+- `infrastructure/rules/` - Soft guidelines and strong formal constraints for research templates; discovery/validation/public-scope/sidecar-sync analog of `infrastructure/project/` for `rules/`
 - `infrastructure/scientific/` - Scientific computing best practices and benchmarking
 - `infrastructure/sia/` - Self-improvement harness (task layout, fixture replay, evaluation runner)
 - `infrastructure/search/` - Literature search and reference discovery
@@ -301,6 +321,7 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/research/` - Research workflow prompt templates (question refinement, gap analysis, synthesis)
 - `infrastructure/skills/` - Programmatic AI skill discovery and manifest generation
 - `infrastructure/steganography/` - Cryptographic PDF watermarking and verification
+- `infrastructure/tools/` - Executable entry points (scripts, skills, agents) for research workflows; discovery/validation/public-scope/sidecar-sync analog of `infrastructure/project/` for `tools/`
 - `infrastructure/validation/` - PDF, output, and markdown integrity validation
 
 ## Project Structure
@@ -676,13 +697,15 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 | **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->

@@ -24,7 +24,7 @@ logger = get_logger(__name__)
 
 def main() -> None:
     log_header("Generate Architecture Overview Diagram", logger)
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = Path(__file__).resolve().parents[2]
     out_dir = repo_root / "docs" / "_generated"
     out_dir.mkdir(parents=True, exist_ok=True)
     svg_path = out_dir / "architecture_overview.svg"

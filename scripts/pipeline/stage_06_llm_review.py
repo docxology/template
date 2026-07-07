@@ -47,7 +47,7 @@ from infrastructure.llm.review.pipeline_runner import ReviewMode, run_llm_review
 logger = get_logger(__name__)
 
 # Repo root used to resolve pipeline.yaml candidates for stage labelling.
-_REPO_ROOT = Path(__file__).parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def main(mode: str = ReviewMode.ALL, project_name: str = "project") -> int:
@@ -71,7 +71,7 @@ def main(mode: str = ReviewMode.ALL, project_name: str = "project") -> int:
         label = stage_label("LLM Scientific Review", project_name, repo_root=_REPO_ROOT)
         log_header(f"{label.split(':')[0]}: LLM Manuscript Review", logger)
 
-    repo_root = Path(__file__).parent.parent
+    repo_root = _REPO_ROOT
     exit_code = run_llm_review_pipeline(mode=mode, project_name=project_name, repo_root=repo_root)
     if exit_code == 0:
         log_success("LLM review stage completed successfully", logger)

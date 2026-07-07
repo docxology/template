@@ -30,7 +30,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
-ensure_repo_root_on_path()
+_REPO_ROOT = ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, setup_logger, log_header, log_success
 from infrastructure.validation.repo.audit_orchestrator import (
@@ -83,7 +83,7 @@ Examples:
         setup_logger(__name__, level=10)  # DEBUG level
 
     # Find repository root
-    repo_root = Path(__file__).parent.parent
+    repo_root = _REPO_ROOT
 
     try:
         # Run comprehensive audit using orchestrator

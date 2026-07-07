@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
-ensure_repo_root_on_path()
+_REPO_ROOT = ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
 from infrastructure.project.discovery import discover_projects
@@ -28,7 +28,7 @@ def main() -> int:
     parser.parse_args()
 
     log_header("STAGE 07: Executive Reporting", logger)
-    repo_root = Path(__file__).parent.parent
+    repo_root = _REPO_ROOT
     projects = discover_projects(repo_root)
     if len(projects) <= 1:
         logger.info("Single-project checkout — executive reporting skipped")

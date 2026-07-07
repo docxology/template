@@ -4,15 +4,25 @@
 
 A combinatoric **grammar** that deterministically generates whole runnable projects — `src/`, `tests/`, `scripts/`, and `manuscript/` — one level past a manuscript generator.
 
-## Use This Template
+## When to use this template
 
-This template is for anyone who needs to **generate runnable project trees deterministically**:
+Use this template when you need to **generate runnable project trees
+deterministically** — not a manuscript, but a whole child project (its own
+`src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a
+combinatoric grammar, with recompute-based provenance verification and a
+falsifiable honesty manifest against green-by-construction test theater. It
+extends `template_madlib` one level up: from generating *a manuscript* to
+generating *a project that generates a manuscript*. If you only need
+token-driven manuscript generation without the project-generation layer, use
+`template_madlib` directly instead; if you need a manuscript template with no
+generative grammar at all, see `template_code_project` or
+`template_prose_project`.
+
+Concretely, this template provides:
 - A combinatoric grammar that emits whole projects (src/, tests/, scripts/, manuscript/)
 - Children that pass their own `pytest --cov 90` gate with real audited kernels
 - Recompute verification (never trust recorded hashes)
 - A falsifiable honesty manifest against green-by-construction theater
-
-It extends `template_madlib` one level up: from generating *a manuscript* to generating *a project that generates a manuscript*.
 
 ## Configuring from this template
 

@@ -66,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     log_header("Generate Stage-Table Documentation", logger)
 
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = Path(__file__).resolve().parents[2]
     yaml_path = args.yaml or (repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml")
     targets = [Path(t) for t in (args.targets or DEFAULT_STAGE_TABLE_TARGETS)]
 

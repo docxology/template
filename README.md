@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -124,6 +124,7 @@ inside that exemplar.
 | --- | --- | --- |
 | `template-code-project` | `template_code_project` | Code-driven computational research |
 | `template-active-inference` | `template_active_inference` | Multi-track Active Inference |
+| `template-autopoiesis` | `template_autopoiesis` | Combinatoric grammar generating whole child projects |
 | `template-autoresearch-project` | `template_autoresearch_project` | Bounded AutoResearch loop |
 | `template-autoscientists` | `template_autoscientists` | Agent-team coordination testbed |
 | `template-template` | `template_template` | Self-referential meta-template |
@@ -174,6 +175,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | Exemplar | Shape | Tests | Coverage |
 |---|---|---|---|
 | [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | see canonical facts | see canonical facts |
+| [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects (src/tests/scripts/manuscript) from a seed | see canonical facts | see canonical facts |
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
 | [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | Coordination-mechanism testbed (deterministic ablatable agent-team primitives, honest no-speedup framing) | see canonical facts | see canonical facts |
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
@@ -499,15 +501,17 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 | **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **10** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **11** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **12** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **13** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full per-stage flowchart, failure/skip transitions, and the script-to-stage

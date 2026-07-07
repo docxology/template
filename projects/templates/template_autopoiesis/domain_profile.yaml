@@ -12,6 +12,16 @@ source_policy: "thin-orchestrator — business logic in src/ only"
 artifact_expectations:
   - "materialized-child: src/tests/scripts/manuscript"
   - "sealed-output: QR-overlaid figures, stego PDF, provenance manifest"
-benchmark_rubric: null
+benchmark_rubric:
+  name: autopoiesis-generation-readiness
+  dimensions:
+    - name: deterministic_expansion
+      weight: 2.0
+    - name: recompute_verification
+      weight: 2.0
+    - name: honesty_manifest_coverage
+      weight: 1.5
+    - name: mutation_gate_teeth
+      weight: 1.5
 stage_mappings: []
 analogy_boundary: null

@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     log_header("Generate API-Reference Documentation", logger)
 
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = Path(__file__).resolve().parents[2]
     infra_dir = repo_root / "infrastructure"
     target = args.target if args.target.is_absolute() else repo_root / args.target
     if not target.exists():

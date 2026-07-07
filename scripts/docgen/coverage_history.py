@@ -29,7 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
-ensure_repo_root_on_path()
+_REPO_ROOT = ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success  # noqa: E402
 from infrastructure.reporting.coverage_history import (  # noqa: E402
@@ -62,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
     log_header("Generate Coverage History Dashboard", logger)
     args = _parse_args(argv)
 
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = _REPO_ROOT
     out_path = args.output or repo_root / "docs" / "_generated" / "coverage_history.md"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 

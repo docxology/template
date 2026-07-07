@@ -18,6 +18,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_autopoiesis",
+      "qualified_name": "templates/template_autopoiesis",
+      "title": "template_autopoiesis",
+      "use_when": "Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
+      "test_file_count": 27,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_code_project",
       "qualified_name": "templates/template_code_project",
       "title": "Code Project — Optimization Research Exemplar",
@@ -46,7 +54,7 @@
       "qualified_name": "templates/template_madlib",
       "title": "Template Madlib — Deterministic Token-Injection Exemplar",
       "use_when": "Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts.",
-      "test_file_count": 8,
+      "test_file_count": 4,
       "coverage_floor": 90
     },
     {
@@ -62,7 +70,7 @@
       "qualified_name": "templates/template_pools_rules_tools",
       "title": "template_pools_rules_tools",
       "use_when": "Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science.",
-      "test_file_count": 7,
+      "test_file_count": 8,
       "coverage_floor": 90
     },
     {

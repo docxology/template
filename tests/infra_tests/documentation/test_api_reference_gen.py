@@ -277,7 +277,7 @@ class TestBuildMarkdown:
         _, pkg_alpha, pkg_beta = two_package_tree
         md = build_api_reference_markdown([pkg_alpha, pkg_beta])
         assert "auto-generated" not in md.lower() or "Do not hand-edit" in md
-        assert "generate_api_reference_doc.py" in md
+        assert "scripts/docgen/api_reference.py" in md
 
     def test_deterministic_output(self, two_package_tree: tuple[Path, Path, Path]) -> None:
         """Two consecutive renders produce byte-identical output."""

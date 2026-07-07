@@ -62,7 +62,7 @@ def main() -> int:
 
     log_header(f"STAGE 00: Environment Setup (Project: {args.project})", logger)
 
-    repo_root = Path(__file__).parent.parent
+    repo_root = Path(__file__).resolve().parents[2]
 
     # Clean coverage files to ensure clean state for subsequent test runs
     clean_coverage_files(repo_root)

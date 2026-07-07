@@ -44,7 +44,7 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-03"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-06"
 
 
 @dataclass(frozen=True)
@@ -67,6 +67,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # exercised from the repo-root interpreter, so the gate is re-derived in its
     # own environment, not here. The collected-test count is from --collect-only.
     ExemplarSnapshot("template_active_inference", 382, "91.35 %"),
+    ExemplarSnapshot("template_autopoiesis", 493, "96.41 %"),
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
     ExemplarSnapshot("template_code_project", 197, "96.96 %"),
@@ -76,6 +77,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_madlib", 37, "93.96 %"),
     ExemplarSnapshot("template_methods_paper", 79, "98.97 %"),
     ExemplarSnapshot("template_newspaper", 53, "94.37 %"),
+    ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
