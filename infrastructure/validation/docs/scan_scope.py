@@ -23,6 +23,7 @@ DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
         ".git",
         ".mypy_cache",
         ".omo",
+        ".provenance",
         ".pytest_cache",
         ".ruff_cache",
         ".tox",
