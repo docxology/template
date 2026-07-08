@@ -1,0 +1,51 @@
+\contentsline {subsection}{\numberline {0.1}Abstract}{2}{subsection.0.1}%
+\contentsline {subsubsection}{\numberline {0.1.1}Generation pipeline}{2}{subsubsection.0.1.1}%
+\contentsline {subsubsection}{\numberline {0.1.2}Grammar product space}{2}{subsubsection.0.1.2}%
+\contentsline {subsection}{\numberline {0.2}Introduction}{3}{subsection.0.2}%
+\contentsline {subsubsection}{\numberline {0.2.1}Why generate projects at all}{3}{subsubsection.0.2.1}%
+\contentsline {subsubsection}{\numberline {0.2.2}The word ``autopoietic'' is doing real work, not decoration}{3}{subsubsection.0.2.2}%
+\contentsline {subsubsection}{\numberline {0.2.3}Three claims that are usually asserted, rarely checked}{3}{subsubsection.0.2.3}%
+\contentsline {subsubsection}{\numberline {0.2.4}What problem seeded, deterministic generation actually solves}{3}{subsubsection.0.2.4}%
+\contentsline {subsubsection}{\numberline {0.2.5}Contributions of this exemplar}{4}{subsubsection.0.2.5}%
+\contentsline {subsubsection}{\numberline {0.2.6}Scope}{4}{subsubsection.0.2.6}%
+\contentsline {subsection}{\numberline {0.3}Methods}{5}{subsection.0.3}%
+\contentsline {subsubsection}{\numberline {0.3.1}The A\ensuremath {\to }E generation spine}{5}{subsubsection.0.3.1}%
+\contentsline {subsubsection}{\numberline {0.3.2}Stage A --- Grammar loading and validation}{5}{subsubsection.0.3.2}%
+\contentsline {subsubsection}{\numberline {0.3.3}Reserved slots vs.~effective slots}{5}{subsubsection.0.3.3}%
+\contentsline {subsubsection}{\numberline {0.3.4}Stage B --- Deterministic spec expansion}{5}{subsubsection.0.3.4}%
+\contentsline {subsubsection}{\numberline {0.3.5}Stage C --- Materialization into a runnable child tree}{6}{subsubsection.0.3.5}%
+\contentsline {subsubsection}{\numberline {0.3.6}Stage D --- Verification}{6}{subsubsection.0.3.6}%
+\contentsline {subsubsection}{\numberline {0.3.7}Stage E --- Sealing}{7}{subsubsection.0.3.7}%
+\contentsline {subsubsection}{\numberline {0.3.8}Property-based invariants}{7}{subsubsection.0.3.8}%
+\contentsline {subsubsection}{\numberline {0.3.9}Reproducibility framing}{7}{subsubsection.0.3.9}%
+\contentsline {subsection}{\numberline {0.4}Results}{8}{subsection.0.4}%
+\contentsline {subsubsection}{\numberline {0.4.1}Grammar product space}{8}{subsubsection.0.4.1}%
+\contentsline {subsubsection}{\numberline {0.4.2}Effective slot breakdown}{9}{subsubsection.0.4.2}%
+\contentsline {subsubsection}{\numberline {0.4.3}The five primitive domains}{9}{subsubsection.0.4.3}%
+\contentsline {subsubsection}{\numberline {0.4.4}Exemplar generation}{10}{subsubsection.0.4.4}%
+\contentsline {subsubsection}{\numberline {0.4.5}Test results}{10}{subsubsection.0.4.5}%
+\contentsline {subsection}{\numberline {0.5}Honesty Contract}{12}{subsection.0.5}%
+\contentsline {subsubsection}{\numberline {0.5.1}Why a manifest, not a claim}{12}{subsubsection.0.5.1}%
+\contentsline {subsubsection}{\numberline {0.5.2}Ground-truth table}{12}{subsubsection.0.5.2}%
+\contentsline {subsubsection}{\numberline {0.5.3}The structural evidence catalogue}{12}{subsubsection.0.5.3}%
+\contentsline {subsubsection}{\numberline {0.5.4}How \texttt {build\_manifest} inspects the AST}{12}{subsubsection.0.5.4}%
+\contentsline {subsubsection}{\numberline {0.5.5}The \texttt {HonestyManifest} dataclass}{12}{subsubsection.0.5.5}%
+\contentsline {subsubsection}{\numberline {0.5.6}Prose scanning for unsupported claims}{13}{subsubsection.0.5.6}%
+\contentsline {subsubsection}{\numberline {0.5.7}The mutation gate: proving the acceptance criteria have teeth}{13}{subsubsection.0.5.7}%
+\contentsline {subsubsection}{\numberline {0.5.8}What this buys, and what it does not}{13}{subsubsection.0.5.8}%
+\contentsline {subsection}{\numberline {0.6}Reproducibility}{14}{subsection.0.6}%
+\contentsline {subsubsection}{\numberline {0.6.1}Determinism guarantee}{14}{subsubsection.0.6.1}%
+\contentsline {subsubsection}{\numberline {0.6.2}The seal.json provenance mechanism}{14}{subsubsection.0.6.2}%
+\contentsline {subsubsection}{\numberline {0.6.3}SHA-256 vs.~Merkle integrity profiles}{14}{subsubsection.0.6.3}%
+\contentsline {subsubsection}{\numberline {0.6.4}Recompute / verify workflow}{15}{subsubsection.0.6.4}%
+\contentsline {subsubsection}{\numberline {0.6.5}Toolchain}{15}{subsubsection.0.6.5}%
+\contentsline {subsubsection}{\numberline {0.6.6}Build command}{15}{subsubsection.0.6.6}%
+\contentsline {subsection}{\numberline {0.7}Limitations}{16}{subsection.0.7}%
+\contentsline {subsubsection}{\numberline {0.7.1}Reserved slots are excluded from the effective product space}{16}{subsubsection.0.7.1}%
+\contentsline {subsubsection}{\numberline {0.7.2}No child-PDF rendering in CI}{16}{subsubsection.0.7.2}%
+\contentsline {subsubsection}{\numberline {0.7.3}Within-platform guarantee only}{16}{subsubsection.0.7.3}%
+\contentsline {subsubsection}{\numberline {0.7.4}Grammar does not self-modify}{16}{subsubsection.0.7.4}%
+\contentsline {subsubsection}{\numberline {0.7.5}Integrity verification checks self-consistency, not tamper-proofing}{16}{subsubsection.0.7.5}%
+\contentsline {subsubsection}{\numberline {0.7.6}Coverage is uneven across modules, not uniform (though every module now clears the floor)}{16}{subsubsection.0.7.6}%
+\contentsline {subsubsection}{\numberline {0.7.7}Cover art now includes the QR seal, but that code path is untested}{17}{subsubsection.0.7.7}%
+\contentsline {subsection}{\numberline {0.8}References}{18}{subsection.0.8}%

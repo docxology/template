@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 from infrastructure.doctor.detectors import (
+    detect_codex_startup_config,
     detect_doctor_state_writable,
     detect_pycache_clutter,
     detect_run_sh_executable,
@@ -102,6 +103,75 @@ def test_doctor_state_writable_does_not_create_directory(tmp_path: Path):
     assert findings[0].healthy is True
     assert not (tmp_path / ".doctor").exists()
     assert not (tmp_path / ".doctor" / ".write_probe").exists()
+
+
+def test_codex_startup_config_detects_noisy_hook_state(tmp_path: Path, monkeypatch):
+    codex_home = tmp_path / ".codex"
+    codex_home.mkdir()
+    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+    (codex_home / "config.toml").write_text(
+        "\n".join(
+            [
+                "[features]",
+                "hooks = true",
+                "codex_hooks = true",
+                "",
+                "[[hooks.SessionStart]]",
+                'matcher = "startup"',
+                "",
+                "[[hooks.SessionStart.hooks]]",
+                'type = "command"',
+                'command = "echo hi"',
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (codex_home / "hooks.json").write_text(
+        '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"echo hi"}]}]}}',
+        encoding="utf-8",
+    )
+    plugin_hooks = codex_home / "plugins/cache/lean4/hooks/hooks.json"
+    plugin_hooks.parent.mkdir(parents=True)
+    plugin_hooks.write_text('{"description":"bad","hooks":{}}', encoding="utf-8")
+
+    findings = detect_codex_startup_config(tmp_path)
+
+    assert findings[0].code == "DOC505"
+    assert findings[0].healthy is False
+    assert findings[0].severity == Severity.WARN
+    assert findings[0].evidence["deprecated_codex_hooks"] is True
+    assert findings[0].evidence["duplicate_hook_sources"] is True
+    assert findings[0].evidence["invalid_hook_files"]
+
+
+def test_codex_startup_config_accepts_toml_only_hooks(tmp_path: Path, monkeypatch):
+    codex_home = tmp_path / ".codex"
+    codex_home.mkdir()
+    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+    (codex_home / "config.toml").write_text(
+        "\n".join(
+            [
+                "[features]",
+                "hooks = true",
+                "",
+                "[[hooks.SessionStart]]",
+                'matcher = "startup"',
+                "",
+                "[[hooks.SessionStart.hooks]]",
+                'type = "command"',
+                'command = "echo hi"',
+            ]
+        ),
+        encoding="utf-8",
+    )
+    plugin_hooks = codex_home / "plugins/cache/lean4/hooks/hooks.json"
+    plugin_hooks.parent.mkdir(parents=True)
+    plugin_hooks.write_text('{"hooks":{}}', encoding="utf-8")
+
+    findings = detect_codex_startup_config(tmp_path)
+
+    assert findings[0].code == "DOC505"
+    assert findings[0].healthy is True
 
 
 # ---------------------------------------------------------------------------

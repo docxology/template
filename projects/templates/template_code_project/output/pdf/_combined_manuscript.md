@@ -177,7 +177,7 @@ The methodology explicitly bridges theoretical mathematics with production-grade
 
 ### Numerical Stability Analysis
 
-Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [analysis orchestrator](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
+Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [analysis orchestrator](https://github.com/docxology/template/blob/main/scripts/pipeline/stage_02_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
 
 ### Performance Benchmarking
 
@@ -534,11 +534,11 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.12.13
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-06-30T12:08:00Z
+- **Generated**: 2026-07-08T02:12:25Z
 
 ## Pipeline ordering
 
-Typical `template_code_project` analysis order (see `scripts/02_run_analysis.py` discovery) is:
+Typical `template_code_project` analysis order (see `scripts/pipeline/stage_02_analysis.py` discovery) is:
 
 1. `optimization_analysis.py` — writes `output/data/optimization_results.csv`, `../figures/*.png`, and JSON reports under `output/reports/`.
 2. `z_generate_manuscript_variables.py` — reads the CSV and YAML, emits `output/data/manuscript_variables.json`, and writes substituted copies to `output/manuscript/` for rendering.
@@ -574,7 +574,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `16947a5b0d7990e2`     |
+| Config hash (SHA-256, truncated)  | `7182b437c586a680`     |
 | Paper version                     | 2.5.2    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |

@@ -487,7 +487,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         "list-projects": _cmd_list_projects,
         "link-projects": _cmd_link_projects,
     }
-    return dispatch[ns.command](ns)
+    try:
+        return dispatch[ns.command](ns)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":  # pragma: no cover - module entry point

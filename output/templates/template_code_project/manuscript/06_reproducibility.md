@@ -6,7 +6,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `16947a5b0d7990e2`     |
+| Config hash (SHA-256, truncated)  | `7182b437c586a680`     |
 | Paper version                     | 2.5.2    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |

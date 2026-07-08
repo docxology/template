@@ -1,0 +1,47 @@
+\contentsline {section}{\numberline {1}Pools, Rules, and Tools: A Template-Integrated Resource Architecture}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Author Contributions}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Acknowledgements}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Data Availability}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Competing Interests}{4}{subsection.1.4}%
+\contentsline {section}{\numberline {2}Abstract}{5}{section.2}%
+\contentsline {section}{\numberline {3}Introduction}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Motivation}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Contribution}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Paper Organisation}{7}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Pools: Fonds as Passive Data Resources}{8}{section.4}%
+\contentsline {subsection}{\numberline {4.1}What Is a Fond?}{8}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}The Three Template Fonds}{8}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}\breaktt {template\_bibliography}}{8}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}\breaktt {template\_contacts}}{8}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}\breaktt {template\_datasets}}{8}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}The \texttt {fonds.yaml} Manifest}{9}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}The \texttt {fonds\_reader} Module}{9}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Resilience by Design}{9}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Rules: Soft and Strong Governance}{10}{section.5}%
+\contentsline {subsection}{\numberline {5.1}The Role of Governance Rules}{10}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Soft Rules: Style and Process Guidelines}{10}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Strong Rules: Hard Constraints}{10}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}The Two Template Rule Sets}{11}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}\breaktt {template\_project\_rules}}{11}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}\breaktt {template\_manuscript\_rules}}{11}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.5}The \texttt {rules\_applier} Module}{11}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Rules and Manuscript Variables}{12}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Tools: Executable Entry Points}{13}{section.6}%
+\contentsline {subsection}{\numberline {6.1}What Is a Tool?}{13}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}The \texttt {tools.yaml} Manifest}{13}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}The Three Template Tools}{13}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}\breaktt {template\_code\_executor}}{13}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}\breaktt {template\_validator}}{14}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}\texttt {template\_skill}}{14}{subsubsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.4}The \texttt {tools\_invoker} Module}{14}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Tool Discovery and Reproducibility}{15}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Integration: Unified Pipeline and Token Injection}{16}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Architecture Overview}{16}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Manuscript Variable Tokens}{16}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}The Script Pipeline}{17}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Resilience Design}{17}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Test Coverage}{17}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Conclusion}{18}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Summary}{18}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Design Decisions Revisited}{18}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Future Directions}{19}{subsection.8.3}%

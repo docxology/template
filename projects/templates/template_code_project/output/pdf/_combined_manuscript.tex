@@ -611,7 +611,7 @@ Rather than writing ad-hoc validation code, the project imports
 This utility subjects the objective function to a barrage of extreme
 inputs (NaN, Inf, \(\pm 10^{10}\)) to calculate a formalized stability
 score. If this score degrades, the
-\href{https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py}{analysis
+\href{https://github.com/docxology/template/blob/main/scripts/pipeline/stage_02_analysis.py}{analysis
 orchestrator} execution deliberately aborts, ensuring the methodology
 cannot enter unrecoverable states.
 
@@ -1487,13 +1487,13 @@ Representative single-call execution time from the last benchmark run:
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-06-30T12:08:00Z
+  \textbf{Generated}: 2026-07-08T02:12:25Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
 
 Typical \breaktt{template\_code\_project} analysis order (see
-\breaktt{scripts/02\_run\_analysis.py} discovery) is:
+\breaktt{scripts/pipeline/stage\_02\_analysis.py} discovery) is:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1576,7 +1576,7 @@ Value
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Config hash (SHA-256, truncated) & \breaktt{16947a5b0d7990e2} \\
+Config hash (SHA-256, truncated) & \breaktt{7182b437c586a680} \\
 Paper version & 2.5.2 \\
 First author & Daniel Ari Friedman \\
 Keywords & optimization algorithms, gradient descent, convergence

@@ -89,7 +89,7 @@ infrastructure/doctor/
 uv run pytest tests/infra_tests/doctor/ -v --no-cov
 ```
 
-49 tests, no mocks, sub-second wall time. Covers:
+The focused test suite uses no mocks and covers:
 
 * `mutate()` refuses paths outside the repo or inside `.doctor/`.
 * Every action kind (`delete_paths`, `chmod`, `write_file`,

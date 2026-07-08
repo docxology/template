@@ -1,5 +1,6 @@
 """Web/HTML rendering module."""
 
+import base64
 import re
 import shutil
 import subprocess
@@ -26,6 +27,19 @@ window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
   dynamicPrefix: "{_MATHJAX_DYNAMIC_PREFIX}"
 }});
 </script>"""
+_FAVICON_MARKER = "data-template-favicon"
+_FAVICON_LINK = f'<link {_FAVICON_MARKER} rel="icon" href="favicon.ico">'
+_FAVICON_PNG = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAALUlEQVR4nGNgGAWjYBSMglEwCkbBqBkFo2AUjIJRMApGwSgYBaNgFIwCABj7ABHX+aOtAAAAAElFTkSuQmCC"
+)
+_FAVICON_ICO = (
+    b"\x00\x00\x01\x00\x01\x00"
+    + bytes([16, 16, 0, 0])
+    + b"\x01\x00\x20\x00"
+    + len(_FAVICON_PNG).to_bytes(4, "little")
+    + (22).to_bytes(4, "little")
+    + _FAVICON_PNG
+)
 
 # Shared design-token + dark-mode block embedded ahead of the rendered CSS so
 # the web surface participates in the same design system (one --brand-1 source
@@ -146,6 +160,8 @@ class WebRenderer:
             subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
             if output_file.exists():
                 self._harden_mathjax_script(output_file)
+                self._embed_favicon(output_file)
+                self._write_favicon_file(output_file.parent)
                 self._normalize_figure_paths_in_file(output_file)
             return output_file
 
@@ -215,7 +231,10 @@ class WebRenderer:
 
         # Combine markdown files
         combined_md = output_dir / "_combined_manuscript.md"
-        combined_content = self._html_safe_markdown(self._combine_markdown_files(source_files))
+        combined_content = self._html_safe_markdown(
+            self._combine_markdown_files(source_files),
+            render_citations=False,
+        )
         _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
         try:
             _tmp.write_text(combined_content, encoding="utf-8")
@@ -265,6 +284,10 @@ class WebRenderer:
                 "Install: https://github.com/lierdakil/pandoc-crossref (e.g. brew install pandoc-crossref)"
             )
 
+        bibliography = manuscript_dir / "references.bib"
+        if bibliography.exists():
+            cmd.extend(["--citeproc", "--bibliography", str(bibliography), "--metadata=link-citations:true"])
+
         logger.info("Converting combined markdown to HTML...")
         logger.debug(f"Combined markdown file: {combined_md}")
 
@@ -294,6 +317,8 @@ class WebRenderer:
         # Embed CSS styling in the generated HTML
         if output_file.exists():
             self._harden_mathjax_script(output_file)
+            self._embed_favicon(output_file)
+            self._write_favicon_file(output_file.parent)
             self._embed_css(output_file)
             self._normalize_figure_paths_in_file(output_file)
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
@@ -423,7 +448,7 @@ class WebRenderer:
         return combined
 
     @classmethod
-    def _html_safe_markdown(cls, content: str) -> str:
+    def _html_safe_markdown(cls, content: str, *, render_citations: bool = True) -> str:
         """Convert PDF-only raw-LaTeX inline spans into readable HTML text.
 
         The canonical manuscript uses Pandoc raw-LaTeX spans such as
@@ -473,7 +498,8 @@ class WebRenderer:
         # raw-span pass strips them; the Div body then flows through citation /
         # ref handling like any other prose.
         content = cls._html_theorem_blocks(content)
-        content = cls._render_pandoc_citations(content)
+        if render_citations:
+            content = cls._render_pandoc_citations(content)
         return cls._normalize_figure_paths(cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
 
     @classmethod
@@ -574,6 +600,31 @@ class WebRenderer:
         except OSError:
             _tmp.unlink(missing_ok=True)
             raise
+
+    @staticmethod
+    def _embed_favicon(html_file: Path) -> None:
+        html_content = html_file.read_text(encoding="utf-8")
+        if _FAVICON_MARKER in html_content:
+            return
+        if "</head>" not in html_content:
+            logger.warning("Could not find </head> tag in HTML, favicon not embedded")
+            return
+        updated = html_content.replace("</head>", f"\n{_FAVICON_LINK}\n</head>", 1)
+        _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(updated, encoding="utf-8")
+            _tmp.replace(html_file)
+        except OSError:
+            _tmp.unlink(missing_ok=True)
+            raise
+
+    @staticmethod
+    def _write_favicon_file(output_dir: Path) -> None:
+        favicon_path = output_dir / "favicon.ico"
+        try:
+            favicon_path.write_bytes(_FAVICON_ICO)
+        except OSError as exc:
+            logger.warning("Failed to write favicon.ico: %s", exc)
 
     def _embed_css(self, html_file: Path) -> None:
         """Embed CSS styling directly into HTML file.

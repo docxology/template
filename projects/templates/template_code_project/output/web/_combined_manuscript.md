@@ -174,7 +174,7 @@ The methodology explicitly bridges theoretical mathematics with production-grade
 
 ### Numerical Stability Analysis
 
-Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [analysis orchestrator](https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
+Rather than writing ad-hoc validation code, the project imports `infrastructure.scientific.stability.check_numerical_stability`. This utility subjects the objective function to a barrage of extreme inputs (NaN, Inf, $\pm 10^{10}$) to calculate a formalized stability score. If this score degrades, the [analysis orchestrator](https://github.com/docxology/template/blob/main/scripts/pipeline/stage_02_analysis.py) execution deliberately aborts, ensuring the methodology cannot enter unrecoverable states.
 
 ### Performance Benchmarking
 
@@ -182,7 +182,7 @@ Computational complexity is evaluated not just theoretically, but empirically vi
 
 ## Convergence Analysis
 
-For quadratic functions $f(x) = \frac{1}{2}x^T A x - b^T x$ where $A$ is positive definite, the convergence factor becomes [bertsekas1999nonlinear]:
+For quadratic functions $f(x) = \frac{1}{2}x^T A x - b^T x$ where $A$ is positive definite, the convergence factor becomes [@bertsekas1999nonlinear]:
 
 \begin{equation}
 \label{eq:convergence_factor}
@@ -277,7 +277,7 @@ The optimization results for different step sizes are synthesized computationall
 
 ### Theoretical vs Empirical Convergence
 
-Modern convergence analysis builds on foundational work in gradient methods [nesterov2013gradient].
+Modern convergence analysis builds on foundational work in gradient methods [@nesterov2013gradient].
 
 [@fig:convergence_rate] provides a comparative analysis of convergence rates across different step sizes, validating theoretical predictions against empirical results.
 
@@ -317,7 +317,7 @@ where $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$ is the condition number. 
 k \geq \frac{\log(\epsilon)}{\log(\rho)}
 \end{equation}
 
-where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor [polyak1964some].
+where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor [@polyak1964some].
 
 Per-step contraction factors $\rho = |1-\alpha|$ and qualitative iteration demand for small fixed $\epsilon$ (see [@eq:iteration_complexity]) are:
 
@@ -472,7 +472,7 @@ This foundation could be extended to:
 
 - **Advanced algorithms**: Newton methods, quasi-Newton approaches
 - **Constrained optimization**: Handling inequality constraints
-- **Stochastic methods**: Mini-batch and online learning variants, including adaptive optimization algorithms such as Adam [kingma2014adam]
+- **Stochastic methods**: Mini-batch and online learning variants, including adaptive optimization algorithms such as Adam [@kingma2014adam]
 - **Agentic Generation Systems**: Extending validation tools built over `infrastructure.validation` to analyze novel model interactions automatically.
 
 ## Final Assessment
@@ -528,11 +528,11 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.12.13
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-06-30T12:08:00Z
+- **Generated**: 2026-07-08T02:12:25Z
 
 ## Pipeline ordering
 
-Typical `template_code_project` analysis order (see `scripts/02_run_analysis.py` discovery) is:
+Typical `template_code_project` analysis order (see `scripts/pipeline/stage_02_analysis.py` discovery) is:
 
 1. `optimization_analysis.py` — writes `output/data/optimization_results.csv`, `../figures/*.png`, and JSON reports under `output/reports/`.
 2. `z_generate_manuscript_variables.py` — reads the CSV and YAML, emits `output/data/manuscript_variables.json`, and writes substituted copies to `output/manuscript/` for rendering.
@@ -567,7 +567,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `16947a5b0d7990e2`     |
+| Config hash (SHA-256, truncated)  | `7182b437c586a680`     |
 | Paper version                     | 2.5.2    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
@@ -626,15 +626,15 @@ To verify: modifying any value in `config.yaml` and re-running the pipeline will
 
 # Scope, Related Work, and Positioning {#sec:scope}
 
-This section situates the exemplar scientifically and states explicit boundaries. The goal is not to compete with monographs on nonlinear programming [nocedal2006numerical; bertsekas1999nonlinear], but to show how a minimal, test-backed optimization story fits the template's reproducibility and rendering stack [peng2011reproducible].
+This section situates the exemplar scientifically and states explicit boundaries. The goal is not to compete with monographs on nonlinear programming [@nocedal2006numerical; @bertsekas1999nonlinear], but to show how a minimal, test-backed optimization story fits the template's reproducibility and rendering stack [@peng2011reproducible].
 
 ## Classical gradient methods
 
-Smooth unconstrained minimization via first-order updates has a long lineage, from Cauchy's early descent perspective [cauchy1847methode] to modern treatments of convex problems [boyd2004convex] and accelerated gradient schemes [nesterov2013gradient]. Polyak's classical discussion of gradient convergence factors remains relevant when interpreting empirical iteration counts [polyak1964some]. The present manuscript restricts attention to **fixed-step** gradient descent on a **convex quadratic**, where rates reduce to scalar linear recurrences in the error ([@sec:results], [@eq:scalar_linear_update]).
+Smooth unconstrained minimization via first-order updates has a long lineage, from Cauchy's early descent perspective [@cauchy1847methode] to modern treatments of convex problems [@boyd2004convex] and accelerated gradient schemes [@nesterov2013gradient]. Polyak's classical discussion of gradient convergence factors remains relevant when interpreting empirical iteration counts [@polyak1964some]. The present manuscript restricts attention to **fixed-step** gradient descent on a **convex quadratic**, where rates reduce to scalar linear recurrences in the error ([@sec:results], [@eq:scalar_linear_update]).
 
 ## Adaptive and stochastic extensions
 
-Practical machine-learning optimizers (e.g., Adam [kingma2014adam]) introduce momentum, adaptive preconditioning, or noise from minibatching. Those methods are **out of scope** for `template_code_project`: the exemplar deliberately keeps the algorithm minimal so that failures (divergent $\alpha$, iteration caps) are interpretable without confounding from stochastic sampling or line-search logic.
+Practical machine-learning optimizers (e.g., Adam [@kingma2014adam]) introduce momentum, adaptive preconditioning, or noise from minibatching. Those methods are **out of scope** for `template_code_project`: the exemplar deliberately keeps the algorithm minimal so that failures (divergent $\alpha$, iteration caps) are interpretable without confounding from stochastic sampling or line-search logic.
 
 ## What this project proves about the template
 
@@ -657,7 +657,7 @@ These limitations are intentional: they narrow the failure surface so that infra
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
 

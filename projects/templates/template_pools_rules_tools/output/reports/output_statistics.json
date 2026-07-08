@@ -1,0 +1,273 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.32",
+      "total_size_bytes": 339417,
+      "largest_files": [
+        {
+          "name": "template_pools_rules_tools_combined.pdf",
+          "size_mb": "0.11",
+          "path": "pdf/template_pools_rules_tools_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.07",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.05",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".pdf": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.19",
+      "total_size_bytes": 196176,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.07",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.03",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__05_tools.html",
+          "size_mb": "0.02",
+          "path": "web/manuscript__05_tools.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".html": 9
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 65,
+      "size_mb": "0.90",
+      "total_size_bytes": 943760,
+      "largest_files": [
+        {
+          "name": "04_rules_slides.log",
+          "size_mb": "0.07",
+          "path": "slides/04_rules_slides.log"
+        },
+        {
+          "name": "06_integration_slides.log",
+          "size_mb": "0.07",
+          "path": "slides/06_integration_slides.log"
+        },
+        {
+          "name": "02_introduction_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/02_introduction_slides.log"
+        }
+      ],
+      "extensions": {
+        ".snm": 8,
+        ".aux": 8,
+        ".log": 8,
+        ".vrb": 8,
+        ".toc": 8,
+        ".tex": 9,
+        ".pdf": 8,
+        ".nav": 8
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "data": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 320,
+      "largest_files": [
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.00",
+          "path": "data/manuscript_variables.json"
+        }
+      ],
+      "extensions": {
+        ".json": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 16,
+      "size_mb": "0.11",
+      "total_size_bytes": 120488,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.05",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "artifact_manifest.json",
+          "size_mb": "0.04",
+          "path": "reports/artifact_manifest.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.01",
+          "path": "reports/validation_report.json"
+        }
+      ],
+      "extensions": {
+        ".json": 14,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 166,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
+    }
+  },
+  "total_files": 103,
+  "total_size_mb": 1.5261907577514648,
+  "largest_files": [
+    {
+      "name": "template_pools_rules_tools_combined.pdf",
+      "size_mb": "0.11",
+      "category": "pdf",
+      "path": "pdf/template_pools_rules_tools_combined.pdf"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.07",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.07",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "04_rules_slides.log",
+      "size_mb": "0.07",
+      "category": "slides",
+      "path": "slides/04_rules_slides.log"
+    },
+    {
+      "name": "06_integration_slides.log",
+      "size_mb": "0.07",
+      "category": "slides",
+      "path": "slides/06_integration_slides.log"
+    },
+    {
+      "name": "02_introduction_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/02_introduction_slides.log"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.05",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.05",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "artifact_manifest.json",
+      "size_mb": "0.04",
+      "category": "reports",
+      "path": "reports/artifact_manifest.json"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.03",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
+    }
+  ],
+  "missing_expected_files": [],
+  "sizes_by_category": {
+    "pdf": 0.32369327545166016,
+    "web": 0.1870880126953125,
+    "slides": 0.9000396728515625,
+    "figures": 0.0,
+    "data": 0.00030517578125,
+    "reports": 0.11490631103515625,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.0001583099365234375
+  },
+  "file_counts_by_type": {
+    ".md": 4,
+    ".log": 11,
+    ".aux": 9,
+    ".pdf": 9,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 10,
+    ".toc": 9,
+    ".bbl": 1,
+    ".html": 9,
+    ".snm": 8,
+    ".vrb": 8,
+    ".nav": 8,
+    ".json": 15
+  }
+}

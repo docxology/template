@@ -12,6 +12,7 @@ from infrastructure.doctor.detectors.hygiene import (
 )
 from infrastructure.doctor.detectors.layout import detect_manuscript_config, detect_project_structure
 from infrastructure.doctor.detectors.state import (
+    detect_codex_startup_config,
     detect_doctor_state_writable,
     detect_lockfile_drift,
     detect_optional_services,
@@ -39,6 +40,7 @@ DETECTORS: tuple[DetectorFn, ...] = (
     detect_pre_commit_installed,
     detect_lockfile_drift,
     detect_optional_services,
+    detect_codex_startup_config,
 )
 
 __all__ = [
@@ -57,6 +59,7 @@ __all__ = [
     "detect_pre_commit_installed",
     "detect_lockfile_drift",
     "detect_optional_services",
+    "detect_codex_startup_config",
 ]
 
 

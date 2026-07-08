@@ -1,0 +1,36 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 108
+Total Size: 2.95 MB
+
+Files by Category:
+  • pdf: 10 files (0.74 MB)
+  • web: 10 files (0.33 MB)
+  • slides: 65 files (1.20 MB)
+  • figures: 5 files (0.31 MB)
+  • data: 2 files (0.00 MB)
+  • reports: 15 files (0.36 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • template_autopoiesis_combined.pdf: 0.48 MB (pdf)
+  • 03_results_slides.pdf: 0.20 MB (slides)
+  • artifact_manifest.json: 0.19 MB (reports)
+  • cover_art.png: 0.15 MB (figures)
+  • index.html: 0.12 MB (web)
+
+File Types:
+  • .json: 15 file(s)
+  • .log: 11 file(s)
+  • .tex: 10 file(s)
+  • .aux: 9 file(s)
+  • .toc: 9 file(s)
+  • .pdf: 9 file(s)
+  • .html: 9 file(s)
+  • .nav: 8 file(s)
+  • .vrb: 8 file(s)
+  • .snm: 8 file(s)

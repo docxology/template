@@ -234,6 +234,34 @@ class TestCombinedHtmlRendering:
         assert result.exists()
         assert result.name == "index.html"
 
+    def test_render_combined_resolves_bibliographic_citations(self, tmp_path):
+        from infrastructure.rendering.config import RenderingConfig
+        from infrastructure.rendering.web_renderer import WebRenderer
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        md = manuscript_dir / "01_intro.md"
+        md.write_text("# Introduction\n\nPrior work matters [@jaynes2003probability].\n", encoding="utf-8")
+        (manuscript_dir / "references.bib").write_text(
+            "@book{jaynes2003probability,\n"
+            "  author = {Jaynes, Edwin T.},\n"
+            "  title = {Probability Theory},\n"
+            "  year = {2003},\n"
+            "  publisher = {Cambridge University Press}\n"
+            "}\n",
+            encoding="utf-8",
+        )
+
+        web_dir = tmp_path / "output" / "web"
+        config = RenderingConfig(web_dir=str(web_dir), output_dir=str(tmp_path / "output"))
+        result = WebRenderer(config).render_combined([md], manuscript_dir, "test")
+
+        content = result.read_text(encoding="utf-8")
+        assert "Jaynes" in content
+        assert "#ref-jaynes2003probability" in content
+        assert "[@jaynes2003probability]" not in content
+        assert "[jaynes2003probability]" not in content
+
 
 def _make_renderer(tmp_path):
     """Create a WebRenderer with config pointing to tmp_path."""

@@ -4,11 +4,11 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "2.30",
-      "total_size_bytes": 2407158,
+      "total_size_bytes": 2409367,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
-          "size_mb": "2.05",
+          "size_mb": "2.06",
           "path": "pdf/template_code_project_combined.pdf"
         },
         {
@@ -36,13 +36,13 @@
     },
     "web": {
       "exists": true,
-      "file_count": 11,
+      "file_count": 12,
       "size_mb": "0.25",
-      "total_size_bytes": 258717,
+      "total_size_bytes": 263917,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.09",
+          "size_mb": "0.10",
           "path": "web/index.html"
         },
         {
@@ -58,14 +58,15 @@
       ],
       "extensions": {
         ".md": 1,
+        ".ico": 1,
         ".html": 10
       }
     },
     "slides": {
       "exists": true,
       "file_count": 73,
-      "size_mb": "2.90",
-      "total_size_bytes": 3045577,
+      "size_mb": "2.91",
+      "total_size_bytes": 3048125,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -98,7 +99,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.96",
-      "total_size_bytes": 2050795,
+      "total_size_bytes": 2054752,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -150,9 +151,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 19,
-      "size_mb": "0.15",
-      "total_size_bytes": 155781,
+      "file_count": 18,
+      "size_mb": "0.19",
+      "total_size_bytes": 197778,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -161,17 +162,17 @@
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.03",
+          "size_mb": "0.07",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "stage-07-output-validation.json",
+          "name": "stage-06-output-validation.json",
           "size_mb": "0.01",
-          "path": "reports/snapshots/stage-07-output-validation.json"
+          "path": "reports/snapshots/stage-06-output-validation.json"
         }
       ],
       "extensions": {
-        ".json": 15,
+        ".json": 14,
         ".txt": 2,
         ".md": 2
       }
@@ -210,11 +211,11 @@
     }
   },
   "total_files": 129,
-  "total_size_mb": 7.728163719177246,
+  "total_size_mb": 7.781484603881836,
   "largest_files": [
     {
       "name": "template_code_project_combined.pdf",
-      "size_mb": "2.05",
+      "size_mb": "2.06",
       "category": "pdf",
       "path": "pdf/template_code_project_combined.pdf"
     },
@@ -243,16 +244,16 @@
       "path": "figures/step_size_sensitivity.png"
     },
     {
+      "name": "index.html",
+      "size_mb": "0.10",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
       "name": "dashboard_payload.json",
       "size_mb": "0.10",
       "category": "data",
       "path": "data/dashboard_payload.json"
-    },
-    {
-      "name": "index.html",
-      "size_mb": "0.09",
-      "category": "web",
-      "path": "web/index.html"
     },
     {
       "name": "evidence_registry.json",
@@ -275,12 +276,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.295644760131836,
-    "web": 0.24673175811767578,
-    "slides": 2.9044885635375977,
-    "figures": 1.9557905197143555,
+    "pdf": 2.2977514266967773,
+    "web": 0.2516908645629883,
+    "slides": 2.906918525695801,
+    "figures": 1.959564208984375,
     "data": 0.1767902374267578,
-    "reports": 0.14856433868408203,
+    "reports": 0.1886157989501953,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.00015354156494140625
@@ -295,12 +296,13 @@
     ".tex": 11,
     ".toc": 10,
     ".bbl": 1,
+    ".ico": 1,
     ".html": 10,
     ".nav": 9,
     ".snm": 9,
     ".vrb": 9,
     ".png": 9,
-    ".json": 20,
+    ".json": 19,
     ".csv": 1,
     ".txt": 2
   }

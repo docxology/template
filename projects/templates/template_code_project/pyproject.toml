@@ -17,6 +17,7 @@ dependencies = [
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
     "pyyaml>=6.0",
+    "defusedxml>=0.7.1",
 ]
 
 [project.optional-dependencies]

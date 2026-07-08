@@ -1,0 +1,34 @@
+{
+  "entries": [
+    {
+      "contract_match": false,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "347990c481111eec25985d506a401e23720843a0ca417bdd8d85b026abb790f1",
+      "size_bytes": 320,
+      "stage_name": "Connector Search",
+      "stage_num": 6,
+      "timestamp": "2026-07-07T04:44:08+00:00"
+    },
+    {
+      "contract_match": false,
+      "path": "output/reports/test_results.json",
+      "sha256": "cecf649acaecd15f425bf67b70de84db2b95094871c3750fe0ec4e57d965dd32",
+      "size_bytes": 616,
+      "stage_name": "Connector Search",
+      "stage_num": 6,
+      "timestamp": "2026-07-07T04:44:08+00:00"
+    },
+    {
+      "contract_match": false,
+      "path": "output/reports/test_results.md",
+      "sha256": "de2a7de6c38095c84a68f2e7152c6539ab6ef70db9da24cc88d7d39ed78f035d",
+      "size_bytes": 293,
+      "stage_name": "Connector Search",
+      "stage_num": 6,
+      "timestamp": "2026-07-07T04:44:08+00:00"
+    }
+  ],
+  "issues": [
+    "missing declared output: projects/templates/template_pools_rules_tools/output/data/connector_search"
+  ]
+}

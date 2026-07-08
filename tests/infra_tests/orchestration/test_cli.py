@@ -17,6 +17,7 @@ from infrastructure.orchestration.cli import (
     build_parser,
     main,
 )
+from infrastructure.orchestration.pipeline_runner import PipelineRunner
 
 
 def test_default_project_name_matches_canonical_qualified() -> None:
@@ -123,18 +124,20 @@ def test_main_with_menu(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> 
     assert rc == 0
 
 
-def test_main_pipeline_rejects_invalid_project(fake_repo: Path) -> None:
-    """Path-traversal slugs raise ValueError before any executor is invoked."""
-    with pytest.raises(ValueError, match=r"\.\."):
-        main(
-            [
-                "--repo-root",
-                str(fake_repo),
-                "pipeline",
-                "--project",
-                "../etc/passwd",
-            ]
-        )
+def test_main_pipeline_rejects_invalid_project(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = main(
+        [
+            "--repo-root",
+            str(fake_repo),
+            "pipeline",
+            "--project",
+            "../etc/passwd",
+        ]
+    )
+    captured = capsys.readouterr()
+    assert rc == 1
+    assert "project slug must not contain '..'" in captured.err
+    assert "Traceback" not in captured.err
 
 
 def test_module_help_via_subprocess() -> None:
@@ -179,7 +182,7 @@ def test_module_list_projects_via_subprocess(fake_repo: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-class _SpyRunner:
+class _SpyRunner(PipelineRunner):
     """Simple recording stand-in for PipelineRunner."""
 
     def __init__(self, repo_root, stream=None):

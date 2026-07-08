@@ -237,7 +237,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -248,6 +267,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -1011,7 +1032,7 @@ Analysis</h3>
 This utility subjects the objective function to a barrage of extreme
 inputs (NaN, Inf, <span class="math inline">\(\pm 10^{10}\)</span>) to
 calculate a formalized stability score. If this score degrades, the <a
-href="https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py">analysis
+href="https://github.com/docxology/template/blob/main/scripts/pipeline/stage_02_analysis.py">analysis
 orchestrator</a> execution deliberately aborts, ensuring the methodology
 cannot enter unrecoverable states.</p>
 <h3 data-number="3.2.2" id="performance-benchmarking"><span
@@ -1028,7 +1049,10 @@ class="header-section-number">3.3</span> Convergence Analysis</h2>
 <p>For quadratic functions <span class="math inline">\(f(x) =
 \frac{1}{2}x^T A x - b^T x\)</span> where <span
 class="math inline">\(A\)</span> is positive definite, the convergence
-factor becomes [bertsekas1999nonlinear]:</p>
+factor becomes <span class="citation"
+data-cites="bertsekas1999nonlinear">(<a
+href="#ref-bertsekas1999nonlinear" role="doc-biblioref">Bertsekas
+1999</a>)</span>:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:convergence_factor}
 \rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} +
@@ -1315,7 +1339,9 @@ class="header-section-number">4.3</span> Convergence Rate Analysis</h2>
 class="header-section-number">4.3.1</span> Theoretical vs Empirical
 Convergence</h3>
 <p>Modern convergence analysis builds on foundational work in gradient
-methods [nesterov2013gradient].</p>
+methods <span class="citation" data-cites="nesterov2013gradient">(<a
+href="#ref-nesterov2013gradient" role="doc-biblioref">Nesterov
+2013</a>)</span>.</p>
 <p>fig. <a href="#fig:convergence_rate">3</a> provides a comparative
 analysis of convergence rates across different step sizes, validating
 theoretical predictions against empirical results.</p>
@@ -1403,7 +1429,10 @@ class="math inline">\(\epsilon\)</span> is:</p>
 k \geq \frac{\log(\epsilon)}{\log(\rho)}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\rho = \sqrt{\frac{\kappa -
-1}{\kappa + 1}}\)</span> is the convergence factor [polyak1964some].</p>
+1}{\kappa + 1}}\)</span> is the convergence factor <span
+class="citation" data-cites="polyak1964some">(<a
+href="#ref-polyak1964some" role="doc-biblioref">Polyak
+1964</a>)</span>.</p>
 <p>Per-step contraction factors <span class="math inline">\(\rho =
 |1-\alpha|\)</span> and qualitative iteration demand for small fixed
 <span class="math inline">\(\epsilon\)</span> (see
@@ -1754,8 +1783,10 @@ approaches</li>
 <li><strong>Constrained optimization</strong>: Handling inequality
 constraints</li>
 <li><strong>Stochastic methods</strong>: Mini-batch and online learning
-variants, including adaptive optimization algorithms such as Adam
-[kingma2014adam]</li>
+variants, including adaptive optimization algorithms such as Adam <span
+class="citation" data-cites="kingma2014adam">(<a
+href="#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba
+2015</a>)</span></li>
 <li><strong>Agentic Generation Systems</strong>: Extending validation
 tools built over <code>infrastructure.validation</code> to analyze novel
 model interactions automatically.</li>
@@ -1843,12 +1874,12 @@ class="header-section-number">6.5</span> Computational Environment</h2>
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-06-30T12:08:00Z</li>
+<li><strong>Generated</strong>: 2026-07-08T02:12:25Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
 <p>Typical <code>template_code_project</code> analysis order (see
-<code>scripts/02_run_analysis.py</code> discovery) is:</p>
+<code>scripts/pipeline/stage_02_analysis.py</code> discovery) is:</p>
 <ol type="1">
 <li><code>optimization_analysis.py</code> — writes
 <code>output/data/optimization_results.csv</code>,
@@ -1938,7 +1969,7 @@ class="header-section-number">7.1</span> Configuration Provenance</h2>
 <tbody>
 <tr>
 <td>Config hash (SHA-256, truncated)</td>
-<td><code>16947a5b0d7990e2</code></td>
+<td><code>7182b437c586a680</code></td>
 </tr>
 <tr>
 <td>Paper version</td>
@@ -2059,17 +2090,30 @@ class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
 <p>This section situates the exemplar scientifically and states explicit
 boundaries. The goal is not to compete with monographs on nonlinear
-programming [nocedal2006numerical; bertsekas1999nonlinear], but to show
-how a minimal, test-backed optimization story fits the template’s
-reproducibility and rendering stack [peng2011reproducible].</p>
+programming <span class="citation"
+data-cites="nocedal2006numerical bertsekas1999nonlinear">(<a
+href="#ref-nocedal2006numerical" role="doc-biblioref">Nocedal and Wright
+2006</a>; <a href="#ref-bertsekas1999nonlinear"
+role="doc-biblioref">Bertsekas 1999</a>)</span>, but to show how a
+minimal, test-backed optimization story fits the template’s
+reproducibility and rendering stack <span class="citation"
+data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>)</span>.</p>
 <h2 data-number="8.1" id="classical-gradient-methods"><span
 class="header-section-number">8.1</span> Classical gradient methods</h2>
 <p>Smooth unconstrained minimization via first-order updates has a long
-lineage, from Cauchy’s early descent perspective [cauchy1847methode] to
-modern treatments of convex problems [boyd2004convex] and accelerated
-gradient schemes [nesterov2013gradient]. Polyak’s classical discussion
-of gradient convergence factors remains relevant when interpreting
-empirical iteration counts [polyak1964some]. The present manuscript
+lineage, from Cauchy’s early descent perspective <span class="citation"
+data-cites="cauchy1847methode">(<a href="#ref-cauchy1847methode"
+role="doc-biblioref">Cauchy 1847</a>)</span> to modern treatments of
+convex problems <span class="citation" data-cites="boyd2004convex">(<a
+href="#ref-boyd2004convex" role="doc-biblioref">Boyd and Vandenberghe
+2004</a>)</span> and accelerated gradient schemes <span class="citation"
+data-cites="nesterov2013gradient">(<a href="#ref-nesterov2013gradient"
+role="doc-biblioref">Nesterov 2013</a>)</span>. Polyak’s classical
+discussion of gradient convergence factors remains relevant when
+interpreting empirical iteration counts <span class="citation"
+data-cites="polyak1964some">(<a href="#ref-polyak1964some"
+role="doc-biblioref">Polyak 1964</a>)</span>. The present manuscript
 restricts attention to <strong>fixed-step</strong> gradient descent on a
 <strong>convex quadratic</strong>, where rates reduce to scalar linear
 recurrences in the error (sec. <a href="#sec:results">4</a>,
@@ -2077,9 +2121,11 @@ eq. <strong>¿eq:scalar_linear_update?</strong>).</p>
 <h2 data-number="8.2" id="adaptive-and-stochastic-extensions"><span
 class="header-section-number">8.2</span> Adaptive and stochastic
 extensions</h2>
-<p>Practical machine-learning optimizers (e.g., Adam [kingma2014adam])
-introduce momentum, adaptive preconditioning, or noise from
-minibatching. Those methods are <strong>out of scope</strong> for
+<p>Practical machine-learning optimizers (e.g., Adam <span
+class="citation" data-cites="kingma2014adam">(<a
+href="#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba
+2015</a>)</span>) introduce momentum, adaptive preconditioning, or noise
+from minibatching. Those methods are <strong>out of scope</strong> for
 <code>template_code_project</code>: the exemplar deliberately keeps the
 algorithm minimal so that failures (divergent <span
 class="math inline">\(\alpha\)</span>, iteration caps) are interpretable
@@ -2126,7 +2172,7 @@ class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[key]</code> citation in the
+<code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
@@ -2146,5 +2192,52 @@ style="width:88.0%" alt="Integrity QR strip" />
 </figure>
 <p><strong>Prior:</strong> <em>No prior releases.</em></p>
 <!-- END OF TRANSMISSION -->
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-bertsekas1999nonlinear" class="csl-entry" role="listitem">
+Bertsekas, Dimitri P. 1999. <em>Nonlinear Programming</em>. 2nd ed.
+Athena Scientific.
+</div>
+<div id="ref-boyd2004convex" class="csl-entry" role="listitem">
+Boyd, Stephen, and Lieven Vandenberghe. 2004. <em>Convex
+Optimization</em>. Cambridge University Press. <a
+href="https://doi.org/10.1017/CBO9780511804441">https://doi.org/10.1017/CBO9780511804441</a>.
+</div>
+<div id="ref-cauchy1847methode" class="csl-entry" role="listitem">
+Cauchy, Augustin-Louis. 1847. <span>“Méthode Générale Pour La Résolution
+Des Systèmes d’équations Simultanées.”</span> <em>Comptes Rendus
+Hebdomadaires Des Séances de l’Académie Des Sciences</em> 25: 536–38. <a
+href="https://gallica.bnf.fr/ark:/12148/bpt6k2982c/f540">https://gallica.bnf.fr/ark:/12148/bpt6k2982c/f540</a>.
+</div>
+<div id="ref-kingma2014adam" class="csl-entry" role="listitem">
+Kingma, Diederik P., and Jimmy Ba. 2015. <span>“<span>Adam</span>: A
+Method for Stochastic Optimization.”</span> <em>3rd International
+Conference on Learning Representations (ICLR)</em> (San Diego, CA, USA).
+<a
+href="https://doi.org/10.48550/arXiv.1412.6980">https://doi.org/10.48550/arXiv.1412.6980</a>.
+</div>
+<div id="ref-nesterov2013gradient" class="csl-entry" role="listitem">
+Nesterov, Yurii. 2013. <span>“Gradient Methods for Minimizing Composite
+Functions.”</span> <em>Mathematical Programming</em> 140 (1): 125–61. <a
+href="https://doi.org/10.1007/s10107-012-0629-5">https://doi.org/10.1007/s10107-012-0629-5</a>.
+</div>
+<div id="ref-nocedal2006numerical" class="csl-entry" role="listitem">
+Nocedal, Jorge, and Stephen J. Wright. 2006. <em>Numerical
+Optimization</em>. 2nd ed. Springer Series in Operations Research and
+Financial Engineering. Springer. <a
+href="https://doi.org/10.1007/978-0-387-40065-5">https://doi.org/10.1007/978-0-387-40065-5</a>.
+</div>
+<div id="ref-peng2011reproducible" class="csl-entry" role="listitem">
+Peng, Roger D. 2011. <span>“Reproducible Research in Computational
+Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
+href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
+</div>
+<div id="ref-polyak1964some" class="csl-entry" role="listitem">
+Polyak, Boris T. 1964. <span>“Some Methods of Speeding up the
+Convergence of Iteration Methods.”</span> <em>USSR Computational
+Mathematics and Mathematical Physics</em> 4 (5): 1–17. <a
+href="https://doi.org/10.1016/0041-5553(64)90137-5">https://doi.org/10.1016/0041-5553(64)90137-5</a>.
+</div>
+</div>
 </body>
 </html>

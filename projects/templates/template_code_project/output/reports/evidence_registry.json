@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 32847,
+  "fact_count": 32828,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 175,
+    "artifact": 156,
     "citation": 9,
     "equation": 18,
     "figure": 29,
@@ -11,11 +11,11 @@
     "section": 18,
     "table": 3
   },
-  "omitted_fact_count": 32647,
+  "omitted_fact_count": 32628,
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.01.iterations[0]",
       "source_field": "$.0.01.iterations[0]",
@@ -27,7 +27,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.01.objectives[0]",
       "source_field": "$.0.01.objectives[0]",
@@ -39,7 +39,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.iterations[0]",
       "source_field": "$.0.1.iterations[0]",
@@ -51,7 +51,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.objectives[0]",
       "source_field": "$.0.1.objectives[0]",
@@ -63,7 +63,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.5.iterations[0]",
       "source_field": "$.0.5.iterations[0]",
@@ -75,7 +75,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.5.objectives[0]",
       "source_field": "$.0.5.objectives[0]",
@@ -87,7 +87,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.0.iterations[0]",
       "source_field": "$.1.0.iterations[0]",
@@ -99,7 +99,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.0.objectives[0]",
       "source_field": "$.1.0.objectives[0]",
@@ -111,7 +111,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.5.iterations[0]",
       "source_field": "$.1.5.iterations[0]",
@@ -123,7 +123,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.5.objectives[0]",
       "source_field": "$.1.5.objectives[0]",
@@ -135,7 +135,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.iterations[0]",
       "source_field": "$.2.5.iterations[0]",
@@ -147,7 +147,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[0]",
       "source_field": "$.2.5.objectives[0]",
@@ -159,7 +159,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.hyperparameters.x0[0]",
       "source_field": "$.hyperparameters.x0[0]",
@@ -171,7 +171,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.hyperparameters.step_sizes[0] (numeric variant)",
       "source_field": "$.hyperparameters.step_sizes[0]",
@@ -183,7 +183,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.hyperparameters.tolerance (numeric variant)",
       "source_field": "$.hyperparameters.tolerance",
@@ -195,7 +195,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.hyperparameters.alpha_sweep_min (numeric variant)",
       "source_field": "$.hyperparameters.alpha_sweep_min",
@@ -207,7 +207,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.step_sizes[0] (numeric variant)",
       "source_field": "$.payload.step_sizes[0]",
@@ -219,7 +219,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.x0[0]",
       "source_field": "$.payload.x0[0]",
@@ -231,7 +231,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.iterations[0]",
       "source_field": "$.payload.trajectories.0.0100.iterations[0]",
@@ -243,7 +243,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[0]",
       "source_field": "$.payload.trajectories.0.0100.objectives[0]",
@@ -255,7 +255,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.1000.iterations[0]",
       "source_field": "$.payload.trajectories.0.1000.iterations[0]",
@@ -267,7 +267,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.1000.objectives[0]",
       "source_field": "$.payload.trajectories.0.1000.objectives[0]",
@@ -279,7 +279,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.5000.iterations[0]",
       "source_field": "$.payload.trajectories.0.5000.iterations[0]",
@@ -291,7 +291,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.5000.objectives[0]",
       "source_field": "$.payload.trajectories.0.5000.objectives[0]",
@@ -303,7 +303,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.0000.iterations[0]",
       "source_field": "$.payload.trajectories.1.0000.iterations[0]",
@@ -315,7 +315,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.0000.objectives[0]",
       "source_field": "$.payload.trajectories.1.0000.objectives[0]",
@@ -327,7 +327,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.5000.iterations[0]",
       "source_field": "$.payload.trajectories.1.5000.iterations[0]",
@@ -339,7 +339,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.5000.objectives[0]",
       "source_field": "$.payload.trajectories.1.5000.objectives[0]",
@@ -351,7 +351,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.2.5000.iterations[0]",
       "source_field": "$.payload.trajectories.2.5000.iterations[0]",
@@ -363,7 +363,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.2.5000.objectives[0]",
       "source_field": "$.payload.trajectories.2.5000.objectives[0]",
@@ -375,7 +375,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.alphas[0] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.alphas[0]",
@@ -387,7 +387,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[0] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[0]",
@@ -399,7 +399,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[1] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[1]",
@@ -411,7 +411,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[2] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[2]",
@@ -423,7 +423,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[3] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[3]",
@@ -435,7 +435,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[4] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[4]",
@@ -447,7 +447,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[5] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[5]",
@@ -459,7 +459,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[6] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[6]",
@@ -471,7 +471,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[7] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[7]",
@@ -483,7 +483,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[8] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[8]",
@@ -495,7 +495,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[9] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[9]",
@@ -507,7 +507,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[10] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[10]",
@@ -519,7 +519,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[11] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[11]",
@@ -531,7 +531,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[12] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[12]",
@@ -543,7 +543,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[13] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[13]",
@@ -555,7 +555,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[14] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[14]",
@@ -567,7 +567,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[15] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[15]",
@@ -579,7 +579,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[16] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[16]",
@@ -591,7 +591,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[17] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[17]",
@@ -603,7 +603,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[18] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[18]",
@@ -615,7 +615,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[19] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[19]",
@@ -627,7 +627,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[20] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[20]",
@@ -639,7 +639,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[21] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[21]",
@@ -651,7 +651,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[22] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[22]",
@@ -663,7 +663,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[23] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[23]",
@@ -675,7 +675,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[24] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[24]",
@@ -687,7 +687,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[25] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[25]",
@@ -699,7 +699,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[26] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[26]",
@@ -711,7 +711,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[27] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[27]",
@@ -723,7 +723,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[28] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[28]",
@@ -735,7 +735,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[29] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[29]",
@@ -747,7 +747,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[30] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[30]",
@@ -759,7 +759,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[31] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[31]",
@@ -771,7 +771,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[32] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[32]",
@@ -783,7 +783,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[33] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[33]",
@@ -795,7 +795,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[34] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[34]",
@@ -807,7 +807,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[35] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[35]",
@@ -819,7 +819,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[36] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[36]",
@@ -831,7 +831,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[37] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[37]",
@@ -843,7 +843,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[38] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[38]",
@@ -855,7 +855,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.final_dist[39] (numeric variant)",
       "source_field": "$.payload.alpha_sweep.final_dist[39]",
@@ -867,7 +867,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[75] (numeric variant)",
       "source_field": "$.payload.landscape.x[75]",
@@ -879,7 +879,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[74] (numeric variant)",
       "source_field": "$.payload.landscape.f[74]",
@@ -891,7 +891,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[125] (numeric variant)",
       "source_field": "$.payload.landscape.f[125]",
@@ -903,7 +903,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].x[0]",
       "source_field": "$.panels[0].traces[0].x[0]",
@@ -915,7 +915,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[0]",
       "source_field": "$.panels[0].traces[0].y[0]",
@@ -927,7 +927,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[1].x[0]",
       "source_field": "$.panels[0].traces[1].x[0]",
@@ -939,7 +939,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[1].y[0]",
       "source_field": "$.panels[0].traces[1].y[0]",
@@ -951,7 +951,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[2].x[0]",
       "source_field": "$.panels[0].traces[2].x[0]",
@@ -963,7 +963,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[2].y[0]",
       "source_field": "$.panels[0].traces[2].y[0]",
@@ -975,7 +975,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[3].x[0]",
       "source_field": "$.panels[0].traces[3].x[0]",
@@ -987,7 +987,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[3].y[0]",
       "source_field": "$.panels[0].traces[3].y[0]",
@@ -999,7 +999,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[4].x[0]",
       "source_field": "$.panels[0].traces[4].x[0]",
@@ -1011,7 +1011,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[4].y[0]",
       "source_field": "$.panels[0].traces[4].y[0]",
@@ -1023,7 +1023,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[5].x[0]",
       "source_field": "$.panels[0].traces[5].x[0]",
@@ -1035,7 +1035,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[5].y[0]",
       "source_field": "$.panels[0].traces[5].y[0]",
@@ -1047,7 +1047,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[1].traces[0].x[0] (numeric variant)",
       "source_field": "$.panels[1].traces[0].x[0]",
@@ -1059,7 +1059,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[1].traces[1].y[0]",
       "source_field": "$.panels[1].traces[1].y[0]",
@@ -1071,7 +1071,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].x[0] (numeric variant)",
       "source_field": "$.panels[2].traces[0].x[0]",
@@ -1083,7 +1083,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[0] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[0]",
@@ -1095,7 +1095,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[1] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[1]",
@@ -1107,7 +1107,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[2] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[2]",
@@ -1119,7 +1119,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[3] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[3]",
@@ -1131,7 +1131,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[4] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[4]",
@@ -1143,7 +1143,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[5] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[5]",
@@ -1155,7 +1155,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[6] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[6]",
@@ -1167,7 +1167,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[7] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[7]",
@@ -1179,7 +1179,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[8] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[8]",
@@ -1191,7 +1191,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[9] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[9]",
@@ -1203,7 +1203,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[10] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[10]",
@@ -1215,7 +1215,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[11] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[11]",
@@ -1227,7 +1227,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[12] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[12]",
@@ -1239,7 +1239,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[13] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[13]",
@@ -1251,7 +1251,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[14] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[14]",
@@ -1263,7 +1263,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[15] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[15]",
@@ -1275,7 +1275,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[16] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[16]",
@@ -1287,7 +1287,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[17] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[17]",
@@ -1299,7 +1299,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[18] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[18]",
@@ -1311,7 +1311,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[19] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[19]",
@@ -1323,7 +1323,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[20] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[20]",
@@ -1335,7 +1335,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[21] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[21]",
@@ -1347,7 +1347,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[22] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[22]",
@@ -1359,7 +1359,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[23] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[23]",
@@ -1371,7 +1371,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[24] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[24]",
@@ -1383,7 +1383,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[25] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[25]",
@@ -1395,7 +1395,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[26] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[26]",
@@ -1407,7 +1407,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[27] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[27]",
@@ -1419,7 +1419,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[28] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[28]",
@@ -1431,7 +1431,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[29] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[29]",
@@ -1443,7 +1443,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[30] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[30]",
@@ -1455,7 +1455,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[31] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[31]",
@@ -1467,7 +1467,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[32] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[32]",
@@ -1479,7 +1479,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[33] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[33]",
@@ -1491,7 +1491,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[34] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[34]",
@@ -1503,7 +1503,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[35] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[35]",
@@ -1515,7 +1515,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[36] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[36]",
@@ -1527,7 +1527,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[37] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[37]",
@@ -1539,7 +1539,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[38] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[38]",
@@ -1551,7 +1551,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].y[39] (numeric variant)",
       "source_field": "$.panels[2].traces[0].y[39]",
@@ -1563,7 +1563,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[75] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[75]",
@@ -1575,7 +1575,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[74] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[74]",
@@ -1587,7 +1587,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[125] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[125]",
@@ -1599,7 +1599,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.controls[0].default (numeric variant)",
       "source_field": "$.controls[0].default",
@@ -1611,7 +1611,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.controls[0].options[0] (numeric variant)",
       "source_field": "$.controls[0].options[0]",
@@ -1623,7 +1623,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.controls[1].step (numeric variant)",
       "source_field": "$.controls[1].step",
@@ -1635,7 +1635,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.controls[1].default",
       "source_field": "$.controls[1].default",
@@ -1647,7 +1647,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[0].tolerance (numeric variant)",
       "source_field": "$.invariants[0].tolerance",
@@ -1659,7 +1659,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[1].tolerance (numeric variant)",
       "source_field": "$.invariants[1].tolerance",
@@ -1671,7 +1671,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[2].tolerance (numeric variant)",
       "source_field": "$.invariants[2].tolerance",
@@ -1683,7 +1683,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[3].tolerance (numeric variant)",
       "source_field": "$.invariants[3].tolerance",
@@ -1695,7 +1695,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[4].tolerance (numeric variant)",
       "source_field": "$.invariants[4].tolerance",
@@ -1707,7 +1707,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[5].tolerance (numeric variant)",
       "source_field": "$.invariants[5].tolerance",
@@ -1719,7 +1719,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[6].tolerance (numeric variant)",
       "source_field": "$.invariants[6].tolerance",
@@ -1731,7 +1731,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[7].tolerance (numeric variant)",
       "source_field": "$.invariants[7].tolerance",
@@ -1743,7 +1743,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[8].tolerance (numeric variant)",
       "source_field": "$.invariants[8].tolerance",
@@ -1755,7 +1755,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[9].tolerance (numeric variant)",
       "source_field": "$.invariants[9].tolerance",
@@ -1767,7 +1767,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[10].tolerance (numeric variant)",
       "source_field": "$.invariants[10].tolerance",
@@ -1779,7 +1779,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[11].tolerance (numeric variant)",
       "source_field": "$.invariants[11].tolerance",
@@ -1791,7 +1791,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[12].tolerance (numeric variant)",
       "source_field": "$.invariants[12].tolerance",
@@ -1803,7 +1803,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[13].tolerance (numeric variant)",
       "source_field": "$.invariants[13].tolerance",
@@ -1815,7 +1815,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[14].tolerance (numeric variant)",
       "source_field": "$.invariants[14].tolerance",
@@ -1827,7 +1827,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[15].tolerance (numeric variant)",
       "source_field": "$.invariants[15].tolerance",
@@ -1839,7 +1839,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[16].tolerance (numeric variant)",
       "source_field": "$.invariants[16].tolerance",
@@ -1851,7 +1851,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[17].tolerance (numeric variant)",
       "source_field": "$.invariants[17].tolerance",
@@ -1863,7 +1863,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[18].tolerance (numeric variant)",
       "source_field": "$.invariants[18].tolerance",
@@ -1875,7 +1875,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[19].tolerance (numeric variant)",
       "source_field": "$.invariants[19].tolerance",
@@ -1887,7 +1887,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[20].tolerance (numeric variant)",
       "source_field": "$.invariants[20].tolerance",
@@ -1899,7 +1899,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.invariants[21].tolerance (numeric variant)",
       "source_field": "$.invariants[21].tolerance",
@@ -1911,7 +1911,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/optimization_results.csv:row_1.step_size (numeric variant)",
       "source_field": "row_1.step_size",
@@ -1923,7 +1923,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/optimization_results.csv:row_1.gradient_norm (numeric variant)",
       "source_field": "row_1.gradient_norm",
@@ -1935,7 +1935,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/optimization_results.csv:row_2.gradient_norm (numeric variant)",
       "source_field": "row_2.gradient_norm",
@@ -1947,7 +1947,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/optimization_results.csv:row_3.gradient_norm (numeric variant)",
       "source_field": "row_3.gradient_norm",
@@ -1959,7 +1959,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/optimization_results.csv:row_4.gradient_norm (numeric variant)",
       "source_field": "row_4.gradient_norm",
@@ -1971,7 +1971,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/optimization_results.csv:row_5.gradient_norm (numeric variant)",
       "source_field": "row_5.gradient_norm",
@@ -1983,7 +1983,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.01.iterations[1]",
       "source_field": "$.0.01.iterations[1]",
@@ -1995,7 +1995,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.01.iterations[100] (numeric variant)",
       "source_field": "$.0.01.iterations[100]",
@@ -2007,7 +2007,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.iterations[1]",
       "source_field": "$.0.1.iterations[1]",
@@ -2019,7 +2019,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.iterations[100] (numeric variant)",
       "source_field": "$.0.1.iterations[100]",
@@ -2031,7 +2031,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.5.iterations[1]",
       "source_field": "$.0.5.iterations[1]",
@@ -2043,7 +2043,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.0.iterations[1]",
       "source_field": "$.1.0.iterations[1]",
@@ -2055,7 +2055,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.5.iterations[1]",
       "source_field": "$.1.5.iterations[1]",
@@ -2067,7 +2067,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.iterations[1]",
       "source_field": "$.2.5.iterations[1]",
@@ -2079,7 +2079,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.iterations[100] (numeric variant)",
       "source_field": "$.2.5.iterations[100]",
@@ -2091,7 +2091,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[7] (numeric variant)",
       "source_field": "$.2.5.objectives[7]",
@@ -2103,7 +2103,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[8] (numeric variant)",
       "source_field": "$.2.5.objectives[8]",
@@ -2115,7 +2115,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[9] (numeric variant)",
       "source_field": "$.2.5.objectives[9]",
@@ -2127,7 +2127,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[10] (numeric variant)",
       "source_field": "$.2.5.objectives[10]",
@@ -2139,7 +2139,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[11] (numeric variant)",
       "source_field": "$.2.5.objectives[11]",
@@ -2151,7 +2151,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[12] (numeric variant)",
       "source_field": "$.2.5.objectives[12]",
@@ -2163,7 +2163,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[13] (numeric variant)",
       "source_field": "$.2.5.objectives[13]",
@@ -2175,7 +2175,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[14] (numeric variant)",
       "source_field": "$.2.5.objectives[14]",
@@ -2187,7 +2187,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[15] (numeric variant)",
       "source_field": "$.2.5.objectives[15]",
@@ -2199,7 +2199,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[16] (numeric variant)",
       "source_field": "$.2.5.objectives[16]",
@@ -2211,7 +2211,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[17] (numeric variant)",
       "source_field": "$.2.5.objectives[17]",
@@ -2223,7 +2223,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[18] (numeric variant)",
       "source_field": "$.2.5.objectives[18]",
@@ -2235,7 +2235,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[19] (numeric variant)",
       "source_field": "$.2.5.objectives[19]",
@@ -2247,7 +2247,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[20] (numeric variant)",
       "source_field": "$.2.5.objectives[20]",
@@ -2259,7 +2259,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[21] (numeric variant)",
       "source_field": "$.2.5.objectives[21]",
@@ -2271,7 +2271,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[22] (numeric variant)",
       "source_field": "$.2.5.objectives[22]",
@@ -2283,7 +2283,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[23] (numeric variant)",
       "source_field": "$.2.5.objectives[23]",
@@ -2295,7 +2295,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[24] (numeric variant)",
       "source_field": "$.2.5.objectives[24]",
@@ -2307,7 +2307,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[25] (numeric variant)",
       "source_field": "$.2.5.objectives[25]",
@@ -2319,7 +2319,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[26] (numeric variant)",
       "source_field": "$.2.5.objectives[26]",
@@ -2331,7 +2331,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[27] (numeric variant)",
       "source_field": "$.2.5.objectives[27]",
@@ -2343,7 +2343,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[28] (numeric variant)",
       "source_field": "$.2.5.objectives[28]",
@@ -2355,7 +2355,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[29] (numeric variant)",
       "source_field": "$.2.5.objectives[29]",
@@ -2367,7 +2367,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[30] (numeric variant)",
       "source_field": "$.2.5.objectives[30]",
@@ -2379,7 +2379,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[31] (numeric variant)",
       "source_field": "$.2.5.objectives[31]",
@@ -2391,7 +2391,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[32] (numeric variant)",
       "source_field": "$.2.5.objectives[32]",
@@ -2403,7 +2403,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-30T12:08:48+00:00",
+      "checked_at": "2026-07-08T02:13:14+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.2.5.objectives[33] (numeric variant)",
       "source_field": "$.2.5.objectives[33]",
@@ -2416,7 +2416,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 243,
+    "artifact": 224,
     "bibliography": 9,
     "generated_metric": 32581,
     "manuscript_claim": 6,

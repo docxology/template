@@ -1,12 +1,12 @@
 {
   "project_name": "templates/template_code_project",
-  "total_duration": 101.757,
-  "total_stages": 8,
+  "total_duration": 87.871,
+  "total_stages": 7,
   "stages": [
     {
       "stage_name": "Clean Output Directories",
       "stage_num": 1,
-      "duration": 0.031,
+      "duration": 0.009,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -20,21 +20,7 @@
     {
       "stage_name": "Environment Setup",
       "stage_num": 2,
-      "duration": 2.465,
-      "exit_code": 0,
-      "success": true,
-      "memory_mb": 0.0,
-      "cpu_percent": 0.0,
-      "io_read_mb": 0.0,
-      "io_write_mb": 0.0,
-      "diagnostic_errors": 0,
-      "diagnostic_warnings": 0,
-      "error_message": ""
-    },
-    {
-      "stage_name": "Infrastructure Tests",
-      "stage_num": 3,
-      "duration": 17.919,
+      "duration": 0.315,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -47,8 +33,8 @@
     },
     {
       "stage_name": "Project Tests",
-      "stage_num": 4,
-      "duration": 28.081,
+      "stage_num": 3,
+      "duration": 32.277,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -61,8 +47,8 @@
     },
     {
       "stage_name": "Project Analysis",
-      "stage_num": 5,
-      "duration": 4.076,
+      "stage_num": 4,
+      "duration": 5.062,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -75,8 +61,8 @@
     },
     {
       "stage_name": "PDF Rendering",
-      "stage_num": 6,
-      "duration": 47.603,
+      "stage_num": 5,
+      "duration": 48.582,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -89,8 +75,8 @@
     },
     {
       "stage_name": "Output Validation",
-      "stage_num": 7,
-      "duration": 0.996,
+      "stage_num": 6,
+      "duration": 0.963,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -103,8 +89,8 @@
     },
     {
       "stage_name": "Copy Outputs",
-      "stage_num": 8,
-      "duration": 0.51,
+      "stage_num": 7,
+      "duration": 0.57,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -120,18 +106,18 @@
     {
       "warning_type": "slow_stage",
       "stage_name": "Project Tests",
-      "message": "Stage 'Project Tests' took 28.1s (2.0\u00d7 the average 12.7s)",
+      "message": "Stage 'Project Tests' took 32.3s (2.0\u00d7 the average 12.5s)",
       "suggestion": "Consider optimizing this stage or running it in parallel",
-      "value": 28.08,
-      "threshold": 25.42
+      "value": 32.28,
+      "threshold": 25.08
     },
     {
       "warning_type": "slow_stage",
       "stage_name": "PDF Rendering",
-      "message": "Stage 'PDF Rendering' took 47.6s (2.0\u00d7 the average 12.7s)",
+      "message": "Stage 'PDF Rendering' took 48.6s (2.0\u00d7 the average 12.5s)",
       "suggestion": "Consider optimizing this stage or running it in parallel",
-      "value": 47.6,
-      "threshold": 25.42
+      "value": 48.58,
+      "threshold": 25.08
     }
   ],
   "system_info": {},

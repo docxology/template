@@ -183,6 +183,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
 <h1 id="sec:methodology">Methodology</h1>
@@ -240,7 +242,7 @@ production-grade validation through the
 This utility subjects the objective function to a barrage of extreme
 inputs (NaN, Inf, <span class="math inline">\(\pm 10^{10}\)</span>) to
 calculate a formalized stability score. If this score degrades, the <a
-href="https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py">analysis
+href="https://github.com/docxology/template/blob/main/scripts/pipeline/stage_02_analysis.py">analysis
 orchestrator</a> execution deliberately aborts, ensuring the methodology
 cannot enter unrecoverable states.</p>
 <h3 id="performance-benchmarking">Performance Benchmarking</h3>

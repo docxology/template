@@ -183,6 +183,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
 <h1 id="sec:experimental_setup">Experimental Setup</h1>
@@ -244,11 +246,11 @@ last benchmark run: <strong>1.9 μs</strong> (recorded in
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-06-30T12:08:00Z</li>
+<li><strong>Generated</strong>: 2026-07-08T02:12:25Z</li>
 </ul>
 <h2 id="pipeline-ordering">Pipeline ordering</h2>
 <p>Typical <code>template_code_project</code> analysis order (see
-<code>scripts/02_run_analysis.py</code> discovery) is:</p>
+<code>scripts/pipeline/stage_02_analysis.py</code> discovery) is:</p>
 <ol type="1">
 <li><code>optimization_analysis.py</code> — writes
 <code>output/data/optimization_results.csv</code>,

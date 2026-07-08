@@ -39,11 +39,11 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.12.13
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-06-30T12:08:00Z
+- **Generated**: 2026-07-08T02:12:25Z
 
 ## Pipeline ordering
 
-Typical `template_code_project` analysis order (see `scripts/02_run_analysis.py` discovery) is:
+Typical `template_code_project` analysis order (see `scripts/pipeline/stage_02_analysis.py` discovery) is:
 
 1. `optimization_analysis.py` — writes `output/data/optimization_results.csv`, `output/figures/*.png`, and JSON reports under `output/reports/`.
 2. `z_generate_manuscript_variables.py` — reads the CSV and YAML, emits `output/data/manuscript_variables.json`, and writes substituted copies to `output/manuscript/` for rendering.
