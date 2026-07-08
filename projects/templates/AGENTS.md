@@ -2,7 +2,7 @@
 
 ## Overview
 
-`projects/templates/` contains the seventeen public canonical exemplar projects for
+`projects/templates/` contains the eighteen public canonical exemplar projects for
 the template repository. This directory is public and tracked; private,
 rotating, archived, active, or search-only project work belongs outside this
 subtree and is guarded by `.gitignore`, `scripts/audit/check_tracked_projects.py`, and
@@ -15,20 +15,24 @@ Use this file for shared exemplar parity, command selection, and escalation.
 
 ```text
 projects/templates/
-├── template_active_inference/      # analytical + pymdp + sheaf + Lean/GNN
-├── template_autoresearch_project/  # deterministic AutoResearch loop
-├── template_autoscientists/        # coordination-mechanism testbed
-├── template_code_project/          # code-first numerical exemplar
-├── template_eda_notebook/          # exploratory data analysis on tabular data
-├── template_gold_refinement/       # metallurgical gold-refining analogy (ore → nine-nines)
-├── template_madlib/                # conditional token-injection manuscript
-├── template_newspaper/             # ReportLab newspaper layout engine
-├── template_prose_project/         # prose/references validation exemplar
-├── template_sia/                   # fixture-backed SIA harness
-├── template_storybook/             # full-page illustrated storybook PDF
-├── template_template/              # meta-template introspection exemplar
-├── template_textbook/              # modular textbook scaffold
-└── template_pools_rules_tools/     # fonds/rules/tools resource-pool integration (autopoietic)
+├── template_active_inference/        # analytical + pymdp + sheaf + Lean/GNN
+├── template_autopoiesis/             # combinatoric grammar generating whole runnable projects
+├── template_autoresearch_project/    # deterministic AutoResearch loop
+├── template_autoscientists/          # coordination-mechanism testbed
+├── template_code_project/            # code-first numerical exemplar
+├── template_eda_notebook/            # exploratory data analysis on tabular data
+├── template_gold_refinement/         # metallurgical gold-refining analogy (ore → nine-nines)
+├── template_literature_meta_analysis/ # reproducible literature meta-analysis (multi-engine retrieval)
+├── template_madlib/                  # conditional token-injection manuscript
+├── template_methods_paper/           # methods-paper exemplar: tested methodology DSL
+├── template_newspaper/               # ReportLab newspaper layout engine
+├── template_pools_rules_tools/       # fonds/rules/tools resource-pool integration (autopoietic)
+├── template_prose_project/           # prose/references validation exemplar
+├── template_search_project/          # literature search → BibTeX → LLM synthesis pipeline
+├── template_sia/                     # fixture-backed SIA harness
+├── template_storybook/               # full-page illustrated storybook PDF
+├── template_template/                # meta-template introspection exemplar
+└── template_textbook/                # modular textbook scaffold
 ```
 
 Every exemplar also carries these agent-facing surfaces:

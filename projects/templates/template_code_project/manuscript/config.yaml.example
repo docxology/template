@@ -54,7 +54,7 @@ keywords:
   - "machine learning"
 
 metadata:
-  license: "Apache-2.0"
+  license: "MIT"
   language: "en"
 
 steganography:

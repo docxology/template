@@ -113,7 +113,7 @@ All rendered artifacts are source-owned and disposable. Do not hand-edit
 | `output/reports/token_plan.json` | `src/composition.py`, `manuscript/config.yaml` | Deterministic mega-madlib token choices and provenance |
 | `output/reports/claim_support_registry.json` | `src/evidence.py` | Project-local contribution-claim assay |
 | `output/reports/evidence_registry.json` | template evidence validator | Shared evidence facts consumed by validation gates |
-| `output/figures/figure_registry.json` | `src/figures/__init__.py::FIGURE_SPECS` | Figure label/path/caption/source registry |
+| `output/figures/figure_registry.json` | `src/figures/_common.py::FIGURE_SPECS` | Figure label/path/caption/source registry |
 | `output/reports/figure_quality_report.json` | `src/figures/registry.py::write_figure_quality_report` | PNG/SVG existence, dimensions, nonblank pixels, color variance, and registry parity |
 | `output/figures/cover_visualization.png` | `src/cover_visualization.py::generate_cover_visualization` | Standalone publication cover visual; not part of the stable 12-figure manuscript registry |
 | `output/reports/cover_visualization.json` | `src/cover_visualization.py::write_cover_visualization` | Cover dimensions, byte sizes, nonwhite fraction, and color variance |

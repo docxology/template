@@ -47,4 +47,4 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_aut
 - Project contract: [`AGENTS.md`](../../../AGENTS.md)
 - README: [`README.md`](../../../README.md)
 - TODO: [`TODO.md`](../../../TODO.md)
-- Exemplar roster: [`projects/AGENTS.md`](../../../../AGENTS.md)
+- Exemplar roster: [`projects/AGENTS.md`](../../../../../AGENTS.md)

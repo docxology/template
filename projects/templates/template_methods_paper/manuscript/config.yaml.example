@@ -51,7 +51,7 @@ keywords:
   - "controlled methods"
 
 metadata:
-  license: "Apache-2.0"
+  license: "MIT"
   language: "en"
 
 steganography:

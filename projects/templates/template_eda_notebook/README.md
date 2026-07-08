@@ -11,7 +11,7 @@ cells. Exemplar roster:
 Use this template for **exploratory data analysis on tabular data**: load a
 dataset, surface missingness, compute descriptive statistics and per-group
 means, rank features by correlation, and produce a few diagnostic figures. It is
-the flagship demonstration of the **notebook -> tested src extraction**
+a demonstration of the **notebook -> tested src extraction**
 workflow: explore fast in a notebook cell, then move any computation that
 matters into `src/eda/` behind a failing test (thin-orchestrator pattern;
 `src/` implements, scripts and cells coordinate, tests enforce ≥90% coverage

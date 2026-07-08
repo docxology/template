@@ -11,8 +11,8 @@ authors:
 publication:
   doi: ""
   version_doi: ""
-  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_madlib"
-  repository_label: "docxology/template"
+  repository_url: ""  # e.g. https://github.com/you/your-repo/tree/main/...
+  repository_label: ""  # e.g. you/your-repo
 
 keywords:
   - "madlib generation"

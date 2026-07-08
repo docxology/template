@@ -58,4 +58,4 @@ uv run python projects/templates/template_autopoiesis/scripts/seal_child.py
 - Grammar syntax: [`SYNTAX.md`](../../../SYNTAX.md)
 - Standalone usage: [`STANDALONE.md`](../../../STANDALONE.md)
 - TODO: [`TODO.md`](../../../TODO.md)
-- Exemplar roster: [`projects/AGENTS.md`](../../../../AGENTS.md)
+- Exemplar roster: [`projects/AGENTS.md`](../../../../../AGENTS.md)

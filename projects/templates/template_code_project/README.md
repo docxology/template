@@ -7,7 +7,7 @@ Research project demonstrating optimization algorithms with automated figure gen
 Use this template for **code-driven computational research**: algorithms in
 `src/`, numerical experiments with deterministic seeds, automated
 publication-quality figures, and a manuscript that reports the computed
-results. It is the flagship demonstration of the thin-orchestrator pattern
+results. It demonstrates the thin-orchestrator pattern
 (scripts coordinate; `src/` implements; tests enforce ≥90% coverage with no
 mocks). If your project is primarily prose review, layout, or book-length
 structure, see [`template_prose_project`](../template_prose_project/),
