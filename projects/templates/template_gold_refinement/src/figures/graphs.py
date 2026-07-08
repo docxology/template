@@ -25,6 +25,7 @@ except ImportError:  # pragma: no cover - flat-layout fallback
 
 
 def build_provenance_flow_graph() -> tuple[nx.DiGraph, list[float]]:
+    """Build provenance flow graph."""
     result = run_refinery()
     stages = result.stages
     graph = nx.DiGraph()
@@ -51,6 +52,7 @@ def build_provenance_flow_graph() -> tuple[nx.DiGraph, list[float]]:
 
 
 def build_formalism_traceability_graph() -> nx.DiGraph:
+    """Build formalism traceability graph."""
     graph = nx.DiGraph()
     for idx, item in enumerate(FORMALISMS):
         y = len(FORMALISMS) - idx
@@ -72,6 +74,7 @@ def build_formalism_traceability_graph() -> nx.DiGraph:
 
 
 def build_implementation_circuit_graph() -> nx.DiGraph:
+    """Build implementation circuit graph."""
     graph = nx.DiGraph()
     nodes = {
         "config": ("Config ore\nconfig.yaml", "source", 0, -2.4, 0.0),
@@ -101,6 +104,7 @@ def build_implementation_circuit_graph() -> nx.DiGraph:
 
 
 def build_claim_evidence_topology(entries: list[Any] | tuple[Any, ...]) -> nx.DiGraph:
+    """Build claim evidence topology."""
     graph = nx.DiGraph()
     evidence_nodes: dict[str, str] = {}
     boundary_nodes: dict[str, str] = {}

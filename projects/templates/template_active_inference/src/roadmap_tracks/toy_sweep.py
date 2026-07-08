@@ -75,6 +75,7 @@ __all__ = [
 
 
 def write_toy_sweep_artifacts(project_root: Path) -> dict[str, Path]:
+    """Write toy sweep artifacts to the output path."""
     root = project_root.resolve()
     return {
         "analytical_observable": write_json(
@@ -120,6 +121,7 @@ def write_toy_sweep_artifacts(project_root: Path) -> dict[str, Path]:
 
 
 def validate_toy_sweep_artifacts(project_root: Path) -> list[str]:
+    """Validate toy sweep artifacts."""
     root = project_root.resolve()
     issues: list[str] = []
     # PR#23 hardening class: every aggregate below is re-derived from its rows

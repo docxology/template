@@ -72,6 +72,7 @@ def _layers_output_is_fresh(root: Path, out: Path) -> bool:
 
 
 def figure_sheaf_layers_overview(project_root: Path) -> Path | None:
+    """Process figure sheaf layers overview."""
     root = project_root.resolve()
     out = root / "output" / "figures" / "sheaf_layers_overview.png"
     if _layers_output_is_fresh(root, out):

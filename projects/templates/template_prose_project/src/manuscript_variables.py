@@ -32,9 +32,11 @@ class ManuscriptVariables:
     shortest_section_words: int
 
     def as_dict(self) -> dict[str, object]:
+        """Process as dict."""
         return asdict(self)
 
     def as_uppercase_keys(self) -> dict[str, str]:
+        """Process as uppercase keys."""
         return {f"{{{{{k.upper()}}}}}": str(v) for k, v in asdict(self).items()}
 
 
@@ -76,6 +78,7 @@ def load_report_payload(path: Path | str) -> dict[str, object]:
 
 
 def write_variables(variables: ManuscriptVariables, output_path: Path | str) -> Path:
+    """Write variables to the output path."""
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(

@@ -25,6 +25,7 @@ from .figure_style import apply_style, load_figure_style
 
 
 def figure_semantic_gluing_graph(project_root: Path) -> Path:
+    """Process figure semantic gluing graph."""
     root = project_root.resolve()
     style = load_figure_style(root)
     from manuscript.sheaf.semantic import build_validation_dependency_graph

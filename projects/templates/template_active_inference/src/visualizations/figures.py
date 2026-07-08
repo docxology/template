@@ -66,6 +66,7 @@ def _apply_artifact_note(ax, artifact: str, style: FigureStyleConfig, *, x: floa
 
 
 def figure_ising_mi_curve(project_root: Path) -> Path:
+    """Process figure ising mi curve."""
     root = project_root.resolve()
     style = load_figure_style(root)
     sweep = root / "output" / "data" / "parameter_sweep.csv"
@@ -125,6 +126,7 @@ def figure_ising_mi_curve(project_root: Path) -> Path:
 
 
 def figure_si_belief_entropy_curve(project_root: Path) -> Path:
+    """Process figure si belief entropy curve."""
     root = project_root.resolve()
     style = load_figure_style(root)
     trace = load_json_artifact(root, "output/data/si_tmaze_trace.json")
@@ -161,6 +163,7 @@ def figure_si_belief_entropy_curve(project_root: Path) -> Path:
 
 
 def figure_si_obs_action_trace(project_root: Path) -> Path:
+    """Process figure si obs action trace."""
     root = project_root.resolve()
     style = load_figure_style(root)
     data = load_json_artifact(root, "output/data/si_tmaze_summary.json")
@@ -194,6 +197,7 @@ def figure_si_obs_action_trace(project_root: Path) -> Path:
 
 
 def figure_si_tmaze_actions(project_root: Path) -> Path:
+    """Process figure si tmaze actions."""
     root = project_root.resolve()
     style = load_figure_style(root)
     data = load_json_artifact(root, "output/data/si_tmaze_summary.json")
@@ -234,6 +238,7 @@ def figure_si_summary(project_root: Path) -> Path:
 
 
 def figure_free_energy_curve(project_root: Path) -> Path:
+    """Process figure free energy curve."""
     root = project_root.resolve()
     style = load_figure_style(root)
     from analytical.decomposition import free_energy_against_entangled_prior
@@ -315,6 +320,7 @@ def run_figure(figure_id: str, project_root: Path) -> Path:
 
 
 def generate_all_figures(project_root: Path) -> list[Path]:
+    """Generate all figures."""
     from orchestration.coverage_pipeline import ensure_coverage_artifacts
     from .figure_registry import write_figure_registry_json
 

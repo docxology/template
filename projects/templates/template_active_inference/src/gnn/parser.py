@@ -162,6 +162,7 @@ def _parse_kv(body: str) -> dict[str, str]:
 
 
 def parse_gnn(text: str, *, source: str = "<string>") -> GnnModel:
+    """Parse gnn."""
     sections = _split_sections(text)
     for req in REQUIRED_SECTIONS:
         if req not in sections:
@@ -193,5 +194,6 @@ def parse_gnn(text: str, *, source: str = "<string>") -> GnnModel:
 
 
 def parse_gnn_file(path: str | Path) -> GnnModel:
+    """Parse gnn file."""
     p = Path(path)
     return parse_gnn(p.read_text(encoding="utf-8"), source=str(p))

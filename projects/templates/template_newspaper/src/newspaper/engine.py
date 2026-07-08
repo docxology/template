@@ -31,9 +31,11 @@ class RenderResult:
 
     @property
     def all_pages_fit(self) -> bool:
+        """Process all pages fit."""
         return not self.oversets
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "output_path": str(self.output_path),
             "page_count": self.page_count,

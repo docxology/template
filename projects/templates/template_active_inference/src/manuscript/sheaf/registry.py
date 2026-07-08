@@ -10,6 +10,7 @@ from manuscript.sheaf.models import TrackRegistry, TrackSpec
 
 
 def load_track_registry(registry_path: Path) -> TrackRegistry:
+    """Load track registry from a file."""
     raw = yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
     tracks_raw = raw.get("tracks") or {}
     specs: dict[str, TrackSpec] = {}
@@ -37,6 +38,7 @@ def track_order_for_section(
     section,
     registry: TrackRegistry | dict[str, TrackSpec],
 ) -> list[str]:
+    """Process track order for section."""
     specs = registry.tracks if isinstance(registry, TrackRegistry) else registry
     if section.track_order:
         return list(section.track_order)
@@ -52,6 +54,7 @@ def track_order_for_section(
 
 
 def list_registered_tracks(project_root: Path) -> list[TrackSpec]:
+    """Process list registered tracks."""
     from manuscript.sheaf.models import DEFAULT_REGISTRY_REL
 
     registry_path = project_root / DEFAULT_REGISTRY_REL

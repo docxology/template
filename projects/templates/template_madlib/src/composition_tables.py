@@ -8,6 +8,7 @@ from .tokens import TokenPlan
 
 
 def build_section_plan_table(config: MadlibConfig, token_plan: TokenPlan) -> str:
+    """Build section plan table."""
     rows = [
         "| Section | Render title | Enabled | Token choices | Narrative moves |",
         "| --- | --- | ---: | ---: | --- |",
@@ -23,6 +24,7 @@ def build_section_plan_table(config: MadlibConfig, token_plan: TokenPlan) -> str
 
 
 def build_section_title_table(config: MadlibConfig) -> str:
+    """Build section title table."""
     rows = ["| Section key | Rendered title | Enabled |", "| --- | --- | ---: |"]
     for section in SECTION_KEYS:
         rows.append(f"| `{section}` | {config.section_titles[section]} | {config.section_conditions[section]} |")
@@ -30,6 +32,7 @@ def build_section_title_table(config: MadlibConfig) -> str:
 
 
 def build_token_inventory_table(token_plan: TokenPlan) -> str:
+    """Build token inventory table."""
     rows = ["| Variable | Category | Value | Section | Source |", "| --- | --- | --- | --- | --- |"]
     for choice in token_plan.choices:
         rows.append(
@@ -40,6 +43,7 @@ def build_token_inventory_table(token_plan: TokenPlan) -> str:
 
 
 def build_method_protocol_table(config: MadlibConfig) -> str:
+    """Build method protocol table."""
     rows = ["| Step | Action | Evidence | Output |", "| --- | --- | --- | --- |"]
     for step in config.method_protocol:
         rows.append(f"| {step.name} | {step.action} | {step.evidence} | `{step.output}` |")
@@ -47,6 +51,7 @@ def build_method_protocol_table(config: MadlibConfig) -> str:
 
 
 def build_audit_rule_table(config: MadlibConfig) -> str:
+    """Build audit rule table."""
     rows = ["| Rule | Enforcement surface |", "| --- | --- |"]
     for index, rule in enumerate(config.audit_rules, start=1):
         rows.append(f"| R{index} | {rule} |")
@@ -54,6 +59,7 @@ def build_audit_rule_table(config: MadlibConfig) -> str:
 
 
 def build_evaluation_criteria_table(config: MadlibConfig) -> str:
+    """Build evaluation criteria table."""
     rows = ["| Criterion | Target | Evidence | Gate |", "| --- | --- | --- | --- |"]
     for criterion in config.evaluation_criteria:
         rows.append(f"| {criterion.name} | {criterion.target} | {criterion.evidence} | `{criterion.gate}` |")
@@ -61,6 +67,7 @@ def build_evaluation_criteria_table(config: MadlibConfig) -> str:
 
 
 def build_failure_mode_table(config: MadlibConfig) -> str:
+    """Build failure mode table."""
     rows = ["| Failure mode | Risk | Detection | Mitigation |", "| --- | --- | --- | --- |"]
     for mode in config.failure_modes:
         rows.append(f"| {mode.name} | {mode.risk} | {mode.detection} | {mode.mitigation} |")
@@ -68,6 +75,7 @@ def build_failure_mode_table(config: MadlibConfig) -> str:
 
 
 def build_configured_field_table(rows: Sequence[Mapping[str, str]]) -> str:
+    """Build configured field table."""
     table = ["| Path | Origin | Scope | Summary |", "| --- | --- | --- | --- |"]
     for row in rows:
         table.append(f"| `{row['path']}` | {row['origin']} | {row['scope']} | {row['summary']} |")
@@ -75,6 +83,7 @@ def build_configured_field_table(rows: Sequence[Mapping[str, str]]) -> str:
 
 
 def build_configured_field_summary_table(counts: Mapping[str, int]) -> str:
+    """Build configured field summary table."""
     rows = ["| Measure | Count |", "| --- | ---: |"]
     labels = (
         ("total", "Total tracked field paths"),
@@ -93,6 +102,7 @@ def build_configured_field_summary_table(counts: Mapping[str, int]) -> str:
 
 
 def build_design_principle_table(config: MadlibConfig) -> str:
+    """Build design principle table."""
     rows = ["| Principle | Rationale | Manuscript effect |", "| --- | --- | --- |"]
     for principle in config.design_principles:
         rows.append(f"| {principle.name} | {principle.rationale} | {principle.manuscript_effect} |")
@@ -100,6 +110,7 @@ def build_design_principle_table(config: MadlibConfig) -> str:
 
 
 def build_pipeline_phase_table(config: MadlibConfig) -> str:
+    """Build pipeline phase table."""
     rows = [
         "| Phase | Input | Transformation | Output | Guard |",
         "| --- | --- | --- | --- | --- |",
@@ -113,6 +124,7 @@ def build_pipeline_phase_table(config: MadlibConfig) -> str:
 
 
 def build_quality_probe_table(config: MadlibConfig) -> str:
+    """Build quality probe table."""
     rows = [
         "| Probe | Question | Passing signal | Artifact |",
         "| --- | --- | --- | --- |",
@@ -123,6 +135,7 @@ def build_quality_probe_table(config: MadlibConfig) -> str:
 
 
 def build_authoring_obligation_table(config: MadlibConfig) -> str:
+    """Build authoring obligation table."""
     rows = ["| Obligation | Required action | Review surface |", "| --- | --- | --- |"]
     for obligation in config.authoring_obligations:
         rows.append(f"| {obligation.name} | {obligation.obligation} | `{obligation.review_surface}` |")
@@ -130,6 +143,7 @@ def build_authoring_obligation_table(config: MadlibConfig) -> str:
 
 
 def build_contribution_table(config: MadlibConfig) -> str:
+    """Build contribution table."""
     rows = ["| Claim | Boundary |", "| --- | --- |"]
     for claim in config.contribution_claims:
         rows.append(f"| {claim} | Local exemplar claim; no live DOI or standalone release implied. |")
@@ -137,6 +151,7 @@ def build_contribution_table(config: MadlibConfig) -> str:
 
 
 def build_provenance_matrix_table(config: MadlibConfig, token_plan: TokenPlan) -> str:
+    """Build provenance matrix table."""
     rows = ["| Section | Token variables | Source categories |", "| --- | ---: | --- |"]
     for section in SECTION_KEYS:
         choices = tuple(choice for choice in token_plan.choices if choice.section == section)

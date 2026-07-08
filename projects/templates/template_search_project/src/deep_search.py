@@ -106,6 +106,7 @@ class KeywordResult:
     output_dir: Path | None = None
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "keyword": self.keyword,
             "slug": self.slug,
@@ -132,17 +133,21 @@ class DeepSearchArtifacts:
 
     @property
     def total_keywords(self) -> int:
+        """Process total keywords."""
         return len(self.keyword_results)
 
     @property
     def total_papers(self) -> int:
+        """Process total papers."""
         return sum(len(kr.search_result.papers) for kr in self.keyword_results)
 
     @property
     def unique_papers(self) -> int:
+        """Process unique papers."""
         return len(self.aggregate_papers)
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "total_keywords": self.total_keywords,
             "total_papers": self.total_papers,
@@ -162,6 +167,7 @@ def slugify(text: str) -> str:
 
 
 def safe_id(paper_id: str) -> str:
+    """Process safe id."""
     return re.sub(r"[^A-Za-z0-9._-]", "_", paper_id)
 
 

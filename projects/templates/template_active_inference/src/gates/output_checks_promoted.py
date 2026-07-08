@@ -7,10 +7,12 @@ from json_io import read_json
 
 
 def load_promoted_artifacts(root: Path) -> dict[str, dict]:
+    """Load promoted artifacts from a file."""
     return {name: read_json(root / rel_path) for name, rel_path in PROMOTED_ARTIFACTS.items()}
 
 
 def add_toy_formal_integration_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
+    """Add toy formal integration checks to the collection."""
     sensitivity = artifacts["sensitivity"]
     uncertainty = artifacts["uncertainty"]
     benchmark = artifacts["benchmark"]
@@ -145,6 +147,7 @@ def add_toy_formal_integration_checks(checks: dict[str, bool], artifacts: dict[s
 
 
 def add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
+    """Add visualization checks to the collection."""
     figure_source = artifacts["figure_source"]
     figure_hash = artifacts["figure_hash"]
     visualization_quality = artifacts["visualization_quality"]
@@ -192,6 +195,7 @@ def add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict]
 
 
 def add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, dict]) -> None:
+    """Add canonical sheaf checks to the collection."""
     replay_matrix = artifacts["replay_matrix"]
     track_lane_matrix = artifacts["track_lane_matrix"]
     artifact_contract_index = artifacts["artifact_contract_index"]
@@ -325,6 +329,7 @@ def add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, dic
 
 
 def add_track_validator_checks(root: Path, checks: dict[str, bool], animation_deltas: dict) -> None:
+    """Add track validator checks to the collection."""
     from roadmap_tracks import (
         validate_formal_interop_artifacts,
         validate_integration_audit_artifacts,
@@ -350,6 +355,7 @@ def set_experiment_plan_metrics(
     simulation_context: dict[str, Any],
     spine_context: dict[str, Path],
 ) -> None:
+    """Process set experiment plan metrics."""
     summary_path = simulation_context["summary_path"]
     checks["experiment_plan_metrics"] = checks.get("invariants_all_pass", False) and checks.get(
         str(summary_path.relative_to(root)),

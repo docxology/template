@@ -17,6 +17,7 @@ except ImportError:
 
 
 def build_timestamp() -> str:
+    """Build timestamp."""
     epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
     if epoch.isdigit():
         return datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -24,6 +25,7 @@ def build_timestamp() -> str:
 
 
 def load_yaml_dict(path: Path) -> dict[str, Any]:
+    """Load yaml dict from a file."""
     if not path.exists():
         return {}
     with path.open("r", encoding="utf-8") as handle:
@@ -32,10 +34,12 @@ def load_yaml_dict(path: Path) -> dict[str, Any]:
 
 
 def load_manuscript_config(project_root: Path) -> dict[str, Any]:
+    """Load manuscript config from a file."""
     return load_yaml_dict(project_root / "manuscript" / "config.yaml")
 
 
 def load_json_object(path: Path) -> dict[str, Any]:
+    """Load json object from a file."""
     if not path.exists():
         return {}
     with path.open("r", encoding="utf-8") as handle:
@@ -44,6 +48,7 @@ def load_json_object(path: Path) -> dict[str, Any]:
 
 
 def as_str_tuple(value: Any) -> tuple[str, ...]:
+    """Process as str tuple."""
     if value is None:
         return ()
     if isinstance(value, str):
@@ -54,6 +59,7 @@ def as_str_tuple(value: Any) -> tuple[str, ...]:
 
 
 def as_int_tuple(value: Any) -> tuple[int, ...]:
+    """Process as int tuple."""
     if value is None:
         return ()
     if isinstance(value, str):
@@ -64,10 +70,12 @@ def as_int_tuple(value: Any) -> tuple[int, ...]:
 
 
 def as_float(value: Any, default: float = 0.0) -> float:
+    """Process as float."""
     if value is None:
         return default
     return float(value)
 
 
 def as_bool(value: Any, default: bool = False, *, field_name: str) -> bool:
+    """Process as bool."""
     return coerce_bool(value, default=default, field_name=field_name)

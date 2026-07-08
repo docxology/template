@@ -135,6 +135,7 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
 
 
 def build_figure_hash_manifest(project_root: Path) -> dict[str, Any]:
+    """Build figure hash manifest."""
     root = project_root.resolve()
     rows = []
     for path in sorted((root / "output" / "figures").glob("*")):

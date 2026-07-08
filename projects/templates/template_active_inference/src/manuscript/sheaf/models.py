@@ -12,6 +12,7 @@ CoverageStatus = Literal["present", "absent", "missing"]
 
 
 def coverage_cell_symbol(color: CoverageColor) -> str:
+    """Process coverage cell symbol."""
     if color == "black":
         return "P"
     if color == "gray":
@@ -24,6 +25,8 @@ SectionKind = Literal["group", "section"]
 
 
 class MissingTrackPolicy(str, Enum):
+    """Data container for MissingTrackPolicy."""
+
     SKIP = "skip"
     WARN = "warn"
     ERROR = "error"
@@ -31,6 +34,8 @@ class MissingTrackPolicy(str, Enum):
 
 @dataclass(frozen=True)
 class TrackSpec:
+    """Data container for TrackSpec."""
+
     id: str
     order: int
     renderer: str
@@ -42,11 +47,15 @@ class TrackSpec:
 
 @dataclass(frozen=True)
 class SheafDefaults:
+    """Data container for SheafDefaults."""
+
     missing_track: MissingTrackPolicy = MissingTrackPolicy.SKIP
 
 
 @dataclass(frozen=True)
 class SheafSection:
+    """Data container for SheafSection."""
+
     id: str
     title: str
     short: str
@@ -62,11 +71,14 @@ class SheafSection:
     exclude_tracks: tuple[str, ...] | None = None
 
     def should_compose(self) -> bool:
+        """Process should compose."""
         return self.compose and self.kind == "section"
 
 
 @dataclass(frozen=True)
 class SheafManifest:
+    """Data container for SheafManifest."""
+
     defaults: SheafDefaults
     sections: tuple[SheafSection, ...]
     registry_path: Path
@@ -74,6 +86,8 @@ class SheafManifest:
 
 @dataclass
 class ManifestIssue:
+    """Data container for ManifestIssue."""
+
     level: str
     code: str
     message: str
@@ -81,6 +95,8 @@ class ManifestIssue:
 
 @dataclass(frozen=True)
 class ComposeOptions:
+    """Data container for ComposeOptions."""
+
     enabled_tracks: frozenset[str] | None = None
     section_ids: frozenset[str] | None = None
     missing_track: MissingTrackPolicy | None = None
@@ -89,18 +105,24 @@ class ComposeOptions:
 
 @dataclass(frozen=True)
 class TrackRegistry:
+    """Data container for TrackRegistry."""
+
     tracks: dict[str, TrackSpec]
     renderer_suffixes: dict[str, tuple[str, ...]]
 
 
 @dataclass(frozen=True)
 class ComposeResult:
+    """Data container for ComposeResult."""
+
     paths: list[Path]
     issues: list[ManifestIssue]
 
 
 @dataclass(frozen=True)
 class CoverageCell:
+    """Data container for CoverageCell."""
+
     track_id: str
     bound: bool
     path: str | None
@@ -110,6 +132,8 @@ class CoverageCell:
 
 @dataclass(frozen=True)
 class CoverageSectionRow:
+    """Data container for CoverageSectionRow."""
+
     section_id: str
     title: str
     cells: tuple[CoverageCell, ...]
@@ -121,10 +145,13 @@ class CoverageSectionRow:
 
 @dataclass(frozen=True)
 class CoverageMatrix:
+    """Data container for CoverageMatrix."""
+
     track_ids: tuple[str, ...]
     sections: tuple[CoverageSectionRow, ...]
 
     def gray_cells(self) -> list[tuple[str, str]]:
+        """Process gray cells."""
         missing: list[tuple[str, str]] = []
         for row in self.sections:
             for cell in row.cells:

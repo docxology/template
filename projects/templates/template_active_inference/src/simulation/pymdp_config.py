@@ -15,6 +15,8 @@ SimulationMode = Literal["state_inference", "policy_inference"]
 
 @dataclass(frozen=True)
 class TMazeConfig:
+    """Data container for TMazeConfig."""
+
     num_states: int = 2
     num_obs: int = 2
     num_actions: int = 2
@@ -24,18 +26,24 @@ class TMazeConfig:
 
 @dataclass(frozen=True)
 class AgentConfig:
+    """Data container for AgentConfig."""
+
     inference_algo: str = "fpi"
     action_selection: str = "deterministic"
 
 
 @dataclass(frozen=True)
 class LoggingConfig:
+    """Data container for LoggingConfig."""
+
     enabled: bool = True
     path: str = "output/logs/pymdp_runs.jsonl"
 
 
 @dataclass(frozen=True)
 class ComparisonConfig:
+    """Data container for ComparisonConfig."""
+
     horizons: tuple[int, ...] = (2, 3)
     seeds: tuple[int, ...] = (0,)
     modes: tuple[SimulationMode, ...] = ("state_inference", "policy_inference")
@@ -43,6 +51,8 @@ class ComparisonConfig:
 
 @dataclass(frozen=True)
 class PymdpConfig:
+    """Data container for PymdpConfig."""
+
     horizon: int = 2
     steps: int = 2
     random_seed: int = 0
@@ -54,6 +64,7 @@ class PymdpConfig:
 
     @property
     def policy_len(self) -> int:
+        """Process policy len."""
         return self.horizon
 
 
@@ -104,10 +115,12 @@ def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:
 
 
 def default_pymdp_config() -> PymdpConfig:
+    """Process default pymdp config."""
     return PymdpConfig()
 
 
 def pymdp_config_path(project_root: Path) -> Path:
+    """Process pymdp config path."""
     return project_root.resolve() / "pymdp.yaml"
 
 
@@ -116,6 +129,7 @@ def load_pymdp_config(
     *,
     config_path: Path | None = None,
 ) -> PymdpConfig:
+    """Load pymdp config from a file."""
     path = config_path or pymdp_config_path(project_root)
     if not path.is_file():
         return default_pymdp_config()
@@ -132,6 +146,7 @@ def apply_pymdp_overrides(
     mode: SimulationMode | None = None,
     logging_enabled: bool | None = None,
 ) -> PymdpConfig:
+    """Process apply pymdp overrides."""
     updated = config
     if horizon is not None:
         updated = replace(updated, horizon=horizon)
@@ -147,6 +162,7 @@ def apply_pymdp_overrides(
 
 
 def config_snapshot(config: PymdpConfig) -> dict[str, Any]:
+    """Process config snapshot."""
     return {
         "horizon": config.horizon,
         "steps": config.steps,
@@ -177,5 +193,6 @@ def config_snapshot(config: PymdpConfig) -> dict[str, Any]:
 
 
 def config_hash(config: PymdpConfig) -> str:
+    """Process config hash."""
     payload = json.dumps(config_snapshot(config), sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]

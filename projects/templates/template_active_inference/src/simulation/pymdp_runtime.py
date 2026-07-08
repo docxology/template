@@ -98,6 +98,7 @@ def construct_agent_with_diagnostics(
 
 
 def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Build runtime diagnostics."""
     known_count = sum(int(record.get("known_warning_count", 0) or 0) for record in records)
     unexpected_count = sum(int(record.get("unexpected_warning_count", 0) or 0) for record in records)
     versions = records[-1].get("versions", {}) if records else {}
@@ -188,6 +189,7 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def write_runtime_diagnostics(project_root: Path, records: list[dict[str, Any]]) -> Path:
+    """Write runtime diagnostics to the output path."""
     root = project_root.resolve()
     path = root / "output" / "reports" / "pymdp_runtime_diagnostics.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -199,6 +201,7 @@ def write_runtime_diagnostics(project_root: Path, records: list[dict[str, Any]])
 
 
 def validate_runtime_diagnostics(project_root: Path) -> list[str]:
+    """Validate runtime diagnostics."""
     root = project_root.resolve()
     path = root / "output" / "reports" / "pymdp_runtime_diagnostics.json"
     if not path.is_file():

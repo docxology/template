@@ -11,6 +11,8 @@ from manuscript.variables.io import count_jsonl_lines, load_config, load_json
 
 @dataclass
 class ExtractContext:
+    """Data container for ExtractContext."""
+
     output_dir: Path
     data_dir: Path
     project_root: Path
@@ -19,6 +21,7 @@ class ExtractContext:
 
     @classmethod
     def from_output_dir(cls, output_dir: Path, cfg: dict[str, Any] | None = None) -> ExtractContext:
+        """Process from output dir."""
         data_dir = output_dir / "data"
         project_root = output_dir.parent
         config = cfg if cfg is not None else load_config(project_root)
@@ -34,6 +37,7 @@ class ExtractContext:
         )
 
     def load_json(self, name: str) -> dict[str, Any]:
+        """Load json from a file."""
         payload = load_json(self.data_dir / name)
         if payload.get("_error") is not None:
             payload = load_json(self.output_dir / name)
@@ -42,6 +46,7 @@ class ExtractContext:
         return payload
 
     def load_json_raw(self, name: str) -> Any:
+        """Load json raw from a file."""
         from manuscript.variables.io import load_pipeline_json_raw
 
         return load_pipeline_json_raw(self.data_dir, self.output_dir, name)

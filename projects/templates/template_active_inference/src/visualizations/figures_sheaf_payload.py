@@ -11,6 +11,8 @@ from manuscript.sheaf.report import CoverageConfig, load_coverage_config
 
 @dataclass(frozen=True)
 class HeatmapPayload:
+    """Data container for HeatmapPayload."""
+
     track_ids: list[str]
     y_labels: list[str]
     grid: list[list[float]]
@@ -20,6 +22,7 @@ class HeatmapPayload:
 
 
 def coverage_heatmap_payload(project_root: Path) -> HeatmapPayload | None:
+    """Process coverage heatmap payload."""
     root = project_root.resolve()
     matrix_path = root / "output" / "data" / "sheaf_coverage_matrix.json"
     if not matrix_path.is_file():

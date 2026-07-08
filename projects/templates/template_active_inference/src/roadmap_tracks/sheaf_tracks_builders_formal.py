@@ -11,6 +11,7 @@ from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, CANONICAL_
 
 
 def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
+    """Build counterexample matrix."""
     _ = project_root
     rows = [
         ("missing_sheaf_track_producer", "provenance", "validate_manuscript.canonical_sheaf_tracks_bound"),
@@ -84,6 +85,7 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
 
 
 def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
+    """Build model checking witnesses."""
     root = project_root.resolve()
     from roadmap_tracks.formal_interop import build_model_checking_witnesses as build_base_model
 
@@ -141,6 +143,7 @@ def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
 
 
 def build_interop_roundtrip_report(project_root: Path) -> dict[str, Any]:
+    """Build interop roundtrip report."""
     root = project_root.resolve()
     sources = {
         "gnn_json_ontology": _load_json(root / CANONICAL_ARTIFACTS["interop"]),
@@ -176,6 +179,7 @@ def build_interop_roundtrip_report(project_root: Path) -> dict[str, Any]:
 
 
 def build_adversarial_audit(project_root: Path) -> dict[str, Any]:
+    """Build adversarial audit."""
     counter = build_counterexample_matrix(project_root)
     rows = [
         {

@@ -13,6 +13,8 @@ from .models import CoverageMatrix, ImradBlock, SheafManifest
 
 @dataclass(frozen=True)
 class HeatmapConfig:
+    """Data container for HeatmapConfig."""
+
     indent_prefix: str = "  "
     group_separator: bool = True
     row_height: float = 0.42
@@ -22,6 +24,8 @@ class HeatmapConfig:
 
 @dataclass(frozen=True)
 class CoverageColorConfig:
+    """Data container for CoverageColorConfig."""
+
     present: str = "#111827"
     absent: str = "#ffffff"
     missing: str = "#94a3b8"
@@ -29,6 +33,8 @@ class CoverageColorConfig:
 
 @dataclass(frozen=True)
 class ReportConfig:
+    """Data container for ReportConfig."""
+
     title: str = "Sheaf Track Coverage"
     show_imrad_headers: bool = True
     show_summary_stats: bool = True
@@ -38,6 +44,8 @@ class ReportConfig:
 
 @dataclass(frozen=True)
 class CoverageConfig:
+    """Data container for CoverageConfig."""
+
     report: ReportConfig = field(default_factory=ReportConfig)
     heatmap: HeatmapConfig = field(default_factory=HeatmapConfig)
     colors: CoverageColorConfig = field(default_factory=CoverageColorConfig)
@@ -45,6 +53,8 @@ class CoverageConfig:
 
 @dataclass(frozen=True)
 class CoverageReport:
+    """Data container for CoverageReport."""
+
     matrix: CoverageMatrix
     manifest: SheafManifest
     config: CoverageConfig
@@ -55,6 +65,7 @@ class CoverageReport:
 
 
 def load_coverage_config(path: Path, *, project_root: Path | None = None) -> CoverageConfig:
+    """Load coverage config from a file."""
     if not path.is_file():
         base = CoverageConfig()
     else:
@@ -102,6 +113,7 @@ def load_coverage_config(path: Path, *, project_root: Path | None = None) -> Cov
 
 
 def default_coverage_config_path(project_root: Path) -> Path:
+    """Process default coverage config path."""
     return project_root.resolve() / "manuscript" / "sheaf" / "coverage.yaml"
 
 
@@ -110,6 +122,7 @@ def build_coverage_report(
     manifest: SheafManifest,
     config: CoverageConfig,
 ) -> CoverageReport:
+    """Build coverage report."""
     total_bound = total_present = total_missing = 0
     row_stats: list[tuple[str, int, int, int]] = []
     for row in matrix.sections:
@@ -141,6 +154,7 @@ def _imrad_heading(imrad: ImradBlock) -> str:
 
 
 def render_report_markdown(report: CoverageReport, *, project_root: Path) -> str:
+    """Render report markdown."""
     cfg = report.config.report
     lines = [f"# {cfg.title} {{#sec:sheaf_coverage}}", ""]
     lines.append(
@@ -193,6 +207,7 @@ def render_report_markdown(report: CoverageReport, *, project_root: Path) -> str
 
 
 def write_coverage_page(project_root: Path) -> Path:
+    """Write coverage page to the output path."""
     from manuscript.sheaf.coverage import load_sheaf_coverage_context
 
     root = project_root.resolve()

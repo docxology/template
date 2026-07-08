@@ -8,6 +8,7 @@ FALSE_STRINGS = frozenset({"false", "no", "off", "0"})
 
 
 def coerce_bool(value: Any, *, default: bool, field_name: str) -> bool:
+    """Process coerce bool."""
     if value is None:
         return default
     if isinstance(value, bool):

@@ -109,6 +109,7 @@ def write_manuscript_staleness_report(project_root: Path) -> Path:
 
 
 def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
+    """Write integration audit artifacts to the output path."""
     root = project_root.resolve()
     paths = {
         "producer_completeness": _write_json(
@@ -196,6 +197,7 @@ def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
 
 
 def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
+    """Validate integration audit artifacts."""
     root = project_root.resolve()
     issues: list[str] = []
     producer = _load_json(root / "output" / "reports" / "producer_completeness.json")

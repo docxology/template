@@ -126,11 +126,15 @@ DEFAULT_NARRATIVE_MOVES: dict[str, tuple[str, ...]] = {
 
 
 class MadlibConfigError(ValueError):
+    """Data container for MadlibConfigError."""
+
     pass
 
 
 @dataclass(frozen=True)
 class SlotSpec:
+    """Data container for SlotSpec."""
+
     name: str
     category: str
     section: str
@@ -139,6 +143,8 @@ class SlotSpec:
 
 @dataclass(frozen=True)
 class MethodStep:
+    """Data container for MethodStep."""
+
     name: str
     action: str
     evidence: str
@@ -147,6 +153,8 @@ class MethodStep:
 
 @dataclass(frozen=True)
 class EvaluationCriterion:
+    """Data container for EvaluationCriterion."""
+
     name: str
     target: str
     evidence: str
@@ -155,6 +163,8 @@ class EvaluationCriterion:
 
 @dataclass(frozen=True)
 class FailureMode:
+    """Data container for FailureMode."""
+
     name: str
     risk: str
     detection: str
@@ -163,6 +173,8 @@ class FailureMode:
 
 @dataclass(frozen=True)
 class DesignPrinciple:
+    """Data container for DesignPrinciple."""
+
     name: str
     rationale: str
     manuscript_effect: str
@@ -170,6 +182,8 @@ class DesignPrinciple:
 
 @dataclass(frozen=True)
 class PipelinePhase:
+    """Data container for PipelinePhase."""
+
     name: str
     input_artifact: str
     transformation: str
@@ -179,6 +193,8 @@ class PipelinePhase:
 
 @dataclass(frozen=True)
 class QualityProbe:
+    """Data container for QualityProbe."""
+
     name: str
     question: str
     passing_signal: str
@@ -187,6 +203,8 @@ class QualityProbe:
 
 @dataclass(frozen=True)
 class AuthoringObligation:
+    """Data container for AuthoringObligation."""
+
     name: str
     obligation: str
     review_surface: str
@@ -194,6 +212,8 @@ class AuthoringObligation:
 
 @dataclass(frozen=True)
 class VisualizationConfig:
+    """Data container for VisualizationConfig."""
+
     enabled: bool = True
     configured_field_matrix: bool = True
     section_configuration_heatmap: bool = True
@@ -205,6 +225,7 @@ class VisualizationConfig:
 
     @property
     def enabled_flags(self) -> tuple[str, ...]:
+        """Process enabled flags."""
         if not self.enabled:
             return ()
         return tuple(field for field in VISUALIZATION_FIELDS if field != "enabled" and bool(getattr(self, field)))
@@ -212,6 +233,8 @@ class VisualizationConfig:
 
 @dataclass(frozen=True)
 class MadlibConfig:
+    """Data container for MadlibConfig."""
+
     title: str
     seed: int
     composition_depth: str
@@ -237,10 +260,12 @@ class MadlibConfig:
 
     @property
     def enabled_sections(self) -> tuple[str, ...]:
+        """Process enabled sections."""
         return tuple(section for section in SECTION_KEYS if self.section_conditions.get(section, True))
 
 
 def load_madlib_config(project_root: Path | str) -> MadlibConfig:
+    """Load madlib config from a file."""
     root = Path(project_root)
     config_path = root / "manuscript" / "config.yaml"
     if not config_path.is_file():

@@ -42,6 +42,7 @@ def _entropy_stats(trace_steps: list[dict[str, Any]]) -> dict[str, float]:
 
 
 def summarize_si_trace(trace: Mapping[str, Any], summary: Mapping[str, Any]) -> dict[str, Any]:
+    """Process summarize si trace."""
     steps = list(trace.get("steps") or [])
     actions = list(summary.get("actions") or [step.get("action") for step in steps if "action" in step])
     observations = list(summary.get("observations") or [step.get("obs") for step in steps if "obs" in step])
@@ -71,6 +72,7 @@ def summarize_si_trace(trace: Mapping[str, Any], summary: Mapping[str, Any]) -> 
 
 
 def load_si_artifacts(project_root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Load si artifacts from a file."""
     root = project_root.resolve()
     summary_path = root / "output" / "data" / "si_tmaze_summary.json"
     trace_path = root / "output" / "data" / "si_tmaze_trace.json"

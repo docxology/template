@@ -12,6 +12,7 @@ from .tokens import TokenPlan
 
 
 def build_imrad_sections(config: MadlibConfig, token_plan: TokenPlan) -> dict[str, str]:
+    """Build imrad sections."""
     sections = {
         "ABSTRACT_BODY": _abstract(config, token_plan),
         "INTRODUCTION_BODY": _introduction(config, token_plan),
@@ -32,6 +33,7 @@ def build_imrad_sections(config: MadlibConfig, token_plan: TokenPlan) -> dict[st
 
 
 def section_title_variables(config: MadlibConfig) -> dict[str, str]:
+    """Process section title variables."""
     return {f"TITLE_{section.upper()}": title for section, title in config.section_titles.items()}
 
 

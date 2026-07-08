@@ -7,6 +7,7 @@ from manuscript.variables.formatters import humanize_list, latex_number
 
 
 def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:
+    """Process extract config tokens."""
     variables: dict[str, str] = {}
     search_cfg = ctx.cfg.get("project_config", {}).get("search", {})
     term = str(search_cfg.get("term") or "the target topic")

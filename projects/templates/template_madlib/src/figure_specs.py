@@ -38,6 +38,8 @@ FigureWriter = Callable[[FigureRun, Path], Path]
 
 @dataclass(frozen=True)
 class ConditionalFigureSpec:
+    """Data container for ConditionalFigureSpec."""
+
     flag: str
     artifact_key: str
     filename: str
@@ -133,12 +135,14 @@ _FIGURE_WRITERS: dict[str, FigureWriter] = {
 
 
 def visualization_enabled(config: MadlibConfig, flag: str) -> bool:
+    """Process visualization enabled."""
     if not config.visualizations.enabled:
         return False
     return bool(getattr(config.visualizations, flag))
 
 
 def write_conditional_figures(run: FigureRun, artifact_paths: dict[str, Path]) -> dict[str, dict[str, str]]:
+    """Write conditional figures to the output path."""
     registry: dict[str, dict[str, str]] = {}
     for spec in CONDITIONAL_FIGURE_SPECS:
         if not visualization_enabled(run.config, spec.flag):
@@ -155,10 +159,12 @@ def write_conditional_figures(run: FigureRun, artifact_paths: dict[str, Path]) -
 
 
 def specs_for_markdown_group(group: str) -> tuple[ConditionalFigureSpec, ...]:
+    """Process specs for markdown group."""
     return tuple(spec for spec in CONDITIONAL_FIGURE_SPECS if spec.markdown_group == group)
 
 
 def build_group_figure_markdown(config: MadlibConfig, group: str, *, disabled_message: str) -> str:
+    """Build group figure markdown."""
     if group == "configuration" and not config.visualizations.enabled:
         return "Configured-field visualizations are disabled by `madlib.visualizations.enabled`."
     if group == "methods":

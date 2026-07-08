@@ -22,6 +22,7 @@ def plot_word_cloud(
     max_words: int = 100,
     title: str | None = None,
 ) -> Path:
+    """Process plot word cloud."""
     from wordcloud import WordCloud
 
     output_path = Path(output_path)

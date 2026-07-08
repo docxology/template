@@ -5,6 +5,7 @@ from .figure_specs import build_group_figure_markdown
 
 
 def build_methods_figure_markdown(config: MadlibConfig) -> str:
+    """Build methods figure markdown."""
     return build_group_figure_markdown(
         config,
         "methods",
@@ -13,10 +14,12 @@ def build_methods_figure_markdown(config: MadlibConfig) -> str:
 
 
 def build_results_figure_markdown(config: MadlibConfig) -> str:
+    """Build results figure markdown."""
     return build_group_figure_markdown(config, "results", disabled_message="")
 
 
 def build_configuration_figure_markdown(config: MadlibConfig) -> str:
+    """Build configuration figure markdown."""
     return build_group_figure_markdown(
         config,
         "configuration",
@@ -25,6 +28,7 @@ def build_configuration_figure_markdown(config: MadlibConfig) -> str:
 
 
 def build_evaluation_figure_markdown(config: MadlibConfig) -> str:
+    """Build evaluation figure markdown."""
     return build_group_figure_markdown(
         config,
         "evaluation",

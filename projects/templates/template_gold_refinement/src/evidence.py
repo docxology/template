@@ -164,6 +164,7 @@ class EvidenceEntry:
     notes: str = ""
 
     def as_dict(self) -> dict[str, str | bool]:
+        """Process as dict."""
         return asdict(self)
 
 
@@ -178,15 +179,18 @@ class EvidenceRegistry:
 
     @property
     def support_rate(self) -> float:
+        """Process support rate."""
         if self.total_claims == 0:
             return 0.0
         return self.supported_claims / self.total_claims
 
     @property
     def is_passing(self) -> bool:
+        """Check whether passing."""
         return self.unsupported_claims == 0 and self.total_claims > 0
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "total_claims": self.total_claims,
             "supported_claims": self.supported_claims,
@@ -285,6 +289,7 @@ def check_claim_ledger_alignment(
     config: GoldRefinementConfig,
     ledger_path: Path,
 ) -> list[str]:
+    """Check claim ledger alignment."""
     mismatches: list[str] = []
 
     if not ledger_path.exists():

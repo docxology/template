@@ -12,6 +12,7 @@ from roadmap_tracks.sheaf_tracks_registry import CANONICAL_SCHEMA
 
 
 def build_sensitivity_sweep(project_root: Path) -> dict[str, Any]:
+    """Build sensitivity sweep."""
     root = project_root.resolve()
     from roadmap_tracks.toy_sweep import build_sensitivity_sweep as build_base_sensitivity
 
@@ -84,6 +85,7 @@ def build_sensitivity_sweep(project_root: Path) -> dict[str, Any]:
 
 
 def build_uncertainty_summary(project_root: Path) -> dict[str, Any]:
+    """Build uncertainty summary."""
     root = project_root.resolve()
     from roadmap_tracks.toy_sweep import build_uncertainty_summary as build_base_uncertainty
 

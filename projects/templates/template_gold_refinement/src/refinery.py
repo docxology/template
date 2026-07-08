@@ -47,14 +47,17 @@ class RefinementStage:
 
     @property
     def karat_grade(self) -> KaratGrade:
+        """Process karat grade."""
         return karat_for_purity(self.output_purity)
 
     @property
     def purity_gain(self) -> float:
+        """Process purity gain."""
         return self.output_purity - self.input_purity
 
     @property
     def label(self) -> str:
+        """Process label."""
         return f"{self.order}. {self.name} ({self.karat_grade.label})"
 
 
@@ -114,10 +117,12 @@ class RefineryResult:
 
     @property
     def stage_count(self) -> int:
+        """Process stage count."""
         return len(self.stages)
 
     @property
     def stage_labels(self) -> tuple[str, ...]:
+        """Process stage labels."""
         return tuple(s.label for s in self.stages)
 
     @property
@@ -129,6 +134,7 @@ class RefineryResult:
 
     @property
     def is_nine_nines_certified(self) -> bool:
+        """Check whether nine nines certified."""
         return bool(self.final_purity >= NINE_NINES_PURITY)
 
 

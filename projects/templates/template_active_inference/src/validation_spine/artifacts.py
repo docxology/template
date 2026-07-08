@@ -425,6 +425,7 @@ def write_validation_spine_artifacts(project_root: Path) -> dict[str, Path]:
 
 
 def validate_artifact_provenance(project_root: Path) -> list[str]:
+    """Validate artifact provenance."""
     root = project_root.resolve()
     path = root / "output" / "data" / "artifact_provenance.json"
     if not path.is_file():
@@ -471,6 +472,7 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
 
 
 def validate_reproducibility_replay(project_root: Path, *, rebuild: bool = False) -> list[str]:
+    """Validate reproducibility replay."""
     root = project_root.resolve()
     path = root / "output" / "reports" / "reproducibility_replay.json"
     if not path.is_file():
@@ -522,6 +524,7 @@ def validate_reproducibility_replay(project_root: Path, *, rebuild: bool = False
 
 
 def validate_counterexample_matrix(project_root: Path) -> list[str]:
+    """Validate counterexample matrix."""
     root = project_root.resolve()
     path = root / "output" / "reports" / "counterexample_matrix.json"
     if not path.is_file():

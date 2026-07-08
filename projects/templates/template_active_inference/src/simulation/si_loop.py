@@ -27,6 +27,7 @@ from simulation.tmaze_model import build_tmaze_generative_model, spec_from_confi
 
 
 def pymdp_available() -> bool:
+    """Process pymdp available."""
     try:
         import pymdp  # noqa: F401
 
@@ -37,6 +38,8 @@ def pymdp_available() -> bool:
 
 @dataclass(frozen=True)
 class SIRunResult:
+    """Data container for SIRunResult."""
+
     steps: int
     policy_len: int
     num_policies: int
@@ -52,6 +55,7 @@ class SIRunResult:
 
 
 def sample_next_state(rng: np.random.Generator, b: np.ndarray, state: int, action: int) -> int:
+    """Process sample next state."""
     probs = np.asarray(b[:, state, action], dtype=np.float64)
     probs = np.clip(probs, 0.0, None)
     if probs.sum() <= 0:
@@ -61,6 +65,7 @@ def sample_next_state(rng: np.random.Generator, b: np.ndarray, state: int, actio
 
 
 def sample_observation(rng: np.random.Generator, a: np.ndarray, state: int) -> int:
+    """Process sample observation."""
     probs = np.asarray(a[:, state], dtype=np.float64)
     probs = np.clip(probs, 0.0, None)
     probs /= probs.sum()

@@ -14,6 +14,7 @@ def _get_project_root() -> Path:
 
 
 def cmd_enumerate(args: argparse.Namespace) -> None:
+    """Process cmd enumerate."""
     from .grammar import load_grammar
     from .expand import enumerate_all
 
@@ -23,6 +24,7 @@ def cmd_enumerate(args: argparse.Namespace) -> None:
 
 
 def cmd_expand(args: argparse.Namespace) -> None:
+    """Process cmd expand."""
     from .grammar import load_grammar
     from .expand import expand, write_spec
 
@@ -37,6 +39,7 @@ def cmd_expand(args: argparse.Namespace) -> None:
 
 
 def cmd_sample(args: argparse.Namespace) -> None:
+    """Process cmd sample."""
     from .grammar import load_grammar
     from .expand import sample
 
@@ -47,6 +50,7 @@ def cmd_sample(args: argparse.Namespace) -> None:
 
 
 def cmd_materialize(args: argparse.Namespace) -> None:
+    """Process cmd materialize."""
     from .grammar import load_grammar
     from .expand import expand
     from .materialize import materialize
@@ -66,6 +70,7 @@ def cmd_materialize(args: argparse.Namespace) -> None:
 
 
 def cmd_verify(args: argparse.Namespace) -> None:
+    """Process cmd verify."""
     from .verify import verify_child_full
 
     report = verify_child_full(args.child_root)
@@ -76,6 +81,7 @@ def cmd_verify(args: argparse.Namespace) -> None:
 
 
 def cmd_honesty(args: argparse.Namespace) -> None:
+    """Process cmd honesty."""
     from .honesty import verify_honesty
 
     project_root = args.project_root or _get_project_root()
@@ -95,6 +101,7 @@ def cmd_honesty(args: argparse.Namespace) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build parser."""
     parser = argparse.ArgumentParser(
         prog="autopoiesis",
         description="Autopoietic project generator CLI",
@@ -131,6 +138,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
 

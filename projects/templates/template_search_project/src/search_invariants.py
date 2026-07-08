@@ -208,6 +208,7 @@ def all_invariants(
     year_floor: float = 0.7,
     min_per_keyword: int = 1,
 ) -> list[InvariantResult]:
+    """Process all invariants."""
     out: list[InvariantResult] = []
     out.extend(schema_invariants(papers))
     out.extend(uniqueness_invariants(papers))

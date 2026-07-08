@@ -9,6 +9,7 @@ from .._runtime import project_root as _project_root
 
 
 def project_root() -> Path:
+    """Process project root."""
     return _project_root("src.figures")
 
 

@@ -45,6 +45,7 @@ def _load_invariant_blocks(project_root: Path) -> list[tuple[str, str, bool]]:
 
 
 def figure_invariant_dashboard(project_root: Path) -> Path:
+    """Process figure invariant dashboard."""
     root = project_root.resolve()
     rows = _load_invariant_blocks(root)
     if not rows:
@@ -91,6 +92,7 @@ def figure_invariant_dashboard(project_root: Path) -> Path:
 
 
 def figure_tmaze_schematic(project_root: Path) -> Path:
+    """Process figure tmaze schematic."""
     root = project_root.resolve()
     spec = TMazeSpec()
     with styled_figure(root, "tmaze_schematic") as (style, out):
@@ -172,6 +174,7 @@ def _load_sheaf_track_labels(project_root: Path) -> list[str]:
 
 
 def figure_multi_track_architecture(project_root: Path) -> Path:
+    """Process figure multi track architecture."""
     root = project_root.resolve()
     counts = structural_counts(root)
     pipeline_labels = _load_pipeline_track_labels(root)
@@ -183,9 +186,11 @@ def figure_multi_track_architecture(project_root: Path) -> Path:
         ax.axis("off")
 
         def chunks(items: list[str], size: int) -> list[list[str]]:
+            """Process chunks."""
             return [items[index : index + size] for index in range(0, len(items), size)]
 
         def draw_group_column(x: float, title: str, groups: list[tuple[str, list[str]]], width: float = 2.55) -> None:
+            """Process draw group column."""
             ax.text(
                 x + width / 2,
                 6.45,
@@ -450,6 +455,7 @@ def figure_artifact_contract_map(project_root: Path) -> Path:
 
 
 def figure_lean_boundary_status(project_root: Path) -> Path:
+    """Process figure lean boundary status."""
     root = project_root.resolve()
     rows = load_lean_boundary_rows(root)
     if not rows:
@@ -481,6 +487,7 @@ def figure_lean_boundary_status(project_root: Path) -> Path:
 
 
 def figure_gnn_ontology_concordance(project_root: Path) -> Path:
+    """Process figure gnn ontology concordance."""
     root = project_root.resolve()
     gnn_path = root / "gnn" / "bernoulli_toy.gnn.md"
     ontology_path = root / "manuscript" / "sections" / "imrad" / "methods_analytical" / "ontology.yaml"

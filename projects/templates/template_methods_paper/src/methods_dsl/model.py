@@ -103,6 +103,7 @@ class Method:
             raise MethodModelError(f"method {self.name!r} must declare at least one step")
 
     def step_by_id(self, step_id: int) -> Step:
+        """Process step by id."""
         for step in self.steps:
             if step.step_id == step_id:
                 return step

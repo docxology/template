@@ -49,6 +49,7 @@ class Spec:
     primitive_domain: str
 
     def to_dict(self) -> dict:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "schema_version": self.schema_version,
             "seed": self.seed,
@@ -59,10 +60,12 @@ class Spec:
         }
 
     def to_json(self) -> str:
+        """Serialize this object to a JSON string."""
         return json.dumps(self.to_dict(), indent=2, sort_keys=True)
 
     @property
     def spec_hash(self) -> str:
+        """Process spec hash."""
         canonical = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(canonical.encode()).hexdigest()[:16]
 

@@ -118,6 +118,7 @@ def _blocked_scope_negated(text: str, needle: str) -> bool:
 
 
 def build_artifact_diffoscope(project_root: Path) -> dict[str, Any]:
+    """Build artifact diffoscope."""
     root = project_root.resolve()
     provenance = _load_json(root / "output" / "data" / "artifact_provenance.json")
     rows = []
@@ -148,6 +149,7 @@ def build_artifact_diffoscope(project_root: Path) -> dict[str, Any]:
 
 
 def build_artifact_license_audit(project_root: Path) -> dict[str, Any]:
+    """Build artifact license audit."""
     root = project_root.resolve()
     provenance = _load_json(root / "output" / "data" / "artifact_provenance.json")
     project_license = "MIT"
@@ -175,6 +177,7 @@ def build_artifact_license_audit(project_root: Path) -> dict[str, Any]:
 
 
 def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
+    """Build release notes evidence."""
     root = project_root.resolve()
     release_bundle = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
     semantic = _load_json(root / "output" / "data" / "sheaf_gluing_certificate.json")
@@ -326,6 +329,7 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
 
 
 def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
+    """Build manuscript evidence tables."""
     root = project_root.resolve()
     claims = build_claim_evidence_audit(root)
     graph = build_integration_dependency_graph(root)
@@ -476,12 +480,14 @@ def build_manuscript_evidence_tables(project_root: Path) -> dict[str, Any]:
 
 
 def build_adversarial_audit(project_root: Path) -> dict[str, Any]:
+    """Build adversarial audit."""
     from roadmap_tracks.sheaf_tracks import build_adversarial_audit as build_canonical_adversarial_audit
 
     return dict(build_canonical_adversarial_audit(project_root))
 
 
 def build_integration_semantic_snapshot(project_root: Path) -> dict[str, Any]:
+    """Build integration semantic snapshot."""
     root = project_root.resolve()
     toy = _load_json(root / "output" / "data" / "sensitivity_sweep.json")
     assumptions = _load_json(root / "output" / "data" / "analytical_assumption_index.json")

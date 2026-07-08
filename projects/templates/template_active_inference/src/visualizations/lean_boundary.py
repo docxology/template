@@ -9,6 +9,8 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class LeanBoundaryRow:
+    """Data container for LeanBoundaryRow."""
+
     module: str
     name: str
     kind: str
@@ -54,6 +56,7 @@ def _scan_lean_file(path: Path, lean_root: Path) -> list[LeanBoundaryRow]:
 
 
 def load_lean_boundary_rows(project_root: Path) -> list[LeanBoundaryRow]:
+    """Load lean boundary rows from a file."""
     lean_root = project_root.resolve() / "lean"
     if not lean_root.is_dir():
         return []

@@ -309,6 +309,7 @@ def build_artifact_contract_index(project_root: Path) -> dict[str, Any]:
 
 
 def build_track_improvement_scope(project_root: Path) -> dict[str, Any]:
+    """Build track improvement scope."""
     root = project_root.resolve()
     registry = _registry_tracks(root)
     bound = _bound_tracks(root)
@@ -404,6 +405,7 @@ def build_validation_dependency_graph(
     provenance: dict[str, Any] | None = None,
     provenance_context: _ProvenanceContext | None = None,
 ) -> dict[str, Any]:
+    """Build validation dependency graph."""
     root = project_root.resolve()
     producers, consumers, gates = _artifact_maps()
     configured = _analysis_scripts(root)

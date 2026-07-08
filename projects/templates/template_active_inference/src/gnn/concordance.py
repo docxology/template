@@ -63,4 +63,5 @@ def concordance_holds(
     symbol_map: dict[str, str] | None = None,
     expected_terms: dict[str, str] | None = None,
 ) -> bool:
+    """Process concordance holds."""
     return not parity_gaps(model, symbol_map, expected_terms)

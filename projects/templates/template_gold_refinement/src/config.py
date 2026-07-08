@@ -180,14 +180,17 @@ class GoldRefinementConfig:
 
     @property
     def enabled_sections(self) -> tuple[str, ...]:
+        """Process enabled sections."""
         return tuple(k for k, v in self.section_conditions.items() if v)
 
     @property
     def disabled_sections(self) -> tuple[str, ...]:
+        """Process disabled sections."""
         return tuple(k for k, v in self.section_conditions.items() if not v)
 
     @property
     def total_token_count(self) -> int:
+        """Process total token count."""
         return sum(s.count for s in self.slots)
 
 

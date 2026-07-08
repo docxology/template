@@ -347,6 +347,7 @@ def run_literature_search(
     )
 
     def run_arxiv() -> None:
+        """Run arxiv."""
         if args.skip_arxiv:
             return
         arxiv_search = _arxiv_search_fn(arxiv_base_url, fast=fast_api)
@@ -370,6 +371,7 @@ def run_literature_search(
         )
 
     def run_semantic_scholar() -> None:
+        """Run semantic scholar."""
         if args.skip_s2:
             return
         s2_search = _semantic_scholar_search_fn(semantic_scholar_base_url, fast=fast_api)
@@ -385,6 +387,7 @@ def run_literature_search(
             sources_searched.append(result)
 
     def run_openalex() -> None:
+        """Run openalex."""
         if args.skip_openalex:
             return
         openalex_search = _openalex_search_fn(openalex_base_url, fast=fast_api)
@@ -400,6 +403,7 @@ def run_literature_search(
             sources_searched.append(result)
 
     def run_crossref() -> None:
+        """Run crossref."""
         crossref_on = engines.get("crossref", True) and not getattr(args, "skip_crossref", False)
         if not crossref_on or (crossref_base_url is None and fast_api):
             return
@@ -409,6 +413,7 @@ def run_literature_search(
             sources_searched.append(result)
 
     def run_pubmed() -> None:
+        """Run pubmed."""
         pubmed_on = engines.get("pubmed", True) and not getattr(args, "skip_pubmed", False)
         if not pubmed_on or (pubmed_esearch_url is None and fast_api):
             return
@@ -418,6 +423,7 @@ def run_literature_search(
             sources_searched.append(result)
 
     def run_sovietrxiv() -> None:
+        """Run sovietrxiv."""
         sovietrxiv_cfg = cfg.get("sovietrxiv", {}) if isinstance(cfg, dict) else {}
         if not engines.get("sovietrxiv", True) or getattr(args, "skip_sovietrxiv", False):
             return
@@ -436,6 +442,7 @@ def run_literature_search(
             sources_searched.append(result)
 
     def run_chinarxiv() -> None:
+        """Run chinarxiv."""
         chinarxiv_cfg = cfg.get("chinarxiv", {}) if isinstance(cfg, dict) else {}
         if not engines.get("chinarxiv", True) or getattr(args, "skip_chinarxiv", False):
             return

@@ -40,6 +40,7 @@ class ManuscriptVariables:
     deep_unique_papers: str
 
     def as_dict(self) -> dict[str, object]:
+        """Process as dict."""
         return asdict(self)
 
     def as_uppercase_keys(self) -> dict[str, str]:

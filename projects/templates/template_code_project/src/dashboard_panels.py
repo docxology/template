@@ -12,6 +12,7 @@ REPO_ROOT = PROJECT_ROOT.parent.parent
 
 
 def to_dashboard_invariant(r) -> Invariant:
+    """Convert this object to dashboard invariant."""
     return Invariant(
         name=r.name,
         actual=r.actual,
@@ -23,6 +24,7 @@ def to_dashboard_invariant(r) -> Invariant:
 
 
 def build_dashboard(args, payload: dict) -> InteractiveDashboard:
+    """Build dashboard."""
     d = InteractiveDashboard(
         title="Optimization Exemplar — Interactive Convergence Suite",
         subtitle=(

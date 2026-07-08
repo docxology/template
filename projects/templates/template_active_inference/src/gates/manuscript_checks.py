@@ -28,6 +28,7 @@ def _duplicate_track_markers(manuscript_dir: Path) -> list[str]:
 
 
 def validate_manuscript(project_root: Path) -> dict[str, bool]:
+    """Validate manuscript."""
     root = project_root.resolve()
     composed = list((root / "manuscript").glob("[0-9][0-9]_*.md"))
     manifest_path = root / "manuscript" / "sheaf" / "manifest.yaml"

@@ -94,6 +94,7 @@ def combine_readiness_reports(
     readiness_post: AutoResearchReport,
     project_name: str,
 ) -> AutoResearchReport:
+    """Process combine readiness reports."""
     issues: list[AutoResearchIssue] = [*readiness_pre.issues, *readiness_post.issues]
     valid = readiness_pre.valid and readiness_post.valid
     plan = readiness_post.plan or readiness_pre.plan

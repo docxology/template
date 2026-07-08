@@ -16,6 +16,7 @@ from simulation.statistics import load_si_artifacts, summarize_si_trace
 
 
 def write_parameter_sweep(project_root: Path) -> Path:
+    """Write parameter sweep to the output path."""
     root = project_root.resolve()
     out = root / "output" / "data" / "parameter_sweep.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -40,6 +41,7 @@ def write_invariants_report(
     project_root: Path,
     results: dict[str, bool] | None = None,
 ) -> Path:
+    """Write invariants report to the output path."""
     root = project_root.resolve()
     out = root / "output" / "reports" / "invariants.json"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -51,11 +53,13 @@ def write_invariants_report(
 
 
 def summarize_sweep(csv_path: Path) -> dict[str, Any]:
+    """Process summarize sweep."""
     summary: dict[str, Any] = summarize_sweep_file(csv_path)
     return summary
 
 
 def write_analysis_statistics(project_root: Path) -> Path:
+    """Write analysis statistics to the output path."""
     root = project_root.resolve()
     sweep_path = root / "output" / "data" / "parameter_sweep.csv"
     summary, trace = load_si_artifacts(root)
@@ -73,6 +77,7 @@ def write_analysis_statistics(project_root: Path) -> Path:
 
 
 def run_analysis(project_root: Path) -> dict[str, Path]:
+    """Run analysis."""
     inv_results = run_invariants()
     return {
         "parameter_sweep": write_parameter_sweep(project_root),

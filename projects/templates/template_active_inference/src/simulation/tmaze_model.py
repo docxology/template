@@ -12,6 +12,8 @@ from .pymdp_config import PymdpConfig, TMazeConfig
 
 @dataclass(frozen=True)
 class TMazeSpec:
+    """Data container for TMazeSpec."""
+
     num_states: int = 2
     num_obs: int = 2
     num_actions: int = 2
@@ -22,6 +24,7 @@ class TMazeSpec:
 
 
 def spec_from_config(config: PymdpConfig) -> TMazeSpec:
+    """Process spec from config."""
     tmaze: TMazeConfig = config.tmaze
     return TMazeSpec(
         num_states=tmaze.num_states,

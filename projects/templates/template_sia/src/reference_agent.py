@@ -54,6 +54,7 @@ def run_agent(dataset_dir: Path, working_dir: Path, *, threshold: float = 0.5) -
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset_dir", type=Path, required=True)
     parser.add_argument("--working_dir", type=Path, required=True)

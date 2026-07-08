@@ -73,6 +73,7 @@ class LiteratureRunArtifacts:
 
     @property
     def papers(self) -> list[Paper]:
+        """Process papers."""
         return list(self.result.papers)
 
 

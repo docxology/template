@@ -273,6 +273,7 @@ def draw_tetrahedron(
     fill: str,
     accent: str,
 ) -> None:
+    """Process draw tetrahedron."""
     cx, cy = center
     fill_rgb = _hex(fill)
     accent_rgb = _hex(accent)
@@ -296,6 +297,7 @@ def draw_cube(
     fill: str,
     accent: str,
 ) -> None:
+    """Process draw cube."""
     cx, cy = center
     fill_rgb = _hex(fill)
     accent_rgb = _hex(accent)
@@ -681,6 +683,7 @@ def _overlay_text(image: Image.Image, page: PageSpec) -> None:
 
 
 def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | str) -> Path:
+    """Render page image."""
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     width, height = spec.page_width, spec.page_height

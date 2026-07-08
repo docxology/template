@@ -29,6 +29,7 @@ class TokenChoice:
     source_key: str
 
     def as_dict(self) -> dict[str, object]:
+        """Process as dict."""
         return asdict(self)
 
 
@@ -41,14 +42,17 @@ class TokenPlan:
 
     @property
     def category_counts(self) -> dict[str, int]:
+        """Process category counts."""
         return dict(Counter(choice.category for choice in self.choices))
 
     @property
     def section_counts(self) -> dict[str, int]:
+        """Process section counts."""
         return dict(Counter(choice.section for choice in self.choices))
 
     @property
     def provenance(self) -> dict[str, dict[str, object]]:
+        """Process provenance."""
         return {
             choice.variable_name: {
                 "category": choice.category,
@@ -60,12 +64,15 @@ class TokenPlan:
         }
 
     def values_for_category(self, category: str) -> tuple[str, ...]:
+        """Process values for category."""
         return tuple(c.value for c in self.choices if c.category == category)
 
     def values_for_section(self, section: str) -> tuple[str, ...]:
+        """Process values for section."""
         return tuple(c.value for c in self.choices if c.section == section)
 
     def first_value(self, category: str, default: str) -> str:
+        """Process first value."""
         vals = self.values_for_category(category)
         return vals[0] if vals else default
 

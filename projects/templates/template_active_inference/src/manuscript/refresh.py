@@ -8,6 +8,8 @@ from json_io import write_json
 
 
 class ManuscriptRefreshPhase(str, Enum):
+    """Data container for ManuscriptRefreshPhase."""
+
     PRE_COMPOSE = "pre_compose"
     POST_COMPOSE = "post_compose"
 
@@ -15,6 +17,7 @@ class ManuscriptRefreshPhase(str, Enum):
 def refresh_manuscript_pipeline(
     root: Path, *, require_analysis_outputs: bool, phase: ManuscriptRefreshPhase
 ) -> dict[str, Path]:
+    """Process refresh manuscript pipeline."""
     from manuscript.hydrate import write_resolved_manuscript
     from manuscript.sheaf import compose_all_sections
     from manuscript.variables import generate_variables
@@ -36,6 +39,7 @@ def refresh_manuscript_pipeline(
 
 
 def settle_manuscript_artifacts(root: Path, *, require_analysis_outputs: bool = False) -> dict[str, Path]:
+    """Process settle manuscript artifacts."""
     return refresh_manuscript_pipeline(
         root, require_analysis_outputs=require_analysis_outputs, phase=ManuscriptRefreshPhase.PRE_COMPOSE
     )

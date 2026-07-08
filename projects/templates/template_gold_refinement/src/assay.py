@@ -39,14 +39,17 @@ class AssayReport:
 
     @property
     def total_claims(self) -> int:
+        """Process total claims."""
         return len(self.claims)
 
     @property
     def supported_claims(self) -> int:
+        """Process supported claims."""
         return sum(1 for c in self.claims if c.supported)
 
     @property
     def unsupported_claims(self) -> int:
+        """Process unsupported claims."""
         return sum(1 for c in self.claims if not c.supported)
 
     @property

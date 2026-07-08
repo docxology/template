@@ -97,6 +97,7 @@ def _run(project_root: Path, cmd: list[str], label: str, *, env: dict[str, str] 
 
 
 def run_verification(project_root: Path, *, skip_chunks: bool = False, monolithic_coverage: bool = False) -> None:
+    """Run verification."""
     preflight = [
         ("Run analytical sweep", ["uv", "run", "python", "scripts/run_analytical_sweep.py"]),
         ("Compute analysis statistics", ["uv", "run", "python", "scripts/compute_statistics.py"]),

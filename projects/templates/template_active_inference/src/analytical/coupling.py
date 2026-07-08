@@ -17,6 +17,7 @@ def entangled_prior_unnormalised(
     coupling_j: ArrayF,
     lam: float,
 ) -> ArrayF:
+    """Process entangled prior unnormalised."""
     base = mean_field_to_joint(mf_prior)
     ja = np.asarray(coupling_j, dtype=np.float64)
     if base.shape != ja.shape:
@@ -32,6 +33,7 @@ def entangled_posterior(
     gamma: float,
     lam: float,
 ) -> ArrayF:
+    """Process entangled posterior."""
     prior_unn = entangled_prior_unnormalised(mf_prior, coupling_j, lam)
     g_total = mean_field_to_joint([np.exp(-gamma * np.asarray(g, dtype=np.float64)) for g in per_stream_g])
     kc = np.asarray(coupling_kc, dtype=np.float64)
@@ -41,6 +43,7 @@ def entangled_posterior(
 
 
 def expected_value(q: ArrayF, f: ArrayF) -> float:
+    """Process expected value."""
     qa = np.asarray(q, dtype=np.float64)
     fa = np.asarray(f, dtype=np.float64)
     if qa.shape != fa.shape:

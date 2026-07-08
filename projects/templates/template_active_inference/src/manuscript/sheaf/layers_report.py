@@ -9,6 +9,7 @@ from manuscript.sheaf.models import CoverageMatrix, SheafManifest, TrackRegistry
 
 
 def render_track_registry_table(registry: TrackRegistry) -> str:
+    """Render track registry table."""
     lines = [
         "<!-- sheaf-layers:registry -->",
         "## Sheaf fragment track registry",
@@ -36,6 +37,7 @@ def render_binding_matrix_table(
     *,
     project_root: Path | None = None,
 ) -> str:
+    """Render binding matrix table."""
     header = "| Section | " + " | ".join(matrix.track_ids) + " |"
     sep = "| --- | " + " | ".join("---" for _ in matrix.track_ids) + " |"
     lines = [
@@ -67,6 +69,7 @@ def render_binding_matrix_table(
 
 
 def render_coverage_legend() -> str:
+    """Render coverage legend."""
     return "\n".join(
         [
             "<!-- sheaf-layers:legend -->",
@@ -81,6 +84,7 @@ def render_coverage_legend() -> str:
 
 
 def render_evidence_crosswalk_table(project_root: Path) -> str:
+    """Render evidence crosswalk table."""
     from manuscript.sheaf.semantic import build_evidence_crosswalk
 
     crosswalk = build_evidence_crosswalk(project_root)
@@ -99,6 +103,7 @@ def render_evidence_crosswalk_table(project_root: Path) -> str:
 
 
 def render_artifact_producer_table(project_root: Path) -> str:
+    """Render artifact producer table."""
     from manuscript.sheaf.semantic import build_validation_dependency_graph
 
     graph = build_validation_dependency_graph(project_root)
@@ -123,6 +128,7 @@ def render_artifact_producer_table(project_root: Path) -> str:
 
 
 def render_semantic_restrictions_table(project_root: Path) -> str:
+    """Render semantic restrictions table."""
     from manuscript.sheaf.semantic import build_semantic_gluing_certificate
 
     restrictions = build_semantic_gluing_certificate(project_root).get("restrictions") or {}
@@ -166,6 +172,7 @@ def render_semantic_restrictions_table(project_root: Path) -> str:
 
 
 def render_track_improvement_scope_table(project_root: Path) -> str:
+    """Render track improvement scope table."""
     import json
 
     path = project_root / "output" / "data" / "track_improvement_scope.json"
@@ -189,6 +196,7 @@ def render_track_improvement_scope_table(project_root: Path) -> str:
 
 
 def render_track_lane_matrix_table(project_root: Path) -> str:
+    """Render track lane matrix table."""
     import json
 
     path = project_root / "output" / "data" / "track_lane_matrix.json"
@@ -216,6 +224,7 @@ def render_track_lane_matrix_table(project_root: Path) -> str:
 
 
 def render_section_status_table(project_root: Path) -> str:
+    """Render section status table."""
     from manuscript.sheaf.status import build_sheaf_section_status_matrix
 
     payload = build_sheaf_section_status_matrix(project_root)
@@ -249,6 +258,7 @@ def render_section_status_table(project_root: Path) -> str:
 
 
 def render_track_status_table(project_root: Path) -> str:
+    """Render track status table."""
     from manuscript.sheaf.status import build_sheaf_section_status_matrix
 
     payload = build_sheaf_section_status_matrix(project_root)
@@ -271,6 +281,7 @@ def render_track_status_table(project_root: Path) -> str:
 
 
 def render_sheaf_render_log_table(project_root: Path) -> str:
+    """Render sheaf render log table."""
     from manuscript.sheaf.status import build_sheaf_render_log
 
     payload = build_sheaf_render_log(project_root)
@@ -292,6 +303,7 @@ def render_sheaf_render_log_table(project_root: Path) -> str:
 
 
 def render_sheaf_layers_markdown(project_root: Path) -> str:
+    """Render sheaf layers markdown."""
     ctx = load_sheaf_coverage_context(project_root)
     parts = [
         render_track_registry_table(ctx.registry),

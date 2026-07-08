@@ -41,12 +41,15 @@ class ExperimentConfig:
     benchmark_dimensions: tuple[int, ...] = _DEFAULT_BENCHMARK_DIMENSIONS
 
     def A_array(self) -> np.ndarray:
+        """Process A array."""
         return np.array(self.quadratic_A, dtype=np.float64)
 
     def b_array(self) -> np.ndarray:
+        """Process b array."""
         return np.array(self.quadratic_b, dtype=np.float64)
 
     def x0(self) -> np.ndarray:
+        """Process x0."""
         return np.array([self.initial_point], dtype=np.float64)
 
     def to_sweep_config(self) -> OptimizerSweepConfig:

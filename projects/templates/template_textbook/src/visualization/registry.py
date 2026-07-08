@@ -11,6 +11,8 @@ _SKIPPED_DOCS = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 
 @dataclass(frozen=True)
 class FigureRegistryEntry:
+    """Data container for FigureRegistryEntry."""
+
     label: str
     filename: str
     caption: str
@@ -19,6 +21,7 @@ class FigureRegistryEntry:
 
 
 def collect_figure_registry_entries(manuscript_dir: Path, figures_dir: Path) -> tuple[FigureRegistryEntry, ...]:
+    """Collect figure registry entries from a directory."""
     entries: dict[str, FigureRegistryEntry] = {}
     figures_root = figures_dir.resolve()
     for markdown_file in sorted(manuscript_dir.rglob("*.md")):
@@ -53,6 +56,7 @@ def _figure_filename(image_path: str, resolved: Path, figures_root: Path) -> str
 
 
 def write_figure_registry(manuscript_dir: Path, figures_dir: Path) -> Path:
+    """Write the figure registry to a JSON file."""
     figures_dir.mkdir(parents=True, exist_ok=True)
     path = figures_dir / "figure_registry.json"
     payload = {

@@ -164,6 +164,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
 
 
 def build_replay_matrix(project_root: Path) -> dict[str, Any]:
+    """Build replay matrix."""
     root = project_root.resolve()
     scripts = _analysis_scripts(root)
     producers, _, _ = _artifact_maps()

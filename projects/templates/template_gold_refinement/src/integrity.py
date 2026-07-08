@@ -7,6 +7,8 @@ from typing import Any
 
 @dataclass(frozen=True)
 class IntegrityDimension:
+    """Data container for IntegrityDimension."""
+
     dimension_id: str
     name: str
     failure_mode: str
@@ -20,19 +22,24 @@ class IntegrityDimension:
 
     @property
     def residual_risk(self) -> int:
+        """Process residual risk."""
         return self.severity * (6 - self.detectability)
 
     def as_dict(self) -> dict[str, str | int]:
+        """Process as dict."""
         return asdict(self)
 
 
 @dataclass(frozen=True)
 class EvidenceTier:
+    """Data container for EvidenceTier."""
+
     tier: str
     count: int
     role: str
 
     def as_dict(self) -> dict[str, str | int]:
+        """Process as dict."""
         return asdict(self)
 
 
@@ -91,6 +98,7 @@ def _audit(config: Any, keyword: str, fallback: str) -> str:
 
 
 def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
+    """Build integrity dimensions."""
     non_monotone_risk, non_monotone_mitigation = _failure(config, "Non-monotone purity")
     lexicon_risk, lexicon_mitigation = _failure(config, "Empty lexicon category")
     token_risk, token_mitigation = _failure(config, "Unresolved token")
@@ -210,6 +218,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
 
 
 def integrity_dimension_table_rows(dimensions: tuple[IntegrityDimension, ...]) -> str:
+    """Process integrity dimension table rows."""
     return "\n".join(
         f"| {item.dimension_id} | {item.name} | {item.residual_risk} | {item.owner} | {item.validator} |"
         for item in dimensions
@@ -217,11 +226,13 @@ def integrity_dimension_table_rows(dimensions: tuple[IntegrityDimension, ...]) -
 
 
 def integrity_owner_table_rows(dimensions: tuple[IntegrityDimension, ...]) -> str:
+    """Process integrity owner table rows."""
     counts = Counter(item.owner for item in dimensions)
     return "\n".join(f"| {owner} | {count} |" for owner, count in sorted(counts.items()))
 
 
 def integrity_summary_line(dimensions: tuple[IntegrityDimension, ...]) -> str:
+    """Process integrity summary line."""
     highest = max(dimensions, key=lambda item: item.residual_risk)
     return (
         f"{len(dimensions)} integrity dimensions; highest residual risk is "
@@ -233,6 +244,7 @@ def build_evidence_tiers(
     shared_evidence: dict[str, Any],
     dimensions: tuple[IntegrityDimension, ...],
 ) -> tuple[EvidenceTier, ...]:
+    """Build evidence tiers."""
     source_tiers = shared_evidence.get("source_tiers", {})
     if isinstance(source_tiers, dict) and source_tiers:
         rows = [
@@ -246,14 +258,17 @@ def build_evidence_tiers(
 
 
 def evidence_tier_table_rows(tiers: tuple[EvidenceTier, ...]) -> str:
+    """Process evidence tier table rows."""
     return "\n".join(f"| {item.tier} | {item.count} | {item.role} |" for item in tiers)
 
 
 def integrity_records(dimensions: tuple[IntegrityDimension, ...]) -> list[dict[str, str | int]]:
+    """Process integrity records."""
     return [item.as_dict() for item in dimensions]
 
 
 def evidence_tier_records(tiers: tuple[EvidenceTier, ...]) -> list[dict[str, str | int]]:
+    """Process evidence tier records."""
     return [item.as_dict() for item in tiers]
 
 

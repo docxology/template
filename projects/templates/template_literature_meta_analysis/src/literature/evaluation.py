@@ -30,6 +30,7 @@ def evaluate_corpus(
     query: str | None = None,
     claim_verdicts: Sequence[Any] | None = None,
 ) -> dict[str, Any]:
+    """Process evaluate corpus."""
     papers = corpus.papers
     total = len(papers)
     source_counter = Counter(

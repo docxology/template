@@ -70,6 +70,7 @@ class PrecisionPoint:
     optimal_set_mass: float
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "gamma": self.gamma,
             "entropy": self.entropy,

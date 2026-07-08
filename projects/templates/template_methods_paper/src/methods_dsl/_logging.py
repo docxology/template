@@ -20,9 +20,11 @@ try:
 except ImportError:  # pragma: no cover - standalone fork without infrastructure/ on the path
 
     def get_logger(name: str) -> logging.Logger:
+        """Get logger."""
         return logging.getLogger(name)
 
 else:
 
     def get_logger(name: str) -> logging.Logger:
+        """Get logger."""
         return _infra_get_logger(name)

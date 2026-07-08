@@ -11,6 +11,8 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class ArtifactManifestEntry:
+    """Data container for ArtifactManifestEntry."""
+
     path: str
     size_bytes: int
     sha256: str
@@ -22,10 +24,13 @@ class ArtifactManifestEntry:
 
 @dataclass(frozen=True)
 class ArtifactManifest:
+    """Data container for ArtifactManifest."""
+
     entries: tuple[ArtifactManifestEntry, ...]
     issues: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "entries": [asdict(entry) for entry in self.entries],
             "issues": list(self.issues),
@@ -33,6 +38,7 @@ class ArtifactManifest:
 
 
 def compute_sha256(path: Path) -> str:
+    """Process compute sha256."""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):

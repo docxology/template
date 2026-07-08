@@ -18,10 +18,12 @@ def load_yaml_defaults(_path: Path) -> ExperimentConfig:
 
 
 def to_diagonal_A(diag: list[float]) -> np.ndarray:
+    """Convert this object to diagonal A."""
     return np.diag(np.array(diag, dtype=np.float64))
 
 
 def compute_payload(args) -> dict:
+    """Process compute payload."""
     A = to_diagonal_A(args.A)
     b = np.array(args.b, dtype=np.float64)
     x_star = np.linalg.solve(A, b)

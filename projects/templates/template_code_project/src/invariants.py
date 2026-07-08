@@ -78,15 +78,19 @@ class OptimizerSweepConfig:
     tolerance: float = 1e-8
 
     def A_array(self) -> ArrayF:
+        """Process A array."""
         return np.array(self.A, dtype=np.float64)
 
     def b_array(self) -> ArrayF:
+        """Process b array."""
         return np.array(self.b, dtype=np.float64)
 
     def x0(self) -> ArrayF:
+        """Process x0."""
         return np.array(self.initial_point, dtype=np.float64)
 
     def closed_form_minimum(self) -> ArrayF:
+        """Process closed form minimum."""
         return np.asarray(
             np.linalg.solve(self.A_array(), self.b_array()),
             dtype=np.float64,
@@ -98,6 +102,7 @@ class OptimizerSweepConfig:
         return float(2.0 / eig.max())
 
     def run_for(self, alpha: float) -> OptimizationResult:
+        """Run for."""
         return gradient_descent(
             initial_point=self.x0(),
             objective_func=lambda x: quadratic_function(x, A=self.A_array(), b=self.b_array()),

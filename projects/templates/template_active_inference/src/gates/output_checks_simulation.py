@@ -6,6 +6,7 @@ from json_io import read_json
 
 
 def pymdp_logging_expected(root: Path) -> bool:
+    """Process pymdp logging expected."""
     from simulation.pymdp_config import load_pymdp_config
     from simulation.si_runner import pymdp_available
 
@@ -25,6 +26,7 @@ def _efe_values_explained(payload: dict) -> bool:
 
 
 def efe_values_explained(payload: dict) -> bool:
+    """Process efe values explained."""
     rows = payload.get("rows") or []
     return bool(rows) and all(
         (row.get("terms_available") and bool((row.get("terms") or {}).get("values")))
@@ -34,6 +36,7 @@ def efe_values_explained(payload: dict) -> bool:
 
 
 def add_simulation_checks(root: Path, checks: dict[str, bool]) -> dict[str, Any]:
+    """Add simulation checks to the collection."""
     summary_path = root / "output" / "data" / "si_tmaze_summary.json"
     trace_path = root / "output" / "data" / "si_tmaze_trace.json"
     analysis_stats_path = root / "output" / "data" / "analysis_statistics.json"
@@ -141,6 +144,7 @@ def add_simulation_checks(root: Path, checks: dict[str, bool]) -> dict[str, Any]
 
 
 def add_log_check(root: Path, checks: dict[str, bool]) -> None:
+    """Add log check to the collection."""
     log_path = root / "output" / "logs" / "pymdp_runs.jsonl"
     if pymdp_logging_expected(root):
         checks["si_log_present"] = log_path.exists() and any(

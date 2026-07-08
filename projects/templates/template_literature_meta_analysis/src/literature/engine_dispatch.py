@@ -10,11 +10,14 @@ from typing import Any
 
 @dataclass(frozen=True)
 class EngineSpec:
+    """Data container for EngineSpec."""
+
     name: str
     skip_flag: str
     config_key: str
 
     def enabled(self, args: argparse.Namespace, engines: dict[str, Any], *, fast_api: bool, injected: bool) -> bool:
+        """Process enabled."""
         if getattr(args, self.skip_flag, False):
             return False
         if not engines.get(self.config_key, True):

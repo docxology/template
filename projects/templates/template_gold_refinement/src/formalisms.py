@@ -5,6 +5,8 @@ from dataclasses import asdict, dataclass
 
 @dataclass(frozen=True)
 class Formalism:
+    """Data container for Formalism."""
+
     formalism_id: str
     title: str
     equation_label: str
@@ -14,6 +16,7 @@ class Formalism:
     interpretation: str
 
     def as_dict(self) -> dict[str, str]:
+        """Process as dict."""
         return asdict(self)
 
 
@@ -92,20 +95,24 @@ FORMALISMS: tuple[Formalism, ...] = (
 
 
 def formalism_count() -> int:
+    """Process formalism count."""
     return len(FORMALISMS)
 
 
 def equation_labels() -> tuple[str, ...]:
+    """Process equation labels."""
     return tuple(item.equation_label for item in FORMALISMS)
 
 
 def formalism_table_rows() -> str:
+    """Process formalism table rows."""
     return "\n".join(
         f"| {item.formalism_id} | {item.title} | [@{item.equation_label}] | `{item.source}` |" for item in FORMALISMS
     )
 
 
 def formalism_equation_blocks() -> str:
+    """Process formalism equation blocks."""
     blocks = []
     for item in FORMALISMS:
         blocks.append(
@@ -117,12 +124,14 @@ def formalism_equation_blocks() -> str:
 
 
 def formalism_traceability_rows() -> str:
+    """Process formalism traceability rows."""
     return "\n".join(
         f"| {item.formalism_id} | {item.equation_label} | {item.source} | {item.statement} |" for item in FORMALISMS
     )
 
 
 def formalism_records() -> list[dict[str, str]]:
+    """Process formalism records."""
     return [item.as_dict() for item in FORMALISMS]
 
 

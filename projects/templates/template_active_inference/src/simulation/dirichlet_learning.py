@@ -59,14 +59,17 @@ class DirichletLearningResult:
 
     @property
     def final_kl(self) -> float:
+        """Process final kl."""
         return self.kl_trajectory[-1]
 
     @property
     def initial_kl(self) -> float:
+        """Process initial kl."""
         return self.kl_trajectory[0]
 
     @property
     def is_monotone_decreasing(self) -> bool:
+        """Check whether monotone decreasing."""
         return all(
             self.kl_trajectory[i] >= self.kl_trajectory[i + 1] - 1e-15 for i in range(len(self.kl_trajectory) - 1)
         )
@@ -85,6 +88,7 @@ class DirichletLearningResult:
         return len(self.kl_trajectory)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "schema": "template_active_inference.dirichlet_learning.v1",
             "num_states": self.num_states,

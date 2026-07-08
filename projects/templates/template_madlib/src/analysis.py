@@ -10,6 +10,7 @@ from .run import build_run
 
 
 def generate_artifacts(project_root: Path | str) -> dict[str, Path]:
+    """Generate artifacts."""
     run = build_run(project_root)
     config = run.config
     plan = run.plan

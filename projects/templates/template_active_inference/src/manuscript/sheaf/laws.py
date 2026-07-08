@@ -93,20 +93,25 @@ class SheafLawReport:
 
     @property
     def ok(self) -> bool:
+        """Return True if the result is successful."""
         return not self.violations
 
     def for_law(self, law: SheafLaw) -> list[LawViolation]:
+        """Process for law."""
         return [v for v in self.violations if v.law == law]
 
     def law_ok(self, law: SheafLaw) -> bool:
+        """Process law ok."""
         return not self.for_law(law)
 
     @property
     def passed_laws(self) -> tuple[SheafLaw, ...]:
+        """Process passed laws."""
         failed = {v.law for v in self.violations}
         return tuple(law for law in self.checked if law not in failed)
 
     def summary(self) -> str:
+        """Return a summary dict of counts and status."""
         if self.ok:
             return f"sheaf laws: {len(self.checked)}/{len(self.checked)} verified"
         return f"sheaf laws: {len(self.passed_laws)}/{len(self.checked)} verified, {len(self.violations)} violation(s)"

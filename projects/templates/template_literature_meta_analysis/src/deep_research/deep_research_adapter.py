@@ -91,6 +91,7 @@ class ReplayedReport:
 
     @property
     def citation_count(self) -> int:
+        """Process citation count."""
         return len(self.citations)
 
 

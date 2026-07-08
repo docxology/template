@@ -180,6 +180,7 @@ class Edition:
 
     @property
     def page_count(self) -> int:
+        """Return the total number of pages."""
         return len(self.pages)
 
 

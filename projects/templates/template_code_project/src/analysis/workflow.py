@@ -41,9 +41,11 @@ def run_analysis_pipeline() -> None:
     exp_config = load_experiment_config(_project_root())
 
     def log_info(msg: str) -> None:
+        """Process log info."""
         logger.info(msg)
 
     def log_warning(msg: str) -> None:
+        """Process log warning."""
         logger.warning(msg)
 
     if INFRASTRUCTURE_AVAILABLE:

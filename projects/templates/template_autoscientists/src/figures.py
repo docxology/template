@@ -36,6 +36,8 @@ class AblationRow(TypedDict):
 
 @dataclass(frozen=True)
 class FigureSpec:
+    """Data container for FigureSpec."""
+
     label: str
     filename: str
     caption: str
@@ -65,6 +67,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
 
 
 def write_figure_registry(figures_dir: Path) -> Path:
+    """Write the figure registry to a JSON file."""
     figures_dir.mkdir(parents=True, exist_ok=True)
     path = figures_dir / "figure_registry.json"
     payload = {

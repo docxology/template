@@ -22,6 +22,7 @@ from manuscript.sheaf.renderers import GENERATED_RENDERERS, resolve_track_body, 
 
 
 def issues_have_errors(issues: list[ManifestIssue]) -> bool:
+    """Process issues have errors."""
     return any(issue.level == "error" for issue in issues)
 
 
@@ -32,6 +33,7 @@ def validate_manifest(
     registry: TrackRegistry | None = None,
     strict_coverage: bool = False,
 ) -> list[ManifestIssue]:
+    """Validate manifest."""
     root = project_root.resolve()
     reg = registry or (
         load_track_registry(root / manifest.registry_path)
@@ -128,6 +130,7 @@ def compose_section(
     options: ComposeOptions | None = None,
     issues: list[ManifestIssue] | None = None,
 ) -> str:
+    """Process compose section."""
     opts = options or ComposeOptions()
     policy = opts.missing_track or MissingTrackPolicy.SKIP
     parts = [f"# {section.title} {{#sec:{section.id}}}\n"]
@@ -160,6 +163,7 @@ def compose_all_sections(
     manifest_path: Path | None = None,
     options: ComposeOptions | None = None,
 ) -> ComposeResult:
+    """Process compose all sections."""
     root = project_root.resolve()
     manifest_file = manifest_path or (root / DEFAULT_MANIFEST_REL)
     manifest = load_manifest(manifest_file, project_root=root)

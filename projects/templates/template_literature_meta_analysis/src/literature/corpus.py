@@ -72,6 +72,7 @@ class Corpus:
             logger.debug("Corpus.add: new paper %s", cid)
 
     def deduplicate_by_metadata(self, *, prefer_preprints: bool = False) -> int:
+        """Process deduplicate by metadata."""
         grouped: dict[str, list[str]] = {}
         for cid, paper in self._papers.items():
             grouped.setdefault(paper.publication_signature, []).append(cid)

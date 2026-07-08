@@ -63,6 +63,7 @@ def ring_root_angles(n_domains: int) -> list[float]:
 
 
 def domain_root_indices(domains: tuple[str, ...]) -> dict[str, int]:
+    """Process domain root indices."""
     return {d: i for i, d in enumerate(domains)}
 
 
@@ -96,6 +97,7 @@ def build_ring_geometry(
     domains: tuple[str, ...],
     radius: float = 1.0,
 ) -> list[BranchSegment]:
+    """Build ring geometry."""
     return branch_segments(domains, radius=radius)
 
 

@@ -27,10 +27,12 @@ from .run import MadlibRun, build_run
 
 
 def artifact_markdown_tables(project_root: Path | str) -> dict[str, str]:
+    """Process artifact markdown tables."""
     return artifact_markdown_tables_from_run(build_run(project_root))
 
 
 def artifact_markdown_tables_from_run(run: MadlibRun) -> dict[str, str]:
+    """Process artifact markdown tables from run."""
     config = run.config
     plan = run.plan
     inventory = run.field_inventory

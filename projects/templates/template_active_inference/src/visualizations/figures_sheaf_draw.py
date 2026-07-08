@@ -68,6 +68,7 @@ def draw_coverage_heatmap(
     boundary_width: float = 1.0,
     label_fontsize: float | None = None,
 ) -> None:
+    """Process draw coverage heatmap."""
     from matplotlib.colors import ListedColormap
 
     style = load_figure_style(project_root)
@@ -137,6 +138,7 @@ def draw_coverage_heatmap(
 
 
 def draw_track_layers_panel(ax, project_root: Path) -> bool:
+    """Process draw track layers panel."""
     from manuscript.sheaf.manifest import load_manifest
     from manuscript.sheaf.registry import load_track_registry
 

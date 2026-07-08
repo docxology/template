@@ -9,6 +9,7 @@ _DEFAULT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def resolve_project_root(package_name: str) -> Path:
+    """Process resolve project root."""
     mod = sys.modules.get(package_name)
     if mod is not None and hasattr(mod, "project_root"):
         return Path(mod.project_root)

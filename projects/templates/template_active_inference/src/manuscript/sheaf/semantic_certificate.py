@@ -210,6 +210,7 @@ def write_semantic_gluing_certificate(
     *,
     output_path: Path | None = None,
 ) -> Path:
+    """Write semantic gluing certificate to the output path."""
     root = project_root.resolve()
     path = output_path or root / "output" / "data" / "sheaf_gluing_certificate.json"
     path.parent.mkdir(parents=True, exist_ok=True)

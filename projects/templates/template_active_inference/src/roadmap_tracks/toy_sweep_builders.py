@@ -24,6 +24,7 @@ from roadmap_tracks.toy_sweep_types import (
 
 
 def build_analytical_observable_sweep(project_root: Path) -> dict[str, Any]:
+    """Build analytical observable sweep."""
     _ = project_root
     rows: list[dict[str, Any]] = []
     metadata = {
@@ -197,6 +198,7 @@ def build_analytical_assumption_index(project_root: Path) -> dict[str, Any]:
 
 
 def build_sensitivity_sweep(project_root: Path) -> dict[str, Any]:
+    """Build sensitivity sweep."""
     _ = project_root
     lambdas = [0.0, 1.0, 2.0]
     horizons = [2, 3]
@@ -227,6 +229,7 @@ def build_sensitivity_sweep(project_root: Path) -> dict[str, Any]:
 
 
 def build_uncertainty_summary(project_root: Path) -> dict[str, Any]:
+    """Build uncertainty summary."""
     root = project_root.resolve()
     trace = _load_json(root / "output" / "data" / "si_tmaze_trace.json")
     rows = []
@@ -256,6 +259,7 @@ def build_uncertainty_summary(project_root: Path) -> dict[str, Any]:
 
 
 def build_toy_benchmark_matrix(project_root: Path) -> dict[str, Any]:
+    """Build toy benchmark matrix."""
     root = project_root.resolve()
     si = _load_json(root / "output" / "data" / "si_tmaze_summary.json")
     graph = _load_json(root / "output" / "data" / "si_graph_world_summary.json")
@@ -294,6 +298,7 @@ def build_toy_benchmark_matrix(project_root: Path) -> dict[str, Any]:
 
 
 def build_policy_grid(project_root: Path) -> dict[str, Any]:
+    """Build policy grid."""
     root = project_root.resolve()
     comparison = _load_json(root / "output" / "data" / "si_policy_comparison.json")
     summary = comparison.get("summary") or {}
@@ -324,6 +329,7 @@ def build_policy_grid(project_root: Path) -> dict[str, Any]:
 
 
 def build_efe_terms(project_root: Path) -> dict[str, Any]:
+    """Build efe terms."""
     root = project_root.resolve()
     comparison = _load_json(root / "output" / "data" / "si_policy_comparison.json")
     rows = []
@@ -378,6 +384,7 @@ def _topology_trace(topology: str) -> list[dict[str, Any]]:
 
 
 def build_graph_world_topology_sweep(project_root: Path) -> dict[str, Any]:
+    """Build graph world topology sweep."""
     _ = project_root
     rows = []
     for topology in ("linear4", "branch4", "loop5", "diamond5"):
@@ -401,6 +408,7 @@ def build_graph_world_topology_sweep(project_root: Path) -> dict[str, Any]:
 
 
 def build_graph_world_topology_traces(project_root: Path) -> dict[str, Any]:
+    """Build graph world topology traces."""
     topology = build_graph_world_topology_sweep(project_root)
     rows = []
     for summary in topology["rows"]:
@@ -453,6 +461,7 @@ def _graph_world_trace_invariants(trace: list[dict[str, Any]]) -> dict[str, bool
 
 
 def build_graph_world_invariants(project_root: Path) -> dict[str, Any]:
+    """Build graph world invariants."""
     _ = project_root
     rows = []
     for topology in ("linear4", "branch4", "loop5", "diamond5"):
@@ -468,6 +477,7 @@ def build_graph_world_invariants(project_root: Path) -> dict[str, Any]:
 
 
 def build_state_space_catalog(project_root: Path) -> dict[str, Any]:
+    """Build state space catalog."""
     topology = build_graph_world_topology_sweep(project_root)
     rows: list[dict[str, Any]] = [
         {
@@ -513,6 +523,7 @@ def build_state_space_catalog(project_root: Path) -> dict[str, Any]:
 
 
 def build_causal_ablation_matrix(project_root: Path) -> dict[str, Any]:
+    """Build causal ablation matrix."""
     topology = build_graph_world_topology_sweep(project_root)
     lambdas = [0.0, 1.0, 2.0]
     perturbations = ("preference_flattened", "likelihood_noise_low", "remove_shortcut_edge")

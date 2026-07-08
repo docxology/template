@@ -12,6 +12,7 @@ from .story import load_storybook, storybook_variables
 
 
 def image_output_path(project_root: Path | str, page: PageSpec) -> Path:
+    """Return the output path for a page image."""
     return Path(project_root) / "output" / "figures" / "storybook_pages" / page.filename
 
 
@@ -26,6 +27,7 @@ def _clean_stale_page_images(project_root: Path, spec: StorybookSpec) -> None:
 
 
 def render_story_page(project_root: Path | str, slug: str) -> Path:
+    """Render a single storybook page image."""
     root = Path(project_root)
     spec = load_storybook(root)
     page = spec.page_by_slug(slug)
@@ -33,6 +35,7 @@ def render_story_page(project_root: Path | str, slug: str) -> Path:
 
 
 def render_story_number(project_root: Path | str, number: int) -> Path:
+    """Render a storybook page by number."""
     root = Path(project_root)
     spec = load_storybook(root)
     page = spec.page_by_number(number)
@@ -40,6 +43,7 @@ def render_story_number(project_root: Path | str, number: int) -> Path:
 
 
 def render_all_images(project_root: Path | str) -> tuple[Path, ...]:
+    """Render all storybook page images."""
     root = Path(project_root)
     spec = load_storybook(root)
     _clean_stale_page_images(root, spec)
@@ -47,6 +51,7 @@ def render_all_images(project_root: Path | str) -> tuple[Path, ...]:
 
 
 def build_storybook_pdf(project_root: Path | str) -> RenderResult:
+    """Build a PDF from rendered storybook pages."""
     root = Path(project_root)
     spec = load_storybook(root)
     _clean_stale_page_images(root, spec)

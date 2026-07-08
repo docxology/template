@@ -49,6 +49,7 @@ def collect_malformed_token_names(text: str) -> list[str]:
 
 
 def collect_tokens_in_directory(manuscript_dir: Path) -> set[str]:
+    """Process collect tokens in directory."""
     tokens: set[str] = set()
     for md_file in sorted(manuscript_dir.glob("*.md")):
         if md_file.name in EXCLUDED_DOC_FILENAMES:
@@ -70,6 +71,7 @@ def substitute_snake_case_tokens(
     text: str,
     variables: dict[str, str],
 ) -> tuple[str, list[str]]:
+    """Process substitute snake case tokens."""
     unresolved: list[str] = []
 
     def _replace(match: re.Match[str]) -> str:

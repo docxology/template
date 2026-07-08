@@ -115,6 +115,7 @@ def roundtrip_payload_lossless(payload: dict[str, Any]) -> bool:
 
 
 def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
+    """Build model checking witnesses."""
     _ = project_root
     rows = [
         {
@@ -183,6 +184,7 @@ def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
 
 
 def build_gnn_roundtrip_report(project_root: Path) -> dict[str, Any]:
+    """Build gnn roundtrip report."""
     root = project_root.resolve()
     rows = []
     for path in _gnn_paths(root):
@@ -205,6 +207,7 @@ def build_gnn_roundtrip_report(project_root: Path) -> dict[str, Any]:
 
 
 def build_gnn_lint_report(project_root: Path) -> dict[str, Any]:
+    """Build gnn lint report."""
     root = project_root.resolve()
     from ontology.bindings import BERNOULLI_EXPECTED_TERMS, SI_EXPECTED_TERMS
 
@@ -277,6 +280,7 @@ def build_gnn_lint_report(project_root: Path) -> dict[str, Any]:
 
 
 def build_ontology_alias_index(project_root: Path) -> dict[str, Any]:
+    """Build ontology alias index."""
     root = project_root.resolve()
     rows = []
     conflicts: list[str] = []
@@ -299,6 +303,7 @@ def build_ontology_alias_index(project_root: Path) -> dict[str, Any]:
 
 
 def build_ontology_profile_matrix(project_root: Path) -> dict[str, Any]:
+    """Build ontology profile matrix."""
     root = project_root.resolve()
     rows = []
     for path in _gnn_paths(root):
@@ -367,6 +372,7 @@ def _lean_text(root: Path) -> str:
 
 
 def build_lean_theorem_inventory(project_root: Path) -> dict[str, Any]:
+    """Build lean theorem inventory."""
     root = project_root.resolve()
     text = _lean_text(root)
     names = re.findall(r"^theorem\s+([A-Za-z0-9_']+)", text, flags=re.MULTILINE)
@@ -388,6 +394,7 @@ def build_lean_theorem_inventory(project_root: Path) -> dict[str, Any]:
 
 
 def build_lean_graph_world_inventory(project_root: Path) -> dict[str, Any]:
+    """Build lean graph world inventory."""
     root = project_root.resolve()
     text = _lean_text(root)
     topology_theorems = {
@@ -429,6 +436,7 @@ def build_lean_graph_world_inventory(project_root: Path) -> dict[str, Any]:
 
 
 def build_interop_roundtrip_report(project_root: Path) -> dict[str, Any]:
+    """Build interop roundtrip report."""
     gnn_report = build_gnn_roundtrip_report(project_root)
     ontology = build_ontology_profile_matrix(project_root)
     rows = [
@@ -466,6 +474,7 @@ def _leading_tactic(proof_text: str) -> str:
 
 
 def build_proof_extraction_index(project_root: Path) -> dict[str, Any]:
+    """Build proof extraction index."""
     root = project_root.resolve()
     rows = []
     any_forbidden = False
@@ -504,6 +513,7 @@ def build_proof_extraction_index(project_root: Path) -> dict[str, Any]:
 
 
 def write_formal_interop_artifacts(project_root: Path) -> dict[str, Path]:
+    """Write formal interop artifacts to the output path."""
     root = project_root.resolve()
     return {
         "model_checking": _write_json(
@@ -543,6 +553,7 @@ def write_formal_interop_artifacts(project_root: Path) -> dict[str, Path]:
 
 
 def validate_formal_interop_artifacts(project_root: Path) -> list[str]:
+    """Validate formal interop artifacts."""
     root = project_root.resolve()
     issues: list[str] = []
     model_checking = _load_json(root / "output" / "reports" / "model_checking_witnesses.json")

@@ -40,6 +40,7 @@ def _require_track_spec(registry: TrackRegistry, track_id: str) -> TrackSpec:
 
 
 def render_track_body(track: TrackSpec, path: Path) -> str:
+    """Render track body."""
     if track.renderer in GENERATED_RENDERERS:
         raise ValueError(f"Renderer `{track.renderer}` for track `{track.id}` requires resolve_track_body()")
     if track.renderer not in RENDERERS:
@@ -102,6 +103,7 @@ def resolve_track_body(
 
 
 def validate_renderer_specs(registry: TrackRegistry, issues: list[ManifestIssue]) -> None:
+    """Validate renderer specs."""
     known = set(RENDERERS) | GENERATED_RENDERERS
     for track in registry.tracks.values():
         if track.renderer not in known:

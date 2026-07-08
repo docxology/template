@@ -9,6 +9,8 @@ from .config import MadlibConfig, SlotSpec
 
 @dataclass(frozen=True)
 class TokenChoice:
+    """Data container for TokenChoice."""
+
     variable_name: str
     slot_name: str
     category: str
@@ -18,24 +20,30 @@ class TokenChoice:
     source_key: str
 
     def as_dict(self) -> dict[str, object]:
+        """Process as dict."""
         return asdict(self)
 
 
 @dataclass(frozen=True)
 class TokenPlan:
+    """Data container for TokenPlan."""
+
     seed: int
     choices: tuple[TokenChoice, ...]
 
     @property
     def category_counts(self) -> dict[str, int]:
+        """Process category counts."""
         return dict(Counter(choice.category for choice in self.choices))
 
     @property
     def section_counts(self) -> dict[str, int]:
+        """Process section counts."""
         return dict(Counter(choice.section for choice in self.choices))
 
     @property
     def provenance(self) -> dict[str, dict[str, object]]:
+        """Process provenance."""
         return {
             choice.variable_name: {
                 "category": choice.category,
@@ -47,14 +55,17 @@ class TokenPlan:
         }
 
     def values_for_category(self, category: str) -> tuple[str, ...]:
+        """Process values for category."""
         return tuple(choice.value for choice in self.choices if choice.category == category)
 
     def first_value(self, category: str, default: str) -> str:
+        """Process first value."""
         values = self.values_for_category(category)
         return values[0] if values else default
 
 
 def generate_token_plan(config: MadlibConfig) -> TokenPlan:
+    """Generate token plan."""
     choices: list[TokenChoice] = []
     for slot in config.slots:
         for ordinal in range(1, slot.count + 1):

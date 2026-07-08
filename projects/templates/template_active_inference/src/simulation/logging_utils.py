@@ -32,6 +32,7 @@ def _json_default(obj: Any) -> Any:
 
 
 def validate_record(record: Mapping[str, Any]) -> None:
+    """Validate record."""
     event = str(record.get("event", ""))
     required = _REQUIRED_KEYS.get(event)
     if required is None:
@@ -43,6 +44,8 @@ def validate_record(record: Mapping[str, Any]) -> None:
 
 @dataclass
 class RunLogger:
+    """Data container for RunLogger."""
+
     path: Path
     enabled: bool = True
 
@@ -59,16 +62,19 @@ class RunLogger:
         relative_path: str = "output/logs/pymdp_runs.jsonl",
         enabled: bool | None = None,
     ) -> RunLogger:
+        """Process from project root."""
         if enabled is None:
             enabled = os.environ.get("PYMDP_RUN_LOG_DISABLED", "") != "1"
         return cls(path=project_root / relative_path, enabled=enabled)
 
     def fresh(self) -> None:
+        """Process fresh."""
         if self.enabled:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             self.path.write_text("", encoding="utf-8")
 
     def emit(self, record: Mapping[str, Any]) -> None:
+        """Process emit."""
         if not self.enabled:
             return
         full = {"timestamp": _now_iso(), **dict(record)}
@@ -85,6 +91,7 @@ class RunLogger:
         seed: int,
         policy_len: int,
     ) -> None:
+        """Process emit run header."""
         self.emit(
             {
                 "event": HEADER_EVENT,
@@ -97,6 +104,7 @@ class RunLogger:
 
     @contextmanager
     def timed(self, **fields: Any) -> Iterator[dict[str, Any]]:
+        """Process timed."""
         ctx: dict[str, Any] = dict(fields)
         start = time.perf_counter()
         try:
@@ -106,6 +114,7 @@ class RunLogger:
             self.emit(ctx)
 
     def records(self) -> list[dict[str, Any]]:
+        """Process records."""
         if not self.path.exists():
             return []
         out: list[dict[str, Any]] = []
@@ -115,4 +124,5 @@ class RunLogger:
         return out
 
     def step_records(self) -> list[dict[str, Any]]:
+        """Process step records."""
         return [rec for rec in self.records() if rec.get("event") == STEP_EVENT]

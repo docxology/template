@@ -24,6 +24,7 @@ from .search_invariants import InvariantResult, all_invariants
 
 
 def load_papers(args: argparse.Namespace) -> tuple[list[dict], dict | None]:
+    """Load papers from a file."""
     raw = json.loads(args.corpus.read_text())
     papers = raw["papers"] if isinstance(raw, dict) and "papers" in raw else raw
     aggregate = None
@@ -35,6 +36,7 @@ def load_papers(args: argparse.Namespace) -> tuple[list[dict], dict | None]:
 
 
 def filter_papers(papers: list[dict], args: argparse.Namespace) -> list[dict]:
+    """Process filter papers."""
     out = []
     for p in papers:
         y = p.get("year")
@@ -51,6 +53,7 @@ def compute_payload(
     papers: list[dict],
     aggregate: dict | None,
 ) -> dict:
+    """Process compute payload."""
     n = len(papers) or 1
     by_year: Counter[int] = Counter()
     by_source: Counter[str] = Counter()
@@ -116,6 +119,7 @@ def build_dashboard(
     *,
     repo_root: Path,
 ) -> InteractiveDashboard:
+    """Build dashboard."""
     d = InteractiveDashboard(
         title="Literature Search Coverage Dashboard",
         subtitle=(

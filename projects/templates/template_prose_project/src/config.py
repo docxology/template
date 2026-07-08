@@ -116,6 +116,7 @@ class ProjectConfig:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ProjectConfig":
+        """Process from dict."""
         _validate_keys("top-level", data, _KNOWN_TOP_LEVEL_KEYS)
         paper = data.get("paper", {}) or {}
         prose_raw = data.get("prose", {}) or {}

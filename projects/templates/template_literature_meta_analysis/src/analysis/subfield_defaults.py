@@ -14,6 +14,7 @@ _DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "subfield_defaults_m
 
 
 def load_modafinil_subfield_keywords() -> dict[str, list[str]]:
+    """Load modafinil subfield keywords from a file."""
     with open(_DATA_PATH, encoding="utf-8") as handle:
         data = yaml.safe_load(handle) or {}
     raw = data.get("subfields") or {}

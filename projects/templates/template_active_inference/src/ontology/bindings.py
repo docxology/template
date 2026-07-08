@@ -25,6 +25,7 @@ SI_EXPECTED_TERMS: dict[str, str] = {
 
 
 def load_section_ontology(path: Path) -> dict[str, str]:
+    """Load section ontology from a file."""
     if not path.exists():
         return {}
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -47,6 +48,7 @@ def validate_gnn_ontology(
     expected_terms: dict[str, str] | None = None,
     label: str | None = None,
 ) -> list[str]:
+    """Validate gnn ontology."""
     model = parse_gnn_file(gnn_path)
     terms = expected_terms if expected_terms is not None else BERNOULLI_EXPECTED_TERMS
     gaps: list[str] = parity_gaps(model, symbol_map or BERNOULLI_SYMBOL_MAP, expected_terms=terms)

@@ -11,6 +11,7 @@ from manuscript.variables.registry import EXTRACTORS
 
 
 def compute_variables(output_dir: Path) -> dict[str, str]:
+    """Process compute variables."""
     cfg = load_config(output_dir.parent)
     ctx = ExtractContext.from_output_dir(output_dir, cfg)
     variables: dict[str, str] = {}

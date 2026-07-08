@@ -4,6 +4,7 @@ from __future__ import annotations
 
 
 def latex_number(n: int) -> str:
+    """Process latex number."""
     s = str(n)
     if len(s) <= 3:
         return s
@@ -16,6 +17,7 @@ def latex_number(n: int) -> str:
 
 
 def humanize_list(items: list[str]) -> str:
+    """Process humanize list."""
     normalized = [str(i) for i in items]
     if not normalized:
         return ""
@@ -27,4 +29,5 @@ def humanize_list(items: list[str]) -> str:
 
 
 def humanize_key(key: str) -> str:
+    """Process humanize key."""
     return key.replace("_", " ").title()

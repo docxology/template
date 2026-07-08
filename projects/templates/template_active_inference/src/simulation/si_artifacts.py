@@ -25,6 +25,7 @@ def write_si_artifacts(
     config: PymdpConfig | None = None,
     trace_steps: list[dict[str, Any]] | None = None,
 ) -> dict[str, Path]:
+    """Write si artifacts to the output path."""
     root = project_root.resolve()
     cfg = config or load_pymdp_config(root)
     data_dir = root / "output" / "data"
@@ -90,6 +91,7 @@ def run_and_persist(
     *,
     config: PymdpConfig | None = None,
 ) -> dict[str, Any]:
+    """Run and persist."""
     cfg = config or load_pymdp_config(project_root)
     logger = RunLogger.from_project_root(
         project_root,

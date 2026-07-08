@@ -12,6 +12,8 @@ BERNOULLI_VERIFICATION_TOLERANCE = 1e-9
 
 @dataclass(frozen=True)
 class Hyperparameters:
+    """Data container for Hyperparameters."""
+
     lambda_grid_points: int = DEFAULT_LAMBDA_GRID_POINTS
     lambda_max: float = DEFAULT_LAMBDA_MAX
     gamma: float = DEFAULT_GAMMA
@@ -20,10 +22,12 @@ class Hyperparameters:
 
 
 def load_hyperparameters() -> Hyperparameters:
+    """Load hyperparameters from a file."""
     return Hyperparameters()
 
 
 def lambda_grid(hp: Hyperparameters | None = None) -> list[float]:
+    """Process lambda grid."""
     params = hp or load_hyperparameters()
     import numpy as np
 

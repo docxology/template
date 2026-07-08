@@ -14,6 +14,8 @@ __all__ = ["JsonArtifactSpec", "ReportArtifactSpec", "write_core_artifacts"]
 
 @dataclass(frozen=True)
 class JsonArtifactSpec:
+    """Data container for JsonArtifactSpec."""
+
     key: str
     filename: str
     builder: Callable[[MadlibRun], object]
@@ -21,6 +23,8 @@ class JsonArtifactSpec:
 
 @dataclass(frozen=True)
 class ReportArtifactSpec:
+    """Data container for ReportArtifactSpec."""
+
     key: str
     filename: str
     builder: Callable[[MadlibRun], str]

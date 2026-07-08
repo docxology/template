@@ -105,6 +105,7 @@ def save_figure_blocks(variables: dict[str, str], path: Path) -> Path:
 
 
 def figure_block(project_root: Path, registry: dict[str, Any], label: str) -> str:
+    """Process figure block."""
     record = mapping(registry.get(label))
     filename = string_value(record.get("filename", ""))
     caption = string_value(record.get("caption", ""))
@@ -123,6 +124,7 @@ def put_figure_blocks(
     provenance: dict[str, dict[str, str]],
     registry: dict[str, Any],
 ) -> None:
+    """Process put figure blocks."""
     for token, label in _FIGURE_BLOCK_LABELS.items():
         block = figure_block(project_root, registry, label)
         variables[token] = block

@@ -11,11 +11,13 @@ ArrayF = NDArray[np.float64]
 
 
 def is_pmf(q: ArrayF, atol: float = 1e-9) -> bool:
+    """Check whether pmf."""
     qa = np.asarray(q, dtype=np.float64)
     return bool(np.all(qa >= -atol)) and bool(abs(float(qa.sum()) - 1.0) <= atol)
 
 
 def normalize(q: ArrayF) -> ArrayF:
+    """Process normalize."""
     qa = np.asarray(q, dtype=np.float64)
     total = float(qa.sum())
     if total <= 0.0:
@@ -24,6 +26,7 @@ def normalize(q: ArrayF) -> ArrayF:
 
 
 def mean_field_to_joint(marginals: Sequence[ArrayF]) -> ArrayF:
+    """Process mean field to joint."""
     if not marginals:
         raise ValueError("mean_field_to_joint requires at least one stream")
     out = np.asarray(marginals[0], dtype=np.float64)
@@ -33,6 +36,7 @@ def mean_field_to_joint(marginals: Sequence[ArrayF]) -> ArrayF:
 
 
 def joint_marginal(q: ArrayF, k: int) -> ArrayF:
+    """Process joint marginal."""
     qa = np.asarray(q, dtype=np.float64)
     if not 0 <= k < qa.ndim:
         raise IndexError(f"stream index {k} out of range for ndim={qa.ndim}")
@@ -41,15 +45,18 @@ def joint_marginal(q: ArrayF, k: int) -> ArrayF:
 
 
 def joint_marginals(q: ArrayF) -> list[ArrayF]:
+    """Process joint marginals."""
     qa = np.asarray(q, dtype=np.float64)
     return [joint_marginal(qa, k) for k in range(qa.ndim)]
 
 
 def is_mean_field(q: ArrayF, atol: float = 1e-9) -> bool:
+    """Check whether mean field."""
     qa = np.asarray(q, dtype=np.float64)
     proj = mean_field_to_joint(joint_marginals(qa))
     return bool(np.max(np.abs(qa - proj)) <= atol)
 
 
 def m_projection(q: ArrayF) -> ArrayF:
+    """Process m projection."""
     return mean_field_to_joint(joint_marginals(q))

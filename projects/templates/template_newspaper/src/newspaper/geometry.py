@@ -39,14 +39,17 @@ class PageGeometry:
 
     @property
     def content_left(self) -> float:
+        """Process content left."""
         return self.margin_left
 
     @property
     def content_right(self) -> float:
+        """Process content right."""
         return self.width - self.margin_right
 
     @property
     def content_width(self) -> float:
+        """Process content width."""
         return self.content_right - self.content_left
 
     @property
@@ -56,10 +59,12 @@ class PageGeometry:
 
     @property
     def content_bottom(self) -> float:
+        """Process content bottom."""
         return self.margin_bottom
 
     @property
     def content_height(self) -> float:
+        """Process content height."""
         return self.content_top - self.content_bottom
 
 
@@ -90,10 +95,12 @@ class ColumnGrid:
 
     @property
     def total_gutter(self) -> float:
+        """Process total gutter."""
         return self.gutter * (self.n_columns - 1)
 
     @property
     def column_width(self) -> float:
+        """Process column width."""
         return (self.width - self.total_gutter) / self.n_columns
 
     def column_x(self, index: int) -> float:

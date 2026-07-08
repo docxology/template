@@ -7,6 +7,7 @@ from manuscript.variables.formatters import humanize_key, humanize_list
 
 
 def extract_subfields(ctx: ExtractContext) -> dict[str, str]:
+    """Process extract subfields."""
     subfield_cfg = ctx.cfg.get("project_config", {}).get("subfield_keywords", {}) or {}
     subfield_names = list(subfield_cfg.keys())
     variables = {

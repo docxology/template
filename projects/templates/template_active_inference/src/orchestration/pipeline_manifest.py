@@ -8,6 +8,8 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class ScriptStep:
+    """Data container for ScriptStep."""
+
     name: str
     script: str
 
@@ -30,6 +32,7 @@ DEFAULT_ANALYSIS_SCRIPTS: tuple[ScriptStep, ...] = (
 
 
 def analysis_scripts(project_root: Path | None = None) -> list[Path]:
+    """Process analysis scripts."""
     root = (project_root or Path(".")).resolve()
     scripts_dir = root / "scripts"
     return [scripts_dir / step.script for step in DEFAULT_ANALYSIS_SCRIPTS if (scripts_dir / step.script).exists()]

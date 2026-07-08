@@ -215,6 +215,7 @@ class CueAdvantage:
         return bool(abs(self.flat_efe_cue - self.flat_efe_greedy) <= EPISTEMIC_ATOL)
 
     def to_dict(self) -> dict[str, float | bool]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "cue_information_gain": self.cue_information_gain,
             "epistemic_reward_log_pref": self.epistemic_reward_log_pref,

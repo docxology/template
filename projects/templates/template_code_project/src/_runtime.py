@@ -15,10 +15,12 @@ except ImportError:  # pragma: no cover — standalone load (no package context)
 
 
 def project_root(caller: str = "src") -> Path:
+    """Process project root."""
     return resolve_project_root(caller)
 
 
 def get_logger(module_name: str | None = None) -> logging.Logger:
+    """Get logger."""
     try:
         from infrastructure.core.logging.utils import get_logger as infra_get_logger
 
@@ -34,10 +36,12 @@ def get_logger(module_name: str | None = None) -> logging.Logger:
 
 
 def experiment_config() -> ExperimentConfig:
+    """Process experiment config."""
     return load_experiment_config(project_root())
 
 
 def save_figure_data(data: object, name: str, output_dir: Path) -> Path:
+    """Save figure data to the output path."""
     data_dir = output_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     data_path = data_dir / f"{name}.json"

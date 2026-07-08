@@ -56,6 +56,7 @@ class LoopArtifacts:
 
     @property
     def output(self) -> Path:
+        """Process output."""
         raise AttributeError("LoopArtifacts does not store project_root; pass output paths explicitly")
 
 

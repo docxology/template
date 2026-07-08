@@ -282,6 +282,7 @@ def build_sheaf_render_log(project_root: Path) -> dict[str, Any]:
 
 
 def validate_sheaf_status_outputs(project_root: Path) -> list[str]:
+    """Validate sheaf status outputs."""
     root = project_root.resolve()
     issues: list[str] = []
     status_path = root / "output" / "data" / "sheaf_section_status_matrix.json"
@@ -328,6 +329,7 @@ def validate_sheaf_status_outputs(project_root: Path) -> list[str]:
 
 
 def write_sheaf_status_outputs(project_root: Path) -> dict[str, Path]:
+    """Write sheaf status outputs to the output path."""
     root = project_root.resolve()
     status_path = root / "output" / "data" / "sheaf_section_status_matrix.json"
     render_log_path = root / "output" / "reports" / "sheaf_render_log.json"

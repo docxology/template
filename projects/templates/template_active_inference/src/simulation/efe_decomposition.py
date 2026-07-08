@@ -71,9 +71,11 @@ class EFETerms:
 
     @property
     def identity_holds(self) -> bool:
+        """Process identity holds."""
         return abs(self.identity_residual) <= EFE_IDENTITY_ATOL
 
     def to_dict(self) -> dict[str, float | bool]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "risk": self.risk,
             "ambiguity": self.ambiguity,

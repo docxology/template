@@ -5,6 +5,7 @@ from .tokens import TokenPlan
 
 
 def configured_field_inventory(config: MadlibConfig, plan: TokenPlan) -> list[dict[str, str]]:
+    """Process configured field inventory."""
     rows: list[dict[str, str]] = []
     for path in sorted(config.explicit_paths | config.defaulted_paths):
         origin = "explicit" if path in config.explicit_paths else "defaulted"
@@ -23,6 +24,7 @@ def configured_field_counts(
     config: MadlibConfig,
     inventory: list[dict[str, str]],
 ) -> dict[str, int]:
+    """Process configured field counts."""
     scopes = {scope: 0 for scope in ("schema", "section", "lexicon", "slot", "visualization")}
     for row in inventory:
         scopes[row["scope"]] = scopes.get(row["scope"], 0) + 1

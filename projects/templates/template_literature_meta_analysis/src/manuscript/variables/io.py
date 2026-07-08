@@ -10,6 +10,7 @@ from manuscript.variables._logging import logger
 
 
 def load_config(project_root: Path) -> dict[str, Any]:
+    """Load config from a file."""
     config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.exists():
         logger.warning("config.yaml not found at %s; domain tokens use fallbacks", config_path)
@@ -24,6 +25,7 @@ def load_config(project_root: Path) -> dict[str, Any]:
 
 
 def load_json(path: Path) -> dict[str, Any]:
+    """Load json from a file."""
     if not path.exists():
         logger.warning("Variable source file not found: %s", path)
         return {"_error": f"file_not_found: {path}"}
@@ -35,6 +37,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def load_pipeline_json_raw(data_dir: Path, output_dir: Path, name: str) -> Any:
+    """Load pipeline json raw from a file."""
     for base in (data_dir, output_dir):
         path = base / name
         if path.exists():
@@ -45,6 +48,7 @@ def load_pipeline_json_raw(data_dir: Path, output_dir: Path, name: str) -> Any:
 
 
 def count_jsonl_lines(path: Path) -> int:
+    """Process count jsonl lines."""
     if not path.exists():
         return 0
     count = 0
@@ -56,6 +60,7 @@ def count_jsonl_lines(path: Path) -> int:
 
 
 def count_total_references(corpus_path: Path) -> int:
+    """Process count total references."""
     if not corpus_path.exists():
         return 0
     total = 0

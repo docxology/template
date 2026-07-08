@@ -20,6 +20,7 @@ from .models import (
 
 
 def parse_missing(value: str | None, fallback: MissingTrackPolicy) -> MissingTrackPolicy:
+    """Parse missing."""
     if value is None:
         return fallback
     try:
@@ -34,6 +35,7 @@ def load_manifest(
     registry_path: Path | None = None,
     project_root: Path | None = None,
 ) -> SheafManifest:
+    """Load manifest from a file."""
     manifest_path = manifest_path.resolve()
     if project_root is not None:
         root = project_root.resolve()
@@ -99,4 +101,5 @@ def load_manifest(
 
 
 def default_manifest_path(project_root: Path) -> Path:
+    """Process default manifest path."""
     return project_root.resolve() / DEFAULT_MANIFEST_REL

@@ -58,6 +58,7 @@ class AlphaSweepConfig:
     divergence_threshold: float = 1e3
 
     def resolved_alphas(self) -> np.ndarray:
+        """Process resolved alphas."""
         if self.alphas is not None:
             return np.array(self.alphas, dtype=np.float64)
         if self.alpha_min is None or self.alpha_max is None or self.alpha_num is None:

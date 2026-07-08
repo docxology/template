@@ -146,6 +146,7 @@ class _Runner:
         )
 
     def run(self) -> SearchResult:
+        """Process run."""
         trajectory: list[float] = []
         clean_trajectory: list[float] = []
         confirmed_improvements = 0

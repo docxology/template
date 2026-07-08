@@ -42,6 +42,7 @@ class KaratGrade:
 
     @property
     def percentage(self) -> float:
+        """Process percentage."""
         return self.purity * 100.0
 
     @property

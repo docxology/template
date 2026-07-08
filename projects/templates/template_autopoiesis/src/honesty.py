@@ -44,6 +44,7 @@ class HonestyManifest:
 
     @property
     def all_passed(self) -> bool:
+        """Process all passed."""
         return all(self.evidence.values()) and not self.missing_calls and not self.unsupported_claims
 
 

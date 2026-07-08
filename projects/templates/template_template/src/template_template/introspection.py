@@ -100,6 +100,7 @@ class InfrastructureReport:
 
     @property
     def pipeline_stages_declared(self) -> int:
+        """Return the declared pipeline stages."""
         return len(self.pipeline_stages)
 
     @property
@@ -110,11 +111,13 @@ class InfrastructureReport:
         # "science"/"provenance" tagged stages are documented there as
         # "Opt-in science/provenance stages (skipped in --core-only and default
         # runs)". All six tags are excluded from the default full-run count.
+        """Return the default full pipeline stages."""
         opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
         return sum(1 for stage in self.pipeline_stages if opt_in_tags.isdisjoint(stage.tags))
 
     @property
     def pipeline_stages_core_only(self) -> int:
+        """Return the core-only pipeline stages."""
         opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
         return sum(
             1

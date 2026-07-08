@@ -13,6 +13,7 @@ from .run import build_run
 
 
 def generate_variables(project_root: Path | str) -> dict[str, str]:
+    """Generate variables."""
     run = build_run(project_root)
     config = run.config
     plan = run.plan
@@ -57,6 +58,7 @@ def generate_variables(project_root: Path | str) -> dict[str, str]:
 
 
 def save_variables(variables: dict[str, str], output_path: Path | str) -> Path:
+    """Save variables to the output path."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(variables, indent=2, sort_keys=True), encoding="utf-8")

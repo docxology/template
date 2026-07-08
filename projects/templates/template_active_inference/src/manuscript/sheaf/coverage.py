@@ -22,6 +22,8 @@ from .models import (
 
 @dataclass(frozen=True)
 class SheafCoverageContext:
+    """Data container for SheafCoverageContext."""
+
     manifest: SheafManifest
     registry: TrackRegistry
     matrix: CoverageMatrix
@@ -32,6 +34,7 @@ def load_sheaf_coverage_context(
     *,
     manifest_path: Path | None = None,
 ) -> SheafCoverageContext:
+    """Load sheaf coverage context from a file."""
     from manuscript.sheaf.manifest import load_manifest
     from manuscript.sheaf.registry import load_track_registry
 
@@ -50,6 +53,7 @@ def classify_cell(
     rel_path: str | None,
     file_exists: bool,
 ) -> tuple[CoverageStatus, CoverageColor]:
+    """Process classify cell."""
     if not bound:
         return "absent", "white"
     if file_exists:
@@ -62,6 +66,7 @@ def build_coverage_matrix(
     manifest: SheafManifest,
     project_root: Path,
 ) -> CoverageMatrix:
+    """Build coverage matrix."""
     root = project_root.resolve()
     track_ids = tuple(tid for tid, _ in sorted(registry.tracks.items(), key=lambda item: item[1].order))
     rows: list[CoverageSectionRow] = []
@@ -101,6 +106,7 @@ def build_coverage_matrix(
 
 
 def coverage_matrix_to_dict(matrix: CoverageMatrix) -> dict[str, Any]:
+    """Process coverage matrix to dict."""
     return {
         "tracks": list(matrix.track_ids),
         "sections": [
@@ -128,6 +134,7 @@ def coverage_matrix_to_dict(matrix: CoverageMatrix) -> dict[str, Any]:
 
 
 def write_coverage_json(matrix: CoverageMatrix, path: Path) -> Path:
+    """Write coverage json to the output path."""
     path = path.resolve()
     path.parent.mkdir(parents=True, exist_ok=True)
     content = json.dumps(coverage_matrix_to_dict(matrix), indent=2) + "\n"
@@ -138,11 +145,13 @@ def write_coverage_json(matrix: CoverageMatrix, path: Path) -> Path:
 
 
 def load_coverage_json(path: Path) -> dict[str, Any]:
+    """Load coverage json from a file."""
     data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
     return data
 
 
 def validate_coverage_strict(matrix: CoverageMatrix) -> list[ManifestIssue]:
+    """Validate coverage strict."""
     issues: list[ManifestIssue] = []
     for section_id, track_id in matrix.gray_cells():
         issues.append(
@@ -156,10 +165,12 @@ def validate_coverage_strict(matrix: CoverageMatrix) -> list[ManifestIssue]:
 
 
 def gray_cell_count(matrix: CoverageMatrix) -> int:
+    """Process gray cell count."""
     return len(matrix.gray_cells())
 
 
 def gray_cell_count_from_json(data: dict[str, Any]) -> int:
+    """Process gray cell count from json."""
     total = 0
     for section in data.get("sections") or []:
         for cell in section.get("cells") or []:
@@ -173,6 +184,7 @@ def validate_coverage_json_data(
     manifest: SheafManifest,
     registry: TrackRegistry,
 ) -> list[ManifestIssue]:
+    """Validate coverage json data."""
     issues: list[ManifestIssue] = []
     tracks = data.get("tracks") or []
     sections = data.get("sections") or []

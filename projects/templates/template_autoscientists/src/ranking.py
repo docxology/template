@@ -47,6 +47,7 @@ def rank_axes(log: Iterable[ExperimentOutcome], axes: Sequence[int]) -> list[int
     tried = {outcome.proposal.axis for outcome in log}
 
     def key(axis: int) -> tuple[int, float, int]:
+        """Process key."""
         untried_first = 0 if axis not in tried else 1
         return (untried_first, -effects[axis], axis)
 

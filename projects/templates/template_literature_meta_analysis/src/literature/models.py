@@ -159,19 +159,23 @@ class Paper:
 
     @property
     def normalized_title(self) -> str:
+        """Process normalized title."""
         return _normalize_text(self.title)
 
     @property
     def author_signature(self) -> str:
+        """Process author signature."""
         return _normalize_author_signature(self.authors)
 
     @property
     def publication_signature(self) -> str:
+        """Process publication signature."""
         parts = [self.normalized_title, self.author_signature]
         return "|".join(part for part in parts if part)
 
     @property
     def is_preprint(self) -> bool:
+        """Check whether preprint."""
         if self.arxiv_id and not self.doi:
             return True
         haystacks = [self.full_text_source, self.venue, self.pdf_url]

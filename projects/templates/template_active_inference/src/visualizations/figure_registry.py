@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class FigureSpec:
+    """Data container for FigureSpec."""
+
     figure_id: str
     filename: str
     alt: str
@@ -29,6 +31,8 @@ class FigureSpec:
 
 @dataclass(frozen=True)
 class SectionFigureRef:
+    """Data container for SectionFigureRef."""
+
     figure_id: str
     number: int | None = None
     caption_prefix: str = ""
@@ -47,6 +51,7 @@ def _load_figures_yaml(project_root: Path) -> dict[str, Any]:
 
 
 def load_figure_registry(project_root: Path) -> dict[str, FigureSpec]:
+    """Load figure registry from a file."""
     raw = _load_figures_yaml(project_root)
     figures_raw = raw.get("figures") or {}
     registry: dict[str, FigureSpec] = {}
@@ -71,6 +76,7 @@ def load_figure_registry(project_root: Path) -> dict[str, FigureSpec]:
 
 
 def load_section_figures(project_root: Path) -> dict[str, tuple[SectionFigureRef, ...]]:
+    """Load section figures from a file."""
     raw = _load_figures_yaml(project_root)
     section_raw = raw.get("section_figures") or {}
     mapping: dict[str, tuple[SectionFigureRef, ...]] = {}
@@ -95,6 +101,7 @@ def load_section_figures(project_root: Path) -> dict[str, tuple[SectionFigureRef
 
 
 def figure_output_path(project_root: Path, figure_id: str) -> Path:
+    """Process figure output path."""
     spec = load_figure_registry(project_root)[figure_id]
     return project_root.resolve() / "output" / "figures" / spec.filename
 
@@ -112,6 +119,7 @@ def render_figure_markdown(
     # intentionally unused: pandoc-crossref owns figure numbering (single source of truth).
     # Hand-written "Figure N (section)." prefixes previously double-numbered every figure
     # against pandoc's auto-caption — see manuscript/SYNTAX.md and src/visualizations/AGENTS.md.
+    """Render figure markdown."""
     del figure_number, caption_prefix
     spec = load_figure_registry(project_root)[figure_id]
     rel = f"../output/figures/{spec.filename}"
@@ -141,6 +149,7 @@ def render_section_figures(
     *,
     variables: dict[str, str] | None = None,
 ) -> str:
+    """Render section figures."""
     refs = load_section_figures(project_root).get(section_id, ())
     if not refs:
         return ""

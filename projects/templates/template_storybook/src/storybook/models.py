@@ -6,6 +6,8 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class Character:
+    """Data container for Character."""
+
     character_id: str
     name: str
     shape: str
@@ -17,6 +19,8 @@ class Character:
 
 @dataclass(frozen=True)
 class PageSpec:
+    """Data container for PageSpec."""
+
     number: int
     slug: str
     title: str
@@ -27,6 +31,7 @@ class PageSpec:
 
     @property
     def filename(self) -> str:
+        """Process filename."""
         if self.number == 0:
             return "00_cover.png"
         return f"{self.number:02d}_{self.slug}.png"
@@ -34,6 +39,8 @@ class PageSpec:
 
 @dataclass(frozen=True)
 class StorybookSpec:
+    """Data container for StorybookSpec."""
+
     title: str
     subtitle: str
     output_pdf: Path
@@ -44,15 +51,18 @@ class StorybookSpec:
 
     @property
     def page_count(self) -> int:
+        """Return the total number of pages."""
         return len(self.pages)
 
     def page_by_slug(self, slug: str) -> PageSpec:
+        """Find a page by its slug."""
         for page in self.pages:
             if page.slug == slug:
                 return page
         raise KeyError(f"No storybook page with slug {slug!r}")
 
     def page_by_number(self, number: int) -> PageSpec:
+        """Find a page by its number."""
         for page in self.pages:
             if page.number == number:
                 return page
@@ -61,6 +71,8 @@ class StorybookSpec:
 
 @dataclass(frozen=True)
 class RenderResult:
+    """Data container for RenderResult."""
+
     output_path: Path
     page_count: int
     image_paths: tuple[Path, ...]
@@ -68,6 +80,7 @@ class RenderResult:
     summary_path: Path
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "output_path": str(self.output_path),
             "page_count": self.page_count,

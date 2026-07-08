@@ -8,6 +8,7 @@ from manuscript.variables.formatters import latex_number
 
 
 def extract_analysis(ctx: ExtractContext) -> dict[str, str]:
+    """Process extract analysis."""
     variables: dict[str, str] = {}
     figures_dir = ctx.output_dir / "figures"
     variables["NUM_FIGURES"] = str(len(list(figures_dir.glob("*.png")))) if figures_dir.exists() else "pending"

@@ -21,6 +21,7 @@ from .manuscript_tokens_format import (
 
 
 def candidate_ledger_table(candidate_ledger: dict[str, Any]) -> str:
+    """Process candidate ledger table."""
     baseline = mapping(candidate_ledger.get("baseline"))
     candidates = mapping_list(candidate_ledger.get("candidates"))
     rows = [
@@ -50,6 +51,7 @@ def candidate_ledger_table(candidate_ledger: dict[str, Any]) -> str:
 
 
 def figure_method_table(registry: dict[str, Any]) -> str:
+    """Process figure method table."""
     rows = []
     for label, record in sorted(registry.items()):
         if not isinstance(record, dict):
@@ -71,6 +73,7 @@ def figure_method_table(registry: dict[str, Any]) -> str:
 
 
 def candidate_interval_table(candidate_intervals: dict[str, Any]) -> str:
+    """Process candidate interval table."""
     rows = [
         (
             candidate_display_label(row.get("candidate_id", "N/A")),
@@ -89,6 +92,7 @@ def candidate_interval_table(candidate_intervals: dict[str, Any]) -> str:
 
 
 def class_balance_table(class_balance: dict[str, Any]) -> str:
+    """Process class balance table."""
     rows = [
         (
             string_value(row.get("split", "N/A")),
@@ -106,6 +110,7 @@ def class_balance_table(class_balance: dict[str, Any]) -> str:
 
 
 def artifact_manifest_table(artifact_manifest: dict[str, Any]) -> str:
+    """Process artifact manifest table."""
     entries = mapping_list(artifact_manifest.get("entries"))
     rows = [
         (
@@ -123,6 +128,7 @@ def artifact_manifest_table(artifact_manifest: dict[str, Any]) -> str:
 
 
 def review_gate_table(review_decisions: dict[str, Any]) -> str:
+    """Process review gate table."""
     rows = [
         (
             string_value(row.get("gate", "N/A")),
@@ -140,6 +146,7 @@ def review_gate_table(review_decisions: dict[str, Any]) -> str:
 
 
 def benchmark_score_table(benchmark_scores: dict[str, Any]) -> str:
+    """Process benchmark score table."""
     rows = [
         (
             string_value(row.get("id", "N/A")),
@@ -157,6 +164,7 @@ def benchmark_score_table(benchmark_scores: dict[str, Any]) -> str:
 
 
 def classification_diagnostics_table(classification: dict[str, Any]) -> str:
+    """Process classification diagnostics table."""
     rows = [
         (
             string_value(row.get("class_label", "N/A")),
@@ -175,6 +183,7 @@ def classification_diagnostics_table(classification: dict[str, Any]) -> str:
 
 
 def calibration_bin_table(calibration: dict[str, Any]) -> str:
+    """Process calibration bin table."""
     rows = [
         (
             f"{string_value(row.get('lower', 'N/A'))}-{string_value(row.get('upper', 'N/A'))}",
@@ -193,6 +202,7 @@ def calibration_bin_table(calibration: dict[str, Any]) -> str:
 
 
 def calibration_bin_interval_table(calibration_intervals: dict[str, Any]) -> str:
+    """Process calibration bin interval table."""
     rows = [
         (
             f"{string_value(row.get('lower', 'N/A'))}-{string_value(row.get('upper', 'N/A'))}",
@@ -212,6 +222,7 @@ def calibration_bin_interval_table(calibration_intervals: dict[str, Any]) -> str
 
 
 def confusion_pair_table(classification: dict[str, Any]) -> str:
+    """Process confusion pair table."""
     rows = [
         (
             f"{string_value(row.get('true_label', 'N/A'))} -> {string_value(row.get('predicted_label', 'N/A'))}",
@@ -228,6 +239,7 @@ def confusion_pair_table(classification: dict[str, Any]) -> str:
 
 
 def robustness_score_table(robustness: dict[str, Any]) -> str:
+    """Process robustness score table."""
     rows = [
         (
             candidate_display_label(row.get("candidate_id", "N/A")),
@@ -245,6 +257,7 @@ def robustness_score_table(robustness: dict[str, Any]) -> str:
 
 
 def probability_diagnostics_table(probability: dict[str, Any]) -> str:
+    """Process probability diagnostics table."""
     rows = [
         ("Mean confidence", percent_value(probability.get("mean_confidence"))),
         ("Mean correct confidence", percent_value(probability.get("mean_correct_confidence"))),
@@ -262,6 +275,7 @@ def probability_diagnostics_table(probability: dict[str, Any]) -> str:
 
 
 def bootstrap_interval_table(bootstrap: dict[str, Any]) -> str:
+    """Process bootstrap interval table."""
     rows = [
         (
             metric_label(row.get("metric", "N/A")),
@@ -280,6 +294,7 @@ def bootstrap_interval_table(bootstrap: dict[str, Any]) -> str:
 
 
 def paired_comparison_table(paired: dict[str, Any]) -> str:
+    """Process paired comparison table."""
     rows = [
         ("Both correct", string_value(paired.get("both_correct", "N/A"))),
         ("Accepted only correct", string_value(paired.get("accepted_only_correct", "N/A"))),
@@ -297,6 +312,7 @@ def paired_comparison_table(paired: dict[str, Any]) -> str:
 
 
 def statistical_summary_table(statistical: dict[str, Any]) -> str:
+    """Process statistical summary table."""
     rows = [
         ("Accuracy", percent_value(statistical.get("accuracy"))),
         ("Balanced accuracy", percent_value(statistical.get("balanced_accuracy"))),
@@ -315,6 +331,7 @@ def statistical_summary_table(statistical: dict[str, Any]) -> str:
 
 
 def selective_accuracy_table(statistical: dict[str, Any]) -> str:
+    """Process selective accuracy table."""
     rows = [
         (
             percent_value(row.get("threshold")),
@@ -333,6 +350,7 @@ def selective_accuracy_table(statistical: dict[str, Any]) -> str:
 
 
 def probability_quality_table(statistical: dict[str, Any]) -> str:
+    """Process probability quality table."""
     rows = [
         (
             candidate_display_label(row.get("candidate_id", "N/A")),
@@ -352,6 +370,7 @@ def probability_quality_table(statistical: dict[str, Any]) -> str:
 
 
 def training_diagnostics_table(training: dict[str, Any]) -> str:
+    """Process training diagnostics table."""
     rows = [
         (
             candidate_display_label(row.get("candidate_id", "N/A")),
@@ -382,6 +401,7 @@ def training_diagnostics_table(training: dict[str, Any]) -> str:
 
 
 def candidate_rank_stability_table(rank_stability: dict[str, Any]) -> str:
+    """Process candidate rank stability table."""
     rows = [
         (
             candidate_display_label(row.get("candidate_id", "N/A")),
@@ -400,6 +420,7 @@ def candidate_rank_stability_table(rank_stability: dict[str, Any]) -> str:
 
 
 def candidate_selection_audit_table(candidate_selection: dict[str, Any]) -> str:
+    """Process candidate selection audit table."""
     rows = [
         (
             string_value(row.get("rank", "N/A")),
@@ -421,6 +442,7 @@ def candidate_selection_audit_table(candidate_selection: dict[str, Any]) -> str:
 
 
 def diagnostic_boundary_table(diagnostic_boundary: dict[str, Any]) -> str:
+    """Process diagnostic boundary table."""
     rows = [
         (
             string_value(row.get("surface", "N/A")).replace("_", " "),
@@ -439,6 +461,7 @@ def diagnostic_boundary_table(diagnostic_boundary: dict[str, Any]) -> str:
 
 
 def phase_ledger_table(phase_ledger: dict[str, Any]) -> str:
+    """Process phase ledger table."""
     rows = [
         (
             string_value(row.get("phase", "N/A")).replace("_", " "),
@@ -457,6 +480,7 @@ def phase_ledger_table(phase_ledger: dict[str, Any]) -> str:
 
 
 def figure_quality_table(figure_quality: dict[str, Any]) -> str:
+    """Process figure quality table."""
     rows = [
         (
             string_value(row.get("label", "N/A")),
@@ -480,6 +504,7 @@ def security_artifact_table(
     security_inventory: dict[str, Any],
     security_attestation: dict[str, Any],
 ) -> str:
+    """Process security artifact table."""
     rows = [
         (
             "profile",
@@ -520,6 +545,7 @@ def security_artifact_table(
 
 
 def security_threat_model_table(threat_model: dict[str, Any]) -> str:
+    """Process security threat model table."""
     rows = [
         (
             string_value(row.get("id", "N/A")).removeprefix("threat-").replace("-", " "),
@@ -538,6 +564,7 @@ def security_threat_model_table(threat_model: dict[str, Any]) -> str:
 
 
 def security_integrity_table(attestation: dict[str, Any]) -> str:
+    """Process security integrity table."""
     rows = [
         ("status", string_value(attestation.get("status", "N/A"))),
         ("algorithm", string_value(attestation.get("algorithm", "N/A"))),
@@ -554,6 +581,7 @@ def security_integrity_table(attestation: dict[str, Any]) -> str:
 
 
 def variable_provenance_table(provenance: dict[str, dict[str, str]]) -> str:
+    """Process variable provenance table."""
     counts = Counter(row["source"] for row in provenance.values())
     rows = [(source, str(count)) for source, count in sorted(counts.items())]
     return markdown_table(

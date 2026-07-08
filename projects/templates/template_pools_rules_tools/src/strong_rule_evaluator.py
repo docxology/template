@@ -35,12 +35,16 @@ logger = logging.getLogger(__name__)
 
 
 class StrongRuleViolation(TypedDict):
+    """Data container for StrongRuleViolation."""
+
     rule_name: str
     filename: str
     message: str
 
 
 class StrongRuleEvaluation(TypedDict):
+    """Data container for StrongRuleEvaluation."""
+
     filename: str
     rule_name: str
     passed: bool
@@ -48,6 +52,8 @@ class StrongRuleEvaluation(TypedDict):
 
 
 class StrongRulesEvaluationResult(TypedDict):
+    """Data container for StrongRulesEvaluationResult."""
+
     rule_set: str
     evaluations: list[StrongRuleEvaluation]
     passed: bool

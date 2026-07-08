@@ -63,6 +63,8 @@ PREPRINT_SOURCE_ORDER = ("arxiv", "sovietrxiv", "chinarxiv", "semantic_scholar",
 
 @dataclass(frozen=True)
 class QueryRoute:
+    """Data container for QueryRoute."""
+
     query_type: QueryType
     confidence: float
     matched_patterns: tuple[str, ...]
@@ -71,7 +73,10 @@ class QueryRoute:
 
 
 class QueryRouter:
+    """Data container for QueryRouter."""
+
     def route(self, query: str | None, available_sources: Sequence[str]) -> QueryRoute:
+        """Process route."""
         text = (query or "").lower().strip()
         academic_hits = tuple(pattern for pattern in ACADEMIC_PATTERNS if pattern in text)
         industry_hits = tuple(pattern for pattern in INDUSTRY_PATTERNS if pattern in text)

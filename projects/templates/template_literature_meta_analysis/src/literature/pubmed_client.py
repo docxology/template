@@ -95,6 +95,7 @@ def search_pubmed(
     session: Optional[requests.Session] = None,
     delay_override: Optional[Callable[[float], None]] = None,
 ) -> list[Paper]:
+    """Process search pubmed."""
     http = session or requests.Session()
 
     try:

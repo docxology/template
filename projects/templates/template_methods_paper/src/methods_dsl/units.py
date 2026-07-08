@@ -92,6 +92,7 @@ class Quantity:
 
     @property
     def dimension(self) -> Dimension:
+        """Process dimension."""
         return dimension_of(self.unit)
 
     def to_base(self) -> float:

@@ -26,6 +26,8 @@ def _load_domain_profile_data(project_root: Path) -> dict[str, Any]:
 
 @dataclass(frozen=True)
 class DomainStageMapping:
+    """Data container for DomainStageMapping."""
+
     refinery_stage: str
     domain_operation: str
     purity_target: float
@@ -33,6 +35,7 @@ class DomainStageMapping:
     notes: str = ""
 
     def as_dict(self) -> dict[str, Any]:
+        """Process as dict."""
         return {
             "refinery_stage": self.refinery_stage,
             "domain_operation": self.domain_operation,
@@ -44,6 +47,8 @@ class DomainStageMapping:
 
 @dataclass(frozen=True)
 class DomainMetricSpec:
+    """Data container for DomainMetricSpec."""
+
     name: str
     weight: float = 1.0
     minimum: float = 0.0
@@ -52,6 +57,7 @@ class DomainMetricSpec:
     description: str = ""
 
     def normalized(self, value: float) -> float:
+        """Process normalized."""
         if self.maximum <= self.minimum:
             raise ValueError(f"Metric '{self.name}' must have maximum greater than minimum")
         score = (value - self.minimum) / (self.maximum - self.minimum)
@@ -61,6 +67,7 @@ class DomainMetricSpec:
         return score
 
     def as_dict(self) -> dict[str, Any]:
+        """Process as dict."""
         return {
             "name": self.name,
             "weight": self.weight,
@@ -73,6 +80,8 @@ class DomainMetricSpec:
 
 @dataclass(frozen=True)
 class DomainAdapterProfile:
+    """Data container for DomainAdapterProfile."""
+
     domain: str
     display_name: str
     required_packages: tuple[str, ...] = ()
@@ -93,13 +102,16 @@ class DomainAdapterProfile:
 
     @property
     def stage_count(self) -> int:
+        """Process stage count."""
         return len(self.stage_mappings)
 
     @property
     def metric_count(self) -> int:
+        """Process metric count."""
         return len(self.metrics)
 
     def purity_from_metrics(self, measurements: Mapping[str, float]) -> float:
+        """Process purity from metrics."""
         if not self.metrics:
             return 0.0
         weighted_total = 0.0
@@ -114,12 +126,14 @@ class DomainAdapterProfile:
         return max(0.0, min(1.0, weighted_total / weight_sum))
 
     def stage_rows(self) -> str:
+        """Process stage rows."""
         return "\n".join(
             f"| {stage.refinery_stage} | {stage.domain_operation} | {stage.purity_target:.3f} | {stage.evidence_surface} |"
             for stage in self.stage_mappings
         )
 
     def metric_rows(self) -> str:
+        """Process metric rows."""
         return "\n".join(
             f"| {metric.name} | {metric.weight:g} | {metric.minimum:g} | {metric.maximum:g} | "
             f"{'yes' if metric.higher_is_better else 'no'} | {metric.description} |"
@@ -127,6 +141,7 @@ class DomainAdapterProfile:
         )
 
     def boundary_lines(self) -> tuple[str, ...]:
+        """Process boundary lines."""
         lines: list[str] = []
         if self.analogy_boundary_thesis:
             lines.append(self.analogy_boundary_thesis)
@@ -135,9 +150,11 @@ class DomainAdapterProfile:
         return tuple(lines)
 
     def boundary_summary(self) -> str:
+        """Process boundary summary."""
         return "\n".join(f"- {line}" for line in self.boundary_lines())
 
     def review_gate_summary(self) -> str:
+        """Process review gate summary."""
         return ", ".join(self.review_gates)
 
 
@@ -200,6 +217,7 @@ def _boundary_parts(data: Any) -> tuple[str, tuple[str, ...], tuple[str, ...]]:
 
 
 def load_domain_profile(project_root: Path | None = None) -> DomainAdapterProfile:
+    """Load domain profile from a file."""
     root = project_root or Path(__file__).resolve().parent.parent
     data = _load_domain_profile_data(root)
     boundary_thesis, boundary_limits, boundary_non_claims = _boundary_parts(data.get("analogy_boundary", {}))

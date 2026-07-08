@@ -64,6 +64,7 @@ class DeterministicProposer:
         proposer_id: str,
         avoid: frozenset[tuple[int, str]] = frozenset(),
     ) -> Proposal:
+        """Process propose."""
         if not axes:
             raise ValueError("axes must be non-empty")
         axis = axes[len(state.log) % len(axes)]

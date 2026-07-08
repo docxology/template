@@ -36,6 +36,7 @@ class DatasetSchema:
 
     @property
     def all_columns(self) -> tuple[str, ...]:
+        """Process all columns."""
         return (self.id_column, self.group_column, *self.numeric_columns)
 
 

@@ -6,6 +6,8 @@ from typing import Any
 
 @dataclass(frozen=True)
 class SecurityAssayRecord:
+    """Data container for SecurityAssayRecord."""
+
     assay_id: str
     threat: str
     standard: str
@@ -14,10 +16,12 @@ class SecurityAssayRecord:
     claim_boundary: str
 
     def as_dict(self) -> dict[str, str]:
+        """Process as dict."""
         return asdict(self)
 
 
 def build_security_assay(config: Any) -> tuple[SecurityAssayRecord, ...]:
+    """Build security assay."""
     rows = getattr(config, "security_assay", [])
     if not isinstance(rows, list):
         return ()
@@ -38,6 +42,7 @@ def build_security_assay(config: Any) -> tuple[SecurityAssayRecord, ...]:
 
 
 def security_assay_table_rows(records: tuple[SecurityAssayRecord, ...]) -> str:
+    """Process security assay table rows."""
     if not records:
         return "| not configured | not configured | not configured | not configured | not configured | not configured |"
     return "\n".join(
@@ -49,6 +54,7 @@ def security_assay_table_rows(records: tuple[SecurityAssayRecord, ...]) -> str:
 
 
 def security_assay_summary_line(records: tuple[SecurityAssayRecord, ...]) -> str:
+    """Process security assay summary line."""
     if not records:
         return "0 adversarial assay rows are configured; no security-scope claim should be made."
     return (
@@ -58,6 +64,7 @@ def security_assay_summary_line(records: tuple[SecurityAssayRecord, ...]) -> str
 
 
 def security_assay_records(records: tuple[SecurityAssayRecord, ...]) -> list[dict[str, str]]:
+    """Process security assay records."""
     return [item.as_dict() for item in records]
 
 

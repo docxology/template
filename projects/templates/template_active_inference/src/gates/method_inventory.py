@@ -53,18 +53,21 @@ class _DefinitionVisitor(ast.NodeVisitor):
         self.entries: list[MethodEntry] = []
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:  # noqa: N802
+        """Process visit ClassDef."""
         self._record(node)
         self._stack.append(node.name)
         self.generic_visit(node)
         self._stack.pop()
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:  # noqa: N802
+        """Process visit FunctionDef."""
         self._record(node)
         self._stack.append(node.name)
         self.generic_visit(node)
         self._stack.pop()
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:  # noqa: N802
+        """Process visit AsyncFunctionDef."""
         self._record(node)
         self._stack.append(node.name)
         self.generic_visit(node)

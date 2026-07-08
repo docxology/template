@@ -13,10 +13,12 @@ def inject_variables(
     filename: str = "<unknown>",
     lenient: bool = False,
 ) -> str:
+    """Process inject variables."""
     replaced_count = 0
     missing_vars: list[str] = []
 
     def replacer(match: re.Match[str]) -> str:
+        """Process replacer."""
         nonlocal replaced_count
         var_name = match.group(1)
         if var_name in variables:

@@ -39,10 +39,12 @@ from .diagrams import (
 
 
 def figure_registry_payload() -> dict[str, Any]:
+    """Process figure registry payload."""
     return {"figures": [spec.registry_record() for spec in FIGURE_SPECS]}
 
 
 def write_figure_registry(output_dir: Path) -> Path:
+    """Write the figure registry to a JSON file."""
     output_dir.mkdir(parents=True, exist_ok=True)
     registry_path = output_dir / "figure_registry.json"
     registry_path.write_text(
@@ -54,6 +56,7 @@ def write_figure_registry(output_dir: Path) -> Path:
 
 
 def write_figure_quality_report(project_root: Path) -> Path:
+    """Write figure quality report to the output path."""
     output_dir = project_root / "output" / "figures"
     reports_dir = project_root / "output" / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)

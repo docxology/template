@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def plot_topic_term_bars(topics: list[dict], output_path: Path) -> Path:
+    """Process plot topic term bars."""
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     n_topics = len(topics)
@@ -81,6 +82,7 @@ def plot_cooccurrence_matrix(
     *,
     n_terms: int = 30,
 ) -> Path:
+    """Process plot cooccurrence matrix."""
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(12, 10), dpi=VIZ_CONFIG["dpi"])

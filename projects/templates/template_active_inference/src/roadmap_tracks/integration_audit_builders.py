@@ -40,6 +40,7 @@ def _analysis_scripts(root: Path) -> list[str]:
 
 
 def build_integration_dependency_graph(project_root: Path) -> dict[str, Any]:
+    """Build integration dependency graph."""
     root = project_root.resolve()
     from manuscript.sheaf.semantic import build_validation_dependency_graph
 
@@ -75,6 +76,7 @@ def build_integration_dependency_graph(project_root: Path) -> dict[str, Any]:
 
 
 def build_producer_completeness(project_root: Path) -> dict[str, Any]:
+    """Build producer completeness."""
     root = project_root.resolve()
     from manuscript.sheaf.semantic import ARTIFACT_PRODUCERS
 
@@ -96,6 +98,7 @@ def build_producer_completeness(project_root: Path) -> dict[str, Any]:
 
 
 def build_stale_artifact_report(project_root: Path) -> dict[str, Any]:
+    """Build stale artifact report."""
     root = project_root.resolve()
     graph = build_integration_dependency_graph(root)
     rows = []
@@ -122,6 +125,7 @@ def build_stale_artifact_report(project_root: Path) -> dict[str, Any]:
 
 
 def build_cross_track_symbol_table(project_root: Path) -> dict[str, Any]:
+    """Build cross track symbol table."""
     root = project_root.resolve()
     from gnn.parser import parse_gnn_file
     from manuscript.variables import generate_variables
@@ -261,6 +265,7 @@ def build_cross_track_symbol_table(project_root: Path) -> dict[str, Any]:
 
 
 def build_manuscript_token_provenance(project_root: Path) -> dict[str, Any]:
+    """Build manuscript token provenance."""
     root = project_root.resolve()
     source = "output/data/manuscript_variables.json"
     variables = _load_json(root / source)
@@ -406,6 +411,7 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
 
 
 def build_claim_evidence_audit(project_root: Path) -> dict[str, Any]:
+    """Build claim evidence audit."""
     root = project_root.resolve()
     from gates.claim_ledger import claim_evidence_status_rows
 
@@ -432,6 +438,7 @@ def build_claim_evidence_audit(project_root: Path) -> dict[str, Any]:
 
 
 def build_validation_gate_index(project_root: Path) -> dict[str, Any]:
+    """Build validation gate index."""
     _ = project_root
 
     def gate(
@@ -441,6 +448,7 @@ def build_validation_gate_index(project_root: Path) -> dict[str, Any]:
         negative_control: str,
         command: str = "uv run python scripts/validate_outputs.py",
     ) -> dict[str, Any]:
+        """Process gate."""
         return {
             "id": gate_id,
             "command": command,

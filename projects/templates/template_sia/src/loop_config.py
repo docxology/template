@@ -22,6 +22,7 @@ class SiaLoopSettings:
 
     @property
     def task_dir(self) -> str:
+        """Process task dir."""
         return f"tasks/{self.task_name}"
 
 

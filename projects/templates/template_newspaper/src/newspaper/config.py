@@ -75,14 +75,17 @@ class NewspaperConfig:
 
     @property
     def gutter_points(self) -> float:
+        """Process gutter points."""
         return self.gutter_inches * INCH
 
     @property
     def rail_points(self) -> float:
+        """Process rail points."""
         return self.rail_inches * INCH
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "NewspaperConfig":
+        """Process from dict."""
         render = data.get("render") or {}
         if not isinstance(render, dict):
             raise ValueError("'render' section must be a mapping")

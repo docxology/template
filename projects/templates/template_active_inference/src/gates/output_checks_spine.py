@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 def add_validation_spine_checks(root: Path, checks: dict[str, bool]) -> dict[str, Path]:
+    """Add validation spine checks to the collection."""
     crosswalk_path = root / "output" / "data" / "sheaf_evidence_crosswalk.json"
     dependency_path = root / "output" / "data" / "validation_dependency_graph.json"
     if crosswalk_path.exists():

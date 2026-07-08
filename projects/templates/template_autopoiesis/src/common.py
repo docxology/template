@@ -30,8 +30,10 @@ class CheckReport:
 
     @property
     def all_passed(self) -> bool:
+        """Process all passed."""
         return all(c.passed for c in self.checks)
 
     @property
     def failed(self) -> tuple[CheckResult, ...]:
+        """Process failed."""
         return tuple(c for c in self.checks if not c.passed)

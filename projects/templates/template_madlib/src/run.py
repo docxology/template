@@ -11,6 +11,8 @@ from .tokens import TokenPlan, generate_token_plan
 
 @dataclass(frozen=True)
 class MadlibRun:
+    """Data container for MadlibRun."""
+
     project_root: Path
     config: MadlibConfig
     plan: TokenPlan
@@ -20,6 +22,7 @@ class MadlibRun:
 
 
 def build_run(project_root: Path | str) -> MadlibRun:
+    """Build run."""
     root = Path(project_root)
     config = load_madlib_config(root)
     plan = generate_token_plan(config)

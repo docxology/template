@@ -17,6 +17,7 @@ def _empty_advanced() -> dict[str, str]:
 
 
 def extract_citation(ctx: ExtractContext) -> dict[str, str]:
+    """Process extract citation."""
     citation = ctx.load_json("citation_network.json")
     if not citation:
         logger.warning("citation_network.json not found; citation variables empty")

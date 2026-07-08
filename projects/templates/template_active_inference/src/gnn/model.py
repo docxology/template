@@ -12,6 +12,8 @@ ArrayF = NDArray[np.float64]
 
 @dataclass(frozen=True)
 class GnnVariable:
+    """Data container for GnnVariable."""
+
     name: str
     dims: tuple[int, ...]
     dtype: str
@@ -20,6 +22,7 @@ class GnnVariable:
 
     @property
     def size(self) -> int:
+        """Process size."""
         n = 1
         for d in self.dims:
             n *= d
@@ -28,6 +31,8 @@ class GnnVariable:
 
 @dataclass(frozen=True)
 class GnnConnection:
+    """Data container for GnnConnection."""
+
     source: str
     target: str
     directed: bool
@@ -36,6 +41,8 @@ class GnnConnection:
 
 @dataclass
 class GnnModel:
+    """Data container for GnnModel."""
+
     section: str
     version: str
     name: str
@@ -48,9 +55,11 @@ class GnnModel:
     time: str = ""
 
     def variable(self, name: str) -> GnnVariable:
+        """Process variable."""
         if name not in self.variables:
             raise KeyError(f"GNN model declares no variable {name!r}")
         return self.variables[name]
 
     def has(self, name: str) -> bool:
+        """Process has."""
         return name in self.variables

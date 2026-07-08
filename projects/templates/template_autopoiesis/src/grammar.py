@@ -99,14 +99,17 @@ class Grammar:
 
     @property
     def reserved_slots(self) -> tuple[GrammarSlot, ...]:
+        """Process reserved slots."""
         return tuple(s for s in self.slots if s.name in RESERVED_SLOTS)
 
     @property
     def effective_slots(self) -> tuple[GrammarSlot, ...]:
+        """Process effective slots."""
         return tuple(s for s in self.slots if s.name not in RESERVED_SLOTS)
 
     @property
     def effective_product_size(self) -> int:
+        """Process effective product size."""
         n = 1
         for s in self.effective_slots:
             n *= len(s.options)
@@ -114,10 +117,12 @@ class Grammar:
 
     @property
     def grammar_hash(self) -> str:
+        """Process grammar hash."""
         canonical = self.canonical()
         return hashlib.sha256(canonical.encode()).hexdigest()[:16]
 
     def slot(self, name: str) -> GrammarSlot:
+        """Process slot."""
         for s in self.slots:
             if s.name == name:
                 return s

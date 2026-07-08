@@ -21,6 +21,7 @@ _TITLE_KW: dict[str, Any] = {"fontsize": 13, "fontweight": "bold", "color": _INK
 
 
 def write_token_density_figure(plan: TokenPlan, output_path: Path | str) -> Path:
+    """Write token density figure to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     counts = plan.category_counts
@@ -55,6 +56,7 @@ def write_cover_overview_figure(
     counts: dict[str, int],
     output_path: Path | str,
 ) -> Path:
+    """Write cover overview figure to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     fig, ax = plt.subplots(figsize=(9.2, 6.2))
@@ -134,6 +136,7 @@ def write_token_injection_flow_figure(
     plan: TokenPlan,
     output_path: Path | str,
 ) -> Path:
+    """Write token injection flow figure to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     fig, ax = plt.subplots(figsize=(8.4, 3.9))
@@ -180,6 +183,7 @@ def write_section_token_allocation_figure(
     plan: TokenPlan,
     output_path: Path | str,
 ) -> Path:
+    """Write section token allocation figure to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     sections = list(config.section_conditions)
@@ -215,6 +219,7 @@ def write_provenance_trace_map(
     plan: TokenPlan,
     output_path: Path | str,
 ) -> Path:
+    """Write provenance trace map to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     categories = sorted(plan.category_counts, key=lambda category: (-plan.category_counts[category], category))
@@ -243,6 +248,7 @@ def write_provenance_trace_map(
 
 
 def write_quality_gate_matrix(config: MadlibConfig, output_path: Path | str) -> Path:
+    """Write quality gate matrix to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     fig, ax = plt.subplots(figsize=(8.1, 4.8))
@@ -273,6 +279,7 @@ def write_configured_field_matrix(
     inventory: list[dict[str, str]],
     output_path: Path | str,
 ) -> Path:
+    """Write configured field matrix to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     scopes = ("schema", "section", "lexicon", "slot", "visualization")
@@ -310,6 +317,7 @@ def write_section_configuration_heatmap(
     plan: TokenPlan,
     output_path: Path | str,
 ) -> Path:
+    """Write section configuration heatmap to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     columns = ("condition", "title", "moves", "slots")
@@ -351,6 +359,7 @@ def write_section_configuration_heatmap(
 
 
 def write_field_origin_summary(counts: dict[str, int], output_path: Path | str) -> Path:
+    """Write field origin summary to the output path."""
     plt = _pyplot()
     output = Path(output_path)
     labels = ("Explicit", "Defaulted")
@@ -528,6 +537,7 @@ def _draw_list_panel(
 
 
 def plt_rectangle(x: float, y: float, width: float, height: float, color: str) -> Any:
+    """Process plt rectangle."""
     from matplotlib.patches import Rectangle
 
     return Rectangle((x, y), width, height, linewidth=0, facecolor=color, alpha=0.92)

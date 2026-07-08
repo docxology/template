@@ -29,6 +29,7 @@ def _field_value(payload: dict[str, Any], field: str) -> Any:
 
 
 def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
+    """Build evidence field index."""
     root = project_root.resolve()
     token_provenance = _load_json(root / "output" / "data" / "manuscript_token_provenance.json")
     tokens_by_source: dict[str, list[str]] = {}
@@ -81,6 +82,7 @@ def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
 
 
 def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
+    """Build release bundle manifest."""
     root = project_root.resolve()
     required = [
         CANONICAL_ARTIFACTS["semantic"],
@@ -151,6 +153,7 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
 
 
 def build_theorem_traceability_matrix(project_root: Path) -> dict[str, Any]:
+    """Build theorem traceability matrix."""
     root = project_root.resolve()
     lean = _load_json(root / "output" / "reports" / "lean_theorem_inventory.json")
     model = _load_json(root / CANONICAL_ARTIFACTS["model_checking"])

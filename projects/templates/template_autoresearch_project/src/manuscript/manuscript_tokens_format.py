@@ -11,6 +11,7 @@ from src.json_coerce import mapping_list
 
 
 def load_json_mapping(path: Path) -> dict[str, Any]:
+    """Load json mapping from a file."""
     if not path.exists():
         raise ValueError(f"required JSON artifact is missing: {path}")
     payload = json.loads(path.read_text(encoding="utf-8"))
@@ -20,36 +21,42 @@ def load_json_mapping(path: Path) -> dict[str, Any]:
 
 
 def load_optional_json_mapping(path: Path) -> dict[str, Any]:
+    """Load optional json mapping from a file."""
     if not path.exists():
         return {}
     return load_json_mapping(path)
 
 
 def string_value(value: object) -> str:
+    """Process string value."""
     if isinstance(value, float):
         return f"{value:g}"
     return str(value)
 
 
 def percent_value(value: object) -> str:
+    """Process percent value."""
     if not isinstance(value, int | float):
         return "N/A"
     return f"{float(value) * 100:.1f}%"
 
 
 def currency_value(value: object) -> str:
+    """Process currency value."""
     if not isinstance(value, int | float):
         return "N/A"
     return f"{float(value):.2f}"
 
 
 def decimal_value(value: object) -> str:
+    """Process decimal value."""
     if not isinstance(value, int | float):
         return "N/A"
     return f"{float(value):.3f}"
 
 
 def accuracy_interval(classification: dict[str, Any]) -> str:
+    """Process accuracy interval."""
     low = classification.get("accuracy_ci_low")
     high = classification.get("accuracy_ci_high")
     if not isinstance(low, int | float) or not isinstance(high, int | float):
@@ -58,6 +65,7 @@ def accuracy_interval(classification: dict[str, Any]) -> str:
 
 
 def top_confusion_pair_label(classification: dict[str, Any]) -> str:
+    """Process top confusion pair label."""
     pairs = mapping_list(classification.get("top_confusion_pairs"))
     if not pairs:
         return "none"
@@ -70,6 +78,7 @@ def top_confusion_pair_label(classification: dict[str, Any]) -> str:
 
 
 def bootstrap_interval(bootstrap: dict[str, Any], metric: str) -> str:
+    """Process bootstrap interval."""
     for row in mapping_list(bootstrap.get("intervals")):
         if row.get("metric") == metric:
             return f"{percent_value(row.get('ci_low'))} to {percent_value(row.get('ci_high'))}"
@@ -77,12 +86,14 @@ def bootstrap_interval(bootstrap: dict[str, Any], metric: str) -> str:
 
 
 def p_value(value: object) -> str:
+    """Process p value."""
     if not isinstance(value, int | float):
         return "N/A"
     return f"{float(value):.3f}"
 
 
 def last_coverage_value(statistical: dict[str, Any], key: str) -> float | None:
+    """Process last coverage value."""
     rows = mapping_list(statistical.get("coverage_curve"))
     if not rows:
         return None
@@ -91,16 +102,19 @@ def last_coverage_value(statistical: dict[str, Any], key: str) -> float | None:
 
 
 def dataset_short_name(dataset_name: str) -> str:
+    """Process dataset short name."""
     return dataset_name.split(maxsplit=1)[0] if dataset_name and dataset_name != "N/A" else dataset_name
 
 
 def image_shape(value: object) -> str:
+    """Process image shape."""
     if isinstance(value, list | tuple) and len(value) == 2:
         return f"{value[0]} by {value[1]}"
     return "N/A"
 
 
 def model_type_label(value: object) -> str:
+    """Process model type label."""
     labels = {
         "mlp": "MLP",
         "nearest_centroid": "nearest-centroid",
@@ -111,6 +125,7 @@ def model_type_label(value: object) -> str:
 
 
 def candidate_display_label(value: object) -> str:
+    """Process candidate display label."""
     text = string_value(value)
     if text == "nearest_centroid_baseline":
         return "baseline"
@@ -118,6 +133,7 @@ def candidate_display_label(value: object) -> str:
 
 
 def metric_label(value: object) -> str:
+    """Process metric label."""
     labels = {
         "accuracy": "accuracy",
         "macro_f1": "macro F1",
@@ -126,21 +142,25 @@ def metric_label(value: object) -> str:
 
 
 def status_counts(candidates: list[dict[str, Any]]) -> Counter[str]:
+    """Process status counts."""
     return Counter(string_value(candidate.get("status", "unknown")) for candidate in candidates)
 
 
 def status_summary(candidates: list[dict[str, Any]]) -> str:
+    """Process status summary."""
     counts = status_counts(candidates)
     return ", ".join(f"{status}: {count}" for status, count in sorted(counts.items()))
 
 
 def model_family_labels(baseline: dict[str, Any], candidates: list[dict[str, Any]]) -> str:
+    """Process model family labels."""
     model_types = {model_type_label(baseline.get("model_type", "N/A"))}
     model_types.update(model_type_label(candidate.get("model_type", "N/A")) for candidate in candidates)
     return ", ".join(sorted(model_types))
 
 
 def first_model_candidate(candidates: list[dict[str, Any]], model_type: str) -> dict[str, Any]:
+    """Process first model candidate."""
     for candidate in candidates:
         if candidate.get("model_type") == model_type:
             return candidate
@@ -148,10 +168,12 @@ def first_model_candidate(candidates: list[dict[str, Any]], model_type: str) -> 
 
 
 def benchmark_task_ids(config: dict[str, Any]) -> str:
+    """Process benchmark task ids."""
     return ", ".join(string_value(row.get("id", "N/A")) for row in mapping_list(config.get("benchmark_tasks")))
 
 
 def artifact_role(path: str) -> str:
+    """Process artifact role."""
     if path.endswith(".png"):
         return "Generated figure"
     if "manuscript" in path:
@@ -172,6 +194,7 @@ def artifact_role(path: str) -> str:
 
 
 def artifact_markdown_link(path: str) -> str:
+    """Process artifact markdown link."""
     label = Path(path).name if path not in {"", "N/A"} else "N/A"
     if path.startswith("output/"):
         target = "../" + path.removeprefix("output/")
@@ -183,6 +206,7 @@ def artifact_markdown_link(path: str) -> str:
 
 
 def short_scope(value: str, *, limit: int = 92) -> str:
+    """Process short scope."""
     compact = " ".join(value.split())
     if len(compact) <= limit:
         return compact
@@ -190,6 +214,7 @@ def short_scope(value: str, *, limit: int = 92) -> str:
 
 
 def per_class_count(class_balance: dict[str, Any], split: str) -> str:
+    """Process per class count."""
     counts = [int(row.get("count", 0)) for row in mapping_list(class_balance.get("rows")) if row.get("split") == split]
     if not counts:
         return "N/A"
@@ -198,4 +223,5 @@ def per_class_count(class_balance: dict[str, Any], split: str) -> str:
 
 
 def escape_table_cell(value: str) -> str:
+    """Process escape table cell."""
     return value.replace("|", "\\|").replace("\n", "<br>")

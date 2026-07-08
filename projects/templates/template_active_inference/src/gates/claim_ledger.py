@@ -285,6 +285,7 @@ def validate_typed_claim_evidence(
 
 
 def validate_claim_ledger(project_root: Path) -> bool:
+    """Validate claim ledger."""
     root = project_root.resolve()
     ledger_path = root / "data" / "claim_ledger.yaml"
     if not ledger_path.exists():

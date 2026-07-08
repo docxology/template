@@ -56,6 +56,7 @@ def _page(record: Mapping[str, object]) -> PageSpec:
 
 
 def load_storybook(project_root: Path | str) -> StorybookSpec:
+    """Load and parse the storybook configuration."""
     root = Path(project_root)
     story_path = root / "content" / "story.yaml"
     payload = yaml.safe_load(story_path.read_text(encoding="utf-8"))
@@ -88,6 +89,7 @@ def load_storybook(project_root: Path | str) -> StorybookSpec:
 
 
 def storybook_variables(spec: StorybookSpec) -> dict[str, Any]:
+    """Generate manuscript variables from the storybook."""
     return {
         "title": spec.title,
         "subtitle": spec.subtitle,

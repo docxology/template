@@ -54,6 +54,8 @@ class CheckResult:
 
 
 class CheckRunner(Protocol):
+    """Data container for CheckRunner."""
+
     def __call__(
         self,
         report: ManuscriptReportLike,

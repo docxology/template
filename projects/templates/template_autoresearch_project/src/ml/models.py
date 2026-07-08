@@ -135,6 +135,7 @@ def evaluate_candidate(
         )
 
         def predict_probabilities(x_values: np.ndarray) -> np.ndarray:
+            """Process predict probabilities."""
             features = features_for_candidate(spec, x_values)
             logits = _mlp_forward(features, mlp_weights, mlp_biases, spec.activation)[0][-1]
             return softmax(logits)
@@ -159,6 +160,7 @@ def evaluate_candidate(
         )
 
         def predict_probabilities(x_values: np.ndarray) -> np.ndarray:
+            """Process predict probabilities."""
             features = features_for_candidate(spec, x_values)
             return softmax(features @ linear_weights + linear_bias)
 

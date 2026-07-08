@@ -23,6 +23,7 @@ import yaml
 
 
 def project_paths() -> tuple[Path, Path, Path]:
+    """Process project paths."""
     project_root = Path(__file__).resolve().parent.parent
     # project_root is projects/templates/<name>/; repo root is three levels up.
     template_root = project_root.parents[2]
@@ -31,10 +32,12 @@ def project_paths() -> tuple[Path, Path, Path]:
 
 
 def H(text: str, level: int = 1) -> str:
+    """Process H."""
     return "#" * level + f" {text}"
 
 
 def check_anchors(text: str) -> list[str]:
+    """Check anchors."""
     anchors = re.findall(r"#([\w-]+)", text)
     broken = []
     for a in set(anchors):
@@ -100,6 +103,7 @@ def ensure_review_summary(project_root: Path, review_dir: Path) -> tuple[dict, i
 
 
 def collect_infra_imports(project_root: Path, template_root: Path) -> defaultdict[str, set[str]]:
+    """Process collect infra imports."""
     infra_root_p = template_root / "infrastructure"
     infra_imports_used: defaultdict[str, set[str]] = defaultdict(set)
     for py in sorted((project_root / "src").glob("*.py")):

@@ -17,6 +17,7 @@ _TIGHT_LAYOUT_INCOMPATIBLE = "This figure includes Axes that are not compatible 
 
 
 def save_styled_figure(fig, path: Path, style: FigureStyleConfig) -> Path:
+    """Save styled figure to the output path."""
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always", UserWarning)
         fig.tight_layout()
@@ -32,6 +33,7 @@ def save_styled_figure(fig, path: Path, style: FigureStyleConfig) -> Path:
 
 
 def style_grid(ax, style: FigureStyleConfig) -> None:
+    """Process style grid."""
     if style.grid:
         ax.grid(True, alpha=0.25, color=style.color("grid"), linewidth=style.layout_value("grid_line_width", 0.8))
     ax.spines["left"].set_color(style.color("grid"))

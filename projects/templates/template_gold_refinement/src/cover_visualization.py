@@ -204,6 +204,7 @@ def generate_cover_visualization(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate cover visualization."""
     root = _project_root(project_root)
     output = output_dir or root / "output" / "figures"
     output.mkdir(parents=True, exist_ok=True)
@@ -269,6 +270,7 @@ def generate_cover_visualization(
 
 
 def cover_visualization_manifest(image_path: Path) -> dict[str, Any]:
+    """Process cover visualization manifest."""
     image = np.asarray(mpimg.imread(image_path))
     rgb = image[..., :3] if image.ndim == 3 else np.stack([image, image, image], axis=-1)
     rgb_float = rgb.astype(float)
@@ -296,6 +298,7 @@ def write_cover_visualization(
     output_dir: Path | None = None,
     report_dir: Path | None = None,
 ) -> Path:
+    """Write cover visualization to the output path."""
     root = _project_root(project_root)
     image_path = generate_cover_visualization(output_dir=output_dir, project_root=root)
     reports = report_dir or root / "output" / "reports"

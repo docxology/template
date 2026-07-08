@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 def load_labels(path: Path) -> dict[str, str]:
+    """Load labels from a file."""
     labels: dict[str, str] = {}
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -19,6 +20,7 @@ def load_labels(path: Path) -> dict[str, str]:
 
 
 def load_predictions(path: Path) -> dict[str, str]:
+    """Load predictions from a file."""
     predictions: dict[str, str] = {}
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -28,6 +30,7 @@ def load_predictions(path: Path) -> dict[str, str]:
 
 
 def accuracy(truth: dict[str, str], predicted: dict[str, str]) -> tuple[float, int]:
+    """Process accuracy."""
     common = sorted(set(truth) & set(predicted))
     if not common:
         return 0.0, 0
@@ -36,6 +39,7 @@ def accuracy(truth: dict[str, str], predicted: dict[str, str]) -> tuple[float, i
 
 
 def main() -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gen-dir", type=Path, required=True)
     args = parser.parse_args()

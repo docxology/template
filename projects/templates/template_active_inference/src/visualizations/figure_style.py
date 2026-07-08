@@ -65,6 +65,8 @@ _DEFAULT_LAYOUT: dict[str, float] = {
 
 @dataclass(frozen=True)
 class FigureStyleConfig:
+    """Data container for FigureStyleConfig."""
+
     dpi: int = 160
     transparent: bool = False
     font_scale: float = 1.0
@@ -74,16 +76,20 @@ class FigureStyleConfig:
     layout: Mapping[str, float] = field(default_factory=lambda: dict(_DEFAULT_LAYOUT))
 
     def color(self, role: str, fallback: str = "#111827") -> str:
+        """Process color."""
         return str(self.palette.get(role, fallback))
 
     def text_size(self, role: str, fallback_role: str = "annotation") -> float:
+        """Process text size."""
         fallback = float(self.typography.get(fallback_role, _DEFAULT_TYPOGRAPHY[fallback_role]))
         return float(self.typography.get(role, fallback))
 
     def layout_value(self, role: str, fallback: float) -> float:
+        """Process layout value."""
         return float(self.layout.get(role, fallback))
 
     def rc_params(self) -> dict[str, Any]:
+        """Process rc params."""
         base = 10.0 * float(self.font_scale)
         return {
             "font.size": self.text_size("axis_label") if self.typography else base,
@@ -104,10 +110,12 @@ _active_style: FigureStyleConfig = DEFAULT_FIGURE_STYLE
 
 
 def active_style() -> FigureStyleConfig:
+    """Process active style."""
     return _active_style
 
 
 def load_figure_style(project_root: Path) -> FigureStyleConfig:
+    """Load figure style from a file."""
     path = project_root.resolve() / "figures.yaml"
     if not path.is_file():
         return DEFAULT_FIGURE_STYLE
@@ -156,6 +164,7 @@ def load_figure_style(project_root: Path) -> FigureStyleConfig:
 
 @contextlib.contextmanager
 def apply_style(config: FigureStyleConfig) -> Iterator[FigureStyleConfig]:
+    """Process apply style."""
     global _active_style
     previous = _active_style
     _active_style = config

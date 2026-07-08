@@ -14,17 +14,20 @@ BERNOULLI_VERIFICATION_TOLERANCE = 1e-9
 
 
 def ising_coupling(shape: tuple[int, int] = (2, 2)) -> ArrayF:
+    """Process ising coupling."""
     if shape != (2, 2):
         raise ValueError("ising_coupling is only defined for shape (2, 2)")
     return np.array([[0.5, -0.5], [-0.5, 0.5]], dtype=np.float64)
 
 
 def symmetric_mean_field_prior() -> tuple[ArrayF, ArrayF]:
+    """Process symmetric mean field prior."""
     half = np.array([0.5, 0.5], dtype=np.float64)
     return (half, half)
 
 
 def ising_mutual_information(lam: float) -> float:
+    """Process ising mutual information."""
     lam = float(lam)
     if lam >= 0:
         pa = 1.0 / (1.0 + np.exp(-lam))
@@ -39,6 +42,7 @@ def ising_mutual_information(lam: float) -> float:
 
 
 def ising_joint_posterior(lam: float) -> ArrayF:
+    """Process ising joint posterior."""
     mf = list(symmetric_mean_field_prior())
     g0 = np.zeros(2, dtype=np.float64)
     kc = np.zeros((2, 2), dtype=np.float64)

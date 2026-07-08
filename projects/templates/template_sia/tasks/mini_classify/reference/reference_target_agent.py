@@ -11,6 +11,7 @@ THRESHOLD = 0.5
 
 
 def main() -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset_dir", type=Path, required=True)
     parser.add_argument("--working_dir", type=Path, required=True)

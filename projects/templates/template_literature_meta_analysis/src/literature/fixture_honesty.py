@@ -9,6 +9,8 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class FixtureHonestyFinding:
+    """Data container for FixtureHonestyFinding."""
+
     path: Path
     line_number: int
     message: str
@@ -32,6 +34,7 @@ def validate_fixture_honesty(
     search_term: str | None = None,
     extra_paths: list[Path] | None = None,
 ) -> list[FixtureHonestyFinding]:
+    """Validate fixture honesty."""
     findings: list[FixtureHonestyFinding] = []
     paths = sorted(manuscript_dir.glob("*.md"))
     if extra_paths:
@@ -79,6 +82,7 @@ def validate_fixture_honesty(
 
 
 def validate_negative_control() -> list[FixtureHonestyFinding]:
+    """Validate negative control."""
     findings: list[FixtureHonestyFinding] = []
     for pattern in _EMPIRICAL_PHRASES:
         if pattern.search(_NEGATIVE_CONTROL):

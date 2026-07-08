@@ -33,6 +33,7 @@ def assess_corpus(corpus: Corpus) -> dict:
                 domain_counter["unknown"] += 1
 
     def pct(n: int) -> float:
+        """Process pct."""
         return round(100.0 * n / total, 1) if total > 0 else 0.0
 
     return {

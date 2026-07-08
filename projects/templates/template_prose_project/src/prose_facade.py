@@ -26,6 +26,8 @@ from typing import Protocol, runtime_checkable
 
 @runtime_checkable
 class ProseMetricsLike(Protocol):
+    """Data container for ProseMetricsLike."""
+
     word_count: int
     sentence_count: int
     flesch_reading_ease: float
@@ -35,6 +37,8 @@ class ProseMetricsLike(Protocol):
 
 @runtime_checkable
 class QualityReportLike(Protocol):
+    """Data container for QualityReportLike."""
+
     citation_count: int
     citation_density_per_1000: float
     hedge_count: int
@@ -46,6 +50,8 @@ class QualityReportLike(Protocol):
 
 @runtime_checkable
 class StructureReportLike(Protocol):
+    """Data container for StructureReportLike."""
+
     has_skipped_level: bool
     has_h1: bool
     headings: list[object]
@@ -53,6 +59,8 @@ class StructureReportLike(Protocol):
 
 @runtime_checkable
 class FileReportLike(Protocol):
+    """Data container for FileReportLike."""
+
     name: str
     metrics: ProseMetricsLike
     quality: QualityReportLike
@@ -61,6 +69,8 @@ class FileReportLike(Protocol):
 
 @runtime_checkable
 class ManuscriptReportLike(Protocol):
+    """Data container for ManuscriptReportLike."""
+
     files: list[FileReportLike]
     total_words: int
     total_sentences: int
@@ -69,6 +79,8 @@ class ManuscriptReportLike(Protocol):
     avg_flesch_kincaid_grade: float
     avg_gunning_fog: float
     citation_keys: list[str]
+
+    """Serialize this object to a plain dict for JSON output."""
 
     def to_dict(self) -> dict[str, object]: ...
 

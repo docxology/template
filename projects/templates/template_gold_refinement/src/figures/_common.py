@@ -51,6 +51,8 @@ matplotlib.rcParams["svg.hashsalt"] = SVG_HASH_SALT
 
 @dataclass(frozen=True)
 class FigureSpec:
+    """Data container for FigureSpec."""
+
     name: str
     label: str
     path: str
@@ -61,9 +63,11 @@ class FigureSpec:
 
     @property
     def svg_path(self) -> str:
+        """Process svg path."""
         return self.path.rsplit(".", 1)[0] + ".svg"
 
     def registry_record(self) -> dict[str, Any]:
+        """Process registry record."""
         record = asdict(self)
         record["svg_path"] = self.svg_path
         return record
@@ -190,10 +194,12 @@ FIGURE_SPEC_BY_NAME = {spec.name: spec for spec in FIGURE_SPECS}
 
 
 def figure_markdown_block(spec: FigureSpec) -> str:
+    """Process figure markdown block."""
     return f"![{spec.caption}](../output/figures/{spec.path}){{#{spec.label}}}"
 
 
 def figure_markdown_variables() -> dict[str, str]:
+    """Process figure markdown variables."""
     return {f"FIGURE_{spec.name.upper()}": figure_markdown_block(spec) for spec in FIGURE_SPECS}
 
 
@@ -323,6 +329,7 @@ def _nines_score(purity: float) -> float:
 
 
 def purity_nines_values(purities: list[float] | tuple[float, ...]) -> list[float]:
+    """Process purity nines values."""
     return [_nines_score(float(purity)) for purity in purities]
 
 

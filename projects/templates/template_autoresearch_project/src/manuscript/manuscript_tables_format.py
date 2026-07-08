@@ -9,6 +9,7 @@ from .manuscript_tokens_format import escape_table_cell
 
 
 def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[str]], caption: str) -> str:
+    """Process markdown table."""
     safe_rows = rows or tuple(("N/A",) * len(headers) for _ in range(1))
     lines = [
         "| " + " | ".join(headers) + " |",
@@ -21,10 +22,12 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[str]], captio
 
 
 def pdf_small_table(headers: Sequence[str], rows: Sequence[Sequence[str]], caption: str) -> str:
+    """Process pdf small table."""
     return "\n".join(("\\begingroup\\footnotesize", markdown_table(headers, rows, caption), "\\endgroup"))
 
 
 def artifact_link_label(path: str) -> str:
+    """Process artifact link label."""
     if path in {"", "N/A"}:
         return "N/A"
     stem = Path(path).stem
@@ -44,6 +47,7 @@ def artifact_link_label(path: str) -> str:
 
 
 def artifact_markdown_link(path: str) -> str:
+    """Process artifact markdown link."""
     label = artifact_link_label(path)
     if path.startswith("output/"):
         target = "../" + path.removeprefix("output/")

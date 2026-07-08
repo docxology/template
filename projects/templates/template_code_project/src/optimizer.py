@@ -206,9 +206,11 @@ def make_quadratic_problem(
     """
 
     def obj_func(x: np.ndarray) -> float:
+        """Process obj func."""
         return quadratic_function(x, A, b)
 
     def grad_func(x: np.ndarray) -> np.ndarray:
+        """Process grad func."""
         return compute_gradient(x, A, b)
 
     return obj_func, grad_func

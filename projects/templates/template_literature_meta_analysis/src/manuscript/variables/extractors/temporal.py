@@ -7,6 +7,7 @@ from manuscript.variables.context import ExtractContext
 
 
 def extract_temporal(ctx: ExtractContext) -> dict[str, str]:
+    """Process extract temporal."""
     variables: dict[str, str] = {}
     temporal = ctx.load_json("temporal_analysis.json")
     if not temporal:

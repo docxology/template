@@ -25,6 +25,7 @@ def plot_pca_embeddings(
     *,
     n_loading_arrows: int = 8,
 ) -> Path:
+    """Process plot pca embeddings."""
     from sklearn.decomposition import PCA
 
     output_path = Path(output_path)
@@ -104,6 +105,7 @@ def plot_term_heatmap(
     *,
     n_terms: int = 20,
 ) -> Path:
+    """Process plot term heatmap."""
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(14, 8), dpi=VIZ_CONFIG["dpi"])
@@ -155,6 +157,7 @@ def plot_dendrogram(
     labels: list[str],
     output_path: Path,
 ) -> Path:
+    """Process plot dendrogram."""
     from scipy.cluster.hierarchy import cophenet, dendrogram as scipy_dendrogram, linkage
     from scipy.spatial.distance import pdist
 

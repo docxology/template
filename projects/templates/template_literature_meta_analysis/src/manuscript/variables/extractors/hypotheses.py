@@ -8,6 +8,7 @@ from manuscript.variables.formatters import latex_number
 
 
 def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
+    """Process extract hypotheses."""
     variables: dict[str, str] = {}
     assertion = ctx.load_json("assertion_summary.json")
     if assertion:
@@ -61,9 +62,11 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
     except ImportError:  # pragma: no cover
 
         def config_key_to_hypothesis_id(key: str, name: str = "") -> str:  # type: ignore[misc]
+            """Process config key to hypothesis id."""
             return key
 
     def score_for(hid: str, hname: str) -> str:
+        """Process score for."""
         mapped = config_key_to_hypothesis_id(hid, hname)
         for key in (hid, mapped, hname, hname.upper().replace(" ", "_")):
             if key in score_lookup:

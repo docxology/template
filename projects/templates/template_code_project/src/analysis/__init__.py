@@ -71,6 +71,7 @@ if not INFRASTRUCTURE_AVAILABLE:
     def log_success(  # pragma: no cover — only executed when infrastructure import fails
         message: str, logger: "logging.Logger | None" = None
     ) -> None:
+        """Process log success."""
         return None
 
 

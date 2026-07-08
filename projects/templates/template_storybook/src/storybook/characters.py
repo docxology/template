@@ -15,6 +15,7 @@ def _require_text(record: Mapping[str, object], key: str) -> str:
 
 
 def generate_character(record: Mapping[str, object]) -> Character:
+    """Generate character."""
     shape = _require_text(record, "shape")
     family_shape = _require_text(record, "family_shape")
     if shape not in VALID_SHAPES:
@@ -34,6 +35,7 @@ def generate_character(record: Mapping[str, object]) -> Character:
 
 
 def generate_cast(records: list[object]) -> tuple[Character, ...]:
+    """Generate cast."""
     characters: list[Character] = []
     seen: set[str] = set()
     for item in records:
@@ -50,6 +52,7 @@ def generate_cast(records: list[object]) -> tuple[Character, ...]:
 
 
 def child_pair(characters: tuple[Character, ...]) -> tuple[Character, Character]:
+    """Process child pair."""
     tetra = next((character for character in characters if character.character_id == "tessa"), None)
     cube = next((character for character in characters if character.character_id == "ciro"), None)
     if tetra is None or cube is None:

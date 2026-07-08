@@ -29,12 +29,14 @@ def _load_trace(root: Path) -> list[dict[str, Any]]:
 
 
 def inv_belief_entropy_finite(root: Path) -> bool:
+    """Process inv belief entropy finite."""
     summary = _load_summary(root)
     entropy = float(summary.get("mean_belief_entropy", -1.0))
     return np.isfinite(entropy) and entropy >= 0.0
 
 
 def inv_actions_length_matches_steps(root: Path) -> bool:
+    """Process inv actions length matches steps."""
     summary = _load_summary(root)
     steps = int(summary.get("steps", 0))
     actions = summary.get("actions") or []
@@ -42,6 +44,7 @@ def inv_actions_length_matches_steps(root: Path) -> bool:
 
 
 def inv_observations_in_obs_space(root: Path) -> bool:
+    """Process inv observations in obs space."""
     summary = _load_summary(root)
     config = summary.get("config") or {}
     n_obs = int((config.get("tmaze") or {}).get("num_obs", 2))
@@ -50,6 +53,7 @@ def inv_observations_in_obs_space(root: Path) -> bool:
 
 
 def inv_policy_len_matches_config(root: Path) -> bool:
+    """Process inv policy len matches config."""
     summary = _load_summary(root)
     config = summary.get("config") or {}
     expected = int(config.get("policy_len", config.get("horizon", 2)))
@@ -57,6 +61,7 @@ def inv_policy_len_matches_config(root: Path) -> bool:
 
 
 def inv_goal_reached(root: Path) -> bool:
+    """Process inv goal reached."""
     summary = _load_summary(root)
     if "goal_reached" in summary:
         return bool(summary["goal_reached"])
@@ -68,6 +73,7 @@ def inv_goal_reached(root: Path) -> bool:
 
 
 def inv_trace_step_count_matches_summary(root: Path) -> bool:
+    """Process inv trace step count matches summary."""
     summary = _load_summary(root)
     trace = _load_trace(root)
     return len(trace) == int(summary.get("steps", 0))
@@ -84,6 +90,7 @@ SIMULATION_INVARIANTS: dict[str, InvariantFn] = {
 
 
 def run_simulation_invariants(project_root: Path) -> dict[str, bool]:
+    """Run simulation invariants."""
     root = project_root.resolve()
     return {name: fn(root) for name, fn in SIMULATION_INVARIANTS.items()}
 
@@ -119,6 +126,7 @@ def build_merged_invariants_payload(
 
 
 def write_simulation_invariants(project_root: Path) -> Path:
+    """Write simulation invariants to the output path."""
     root = project_root.resolve()
     results = run_simulation_invariants(root)
     out = root / "output" / "reports" / "si_invariants.json"
@@ -129,6 +137,7 @@ def write_simulation_invariants(project_root: Path) -> Path:
 
 
 def merge_simulation_into_invariants_report(project_root: Path) -> Path:
+    """Process merge simulation into invariants report."""
     root = project_root.resolve()
     inv_path = root / "output" / "reports" / "invariants.json"
     analytical: dict[str, bool] | None = None

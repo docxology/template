@@ -23,6 +23,8 @@ except ImportError:
 
 @dataclass(frozen=True)
 class SteganographyProfile:
+    """Data container for SteganographyProfile."""
+
     enabled: bool = False
     overlays_enabled: bool = False
     barcodes_enabled: bool = False
@@ -47,6 +49,7 @@ class SteganographyProfile:
 
     @property
     def active_techniques(self) -> tuple[str, ...]:
+        """Process active techniques."""
         return tuple(
             name
             for name, enabled in (
@@ -62,9 +65,11 @@ class SteganographyProfile:
 
     @property
     def is_actionable(self) -> bool:
+        """Check whether actionable."""
         return self.enabled and bool(self.active_techniques)
 
     def summary(self) -> str:
+        """Return a summary dict of counts and status."""
         if not self.enabled:
             return "disabled"
         techniques = ", ".join(self.active_techniques) if self.active_techniques else "none"
@@ -73,6 +78,8 @@ class SteganographyProfile:
 
 @dataclass(frozen=True)
 class LLMReviewPolicy:
+    """Data container for LLMReviewPolicy."""
+
     enabled: bool = False
     types: tuple[str, ...] = ()
     requires_ollama: bool = True
@@ -80,9 +87,11 @@ class LLMReviewPolicy:
 
     @property
     def is_configured(self) -> bool:
+        """Check whether configured."""
         return self.enabled and bool(self.types)
 
     def gate_reasons(self, *, ollama_available: bool, explicit_opt_in: bool) -> tuple[str, ...]:
+        """Process gate reasons."""
         reasons: list[str] = []
         if not self.enabled:
             reasons.append("LLM reviews disabled in config")
@@ -95,9 +104,11 @@ class LLMReviewPolicy:
         return tuple(reasons)
 
     def can_run(self, *, ollama_available: bool, explicit_opt_in: bool) -> bool:
+        """Process can run."""
         return not self.gate_reasons(ollama_available=ollama_available, explicit_opt_in=explicit_opt_in)
 
     def summary(self) -> str:
+        """Return a summary dict of counts and status."""
         if not self.enabled:
             return "disabled"
         review_types = ", ".join(self.types) if self.types else "none"
@@ -106,11 +117,14 @@ class LLMReviewPolicy:
 
 @dataclass(frozen=True)
 class PipelinePolicy:
+    """Data container for PipelinePolicy."""
+
     steganography: SteganographyProfile
     llm_reviews: LLMReviewPolicy
 
 
 def load_steganography_profile(project_root: Path | None = None) -> SteganographyProfile:
+    """Load steganography profile from a file."""
     root = project_root or Path(__file__).resolve().parent.parent
     config = _load_project_config(root)
     raw = config.get("steganography", {})
@@ -162,6 +176,7 @@ def load_steganography_profile(project_root: Path | None = None) -> Steganograph
 
 
 def load_llm_review_policy(project_root: Path | None = None) -> LLMReviewPolicy:
+    """Load llm review policy from a file."""
     root = project_root or Path(__file__).resolve().parent.parent
     config = _load_project_config(root)
     raw = config.get("llm", {})
@@ -187,6 +202,7 @@ def load_llm_review_policy(project_root: Path | None = None) -> LLMReviewPolicy:
 
 
 def load_pipeline_policy(project_root: Path | None = None) -> PipelinePolicy:
+    """Load pipeline policy from a file."""
     return PipelinePolicy(
         steganography=load_steganography_profile(project_root),
         llm_reviews=load_llm_review_policy(project_root),
@@ -199,6 +215,7 @@ def llm_review_gate_reason(
     ollama_available: bool,
     explicit_opt_in: bool,
 ) -> str:
+    """Process llm review gate reason."""
     reasons = policy.gate_reasons(ollama_available=ollama_available, explicit_opt_in=explicit_opt_in)
     return "ready" if not reasons else "; ".join(reasons)
 
@@ -209,6 +226,7 @@ def llm_review_is_enabled(
     ollama_available: bool,
     explicit_opt_in: bool,
 ) -> bool:
+    """Process llm review is enabled."""
     return policy.can_run(ollama_available=ollama_available, explicit_opt_in=explicit_opt_in)
 
 

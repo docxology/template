@@ -156,6 +156,7 @@ def _build_variables(project_root: Path, artifacts: LoopArtifacts) -> tuple[dict
     provenance: dict[str, dict[str, str]] = {}
 
     def put(key: str, value: object, source: str, pointer: str) -> None:
+        """Process put."""
         variables[key] = string_value(value)
         provenance[key] = {"source": source, "pointer": pointer}
 

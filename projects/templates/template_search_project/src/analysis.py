@@ -28,6 +28,7 @@ class StageResult:
     exit_code: int = 0
 
     def as_dict(self) -> dict:
+        """Process as dict."""
         return {
             "name": self.name,
             "status": self.status,

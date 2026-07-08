@@ -59,6 +59,7 @@ def generate_provenance_sankey(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate provenance sankey."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph, edge_widths = build_provenance_flow_graph()
     return _render_digraph_figure(
@@ -194,6 +195,7 @@ def generate_integrity_gate_matrix(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate integrity gate matrix."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     cfg = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
@@ -237,6 +239,7 @@ def generate_formalism_traceability(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate formalism traceability."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph = build_formalism_traceability_graph()
     formalism_count_for_height = sum(1 for _, data in graph.nodes(data=True) if data.get("kind") == "formalism")
@@ -259,6 +262,7 @@ def generate_implementation_circuit(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate implementation circuit."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph = build_implementation_circuit_graph()
     return _render_digraph_figure(
@@ -281,6 +285,7 @@ def generate_claim_evidence_assay(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate claim evidence assay."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
@@ -350,6 +355,7 @@ def generate_integrity_risk_matrix(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate integrity risk matrix."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
@@ -437,6 +443,7 @@ def generate_evidence_tier_ladder(
     *,
     project_root: Path | None = None,
 ) -> Path:
+    """Generate evidence tier ladder."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
