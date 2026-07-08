@@ -1,4 +1,5 @@
 """Protocol and data models for static-site hosting adapters (GitHub Pages, Netlify, Cloudflare)."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

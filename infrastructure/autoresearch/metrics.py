@@ -1,4 +1,5 @@
 """Metric-unit inference and grading helpers for autoresearch benchmarks."""
+
 from __future__ import annotations
 
 import math
