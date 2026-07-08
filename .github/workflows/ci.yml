@@ -296,8 +296,19 @@ jobs:
       # TeX Live so the xelatex/bibtex-gated rendering tests run instead of
       # skipping (they assert a real PDF lands on disk). Linux lanes only:
       # MacTeX is a multi-GB install and macOS breadth is a 3.12 smoke lane.
-      - name: Install TeX Live (xelatex + bibtex)
+      - name: Cache TeX Live packages
         if: runner.os == 'Linux'
+        uses: actions/cache@d4323354652e1f5bf13207d857b2d211c1ca1c2e # v4.2.2
+        with:
+          path: |
+            /var/cache/apt
+            /usr/share/texlive
+            /usr/share/texmf
+          key: texlive-${{ runner.os }}-xetex-extra-bibtex-fonts-v1
+        id: texlive-cache
+
+      - name: Install TeX Live (xelatex + bibtex)
+        if: runner.os == 'Linux' && steps.texlive-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
@@ -719,6 +730,12 @@ jobs:
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: "20"
+
+      - name: Cache puppeteer / chrome-headless-shell
+        uses: actions/cache@d4323354652e1f5bf13207d857b2d211c1ca1c2e # v4.2.2
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-chrome-headless-shell-${{ runner.os }}-v1
 
       - name: Sync Python dependencies
         run: uv sync

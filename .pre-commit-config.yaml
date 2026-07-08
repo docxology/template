@@ -22,6 +22,50 @@
 # clients identically.
 
 repos:
+  # Standard hygiene hooks — fast (<1s each), catch entire classes of issues
+  # before push that ruff/mypy don't cover (non-Python files, binary blobs,
+  # merge-conflict markers, trailing whitespace, missing EOF newlines).
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: c0e5c4eef9bcb1bcedcdd0c3b9d3b3e43b729bee  # v5.0.0
+    hooks:
+      - id: check-added-large-files
+        name: check-added-large-files (prevent binary blobs)
+        args: ["--maxkb=512"]
+        exclude: |
+          (?x)^(
+            projects/templates/.*\.png|
+            projects/templates/.*\.svg|
+            projects/templates/.*\.pdf|
+            projects/templates/.*\.epub
+          )
+      - id: check-merge-conflict
+        name: check-merge-conflict (catch conflict markers)
+      - id: trailing-whitespace
+        name: trailing-whitespace (strip trailing whitespace)
+        exclude: |
+          (?x)^(
+            projects/templates/.*\.svg
+          )
+      - id: end-of-file-fixer
+        name: end-of-file-fixer (ensure trailing newline)
+        exclude: |
+          (?x)^(
+            projects/templates/.*\.svg|
+            projects/templates/.*\.png
+          )
+      - id: check-yaml
+        name: check-yaml (validate YAML syntax)
+        args: ["--allow-multiple-documents"]
+      - id: check-toml
+        name: check-toml (validate TOML syntax)
+      - id: check-json
+        name: check-json (validate JSON syntax)
+        exclude: |
+          (?x)^(
+            .*/\.vscode/.*|
+            .*/\.claude/.*
+          )
+
   - repo: local
     hooks:
       - id: ruff-ci

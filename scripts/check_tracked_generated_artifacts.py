@@ -15,7 +15,7 @@ from infrastructure.project.git_guards import tracked_generated_artifacts  # noq
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
+    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT, help="Path to repository root (default: auto-detected from script location)")
     args = parser.parse_args(argv)
 
     offenders = tracked_generated_artifacts(args.repo_root.resolve())
