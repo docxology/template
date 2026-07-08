@@ -19,6 +19,7 @@ from src.reports import compute_variables, write_manuscript_variables
 
 
 def main() -> int:
+    """CLI entry point."""
     summary = PROJECT_ROOT / "output" / "runs" / "run_1" / "run_summary.json"
     if not summary.is_file():
         raise FileNotFoundError(

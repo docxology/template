@@ -17,6 +17,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def main():
+    """CLI entry point."""
     grammar = load_grammar(PROJECT_ROOT)
     spec = expand(grammar)
     dirs = project_output_dirs(PROJECT_ROOT)

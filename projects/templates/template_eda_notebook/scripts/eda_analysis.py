@@ -107,6 +107,7 @@ def run_eda(project_root: Path | None = None) -> list[Path]:
 
 
 def main() -> None:
+    """CLI entry point."""
     for path in run_eda():
         print(path)
 

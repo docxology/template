@@ -45,6 +45,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     args = _parse_args(argv)
     project_root: Path = args.project_root.resolve()
     report_path = project_root / "output" / "manuscript_report.json"

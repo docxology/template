@@ -75,6 +75,7 @@ def _run_summary(objective: SyntheticObjective, result: SearchResult) -> dict[st
 
 
 def main() -> int:
+    """CLI entry point."""
     objective = _build_objective()
     coordinated, baseline = _run_pair(objective)
 

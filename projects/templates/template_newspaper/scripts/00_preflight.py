@@ -20,6 +20,7 @@ logger = get_logger("newspaper.preflight")
 
 
 def main() -> int:
+    """CLI entry point."""
     root = project_root()
     try:
         import PIL  # noqa: F401

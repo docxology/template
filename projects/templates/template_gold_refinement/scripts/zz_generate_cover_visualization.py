@@ -11,6 +11,7 @@ sys.path.insert(0, str(_PROJECT_ROOT.parents[2]))
 
 
 def main() -> int:
+    """CLI entry point."""
     from cover_visualization import COVER_REPORT, write_cover_visualization
 
     image_path = write_cover_visualization(_PROJECT_ROOT)

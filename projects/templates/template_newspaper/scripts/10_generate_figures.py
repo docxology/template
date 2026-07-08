@@ -19,6 +19,7 @@ logger = get_logger("newspaper.figures")
 
 
 def main() -> int:
+    """CLI entry point."""
     root = project_root()
     from newspaper.config import load_newspaper_config
     from newspaper.figures import generate_all

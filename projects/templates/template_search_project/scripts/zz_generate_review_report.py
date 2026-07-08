@@ -22,6 +22,7 @@ from src.review_report import generate_review_report, project_paths  # noqa: E40
 
 
 def main() -> int:
+    """CLI entry point."""
     project_root, template_root, review_dir = project_paths()
     return generate_review_report(project_root, template_root, review_dir)
 

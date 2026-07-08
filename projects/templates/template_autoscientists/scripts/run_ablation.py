@@ -65,6 +65,7 @@ def _run_ablations() -> list[AblationRow]:
 
 
 def main() -> int:
+    """CLI entry point."""
     rows = _run_ablations()
 
     figures_dir = PROJECT_ROOT / "output" / "figures"

@@ -28,6 +28,7 @@ def _serialisable(obj: object) -> object:
 
 
 def main() -> int:
+    """CLI entry point."""
     print("Running integration demo …")
     results = run_integration_demo()
 

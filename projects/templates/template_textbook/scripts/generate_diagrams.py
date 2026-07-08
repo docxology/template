@@ -15,6 +15,7 @@ ensure_project_paths()
 
 
 def main() -> int:
+    """CLI entry point."""
     from textbook_logging import get_logger
     from mermaid.diagrams import generate_all_diagrams
 

@@ -13,6 +13,7 @@ from validation_spine import write_validation_spine_artifacts
 
 
 def main() -> int:
+    """CLI entry point."""
     for name, path in write_validation_spine_artifacts(PROJECT_ROOT).items():
         print(f"{name}: {path}")
     return 0

@@ -26,6 +26,7 @@ _RULE_SETS = ["template_project_rules", "template_manuscript_rules"]
 
 
 def main() -> int:
+    """CLI entry point."""
     context = load_rule_context_from_project(_PROJECT_DIR)
     errors: list[str] = []
 

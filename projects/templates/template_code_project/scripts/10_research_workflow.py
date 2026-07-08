@@ -51,6 +51,7 @@ def _run_stage(stage_name: str) -> bool:
 
 
 def main() -> int:
+    """CLI entry point."""
     cfg = load_research_workflow_config(PROJECT_DIR)
 
     if not cfg.enabled:

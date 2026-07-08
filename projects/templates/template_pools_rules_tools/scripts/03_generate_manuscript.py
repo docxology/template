@@ -53,6 +53,7 @@ def generate_manuscript_variables() -> dict[str, object]:
 
 
 def main() -> int:
+    """CLI entry point."""
     variables = generate_manuscript_variables()
 
     _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

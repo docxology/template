@@ -18,6 +18,7 @@ from roadmap_tracks import run_semantic_fixed_point, write_manuscript_staleness_
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--allow-draft",

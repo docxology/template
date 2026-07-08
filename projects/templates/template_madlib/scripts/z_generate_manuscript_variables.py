@@ -17,6 +17,7 @@ from src.manuscript_variables import generate_variables, save_variables
 
 
 def main() -> int:
+    """CLI entry point."""
     generate_artifacts(PROJECT_ROOT)
     variables = generate_variables(PROJECT_ROOT)
     out_path = PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"

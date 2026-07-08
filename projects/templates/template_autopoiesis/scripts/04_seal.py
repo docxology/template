@@ -19,6 +19,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def main():
+    """CLI entry point."""
     dirs = project_output_dirs(PROJECT_ROOT)
     child_dir = dirs["children"]
     children = sorted(child_dir.iterdir()) if child_dir.exists() else []

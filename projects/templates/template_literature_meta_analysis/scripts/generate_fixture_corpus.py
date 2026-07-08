@@ -24,6 +24,7 @@ from literature.fixture_corpus import DEFAULT_N, DEFAULT_SEED, DEFAULT_TERM, bui
 
 
 def main() -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description="Generate a synthetic fixture corpus")
     parser.add_argument("--term", default=DEFAULT_TERM)
     parser.add_argument("--n", type=int, default=DEFAULT_N)

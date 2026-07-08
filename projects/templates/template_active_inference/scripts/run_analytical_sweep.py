@@ -13,6 +13,7 @@ from analysis import run_analysis
 
 
 def main() -> int:
+    """CLI entry point."""
     paths = run_analysis(PROJECT_ROOT)
     for name, path in paths.items():
         print(f"{name}: {path}")

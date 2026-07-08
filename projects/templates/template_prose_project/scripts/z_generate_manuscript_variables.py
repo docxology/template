@@ -61,6 +61,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     args = _parse_args(argv)
     project_root: Path = args.project_root.resolve()
     config_path: Path = (args.config or (project_root / "manuscript" / "config.yaml")).resolve()

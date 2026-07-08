@@ -24,6 +24,7 @@ from visualization.figure_runner import generate_all_figures
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse args."""
     parser = argparse.ArgumentParser(description="Generate all figures for the literature meta-analysis.")
     parser.add_argument("--input-dir", type=str, default=str(DEFAULT_DATA_DIR))
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_FIGURES_DIR))
@@ -37,6 +38,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point."""
     args = parse_args()
     logging.basicConfig(
         level=getattr(logging, args.log_level),

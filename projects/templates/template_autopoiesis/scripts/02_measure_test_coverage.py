@@ -24,6 +24,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def main():
+    """CLI entry point."""
     dirs = project_output_dirs(PROJECT_ROOT)
     full_report = dirs["data"] / "coverage_full.json"
     test_count, coverage_pct = measure_test_summary(PROJECT_ROOT, full_report_out=full_report)

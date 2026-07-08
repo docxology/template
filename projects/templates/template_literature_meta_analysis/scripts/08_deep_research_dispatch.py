@@ -40,6 +40,7 @@ from deep_research.deep_research_adapter import (
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse args."""
     parser = argparse.ArgumentParser(
         description=(
             "Demonstrate infrastructure.search.deep_research via offline fixture replay. "
@@ -67,6 +68,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point."""
     args = parse_args()
     logging.basicConfig(
         level=getattr(logging, args.log_level),

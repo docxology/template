@@ -93,6 +93,7 @@ def run_methods_analysis(project_root: Path | None = None) -> list[Path]:
 
 
 def main() -> None:
+    """CLI entry point."""
     for path in run_methods_analysis():
         print(path)
 

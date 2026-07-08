@@ -17,6 +17,7 @@ ensure_project_paths()
 
 
 def main() -> int:
+    """CLI entry point."""
     import numpy as np
 
     from textbook import models

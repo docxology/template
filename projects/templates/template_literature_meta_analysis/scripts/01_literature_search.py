@@ -21,6 +21,7 @@ from literature.search_runner import run_literature_search
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse args."""
     parser = argparse.ArgumentParser(description="Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv).")
     parser.add_argument(
         "--query",
@@ -52,6 +53,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point."""
     args = parse_args()
     logging.basicConfig(
         level=getattr(logging, args.log_level),

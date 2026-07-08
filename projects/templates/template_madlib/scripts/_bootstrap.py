@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 def bootstrap_project_paths(project_root: Path | None = None) -> Path:
+    """Process bootstrap project paths."""
     root = project_root or Path(__file__).resolve().parent.parent
     repo_root = root.parents[2]
     for candidate in (root, repo_root):

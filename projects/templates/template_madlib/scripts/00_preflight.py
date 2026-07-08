@@ -13,6 +13,7 @@ from infrastructure.rendering.preflight import run_manuscript_preflight  # noqa:
 
 
 def main() -> int:
+    """CLI entry point."""
     manuscript_dir = Path(__file__).resolve().parent.parent / "manuscript"
     ok, message = run_manuscript_preflight(manuscript_dir)
     if ok:

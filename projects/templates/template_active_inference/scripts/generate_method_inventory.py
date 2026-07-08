@@ -30,6 +30,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    """CLI entry point."""
     args = build_parser().parse_args()
     if args.check:
         destination = PROJECT_ROOT / DEFAULT_OUTPUT

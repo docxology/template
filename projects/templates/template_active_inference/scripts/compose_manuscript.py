@@ -13,6 +13,7 @@ from manuscript.sheaf.cli import run_compose_cli
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     return run_compose_cli(argv, project_root=PROJECT_ROOT)
 
 

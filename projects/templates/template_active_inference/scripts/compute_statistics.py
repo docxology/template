@@ -13,6 +13,7 @@ from analysis import write_analysis_statistics
 
 
 def main() -> int:
+    """CLI entry point."""
     path = write_analysis_statistics(PROJECT_ROOT)
     print(path)
     return 0

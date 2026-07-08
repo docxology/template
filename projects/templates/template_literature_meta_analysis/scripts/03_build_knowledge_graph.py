@@ -27,6 +27,7 @@ from knowledge_graph.kg_runner import run_knowledge_graph_pipeline
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse args."""
     parser = argparse.ArgumentParser(description="Build knowledge graph and score hypotheses.")
     parser.add_argument("--corpus", type=str, default=str(DEFAULT_CORPUS_PATH))
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_OUTPUT_DIR))
@@ -45,6 +46,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point."""
     args = parse_args()
     logging.basicConfig(
         level=getattr(logging, args.log_level),

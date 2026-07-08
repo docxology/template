@@ -56,6 +56,7 @@ class HermesProposer:
         proposer_id: str,
         avoid: frozenset[tuple[int, str]] = frozenset(),
     ) -> Proposal:
+        """Process propose."""
         if not axes:
             raise ValueError("axes must be non-empty")
         from infrastructure.llm.core.config import GenerationOptions

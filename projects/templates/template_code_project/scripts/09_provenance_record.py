@@ -28,6 +28,7 @@ logger = get_logger(__name__)
 
 
 def main() -> int:
+    """CLI entry point."""
     cfg = load_provenance_config(PROJECT_DIR)
 
     if not cfg.enabled:

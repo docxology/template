@@ -12,6 +12,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build parser."""
     parser = argparse.ArgumentParser(
         description="Write a deterministic trace-derived GIF for the animation extension track.",
     )
@@ -24,6 +25,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     args = build_parser().parse_args(argv)
     if args.skip:
         print("render_animation.py: skipped (--skip)")

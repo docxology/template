@@ -13,6 +13,7 @@ from visualizations.figures import generate_all_figures
 
 
 def main() -> int:
+    """CLI entry point."""
     for path in generate_all_figures(PROJECT_ROOT):
         print(path)
     return 0

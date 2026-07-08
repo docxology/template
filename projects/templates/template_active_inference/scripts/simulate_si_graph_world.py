@@ -11,6 +11,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 
 def main() -> int:
+    """CLI entry point."""
     from simulation.graph_world import write_graph_world_artifacts
 
     for name, path in write_graph_world_artifacts(PROJECT_ROOT).items():

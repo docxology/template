@@ -14,6 +14,7 @@ from gates.validation import validate_manuscript, validate_outputs
 
 
 def main() -> int:
+    """CLI entry point."""
     outputs = validate_outputs(PROJECT_ROOT)
     manuscript = validate_manuscript(PROJECT_ROOT)
     failed = {**{k: v for k, v in outputs.items() if not v}, **{k: v for k, v in manuscript.items() if not v}}

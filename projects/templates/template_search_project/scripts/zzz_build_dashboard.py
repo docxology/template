@@ -78,6 +78,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """CLI entry point."""
     args = _parse_args(argv)
     papers, aggregate = load_papers(args)
     filtered = filter_papers(papers, args)

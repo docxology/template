@@ -13,6 +13,7 @@ from roadmap_tracks import write_toy_sweep_artifacts
 
 
 def main() -> int:
+    """CLI entry point."""
     for name, path in write_toy_sweep_artifacts(PROJECT_ROOT).items():
         print(f"{name}: {path}")
     return 0

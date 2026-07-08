@@ -22,6 +22,7 @@ ensure_project_paths()
 
 
 def main() -> int:
+    """CLI entry point."""
     from textbook import content
     from textbook.config import iter_chapters, iter_unit_intros, load_config
     from textbook_io import write_text_atomic

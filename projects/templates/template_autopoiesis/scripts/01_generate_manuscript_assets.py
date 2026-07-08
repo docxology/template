@@ -13,6 +13,7 @@ from src.project_paths import project_output_dirs
 
 
 def main() -> None:
+    """CLI entry point."""
     dirs = project_output_dirs(PROJECT_ROOT)
     fig_dir = dirs["figures"]
     print("Generating manuscript figures...")

@@ -23,6 +23,7 @@ from literature.fulltext_assessment import assess_corpus
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse args."""
     parser = argparse.ArgumentParser(description="Assess full-text availability across the literature corpus.")
     parser.add_argument("--corpus", type=str, default=str(DEFAULT_CORPUS_PATH))
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_DATA_DIR))
@@ -35,6 +36,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point."""
     args = parse_args()
     logging.basicConfig(
         level=getattr(logging, args.log_level),

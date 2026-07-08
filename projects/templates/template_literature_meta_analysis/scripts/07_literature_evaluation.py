@@ -24,6 +24,7 @@ from literature.fixture_honesty import validate_fixture_honesty
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse args."""
     parser = argparse.ArgumentParser(description="Evaluate literature corpus quality and routing coverage.")
     parser.add_argument("--corpus", type=str, default=str(DEFAULT_CORPUS_PATH))
     parser.add_argument("--query", type=str, default=None)
@@ -38,6 +39,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point."""
     args = parse_args()
     logging.basicConfig(
         level=getattr(logging, args.log_level),

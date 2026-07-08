@@ -16,6 +16,7 @@ from simulation.si_runner import pymdp_available, run_and_persist
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build parser."""
     parser = argparse.ArgumentParser(
         description="Run pymdp T-maze state or policy inference and write SI artifacts.",
     )
@@ -48,6 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
     if not pymdp_available():

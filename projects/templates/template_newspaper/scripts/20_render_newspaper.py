@@ -25,6 +25,7 @@ logger = get_logger("newspaper.render")
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--project-root", default=str(project_root()))
     parser.add_argument(

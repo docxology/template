@@ -15,6 +15,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def main():
+    """CLI entry point."""
     grammar = load_grammar(PROJECT_ROOT)
     dirs = project_output_dirs(PROJECT_ROOT)
     out = dirs["figures"] / "cover_art.png"

@@ -42,6 +42,7 @@ logger = get_logger(__name__)
 
 
 def main() -> int:
+    """CLI entry point."""
     results_path = _project_root / "output" / "search" / "results.json"
     if not results_path.exists():
         logger.warning("No search results at %s; skipping.", results_path)

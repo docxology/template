@@ -26,6 +26,7 @@ def _load_test_coverage_summary(data_dir: Path) -> tuple[int | str | None, str |
 
 
 def main():
+    """CLI entry point."""
     dirs = project_output_dirs(PROJECT_ROOT)
     test_count, coverage_pct = _load_test_coverage_summary(dirs["data"])
     variables = generate_variables(PROJECT_ROOT, test_count=test_count, coverage_pct=coverage_pct)

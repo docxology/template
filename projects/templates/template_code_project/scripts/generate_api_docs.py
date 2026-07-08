@@ -47,6 +47,7 @@ def run_api_doc_generation(project_root: Path) -> dict[str, str | None] | None:
 
 
 def main() -> int:
+    """CLI entry point."""
     logger.info("Starting API documentation generation...")
     docs_files = run_api_doc_generation(PROJECT_ROOT)
     if not docs_files:

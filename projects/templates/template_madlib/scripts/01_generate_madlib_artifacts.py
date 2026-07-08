@@ -18,6 +18,7 @@ logger = get_logger(__name__)
 
 
 def main() -> int:
+    """CLI entry point."""
     artifacts = generate_artifacts(PROJECT_ROOT)
     for name, path in sorted(artifacts.items()):
         logger.info("%s: %s", name, path)

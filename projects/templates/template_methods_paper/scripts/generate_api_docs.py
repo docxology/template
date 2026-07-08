@@ -38,6 +38,7 @@ def run_api_doc_generation(project_root: Path) -> Path | None:
 
 
 def main() -> int:
+    """CLI entry point."""
     logger.info("Starting API documentation generation...")
     glossary_path = run_api_doc_generation(PROJECT_ROOT)
     if glossary_path is None:

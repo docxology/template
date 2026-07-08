@@ -27,6 +27,7 @@ sys.path.insert(0, str(_PROJECT_ROOT.parents[2]))
 
 
 def main() -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(
         description="Generate manuscript variables for template_gold_refinement"
     )

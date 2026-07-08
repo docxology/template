@@ -29,6 +29,7 @@ logger = get_logger(__name__)
 
 
 def main() -> int:
+    """CLI entry point."""
     connector_search_config_path = PROJECT_DIR / "connector_search.yaml"
     if not connector_search_config_path.exists():
         logger.info("[skip] no connector_search.yaml — connector search not configured for this project")

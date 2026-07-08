@@ -34,6 +34,7 @@ from manuscript.render_helpers import extract_preamble, geometry_string  # noqa:
 
 
 def main() -> int:
+    """CLI entry point."""
     for tool in ("pandoc", "xelatex"):
         if shutil.which(tool) is None:
             print(f"error: `{tool}` not found on PATH (required for standalone render)", file=sys.stderr)

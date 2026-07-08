@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     script = Path(__file__).resolve().parent / "z_generate_manuscript_variables.py"
     result = subprocess.run(
         [sys.executable, str(script), *(argv or [])],

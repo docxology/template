@@ -48,6 +48,7 @@ def resolve_project_dir(project_name: str) -> Path:
 
 
 def main() -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description="Inject pipeline variables into manuscript templates")
     parser.add_argument("--project", default=PROJECT_NAME)
     parser.add_argument("--dry-run", action="store_true")

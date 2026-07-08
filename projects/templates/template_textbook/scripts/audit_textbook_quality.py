@@ -16,6 +16,7 @@ ensure_project_paths()
 
 
 def main() -> int:
+    """CLI entry point."""
     from textbook.audit import format_audit_table, run_manuscript_audit
     from textbook.config import load_config
 

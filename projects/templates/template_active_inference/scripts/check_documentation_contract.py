@@ -25,6 +25,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    """CLI entry point."""
     build_parser().parse_args()
     issues = check_documentation_contract(PROJECT_ROOT)
     if issues:

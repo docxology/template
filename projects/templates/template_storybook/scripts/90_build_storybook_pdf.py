@@ -11,6 +11,7 @@ from storybook.rendering import build_storybook_pdf
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-root", type=Path, default=PROJECT_ROOT)
     args = parser.parse_args(argv)

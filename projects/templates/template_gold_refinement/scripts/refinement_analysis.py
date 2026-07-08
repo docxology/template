@@ -27,6 +27,7 @@ CLAIM_SUPPORT_REGISTRY_NAME = "claim_support_registry.json"
 
 
 def main() -> int:
+    """CLI entry point."""
     from composition import generate_token_plan
     from config import load_gold_refinement_config
     from refinery import run_refinery

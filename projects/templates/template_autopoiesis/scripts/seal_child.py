@@ -45,6 +45,7 @@ def seal_child(child_root: Path) -> None:
 
 
 def main():
+    """CLI entry point."""
     if len(sys.argv) < 2:
         print("Usage: seal_child.py <child_root>", file=sys.stderr)
         sys.exit(1)
