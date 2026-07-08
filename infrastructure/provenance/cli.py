@@ -1,8 +1,8 @@
-"""CLI for the provenance DAG — ``record``, ``list``, ``query``, and ``review`` subcommands.
+"""CLI for the provenance DAG — ``record-artifact``, ``list``, and ``review`` subcommands.
 
 Usage::
 
-    python -m infrastructure.provenance record artifact fig1.pdf --path output/figures/fig1.pdf
+    python -m infrastructure.provenance record-artifact fig1 --path output/figures/fig1.pdf
     python -m infrastructure.provenance list
     python -m infrastructure.provenance review
 """
