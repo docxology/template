@@ -1,3 +1,4 @@
+"""Claim verification: fact-check manuscript claims against web evidence via search APIs."""
 from __future__ import annotations
 
 import re
