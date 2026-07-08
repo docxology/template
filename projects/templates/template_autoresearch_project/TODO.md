@@ -21,32 +21,18 @@ normal analysis/render/validate/copy pipeline. This TODO records future work
 only; shipped evidence belongs in generated artifacts, reports, tests, and the
 README/AGENTS contract.
 
-Coverage as of this pass: **95.80%** (up from 93.45% before edge-case test
-additions).  New test files added this pass:
+Live test counts and coverage are read from
+[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
+here. Edge-case coverage lives in `tests/test_edge_{config,ledger,loop,gates}.py`
+and manuscript-token/format helpers in `tests/test_format_helpers.py`; keep both
+green as the loop surfaces evolve.
 
-- `tests/test_edge_cases.py` — 63 tests covering config error branches,
-  source-ledger edge cases (duplicate citekey, schema mismatch, bad date),
-  loop helper functions (`combine_readiness_reports`, `only_changed_artifact_manifest_issues`,
-  `final_output_path_payload`, `build_stage_results` fallback), research-object
-  out-of-tree exclusion, security render with non-list non_claims, writers/io
-  outside-root path, benchmark grading helpers, and artifact_content depth.
-  Split across `tests/test_edge_{config,ledger,loop,gates}.py`.
-- `tests/test_format_helpers.py` — 76 tests covering all manuscript token
-  format functions (`load_json_mapping`, `string_value`, `percent_value`,
-  `currency_value`, `decimal_value`, `accuracy_interval`, `bootstrap_interval`,
-  `p_value`, `last_coverage_value`, `image_shape`, `artifact_role`, all six
-  branches, `artifact_markdown_link`, `short_scope`, `per_class_count`,
-  `first_model_candidate`) plus ml/data validation helpers
-  (`_positive_int`, `_nonnegative_int`, `_probability_float`, `_decay_float`,
-  `_mapping_list`, robustness transforms, MNIST shape validation).
+## Invariants to keep
 
-## Shipped state
+These are the load-bearing guardrails of the exemplar. Keep each one true; use
+git history for how they were established.
 
-The long checklist-heavy hardening plan that previously lived here is complete.
-Use git history for line-by-line closure detail; keep this file focused on work
-that remains live.
-
-| Surface | Shipped behavior | Guardrail to keep |
+| Surface | Behavior | Guardrail to keep |
 | --- | --- | --- |
 | Manual approval | `human_review.yaml` is the human-authored approval source; generated files can report readiness but cannot self-approve publication | default `publication_approved: false`; generated code must not mutate the human review file |
 | Review readiness | `autoresearch_review_packet.json` and `review_decisions.json` distinguish review readiness from publication approval | validators fail on generated self-approval |

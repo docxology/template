@@ -6,12 +6,13 @@ about template status, validation depth, and forkability.
 ## Current validation evidence
 
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_prose_project/manuscript --repo-root .`
-- Project tests and coverage: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`
-  - 120 tests · 100% branch coverage as of 2026-06-25
+- Project tests and coverage (live counts in
+  [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here):
+  `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`
 - Prose analysis is offline by default and uses real markdown and BibTeX fixtures.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
-- Stage 04 warning snapshot, 2026-06-20: PDF, markdown, output structure, figure registry, evidence registry, and design overlays pass; artifact manifest reports advisory drift after single-stage regeneration.
-- ruff + mypy: clean on all 8 src/ files.
+- Style + type gates over public source paths:
+  `uv run python -m infrastructure.project.public_scope source-paths` piped to ruff and mypy.
 
 ## Integrity and template-status gaps
 
@@ -31,14 +32,8 @@ about template status, validation depth, and forkability.
 
 ## Test and validator gaps
 
-- ✅ Negative controls for skipped heading levels added (`TestNegativeControls`, `TestCheckUnits`).
-- ✅ Negative controls for citation-density regressions added.
-- ✅ Negative controls for missing bibliography entries added.
-- ✅ `HeadingView` and `render_outline` fallback path covered (`test_prose_facade.py`).
-- ✅ `parse_bib_keys` now correctly skips `@comment{}` blocks (negative lookahead); tested.
-- ✅ `write_review_report` with empty manuscript (no files) tested and confirmed correct.
-- ✅ `run_configured_checks` with all optional checks disabled tested.
-- ✅ 100% branch coverage on all src/ files.
+- Keep negative controls for skipped heading levels, citation-density
+  regressions, and missing bibliography entries as the suite grows.
 - Add report-schema tests before downstream docs depend on new report fields.
 - Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks.
 

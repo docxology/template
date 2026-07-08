@@ -6,12 +6,13 @@ This template must stay honest about fixture replay versus live subprocess runs.
 ## Current validation evidence
 
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_sia/manuscript --repo-root .`
-- Project tests and coverage: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`
-  - 2026-06-25: 64 tests, 99.52% coverage (was 41 tests, 94.25%).
+- Project tests and coverage (live counts in
+  [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here):
+  `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`
 - Default loop execution replays recorded fixtures; `--live-sia` is bounded but does not apply code mutations.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
-- ruff + mypy: both clean on `src/` (fixed unused `y_off` variable, unused `numpy` import, and `FancyArrowPatch` explicit kwargs for mypy compliance).
-- Stage 04 warning snapshot, 2026-06-20: figure registry and artifact manifest pass; evidence registry still reports unsupported illustrative `85%` and `90%` manuscript thresholds.
+- Style + type gates over public source paths:
+  `uv run python -m infrastructure.project.public_scope source-paths` piped to ruff and mypy.
 
 ## Integrity and template-status gaps
 
@@ -31,10 +32,11 @@ This template must stay honest about fixture replay versus live subprocess runs.
 
 ## Test and validator gaps
 
-- ✅ Added negative controls: invalid run_summary payload, empty train CSV, all four `validate_task_dir` failure modes.
-- ✅ Added edge-case tests: single-generation delta/metric figures, empty-metrics placeholder PNGs, metrics > 1.0 (non-percentage range), non-dict YAML config, outside-root artifact manifest path.
-- ✅ Added `SIA_METRIC_DELTA = "0"` path tests for non-numeric metric values.
-- Register the remaining manuscript threshold numbers as configured facts, or rewrite them as qualitative defaults, before treating Stage 04 as warning-free.
+- Keep negative controls (invalid run_summary payload, empty train CSV, all
+  `validate_task_dir` failure modes) and metric edge cases as the suite grows.
+- Register the remaining illustrative manuscript threshold numbers (`85%`, `90%`)
+  as configured facts, or rewrite them as qualitative defaults, before treating
+  Stage 04 as warning-free.
 
 ## Ordered improvement ladder
 

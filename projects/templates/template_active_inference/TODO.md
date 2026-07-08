@@ -24,11 +24,10 @@ sheaf-track, manuscript-variable, scholarship, figure, and method-inventory
 artifacts before validation. `validate_outputs.py` is green for the current
 artifact tree, including the 23 registered figures, GIF evidence, auxiliary
 visualization classification, 21 connected scholarship rows, and toy-only
-scope-boundary checks. The focused regression suite returned 73 passed in
-148.32s (0:02:28). `uv run pytest tests/ --cov=src --cov-fail-under=90`
-passed 423 tests with 90.34% coverage in 1576.84s (0:26:16), using
-`COVERAGE_FILE=/tmp/template_ai_publication.coverage`, `--durations=20`, and
-`-q`.
+scope-boundary checks. The full suite runs via
+`uv run pytest projects/templates/template_active_inference/tests/ --cov=projects/templates/template_active_inference/src --cov-fail-under=90`;
+live test counts, coverage, and timings are read from
+[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here.
 
 ## Promotion rule
 
