@@ -60,6 +60,7 @@ class NodeBase:
     created_at: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "node_id": self.node_id,
             "kind": self.kind.value,
@@ -84,6 +85,7 @@ class ArtifactNode(NodeBase):
     size_bytes: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         d = super().to_dict()
         d.update({"path": self.path, "content_hash": self.content_hash, "size_bytes": self.size_bytes})
         return d
@@ -97,6 +99,7 @@ class ArtifactNode(NodeBase):
         size_bytes: int | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> "ArtifactNode":
+        """Process create."""
         node_id = _sha256_id(NodeKind.artifact.value, {"label": label, "path": path})
         return cls(
             node_id=node_id,
@@ -124,6 +127,7 @@ class RunNode(NodeBase):
     duration_seconds: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         d = super().to_dict()
         d.update(
             {
@@ -143,6 +147,7 @@ class RunNode(NodeBase):
         duration_seconds: float | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> "RunNode":
+        """Process create."""
         node_id = _sha256_id(NodeKind.run.value, {"label": label, "command": command})
         return cls(
             node_id=node_id,
@@ -168,6 +173,7 @@ class SourceNode(NodeBase):
     source_type: str = "generic"
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         d = super().to_dict()
         d.update({"uri": self.uri, "source_type": self.source_type})
         return d
@@ -180,6 +186,7 @@ class SourceNode(NodeBase):
         source_type: str = "generic",
         metadata: dict[str, Any] | None = None,
     ) -> "SourceNode":
+        """Process create."""
         node_id = _sha256_id(NodeKind.source.value, {"label": label, "uri": uri})
         return cls(
             node_id=node_id,
@@ -204,6 +211,7 @@ class ClaimNode(NodeBase):
     confidence: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         d = super().to_dict()
         d.update({"claim_text": self.claim_text, "confidence": self.confidence})
         return d
@@ -216,6 +224,7 @@ class ClaimNode(NodeBase):
         confidence: float = 0.0,
         metadata: dict[str, Any] | None = None,
     ) -> "ClaimNode":
+        """Process create."""
         node_id = _sha256_id(NodeKind.claim.value, {"label": label, "claim_text": claim_text})
         return cls(
             node_id=node_id,
@@ -244,6 +253,7 @@ class Edge:
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "from_id": self.from_id,
             "to_id": self.to_id,

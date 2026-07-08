@@ -78,10 +78,12 @@ def log_function_call(logger: logging.Logger | None = None) -> Callable[[Callabl
     """Decorator that logs function calls at DEBUG level with elapsed time and error reporting."""
 
     def decorator(func: Callable[P, T]) -> Callable[P, T]:
+        """Decorator that wraps a function with the cross-cutting concern."""
         func_logger = logger or get_logger(func.__module__)
 
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
+            """Inner wrapper function that applies the cross-cutting concern."""
             func_logger.debug(f"Calling: {func.__name__}")
             start_time = time.time()
             try:

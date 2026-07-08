@@ -300,6 +300,7 @@ def detect_markdown_link_cycles(
     cycles: list[LinkCycle] = []
 
     def dfs(node: str, path: list[str]) -> None:
+        """Run a depth-first search over the link graph."""
         if node in stack:
             start = path.index(node)
             cycle = tuple(path[start:] + [node])

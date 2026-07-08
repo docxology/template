@@ -32,6 +32,7 @@ class ProvenanceConfig:
         return Path(project_dir) / self.output_dir / self.filename
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "enabled": self.enabled,
             "output_dir": self.output_dir,

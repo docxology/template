@@ -45,6 +45,7 @@ class ArtifactManifest:
     issues: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "entries": [asdict(entry) for entry in self.entries],
             "issues": list(self.issues),
@@ -59,6 +60,7 @@ class ArtifactValidationReport:
 
     @property
     def valid(self) -> bool:
+        """Return True if the artifact is valid."""
         return not self.issues
 
 

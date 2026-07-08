@@ -44,6 +44,7 @@ class OpenAlexConnector:
         query: str,
         options: SearchOptions | None = None,
     ) -> list[ConnectorHit]:
+        """Search for results matching a query."""
         opts = options or SearchOptions()
         params: dict[str, str] = {
             "search": query,
@@ -74,6 +75,7 @@ class OpenAlexConnector:
         record_id: str,
         options: FetchOptions | None = None,
     ) -> ConnectorHit | None:
+        """Fetch a resource by identifier."""
         oa_id = record_id.removeprefix("openalex:")
         try:
             data = self._http.get_json(f"{self.base_url}/works/{oa_id}")

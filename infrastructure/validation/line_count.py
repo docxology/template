@@ -8,6 +8,8 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class LineCountThresholds:
+    """Data container for LineCountThresholds."""
+
     warn_at: int
     fail_at: int
 
@@ -18,6 +20,7 @@ DEFAULT_TEST_THRESHOLDS = LineCountThresholds(warn_at=800, fail_at=10_000)
 
 
 def count_lines(path: Path) -> int:
+    """Count lines in a file."""
     with path.open("r", encoding="utf-8") as handle:
         return sum(1 for _ in handle)
 
@@ -53,6 +56,7 @@ def scan_infrastructure_and_scripts(
     *,
     allowlist: frozenset[str] = frozenset(),
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
+    """Scan infrastructure and scripts."""
     return scan_line_counts(
         repo_root,
         ("infrastructure", "scripts"),
@@ -66,6 +70,7 @@ def scan_project_scripts(
     *,
     allowlist: frozenset[str] = frozenset(),
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
+    """Scan project scripts."""
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
     warnings: list[tuple[str, int]] = []

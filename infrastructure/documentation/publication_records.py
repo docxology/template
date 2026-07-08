@@ -73,6 +73,7 @@ class PublicationRecord:
 
     @property
     def github_url_path(self) -> str:
+        """Return the GitHub url path."""
         url = self.repository_url
         if url and "github.com/" in url:
             return url.split("github.com/", 1)[1].strip("/")
@@ -80,11 +81,13 @@ class PublicationRecord:
 
     @property
     def is_monorepo_publication_path(self) -> bool:
+        """Check whether monorepo publication path."""
         path = self.github_url_path
         return not self.github_repository and ("/tree/" in path or "/blob/" in path)
 
     @property
     def monorepo_slug(self) -> str:
+        """Return the monorepo slug."""
         if not self.is_monorepo_publication_path:
             return ""
         parts = self.github_url_path.split("/")
@@ -94,6 +97,7 @@ class PublicationRecord:
 
     @property
     def github_display_label(self) -> str:
+        """Return the GitHub display label."""
         if self.github_repo_slug:
             return self.github_repo_slug
         if self.is_monorepo_publication_path and self.monorepo_slug:
@@ -102,6 +106,7 @@ class PublicationRecord:
 
     @property
     def github_display_url(self) -> str:
+        """Return the GitHub display url."""
         if self.github_repo_slug:
             return _github_repo_url(self.github_repo_slug)
         if self.is_monorepo_publication_path:
@@ -569,6 +574,7 @@ def check_publication_records_doc(
     refresh_external: bool = False,
     update_github_readme: bool = True,
 ) -> list[str]:
+    """Check publication records doc."""
     repo_root = Path(repo_root).resolve()
     records = load_publication_records(repo_root)
     if refresh_external:

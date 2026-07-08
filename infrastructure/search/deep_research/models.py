@@ -31,6 +31,7 @@ class DeepResearchSources:
     mcp_servers: tuple[DeepResearchMCPServer, ...] = ()
 
     def has_supported_source(self) -> bool:
+        """Return whether supported source is present."""
         return bool(self.web or self.vector_store_ids or self.file_search_store_names or self.mcp_servers)
 
 

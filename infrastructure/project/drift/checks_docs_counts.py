@@ -128,6 +128,7 @@ def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
 
 
 def check_shared_template_design_contract(repo_root: Path, report: Report) -> None:
+    """Check shared template design contract."""
     design_path = repo_root / "projects" / "templates" / "DESIGN.md"
     agents_path = repo_root / "projects" / "templates" / "AGENTS.md"
 

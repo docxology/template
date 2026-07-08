@@ -69,6 +69,7 @@ def known_stage_keys() -> frozenset[str]:
 
 
 def normalize_stage_key(stage: str) -> str:
+    """Process normalize stage key."""
     return stage.strip().lower()
 
 

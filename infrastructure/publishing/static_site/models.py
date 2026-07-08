@@ -4,6 +4,8 @@ from enum import Enum
 
 
 class SiteHosting(str, Enum):
+    """Data container for SiteHosting."""
+
     GITHUB_PAGES = "github_pages"
     CLOUDFLARE_PAGES = "cloudflare_pages"
     NETLIFY = "netlify"

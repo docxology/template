@@ -99,6 +99,7 @@ def _cmd_convert(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(
         prog="python -m infrastructure.reference.citation",
         description="BibTeX validation, formatting, and Paper→BibTeX conversion.",
@@ -134,6 +135,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
     return int(args.func(args))

@@ -64,4 +64,5 @@ class HuggingFaceResult:
 
     @property
     def ok(self) -> bool:
+        """Return True if the result is successful."""
         return self.status == "ok"

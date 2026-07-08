@@ -38,6 +38,7 @@ class UploadTargets:
 
 
 def upload_pinata(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload pinata to the remote service."""
     from infrastructure.publishing.archival.providers import IPFSPinataProvider
 
     receipt = IPFSPinataProvider(jwt=env.get("PINATA_JWT")).deposit(targets.pdf, dry_run=not commit)
@@ -45,6 +46,7 @@ def upload_pinata(targets: UploadTargets, commit: bool, env: Mapping[str, str]) 
 
 
 def upload_huggingface(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload huggingface to the remote service."""
     from infrastructure.publishing.huggingface import HuggingFaceConfig, HuggingFaceHubAdapter
 
     adapter = HuggingFaceHubAdapter(HuggingFaceConfig(repo_id=targets.hf_repo_id))
@@ -53,6 +55,7 @@ def upload_huggingface(targets: UploadTargets, commit: bool, env: Mapping[str, s
 
 
 def upload_osf(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload osf to the remote service."""
     from infrastructure.publishing.osf import OSFAdapter, OSFConfig
 
     adapter = OSFAdapter(OSFConfig(title=targets.osf_title, node_id=targets.osf_node_id))
@@ -61,6 +64,7 @@ def upload_osf(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> 
 
 
 def upload_testpypi(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload testpypi to the remote service."""
     from infrastructure.publishing.pypi import run_pypi_release
 
     receipt = run_pypi_release(targets.project_root, test=True, dry_run=not commit)
@@ -74,6 +78,7 @@ def upload_testpypi(targets: UploadTargets, commit: bool, env: Mapping[str, str]
 
 
 def upload_github(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload github to the remote service."""
     from infrastructure.publishing.github import create_github_release
 
     repo = env.get("GITHUB_REPO", targets.github_repo)
@@ -114,14 +119,17 @@ def _deploy_static(targets: UploadTargets, hosting: str, commit: bool) -> dict:
 
 
 def upload_netlify(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload netlify to the remote service."""
     return _deploy_static(targets, "netlify", commit)
 
 
 def upload_cloudflare(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload cloudflare to the remote service."""
     return _deploy_static(targets, "cloudflare", commit)
 
 
 def upload_github_pages(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+    """Upload github pages to the remote service."""
     from infrastructure.publishing.static_site import GitHubPagesAdapter, SiteDeployConfig, SiteHosting
 
     config = SiteDeployConfig(
@@ -177,6 +185,7 @@ class UploadRun:
 
     @property
     def ok(self) -> bool:
+        """Return True if the result is successful."""
         return all(r.get("status") != "error" for r in self.results.values())
 
 

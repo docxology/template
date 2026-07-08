@@ -47,15 +47,19 @@ class DeepResearchClient:
 
     @classmethod
     def from_env(cls) -> "DeepResearchClient":
+        """Construct an instance from environment variables, or return None."""
         return cls(DeepResearchConfig.from_env())
 
     def openai_provider(self) -> OpenAIDeepResearchProvider:
+        """Return the OpenAI provider configuration."""
         return OpenAIDeepResearchProvider(api_key=self.config.openai_api_key, model=self.config.openai_model)
 
     def gemini_provider(self) -> GeminiDeepResearchProvider:
+        """Return the Gemini provider configuration."""
         return GeminiDeepResearchProvider(api_key=self.config.gemini_api_key, agent=self.config.gemini_agent)
 
     def available_providers(self) -> tuple[str, ...]:
+        """Return the list of available providers."""
         names: list[str] = []
         if self.config.has_openai:
             names.append("openai")
@@ -107,6 +111,7 @@ class DeepResearchClient:
         raise RuntimeError(f"Unknown deep research provider: {name}")
 
     def submit(self, request: DeepResearchRequest) -> DeepResearchJobHandle:
+        """Submit a request to the API."""
         provider = self.select_provider(request)
         return self._provider_for(provider).submit(request)
 

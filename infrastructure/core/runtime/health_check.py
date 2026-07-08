@@ -18,6 +18,8 @@ logger = get_logger(__name__)
 
 
 class CheckResult(TypedDict, total=False):
+    """Data container for CheckResult."""
+
     status: str
     details: dict[str, Any]
     error: str
@@ -26,6 +28,8 @@ class CheckResult(TypedDict, total=False):
 
 
 class HealthStatus(TypedDict):
+    """Data container for HealthStatus."""
+
     timestamp: float
     overall_status: str
     checks: dict[str, CheckResult]

@@ -20,6 +20,7 @@ class AnchorLinkPolicy:
     )
 
     def should_skip(self, file_key: str, target: str) -> bool:
+        """Return True if the path should be skipped by the link policy."""
         anchor = target.lstrip("#")
         if self.manuscript_path_token in file_key:
             return True
@@ -37,6 +38,7 @@ class FileReferencePolicy:
     generated_output_tokens: tuple[str, ...] = ("output/", "/output/")
 
     def should_skip(self, target: str) -> bool:
+        """Return True if the path should be skipped by the link policy."""
         return any(token in target for token in self.generated_output_tokens)
 
 

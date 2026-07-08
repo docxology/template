@@ -19,12 +19,15 @@ def _now_utc() -> str:
 
 
 class CloudflarePagesAdapter:
+    """Data container for CloudflarePagesAdapter."""
+
     name: str = "cloudflare_pages"
 
     def __init__(self, config: SiteDeployConfig) -> None:
         self.config = config
 
     def deploy(self, *, dry_run: bool = True) -> SiteDeployResult:
+        """Deploy the static site to the hosting provider."""
         site_dir = Path(self.config.site_dir)
         project = self.config.site_id or "my-project"
 

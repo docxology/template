@@ -57,6 +57,7 @@ class BundleEntry:
     present: bool
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "kind": self.kind,
             "path": self.path,
@@ -75,6 +76,7 @@ class VerifyReport:
     mismatches: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "ok": self.ok,
             "checked": self.checked,

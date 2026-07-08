@@ -95,6 +95,7 @@ class StepResult:
 
     @property
     def ok(self) -> bool:
+        """Return True if the result is successful."""
         return self.skipped or self.returncode == 0
 
 

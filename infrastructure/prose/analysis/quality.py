@@ -87,6 +87,7 @@ class QualityReport:
     passive_density_per_1000: float = 0.0
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "word_count": self.word_count,
             "passive_count": self.passive_count,
@@ -163,6 +164,7 @@ def analyze_quality(text: str, *, long_sentence_threshold: int = 35) -> QualityR
     long_sents = detect_long_sentences(text, threshold=long_sentence_threshold)
 
     def density(count: int) -> float:
+        """Return the citation density metric."""
         return round(1000.0 * count / n, 2) if n else 0.0
 
     return QualityReport(

@@ -39,17 +39,21 @@ class _Reader:
         self.pos = 0
 
     def eof(self) -> bool:
+        """Process eof."""
         return self.pos >= len(self.text)
 
     def peek(self) -> str:
+        """Process peek."""
         return self.text[self.pos] if not self.eof() else ""
 
     def advance(self) -> str:
+        """Process advance."""
         ch = self.text[self.pos]
         self.pos += 1
         return ch
 
     def skip_ws_and_comments(self) -> None:
+        """Process skip ws and comments."""
         while not self.eof():
             ch = self.peek()
             if ch.isspace():
@@ -62,12 +66,14 @@ class _Reader:
             break
 
     def expect(self, ch: str) -> None:
+        """Process expect."""
         if self.eof() or self.peek() != ch:
             ctx = self.text[max(0, self.pos - 20) : self.pos + 20]
             raise BibParseError(f"Expected {ch!r} at pos {self.pos} near: …{ctx}…")
         self.pos += 1
 
     def read_identifier(self) -> str:
+        """Read identifier."""
         start = self.pos
         while not self.eof():
             ch = self.peek()
@@ -95,6 +101,7 @@ class _Reader:
         raise BibParseError(f"Unterminated braced value starting at pos {start}")
 
     def read_quoted(self) -> str:
+        """Read quoted."""
         self.expect('"')
         start = self.pos
         while not self.eof():
@@ -107,6 +114,7 @@ class _Reader:
         raise BibParseError(f"Unterminated quoted value starting at pos {start}")
 
     def read_number(self) -> str:
+        """Read number."""
         start = self.pos
         while not self.eof() and self.peek().isdigit():
             self.pos += 1

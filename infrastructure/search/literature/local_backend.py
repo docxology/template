@@ -30,6 +30,7 @@ class LocalBackend(SearchBackend):
         return self._corpus
 
     def search(self, query: SearchQuery) -> list[Paper]:
+        """Search for results matching a query."""
         try:
             corpus = self._load()
         except (OSError, json.JSONDecodeError) as exc:

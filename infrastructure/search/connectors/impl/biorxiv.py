@@ -42,6 +42,7 @@ class BiorxivConnector:
         query: str,
         options: SearchOptions | None = None,
     ) -> list[ConnectorHit]:
+        """Search for results matching a query."""
         opts = options or SearchOptions()
         # bioRxiv's search endpoint does not support free-text via v2; use details
         # endpoint with a date window or fall back to the pubs endpoint.
@@ -71,6 +72,7 @@ class BiorxivConnector:
         record_id: str,
         options: FetchOptions | None = None,
     ) -> ConnectorHit | None:
+        """Fetch a resource by identifier."""
         doi = record_id.removeprefix("biorxiv:")
         url = f"{self.base_url}/details/{self.server}/{doi}/na/json"
         try:

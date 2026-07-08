@@ -97,6 +97,7 @@ class PipelineState:
 
     @property
     def ready(self) -> bool:
+        """Return True if the artifact is ready for publication."""
         return self.available and self.failed_stages == 0 and self.total_stages > 0
 
 
@@ -123,10 +124,12 @@ class DocsLintStatus:
 
     @property
     def total_issues(self) -> int:
+        """Return the total number of issues across all categories."""
         return self.mermaid + self.broken_links + self.consistency + self.doc_pairs
 
     @property
     def ready(self) -> bool:
+        """Return True if the artifact is ready for publication."""
         return self.available and self.total_issues == 0
 
 

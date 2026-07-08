@@ -54,6 +54,7 @@ __all__ = [
 
 
 def check_project(repo_root: Path, project: str, report: Report) -> None:
+    """Check project."""
     from infrastructure.project.drift.registry import run_project_checks
 
     project_root = repo_root / "projects" / project
@@ -64,4 +65,5 @@ def check_project(repo_root: Path, project: str, report: Report) -> None:
 
 
 def check_repo_thin_orchestrator_scripts(repo_root: Path, report: Report) -> None:
+    """Check repo thin orchestrator scripts."""
     check_repo_scripts(repo_root, report)

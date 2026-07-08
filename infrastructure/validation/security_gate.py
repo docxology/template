@@ -180,6 +180,7 @@ def _pip_audit_vulnerabilities(data: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def aggregate_security_findings(results: list[dict[str, Any]]) -> dict[str, Any]:
+    """Process aggregate security findings."""
     aggregated: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "severity_counts": {s: 0 for s in SEVERITY_LEVELS},
@@ -222,6 +223,7 @@ def aggregate_security_findings(results: list[dict[str, Any]]) -> dict[str, Any]
 
 
 def write_security_report(report: dict[str, Any], report_path: Path) -> None:
+    """Process write security report."""
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"Security report written to {report_path}")

@@ -48,6 +48,7 @@ class PaperclipBackend(SearchBackend):
         return " ".join(parts)
 
     def search(self, query: SearchQuery) -> list[Paper]:
+        """Search for results matching a query."""
         self._call_id += 1
         command = self._build_command(query)
         payload = {

@@ -629,6 +629,7 @@ def _contains_signpost(text: str, options: tuple[SignpostOption, ...]) -> bool:
 
 
 def check_template_signpost_contract(project_root: Path, report: Report, project: str) -> None:
+    """Check template signpost contract."""
     for rel, groups in _TEMPLATE_SIGNPOST_GROUPS.items():
         path = project_root / rel
         if not path.is_file():
@@ -646,6 +647,7 @@ def check_template_signpost_contract(project_root: Path, report: Report, project
 
 
 def check_config_example_parity(project_root: Path, report: Report, project: str) -> None:
+    """Check config example parity."""
     config_path = project_root / "manuscript" / "config.yaml"
     example_path = project_root / "manuscript" / "config.yaml.example"
     if not config_path.is_file() or not example_path.is_file():

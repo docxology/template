@@ -173,11 +173,13 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..
     from infrastructure.core.exceptions import SecurityViolation
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        """Decorator that wraps a function with the cross-cutting concern."""
         limiter = RateLimiter(max_requests, window_seconds)
 
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             # Use function name as rate limit key (could be enhanced with user ID/IP)
+            """Inner wrapper function that applies the cross-cutting concern."""
             key = f"{func.__module__}.{func.__name__}"
 
             if not limiter.is_allowed(key):

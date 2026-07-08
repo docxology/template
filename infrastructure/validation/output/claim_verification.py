@@ -57,6 +57,8 @@ _PREPOSITIONAL_STOPWORDS = {
 
 @dataclass(frozen=True)
 class ClaimVerdict:
+    """Data container for ClaimVerdict."""
+
     claim: str
     verdict: Verdict
     confidence: float
@@ -68,12 +70,15 @@ class ClaimVerdict:
 
 @dataclass
 class ClaimVerificationReport:
+    """Data container for ClaimVerificationReport."""
+
     claims: list[str] = field(default_factory=list)
     verdicts: list[ClaimVerdict] = field(default_factory=list)
     skipped: bool = False
     reason: str = ""
 
     def summary(self) -> dict[str, Any]:
+        """Return a summary dict of counts and status."""
         counts = {"supported": 0, "contradicted": 0, "insufficient": 0}
         for verdict in self.verdicts:
             counts[verdict.verdict] += 1
@@ -88,6 +93,7 @@ class ClaimVerificationReport:
         }
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "claims": list(self.claims),
             "verdicts": [verdict.__dict__ for verdict in self.verdicts],
@@ -96,6 +102,8 @@ class ClaimVerificationReport:
 
 
 class FactCheckVerifier:
+    """Data container for FactCheckVerifier."""
+
     def __init__(
         self,
         client: Any | None = None,
@@ -118,6 +126,7 @@ class FactCheckVerifier:
         max_workers: int = 4,
         max_results: int = 5,
     ) -> FactCheckVerifier | None:
+        """Construct an instance from env."""
         try:
             from infrastructure.search.exa.client import ExaClient
             from infrastructure.search.exa.errors import ExaError
@@ -146,6 +155,7 @@ class FactCheckVerifier:
         self._cache[claim] = verdict
 
     def verify_claims(self, claims: list[str]) -> list[ClaimVerdict]:
+        """Verify claims."""
         if not claims:
             return []
         results: list[ClaimVerdict | None] = [None] * len(claims)
@@ -158,6 +168,7 @@ class FactCheckVerifier:
         return [result for result in results if result is not None]
 
     def verify_claim(self, claim: str) -> ClaimVerdict:
+        """Verify claim."""
         claim = " ".join(claim.split())
         if not claim:
             return ClaimVerdict(claim="", verdict="insufficient", confidence=0.0, evidence_snippet="empty claim")
@@ -296,6 +307,7 @@ def _normalize_claim_candidate(text: str) -> str:
 
 
 def claim_verification_enabled(project_root: Path | str) -> bool:
+    """Process claim verification enabled."""
     project_root = Path(project_root)
     config = load_project_config_yaml(project_root / "manuscript")
     if not config:
@@ -306,6 +318,7 @@ def claim_verification_enabled(project_root: Path | str) -> bool:
 
 
 def verify_project_claims(project_root: Path | str) -> ClaimVerificationReport:
+    """Verify project claims."""
     project_root = Path(project_root)
     manuscript_dir = project_root / "manuscript"
     if not manuscript_dir.is_dir():
@@ -343,6 +356,7 @@ def verify_project_claims(project_root: Path | str) -> ClaimVerificationReport:
 
 
 def validate_claim_verification(project_root: Path | str) -> bool:
+    """Validate claim verification."""
     project_root = Path(project_root)
     log_substep("Verifying manuscript claims against web evidence...", logger)
     report = verify_project_claims(project_root)

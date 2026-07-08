@@ -106,6 +106,7 @@ def extract_paths_from_files_payload(payload: str) -> list[str]:
     paths: set[str] = set()
 
     def visit(value: Any) -> None:
+        """Visit an AST node during traversal."""
         if isinstance(value, str):
             if "/" in value or "\\" in value:
                 paths.add(value)

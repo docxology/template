@@ -23,9 +23,11 @@ class _NoOpMetrics:
         self._description = description
 
     def labels(self, **_kwargs: str) -> "_NoOpMetrics":
+        """Label a metric with tag values."""
         return self
 
     def inc(self, amount: float = 1.0) -> None:
+        """Increment a counter."""
         logger.debug("%s.inc(%.1f)", self._name, amount)
 
 
@@ -35,9 +37,11 @@ class _NoOpHistogram:
         self._description = description
 
     def labels(self, **_kwargs: str) -> "_NoOpHistogram":
+        """Label a metric with tag values."""
         return self
 
     def observe(self, value: float) -> None:
+        """Record an observation."""
         logger.debug("%s.observe(%.4f)", self._name, value)
 
 
@@ -120,6 +124,7 @@ def _populate_cache(hermes_home: Path, cache_path: Path, cache_marker: Path) -> 
 
 
 def run_cache_gate() -> int:
+    """Run cache gate."""
     hermes_home_env = os.getenv("HERMES_HOME")
     # Default under the user cache dir (XDG_CACHE_HOME or ~/.cache) for portability;
     # /var/cache requires root and is not writable on most dev/CI machines.

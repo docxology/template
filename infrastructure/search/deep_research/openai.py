@@ -25,6 +25,8 @@ class OpenAIDeepResearchError(RuntimeError):
 
 @dataclass(frozen=True)
 class OpenAIDeepResearchOptions:
+    """Data container for OpenAIDeepResearchOptions."""
+
     api_key: str | None
     model: str = DEFAULT_OPENAI_MODEL
 
@@ -83,6 +85,7 @@ class OpenAIDeepResearchProvider:
 
     @property
     def is_available(self) -> bool:
+        """Return True if the service is available (credentials present)."""
         return bool(self.options.api_key)
 
     def _client(self):
@@ -97,6 +100,7 @@ class OpenAIDeepResearchProvider:
         return OpenAI(api_key=self.options.api_key)
 
     def submit(self, request: DeepResearchRequest) -> DeepResearchJobHandle:
+        """Submit a request to the API."""
         payload = build_openai_payload(request, model=self.options.model)
         client = self._client()
         # One key per logical submission, reused across retries. Best-effort
@@ -117,6 +121,7 @@ class OpenAIDeepResearchProvider:
         )
 
     def poll(self, job_id: str) -> DeepResearchResult:
+        """Poll the API for completion status."""
         resp = self._client().responses.retrieve(job_id)
         citations = _extract_citations(resp)
         trace = _extract_trace(resp)

@@ -71,6 +71,7 @@ def substitute_manuscript_var_placeholders(content: str, flat: dict[str, str]) -
     n_subs = 0
 
     def repl(match: re.Match[str]) -> str:
+        """Process repl."""
         nonlocal n_subs
         key = match.group(1).strip()
         if key == "maturity.*":

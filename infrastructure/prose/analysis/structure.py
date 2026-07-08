@@ -46,6 +46,7 @@ class StructureReport:
     has_skipped_level: bool = False
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "total_words": self.total_words,
             "max_depth": self.max_depth,

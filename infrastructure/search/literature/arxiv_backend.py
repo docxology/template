@@ -64,6 +64,7 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
         self._sleep = sleeper
 
     def search(self, query: SearchQuery) -> list[Paper]:
+        """Search for results matching a query."""
         params = {
             "search_query": f"all:{query.text}",
             "start": 0,
@@ -118,6 +119,7 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
 
     def _entry_to_paper(self, entry: XMLElement) -> Paper | None:
         def text(tag: str, ns: str = "atom") -> str | None:
+            """Process text."""
             el = entry.find(f"{ns}:{tag}", self._ATOM_NS)
             return el.text.strip() if (el is not None and el.text) else None
 

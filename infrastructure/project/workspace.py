@@ -16,6 +16,7 @@ logger = get_logger(__name__)
 
 
 def run_uv_command(cmd: list[str], cwd: Path | None = None) -> int:
+    """Run a uv command in the project directory."""
     try:
         result = subprocess.run(cmd, cwd=cwd or Path.cwd(), capture_output=False, check=False, timeout=120)
         return result.returncode
@@ -25,6 +26,7 @@ def run_uv_command(cmd: list[str], cwd: Path | None = None) -> int:
 
 
 def sync_workspace() -> int:
+    """Synchronize the workspace dependencies."""
     log_header("SYNCING WORKSPACE DEPENDENCIES", logger)
     logger.info("Running 'uv sync' for entire workspace...")
     exit_code = run_uv_command(["uv", "sync"])
@@ -36,6 +38,7 @@ def sync_workspace() -> int:
 
 
 def add_dependency(package: str, project_name: str) -> int:
+    """Add a dependency to the project."""
     log_header(f"ADDING DEPENDENCY TO PROJECT: {project_name}", logger)
     project_dir = Path("projects") / project_name
     if not project_dir.exists():
@@ -51,6 +54,7 @@ def add_dependency(package: str, project_name: str) -> int:
 
 
 def update_workspace() -> int:
+    """Update the workspace to reflect dependency changes."""
     log_header("UPDATING WORKSPACE DEPENDENCIES", logger)
     exit_code = run_uv_command(["uv", "sync", "--upgrade"])
     if exit_code == 0:
@@ -61,6 +65,7 @@ def update_workspace() -> int:
 
 
 def show_workspace_tree() -> int:
+    """Print the workspace dependency tree."""
     log_header("WORKSPACE DEPENDENCY TREE", logger)
     exit_code = run_uv_command(["uv", "tree"])
     if exit_code != 0:
@@ -69,6 +74,7 @@ def show_workspace_tree() -> int:
 
 
 def show_workspace_status() -> int:
+    """Print the workspace status."""
     log_header("WORKSPACE STATUS", logger)
     workspace_file = Path("pyproject.toml")
     if not workspace_file.exists():

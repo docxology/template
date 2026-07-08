@@ -40,6 +40,7 @@ class Finding:
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "node_id": self.node_id,
             "severity": self.severity.value,
@@ -70,6 +71,7 @@ class ReviewResult:
         return [f for f in self.findings if f.severity == severity]
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "passed": self.passed,
             "findings": [f.to_dict() for f in self.findings],

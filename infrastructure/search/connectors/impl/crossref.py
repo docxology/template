@@ -43,6 +43,7 @@ class CrossrefConnector:
         query: str,
         options: SearchOptions | None = None,
     ) -> list[ConnectorHit]:
+        """Search for results matching a query."""
         opts = options or SearchOptions()
         params: dict[str, str] = {
             "query": query,
@@ -70,6 +71,7 @@ class CrossrefConnector:
         record_id: str,
         options: FetchOptions | None = None,
     ) -> ConnectorHit | None:
+        """Fetch a resource by identifier."""
         doi = record_id.removeprefix("crossref:").removeprefix("doi:")
         url = f"{self.base_url}/works/{doi}"
         try:

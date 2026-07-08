@@ -63,6 +63,7 @@ logger = get_logger(__name__)
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(
         prog="infrastructure.doctor",
         description=(
@@ -177,12 +178,14 @@ def _build_report(
 
 
 def cmd_diagnose(args: argparse.Namespace) -> int:
+    """Process cmd diagnose."""
     report = _build_report(args.repo_root)
     _emit_report(report, as_json=args.json)
     return report.exit_code
 
 
 def cmd_fix(args: argparse.Namespace) -> int:
+    """Process cmd fix."""
     state = DoctorState(args.repo_root)
     state.ensure()
 
@@ -246,6 +249,7 @@ def cmd_fix(args: argparse.Namespace) -> int:
 
 
 def cmd_undo(args: argparse.Namespace) -> int:
+    """Process cmd undo."""
     state = DoctorState(args.repo_root)
     records = load_journal(state)
     target = None
@@ -283,6 +287,7 @@ def cmd_undo(args: argparse.Namespace) -> int:
 
 
 def cmd_history(args: argparse.Namespace) -> int:
+    """Process cmd history."""
     state = DoctorState(args.repo_root)
     records = load_journal(state)
     if args.json:
@@ -297,6 +302,7 @@ def cmd_history(args: argparse.Namespace) -> int:
 
 
 def cmd_capabilities(args: argparse.Namespace) -> int:
+    """Process cmd capabilities."""
     payload = {
         "version": "1.0",
         "detectors": [
@@ -326,6 +332,7 @@ def cmd_capabilities(args: argparse.Namespace) -> int:
 
 
 def cmd_robot_docs(args: argparse.Namespace) -> int:
+    """Process cmd robot docs."""
     sys.stdout.write(_ROBOT_DOCS)
     return 0
 
@@ -394,6 +401,7 @@ _DISPATCH = {
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
     cmd = args.command or "diagnose"

@@ -42,6 +42,7 @@ class PDBConnector:
         query: str,
         options: SearchOptions | None = None,
     ) -> list[ConnectorHit]:
+        """Search for results matching a query."""
         opts = options or SearchOptions()
         payload: dict[str, Any] = {
             "query": {
@@ -75,6 +76,7 @@ class PDBConnector:
         record_id: str,
         options: FetchOptions | None = None,
     ) -> ConnectorHit | None:
+        """Fetch a resource by identifier."""
         pdb_id = record_id.removeprefix("pdb:").upper()
         try:
             data = self._http.get_json(f"{_DATA_URL}/rest/v1/core/entry/{pdb_id}")

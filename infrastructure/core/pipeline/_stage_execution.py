@@ -32,6 +32,7 @@ def maybe_hitl_pause_before_stage(
     hitl_controller: HitlController,
     start_time: float,
 ) -> PipelineStageResult | None:
+    """Process maybe hitl pause before stage."""
     if not hitl_controller.should_pause_before(stage_num, stage_spec):
         return None
     reason = hitl_controller.pause_reason(
@@ -69,6 +70,7 @@ def run_pre_stage_hooks(
     stage_hooks,
     start_time: float,
 ) -> PipelineStageResult | None:
+    """Run pre stage hooks."""
     pre_context = StageHookContext(
         project_name=executor.config.project_name,
         stage_name=stage_name,
@@ -100,6 +102,7 @@ def run_pre_stage_hooks(
 
 
 def invoke_stage_function(stage_func: Callable[[], bool], *, retry_policy: int) -> bool:
+    """Process invoke stage function."""
     attempts = max(1, retry_policy + 1)
     for attempt in range(1, attempts + 1):
         try:
@@ -133,6 +136,7 @@ def record_stage_telemetry(
     exit_code: int = 0,
     error_message: str = "",
 ) -> None:
+    """Process record stage telemetry."""
     if executor._telemetry is None:
         return
     executor._telemetry.end_stage(
@@ -151,6 +155,7 @@ def log_stage_start(
     stage_name: str,
     pipeline_start: float | None,
 ) -> None:
+    """Process log stage start."""
     if pipeline_start is not None:
         log_pipeline_stage_with_eta(
             stage_num,
@@ -175,6 +180,7 @@ def handle_post_stage_success(
     hitl_controller: HitlController,
     stage_contract,
 ) -> PipelineStageResult:
+    """Process handle post stage success."""
     logger.info(f"✓ Stage {stage_num} completed successfully ({duration:.1f}s)")
     post_context = StageHookContext(
         project_name=executor.config.project_name,
@@ -283,6 +289,7 @@ def handle_stage_failure(
     stage_hooks,
     error_detail: str = "stage returned false",
 ) -> PipelineStageResult:
+    """Process handle stage failure."""
     from infrastructure.core.errors import STAGE_FAILED
 
     logger.error(STAGE_FAILED.format(stage_num=stage_num))
@@ -324,6 +331,7 @@ def handle_stage_exception(
     stage_hooks,
     exc: Exception,
 ) -> PipelineStageResult:
+    """Process handle stage exception."""
     from infrastructure.core.errors import STAGE_EXCEPTION
 
     logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=exc))

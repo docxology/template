@@ -58,6 +58,7 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
         repo_root = Path(repo_root)
 
     def has_project_markers(path: Path) -> bool:
+        """Return True if the directory contains project marker files."""
         return any((path / marker).exists() for marker in ("src", "tests", "scripts", "manuscript"))
 
     # A name that already carries a typed-subfolder prefix (e.g. ``active/demo``,

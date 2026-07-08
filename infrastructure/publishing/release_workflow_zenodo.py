@@ -109,6 +109,7 @@ def write_reserved_dois_to_config(
     version_doi: str,
     dry_run: bool,
 ) -> bool:
+    """Write reserved DOIs to the project config."""
     concept_changed = update_publication_doi(
         config_path,
         concept_doi,

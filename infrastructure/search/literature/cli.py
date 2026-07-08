@@ -124,12 +124,14 @@ def _cmd_to_bibtex(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(
         prog="python -m infrastructure.search.literature",
         description="Aggregated literature search across arXiv, Crossref, Paperclip, and local corpora.",
     )
 
     def add_common(p: argparse.ArgumentParser) -> None:
+        """Add common to the collection."""
         p.add_argument("query", help="Search query string")
         p.add_argument("--max-results", "-n", type=int, default=10)
         p.add_argument("--from-year", type=int, default=None, dest="from_year")
@@ -185,6 +187,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
     return int(args.func(args))

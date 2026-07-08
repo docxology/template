@@ -99,6 +99,7 @@ class DeepResearchConfig:
 
     @classmethod
     def from_env(cls) -> "DeepResearchConfig":
+        """Construct an instance from environment variables, or return None."""
         ensure_dotenv_loaded()
         return cls(
             openai_api_key=os.getenv(OPENAI_API_KEY_ENV),
@@ -109,10 +110,12 @@ class DeepResearchConfig:
 
     @property
     def has_openai(self) -> bool:
+        """Return whether openai is present."""
         return bool(self.openai_api_key)
 
     @property
     def has_gemini(self) -> bool:
+        """Return whether gemini is present."""
         return bool(self.gemini_api_key)
 
 

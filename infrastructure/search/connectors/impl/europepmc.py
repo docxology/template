@@ -40,6 +40,7 @@ class EuropePMCConnector:
         query: str,
         options: SearchOptions | None = None,
     ) -> list[ConnectorHit]:
+        """Search for results matching a query."""
         opts = options or SearchOptions()
         q = query
         if opts.year_min:
@@ -65,6 +66,7 @@ class EuropePMCConnector:
         record_id: str,
         options: FetchOptions | None = None,
     ) -> ConnectorHit | None:
+        """Fetch a resource by identifier."""
         pmid = record_id.removeprefix("europepmc:")
         params = {"query": f"EXT_ID:{pmid}", "format": "json", "resultType": "core"}
         try:

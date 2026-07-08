@@ -64,6 +64,7 @@ def parse_metric_lines(output: str) -> dict[str, float]:
 
 
 def metric_unit_from_name(name: str) -> str:
+    """Process metric unit from name."""
     normalized = name.strip().lower()
     for suffix, unit in _UNIT_SUFFIXES:
         if normalized.endswith(suffix):

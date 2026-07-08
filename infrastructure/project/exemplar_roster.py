@@ -58,6 +58,7 @@ class ExemplarEntry:
 
     @property
     def has_use_when(self) -> bool:
+        """Return True if the exemplar has a 'use when' description."""
         return bool(self.use_when.strip())
 
 
@@ -148,6 +149,7 @@ def missing_run_via_monorepo(repo_root: Path) -> list[str]:
 
 
 def render_roster_markdown(entries: list[ExemplarEntry]) -> str:
+    """Render the exemplar roster as a markdown table."""
     rows = [
         "| Exemplar | Title | When to use | Test files | Coverage floor |",
         "| --- | --- | --- | ---: | ---: |",

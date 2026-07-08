@@ -171,6 +171,7 @@ class SearchResult:
         return iter(self.papers)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "query": asdict(self.query),
             "papers": [p.to_dict() for p in self.papers],
@@ -179,6 +180,7 @@ class SearchResult:
         }
 
     def to_json(self, *, indent: int = 2) -> str:
+        """Serialize this object to a JSON string."""
         return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False, sort_keys=False)
 
 

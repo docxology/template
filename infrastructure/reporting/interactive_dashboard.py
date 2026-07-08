@@ -68,24 +68,29 @@ class InteractiveDashboard:
         return self
 
     def set_hyperparameters(self, hp: dict[str, Any]) -> "InteractiveDashboard":
+        """Process set hyperparameters."""
         self.hyperparameters = _to_jsonable(hp)  # type: ignore[assignment]
         return self
 
     def set_meta(self, **kwargs: Any) -> "InteractiveDashboard":
+        """Process set meta."""
         self._extra_meta.update(kwargs)
         return self
 
     def add_table(self, name: str, rows: list[dict[str, Any]]) -> "InteractiveDashboard":
+        """Add table to the collection."""
         self.tables[name] = [_to_jsonable(r) for r in rows]  # type: ignore[misc]
         return self
 
     def add_panel(self, panel: "Panel") -> "InteractiveDashboard":
+        """Add panel to the collection."""
         if any(p.panel_id == panel.panel_id for p in self.panels):
             raise ValueError(f"duplicate panel_id: {panel.panel_id!r}")
         self.panels.append(panel)
         return self
 
     def add_control(self, control: "Control") -> "InteractiveDashboard":
+        """Add control to the collection."""
         if any(c.control_id == control.control_id for c in self.controls):
             raise ValueError(f"duplicate control_id: {control.control_id!r}")
         self.controls.append(control)
@@ -101,6 +106,7 @@ class InteractiveDashboard:
         default: float,
         description: str = "",
     ) -> "InteractiveDashboard":
+        """Add slider to the collection."""
         return self.add_control(
             Control(
                 control_id=control_id,
@@ -123,6 +129,7 @@ class InteractiveDashboard:
         option_labels: Sequence[str] | None = None,
         description: str = "",
     ) -> "InteractiveDashboard":
+        """Add dropdown to the collection."""
         return self.add_control(
             Control(
                 control_id=control_id,
@@ -142,6 +149,7 @@ class InteractiveDashboard:
         default: bool = False,
         description: str = "",
     ) -> "InteractiveDashboard":
+        """Add toggle to the collection."""
         return self.add_control(
             Control(
                 control_id=control_id,
@@ -153,16 +161,19 @@ class InteractiveDashboard:
         )
 
     def add_invariant(self, inv: "Invariant") -> "InteractiveDashboard":
+        """Add invariant to the collection."""
         self.invariants.append(inv)
         return self
 
     def add_note(self, note: str) -> "InteractiveDashboard":
+        """Add note to the collection."""
         self.notes.append(note)
         return self
 
     # -- output ------------------------------------------------------------
 
     def evaluate_invariants(self) -> list[dict[str, Any]]:
+        """Process evaluate invariants."""
         results: list[dict[str, Any]] = []
         for inv in self.invariants:
             ok, witness = inv.evaluate()
@@ -179,6 +190,7 @@ class InteractiveDashboard:
         return results
 
     def render_invariants_text(self, results: Sequence[dict[str, Any]] | None = None) -> str:
+        """Render invariants text."""
         if results is None:
             results = self.evaluate_invariants()
         lines: list[str] = []
@@ -210,6 +222,7 @@ class InteractiveDashboard:
         return "\n".join(lines)
 
     def render_summary_text(self) -> str:
+        """Render summary text."""
         lines: list[str] = []
         title = self.title
         lines.append(title)
@@ -241,6 +254,7 @@ class InteractiveDashboard:
         return "\n".join(lines) + "\n"
 
     def to_json(self) -> dict[str, Any]:
+        """Serialize this object to a JSON string."""
         return {
             "title": self.title,
             "subtitle": self.subtitle,

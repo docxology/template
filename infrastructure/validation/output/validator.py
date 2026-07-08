@@ -28,6 +28,8 @@ class _IssuesBySeverity(TypedDict):
 
 
 class ValidationResultDict(TypedDict):
+    """Data container for ValidationResultDict."""
+
     structure: dict[str, Any]
     directories: dict[str, _DirectoryDetail]
     file_counts: dict[str, int]

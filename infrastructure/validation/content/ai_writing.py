@@ -117,13 +117,16 @@ class ProseQualityReport:
 
     @property
     def has_flags(self) -> bool:
+        """Return whether flags is present."""
         return bool(self.flags)
 
     @property
     def total_ai_terms(self) -> int:
+        """Process total ai terms."""
         return sum(hit.count for hit in self.ai_term_hits)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "word_count": self.word_count,
             "sentence_count": self.sentence_count,

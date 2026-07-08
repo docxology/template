@@ -98,6 +98,7 @@ class PublishingStatusReport:
 
     @property
     def published_count(self) -> int:
+        """Return the count of published items."""
         return sum(1 for p in self.platforms if p.state is PublicationState.PUBLISHED)
 
 

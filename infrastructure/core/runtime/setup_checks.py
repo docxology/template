@@ -74,6 +74,7 @@ def sync_workspace_dependencies(repo_root: Path) -> bool:
 
 
 def validate_project_discovery(repo_root: Path, project_name: str) -> bool:
+    """Validate project discovery."""
     from infrastructure.core.project_paths import resolve_project_root
     from infrastructure.project.discovery import discover_projects
     from infrastructure.project.validation import validate_project_structure
@@ -115,6 +116,7 @@ def validate_project_discovery(repo_root: Path, project_name: str) -> bool:
 
 
 def run_optional_setup_hook(repo_root: Path, project_name: str) -> bool:
+    """Run optional setup hook."""
     from infrastructure.core.project_paths import resolve_project_root
     from infrastructure.project.setup_hook import run_project_setup_hook
 

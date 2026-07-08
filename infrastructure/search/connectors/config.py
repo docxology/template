@@ -28,6 +28,7 @@ class ConnectorSearchConfig:
     source_path: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "enabled_connectors": self.enabled_connectors,
             "default_max_results": self.default_max_results,

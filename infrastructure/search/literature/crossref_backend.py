@@ -38,6 +38,7 @@ class CrossrefBackend(SearchBackend, HttpGetMixin):
         self.timeout = timeout
 
     def search(self, query: SearchQuery) -> list[Paper]:
+        """Search for results matching a query."""
         params: dict[str, Any] = {"query": query.text, "rows": query.max_results}
         filters: list[str] = []
         if query.year_min is not None:

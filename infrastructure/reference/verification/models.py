@@ -89,13 +89,16 @@ class ReferenceVerdict:
 
     @property
     def is_ok(self) -> bool:
+        """Check whether ok."""
         return self.status is VerificationStatus.OK
 
     @property
     def is_blocking(self) -> bool:
+        """Check whether blocking."""
         return self.status in BLOCKING_STATUSES
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "citation_key": self.citation_key,
             "status": self.status.value,
@@ -124,13 +127,16 @@ class VerificationReport:
 
     @property
     def blocking(self) -> list[ReferenceVerdict]:
+        """Return True if this result blocks publication."""
         return [v for v in self.verdicts if v.is_blocking]
 
     @property
     def has_blocking(self) -> bool:
+        """Return True if any result blocks publication."""
         return any(v.is_blocking for v in self.verdicts)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "network_used": self.network_used,
             "counts": self.counts(),

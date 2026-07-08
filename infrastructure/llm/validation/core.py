@@ -166,12 +166,14 @@ def validate_citations(content: str) -> list[str]:
 
 
 def strip_placeholder_tokens(content: str) -> str:
+    """Remove placeholder tokens from text."""
     content = _PLACEHOLDER_RE.sub("", content)
     content = _PLACEHOLDER_LINE_RE.sub("", content)
     return content
 
 
 def normalize_output_whitespace(content: str) -> str:
+    """Normalize whitespace in agent output."""
     lines = [line.rstrip() for line in content.splitlines()]
     text = "\n".join(lines)
     text = _DOUBLE_BLANK_RE.sub("\n\n", text)
@@ -179,6 +181,7 @@ def normalize_output_whitespace(content: str) -> str:
 
 
 def citation_density(content: str) -> float:
+    """Return the citation density of a text."""
     words = max(len(content.split()), 1)
     return len(validate_citations(content)) * 1000.0 / words
 
@@ -188,6 +191,7 @@ def validate_citation_density(
     min_per_1000_words: float = 0.0,
     max_per_1000_words: float | None = None,
 ) -> tuple[bool, dict[str, Any]]:
+    """Validate that citation density meets thresholds."""
     density = citation_density(content)
     details = {
         "citation_density_per_1000_words": density,
@@ -217,6 +221,7 @@ def clean_agent_output(
     *,
     max_repetitions: int = 2,
 ) -> str:
+    """Clean and normalize LLM agent output."""
     cleaned = strip_placeholder_tokens(content)
     cleaned = clean_repetitive_output(cleaned, max_repetitions=max_repetitions)
     cleaned = normalize_output_whitespace(cleaned)

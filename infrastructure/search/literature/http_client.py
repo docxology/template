@@ -21,6 +21,7 @@ class HttpResponse:
     url: str
 
     def json(self) -> Any:
+        """Return the response as parsed JSON."""
         return json.loads(self.text)
 
 
@@ -67,6 +68,7 @@ class UrllibHttpClient:
         headers: dict[str, str] | None = None,
         timeout: float = 10.0,
     ) -> HttpResponse:
+        """Get a cached value, or None if not present."""
         if params:
             qs = urllib.parse.urlencode(params, doseq=True)
             sep = "&" if "?" in url else "?"
@@ -123,6 +125,7 @@ class UrllibHttpClient:
         headers: dict[str, str] | None = None,
         timeout: float = 30.0,
     ) -> HttpResponse:
+        """Send a POST request."""
         body: bytes
         if json is not None:
             import json as _json

@@ -38,6 +38,7 @@ class BaseConnector:
         query: str,
         opts: SearchOptions | None = None,
     ) -> list[ConnectorHit]:  # pragma: no cover
+        """Search for results matching a query."""
         raise NotImplementedError
 
     def fetch(
@@ -45,4 +46,5 @@ class BaseConnector:
         record_id: str,
         opts: FetchOptions | None = None,
     ) -> object:  # pragma: no cover
+        """Fetch a resource by identifier."""
         raise NotImplementedError

@@ -11,6 +11,7 @@ from infrastructure.core.exceptions import FileNotFoundError
 
 
 def collect_project_info(project_name: str, repo_root: Path) -> dict[str, Any]:
+    """Collect and return project metadata."""
     project_dir = repo_root / "projects" / project_name
     if not project_dir.exists():
         raise FileNotFoundError(

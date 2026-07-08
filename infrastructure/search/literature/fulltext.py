@@ -99,6 +99,7 @@ class AbstractFetcher:
         return self.cache_dir / f"abs_{_safe_id(paper.id)}.txt"
 
     def fetch(self, paper: Paper, *, force: bool = False) -> FetchResult:
+        """Fetch a resource by identifier."""
         if paper.abstract and not force:
             return FetchResult(paper=paper, status="skipped", message="already present")
 
@@ -144,6 +145,7 @@ class AbstractFetcher:
         )
 
     def fetch_all(self, papers: Iterable[Paper], *, force: bool = False) -> list[FetchResult]:
+        """Process fetch all."""
         return [self.fetch(p, force=force) for p in papers]
 
 
@@ -227,6 +229,7 @@ class FulltextFetcher:
         pdf_url: str | None = None,
         force: bool = False,
     ) -> FetchResult:
+        """Fetch a resource by identifier."""
         if paper.fulltext and not force:
             return FetchResult(paper=paper, status="skipped", message="already present")
 
@@ -276,6 +279,7 @@ class FulltextFetcher:
         return FetchResult(paper=paper, status="hit", path=path)
 
     def fetch_all(self, papers: Iterable[Paper], *, force: bool = False) -> list[FetchResult]:
+        """Process fetch all."""
         return [self.fetch(p, force=force) for p in papers]
 
 

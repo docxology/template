@@ -53,9 +53,11 @@ class SearchCache:
         self.ttl_seconds = ttl_seconds
 
     def path_for(self, query: SearchQuery) -> Path:
+        """Process path for."""
         return self.cache_dir / f"search_{_query_hash(query)}.json"
 
     def get(self, query: SearchQuery) -> SearchResult | None:
+        """Get a cached value, or None if not present."""
         path = self.path_for(query)
         if not path.exists():
             return None
@@ -80,6 +82,7 @@ class SearchCache:
         )
 
     def put(self, result: SearchResult) -> Path:
+        """Process put."""
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         payload = result.to_dict()
         payload["_cached_at"] = time.time()

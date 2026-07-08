@@ -210,6 +210,7 @@ def execute_multi_project(
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
+    """Build arg parser."""
     parser = argparse.ArgumentParser(description="Execute multi-project orchestration")
     parser.add_argument("--no-infra-tests", action="store_true", help="Skip infrastructure tests")
     parser.add_argument("--no-llm", action="store_true", help="Skip LLM stages")

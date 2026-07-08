@@ -68,6 +68,7 @@ class _ExplicitToplevelAllowlist:
     """
 
     def match(self, path: str) -> str | None:
+        """Process match."""
         return path if path in ALLOWED_PROJECTS_TOPLEVEL_FILES else None
 
 
@@ -115,11 +116,13 @@ PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
 
 
 def is_public_template_output_path(path: str) -> bool:
+    """Check whether public template output path."""
     normalized = path.replace("\\", "/")
     return any(normalized.startswith(prefix) for prefix in PUBLIC_TEMPLATE_OUTPUT_PREFIXES)
 
 
 def offending_tracked_projects(repo_root: Path) -> list[str]:
+    """Return the list of offending tracked projects."""
     return _offending_tracked_paths(
         repo_root,
         path_prefix="projects/",
@@ -129,6 +132,7 @@ def offending_tracked_projects(repo_root: Path) -> list[str]:
 
 
 def offending_tracked_fonds(repo_root: Path) -> list[str]:
+    """Return the list of offending tracked fonds."""
     return _offending_tracked_paths(
         repo_root,
         path_prefix="fonds/",
@@ -138,6 +142,7 @@ def offending_tracked_fonds(repo_root: Path) -> list[str]:
 
 
 def offending_tracked_rules(repo_root: Path) -> list[str]:
+    """Return the list of offending tracked rules."""
     return _offending_tracked_paths(
         repo_root,
         path_prefix="rules/",
@@ -147,6 +152,7 @@ def offending_tracked_rules(repo_root: Path) -> list[str]:
 
 
 def offending_tracked_tools(repo_root: Path) -> list[str]:
+    """Return the list of offending tracked tools."""
     return _offending_tracked_paths(
         repo_root,
         path_prefix="tools/",
@@ -181,6 +187,7 @@ def _offending_tracked_paths(
 
 
 def is_generated_artifact_path(path: str) -> bool:
+    """Check whether generated artifact path."""
     normalized = path.replace("\\", "/")
     if any(fnmatch.fnmatch(normalized, pattern) for pattern in ALWAYS_GENERATED_ARTIFACT_PATTERNS):
         return True
@@ -190,6 +197,7 @@ def is_generated_artifact_path(path: str) -> bool:
 
 
 def is_oversized_public_template_output(repo_root: Path, path: str) -> bool:
+    """Check whether oversized public template output."""
     normalized = path.replace("\\", "/")
     if not is_public_template_output_path(normalized):
         return False
@@ -200,6 +208,7 @@ def is_oversized_public_template_output(repo_root: Path, path: str) -> bool:
 
 
 def tracked_generated_artifacts(repo_root: Path) -> list[str]:
+    """Return the set of tracked generated artifacts."""
     proc = subprocess.run(
         ["git", "ls-files", "-z"],
         cwd=repo_root,

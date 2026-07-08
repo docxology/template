@@ -86,6 +86,7 @@ class ConsoleFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         # Honour LOG_TERMINAL_VERBOSE=1 → full prefix (rollback path)
+        """Format a log record."""
         if get_terminal_verbose_enabled():
             return TemplateFormatter().format(record)
 

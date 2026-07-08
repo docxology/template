@@ -20,12 +20,15 @@ def _now_utc() -> str:
 
 
 class NetlifyAdapter:
+    """Data container for NetlifyAdapter."""
+
     name: str = "netlify"
 
     def __init__(self, config: SiteDeployConfig) -> None:
         self.config = config
 
     def deploy(self, *, dry_run: bool = True) -> SiteDeployResult:
+        """Deploy the static site to the hosting provider."""
         site_dir = Path(self.config.site_dir)
         site_id = self.config.site_id
 

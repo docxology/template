@@ -27,6 +27,7 @@ class ExaResponse:
     url: str
 
     def json(self) -> Any:
+        """Return the response as parsed JSON."""
         try:
             return _json.loads(self.text)
         except _json.JSONDecodeError as exc:
@@ -61,6 +62,7 @@ class UrllibExaHttpClient:
         headers: dict[str, str],
         timeout: float,
     ) -> ExaResponse:
+        """Send a POST request."""
         body = _json.dumps(json).encode("utf-8")
         req = urllib.request.Request(url, data=body, headers=dict(headers), method="POST")
         try:

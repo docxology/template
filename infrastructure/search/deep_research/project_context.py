@@ -120,6 +120,7 @@ def _select_artifacts(root: Path, *, max_files: int) -> list[Path]:
     seen: set[Path] = set()
 
     def add(path: Path) -> None:
+        """Add a finding to the report."""
         if len(artifacts) >= max_files:
             return
         if not path.is_file():

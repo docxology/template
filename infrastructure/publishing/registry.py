@@ -11,6 +11,8 @@ from enum import Enum
 
 
 class PublishingTier(str, Enum):
+    """Data container for PublishingTier."""
+
     FIRST_CLASS = "first_class"  # implemented, tested, locally verifiable
     DOCUMENTED = "documented"  # documented intent, no live adapter yet
 

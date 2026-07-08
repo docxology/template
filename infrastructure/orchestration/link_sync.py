@@ -23,10 +23,12 @@ _HOOKS: list[LinkSyncHook] = []
 
 
 def register_link_sync(hook: LinkSyncHook) -> None:
+    """Process register link sync."""
     _HOOKS.append(hook)
 
 
 def registered_link_sync_hooks() -> Sequence[LinkSyncHook]:
+    """Process registered link sync hooks."""
     return tuple(_HOOKS)
 
 
@@ -53,10 +55,12 @@ def _sync_tools_if_enabled(repo_root: Path) -> LinkSyncResult:
 
 
 def maybe_sync_all_links(repo_root: Path) -> list[LinkSyncResult]:
+    """Process maybe sync all links."""
     return [hook(repo_root) for hook in _HOOKS]
 
 
 def print_link_sync_result(result: LinkSyncResult, *, stream: TextIO | None = None) -> None:
+    """Print link sync result to stdout."""
     out = stream or sys.stderr
     print(f"[link-sync] {result.summary()}", file=out)
     for name in result.created:
@@ -70,6 +74,7 @@ def print_link_sync_result(result: LinkSyncResult, *, stream: TextIO | None = No
 
 
 def print_link_sync_results(results: Sequence[LinkSyncResult], *, stream: TextIO | None = None) -> None:
+    """Print link sync results to stdout."""
     for result in results:
         if result.changed:
             print_link_sync_result(result, stream=stream)

@@ -61,6 +61,8 @@ _REPO_ROOT = Path(__file__).parent.parent.parent.parent
 
 @dataclass(frozen=True)
 class PipelineCheck:
+    """Data container for PipelineCheck."""
+
     name: str
     run: Callable[[], bool]
 

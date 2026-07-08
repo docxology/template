@@ -14,12 +14,16 @@ EntryKind = Literal["standalone", "program"]
 
 @dataclass(frozen=True)
 class LifecycleDiscoveryConfig:
+    """Data container for LifecycleDiscoveryConfig."""
+
     non_rendered_subdirs: frozenset[str] = field(default_factory=lambda: NON_RENDERED_SUBDIRS)
     skip_dot_prefixed: bool = True
 
 
 @dataclass(frozen=True)
 class ProgramEntry:
+    """Data container for ProgramEntry."""
+
     name: str
     path: Path
     kind: EntryKind
@@ -29,6 +33,7 @@ def discover_program_entries(
     projects_dir: Path,
     config: LifecycleDiscoveryConfig | None = None,
 ) -> list[ProgramEntry]:
+    """Process discover program entries."""
     cfg = config or LifecycleDiscoveryConfig()
     if not projects_dir.is_dir():
         return []

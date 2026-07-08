@@ -65,9 +65,9 @@ log_header() {
     local msg_len=${#message}
     local padding=$(( (width - msg_len - 2) / 2 ))
     echo
-    echo -e "${BLUE}${BOX_TL}$(printf '%*s' $width '' | tr ' ' "${BOX_H}")${BOX_TR}${NC}"
-    echo -e "${BLUE}${BOX_V}${NC}$(printf '%*s' $padding '')${BOLD}${message}${NC}$(printf '%*s' $((width - padding - msg_len)) '')${BLUE}${BOX_V}${NC}"
-    echo -e "${BLUE}${BOX_BL}$(printf '%*s' $width '' | tr ' ' "${BOX_H}")${BOX_BR}${NC}"
+    echo -e "${BLUE}${BOX_TL}$(printf '%*s' "$width" '' | sed "s/ /${BOX_H}/g")${BOX_TR}${NC}"
+    echo -e "${BLUE}${BOX_V}${NC}$(printf '%*s' "$padding" '')${BOLD}${message}${NC}$(printf '%*s' $((width - padding - msg_len)) '')${BLUE}${BOX_V}${NC}"
+    echo -e "${BLUE}${BOX_BL}$(printf '%*s' "$width" '' | sed "s/ /${BOX_H}/g")${BOX_BR}${NC}"
 }
 
 log_stage() {

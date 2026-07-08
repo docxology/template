@@ -50,6 +50,7 @@ class ExaResult:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> ExaResult:
+        """Construct an instance from a dictionary."""
         return cls(
             id=str(data.get("id") or data.get("url") or ""),
             url=data.get("url"),
@@ -78,6 +79,7 @@ class Grounding:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> Grounding:
+        """Construct an instance from a dictionary."""
         return cls(
             field=str(data.get("field", "")),
             citations=list(data.get("citations") or []),
@@ -94,6 +96,7 @@ class SearchOutput:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> SearchOutput:
+        """Construct an instance from a dictionary."""
         return cls(
             content=data.get("content"),
             grounding=[Grounding.from_dict(g) for g in data.get("grounding") or []],
@@ -113,6 +116,7 @@ class SearchResponse:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> SearchResponse:
+        """Construct an instance from a dictionary."""
         output = data.get("output")
         cost = data.get("costDollars")
         return cls(
@@ -136,6 +140,7 @@ class ContentsResponse:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> ContentsResponse:
+        """Construct an instance from a dictionary."""
         cost = data.get("costDollars")
         return cls(
             results=[ExaResult.from_dict(r) for r in data.get("results") or []],
@@ -157,6 +162,7 @@ class AnswerResponse:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> AnswerResponse:
+        """Construct an instance from a dictionary."""
         cost = data.get("costDollars")
         return cls(
             answer=data.get("answer"),

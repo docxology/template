@@ -391,6 +391,7 @@ def format_report_table(report: HealthReport, *, color: bool = True) -> str:
     """
 
     def colorize(text: str, code: str) -> str:
+        """Wrap text with ANSI color codes for terminal output."""
         return f"{code}{text}{_ANSI_RESET}" if color else text
 
     rows: list[tuple[str, str, str]] = []

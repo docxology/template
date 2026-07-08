@@ -27,6 +27,7 @@ def _load_config(project_root: Path) -> dict[str, Any] | None:
 
 
 def run_metadata_package(repo_root: Path, project: str) -> int:
+    """Run the metadata packaging stage."""
     project_root = resolve_project_root(repo_root, project)
     config = _load_config(project_root)
     if config is None:

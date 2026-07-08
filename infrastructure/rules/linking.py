@@ -45,10 +45,12 @@ RULES_LINK_CONFIG = SidecarLinkConfig(
 
 
 def private_rules_root(repo_root: Path) -> Path | None:
+    """Return the private rules root root path."""
     return resolve_private_root(repo_root, RULES_LINK_CONFIG)
 
 
 def is_managed_symlink(path: Path, private_root: Path) -> bool:
+    """Check whether managed symlink."""
     return _is_managed_symlink(path, private_root, RULES_LINK_CONFIG)
 
 
@@ -59,6 +61,7 @@ def sync_private_rule_links(
     prune: bool = True,
     dry_run: bool = False,
 ) -> LinkSyncResult:
+    """Synchronize private rule links."""
     return sync_private_links(
         repo_root,
         RULES_LINK_CONFIG,
@@ -75,6 +78,7 @@ def sync_active_rule_links(
     prune: bool = True,
     dry_run: bool = False,
 ) -> LinkSyncResult:
+    """Synchronize active rule links."""
     return sync_private_rule_links(repo_root, private_root, prune=prune, dry_run=dry_run)
 
 
@@ -91,6 +95,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     ns = _build_parser().parse_args(argv)
     repo_root = ns.repo_root or find_repo_root()
     result = sync_private_rule_links(

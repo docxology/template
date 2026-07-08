@@ -13,6 +13,8 @@ logger = get_logger(__name__)
 
 @dataclass(frozen=True)
 class SidecarLinkConfig:
+    """Data container for SidecarLinkConfig."""
+
     protected_names: frozenset[str]
     lifecycle_subdirs: tuple[str, ...]
     required_private_root_subdirs: tuple[str, ...]
@@ -25,6 +27,8 @@ class SidecarLinkConfig:
 
 @dataclass
 class LinkSyncResult:
+    """Data container for LinkSyncResult."""
+
     created: list[str] = field(default_factory=list)
     updated: list[str] = field(default_factory=list)
     removed: list[str] = field(default_factory=list)
@@ -33,9 +37,11 @@ class LinkSyncResult:
 
     @property
     def changed(self) -> bool:
+        """Return True if any links changed during sync."""
         return bool(self.created or self.updated or self.removed)
 
     def summary(self) -> str:
+        """Return a summary dict of counts and status."""
         if self.private_root is None:
             return "link-sync: no private projects root found (no-op)"
         return (
@@ -46,6 +52,7 @@ class LinkSyncResult:
 
 
 def resolve_private_root(repo_root: Path, config: SidecarLinkConfig) -> Path | None:
+    """Resolve private root to a concrete value."""
     repo_root = Path(repo_root)
     candidates: list[tuple[Path, bool]] = []
     env = os.environ.get(config.env_var)

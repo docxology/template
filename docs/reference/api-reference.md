@@ -1593,6 +1593,8 @@ Container for citation style configuration.
 class CloudflarePagesAdapter(config: SiteDeployConfig)
 ```
 
+Data container for CloudflarePagesAdapter.
+
 ### `create_academic_profile_data`
 
 *function — defined in `infrastructure.publishing._metadata_reporting`*
@@ -1791,6 +1793,8 @@ Return the right adapter instance for config.hosting.
 class GitHubPagesAdapter(config: SiteDeployConfig)
 ```
 
+Data container for GitHubPagesAdapter.
+
 ### `list_platforms`
 
 *function — defined in `infrastructure.publishing.registry`*
@@ -1818,6 +1822,8 @@ Read provider credentials from env vars first, then a JSON file.
 ```python
 class NetlifyAdapter(config: SiteDeployConfig)
 ```
+
+Data container for NetlifyAdapter.
 
 ### `PLATFORM_REGISTRY`
 
@@ -1875,6 +1881,8 @@ Publish research artifacts to Zenodo and return DOI plus deposition id.
 class PublishingTier(str, Enum)
 ```
 
+Data container for PublishingTier.
+
 ### `PyPIAdapter`
 
 *class — defined in `infrastructure.publishing.pypi.adapter`*
@@ -1912,6 +1920,8 @@ Result of a static-site deploy attempt.
 ```python
 class SiteHosting(str, Enum)
 ```
+
+Data container for SiteHosting.
 
 ### `upload_dist`
 

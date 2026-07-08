@@ -444,6 +444,7 @@ def _rewrite_text_mode_math_segment(segment: str) -> tuple[str, int]:
     replacements = 0
 
     def replace(match: re.Match[str]) -> str:
+        """Replace matched text."""
         nonlocal replacements
         replacements += 1
         return _TEXT_MODE_MATH_COMMAND_REPLACEMENTS[match.group("name")]

@@ -100,6 +100,7 @@ class LinkIssue:
     type: str
 
     def as_dict(self) -> dict[str, Any]:
+        """Process as dict."""
         return {
             "file": self.file,
             "line": self.line,

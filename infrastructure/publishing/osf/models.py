@@ -63,4 +63,5 @@ class OSFResult:
 
     @property
     def ok(self) -> bool:
+        """Return True if the result is successful."""
         return self.status == "ok"

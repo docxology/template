@@ -51,6 +51,7 @@ class ManifestClaim:
     verifier_args: dict[str, object]
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         out: dict[str, object] = {
             "id": self.id,
             "manuscript_section": self.manuscript_section,
@@ -83,6 +84,7 @@ class Manifest:
     archival_receipts: dict[str, str] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "schema_version": self.schema_version,
             "project_name": self.project_name,
@@ -98,6 +100,7 @@ class Manifest:
         }
 
     def write_to(self, path: Path) -> None:
+        """Write the manifest to a file path."""
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
             json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n",

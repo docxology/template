@@ -61,6 +61,7 @@ def retry_with_backoff(
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
+            """Inner wrapper function that applies the cross-cutting concern."""
             for attempt in range(1, max_attempts + 1):
                 try:
                     return func(*args, **kwargs)

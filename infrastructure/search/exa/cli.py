@@ -31,6 +31,7 @@ def _domains(value: str | None) -> list[str] | None:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(prog="exa", description="Exa search interfaces")
     parser.add_argument("--base-url", default=None, help="override API host (testing)")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -64,6 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    """Process run."""
     client = ExaClient.from_env(base_url=args.base_url)
     if args.command == "search":
         resp = client.search(
@@ -90,6 +92,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """CLI entry point."""
     args = build_parser().parse_args(argv)
     func = getattr(args, "func", None)
     if func is not None:

@@ -67,6 +67,7 @@ def _cmd_report(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(
         prog="python -m infrastructure.prose.cli",
         description="Prose analysis: metrics, outline, quality, full report.",
@@ -103,6 +104,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
     return int(args.func(args))

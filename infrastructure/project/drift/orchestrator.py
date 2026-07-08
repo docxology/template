@@ -180,6 +180,7 @@ def check_project_scripts(
     report: Report,
     project: str,
 ) -> None:
+    """Check project scripts."""
     scripts_dir = project_root / "scripts"
     for script in _iter_script_files(scripts_dir):
         severity, message = _analyze_script(script, repo_root)
@@ -188,6 +189,7 @@ def check_project_scripts(
 
 
 def check_repo_scripts(repo_root: Path, report: Report) -> None:
+    """Check repo scripts."""
     scripts_dir = repo_root / "scripts"
     for script in _iter_script_files(scripts_dir):
         if "gates" in script.parts and script.name != "__init__.py":

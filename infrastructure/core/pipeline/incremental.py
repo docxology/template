@@ -109,9 +109,11 @@ class HashManifest:
         self._records: dict[str, StageHashRecord] = dict(records or {})
 
     def get(self, stage_name: str) -> StageHashRecord | None:
+        """Get a cached value, or None if not present."""
         return self._records.get(stage_name)
 
     def record(self, stage_name: str, *, input_hash: str, output_hash: str) -> None:
+        """Record a result in the store."""
         self._records[stage_name] = StageHashRecord(input_hash=input_hash, output_hash=output_hash)
 
     def output_hashes(self) -> dict[str, str]:
@@ -119,6 +121,7 @@ class HashManifest:
         return {name: rec.output_hash for name, rec in self._records.items()}
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "version": 1,
             "stages": {

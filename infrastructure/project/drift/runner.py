@@ -29,6 +29,7 @@ def run_drift_checks(
 
 
 def print_human_report(report: Report) -> None:
+    """Print human report to stdout."""
     if not report.findings:
         print("template_drift: no drift detected.")
         return
@@ -45,12 +46,14 @@ def print_human_report(report: Report) -> None:
 
 
 def print_github_report(report: Report) -> None:
+    """Print github report to stdout."""
     for finding in report.findings:
         prefix = "::error" if finding.severity == "ERROR" else "::warning"
         print(f"{prefix} title={finding.project}/{finding.rule}::{finding.message}")
 
 
 def exit_code_for_report(report: Report, *, strict: bool = False) -> int:
+    """Process exit code for report."""
     if report.errors():
         return 1
     if strict and report.warnings():

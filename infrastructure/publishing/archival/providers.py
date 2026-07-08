@@ -49,6 +49,8 @@ class ArchivalProvider(Protocol):
 
     name: str
 
+    """Deposit a payload to the archival service."""
+
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt: ...
 
 
@@ -80,6 +82,7 @@ class ZenodoProvider:
         self._base_url = base_url.rstrip("/")
 
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+        """Deposit a payload to the archival service."""
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -166,6 +169,7 @@ class IPFSPinataProvider:
         self._timeout = timeout
 
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+        """Deposit a payload to the archival service."""
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -254,6 +258,7 @@ class IPFSWeb3StorageProvider:
         self._timeout = timeout
 
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+        """Deposit a payload to the archival service."""
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -352,6 +357,7 @@ class SoftwareHeritageProvider:
         self._timeout = timeout
 
     def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+        """Deposit a payload to the archival service."""
         sha = _bundle_sha256(bundle)
         repo_url = self._resolve_repo_url(bundle)
 

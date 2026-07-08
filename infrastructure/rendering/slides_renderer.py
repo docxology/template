@@ -419,6 +419,7 @@ class SlidesRenderer:
             return None
 
         def matching_brace(start: int) -> int | None:
+            """Find the index of the matching closing brace."""
             depth = 0
             escaped = False
             for idx in range(start, len(tex_content)):

@@ -55,6 +55,7 @@ class FileReport:
     quality: QualityReport
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "name": self.name,
             "metrics": self.metrics.to_dict(),
@@ -77,6 +78,7 @@ class ManuscriptReport:
     citation_keys: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {
             "total_words": self.total_words,
             "total_sentences": self.total_sentences,
@@ -89,6 +91,7 @@ class ManuscriptReport:
         }
 
     def to_json(self, *, indent: int = 2) -> str:
+        """Serialize this object to a JSON string."""
         return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
 
     @classmethod
@@ -233,6 +236,7 @@ def analyze_files(
     total_paragraphs = sum(f.metrics.paragraph_count for f in file_reports)
 
     def weighted(metric_key: str) -> float:
+        """Return the weighted aggregate score."""
         num = round(
             sum(float(getattr(f.metrics, metric_key)) * float(f.metrics.word_count) for f in file_reports)
             / max(1, total_words),

@@ -107,9 +107,11 @@ class BibEntry:
         self.fields[name] = value
 
     def has(self, name: str) -> bool:
+        """Return True if a key is present."""
         return self.get(name) is not None
 
     def keys(self) -> Iterator[str]:
+        """Return all citation keys."""
         return iter(self.fields.keys())
 
 
@@ -122,13 +124,16 @@ class BibDatabase:
     """Optional ``@comment{...}`` block emitted at the top of the file."""
 
     def add(self, entry: BibEntry) -> None:
+        """Add a finding to the report."""
         self.entries.append(entry)
 
     def extend(self, entries: Iterable[BibEntry]) -> None:
+        """Extend the collection with additional entries."""
         for entry in entries:
             self.add(entry)
 
     def find(self, citation_key: str) -> BibEntry | None:
+        """Find citations matching a query."""
         for entry in self.entries:
             if entry.citation_key == citation_key:
                 return entry
@@ -141,7 +146,9 @@ class BibDatabase:
         return iter(self.entries)
 
     def keys(self) -> list[str]:
+        """Return all citation keys."""
         return [entry.citation_key for entry in self.entries]
 
     def as_mapping(self) -> Mapping[str, BibEntry]:
+        """Return the entries as a dict mapping."""
         return {entry.citation_key: entry for entry in self.entries}

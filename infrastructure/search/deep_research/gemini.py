@@ -22,6 +22,8 @@ class GeminiDeepResearchError(RuntimeError):
 
 @dataclass(frozen=True)
 class GeminiDeepResearchOptions:
+    """Data container for GeminiDeepResearchOptions."""
+
     api_key: str | None
     agent: str = DEFAULT_GEMINI_AGENT
 
@@ -84,6 +86,7 @@ class GeminiDeepResearchProvider:
 
     @property
     def is_available(self) -> bool:
+        """Return True if the service is available (credentials present)."""
         return bool(self.options.api_key)
 
     def _client(self):
@@ -98,6 +101,7 @@ class GeminiDeepResearchProvider:
         return genai.Client(api_key=self.options.api_key)
 
     def submit(self, request: DeepResearchRequest) -> DeepResearchJobHandle:
+        """Submit a request to the API."""
         payload = build_gemini_payload(request, agent=self.options.agent)
         client = self._client()
         resp = submit_with_transient_retry(lambda: client.interactions.create(**payload), provider="gemini")
@@ -110,6 +114,7 @@ class GeminiDeepResearchProvider:
         )
 
     def poll(self, job_id: str) -> DeepResearchResult:
+        """Poll the API for completion status."""
         resp = self._client().interactions.get(job_id)
         return DeepResearchResult(
             provider="gemini",

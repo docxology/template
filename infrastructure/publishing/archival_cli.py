@@ -53,6 +53,7 @@ def _build_providers(names: list[str], credentials: ArchivalCredentials) -> list
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(
         prog="python -m infrastructure.publishing.archival_cli",
         description="Mirror a publication bundle to multiple archival targets.",

@@ -305,18 +305,21 @@ class _SymbolVisitor(ast.NodeVisitor):
         )
 
     def visit_ClassDef(self, node: ast.ClassDef) -> Any:  # noqa: N802
+        """Process visit ClassDef."""
         self._record(node, "class")
         self.stack.append(node.name)
         self.generic_visit(node)
         self.stack.pop()
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:  # noqa: N802
+        """Process visit FunctionDef."""
         self._record(node, "def")
         self.stack.append(node.name)
         self.generic_visit(node)
         self.stack.pop()
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> Any:  # noqa: N802
+        """Process visit AsyncFunctionDef."""
         self._record(node, "async def")
         self.stack.append(node.name)
         self.generic_visit(node)

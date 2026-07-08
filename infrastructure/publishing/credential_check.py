@@ -61,6 +61,7 @@ class ProbeResult:
 
     @property
     def ok(self) -> bool:
+        """Return True if the result is successful."""
         return self.status == "pass"
 
 
@@ -253,6 +254,7 @@ _BADGE = {"pass": "✅", "fail": "❌", "skipped": "⚪", "no-endpoint": "•"} 
 
 
 def format_results(results: list[ProbeResult]) -> str:
+    """Format credential check results for display."""
     lines = ["Publishing credential check (read-only, no writes):", ""]
     for r in results:
         badge = _BADGE.get(r.status, "?")

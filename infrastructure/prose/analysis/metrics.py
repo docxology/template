@@ -46,6 +46,7 @@ class ProseMetrics:
     gunning_fog: float
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
         return {k: getattr(self, k) for k in self.__dataclass_fields__}
 
 

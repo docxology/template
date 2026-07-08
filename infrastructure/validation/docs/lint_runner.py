@@ -36,6 +36,8 @@ logger = get_logger(__name__)
 
 @dataclass
 class DocsLintReport:
+    """Data container for DocsLintReport."""
+
     mermaid: list[ValidationFailure] | None
     broken_links: list[BrokenLink] | None
     consistency: list[Inconsistency] | None
@@ -44,6 +46,7 @@ class DocsLintReport:
 
     @property
     def failed(self) -> bool:
+        """Return True if the lint run failed."""
         return bool(
             (self.mermaid and len(self.mermaid) > 0)
             or (self.broken_links and len(self.broken_links) > 0)
@@ -54,6 +57,7 @@ class DocsLintReport:
 
     @property
     def exit_code(self) -> int:
+        """Return the exit code (0 for success, non-zero for failure)."""
         if self.runtime_error:
             return 2
         return 1 if self.failed else 0
@@ -86,6 +90,7 @@ def _is_rel(path: Path, root: Path) -> bool:
 
 
 def run_mermaid_lint(repo_root: Path, *, quiet: bool) -> list[ValidationFailure]:
+    """Run mermaid lint."""
     blocks = find_mermaid_blocks(doc_roots(repo_root))
     if not quiet:
         logger.info("mermaid: discovered %d blocks", len(blocks))
@@ -100,6 +105,7 @@ def run_mermaid_lint(repo_root: Path, *, quiet: bool) -> list[ValidationFailure]
 
 
 def run_links_lint(repo_root: Path, *, quiet: bool) -> list[BrokenLink]:
+    """Run links lint."""
     broken = find_broken_links(doc_roots(repo_root))
     if not quiet:
         logger.info("cross-links: %d broken", len(broken))
@@ -107,6 +113,7 @@ def run_links_lint(repo_root: Path, *, quiet: bool) -> list[BrokenLink]:
 
 
 def run_consistency_lint(repo_root: Path, *, quiet: bool) -> list[Inconsistency]:
+    """Run consistency lint."""
     issues: list[Inconsistency] = []
     issues.extend(check_module_count_claims(repo_root))
     issues.extend(check_no_ghost_projects(repo_root))
@@ -123,6 +130,7 @@ def run_consistency_lint(repo_root: Path, *, quiet: bool) -> list[Inconsistency]
 
 
 def run_doc_pairs_lint(repo_root: Path, *, quiet: bool) -> list[DocPairIssue]:
+    """Run doc pairs lint."""
     issues = find_doc_pair_issues(repo_root)
     if not quiet:
         logger.info("doc-pairs: %d issues", len(issues))
@@ -130,6 +138,7 @@ def run_doc_pairs_lint(repo_root: Path, *, quiet: bool) -> list[DocPairIssue]:
 
 
 def emit_text_report(report: DocsLintReport) -> None:
+    """Emit text report."""
     if report.mermaid:
         log_header("MERMAID FAILURES", logger)
         for failure in report.mermaid:
@@ -149,6 +158,7 @@ def emit_text_report(report: DocsLintReport) -> None:
 
 
 def emit_json_report(report: DocsLintReport, repo_root: Path) -> str:
+    """Emit json report."""
     payload: dict[str, Any] = {
         "mermaid": [
             {
@@ -203,6 +213,7 @@ def run_docs_lint(
     quiet: bool = False,
     strict_mermaid: bool = False,
 ) -> DocsLintReport:
+    """Run docs lint."""
     only_flags = sum(1 for f in (mermaid_only, links_only, consistency_only, doc_pairs_only) if f)
     if only_flags > 1:
         raise ValueError("pass at most one of mermaid_only, links_only, consistency_only, doc_pairs_only")
@@ -256,6 +267,7 @@ def format_docs_lint_report(
     as_json: bool = False,
     quiet: bool = False,
 ) -> str | None:
+    """Format docs lint report."""
     if as_json:
         return emit_json_report(report, repo_root)
     if not quiet or report.failed:

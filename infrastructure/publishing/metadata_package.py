@@ -500,6 +500,7 @@ def generate_metadata_package(
 
 
 def ebook_metadata_from_config(config: dict[str, Any], project_slug: str) -> EbookPublicationMetadata:
+    """Build ebook metadata from the manuscript config."""
     paper = config.get("paper", {}) or {}
     publication = config.get("publication", {}) or {}
     meta_block = config.get("metadata", {}) or {}

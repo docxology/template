@@ -63,6 +63,7 @@ class TherapyLevel(IntEnum):
 
     @property
     def label(self) -> str:
+        """Process label."""
         return self.name.lower()
 
 
@@ -98,6 +99,7 @@ class Finding:
     repair_levels: tuple[RepairLevel, ...] = field(default_factory=tuple)
 
     def to_jsonable(self) -> dict[str, Any]:
+        """Convert this object to a JSON-serializable form."""
         return {
             "code": self.code,
             "title": self.title,
@@ -152,6 +154,7 @@ class FixPlan:
     reversible: bool = True
 
     def to_jsonable(self) -> dict[str, Any]:
+        """Convert this object to a JSON-serializable form."""
         return {
             "fix_id": self.fix_id,
             "title": self.title,
@@ -188,6 +191,7 @@ class MutateRecord:
     error: str | None = None
 
     def to_jsonable(self) -> dict[str, Any]:
+        """Convert this object to a JSON-serializable form."""
         return asdict(self)
 
 
@@ -216,6 +220,7 @@ class DoctorReport:
     exit_code: int
 
     def to_jsonable(self) -> dict[str, Any]:
+        """Convert this object to a JSON-serializable form."""
         return {
             "findings": [f.to_jsonable() for f in self.findings],
             "applied": [r.to_jsonable() for r in self.applied],

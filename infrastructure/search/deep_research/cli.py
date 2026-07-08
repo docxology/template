@@ -32,6 +32,7 @@ from infrastructure.search.deep_research.models import DeepResearchJobHandle, De
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(prog="deep_research", description="Deep research provider dispatch")
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -82,6 +83,7 @@ def _result_dict(result: DeepResearchResult) -> dict[str, Any]:
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    """Process run."""
     client = DeepResearchClient.from_env()
     if args.command == "providers":
         return {
@@ -125,6 +127,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """CLI entry point."""
     args = build_parser().parse_args(argv)
     func = getattr(args, "func", None)
     if func is not None:

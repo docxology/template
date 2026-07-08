@@ -258,10 +258,12 @@ def _quote_html_break_labels(source: str) -> str:
     """
 
     def quote_square(match: re.Match[str]) -> str:
+        """Process quote square."""
         label = _mermaid_quoted_label(match.group("label"))
         return f'{match.group("prefix")}["{label}"]'
 
     def quote_brace(match: re.Match[str]) -> str:
+        """Process quote brace."""
         label = _mermaid_quoted_label(match.group("label"))
         return f'{match.group("prefix")}{{"{label}"}}'
 

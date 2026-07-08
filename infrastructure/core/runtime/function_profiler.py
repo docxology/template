@@ -217,6 +217,7 @@ def monitor_performance(
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Inner wrapper function that applies the cross-cutting concern."""
             monitor = get_code_profiler()
             op_name = operation_name
             with monitor.monitor(op_name, track_memory):

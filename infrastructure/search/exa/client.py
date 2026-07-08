@@ -64,39 +64,47 @@ class ExaClient:
 
     @cached_property
     def search_interface(self) -> Any:
+        """Process search interface."""
         from infrastructure.search.exa.search import ExaSearchInterface
 
         return ExaSearchInterface(self)
 
     @cached_property
     def contents_interface(self) -> Any:
+        """Process contents interface."""
         from infrastructure.search.exa.contents import ExaContentsInterface
 
         return ExaContentsInterface(self)
 
     @cached_property
     def answer_interface(self) -> Any:
+        """Process answer interface."""
         from infrastructure.search.exa.answer import ExaAnswerInterface
 
         return ExaAnswerInterface(self)
 
     @cached_property
     def find_similar_interface(self) -> Any:
+        """Process find similar interface."""
         from infrastructure.search.exa.find_similar import ExaFindSimilarInterface
 
         return ExaFindSimilarInterface(self)
 
     # Convenience pass-throughs so callers can use ``client.search(...)`` etc.
     def search(self, query: str, **kwargs: Any) -> Any:
+        """Search for results matching a query."""
         return self.search_interface.search(query, **kwargs)
 
     def contents(self, urls: Any, **kwargs: Any) -> Any:
+        """Process contents."""
         return self.contents_interface.get(urls, **kwargs)
 
     def answer(self, query: str, **kwargs: Any) -> Any:
+        """Process answer."""
         return self.answer_interface.answer(query, **kwargs)
 
     def find_similar(self, url: str, **kwargs: Any) -> Any:
+        """Process find similar."""
         return self.find_similar_interface.find_similar(url, **kwargs)
 
 
