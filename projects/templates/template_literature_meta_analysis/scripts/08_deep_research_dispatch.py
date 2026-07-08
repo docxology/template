@@ -40,7 +40,6 @@ from deep_research.deep_research_adapter import (
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse args."""
     parser = argparse.ArgumentParser(
         description=(
             "Demonstrate infrastructure.search.deep_research via offline fixture replay. "
