@@ -24,6 +24,13 @@ MIN_ARCHITECTURE_SCORE = 33
 REQUESTS_PACKAGE = FIXTURES_DIR / "requests" / "src" / "requests"
 FASTAPI_PACKAGE = FIXTURES_DIR / "fastapi" / "fastapi"
 
+# Skip the entire module if the fixture trees aren't checked out.
+# Run ``scripts/fixtures/download_real_codebases.py`` to populate them.
+pytestmark = pytest.mark.skipif(
+    not REQUESTS_DIR.exists() or not FASTAPI_DIR.exists(),
+    reason="real codebase fixtures missing — run scripts/fixtures/download_real_codebases.py",
+)
+
 
 def has_file(path: Path, name: str) -> bool:
     """Check if a file with given name exists somewhere under path."""
