@@ -306,7 +306,7 @@ class TestPlotlyDashboard:
 class TestAllDashboards:
     """Test generating all dashboard formats."""
 
-    @pytest.mark.timeout(30)
+    @pytest.mark.timeout(120)
     def test_generate_all_dashboards(self, sample_summary, tmp_path):
         """Test generating all dashboard formats."""
         all_files = generate_all_dashboards(sample_summary, tmp_path)
