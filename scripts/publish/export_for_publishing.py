@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Export a publication-ready bundle (manuscript + artifacts + metadata) from a project."""
 from __future__ import annotations
 
 import sys

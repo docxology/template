@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Stage 11: Generate ebook artifacts (EPUB, PDF) from rendered manuscript content."""
 from __future__ import annotations
 
 import argparse

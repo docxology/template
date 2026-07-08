@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Stage 12: Package manuscript metadata for archival and publication."""
 from __future__ import annotations
 
 import argparse
