@@ -27,6 +27,17 @@ flowchart LR
     class CLI ui
 ```
 
+## Modules
+
+| Module | Role |
+| --- | --- |
+| `base.py` | `SearchBackend` ABC and `BackendError`; defines the backend contract (honour `max_results`, apply year filters, stamp `Paper.source`, return `[]` when empty, raise `BackendError` on transport/parse failure). |
+| `arxiv_backend.py` | `ArxivBackend` — arXiv Atom export API backend; parses Atom XML into `Paper`s, resolves old- and new-style arXiv ids, and retries 429/503 throttling in `fetch_by_id`. |
+| `crossref_backend.py` | `CrossrefBackend` plus module-level `crossref_item_to_paper` and `clean_jats`; queries the Crossref REST `/works` API and maps records to `Paper` (the mapper is shared with reference verification). |
+| `local_backend.py` | `LocalBackend` — searches a JSON corpus on disk, term-matching title/abstract/keywords/authors and scoring by the fraction of query terms matched. |
+| `paperclip_backend.py` | `PaperclipBackend` — Paperclip (paperclip.gxl.ai) MCP JSON-RPC backend (requires `api_key`); issues a `search` tool call and extracts papers from structured or text content. |
+| `paperclip_text_parser.py` | `parse_cli_blocks` / `papers_from_text_content` — parse Paperclip CLI-style text blocks into `Paper` records (title, authors, ids, DOI, venue). |
+
 ## Invariants
 
 - **`Paper.id` is unique within a result set.** The aggregator's

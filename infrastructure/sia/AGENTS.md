@@ -18,6 +18,30 @@ Target → Feedback artifact contract without vendoring upstream LLM orchestrati
 - `run_sia_loop(RunConfig)` — generation state machine
 - `RunConfig`, `GenerationArtifacts`, `EvaluationResult`, `TaskLayout`
 
+## Modules
+
+- `task_layout.py` — `validate_task_dir(task_dir)` checks the required
+  `data/public`, `data/private`, and `reference/` layout (plus `task.md` and
+  `reference_target_agent.py`) and returns a resolved `TaskLayout`.
+- `models.py` — Frozen dataclass contracts (`TaskLayout`, `EvaluationResult`,
+  `AgentExecutionLog`, `GenerationArtifacts`) plus the mutable `RunConfig` and
+  `GenerationState` that carry the harness through a run.
+- `execution_logs.py` — `load_agent_execution(path)` loads
+  `agent_execution.json` (or an `execution_q*.json` directory) into a normalized
+  single- or multi-trajectory `AgentExecutionLog`.
+- `evaluation_runner.py` — `run_evaluation()` runs a task's `evaluate.py` as a
+  bounded subprocess; `read_results_json()` / `write_results_json()` parse and
+  emit the canonical `results.json` as an `EvaluationResult`.
+- `context_ledger.py` — `init_context()` and `append_generation()` create and
+  grow the deterministic `context.md` ledger, recording each generation's target
+  agent, execution log, and metric summary without LLM calls.
+- `live_llm.py` — `generate_improvement_markdown()` optionally asks an
+  Ollama-backed `LLMClient` for improvement-note markdown, returning `None` when
+  no model is configured or the LLM is unreachable.
+- `loop_runner.py` — `run_sia_loop(config)` drives the Meta → Target → Feedback
+  generation state machine over fixture-replay or live subprocess paths and
+  writes `run_summary.json`.
+
 ## Boundaries
 
 - Default path is **fixture replay** (`live=False`); no network in CI.

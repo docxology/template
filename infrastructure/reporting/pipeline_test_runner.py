@@ -30,6 +30,7 @@ from infrastructure.core.pytest_orchestration import (
     project_declared_coverage_floor,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
+    resolve_xdist_args,
 )
 from infrastructure.core.runtime.environment import resolve_test_python
 from infrastructure.project.discovery import resolve_project_root
@@ -52,8 +53,13 @@ def run_infrastructure_tests(
     include_bench: bool = False,
     strict: bool = True,
     scope: InfrastructureTestScope = "full",
+    parallel: str | int | None = None,
 ) -> tuple[int, TestSuiteResults]:
-    """Execute infrastructure test suite with coverage."""
+    """Execute infrastructure test suite with coverage.
+
+    *parallel* opts the run into pytest-xdist (``"auto"`` or an integer worker
+    count); ``None`` falls back to ``PYTEST_XDIST_WORKERS`` then serial.
+    """
     if scope not in INFRASTRUCTURE_TEST_SCOPES:
         raise ValueError(f"Unknown infrastructure test scope: {scope}")
     start_time = time.time()
@@ -90,6 +96,7 @@ def run_infrastructure_tests(
     )
     if infra_marker:
         cmd.extend(["-m", infra_marker])
+    cmd.extend(resolve_xdist_args(parallel))
 
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
@@ -161,6 +168,7 @@ def run_project_tests(
     include_bench: bool = False,
     strict: bool = True,
     include_ollama_tests: bool = False,
+    parallel: str | int | None = None,
 ) -> tuple[int, TestSuiteResults]:
     """Execute the project test suite under the per-project output lock.
 
@@ -180,6 +188,7 @@ def run_project_tests(
             include_bench=include_bench,
             strict=strict,
             include_ollama_tests=include_ollama_tests,
+            parallel=parallel,
         )
 
 
@@ -192,6 +201,7 @@ def _run_project_tests_impl(
     include_bench: bool = False,
     strict: bool = True,
     include_ollama_tests: bool = False,
+    parallel: str | int | None = None,
 ) -> tuple[int, TestSuiteResults]:
     """Execute project test suite with coverage (assumes the output lock is held)."""
     start_time = time.time()
@@ -251,6 +261,7 @@ def _run_project_tests_impl(
     )
     if project_marker:
         cmd.extend(["-m", project_marker])
+    cmd.extend(resolve_xdist_args(parallel))
     if quiet:
         cmd.extend(["-q"])
     prepend_uv_to_path(env)
@@ -308,8 +319,14 @@ def execute_test_pipeline(
     include_ollama_tests: bool,
     strict: bool,
     infra_scope: InfrastructureTestScope = "full",
+    parallel: str | int | None = None,
 ) -> int:
-    """Run full test orchestration."""
+    """Run full test orchestration.
+
+    *parallel* opts both the infrastructure and project suites into
+    pytest-xdist (``"auto"`` or an integer worker count); ``None`` falls back
+    to ``PYTEST_XDIST_WORKERS`` then serial.
+    """
     infra_exit, infra_results = 0, {}
     project_exit, project_results = 0, {}
     total_phases = int(run_infra) + int(run_project)
@@ -325,6 +342,7 @@ def execute_test_pipeline(
             include_ollama_tests,
             strict=strict,
             scope=infra_scope,
+            parallel=parallel,
         )
 
     if run_project:
@@ -339,6 +357,7 @@ def execute_test_pipeline(
             include_long_running=include_long_running,
             strict=strict,
             include_ollama_tests=include_ollama_tests,
+            parallel=parallel,
         )
 
     if run_project:

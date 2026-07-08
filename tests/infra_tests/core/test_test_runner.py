@@ -262,6 +262,22 @@ def test_stage01_public_projects_flag_is_documented_in_help() -> None:
     assert "--public-projects" in proc.stdout
 
 
+def test_stage01_parallel_flag_is_documented_in_help() -> None:
+    """The Stage 01 CLI exposes opt-in pytest-xdist parallelism via -n/--parallel."""
+    proc = subprocess.run(  # noqa: S603
+        [sys.executable, "scripts/pipeline/stage_01_test.py", "--help"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode == 0
+    assert "--parallel" in proc.stdout
+    assert "PYTEST_XDIST_WORKERS" in proc.stdout
+
+
 def test_stage01_public_projects_requires_all_projects_mode() -> None:
     """The public-scope flag is not silently ignored on the wrong command."""
     proc = subprocess.run(  # noqa: S603

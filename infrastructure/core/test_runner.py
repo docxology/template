@@ -190,6 +190,7 @@ def run_per_project_pytest(
     fail_under: int = DEFAULT_FAIL_UNDER,
     marker_expr: str | None = None,
     timeout: int = DEFAULT_TIMEOUT,
+    parallel: str | int | None = None,
 ) -> int:
     """Run pytest once per project and gate combined coverage.
 
@@ -210,6 +211,10 @@ def run_per_project_pytest(
             :data:`DEFAULT_MARKER_EXPR` (``not requires_ollama and not slow and
             not bench``). Pass ``""`` to omit ``-m`` (collect all markers).
         timeout: Per-test ``--timeout`` value forwarded to pytest.
+        parallel: Opt-in pytest-xdist worker count (``"auto"`` or a positive
+            integer). ``None`` falls back to the ``PYTEST_XDIST_WORKERS`` env
+            var, and finally to serial. Coverage is unaffected — pytest-cov
+            combines per-worker data before each project's ``--cov-append``.
 
     Returns:
         ``0`` only when **every** per-project pytest exited cleanly **and**
@@ -255,6 +260,7 @@ def run_per_project_pytest(
             is_first=(index == 0),
             marker_expr=resolved_markers,
             timeout=timeout,
+            parallel=parallel,
         )
         rc = _run_pytest_for_project(cmd, repo_root, env, project_name)
         if rc == 0:

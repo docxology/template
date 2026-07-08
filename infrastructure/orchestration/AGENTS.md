@@ -16,6 +16,7 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 | `pipeline_runner.py` | `PipelineRunner` — thin adapter over `PipelineExecutor`. |
 | `stage_logger.py` | `setup_stage_log`, `stage_log_path` — append-only banners under project log paths. |
 | `secure_run.py` | `run_secure_pipeline` — pipeline + steganography post-processing. |
+| `link_sync.py` | Sidecar link-sync hook registry: `register_link_sync` / `registered_link_sync_hooks`, `maybe_sync_all_links`, and `print_link_sync_result(s)`. Registers the projects/fonds/rules/tools sync hooks (each skipped via its own `*_SKIP` env var). |
 
 ## Contracts
 

@@ -18,6 +18,7 @@ The `infrastructure/validation/docs/` package contains repository documentation 
 - `consistency_lint.py` - facade re-exporting consistency checks (module counts, ghost projects, command conventions, doc imports, stale shell-bootstrap contracts)
 - `consistency/` - implementation package for consistency linters
 - `doc_pair_lint.py` - permanent-template `AGENTS.md` / `README.md` coverage (skips generated fixture payloads under `tests/fixtures/`)
+- `module_coverage.py` - package-level module-doc coverage (`find_module_doc_gaps`, `ModuleDocGap`); asserts each package's folder docs reference its public modules, complementing `doc_pair_lint.py` (which only checks the pair exists). Backs `scripts/audit/check_module_doc_coverage.py`.
 - `accuracy.py` - accuracy checks
 - `completeness.py` - completeness checks
 - `quality.py` - quality checks

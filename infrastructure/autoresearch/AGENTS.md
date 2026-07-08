@@ -45,6 +45,15 @@ without autonomous research execution.
 
 Implementation split: [`validation.py`](validation.py) orchestrates;
 [`validation_checks.py`](validation_checks.py) holds per-check validators.
+The frozen dataclasses (`AutoResearchConfig`, `BudgetPolicy`, `ReviewGate`,
+`BenchmarkTask`, `EvidenceLink`, `ResearchIdea`, `ExperimentCandidate`,
+`ResearchProgram`, `RunLedger`, `SecurityProfile`, `AutoResearchStage`,
+`AutoResearchPlan`, `AutoResearchIssue`, `AutoResearchReport`) plus the
+`DEFAULT_QUALITY_CHECKS` / `METHOD_QUALITY_CHECKS` / `KNOWN_QUALITY_CHECKS`
+tuples live in [`models.py`](models.py); `build_autoresearch_plan(repo_root,
+project_name, projects_dir="projects")` — which assembles a deterministic plan
+from domain profile, experiment plan, and `pipeline.yaml` DAG — lives in
+[`planner.py`](planner.py).
 
 ## Validation phases
 

@@ -19,6 +19,8 @@ running project science or rendering stages itself.
 | Repo audit | `repo/` | Repository scanner and audit orchestration. |
 | CLI | `cli/main.py` | `python -m infrastructure.validation.cli ...`. |
 | Gates | `line_count.py`, `security_gate.py`, `plugin_export.py` | Shared logic for scripts under `scripts/gates/`. |
+| Evidence registry | `evidence_registry.py`, `evidence_registry_collectors.py` | `VerifiedEvidenceRegistry` of project-local facts plus `validate_text_against_registry`; `register_all_project_facts` collects numbers/citations/labels from config, JSON, CSV, claim ledgers, BibTeX, markdown, and output artifacts. |
+| XML parser policy | `xml_parser_policy.py` | `validate_xml_parser_policy`: AST import-level guard forbidding stdlib `xml.*` parsers and `lxml`, requiring `defusedxml` (DEP-DEFUSEDXML-1). |
 
 ## Boundaries
 

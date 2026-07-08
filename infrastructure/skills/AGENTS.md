@@ -46,6 +46,19 @@ flowchart TB
 - `validate_skill_contract_file(skill_path) -> list[str]` — validates one workflow skill metadata contract
 - `check_skill_contracts(repo_root) -> list[str]` — validates all workflow skill contracts
 
+## Public API (`operation_registry.py`)
+
+Static (AST-only; never imports the target modules) catalog of agent-invocable `python -m` CLIs under `infrastructure/`, mirroring the `discovery.py` contract for *operations*.
+
+- `OperationDescriptor` — one invocable CLI: `module`, `invocation`, `source_path`, `purpose`, `subcommands`, `exports`, `effect`
+- `SubcommandInfo` — one statically-parsed `add_parser(name, help=...)` subcommand
+- `MUTATING_OPERATIONS` — allowlist of dotted modules whose CLIs mutate external state / incur cost (everything else is `read_only`)
+- `discover_operations(repo_root, *, search_roots=None) -> list[OperationDescriptor]`
+- `build_operations_payload(ops) -> dict` / `operation_descriptors_as_json_serializable(ops) -> list[dict]`
+- `write_operations_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.cursor/operations_manifest.json`
+- `load_operations_manifest(manifest_path) -> dict`
+- `operations_manifest_matches_discovery(repo_root, manifest_path, *, search_roots=None) -> tuple[bool, str]`
+
 ## CLI (`cli.py`)
 
 - `main(argv=None) -> int`

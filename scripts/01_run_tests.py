@@ -130,6 +130,18 @@ def main() -> int:
             "private or rotating local projects."
         ),
     )
+    parser.add_argument(
+        "--parallel",
+        "-n",
+        metavar="WORKERS",
+        default=None,
+        help=(
+            "Opt into pytest-xdist parallelism: 'auto' (one worker per core) or "
+            "a positive integer. Default is serial. Also honours the "
+            "PYTEST_XDIST_WORKERS env var. On loaded dev machines prefer a fixed "
+            "count (e.g. -n 6) over 'auto' to avoid wall-clock timeout flakiness."
+        ),
+    )
     args = parser.parse_args()
 
     # Validate mutually exclusive flags
@@ -192,6 +204,7 @@ def main() -> int:
             repo_root,
             projects=projects,
             marker_expr=marker_expr,
+            parallel=args.parallel,
         )
         log_live_resource_usage("Test stage end", logger)
         return exit_code
@@ -207,6 +220,7 @@ def main() -> int:
         include_ollama_tests=args.include_ollama_tests,
         strict=strict,
         infra_scope=args.infra_scope,
+        parallel=args.parallel,
     )
 
     # Log resource usage at end

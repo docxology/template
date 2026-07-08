@@ -17,6 +17,8 @@ Operator and repository-maintenance orchestrators. **None of these run in the de
 | `batch_cogsec_improve.py` | `infrastructure.core.source_improve` | Batch source-improvement orchestrator |
 | `setup_pre_commit.py` | (subprocess `pre-commit install`) | Install / refresh the pre-commit hook set |
 | `codegraph_local.py` | `infrastructure.project.codegraph` | Local CodeGraph index helper commands (optional; not a CI/publication dependency) |
+| `migrate_doc_script_paths.py` | (self-contained in-repo text rewrite) | One-shot rewrite of tracked docs/config to the subpackage script paths (`scripts/audit/*`, `scripts/pipeline/stage_*`, `scripts/runner/*`, `scripts/docgen/*`, `scripts/publish/*`, `scripts/shell/*`); `--dry-run` reports files that would change |
+| `rename_counts_doc.py` | (self-contained tree scan) | Guard that scans tracked text files for stale `canonical_facts.md` markers after the COUNTS.md rename; `--check` exits non-zero when any remain outside archived audits |
 
 ## Usage
 

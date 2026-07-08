@@ -9,6 +9,39 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Added
+
+- 📦 **Package-level module-doc coverage gate.** A deep review found the
+  doc-pair linter only verifies the `AGENTS.md`/`README.md` pair *exists*, not
+  that the docs *enumerate* the package's modules — 112 public modules across
+  26 `infrastructure/`+`scripts/` packages were undocumented (81.4% coverage).
+  All 112 are now documented in their package `AGENTS.md` (each entry cites the
+  module's real public symbols), bringing public-module coverage to 100%. New
+  `infrastructure.validation.docs.module_coverage` (`find_module_doc_gaps`,
+  `ModuleDocGap`) + thin `scripts/audit/check_module_doc_coverage.py` gate make
+  this enforceable; `_`-prefixed internals and `__main__`/`__init__` shims are
+  excluded by design. Regression is caught by
+  `tests/infra_tests/validation/test_module_coverage.py::test_live_repo_has_full_public_module_doc_coverage`
+  (9 tests, no mocks). ruff + mypy clean; `lint_docs.py` stays green.
+
+- ⚡ **Opt-in parallelism for the local test orchestrator.** The Stage-01
+  runners (`scripts/01_run_tests.py`, `scripts/pipeline/stage_01_test.py`)
+  gained a `-n/--parallel WORKERS` flag (`auto` or an integer), also honoured
+  via the `PYTEST_XDIST_WORKERS` env var. Previously only CI wired
+  `pytest-xdist -n auto` (infra job); the local orchestrator ran strictly
+  serial despite every doc recommending `-n auto`. A single centralized
+  helper `infrastructure.core.pytest_orchestration.resolve_xdist_args()`
+  resolves the worker count and is threaded through
+  `build_union_pytest_command`, `run_per_project_pytest`, and
+  `pipeline_test_runner` (infra + project + `execute_test_pipeline`).
+  **Default stays serial** to preserve the load-contention safety documented
+  in `CLAUDE.md`; `0`/`1`/invalid collapse to serial. Coverage is unaffected —
+  pytest-cov combines per-worker data before each `--cov-append`. Verified:
+  `--infra-only --infra-scope pipeline-smoke -n 2` spins up 2 workers and
+  passes 153 tests; the default run stays single-process. Nine new unit tests
+  in `tests/infra_tests/core/test_pytest_orchestration.py` (25 total green);
+  ruff + mypy clean on the changed modules.
+
 ### Changed
 
 ### 2026-07-07 (cont.) — aggregate union-coverage gate fixed

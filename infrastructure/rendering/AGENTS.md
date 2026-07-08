@@ -15,6 +15,9 @@ renderers without owning validation policy or project analysis.
 | Format renderers | `slides_renderer.py`, `web_renderer.py`, `pandoc_renderers.py` | Slides, HTML, DOCX, EPUB. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py` | Section ordering, substitutions, resolved manuscript trees. |
 | LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks. |
+| LaTeX checks | `latex_discovery.py`, `latex_validation.py`, `latex_log_quality.py`, `latex_texttt.py` | `kpsewhich`/per-package discovery, required/optional package `ValidationReport`, render-log findings for overfull/underfull boxes and undefined references, and rewriting long `\texttt{}` spans into a breakable monospace macro. |
+| Ebook formats | `ebook_bundle.py`, `ebook_stage.py`, `mobi_renderer.py` | `EbookBundleManager.generate_all` ties EPUB/MOBI/DOCX plus metadata together; `ebook_stage.py` is the opt-in ebook stage orchestrator; `mobi_renderer.py` renders MOBI via a pandoc EPUB intermediate and calibre `ebook-convert`. |
+| Executable bundle | `dockerfile_gen.py`, `manifest.py` | Deterministic reproducible-build Dockerfile generation (pinned base image and `uv` version) and the Stage-10 `manifest.json` of pinned numerical claims, git metadata, and build environment. |
 | CLI | `cli.py`, `render_all_cli.py` | Module commands and legacy all-format entrypoint. |
 
 ## Boundaries

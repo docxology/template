@@ -95,10 +95,58 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **pytest_orchestration.py**
 - Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Project subprocesses inject pytest/pytest-cov/pytest-timeout and pin `coverage==<workspace coverage version>` so `--cov-append` writes a single readable SQLite trace across mixed project environments. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
+- ``resolve_xdist_args(parallel=None) -> list[str]`` centralizes **opt-in** pytest-xdist parallelism. Returns ``["-n", "auto"]`` / ``["-n", "<N>"]`` or ``[]`` (serial). Resolution order: explicit ``parallel`` arg → ``PYTEST_XDIST_WORKERS`` env var → serial. ``0``/``1``/``none``/``off``/unparseable collapse to serial (one xdist worker is pure overhead). Threaded through ``build_union_pytest_command(..., parallel=...)``, ``run_per_project_pytest(..., parallel=...)``, and ``pipeline_test_runner`` (infra + project + ``execute_test_pipeline``), surfaced as the ``-n/--parallel`` flag on ``scripts/01_run_tests.py`` and ``scripts/pipeline/stage_01_test.py``. Default stays **serial** to preserve the load-contention safety documented in the root ``CLAUDE.md`` Testing section; coverage is unaffected because pytest-cov combines per-worker data before the datafile is written. Mirrors the ``MULTI_PROJECT_MAX_WORKERS`` opt-in convention of ``infrastructure.core.pipeline.multi_project_parallel``.
+
+**analysis_pipeline.py**
+- Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator
+- Public API: `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`
+
+**analysis_timeout.py**
+- Resolves the per-script Stage-02 subprocess timeout from `ANALYSIS_SCRIPT_TIMEOUT_SEC` (default 7200s; `0`/`none`/`unlimited`/`inf` disables it; invalid/negative falls back to the default)
+- Public API: `parse_analysis_script_timeout_sec(environ=None) -> float | None`
+
+**coverage_policy.py**
+- Coverage-plugin capability probe with no reporting imports (Layer 1)
+- `check_cov_datafile_support() -> bool` — True when the installed pytest-cov supports the `--cov-datafile` flag
+
+**determinism.py**
+- Build-time reproducibility resolution around the `SOURCE_DATE_EPOCH` standard; precedence is an already-set `SOURCE_DATE_EPOCH` env var, then deterministic mode (author-date epoch of `HEAD` via git), then wall clock
+- Public API: `is_deterministic_requested`, `resolve_source_date_epoch`, `resolve_build_timestamp`, `deterministic_subprocess_env`, constant `TEMPLATE_DETERMINISTIC_ENV`
+
+**install_commands.py**
+- OS-appropriate installation command generation; standalone with no infrastructure dependencies so it is import-safe from `exceptions.py`
+- `build_install_commands(dependency) -> list[str]`
+
+**lifecycle_discovery.py**
+- Discovers top-level entries under `projects/` for pipeline discovery, classifying each directory as `standalone` (valid project) or `program`, skipping non-rendered lifecycle subdirs and dot-prefixed names
+- Public API: `discover_program_entries(projects_dir, config=None)`, dataclasses `ProgramEntry` and `LifecycleDiscoveryConfig`, type `EntryKind`
+
+**project_paths.py**
+- Pure `pathlib` project-path primitives with no dependency on `infrastructure.project`, avoiding a `core ↔ project` layering cycle (re-exported by `infrastructure.project.discovery`)
+- Public API: `find_repo_root()`, `resolve_project_root(repo_root, project_name)`, constant `NON_RENDERED_SUBDIRS`
+
+**project_pyproject.py**
+- Cached single-read accessors for a project `pyproject.toml`'s test/coverage settings
+- Public API: `load_project_pyproject`, `project_declared_coverage_floor`, `resolve_project_cov_config`, `project_declares_dev_extra`, dataclass `ProjectPyprojectConfig`
+
+**sidecar_linking.py**
+- Generic sidecar lifecycle symlink sync for template checkouts: creates/updates/prunes managed symlinks under `projects/` from a resolved private root, honoring per-pool env/config overrides
+- Public API: `sync_private_links`, `resolve_private_root`, `is_managed_symlink`, dataclasses `SidecarLinkConfig` and `LinkSyncResult`
 
 **cli.py**
 - Command-line interface utilities
 - CLI argument parsing and validation
+
+**cli_parser.py**
+- `create_parser()` builds the argparse parser and the `pipeline`, `multi-project`, `inventory`, and `discover` subcommands for `python -m infrastructure.core.cli`
+
+**cli_handlers.py**
+- Command handlers dispatched from the CLI entry point; each takes a parsed `argparse.Namespace` and returns an exit code
+- Public API: `handle_pipeline_command`, `handle_multi_project_command`, `handle_inventory_command`, `handle_discover_command`
+
+**cli_scaffold.py**
+- Shared CLI flag definitions and argparse schema introspection — an opt-in convergence point so adopting CLIs name flags identically and can emit a machine-readable parameter contract
+- Public API: `add_repo_root_arg`, `add_project_arg`, `add_format_arg`, `add_verbose_arg`, `add_schema_flag`, `parser_schema`, `emit_schema`
 
 **config/cli.py**
 - Configuration CLI commands

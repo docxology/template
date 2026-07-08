@@ -16,6 +16,27 @@ LaTeX/pandoc warnings.
 - `ai_writing.py` - advisory AI-writing fingerprint detector (em-dash density, burstiness, stock phrases); **not** a hard pipeline gate
 - `diagnostic_codes.py` - stable, dotted IDs (`MarkdownCode`, `BibtexCode`)
   attached to every `DiagnosticEvent` emitted by `markdown_validator`
+- `markdown_strip.py` - shared code/math stripping helpers (`strip_fences`,
+  `strip_inline_code`, `strip_math`, `strip_markdown_code_regions`,
+  `strip_code_and_math`) used by the validators before scanning prose
+- `symbols.py` - shared symbol collection and cross-reference resolution
+  (`collect_symbols`, `collect_latex_labels`, `collect_latex_references`,
+  `resolve_cross_reference_integrity`) over manuscript markdown
+- `validator_images.py` - `validate_images`: referenced images resolve on disk
+  (ERROR, `MARKDOWN.IMG_MISSING`)
+- `validator_refs.py` - `validate_refs`: `\eqref`/`(#anchor)` resolution plus
+  bare-URL and non-informative link-text checks; exports
+  `text_without_fenced_code`
+- `validator_math.py` - `validate_math`: display-math delimiter, `\[ \]`, and
+  equation-label checks
+- `validator_pitfalls.py` - `validate_pandoc_pitfalls`: bare `|word|` and
+  escaped table-cell `\|` patterns Pandoc turns into `\mid`; defines
+  `NON_RENDERED_MANUSCRIPT_FILES`
+- `validator_citations.py` - `validate_citations`: every `[@key]` resolves in
+  the manuscript `*.bib` union (ERROR, `BIBTEX.UNDEFINED_KEY`)
+- `prerender.py` - `prevalidate_for_render` (alias `prevalidate_source_markdown`):
+  hard-gates a combined-PDF render by raising `RenderingError` when pitfall or
+  citation blockers are found before Pandoc/xelatex runs
 
 ## `ai_writing.py` — advisory prose quality
 

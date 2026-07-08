@@ -53,6 +53,16 @@ shims where noted in each subpackage's `AGENTS.md`.
 - `docgen/coverage_history.py`, `docgen/stage_table.py`, `docgen/exemplar_roster.py`
 - `docgen/publication_records.py`, `docgen/counts.py`
 
+**Root-level modules and compatibility shims** (canonical location noted where the file has moved under a subpackage):
+
+- `generate_active_projects_doc.py` - root-level entry point for `docs/_generated/active_projects.md`; delegates to `infrastructure.documentation.active_projects_doc.write_active_projects_doc` (canonical: `docgen/active_projects.py`)
+- `generate_architecture_overview.py` - regenerates `docs/_generated/architecture_overview.{mmd,svg}` via `infrastructure.documentation.architecture_overview.render_architecture_svg` (canonical: `docgen/architecture_overview.py`)
+- `generate_counts.py` - writes/checks `docs/_generated/COUNTS.md` via `infrastructure.documentation.counts_doc` (`--write` / `--check`; canonical: `docgen/counts.py`)
+- `generate_coverage_history.py` - builds `docs/_generated/coverage_history.md` from CI coverage XML via `infrastructure.reporting.coverage_history` (`--from-dir` / `--from-gh`; canonical: `docgen/coverage_history.py`)
+- `10_research_workflow.py` - deprecated shim that warns and delegates to `pipeline/stage_10_research_workflow.py`
+- `mcp_server_template.py` - thin launcher for the stdio MCP server (equivalent to `python -m infrastructure.mcp_server`); opt-in agent surface, not part of the default pipeline/CI
+- `exit_codes.py` - `ExitCode` IntEnum naming the shared orchestrator exit-code contract (`SUCCESS=0`, `FAILURE=1`, `SKIP=2`, `VALIDATION_FAILED=3`, `MISSING_DEPENDENCY=4`); importing changes no return value
+
 **Quality gates / audits** (`audit/`):
 
 - `audit/lint_docs.py`, `audit/audit_documentation.py`, `audit/verify_no_mocks.py`

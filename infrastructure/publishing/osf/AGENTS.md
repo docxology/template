@@ -5,6 +5,12 @@
 Publishes manuscript and reproducibility bundles to Open Science Framework nodes
 for open-science sharing alongside DOI and repository publication channels.
 
+## Modules
+
+| Module | Role |
+| --- | --- |
+| `models.py` | `OSFConfig`, `OSFResult` — frozen config/result dataclasses (node title/id, category, public flag, separate `api_base` + `files_base` Waterbutler endpoints, `storage_provider`); token defaults to `OSF_TOKEN`, and `OSFResult.ok` is `True` when `status == "ok"` |
+
 ## Contracts
 
 - Keep `dry_run=True` as the safe default.

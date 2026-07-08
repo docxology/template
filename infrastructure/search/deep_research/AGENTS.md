@@ -63,6 +63,13 @@ uv run python -m infrastructure.search.deep_research providers   # free availabi
 # then: submit / poll / run-project — see README CLI section
 ```
 
+## Modules
+
+| Module | Role |
+| --- | --- |
+| `prompting.py` | `build_research_instructions` / `build_full_prompt` — build the structured research brief (scope, source controls, safety guardrails) and the human-visible prompt combining instructions with the user query. |
+| `artifacts.py` | `save_deep_research_result` / `save_deep_research_results` and `DeepResearchReportBundle` — persist a result (or all provider results plus an `index.json`) as Markdown, JSON, and log files under `output/reports/deep_research/`. |
+
 ## See also
 
 - [`README.md`](README.md)

@@ -32,6 +32,15 @@ INFRASTRUCTURE_TEST_SCOPES: tuple[InfrastructureTestScope, ...] = ("full", "pipe
 
 TEST_RUNNER_BASE_DEPS: tuple[str, ...] = ("pytest", "pytest-cov", "pytest-timeout")
 
+# Environment variable that opts a local test run into pytest-xdist parallelism
+# when no explicit ``parallel`` argument is threaded through. Mirrors the
+# opt-in ``MULTI_PROJECT_MAX_WORKERS`` convention used by the cross-project
+# parallel runner (``infrastructure.core.pipeline.multi_project_parallel``).
+ENV_XDIST_WORKERS: str = "PYTEST_XDIST_WORKERS"
+
+# Values that mean "run serially" regardless of source (arg or env).
+_XDIST_SERIAL_TOKENS: frozenset[str] = frozenset({"", "0", "1", "none", "serial", "off"})
+
 PIPELINE_SMOKE_INFRA_TEST_PATHS = (
     Path("tests/infra_tests/git_hook_smoke"),
     Path("tests/infra_tests/core/test_pipeline.py"),
@@ -84,6 +93,45 @@ class TestSuiteResults(TypedDict, total=False):
     test_categories: dict[str, int]
     coverage_percent: float
     failed_tests: list[dict[str, str]]
+
+
+def resolve_xdist_args(parallel: str | int | None = None) -> list[str]:
+    """Return pytest-xdist ``-n`` argv for the requested parallelism, or ``[]``.
+
+    Parallelism is **opt-in**: the default is serial. This preserves the
+    load-contention safety the repo already documents (CLAUDE.md Testing
+    section) — real LaTeX/subprocess tests carry wall-clock timeouts that
+    ``-n auto`` can trip nondeterministically on a busy dev machine.
+
+    Resolution order:
+        1. An explicit *parallel* argument, when not ``None``.
+        2. Otherwise the ``PYTEST_XDIST_WORKERS`` environment variable.
+
+    Accepted values (from either source):
+        * ``"auto"`` → ``["-n", "auto"]`` (one worker per detected core).
+        * a positive integer > 1 → ``["-n", str(n)]``.
+        * ``None``/``""``/``"0"``/``"1"``/``"serial"``/``"off"`` or anything
+          unparseable → ``[]`` (serial). A single worker is pure xdist
+          overhead, so it collapses to serial rather than spawning one worker.
+    """
+    raw: str | int | None = parallel
+    if raw is None:
+        raw = os.environ.get(ENV_XDIST_WORKERS)
+    if raw is None:
+        return []
+    value = str(raw).strip().lower()
+    if value in _XDIST_SERIAL_TOKENS:
+        return []
+    if value == "auto":
+        return ["-n", "auto"]
+    try:
+        workers = int(value)
+    except ValueError:
+        logger.warning("Ignoring invalid %s=%r; running tests serially", ENV_XDIST_WORKERS, raw)
+        return []
+    if workers <= 1:
+        return []
+    return ["-n", str(workers)]
 
 
 def resolve_infrastructure_test_paths(repo_root: Path, scope: InfrastructureTestScope) -> list[str]:
@@ -315,8 +363,15 @@ def build_union_pytest_command(
     is_first: bool,
     marker_expr: str | None,
     timeout: int,
+    parallel: str | int | None = None,
 ) -> list[str]:
-    """Build argv for one project in a multi-project combined-coverage run."""
+    """Build argv for one project in a multi-project combined-coverage run.
+
+    When *parallel* (or the ``PYTEST_XDIST_WORKERS`` env var) requests it, the
+    per-project pytest invocation is parallelized with pytest-xdist. pytest-cov
+    combines per-worker coverage data before the shared datafile is written, so
+    the ``--cov-append`` union across projects is unaffected.
+    """
     resolved_root = project_root.resolve()
     src_dir = resolved_root / "src"
     # Use the ABSOLUTE resolved path so that --cov resolves correctly even
@@ -341,6 +396,7 @@ def build_union_pytest_command(
         pytest_args.extend(["-m", marker_expr])
     if not is_first:
         pytest_args.append("--cov-append")
+    pytest_args.extend(resolve_xdist_args(parallel))
     return build_project_pytest_command(resolved_root, pytest_args)
 
 
@@ -385,6 +441,7 @@ def enforce_project_suite_guards(
 
 __all__ = [
     "DISCOVERY_PATTERNS",
+    "ENV_XDIST_WORKERS",
     "INFRASTRUCTURE_TEST_SCOPES",
     "InfrastructureTestScope",
     "PIPELINE_SMOKE_INFRA_TEST_PATHS",
@@ -404,5 +461,6 @@ __all__ = [
     "resolve_project_cov_config",
     "resolve_infrastructure_test_paths",
     "resolve_project_test_python",
+    "resolve_xdist_args",
     "test_runner_dependency_specs",
 ]

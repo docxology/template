@@ -95,6 +95,12 @@ uv run python scripts/runner/execute_pipeline.py --project {project_name} --core
 # Run all tests (infrastructure + project)
 uv run python scripts/pipeline/stage_01_test.py --project {project_name}
 
+# Opt into parallelism for the local orchestrator (serial by default):
+#   -n auto  → one worker per core;  -n 6 → fixed 6 workers (safer on busy machines)
+# Also honoured via the PYTEST_XDIST_WORKERS env var. Applies to infra + project
+# suites and the --all-projects union gate; coverage is combined per-worker first.
+uv run python scripts/pipeline/stage_01_test.py --project {project_name} -n auto
+
 # Infrastructure tests only (60% coverage minimum)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 

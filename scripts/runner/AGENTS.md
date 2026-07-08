@@ -12,6 +12,16 @@ orchestrate one or many projects through the numbered pipeline stages.
 | `execute_pipeline.py` | Single-project pipeline runner; delegates to `infrastructure.core.pipeline.PipelineExecutor` |
 | `execute_multi_project.py` | Multi-project pipeline runner (serial; `--parallel` for process pool) |
 | `run_matrix.py` | Reproducible project × stage matrix runner; reads `run.config`, resolves projects + orders stages canonically |
+| `bundle_executable.py` | Executable-bundle stage (opt-in `bundle` tag); delegates to `infrastructure.publishing.executable_bundle.bundle_project` |
+| `archive_publication.py` | Archival publication stage (opt-in `archival` tag); mirrors a project's executable bundle to Zenodo / Software Heritage / IPFS via `infrastructure.publishing.archival` (dry-run unless `--commit`; exit 2 when the bundle is absent) |
+| `repro_bundle.py` | Reproduction-bundle `build`/`verify` thin wrapper forwarding to `infrastructure.publishing.repro_bundle` |
+
+## Shared modules (not runners)
+
+| Module | Purpose |
+|--------|---------|
+| `exit_codes.py` | Canonical `ExitCode` IntEnum naming the shared orchestrator exit-code contract (`SUCCESS=0`, `FAILURE=1`, `SKIP=2`, `VALIDATION_FAILED=3`, `MISSING_DEPENDENCY=4`); importing changes no behavior |
+| `mcp_server_template.py` | Thin launcher for the template's stdio MCP server (equivalent to `python -m infrastructure.mcp_server`); opt-in agent surface, intentionally not part of the default pipeline/CI |
 
 ## Bootstrap pattern
 

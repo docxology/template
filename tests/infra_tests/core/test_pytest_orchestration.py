@@ -12,6 +12,7 @@ from textwrap import dedent
 import pytest
 
 from infrastructure.core.pytest_orchestration import (
+    ENV_XDIST_WORKERS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
     build_project_pytest_command,
     build_union_pytest_command,
@@ -22,6 +23,7 @@ from infrastructure.core.pytest_orchestration import (
     resolve_coverage_file,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
+    resolve_xdist_args,
 )
 
 
@@ -241,3 +243,83 @@ def test_build_union_pytest_command_uses_qualified_cov_path(tmp_path: Path) -> N
         timeout=30,
     )
     assert "--cov-append" in cmd_append
+
+
+# ── pytest-xdist parallelism (opt-in) ───────────────────────────────────────
+
+
+def test_resolve_xdist_args_defaults_to_serial(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No arg and no env var ⇒ serial (empty), preserving current behavior."""
+    monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
+    assert resolve_xdist_args() == []
+    assert resolve_xdist_args(None) == []
+
+
+def test_resolve_xdist_args_auto(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
+    assert resolve_xdist_args("auto") == ["-n", "auto"]
+
+
+def test_resolve_xdist_args_positive_int(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
+    assert resolve_xdist_args(6) == ["-n", "6"]
+    assert resolve_xdist_args("4") == ["-n", "4"]
+
+
+def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
+    """PYTEST_XDIST_WORKERS is honoured only when no explicit arg is passed."""
+    monkeypatch.setenv(ENV_XDIST_WORKERS, "auto")
+    assert resolve_xdist_args() == ["-n", "auto"]
+    monkeypatch.setenv(ENV_XDIST_WORKERS, "3")
+    assert resolve_xdist_args() == ["-n", "3"]
+
+
+def test_resolve_xdist_args_explicit_overrides_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(ENV_XDIST_WORKERS, "auto")
+    # Explicit serial request wins over an env var that would parallelize.
+    assert resolve_xdist_args(1) == []
+    assert resolve_xdist_args(8) == ["-n", "8"]
+
+
+def test_resolve_xdist_args_one_worker_is_serial(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A single worker is pure xdist overhead — treat as serial."""
+    monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
+    assert resolve_xdist_args(1) == []
+    assert resolve_xdist_args("1") == []
+
+
+def test_resolve_xdist_args_zero_and_invalid_are_serial(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
+    assert resolve_xdist_args(0) == []
+    assert resolve_xdist_args("0") == []
+    assert resolve_xdist_args("nonsense") == []
+    assert resolve_xdist_args("") == []
+
+
+def test_build_union_pytest_command_omits_xdist_by_default(tmp_path: Path) -> None:
+    """Default union command stays serial — no ``-n`` regression."""
+    repo = tmp_path / "repo"
+    project = repo / "projects" / "templates" / "demo"
+    (project / "src").mkdir(parents=True)
+    tests = project / "tests"
+    tests.mkdir(parents=True)
+
+    cmd = build_union_pytest_command(repo, project, tests, is_first=True, marker_expr=None, timeout=30)
+    assert "-n" not in cmd
+
+
+def test_build_union_pytest_command_injects_xdist_when_parallel(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    project = repo / "projects" / "templates" / "demo"
+    (project / "src").mkdir(parents=True)
+    tests = project / "tests"
+    tests.mkdir(parents=True)
+
+    cmd_auto = build_union_pytest_command(
+        repo, project, tests, is_first=True, marker_expr=None, timeout=30, parallel="auto"
+    )
+    joined = " ".join(cmd_auto)
+    assert "-n auto" in joined
+
+    cmd_n = build_union_pytest_command(repo, project, tests, is_first=True, marker_expr=None, timeout=30, parallel=4)
+    assert "-n" in cmd_n and "4" in cmd_n

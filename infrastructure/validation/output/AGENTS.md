@@ -15,6 +15,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 - `prose_quality.py` - opt-in, report-only AI-writing prose quality gate
 - `claim_verification.py` - optional web-grounded claim verification report for manuscript prose
 - `no_mock_enforcer.py` - mock-usage checks (line-based scan; one-line `"""..."""` / `'''...'''` docstrings are skipped so policy docs can name forbidden APIs)
+- `layout.py` - shared output directory layout constants (`OUTPUT_SUBDIR_NAMES`, `OPTIONAL_OUTPUT_SUBDIRS`)
 
 ## Key APIs
 

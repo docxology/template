@@ -72,6 +72,11 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `collect_project_info(project_name, repo_root)` - manuscript/source/output/tests counts
 - `display_project_info(info, logger=...)` - formatted logging for `scripts/maintenance/show_project_info.py`
 
+### ProjectInfo Model (`project_info.py`)
+
+- `ProjectInfo` - dataclass describing a discovered project (`name`, `path`, `has_src`/`has_tests`/`has_scripts`/`has_manuscript`, `metadata`, `program`) with `is_valid` and `qualified_name` properties
+- `build_project_info(project_dir, program="")` - construct a `ProjectInfo` from a validated project directory, loading metadata via `get_project_metadata`
+
 ### Workspace Management (`workspace.py`)
 
 - `sync_workspace()`, `update_workspace()`, `add_dependency()`, `show_workspace_tree()`, `show_workspace_status()` — used by `scripts/maintenance/manage_workspace.py`

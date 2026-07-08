@@ -8,6 +8,18 @@
   from `projects/` or `scripts/`.
 - This is generic infrastructure: no project-specific logic.
 
+## Models (`models.py`)
+
+- `VerificationStatus` — enum of per-reference outcomes (`ok`, `mismatch`,
+  `fabricated`, `unverifiable`, `unchecked`, `anachronism`); `BLOCKING_STATUSES`
+  is the frozenset that fails a gate by default (`fabricated` / `mismatch` /
+  `anachronism`).
+- `ReferenceVerdict` — one reference's result (`citation_key`, `status`,
+  `detail`, `doi`, `arxiv_id`, `resolved_via`, `title_similarity`, `issues`)
+  with `is_ok` / `is_blocking` properties and `to_dict()`.
+- `VerificationReport` — aggregate over every verdict; `counts()`, `blocking` /
+  `has_blocking`, `to_dict()`, and `summary_line()`.
+
 ## Invariants
 
 - **Offline never passes silently.** With `allow_network=False` and a cache

@@ -12,6 +12,9 @@ The `infrastructure/validation/integrity/` package contains link validation and 
 - `link_audit_core.py` - `run_link_audit(repo_root)` loop (uses `discover_markdown_files(..., scope="link_audit")`)
 - `link_policies.py` - skip policies for anchors and generated paths
 - `link_validator.py` - `LinkValidator` path resolution helpers
+- `link_skip_policy.py` - `should_validate_path` plus `PATH_SKIP_SUBSTRINGS` / `PATH_SKIP_KEYWORDS` tables that exclude template/placeholder/example paths from filesystem checks
+- `completeness.py` - build-artifact and output-tree completeness checks (`validate_build_artifacts`, `check_file_permissions`, `verify_output_completeness`) with `TypedDict` results
+- `manifest.py` - integrity manifest create/save/load/verify (`create_integrity_manifest`, `save_integrity_manifest`, `load_integrity_manifest`, `verify_integrity_against_manifest`) using per-file hashes
 
 ## Markdown discovery
 

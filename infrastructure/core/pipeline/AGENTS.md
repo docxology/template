@@ -36,6 +36,11 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `summary_helpers.py` - summary helpers
 - `summary_models.py` - summary dataclasses
 - `types.py` - shared pipeline types
+- `artifacts.py` - advisory per-stage artifact manifests with content-hash provenance (`compute_sha256`, `write_stage_artifact_manifest`, `aggregate_artifact_manifests`, `validate_artifact_manifest`; dataclasses `ArtifactManifestEntry`, `ArtifactManifest`, `ArtifactValidationReport`)
+- `control.py` - advisory pipeline control config parsing/merging with precedence default YAML → project YAML → CLI HITL mode (`load_pipeline_control_config`, `merge_control_configs`, `control_config_from_dict`)
+- `run_matrix.py` - reproducible project × stage run matrix from a `run.config` YAML file; canonically orders steps so a given config reproduces byte-for-byte (`parse_run_config`, `resolve_run_plan`, `execute_run_plan`, `find_run_config`, `format_report`)
+- `smart_pause.py` - advisory SmartPause recommendation scoring from run reports (report-first; the default pipeline does not pause) (`compute_pause_recommendations`, `write_pause_recommendations`, `PauseRecommendation`)
+- `snapshot.py` - pipeline output snapshots and comparison reports (`create_snapshot`, `compare_snapshots`, `write_snapshot_comparison`, `snapshot_compare_to_markdown`, `main`)
 
 ## See Also
 

@@ -5,6 +5,12 @@
 Publishes manuscript and reproducibility bundles to HuggingFace Hub repositories,
 usually as datasets for research artifacts.
 
+## Modules
+
+| Module | Role |
+| --- | --- |
+| `models.py` | `HuggingFaceConfig`, `HuggingFaceResult`, `HFRepoType` — frozen config/result dataclasses and the repo-type enum (`model` / `dataset` / `space`); token defaults to `HUGGINGFACE_TOKEN` then `HF_TOKEN`, and `HuggingFaceResult.ok` is `True` when `status == "ok"` |
+
 ## Contracts
 
 - Keep `dry_run=True` as the safe default.
