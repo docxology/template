@@ -210,6 +210,11 @@ projects/templates/*
 !projects/templates/template_pools_rules_tools/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
+# Re-ignore coverage artifacts that the per-template negation rules above un-ignore.
+projects/templates/*/**/.coverage
+projects/templates/*/**/.coverage.*
+projects/templates/*/**/coverage_*.json
+projects/templates/*/**/coverage_*.xml
 
 # fonds/: only public template fonds under fonds/templates/ are tracked.
 fonds/*
@@ -333,3 +338,4 @@ run.config.yml
 !run.config.example.yaml
 /.humos
 /Plans
+/$HOME
