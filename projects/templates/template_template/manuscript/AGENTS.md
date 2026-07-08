@@ -23,7 +23,7 @@ Self-referential publication describing `template/`; sources live under `project
 | `05e_future_conclusion.md` | Discussion: Futures + conclusions |
 | `06_infrastructure_modules.md` | Module reference |
 | `07_security_provenance.md` | Security |
-| `08a_appendix_pipeline.md` | Appendix · Pipeline DAG (12 YAML rows) |
+| `08a_appendix_pipeline.md` | Appendix · Pipeline DAG (16 YAML rows) |
 | `08b_appendix_config.md` | Appendix · Configuration |
 | `08c_appendix_directory.md` | Appendix · Directory sketch |
 | `08d_appendix_exemplars.md` | Appendix · Public exemplars |

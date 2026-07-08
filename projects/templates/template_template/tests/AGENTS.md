@@ -63,11 +63,12 @@ patching `sys.modules` (violates the zero-mock policy):
 
 | Line | Branch | Why Unreachable |
 |------|--------|-----------------|
-| ~161 | `dir()` fallback for modules without `__all__` | All real infrastructure modules define `__all__` |
-| ~198 | `if manuscript_dir.is_dir():` False branch | Logically impossible: `config.yaml` exists only inside `manuscript/` |
-| ~418–419 | ImportError for `infrastructure.__version__` | `infrastructure` is always installed and importable in this repo |
+| 161 | `dir()` fallback for modules without `__all__` | All real infrastructure modules define `__all__` |
+| 198→206 | `if manuscript_dir.is_dir():` False branch | Logically impossible: `config.yaml` exists only inside `manuscript/` |
+| 419–420 | ImportError for `infrastructure.__version__` | `infrastructure` is always installed and importable in this repo |
 
-(Line numbers drift as `introspection.py` grows; re-check with `grep -n` before citing exact numbers.)
+(Verified against `uv run pytest ... --cov-report=term-missing` coverage "Missing" lines
+on 2026-07-07; line numbers drift as `introspection.py` grows — re-check before citing.)
 
 ## Patterns
 
