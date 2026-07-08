@@ -9,6 +9,13 @@
 
 set -euo pipefail
 
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    echo "Usage: $0 [remote-host] [snapshot-name]"
+    echo "  Non-destructive restore test: downloads to /tmp/restore-test-<snapshot>."
+    echo "  Verifies file counts match."
+    exit 0
+fi
+
 REMOTE="${1:-backup}"
 SNAPSHOT="${2:-$(date +%Y-%m-%d)}"
 TEST_DIR="/tmp/restore-test-${SNAPSHOT}"

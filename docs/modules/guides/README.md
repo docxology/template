@@ -29,6 +29,12 @@
 | **Search** | [search-module.md](search-module.md) | Literature discovery, web search, and backends under `search/literature/` and `search/exa/` |
 | **Reference** | [reference-module.md](reference-module.md) | BibTeX / citation toolkit with `reference/citation/` and `reference/verification/` |
 | **SIA** | [sia-module.md](sia-module.md) | Meta → Target → Feedback self-improvement harness |
+| **Fonds** | [fonds-module.md](fonds-module.md) | Fonds (knowledge collection) discovery and linking |
+| **Logrotate** | [logrotate-module.md](logrotate-module.md) | Log rotation configuration templates |
+| **Provenance** | [provenance-module.md](provenance-module.md) | Provenance DAG tracking for research artifacts |
+| **Research** | [research-module.md](research-module.md) | Research workflow configuration and models |
+| **Rules** | [rules-module.md](rules-module.md) | Rules engine for policy and compliance checks |
+| **Tools** | [tools-module.md](tools-module.md) | Tools discovery and management |
 
 ## See Also
 

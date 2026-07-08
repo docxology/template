@@ -211,7 +211,11 @@ jobs:
     name: Verify No Mocks Policy
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [lint]
+    # Runs in parallel with `lint` — the no-mocks script only needs the
+    # checkout and `uv sync`, not the lint/type results. This shaves ~5 min
+    # off the critical path to the test subtree (test-infra, test-regression,
+    # test-project all gate on verify-no-mocks, which previously sat behind
+    # lint unnecessarily).
     permissions:
       contents: read
     steps:

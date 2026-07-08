@@ -7,6 +7,13 @@
 
 set -euo pipefail
 
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    echo "Usage: $0"
+    echo "  Verifies Python, uv, and optional tools (ollama) are available."
+    echo "  Exits 0 if healthy, 1 if critical checks fail."
+    exit 0
+fi
+
 echo "=== Health Check ==="
 ERRORS=0
 

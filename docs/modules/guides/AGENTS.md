@@ -35,3 +35,9 @@ Focused guides for specific infrastructure modules. These documents supplement:
 | `orchestration-module.md` | Pipeline CLI and menus |
 | `prose-module.md` | Readability and editorial heuristics |
 | `reference-module.md` | BibTeX and citation utilities |
+| `fonds-module.md` | Fonds (knowledge collection) discovery |
+| `logrotate-module.md` | Log rotation configuration templates |
+| `provenance-module.md` | Provenance DAG tracking |
+| `research-module.md` | Research workflow configuration |
+| `rules-module.md` | Rules engine for policy checks |
+| `tools-module.md` | Tools discovery and management |

@@ -10,6 +10,13 @@
 
 set -euo pipefail
 
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    echo "Usage: $0 [remote-host] [snapshot-name]"
+    echo "  Full backup of ~/.hermes, .cache, output to remote-host."
+    echo "  snapshot-name defaults to YYYY-MM-DD."
+    exit 0
+fi
+
 REMOTE="${1:-backup}"
 SNAPSHOT="${2:-$(date +%Y-%m-%d)}"
 LOG="/tmp/backup-full-${SNAPSHOT}.log"

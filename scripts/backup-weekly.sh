@@ -9,6 +9,12 @@
 
 set -euo pipefail
 
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    echo "Usage: $0 [remote-host]"
+    echo "  Weekly backup of .cache/ (excluding tmp) to remote-host."
+    exit 0
+fi
+
 REMOTE="${1:-backup}"
 DATE=$(date +%Y-%U)  # Year-Week number
 LOG="/tmp/backup-weekly-${DATE}.log"

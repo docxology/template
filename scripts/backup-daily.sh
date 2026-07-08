@@ -10,6 +10,13 @@
 
 set -euo pipefail
 
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    echo "Usage: $0 [remote-host]"
+    echo "  Backs up ~/.hermes/ to remote-host (default: 'backup')."
+    echo "  Intended for daily cron."
+    exit 0
+fi
+
 REMOTE="${1:-backup}"
 DATE=$(date +%Y-%m-%d)
 LOG="/tmp/backup-${DATE}.log"
