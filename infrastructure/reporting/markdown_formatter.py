@@ -155,7 +155,7 @@ def run_test_summary_generation() -> int:
     # Save JSON report
     json_file = Path("test_results_summary.json")
     try:
-        with open(json_file, "w") as f:
+        with open(json_file, "w", encoding="utf-8") as f:
             json.dump(report_data, f, indent=2)
         logger.info(f"JSON report saved: {json_file}")
     except OSError as e:
@@ -166,7 +166,7 @@ def run_test_summary_generation() -> int:
     markdown_content = generate_markdown_report(report_data)
     md_file = Path("test_results_summary.md")
     try:
-        with open(md_file, "w") as f:
+        with open(md_file, "w", encoding="utf-8") as f:
             f.write(markdown_content)
         logger.info(f"Markdown report saved: {md_file}")
     except OSError as e:

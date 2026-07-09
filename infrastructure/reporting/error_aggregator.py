@@ -228,8 +228,8 @@ class ErrorAggregator:
         json_path = output_dir / "error_summary.json"
         _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
         try:
-            with open(_tmp, "w") as f:
-                json.dump(summary, f, indent=2)
+            with open(_tmp, "w", encoding="utf-8") as f:
+                json.dump(summary, f, indent=2, ensure_ascii=False)
             _tmp.replace(json_path)
         except OSError:
             _tmp.unlink(missing_ok=True)
@@ -240,7 +240,7 @@ class ErrorAggregator:
         md_content = self._generate_markdown_report(summary)
         _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
         try:
-            _tmp.write_text(md_content)
+            _tmp.write_text(md_content, encoding="utf-8")
             _tmp.replace(md_path)
         except OSError:
             _tmp.unlink(missing_ok=True)

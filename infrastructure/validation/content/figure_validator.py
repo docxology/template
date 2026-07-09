@@ -32,7 +32,11 @@ def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
             continue
         try:
             text = _strip_reference_examples(
-                "\n".join(line for line in md_file.read_text().splitlines() if not line.lstrip().startswith("%"))
+                "\n".join(
+                    line
+                    for line in md_file.read_text(encoding="utf-8").splitlines()
+                    if not line.lstrip().startswith("%")
+                )
             )
             referenced.update(_normalise_figure_label(label) for label in _LATEX_FIGURE_REF_PATTERN.findall(text))
             referenced.update(_normalise_figure_label(label) for label in _PANDOC_FIGURE_REF_PATTERN.findall(text))

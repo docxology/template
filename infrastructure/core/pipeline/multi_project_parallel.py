@@ -159,23 +159,28 @@ class _RedirectedStreams:
             sys.stderr.flush()
         except (OSError, ValueError):
             pass
-        if self._original_stdout is not None:
-            sys.stdout = self._original_stdout
-            self._original_stdout = None
-        if self._original_stderr is not None:
-            sys.stderr = self._original_stderr
-            self._original_stderr = None
-        if self._saved_stdout is not None:
-            os.dup2(self._saved_stdout, 1)
-            os.close(self._saved_stdout)
-            self._saved_stdout = None
-        if self._saved_stderr is not None:
-            os.dup2(self._saved_stderr, 2)
-            os.close(self._saved_stderr)
-            self._saved_stderr = None
-        if self._log_stream is not None:
-            self._log_stream.close()
-            self._log_stream = None
+        # FD restoration must always run, even if flush() raised an
+        # unexpected exception — otherwise the worker is left with
+        # stdout/stderr pointing at a closed log file.
+        try:
+            if self._original_stdout is not None:
+                sys.stdout = self._original_stdout
+                self._original_stdout = None
+            if self._original_stderr is not None:
+                sys.stderr = self._original_stderr
+                self._original_stderr = None
+            if self._saved_stdout is not None:
+                os.dup2(self._saved_stdout, 1)
+                os.close(self._saved_stdout)
+                self._saved_stdout = None
+            if self._saved_stderr is not None:
+                os.dup2(self._saved_stderr, 2)
+                os.close(self._saved_stderr)
+                self._saved_stderr = None
+        finally:
+            if self._log_stream is not None:
+                self._log_stream.close()
+                self._log_stream = None
 
 
 def _redirect_worker_streams(log_file: Path) -> _RedirectedStreams:

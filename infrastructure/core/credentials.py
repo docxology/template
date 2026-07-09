@@ -125,7 +125,7 @@ class CredentialManager:
 
     def _load_yaml_config(self, config_file: Path) -> dict[str, Any]:
         """Load YAML config and substitute environment variables."""
-        with open(config_file, "r") as f:
+        with open(config_file, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
 
         # Recursively substitute ${VAR} with environment variables

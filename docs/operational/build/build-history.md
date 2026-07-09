@@ -43,7 +43,7 @@ build_combined() {
 
 The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only` path, to the current declarative DAG in [`pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml):
 
-- **14 declared stages** in YAML: 8 default core, 2 LLM-tagged, 2 opt-in publishing, 2 opt-in bundle/archival
+- **16 declared stages** in YAML: 8 default core, 2 science/provenance, 2 LLM-tagged, 2 opt-in publishing, 2 opt-in bundle/archival
 - **Default full run:** Clean Output Directories + 9 numbered stages (10 core+LLM path)
 - **`--core-only`:** 8 stages (LLM-tagged stages excluded)
 

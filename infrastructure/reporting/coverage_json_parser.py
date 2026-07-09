@@ -27,7 +27,7 @@ def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
         return None
 
     try:
-        with open(coverage_json_path, "r") as f:
+        with open(coverage_json_path, "r", encoding="utf-8") as f:
             coverage_data = json.load(f)
 
         # Extract file-level coverage information

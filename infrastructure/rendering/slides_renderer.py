@@ -178,7 +178,7 @@ class SlidesRenderer:
             subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
 
             # Read LaTeX content and fix figure paths
-            tex_content = temp_tex.read_text()
+            tex_content = temp_tex.read_text(encoding="utf-8")
 
             # Fix figure paths for LaTeX compilation
             if figures_dir:
@@ -206,7 +206,7 @@ class SlidesRenderer:
             # Write fixed LaTeX back
             _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
             try:
-                _tmp.write_text(tex_content)
+                _tmp.write_text(tex_content, encoding="utf-8")
                 _tmp.replace(temp_tex)
             except OSError:
                 _tmp.unlink(missing_ok=True)

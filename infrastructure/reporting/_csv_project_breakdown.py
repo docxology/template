@@ -24,7 +24,7 @@ def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_di
     organizer.ensure_directory_structure(output_dir)
     csv_path = organizer.get_output_path("detailed_project_breakdown.csv", output_dir, FileType.CSV)
 
-    with open(csv_path, "w", newline="") as f:
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
         # Header with explanations

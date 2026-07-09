@@ -28,7 +28,7 @@ def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_d
         FileType.CSV,
     )
 
-    with open(csv_path, "w", newline="") as f:
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
         # Header
@@ -165,7 +165,7 @@ def _write_project_metrics_csv(summary: ExecutiveSummary, output_dir: Path, orga
     from infrastructure.reporting.executive_reporter import calculate_project_health_score
 
     metrics_csv = organizer.get_output_path("project_metrics.csv", output_dir, FileType.CSV)
-    with open(metrics_csv, "w", newline="") as f:
+    with open(metrics_csv, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
         writer.writerow(
@@ -231,7 +231,7 @@ def _write_project_metrics_csv(summary: ExecutiveSummary, output_dir: Path, orga
 def _write_aggregate_metrics_csv(summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer) -> Path:
     """Write aggregate (cross-project) metrics CSV."""
     aggregate_csv = organizer.get_output_path("aggregate_metrics.csv", output_dir, FileType.CSV)
-    with open(aggregate_csv, "w", newline="") as f:
+    with open(aggregate_csv, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["Category", "Metric", "Value", "Unit"])
 
@@ -275,7 +275,7 @@ def _write_aggregate_metrics_csv(summary: ExecutiveSummary, output_dir: Path, or
 def _write_health_scores_csv(summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer) -> Path:
     """Write per-project health scores CSV."""
     health_csv = organizer.get_output_path("health_scores.csv", output_dir, FileType.CSV)
-    with open(health_csv, "w", newline="") as f:
+    with open(health_csv, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
         writer.writerow(

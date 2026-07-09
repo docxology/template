@@ -79,8 +79,8 @@ def save_test_report_to_files(report: dict[str, Any], output_dir: Path) -> tuple
     # Save JSON report
     json_path = output_dir / "test_results.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(report, f, indent=2)
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(report, f, indent=2, ensure_ascii=False)
     except OSError as e:
         logger.error(f"Failed to write test report JSON: {e}")
         raise
@@ -90,7 +90,7 @@ def save_test_report_to_files(report: dict[str, Any], output_dir: Path) -> tuple
     # Generate markdown summary
     md_path = output_dir / "test_results.md"
     try:
-        with open(md_path, "w") as f:
+        with open(md_path, "w", encoding="utf-8") as f:
             f.write("# Test Results Summary\n\n")
             f.write(f"Generated: {report['timestamp']}\n\n")
             f.write("## Infrastructure Tests\n\n")

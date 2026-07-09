@@ -46,7 +46,7 @@ Automated sequence of operations orchestrated by `scripts/runner/execute_pipelin
 
 **Core pipeline** (`--core-only`): Clean Output Directories → Environment Setup → Infrastructure Tests → Project Tests → Project Analysis → PDF Rendering → Output Validation → Copy Outputs (8 stages).
 **Full pipeline** (default): adds LLM Scientific Review and LLM Translations stages (10 total).
-**Opt-in stages**: Ebook Generation, Metadata Package, Executable Bundle, and Archival Publication are declared in the DAG for contracts and direct invocation, so `pipeline.yaml` contains 14 stages total.
+**Opt-in stages**: Ebook Generation, Metadata Package, Executable Bundle, and Archival Publication are declared in the DAG for contracts and direct invocation, so `pipeline.yaml` contains 16 stages total.
 
 See [RUN_GUIDE.md](../RUN_GUIDE.md) for the complete stage reference.
 

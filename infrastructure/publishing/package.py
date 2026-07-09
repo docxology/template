@@ -8,7 +8,7 @@ This module serves as the entry point, re-exporting from focused submodules:
 
 import hashlib
 from dataclasses import asdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -78,7 +78,7 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
         "files_included": files_included,
         "metadata": asdict(metadata),
         "package_hash": package_hash,
-        "created_at": datetime.now().isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
     }
 
 

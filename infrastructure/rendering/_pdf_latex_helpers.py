@@ -160,7 +160,7 @@ def extract_preamble(preamble_file: Path) -> str:
         LaTeX preamble content or empty string if not found
     """
     try:
-        content = preamble_file.read_text()
+        content = preamble_file.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as e:
         logger.warning(f"Failed to read preamble file: {e}")
         return ""

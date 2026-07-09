@@ -109,7 +109,7 @@ def detect_manuscript_config(repo_root: Path) -> list[Finding]:
             )
             continue
         try:
-            data: Any = yaml.safe_load(cfg.read_text())
+            data: Any = yaml.safe_load(cfg.read_text(encoding="utf-8"))
         except yaml.YAMLError as exc:
             findings.append(
                 Finding(

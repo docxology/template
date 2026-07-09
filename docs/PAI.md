@@ -5,7 +5,7 @@
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
 - **Type**: Core Infrastructure / Skill
-- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) declares **14** stages: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, and 2 opt-in bundle/archival stages. Default full runs execute the 10 core+LLM stages; `--core-only` executes the 8 core stages — see [`RUN_GUIDE.md`](RUN_GUIDE.md).
+- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) declares **16** stages: 8 core stages, 2 science/provenance stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, and 2 opt-in bundle/archival stages. Default full runs execute the 12 core+science+LLM stages; `--core-only` executes the 8 core stages — see [`RUN_GUIDE.md`](RUN_GUIDE.md).
 - **Signposting**: This repository is a PAI “template” node; it is intended to be self-describing via `AGENTS.md` and `docs/`.
 
 ---

@@ -69,7 +69,7 @@ def load_test_results(
 
     if results_file.exists():
         try:
-            with open(results_file, "r") as f:
+            with open(results_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
         except OSError as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
@@ -91,7 +91,7 @@ def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     infra_results_file = root / "infrastructure_validation_report.json"
     if infra_results_file.exists():
         try:
-            with open(infra_results_file, "r") as f:
+            with open(infra_results_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
             test_results = data.get("test_results", {})
             infra_data = test_results.get("infrastructure", {})
@@ -115,7 +115,7 @@ def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     for coverage_path in (root / "coverage_infra.json", root / "htmlcov" / "coverage.json"):
         if coverage_path.exists():
             try:
-                with open(coverage_path, "r") as f:
+                with open(coverage_path, "r", encoding="utf-8") as f:
                     coverage_data = json.load(f)
                 totals = coverage_data.get("totals", {})
                 return {

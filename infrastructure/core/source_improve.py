@@ -46,7 +46,7 @@ _BARE_EXCEPT_RE = re.compile(r"^(\s*)except\s*:")
 
 def improve_file(path: Path) -> FileImprovementResult:
     """Apply mechanical improvements to a single Python file in-place."""
-    source = path.read_text()
+    source = path.read_text(encoding="utf-8")
     lines = source.splitlines(keepends=True)
     try:
         tree = ast.parse(source)
@@ -105,7 +105,7 @@ def improve_file(path: Path) -> FileImprovementResult:
         changes["modified"] = True
 
     if changes["modified"]:
-        path.write_text("".join(new_lines))
+        path.write_text("".join(new_lines), encoding="utf-8")
     return changes
 
 

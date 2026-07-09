@@ -155,7 +155,7 @@ def generate_multi_project_summary_report(
     try:
         _tmp = json_file.with_suffix(json_file.suffix + ".tmp")
         try:
-            _tmp.write_text(json.dumps(summary, indent=2))
+            _tmp.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
             _tmp.replace(json_file)
         except OSError:
             _tmp.unlink(missing_ok=True)
@@ -170,7 +170,7 @@ def generate_multi_project_summary_report(
     try:
         _tmp = md_file.with_suffix(md_file.suffix + ".tmp")
         try:
-            _tmp.write_text(_format_multi_project_summary_markdown(summary))
+            _tmp.write_text(_format_multi_project_summary_markdown(summary), encoding="utf-8")
             _tmp.replace(md_file)
         except OSError:
             _tmp.unlink(missing_ok=True)

@@ -52,7 +52,7 @@ def _run_latex_pass(
     # /CreationDate (byte-stable PDFs). No-op in wall-clock mode — a faithful
     # copy of os.environ. repo_root is the output_dir's owning checkout; the
     # resolver walks git from there.
-    with open(xelatex_stdout_log, "w") as stdout_sink:
+    with open(xelatex_stdout_log, "w", encoding="utf-8") as stdout_sink:
         result = subprocess.run(
             cmd,
             check=False,
@@ -79,7 +79,7 @@ def _check_fatal_error(
     Returns True if compilation should stop, False to continue.
     Raises RenderingError on unrecoverable failures.
     """
-    log_content = log_file.read_text() if log_file.exists() else ""
+    log_content = log_file.read_text(encoding="utf-8") if log_file.exists() else ""
     fatal_markers = (
         "Fatal error occurred",
         "Emergency stop",
@@ -141,7 +141,7 @@ def _recover_invalid_pdf(output_dir: Path, cmd: list[str], temp_pdf: Path, combi
     logger.warning("PDF structurally invalid (truncated xref/%%EOF). Re-running recovery pass...")
     xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
 
-    with open(xelatex_stdout_log, "w") as stdout_sink:
+    with open(xelatex_stdout_log, "w", encoding="utf-8") as stdout_sink:
         subprocess.run(
             cmd,
             check=False,
@@ -230,7 +230,7 @@ def compile_latex_manuscript(
 
             _check_fatal_error(result, log_file, combined_tex, output_file, run + 1)
 
-            log_content = log_file.read_text() if log_file.exists() else ""
+            log_content = log_file.read_text(encoding="utf-8") if log_file.exists() else ""
             if "Rerun" not in log_content and "undefined" not in log_content.lower():
                 logger.info(f"  All references resolved after pass {run + 1}")
                 break

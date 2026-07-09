@@ -195,10 +195,13 @@ def _validate_paths(paths: Iterable[Path], state: DoctorState) -> list[Path]:
     repo = state.repo_root
     doctor_root = state.root.resolve()
     for raw in paths:
-        # Resolve symlinks and ``..`` segments but tolerate non-existent
-        # leaves (resolve(strict=False) still normalises — the extra
-        # os.path.normpath wrapper was redundant).
-        resolved = (repo / raw).resolve() if not raw.is_absolute() else raw.resolve()
+        # Resolve symlinks and ``..`` segments. Python 3.6+ resolve() is
+        # non-strict by default (tolerates non-existent leaves) but can still
+        # raise OSError on broken symlink components — wrap for safety.
+        try:
+            resolved = (repo / raw).resolve() if not raw.is_absolute() else raw.resolve()
+        except OSError as exc:
+            raise DoctorSafetyError(f"Cannot resolve path (broken symlink?): {raw}: {exc}") from exc
         try:
             resolved.relative_to(repo)
         except ValueError as exc:
@@ -247,7 +250,7 @@ def _snapshot(paths: list[Path], state: DoctorState, action_id: str) -> tuple[Pa
         "pre_hashes": hashes,
         "repo_root": str(state.repo_root),
     }
-    (backup_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
+    (backup_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
     return backup_dir, hashes
 
 
@@ -269,7 +272,7 @@ def load_journal(state: DoctorState) -> list[MutateRecord]:
     if not state.journal_path.exists():
         return []
     records: list[MutateRecord] = []
-    for line_no, raw in enumerate(state.journal_path.read_text().splitlines(), start=1):
+    for line_no, raw in enumerate(state.journal_path.read_text(encoding="utf-8").splitlines(), start=1):
         raw = raw.strip()
         if not raw:
             continue

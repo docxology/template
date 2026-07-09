@@ -53,7 +53,7 @@ def save_review_outputs(
             header = _build_review_header(name, model_name, date_str, metrics)
             _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
             try:
-                _tmp.write_text(header + content)
+                _tmp.write_text(header + content, encoding="utf-8")
                 _tmp.replace(filepath)
             except Exception:
                 _tmp.unlink(missing_ok=True)
@@ -85,7 +85,7 @@ def save_review_outputs(
         )
         _tmp = combined_path.with_suffix(combined_path.suffix + ".tmp")
         try:
-            _tmp.write_text(combined_content)
+            _tmp.write_text(combined_content, encoding="utf-8")
             _tmp.replace(combined_path)
         except Exception:
             _tmp.unlink(missing_ok=True)
@@ -107,7 +107,7 @@ def save_review_outputs(
         )
         _tmp = metadata_path.with_suffix(metadata_path.suffix + ".tmp")
         try:
-            _tmp.write_text(json.dumps(metadata, indent=2))
+            _tmp.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
             _tmp.replace(metadata_path)
         except Exception:
             _tmp.unlink(missing_ok=True)
@@ -161,7 +161,7 @@ def save_single_review(
     try:
         _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
         try:
-            _tmp.write_text(header + content)
+            _tmp.write_text(header + content, encoding="utf-8")
             _tmp.replace(filepath)
         except Exception:
             _tmp.unlink(missing_ok=True)

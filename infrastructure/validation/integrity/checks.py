@@ -114,11 +114,11 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
             logger.debug(f"Checking {data_file} ({file_extension})")
 
             if file_extension == ".json":
-                with open(data_file, "r") as f:
+                with open(data_file, "r", encoding="utf-8") as f:
                     json.load(f)
             elif file_extension == ".csv":
                 # Basic CSV validation
-                with open(data_file, "r") as f:
+                with open(data_file, "r", encoding="utf-8") as f:
                     lines = f.readlines()
                     if lines:
                         first_line = lines[0].strip()

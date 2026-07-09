@@ -234,7 +234,7 @@ class PDFRenderer:
         run_pandoc_conversion(pandoc_cmd, combined_md, source_files, md_content)
 
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
-        tex_content = combined_tex.read_text()
+        tex_content = combined_tex.read_text(encoding="utf-8")
         tex_content = postprocess_latex(tex_content)
 
         # Step 5: Fix figure paths for LaTeX compilation
@@ -262,7 +262,7 @@ class PDFRenderer:
         # .tmp file before re-raising, so the broad catch is intentional.
         _tmp = combined_tex.with_suffix(combined_tex.suffix + ".tmp")
         try:
-            _tmp.write_text(tex_content)
+            _tmp.write_text(tex_content, encoding="utf-8")
             _tmp.replace(combined_tex)
         except Exception:  # noqa: BLE001 — atomic-write cleanup; re-raised below
             _tmp.unlink(missing_ok=True)

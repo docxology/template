@@ -102,7 +102,7 @@ class FigureManager:
         """
         if self.registry_file.exists():
             try:
-                with open(self.registry_file, "r") as f:
+                with open(self.registry_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self.figures = {fig_id: FigureMetadata.from_dict(fig_data) for fig_id, fig_data in data.items()}
                     # Update counter from max numeric suffix; default=0 guards against

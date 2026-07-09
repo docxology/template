@@ -130,7 +130,7 @@ class CheckpointManager:
 
         try:
             self._ensure_checkpoint_dir()
-            with open(self.checkpoint_file, "w") as f:
+            with open(self.checkpoint_file, "w", encoding="utf-8") as f:
                 json.dump(checkpoint.to_dict(), f, indent=2)
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
             return True
@@ -149,7 +149,7 @@ class CheckpointManager:
             return None
 
         try:
-            with open(self.checkpoint_file, "r") as f:
+            with open(self.checkpoint_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
             checkpoint = PipelineCheckpoint.from_dict(data)
             logger.info(

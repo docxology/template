@@ -98,8 +98,8 @@ def check_file_permissions(output_dir: Path) -> PermissionCheck:
 
     try:
         test_file = output_dir / ".permission_test"
-        test_file.write_text("test")
-        test_file_content = test_file.read_text()
+        test_file.write_text("test", encoding="utf-8")
+        test_file_content = test_file.read_text(encoding="utf-8")
         test_file.unlink()
 
         if test_file_content != "test":

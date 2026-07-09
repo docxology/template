@@ -349,7 +349,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # Count artifacts for summary
     manifest_path = bundle_dir / "manifest.json"
-    manifest = json.loads(manifest_path.read_text())
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     counts = {k: len(v) for k, v in manifest["artifacts"].items()}
     total = sum(counts.values())
 

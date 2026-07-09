@@ -33,7 +33,7 @@ def _atomic_write_text(path: Path, content: str) -> None:
     """Write *content* as text to *path* atomically via a .tmp intermediate file."""
     _tmp = path.with_suffix(path.suffix + ".tmp")
     try:
-        _tmp.write_text(content)
+        _tmp.write_text(content, encoding="utf-8")
         _tmp.replace(path)
     except OSError:
         _tmp.unlink(missing_ok=True)

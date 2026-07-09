@@ -258,7 +258,7 @@ def _wait_for_coverage_file(paths: list[Path], max_retries: int = 3, delay: floa
 def _parse_coverage_json(path: Path) -> float | None:
     """Return percent_covered from a coverage JSON file, or None on failure."""
     try:
-        with open(path, "r") as f:
+        with open(path, "r", encoding="utf-8") as f:
             coverage_data = json.load(f)
         pct = coverage_data.get("totals", {}).get("percent_covered", 0)
         if pct > 0:

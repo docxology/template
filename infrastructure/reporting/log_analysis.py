@@ -31,7 +31,7 @@ def _tally_log_level_counts(log_file: Path) -> dict[str, Any]:
         "warnings": [],
     }
 
-    with open(log_file, "r") as f:
+    with open(log_file, "r", encoding="utf-8") as f:
         for line in f:
             stats["total_lines"] += 1
             line_lower = line.lower()
@@ -108,7 +108,7 @@ def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str
 
     if output_file:
         output_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_file, "w") as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(summary_text)
 
     return summary_text

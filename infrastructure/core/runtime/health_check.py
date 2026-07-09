@@ -219,7 +219,7 @@ class SystemHealthChecker:
         """Return system and process uptime; falls back from /proc/uptime to psutil.boot_time()."""
         uptime_seconds: float | None = None
         try:
-            with open("/proc/uptime", "r") as f:
+            with open("/proc/uptime", "r", encoding="utf-8") as f:
                 uptime_seconds = float(f.readline().split()[0])
         except (FileNotFoundError, OSError):
             # Fallback for systems without /proc/uptime

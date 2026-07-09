@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
-2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **14** stages including the opt-in ebook, metadata, bundle, and archival contracts.
+2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **12** core+science+LLM stages, while the YAML declares **16** stages including the opt-in ebook, metadata, bundle, and archival contracts.
 
 ## Thin Orchestration Architecture
 
@@ -285,7 +285,7 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
 After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
 
-Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 14 stages total: 8 core, 2 optional LLM, 2 opt-in ebook/metadata, and 2 opt-in bundle/archival stages.
+Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 16 stages total: 8 core, 2 science/provenance, 2 optional LLM, 2 opt-in ebook/metadata, and 2 opt-in bundle/archival stages.
 
 ### Manuscript Menu Options
 
@@ -385,7 +385,7 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Default full run (10 executed stages; pipeline.yaml declares 14 total)
+./run.sh --pipeline          # Default full run (12 executed stages; pipeline.yaml declares 16 total)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
 uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only

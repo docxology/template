@@ -20,7 +20,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
     organizer.ensure_directory_structure(output_dir)
     csv_path = organizer.get_output_path("comparative_analysis.csv", output_dir, FileType.CSV)
 
-    with open(csv_path, "w", newline="") as f:
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
         # Header

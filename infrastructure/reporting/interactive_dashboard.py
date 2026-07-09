@@ -254,7 +254,7 @@ class InteractiveDashboard:
         return "\n".join(lines) + "\n"
 
     def to_json(self) -> dict[str, Any]:
-        """Serialize this object to a JSON string."""
+        """Return the dashboard payload as a dict for JSON serialization."""
         return {
             "title": self.title,
             "subtitle": self.subtitle,
