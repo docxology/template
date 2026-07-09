@@ -34,6 +34,8 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_eda_notebook/`](templates/template_eda_notebook/) — EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs
 - [`templates/template_madlib/`](templates/template_madlib/) — conditional token-injection manuscript generator with QA probes and authoring contract
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
+- [`templates/template_pitch_deck/`](templates/template_pitch_deck/) — pitch deck / slide deck scaffold exemplar
+- [`templates/template_pitch_deck/`](templates/template_pitch_deck/) — pitch deck / slide deck scaffold
 - [`templates/template_pools_rules_tools/`](templates/template_pools_rules_tools/) — fonds/rules/tools resource-pool integration exemplar
 - [`templates/template_search_project/`](templates/template_search_project/) — literature-search pipeline with auto-populated BibTeX and optional local LLM synthesis
 - [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
@@ -70,6 +72,7 @@ projects.
 | [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
 | [`template_methods_paper`](templates/template_methods_paper/) | Controlled-method specification DSL with staged validation | yes (`src/methods_dsl/*`) | no (curated) | step-count figure | see canonical facts | see canonical facts |
 | [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
+| [`template_pitch_deck`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold | see canonical facts | see canonical facts | see canonical facts | see canonical facts |
 | [`template_search_project`](templates/template_search_project/) | Literature-search pipeline with auto-populated BibTeX | no (orchestration over search/reference/LLM infrastructure) | yes (`references.bib` + `references_deep.bib`) | 3 figures | see canonical facts | see canonical facts |
 | [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
 | [`template_storybook`](templates/template_storybook/) | Full-page illustrated storybook PDF | yes (`src/storybook/*`) | n/a | yes (full-page story art) | see canonical facts | see canonical facts |
@@ -189,6 +192,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_madlib/` | Conditional token-injection manuscript exemplar | see canonical facts | see canonical facts |
 | `templates/template_methods_paper/` | Methods-paper exemplar (controlled-method specification DSL) | see canonical facts | see canonical facts |
 | `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
+| [`template_pitch_deck`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold | see canonical facts | see canonical facts | see canonical facts | see canonical facts |
 | `templates/template_pools_rules_tools/` | Fonds/rules/tools resource-pool integration exemplar | see canonical facts | see canonical facts |
 | `templates/template_search_project/` | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | `templates/template_sia/` | SIA self-improvement harness exemplar | see canonical facts | see canonical facts |
@@ -961,6 +965,7 @@ infrastructure compliance:
 - **template_madlib**: Conditional token-injection manuscript exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_methods_paper**: Methods-paper exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_newspaper**: Newspaper layout exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_pitch_deck**: Pitch deck exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_pools_rules_tools**: Fonds/rules/tools resource-pool integration exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_search_project**: Literature-search exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

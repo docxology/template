@@ -19,6 +19,7 @@ HARNESS = _SCRIPTS / "run_eval_harness.py"
 sys.path.insert(0, str(_SCRIPTS))
 sys.path.insert(0, str(_SKILLS_TESTS))
 
+from skill_eval.config import EVAL_ROOT  # noqa: E402
 from skill_eval_fixtures import write_minimal_workspace
 
 
@@ -147,15 +148,9 @@ def test_validate_rejects_save_baseline_with_offline_mode(
 
 @pytest.mark.timeout(30)
 def test_save_baseline_only_integration(tmp_path: Path) -> None:
-    """Integration test: --save-baseline-only pins the latest run as a baseline.
-
-    Uses a minimal synthetic workspace (no real LLM eval run needed) to
-    exercise the full subprocess harness entry point.
-    """
+    """Integration test: --save-baseline-only pins the latest run as a baseline."""
     workspace = tmp_path / "latest"
     write_minimal_workspace(workspace)
 
-    # The harness resolves --output-dir as the workspace containing benchmark.json.
-    # Pass --output-dir pointing at the synthetic workspace.
     result = _run_harness("--save-baseline-only", "--output-dir", str(workspace))
     assert result.returncode == 0, result.stderr

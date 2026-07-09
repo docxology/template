@@ -12,7 +12,7 @@ renderers without owning validation policy or project analysis.
 | --- | --- | --- |
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `web_renderer.py`, `pandoc_renderers.py` | Slides, HTML, DOCX, EPUB. |
+| Format renderers | `slides_renderer.py`, `web_renderer.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `mermaid_figure.py` | Slides, HTML, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py` | Section ordering, substitutions, resolved manuscript trees. |
 | LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks. |
 | LaTeX checks | `latex_discovery.py`, `latex_validation.py`, `latex_log_quality.py`, `latex_texttt.py` | `kpsewhich`/per-package discovery, required/optional package `ValidationReport`, render-log findings for overfull/underfull boxes and undefined references, and rewriting long `\texttt{}` spans into a breakable monospace macro. |

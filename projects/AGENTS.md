@@ -54,6 +54,7 @@ Nineteen projects under `projects/templates/` are **permanent canonical exemplar
 | [`templates/template_madlib/`](templates/template_madlib/) | Conditional token-injection manuscript generator (config-owned lexicon, QA probes, authoring contract, and IMRAD hydration) | yes (`src/tokens.py`, `src/composition.py`) | curated read-only | token-density figure | see canonical facts | see canonical facts |
 | [`templates/template_methods_paper/`](templates/template_methods_paper/) | Methods paper: controlled-method specification DSL (units/vocabulary/model/staged-validation/deterministic-compiler/export/trust), informed by BPL | yes (`src/methods_dsl/*`) | curated read-only | 1 (step-count figure) | see canonical facts | see canonical facts |
 | [`templates/template_newspaper/`](templates/template_newspaper/) | Newspaper layout engine (data-driven 12-page broadsheet from YAML via ReportLab) | no (orchestration over the ReportLab layout engine) | n/a | full-page layout | see canonical facts | see canonical facts |
+| [`templates/template_pitch_deck/`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold exemplar | yes (`src/pitch_deck/*`) | curated read-only | slide figures | see canonical facts | see canonical facts |
 | [`templates/template_prose_project/`](templates/template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`templates/template_search_project/`](templates/template_search_project/) | Literature-search pipeline (search → BibTeX → LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | see canonical facts | see canonical facts |
 | [`templates/template_sia/`](templates/template_sia/) | SIA harness (meta → target → feedback loop, fixture replay) | yes (`src/loop.py`, `infrastructure/sia`) | curated read-only | registry-backed | see canonical facts | see canonical facts |
@@ -141,6 +142,7 @@ graph TD
         P15[templates/template_storybook<br/>Storybook exemplar · see canonical facts]
         P16[templates/template_autopoiesis<br/>Autopoietic project-generation exemplar · see canonical facts]
         P17[templates/template_pools_rules_tools<br/>Fonds/rules/tools integration exemplar · see canonical facts]
+        P18[templates/template_pitch_deck<br/>Pitch deck exemplar · see canonical facts]
         Pn[active/* rotating hot-seat workspaces<br/>see docs/_generated/active_projects.md]
     end
 

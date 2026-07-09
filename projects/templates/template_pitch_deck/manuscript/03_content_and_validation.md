@@ -1,5 +1,8 @@
 # Content and Validation {#sec:validation}
 
+## Methods
+
+
 ## The flagship pitch
 
 The shipped content pitches [`template_template`](../../template_template/) — this

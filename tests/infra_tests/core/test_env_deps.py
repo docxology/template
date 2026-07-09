@@ -199,7 +199,6 @@ class TestInstallMissingPackages:
 
     def test_uv_add_timeout_continues_to_sync(self, tmp_path):
         """TimeoutExpired on uv add is caught and execution continues to sync."""
-        # Python script: sleep long on 'add' (triggers timeout); exit 0 on 'sync'
         script = """\
             import sys, time
             if len(sys.argv) > 1 and sys.argv[1] == "add":
@@ -229,7 +228,6 @@ class TestInstallMissingPackages:
 
     def test_uv_sync_timeout_returns_false(self, tmp_path):
         """TimeoutExpired on uv sync returns False."""
-        # Python script: exit 0 on 'add'; sleep long on 'sync'
         script = """\
             import sys, time
             if len(sys.argv) > 1 and sys.argv[1] == "sync":

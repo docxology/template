@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import platform
 
+import pytest
 
 from infrastructure.core.install_commands import build_install_commands
 
@@ -125,6 +126,7 @@ class TestBuildInstallCommandsBranchCoverage:
         import infrastructure.core.install_commands as _mod
 
         monkeypatch.setattr(_platform, "system", lambda: "Linux")
+        real_which = shutil.which
 
         def _which_yum_only(cmd: str) -> str | None:
             return "/usr/bin/yum" if cmd == "yum" else None
