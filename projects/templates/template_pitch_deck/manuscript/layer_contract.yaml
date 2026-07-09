@@ -1,0 +1,32 @@
+# Pitch-deck exemplar: sanctioned infrastructure imports, declared per the
+# layer-boundary contract infrastructure/project/drift/checks_boundary.py enforces.
+#
+# - src/content_loader.py imports infrastructure.rendering.slide_deck for the
+#   DeckContent/Slide dataclasses — it builds those objects from YAML content
+#   but never draws/lays out a slide itself (that logic lives entirely in
+#   infrastructure/rendering/{slide_deck,pptx_deck}.py).
+# - src/deck_tokens.py imports infrastructure.project.public_scope to source
+#   the live exemplar count/roster — the whole point of this project's honesty
+#   model is that facts come from a real repo read, not a hand-typed literal.
+# - src/render_orchestration.py calls the two renderers directly (it's the
+#   coordination layer scripts/20_render_decks.py delegates to, so the infra
+#   render calls live here instead of in the thin script).
+# - src/standalone_slides.py imports infrastructure.rendering.slide_deck for
+#   the Slide/DeckContent/source_url types it builds per-slide standalone
+#   pages and QR deep-link URLs from — same rationale as content_loader.py.
+# - src/infra_facts.py imports infrastructure.documentation.counts_doc to
+#   reuse its existing infrastructure_packages()/tracked_infra_python_count()
+#   introspection — the same functions docs/_generated/COUNTS.md itself is
+#   built from, so this deck's INFRA_* tokens can never silently disagree
+#   with that generated factsheet.
+# - src/chart_rendering.py imports infrastructure.rendering.slide_deck for
+#   the DeckTheme type its chart functions take, so every chart's colors
+#   match the rendered slides — moved here from scripts/16_generate_charts.py
+#   once that script grew past the thin-orchestrator line/function threshold.
+allow_infrastructure_imports:
+  - src/content_loader.py
+  - src/deck_tokens.py
+  - src/render_orchestration.py
+  - src/standalone_slides.py
+  - src/infra_facts.py
+  - src/chart_rendering.py

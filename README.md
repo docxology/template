@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -140,6 +140,7 @@ inside that exemplar.
 | `template-search-project` | `template_search_project` | Literature search pipeline |
 | `template-sia` | `template_sia` | SIA harness evaluation |
 | `template-pools-rules-tools` | `template_pools_rules_tools` | Fonds/rules/tools resource-pool integration |
+| `template-pitch-deck` | `template_pitch_deck` | Reproducible short/medium/long PDF+PPTX pitch decks |
 
 ### Generated infrastructure skills
 
@@ -192,6 +193,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_template/`](projects/templates/template_template/) | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
 | [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | Book-length manuscript scaffold (data-driven parts → chapters → labs/question banks, fillable stubs) | see canonical facts | see canonical facts |
 | [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) | Fonds/rules/tools resource-pool integration (passive data pools + governance rule sets + executable tool entry points) | see canonical facts | see canonical facts |
+| [`projects/templates/template_pitch_deck/`](projects/templates/template_pitch_deck/) | Reproducible short/medium/long PDF+PPTX pitch decks (token-validated, cliché-linted, diligence-cited; flagship deck pitches `template_template`) | see canonical facts | see canonical facts |
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) after substantive changes.*
 

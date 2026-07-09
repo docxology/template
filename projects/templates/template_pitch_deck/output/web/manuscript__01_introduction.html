@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<h1 id="sec:introduction">Introduction</h1>
+<p>Every other public exemplar in this monorepo renders a manuscript:
+prose, figures, citations, a combined PDF. None of them render a
+<em>pitch</em> — a short-form, persuasion-oriented artifact whose job is
+not to document a method but to move an audience to a decision. Pitch
+decks live outside the repository’s reproducibility guarantees entirely:
+built by hand in proprietary tools, their claims untethered from any
+generator, their content unchecked for the boilerplate language
+(“synergy,” “disruptive,” “10x”) that makes a real pitch land badly with
+a sophisticated audience.</p>
+<p><code>template_pitch_deck</code> treats a pitch deck the same way
+this repository treats a manuscript: as a build artifact with a single
+source of truth, a validation gate, and a reproducibility guarantee.
+Three properties make that possible.</p>
+<p><strong>One content source, six artifacts.</strong>
+<code>manuscript/deck_content_{short,medium,long}.yaml</code> define the
+slide-by-slide narrative at three lengths;
+<code>manuscript/deck_tokens.yaml</code> supplies the facts.
+<code>scripts/render_decks.py</code> resolves tokens once and calls both
+renderers — <code>infrastructure.rendering.slide_deck.render_pdf</code>
+and <code>infrastructure.rendering.pptx_deck.render_pptx</code> —
+against the identical resolved content, so PDF and PPTX cannot drift
+from each other.</p>
+<p><strong>Facts, not fabrication.</strong> Every numeric claim in
+<code>deck_tokens.yaml</code> about the pitch subject
+(<code>template_template</code>) is generated from a live read of that
+project’s own <code>README.md</code>/<code>AGENTS.md</code> or the
+repository’s public exemplar roster — never hand-typed, never a
+plausible-sounding invented metric. <code>src/token_resolution.py</code>
+raises loudly if any <code>{{TOKEN}}</code> in the content source has no
+corresponding resolved value, and a rendered artifact’s extracted text
+is checked to contain zero leftover <code>{{</code> literals.</p>
+<p><strong>Cliché is a lint, not a vibe.</strong>
+<code>src/cliche_lint.py</code> runs a word-boundary denylist of
+pitch-deck stock phrases over every resolved slide before render. A
+pitch that reads as generic — regardless of how factually accurate it is
+— fails the same way an uncovered line of code fails a coverage
+gate.</p>
+<p>The remainder of this manuscript covers the deck-rendering
+architecture (<span class="citation"
+data-cites="sec:architecture">[@sec:architecture]</span>), the
+validation model (<span class="citation"
+data-cites="sec:validation">[@sec:validation]</span>), and the
+reproducibility guarantees (<span class="citation"
+data-cites="sec:reproducibility">[@sec:reproducibility]</span>) that let
+<code>uv run python scripts/render_decks.py --project templates/template_pitch_deck</code>
+produce the same six files, byte-for-byte, on any machine with this repo
+checked out.</p>
+</body>
+</html>

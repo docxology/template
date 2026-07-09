@@ -1,0 +1,26 @@
+conditions:
+  - name: template_template_pitch
+    role: proposed
+    description: "The flagship deck: template_template pitched to a meta-science/science-integrity audience, at three lengths (short/medium/long) and two formats (PDF/PPTX)."
+  - name: pdf_pptx_parity_check
+    role: variant
+    description: "Render the same resolved DeckContent through both infrastructure.rendering.slide_deck.render_pdf and pptx_deck.render_pptx and assert identical slide/page counts."
+  - name: missing_mmdc
+    role: variant
+    description: "Render with mmdc (mermaid-cli) absent from PATH to confirm graceful degradation (diagram slide renders without its figure, warning logged, no hard failure)."
+metrics:
+  primary:
+    name: unresolved_token_count
+    direction: minimize
+  secondary:
+    - name: cliche_hit_count
+      direction: minimize
+    - name: uncited_fact_slide_count
+      direction: minimize
+protocol: "Load each manuscript/deck_content_*.yaml, resolve tokens via src/deck_tokens.py::build_deck_tokens, audit (token resolution + cliche lint + diligence citation), then render through both PDF and PPTX renderers; assert zero unresolved tokens, zero cliche hits, zero uncited fact slides, and equal PDF page count / PPTX slide count."
+expected_figures:
+  - fig:two_layer_architecture
+baselines:
+  - template_template_pitch
+ablations:
+  - missing_mmdc

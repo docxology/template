@@ -1,0 +1,17 @@
+flowchart TB
+    subgraph G1["This deck's gates"]
+        direction LR
+        TOK["Token audit<br/>fail on any {{TOKEN}}"] --> CLI["Cliche lint<br/>word-boundary denylist"]
+        CLI --> DIL["Diligence audit<br/>citation coverage"]
+    end
+    subgraph G2["Build-correctness gates"]
+        direction LR
+        NM["No-mocks policy"] --> COV["Coverage floors<br/>90% project / 60% infra"]
+        COV --> REP["Reproducibility invariant<br/>byte-identical PDF"]
+    end
+    subgraph G3["Repo-wide gates"]
+        direction LR
+        DRI["Drift check"] --> SEC["Security scan<br/>bandit"]
+        SEC --> CONF["Confidentiality invariant<br/>tracked-project guard"]
+    end
+    G1 --> G2 --> G3

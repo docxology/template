@@ -77,12 +77,13 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_madlib", 37, "93.96 %"),
     ExemplarSnapshot("template_methods_paper", 79, "98.97 %"),
     ExemplarSnapshot("template_newspaper", 53, "94.37 %"),
+    ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
     ExemplarSnapshot("template_storybook", 10, "93.92 %"),
-    ExemplarSnapshot("template_template", 89, "91.62 %"),
+    ExemplarSnapshot("template_template", 130, "99.37 %"),
     ExemplarSnapshot("template_textbook", 112, "96.73 %"),
 )
 

@@ -26,7 +26,7 @@ repos:
   # before push that ruff/mypy don't cover (non-Python files, binary blobs,
   # merge-conflict markers, trailing whitespace, missing EOF newlines).
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c0e5c4eef9bcb1bcedcdd0c3b9d3b3e43b729bee  # v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # v5.0.0
     hooks:
       - id: check-added-large-files
         name: check-added-large-files (prevent binary blobs)

@@ -1,0 +1,16 @@
+{
+  "releases": [
+    {
+      "doi": "10.5281/zenodo.dryrun",
+      "dry_run": true,
+      "github_release_url": "https://github.com/docxology/template-pitch-deck/releases/tag/v1.0.0",
+      "github_repo": "docxology/template-pitch-deck",
+      "pairing_valid": true,
+      "pdf_sha256": "517134314ab6c2049d490cd685db29dffda41b9f62498fe753fbe185d1157edf",
+      "sandbox": false,
+      "tag": "v1.0.0",
+      "timestamp": "2026-07-09T14:28:03.972524+00:00"
+    }
+  ],
+  "schema": "template-publication-ledger-v1"
+}

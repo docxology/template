@@ -1,0 +1,17 @@
+flowchart TB
+    subgraph L1["Layer 1 — infrastructure/"]
+        R["rendering/<br/>PDF · HTML · PPTX · DOCX · EPUB"]
+        V["validation/"]
+        P["publishing/"]
+        PR["provenance/"]
+    end
+    subgraph L2["Layer 2 (projects/*/src/)"]
+        A["template_template<br/>introspection + metrics"]
+        B["template_pitch_deck<br/>content + tokens + lint"]
+        C["... every other<br/>public exemplar"]
+    end
+    S["scripts/ — thin orchestrators<br/>(coordinate, no business logic)"]
+
+    L1 --> S
+    L2 --> S
+    S --> O["output/ — PDF, PPTX,<br/>figures, data"]

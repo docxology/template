@@ -201,6 +201,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract
 - [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) — methods paper template: a tested controlled-method specification DSL (staged validation gates, deterministic compilation), informed by BPL (Biology Programming Language) as an upstream domain language
 - [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
+- [`projects/templates/template_pitch_deck/`](projects/templates/template_pitch_deck/) — reproducible short/medium/long PDF+PPTX pitch decks (token-validated, cliché-linted, diligence-cited; new `infrastructure/rendering/{slide_deck,pptx_deck,mermaid_figure}.py` primitives; flagship deck pitches `template_template`)
 - [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) — meta-project exemplar demonstrating integration of the `fonds/`, `rules/`, and `tools/` top-level resource-pool directories
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
 - [`projects/templates/template_search_project/`](projects/templates/template_search_project/) — literature-search → BibTeX → LLM-synthesis template

@@ -1,0 +1,2 @@
+[2026-07-08 16:19:20,151] [DEBUG] Set up log file handler: /Users/4d/Documents/GitHub/template/projects/templates/template_pitch_deck/output/logs/pipeline.log
+[2026-07-08 16:19:29,294] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 3: Infrastructure Tests — Check stage logs for details

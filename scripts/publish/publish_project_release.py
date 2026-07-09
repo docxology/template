@@ -19,7 +19,7 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts import ensure_repo_root_on_path  # noqa: E402
 
 _REPO_ROOT = ensure_repo_root_on_path()
@@ -42,7 +42,7 @@ logger = get_logger(__name__)
 
 def _resolve_zenodo_token(args: argparse.Namespace, sandbox: bool) -> str | None:
     if args.zenodo_token:
-        return args.zenodo_token
+        return str(args.zenodo_token)
     if sandbox:
         return os.getenv("ZENODO_SANDBOX_TOKEN") or os.getenv("ZENODO_TOKEN")
     return os.getenv("ZENODO_PROD_TOKEN") or os.getenv("ZENODO_TOKEN")

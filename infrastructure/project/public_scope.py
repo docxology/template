@@ -35,6 +35,7 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_storybook",
     "templates/template_template",
     "templates/template_textbook",
+    "templates/template_pitch_deck",
 )
 
 # Template exemplars that exist on disk under projects/templates/ but are NOT

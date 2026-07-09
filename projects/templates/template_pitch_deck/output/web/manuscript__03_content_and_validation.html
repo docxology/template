@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_content_and_validation.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<h1 id="sec:validation">Content and Validation</h1>
+<h2 id="the-flagship-pitch">The flagship pitch</h2>
+<p>The shipped content pitches <a
+href="../../template_template/"><code>template_template</code></a> —
+this monorepo’s autopoietic meta-project, which introspects the
+repository’s own architecture and regenerates its manuscript from live
+counts — to a meta-science and science-integrity audience. Every length
+follows the same arc: the problem (research communication and
+reproducibility are under-tooled), the solution (a two-layer,
+thin-orchestrator monorepo with a 90%/60% coverage floor, no-mocks
+testing, and multi-platform publication), proof (real,
+currently-measured facts: exemplar count, coverage floors, the
+publishing surface <code>template_template</code> itself already
+reaches), and an ask. Medium and long variants add landscape,
+architecture, and roadmap detail; long adds a full
+governance/confidentiality walkthrough and an appendix.</p>
+<h2 id="token-resolution">Token resolution</h2>
+<p><code>src/token_resolution.py</code> implements the same
+<code>{{TOKEN}}</code> convention used by
+<code>infrastructure/rendering/manuscript_injection.py</code>
+(<code>\{\{[A-Z][A-Z0-9_]*\}\}</code>), scoped to
+<code>manuscript/deck_content_*.yaml</code> instead of
+<code>manuscript/*.md</code>. <code>resolve_tokens</code> raises if any
+token in the content has no matching key in
+<code>manuscript/deck_tokens.yaml</code> — mirroring
+<code>template_madlib</code>’s
+<code>test_all_manuscript_tokens_are_generated</code> pre-substitution
+coverage check, adapted to deck content.
+<code>scripts/audit_deck_content.py</code> runs this check plus the
+cliché lint in one pass and exits non-zero on either class of failure;
+both failure modes are proven to actually fire (a deliberately-broken
+fixture triggers each) before the real content is checked clean.</p>
+<h2 id="cliché-lint">Cliché lint</h2>
+<p><code>src/cliche_lint.py</code> maintains a word-boundary-safe
+denylist of pitch-deck stock phrases (“synergy,” “disrupt,” “10x,”
+“game-changing,” “rocket ship,” “paradigm shift,” and more). It is
+checked against every resolved slide across all three lengths as part of
+the same audit script, and — like the token check — is proven to fire on
+a deliberately cliché-laden sentence before the real content’s
+cleanliness is trusted.</p>
+</body>
+</html>

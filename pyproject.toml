@@ -1,5 +1,5 @@
 # Research Project Template Configuration
-# 
+#
 # This is a comprehensive template for research projects with test-driven development,
 # automated PDF generation, and professional documentation structure.
 #
@@ -87,6 +87,12 @@ rendering = [
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
 dashboard = [
   "plotly>=5.0.0",
+]
+# Optional PPTX rendering (infrastructure/rendering/pptx_deck.py; used by
+# template_pitch_deck). Opt-in — not in default-groups — so `uv sync` at repo
+# root does not pull in python-pptx for projects that never touch slide decks.
+rendering-pptx = [
+  "python-pptx>=1.0.0",
 ]
 # Optional .env file loading (used in infrastructure/core/credentials.py, gracefully absent)
 dotenv = [

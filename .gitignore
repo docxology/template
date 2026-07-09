@@ -208,6 +208,10 @@ projects/templates/*
 !projects/templates/template_storybook/**
 !projects/templates/template_pools_rules_tools/
 !projects/templates/template_pools_rules_tools/**
+!projects/templates/template_pitch_deck/
+!projects/templates/template_pitch_deck/**
+!projects/templates/template_formal/
+!projects/templates/template_formal/**
 projects/*/.DS_Store
 projects/templates/*/.DS_Store
 # Re-ignore coverage artifacts that the per-template negation rules above un-ignore.

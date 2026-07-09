@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_deck_architecture.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<h1 id="sec:architecture">Deck Rendering Architecture</h1>
+<h2 id="content-model">Content model</h2>
+<p><code>infrastructure/rendering/slide_deck.py</code> defines the
+format-agnostic content model shared by both renderers:</p>
+<ul>
+<li><code>Slide</code> — one slide’s title, bullets, an optional
+speaker-notes string, an optional local figure path, and a
+<code>kind</code> (<code>title</code>, <code>section</code>, or
+<code>content</code>).</li>
+<li><code>DeckContent</code> — a deck title/subtitle plus an ordered
+tuple of <code>Slide</code>.</li>
+<li><code>SlideBudget</code> — the three published lengths
+(<code>SHORT</code> ≤ 10 slides, <code>MEDIUM</code> ≤ 22,
+<code>LONG</code> ≤ 45) and <code>filter_deck_for_budget</code>, a pure
+function that truncates a deck to a budget without mutating slide order
+or content.</li>
+</ul>
+<h2 id="two-renderers-one-model">Two renderers, one model</h2>
+<p><code>infrastructure/rendering/slide_deck.render_pdf</code> draws
+each slide directly with ReportLab’s canvas API onto a 16:9 page — no
+LaTeX/pandoc dependency, following the same “project needs pixel-level
+layout control” reasoning that led <code>template_newspaper</code> to a
+hand-written ReportLab engine, but implemented as a generic,
+project-agnostic <em>format</em> renderer (like
+<code>infrastructure/rendering/docx_renderer.py</code> or
+<code>epub_renderer.py</code>) rather than a project-owned layout
+engine, because a slide deck — unlike a newspaper’s column geometry — is
+a reusable output shape any future project can consume.</p>
+<p><code>infrastructure/rendering/pptx_deck.render_pptx</code> builds
+the identical slide sequence with <code>python-pptx</code> (an opt-in
+dependency: <code>uv sync --group rendering-pptx</code>), matching
+title/section/content slide handling 1:1 with the PDF path. Both
+renderers are exercised by
+<code>tests/infra_tests/rendering/test_slide_deck.py</code> and
+<code>test_pptx_deck.py</code>, including a direct parity test that
+renders the same <code>DeckContent</code> through both paths and asserts
+the PDF page count equals the PPTX slide count.</p>
+<h2 id="project-side-content">Project-side content</h2>
+<p><code>projects/templates/template_pitch_deck/src/</code> holds only
+pitch-deck-domain code — loading
+<code>manuscript/deck_content_*.yaml</code> into
+<code>DeckContent</code> objects, resolving <code>{{TOKEN}}</code>
+values, and linting for cliché — never layout/drawing code.
+<code>scripts/render_decks.py</code> is the thin orchestrator that ties
+content loading, token resolution, cliché linting, and the two infra
+renderers together into the six published artifacts under
+<code>output/{pdf,pptx}/</code>.</p>
+</body>
+</html>

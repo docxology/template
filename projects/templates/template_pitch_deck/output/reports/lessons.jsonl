@@ -1,0 +1,3 @@
+{"category": "pipeline_failure", "message": "Stage exited with code 1", "severity": "error", "source": "pipeline", "stage_name": "Infrastructure Tests", "stage_num": 3, "timestamp": "2026-07-08T23:19:29+00:00"}
+{"category": "pause_recommendation", "message": "pause recommended", "severity": "info", "source": "reports/pause_recommendations.json", "stage_name": "Infrastructure Tests", "stage_num": 0, "timestamp": "2026-07-08T23:19:29+00:00"}
+{"category": "slow_telemetry", "message": "Stage 'Infrastructure Tests' took 8.9s (2.0\u00d7 the average 0.1s)", "severity": "warning", "source": "reports/telemetry.json", "stage_name": "Infrastructure Tests", "stage_num": 0, "timestamp": "2026-07-08T23:19:29+00:00"}

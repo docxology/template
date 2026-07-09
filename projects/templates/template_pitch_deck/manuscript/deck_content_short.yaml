@@ -1,0 +1,84 @@
+# Short pitch (<=10 slides) — template_template, for a meta-science /
+# science-integrity audience. Every {{TOKEN}} here must resolve via
+# src/deck_tokens.py::build_deck_tokens — see src/token_resolution.py for the
+# substitution rule. Slides whose text references a live-sourced fact token
+# (PITCH_SUBJECT_*/EXEMPLAR_*) carry a `source` citation — see
+# src/diligence_audit.py for the coverage check this enables.
+
+title: "{{PITCH_SUBJECT_TITLE}}"
+subtitle: "Research infrastructure that documents itself — a case study for meta-science and science-integrity teams"
+
+slides:
+  - kind: title
+    title: "{{PITCH_SUBJECT_TITLE}}"
+    notes: "Opening: name the audience explicitly — meta-science / science-integrity groups, not general investors."
+
+  - kind: content
+    title: "The problem"
+    bullets:
+      - "Research groups publish claims about their own tools and pipelines that no one outside the team can re-check."
+      - "Manuscripts describing infrastructure go stale the moment the infrastructure changes underneath them."
+      - "Reproducibility efforts usually stop at the data and code layer — the documentation layer is still hand-maintained and drifts silently."
+    notes: "Land the problem in one sentence a non-technical funder can parse without repo context."
+
+  - kind: content
+    title: "What {{PITCH_SUBJECT_NAME}} is"
+    bullets:
+      - "A manuscript that is generated FROM the repository it describes, not written ABOUT it from memory."
+      - "Every metric in the paper — module counts, test counts, pipeline stages — is computed live by {{PITCH_SUBJECT_NAME}}'s own introspection code."
+      - "One of {{EXEMPLAR_COUNT}} public exemplar templates in the same monorepo, each independently tested and coverage-gated."
+    notes: "This slide answers 'what is it' concretely — no adjectives, only mechanism."
+    source: "infrastructure/project/public_scope.py"
+
+  - kind: content
+    title: "How it works"
+    bullets:
+      - "src/template_template/introspection.py scans infrastructure/ modules, the pipeline DAG, and the public project roster."
+      - "metrics.py turns that scan into a dictionary of ${variable} values; inject_metrics.py substitutes them into the manuscript text."
+      - "Re-running the pipeline regenerates the paper from current repository state — the citation and the artifact cannot drift apart."
+
+  - kind: diagram
+    title: "Two-layer architecture, at a glance"
+    figure: "two_layer_architecture.png"
+    source: "CLAUDE.md"
+
+  - kind: stat
+    title: "Proof, not adjectives"
+    stat_value: "{{PITCH_SUBJECT_TEST_COUNT}} tests"
+    stat_label: "{{PITCH_SUBJECT_COVERAGE_PCT}}% coverage on {{PITCH_SUBJECT_NAME}}'s own source — the same gate every exemplar in the repo must pass."
+    source: "docs/_generated/COUNTS.md"
+
+  - kind: content
+    title: "Already public"
+    bullets:
+      - "Concept DOI {{PITCH_SUBJECT_DOI}}, {{PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT}} durable publication records already on file: {{PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES}}."
+      - "Licensed {{PITCH_SUBJECT_LICENSE}} — the introspection code, not only the prose, is available for a science-integrity team to audit directly."
+    source: "projects/templates/template_template/manuscript/config.yaml"
+
+  - kind: content
+    title: "Why this matters for science integrity"
+    bullets:
+      - "A funder or reviewer can clone the repository and regenerate the exact figures and counts cited in the manuscript, on their own machine."
+      - "The same no-mocks, coverage-gated testing discipline that verifies the code also verifies the claims made about the code."
+      - "The pattern generalizes across the whole projects/templates/ folder — all {{EXEMPLAR_COUNT}} exemplars, not just one cherry-picked example — follow the identical thin-orchestrator, two-layer architecture."
+    source: "docs/_generated/active_projects.md"
+
+  - kind: content
+    title: "Cite this deck"
+    bullets:
+      - "This pitch deck ({{PITCH_SUBJECT_NAME}}_pitch_short.pdf) is its own exemplar in the same monorepo — it has its own source, tests, and citable identity, separate from the DOI of the project it pitches."
+      - "This deck's own DOI: {{PITCH_DECK_DOI_STATUS}}."
+      - "Every slide also carries a QR code to its own standalone, citable page — see the deep-linking mechanism described later in the medium and long versions of this deck."
+    source: "projects/templates/template_pitch_deck/manuscript/config.yaml"
+
+  - kind: content
+    title: "The ask"
+    bullets:
+      - "Adopt this pattern for your own methods papers: bind every reported number to the code that produced it, not to a hand-typed table."
+      - "Pilot it on one existing manuscript in your group before committing to a full rewrite."
+      - "Happy to pair with your team through a first regeneration cycle, if useful — no prior engagements to point to yet, this pattern is newly forkable."
+      - "Open to funding conversations and scoping a consulting engagement for a deeper or custom integration — no prior engagements exist yet; this is an invitation to talk, not an established offering."
+
+  - kind: title
+    title: "Questions"
+    notes: "Closing slide — leave contact/repo pointer to the resolved GitHub token."

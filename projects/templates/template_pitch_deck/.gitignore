@@ -1,0 +1,20 @@
+.coverage
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+.benchmarks/
+htmlcov/
+
+# Egg-info from local installs (any location — guards against renamed-fork drift).
+**/*.egg-info/
+
+# Project-local virtualenvs (root .venv is shared)
+.venv/
+
+.DS_Store
+
+# mmdc/Chrome sidecar config — machine-specific executable path, not portable.
+output/figures/*.puppeteer.json

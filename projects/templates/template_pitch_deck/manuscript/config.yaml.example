@@ -1,0 +1,64 @@
+# Template Pitch Deck Configuration Template
+# Copy this file to config.yaml and customize for your own pitch-deck project.
+# This is the "about this template" manuscript config — the deck content itself
+# (short/medium/long, PDF+PPTX) lives in manuscript/deck_content_*.yaml and
+# manuscript/deck_tokens.yaml.
+
+# Consumed by: `infrastructure/rendering/pdf_renderer.py`
+paper:
+  title: "Your Pitch Deck Project Title"
+  subtitle: "One-line description of what the deck pitches"
+  version: "0.1.0"
+  date: "" # Auto-generated via `infrastructure/validation/output/validator.py` if empty
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "you@example.org"
+    affiliation: "Your Organization"
+    corresponding: true
+
+# No DOI/publication record until you actually publish — leave this block
+# minimal until you run `publish_project_release.py`.
+publication:
+  github_repository: "your-org/your-pitch-deck-repo"
+
+keywords:
+  - "pitch deck"
+  - "slide generation"
+  - "reproducible research communication"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+# Deck-generation parameters — read by scripts/render_decks.py and
+# src/deck_tokens.py.
+deck:
+  pitch_subject: "your_pitch_subject"
+  lengths: ["short", "medium", "long"]
+  formats: ["pdf", "pptx"]
+  # Deep-link base for every slide's `source` diligence citation.
+  source_base_url: "https://github.com/your-org/your-repo/blob/main/"
+  # Black + white base plus 3 configurable highlight colors — set all three
+  # the same for a monochrome accent, or distinct hex values for a
+  # multi-accent palette.
+  theme:
+    black: "#0A0A0A"
+    white: "#FFFFFF"
+    highlight_1: "#B3131A"
+    highlight_2: "#2F6F9F"
+    highlight_3: "#1E8449"

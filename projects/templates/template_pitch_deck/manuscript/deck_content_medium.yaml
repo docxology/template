@@ -1,0 +1,228 @@
+# Medium pitch (~20-25 slides) — template_template, for a meta-science /
+# science-integrity audience. Adds landscape, org framing, architecture
+# detail, a second case study, and a roadmap on top of the short deck's arc.
+# Slides whose text references a live-sourced fact token
+# (PITCH_SUBJECT_*/EXEMPLAR_*) carry a `source` citation — see
+# src/diligence_audit.py for the coverage check this enables.
+
+title: "{{PITCH_SUBJECT_TITLE}}"
+subtitle: "Research infrastructure that documents itself — a case study for meta-science and science-integrity teams"
+
+slides:
+  - kind: title
+    title: "{{PITCH_SUBJECT_TITLE}}"
+    notes: "Opening: name the audience explicitly — meta-science / science-integrity groups, not general investors."
+
+  - kind: content
+    title: "The problem"
+    bullets:
+      - "Research groups publish claims about their own tools and pipelines that no one outside the team can re-check."
+      - "Manuscripts describing infrastructure go stale the moment the infrastructure changes underneath them."
+      - "Reproducibility efforts usually stop at the data and code layer — the documentation layer is still hand-maintained and drifts silently."
+
+  - kind: section
+    title: "Landscape"
+
+  - kind: content
+    title: "Where meta-science tooling stands today"
+    bullets:
+      - "Electronic lab notebooks and preregistration platforms address the experiment layer, not the infrastructure-description layer."
+      - "Literate-programming tools (R Markdown, Jupyter, Quarto) bind prose to code within one document, but rarely to a whole repository's live state."
+      - "Very few public examples exist of a manuscript that introspects and reports on the software system that produced it, at repository scale."
+
+  - kind: content
+    title: "What {{PITCH_SUBJECT_NAME}} is"
+    bullets:
+      - "A manuscript that is generated FROM the repository it describes, not written ABOUT it from memory."
+      - "Every metric in the paper — module counts, test counts, pipeline stages — is computed live by {{PITCH_SUBJECT_NAME}}'s own introspection code."
+      - "One of {{EXEMPLAR_COUNT}} public exemplar templates in the same monorepo, each independently tested and coverage-gated."
+    source: "infrastructure/project/public_scope.py"
+
+  - kind: quote
+    quote_text: "Autopoietic: the paper regenerates itself from the code it describes."
+    quote_attribution: "template_template/README.md"
+    title: ""
+    source: "projects/templates/template_template/README.md"
+
+  - kind: section
+    title: "How it works"
+
+  - kind: content
+    title: "Introspection"
+    bullets:
+      - "src/template_template/introspection.py discovers infrastructure/ subpackages, the pipeline.yaml stage DAG, and the public exemplar roster."
+      - "The scan reads the filesystem and YAML directly — it does not depend on any external service or cached snapshot."
+      - "Function-level entry points (discover_infrastructure_modules, discover_projects, load_pipeline_stages_from_yaml) each return typed, testable dataclasses."
+
+  - kind: content
+    title: "Metrics and injection"
+    bullets:
+      - "metrics.py turns the introspection scan into a dictionary of ${variable} values — the same token convention used across every exemplar's manuscript."
+      - "inject_metrics.py substitutes those values into manuscript/*.md, writing the resolved text to output/manuscript/ for rendering."
+      - "Re-running the pipeline regenerates the paper from current repository state — the citation and the artifact cannot drift apart."
+
+  - kind: content
+    title: "Visualization"
+    bullets:
+      - "Four figures — architecture overview, pipeline stages, module inventory, comparative feature matrix — are generated from the same live data, not hand-drawn."
+      - "generate_architecture_viz.py orchestrates dedicated figure modules sharing one palette module, so the visual language stays consistent across all four."
+
+  - kind: diagram
+    title: "Two-layer architecture, at a glance"
+    figure: "two_layer_architecture.png"
+    source: "CLAUDE.md"
+
+  - kind: diagram
+    title: "The core pipeline, stage by stage"
+    figure: "pipeline_stages.png"
+    source: "CLAUDE.md"
+
+  - kind: section
+    title: "Proof, not adjectives"
+
+  - kind: stat
+    title: "Measured, not asserted"
+    stat_value: "{{PITCH_SUBJECT_TEST_COUNT}} tests"
+    stat_label: "{{PITCH_SUBJECT_COVERAGE_PCT}}% coverage on {{PITCH_SUBJECT_NAME}}'s own source — the same gate every exemplar in the repo must pass."
+    source: "docs/_generated/COUNTS.md"
+
+  - kind: content
+    title: "No partial credit"
+    bullets:
+      - "90% project-coverage floor and a no-mocks testing policy apply to this project exactly as they do to the {{EXEMPLAR_COUNT}} other exemplars."
+      - "Every pipeline run either passes its own gate or fails loudly — there is no partial-credit reporting path."
+    source: "infrastructure/project/public_scope.py"
+
+  - kind: content
+    title: "Already public"
+    bullets:
+      - "Concept DOI {{PITCH_SUBJECT_DOI}}, with a version-specific Zenodo deposit for the current release."
+      - "{{PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT}} durable publication records on file: {{PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES}}."
+      - "Licensed {{PITCH_SUBJECT_LICENSE}} — the introspection code, not only the prose, is available for a science-integrity team to audit directly at {{PITCH_SUBJECT_GITHUB}}."
+    source: "projects/templates/template_template/manuscript/config.yaml"
+
+  - kind: section
+    title: "The pattern generalizes"
+
+  - kind: content
+    title: "The full roster, not one cherry-picked example"
+    bullets:
+      - "projects/templates/ holds all {{EXEMPLAR_COUNT}} public exemplars: {{EXEMPLAR_ROSTER}}."
+      - "{{SECOND_EXEMPLAR_NAME}} is called out here only as one concrete instance to point to — every name in that list is an independently-built exemplar following the identical two-layer architecture, not a hand-picked best case."
+      - "Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all {{EXEMPLAR_COUNT}} projects, and the folder itself is the evidence, not a claim about it."
+    source: "docs/_generated/active_projects.md"
+
+  - kind: content
+    title: "Two-layer architecture"
+    bullets:
+      - "Layer 1 (infrastructure/): generic, reusable — rendering, validation, publishing, provenance, testing utilities."
+      - "Layer 2 (projects/{name}/src/): domain-specific — each exemplar's own algorithms, kept out of infrastructure/ by convention and enforced by drift checks."
+      - "Thin orchestrator scripts (projects/{name}/scripts/) coordinate the two layers but implement no business logic themselves."
+
+  - kind: content
+    title: "Governance and confidentiality"
+    bullets:
+      - "Only projects/templates/ is public and CI-gated; private working projects render locally through the same pipeline without ever being tracked."
+      - "A dedicated audit (scripts/audit/check_tracked_all.py) fails CI if any private project path is accidentally committed."
+
+  - kind: section
+    title: "Scientific integrity, by construction"
+
+  - kind: content
+    title: "Independent gates, not one"
+    bullets:
+      - "No-mocks testing policy, CI-enforced: scripts/audit/verify_no_mocks.py fails the build if any test imports MagicMock, mocker.patch, or unittest.mock — a checked gate, not a style preference."
+      - "Coverage floors are enforced per project (90%) and for shared infrastructure (60%), not averaged away across the monorepo."
+      - "A byte-level reproducibility invariant: two renders of identical content in the same environment produce an identical PDF — verified by a real, passing test, not assumed across every OS/toolchain combination."
+    source: "tests/infra_tests/rendering/test_slide_deck.py"
+
+  - kind: diagram
+    title: "The integrity stack, gate by gate"
+    figure: "integrity_stack.png"
+    source: "projects/templates/template_pitch_deck/src/token_resolution.py"
+
+  - kind: content
+    title: "Coverage isn't a headline number"
+    bullets:
+      - "Every one of {{EXEMPLAR_COUNT}} public exemplars is measured independently, not summarized into one repo-wide percentage."
+      - "The chart on the next slide is generated from the same docs/_generated/COUNTS.md factsheet this deck's own {{PITCH_SUBJECT_COVERAGE_PCT}}% figure comes from — one source of truth, two presentations."
+    source: "docs/_generated/COUNTS.md"
+
+  - kind: diagram
+    title: "Per-exemplar coverage, measured live"
+    figure: "coverage_by_exemplar.png"
+    source: "docs/_generated/COUNTS.md"
+
+  - kind: diagram
+    title: "Test volume and coverage aren't a tradeoff"
+    figure: "test_count_vs_coverage.png"
+    source: "docs/_generated/COUNTS.md"
+
+  - kind: content
+    title: "This deck audits itself"
+    bullets:
+      - "src/token_resolution.py fails the build on any unresolved double-curly-brace placeholder — the same discipline this slide's own {{PITCH_SUBJECT_NAME}} token was resolved by."
+      - "src/cliche_lint.py and src/diligence_audit.py both run inside render_orchestration.py itself, before that deck length's own PDF/PPTX is written — a slide referencing a live-sourced token with no citation blocks that length's render, it does not just fail a separate, skippable check."
+      - "None of these checks are generic infrastructure — they are this project's own src/, built specifically because a pitch deck is exactly the kind of document that tempts unverifiable claims."
+    source: "projects/templates/template_pitch_deck/src/diligence_audit.py"
+
+  - kind: content
+    title: "The chain of custody: slide → QR → GitHub"
+    bullets:
+      - "Every slide in this deck carries its own QR code, linking to a standalone, real Markdown page for that exact slide under output/slides_standalone/."
+      - "Once this output/ directory is committed and pushed, a photo of a projected or printed slide can be traced back to its precise source page on GitHub — not just to the deck as a whole. Locally, the generated page already exists; the QR only resolves once it is actually published."
+      - "Mechanically, this is the same source-citation system with one more hop: a citation links out to evidence; the QR links to the slide's own generated page, which repeats that same citation."
+    source: "projects/templates/template_pitch_deck/src/standalone_slides.py"
+
+  - kind: content
+    title: "Cite this deck"
+    bullets:
+      - "This pitch deck is its own exemplar in the same monorepo — it has its own src/, tests, and citable identity, distinct from the DOI of {{PITCH_SUBJECT_NAME}}, the project it pitches."
+      - "This deck's own DOI: {{PITCH_DECK_DOI_STATUS}}."
+      - "That status is read live from this project's own manuscript/config.yaml at render time — the moment a real Zenodo deposit is recorded there, this slide's own text updates on the next regeneration, the same way every other fact in this deck does."
+    source: "projects/templates/template_pitch_deck/manuscript/config.yaml"
+
+  - kind: section
+    title: "What's actually inside infrastructure/"
+
+  - kind: content
+    title: "Not a black box"
+    bullets:
+      - "{{INFRA_SUBPACKAGE_COUNT}} importable subpackages, {{INFRA_PYTHON_FILE_COUNT}} tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction."
+      - "The largest single subpackage, {{INFRA_LARGEST_SUBPACKAGE}}, holds {{INFRA_LARGEST_SUBPACKAGE_COUNT}} files — still a minority of the whole, not a monolith wearing a modular label."
+      - "Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from."
+      - "The chart on the next slide shows a slightly narrower total — it only counts files inside an importable subpackage, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} top-level file(s) (infrastructure/__init__.py, mcp_server.py) that do not belong to any subpackage."
+    source: "projects/templates/template_pitch_deck/src/infra_facts.py"
+
+  - kind: diagram
+    title: "infrastructure/, by subpackage"
+    figure: "infra_subpackage_sizes.png"
+    source: "projects/templates/template_pitch_deck/src/infra_facts.py"
+
+  - kind: section
+    title: "Roadmap"
+
+  - kind: content
+    title: "What comes next for this exemplar"
+    bullets:
+      - "Extend token-sourced facts beyond one pitch subject to any exemplar in the roster, so a new deck for a different project needs only new content YAML, not new code."
+      - "Add a second validated pitch (a broader meta-science-group deck) reusing the same rendering and audit pipeline."
+      - "Track deck-generation coverage and drift in the same CI gates that already watch every other public exemplar."
+
+  - kind: content
+    title: "The ask"
+    bullets:
+      - "Adopt this pattern for your own methods papers: bind every reported number to the code that produced it, not to a hand-typed table."
+      - "Pilot it on one existing manuscript in your group before committing to a full rewrite."
+      - "Happy to pair with your team through a first regeneration cycle and help define your own introspection surface, if useful — no prior engagements to point to yet, this pattern is newly forkable."
+
+  - kind: content
+    title: "Funding & consulting"
+    bullets:
+      - "The code itself is available to adopt directly today — real, tested, and licensed for reuse, no engagement required to start."
+      - "Open to funding conversations for a dedicated integration (a new pitch subject, a distinct theme, a deeper introspection surface) — no such engagement exists yet, this is an invitation to scope one, not an established program."
+      - "Open to scoping a consulting engagement on request — pairing through a first regeneration cycle, or adapting the two-layer architecture to an existing codebase outside this monorepo. No such engagement has happened yet; this is an invitation, not a track record."
+
+  - kind: title
+    title: "Questions"
+    notes: "Closing slide — leave contact/repo pointer to the resolved GitHub token."

@@ -2,8 +2,11 @@
 
 ## Overview
 
-`projects/templates/` contains the eighteen public canonical exemplar projects for
-the template repository. This directory is public and tracked; private,
+`projects/templates/` contains nineteen public canonical exemplar projects (see
+[`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md)
+for the authoritative, generated list — the count and tree below are
+illustrative and may lag it) for the template repository. This directory is
+public and tracked; private,
 rotating, archived, active, or search-only project work belongs outside this
 subtree and is guarded by `.gitignore`, `scripts/audit/check_tracked_projects.py`, and
 `infrastructure.project.public_scope`.
@@ -26,6 +29,7 @@ projects/templates/
 ├── template_madlib/                  # conditional token-injection manuscript
 ├── template_methods_paper/           # methods-paper exemplar: tested methodology DSL
 ├── template_newspaper/               # ReportLab newspaper layout engine
+├── template_pitch_deck/              # reproducible short/medium/long PDF+PPTX pitch decks
 ├── template_pools_rules_tools/       # fonds/rules/tools resource-pool integration (autopoietic)
 ├── template_prose_project/           # prose/references validation exemplar
 ├── template_search_project/          # literature search → BibTeX → LLM synthesis pipeline

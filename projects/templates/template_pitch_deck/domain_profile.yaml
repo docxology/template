@@ -1,0 +1,57 @@
+domain: pitch_deck_generation
+display_name: Reproducible Pitch-Deck Generation Exemplar
+required_packages:
+  - reportlab
+  - pyyaml
+  - pytest
+  - pypdf
+preferred_outputs:
+  - pdf
+  - pptx
+figure_types:
+  - mermaid_architecture_diagram
+validation_gates:
+  - token_resolution_audit
+  - cliche_lint_audit
+  - diligence_citation_audit
+  - pdf_pptx_parity
+citation_policy: required_for_fact_bearing_slides
+source_policy: >-
+  Every numeric or factual claim in the shipped deck content
+  (manuscript/deck_content_*.yaml) must be sourced from a live read of the
+  repository via src/deck_tokens.py::build_deck_tokens — never a hand-typed
+  literal. Any slide referencing a PITCH_SUBJECT_*/EXEMPLAR_* fact token must
+  carry a `source` citation (src/diligence_audit.py enforces this).
+review_gates:
+  - token_resolution_audit
+  - cliche_lint_audit
+  - diligence_citation_audit
+artifact_expectations:
+  - output/pdf/template_template_pitch_short.pdf
+  - output/pdf/template_template_pitch_medium.pdf
+  - output/pdf/template_template_pitch_long.pdf
+  - output/pptx/template_template_pitch_short.pptx
+  - output/pptx/template_template_pitch_medium.pptx
+  - output/pptx/template_template_pitch_long.pptx
+  - output/figures/two_layer_architecture.png
+benchmark_rubric:
+  name: pitch-deck-readiness
+  dimensions:
+    - name: render_success
+      weight: 2.0
+    - name: pdf_pptx_slide_parity
+      weight: 1.5
+    - name: zero_unresolved_tokens
+      weight: 2.0
+    - name: zero_cliche_hits
+      weight: 1.0
+    - name: full_diligence_citation_coverage
+      weight: 1.5
+llm_prompt_guidance: >-
+  Treat manuscript/deck_content_*.yaml as the single source of truth for
+  narrative and manuscript/config.yaml's deck: block for theme/subject/format
+  toggles. Never hard-code a fact directly into content YAML — add a new
+  token to src/deck_tokens.py sourced from a live repo read instead. Verify
+  every rendering change by regenerating and reading back both the PDF (text
+  extraction + a page raster, per this repo's Rule 1 verification doctrine)
+  and the PPTX.

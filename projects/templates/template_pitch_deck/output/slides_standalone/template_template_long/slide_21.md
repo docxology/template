@@ -1,0 +1,16 @@
+# Measured, not asserted
+
+*Slide 21 of 56 — template_template pitch, long deck — kind: `stat`*
+
+## 130 tests
+
+99.37% coverage on template_template's own source — the same gate every exemplar in the repo must pass. No partial-credit reporting path exists.
+
+---
+
+**Source:** [docs/_generated/COUNTS.md](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)
+
+**Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
+**Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)
+
+*This page is generated — it exists so a QR code on the rendered slide can point somewhere real and citable on GitHub, not just at the deck as a whole. Regenerate via `scripts/20_render_decks.py`; do not hand-edit.*

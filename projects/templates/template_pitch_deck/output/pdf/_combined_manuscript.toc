@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}Abstract}{2}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
+\contentsline {section}{\numberline {3}Deck Rendering Architecture}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Content model}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Two renderers, one model}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Project-side content}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Content and Validation}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The flagship pitch}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Token resolution}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Cliché lint}{5}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Reproducibility}{6}{section.5}%

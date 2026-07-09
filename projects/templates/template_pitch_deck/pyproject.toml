@@ -1,0 +1,72 @@
+# template_pitch_deck — exemplar pitch-deck generation project
+# Inherits workspace settings from the root pyproject.toml.
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_pitch_deck"
+version = "1.0.0"
+description = "Reproducible short/medium/long PDF+PPTX pitch decks — token-validated, cliche-linted content built on infrastructure/rendering's generic slide-deck renderers. Flagship deck pitches template_template as meta-science research infrastructure."
+authors = [{name = "Research Template Author", email = "author@research-template.org"}]
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+    # `src/content_loader.py`/`src/render_orchestration.py` import
+    # `infrastructure.rendering.slide_deck` — importing any single submodule
+    # of `infrastructure.rendering` runs that package's `__init__.py`, which
+    # eagerly imports the full PDF/DOCX/EPUB stack (including a Pillow
+    # dependency several layers deep in `infrastructure/publishing/`).
+    # Workspace mode picks these up transitively through the root repo's
+    # `rendering` optional group; project-local venvs (used by
+    # `execute_pipeline.py --core-only`) need them declared explicitly —
+    # same pattern as `template_search_project`/`template_newspaper`.
+    "reportlab>=4.0.0",
+    "pypdf>=6.12.0",
+    "Pillow>=10.0",
+    # `infrastructure.rendering.slide_deck._draw_qr_code`/`pptx_deck._add_qr_code`
+    # call `infrastructure.steganography.barcode_generators.generate_qr_code`
+    # for the per-slide QR deep-links — same transitive-dependency situation
+    # as reportlab/pypdf/Pillow above (root repo's `steganography` default
+    # group provides it for free; this project's own isolated venv needs it
+    # declared explicitly).
+    "qrcode[pil]>=8.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    # Test fixtures build a real matplotlib figure to exercise the
+    # `Slide.figure_path` embedding path (no-mocks policy).
+    "matplotlib>=3.7.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml

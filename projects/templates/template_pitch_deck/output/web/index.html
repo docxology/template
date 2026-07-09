@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>template_pitch_deck: Reproducible, Validated Pitch-Deck
+Generation</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
+   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
+   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
+   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
+   preamble). */
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: 100vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 390px;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: red;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">template_pitch_deck: Reproducible, Validated
+Pitch-Deck Generation</h1>
+<p class="subtitle">Short/Medium/Long PDF+PPTX decks from one
+token-resolved content source</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:abstract" id="toc-sec:abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#sec:introduction" id="toc-sec:introduction"><span
+class="toc-section-number">2</span> Introduction</a></li>
+<li><a href="#sec:architecture" id="toc-sec:architecture"><span
+class="toc-section-number">3</span> Deck Rendering Architecture</a>
+<ul>
+<li><a href="#content-model" id="toc-content-model"><span
+class="toc-section-number">3.1</span> Content model</a></li>
+<li><a href="#two-renderers-one-model"
+id="toc-two-renderers-one-model"><span
+class="toc-section-number">3.2</span> Two renderers, one model</a></li>
+<li><a href="#project-side-content" id="toc-project-side-content"><span
+class="toc-section-number">3.3</span> Project-side content</a></li>
+</ul></li>
+<li><a href="#sec:validation" id="toc-sec:validation"><span
+class="toc-section-number">4</span> Content and Validation</a>
+<ul>
+<li><a href="#the-flagship-pitch" id="toc-the-flagship-pitch"><span
+class="toc-section-number">4.1</span> The flagship pitch</a></li>
+<li><a href="#token-resolution" id="toc-token-resolution"><span
+class="toc-section-number">4.2</span> Token resolution</a></li>
+<li><a href="#cliché-lint" id="toc-cliché-lint"><span
+class="toc-section-number">4.3</span> Cliché lint</a></li>
+</ul></li>
+<li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
+class="toc-section-number">5</span> Reproducibility</a></li>
+<li><a href="#sec:references" id="toc-sec:references"><span
+class="toc-section-number">6</span> References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="sec:abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>Research groups routinely need to pitch their work — to funders,
+partners, or collaborators — yet pitch decks are almost never treated as
+reproducible research artifacts: they are hand-assembled in proprietary
+slide tools, contain unverifiable claims, and cannot be regenerated when
+the underlying facts change. <code>template_pitch_deck</code> closes
+that gap. It generates six artifacts from one token-resolved content
+source — short, medium, and long decks, each in both PDF and PPTX — with
+every numeric claim traced back to a live introspection of the
+repository it describes, every <code>{{TOKEN}}</code> substitution
+verified to have actually landed, and every sentence checked against a
+denylist of pitch-deck clichés.</p>
+<p>The flagship content pitches <a
+href="../../template_template/"><code>template_template</code></a>, this
+monorepo’s own autopoietic meta-project, to a meta-science and
+science-integrity audience — the kind of pitch an organization like the
+Active Inference Institute or COGSEC would actually hand to a funder.
+The rendering engine itself is new, reusable infrastructure:
+<code>infrastructure/rendering/slide_deck.py</code> (ReportLab, PDF) and
+<code>infrastructure/rendering/pptx_deck.py</code> (python-pptx) both
+consume the same <code>DeckContent</code> model, so a PDF and a PPTX
+built from identical content carry identical slide counts and identical
+text — verified by direct read-back of both file formats, not by
+inspection.</p>
+<p><strong>Keywords:</strong> pitch deck, slide generation, reproducible
+research communication, meta-science infrastructure, token validation,
+PPTX, PDF rendering.</p>
+<hr />
+<h1 data-number="2" id="sec:introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>Every other public exemplar in this monorepo renders a manuscript:
+prose, figures, citations, a combined PDF. None of them render a
+<em>pitch</em> — a short-form, persuasion-oriented artifact whose job is
+not to document a method but to move an audience to a decision. Pitch
+decks live outside the repository’s reproducibility guarantees entirely:
+built by hand in proprietary tools, their claims untethered from any
+generator, their content unchecked for the boilerplate language
+(“synergy,” “disruptive,” “10x”) that makes a real pitch land badly with
+a sophisticated audience.</p>
+<p><code>template_pitch_deck</code> treats a pitch deck the same way
+this repository treats a manuscript: as a build artifact with a single
+source of truth, a validation gate, and a reproducibility guarantee.
+Three properties make that possible.</p>
+<p><strong>One content source, six artifacts.</strong>
+<code>manuscript/deck_content_{short,medium,long}.yaml</code> define the
+slide-by-slide narrative at three lengths;
+<code>manuscript/deck_tokens.yaml</code> supplies the facts.
+<code>scripts/render_decks.py</code> resolves tokens once and calls both
+renderers — <code>infrastructure.rendering.slide_deck.render_pdf</code>
+and <code>infrastructure.rendering.pptx_deck.render_pptx</code> —
+against the identical resolved content, so PDF and PPTX cannot drift
+from each other.</p>
+<p><strong>Facts, not fabrication.</strong> Every numeric claim in
+<code>deck_tokens.yaml</code> about the pitch subject
+(<code>template_template</code>) is generated from a live read of that
+project’s own <code>README.md</code>/<code>AGENTS.md</code> or the
+repository’s public exemplar roster — never hand-typed, never a
+plausible-sounding invented metric. <code>src/token_resolution.py</code>
+raises loudly if any <code>{{TOKEN}}</code> in the content source has no
+corresponding resolved value, and a rendered artifact’s extracted text
+is checked to contain zero leftover <code>{{</code> literals.</p>
+<p><strong>Cliché is a lint, not a vibe.</strong>
+<code>src/cliche_lint.py</code> runs a word-boundary denylist of
+pitch-deck stock phrases over every resolved slide before render. A
+pitch that reads as generic — regardless of how factually accurate it is
+— fails the same way an uncovered line of code fails a coverage
+gate.</p>
+<p>The remainder of this manuscript covers the deck-rendering
+architecture (sec. <a href="#sec:architecture">3</a>), the validation
+model (sec. <a href="#sec:validation">4</a>), and the reproducibility
+guarantees (sec. <a href="#sec:reproducibility">5</a>) that let
+<code>uv run python scripts/render_decks.py --project templates/template_pitch_deck</code>
+produce the same six files, byte-for-byte, on any machine with this repo
+checked out.</p>
+<hr />
+<h1 data-number="3" id="sec:architecture"><span
+class="header-section-number">3</span> Deck Rendering Architecture</h1>
+<h2 data-number="3.1" id="content-model"><span
+class="header-section-number">3.1</span> Content model</h2>
+<p><code>infrastructure/rendering/slide_deck.py</code> defines the
+format-agnostic content model shared by both renderers:</p>
+<ul>
+<li><code>Slide</code> — one slide’s title, bullets, an optional
+speaker-notes string, an optional local figure path, and a
+<code>kind</code> (<code>title</code>, <code>section</code>, or
+<code>content</code>).</li>
+<li><code>DeckContent</code> — a deck title/subtitle plus an ordered
+tuple of <code>Slide</code>.</li>
+<li><code>SlideBudget</code> — the three published lengths
+(<code>SHORT</code> ≤ 10 slides, <code>MEDIUM</code> ≤ 22,
+<code>LONG</code> ≤ 45) and <code>filter_deck_for_budget</code>, a pure
+function that truncates a deck to a budget without mutating slide order
+or content.</li>
+</ul>
+<h2 data-number="3.2" id="two-renderers-one-model"><span
+class="header-section-number">3.2</span> Two renderers, one model</h2>
+<p><code>infrastructure/rendering/slide_deck.render_pdf</code> draws
+each slide directly with ReportLab’s canvas API onto a 16:9 page — no
+LaTeX/pandoc dependency, following the same “project needs pixel-level
+layout control” reasoning that led <code>template_newspaper</code> to a
+hand-written ReportLab engine, but implemented as a generic,
+project-agnostic <em>format</em> renderer (like
+<code>infrastructure/rendering/docx_renderer.py</code> or
+<code>epub_renderer.py</code>) rather than a project-owned layout
+engine, because a slide deck — unlike a newspaper’s column geometry — is
+a reusable output shape any future project can consume.</p>
+<p><code>infrastructure/rendering/pptx_deck.render_pptx</code> builds
+the identical slide sequence with <code>python-pptx</code> (an opt-in
+dependency: <code>uv sync --group rendering-pptx</code>), matching
+title/section/content slide handling 1:1 with the PDF path. Both
+renderers are exercised by
+<code>tests/infra_tests/rendering/test_slide_deck.py</code> and
+<code>test_pptx_deck.py</code>, including a direct parity test that
+renders the same <code>DeckContent</code> through both paths and asserts
+the PDF page count equals the PPTX slide count.</p>
+<h2 data-number="3.3" id="project-side-content"><span
+class="header-section-number">3.3</span> Project-side content</h2>
+<p><code>projects/templates/template_pitch_deck/src/</code> holds only
+pitch-deck-domain code — loading
+<code>manuscript/deck_content_*.yaml</code> into
+<code>DeckContent</code> objects, resolving <code>{{TOKEN}}</code>
+values, and linting for cliché — never layout/drawing code.
+<code>scripts/render_decks.py</code> is the thin orchestrator that ties
+content loading, token resolution, cliché linting, and the two infra
+renderers together into the six published artifacts under
+<code>output/{pdf,pptx}/</code>.</p>
+<hr />
+<h1 data-number="4" id="sec:validation"><span
+class="header-section-number">4</span> Content and Validation</h1>
+<h2 data-number="4.1" id="the-flagship-pitch"><span
+class="header-section-number">4.1</span> The flagship pitch</h2>
+<p>The shipped content pitches <a
+href="../../template_template/"><code>template_template</code></a> —
+this monorepo’s autopoietic meta-project, which introspects the
+repository’s own architecture and regenerates its manuscript from live
+counts — to a meta-science and science-integrity audience. Every length
+follows the same arc: the problem (research communication and
+reproducibility are under-tooled), the solution (a two-layer,
+thin-orchestrator monorepo with a 90%/60% coverage floor, no-mocks
+testing, and multi-platform publication), proof (real,
+currently-measured facts: exemplar count, coverage floors, the
+publishing surface <code>template_template</code> itself already
+reaches), and an ask. Medium and long variants add landscape,
+architecture, and roadmap detail; long adds a full
+governance/confidentiality walkthrough and an appendix.</p>
+<h2 data-number="4.2" id="token-resolution"><span
+class="header-section-number">4.2</span> Token resolution</h2>
+<p><code>src/token_resolution.py</code> implements the same
+<code>{{TOKEN}}</code> convention used by
+<code>infrastructure/rendering/manuscript_injection.py</code>
+(<code>\{\{[A-Z][A-Z0-9_]*\}\}</code>), scoped to
+<code>manuscript/deck_content_*.yaml</code> instead of
+<code>manuscript/*.md</code>. <code>resolve_tokens</code> raises if any
+token in the content has no matching key in
+<code>manuscript/deck_tokens.yaml</code> — mirroring
+<code>template_madlib</code>’s
+<code>test_all_manuscript_tokens_are_generated</code> pre-substitution
+coverage check, adapted to deck content.
+<code>scripts/audit_deck_content.py</code> runs this check plus the
+cliché lint in one pass and exits non-zero on either class of failure;
+both failure modes are proven to actually fire (a deliberately-broken
+fixture triggers each) before the real content is checked clean.</p>
+<h2 data-number="4.3" id="cliché-lint"><span
+class="header-section-number">4.3</span> Cliché lint</h2>
+<p><code>src/cliche_lint.py</code> maintains a word-boundary-safe
+denylist of pitch-deck stock phrases (“synergy,” “disrupt,” “10x,”
+“game-changing,” “rocket ship,” “paradigm shift,” and more). It is
+checked against every resolved slide across all three lengths as part of
+the same audit script, and — like the token check — is proven to fire on
+a deliberately cliché-laden sentence before the real content’s
+cleanliness is trusted.</p>
+<hr />
+<h1 data-number="5" id="sec:reproducibility"><span
+class="header-section-number">5</span> Reproducibility</h1>
+<p><code>scripts/render_decks.py</code> is deterministic: given the same
+repository state (<code>manuscript/deck_content_*.yaml</code>,
+<code>manuscript/deck_tokens.yaml</code>, and the live facts
+<code>src/deck_tokens.py</code> reads from
+<code>template_template</code>’s own files and the public exemplar
+roster), two consecutive runs produce byte-identical PDF and PPTX
+output. No wall-clock timestamps appear in slide content; the only place
+a generation time is recorded is deck metadata, following the
+<code>STEGANOGRAPHY_DETERMINISTIC</code>-style convention already used
+elsewhere in this repository for reproducible builds.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/render_decks.py</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pdf/template_template_pitch_{short,medium,long}.pdf</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pptx/template_template_pitch_{short,medium,long}.pptx</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_pitch_deck/tests/ <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov</span><span class="op">=</span>projects/templates/template_pitch_deck/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/audit/check_template_drift.py</span></code></pre></div>
+<p>This project participates in the standard multi-project pipeline like
+any other public exemplar
+(<code>./run.sh --project templates/template_pitch_deck --pipeline --core-only</code>)
+and requires no LLM/Ollama stage — deck content is authored and
+token-resolved, not generated at render time by a model call, which
+keeps the artifact deterministic and the core pipeline
+Ollama-optional.</p>
+<hr />
+<h1 data-number="6" id="sec:references"><span
+class="header-section-number">6</span> References</h1>
+<div id="refs" role="list">
+
+</div>
+</body>
+</html>

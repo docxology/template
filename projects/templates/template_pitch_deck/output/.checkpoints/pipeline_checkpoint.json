@@ -1,0 +1,46 @@
+{
+  "pipeline_start_time": 1783552760.1460748,
+  "last_stage_completed": 2,
+  "stage_results": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.00506591796875,
+      "timestamp": "2026-07-08 16:19:20",
+      "completed": true,
+      "status": "passed",
+      "context": {
+        "stage_num": 1,
+        "stage_name": "Clean Output Directories",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.2663078308105469,
+      "timestamp": "2026-07-08 16:19:20",
+      "completed": true,
+      "status": "passed",
+      "context": {
+        "stage_num": 2,
+        "stage_name": "Environment Setup",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
+    }
+  ],
+  "total_stages": 8,
+  "checkpoint_time": 1783552760.422082
+}

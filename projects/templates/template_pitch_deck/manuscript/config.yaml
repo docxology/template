@@ -1,0 +1,89 @@
+# Template Pitch Deck Configuration
+# This is the "about this template" manuscript config — the deck content itself
+# (short/medium/long, PDF+PPTX) lives in manuscript/deck_content_*.yaml and
+# manuscript/deck_tokens.yaml, and is NOT rendered through this LaTeX/pandoc
+# manuscript path. This config exists to satisfy the standard exemplar
+# registration contract (infrastructure/project/drift/checks_exemplar.py) and
+# to document the project the way every other public template does.
+
+# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
+paper:
+  title: "template_pitch_deck: Reproducible, Validated Pitch-Deck Generation"
+  subtitle: "Short/Medium/Long PDF+PPTX decks from one token-resolved content source"
+  version: "1.0.0"
+  date: "2026-07-08"
+
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+# Real Zenodo deposit + standalone GitHub repo, both published 2026-07-09 —
+# see the bottom of this file for the actual `publication:` block (a prior
+# release-tooling run appended a second `publication:` key here rather than
+# updating this one in place; YAML silently keeps only the last occurrence,
+# so the values below are the ones actually in effect — consolidated into one
+# block to avoid the confusing duplicate).
+
+keywords:
+  - "pitch deck"
+  - "slide generation"
+  - "reproducible research communication"
+  - "meta-science infrastructure"
+  - "science integrity"
+  - "token validation"
+  - "PPTX"
+  - "PDF rendering"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+# Render format toggles — this manuscript is prose-only (about-the-template);
+# the deck artifacts themselves are produced by scripts/render_decks.py via
+# infrastructure/rendering/{slide_deck,pptx_deck}.py, not this pipeline.
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false
+    docx: false
+    epub: false
+
+# Consumed by: `infrastructure/reporting/pipeline_report_model.py` and CI/CD gates
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+# Deck-generation parameters — read by scripts/render_decks.py and
+# src/deck_tokens.py. `pitch_subject` names which manuscript/deck_content_*.yaml
+# + deck_tokens.yaml pair to render; the schema supports adding future pitches
+# (e.g. a distinct meta-science-group deck) by adding a new subject key here.
+deck:
+  pitch_subject: "template_template"
+  lengths: ["short", "medium", "long"]
+  formats: ["pdf", "pptx"]
+  # Deep-link base for every slide's `source` diligence citation (a
+  # repo-relative path like "CLAUDE.md" or "infrastructure/project/public_scope.py")
+  # — resolved into a clickable GitHub blob URL by scripts/20_render_decks.py.
+  source_base_url: "https://github.com/docxology/template/blob/main/"
+  # Black + white base plus 3 configurable highlight colors
+  # (infrastructure.rendering.slide_deck.DeckTheme). All three highlights are
+  # the same red here (monochrome accent); set distinct hex values for a
+  # multi-accent palette instead.
+  theme:
+    black: "#0A0A0A"
+    white: "#FFFFFF"
+    highlight_1: "#B3131A"
+    highlight_2: "#B3131A"
+    highlight_3: "#B3131A"
+publication:
+  doi: "10.5281/zenodo.21281509"
+  version_doi: "10.5281/zenodo.21281510"
+  version_record: "https://zenodo.org/records/21281510"
+  github_repository: "docxology/template-pitch-deck"

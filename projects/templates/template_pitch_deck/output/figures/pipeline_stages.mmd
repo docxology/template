@@ -1,0 +1,16 @@
+flowchart TB
+    subgraph Row1["Core"]
+        direction LR
+        C[Clean Output] --> E[Environment Setup]
+        E --> IT["Infrastructure Tests"]
+        IT --> PT["Project Tests<br/>90% coverage floor"]
+        PT --> A["Run Analysis"]
+    end
+    subgraph Row2["Render, validate, ship"]
+        direction LR
+        R["Render PDF"] --> V["Validate Output"]
+        V --> L1["LLM Review<br/>(optional)"]
+        L1 --> L2["LLM Translations<br/>(optional)"]
+        L2 --> O["Copy Outputs"]
+    end
+    Row1 --> Row2
