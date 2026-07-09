@@ -7,12 +7,21 @@ exceptions.py without creating circular import cycles.
 import shutil
 
 
-def build_install_commands(dependency: str) -> list[str]:
-    """Return OS-appropriate installation commands for a dependency."""
+def build_install_commands(dependency: str, *, system: str | None = None) -> list[str]:
+    """Return OS-appropriate installation commands for a dependency.
+
+    Args:
+        dependency: The package/tool name to install.
+        system: Override the platform system name (e.g. ``"darwin"``).
+            Defaults to ``platform.system().lower()``.
+    """
     import platform
 
     commands: list[str] = []
-    system = platform.system().lower()
+    if system is None:
+        system = platform.system().lower()
+    else:
+        system = system.lower()
 
     if system == "linux":
         if shutil.which("apt-get"):

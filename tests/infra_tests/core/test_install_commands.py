@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import platform
 
-import pytest
 
 from infrastructure.core.install_commands import build_install_commands
 
@@ -84,12 +83,21 @@ class TestBuildInstallCommandsFromInstallCommands:
 
     def test_darwin_brew(self):
         """On macOS with brew, should suggest brew install."""
-        system = platform.system().lower()
-        if system != "darwin":
-            pytest.skip("Not on macOS")
-        result = build_install_commands("xelatex")
-        # Should have at least one install command + verification
+        result = build_install_commands("xelatex", system="darwin")
+        assert any("brew install" in cmd for cmd in result)
         assert len(result) >= 2
+
+    def test_darwin_no_brew(self):
+        """On macOS without brew, should suggest brew install with a hint."""
+        import shutil as _shutil
+
+        original_which = _shutil.which
+        try:
+            _shutil.which = lambda name: None if name == "brew" else original_which(name)
+            result = build_install_commands("xelatex", system="darwin")
+        finally:
+            _shutil.which = original_which
+        assert any("brew install" in cmd for cmd in result)
 
     def test_custom_dependency_name(self):
         """Should use the dependency name in commands."""
@@ -117,7 +125,6 @@ class TestBuildInstallCommandsBranchCoverage:
         import infrastructure.core.install_commands as _mod
 
         monkeypatch.setattr(_platform, "system", lambda: "Linux")
-        real_which = shutil.which
 
         def _which_yum_only(cmd: str) -> str | None:
             return "/usr/bin/yum" if cmd == "yum" else None
@@ -178,9 +185,7 @@ class TestBuildInstallCommandsBranchCoverage:
         monkeypatch.setattr(_mod.shutil, "which", lambda cmd: None)
 
         result = _mod.build_install_commands("pandoc")
-        assert any(
-            "# Install pandoc using Homebrew: brew install pandoc" == cmd for cmd in result
-        )
+        assert any("# Install pandoc using Homebrew: brew install pandoc" == cmd for cmd in result)
 
     def test_windows_platform_fallback(self, monkeypatch):
         """On Windows (or any non-linux/non-darwin OS), returns a generic comment."""
@@ -190,9 +195,7 @@ class TestBuildInstallCommandsBranchCoverage:
         monkeypatch.setattr(_platform, "system", lambda: "Windows")
 
         result = _mod.build_install_commands("cmake")
-        assert any(
-            "# Install cmake using your system's package manager" == cmd for cmd in result
-        )
+        assert any("# Install cmake using your system's package manager" == cmd for cmd in result)
         assert result[-1] == "which cmake  # Verify installation"
 
     def test_linux_apt_get_branch_explicit(self, monkeypatch):

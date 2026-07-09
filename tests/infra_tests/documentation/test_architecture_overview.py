@@ -10,6 +10,7 @@ Mermaid-source tests still run.
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
@@ -165,13 +166,35 @@ def test_generated_mermaid_parses_via_mmdc(tmp_path: Path) -> None:
 
     # Use the bundled puppeteer config approach so the test works on macOS
     # without requiring a separate Chromium download. mmdc errors via stderr.
-    chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-    if not Path(chrome_path).exists():  # pragma: no cover - non-macOS dev hosts
-        pytest.skip("system Chrome not installed at the expected path")
+    # Resolve a Chrome/Chromium executable across platforms:
+    # 1. CHROME_EXECUTABLE_PATH env var (CI sets this)
+    # 2. puppeteer's chrome-headless-shell cache
+    # 3. macOS system Chrome
+    chrome_env = os.environ.get("CHROME_EXECUTABLE_PATH", "")
+    chrome_candidates = [
+        chrome_env,
+        str(
+            Path.home()
+            / ".cache"
+            / "puppeteer"
+            / "chrome-headless-shell"
+            / "linux-150.0.7871.24"
+            / "chrome-headless-shell-linux64"
+            / "chrome-headless-shell"
+        ),
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    ]
+    chrome_path = next((p for p in chrome_candidates if p and Path(p).exists()), "")
+    if not chrome_path:
+        pytest.skip(
+            "Chrome/Chromium not installed — set CHROME_EXECUTABLE_PATH or install puppeteer chrome-headless-shell"
+        )
 
     puppeteer_cfg = tmp_path / "puppeteer.json"
+    import json as _json
+
     puppeteer_cfg.write_text(
-        '{"executablePath":"' + chrome_path + '","args":["--no-sandbox"]}',
+        _json.dumps({"executablePath": chrome_path, "args": ["--no-sandbox"]}),
         encoding="utf-8",
     )
     result = subprocess.run(  # noqa: S603 - test-only invocation with literal args
