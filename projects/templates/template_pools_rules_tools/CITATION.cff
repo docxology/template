@@ -1,0 +1,25 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Template Author
+  given-names: Research
+  orcid: 0000-0002-0000-0001
+- affiliation: Active Inference Institute
+  family-names: Collaborator
+  given-names: Template
+  orcid: 0000-0002-0000-0002
+cff-version: 1.2.0
+date-released: "2026-07-05"
+keywords:
+- research software engineering
+- monorepo architecture
+- reproducibility
+- fonds
+- governance rules
+- tool discovery
+- graceful degradation
+license: CC-BY-4.0
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template
+title: Pools, Rules, and Tools — A Template-Integrated Resource Architecture
+type: software
+version: "1.0.0"
