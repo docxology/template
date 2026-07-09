@@ -2,9 +2,9 @@
 
 *Slide 18 of 37 — template_template pitch, medium deck — kind: `content`*
 
-- projects/templates/ holds all 20 public exemplars: template_active_inference, template_autopoiesis, template_autoresearch_project, template_autoscientists, template_code_project, template_eda_notebook, template_formal, template_gold_refinement, template_literature_meta_analysis, template_madlib, template_methods_paper, template_newspaper, template_pitch_deck, template_pools_rules_tools, template_prose_project, template_search_project, template_sia, template_storybook, template_template, template_textbook.
+- projects/templates/ holds all 19 public exemplars: template_active_inference, template_autopoiesis, template_autoresearch_project, template_autoscientists, template_code_project, template_eda_notebook, template_gold_refinement, template_literature_meta_analysis, template_madlib, template_methods_paper, template_newspaper, template_pitch_deck, template_pools_rules_tools, template_prose_project, template_search_project, template_sia, template_storybook, template_template, template_textbook.
 - template_active_inference is called out here only as one concrete instance to point to — every name in that list is an independently-built exemplar following the identical two-layer architecture, not a hand-picked best case.
-- Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all 20 projects, and the folder itself is the evidence, not a claim about it.
+- Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all 19 projects, and the folder itself is the evidence, not a claim about it.
 
 ---
 

@@ -4,7 +4,7 @@
 
 - A manuscript that is generated FROM the repository it describes, not written ABOUT it from memory.
 - Every metric in the paper — module counts, test counts, pipeline stages — is computed live by template_template's own introspection code.
-- One of 20 public exemplar templates in the same monorepo, each independently tested and coverage-gated.
+- One of 19 public exemplar templates in the same monorepo, each independently tested and coverage-gated.
 
 ---
 
