@@ -46,7 +46,12 @@ def test_locate_repo_root_raises_cleanly_on_shallow_path_with_few_parents():
 
 
 def test_project_root_returns_template_pitch_deck_directory():
+    # The standalone GitHub repo is legitimately named `template-pitch-deck`
+    # (hyphenated, matching every other exemplar's repo-slug convention),
+    # while the monorepo checkout uses `template_pitch_deck` (underscored,
+    # matching the Python package name) — accept either so this test is
+    # true from both deployment contexts, not just the monorepo one.
     root = project_root()
-    assert root.name == "template_pitch_deck"
+    assert root.name in ("template_pitch_deck", "template-pitch-deck")
     assert (root / "src").is_dir()
     assert (root / "manuscript").is_dir()
