@@ -67,8 +67,14 @@ def check_dependencies(
     return len(missing_packages) == 0, missing_packages
 
 
-def install_missing_packages(packages: list[str]) -> bool:
-    """Install packages via uv add + uv sync; returns True on success."""
+def install_missing_packages(packages: list[str], *, add_timeout: float = 30, sync_timeout: float = 120) -> bool:
+    """Install packages via uv add + uv sync; returns True on success.
+
+    Args:
+        packages: List of package names to install.
+        add_timeout: Per-package timeout (seconds) for ``uv add``.
+        sync_timeout: Timeout (seconds) for ``uv sync``.
+    """
     logger.info(f"Installing {len(packages)} missing package(s) with uv...")
 
     # Check if uv is available
@@ -85,7 +91,7 @@ def install_missing_packages(packages: list[str]) -> bool:
             add_cmd = ["uv", "add", package]
             logger.info(f"Adding to pyproject.toml: {' '.join(add_cmd)}")
             try:
-                add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True, timeout=30)
+                add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True, timeout=add_timeout)
             except subprocess.TimeoutExpired:
                 logger.warning(f"Timeout adding {package} to pyproject.toml (30s)")
                 continue
@@ -97,7 +103,7 @@ def install_missing_packages(packages: list[str]) -> bool:
         logger.info(f"Syncing dependencies: {' '.join(cmd)}")
 
         try:
-            result = subprocess.run(cmd, check=False, timeout=120)
+            result = subprocess.run(cmd, check=False, timeout=sync_timeout)
         except subprocess.TimeoutExpired:
             logger.error("uv sync timed out after 120s")
             return False

@@ -197,26 +197,18 @@ class TestInstallMissingPackages:
             result = install_missing_packages(["json"])
         assert result is False
 
-    @pytest.mark.skip(
-        reason=(
-            "TimeoutExpired on uv add requires a real 30s subprocess wait, "
-            "which exceeds the 10s pytest-timeout ceiling. "
-            "Branch covered by code inspection; timeout path uses 'continue' so "
-            "subsequent packages and uv sync still run."
-        )
-    )
     def test_uv_add_timeout_continues_to_sync(self, tmp_path):
         """TimeoutExpired on uv add is caught and execution continues to sync."""
-        # Python script: sleep long on 'add' (triggers 30s timeout); exit 0 on 'sync'
+        # Python script: sleep long on 'add' (triggers timeout); exit 0 on 'sync'
         script = """\
             import sys, time
             if len(sys.argv) > 1 and sys.argv[1] == "add":
-                time.sleep(120)
+                time.sleep(10)
             sys.exit(0)
         """
         _make_fake_uv_py(tmp_path, script)
         with _path_override(str(tmp_path)):
-            result = install_missing_packages(["os"])
+            result = install_missing_packages(["os"], add_timeout=1)
         assert result is True
 
     def test_uv_add_nonzero_returncode_continues(self, tmp_path):
@@ -235,25 +227,18 @@ class TestInstallMissingPackages:
             result = install_missing_packages(["json"])
         assert result is True
 
-    @pytest.mark.skip(
-        reason=(
-            "TimeoutExpired on uv sync requires a real 120s subprocess wait, "
-            "which exceeds the 10s pytest-timeout ceiling. "
-            "Branch covered by code inspection; TimeoutExpired during sync returns False."
-        )
-    )
     def test_uv_sync_timeout_returns_false(self, tmp_path):
         """TimeoutExpired on uv sync returns False."""
         # Python script: exit 0 on 'add'; sleep long on 'sync'
         script = """\
             import sys, time
             if len(sys.argv) > 1 and sys.argv[1] == "sync":
-                time.sleep(300)
+                time.sleep(10)
             sys.exit(0)
         """
         _make_fake_uv_py(tmp_path, script)
         with _path_override(str(tmp_path)):
-            result = install_missing_packages(["json"])
+            result = install_missing_packages(["json"], sync_timeout=1)
         assert result is False
 
     def test_uv_sync_success_all_packages_import_returns_true(self, tmp_path):
