@@ -441,7 +441,7 @@
       "module": "infrastructure.provenance",
       "invocation": "python -m infrastructure.provenance",
       "source_path": "infrastructure/provenance/cli.py",
-      "purpose": "CLI for the provenance DAG — ``record``, ``list``, ``query``, and ``review`` subcommands.",
+      "purpose": "CLI for the provenance DAG — ``record-artifact``, ``list``, and ``review`` subcommands.",
       "subcommands": [
         {
           "name": "list",
