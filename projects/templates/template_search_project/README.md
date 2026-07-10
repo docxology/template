@@ -23,11 +23,11 @@ prose-quality/editorial review see
 
 Concept DOI: [10.5281/zenodo.21298894](https://doi.org/10.5281/zenodo.21298894) | Version DOI: [10.5281/zenodo.21298895](https://zenodo.org/records/21298895) | Repository: —
 
-Publishing surface — 20 platforms, 1 published:
+Publishing surface — 20 platforms, 2 published:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
-| zenodo | first-class | 🔵 reserved | [10.5281/zenodo.21298894](https://doi.org/10.5281/zenodo.21298894) | `ZENODO_API_TOKEN` |
+| zenodo | first-class | ✅ published | [10.5281/zenodo.21298894](https://doi.org/10.5281/zenodo.21298894) | `ZENODO_API_TOKEN` |
 | github | first-class | ✅ published | [docxology/template_search_project](https://github.com/docxology/template_search_project) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
 | pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
