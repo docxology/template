@@ -1,44 +1,249 @@
 {
-  "release_authority": "public-affairs-review",
+  "release_authority": "public-affairs-review-board",
   "release_policy": "intelligence_release_review",
   "public_ceiling": "UNCLASSIFIED",
   "segments": [
     {
       "id": "s1",
       "classification": "UNCLASSIFIED",
-      "text": "The public summary describes a logistics disruption and omits source details.",
+      "text": "This report documents the disclosure-control methodology applied to a sanitized release packet. The exemplar demonstrates classification ceilings, provenance-protection checks, mosaic-risk scoring, and TPM-backed sealed sidecars across a sixteen-variant visual proof matrix.",
       "source_controls": []
     },
     {
       "id": "s2",
+      "classification": "UNCLASSIFIED",
+      "text": "The release pipeline operates in two layers. Layer one performs text-level disclosure control: each segment is audited against a public classification ceiling, redaction spans are validated for non-overlap, orphan decisions are flagged, and provenance-control coverage is enforced. Layer two applies visual redaction treatments, steganographic provenance overlays, and optional Kmyth TPM sidecar sealing.",
+      "source_controls": []
+    },
+    {
+      "id": "s3",
       "classification": "SECRET",
-      "text": "HUMINT source Alpha reported the location selector at 2026-07-09T10:00Z.",
-      "source_controls": ["HUMINT"]
+      "text": "HUMINT source Alpha reported the location selector at coordinates 38.8977, -77.0365 on 2026-07-09T10:00Z. The source was recruited via NOFORN channels and operated under SIGINT discipline. Contact analyst@example.org for debrief notes.",
+      "source_controls": [
+        "HUMINT"
+      ]
+    },
+    {
+      "id": "s4",
+      "classification": "SECRET",
+      "text": "The operational detail describes a SIGINT collection platform deployed near the selector. The platform transmitted from 192.0.2.10 and used compartmented SCI handling for downstream analysis. The ORCON distribution was limited to the originator and classification review.",
+      "source_controls": [
+        "SIGINT"
+      ]
+    },
+    {
+      "id": "s5",
+      "classification": "TOP_SECRET",
+      "text": "The TS_SCI compartment covered the full collection discipline chain: HUMINT input Alpha, SIGINT platform Bravo, and IMINT sensor Charlie. The mosaic risk of combining these three inputs exceeds the release threshold of 0.30 even after individual redaction. The TOP SECRET//SCI markings require three-role approval: originator, classification reviewer, and release authority.",
+      "source_controls": [
+        "HUMINT",
+        "SIGINT",
+        "IMINT"
+      ]
+    },
+    {
+      "id": "s6",
+      "classification": "UNCLASSIFIED",
+      "text": "After redaction, the public narrative reads: [REDACTED] reported the [REDACTED] at [REDACTED]. The release packet includes a provenance-safe redaction ledger with SHA-256 hashes of each redacted span, a segment hash manifest comparing provenance and public SHA-256 digests, and a paragraph-level audit table showing classification ceiling compliance.",
+      "source_controls": []
+    },
+    {
+      "id": "s7",
+      "classification": "UNCLASSIFIED",
+      "text": "The visual proof matrix enumerates four redaction styles - blackout, whiteout, grayout, and blur - across four PDF backgrounds - white, gray, black, and blur - yielding sixteen variant PDFs. Each variant receives the same provenance-safe redaction decisions, ensuring visual presentation remains orthogonal to the release gate.",
+      "source_controls": []
+    },
+    {
+      "id": "s8",
+      "classification": "UNCLASSIFIED",
+      "text": "The steganography layer post-processes each base PDF with nine security methods: SHA-256/SHA-512 hash manifests, diagonal watermark overlays, footer provenance stamps, first-page invisible text, QR payload barcodes, Code128 page barcodes, PDF Info metadata, XMP metadata, and embedded steganographic manifest attachments. An optional PDF password encryption layer adds AES-256 protection.",
+      "source_controls": []
+    },
+    {
+      "id": "s9",
+      "classification": "UNCLASSIFIED",
+      "text": "Kmyth TPM sealing wraps each hash manifest and steganography PDF in a .ski sidecar sealed against the TPM2-TSS storage hierarchy. The sealed objects are bound to PCR selections and policy or-values, ensuring that unsealing requires the same platform configuration. On macOS, a software TPM emulator (swtpm) and an mssim-to-swtpm protocol proxy bridge the TPM2-TSS mssim TCTI to swtpm's native socket protocol. The proxy translates platform commands on the control channel and strips the mssim wire header on the data channel, forwarding raw TPM commands to swtpm.",
+      "source_controls": []
+    },
+    {
+      "id": "s10",
+      "classification": "UNCLASSIFIED",
+      "text": "The kmyth-seal binary was patched to call Tss2_Sys_FlushContext for the storage key handle before freeing TPM2 TPM handles. Without this patch, consecutive kmyth-seal invocations exhaust the swtpm transient object slots (typically three), causing 'out of memory for object contexts' errors on the second seal. The FlushContext call ensures each invocation starts with a clean transient object table.",
+      "source_controls": []
+    },
+    {
+      "id": "s11",
+      "classification": "UNCLASSIFIED",
+      "text": "The release gate requires three reviewer roles: originator, classification reviewer, and release authority. Each reviewer must provide a non-empty rationale. A reject decision blocks release entirely; a changes_requested decision generates a warning. The final_release_recommended flag is true only when the packet is releasable, the review gate is approved, and no blocking warnings remain.",
+      "source_controls": []
+    },
+    {
+      "id": "s12",
+      "classification": "UNCLASSIFIED",
+      "text": "Residual risk detection scans sanitized text for common public-release leaks: email addresses, IPv4 addresses, coordinate pairs, controlled dissemination markers (such as foreign-dissemination controls and originator-controlled markings), and intelligence collection tradecrafts (human, signals, imagery, measurement, and open-origin). Each detected marker generates a warning finding. The mosaic risk score aggregates residual markers across all segments, normalized by the product of segment count and pattern count.",
+      "source_controls": []
+    },
+    {
+      "id": "s13",
+      "classification": "CUI",
+      "text": "The controlled unclassified information segment demonstrates the CUI classification level, which sits between UNCLASSIFIED and CONFIDENTIAL in the intelligence agency taxonomy. CUI segments above the public ceiling require at least one redaction decision before release. The provenance control HUMINT is noted but no operational details are included.",
+      "source_controls": [
+        "HUMINT"
+      ]
+    },
+    {
+      "id": "s14",
+      "classification": "UNCLASSIFIED",
+      "text": "The comprehensive release packet combines the sanitized text, release audit, redaction ledger, segment hash manifest, review gate report, and paragraph audit table into a single JSON-ready export. The packet records the release authority, public ceiling, taxonomy name, release safety score, redaction coverage, mosaic risk score, and all findings. This exemplar confirms that the methodology produces reproducible, provenance-safe, and auditable release artifacts.",
+      "source_controls": []
     }
   ],
   "redactions": [
-    {"segment_id": "s2", "start": 0, "end": 20, "reason": "source_identity"},
-    {"segment_id": "s2", "start": 33, "end": 50, "reason": "operational_detail"},
-    {"segment_id": "s2", "start": 54, "end": 71, "reason": "time_place_selector"}
+    {
+      "segment_id": "s3",
+      "start": 0,
+      "end": 19,
+      "reason": "source_identity"
+    },
+    {
+      "segment_id": "s3",
+      "start": 33,
+      "end": 50,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s3",
+      "start": 54,
+      "end": 83,
+      "reason": "time_place_selector"
+    },
+    {
+      "segment_id": "s3",
+      "start": 87,
+      "end": 104,
+      "reason": "time_place_selector"
+    },
+    {
+      "segment_id": "s3",
+      "start": 135,
+      "end": 141,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s3",
+      "start": 170,
+      "end": 176,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s3",
+      "start": 197,
+      "end": 216,
+      "reason": "privacy"
+    },
+    {
+      "segment_id": "s4",
+      "start": 35,
+      "end": 61,
+      "reason": "source_identity"
+    },
+    {
+      "segment_id": "s4",
+      "start": 80,
+      "end": 88,
+      "reason": "time_place_selector"
+    },
+    {
+      "segment_id": "s4",
+      "start": 120,
+      "end": 130,
+      "reason": "time_place_selector"
+    },
+    {
+      "segment_id": "s4",
+      "start": 154,
+      "end": 157,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s4",
+      "start": 196,
+      "end": 201,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s5",
+      "start": 4,
+      "end": 10,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s5",
+      "start": 69,
+      "end": 75,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s5",
+      "start": 76,
+      "end": 88,
+      "reason": "source_identity"
+    },
+    {
+      "segment_id": "s5",
+      "start": 90,
+      "end": 96,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s5",
+      "start": 97,
+      "end": 111,
+      "reason": "source_identity"
+    },
+    {
+      "segment_id": "s5",
+      "start": 117,
+      "end": 122,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s5",
+      "start": 123,
+      "end": 137,
+      "reason": "source_identity"
+    },
+    {
+      "segment_id": "s13",
+      "start": 65,
+      "end": 68,
+      "reason": "legal_privilege"
+    },
+    {
+      "segment_id": "s13",
+      "start": 294,
+      "end": 300,
+      "reason": "source_identity"
+    }
   ],
   "reviews": [
     {
       "reviewer": "originator-a",
       "role": "originator",
       "decision": "approve",
-      "rationale": "invented fixture source equities reviewed"
+      "rationale": "invented fixture source equities reviewed and cleared for public exemplar"
     },
     {
       "reviewer": "classification-reviewer",
       "role": "classification_reviewer",
       "decision": "approve",
-      "rationale": "invented fixture markings checked"
+      "rationale": "invented fixture markings checked against intelligence taxonomy"
     },
     {
       "reviewer": "release-board",
       "role": "release_authority",
       "decision": "approve",
-      "rationale": "invented fixture authorized for public example use"
+      "rationale": "invented fixture authorized for public example use with full audit trail"
     }
   ]
 }

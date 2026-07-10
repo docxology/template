@@ -285,8 +285,8 @@ def test_visual_redacted_segments_are_source_safe() -> None:
 
     sanitized = visual_redacted_segments(segments, decisions, style="grayout")
 
-    assert sanitized[1]["redaction_style"] == "grayout"
-    assert "[GRAYOUT]" in str(sanitized[1]["text"])
+    assert sanitized[2]["redaction_style"] == "grayout"
+    assert "[GRAYOUT]" in str(sanitized[2]["text"])
     assert "Alpha" not in str(sanitized)
 
 
@@ -311,11 +311,11 @@ def test_release_packet_exports_redacted_text_and_paragraph_audit() -> None:
 
     assert packet["releasable"] is True
     assert packet["segments"] == sanitized
-    assert sanitized[1]["text"].count("[REDACTED]") == 3
-    assert "Alpha" not in str(sanitized[1]["text"])
-    assert audit_rows[1]["decision_count"] == 3
-    assert audit_rows[1]["above_ceiling"] is True
-    assert packet["paragraph_audit"][1]["status"] == "reviewed"
+    assert sanitized[2]["text"].count("[REDACTED]") == 7
+    assert "Alpha" not in str(sanitized[2]["text"])
+    assert audit_rows[2]["decision_count"] == 7
+    assert audit_rows[2]["above_ceiling"] is True
+    assert packet["paragraph_audit"][2]["status"] == "reviewed"
 
 
 def test_redaction_ledger_and_hash_manifest_do_not_expose_source_text() -> None:
@@ -324,7 +324,7 @@ def test_redaction_ledger_and_hash_manifest_do_not_expose_source_text() -> None:
     ledger = build_redaction_ledger(segments, decisions)
     hashes = segment_hash_manifest(segments, decisions)
 
-    assert len(ledger) == 3
+    assert len(ledger) == len(decisions)
     assert all(row["valid_span"] is True for row in ledger)
     assert all(len(str(row["source_span_sha256"])) == 64 for row in ledger)
     assert "Alpha" not in str(ledger)
@@ -362,8 +362,8 @@ def test_comprehensive_release_packet_combines_audit_ledger_hashes_and_review_ga
     assert packet["policy"] == "intelligence_release_review"
     assert packet["review_gate"]["approved"] is True
     assert packet["review_gate"]["approval_count"] == 3
-    assert len(packet["redaction_ledger"]) == 3
-    assert len(packet["hash_manifest"]) == 2
+    assert len(packet["redaction_ledger"]) == len(decisions)
+    assert len(packet["hash_manifest"]) == len(segments)
     assert "Alpha" not in str(packet["segments"])
     assert packet["final_release_recommended"] is False
 

@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.09",
-      "total_size_bytes": 91661,
+      "total_size_bytes": 91662,
       "largest_files": [
         {
           "name": "_combined_manuscript.log",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 24,
       "size_mb": "0.23",
-      "total_size_bytes": 239648,
+      "total_size_bytes": 239649,
       "largest_files": [
         {
           "name": "01_methods_slides.log",
@@ -111,7 +111,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.05",
-      "total_size_bytes": 54340,
+      "total_size_bytes": 54337,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -155,7 +155,7 @@
     }
   },
   "total_files": 48,
-  "total_size_mb": 0.3932771682739258,
+  "total_size_mb": 0.3932762145996094,
   "largest_files": [
     {
       "name": "01_methods_slides.log",
@@ -226,10 +226,10 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.08741474151611328,
+    "pdf": 0.08741569519042969,
     "web": 0.025493621826171875,
-    "slides": 0.228546142578125,
-    "reports": 0.051822662353515625
+    "slides": 0.2285470962524414,
+    "reports": 0.051819801330566406
   },
   "file_counts_by_type": {
     ".md": 4,
