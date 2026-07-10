@@ -1,34 +1,20 @@
-cff-version: 1.2.0
-message: If you use this software, please cite it using the metadata from this file.
-type: software
-title: "Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts"
-version: "0.1.1"
-date-released: "2026-06-26"
-license: MIT
-repository-code: https://github.com/docxology/template_madlib
-doi: 10.5281/zenodo.20786638
 authors:
-  - given-names: Daniel Ari
-    family-names: Friedman
-    affiliation: Active Inference Institute
-    orcid: 0000-0001-6232-9096
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-07-10'
+doi: 10.5281/zenodo.20786638
 keywords:
-  - madlib generation
-  - token injection
-  - conditional manuscripts
-  - configuration driven writing
-  - configured-field visualization
-  - cover visualization
-  - pipeline audit visualization
-  - configuration provenance
-  - manuscript provenance
-  - method protocol
-  - method documentation
-  - digest invariants
-  - review packet
-  - fork validation contract
-  - fork migration
-  - QA probes
-  - authoring obligations
-  - reproducible research
-  - IMRAD
+- madlib generation
+- token injection
+- conditional manuscripts
+- reproducible research
+- IMRAD
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_madlib
+title: 'Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts'
+type: software
+version: 0.1.1

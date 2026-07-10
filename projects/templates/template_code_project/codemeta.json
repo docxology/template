@@ -14,7 +14,8 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_code_project",
-  "dateModified": "2026-05-27",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.20417136",
   "keywords": [
     "optimization algorithms",
     "gradient descent",
@@ -26,5 +27,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "Convergence Analysis of Gradient Descent Optimization",
-  "version": "2.3"
+  "version": "2.5.2"
 }

@@ -4,17 +4,17 @@ authors:
   given-names: Daniel Ari
   orcid: 0000-0001-6232-9096
 cff-version: 1.2.0
-date-released: "2026-06-26"
+date-released: '2026-07-10'
 doi: 10.5281/zenodo.20417021
 keywords:
 - active inference
 - pymdp
 - sophisticated inference
+- generalized notation notation
 - lean
-- reproducible research
 license: MIT
 message: If you use this software, please cite it using the metadata from this file.
 repository-code: https://github.com/docxology/template_active_inference
 title: Active Inference Multi-Track Exemplar
 type: software
-version: "0.3.2"
+version: 0.3.2

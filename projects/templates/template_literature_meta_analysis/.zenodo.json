@@ -1,21 +1,24 @@
 {
   "creators": [
     {
-      "affiliation": "Active Inference Institute",
       "name": "Friedman, Daniel Ari",
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "A generic, idempotent literature meta-analysis template: multi-engine retrieval, de-duplication, full-text mining, embeddings, and bibliometrics for any search term (bundled default: modafinil).",
+  "description": "Source code for A Living Meta-Analysis of the Modafinil Literature (2026).",
   "keywords": [
-    "literature meta-analysis",
+    "modafinil",
+    "meta-analysis",
+    "literature retrieval",
     "bibliometrics",
-    "multi-engine retrieval",
     "record de-duplication",
     "full-text mining",
     "document embeddings",
-    "citation network analysis",
+    "citation network",
     "topic modeling",
+    "entity extraction",
+    "wakefulness",
+    "cognitive enhancement",
     "reproducible research"
   ],
   "license": "CC-BY-4.0",
@@ -26,7 +29,7 @@
       "scheme": "doi"
     }
   ],
-  "title": "A Generic Literature Meta-Analysis Template (default term: modafinil)",
+  "title": "A Living Meta-Analysis of the Modafinil Literature",
   "upload_type": "software",
   "version": "0.1.0"
 }

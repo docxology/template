@@ -6,25 +6,11 @@
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "Source code for Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts with configured-field, cover, and pipeline audit visualizations.",
+  "description": "Source code for Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts (2026).",
   "keywords": [
     "madlib generation",
     "token injection",
     "conditional manuscripts",
-    "configuration driven writing",
-    "configured-field visualization",
-    "cover visualization",
-    "pipeline audit visualization",
-    "configuration provenance",
-    "manuscript provenance",
-    "method protocol",
-    "method documentation",
-    "digest invariants",
-    "review packet",
-    "fork validation contract",
-    "fork migration",
-    "QA probes",
-    "authoring obligations",
     "reproducible research",
     "IMRAD"
   ],

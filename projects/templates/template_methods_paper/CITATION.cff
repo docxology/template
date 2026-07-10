@@ -4,7 +4,7 @@ authors:
   given-names: Daniel Ari
   orcid: 0000-0001-6232-9096
 cff-version: 1.2.0
-date-released: "2026-06-30"
+date-released: '2026-07-10'
 doi: 10.5281/zenodo.21086548
 keywords:
 - methods paper
@@ -16,6 +16,6 @@ keywords:
 license: MIT
 message: If you use this software, please cite it using the metadata from this file.
 repository-code: https://github.com/docxology/template_methods_paper
-title: "A Domain Language for Specifying Controlled Methods"
+title: A Domain Language for Specifying Controlled Methods
 type: software
-version: "1.0.0"
+version: 1.0.0

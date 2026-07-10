@@ -1,15 +1,20 @@
 {
-  "title": "The Shape Between: template_storybook",
-  "upload_type": "software",
-  "description": "A full-page illustrated storybook exemplar with shape-character generation, page-level orchestrators, text overlays, and deterministic PDF assembly.",
   "creators": [
     {
+      "affiliation": "Active Inference Institute",
       "name": "Friedman, Daniel Ari",
       "orcid": "0000-0001-6232-9096"
     }
   ],
+  "description": "Source code for The Shape Between: A Full-Page Illustrated Storybook Template (2026).",
+  "keywords": [
+    "storybook",
+    "illustration",
+    "procedural graphics",
+    "reportlab",
+    "reproducible publishing"
+  ],
   "license": "MIT",
-  "doi": "10.5281/zenodo.21176001",
   "related_identifiers": [
     {
       "identifier": "10.5281/zenodo.21176000",
@@ -17,12 +22,7 @@
       "scheme": "doi"
     }
   ],
-  "keywords": [
-    "storybook",
-    "illustration",
-    "pdf",
-    "procedural graphics",
-    "reproducible publishing"
-  ],
+  "title": "The Shape Between: A Full-Page Illustrated Storybook Template",
+  "upload_type": "software",
   "version": "0.1.0"
 }

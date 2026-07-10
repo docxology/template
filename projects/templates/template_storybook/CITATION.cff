@@ -1,16 +1,20 @@
-cff-version: 1.2.0
-message: "If you use this exemplar, cite the template repository and this storybook template."
-title: "The Shape Between: template_storybook"
-version: "0.1.0"
 authors:
-  - family-names: "Friedman"
-    given-names: "Daniel Ari"
-    orcid: "https://orcid.org/0000-0001-6232-9096"
-license: "MIT"
-repository-code: "https://github.com/docxology/template_storybook"
-doi: "10.5281/zenodo.21176000"
-identifiers:
-  - type: doi
-    value: "10.5281/zenodo.21176000"
-    description: "Reserved Zenodo concept DOI for the storybook exemplar"
-date-released: "2026-07-03"
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-07-10'
+doi: 10.5281/zenodo.21176000
+keywords:
+- storybook
+- illustration
+- procedural graphics
+- reportlab
+- reproducible publishing
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_storybook
+title: 'The Shape Between: A Full-Page Illustrated Storybook Template'
+type: software
+version: 0.1.0

@@ -6,7 +6,7 @@
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "A controlled-methods specification exemplar: a small, tested domain language (methods_dsl) for specifying, validating, and deterministically compiling controlled procedures, with a manuscript describing the methodology itself. Informed by BPL (Biology Programming Language) as an upstream domain-language reference.",
+  "description": "Source code for A Domain Language for Specifying Controlled Methods (2026).",
   "keywords": [
     "methods paper",
     "domain-specific language",

@@ -14,7 +14,8 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_active_inference",
-  "dateModified": "2026-05-27",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.20417021",
   "keywords": [
     "active inference",
     "pymdp",
@@ -24,5 +25,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "Active Inference Multi-Track Exemplar",
-  "version": "0.1.0"
+  "version": "0.3.2"
 }
