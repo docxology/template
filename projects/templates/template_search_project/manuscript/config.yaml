@@ -20,7 +20,14 @@ publication:
   doi: ""
   journal: ""
   year: "2026"
-  github_repository: "docxology/template_search_project"
+  # docxology/template_search_project exists but is PRIVATE (verified
+  # 2026-07-10) — a private repo is not a resolvable public identifier, so
+  # recording it here would overclaim "published" in the generated
+  # PUBLISHING-STATUS block. Restore the slug once the repo is flipped public.
+  github_repository: ""
+  # Public monorepo path — the canonical public home while the standalone
+  # repo stays private (same convention as the other monorepo-only exemplars).
+  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_search_project"
 
 keywords:
   - "literature search"

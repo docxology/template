@@ -13,7 +13,7 @@ keywords:
 - local LLM synthesis
 license: MIT
 message: If you use this software, please cite it using the metadata from this file.
-repository-code: https://github.com/docxology/template_search_project
+repository-code: https://github.com/docxology/template/tree/main/projects/templates/template_search_project
 title: Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference
 type: software
 version: '0.1'
