@@ -13,6 +13,7 @@ from infrastructure.project.drift.checks_docs_counts import (  # noqa: F401
 )
 from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_all_export_drift,
+    check_config_author_placeholders,
     check_config_example_parity,
     check_coverage_floor_consistency,
     check_function_name_drift,
@@ -33,6 +34,7 @@ from infrastructure.project.drift.orchestrator import check_repo_scripts
 
 __all__ = [
     "check_all_export_drift",
+    "check_config_author_placeholders",
     "check_config_example_parity",
     "check_coverage_floor_consistency",
     "check_docs_hardcoded_counts",

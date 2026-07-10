@@ -495,14 +495,16 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
                 )
 
 
-def _normalize_orcid(value: str) -> str:
+def _normalize_orcid(value: object) -> str:
     """Strip an orcid.org URL prefix so bare and URL ORCID forms compare equal.
 
     CFF files historically carry `https://orcid.org/0000-...` while the current
     generator emits the bare identifier; both name the same person and must not
-    read as authorship drift.
+    read as authorship drift. Handles http/https schemes, an optional `www.`
+    host prefix, and a trailing slash.
     """
-    text = value.rstrip("/")
+    original = str(value or "").strip()
+    text = original.rstrip("/")
     lowered = text.lower()
     for prefix in ("https://", "http://"):
         if lowered.startswith(prefix):
@@ -512,7 +514,7 @@ def _normalize_orcid(value: str) -> str:
     for host in ("www.orcid.org/", "orcid.org/"):
         if lowered.startswith(host):
             return text[len(host) :]
-    return value
+    return original
 
 
 def _author_rows(entries: object, keys: tuple[str, ...]) -> list[tuple[str, ...]]:
@@ -635,6 +637,80 @@ def check_metadata_export_current(project_root: Path, report: Report, project: s
                 (
                     f"{rel_name} concept DOI {actual_doi!r} disagrees with manuscript/config.yaml "
                     f"concept DOI {expected_doi!r} — {regen_hint}"
+                ),
+            )
+
+
+_PLACEHOLDER_AUTHOR_NAMES = frozenset({"research template author", "project author", "your name"})
+_PLACEHOLDER_ORCIDS = frozenset({"0000-0000-0000-0000", "0000-0000-0000-1234"})
+_KNOWN_AUTHOR_KEYS = frozenset({"name", "orcid", "email", "affiliation", "corresponding"})
+
+
+def check_config_author_placeholders(project_root: Path, report: Report, project: str) -> None:
+    """Scaffold authorship in manuscript/config.yaml must not ride into derived metadata.
+
+    The export-consistency checks bind derived CITATION.cff/.zenodo.json/codemeta.json
+    back to config.yaml, so a placeholder author in config.yaml ITSELF passes them
+    green — the derived files faithfully agree with the bad source. This check
+    inspects the source of truth directly. Scoped to manuscript/config.yaml only;
+    config.yaml.example is expected to hold placeholders and is never scanned.
+    """
+    config_path = project_root / "manuscript" / "config.yaml"
+    if not config_path.is_file():
+        return
+    config = _load_yaml_mapping(config_path)
+    raw_authors = config.get("authors")
+    authors = [entry for entry in raw_authors if isinstance(entry, dict)] if isinstance(raw_authors, list) else []
+
+    if not authors:
+        publication = config.get("publication", {}) if isinstance(config.get("publication"), dict) else {}
+        if _normalize_doi(publication.get("doi", "")):
+            report.add(
+                "WARNING",
+                project,
+                "config_authors_missing_with_doi",
+                (
+                    f"{_rel(config_path, project_root)} declares publication.doi but has no authors block — "
+                    "metadata export falls back to the 'Project Author' placeholder, which would ride "
+                    "into a real Zenodo deposit"
+                ),
+            )
+        return
+
+    for idx, author in enumerate(authors):
+        name = str(author.get("name", "")).strip()
+        if " ".join(name.lower().split()) in _PLACEHOLDER_AUTHOR_NAMES:
+            report.add(
+                "ERROR",
+                project,
+                "config_author_placeholder_name",
+                (
+                    f"{_rel(config_path, project_root)} authors[{idx}].name is the scaffold "
+                    f"placeholder {name!r} — replace with a real author before publication"
+                ),
+            )
+        orcid = _normalize_orcid(author.get("orcid"))
+        if orcid in _PLACEHOLDER_ORCIDS:
+            report.add(
+                "ERROR",
+                project,
+                "config_author_placeholder_orcid",
+                (
+                    f"{_rel(config_path, project_root)} authors[{idx}].orcid is the example "
+                    f"value {orcid!r} — replace with the author's real ORCID or remove the key"
+                ),
+            )
+        unknown_keys = sorted(str(key) for key in author if str(key) not in _KNOWN_AUTHOR_KEYS)
+        if unknown_keys:
+            report.add(
+                "ERROR",
+                project,
+                "config_author_unknown_keys",
+                (
+                    f"{_rel(config_path, project_root)} authors[{idx}] has unrecognized key(s) "
+                    f"{unknown_keys} — the metadata generator silently ignores keys outside "
+                    f"{sorted(_KNOWN_AUTHOR_KEYS)} (a plural 'affiliations:' once dropped an "
+                    "affiliation from public metadata)"
                 ),
             )
 
@@ -809,6 +885,7 @@ def check_config_example_parity(project_root: Path, report: Report, project: str
 
 __all__ = [
     "check_all_export_drift",
+    "check_config_author_placeholders",
     "check_config_example_parity",
     "check_coverage_floor_consistency",
     "check_function_name_drift",

@@ -12,6 +12,7 @@ RepoCheckFn = Callable[[Path, Report], None]
 
 from infrastructure.project.drift.checks import (  # noqa: E402 — registry aggregates checks module
     check_all_export_drift,
+    check_config_author_placeholders,
     check_config_example_parity,
     check_coverage_floor_consistency,
     check_docs_hardcoded_counts,
@@ -49,6 +50,7 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_no_blanket_except_in_src,
     check_mocks_absent_from_tests,
     check_publication_metadata_consistency,
+    check_config_author_placeholders,
     check_metadata_export_current,
     check_publishing_status_block_current,
     check_project_src_infrastructure_boundary,

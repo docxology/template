@@ -51,6 +51,7 @@ def drift_module():
         check_template_signpost_contract=checks.check_template_signpost_contract,
         check_config_example_parity=checks.check_config_example_parity,
         check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
+        check_config_author_placeholders=checks.check_config_author_placeholders,
         check_metadata_export_current=checks.check_metadata_export_current,
         check_publishing_status_block_current=checks.check_publishing_status_block_current,
         check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
@@ -673,6 +674,91 @@ def test_publication_metadata_flags_cff_version_drift(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
     assert any(f.rule == "publication_cff_version_drift" for f in rep.findings)
+
+
+def test_config_author_placeholder_name_is_error(drift_module, tmp_path):
+    """A scaffold author name in config.yaml itself must ERROR — the derived
+    CITATION.cff/.zenodo.json would agree with the bad source and pass the
+    export-consistency checks green."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper: {}\npublication: {}\nauthors:\n  - name: 'Research Template Author'\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_config_author_placeholders(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "config_author_placeholder_name" and "Research Template Author" in f.message
+        for f in rep.findings
+    )
+
+
+def test_config_author_placeholder_orcid_is_error(drift_module, tmp_path):
+    """All-zero / example ORCIDs must ERROR, including the URL form."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper: {}\npublication: {}\nauthors:\n"
+        "  - name: 'Real Person'\n    orcid: '0000-0000-0000-0000'\n"
+        "  - name: 'Other Person'\n    orcid: 'https://orcid.org/0000-0000-0000-1234'\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_config_author_placeholders(root, rep, "fake_project")
+    orcid_errors = [f for f in rep.findings if f.rule == "config_author_placeholder_orcid"]
+    assert len(orcid_errors) == 2
+    assert all(f.severity == "ERROR" for f in orcid_errors)
+
+
+def test_config_author_unknown_keys_is_error(drift_module, tmp_path):
+    """Unrecognized author sub-keys (e.g. plural 'affiliations:') are silently
+    dropped by the metadata generator — the check must catch them."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper: {}\npublication: {}\nauthors:\n"
+        "  - name: 'Real Person'\n    orcid: '0000-0001-6232-9096'\n"
+        "    affiliations: 'Some Institute'\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_config_author_placeholders(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "config_author_unknown_keys" and "affiliations" in f.message
+        for f in rep.findings
+    )
+
+
+def test_config_authors_missing_with_reserved_doi_warns(drift_module, tmp_path):
+    """A reserved concept DOI with no authors block warns — the 'Project Author'
+    generator fallback would ride into a real Zenodo deposit."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper: {}\npublication:\n  doi: '10.5281/zenodo.11111'\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_config_author_placeholders(root, rep, "fake_project")
+    assert any(f.severity == "WARNING" and f.rule == "config_authors_missing_with_doi" for f in rep.findings)
+
+
+def test_config_author_placeholders_negative_control(drift_module, tmp_path):
+    """Negative control: a real author with only known keys, and a no-DOI
+    config with no authors block, must both produce zero findings."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper: {}\npublication:\n  doi: '10.5281/zenodo.11111'\nauthors:\n"
+        "  - name: 'Daniel Ari Friedman'\n    orcid: '0000-0001-6232-9096'\n"
+        "    email: 'x@example.com'\n    affiliation: 'Active Inference Institute'\n"
+        "    corresponding: true\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_config_author_placeholders(root, rep, "fake_project")
+    assert rep.findings == []
+
+    (root / "manuscript" / "config.yaml").write_text("paper: {}\npublication: {}\n", encoding="utf-8")
+    rep2 = drift_module.Report()
+    drift_module.check_config_author_placeholders(root, rep2, "fake_project")
+    assert rep2.findings == []
 
 
 def test_publication_metadata_flags_missing_concept_xlink(drift_module, tmp_path):
