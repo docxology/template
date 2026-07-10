@@ -23,6 +23,7 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_code_project",
     "templates/template_data_descriptor",
     "templates/template_eda_notebook",
+    "templates/template_formal",
     "templates/template_literature_meta_analysis",
     "templates/template_madlib",
     "templates/template_newspaper",

@@ -1,0 +1,44 @@
+domain: formal_type_architecture
+display_name: Formal Type-Architecture Multiagent Exemplar
+required_packages:
+  - pytest
+  - mypy
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - experiment_method_design
+  - artifact_manifest
+  - evidence_grounding
+  - render_validation
+  - publication_readiness
+figure_types:
+  - state_machine_diagram
+  - convergence_trace
+citation_policy: official_or_scholarly
+source_policy: "Prefer primary type-theory, session-type, and Active Inference literature already cited in references.bib; do not invent numeric results."
+review_gates:
+  - experiment_method_design
+  - render_validation
+  - publication_readiness
+artifact_expectations:
+  - output/data/colony_demo_summary.json
+  - output/data/agent_0.sqlite3
+  - output/figures/figure_registry.json
+  - output/reports/evidence_registry.json
+  - output/reports/validation_report.json
+  - output/pdf/template_formal_combined.pdf
+benchmark_rubric:
+  name: formal-type-architecture-readiness
+  dimensions:
+    - name: mypy_oracle_detection
+      weight: 2.0
+    - name: fault_injection_coverage
+      weight: 2.0
+    - name: colony_convergence_reproducibility
+      weight: 1.0
+    - name: render_success
+      weight: 1.0
+    - name: publication_readiness
+      weight: 1.0
+llm_prompt_guidance: "Ground every claim in a real mypy --strict subprocess result, a real fault-injected test, or real colony-integration state; never assert a proof mypy did not actually check."

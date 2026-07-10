@@ -134,11 +134,18 @@ class TestTemplateRepository:
         # projects and leak their SKILL.md names into the tracked manifest/index.
         assert DEFAULT_SKILL_SEARCH_ROOTS == (
             "infrastructure",
+            "scripts",
             "projects/templates",
+            "fonds/templates",
+            "rules/templates",
+            "tools/templates",
             "docs/prompts",
             ".cursor/skills",
         )
         assert "projects" not in DEFAULT_SKILL_SEARCH_ROOTS
+        assert "fonds" not in DEFAULT_SKILL_SEARCH_ROOTS
+        assert "rules" not in DEFAULT_SKILL_SEARCH_ROOTS
+        assert "tools" not in DEFAULT_SKILL_SEARCH_ROOTS
 
     def test_template_workflow_skills_present(self) -> None:
         root = _template_repo_root()
@@ -152,8 +159,34 @@ class TestTemplateRepository:
         assert "template-pipeline-debugging" in names
         assert "template-comprehensive-assessment" in names
         template_names = [n for n in names if n and n.startswith("template-")]
-        assert len(template_names) >= 18
+        assert len(template_names) >= 45
         assert len(template_names) == len(set(template_names))
+
+    def test_public_template_agent_skills_present(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        paths = {s.path_posix for s in skills}
+        assert "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md" in paths
+        assert (
+            "projects/templates/template_pools_rules_tools/.agents/skills/template-pools-rules-tools/SKILL.md" in paths
+        )
+
+    def test_script_skills_present(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        paths = {s.path_posix for s in skills}
+        assert "scripts/pipeline/SKILL.md" in paths
+        assert "scripts/runner/SKILL.md" in paths
+
+    def test_private_working_agent_skills_stay_excluded(self, tmp_path: Path) -> None:
+        skill = tmp_path / "projects/working/private/.agents/skills/private/SKILL.md"
+        skill.parent.mkdir(parents=True)
+        skill.write_text(
+            "---\nname: private-skill\ndescription: should not leak\n---\n",
+            encoding="utf-8",
+        )
+        skills = discover_skills(tmp_path, search_roots=("projects",))
+        assert [s.path_posix for s in skills] == []
 
     def test_prompt_mode_registry_present(self) -> None:
         root = _template_repo_root()

@@ -1,6 +1,6 @@
 ---
 name: infrastructure-skills
-description: Programmatic discovery of first-party agent SKILL.md files under configured public repo roots (infrastructure, projects, docs/prompts, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.
+description: Programmatic discovery of first-party agent SKILL.md files under configured public repo roots (infrastructure, scripts, projects/templates, resource-pool templates, docs/prompts, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor/Codex/MCP automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.
 ---
 
 # Skill Descriptor — infrastructure/skills
@@ -11,7 +11,8 @@ Machine-readable discovery for all `SKILL.md` descriptors used by Cursor and sim
 
 ## Capabilities
 
-- **Recursive scan**: `**/SKILL.md` under the default roots `infrastructure/`, `projects/`, `docs/prompts/`, and `.cursor/skills/` (configurable)
+- **Recursive scan**: `**/SKILL.md` under the default roots `infrastructure/`, `scripts/`, `projects/templates/`, `fonds/templates/`, `rules/templates/`, `tools/templates/`, `docs/prompts/`, and `.cursor/skills/` (configurable)
+- **Project-local agents**: public exemplar `.agents/skills/<name>/SKILL.md` files are included so Hermes/agentskills.io descriptors also appear in `.cursor/skill_manifest.json` and MCP `list_skills`
 - **Frontmatter parsing**: YAML `name` and `description` (full dict available)
 - **Manifest I/O**: Write or verify `.cursor/skill_manifest.json`
 - **Generated index**: Write `docs/_generated/skills_index.md` for human browsing

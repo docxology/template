@@ -1,0 +1,31 @@
+.coverage
+.coverage.*
+.pytest_cache/
+__pycache__/
+*.pyc
+.benchmarks/
+.mypy_cache/
+
+# Egg-info from local installs (any location — guards against renamed-fork drift).
+**/*.egg-info/
+
+# Project-local virtualenvs (root .venv is shared)
+.venv/
+
+# Lean 4 build artifacts (formal/lean/ — non-default side-spec)
+formal/lean/.lake/
+formal/lean/build/
+
+# Disposable working outputs (per-agent SQLite files, demo summaries)
+output/
+formal/tla/tla2tools.jar
+
+# TLC (TLA+ model checker) scratch/checkpoint directory -- created as a
+# working directory during a model-check run, disposable like Lean's
+# .lake/build/ above.
+formal/tla/states/
+
+# TLC trace-exploration artifacts, written whenever an invariant violation
+# is found -- always, by design, for AntProtocolFaultyNegControl.tla.
+formal/tla/*_TTrace_*.tla
+formal/tla/*_TTrace_*.bin

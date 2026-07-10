@@ -418,6 +418,19 @@ module = [
 ]
 ignore_errors = true
 
+# template_formal uses a src/ layout with a real package dir
+# (src/template_formal/), so with explicit_package_bases mypy resolves it
+# under the repo-relative dotted path and as the top-level package name.
+# Same relaxation as the siblings above (only infrastructure is held
+# type-strict at CI scope); the exemplar's own tests/test_mypy_oracle.py
+# keeps the project type-checked with its correct project-local resolution.
+[[tool.mypy.overrides]]
+module = [
+    "projects.templates.template_formal.*",
+    "template_formal.*",
+]
+ignore_errors = true
+
 [[tool.mypy.overrides]]
 module = "projects.what_is_cogsec.*"
 ignore_errors = true

@@ -1,11 +1,11 @@
 # AGENTS.md — tools/
 
-> Agent-oriented documentation for the `tools/` directory.  
+> Agent-oriented documentation for the `tools/` directory.
 > Human developers: see [README.md](README.md).
 
 ## Purpose
 
-This directory contains **executable entry points** that agents can discover, invoke, and compose.  
+This directory contains **executable entry points** that agents can discover, invoke, and compose.
 Each tool is declared via a `tools.yaml` manifest that specifies type, entrypoints, and metadata.
 
 ## Discovery
@@ -19,7 +19,7 @@ An agent scanning this workspace should:
 ## Manifest Schema (`tools.yaml`)
 
 ```yaml
-type: code_executor | validator | skill | agent | renderer
+type: code_executor | validator | skill | agent | renderer | model
 description: "Human-readable description"
 version: "semver string"
 tags:
@@ -41,6 +41,7 @@ entrypoints:
 | `scripts/run.sh` | JSON payload (optional) | JSON result | 0 = success |
 | `scripts/validate.sh` | — | human-readable report | 0 = valid |
 | `scripts/invoke.sh` | prompt string | agent response | 0 = success |
+| `scripts/predict.sh` | JSON payload | JSON prediction | 0 = success |
 
 ## Available Exemplars
 
@@ -49,6 +50,7 @@ entrypoints:
 | `templates/template_code_executor/` | `code_executor` | Generic code execution tool manifest |
 | `templates/template_validator/` | `validator` | Validation tool manifest |
 | `templates/template_skill/` | `skill` | Agent skill manifest |
+| `templates/template_model/` | `model` | Pre-trained linear regression model, real OLS-computed coefficients |
 
 ## Extending
 

@@ -45,6 +45,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_storybook/`](templates/template_storybook/) — full-page illustrated storybook PDF exemplar
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
 - [`templates/template_textbook/`](templates/template_textbook/) — modular fillable textbook scaffold
+- [`templates/template_formal/`](templates/template_formal/) — strongly-typed multiagent ant-robot colony exemplar (ADTs, session types, affine-discipline resource handles, decentralized per-agent storage/network)
 
 They share the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`,
 root `README.md`/`AGENTS.md`) plus a tested forkability contract:
@@ -73,6 +74,7 @@ projects.
 | [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
+| [`template_formal`](templates/template_formal/) | Strongly-typed multiagent ant-robot colony (ADTs, session types, affine-discipline handles) | yes (`src/template_formal/colony/*`) | no (curated) | yes (2 figures) | see canonical facts | see canonical facts |
 | [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
 | [`template_methods_paper`](templates/template_methods_paper/) | Controlled-method specification DSL with staged validation | yes (`src/methods_dsl/*`) | no (curated) | step-count figure | see canonical facts | see canonical facts |
 | [`template_redacted_report`](templates/template_redacted_report/) | Formal redaction and release-review report | yes (`src/redacted_report/*`) | no (curated) | no | see canonical facts | see canonical facts |
@@ -197,6 +199,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 | `templates/template_autoscientists/` | AutoScientists coordination-mechanism testbed | see canonical facts | see canonical facts |
 | `templates/template_eda_notebook/` | EDA notebook exemplar (notebook imports tested `src/eda/*`) | see canonical facts | see canonical facts |
+| `templates/template_formal/` | Strongly-typed multiagent ant-robot colony exemplar (ADTs, session types, affine-discipline handles) | see canonical facts | see canonical facts |
 | `templates/template_madlib/` | Conditional token-injection manuscript exemplar | see canonical facts | see canonical facts |
 | `templates/template_methods_paper/` | Methods-paper exemplar (controlled-method specification DSL) | see canonical facts | see canonical facts |
 | `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
@@ -971,6 +974,7 @@ infrastructure compliance:
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_data_descriptor**: Dataset descriptor/data-paper exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_eda_notebook**: EDA notebook exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_formal**: Strongly-typed multiagent ant-robot colony exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_gold_refinement**: Metallurgical gold-refining analogy exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_literature_meta_analysis**: Generic literature meta-analysis exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_madlib**: Conditional token-injection manuscript exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

@@ -51,6 +51,17 @@ def build_pandoc_tex_command(
 
             if yaml_data and isinstance(yaml_data, dict):
                 metadata = yaml_data.get("metadata", {})
+                paper = yaml_data.get("paper", {})
+                authors = yaml_data.get("authors", [])
+                if isinstance(paper, dict) and paper.get("title"):
+                    cmd.append(f"--metadata=title:{paper['title']}")
+                author_names = [
+                    str(author["name"]) for author in authors if isinstance(author, dict) and author.get("name")
+                ]
+                if author_names:
+                    cmd.append(f"--metadata=author:{'; '.join(author_names)}")
+                if isinstance(metadata, dict) and metadata.get("language"):
+                    cmd.append(f"--metadata=lang:{metadata['language']}")
                 geometry = metadata.get("geometry")
                 if geometry:
                     cmd.extend(["-V", f"geometry:{geometry}"])

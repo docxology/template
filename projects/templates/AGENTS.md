@@ -2,7 +2,7 @@
 
 ## Overview
 
-`projects/templates/` contains nineteen public canonical exemplar projects (see
+`projects/templates/` contains twenty public canonical exemplar projects (see
 [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md)
 for the authoritative, generated list — the count and tree below are
 illustrative and may lag it) for the template repository. This directory is
@@ -24,6 +24,7 @@ projects/templates/
 ├── template_autoscientists/          # coordination-mechanism testbed
 ├── template_code_project/            # code-first numerical exemplar
 ├── template_eda_notebook/            # exploratory data analysis on tabular data
+├── template_formal/                  # strongly-typed multiagent ant-robot colony (ADTs, session types, affine handles)
 ├── template_gold_refinement/         # metallurgical gold-refining analogy (ore → nine-nines)
 ├── template_literature_meta_analysis/ # reproducible literature meta-analysis (multi-engine retrieval)
 ├── template_madlib/                  # conditional token-injection manuscript

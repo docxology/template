@@ -15,6 +15,7 @@ from infrastructure.validation.docs.scan_scope import (
 # Roots (relative to repository root) searched recursively for **/SKILL.md
 DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     "infrastructure",
+    "scripts",
     # Only the tracked public exemplars under projects/templates/ — NOT bare
     # "projects", which would recurse into untracked, local-only sibling
     # projects (private WIP, rotating research) and bake their SKILL.md names
@@ -22,6 +23,9 @@ DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     # confidentiality invariant guarantees every tracked project skill lives
     # under projects/templates/, so this scope loses nothing on a clean clone.
     "projects/templates",
+    "fonds/templates",
+    "rules/templates",
+    "tools/templates",
     "docs/prompts",
     ".cursor/skills",
 )
@@ -103,6 +107,19 @@ def load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor:
     )
 
 
+def _is_public_template_agent_skill_path(path: Path) -> bool:
+    """Return True for public exemplar-local Hermes/agentskills.io descriptors."""
+    parts = path.parts
+    return (
+        len(parts) >= 7
+        and parts[0] == "projects"
+        and parts[1] == "templates"
+        and parts[3] == ".agents"
+        and parts[4] == "skills"
+        and parts[-1] == "SKILL.md"
+    )
+
+
 def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
     """Yield absolute paths to ``SKILL.md`` under each root relative to ``repo_root``."""
     root_resolved = repo_root.resolve()
@@ -120,7 +137,13 @@ def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
             # Skip vendored / tool-managed skill trees (.venv, site-packages,
             # .claude, .agents, projects/archive, …) so discovery only sees
             # first-party repo skills — same scope convention as doc scanning.
-            if should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS):
+            # Public exemplar-local `.agents/skills/*/SKILL.md` files are the
+            # one intentional exception: README/AGENTS advertise them as the
+            # Hermes / agentskills.io entry points for canonical templates, and
+            # MCP `list_skills` should surface them too.
+            if should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS) and not _is_public_template_agent_skill_path(
+                rel_path
+            ):
                 continue
             yield p
 

@@ -497,6 +497,28 @@ class TestSlidesMathHeaderInjection:
         assert "\\providecommand{\\citep}" in content
         assert "unicode-math" not in content
 
+    def test_helper_defines_proposition_and_hypothesis_environments(self, tmp_path):
+        """Beamer's document class already defines \\theorem/\\lemma/\\corollary/
+        \\definition natively; redeclaring them via \\newtheorem fails with
+        "Command ... already defined" (regression: template_formal's
+        auto-numbered-formalism manuscript hit exactly this on \\usepackage-free
+        beamer compilation). Only the two environments beamer does not ship —
+        proposition and hypothesis — should be declared here, and neither
+        declaration should attempt to chain onto beamer's own theorem counter.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        renderer = self._make_renderer(tmp_path)
+        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
+        assert "\\newtheorem{proposition}{Proposition}" in content
+        assert "\\newtheorem{hypothesis}{Hypothesis}" in content
+        assert "\\newtheorem{theorem}" not in content
+        assert "\\newtheorem{lemma}" not in content
+        assert "\\newtheorem{corollary}" not in content
+        assert "\\newtheorem{definition}" not in content
+
     def test_beamer_renames_compiled_pdf_to_output_file(self, tmp_path, monkeypatch):
         """When compile_latex writes {stem}_slides.pdf, normalize to output_file."""
         source = tmp_path / "slides.md"

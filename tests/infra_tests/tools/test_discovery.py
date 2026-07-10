@@ -32,6 +32,7 @@ def test_discover_tools_against_real_repo() -> None:
     assert "template_code_executor" in names
     assert "template_validator" in names
     assert "template_skill" in names
+    assert "template_model" in names
 
 
 def test_public_tool_infos_contains_exemplars() -> None:

@@ -18,6 +18,7 @@ Always-present permanent exemplars under `projects/`:
 | `template_autoresearch_project` | AutoResearch exemplar | ✅ Permanent exemplar |
 | `template_autoscientists` | Coordination-mechanism testbed | ✅ Permanent exemplar |
 | `template_code_project` | Optimization research exemplar | ✅ Permanent exemplar |
+| `template_formal` | Strongly-typed multiagent ant-robot colony exemplar | ✅ Permanent exemplar |
 | `template_newspaper` | Newspaper layout exemplar | ✅ Permanent exemplar |
 | `template_prose_project` | Prose-review exemplar | ✅ Permanent exemplar |
 | `template_sia` | SIA self-improvement harness exemplar | ✅ Permanent exemplar |

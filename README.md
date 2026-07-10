@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_data_descriptor`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_redacted_report`, `template_registered_report`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_data_descriptor`, `template_eda_notebook`, `template_formal`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_redacted_report`, `template_registered_report`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -128,6 +128,7 @@ inside that exemplar.
 | `template-autoresearch-project` | `template_autoresearch_project` | Bounded AutoResearch loop |
 | `template-autoscientists` | `template_autoscientists` | Agent-team coordination testbed |
 | `template-data-descriptor` | `template_data_descriptor` | Dataset descriptor and data-paper contract |
+| `template-formal` | `template_formal` | Strongly typed multiagent colony |
 | `template-template` | `template_template` | Self-referential meta-template |
 | `template-newspaper` | `template_newspaper` | Data-driven print layout |
 | `template-textbook` | `template_textbook` | Book-length manuscript scaffold |
@@ -161,12 +162,17 @@ SKILL.md files from live discovery:
 - **Infrastructure module skills:** [`infrastructure/SKILL.md`](infrastructure/SKILL.md)
   is the Layer-1 hub; pair the relevant `infrastructure/<module>/SKILL.md`
   with that module's `AGENTS.md` before editing code.
+- **Script and resource-pool skills:** `scripts/*/SKILL.md` files and
+  public `fonds/templates/`, `rules/templates/`, and `tools/templates/`
+  skills are included when present, without scanning private lifecycle roots.
 - **Human skill index:** [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md)
   lists all discovered skills. Regenerate after skill changes with
   `uv run python -m infrastructure.skills write-index`; refresh the editor
   manifest with `uv run python -m infrastructure.skills write`; verify both
   with `uv run python -m infrastructure.skills check` and
-  `uv run python -m infrastructure.skills check-contracts`.
+  `uv run python -m infrastructure.skills check-contracts`. The same inventory
+  is returned by the opt-in stdio MCP server's `list_skills` tool via
+  `uv run python -m infrastructure.mcp_server`.
 
 ## 🔀 Multi-Project Support
 
@@ -185,6 +191,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
 | [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) | Dataset descriptor/data-paper scaffold (schema, file inventory, provenance chain, data dictionary, quality checks, license boundary) | see canonical facts | see canonical facts |
 | [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) | Exploratory data analysis on tabular data (missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures) | see canonical facts | see canonical facts |
+| [`projects/templates/template_formal/`](projects/templates/template_formal/) | Strongly typed multiagent colony (ADTs, session-typed protocols, affine handles, and type/runtime negative controls) | see canonical facts | see canonical facts |
 | [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection) | see canonical facts | see canonical facts |
 | [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics; default term `modafinil`) | see canonical facts | see canonical facts |
 | [`projects/templates/template_madlib/`](projects/templates/template_madlib/) | Conditional token-injection manuscript generator (config-owned lexicon, QA probes, authoring contract, and IMRAD hydration) | see canonical facts | see canonical facts |

@@ -1,0 +1,101 @@
+# Standalone Fork Guide
+
+## Purpose
+
+`template_formal` is the strongly-typed multiagent ant-robot colony exemplar:
+illegal-state-unrepresentable ADTs, a session-typed handshake protocol,
+affine-discipline resource handles, per-agent local storage/networking, a
+decentralized colony coordinator, and an optional formal side-spec (Lean 4 +
+TLA+) — with mypy `--strict` used as a real, tested oracle.
+
+## Copy This When
+
+Use it when the research subject *is* the type architecture itself: you need
+a template where illegal states are unrepresentable by construction,
+protocol phases are enforced by the type checker rather than by runtime
+convention, and a decentralized multiagent simulation needs its own local
+storage and local networking per agent — not a shared global mutable state.
+
+## Clean Copy Command
+
+From the template repository root:
+
+```bash
+uv run python scripts/audit/copy_exemplar.py \
+  --source templates/template_formal \
+  --dest projects/working/my_formal_project \
+  --new-name my_formal_project
+```
+
+Fallback when the helper is unavailable:
+
+```bash
+rsync -a \
+  --exclude '.venv/' --exclude '.pytest_cache/' --exclude '.mypy_cache/' \
+  --exclude 'output/' --exclude '*.egg-info/' --exclude 'formal/lean/.lake/' \
+  projects/templates/template_formal/ projects/working/my_formal_project/
+```
+
+## Required Post-Fork Edits
+
+- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+  and `pyproject.toml` (rename the package, update authors/description).
+- Rename the `src/template_formal/` package if the fork uses a different
+  package name, and update every `from template_formal...` import across
+  `src/`, `tests/`, and `scripts/` to match.
+- Replace the type/protocol/storage/network/agent/colony domain modules with
+  the fork's own illegal-state-unrepresentable design, keeping the same
+  positive-control/negative-control test discipline (mypy-as-oracle fixtures,
+  fault-injected protocol tests, colony integration test).
+- Regenerate `output/data/colony_demo_summary.json` and the per-agent SQLite
+  files before updating any manuscript result claims.
+
+## Validation Commands
+
+From the template repository root after copying into `projects/working/`:
+
+```bash
+uv run pytest projects/working/my_formal_project/tests/ \
+  --cov=projects/working/my_formal_project/src --cov-fail-under=90
+MYPYPATH=projects/working/my_formal_project/src \
+  uv run mypy --strict --explicit-package-bases --namespace-packages \
+  projects/working/my_formal_project/src
+uv run python projects/working/my_formal_project/scripts/02_run_analysis.py
+```
+
+For the public exemplar:
+
+```bash
+uv run pytest projects/templates/template_formal/tests/ \
+  --cov=projects/templates/template_formal/src --cov-fail-under=90
+MYPYPATH=projects/templates/template_formal/src \
+  uv run mypy --strict --explicit-package-bases --namespace-packages \
+  projects/templates/template_formal/src
+```
+
+## Intentional Non-Standalone Dependencies
+
+The manuscript renders through the shared `infrastructure/rendering/` and
+`infrastructure/validation/` pipeline, and `scripts/00_setup_environment.py`
+imports `infrastructure.rendering.preflight`. `src/template_formal/` itself
+has zero `infrastructure/` imports — every type/storage/protocol/network/
+agent/colony module is pure, project-local Python — so the source package is
+standalone even though the manuscript pipeline is not.
+
+The optional formal side-spec (`formal/lean/`, `formal/tla/`) requires
+`lake`/`elan` (Lean 4) and a Java runtime (TLA+ TLC) respectively; neither is
+part of `--core-only` pipeline runs, the coverage gate, or a forkable
+project's minimum requirements. Fork without them if the formal side-spec
+does not apply to your domain.
+
+## What Not To Claim
+
+Do not claim a wider mypy-oracle detection class, a wider fault-injection
+coverage, or a wider colony-convergence result than the fixtures and tests
+actually exercise. `tests/mypy_fixtures/` covers six specific known-bad
+patterns (ISC-2/4/15/18/19/31) — it is not evidence about bug classes those
+fixtures do not construct. The colony integration test's emergent
+convergence result is specific to its three-agent, two-location, five-tick
+configuration; widening any of these claims in a fork requires a new
+negative-control test or fault-injected scenario first, not a wider sentence
+in the manuscript.

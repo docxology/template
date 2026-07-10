@@ -12,9 +12,13 @@ uv run python -m infrastructure.skills check-contracts
 uv run python -m infrastructure.skills list-json
 ```
 
-Default discovery roots are `infrastructure/`, `projects/`, `docs/prompts/`,
-and `.cursor/skills/`. Override them with `--roots` after the subcommand when
-you need a focused manifest.
+Default discovery roots are `infrastructure/`, `scripts/`,
+`projects/templates/`, `fonds/templates/`, `rules/templates/`,
+`tools/templates/`, `docs/prompts/`, and `.cursor/skills/`. Public exemplar
+`.agents/skills/<name>/SKILL.md` descriptors under `projects/templates/` are
+included for Hermes/agentskills.io, Codex, and MCP `list_skills` visibility.
+Override roots with `--roots` after the subcommand when you need a focused
+manifest.
 
 ## Python API
 

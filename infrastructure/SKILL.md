@@ -10,8 +10,8 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 ## Finding skills (Cursor and other agents)
 
 - **Hub:** This file lists every subpackage skill and a module map.
-- **Manifest:** `.cursor/skill_manifest.json` lists every skill (`name`, `description`, `path`); regenerate with `uv run python -m infrastructure.skills write`.
-- **Search:** `infrastructure/**/SKILL.md` (hub `infrastructure/SKILL.md`, top-level subpackage skills, and nested skills such as `infrastructure/core/telemetry/SKILL.md`, `infrastructure/reference/citation/SKILL.md`, and `infrastructure/search/literature/SKILL.md`).
+- **Manifest:** `.cursor/skill_manifest.json` lists every discovered first-party skill (`name`, `description`, `path`); regenerate with `uv run python -m infrastructure.skills write`.
+- **Search:** default discovery covers `infrastructure/**/SKILL.md`, `scripts/**/SKILL.md`, public `projects/templates/**/SKILL.md` including `.agents/skills`, public resource-pool template skills under `fonds/templates/`, `rules/templates/`, and `tools/templates/`, plus `.cursor/skills/`.
 - **In Cursor:** `@infrastructure/SKILL.md` or `@infrastructure/<module>/SKILL.md` to load context; pair with the matching `AGENTS.md` for API tables.
 - **Frontmatter:** Each `SKILL.md` has YAML `name` and `description` for routing (see also the table in `infrastructure/README.md`).
 

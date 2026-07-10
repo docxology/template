@@ -44,7 +44,7 @@ metadata:
 
 ## Workflow
 
-1. **Inventory** - run `uv run python -m infrastructure.skills list-json`, `check`, and `check-contracts`. Use [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) as the human index and `.cursor/skill_manifest.json` as the editor manifest.
+1. **Inventory** - run `uv run python -m infrastructure.skills list-json`, `check`, `check-contracts`, and `operations-check`. Use [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) as the human index, `.cursor/skill_manifest.json` as the editor manifest, and `.cursor/operations_manifest.json` as the Codex/MCP operation catalog.
 
 2. **Route locally first** - choose `docs/prompts/SKILL.md` ([template-workflows](../SKILL.md)) for broad template work, then exactly one child skill for implementation. Use this skill only for agent onboarding, routing, skill-surface maintenance, and external-skill review.
 
@@ -54,7 +54,7 @@ metadata:
 
 5. **Adopt external references template-first** - when a reference such as [Steward OS](https://nesquena.github.io/steward-os/), [AutoResearch CLI](https://github.com/trotsky1997/autoresearch-cli), or [LEANN](https://github.com/StarTrail-org/LEANN) is useful, translate the idea into template-native routing, eval, local guide, or deterministic infrastructure language. Do not copy external SKILL.md bodies, add scheduled jobs, create public-write automation, install MCP servers, or vendor external directories unless the user explicitly requests that separate implementation.
 
-6. **Verify** - rerun skill checks, skill tests, eval harness, and docs lint before claiming the routing surface is ready.
+6. **Verify** - rerun skill checks, operations checks, MCP smoke tests, skill tests, eval harness, and docs lint before claiming the routing surface is ready.
 
 ## Steward OS reference map
 
@@ -106,6 +106,8 @@ Steward OS is an external operating-model reference for AI-assisted project main
 ```bash
 uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills check-contracts
+uv run python -m infrastructure.skills operations-check
+uv run pytest tests/infra_tests/test_mcp_server.py -q
 uv run pytest tests/infra_tests/skills -q
 uv run python docs/prompts/_skill-eval/scripts/run_eval_harness.py --write-review --fail-under 0.96
 uv run python scripts/audit/lint_docs.py

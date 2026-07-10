@@ -1,0 +1,95 @@
+# template_formal TODO
+
+Forward-only integrity backlog for the strongly-typed ant-robot colony
+exemplar. Keep this file focused on template status, not general feature
+ideas. This file may be edited by more than one agent in parallel (source
+code / formal-specs and manuscript / forkable-surface) — preserve existing
+lines when appending; do not overwrite sections you did not author.
+
+## Current validation evidence
+
+- mypy-as-oracle: `uv run mypy --strict projects/templates/template_formal/src` must exit 0; `tests/test_mypy_oracle.py` also runs this as a subprocess and separately asserts non-zero exit + matching error substring on each `tests/mypy_fixtures/*.py` negative-control fixture.
+- Project tests and coverage: `uv run pytest projects/templates/template_formal/tests/ --cov=projects/templates/template_formal/src --cov-fail-under=90`.
+- Latest full regression run: 277 passed with 96.03% coverage (no skips or failures; timing is machine-dependent).
+- Zero mocks: `grep -rn "MagicMock\|mocker.patch\|unittest.mock" projects/templates/template_formal/tests/` must return nothing.
+- Optional formal side-spec: `scripts/check_formal_specs.sh` runs the Lean 4 `lake build` and the TLA+ TLC model check as real subprocesses; both are non-default (require `lake`/`elan` and a Java runtime respectively) and are not part of the core pipeline.
+- Manuscript honesty gate: grep for `"dependent type"` and `"linear type"` outside the manuscript's explicit "What mypy --strict proves" scoping section must return zero matches (ISC-44).
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`.
+
+## Optional formal side-spec
+
+- Formal side-specs (Lean 4 + TLA+) are non-default, run via `scripts/check_formal_specs.sh`.
+- **Decision (ISC-35/36): shipped, not cut.** Both a Lean 4 model (`formal/lean/AntProtocol.lean`) and a TLA+ spec (`formal/tla/AntProtocol.tla` + `.cfg`) of the handshake protocol ship in v1, each wired to exactly one real runnable check command inside `scripts/check_formal_specs.sh` (`lake build` for Lean; TLC via `tla2tools.jar` for TLA+). Neither is decorative: the script fails non-zero if either check fails, and both have been executed at least once with captured output (see `## Decisions` in `ISA.md`). Both remain **optional** — they are not part of `--core-only` pipeline runs or the required 90% coverage gate on `src/`, since Python source coverage cannot observe Lean/TLA+ execution.
+- **2026-07-09 Lean spec expansion (audit follow-up).** `formal/lean/AntProtocol.lean` grew from 3 theorems to 7, all zero-`sorry`, zero-extra-axiom, re-verified via a clean (`rm -rf .lake/build`) `lake build`: `phase_exhaustive` (the 4 `Phase` constructors are the only inhabitants), `closed_is_terminal` (no outgoing `Step` from `closed`), a minimal affine `SessionToken`/`use` model plus `cannot_reuse_consumed_token` (the precondition needed to reuse an already-consumed token is unsatisfiable — the first Lean counterpart to the runtime `SessionConsumedError` discipline in `protocol/session.py`, previously unmodeled), and `no_direct_idle_to_established` replacing the prior `no_skip_to_established` (which was near-content-free — it reduced to a double-negation of `established_requires_handshaking` via a vacuously-true `Reaches idle idle` conjunct). All 7 confirmed via the file's own `#print axioms` lines: `established_requires_handshaking`, `no_direct_idle_to_established`, `closed_is_terminal`, and `session_token_use_succeeds` depend on no axioms at all; `phase_exhaustive` and `cannot_reuse_consumed_token` were rewritten to avoid `simp`-introduced `propext` and also report zero axioms.
+- **2026-07-09 Second cross-vendor audit fix (round 2).** A follow-up Forge pass caught `closed_only_via_known_paths` carrying the identical near-vacuity class the line above already fixed once (its `Reaches idle established ∨ Reaches idle idle ∨ Reaches idle handshaking` conclusion is trivially satisfiable via the unconditionally-true `Reaches idle idle` disjunct, independent of the hypothesis). Rewording to an existential over the run's own extracted predecessor phase did not escape the trap (every candidate phase is trivially `Reaches`-reachable from `idle` in this 4-state model regardless of the specific run) — the theorem was removed rather than patched a second time, and the theorem count stays at 7 by promoting the already-existing, genuinely non-vacuous helper `step_to_closed_cases` (a direct, falsifiable, universally-quantified claim about the `Step` relation, with no `Reaches`/hypothesis wrapping) to a named, `#print axioms`-checked theorem in its place. See `ISA.md`'s Changelog and `manuscript/05_results_discussion.md`'s Lean paragraph for the full account.
+
+## Integrity and template-status gaps
+
+- Keep this exemplar as the smallest reliable control-positive path for illegal-state-unrepresentable, session-typed, affine-discipline design applied to a decentralized multiagent domain.
+- Keep the manuscript's claim-scoping section ("what mypy --strict proves" vs "what is a runtime discipline") in lockstep with `tests/mypy_fixtures/` — every strong claim needs a live ISC-numbered test, not just prose.
+- Keep the formal side-specs (Lean/TLA+) wired to `scripts/check_formal_specs.sh` for as long as they ship; do not let either drift to vestigial/unwired status (ISC-36 anti).
+
+## Configurable-surface gaps
+
+- Keep `manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
+- Add any future fault-injection or protocol-timing parameters under typed source loaders (`network/bus.py::FaultConfig`) rather than reading ad hoc YAML from scripts.
+
+## Documentation and signposting gaps
+
+- Keep README quick-start commands aligned with the qualified project name `templates/template_formal`.
+- Link new public artifacts from README, AGENTS, and `docs/_generated/exemplar_roster.md` through the generator (a later registration stage owns this).
+
+## Test and validator gaps
+
+- Add a negative control before widening any new typed-invariant claim beyond the ISC-1..40 surface already covered.
+- Add dashboard/report schema assertions only if a future stage adds a dashboard (none ships in v1 — manuscript + CLI scripts + figures only, per Out of Scope).
+- Registration is complete: `infrastructure/project/public_scope.py`, `docs/_generated/{active_projects,exemplar_roster,COUNTS}.md`, root `.gitignore` (both `projects/templates/template_formal/` and `output/templates/template_formal/` negations), `scripts/audit/check_template_drift.py --strict`, and `scripts/audit/check_tracked_all.py` all pass clean. `CLAUDE.md` and `README.md`'s hand-maintained exemplar lists/tables also mention `template_formal`.
+- Not yet updated (lower-priority, pre-existing staleness predates this template — several of these were already missing `template_pitch_deck` too): `MAINTAINERS.md`'s tracked-project-list sentence, `projects/AGENTS.md`'s "Eighteen projects" paragraph, `projects/README.md`'s exemplar bullets/tables, `projects/templates/AGENTS.md`'s "seventeen" structure list, `projects/PAI.md`'s table. These are prose-only (not gated by `check_template_drift.py`); backfill in a dedicated roster-hygiene pass rather than piecemeal per-template edits.
+
+## Ordered improvement ladder
+
+1. Preserve the paired static+dynamic proof contract: every new ADT/session-type/affine-handle claim gets both a `tests/mypy_fixtures/` negative control and a runtime-raise unit test before merge.
+2. Keep the formal side-specs (if retained) wired to a real runnable check; cut cleanly (zero `.lean`/`.tla` files) if they ever become unmaintainable rather than let them go stale.
+3. Expand the colony/pheromone integration scenario only with deterministic seeds and documented emergent-property assertions (never a scripted/staged result).
+4. Refresh generated docs (`docs/_generated/active_projects.md`, `exemplar_roster.md`, `COUNTS.md`) after registration and after any public-surface change.
+
+## Round-4 scientific-depth additions (2026-07-09, ISC-85..90)
+
+- `colony/nullmodel.py` (random-choice baseline) and `colony/sweep.py` (generic parameter-sweep runner) are new, real, 100%-covered infrastructure — not throwaway scripts. Reuse them for any future hypothesis of the same shape ("does convergence rate change as parameter X varies," "does the real mechanism beat chance") rather than writing a new one-off script.
+- Three real experiments (decay-rate sensitivity, real-vs-null-model comparison, heterogeneity-magnitude sweep) are pinned as regression-guard tests in `tests/colony/test_colony_experiments_extended.py` and reported in `manuscript/05_results_discussion.md`'s "Three pre-registered experiments" section. All numbers are bound to `seed_base=0`; robustness was spot-checked at a handful of additional seed bases (documented in `ISA.md`'s Decisions) but those checks are **not** gated by a test — a future session wanting a stronger robustness claim should add a parametrized multi-seed-base regression test rather than relying on the prose record alone.
+- **Pending, not done by this round:** the manuscript PDF has not been re-rendered since this round's additions (markdown-source validation only — `infrastructure.validation.cli markdown` passes clean). The primary session owns rendering (`scripts/pipeline/stage_03_render.py`) and page-scale raster re-confirmation of the new section's math/table rendering before this round's manuscript changes are considered fully verified end-to-end.
+  - **RESOLVED 2026-07-09 (round 6):** the manuscript has since been re-rendered multiple times (most recently at 20 pages) and independently page-raster-verified section by section. This line is kept for the historical record rather than deleted, per this file's own append-only convention.
+- A dedicated ablation isolating the mechanistic account offered for Experiment A's decay threshold (why low decay breaks convergence — pheromone accumulation swamping the free-energy discrimination signal) is explicitly flagged as future work, not claimed as proven by this round. **Still open as of round 6 — see below.**
+
+## Round-6 additions (2026-07-09, ISC-97..106)
+
+- **Presentation.** New title/subtitle ("Illegal States, Mostly Unrepresentable"); a deterministic, seeded procedural cover-art generator (`colony/cover_art.py`, no AI image API — none was available in this environment, and a reproducible generator fits this template's zero-mocks discipline better anyway), wired via `scripts/zz_generate_cover_art.py` to `manuscript/figures/cover_colony.png`; real auto-numbered LaTeX formalisms (`\newtheorem` in `preamble.md`; 10 blocks across `02_type_architecture.md`/`03_storage_as_functor.md`/`04_active_inference.md`/`05_results_discussion.md`, one shared Theorem/Lemma/Proposition/Corollary/Definition/Hypothesis counter, Definition 1 through Theorem 10). A shared-infra fix landed in `infrastructure/rendering/slides_renderer.py` (outside this project's own tree — affects every template using beamer slides) so beamer doesn't hard-fail on the new `proposition`/`hypothesis` environments (beamer already ships `theorem`/`lemma`/`corollary`/`definition` natively).
+- **Methods.** `colony/stats.py` gained `cochran_armitage_trend_test` (stdlib-only, real closed-form ordered-trend test), applied to both the decay and heterogeneity sweeps — **this closes the "add a formal trend test across the full ordered sweep" item every round since round 4 had flagged as the correctly-scoped next step.**
+- A gated cross-seed replication test now exists for the **heterogeneity** sweep (`seed_base=7000`, sharing zero seeds with `seed_base=0`) — narrows the "robustness spot-checks not gated by a test" line above to **decay only** (see "Still open" below).
+- **TLA+ hardening.** The side-spec gained a permanent negative control, `formal/tla/AntProtocolFaultyNegControl.tla`/`.cfg` — proves `NoFalseEstablishment` is not vacuously true (a RedTeam mutation test found the pre-existing invariant would stay green even if the receiving guard were broken to accept corrupted content). Wired into `scripts/check_formal_specs.sh` with inverted pass/fail logic (a reported violation is the expected PASS). Manuscript's Theorem 10 corrected from claiming "content-integrity resilience" to the precise "send-provenance" guarantee actually established.
+- **Cross-vendor audit:** Forge — verdict **PASS**. Three minor, non-blocking nits found and fixed: a dead branch + stale docstring in `slides_renderer.py`, a docstring under-claim in `cover_art.py` (test asserts a stronger, correct claim than the docstring stated), and a missing dedicated regression test for `cochran_armitage_trend_test`'s 2-group happy path (added).
+
+## Round-7 additions (2026-07-09, ISC-107..110) — all five round-6 "Still open" items closed
+
+All five items below the old "Still open" heading were closed this round by a Workflow-orchestrated sequential build chain (four dependent statistics/experiment items serialized to avoid the file-collision class round 6 hit, plus one fully-independent docs item run in parallel), then independently re-verified by the primary session, then Forge cross-vendor audited (verdict PASS, one minor pre-existing doc concern found and fixed — see below).
+
+1. ~~Decay-sweep robustness across seed bases~~ **CLOSED (ISC-107).** A real `seed_base=1000` replication of the decay sweep (the exact seed base the manuscript's prose already named) is now a gated regression test, reproducing the identical qualitative shape (near-zero floor, 100% plateau, top-end decline) with different exact counts, as expected for a disjoint seed block. `seed_base=5000` remains an informal, ungated spot-check.
+2. ~~Decay-threshold mechanistic ablation~~ **CLOSED (ISC-109), genuinely confirmed, not just corroborated by trace inspection.** New optional `ColonyTrialConfig.sensed_concentration_cap` field, wired to clip sensed concentration before the sensing-noise term. Capping at 13.0 (preference-range ceiling + 2 sensing-noise σ, chosen a priori, not tuned to win) flips both decay=0.10 and decay=0.30 from 0/60 to 60/60 — H0 rejected, real evidence the mechanism is at least *sufficient*. Honestly scoped: sufficiency shown, not necessity, and the KL-term argument itself is still not directly instrumented.
+3. ~~real-vs-null decay/noise confound~~ **CLOSED (ISC-108).** A real `deposit_amount=0.0` condition (full Agent/BeliefState/free-energy loop, zero pheromone deposit) scores 0/150 — statistically indistinguishable from the null model's 1/150 — isolating the real mechanism's advantage to the pheromone channel specifically, not general decision-rule noise-robustness. Does not close the separate `decay=0.97`/`sensing_noise_std=4.0` positive-control confound (still open, was never claimed to).
+4. ~~Roster-hygiene pass~~ **CLOSED.** `template_formal` added to `MAINTAINERS.md`, `projects/AGENTS.md`, `projects/README.md`, `projects/templates/AGENTS.md`, `projects/PAI.md`; stale "nineteen"/"nine" counts corrected to "twenty" where verified against the real roster. Forge's audit found one file (`MAINTAINERS.md`) still had a stale *inline enumeration* (only 10 of 20 exemplars named) predating this round — fixed by replacing the hand-maintained list with a pointer to `docs/_generated/active_projects.md` alone, drift-proof rather than re-enumerating.
+5. ~~Multiple-comparisons correction~~ **CLOSED, by explicit methodological note rather than a bolted-on correction (ISC-110).** New manuscript paragraph explains why no Bonferroni/Holm correction is applied: the primary claims rest on one pre-specified omnibus Cochran-Armitage trend test per sweep, and the one genuinely exploratory pairwise comparison is already disclosed non-significant. Independently grep-verified (twice — once by the build agent, once by Forge) that no instance of scanning multiple pairwise comparisons for the smallest p-value actually exists in the manuscript.
+
+**Process note, worth remembering for future rounds:** two of the four sequential build agents in this round's Workflow each mis-anchored their new `## Criteria` ISC bullet into `## Decisions` instead (an ISA.md structural bug, not a content bug) — caught by the primary session via a full-file section-heading grep, not by either agent's own review. A section-heading-level structural check belongs in every round's independent re-verification pass on a multi-section document like `ISA.md`, not just spot-checks of the added prose itself.
+
+## Still open (none carried forward from round 6 — see below for what round 7 itself did not attempt)
+
+- The `decay=0.97`/`sensing_noise_std=4.0` positive control's own confound (a `deposit_amount=0` ablation *at that specific configuration*, distinct from ISC-108's calibrated-baseline ablation) remains untested.
+- The `sensed_concentration_cap`'s dose-response curve between the tested cap (13.0) and the fade-out point (~20.0) is informally probed but not gated by a regression test.
+- No new items were identified this round beyond completing round 6's list — the next round's agenda is genuinely open.
+
+## Round-15 additions (2026-07-10, ISC-115..117)
+
+- **Evidence provenance is now fail-closed at the project surface (ISC-115).** `data/claim_ledger.yaml` records the quantitative tokens emitted by the strict manuscript result surfaces, their source paths, source tier, and generated validation artifact. `tests/test_project_surface_sync.py` resolves every source path and rejects missing or duplicate ledger rows. Stage 04 now reports `Evidence registry: true` rather than exiting successfully with an unresolved registry warning.
+- **Required publication figures now fail closed (ISC-116).** The two analysis figures are declared in `experiment_plan.yaml`, generated by `scripts/02_run_analysis.py`, registered in `output/figures/figure_registry.json`, and checked as readable, non-trivial PNGs. Broken destinations and blank/invalid render outputs are negative controls; a missing required figure aborts the analysis stage.
+- **The live method surface is synchronized (ISC-117).** README/test/manuscript method counts now describe eight analyses, six bad plus three good mypy fixtures, and the current 277-test/96.03% run. A project-level synchronization test guards the experiment-plan figure declarations, manuscript labels, fixture roster, and current validation text.
+- **End-to-end status:** analysis, formal Lean/TLA+ checks including the inverted faulty-model negative control, manuscript rendering, Stage 04 all-check validation, Stage 05 artifact copy, and browser/PDF visual QA are required evidence for this round.

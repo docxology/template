@@ -12,6 +12,7 @@ Covers fixture-driven branches for:
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
@@ -254,8 +255,7 @@ def test_render_combined_docx_with_bibliography(tmp_path: Path) -> None:
     render_combined_docx(manager, manuscript_dir, "myproject", reporter)
 
 
-def test_render_combined_epub_with_bibliography(tmp_path: Path) -> None:
-    """render_combined_epub passes bibliography to render_epub when .bib exists."""
+def test_render_combined_epub_with_bibliography(tmp_path: Path, monkeypatch) -> None:
     project_root = tmp_path
     manuscript_dir = project_root / "manuscript"
     manuscript_dir.mkdir()
@@ -267,12 +267,30 @@ def test_render_combined_epub_with_bibliography(tmp_path: Path) -> None:
 
     bib = manuscript_dir / "references.bib"
     bib.write_text("@article{x, title={X}}\n")
+    (manuscript_dir / "config.yaml").write_text(
+        "paper:\n  title: Test EPUB\nauthors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n"
+    )
 
     manager = _make_manager(tmp_path)
     reporter = _make_reporter(tmp_path)
+    captured: dict[str, object] = {}
 
-    # Should not raise — errors are caught and logged internally
+    def fake_render_epub(*args, **kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(output_path=Path("test.epub"), size_bytes=1024)
+
+    monkeypatch.setattr("infrastructure.rendering.epub_renderer.render_epub", fake_render_epub)
+
     render_combined_epub(manager, manuscript_dir, "myproject", reporter)
+
+    assert captured["bibliography"] is None
+    assert captured["title"] == "Test EPUB"
+    assert captured["author"] == "Ada Lovelace"
+    assert captured["language"] == "en-GB"
+    extra_args = captured["extra_args"]
+    assert isinstance(extra_args, list)
+    assert "--citeproc" in extra_args
+    assert f"--bibliography={bib}" in extra_args
 
 
 def test_render_combined_epub_without_bibliography(tmp_path: Path) -> None:

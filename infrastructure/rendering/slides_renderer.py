@@ -286,10 +286,13 @@ class SlidesRenderer:
         typesets cleanly in slides. The fallback renders citations as
         ``[key]`` and unresolved cross-references as detokenized label
         strings — readable, distinct, and safe from undefined-control-
-        sequence and raw-underscore errors.
+        sequence and raw-underscore errors. It also unconditionally
+        declares the two auto-numbered formalism environments beamer does
+        not ship natively (``proposition``, ``hypothesis`` — see below).
 
-        Returns the header path when a snippet was produced, or ``None``
-        when neither a math snippet nor a citation fallback is needed.
+        Returns ``None`` only when ``manuscript_dir`` itself is ``None``;
+        otherwise a header path is always returned, since the natbib/cref
+        fallback and formalism-environment declarations are unconditional.
         """
         if manuscript_dir is None:
             return None
@@ -335,10 +338,25 @@ class SlidesRenderer:
             "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
         )
 
-        if not snippet_parts:
-            logger.debug("preamble.md does not need a slides header; skipping")
-            return None
+        # Auto-numbered formalism environments the manuscript body may use
+        # (mirrors the \newtheorem declarations `preamble.md` defines for the
+        # combined PDF, per @sec:type-architecture-style raw-LaTeX blocks).
+        # Beamer's own document class already provides \theorem, \lemma,
+        # \corollary, and \definition as built-in styled blocks (redeclaring
+        # them via \newtheorem fails with "Command ... already defined"), so
+        # only the two environments beamer does *not* ship — proposition and
+        # hypothesis — need a declaration here. Each gets its own independent
+        # counter rather than chaining onto beamer's internal theorem counter
+        # (whose name is not a public API): slides already render several
+        # PDF-only features in simplified form (see the natbib/cref
+        # fallbacks above), so a proposition/hypothesis number that doesn't
+        # exactly match the PDF's shared sequence is consistent with that
+        # existing degraded-but-non-fatal slides behavior, not a regression.
+        snippet_parts.append("\\newtheorem{proposition}{Proposition}\n\\newtheorem{hypothesis}{Hypothesis}\n")
 
+        # snippet_parts is never empty past this point (the natbib/cref
+        # fallback and the formalism-environment declarations above are both
+        # unconditional appends) -- a header is always written here.
         output_dir.mkdir(parents=True, exist_ok=True)
         header_path = output_dir / "_slides_math_header.tex"
         header_path.write_text("\n".join(snippet_parts), encoding="utf-8")

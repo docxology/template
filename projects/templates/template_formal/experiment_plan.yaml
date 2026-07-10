@@ -1,0 +1,23 @@
+conditions:
+  - name: happy_path_protocol
+    role: reference
+    description: "Session-typed handshake protocol driven over the in-process bus with no fault injection enabled."
+  - name: mypy_strict_oracle
+    role: proposed
+    description: "mypy --strict run against src/template_formal/ (expected zero exit) and against six known-bad tests/mypy_fixtures/ programs (expected non-zero exit each)."
+  - name: fault_injected_protocol
+    role: variant
+    description: "Same handshake protocol with drop/reorder/duplicate/corrupt fault modes enabled independently via the deterministic-seed fault injector."
+metrics:
+  primary:
+    name: mypy_exit_code_matches_expected_class
+    direction: minimize
+protocol: "Run tests/test_mypy_oracle.py, tests/network/test_bus.py, tests/network/test_handshake_over_bus.py, and tests/colony/test_colony_integration.py as real subprocess/pytest invocations; assert exit codes and typed Result variants directly against captured state, never against a scripted or hardcoded outcome."
+expected_figures:
+  - fig:demo-convergence
+  - fig:convergence-tick-distribution
+expected_tables: []
+baselines:
+  - happy_path_protocol
+ablations:
+  - fault_injected_protocol

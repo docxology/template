@@ -1,6 +1,7 @@
 """Web/HTML rendering module."""
 
 import base64
+import html
 import re
 import shutil
 import subprocess
@@ -137,7 +138,10 @@ class WebRenderer:
         safe_source = source_file.with_suffix(source_file.suffix + ".web.tmp")
         try:
             safe_source.write_text(
-                self._html_safe_markdown(source_file.read_text(encoding="utf-8")),
+                self._html_safe_markdown(
+                    source_file.read_text(encoding="utf-8"),
+                    preserve_crossrefs=False,
+                ),
                 encoding="utf-8",
             )
         except OSError:
@@ -163,6 +167,8 @@ class WebRenderer:
                 self._embed_favicon(output_file)
                 self._write_favicon_file(output_file.parent)
                 self._normalize_figure_paths_in_file(output_file)
+                self._enhance_accessibility(output_file)
+                self._add_responsive_image_variants(output_file)
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -321,6 +327,11 @@ class WebRenderer:
             self._write_favicon_file(output_file.parent)
             self._embed_css(output_file)
             self._normalize_figure_paths_in_file(output_file)
+            self._enhance_accessibility(
+                output_file,
+                language=self._manuscript_language(manuscript_dir),
+            )
+            self._add_responsive_image_variants(output_file)
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
 
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
@@ -352,7 +363,29 @@ class WebRenderer:
             args.append(f"--metadata=pagetitle:{title_text}")
         if subtitle:
             args.append(f"--metadata=subtitle:{subtitle}")
+        for entry in config.get("authors") or []:
+            if isinstance(entry, dict) and entry.get("name"):
+                args.append(f"--metadata=author:{entry['name']}")
+            elif isinstance(entry, str) and entry:
+                args.append(f"--metadata=author:{entry}")
+        language = WebRenderer._manuscript_language(manuscript_dir)
+        if language:
+            args.append(f"--metadata=lang:{language}")
         return args
+
+    @staticmethod
+    def _manuscript_language(manuscript_dir: Path) -> str:
+        config_path = manuscript_dir / "config.yaml"
+        if not config_path.exists():
+            return "en"
+        try:
+            config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+        except (OSError, yaml.YAMLError):
+            return "en"
+        metadata = config.get("metadata") if isinstance(config, dict) else None
+        if not isinstance(metadata, dict):
+            return "en"
+        return str(metadata.get("language") or "en")
 
     def _combine_markdown_files(self, source_files: list[Path]) -> str:
         """Combine multiple markdown files into one.
@@ -448,7 +481,13 @@ class WebRenderer:
         return combined
 
     @classmethod
-    def _html_safe_markdown(cls, content: str, *, render_citations: bool = True) -> str:
+    def _html_safe_markdown(
+        cls,
+        content: str,
+        *,
+        render_citations: bool = True,
+        preserve_crossrefs: bool = True,
+    ) -> str:
         """Convert PDF-only raw-LaTeX inline spans into readable HTML text.
 
         The canonical manuscript uses Pandoc raw-LaTeX spans such as
@@ -499,7 +538,7 @@ class WebRenderer:
         # ref handling like any other prose.
         content = cls._html_theorem_blocks(content)
         if render_citations:
-            content = cls._render_pandoc_citations(content)
+            content = cls._render_pandoc_citations(content, preserve_crossrefs=preserve_crossrefs)
         return cls._normalize_figure_paths(cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
 
     @classmethod
@@ -527,7 +566,7 @@ class WebRenderer:
         return cls._THEOREM_BLOCK_RE.sub(_replace, content)
 
     @classmethod
-    def _render_pandoc_citations(cls, content: str) -> str:
+    def _render_pandoc_citations(cls, content: str, *, preserve_crossrefs: bool = True) -> str:
         """Render Pandoc ``[@key]`` citation groups as readable ``[key]`` text.
 
         The HTML writer (unlike the citeproc-driven PDF path) leaves Pandoc
@@ -542,7 +581,7 @@ class WebRenderer:
             keys = cls._PANDOC_CITEKEY_RE.findall(match.group("body"))
             if not keys:
                 return match.group(0)
-            if any(key.startswith(cls._PANDOC_CROSSREF_PREFIXES) for key in keys):
+            if preserve_crossrefs and any(key.startswith(cls._PANDOC_CROSSREF_PREFIXES) for key in keys):
                 return match.group(0)
             return "[" + "; ".join(keys) + "]"
 
@@ -570,6 +609,125 @@ class WebRenderer:
             _tmp.replace(html_file)
         except OSError:
             _tmp.unlink(missing_ok=True)
+            raise
+
+    @classmethod
+    def _enhance_accessibility(cls, html_file: Path, *, language: str = "en") -> None:
+        content = html_file.read_text(encoding="utf-8")
+        if not re.search(r"<html\b[^>]*\blang=", content, flags=re.IGNORECASE):
+            content = re.sub(
+                r"<html\b",
+                f'<html lang="{html.escape(language, quote=True)}"',
+                content,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        content = re.sub(
+            r"(<figcaption\b[^>]*)\saria-hidden=(?:\"true\"|'true')",
+            r"\1",
+            content,
+            flags=re.IGNORECASE,
+        )
+        content = cls._replace_figure_alts(content)
+        if not re.search(r"<main\b", content, flags=re.IGNORECASE):
+            content = re.sub(
+                r"(<body\b[^>]*>)",
+                r'\1\n<main id="main-content">',
+                content,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+            content = re.sub(
+                r"</body>",
+                "</main>\n</body>",
+                content,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        cls._write_if_changed(html_file, content)
+
+    @classmethod
+    def _replace_figure_alts(cls, content: str) -> str:
+        def _figure(match: re.Match[str]) -> str:
+            block = match.group(0)
+            caption_match = re.search(
+                r"<figcaption\b[^>]*>(?P<caption>.*?)</figcaption>",
+                block,
+                flags=re.IGNORECASE | re.DOTALL,
+            )
+            if caption_match is None:
+                return block
+            caption = re.sub(r"<[^>]+>", " ", caption_match.group("caption"))
+            caption = html.unescape(caption)
+            replacements = {
+                "delta": "delta",
+                "pi": "pi",
+                "sqrt": "square root",
+                "approx": "approximately",
+                "times": "times",
+            }
+            caption = re.sub(
+                r"\\([A-Za-z]+)",
+                lambda tex: replacements.get(tex.group(1), tex.group(1)),
+                caption,
+            )
+            caption = re.sub(r"[${}]+", "", caption)
+            caption = re.sub(r"\s+", " ", caption).strip()
+            sentence = re.split(r"(?<=[.!?])\s+", caption, maxsplit=1)[0]
+            concise = sentence[:240].rstrip()
+            if len(sentence) > 240:
+                concise = concise.rsplit(" ", 1)[0] + "…"
+            escaped = html.escape(concise, quote=True)
+            return re.sub(
+                r"(<img\b[^>]*\balt=)(?:\"[^\"]*\"|'[^']*')",
+                rf'\1"{escaped}"',
+                block,
+                count=1,
+                flags=re.IGNORECASE | re.DOTALL,
+            )
+
+        return re.sub(
+            r"<figure\b[^>]*>.*?</figure>",
+            _figure,
+            content,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+
+    @classmethod
+    def _add_responsive_image_variants(cls, html_file: Path) -> None:
+        content = html_file.read_text(encoding="utf-8")
+
+        def _image(match: re.Match[str]) -> str:
+            tag = match.group(0)
+            src_match = re.search(r'\bsrc="([^"]+)"', tag, flags=re.IGNORECASE)
+            if src_match is None:
+                return tag
+            source = src_match.group(1)
+            source_path = Path(source)
+            if source_path.stem.endswith("_mobile"):
+                return tag
+            mobile_source = str(source_path.with_name(source_path.stem + "_mobile" + source_path.suffix))
+            mobile_file = (html_file.parent / mobile_source).resolve()
+            if not mobile_file.is_file():
+                return tag
+            return (
+                '<picture><source media="(max-width: 600px)" '
+                f'srcset="{html.escape(mobile_source, quote=True)}">{tag}</picture>'
+            )
+
+        updated = re.sub(r"<img\b[^>]*>", _image, content, flags=re.IGNORECASE)
+        cls._write_if_changed(html_file, updated)
+
+    @staticmethod
+    def _write_if_changed(path: Path, content: str) -> None:
+        if content == path.read_text(encoding="utf-8"):
+            return
+        temporary = path.with_suffix(path.suffix + ".tmp")
+        try:
+            temporary.write_text(content, encoding="utf-8")
+            temporary.replace(path)
+        except OSError:
+            temporary.unlink(missing_ok=True)
             raise
 
     @staticmethod

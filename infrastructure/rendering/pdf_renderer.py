@@ -1,9 +1,12 @@
 """PDF Rendering module."""
 
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
+
+import yaml
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
@@ -31,6 +34,23 @@ from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
+
+
+def _pdf_tagging_options(manuscript_dir: Path) -> tuple[bool, str]:
+    config_path = manuscript_dir / "config.yaml"
+    if not config_path.is_file():
+        return False, "en"
+    try:
+        config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        return False, "en"
+    metadata = config.get("metadata") if isinstance(config, dict) else None
+    if not isinstance(metadata, dict):
+        return False, "en"
+    language = str(metadata.get("language") or "en")
+    if re.fullmatch(r"[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*", language) is None:
+        language = "en"
+    return bool(metadata.get("tagged_pdf", False)), language
 
 
 class PDFRenderer:
@@ -235,7 +255,12 @@ class PDFRenderer:
 
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
         tex_content = combined_tex.read_text(encoding="utf-8")
-        tex_content = postprocess_latex(tex_content)
+        tagged_pdf, language = _pdf_tagging_options(manuscript_dir)
+        tex_content = postprocess_latex(
+            tex_content,
+            tagged_pdf=tagged_pdf,
+            language=language,
+        )
 
         # Step 5: Fix figure paths for LaTeX compilation
         tex_content = fix_figure_paths(tex_content, manuscript_dir, output_dir)

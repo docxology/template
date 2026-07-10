@@ -11,7 +11,8 @@ tools/
 └── templates/         # Public exemplar tool definitions
     ├── template_code_executor/   # Generic code execution tool
     ├── template_validator/       # Validation tool
-    └── template_skill/           # Agent skill manifest
+    ├── template_skill/           # Agent skill manifest
+    └── template_model/           # Pre-trained linear regression model
 ```
 
 ## Concepts
@@ -23,6 +24,7 @@ tools/
 | **skill** | An agent capability definition — prompt template + `invoke.sh` entrypoint |
 | **agent** | Full agent manifest with memory, tools, and goals |
 | **renderer** | Converts source artefacts (Markdown, LaTeX, YAML) into rendered outputs |
+| **model** | A pre-trained model; exposes a `predict.sh` inference entrypoint plus `validate.sh` |
 
 ## Usage
 

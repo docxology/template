@@ -17,6 +17,7 @@ from infrastructure.tools.tools_info import ToolInfo
 #: Each entry is qualified as ``<program>/<name>`` (e.g. ``templates/template_code_executor``).
 PUBLIC_TOOL_NAMES: tuple[str, ...] = (
     "templates/template_code_executor",
+    "templates/template_model",
     "templates/template_skill",
     "templates/template_validator",
 )

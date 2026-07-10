@@ -164,12 +164,18 @@ uv run python -m infrastructure.documentation.generate_glossary_cli projects/{pr
 
 # Agent SKILL.md manifest (Cursor / editors)
 uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills write-index
 uv run python -m infrastructure.skills check
+uv run python -m infrastructure.skills operations-check
 
 # Discoverable per-template skills (Hermes / agentskills.io)
 # Every exemplar under projects/templates/ ships .agents/skills/<name>/SKILL.md
+# These descriptors are included in .cursor/skill_manifest.json and MCP list_skills.
 # Load via Hermes: skill_view(name='template-code-project')
 # List skills in a template: ls projects/templates/<name>/.agents/skills/
+
+# Optional stdio MCP server exposing list_skills/list_operations/describe_pipeline/invoke_cli
+uv run python -m infrastructure.mcp_server
 ```
 
 ### Multi-Project Operations

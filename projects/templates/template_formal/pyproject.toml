@@ -1,0 +1,65 @@
+# template_formal — strongly-typed multiagent ant-robot colony exemplar.
+# Inherits workspace tooling (uv, pytest, mypy, ruff) from the root pyproject.toml.
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "template_formal"
+version = "0.1.0"
+description = "Strongly-typed multiagent ant-robot colony: ADTs, session-typed protocols, affine-discipline resource handles"
+authors = [
+    {name = "Research Template Author", email = "author@research-template.org"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+    "pillow>=10.0",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-xdist>=3.6.0",
+    "mypy>=1.17.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "tests/*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+# `mypy --strict projects/templates/template_formal/src` is the authoritative
+# oracle invocation (see tests/test_mypy_oracle.py). This section documents
+# the same policy for editors/IDEs that discover config by directory.
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "src"
+explicit_package_bases = true
+namespace_packages = true
+
+[tool.uv]

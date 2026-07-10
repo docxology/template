@@ -28,6 +28,10 @@ def test_pandoc_tex_command_enables_linked_references(tmp_path: Path) -> None:
     config = RenderingConfig(figures_dir=str(tmp_path / "figures"))
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
+    (manuscript_dir / "config.yaml").write_text(
+        "paper:\n  title: Test Paper\nauthors:\n  - name: Ada Lovelace\nmetadata:\n  language: en\n",
+        encoding="utf-8",
+    )
 
     command = build_pandoc_tex_command(
         config,
@@ -37,6 +41,9 @@ def test_pandoc_tex_command_enables_linked_references(tmp_path: Path) -> None:
     )
 
     assert "--metadata=linkReferences:true" in command
+    assert "--metadata=title:Test Paper" in command
+    assert "--metadata=author:Ada Lovelace" in command
+    assert "--metadata=lang:en" in command
 
 
 class TestTitlePageGeneration:

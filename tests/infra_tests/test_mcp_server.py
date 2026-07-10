@@ -59,12 +59,18 @@ class TestHandleRequest:
         payload = json.loads(resp["result"]["content"][0]["text"])
         assert any(op["module"] == "infrastructure.skills" for op in payload["operations"])
 
+    def test_tools_call_list_skills_includes_public_template_agent_skill(self) -> None:
+        resp = handle_request({"jsonrpc": "2.0", "id": 5, "method": "tools/call", "params": {"name": "list_skills"}})
+        payload = json.loads(resp["result"]["content"][0]["text"])
+        paths = {skill["path"] for skill in payload["skills"]}
+        assert "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md" in paths
+
     def test_unknown_tool_is_error(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 5, "method": "tools/call", "params": {"name": "nope"}})
+        resp = handle_request({"jsonrpc": "2.0", "id": 6, "method": "tools/call", "params": {"name": "nope"}})
         assert "error" in resp
 
     def test_unknown_method(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 6, "method": "frobnicate"})
+        resp = handle_request({"jsonrpc": "2.0", "id": 7, "method": "frobnicate"})
         assert resp["error"]["code"] == -32601
 
 

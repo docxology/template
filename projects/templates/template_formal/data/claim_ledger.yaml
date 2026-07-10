@@ -1,0 +1,708 @@
+claims:
+  - claim_id: manuscript-number-001
+    kind: number
+    value: 0.35
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-002
+    kind: number
+    value: 93.3
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-003
+    kind: number
+    value: 0.67
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-004
+    kind: number
+    value: 15
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-005
+    kind: number
+    value: 31
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-006
+    kind: number
+    value: 32
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-007
+    kind: number
+    value: 150
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-008
+    kind: number
+    value: 95
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-009
+    kind: number
+    value: 140
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-010
+    kind: number
+    value: 0.9333
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-011
+    kind: number
+    value: "95%"
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-012
+    kind: number
+    value: 0.8816
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-013
+    kind: number
+    value: 0.9634
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-014
+    kind: number
+    value: 4.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-015
+    kind: number
+    value: 9
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-016
+    kind: number
+    value: 0.0977
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-017
+    kind: number
+    value: 0.3080
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-018
+    kind: number
+    value: 0.0713
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-019
+    kind: number
+    value: 0.0026
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-020
+    kind: number
+    value: 0.1648
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-021
+    kind: number
+    value: 0.10
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-022
+    kind: number
+    value: 0.60
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-023
+    kind: number
+    value: 60
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-024
+    kind: number
+    value: 0.0602
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-025
+    kind: number
+    value: 56
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-026
+    kind: number
+    value: 0.8407
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-027
+    kind: number
+    value: 0.9738
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-028
+    kind: number
+    value: 0.9398
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-029
+    kind: number
+    value: 0.06
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-030
+    kind: number
+    value: 13
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-031
+    kind: number
+    value: 57
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-032
+    kind: number
+    value: 93
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-033
+    kind: number
+    value: 0.1187
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-034
+    kind: number
+    value: 1000
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-035
+    kind: number
+    value: 5000
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-036
+    kind: number
+    value: 14.57
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-037
+    kind: number
+    value: -10
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-038
+    kind: number
+    value: 13.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-038b
+    kind: number
+    value: 20.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-039
+    kind: number
+    value: 12.5
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-040
+    kind: number
+    value: 14.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-041
+    kind: number
+    value: 15.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-042
+    kind: number
+    value: 41
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-043
+    kind: number
+    value: 0.6833
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-044
+    kind: number
+    value: 0.5577
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-045
+    kind: number
+    value: 0.7869
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-046
+    kind: number
+    value: 16.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-047
+    kind: number
+    value: 0.2167
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-048
+    kind: number
+    value: 0.1312
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-049
+    kind: number
+    value: 0.3362
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-050
+    kind: number
+    value: 17.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-051
+    kind: number
+    value: 0.0171
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-052
+    kind: number
+    value: 0.1370
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-053
+    kind: number
+    value: 0.0167
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-054
+    kind: number
+    value: 0.0029
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-055
+    kind: number
+    value: 0.0886
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-056
+    kind: number
+    value: -16.4245
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-057
+    kind: number
+    value: -35
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-058
+    kind: number
+    value: 120
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-059
+    kind: number
+    value: "98%"
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-060
+    kind: number
+    value: 2.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-061
+    kind: number
+    value: 24
+    source: formal/tla/AntProtocolFaulty.tla and formal/lean/AntProtocol.lean verification record
+    source_tier: formal_check
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-062
+    kind: number
+    value: 2.07
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-063
+    kind: number
+    value: 4.31
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-064
+    kind: number
+    value: -11
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-065
+    kind: number
+    value: 0.0067
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-066
+    kind: number
+    value: 0.0012
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-067
+    kind: number
+    value: 0.0368
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-068
+    kind: number
+    value: "93%"
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-069
+    kind: number
+    value: 1.2
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-070
+    kind: number
+    value: 0.0250
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-071
+    kind: number
+    value: 11
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-072
+    kind: number
+    value: 10.0
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-073
+    kind: number
+    value: 0.2500
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-074
+    kind: number
+    value: 0.1578
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-075
+    kind: number
+    value: 0.3723
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-076
+    kind: number
+    value: 0.0333
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-077
+    kind: number
+    value: 0.0092
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-078
+    kind: number
+    value: 0.1136
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-079
+    kind: number
+    value: 70
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-080
+    kind: number
+    value: 16
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-081
+    kind: number
+    value: -12.76
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-082
+    kind: number
+    value: 0.1970
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-083
+    kind: number
+    value: 7000
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-084
+    kind: number
+    value: 0.0833
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-085
+    kind: number
+    value: 0.0361
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-086
+    kind: number
+    value: 0.1807
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-087
+    kind: number
+    value: 0.00168
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-088
+    kind: number
+    value: 2.14
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-089
+    kind: number
+    value: -8
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-090
+    kind: number
+    value: 7.26
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-091
+    kind: number
+    value: -9
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-092
+    kind: number
+    value: 58
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-093
+    kind: number
+    value: 53
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-094
+    kind: number
+    value: 54
+    source: tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py
+    source_tier: fixture
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-095
+    kind: number
+    value: 14
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-096
+    kind: number
+    value: 36
+    source: ISA.md and project method/test contract
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-097
+    kind: number
+    value: 494
+    source: formal/tla/AntProtocolFaulty.tla and formal/lean/AntProtocol.lean verification record
+    source_tier: formal_check
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-098
+    kind: number
+    value: 92
+    source: formal/tla/AntProtocolFaulty.tla and formal/lean/AntProtocol.lean verification record
+    source_tier: formal_check
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-099
+    kind: number
+    value: 136
+    source: formal/tla/AntProtocolFaulty.tla and formal/lean/AntProtocol.lean verification record
+    source_tier: formal_check
+    freshness: active
+    artifact_path: output/reports/validation_report.json
+  - claim_id: manuscript-number-100
+    kind: number
+    value: 7
+    source: formal/tla/AntProtocolFaulty.tla and formal/lean/AntProtocol.lean verification record
+    source_tier: formal_check
+    freshness: active
+    artifact_path: output/reports/validation_report.json

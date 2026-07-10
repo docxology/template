@@ -50,6 +50,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_formal",
+      "qualified_name": "templates/template_formal",
+      "title": "Formal — Strongly-Typed Multiagent Ant-Robot Colony Exemplar",
+      "use_when": "Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent.",
+      "test_file_count": 22,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_literature_meta_analysis",
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",

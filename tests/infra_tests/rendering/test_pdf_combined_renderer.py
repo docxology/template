@@ -279,6 +279,12 @@ class TestPreprocessCombinedMarkdown:
 
 
 class TestPostprocessLatex:
+    def test_opt_in_tagged_pdf_injects_document_metadata_before_documentclass(self):
+        tex = "\\documentclass{article}\n\\begin{document}\nText\n\\end{document}"
+        result = postprocess_latex(tex, tagged_pdf=True, language="en-US")
+        assert result.startswith("\\DocumentMetadata{pdfversion=2.0,lang=en-US,tagging=on,pdfstandard=ua-2}\n")
+        assert result.index("\\DocumentMetadata") < result.index("\\documentclass")
+
     def test_disables_lmodern(self):
         tex = r"\usepackage{lmodern}" + "\nOther content"
         result = postprocess_latex(tex)

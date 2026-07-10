@@ -275,11 +275,55 @@ def _make_renderer(tmp_path):
 def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
-    (manuscript_dir / "config.yaml").write_text("paper:\n  title: Test\n", encoding="utf-8")
+    (manuscript_dir / "config.yaml").write_text(
+        "paper:\n  title: Test\nauthors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n",
+        encoding="utf-8",
+    )
 
     args = WebRenderer._pandoc_metadata_args(manuscript_dir)
 
     assert "--metadata=linkReferences:true" in args
+    assert "--metadata=author:Ada Lovelace" in args
+    assert "--metadata=lang:en-GB" in args
+
+
+def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: Path) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><head></head><body><figure><img src="plot.png" '
+        'alt="very long raw \\delta caption"><figcaption aria-hidden="true">'
+        "Figure 1: Paired effect $\\delta$ across seeds. Extra detail with math."
+        "</figcaption></figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._enhance_accessibility(html_file, language="en-GB")
+
+    content = html_file.read_text(encoding="utf-8")
+    assert '<html lang="en-GB">' in content
+    assert '<main id="main-content">' in content
+    assert "aria-hidden" not in content
+    assert 'alt="Figure 1: Paired effect delta across seeds."' in content
+
+
+def test_responsive_variant_uses_mobile_sibling_when_present(tmp_path: Path) -> None:
+    web_dir = tmp_path / "output" / "web"
+    figure_dir = tmp_path / "output" / "figures"
+    web_dir.mkdir(parents=True)
+    figure_dir.mkdir(parents=True)
+    (figure_dir / "graphical.png").write_bytes(b"desktop")
+    (figure_dir / "graphical_mobile.png").write_bytes(b"mobile")
+    html_file = web_dir / "index.html"
+    html_file.write_text(
+        '<html><body><img src="../figures/graphical.png" alt="Graphical abstract"></body></html>',
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_responsive_image_variants(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert '<picture><source media="(max-width: 600px)"' in content
+    assert 'srcset="../figures/graphical_mobile.png"' in content
 
 
 def test_individual_render_output_names_include_parent_context(tmp_path: Path) -> None:
@@ -398,6 +442,17 @@ class TestCombineMarkdownFiles:
         assert "[sec:results]" not in result
         assert "[smith2020; doe2021]" in result
 
+    def test_per_section_html_can_render_crossrefs_without_raw_markers(self, tmp_path):
+        renderer = _make_renderer(tmp_path)
+        source = "See [@fig:coverage] and [@sec:results]."
+
+        result = renderer._html_safe_markdown(source, preserve_crossrefs=False)
+
+        assert "[@fig:coverage]" not in result
+        assert "[@sec:results]" not in result
+        assert "[fig:coverage]" in result
+        assert "[sec:results]" in result
+
 
 class TestEmbedCss:
     def test_embed_in_head(self, tmp_path):
@@ -435,6 +490,8 @@ class TestEmbedCss:
         content = html_file.read_text()
         assert "--brand-1" in content
         assert "prefers-color-scheme" in content
+        assert 'mjx-container[display="true"]' in content
+        assert "color: #b91c1c" in content
 
 
 class TestTheoremBlocks:
