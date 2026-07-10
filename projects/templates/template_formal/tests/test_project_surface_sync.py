@@ -56,4 +56,10 @@ def test_claim_ledger_rows_have_resolvable_source_and_artifact_paths() -> None:
     for claim in claims:
         source_path = claim["source"].split(" ", 1)[0]
         assert (PROJECT_ROOT / source_path).exists(), source_path
-        assert (PROJECT_ROOT / claim["artifact_path"]).parent.exists()
+        artifact_parent = (PROJECT_ROOT / claim["artifact_path"]).parent
+        if claim["artifact_path"].startswith("output/") and not (PROJECT_ROOT / "output").exists():
+            # output/ is gitignored (disposable render tree): rows binding to
+            # render artifacts are checkable only after a pipeline run, not on
+            # a clean checkout.
+            continue
+        assert artifact_parent.exists(), claim["artifact_path"]

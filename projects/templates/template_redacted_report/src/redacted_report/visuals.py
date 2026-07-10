@@ -1420,7 +1420,7 @@ def _verify_pdf_file(path: Path, expected_sha256: object, expected_bytes: object
         errors.append(f"{path.name}: sha256 differs from matrix")
     try:
         page_count = _pdf_page_count(path)
-    except Exception as exc:  # noqa: BLE001 - pypdf raises several parse-specific exceptions
+    except Exception as exc:  # noqa: BLE001 - verifier safety net: pypdf raises several parse-specific exceptions; every failure is recorded as a finding, never swallowed
         errors.append(f"{path.name}: PDF readability check failed: {exc}")
         return
     if page_count < 1:

@@ -67,3 +67,7 @@ render:
   toc: true
   toc_depth: 3
   highlight_style: "tango"
+
+# Page geometry forwarded to the LaTeX/Pandoc render (mirrors config.yaml).
+metadata:
+  geometry: "a4paper,margin=1.6cm,top=1.8cm,bottom=1.8cm"
