@@ -13,17 +13,16 @@
       "givenName": "Daniel Ari"
     }
   ],
-  "codeRepository": "https://github.com/docxology/template_search_project",
+  "codeRepository": "https://github.com/docxology/template/tree/main/projects/templates/template_data_descriptor",
   "dateModified": "2026-07-10",
-  "identifier": "10.5281/zenodo.21298894",
+  "identifier": "10.5281/zenodo.21298883",
   "keywords": [
-    "literature search",
-    "automated reference management",
-    "BibTeX",
-    "reproducible research",
-    "local LLM synthesis"
+    "data descriptor",
+    "FAIR data",
+    "provenance",
+    "schema validation"
   ],
-  "license": "https://spdx.org/licenses/MIT",
-  "name": "Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference",
-  "version": "0.1"
+  "license": "https://spdx.org/licenses/CC-BY-4.0",
+  "name": "Data Descriptor Template: Schema, Provenance, and Release Readiness",
+  "version": "0.1.0"
 }

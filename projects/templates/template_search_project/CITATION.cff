@@ -1,10 +1,11 @@
 authors:
-- affiliation: Research Template Institute
-  family-names: Author
-  given-names: Research Template
-  orcid: 0000-0000-0000-1234
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
 cff-version: 1.2.0
-date-released: '2026-07-01'
+date-released: '2026-07-10'
+doi: 10.5281/zenodo.21298894
 keywords:
 - literature search
 - automated reference management

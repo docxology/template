@@ -1,14 +1,27 @@
 {
- "title": "template_redacted_report",
- "version": "0.1.0",
- "upload_type": "publication",
- "publication_type": "technicalnote",
- "license": "cc-by-4.0",
- "related_identifiers": [
-  {
-   "relation": "isVersionOf",
-   "identifier": "10.5281/zenodo.21298890",
-   "scheme": "doi"
-  }
- ]
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for Redacted Report Template: Disclosure Control and Release Audit.",
+  "keywords": [
+    "redaction",
+    "disclosure control",
+    "release audit",
+    "source protection"
+  ],
+  "license": "CC-BY-4.0",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21298890",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
+  "title": "Redacted Report Template: Disclosure Control and Release Audit",
+  "upload_type": "software",
+  "version": "0.1.0"
 }

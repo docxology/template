@@ -1,7 +1,19 @@
-cff-version: 1.2.0
-title: template_redacted_report
-message: "If you use this exemplar, cite the Research Project Template repository."
-version: "0.1.0"
 authors:
-  - family-names: "Template Author"
-    given-names: "Research"
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-07-10'
+doi: 10.5281/zenodo.21298890
+keywords:
+- redaction
+- disclosure control
+- release audit
+- source protection
+license: CC-BY-4.0
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template/tree/main/projects/templates/template_redacted_report
+title: 'Redacted Report Template: Disclosure Control and Release Audit'
+type: software
+version: 0.1.0
