@@ -358,4 +358,6 @@ run.config.yml
 
 # Standalone-repo staging dirs at repo root (own .git; published separately).
 # Guard against accidental monorepo commits of nested repo checkouts.
-template-pitch-deck/
+# Root-anchored: must NOT catch projects/templates/template_pitch_deck's
+# .agents/skills/template-pitch-deck/ tracked skill dir.
+/template-pitch-deck/
