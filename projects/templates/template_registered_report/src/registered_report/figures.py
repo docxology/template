@@ -73,9 +73,7 @@ def _box(ax: Any, x: float, y: float, w: float, h: float, text: str, color: str,
 
 
 def _arrow(ax: Any, start: tuple[float, float], end: tuple[float, float]) -> None:
-    ax.add_patch(
-        FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=12, linewidth=1.2, color=_INK)
-    )
+    ax.add_patch(FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=12, linewidth=1.2, color=_INK))
 
 
 def plot_hypothesis_map(registration: dict[str, Any], path: Path) -> Path:
