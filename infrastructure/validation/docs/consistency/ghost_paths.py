@@ -80,7 +80,7 @@ def check_no_ghost_projects(
     # Optional typed-subfolder prefix, then the project-name segment.
     pattern = re.compile(
         r"(?<![A-Za-z0-9_/])projects/"
-        r"(?:(?P<type>active|working|published|archive|other|templates)/)?"
+        r"(?:(?P<type>active|working|ongoing|published|archive|other|templates)/)?"
         r"(?P<name>\{[^}]+\}|<[^>]+>|[A-Za-z0-9_][A-Za-z0-9_.-]*)/"
     )
 

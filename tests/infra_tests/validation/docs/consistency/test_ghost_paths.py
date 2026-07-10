@@ -48,6 +48,18 @@ def test_ghost_project_active_project_is_allowed(tmp_path: Path) -> None:
     assert check_no_ghost_projects(repo) == []
 
 
+def test_ghost_project_ongoing_subfolder_names_are_allowed(tmp_path: Path) -> None:
+    """`ongoing` is a non-rendered typed subfolder: any name beneath it is allowed."""
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "docs" / "guide.md",
+        """See `projects/ongoing/someprivate/file.md` for the private thread.
+Bare structural refs like `projects/ongoing/` are fine too.
+""",
+    )
+    assert check_no_ghost_projects(repo) == []
+
+
 def test_ghost_project_unqualified_public_template_is_flagged(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
     shutil.rmtree(repo / "projects" / "template_code_project")
