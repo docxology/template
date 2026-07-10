@@ -57,7 +57,7 @@ Generate the full development proof matrix, including template steganography/pro
 uv run python projects/templates/template_redacted_report/scripts/generate_dev_variants.py
 ```
 
-When the bundled Kmyth tools are built, the generator also requests TPM sidecar sealing for each steganography PDF and its source-safe hash manifest. The resulting `variant_matrix.json` records whether Kmyth was runnable, which `kmyth-seal`/`kmyth-unseal` paths were used, and how many `.ski` sidecars were actually created. Use `--kmyth-binary-dir infrastructure/steganography/kmyth/bin` to pin the bundled build, or `--require-kmyth` when missing tools or failed sealing should block generation.
+Kmyth TPM sidecar sealing is optional and disabled by default. To request `.ski` sidecars for each steganography PDF and source-safe hash manifest, pass `--with-kmyth` or `--kmyth-binary-dir infrastructure/steganography/kmyth/bin`; add `--require-kmyth` when missing tools or failed sealing should block generation. When requested, `variant_matrix.json` records tool paths, runtime status, and sidecar counts.
 
 ## Tests
 

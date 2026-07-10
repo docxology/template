@@ -389,7 +389,7 @@ def write_dev_variant_pdfs(
     *,
     title: str = "Redacted Report Visual Proof Matrix",
     include_steganography: bool = True,
-    include_kmyth: bool = True,
+    include_kmyth: bool = False,
     deterministic_steganography: bool = True,
     pdf_password: str | None = None,
     kmyth_binary_dir: str | Path | None = None,

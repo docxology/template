@@ -40,6 +40,11 @@ def main() -> int:
         help="Do not request optional Kmyth TPM sidecar sealing.",
     )
     parser.add_argument(
+        "--with-kmyth",
+        action="store_true",
+        help="Request optional Kmyth TPM sidecar sealing.",
+    )
+    parser.add_argument(
         "--kmyth-binary-dir",
         type=Path,
         default=None,
@@ -62,6 +67,7 @@ def main() -> int:
         help="Optional development-only PDF password for encrypted steganography variants.",
     )
     args = parser.parse_args()
+    request_kmyth = (args.with_kmyth or args.kmyth_binary_dir is not None or args.require_kmyth) and not args.no_kmyth
 
     payload = json.loads(args.data.read_text(encoding="utf-8"))
     segments = [
@@ -79,7 +85,7 @@ def main() -> int:
         decisions,
         args.output_dir,
         include_steganography=not args.no_steganography,
-        include_kmyth=not args.no_kmyth,
+        include_kmyth=request_kmyth,
         pdf_password=args.pdf_password,
         kmyth_binary_dir=args.kmyth_binary_dir,
         kmyth_required=args.require_kmyth,

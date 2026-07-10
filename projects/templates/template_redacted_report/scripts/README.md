@@ -8,7 +8,7 @@ Use monorepo pipeline scripts from the repository root for normal test/render st
 uv run python projects/templates/template_redacted_report/scripts/generate_dev_variants.py
 ```
 
-If Kmyth is built under `infrastructure/steganography/kmyth/bin`, generation records Kmyth availability and `.ski` sidecar counts in the matrix. Use `--kmyth-binary-dir` to select a specific build, `--no-kmyth` to skip TPM sealing requests, and `--require-kmyth` to make missing tools or seal failures fatal.
+Kmyth TPM sidecar sealing is optional and disabled by default. Use `--with-kmyth` to request sealing with tools on `PATH`, `--kmyth-binary-dir infrastructure/steganography/kmyth/bin` to pin the bundled build, or `--require-kmyth` when missing tools or failed sealing should block generation.
 
 Verify the rendered matrix after generation:
 
@@ -16,4 +16,4 @@ Verify the rendered matrix after generation:
 uv run python projects/templates/template_redacted_report/scripts/verify_dev_variants.py --render-smoke
 ```
 
-The verifier enforces the stable `redaction_on_background.pdf`, `redaction_on_background_steganography.pdf`, and `redaction_on_background.hashes.json` filenames for all 16 visual combinations, checks matrix hashes, opens every PDF, and optionally rasterizes page 1 of every PDF with Poppler. After a TPM backend is configured, add `--require-kmyth-sidecars` to require both `.ski` sidecars for every variant.
+The verifier enforces the stable `redaction_on_background.pdf`, `redaction_on_background_steganography.pdf`, and `redaction_on_background.hashes.json` filenames for all 16 visual combinations, checks matrix hashes, opens every PDF, and optionally rasterizes page 1 of every PDF with Poppler. For Kmyth-enabled runs, add `--require-kmyth-sidecars` to require both `.ski` sidecars for every variant.
