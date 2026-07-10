@@ -82,10 +82,10 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
-    # Re-measured 2026-07-10 after the coverage-debt closure: 45 real no-mock
-    # tests added over visuals.py (was 55.91 % when the 1500-line kmyth/TPM
-    # proof module landed with only 7 tests).
-    ExemplarSnapshot("template_redacted_report", 67, "97.77 %"),
+    # Union of two independent 2026-07-10 coverage-debt closures (both real
+    # no-mock suites over visuals.py, written in parallel sessions): 95 tests,
+    # 99.05 % — was 55.91 % when the 1500-line kmyth/TPM module landed with 7.
+    ExemplarSnapshot("template_redacted_report", 95, "99.05 %"),
     ExemplarSnapshot("template_registered_report", 30, "96.37 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
