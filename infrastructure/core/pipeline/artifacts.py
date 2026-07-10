@@ -119,6 +119,7 @@ def write_stage_artifact_manifest(
 def aggregate_artifact_manifests(output_dir: Path) -> ArtifactManifest:
     """Aggregate all stage manifests into ``output/reports/artifact_manifest.json``."""
     stage_dir = output_dir / ".pipeline" / "artifacts"
+    project_dir = output_dir.parent
     entries: list[ArtifactManifestEntry] = []
     issues: list[str] = []
     if stage_dir.exists():
@@ -130,6 +131,21 @@ def aggregate_artifact_manifests(output_dir: Path) -> ArtifactManifest:
                 continue
             entries.extend(_entries_from_payload(payload))
             issues.extend(str(issue) for issue in payload.get("issues", []))
+
+    if not entries and output_dir.exists():
+        for path in sorted(output_dir.rglob("*")):
+            if not path.is_file() or _is_ignored_output(path, output_dir):
+                continue
+            entries.append(
+                ArtifactManifestEntry(
+                    path=str(path.relative_to(project_dir)),
+                    size_bytes=path.stat().st_size,
+                    sha256=compute_sha256(path),
+                    stage_num=0,
+                    stage_name="standalone-output-scan",
+                    contract_match=True,
+                )
+            )
 
     aggregate = ArtifactManifest(entries=tuple(entries), issues=tuple(issues))
     report_path = output_dir / "reports" / "artifact_manifest.json"

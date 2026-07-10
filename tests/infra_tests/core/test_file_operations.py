@@ -282,6 +282,23 @@ class TestCopyFinalDeliverables:
         assert stats["total_files"] > 0
         assert len(stats["errors"]) == 0
 
+    def test_copy_materializes_symlink_targets_inside_output(self, tmp_path):
+        project_root = tmp_path / "repo"
+        project_output = project_root / "projects" / "project" / "output"
+        (project_output / "data").mkdir(parents=True)
+        outside = tmp_path / "outside.txt"
+        outside.write_text("private content", encoding="utf-8")
+        (project_output / "data" / "linked.txt").symlink_to(outside)
+
+        output_dir = tmp_path / "final_output" / "project"
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+
+        copied = output_dir / "data" / "linked.txt"
+        assert stats["errors"] == []
+        assert copied.is_file()
+        assert not copied.is_symlink()
+        assert copied.read_text(encoding="utf-8") == "private content"
+
     def test_copy_with_missing_project_output(self, tmp_path):
         """Test copying when project output doesn't exist."""
         project_root = tmp_path / "repo"

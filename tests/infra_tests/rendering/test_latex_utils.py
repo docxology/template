@@ -1,5 +1,6 @@
 """Tests for latex_utils module."""
 
+import inspect
 import stat
 
 import pytest
@@ -8,6 +9,12 @@ from reportlab.pdfgen import canvas
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
+
+
+def test_compile_latex_disables_shell_escape() -> None:
+    source = inspect.getsource(compile_latex)
+    assert '"-shell-escape",' not in source
+    assert "-no-shell-escape" in source
 
 
 def _write_valid_pdf(path) -> None:

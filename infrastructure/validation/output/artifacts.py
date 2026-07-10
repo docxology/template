@@ -50,6 +50,9 @@ def current_project_manifest_if_valid(output_dir: Path, project_root: Path) -> A
         manifest = read_artifact_manifest(manifest_path)
     except (OSError, json.JSONDecodeError, ValueError):
         return None
+    output_categories = ("pdf", "web", "slides", "figures", "data")
+    if not manifest.entries and any((output_dir / name).exists() for name in output_categories):
+        return None
     if validate_artifact_manifest(manifest, project_dir=project_root).valid:
         return manifest
     return None

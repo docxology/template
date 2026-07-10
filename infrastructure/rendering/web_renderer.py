@@ -671,6 +671,7 @@ class WebRenderer:
                 lambda tex: replacements.get(tex.group(1), tex.group(1)),
                 caption,
             )
+            caption = re.sub(r"\\[()\[\]]", "", caption)
             caption = re.sub(r"[${}]+", "", caption)
             caption = re.sub(r"\s+", " ", caption).strip()
             sentence = re.split(r"(?<=[.!?])\s+", caption, maxsplit=1)[0]

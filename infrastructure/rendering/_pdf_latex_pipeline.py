@@ -25,7 +25,7 @@ from infrastructure.rendering._pdf_latex_validation import (
 logger = get_logger(__name__)
 
 # Constants for LaTeX compilation
-LATEX_CMD_BASE = ["xelatex", "-interaction=nonstopmode", "-shell-escape"]
+LATEX_CMD_OPTIONS = ["-interaction=nonstopmode", "-no-shell-escape"]
 STALE_AUX_EXTENSIONS = [".aux", ".bbl", ".blg", ".toc", ".out", ".lof", ".lot"]
 SIGPIPE_EXIT = 141
 MAX_LATEX_PASSES = 4
@@ -44,15 +44,15 @@ def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
 def _run_latex_pass(
     cmd: list[str], output_dir: Path, tex_stem: str, pass_num: int, timeout: int
 ) -> subprocess.CompletedProcess[bytes]:
-    """Execute a single xelatex pass and return the result."""
+    """Execute a single LaTeX-engine pass and return the result."""
     aux_file = output_dir / f"{tex_stem}.aux"
-    xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
+    latex_stdout_log = output_dir / "_latex_stdout.log"
 
-    # Pin SOURCE_DATE_EPOCH in deterministic mode so xelatex stamps a stable
+    # Pin SOURCE_DATE_EPOCH in deterministic mode so the engine stamps a stable
     # /CreationDate (byte-stable PDFs). No-op in wall-clock mode — a faithful
     # copy of os.environ. repo_root is the output_dir's owning checkout; the
     # resolver walks git from there.
-    with open(xelatex_stdout_log, "w", encoding="utf-8") as stdout_sink:
+    with open(latex_stdout_log, "w", encoding="utf-8") as stdout_sink:
         result = subprocess.run(
             cmd,
             check=False,
@@ -73,6 +73,7 @@ def _check_fatal_error(
     combined_tex: Path,
     output_file: Path,
     pass_num: int,
+    final_pass: bool = False,
 ) -> bool:
     """Check if a fatal error occurred during LaTeX compilation.
 
@@ -89,7 +90,7 @@ def _check_fatal_error(
     has_fatal_marker = any(marker in log_content for marker in fatal_markers)
     is_fatal_exit = result.returncode not in (0, SIGPIPE_EXIT)
 
-    if has_fatal_marker or (is_fatal_exit and "Output written on" not in log_content):
+    if has_fatal_marker or (is_fatal_exit and (final_pass or "Output written on" not in log_content)):
         if log_file.exists():
             missing_pkg = parse_missing_latex_package_from_log(log_file)
             if missing_pkg:
@@ -113,12 +114,12 @@ def _check_fatal_error(
                 },
             )
         raise RenderingError(
-            f"XeLaTeX compilation failed (pass {pass_num})",
+            f"LaTeX compilation failed (pass {pass_num})",
             context={"source": str(combined_tex), "output": str(output_file)},
         )
     if is_fatal_exit:
         logger.warning(
-            "  XeLaTeX pass %d exited with code %s but wrote output; continuing multi-pass compile",
+            "  LaTeX pass %d exited with code %s but wrote output; continuing multi-pass compile",
             pass_num,
             result.returncode,
         )
@@ -139,9 +140,9 @@ def _handle_graphics_warnings(log_file: Path, pass_num: int) -> None:
 def _recover_invalid_pdf(output_dir: Path, cmd: list[str], temp_pdf: Path, combined_tex: Path) -> None:
     """Attempt a recovery pass if the PDF is structurally invalid."""
     logger.warning("PDF structurally invalid (truncated xref/%%EOF). Re-running recovery pass...")
-    xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
+    latex_stdout_log = output_dir / "_latex_stdout.log"
 
-    with open(xelatex_stdout_log, "w", encoding="utf-8") as stdout_sink:
+    with open(latex_stdout_log, "w", encoding="utf-8") as stdout_sink:
         subprocess.run(
             cmd,
             check=False,
@@ -163,8 +164,9 @@ def compile_latex_manuscript(
     bib_files: list[Path],
     bib_exists: bool,
     source_files: list[Path],
+    latex_compiler: str = "xelatex",
 ) -> Path:
-    """Run multi-pass xelatex compilation with bibliography processing.
+    """Run multi-pass LaTeX compilation with bibliography processing.
 
     Executes up to 4 LaTeX passes, with optional bibliography processing
     between passes, and validates the output PDF structure.
@@ -184,7 +186,7 @@ def compile_latex_manuscript(
     Raises:
         RenderingError: If compilation fails or PDF is not produced.
     """
-    cmd = LATEX_CMD_BASE + [combined_tex.name]
+    cmd = [latex_compiler, *LATEX_CMD_OPTIONS, combined_tex.name]
     start_time = time.time()
     tex_stem = combined_tex.stem
     latex_timeout = 8 if os.environ.get("PYTEST_CURRENT_TEST") else 600
@@ -209,10 +211,17 @@ def compile_latex_manuscript(
         result = _run_latex_pass(cmd, output_dir, tex_stem, 1, latex_timeout)
         log_file = output_dir / "_combined_manuscript.log"
 
-        _check_fatal_error(result, log_file, combined_tex, output_file, 1)
+        _check_fatal_error(
+            result,
+            log_file,
+            combined_tex,
+            output_file,
+            1,
+        )
+        final_pass_num = 1
 
         if result.returncode == SIGPIPE_EXIT:
-            logger.debug(f"  xelatex exited with {SIGPIPE_EXIT} (SIGPIPE) — expected")
+            logger.debug(f"  {latex_compiler} exited with {SIGPIPE_EXIT} (SIGPIPE) — expected")
 
         # Phase 3: Bibliography processing
         if bib_exists:
@@ -228,7 +237,14 @@ def compile_latex_manuscript(
             log_progress_bar(run + 1, MAX_LATEX_PASSES, "LaTeX compilation", bar_width=20)
             result = _run_latex_pass(cmd, output_dir, tex_stem, run + 1, latex_timeout)
 
-            _check_fatal_error(result, log_file, combined_tex, output_file, run + 1)
+            _check_fatal_error(
+                result,
+                log_file,
+                combined_tex,
+                output_file,
+                run + 1,
+            )
+            final_pass_num = run + 1
 
             log_content = log_file.read_text(encoding="utf-8") if log_file.exists() else ""
             if "Rerun" not in log_content and "undefined" not in log_content.lower():
@@ -237,6 +253,15 @@ def compile_latex_manuscript(
 
             if run == MAX_LATEX_PASSES - 1:
                 _handle_graphics_warnings(log_file, run + 1)
+
+        _check_fatal_error(
+            result,
+            log_file,
+            combined_tex,
+            output_file,
+            final_pass_num,
+            final_pass=True,
+        )
 
         # Phase 5: PDF validation and recovery
         if temp_pdf.exists():

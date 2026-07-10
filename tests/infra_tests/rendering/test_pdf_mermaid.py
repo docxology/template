@@ -77,6 +77,41 @@ def test_resolve_chrome_uses_newest_cache_executable(tmp_path: Path, monkeypatch
     assert resolved == newest
 
 
+def test_resolve_chrome_prefers_headless_shell_at_same_version(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cache_dir = tmp_path / ".cache" / "puppeteer"
+    version = "mac_arm-150.0.7871.24"
+    _write_shell_executable(
+        cache_dir
+        / "chrome"
+        / version
+        / "chrome-mac-arm64"
+        / "Google Chrome for Testing.app"
+        / "Contents"
+        / "MacOS"
+        / "Google Chrome for Testing",
+        "exit 0\n",
+    )
+    headless = _write_shell_executable(
+        cache_dir
+        / "chrome-headless-shell"
+        / version
+        / "chrome-headless-shell-mac-arm64"
+        / "chrome-headless-shell",
+        "exit 0\n",
+    )
+
+    monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
+    monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(cache_dir))
+    monkeypatch.setenv("PATH", "")
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+
+    assert _resolve_chrome_executable() == headless
+
+
 def test_resolve_chrome_uses_system_candidates_then_none(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     system_chrome = _write_shell_executable(tmp_path / "bin" / "chromium-browser", "exit 0\n")
 

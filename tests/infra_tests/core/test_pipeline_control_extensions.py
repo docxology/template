@@ -20,6 +20,7 @@ from infrastructure.core.pipeline.artifacts import (
     validate_artifact_manifest,
     write_stage_artifact_manifest,
 )
+from infrastructure.validation.output.artifacts import current_project_manifest_if_valid
 from infrastructure.core.pipeline.control import load_pipeline_control_config
 from infrastructure.core.pipeline.hitl import HitlController, HitlMode, validate_agent_response_file
 from infrastructure.core.pipeline.hooks import HookEvent, StageHookContext, run_stage_hooks
@@ -658,6 +659,32 @@ def test_stage_artifact_manifest_records_hashes_and_contract_issues(tmp_path: Pa
     assert all(not entry.path.endswith(".aux") for entry in manifest.entries)
     assert any("missing declared output" in issue for issue in validation.issues)
     assert (project_dir / "output" / "reports" / "artifact_manifest.json").exists()
+
+
+def test_aggregate_artifact_manifest_scans_outputs_without_stage_manifests(tmp_path: Path) -> None:
+    project_dir = tmp_path / "projects" / "p"
+    output_file = project_dir / "output" / "data" / "result.json"
+    output_file.parent.mkdir(parents=True)
+    output_file.write_text('{"ok": true}\n', encoding="utf-8")
+
+    aggregate = aggregate_artifact_manifests(project_dir / "output")
+    validation = validate_artifact_manifest(aggregate, project_dir=project_dir)
+
+    assert len(aggregate.entries) == 1
+    assert aggregate.entries[0].path == "output/data/result.json"
+    assert aggregate.entries[0].stage_name == "standalone-output-scan"
+    assert validation.issues == ()
+
+
+def test_empty_project_manifest_is_not_accepted_when_outputs_exist(tmp_path: Path) -> None:
+    project_dir = tmp_path / "projects" / "p"
+    output_dir = project_dir / "output"
+    (output_dir / "pdf").mkdir(parents=True)
+    (output_dir / "pdf" / "book.pdf").write_bytes(b"%PDF-1.7\n")
+    (output_dir / "reports").mkdir()
+    (output_dir / "reports" / "artifact_manifest.json").write_text('{"entries": [], "issues": []}\n', encoding="utf-8")
+
+    assert current_project_manifest_if_valid(output_dir, project_dir) is None
 
 
 def test_stage_artifact_manifest_accepts_symlinked_private_project_contracts(tmp_path: Path) -> None:

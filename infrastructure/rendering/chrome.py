@@ -12,7 +12,8 @@ Resolution order (``resolve_chrome_executable``):
 2. ``CHROME_EXECUTABLE_PATH`` env var (the var ``.github/workflows/ci.yml``
    exports after ``puppeteer browsers install chrome-headless-shell``).
 3. Newest browser under the Puppeteer cache (``PUPPETEER_CACHE_DIR`` or
-   ``~/.cache/puppeteer``), version-sorted.
+   ``~/.cache/puppeteer``), version-sorted, preferring the headless shell when
+   both browser forms have the same version.
 4. A system browser on ``PATH`` (``shutil.which``).
 5. A browser in the home directory.
 6. *(opt-in)* the macOS system Chrome app bundle, when ``include_macos_app`` is
@@ -99,7 +100,10 @@ def resolve_chrome_executable(*, include_macos_app: bool = False) -> Path | None
     cache_dir = Path(os.environ.get("PUPPETEER_CACHE_DIR", Path.home() / ".cache" / "puppeteer"))
     cache_candidates = _iter_cache_chrome_candidates(cache_dir)
     if cache_candidates:
-        return max(cache_candidates, key=lambda item: item[0])[1]
+        return max(
+            cache_candidates,
+            key=lambda item: (item[0], item[1].name == "chrome-headless-shell"),
+        )[1]
 
     for executable_name in _SYSTEM_CHROME_NAMES:
         resolved = shutil.which(executable_name)

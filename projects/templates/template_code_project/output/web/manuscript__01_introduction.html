@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -187,6 +187,7 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:introduction">Introduction</h1>
 <p>This <code>template_code_project</code> serves as the foundational
 exemplar for the <a
@@ -224,9 +225,8 @@ governs the AI-assisted agents writing these very texts.</li>
 </ol>
 <p>This implementation of gradient descent algorithms for solving
 optimization problems is used as the vehicle to demonstrate these
-pillars. The theoretical problem stated in <span class="citation"
-data-cites="eq:optimization_problem">[@eq:optimization_problem]</span>
-is mapped programmatically inside the <a
+pillars. The theoretical problem stated in [eq:optimization_problem] is
+mapped programmatically inside the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py">optimizer
 module</a>:</p>
 <p><span class="math display">\[\begin{equation}
@@ -256,8 +256,7 @@ manuscript.</li>
 </ul>
 <h2 id="algorithm-overview">Algorithm Overview</h2>
 <p>The reference gradient descent algorithm iteratively updates the
-solution using the rule shown in <span class="citation"
-data-cites="eq:gradient_descent_update">[@eq:gradient_descent_update]</span>:</p>
+solution using the rule shown in [eq:gradient_descent_update]:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:gradient_descent_update}
 x_{k+1} = x_k - \alpha \nabla f(x_k)
@@ -288,30 +287,22 @@ intelligence.</li>
 <h2 id="readers-guide-to-the-manuscript">Reader’s guide to the
 manuscript</h2>
 <ul>
-<li><strong><span class="citation"
-data-cites="sec:methodology">[@sec:methodology]</span></strong> ties
-pseudocode to <code>gradient_descent()</code> and explains how stability
-checks and benchmarks call into
-<code>infrastructure.scientific</code>.</li>
-<li><strong><span class="citation"
-data-cites="sec:results">[@sec:results]</span></strong> is
-figure-centric: every panel references a generator in
-<code>src/figures/</code> (orchestrated via
+<li><strong>[sec:methodology]</strong> ties pseudocode to
+<code>gradient_descent()</code> and explains how stability checks and
+benchmarks call into <code>infrastructure.scientific</code>.</li>
+<li><strong>[sec:results]</strong> is figure-centric: every panel
+references a generator in <code>src/figures/</code> (orchestrated via
 <code>scripts/optimization_analysis.py</code>) and uses
 <code>{{CONFIG_*}}</code> / <code>{{RESULT_*}}</code> placeholders for
 numeric values.</li>
-<li><strong><span class="citation"
-data-cites="sec:experimental_setup">[@sec:experimental_setup]</span></strong>
-lists the exact YAML fields (<code>experiment:</code> block) that
-controlled the run whose artifacts you are viewing.</li>
-<li><strong><span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span></strong>
-records the configuration hash and artifact inventory produced alongside
-the PDF.</li>
-<li><strong><span class="citation"
-data-cites="sec:scope">[@sec:scope]</span></strong> states scope and
-related literature so the exemplar is not mistaken for a general-purpose
-optimizer benchmark suite.</li>
+<li><strong>[sec:experimental_setup]</strong> lists the exact YAML
+fields (<code>experiment:</code> block) that controlled the run whose
+artifacts you are viewing.</li>
+<li><strong>[sec:reproducibility]</strong> records the configuration
+hash and artifact inventory produced alongside the PDF.</li>
+<li><strong>[sec:scope]</strong> states scope and related literature so
+the exemplar is not mistaken for a general-purpose optimizer benchmark
+suite.</li>
 </ul>
 <h2 id="why-a-quadratic-model">Why a quadratic model</h2>
 <p>Restricting <span class="math inline">\(f\)</span> to a quadratic
@@ -321,13 +312,11 @@ gradient, and spectral data explicit. For <span class="math inline">\(A
 the optimal point is <span class="math inline">\(x^\ast =
 \mathbf{1}\)</span> and gradient descent with fixed <span
 class="math inline">\(\alpha\)</span> reduces to a linear iteration in
-the error (see <span class="citation"
-data-cites="eq:scalar_linear_update">[@eq:scalar_linear_update]</span>
-in the results section). That simplicity isolates step-size effects and
-makes divergent choices (<span class="math inline">\(\alpha \geq
-2\)</span> in 1D) visible in both plots and CSV rows without requiring
-trust-region or line-search fixes—those extensions are left to future
-work (<span class="citation"
-data-cites="sec:scope">[@sec:scope]</span>).</p>
+the error (see [eq:scalar_linear_update] in the results section). That
+simplicity isolates step-size effects and makes divergent choices (<span
+class="math inline">\(\alpha \geq 2\)</span> in 1D) visible in both
+plots and CSV rows without requiring trust-region or line-search
+fixes—those extensions are left to future work ([sec:scope]).</p>
+</main>
 </body>
 </html>

@@ -292,7 +292,7 @@ def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: 
     html_file.write_text(
         '<html><head></head><body><figure><img src="plot.png" '
         'alt="very long raw \\delta caption"><figcaption aria-hidden="true">'
-        "Figure 1: Paired effect $\\delta$ across seeds. Extra detail with math."
+        "Figure 1: Paired effect $\\delta$ and likelihood \\(A_k\\) across seeds. Extra detail with math."
         "</figcaption></figure></body></html>",
         encoding="utf-8",
     )
@@ -303,7 +303,7 @@ def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: 
     assert '<html lang="en-GB">' in content
     assert '<main id="main-content">' in content
     assert "aria-hidden" not in content
-    assert 'alt="Figure 1: Paired effect delta across seeds."' in content
+    assert 'alt="Figure 1: Paired effect delta and likelihood A_k across seeds."' in content
 
 
 def test_responsive_variant_uses_mobile_sibling_when_present(tmp_path: Path) -> None:

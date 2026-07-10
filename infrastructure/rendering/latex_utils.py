@@ -130,13 +130,10 @@ def compile_latex(
     out_dir.mkdir(parents=True, exist_ok=True)
     _clean_stale_aux_files(out_dir, tex_path.stem)
 
-    # IMPORTANT: -shell-escape is required for XeTeX to properly determine PNG image
-    # dimensions. Without this flag, XeTeX cannot read PNG bounding box information
-    # and will produce "Division by 0" errors when including graphics.
     cmd = [
         compiler,
         "-interaction=nonstopmode",
-        "-shell-escape",
+        "-no-shell-escape",
         f"-output-directory={out_dir}",
         str(tex_path),
     ]
@@ -227,7 +224,7 @@ def compile_latex(
                 if "Missing \\begin{document}" in log_content:
                     error_hints.append("Missing \\begin{document} command - check document structure")
                 if "Division by 0" in log_content and "graphics" in log_content.lower():
-                    error_hints.append("Graphics error - ensure PNG files are valid and -shell-escape flag is used")
+                    error_hints.append("Graphics error - ensure PNG files are valid and readable")
                 if pdf_exists and not pdf_valid:
                     error_hints.append("PDF was written but is structurally invalid/truncated")
 

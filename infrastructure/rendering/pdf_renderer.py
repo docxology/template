@@ -53,6 +53,10 @@ def _pdf_tagging_options(manuscript_dir: Path) -> tuple[bool, str]:
     return bool(metadata.get("tagged_pdf", False)), language
 
 
+def _combined_latex_compiler(configured: str, *, tagged_pdf: bool) -> str:
+    return "lualatex" if tagged_pdf else configured
+
+
 class PDFRenderer:
     """Handles PDF generation logic."""
 
@@ -256,6 +260,15 @@ class PDFRenderer:
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
         tex_content = combined_tex.read_text(encoding="utf-8")
         tagged_pdf, language = _pdf_tagging_options(manuscript_dir)
+        latex_compiler = _combined_latex_compiler(
+            self.config.latex_compiler,
+            tagged_pdf=tagged_pdf,
+        )
+        if shutil.which(latex_compiler) is None:
+            raise RenderingError(
+                f"LaTeX compiler not found: {latex_compiler}",
+                context={"tagged_pdf": tagged_pdf, "source": str(combined_tex)},
+            )
         tex_content = postprocess_latex(
             tex_content,
             tagged_pdf=tagged_pdf,
@@ -297,7 +310,7 @@ class PDFRenderer:
         figures_dir = Path(self.config.figures_dir)
         verify_figure_references(tex_content, figures_dir)
 
-        # Step 10: Compile LaTeX to PDF with multi-pass xelatex
+        # Step 10: Compile LaTeX to PDF with the selected multi-pass engine
         return compile_latex_manuscript(
             combined_tex=combined_tex,
             combined_md=combined_md,
@@ -306,4 +319,5 @@ class PDFRenderer:
             bib_files=bib_paths,
             bib_exists=bib_exists,
             source_files=source_files,
+            latex_compiler=latex_compiler,
         )

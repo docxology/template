@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Convergence Analysis of Gradient Descent Optimization</title>
   <style>
     /* Default styles provided by pandoc.
@@ -307,34 +308,34 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -389,13 +390,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -410,13 +411,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -434,7 +443,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -442,11 +451,13 @@ a:hover {
 </style>
 </head>
 <body>
+<main id="main-content">
 <header id="title-block-header">
 <h1 class="title">Convergence Analysis of Gradient Descent
 Optimization</h1>
 <p class="subtitle">Theoretical Bounds and Empirical Performance in
 Quadratic Minimization</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -765,14 +776,14 @@ confirm they resolve to this release pairing.</li>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
 <img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" />
-<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+<figcaption>Publication pairing flow</figcaption>
 </figure>
 <p><strong>Stego:</strong> on | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
@@ -1187,8 +1198,8 @@ algorithm iteratively updates the solution using the rule <span
 class="math inline">\(x_{k+1} = x_k - \alpha \nabla f(x_k)\)</span>.</p>
 <figure id="fig:convergence">
 <img src="../figures/convergence_plot.png"
-alt="Figure 1: Objective value f(x_k)=\tfrac{1}{2}x_k^2 - x_k versus iteration k for gradient descent at six step sizes (legend colours follow the agency taxonomy in sec. 3: blue = conservative, green = near-optimal, orange = aggressive, red = divergent). Trajectories are produced by simulate_trajectory() in src/optimizer.py, which calls the same gradient_descent() used in tbl. 1; the upper bound on the y-axis clips the divergent \alpha=2.5 curve so that stable trajectories remain visible. Dashed grey reference line marks the analytic optimum f(x^\ast)=-0.5. Fastest configuration in this experiment: \alpha=1.0 converges in 1 iteration(s)." />
-<figcaption aria-hidden="true">Figure 1: Objective value <span
+alt="Figure 1: Objective value f(x_k)=tfrac12x_k^2 - x_k versus iteration k for gradient descent at six step sizes (legend colours follow the agency taxonomy in sec." />
+<figcaption>Figure 1: Objective value <span
 class="math inline">\(f(x_k)=\tfrac{1}{2}x_k^2 - x_k\)</span> versus
 iteration <span class="math inline">\(k\)</span> for gradient descent at
 six step sizes (legend colours follow the agency taxonomy in sec. <a
@@ -1230,8 +1241,8 @@ analysis reveals the trade-off between convergence speed and numerical
 stability.</p>
 <figure id="fig:step_sensitivity">
 <img src="../figures/step_size_sensitivity.png"
-alt="Figure 2: Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent dense grid \alpha \in [0.005, 0.4] (10 points), distinct from the discrete experiment.step_sizes used elsewhere in this section. Left: iterations to convergence on log–log axes — the curve drops sharply from 500 iterations at the smallest \alpha (the max_iterations cap in this sub-experiment) to 37 iterations at \alpha=0.4, illustrating the geometric speedup as \rho(\alpha)=|1-\alpha| shrinks. Right: final f(x) versus \alpha with horizontal reference lines at f(x_0)=0 (initial) and f(x^\ast)=-0.5 (analytic optimum); every \alpha in this stable window lands on the optimum." />
-<figcaption aria-hidden="true">Figure 2: Sensitivity sweep produced by
+alt="Figure 2: Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent dense grid alpha in [0.005, 0.4] (10 points), distinct from the discrete experiment.step_sizes used elsewhere in this section." />
+<figcaption>Figure 2: Sensitivity sweep produced by
 <code>generate_step_size_sensitivity_plot()</code> over an independent
 dense grid <span class="math inline">\(\alpha \in [0.005, 0.4]\)</span>
 (10 points), distinct from the discrete
@@ -1347,8 +1358,8 @@ analysis of convergence rates across different step sizes, validating
 theoretical predictions against empirical results.</p>
 <figure id="fig:convergence_rate">
 <img src="../figures/convergence_rate_comparison.png"
-alt="Figure 3: Absolute objective error |f(x_k)-f(x^\ast)| versus iteration on a logarithmic y-axis, generated by generate_convergence_rate_plot(). Stable step sizes produce straight lines whose slopes equal 2\log_{10}\rho(\alpha) (per eq. ¿eq:convergence_bound?); \alpha=1.0 (\rho=0) collapses to the optimum in one step (vertical green line at k=1); \alpha=1.5 (orange) descends fastest among the multi-step contractions because \rho=0.5; the divergent \alpha=2.5 curve (red) climbs upward at slope 2\log_{10}(1.5). Horizontal dashed line marks the gradient-norm tolerance \varepsilon = 10^{-8} read from experiment.convergence_tolerance." />
-<figcaption aria-hidden="true">Figure 3: Absolute objective error <span
+alt="Figure 3: Absolute objective error |f(x_k)-f(x^ast)| versus iteration on a logarithmic y-axis, generated by generate_convergence_rate_plot() ." />
+<figcaption>Figure 3: Absolute objective error <span
 class="math inline">\(|f(x_k)-f(x^\ast)|\)</span> versus iteration on a
 logarithmic y-axis, generated by
 <code>generate_convergence_rate_plot()</code>. Stable step sizes produce
@@ -1521,8 +1532,8 @@ algorithm’s computational characteristics, including time and space
 complexity analysis across different problem scales.</p>
 <figure id="fig:complexity">
 <img src="../figures/algorithm_complexity.png"
-alt="Figure 4: Four-panel diagnostic from generate_complexity_visualization(). Top left: bars give the empirical iteration count per configured \alpha, coloured by agency category; \alpha=1.0 achieves the global minimum of 1 step(s), while \alpha=0.01 and \alpha=2.5 both saturate at the iteration cap N_{\max}=1000 (slow convergence and divergence respectively). Top right: \log_{10}|f(x)-f(x^\ast)| at termination; the four converged rows reach \approx 10^{-16} (machine precision) while \alpha=0.01 stops near 10^{-9} at the cap. Dashed reference at \log_{10}\varepsilon for \varepsilon= experiment.convergence_tolerance. Bottom left: empirical iterations (solid) versus the smooth proxy 1/(2\alpha(1-\alpha)) (dashed) on log axes — a shape comparison, not a tight count prediction for every \alpha. Bottom right: per-step error contraction factor \rho=|1-\alpha| from the unit-Hessian linear recurrence (eq. ¿eq:scalar_linear_update?); the dashed reference at \rho=1 separates stable bars (left of it) from divergent ones (right)." />
-<figcaption aria-hidden="true">Figure 4: Four-panel diagnostic from
+alt="Figure 4: Four-panel diagnostic from generate_complexity_visualization() ." />
+<figcaption>Figure 4: Four-panel diagnostic from
 <code>generate_complexity_visualization()</code>. <strong>Top
 left</strong>: bars give the empirical iteration count per configured
 <span class="math inline">\(\alpha\)</span>, coloured by agency
@@ -1574,8 +1585,8 @@ the optimizer on identity-Hessian quadratics of dimension <span
 class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>.</p>
 <figure id="fig:benchmark">
 <img src="../figures/performance_benchmark.png"
-alt="Figure 5: Dimensional scaling from generate_benchmark_visualization(). Dimensions d \in \{1, 2, 5, 10, 20, 50\} run on identity-Hessian quadratics with \alpha=0.1 and gradient tolerance 10^{-10} (both hardcoded in the script for benchmark stability). Left: mean wall-clock time per gradient_descent() call (μs). The flat regime at d \leq 20 reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at d=50 shows the O(d) matrix-vector cost beginning to dominate. Right: iterations-to-convergence rises only modestly across two decades of d (219 \to 238). This near-invariance is expected: \kappa(I_d)=1 regardless of dimension, so the contraction factor \rho=|1-\alpha|=0.9 is identical for every d, and only the per-coordinate residual norm grows mildly." />
-<figcaption aria-hidden="true">Figure 5: Dimensional scaling from
+alt="Figure 5: Dimensional scaling from generate_benchmark_visualization() ." />
+<figcaption>Figure 5: Dimensional scaling from
 <code>generate_benchmark_visualization()</code>. Dimensions <span
 class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span> run on
 identity-Hessian quadratics with <span
@@ -1607,8 +1618,8 @@ across a grid of 8 starting points (<span class="math inline">\(x_0 \in
 <code>compute_gradient()</code> across the parameter space.</p>
 <figure id="fig:stability">
 <img src="../figures/stability_analysis.png"
-alt="Figure 6: Numerical stability heatmap from generate_stability_visualization(). Each cell shows \log_{10}|f(x)-f(x^\ast)| at termination for one (starting point x_0, step size \alpha) combination, evaluated by gradient_descent() over the 8-by-6 grid (48 cells). The leftmost column (\alpha=0.01, conservative) reaches only 10^{-6} to 10^{-9} within the iteration cap, while every other column saturates at machine precision (10^{-16}) regardless of how far x_0 starts from the optimum (range [-50, 50]). The right panel summarises this uniformity as the aggregate stability score of 1.00/1.00 returned by infrastructure.scientific.stability.check_numerical_stability(), which exercises the same objective with extreme inputs (NaN, \pm\infty, \pm 10^{10})." />
-<figcaption aria-hidden="true">Figure 6: Numerical stability heatmap
+alt="Figure 6: Numerical stability heatmap from generate_stability_visualization() ." />
+<figcaption>Figure 6: Numerical stability heatmap
 from <code>generate_stability_visualization()</code>. Each cell shows
 <span class="math inline">\(\log_{10}|f(x)-f(x^\ast)|\)</span> at
 termination for one (starting point <span
@@ -1874,7 +1885,7 @@ class="header-section-number">6.5</span> Computational Environment</h2>
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-07-08T02:12:25Z</li>
+<li><strong>Generated</strong>: 2026-07-10T14:33:59Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2006,7 +2017,7 @@ validated by
 <tbody>
 <tr>
 <td>Publication-quality figures</td>
-<td>8</td>
+<td>9</td>
 </tr>
 <tr>
 <td>Structured data files (CSV/JSON)</td>
@@ -2014,11 +2025,11 @@ validated by
 </tr>
 <tr>
 <td>Analysis reports</td>
-<td>9</td>
+<td>19</td>
 </tr>
 <tr>
 <td><strong>Total artifacts</strong></td>
-<td><strong>22</strong></td>
+<td><strong>33</strong></td>
 </tr>
 </tbody>
 </table>
@@ -2188,7 +2199,7 @@ pairing pending</p>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p><strong>Prior:</strong> <em>No prior releases.</em></p>
 <!-- END OF TRANSMISSION -->
@@ -2239,5 +2250,6 @@ Mathematics and Mathematical Physics</em> 4 (5): 1–17. <a
 href="https://doi.org/10.1016/0041-5553(64)90137-5">https://doi.org/10.1016/0041-5553(64)90137-5</a>.
 </div>
 </div>
+</main>
 </body>
 </html>

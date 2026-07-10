@@ -21,7 +21,12 @@ from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_comma
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.pdf_renderer import PDFRenderer
+from infrastructure.rendering.pdf_renderer import PDFRenderer, _combined_latex_compiler
+
+
+def test_tagged_combined_pdf_requires_lualatex() -> None:
+    assert _combined_latex_compiler("xelatex", tagged_pdf=True) == "lualatex"
+    assert _combined_latex_compiler("xelatex", tagged_pdf=False) == "xelatex"
 
 
 def test_pandoc_tex_command_enables_linked_references(tmp_path: Path) -> None:

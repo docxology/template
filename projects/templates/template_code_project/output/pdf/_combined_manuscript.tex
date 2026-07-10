@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,14 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Convergence Analysis of Gradient Descent Optimization},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Convergence Analysis of Gradient Descent Optimization}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -227,6 +240,7 @@
 \setmathfont{latinmodern-math.otf}
 
 \begin{document}
+\maketitle
 
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -303,24 +317,6 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \end{samepage}
 \newpage
-
-\begin{titlepage}
-\centering
-\vspace*{2cm}
-{\LARGE\bfseries Convergence Analysis of Gradient Descent Optimization\par}
-\vspace{0.75em}
-{\large Theoretical Bounds and Empirical Performance in Quadratic Minimization\par}
-\vfill
-\makeatletter
-{\@author\par}
-\vspace{1em}
-{\@date\par}
-\makeatother
-\vfill
-\end{titlepage}
-\thispagestyle{empty}
-\newpage
-
 \tableofcontents
 \newpage
 
@@ -1487,7 +1483,7 @@ Representative single-call execution time from the last benchmark run:
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-07-08T02:12:25Z
+  \textbf{Generated}: 2026-07-10T14:33:59Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
@@ -1603,10 +1599,10 @@ Category & Count \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Publication-quality figures & 8 \\
+Publication-quality figures & 9 \\
 Structured data files (CSV/JSON) & 5 \\
-Analysis reports & 9 \\
-\textbf{Total artifacts} & \textbf{22} \\
+Analysis reports & 19 \\
+\textbf{Total artifacts} & \textbf{33} \\
 \end{longtable}
 }
 
