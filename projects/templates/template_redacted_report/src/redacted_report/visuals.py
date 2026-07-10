@@ -523,20 +523,44 @@ def _write_visual_pdf(
 # --- Section metadata for the comprehensive proof document ---
 
 _SECTION_MAP: dict[str, tuple[str, str]] = {
-    "s1": ("Abstract", "This exemplar demonstrates a complete disclosure-control pipeline for sanitized public release reports."),
-    "s2": ("1. Introduction", "The pipeline operates in two layers: text-level disclosure control and visual proof with steganography."),
-    "s3": ("2. Fixture: SECRET Segment", "Invented high-side content demonstrating source-identity and operational-detail redaction."),
-    "s4": ("2.1 SIGINT Collection Platform", "Invented SIGINT content demonstrating operational-detail and time-place-selector redaction."),
-    "s5": ("2.2 TOP_SECRET//SCI Compartment", "Invented compartmented content demonstrating mosaic risk from multi-source combination."),
-    "s6": ("3. Sanitized Public Narrative", "The public export after redaction, with source-safe ledger and hash manifest."),
+    "s1": (
+        "Abstract",
+        "This exemplar demonstrates a complete disclosure-control pipeline for sanitized public release reports.",
+    ),
+    "s2": (
+        "1. Introduction",
+        "The pipeline operates in two layers: text-level disclosure control and visual proof with steganography.",
+    ),
+    "s3": (
+        "2. Fixture: SECRET Segment",
+        "Invented high-side content demonstrating source-identity and operational-detail redaction.",
+    ),
+    "s4": (
+        "2.1 SIGINT Collection Platform",
+        "Invented SIGINT content demonstrating operational-detail and time-place-selector redaction.",
+    ),
+    "s5": (
+        "2.2 TOP_SECRET//SCI Compartment",
+        "Invented compartmented content demonstrating mosaic risk from multi-source combination.",
+    ),
+    "s6": (
+        "3. Sanitized Public Narrative",
+        "The public export after redaction, with source-safe ledger and hash manifest.",
+    ),
     "s7": ("4. Visual Proof Matrix", "Four redaction styles across four PDF backgrounds yield sixteen variant PDFs."),
     "s8": ("5. Steganography Layer", "Nine security methods post-process each base PDF for provenance and integrity."),
     "s9": ("6. Kmyth TPM Sealing", "TPM2-TSS storage hierarchy sealing with mssim-to-swtpm protocol proxy on macOS."),
-    "s10": ("6.1 FlushContext Patch", "Kmyth-seal patched to flush transient TPM objects between consecutive seal invocations."),
+    "s10": (
+        "6.1 FlushContext Patch",
+        "Kmyth-seal patched to flush transient TPM objects between consecutive seal invocations.",
+    ),
     "s11": ("7. Release Gate", "Three-role approval gate: originator, classification reviewer, release authority."),
     "s12": ("8. Residual Risk Detection", "Pattern-based detection of common public-release leaks in sanitized text."),
     "s13": ("9. CUI Classification Example", "Controlled Unclassified Information segment above the public ceiling."),
-    "s14": ("10. Comprehensive Release Packet", "Combined export with audit, ledger, hashes, review gate, and paragraph audit table."),
+    "s14": (
+        "10. Comprehensive Release Packet",
+        "Combined export with audit, ledger, hashes, review gate, and paragraph audit table.",
+    ),
 }
 
 
@@ -598,19 +622,23 @@ class _ProofPDFRenderer:
         self.doc.setStrokeColor(self._color(self.background.subdued_text_rgb))
         self.doc.setLineWidth(0.3)
         self.doc.line(
-            self.left_margin, self.page_height - 32,
-            self.page_width - self.right_margin, self.page_height - 32,
+            self.left_margin,
+            self.page_height - 32,
+            self.page_width - self.right_margin,
+            self.page_height - 32,
         )
 
     def _draw_footer(self) -> None:
         self.doc.setFillColor(self._color(self.background.subdued_text_rgb))
         self.doc.setFont("Helvetica", 6)
         self.doc.drawString(
-            self.left_margin, 18,
+            self.left_margin,
+            18,
             "Dev proof only: invented fixture text, source-safe masks, no operational content.",
         )
         self.doc.drawRightString(
-            self.page_width - self.right_margin, 18,
+            self.page_width - self.right_margin,
+            18,
             f"Style: {self.style.name}  |  BG: {self.background.name}",
         )
 
@@ -632,7 +660,8 @@ class _ProofPDFRenderer:
         self.doc.setFont("Helvetica", 11)
         self.doc.setFillColor(self._color(self.background.subdued_text_rgb))
         self.doc.drawCentredString(
-            self.page_width / 2, self.page_height - 145,
+            self.page_width / 2,
+            self.page_height - 145,
             "Disclosure Control and Release Audit with TPM-Backed Sealed Sidecars",
         )
 

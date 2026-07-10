@@ -83,8 +83,7 @@ def handle_ctrl_client(
         swtpm_sock.settimeout(10)
         swtpm_sock.connect((swtpm_ctrl_host, swtpm_ctrl_port))
     except (ConnectionRefusedError, OSError) as exc:
-        logger.error("ctrl: cannot connect to swtpm at %s:%d: %s",
-                     swtpm_ctrl_host, swtpm_ctrl_port, exc)
+        logger.error("ctrl: cannot connect to swtpm at %s:%d: %s", swtpm_ctrl_host, swtpm_ctrl_port, exc)
         client_sock.close()
         return
 
@@ -177,8 +176,7 @@ def handle_data_client(
         swtpm_sock.settimeout(30)
         swtpm_sock.connect((swtpm_data_host, swtpm_data_port))
     except (ConnectionRefusedError, OSError) as exc:
-        logger.error("data: cannot connect to swtpm at %s:%d: %s",
-                     swtpm_data_host, swtpm_data_port, exc)
+        logger.error("data: cannot connect to swtpm at %s:%d: %s", swtpm_data_host, swtpm_data_port, exc)
         client_sock.close()
         return
 
@@ -197,14 +195,12 @@ def handle_data_client(
             tpm_cmd_size = struct.unpack(">I", header[5:9])[0]
 
             if cmd_type == MS_SIM_TPM_SEND_COMMAND:
-                logger.debug("data: TPM_SEND_COMMAND locality=%d tpm_size=%d",
-                             locality, tpm_cmd_size)
+                logger.debug("data: TPM_SEND_COMMAND locality=%d tpm_size=%d", locality, tpm_cmd_size)
 
                 # Read the full TPM command
                 tpm_cmd = recv_exactly(client_sock, tpm_cmd_size) or b""
                 if len(tpm_cmd) != tpm_cmd_size:
-                    logger.warning("data: truncated command (got %d, expected %d)",
-                                   len(tpm_cmd), tpm_cmd_size)
+                    logger.warning("data: truncated command (got %d, expected %d)", len(tpm_cmd), tpm_cmd_size)
                     break
 
                 # The flush (Shutdown+Startup) already re-initialized the
@@ -252,7 +248,10 @@ def handle_data_client(
 
 
 def _flush_tpm_state(
-    ctrl_host: str, ctrl_port: int, data_host: str, data_port: int,
+    ctrl_host: str,
+    ctrl_port: int,
+    data_host: str,
+    data_port: int,
 ) -> None:
     """Flush transient TPM objects by:
     1. Sending CMD_INIT via the control channel (swtpm ioctl)
@@ -282,8 +281,7 @@ def _flush_tpm_state(
         sock.settimeout(5)
         sock.connect((data_host, data_port))
 
-        startup_cmd = bytes([0x80, 0x01, 0x00, 0x00, 0x00, 0x0a,
-                             0x00, 0x00, 0x01, 0x44, 0x00, 0x00])
+        startup_cmd = bytes([0x80, 0x01, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x01, 0x44, 0x00, 0x00])
         sock.sendall(startup_cmd)
         resp = recv_exactly(sock, 10)
         if resp:
@@ -326,8 +324,7 @@ def serve(
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind((host, port))
     server.listen(8)
-    logger.info("%s: listening on %s:%d -> swtpm %s:%d",
-                label, host, port, swtpm_host, swtpm_port)
+    logger.info("%s: listening on %s:%d -> swtpm %s:%d", label, host, port, swtpm_host, swtpm_port)
     while True:
         try:
             client_sock, client_addr = server.accept()
@@ -359,14 +356,12 @@ def main() -> int:
 
     ctrl_thread = threading.Thread(
         target=serve,
-        args=(args.proxy_host, args.proxy_ctrl_port, handle_ctrl_client,
-              args.swtpm_host, args.swtpm_ctrl_port, "ctrl"),
+        args=(args.proxy_host, args.proxy_ctrl_port, handle_ctrl_client, args.swtpm_host, args.swtpm_ctrl_port, "ctrl"),
         daemon=True,
     )
     data_thread = threading.Thread(
         target=serve,
-        args=(args.proxy_host, args.proxy_data_port, handle_data_client,
-              args.swtpm_host, args.swtpm_data_port, "data"),
+        args=(args.proxy_host, args.proxy_data_port, handle_data_client, args.swtpm_host, args.swtpm_data_port, "data"),
         daemon=True,
     )
     ctrl_thread.start()

@@ -154,9 +154,10 @@ def start() -> int:
 
     print("Initializing TPM state...", file=sys.stderr)
     result = subprocess.run(
-        ["swtpm_setup", "--tpmstate", str(SWTPM_STATE_DIR), "--tpm2",
-         "--createek", "--lock-nvram"],
-        capture_output=True, text=True, timeout=30,
+        ["swtpm_setup", "--tpmstate", str(SWTPM_STATE_DIR), "--tpm2", "--createek", "--lock-nvram"],
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     if result.returncode != 0:
         print(f"ERROR: swtpm_setup failed: {result.stderr}", file=sys.stderr)
@@ -165,14 +166,23 @@ def start() -> int:
     # Start swtpm
     print("Starting swtpm...", file=sys.stderr)
     swtpm_proc = subprocess.Popen(
-        ["swtpm", "socket",
-         "--tpmstate", f"dir={SWTPM_STATE_DIR}",
-         "--ctrl", f"type=tcp,port={SWTPM_CTRL_PORT}",
-         "--server", f"type=tcp,port={SWTPM_DATA_PORT}",
-         "--tpm2",
-         "--flags", "startup-clear",
-         "--log", f"level=20,file={SWTPM_LOG}"],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        [
+            "swtpm",
+            "socket",
+            "--tpmstate",
+            f"dir={SWTPM_STATE_DIR}",
+            "--ctrl",
+            f"type=tcp,port={SWTPM_CTRL_PORT}",
+            "--server",
+            f"type=tcp,port={SWTPM_DATA_PORT}",
+            "--tpm2",
+            "--flags",
+            "startup-clear",
+            "--log",
+            f"level=20,file={SWTPM_LOG}",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
     SWTPM_PID_FILE.write_text(str(swtpm_proc.pid))
     time.sleep(2)
@@ -184,13 +194,22 @@ def start() -> int:
     # Start proxy
     print("Starting mssim proxy...", file=sys.stderr)
     proxy_proc = subprocess.Popen(
-        [sys.executable, str(PROXY_SCRIPT),
-         "--proxy-data-port", str(PROXY_DATA_PORT),
-         "--proxy-ctrl-port", str(PROXY_CTRL_PORT),
-         "--swtpm-data-port", str(SWTPM_DATA_PORT),
-         "--swtpm-ctrl-port", str(SWTPM_CTRL_PORT),
-         "--log-level", "WARNING"],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        [
+            sys.executable,
+            str(PROXY_SCRIPT),
+            "--proxy-data-port",
+            str(PROXY_DATA_PORT),
+            "--proxy-ctrl-port",
+            str(PROXY_CTRL_PORT),
+            "--swtpm-data-port",
+            str(SWTPM_DATA_PORT),
+            "--swtpm-ctrl-port",
+            str(SWTPM_CTRL_PORT),
+            "--log-level",
+            "WARNING",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
     PROXY_PID_FILE.write_text(str(proxy_proc.pid))
     time.sleep(1)
