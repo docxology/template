@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Reproducible Literature Synthesis with infrastructure/search
 and infrastructure/reference</title>
   <style>
@@ -238,7 +239,26 @@ and infrastructure/reference</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -249,6 +269,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -287,34 +309,34 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -369,13 +391,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -390,13 +412,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -414,7 +444,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -422,11 +452,13 @@ a:hover {
 </style>
 </head>
 <body>
+<main id="main-content">
 <header id="title-block-header">
 <h1 class="title">Reproducible Literature Synthesis with
 infrastructure/search and infrastructure/reference</h1>
 <p class="subtitle">A configurable pipeline from query → references.bib
 → LLM-driven reading report</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -605,11 +637,13 @@ infrastructure</p>
 class="header-section-number">2</span> Introduction</h1>
 <p>Reproducible computational research demands that every claim be
 traceable back to a stable artifact — code, data, and citations alike
-[peng2011reproducible]. Manual literature curation is a well-known
-bottleneck in such workflows: a graduate student writing a related-work
-section may spend hours searching arXiv, Crossref, and Google Scholar;
-copying citations into a <code>.bib</code> file by hand; and tracking
-which papers they have actually read. Three failure modes recur:</p>
+<span class="citation" data-cites="peng2011reproducible">(<a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng
+2011</a>)</span>. Manual literature curation is a well-known bottleneck
+in such workflows: a graduate student writing a related-work section may
+spend hours searching arXiv, Crossref, and Google Scholar; copying
+citations into a <code>.bib</code> file by hand; and tracking which
+papers they have actually read. Three failure modes recur:</p>
 <ol type="1">
 <li><strong>Style drift</strong> — hand-edited <code>.bib</code> files
 accumulate formatting inconsistencies that hide real semantic conflicts
@@ -695,10 +729,14 @@ pipeline run appear at the end of this section.</p>
 class="header-section-number">3.1</span> Search</h2>
 <p>The search stage is intentionally faithful to the standard
 literature-search pattern documented in foundational optimisation
-textbooks [boyd2004convex; nocedal2006numerical] — a deterministic
-query, capped result count, and explicit failure isolation between
-sources — so reviewers familiar with those references can reason about
-the workflow without learning new abstractions.</p>
+textbooks <span class="citation"
+data-cites="boyd2004convex nocedal2006numerical">(<a
+href="#ref-boyd2004convex" role="doc-biblioref">Boyd and Vandenberghe
+2004</a>; <a href="#ref-nocedal2006numerical"
+role="doc-biblioref">Nocedal and Wright 2006</a>)</span> — a
+deterministic query, capped result count, and explicit failure isolation
+between sources — so reviewers familiar with those references can reason
+about the workflow without learning new abstractions.</p>
 <p>A <code>SearchQuery</code> is constructed from
 <code>config.search</code>:</p>
 <div class="sourceCode" id="cb1"><pre
@@ -827,8 +865,8 @@ merge step), so a backend that returned five papers all duplicating
 arXiv hits still scores five here.</p>
 <figure id="fig:papers_per_source">
 <img src="../figures/papers_per_source.png"
-alt="Figure 1: Per-source paper counts read from SearchResult.per_source_counts (pre-deduplication contribution per backend). The numeric label above each bar reports the raw count; the y-axis spans [0, max + headroom]. Bar order follows the order recorded in config.search.sources. Empty runs render (no results) centred. Generated by src/figures.py::plot_papers_per_source." />
-<figcaption aria-hidden="true">Figure 1: Per-source paper counts read
+alt="Figure 1: Per-source paper counts read from SearchResult.per_source_counts (pre-deduplication contribution per backend)." />
+<figcaption>Figure 1: Per-source paper counts read
 from <code>SearchResult.per_source_counts</code> (pre-deduplication
 contribution per backend). The numeric label above each bar reports the
 raw count; the y-axis spans <code>[0, max + headroom]</code>. Bar order
@@ -843,8 +881,8 @@ older / newer literature. Papers with no <code>year</code> field are
 dropped silently from the histogram (they remain in the corpus).</p>
 <figure id="fig:year_histogram">
 <img src="../figures/year_histogram.png"
-alt="Figure 2: Publication-year histogram of the deduplicated paper roster. One bin per year (no smoothing); the x-axis spans the observed [min(year), max(year)] from result.papers. Papers with year is None are dropped; the y-axis is per-year paper count. Generated by src/figures.py::plot_year_histogram." />
-<figcaption aria-hidden="true">Figure 2: Publication-year histogram of
+alt="Figure 2: Publication-year histogram of the deduplicated paper roster." />
+<figcaption>Figure 2: Publication-year histogram of
 the deduplicated paper roster. One bin per year (no smoothing); the
 x-axis spans the observed <code>[min(year), max(year)]</code> from
 <code>result.papers</code>. Papers with <code>year is None</code> are
@@ -860,8 +898,8 @@ but still appear as ticks on the y-axis so the reader can see how many
 unranked papers exist.</p>
 <figure id="fig:score_distribution">
 <img src="../figures/score_distribution.png"
-alt="Figure 3: Per-paper backend-reported relevance scores ranked descending (highest at top). Each horizontal bar is one Paper.score; the y-tick label is the paper title truncated to 60 characters with an ellipsis. Backends without scoring (notably LocalBackend) report Paper.score = 0.0 so those bars have zero length. Generated by src/figures.py::plot_score_distribution." />
-<figcaption aria-hidden="true">Figure 3: Per-paper backend-reported
+alt="Figure 3: Per-paper backend-reported relevance scores ranked descending (highest at top)." />
+<figcaption>Figure 3: Per-paper backend-reported
 relevance scores ranked descending (highest at top). Each horizontal bar
 is one <code>Paper.score</code>; the y-tick label is the paper title
 truncated to 60 characters with an ellipsis. Backends without scoring
@@ -880,8 +918,8 @@ abstract); the per-source breakdown is local=6 and recorded backend
 errors are none. The deep-search workflow (sec. <a
 href="#sec:deep_search">8</a>) covered 3 keyword(s) — <em>convex
 optimization; stochastic gradient descent; reproducible research</em> —
-drawn from arxiv, crossref, paperclip, producing <deep-search not run>
-unique paper(s) after cross-keyword deduplication.</p>
+drawn from arxiv, crossref, producing <deep-search not run> unique
+paper(s) after cross-keyword deduplication.</p>
 <p>The diagnostic figures generated for this run are catalogued in
 sec. <a href="#sec:methodology">3</a>: fig. <a
 href="#fig:papers_per_source">1</a> surfaces per-backend coverage,
@@ -1033,10 +1071,20 @@ they show that <em>domain-specific research automation</em> and
 <em>template-strict architectural discipline</em> are compatible — and,
 in fact, mutually reinforcing.</p>
 <p>The bundled <code>data/corpus.json</code> exercises classical
-optimisation references [boyd2004convex; nocedal2006numerical;
-nesterov2013gradient] alongside modern stochastic-optimisation work
-[kingma2014adam; reddi2018convergence] and the canonical reproducibility
-paper [peng2011reproducible], so the auto-generated
+optimisation references <span class="citation"
+data-cites="boyd2004convex nocedal2006numerical nesterov2013gradient">(<a
+href="#ref-boyd2004convex" role="doc-biblioref">Boyd and Vandenberghe
+2004</a>; <a href="#ref-nocedal2006numerical"
+role="doc-biblioref">Nocedal and Wright 2006</a>; <a
+href="#ref-nesterov2013gradient" role="doc-biblioref">Nesterov
+2013</a>)</span> alongside modern stochastic-optimisation work <span
+class="citation" data-cites="kingma2014adam reddi2018convergence">(<a
+href="#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba 2014</a>;
+<a href="#ref-reddi2018convergence" role="doc-biblioref">Reddi et al.
+2018</a>)</span> and the canonical reproducibility paper <span
+class="citation" data-cites="peng2011reproducible">(<a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng
+2011</a>)</span>, so the auto-generated
 <code>manuscript/references.bib</code> always contains real
 citation-ready entries that downstream tooling can resolve.</p>
 <hr />
@@ -1285,7 +1333,9 @@ from a fake “(LLM unavailable)” string.</li>
 class="header-section-number">7</span> Reproducibility</h1>
 <p>Reproducibility in computational research has well-documented
 prerequisites: open data, open code, and a deterministic build that can
-be re-run from scratch [peng2011reproducible]. The bundled
+be re-run from scratch <span class="citation"
+data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>)</span>. The bundled
 <code>manuscript/config.yaml</code> is intentionally configured to
 satisfy all three for <strong>strict reproducibility</strong>:</p>
 <ol type="1">
@@ -1493,7 +1543,7 @@ case rather than emitting empty rows.</li>
 <li><code>write_unified_bibtex</code> / <code>unified_bibtex_path</code>
 — when <code>true</code>, a deduplicated, collision-suffixed BibTeX file
 is written under <code>manuscript/references_deep.bib</code> so it can
-be cited from the manuscript via Pandoc <code>[key]</code> syntax
+be cited from the manuscript via Pandoc <code>[@key]</code> syntax
 exactly the same way as the hand-curated
 <code>references.bib</code>.</li>
 </ul>
@@ -1692,15 +1742,15 @@ from the most recent deep-search run. Edit the script, not this file —
 manual edits will be overwritten on the next pipeline run.</em></p>
 <p>This review covers <strong>3 keyword(s)</strong>, <strong>300 unique
 paper(s)</strong> (retrieved at up to 100 per keyword from arxiv,
-crossref, paperclip). All references are stored in
+crossref). All references are stored in
 <code>manuscript/references_deep.bib</code> and resolved by the
 combined-PDF pipeline (Pandoc <code>--natbib</code> + BibTeX over all
 <code>manuscript/*.bib</code> files).</p>
 <h2 data-number="9.1" id="convex-optimization"><span
 class="header-section-number">9.1</span> convex optimization</h2>
 <p><em>Papers retrieved:</em> <strong>100</strong> · <em>per-source
-contributions:</em> arxiv=100, crossref=100, paperclip=95 · <em>backend
-errors:</em> none</p>
+contributions:</em> arxiv=100, crossref=100 · <em>backend errors:</em>
+none</p>
 <table>
 <colgroup>
 <col style="width: 23%" />
@@ -1718,126 +1768,162 @@ errors:</em> none</p>
 </thead>
 <tbody>
 <tr>
-<td>[anon2004convex]</td>
+<td><span class="citation" data-cites="anon2004convex">(<a
+href="#ref-anon2004convex"
+role="doc-biblioref"><strong>anon2004convex?</strong></a>)</span></td>
 <td>Convex optimization problems</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1017/cbo9780511804441.005 (<a
 href="https://doi.org/10.1017/cbo9780511804441.005">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004convexa]</td>
+<td><span class="citation" data-cites="anon2004convexa">(<a
+href="#ref-anon2004convexa"
+role="doc-biblioref"><strong>anon2004convexa?</strong></a>)</span></td>
 <td>Convex functions</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1017/cbo9780511804441.004 (<a
 href="https://doi.org/10.1017/cbo9780511804441.004">open</a>)</td>
 </tr>
 <tr>
-<td>[anonreverse]</td>
+<td><span class="citation" data-cites="anonreverse">(<a
+href="#ref-anonreverse"
+role="doc-biblioref"><strong>anonreverse?</strong></a>)</span></td>
 <td>Reverse Convex Optimization, Reverse convex programming</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1007/springerreference_72642 (<a
 href="https://doi.org/10.1007/springerreference_72642">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2021convex]</td>
-<td>Convex Optimization and Efficiency</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1017/9781108699211.006 (<a
-href="https://doi.org/10.1017/9781108699211.006">open</a>)</td>
-</tr>
-<tr>
-<td>[suh20221]</td>
+<td><span class="citation" data-cites="suh20221">(<a
+href="#ref-suh20221"
+role="doc-biblioref"><strong>suh20221?</strong></a>)</span></td>
 <td>1. Convex Optimization Basics</td>
 <td style="text-align: right;">2022</td>
 <td>DOI 10.1561/9781638280538.ch1 (<a
 href="https://doi.org/10.1561/9781638280538.ch1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2021ellipsoid]</td>
+<td><span class="citation" data-cites="anon2021convex">(<a
+href="#ref-anon2021convex"
+role="doc-biblioref"><strong>anon2021convex?</strong></a>)</span></td>
+<td>Convex Optimization and Efficiency</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108699211.006 (<a
+href="https://doi.org/10.1017/9781108699211.006">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2021ellipsoid">(<a
+href="#ref-anon2021ellipsoid"
+role="doc-biblioref"><strong>anon2021ellipsoid?</strong></a>)</span></td>
 <td>Ellipsoid Method for Convex Optimization</td>
 <td style="text-align: right;">2021</td>
 <td>DOI 10.1017/9781108699211.015 (<a
 href="https://doi.org/10.1017/9781108699211.015">open</a>)</td>
 </tr>
 <tr>
-<td>[nesterov2004smooth]</td>
+<td><span class="citation" data-cites="nesterov2004smooth">(<a
+href="#ref-nesterov2004smooth"
+role="doc-biblioref"><strong>nesterov2004smooth?</strong></a>)</span></td>
 <td>Smooth Convex Optimization</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1007/978-1-4419-8853-9_2 (<a
 href="https://doi.org/10.1007/978-1-4419-8853-9_2">open</a>)</td>
 </tr>
 <tr>
-<td>[nesterov2004nonsmooth]</td>
+<td><span class="citation" data-cites="nesterov2004nonsmooth">(<a
+href="#ref-nesterov2004nonsmooth"
+role="doc-biblioref"><strong>nesterov2004nonsmooth?</strong></a>)</span></td>
 <td>Nonsmooth Convex Optimization</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1007/978-1-4419-8853-9_3 (<a
 href="https://doi.org/10.1007/978-1-4419-8853-9_3">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2022convex]</td>
+<td><span class="citation" data-cites="anon2022convex">(<a
+href="#ref-anon2022convex"
+role="doc-biblioref"><strong>anon2022convex?</strong></a>)</span></td>
 <td>Convex Optimization Basics</td>
 <td style="text-align: right;">2022</td>
 <td>DOI 10.1561/978-1-63828-053-820251002 (<a
 href="https://doi.org/10.1561/978-1-63828-053-820251002">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004convexb]</td>
+<td><span class="citation" data-cites="anon2004convexb">(<a
+href="#ref-anon2004convexb"
+role="doc-biblioref"><strong>anon2004convexb?</strong></a>)</span></td>
 <td>Convex sets</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1017/cbo9780511804441.003 (<a
 href="https://doi.org/10.1017/cbo9780511804441.003">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011what]</td>
+<td><span class="citation" data-cites="anon2011what">(<a
+href="#ref-anon2011what"
+role="doc-biblioref"><strong>anon2011what?</strong></a>)</span></td>
 <td>What Is Convex Optimization?</td>
 <td style="text-align: right;">2011</td>
 <td>DOI 10.1201/b11156-7 (<a
 href="https://doi.org/10.1201/b11156-7">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011convex]</td>
+<td><span class="citation" data-cites="anon2011convex">(<a
+href="#ref-anon2011convex"
+role="doc-biblioref"><strong>anon2011convex?</strong></a>)</span></td>
 <td>Convex Semi-Infinite Optimization</td>
 <td style="text-align: right;">2011</td>
 <td>DOI 10.1201/b11156-17 (<a
 href="https://doi.org/10.1201/b11156-17">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011tools]</td>
+<td><span class="citation" data-cites="anon2011tools">(<a
+href="#ref-anon2011tools"
+role="doc-biblioref"><strong>anon2011tools?</strong></a>)</span></td>
 <td>Tools for Convex Optimization</td>
 <td style="text-align: right;">2011</td>
 <td>DOI 10.1201/b11156-8 (<a
 href="https://doi.org/10.1201/b11156-8">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004convexc]</td>
+<td><span class="citation" data-cites="anon2004convexc">(<a
+href="#ref-anon2004convexc"
+role="doc-biblioref"><strong>anon2004convexc?</strong></a>)</span></td>
 <td>Convex Sets. Convex and Generalized Convex Functions</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1016/b978-044450550-7/50002-8 (<a
 href="https://doi.org/10.1016/b978-044450550-7/50002-8">open</a>)</td>
 </tr>
 <tr>
-<td>[anon20146]</td>
+<td><span class="citation" data-cites="anon20146">(<a
+href="#ref-anon20146"
+role="doc-biblioref"><strong>anon20146?</strong></a>)</span></td>
 <td>6 Convex optimization algorithms</td>
 <td style="text-align: right;">2014</td>
 <td>DOI 10.1515/9783110361629.117 (<a
 href="https://doi.org/10.1515/9783110361629.117">open</a>)</td>
 </tr>
 <tr>
-<td>[jacobsen2008reverse]</td>
+<td><span class="citation" data-cites="jacobsen2008reverse">(<a
+href="#ref-jacobsen2008reverse"
+role="doc-biblioref"><strong>jacobsen2008reverse?</strong></a>)</span></td>
 <td>Reverse Convex Optimization</td>
 <td style="text-align: right;">2008</td>
 <td>DOI 10.1007/978-0-387-74759-0_564 (<a
 href="https://doi.org/10.1007/978-0-387-74759-0_564">open</a>)</td>
 </tr>
 <tr>
-<td>[nesterov2018nonsmooth]</td>
+<td><span class="citation" data-cites="nesterov2018nonsmooth">(<a
+href="#ref-nesterov2018nonsmooth"
+role="doc-biblioref"><strong>nesterov2018nonsmooth?</strong></a>)</span></td>
 <td>Nonsmooth Convex Optimization</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1007/978-3-319-91578-4_3 (<a
 href="https://doi.org/10.1007/978-3-319-91578-4_3">open</a>)</td>
 </tr>
 <tr>
-<td>[jacobsen2001bb]</td>
+<td><span class="citation" data-cites="jacobsen2001bb">(<a
+href="#ref-jacobsen2001bb"
+role="doc-biblioref"><strong>jacobsen2001bb?</strong></a>)</span></td>
 <td>αBB algorithm; Concave programming; D.C. programming; Quadratic
 knapsack. Quadratic programming with bound constraints; Reverse convex
 optimization Standard quadratic optimization problems: Theory REVERSE
@@ -1847,56 +1933,72 @@ CONVEX OPTIMIZATION</td>
 href="https://doi.org/10.1007/0-306-48332-7_431">open</a>)</td>
 </tr>
 <tr>
-<td>[tuypartly]</td>
+<td><span class="citation" data-cites="tuypartly">(<a
+href="#ref-tuypartly"
+role="doc-biblioref"><strong>tuypartly?</strong></a>)</span></td>
 <td>Partly Convex and Convex-Monotonic Optimization Problems</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1007/3-540-27170-8_37 (<a
 href="https://doi.org/10.1007/3-540-27170-8_37">open</a>)</td>
 </tr>
 <tr>
-<td>[nesterov2018smooth]</td>
+<td><span class="citation" data-cites="nesterov2018smooth">(<a
+href="#ref-nesterov2018smooth"
+role="doc-biblioref"><strong>nesterov2018smooth?</strong></a>)</span></td>
 <td>Smooth Convex Optimization</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1007/978-3-319-91578-4_2 (<a
 href="https://doi.org/10.1007/978-3-319-91578-4_2">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011weak]</td>
+<td><span class="citation" data-cites="anon2011weak">(<a
+href="#ref-anon2011weak"
+role="doc-biblioref"><strong>anon2011weak?</strong></a>)</span></td>
 <td>Weak Sharp Minima in Convex Optimization</td>
 <td style="text-align: right;">2011</td>
 <td>DOI 10.1201/b11156-15 (<a
 href="https://doi.org/10.1201/b11156-15">open</a>)</td>
 </tr>
 <tr>
-<td>[anonconvex]</td>
+<td><span class="citation" data-cites="anonconvex">(<a
+href="#ref-anonconvex"
+role="doc-biblioref"><strong>anonconvex?</strong></a>)</span></td>
 <td>Convex Discrete Optimization</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1007/springerreference_72172 (<a
 href="https://doi.org/10.1007/springerreference_72172">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025convex]</td>
+<td><span class="citation" data-cites="anon2025convex">(<a
+href="#ref-anon2025convex"
+role="doc-biblioref"><strong>anon2025convex?</strong></a>)</span></td>
 <td>Convex Functions</td>
 <td style="text-align: right;">2025</td>
 <td>DOI 10.1017/9781009510561.012 (<a
 href="https://doi.org/10.1017/9781009510561.012">open</a>)</td>
 </tr>
 <tr>
-<td>[zaslavski2020nonsmooth]</td>
+<td><span class="citation" data-cites="zaslavski2020nonsmooth">(<a
+href="#ref-zaslavski2020nonsmooth"
+role="doc-biblioref"><strong>zaslavski2020nonsmooth?</strong></a>)</span></td>
 <td>Nonsmooth Convex Optimization</td>
 <td style="text-align: right;">2020</td>
 <td>DOI 10.1007/978-3-030-60300-7_2 (<a
 href="https://doi.org/10.1007/978-3-030-60300-7_2">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2020appendix]</td>
+<td><span class="citation" data-cites="anon2020appendix">(<a
+href="#ref-anon2020appendix"
+role="doc-biblioref"><strong>anon2020appendix?</strong></a>)</span></td>
 <td>Appendix:</td>
 <td style="text-align: right;">2020</td>
 <td>DOI 10.2307/j.ctvqsdxqd.15 (<a
 href="https://doi.org/10.2307/j.ctvqsdxqd.15">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2005connectedness]</td>
+<td><span class="citation" data-cites="anon2005connectedness">(<a
+href="#ref-anon2005connectedness"
+role="doc-biblioref"><strong>anon2005connectedness?</strong></a>)</span></td>
 <td>Connectedness of efficient points in convex and convex transformable
 vector optimization</td>
 <td style="text-align: right;">2005</td>
@@ -1904,7 +2006,9 @@ vector optimization</td>
 href="https://doi.org/10.1080/02331930500096270">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025convexa]</td>
+<td><span class="citation" data-cites="anon2025convexa">(<a
+href="#ref-anon2025convexa"
+role="doc-biblioref"><strong>anon2025convexa?</strong></a>)</span></td>
 <td>Convex Programming Problems and Convex Theorem of the
 Alternative</td>
 <td style="text-align: right;">2025</td>
@@ -1912,42 +2016,63 @@ Alternative</td>
 href="https://doi.org/10.1017/9781009510561.021">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011toolsa]</td>
-<td>Tools for Convex Optimization</td>
-<td style="text-align: right;">2011</td>
-<td>DOI 10.1201/b11156-3 (<a
-href="https://doi.org/10.1201/b11156-3">open</a>)</td>
-</tr>
-<tr>
-<td>[tuy1998convex]</td>
+<td><span class="citation" data-cites="tuy1998convex">(<a
+href="#ref-tuy1998convex"
+role="doc-biblioref"><strong>tuy1998convex?</strong></a>)</span></td>
 <td>Convex Functions</td>
 <td style="text-align: right;">1998</td>
 <td>DOI 10.1007/978-1-4757-2809-5_2 (<a
 href="https://doi.org/10.1007/978-1-4757-2809-5_2">open</a>)</td>
 </tr>
 <tr>
-<td>[mattingley2009automatic]</td>
+<td><span class="citation" data-cites="mattingley2009automatic">(<a
+href="#ref-mattingley2009automatic"
+role="doc-biblioref"><strong>mattingley2009automatic?</strong></a>)</span></td>
 <td>Automatic code generation for real-time convex optimization</td>
 <td style="text-align: right;">2009</td>
 <td>DOI 10.1017/cbo9780511804458.002 (<a
 href="https://doi.org/10.1017/cbo9780511804458.002">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011whata]</td>
-<td>What Is Convex Optimization?</td>
+<td><span class="citation" data-cites="anon2011toolsa">(<a
+href="#ref-anon2011toolsa"
+role="doc-biblioref"><strong>anon2011toolsa?</strong></a>)</span></td>
+<td>Tools for Convex Optimization</td>
 <td style="text-align: right;">2011</td>
-<td>DOI 10.1201/b11156-2 (<a
-href="https://doi.org/10.1201/b11156-2">open</a>)</td>
+<td>DOI 10.1201/b11156-3 (<a
+href="https://doi.org/10.1201/b11156-3">open</a>)</td>
 </tr>
 <tr>
-<td>[tuy1998convexa]</td>
+<td><span class="citation" data-cites="tuy1998convexa">(<a
+href="#ref-tuy1998convexa"
+role="doc-biblioref"><strong>tuy1998convexa?</strong></a>)</span></td>
 <td>Convex Sets</td>
 <td style="text-align: right;">1998</td>
 <td>DOI 10.1007/978-1-4757-2809-5_1 (<a
 href="https://doi.org/10.1007/978-1-4757-2809-5_1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2020appendixa]</td>
+<td><span class="citation" data-cites="anon2011whata">(<a
+href="#ref-anon2011whata"
+role="doc-biblioref"><strong>anon2011whata?</strong></a>)</span></td>
+<td>What Is Convex Optimization?</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b11156-2 (<a
+href="https://doi.org/10.1201/b11156-2">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="bonnans2019convex">(<a
+href="#ref-bonnans2019convex"
+role="doc-biblioref"><strong>bonnans2019convex?</strong></a>)</span></td>
+<td>A Convex Optimization Toolbox</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1007/978-3-030-14977-2_1 (<a
+href="https://doi.org/10.1007/978-3-030-14977-2_1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2020appendixa">(<a
+href="#ref-anon2020appendixa"
+role="doc-biblioref"><strong>anon2020appendixa?</strong></a>)</span></td>
 <td>Appendix: Executive Summary on Efficient Solvability of Convex
 Optimization Problems</td>
 <td style="text-align: right;">2020</td>
@@ -1955,155 +2080,153 @@ Optimization Problems</td>
 href="https://doi.org/10.1515/9780691200316-013">open</a>)</td>
 </tr>
 <tr>
-<td>[bonnans2019convex]</td>
-<td>A Convex Optimization Toolbox</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.1007/978-3-030-14977-2_1 (<a
-href="https://doi.org/10.1007/978-3-030-14977-2_1">open</a>)</td>
-</tr>
-<tr>
-<td>[anon20142]</td>
+<td><span class="citation" data-cites="anon20142">(<a
+href="#ref-anon20142"
+role="doc-biblioref"><strong>anon20142?</strong></a>)</span></td>
 <td>2 Convex sets and convex functions</td>
 <td style="text-align: right;">2014</td>
 <td>DOI 10.1515/9783110361629.30 (<a
 href="https://doi.org/10.1515/9783110361629.30">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2021convexa]</td>
+<td><span class="citation" data-cites="anon2021convexa">(<a
+href="#ref-anon2021convexa"
+role="doc-biblioref"><strong>anon2021convexa?</strong></a>)</span></td>
 <td>Convex Optimization</td>
 <td style="text-align: right;">2021</td>
 <td>DOI 10.1017/9781108980647.012 (<a
 href="https://doi.org/10.1017/9781108980647.012">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2017convex]</td>
+<td><span class="citation" data-cites="anon2017convex">(<a
+href="#ref-anon2017convex"
+role="doc-biblioref"><strong>anon2017convex?</strong></a>)</span></td>
 <td>Convex Optimization Problems</td>
 <td style="text-align: right;">2017</td>
 <td>DOI 10.1201/9781315366920-5 (<a
 href="https://doi.org/10.1201/9781315366920-5">open</a>)</td>
 </tr>
 <tr>
-<td>[zaslavski2020pdabased]</td>
+<td><span class="citation" data-cites="zaslavski2020pdabased">(<a
+href="#ref-zaslavski2020pdabased"
+role="doc-biblioref"><strong>zaslavski2020pdabased?</strong></a>)</span></td>
 <td>PDA-Based Method for Convex Optimization</td>
 <td style="text-align: right;">2020</td>
 <td>DOI 10.1007/978-3-030-37822-6_9 (<a
 href="https://doi.org/10.1007/978-3-030-37822-6_9">open</a>)</td>
 </tr>
 <tr>
-<td>[tuy2016convex]</td>
+<td><span class="citation" data-cites="tuy2016convex">(<a
+href="#ref-tuy2016convex"
+role="doc-biblioref"><strong>tuy2016convex?</strong></a>)</span></td>
 <td>Convex Functions</td>
 <td style="text-align: right;">2016</td>
 <td>DOI 10.1007/978-3-319-31484-6_2 (<a
 href="https://doi.org/10.1007/978-3-319-31484-6_2">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004introduction]</td>
-<td>Introduction</td>
-<td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.002 (<a
-href="https://doi.org/10.1017/cbo9780511804441.002">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2025optimality]</td>
+<td><span class="citation" data-cites="anon2025optimality">(<a
+href="#ref-anon2025optimality"
+role="doc-biblioref"><strong>anon2025optimality?</strong></a>)</span></td>
 <td>Optimality Conditions in Convex Programming</td>
 <td style="text-align: right;">2025</td>
 <td>DOI 10.1017/9781009510561.024 (<a
 href="https://doi.org/10.1017/9781009510561.024">open</a>)</td>
 </tr>
 <tr>
-<td>[lasserre2011convex]</td>
-<td>On convex optimization without convex representation</td>
-<td style="text-align: right;">2011</td>
-<td>DOI 10.1007/s11590-011-0323-1 (<a
-href="https://doi.org/10.1007/s11590-011-0323-1">open</a>)</td>
-</tr>
-<tr>
-<td>[anonconvexa]</td>
-<td>Convex Envelopes in Optimization Problems</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1007/springerreference_72173 (<a
-href="https://doi.org/10.1007/springerreference_72173">open</a>)</td>
-</tr>
-<tr>
-<td>[li2015convex]</td>
-<td>Convex Relaxation</td>
-<td style="text-align: right;">2015</td>
-<td>DOI 10.1007/978-3-662-46356-7_6 (<a
-href="https://doi.org/10.1007/978-3-662-46356-7_6">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2004preface]</td>
-<td>Preface</td>
-<td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.001 (<a
-href="https://doi.org/10.1017/cbo9780511804441.001">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2021convexb]</td>
-<td>Convex Analysis and Convex Optimization</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1017/9781108377447.033 (<a
-href="https://doi.org/10.1017/9781108377447.033">open</a>)</td>
-</tr>
-<tr>
-<td>[tuy2016convexa]</td>
-<td>Convex Sets</td>
-<td style="text-align: right;">2016</td>
-<td>DOI 10.1007/978-3-319-31484-6_1 (<a
-href="https://doi.org/10.1007/978-3-319-31484-6_1">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2025first]</td>
-<td>First Acquaintance with Convex Sets</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009510561.003 (<a
-href="https://doi.org/10.1017/9781009510561.003">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2021convexc]</td>
-<td>Convex Sets</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1002/9781119804093.ch2 (<a
-href="https://doi.org/10.1002/9781119804093.ch2">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2021convexd]</td>
+<td><span class="citation" data-cites="anon2021convexb">(<a
+href="#ref-anon2021convexb"
+role="doc-biblioref"><strong>anon2021convexb?</strong></a>)</span></td>
 <td>Convex Functions</td>
 <td style="text-align: right;">2021</td>
 <td>DOI 10.1002/9781119804093.ch3 (<a
 href="https://doi.org/10.1002/9781119804093.ch3">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025firsta]</td>
-<td>First Acquaintance with Convex Functions</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009510561.013 (<a
-href="https://doi.org/10.1017/9781009510561.013">open</a>)</td>
+<td><span class="citation" data-cites="li2015convex">(<a
+href="#ref-li2015convex"
+role="doc-biblioref"><strong>li2015convex?</strong></a>)</span></td>
+<td>Convex Relaxation</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.1007/978-3-662-46356-7_6 (<a
+href="https://doi.org/10.1007/978-3-662-46356-7_6">open</a>)</td>
 </tr>
 <tr>
-<td>[singer2001duality]</td>
-<td>On Duality for Quasi-convex Supremization and Reverse Convex
-Infimization</td>
-<td style="text-align: right;">2001</td>
-<td>DOI 10.1007/978-1-4613-0295-7_16 (<a
-href="https://doi.org/10.1007/978-1-4613-0295-7_16">open</a>)</td>
+<td><span class="citation" data-cites="lasserre2011convex">(<a
+href="#ref-lasserre2011convex"
+role="doc-biblioref"><strong>lasserre2011convex?</strong></a>)</span></td>
+<td>On convex optimization without convex representation</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1007/s11590-011-0323-1 (<a
+href="https://doi.org/10.1007/s11590-011-0323-1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004references]</td>
-<td>References</td>
-<td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.016 (<a
-href="https://doi.org/10.1017/cbo9780511804441.016">open</a>)</td>
+<td><span class="citation" data-cites="anon2021convexc">(<a
+href="#ref-anon2021convexc"
+role="doc-biblioref"><strong>anon2021convexc?</strong></a>)</span></td>
+<td>Convex Analysis and Convex Optimization</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1017/9781108377447.033 (<a
+href="https://doi.org/10.1017/9781108377447.033">open</a>)</td>
 </tr>
 <tr>
-<td>[anonglobal]</td>
-<td>Global Optimization: Tight Convex Underestimators</td>
+<td><span class="citation" data-cites="anonconvexa">(<a
+href="#ref-anonconvexa"
+role="doc-biblioref"><strong>anonconvexa?</strong></a>)</span></td>
+<td>Convex Envelopes in Optimization Problems</td>
 <td style="text-align: right;">n.d.</td>
-<td>DOI 10.1007/springerreference_72325 (<a
-href="https://doi.org/10.1007/springerreference_72325">open</a>)</td>
+<td>DOI 10.1007/springerreference_72173 (<a
+href="https://doi.org/10.1007/springerreference_72173">open</a>)</td>
 </tr>
 <tr>
-<td>[singer1999duality]</td>
+<td><span class="citation" data-cites="anon2004preface">(<a
+href="#ref-anon2004preface"
+role="doc-biblioref"><strong>anon2004preface?</strong></a>)</span></td>
+<td>Preface</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.001 (<a
+href="https://doi.org/10.1017/cbo9780511804441.001">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2025first">(<a
+href="#ref-anon2025first"
+role="doc-biblioref"><strong>anon2025first?</strong></a>)</span></td>
+<td>First Acquaintance with Convex Sets</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.003 (<a
+href="https://doi.org/10.1017/9781009510561.003">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2021convexd">(<a
+href="#ref-anon2021convexd"
+role="doc-biblioref"><strong>anon2021convexd?</strong></a>)</span></td>
+<td>Convex Sets</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1002/9781119804093.ch2 (<a
+href="https://doi.org/10.1002/9781119804093.ch2">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="tuy2016convexa">(<a
+href="#ref-tuy2016convexa"
+role="doc-biblioref"><strong>tuy2016convexa?</strong></a>)</span></td>
+<td>Convex Sets</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1007/978-3-319-31484-6_1 (<a
+href="https://doi.org/10.1007/978-3-319-31484-6_1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2004introduction">(<a
+href="#ref-anon2004introduction"
+role="doc-biblioref"><strong>anon2004introduction?</strong></a>)</span></td>
+<td>Introduction</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.002 (<a
+href="https://doi.org/10.1017/cbo9780511804441.002">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="singer1999duality">(<a
+href="#ref-singer1999duality"
+role="doc-biblioref"><strong>singer1999duality?</strong></a>)</span></td>
 <td>Duality in quasi-convex supremization and reverse convex
 infimization via abstract convex analysis,and applications to
 approximation **</td>
@@ -2112,79 +2235,91 @@ approximation **</td>
 href="https://doi.org/10.1080/02331939908844436">open</a>)</td>
 </tr>
 <tr>
-<td>[marechal2001generating]</td>
+<td><span class="citation" data-cites="anon2025firsta">(<a
+href="#ref-anon2025firsta"
+role="doc-biblioref"><strong>anon2025firsta?</strong></a>)</span></td>
+<td>First Acquaintance with Convex Functions</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.013 (<a
+href="https://doi.org/10.1017/9781009510561.013">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="singer2001duality">(<a
+href="#ref-singer2001duality"
+role="doc-biblioref"><strong>singer2001duality?</strong></a>)</span></td>
+<td>On Duality for Quasi-convex Supremization and Reverse Convex
+Infimization</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/978-1-4613-0295-7_16 (<a
+href="https://doi.org/10.1007/978-1-4613-0295-7_16">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2004references">(<a
+href="#ref-anon2004references"
+role="doc-biblioref"><strong>anon2004references?</strong></a>)</span></td>
+<td>References</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.016 (<a
+href="https://doi.org/10.1017/cbo9780511804441.016">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonglobal">(<a
+href="#ref-anonglobal"
+role="doc-biblioref"><strong>anonglobal?</strong></a>)</span></td>
+<td>Global Optimization: Tight Convex Underestimators</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72325 (<a
+href="https://doi.org/10.1007/springerreference_72325">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="marechal2001generating">(<a
+href="#ref-marechal2001generating"
+role="doc-biblioref"><strong>marechal2001generating?</strong></a>)</span></td>
 <td>Generating Convex Functions</td>
 <td style="text-align: right;">2001</td>
 <td>DOI 10.1007/978-1-4613-0279-7_21 (<a
 href="https://doi.org/10.1007/978-1-4613-0279-7_21">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025convexb]</td>
+<td><span class="citation" data-cites="anon2025convexb">(<a
+href="#ref-anon2025convexb"
+role="doc-biblioref"><strong>anon2025convexb?</strong></a>)</span></td>
 <td>Convex Programming, Lagrange Duality, Saddle Points</td>
 <td style="text-align: right;">2025</td>
 <td>DOI 10.1017/9781009510561.020 (<a
 href="https://doi.org/10.1017/9781009510561.020">open</a>)</td>
 </tr>
 <tr>
-<td>[peypouquet2015convex]</td>
+<td><span class="citation" data-cites="peypouquet2015convex">(<a
+href="#ref-peypouquet2015convex"
+role="doc-biblioref"><strong>peypouquet2015convex?</strong></a>)</span></td>
 <td>Convex Analysis and Subdifferential Calculus</td>
 <td style="text-align: right;">2015</td>
 <td>DOI 10.1007/978-3-319-13710-0_3 (<a
 href="https://doi.org/10.1007/978-3-319-13710-0_3">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025minima]</td>
-<td>Minima and Maxima of Convex Functions</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009510561.015 (<a
-href="https://doi.org/10.1017/9781009510561.015">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2025convexc]</td>
+<td><span class="citation" data-cites="anon2025convexc">(<a
+href="#ref-anon2025convexc"
+role="doc-biblioref"><strong>anon2025convexc?</strong></a>)</span></td>
 <td>★ Convex Programming in Cone-Constrained Form</td>
 <td style="text-align: right;">2025</td>
 <td>DOI 10.1017/9781009510561.023 (<a
 href="https://doi.org/10.1017/9781009510561.023">open</a>)</td>
 </tr>
 <tr>
-<td>[stillwell2019statistical]</td>
-<td>Statistical Inference via Convex Optimization</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.23943/princeton/9780691197296.001.0001 (<a
-href="https://doi.org/10.23943/princeton/9780691197296.001.0001">open</a>)</td>
+<td><span class="citation" data-cites="anon2025minima">(<a
+href="#ref-anon2025minima"
+role="doc-biblioref"><strong>anon2025minima?</strong></a>)</span></td>
+<td>Minima and Maxima of Convex Functions</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.015 (<a
+href="https://doi.org/10.1017/9781009510561.015">open</a>)</td>
 </tr>
 <tr>
-<td>[dutta2014barrier]</td>
-<td>Barrier method in nonsmooth convex optimization without convex
-representation</td>
-<td style="text-align: right;">2014</td>
-<td>DOI 10.1007/s11590-014-0811-1 (<a
-href="https://doi.org/10.1007/s11590-014-0811-1">open</a>)</td>
-</tr>
-<tr>
-<td>[youness1999econvex]</td>
-<td>E-Convex Sets, E-Convex Functions, and E-Convex Programming</td>
-<td style="text-align: right;">1999</td>
-<td>DOI 10.1023/a:1021792726715 (<a
-href="https://doi.org/10.1023/a:1021792726715">open</a>)</td>
-</tr>
-<tr>
-<td>[lasserre2014erratum]</td>
-<td>Erratum to: On convex optimization without convex
-representation</td>
-<td style="text-align: right;">2014</td>
-<td>DOI 10.1007/s11590-014-0735-9 (<a
-href="https://doi.org/10.1007/s11590-014-0735-9">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2004unconstrained]</td>
-<td>Unconstrained minimization</td>
-<td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.010 (<a
-href="https://doi.org/10.1017/cbo9780511804441.010">open</a>)</td>
-</tr>
-<tr>
-<td>[halman2015approximating]</td>
+<td><span class="citation" data-cites="halman2015approximating">(<a
+href="#ref-halman2015approximating"
+role="doc-biblioref"><strong>halman2015approximating?</strong></a>)</span></td>
 <td>Approximating convex functions via non-convex oracles under the
 relative noise model</td>
 <td style="text-align: right;">2015</td>
@@ -2192,133 +2327,200 @@ relative noise model</td>
 href="https://doi.org/10.1016/j.disopt.2014.12.001">open</a>)</td>
 </tr>
 <tr>
-<td>[anonduality]</td>
-<td>Duality Theory: Monoduality in Convex Optimization</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1007/springerreference_72219 (<a
-href="https://doi.org/10.1007/springerreference_72219">open</a>)</td>
+<td><span class="citation" data-cites="stillwell2019statistical">(<a
+href="#ref-stillwell2019statistical"
+role="doc-biblioref"><strong>stillwell2019statistical?</strong></a>)</span></td>
+<td>Statistical Inference via Convex Optimization</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.23943/princeton/9780691197296.001.0001 (<a
+href="https://doi.org/10.23943/princeton/9780691197296.001.0001">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004geometric]</td>
-<td>Geometric problems</td>
+<td><span class="citation" data-cites="dutta2014barrier">(<a
+href="#ref-dutta2014barrier"
+role="doc-biblioref"><strong>dutta2014barrier?</strong></a>)</span></td>
+<td>Barrier method in nonsmooth convex optimization without convex
+representation</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1007/s11590-014-0811-1 (<a
+href="https://doi.org/10.1007/s11590-014-0811-1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="youness1999econvex">(<a
+href="#ref-youness1999econvex"
+role="doc-biblioref"><strong>youness1999econvex?</strong></a>)</span></td>
+<td>E-Convex Sets, E-Convex Functions, and E-Convex Programming</td>
+<td style="text-align: right;">1999</td>
+<td>DOI 10.1023/a:1021792726715 (<a
+href="https://doi.org/10.1023/a:1021792726715">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="lasserre2014erratum">(<a
+href="#ref-lasserre2014erratum"
+role="doc-biblioref"><strong>lasserre2014erratum?</strong></a>)</span></td>
+<td>Erratum to: On convex optimization without convex
+representation</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1007/s11590-014-0735-9 (<a
+href="https://doi.org/10.1007/s11590-014-0735-9">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2004unconstrained">(<a
+href="#ref-anon2004unconstrained"
+role="doc-biblioref"><strong>anon2004unconstrained?</strong></a>)</span></td>
+<td>Unconstrained minimization</td>
 <td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.009 (<a
-href="https://doi.org/10.1017/cbo9780511804441.009">open</a>)</td>
+<td>DOI 10.1017/cbo9780511804441.010 (<a
+href="https://doi.org/10.1017/cbo9780511804441.010">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004statistical]</td>
-<td>Statistical estimation</td>
-<td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.008 (<a
-href="https://doi.org/10.1017/cbo9780511804441.008">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2025coneconvex]</td>
-<td>★ Cone-Convex Functions: Elementary Calculus and Examples</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009510561.025 (<a
-href="https://doi.org/10.1017/9781009510561.025">open</a>)</td>
-</tr>
-<tr>
-<td>[yang2001econvex]</td>
+<td><span class="citation" data-cites="yang2001econvex">(<a
+href="#ref-yang2001econvex"
+role="doc-biblioref"><strong>yang2001econvex?</strong></a>)</span></td>
 <td>On E-Convex Sets, E-Convex Functions, and E-Convex Programming</td>
 <td style="text-align: right;">2001</td>
 <td>DOI 10.1023/a:1017532225395 (<a
 href="https://doi.org/10.1023/a:1017532225395">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004mathematical]</td>
+<td><span class="citation" data-cites="anon2004statistical">(<a
+href="#ref-anon2004statistical"
+role="doc-biblioref"><strong>anon2004statistical?</strong></a>)</span></td>
+<td>Statistical estimation</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.008 (<a
+href="https://doi.org/10.1017/cbo9780511804441.008">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2004mathematical">(<a
+href="#ref-anon2004mathematical"
+role="doc-biblioref"><strong>anon2004mathematical?</strong></a>)</span></td>
 <td>Mathematical background</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1017/cbo9780511804441.013 (<a
 href="https://doi.org/10.1017/cbo9780511804441.013">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025separation]</td>
-<td>Separation Theorem and Geometry of Convex Sets</td>
+<td><span class="citation" data-cites="anon2004geometric">(<a
+href="#ref-anon2004geometric"
+role="doc-biblioref"><strong>anon2004geometric?</strong></a>)</span></td>
+<td>Geometric problems</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.009 (<a
+href="https://doi.org/10.1017/cbo9780511804441.009">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonduality">(<a
+href="#ref-anonduality"
+role="doc-biblioref"><strong>anonduality?</strong></a>)</span></td>
+<td>Duality Theory: Monoduality in Convex Optimization</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1007/springerreference_72219 (<a
+href="https://doi.org/10.1007/springerreference_72219">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2025coneconvex">(<a
+href="#ref-anon2025coneconvex"
+role="doc-biblioref"><strong>anon2025coneconvex?</strong></a>)</span></td>
+<td>★ Cone-Convex Functions: Elementary Calculus and Examples</td>
 <td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009510561.009 (<a
-href="https://doi.org/10.1017/9781009510561.009">open</a>)</td>
+<td>DOI 10.1017/9781009510561.025 (<a
+href="https://doi.org/10.1017/9781009510561.025">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025convexd]</td>
-<td>Convex Optimization</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009493512.006 (<a
-href="https://doi.org/10.1017/9781009493512.006">open</a>)</td>
-</tr>
-<tr>
-<td>[dragomirescu1992smallest]</td>
-<td>The smallest convex extensions of a convex function</td>
-<td style="text-align: right;">1992</td>
-<td>DOI 10.1080/02331939208843789 (<a
-href="https://doi.org/10.1080/02331939208843789">open</a>)</td>
-</tr>
-<tr>
-<td>[rubsamen2009robust]</td>
-<td>Robust broadband adaptive beamforming using convex optimization</td>
-<td style="text-align: right;">2009</td>
-<td>DOI 10.1017/cbo9780511804458.010 (<a
-href="https://doi.org/10.1017/cbo9780511804458.010">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2021generalizations]</td>
-<td>Generalizations of Convex Functions</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1002/9781119804093.ch4 (<a
-href="https://doi.org/10.1002/9781119804093.ch4">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2025convexe]</td>
-<td>Convex Optimization Theory</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009428095.021 (<a
-href="https://doi.org/10.1017/9781009428095.021">open</a>)</td>
-</tr>
-<tr>
-<td>[florenzano2001convex]</td>
-<td>Convex Optimization With Convex Constraints</td>
-<td style="text-align: right;">2001</td>
-<td>DOI 10.1007/978-3-642-56522-9_7 (<a
-href="https://doi.org/10.1007/978-3-642-56522-9_7">open</a>)</td>
-</tr>
-<tr>
-<td>[floudas1995convex]</td>
+<td><span class="citation" data-cites="floudas1995convex">(<a
+href="#ref-floudas1995convex"
+role="doc-biblioref"><strong>floudas1995convex?</strong></a>)</span></td>
 <td>Convex Analysis</td>
 <td style="text-align: right;">1995</td>
 <td>DOI 10.1093/oso/9780195100563.003.0006 (<a
 href="https://doi.org/10.1093/oso/9780195100563.003.0006">open</a>)</td>
 </tr>
 <tr>
-<td>[anon20144]</td>
+<td><span class="citation" data-cites="rubsamen2009robust">(<a
+href="#ref-rubsamen2009robust"
+role="doc-biblioref"><strong>rubsamen2009robust?</strong></a>)</span></td>
+<td>Robust broadband adaptive beamforming using convex optimization</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.1017/cbo9780511804458.010 (<a
+href="https://doi.org/10.1017/cbo9780511804458.010">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="florenzano2001convex">(<a
+href="#ref-florenzano2001convex"
+role="doc-biblioref"><strong>florenzano2001convex?</strong></a>)</span></td>
+<td>Convex Optimization With Convex Constraints</td>
+<td style="text-align: right;">2001</td>
+<td>DOI 10.1007/978-3-642-56522-9_7 (<a
+href="https://doi.org/10.1007/978-3-642-56522-9_7">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2021generalizations">(<a
+href="#ref-anon2021generalizations"
+role="doc-biblioref"><strong>anon2021generalizations?</strong></a>)</span></td>
+<td>Generalizations of Convex Functions</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1002/9781119804093.ch4 (<a
+href="https://doi.org/10.1002/9781119804093.ch4">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon20144">(<a
+href="#ref-anon20144"
+role="doc-biblioref"><strong>anon20144?</strong></a>)</span></td>
 <td>4 Convex Nonsmooth Optimization</td>
 <td style="text-align: right;">2014</td>
 <td>DOI 10.2478/9783110426045.4 (<a
 href="https://doi.org/10.2478/9783110426045.4">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011algorithms]</td>
+<td><span class="citation" data-cites="anon2025convexd">(<a
+href="#ref-anon2025convexd"
+role="doc-biblioref"><strong>anon2025convexd?</strong></a>)</span></td>
+<td>Convex Optimization</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009493512.006 (<a
+href="https://doi.org/10.1017/9781009493512.006">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2025separation">(<a
+href="#ref-anon2025separation"
+role="doc-biblioref"><strong>anon2025separation?</strong></a>)</span></td>
+<td>Separation Theorem and Geometry of Convex Sets</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009510561.009 (<a
+href="https://doi.org/10.1017/9781009510561.009">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="dragomirescu1992smallest">(<a
+href="#ref-dragomirescu1992smallest"
+role="doc-biblioref"><strong>dragomirescu1992smallest?</strong></a>)</span></td>
+<td>The smallest convex extensions of a convex function</td>
+<td style="text-align: right;">1992</td>
+<td>DOI 10.1080/02331939208843789 (<a
+href="https://doi.org/10.1080/02331939208843789">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2011algorithms">(<a
+href="#ref-anon2011algorithms"
+role="doc-biblioref"><strong>anon2011algorithms?</strong></a>)</span></td>
 <td>Algorithms for Conic Optimization</td>
 <td style="text-align: right;">2011</td>
 <td>DOI 10.1201/b10839-12 (<a
 href="https://doi.org/10.1201/b10839-12">open</a>)</td>
 </tr>
 <tr>
-<td>[murota2008lconvex]</td>
-<td>L-convex Functions and M-convex Functions</td>
-<td style="text-align: right;">2008</td>
-<td>DOI 10.1007/978-0-387-74759-0_325 (<a
-href="https://doi.org/10.1007/978-0-387-74759-0_325">open</a>)</td>
+<td><span class="citation" data-cites="anon2025convexe">(<a
+href="#ref-anon2025convexe"
+role="doc-biblioref"><strong>anon2025convexe?</strong></a>)</span></td>
+<td>Convex Optimization Theory</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009428095.021 (<a
+href="https://doi.org/10.1017/9781009428095.021">open</a>)</td>
 </tr>
 <tr>
-<td>[murota2024lconvex]</td>
-<td>L-Convex Functions and M-Convex Functions</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.1007/978-3-030-54621-2_325-1 (<a
-href="https://doi.org/10.1007/978-3-030-54621-2_325-1">open</a>)</td>
-</tr>
-<tr>
-<td>[strongin2000global]</td>
+<td><span class="citation" data-cites="strongin2000global">(<a
+href="#ref-strongin2000global"
+role="doc-biblioref"><strong>strongin2000global?</strong></a>)</span></td>
 <td>Global Optimization under Non-Convex Constraints — The Index
 Approach</td>
 <td style="text-align: right;">2000</td>
@@ -2326,42 +2528,45 @@ Approach</td>
 href="https://doi.org/10.1007/978-1-4615-4677-1_6">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004equality]</td>
+<td><span class="citation" data-cites="murota2024lconvex">(<a
+href="#ref-murota2024lconvex"
+role="doc-biblioref"><strong>murota2024lconvex?</strong></a>)</span></td>
+<td>L-Convex Functions and M-Convex Functions</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.1007/978-3-030-54621-2_325-1 (<a
+href="https://doi.org/10.1007/978-3-030-54621-2_325-1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2004equality">(<a
+href="#ref-anon2004equality"
+role="doc-biblioref"><strong>anon2004equality?</strong></a>)</span></td>
 <td>Equality constrained minimization</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1017/cbo9780511804441.011 (<a
 href="https://doi.org/10.1017/cbo9780511804441.011">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004approximation]</td>
+<td><span class="citation" data-cites="anon2004approximation">(<a
+href="#ref-anon2004approximation"
+role="doc-biblioref"><strong>anon2004approximation?</strong></a>)</span></td>
 <td>Approximation and fitting</td>
 <td style="text-align: right;">2004</td>
 <td>DOI 10.1017/cbo9780511804441.007 (<a
 href="https://doi.org/10.1017/cbo9780511804441.007">open</a>)</td>
 </tr>
 <tr>
-<td>[kramerbasis]</td>
-<td>Basis identification through convex optimization</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.31274/etd-180810-1098 (<a
-href="https://doi.org/10.31274/etd-180810-1098">open</a>)</td>
+<td><span class="citation" data-cites="murota2008lconvex">(<a
+href="#ref-murota2008lconvex"
+role="doc-biblioref"><strong>murota2008lconvex?</strong></a>)</span></td>
+<td>L-convex Functions and M-convex Functions</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.1007/978-0-387-74759-0_325 (<a
+href="https://doi.org/10.1007/978-0-387-74759-0_325">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2004duality]</td>
-<td>Duality</td>
-<td style="text-align: right;">2004</td>
-<td>DOI 10.1017/cbo9780511804441.006 (<a
-href="https://doi.org/10.1017/cbo9780511804441.006">open</a>)</td>
-</tr>
-<tr>
-<td>[anonintroduction]</td>
-<td>Introduction</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1017/cbo9781139924672.002 (<a
-href="https://doi.org/10.1017/cbo9781139924672.002">open</a>)</td>
-</tr>
-<tr>
-<td>[zalinescu2024locally]</td>
+<td><span class="citation" data-cites="zalinescu2024locally">(<a
+href="#ref-zalinescu2024locally"
+role="doc-biblioref"><strong>zalinescu2024locally?</strong></a>)</span></td>
 <td>On locally Lipschitz convex functions defined on subsets with empty
 interior of locally convex spaces</td>
 <td style="text-align: right;">2024</td>
@@ -2369,50 +2574,45 @@ interior of locally convex spaces</td>
 href="https://doi.org/10.1080/02331934.2024.2388200">open</a>)</td>
 </tr>
 <tr>
-<td>[liuautonomous]</td>
-<td>Autonomous Trajectory Planning by Convex Optimization</td>
+<td><span class="citation" data-cites="kramerbasis">(<a
+href="#ref-kramerbasis"
+role="doc-biblioref"><strong>kramerbasis?</strong></a>)</span></td>
+<td>Basis identification through convex optimization</td>
 <td style="text-align: right;">n.d.</td>
-<td>DOI 10.31274/etd-180810-3525 (<a
-href="https://doi.org/10.31274/etd-180810-3525">open</a>)</td>
+<td>DOI 10.31274/etd-180810-1098 (<a
+href="https://doi.org/10.31274/etd-180810-1098">open</a>)</td>
 </tr>
 <tr>
-<td>[anonbackground]</td>
-<td>Background</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1017/cbo9781139924672.003 (<a
-href="https://doi.org/10.1017/cbo9781139924672.003">open</a>)</td>
-</tr>
-<tr>
-<td>[murota2001lconvex]</td>
+<td><span class="citation" data-cites="murota2001lconvex">(<a
+href="#ref-murota2001lconvex"
+role="doc-biblioref"><strong>murota2001lconvex?</strong></a>)</span></td>
 <td>L-Convex Functions and M-Convex Functions</td>
 <td style="text-align: right;">2001</td>
 <td>DOI 10.1007/0-306-48332-7_244 (<a
 href="https://doi.org/10.1007/0-306-48332-7_244">open</a>)</td>
 </tr>
 <tr>
-<td>[anonpreface]</td>
-<td>Preface</td>
+<td><span class="citation" data-cites="anon2004duality">(<a
+href="#ref-anon2004duality"
+role="doc-biblioref"><strong>anon2004duality?</strong></a>)</span></td>
+<td>Duality</td>
+<td style="text-align: right;">2004</td>
+<td>DOI 10.1017/cbo9780511804441.006 (<a
+href="https://doi.org/10.1017/cbo9780511804441.006">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonintroduction">(<a
+href="#ref-anonintroduction"
+role="doc-biblioref"><strong>anonintroduction?</strong></a>)</span></td>
+<td>Introduction</td>
 <td style="text-align: right;">n.d.</td>
-<td>DOI 10.1017/cbo9781139924672.001 (<a
-href="https://doi.org/10.1017/cbo9781139924672.001">open</a>)</td>
+<td>DOI 10.1017/cbo9781139924672.002 (<a
+href="https://doi.org/10.1017/cbo9781139924672.002">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011cones]</td>
-<td>Cones, Complementarity, and Conic Optimization</td>
-<td style="text-align: right;">2011</td>
-<td>DOI 10.1201/b10839-5 (<a
-href="https://doi.org/10.1201/b10839-5">open</a>)</td>
-</tr>
-<tr>
-<td>[oktem2017computational]</td>
-<td>Computational Spectral and Ultrafast Imaging via Convex
-Optimization</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.1007/978-3-319-61609-4_5 (<a
-href="https://doi.org/10.1007/978-3-319-61609-4_5">open</a>)</td>
-</tr>
-<tr>
-<td>[anonalgorithm]</td>
+<td><span class="citation" data-cites="anonalgorithm">(<a
+href="#ref-anonalgorithm"
+role="doc-biblioref"><strong>anonalgorithm?</strong></a>)</span></td>
 <td>Algorithm 1 : Convex optimization with regularized feature
 selection.</td>
 <td style="text-align: right;">n.d.</td>
@@ -2420,18 +2620,68 @@ selection.</td>
 href="https://doi.org/10.7717/peerj-cs.3752/table-101">open</a>)</td>
 </tr>
 <tr>
-<td>[anoneconomics]</td>
+<td><span class="citation" data-cites="liuautonomous">(<a
+href="#ref-liuautonomous"
+role="doc-biblioref"><strong>liuautonomous?</strong></a>)</span></td>
+<td>Autonomous Trajectory Planning by Convex Optimization</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.31274/etd-180810-3525 (<a
+href="https://doi.org/10.31274/etd-180810-3525">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonbackground">(<a
+href="#ref-anonbackground"
+role="doc-biblioref"><strong>anonbackground?</strong></a>)</span></td>
+<td>Background</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1017/cbo9781139924672.003 (<a
+href="https://doi.org/10.1017/cbo9781139924672.003">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonpreface">(<a
+href="#ref-anonpreface"
+role="doc-biblioref"><strong>anonpreface?</strong></a>)</span></td>
+<td>Preface</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1017/cbo9781139924672.001 (<a
+href="https://doi.org/10.1017/cbo9781139924672.001">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="oktem2017computational">(<a
+href="#ref-oktem2017computational"
+role="doc-biblioref"><strong>oktem2017computational?</strong></a>)</span></td>
+<td>Computational Spectral and Ultrafast Imaging via Convex
+Optimization</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1007/978-3-319-61609-4_5 (<a
+href="https://doi.org/10.1007/978-3-319-61609-4_5">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anoneconomics">(<a
+href="#ref-anoneconomics"
+role="doc-biblioref"><strong>anoneconomics?</strong></a>)</span></td>
 <td>Economics</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1017/cbo9781139924672.007 (<a
 href="https://doi.org/10.1017/cbo9781139924672.007">open</a>)</td>
 </tr>
 <tr>
-<td>[onn2008convex]</td>
-<td>Convex Discrete Optimization</td>
-<td style="text-align: right;">2008</td>
-<td>DOI 10.1007/978-0-387-74759-0_94 (<a
-href="https://doi.org/10.1007/978-0-387-74759-0_94">open</a>)</td>
+<td><span class="citation" data-cites="anon2011cones">(<a
+href="#ref-anon2011cones"
+role="doc-biblioref"><strong>anon2011cones?</strong></a>)</span></td>
+<td>Cones, Complementarity, and Conic Optimization</td>
+<td style="text-align: right;">2011</td>
+<td>DOI 10.1201/b10839-5 (<a
+href="https://doi.org/10.1201/b10839-5">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="zaslavski2020minimization">(<a
+href="#ref-zaslavski2020minimization"
+role="doc-biblioref"><strong>zaslavski2020minimization?</strong></a>)</span></td>
+<td>Minimization of Sharp Weakly Convex Functions</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1007/978-3-030-37822-6_11 (<a
+href="https://doi.org/10.1007/978-3-030-37822-6_11">open</a>)</td>
 </tr>
 </tbody>
 </table>
@@ -2439,8 +2689,8 @@ href="https://doi.org/10.1007/978-0-387-74759-0_94">open</a>)</td>
 class="header-section-number">9.2</span> stochastic gradient
 descent</h2>
 <p><em>Papers retrieved:</em> <strong>100</strong> · <em>per-source
-contributions:</em> arxiv=100, crossref=100, paperclip=93 · <em>backend
-errors:</em> none</p>
+contributions:</em> arxiv=100, crossref=100 · <em>backend errors:</em>
+none</p>
 <table>
 <colgroup>
 <col style="width: 23%" />
@@ -2458,7 +2708,9 @@ errors:</em> none</p>
 </thead>
 <tbody>
 <tr>
-<td>[gwozdz2018stochastic]</td>
+<td><span class="citation" data-cites="gwozdz2018stochastic">(<a
+href="#ref-gwozdz2018stochastic"
+role="doc-biblioref"><strong>gwozdz2018stochastic?</strong></a>)</span></td>
 <td>Stochastic and semi-stochastic gradient descent in speech
 disambiguation</td>
 <td style="text-align: right;">2018</td>
@@ -2466,14 +2718,18 @@ disambiguation</td>
 href="https://doi.org/10.7490/f1000research.1115776.1">open</a>)</td>
 </tr>
 <tr>
-<td>[wang2018stochastic]</td>
+<td><span class="citation" data-cites="wang2018stochastic">(<a
+href="#ref-wang2018stochastic"
+role="doc-biblioref"><strong>wang2018stochastic?</strong></a>)</span></td>
 <td>Stochastic gradient descent</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.53347/rid-61715 (<a
 href="https://doi.org/10.53347/rid-61715">open</a>)</td>
 </tr>
 <tr>
-<td>[kosinski2017coxphsgd]</td>
+<td><span class="citation" data-cites="kosinski2017coxphsgd">(<a
+href="#ref-kosinski2017coxphsgd"
+role="doc-biblioref"><strong>kosinski2017coxphsgd?</strong></a>)</span></td>
 <td>coxphSGD: Stochastic Gradient Descent log-Likelihood Estimation in
 Cox Proportional Hazards Model</td>
 <td style="text-align: right;">2017</td>
@@ -2481,7 +2737,9 @@ Cox Proportional Hazards Model</td>
 href="https://doi.org/10.32614/cran.package.coxphsgd">open</a>)</td>
 </tr>
 <tr>
-<td>[anontable]</td>
+<td><span class="citation" data-cites="anontable">(<a
+href="#ref-anontable"
+role="doc-biblioref"><strong>anontable?</strong></a>)</span></td>
 <td>Table 4: Stochastic gradient descent (SGD) parameter settings with
 CC images.</td>
 <td style="text-align: right;">n.d.</td>
@@ -2489,7 +2747,9 @@ CC images.</td>
 href="https://doi.org/10.7717/peerj-cs.3332/table-4">open</a>)</td>
 </tr>
 <tr>
-<td>[peseux2023stochastic]</td>
+<td><span class="citation" data-cites="peseux2023stochastic">(<a
+href="#ref-peseux2023stochastic"
+role="doc-biblioref"><strong>peseux2023stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent with Gradient Estimator for Categorical
 Features</td>
 <td style="text-align: right;">2023</td>
@@ -2497,49 +2757,66 @@ Features</td>
 href="https://doi.org/10.2139/ssrn.4439301">open</a>)</td>
 </tr>
 <tr>
-<td>[theodoridis2015stochastic]</td>
+<td><span class="citation" data-cites="theodoridis2015stochastic">(<a
+href="#ref-theodoridis2015stochastic"
+role="doc-biblioref"><strong>theodoridis2015stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent</td>
 <td style="text-align: right;">2015</td>
 <td>DOI 10.1016/b978-0-12-801522-3.00005-7 (<a
 href="https://doi.org/10.1016/b978-0-12-801522-3.00005-7">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2014stochastic]</td>
+<td><span class="citation" data-cites="anon2014stochastic">(<a
+href="#ref-anon2014stochastic"
+role="doc-biblioref"><strong>anon2014stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent</td>
 <td style="text-align: right;">2014</td>
 <td>DOI 10.1017/cbo9781107298019.015 (<a
 href="https://doi.org/10.1017/cbo9781107298019.015">open</a>)</td>
 </tr>
 <tr>
-<td>[anon1011171223051015783306294001]</td>
+<td><span class="citation"
+data-cites="anon1011171223051015783306294001">(<a
+href="#ref-anon1011171223051015783306294001"
+role="doc-biblioref"><strong>anon1011171223051015783306294001?</strong></a>)</span></td>
 <td>10.1117/12.2305101.5783306294001</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1117/12.2305101.5783306294001 (<a
 href="https://doi.org/10.1117/12.2305101.5783306294001">open</a>)</td>
 </tr>
 <tr>
-<td>[anon1011171225128176013939792001]</td>
-<td>10.1117/12.2512817.6013939792001</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1117/12.2512817.6013939792001 (<a
-href="https://doi.org/10.1117/12.2512817.6013939792001">open</a>)</td>
-</tr>
-<tr>
-<td>[lan2023stochastic]</td>
+<td><span class="citation" data-cites="lan2023stochastic">(<a
+href="#ref-lan2023stochastic"
+role="doc-biblioref"><strong>lan2023stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent</td>
 <td style="text-align: right;">2023</td>
 <td>DOI 10.1007/978-3-030-54621-2_777-1 (<a
 href="https://doi.org/10.1007/978-3-030-54621-2_777-1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon1011171226435646314793833112]</td>
+<td><span class="citation"
+data-cites="anon1011171225128176013939792001">(<a
+href="#ref-anon1011171225128176013939792001"
+role="doc-biblioref"><strong>anon1011171225128176013939792001?</strong></a>)</span></td>
+<td>10.1117/12.2512817.6013939792001</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2512817.6013939792001 (<a
+href="https://doi.org/10.1117/12.2512817.6013939792001">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation"
+data-cites="anon1011171226435646314793833112">(<a
+href="#ref-anon1011171226435646314793833112"
+role="doc-biblioref"><strong>anon1011171226435646314793833112?</strong></a>)</span></td>
 <td>10.1117/12.2643564.6314793833112</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1117/12.2643564.6314793833112 (<a
 href="https://doi.org/10.1117/12.2643564.6314793833112">open</a>)</td>
 </tr>
 <tr>
-<td>[songanglebased]</td>
+<td><span class="citation" data-cites="songanglebased">(<a
+href="#ref-songanglebased"
+role="doc-biblioref"><strong>songanglebased?</strong></a>)</span></td>
 <td>An Angle-based Stochastic Gradient Descent Method for Machine
 Learning: Principle and Application</td>
 <td style="text-align: right;">n.d.</td>
@@ -2547,21 +2824,27 @@ Learning: Principle and Application</td>
 href="https://doi.org/10.25148/etd.fidc009555">open</a>)</td>
 </tr>
 <tr>
-<td>[ketkar2017stochastic]</td>
-<td>Stochastic Gradient Descent</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.1007/978-1-4842-2766-4_8 (<a
-href="https://doi.org/10.1007/978-1-4842-2766-4_8">open</a>)</td>
-</tr>
-<tr>
-<td>[turali2024optimal]</td>
+<td><span class="citation" data-cites="turali2024optimal">(<a
+href="#ref-turali2024optimal"
+role="doc-biblioref"><strong>turali2024optimal?</strong></a>)</span></td>
 <td>Optimal Stochastic Gradient Descent Algorithm for Filtering</td>
 <td style="text-align: right;">2024</td>
 <td>DOI 10.2139/ssrn.4879640 (<a
 href="https://doi.org/10.2139/ssrn.4879640">open</a>)</td>
 </tr>
 <tr>
-<td>[alonso2025mathematics]</td>
+<td><span class="citation" data-cites="ketkar2017stochastic">(<a
+href="#ref-ketkar2017stochastic"
+role="doc-biblioref"><strong>ketkar2017stochastic?</strong></a>)</span></td>
+<td>Stochastic Gradient Descent</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1007/978-1-4842-2766-4_8 (<a
+href="https://doi.org/10.1007/978-1-4842-2766-4_8">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="alonso2025mathematics">(<a
+href="#ref-alonso2025mathematics"
+role="doc-biblioref"><strong>alonso2025mathematics?</strong></a>)</span></td>
 <td>The Mathematics of Stochastic Gradient Descent and Non-Convex
 Optimization</td>
 <td style="text-align: right;">2025</td>
@@ -2569,23 +2852,9 @@ Optimization</td>
 href="https://doi.org/10.2139/ssrn.5032378">open</a>)</td>
 </tr>
 <tr>
-<td>[yang2022adaptive]</td>
-<td>Adaptive stochastic gradient descent for large-scale learning
-problems</td>
-<td style="text-align: right;">2022</td>
-<td>DOI 10.21203/rs.3.rs-1066512/v1 (<a
-href="https://doi.org/10.21203/rs.3.rs-1066512/v1">open</a>)</td>
-</tr>
-<tr>
-<td>[amor2024realtime]</td>
-<td>Real-Time Traffic Prediction Through Stochastic Gradient
-Descent</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.5220/0012687400003702 (<a
-href="https://doi.org/10.5220/0012687400003702">open</a>)</td>
-</tr>
-<tr>
-<td>[pillaudvivienlearning]</td>
+<td><span class="citation" data-cites="pillaudvivienlearning">(<a
+href="#ref-pillaudvivienlearning"
+role="doc-biblioref"><strong>pillaudvivienlearning?</strong></a>)</span></td>
 <td>Learning with reproducing kernel Hilbert spaces : stochastic
 gradient descent and laplacian estimation</td>
 <td style="text-align: right;">n.d.</td>
@@ -2593,7 +2862,29 @@ gradient descent and laplacian estimation</td>
 href="https://doi.org/10.70675/f938eaabz37fcz4483zba85z57f0849e7747">open</a>)</td>
 </tr>
 <tr>
-<td>[arefin2016minimizing]</td>
+<td><span class="citation" data-cites="amor2024realtime">(<a
+href="#ref-amor2024realtime"
+role="doc-biblioref"><strong>amor2024realtime?</strong></a>)</span></td>
+<td>Real-Time Traffic Prediction Through Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.5220/0012687400003702 (<a
+href="https://doi.org/10.5220/0012687400003702">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="yang2022adaptive">(<a
+href="#ref-yang2022adaptive"
+role="doc-biblioref"><strong>yang2022adaptive?</strong></a>)</span></td>
+<td>Adaptive stochastic gradient descent for large-scale learning
+problems</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.21203/rs.3.rs-1066512/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-1066512/v1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="arefin2016minimizing">(<a
+href="#ref-arefin2016minimizing"
+role="doc-biblioref"><strong>arefin2016minimizing?</strong></a>)</span></td>
 <td>Minimizing Average of Loss Functions Using Gradient Descent and
 Stochastic Gradient Descent</td>
 <td style="text-align: right;">2016</td>
@@ -2601,15 +2892,9 @@ Stochastic Gradient Descent</td>
 href="https://doi.org/10.3329/dujs.v64i2.54490">open</a>)</td>
 </tr>
 <tr>
-<td>[abubaker2022scaling]</td>
-<td>Scaling Stratified Stochastic Gradient Descent for Distributed
-Matrix Completion</td>
-<td style="text-align: right;">2022</td>
-<td>DOI 10.36227/techrxiv.19350536.v1 (<a
-href="https://doi.org/10.36227/techrxiv.19350536.v1">open</a>)</td>
-</tr>
-<tr>
-<td>[chendistributed]</td>
+<td><span class="citation" data-cites="chendistributed">(<a
+href="#ref-chendistributed"
+role="doc-biblioref"><strong>chendistributed?</strong></a>)</span></td>
 <td>Distributed Stochastic Gradient Descent with Staleness: A Stochastic
 Delay Differential Equation Based Framework_supp1-3546574.pdf</td>
 <td style="text-align: right;">n.d.</td>
@@ -2617,15 +2902,19 @@ Delay Differential Equation Based Framework_supp1-3546574.pdf</td>
 href="https://doi.org/10.1109/tsp.2025.3546574/mm1">open</a>)</td>
 </tr>
 <tr>
-<td>[abubaker2022scalinga]</td>
+<td><span class="citation" data-cites="abubaker2022scaling">(<a
+href="#ref-abubaker2022scaling"
+role="doc-biblioref"><strong>abubaker2022scaling?</strong></a>)</span></td>
 <td>Scaling Stratified Stochastic Gradient Descent for Distributed
 Matrix Completion</td>
 <td style="text-align: right;">2022</td>
-<td>DOI 10.36227/techrxiv.19350536 (<a
-href="https://doi.org/10.36227/techrxiv.19350536">open</a>)</td>
+<td>DOI 10.36227/techrxiv.19350536.v1 (<a
+href="https://doi.org/10.36227/techrxiv.19350536.v1">open</a>)</td>
 </tr>
 <tr>
-<td>[fu2025theoretical]</td>
+<td><span class="citation" data-cites="fu2025theoretical">(<a
+href="#ref-fu2025theoretical"
+role="doc-biblioref"><strong>fu2025theoretical?</strong></a>)</span></td>
 <td>A Theoretical and Experimental Study of Gradient Descent and Its
 Stochastic Variants</td>
 <td style="text-align: right;">2025</td>
@@ -2633,21 +2922,29 @@ Stochastic Variants</td>
 href="https://doi.org/10.36227/techrxiv.176162233.33076025/v1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon101117123028105e628af96d7c5ee11a99e00505691c5e1]</td>
+<td><span class="citation" data-cites="abubaker2022scalinga">(<a
+href="#ref-abubaker2022scalinga"
+role="doc-biblioref"><strong>abubaker2022scalinga?</strong></a>)</span></td>
+<td>Scaling Stratified Stochastic Gradient Descent for Distributed
+Matrix Completion</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.36227/techrxiv.19350536 (<a
+href="https://doi.org/10.36227/techrxiv.19350536">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation"
+data-cites="anon101117123028105e628af96d7c5ee11a99e00505691c5e1">(<a
+href="#ref-anon101117123028105e628af96d7c5ee11a99e00505691c5e1"
+role="doc-biblioref"><strong>anon101117123028105e628af96d7c5ee11a99e00505691c5e1?</strong></a>)</span></td>
 <td>10.1117/12.3028105.e628af96-d7c5-ee11-a99e-00505691c5e1</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1117/12.3028105.e628af96-d7c5-ee11-a99e-00505691c5e1 (<a
 href="https://doi.org/10.1117/12.3028105.e628af96-d7c5-ee11-a99e-00505691c5e1">open</a>)</td>
 </tr>
 <tr>
-<td>[lam2023resampling]</td>
-<td>Resampling Stochastic Gradient Descent Cheaply</td>
-<td style="text-align: right;">2023</td>
-<td>DOI 10.1109/wsc60868.2023.10408023 (<a
-href="https://doi.org/10.1109/wsc60868.2023.10408023">open</a>)</td>
-</tr>
-<tr>
-<td>[tarkhan2020bigsurvsgd]</td>
+<td><span class="citation" data-cites="tarkhan2020bigsurvsgd">(<a
+href="#ref-tarkhan2020bigsurvsgd"
+role="doc-biblioref"><strong>tarkhan2020bigsurvsgd?</strong></a>)</span></td>
 <td>bigSurvSGD: Big Survival Analysis Using Stochastic Gradient
 Descent</td>
 <td style="text-align: right;">2020</td>
@@ -2655,7 +2952,18 @@ Descent</td>
 href="https://doi.org/10.32614/cran.package.bigsurvsgd">open</a>)</td>
 </tr>
 <tr>
-<td>[sun2023noisy]</td>
+<td><span class="citation" data-cites="lam2023resampling">(<a
+href="#ref-lam2023resampling"
+role="doc-biblioref"><strong>lam2023resampling?</strong></a>)</span></td>
+<td>Resampling Stochastic Gradient Descent Cheaply</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.1109/wsc60868.2023.10408023 (<a
+href="https://doi.org/10.1109/wsc60868.2023.10408023">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="sun2023noisy">(<a
+href="#ref-sun2023noisy"
+role="doc-biblioref"><strong>sun2023noisy?</strong></a>)</span></td>
 <td>Noisy Stochastic Gradient Descent Algorithm with Stochastic
 Event-Triggered Mechanism for Communication-Efficient Distributed
 Learning</td>
@@ -2664,15 +2972,9 @@ Learning</td>
 href="https://doi.org/10.2139/ssrn.4588764">open</a>)</td>
 </tr>
 <tr>
-<td>[theodoridis2026online]</td>
-<td>Online learning: the stochastic gradient descent family of
-algorithms</td>
-<td style="text-align: right;">2026</td>
-<td>DOI 10.1016/b978-0-44-329238-5.00011-1 (<a
-href="https://doi.org/10.1016/b978-0-44-329238-5.00011-1">open</a>)</td>
-</tr>
-<tr>
-<td>[theodoridis2020online]</td>
+<td><span class="citation" data-cites="theodoridis2020online">(<a
+href="#ref-theodoridis2020online"
+role="doc-biblioref"><strong>theodoridis2020online?</strong></a>)</span></td>
 <td>Online Learning: the Stochastic Gradient Descent Family of
 Algorithms</td>
 <td style="text-align: right;">2020</td>
@@ -2680,37 +2982,19 @@ Algorithms</td>
 href="https://doi.org/10.1016/b978-0-12-818803-3.00014-3">open</a>)</td>
 </tr>
 <tr>
-<td>[guo2022variable]</td>
-<td>Variable selection of regularized stochastic gradient descent in
-logistic regression</td>
-<td style="text-align: right;">2022</td>
-<td>DOI 10.54647/mathematics11319 (<a
-href="https://doi.org/10.54647/mathematics11319">open</a>)</td>
+<td><span class="citation" data-cites="theodoridis2026online">(<a
+href="#ref-theodoridis2026online"
+role="doc-biblioref"><strong>theodoridis2026online?</strong></a>)</span></td>
+<td>Online learning: the stochastic gradient descent family of
+algorithms</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.1016/b978-0-44-329238-5.00011-1 (<a
+href="https://doi.org/10.1016/b978-0-44-329238-5.00011-1">open</a>)</td>
 </tr>
 <tr>
-<td>[sirignano2017stochastic]</td>
-<td>Stochastic Gradient Descent in Continuous Time</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.2139/ssrn.2954149 (<a
-href="https://doi.org/10.2139/ssrn.2954149">open</a>)</td>
-</tr>
-<tr>
-<td>[cacciola2023convergence]</td>
-<td>On the Convergence of Stochastic Gradient Descent in Low-Precision
-Number Formats</td>
-<td style="text-align: right;">2023</td>
-<td>DOI 10.5220/0011795500003411 (<a
-href="https://doi.org/10.5220/0011795500003411">open</a>)</td>
-</tr>
-<tr>
-<td>[anon1011171225997446269411057001]</td>
-<td>10.1117/12.2599744.6269411057001</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1117/12.2599744.6269411057001 (<a
-href="https://doi.org/10.1117/12.2599744.6269411057001">open</a>)</td>
-</tr>
-<tr>
-<td>[ali2023comparing]</td>
+<td><span class="citation" data-cites="ali2023comparing">(<a
+href="#ref-ali2023comparing"
+role="doc-biblioref"><strong>ali2023comparing?</strong></a>)</span></td>
 <td>Comparing the Effectiveness of Support Vector Classifier and
 Stochastic Gradient Descent in Hate-Speech Detection</td>
 <td style="text-align: right;">2023</td>
@@ -2718,7 +3002,58 @@ Stochastic Gradient Descent in Hate-Speech Detection</td>
 href="https://doi.org/10.47611/harp.315">open</a>)</td>
 </tr>
 <tr>
-<td>[nguyenheavytailed]</td>
+<td><span class="citation" data-cites="guo2022variable">(<a
+href="#ref-guo2022variable"
+role="doc-biblioref"><strong>guo2022variable?</strong></a>)</span></td>
+<td>Variable selection of regularized stochastic gradient descent in
+logistic regression</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.54647/mathematics11319 (<a
+href="https://doi.org/10.54647/mathematics11319">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="cacciola2023convergence">(<a
+href="#ref-cacciola2023convergence"
+role="doc-biblioref"><strong>cacciola2023convergence?</strong></a>)</span></td>
+<td>On the Convergence of Stochastic Gradient Descent in Low-Precision
+Number Formats</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.5220/0011795500003411 (<a
+href="https://doi.org/10.5220/0011795500003411">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="sirignano2017stochastic">(<a
+href="#ref-sirignano2017stochastic"
+role="doc-biblioref"><strong>sirignano2017stochastic?</strong></a>)</span></td>
+<td>Stochastic Gradient Descent in Continuous Time</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.2139/ssrn.2954149 (<a
+href="https://doi.org/10.2139/ssrn.2954149">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="abrolbekov2026high">(<a
+href="#ref-abrolbekov2026high"
+role="doc-biblioref"><strong>abrolbekov2026high?</strong></a>)</span></td>
+<td>High Probability Convergence Bounds for Non-convex Stochastic
+Gradient Descent with Sub-Weibull Noise</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.2139/ssrn.6738058 (<a
+href="https://doi.org/10.2139/ssrn.6738058">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation"
+data-cites="anon1011171225997446269411057001">(<a
+href="#ref-anon1011171225997446269411057001"
+role="doc-biblioref"><strong>anon1011171225997446269411057001?</strong></a>)</span></td>
+<td>10.1117/12.2599744.6269411057001</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1117/12.2599744.6269411057001 (<a
+href="https://doi.org/10.1117/12.2599744.6269411057001">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="nguyenheavytailed">(<a
+href="#ref-nguyenheavytailed"
+role="doc-biblioref"><strong>nguyenheavytailed?</strong></a>)</span></td>
 <td>Heavy-tailed nature of stochastic gradient descent in deep learning
 : theoretical and empirical analysis</td>
 <td style="text-align: right;">n.d.</td>
@@ -2726,7 +3061,9 @@ href="https://doi.org/10.47611/harp.315">open</a>)</td>
 href="https://doi.org/10.70675/674d4873zb009z425cz9c8ezb792c820253d">open</a>)</td>
 </tr>
 <tr>
-<td>[shrimali2023comparative]</td>
+<td><span class="citation" data-cites="shrimali2023comparative">(<a
+href="#ref-shrimali2023comparative"
+role="doc-biblioref"><strong>shrimali2023comparative?</strong></a>)</span></td>
 <td>A comparative study of gradient descent and stochastic gradient
 descent method for optimization</td>
 <td style="text-align: right;">2023</td>
@@ -2734,7 +3071,9 @@ descent method for optimization</td>
 href="https://doi.org/10.1063/5.0148736">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2011largescale]</td>
+<td><span class="citation" data-cites="anon2011largescale">(<a
+href="#ref-anon2011largescale"
+role="doc-biblioref"><strong>anon2011largescale?</strong></a>)</span></td>
 <td>Large-Scale Machine Learning with Stochastic Gradient Descent Léon
 Bottou</td>
 <td style="text-align: right;">2011</td>
@@ -2742,29 +3081,18 @@ Bottou</td>
 href="https://doi.org/10.1201/b11429-6">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2021stochastic]</td>
+<td><span class="citation" data-cites="anon2021stochastic">(<a
+href="#ref-anon2021stochastic"
+role="doc-biblioref"><strong>anon2021stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent</td>
 <td style="text-align: right;">2021</td>
 <td>DOI 10.1017/9781108860604.006 (<a
 href="https://doi.org/10.1017/9781108860604.006">open</a>)</td>
 </tr>
 <tr>
-<td>[anonymous2026absorbing]</td>
-<td>Absorbing state dynamics of stochastic gradient descent</td>
-<td style="text-align: right;">2026</td>
-<td>DOI 10.1103/sbv7-syp7 (<a
-href="https://doi.org/10.1103/sbv7-syp7">open</a>)</td>
-</tr>
-<tr>
-<td>[li2024stochastic]</td>
-<td>Stochastic Gradient Descent in Nonconvex Optimization:
-Continuous-Time Dynamics and the Role of Learning Rates</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.2139/ssrn.4980990 (<a
-href="https://doi.org/10.2139/ssrn.4980990">open</a>)</td>
-</tr>
-<tr>
-<td>[yamada2018hyperparameterfree]</td>
+<td><span class="citation" data-cites="yamada2018hyperparameterfree">(<a
+href="#ref-yamada2018hyperparameterfree"
+role="doc-biblioref"><strong>yamada2018hyperparameterfree?</strong></a>)</span></td>
 <td>Hyperparameter-free optimizer of stochastic gradient descent that
 incorporates unit correction and moment estimation</td>
 <td style="text-align: right;">2018</td>
@@ -2772,7 +3100,20 @@ incorporates unit correction and moment estimation</td>
 href="https://doi.org/10.1101/348557">open</a>)</td>
 </tr>
 <tr>
-<td>[cai2023communicationefficient]</td>
+<td><span class="citation" data-cites="li2024stochastic">(<a
+href="#ref-li2024stochastic"
+role="doc-biblioref"><strong>li2024stochastic?</strong></a>)</span></td>
+<td>Stochastic Gradient Descent in Nonconvex Optimization:
+Continuous-Time Dynamics and the Role of Learning Rates</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.2139/ssrn.4980990 (<a
+href="https://doi.org/10.2139/ssrn.4980990">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation"
+data-cites="cai2023communicationefficient">(<a
+href="#ref-cai2023communicationefficient"
+role="doc-biblioref"><strong>cai2023communicationefficient?</strong></a>)</span></td>
 <td>Communication-Efficient Distributed Stochastic Gradient Descent with
 Pooling Operator</td>
 <td style="text-align: right;">2023</td>
@@ -2780,7 +3121,9 @@ Pooling Operator</td>
 href="https://doi.org/10.2139/ssrn.4327869">open</a>)</td>
 </tr>
 <tr>
-<td>[ayadi2021stochastic]</td>
+<td><span class="citation" data-cites="ayadi2021stochastic">(<a
+href="#ref-ayadi2021stochastic"
+role="doc-biblioref"><strong>ayadi2021stochastic?</strong></a>)</span></td>
 <td>Stochastic Runge-Kutta methods and adaptive SGD-G2 stochastic
 gradient descent</td>
 <td style="text-align: right;">2021</td>
@@ -2788,30 +3131,29 @@ gradient descent</td>
 href="https://doi.org/10.1109/icpr48806.2021.9412831">open</a>)</td>
 </tr>
 <tr>
-<td>[ramos2015hilbert]</td>
-<td>Hilbert maps: scalable continuous occupancy mapping with stochastic
-gradient descent</td>
-<td style="text-align: right;">2015</td>
-<td>DOI 10.15607/rss.2015.xi.002 (<a
-href="https://doi.org/10.15607/rss.2015.xi.002">open</a>)</td>
+<td><span class="citation" data-cites="chen2026fractionalorder">(<a
+href="#ref-chen2026fractionalorder"
+role="doc-biblioref"><strong>chen2026fractionalorder?</strong></a>)</span></td>
+<td>Fractional-order dynamics driven stochastic gradient descent method
+with momentum</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.2139/ssrn.6902318 (<a
+href="https://doi.org/10.2139/ssrn.6902318">open</a>)</td>
 </tr>
 <tr>
-<td>[hafshejani2023fast]</td>
-<td>Fast Armijo line search for stochastic gradient descent</td>
-<td style="text-align: right;">2023</td>
-<td>DOI 10.21203/rs.3.rs-2285238/v1 (<a
-href="https://doi.org/10.21203/rs.3.rs-2285238/v1">open</a>)</td>
+<td><span class="citation" data-cites="srinivasan2026intelligent">(<a
+href="#ref-srinivasan2026intelligent"
+role="doc-biblioref"><strong>srinivasan2026intelligent?</strong></a>)</span></td>
+<td>An Intelligent Predictive  CPU Scheduling Algorithm Using Online
+Multiple Linear Regression and Stochastic Gradient Descent</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.2139/ssrn.6956552 (<a
+href="https://doi.org/10.2139/ssrn.6956552">open</a>)</td>
 </tr>
 <tr>
-<td>[sirignano2020stochastic]</td>
-<td>Stochastic Gradient Descent in Continuous Time: A Central Limit
-Theorem</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.1287/stsy.2019.0050 (<a
-href="https://doi.org/10.1287/stsy.2019.0050">open</a>)</td>
-</tr>
-<tr>
-<td>[kour2024stochastic]</td>
+<td><span class="citation" data-cites="kour2024stochastic">(<a
+href="#ref-kour2024stochastic"
+role="doc-biblioref"><strong>kour2024stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent Optimized Efficient Transfer Learning
 Architecture for Brain Tumor Segmentation</td>
 <td style="text-align: right;">2024</td>
@@ -2819,29 +3161,47 @@ Architecture for Brain Tumor Segmentation</td>
 href="https://doi.org/10.2139/ssrn.5012382">open</a>)</td>
 </tr>
 <tr>
-<td>[bottou2010largescale]</td>
+<td><span class="citation" data-cites="ramos2015hilbert">(<a
+href="#ref-ramos2015hilbert"
+role="doc-biblioref"><strong>ramos2015hilbert?</strong></a>)</span></td>
+<td>Hilbert maps: scalable continuous occupancy mapping with stochastic
+gradient descent</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.15607/rss.2015.xi.002 (<a
+href="https://doi.org/10.15607/rss.2015.xi.002">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="sirignano2020stochastic">(<a
+href="#ref-sirignano2020stochastic"
+role="doc-biblioref"><strong>sirignano2020stochastic?</strong></a>)</span></td>
+<td>Stochastic Gradient Descent in Continuous Time: A Central Limit
+Theorem</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1287/stsy.2019.0050 (<a
+href="https://doi.org/10.1287/stsy.2019.0050">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hafshejani2023fast">(<a
+href="#ref-hafshejani2023fast"
+role="doc-biblioref"><strong>hafshejani2023fast?</strong></a>)</span></td>
+<td>Fast Armijo line search for stochastic gradient descent</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.21203/rs.3.rs-2285238/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-2285238/v1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="bottou2010largescale">(<a
+href="#ref-bottou2010largescale"
+role="doc-biblioref"><strong>bottou2010largescale?</strong></a>)</span></td>
 <td>Large-Scale Machine Learning with Stochastic Gradient Descent</td>
 <td style="text-align: right;">2010</td>
 <td>DOI 10.1007/978-3-7908-2604-3_16 (<a
 href="https://doi.org/10.1007/978-3-7908-2604-3_16">open</a>)</td>
 </tr>
 <tr>
-<td>[cheng2025convergence]</td>
-<td>Convergence Analysis of the Last Iterate in Distributed Stochastic
-Gradient Descent with Momentum</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.2139/ssrn.5351413 (<a
-href="https://doi.org/10.2139/ssrn.5351413">open</a>)</td>
-</tr>
-<tr>
-<td>[amari1993backpropagation]</td>
-<td>Backpropagation and stochastic gradient descent method</td>
-<td style="text-align: right;">1993</td>
-<td>DOI 10.1016/0925-2312(93)90006-o (<a
-href="https://doi.org/10.1016/0925-2312(93)90006-o">open</a>)</td>
-</tr>
-<tr>
-<td>[chen2025revisit]</td>
+<td><span class="citation" data-cites="chen2025revisit">(<a
+href="#ref-chen2025revisit"
+role="doc-biblioref"><strong>chen2025revisit?</strong></a>)</span></td>
 <td>Revisit Stochastic Gradient Descent for Strongly Convex Objectives:
 Tight Uniform-in-Time Bounds</td>
 <td style="text-align: right;">2025</td>
@@ -2849,14 +3209,19 @@ Tight Uniform-in-Time Bounds</td>
 href="https://doi.org/10.2139/ssrn.5546711">open</a>)</td>
 </tr>
 <tr>
-<td>[schraudolph1999local]</td>
-<td>Local gain adaptation in stochastic gradient descent</td>
-<td style="text-align: right;">1999</td>
-<td>DOI 10.1049/cp:19991170 (<a
-href="https://doi.org/10.1049/cp:19991170">open</a>)</td>
+<td><span class="citation" data-cites="cheng2025convergence">(<a
+href="#ref-cheng2025convergence"
+role="doc-biblioref"><strong>cheng2025convergence?</strong></a>)</span></td>
+<td>Convergence Analysis of the Last Iterate in Distributed Stochastic
+Gradient Descent with Momentum</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.2139/ssrn.5351413 (<a
+href="https://doi.org/10.2139/ssrn.5351413">open</a>)</td>
 </tr>
 <tr>
-<td>[huadaptive]</td>
+<td><span class="citation" data-cites="huadaptive">(<a
+href="#ref-huadaptive"
+role="doc-biblioref"><strong>huadaptive?</strong></a>)</span></td>
 <td>Adaptive Batch Size Time Evolving Stochastic Gradient Descent for
 Federated Learning_supp1-3610169.pdf</td>
 <td style="text-align: right;">n.d.</td>
@@ -2864,7 +3229,27 @@ Federated Learning_supp1-3610169.pdf</td>
 href="https://doi.org/10.1109/tpami.2025.3610169/mm1">open</a>)</td>
 </tr>
 <tr>
-<td>[anonymous2025noise]</td>
+<td><span class="citation" data-cites="amari1993backpropagation">(<a
+href="#ref-amari1993backpropagation"
+role="doc-biblioref"><strong>amari1993backpropagation?</strong></a>)</span></td>
+<td>Backpropagation and stochastic gradient descent method</td>
+<td style="text-align: right;">1993</td>
+<td>DOI 10.1016/0925-2312(93)90006-o (<a
+href="https://doi.org/10.1016/0925-2312(93)90006-o">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="schraudolph1999local">(<a
+href="#ref-schraudolph1999local"
+role="doc-biblioref"><strong>schraudolph1999local?</strong></a>)</span></td>
+<td>Local gain adaptation in stochastic gradient descent</td>
+<td style="text-align: right;">1999</td>
+<td>DOI 10.1049/cp:19991170 (<a
+href="https://doi.org/10.1049/cp:19991170">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonymous2025noise">(<a
+href="#ref-anonymous2025noise"
+role="doc-biblioref"><strong>anonymous2025noise?</strong></a>)</span></td>
 <td>Noise balance and stationary distribution of stochastic gradient
 descent</td>
 <td style="text-align: right;">2025</td>
@@ -2872,7 +3257,9 @@ descent</td>
 href="https://doi.org/10.1103/zjq6-nzwd">open</a>)</td>
 </tr>
 <tr>
-<td>[liu2024optimizing]</td>
+<td><span class="citation" data-cites="liu2024optimizing">(<a
+href="#ref-liu2024optimizing"
+role="doc-biblioref"><strong>liu2024optimizing?</strong></a>)</span></td>
 <td>Optimizing Synchronous Stochastic Gradient Descent with Local
 Efficient Sign and Model Averaging Correction</td>
 <td style="text-align: right;">2024</td>
@@ -2880,7 +3267,18 @@ Efficient Sign and Model Averaging Correction</td>
 href="https://doi.org/10.2139/ssrn.4965637">open</a>)</td>
 </tr>
 <tr>
-<td>[chang2020efficient]</td>
+<td><span class="citation" data-cites="ito2026constrained">(<a
+href="#ref-ito2026constrained"
+role="doc-biblioref"><strong>ito2026constrained?</strong></a>)</span></td>
+<td>Constrained Graph Drawing by Stochastic Gradient Descent</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.1109/pacificvis68791.2026.00006 (<a
+href="https://doi.org/10.1109/pacificvis68791.2026.00006">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="chang2020efficient">(<a
+href="#ref-chang2020efficient"
+role="doc-biblioref"><strong>chang2020efficient?</strong></a>)</span></td>
 <td>Efficient phase-locking of 60 fiber lasers by stochastic parallel
 gradient descent algorithm</td>
 <td style="text-align: right;">2020</td>
@@ -2888,23 +3286,9 @@ gradient descent algorithm</td>
 href="https://doi.org/10.3788/col202018.101403">open</a>)</td>
 </tr>
 <tr>
-<td>[livni2024sample]</td>
-<td>The Sample Complexity of Gradient Descent in Stochastic Convex
-Optimization</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.52202/079017-2048 (<a
-href="https://doi.org/10.52202/079017-2048">open</a>)</td>
-</tr>
-<tr>
-<td>[li2024withdrawn]</td>
-<td>WITHDRAWN: Bridging Stochastic Gradient Descent and Markov Chains:
-Constant Step-Size Convergence and Richardson-Romberg Extrapolation</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.21203/rs.3.rs-5202271/v1 (<a
-href="https://doi.org/10.21203/rs.3.rs-5202271/v1">open</a>)</td>
-</tr>
-<tr>
-<td>[bao2020stochastic]</td>
+<td><span class="citation" data-cites="bao2020stochastic">(<a
+href="#ref-bao2020stochastic"
+role="doc-biblioref"><strong>bao2020stochastic?</strong></a>)</span></td>
 <td>Stochastic gradient descent algorithm for stochastic optimization in
 solving analytic continuation problems</td>
 <td style="text-align: right;">2020</td>
@@ -2912,21 +3296,29 @@ solving analytic continuation problems</td>
 href="https://doi.org/10.3934/fods.2020001">open</a>)</td>
 </tr>
 <tr>
-<td>[koutsibella2020stochastic]</td>
-<td>Stochastic gradient descent possibilistic clustering</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.1145/3411408.3411436 (<a
-href="https://doi.org/10.1145/3411408.3411436">open</a>)</td>
+<td><span class="citation" data-cites="li2024withdrawn">(<a
+href="#ref-li2024withdrawn"
+role="doc-biblioref"><strong>li2024withdrawn?</strong></a>)</span></td>
+<td>WITHDRAWN: Bridging Stochastic Gradient Descent and Markov Chains:
+Constant Step-Size Convergence and Richardson-Romberg Extrapolation</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.21203/rs.3.rs-5202271/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-5202271/v1">open</a>)</td>
 </tr>
 <tr>
-<td>[chen2012dictionary]</td>
-<td>Dictionary learning with weighted stochastic gradient descent</td>
-<td style="text-align: right;">2012</td>
-<td>DOI 10.1109/iccps.2012.6384229 (<a
-href="https://doi.org/10.1109/iccps.2012.6384229">open</a>)</td>
+<td><span class="citation" data-cites="livni2024sample">(<a
+href="#ref-livni2024sample"
+role="doc-biblioref"><strong>livni2024sample?</strong></a>)</span></td>
+<td>The Sample Complexity of Gradient Descent in Stochastic Convex
+Optimization</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.52202/079017-2048 (<a
+href="https://doi.org/10.52202/079017-2048">open</a>)</td>
 </tr>
 <tr>
-<td>[li2024withdrawna]</td>
+<td><span class="citation" data-cites="li2024withdrawna">(<a
+href="#ref-li2024withdrawna"
+role="doc-biblioref"><strong>li2024withdrawna?</strong></a>)</span></td>
 <td>WITHDRAWN: Bridging Stochastic Gradient Descent and Markov Chains:
 Constant Step-Size Convergence and Richardson-Romberg Extrapolation</td>
 <td style="text-align: right;">2024</td>
@@ -2934,15 +3326,27 @@ Constant Step-Size Convergence and Richardson-Romberg Extrapolation</td>
 href="https://doi.org/10.21203/rs.3.rs-5202271/v2">open</a>)</td>
 </tr>
 <tr>
-<td>[lee2017differentially]</td>
-<td>Differentially Private Variance Reduced Stochastic Gradient
-Descent</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.1109/ictcs.2017.60 (<a
-href="https://doi.org/10.1109/ictcs.2017.60">open</a>)</td>
+<td><span class="citation" data-cites="koutsibella2020stochastic">(<a
+href="#ref-koutsibella2020stochastic"
+role="doc-biblioref"><strong>koutsibella2020stochastic?</strong></a>)</span></td>
+<td>Stochastic gradient descent possibilistic clustering</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1145/3411408.3411436 (<a
+href="https://doi.org/10.1145/3411408.3411436">open</a>)</td>
 </tr>
 <tr>
-<td>[t2024hybrid]</td>
+<td><span class="citation" data-cites="chen2012dictionary">(<a
+href="#ref-chen2012dictionary"
+role="doc-biblioref"><strong>chen2012dictionary?</strong></a>)</span></td>
+<td>Dictionary learning with weighted stochastic gradient descent</td>
+<td style="text-align: right;">2012</td>
+<td>DOI 10.1109/iccps.2012.6384229 (<a
+href="https://doi.org/10.1109/iccps.2012.6384229">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="t2024hybrid">(<a
+href="#ref-t2024hybrid"
+role="doc-biblioref"><strong>t2024hybrid?</strong></a>)</span></td>
 <td>Hybrid Optimization Model Integrating Gradient Descent and
 Stochastic Descent for Enhanced Osteoporosis and Osteopenia
 Recognition</td>
@@ -2951,14 +3355,29 @@ Recognition</td>
 href="https://doi.org/10.53759/7669/jmc202404032">open</a>)</td>
 </tr>
 <tr>
-<td>[anon1011171225259536062680904001]</td>
+<td><span class="citation" data-cites="lee2017differentially">(<a
+href="#ref-lee2017differentially"
+role="doc-biblioref"><strong>lee2017differentially?</strong></a>)</span></td>
+<td>Differentially Private Variance Reduced Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.1109/ictcs.2017.60 (<a
+href="https://doi.org/10.1109/ictcs.2017.60">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation"
+data-cites="anon1011171225259536062680904001">(<a
+href="#ref-anon1011171225259536062680904001"
+role="doc-biblioref"><strong>anon1011171225259536062680904001?</strong></a>)</span></td>
 <td>10.1117/12.2525953.6062680904001</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1117/12.2525953.6062680904001 (<a
 href="https://doi.org/10.1117/12.2525953.6062680904001">open</a>)</td>
 </tr>
 <tr>
-<td>[ravasi2022multidimensional]</td>
+<td><span class="citation" data-cites="ravasi2022multidimensional">(<a
+href="#ref-ravasi2022multidimensional"
+role="doc-biblioref"><strong>ravasi2022multidimensional?</strong></a>)</span></td>
 <td>Multi-Dimensional Deconvolution with Stochastic Gradient
 Descent</td>
 <td style="text-align: right;">2022</td>
@@ -2966,45 +3385,18 @@ Descent</td>
 href="https://doi.org/10.3997/2214-4609.202210234">open</a>)</td>
 </tr>
 <tr>
-<td>[song2021agsgd]</td>
-<td>AG-SGD: Angle-Based Stochastic Gradient Descent</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1109/access.2021.3055993 (<a
-href="https://doi.org/10.1109/access.2021.3055993">open</a>)</td>
-</tr>
-<tr>
-<td>[williams2022stochastic]</td>
-<td>Stochastic Gradient Descent for Optimization of Nuclear Systems</td>
+<td><span class="citation" data-cites="hu2022efficiency">(<a
+href="#ref-hu2022efficiency"
+role="doc-biblioref"><strong>hu2022efficiency?</strong></a>)</span></td>
+<td>Efficiency Ordering of Stochastic Gradient Descent</td>
 <td style="text-align: right;">2022</td>
-<td>DOI 10.21203/rs.3.rs-2073277/v1 (<a
-href="https://doi.org/10.21203/rs.3.rs-2073277/v1">open</a>)</td>
+<td>DOI 10.52202/068431-1155 (<a
+href="https://doi.org/10.52202/068431-1155">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2014convergence]</td>
-<td>On the Convergence Rate of Stochastic Gradient Descent for Strongly
-Convex Functions</td>
-<td style="text-align: right;">2014</td>
-<td>DOI 10.1201/b17558-10 (<a
-href="https://doi.org/10.1201/b17558-10">open</a>)</td>
-</tr>
-<tr>
-<td>[sharma2021guided]</td>
-<td>Guided parallelized stochastic gradient descent for delay
-compensation</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1016/j.asoc.2021.107084 (<a
-href="https://doi.org/10.1016/j.asoc.2021.107084">open</a>)</td>
-</tr>
-<tr>
-<td>[yaghoubi2017hybrid]</td>
-<td>Hybrid approximate gradient and stochastic descent for falsification
-of nonlinear systems</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.23919/acc.2017.7963007 (<a
-href="https://doi.org/10.23919/acc.2017.7963007">open</a>)</td>
-</tr>
-<tr>
-<td>[azimjonov2023stochastic]</td>
+<td><span class="citation" data-cites="azimjonov2023stochastic">(<a
+href="#ref-azimjonov2023stochastic"
+role="doc-biblioref"><strong>azimjonov2023stochastic?</strong></a>)</span></td>
 <td>Stochastic Gradient Descent Classifier-Based Lightweight Intrusion
 Detection Systems Using the Most Efficient Feature Subsets of
 Datasets</td>
@@ -3013,7 +3405,29 @@ Datasets</td>
 href="https://doi.org/10.2139/ssrn.4378339">open</a>)</td>
 </tr>
 <tr>
-<td>[data2020byzantineresilient]</td>
+<td><span class="citation" data-cites="sharma2021guided">(<a
+href="#ref-sharma2021guided"
+role="doc-biblioref"><strong>sharma2021guided?</strong></a>)</span></td>
+<td>Guided parallelized stochastic gradient descent for delay
+compensation</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1016/j.asoc.2021.107084 (<a
+href="https://doi.org/10.1016/j.asoc.2021.107084">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="yaghoubi2017hybrid">(<a
+href="#ref-yaghoubi2017hybrid"
+role="doc-biblioref"><strong>yaghoubi2017hybrid?</strong></a>)</span></td>
+<td>Hybrid approximate gradient and stochastic descent for falsification
+of nonlinear systems</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.23919/acc.2017.7963007 (<a
+href="https://doi.org/10.23919/acc.2017.7963007">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="data2020byzantineresilient">(<a
+href="#ref-data2020byzantineresilient"
+role="doc-biblioref"><strong>data2020byzantineresilient?</strong></a>)</span></td>
 <td>On Byzantine-Resilient High-Dimensional Stochastic Gradient
 Descent</td>
 <td style="text-align: right;">2020</td>
@@ -3021,7 +3435,9 @@ Descent</td>
 href="https://doi.org/10.1109/isit44484.2020.9174363">open</a>)</td>
 </tr>
 <tr>
-<td>[cheng2019static]</td>
+<td><span class="citation" data-cites="cheng2019static">(<a
+href="#ref-cheng2019static"
+role="doc-biblioref"><strong>cheng2019static?</strong></a>)</span></td>
 <td>Static &amp; Dynamic Appointment Scheduling with Stochastic Gradient
 Descent</td>
 <td style="text-align: right;">2019</td>
@@ -3029,29 +3445,28 @@ Descent</td>
 href="https://doi.org/10.23919/acc.2019.8814666">open</a>)</td>
 </tr>
 <tr>
-<td>[anon1011171230261530df877b5f9b8ee11a99dc49c781f4d15]</td>
+<td><span class="citation"
+data-cites="anon1011171230261530df877b5f9b8ee11a99dc49c781f4d15">(<a
+href="#ref-anon1011171230261530df877b5f9b8ee11a99dc49c781f4d15"
+role="doc-biblioref"><strong>anon1011171230261530df877b5f9b8ee11a99dc49c781f4d15?</strong></a>)</span></td>
 <td>10.1117/12.3026153.0df877b5-f9b8-ee11-a99d-c49c781f4d15</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1117/12.3026153.0df877b5-f9b8-ee11-a99d-c49c781f4d15 (<a
 href="https://doi.org/10.1117/12.3026153.0df877b5-f9b8-ee11-a99d-c49c781f4d15">open</a>)</td>
 </tr>
 <tr>
-<td>[doshi2022efficiency]</td>
-<td>Efficiency Ordering of Stochastic Gradient Descent</td>
-<td style="text-align: right;">2022</td>
-<td>DOI 10.52202/068431-1155 (<a
-href="https://doi.org/10.52202/068431-1155">open</a>)</td>
+<td><span class="citation" data-cites="song2021agsgd">(<a
+href="#ref-song2021agsgd"
+role="doc-biblioref"><strong>song2021agsgd?</strong></a>)</span></td>
+<td>AG-SGD: Angle-Based Stochastic Gradient Descent</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1109/access.2021.3055993 (<a
+href="https://doi.org/10.1109/access.2021.3055993">open</a>)</td>
 </tr>
 <tr>
-<td>[zamora2016dendrite]</td>
-<td>Dendrite morphological neurons trained by stochastic gradient
-descent</td>
-<td style="text-align: right;">2016</td>
-<td>DOI 10.1109/ssci.2016.7849933 (<a
-href="https://doi.org/10.1109/ssci.2016.7849933">open</a>)</td>
-</tr>
-<tr>
-<td>[jain2025controlling]</td>
+<td><span class="citation" data-cites="jain2025controlling">(<a
+href="#ref-jain2025controlling"
+role="doc-biblioref"><strong>jain2025controlling?</strong></a>)</span></td>
 <td>Controlling stochastic gradient descent using stochastic
 approximation for robust distributed optimization</td>
 <td style="text-align: right;">2025</td>
@@ -3059,7 +3474,38 @@ approximation for robust distributed optimization</td>
 href="https://doi.org/10.3934/naco.2024041">open</a>)</td>
 </tr>
 <tr>
-<td>[liu2021diffusion]</td>
+<td><span class="citation" data-cites="williams2022stochastic">(<a
+href="#ref-williams2022stochastic"
+role="doc-biblioref"><strong>williams2022stochastic?</strong></a>)</span></td>
+<td>Stochastic Gradient Descent for Optimization of Nuclear Systems</td>
+<td style="text-align: right;">2022</td>
+<td>DOI 10.21203/rs.3.rs-2073277/v1 (<a
+href="https://doi.org/10.21203/rs.3.rs-2073277/v1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2014convergence">(<a
+href="#ref-anon2014convergence"
+role="doc-biblioref"><strong>anon2014convergence?</strong></a>)</span></td>
+<td>On the Convergence Rate of Stochastic Gradient Descent for Strongly
+Convex Functions</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1201/b17558-10 (<a
+href="https://doi.org/10.1201/b17558-10">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="zamora2016dendrite">(<a
+href="#ref-zamora2016dendrite"
+role="doc-biblioref"><strong>zamora2016dendrite?</strong></a>)</span></td>
+<td>Dendrite morphological neurons trained by stochastic gradient
+descent</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1109/ssci.2016.7849933 (<a
+href="https://doi.org/10.1109/ssci.2016.7849933">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="liu2021diffusion">(<a
+href="#ref-liu2021diffusion"
+role="doc-biblioref"><strong>liu2021diffusion?</strong></a>)</span></td>
 <td>A Diffusion Approximation Theory of Momentum Stochastic Gradient
 Descent in Nonconvex Optimization</td>
 <td style="text-align: right;">2021</td>
@@ -3067,63 +3513,9 @@ Descent in Nonconvex Optimization</td>
 href="https://doi.org/10.1287/stsy.2021.0083">open</a>)</td>
 </tr>
 <tr>
-<td>[bhardwaj2016practical]</td>
-<td>Practical Efficiency of Asynchronous Stochastic Gradient
-Descent</td>
-<td style="text-align: right;">2016</td>
-<td>DOI 10.1109/mlhpc.2016.010 (<a
-href="https://doi.org/10.1109/mlhpc.2016.010">open</a>)</td>
-</tr>
-<tr>
-<td>[afshar2009gradient]</td>
-<td>Gradient descent optimisation for ILC-based stochastic distribution
-control</td>
-<td style="text-align: right;">2009</td>
-<td>DOI 10.1109/icca.2009.5410612 (<a
-href="https://doi.org/10.1109/icca.2009.5410612">open</a>)</td>
-</tr>
-<tr>
-<td>[jiao2024emergence]</td>
-<td>Emergence of heavy tails in homogenized stochastic gradient
-descent</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.52202/079017-0450 (<a
-href="https://doi.org/10.52202/079017-0450">open</a>)</td>
-</tr>
-<tr>
-<td>[iutzeler2024derivatives]</td>
-<td>Derivatives of Stochastic Gradient Descent in parametric
-optimization</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.52202/079017-3775 (<a
-href="https://doi.org/10.52202/079017-3775">open</a>)</td>
-</tr>
-<tr>
-<td>[cui2019acoustic]</td>
-<td>Acoustic Model Optimization Based on Evolutionary Stochastic
-Gradient Descent with Anchors for Automatic Speech Recognition</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.21437/interspeech.2019-2620 (<a
-href="https://doi.org/10.21437/interspeech.2019-2620">open</a>)</td>
-</tr>
-<tr>
-<td>[ferrarotti2019synthesis]</td>
-<td>Synthesis of Optimal Feedback Controllers from Data via Stochastic
-Gradient Descent</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.23919/ecc.2019.8796130 (<a
-href="https://doi.org/10.23919/ecc.2019.8796130">open</a>)</td>
-</tr>
-<tr>
-<td>[sharma2018guided]</td>
-<td>Guided Stochastic Gradient Descent Algorithm for inconsistent
-datasets</td>
-<td style="text-align: right;">2018</td>
-<td>DOI 10.1016/j.asoc.2018.09.038 (<a
-href="https://doi.org/10.1016/j.asoc.2018.09.038">open</a>)</td>
-</tr>
-<tr>
-<td>[hua2023machinelearning]</td>
+<td><span class="citation" data-cites="hua2023machinelearning">(<a
+href="#ref-hua2023machinelearning"
+role="doc-biblioref"><strong>hua2023machinelearning?</strong></a>)</span></td>
 <td>Machine-Learning Topology Optimization with Stochastic Gradient
 Descent Optimizer for Heat Conduction Problems</td>
 <td style="text-align: right;">2023</td>
@@ -3131,7 +3523,9 @@ Descent Optimizer for Heat Conduction Problems</td>
 href="https://doi.org/10.2139/ssrn.4594476">open</a>)</td>
 </tr>
 <tr>
-<td>[sundecentralized]</td>
+<td><span class="citation" data-cites="sundecentralized">(<a
+href="#ref-sundecentralized"
+role="doc-biblioref"><strong>sundecentralized?</strong></a>)</span></td>
 <td>On the Decentralized Stochastic Gradient Descent with Markov Chain
 Sampling_supp1-3297053.pdf</td>
 <td style="text-align: right;">n.d.</td>
@@ -3139,70 +3533,59 @@ Sampling_supp1-3297053.pdf</td>
 href="https://doi.org/10.1109/tsp.2023.3297053/mm1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025neural]</td>
-<td>Neural Networks, Backpropagation, and Stochastic Gradient
+<td><span class="citation" data-cites="bhardwaj2016practical">(<a
+href="#ref-bhardwaj2016practical"
+role="doc-biblioref"><strong>bhardwaj2016practical?</strong></a>)</span></td>
+<td>Practical Efficiency of Asynchronous Stochastic Gradient
 Descent</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.1017/9781009509435.009 (<a
-href="https://doi.org/10.1017/9781009509435.009">open</a>)</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1109/mlhpc.2016.010 (<a
+href="https://doi.org/10.1109/mlhpc.2016.010">open</a>)</td>
 </tr>
 <tr>
-<td>[li2021fast]</td>
-<td>Fast Distributed Stochastic Nesterov Gradient Descent Algorithm for
-Image Classification</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.1109/cac53003.2021.9727635 (<a
-href="https://doi.org/10.1109/cac53003.2021.9727635">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2020testing]</td>
-<td>Testing of the stochastic parallel gradient descent algorithm to the
-alignment of a two-mirror telescope</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.17586/1023-5086-2020-87-05-31-41 (<a
-href="https://doi.org/10.17586/1023-5086-2020-87-05-31-41">open</a>)</td>
-</tr>
-<tr>
-<td>[wijnhoven2010fast]</td>
-<td>Fast Training of Object Detection Using Stochastic Gradient
-Descent</td>
-<td style="text-align: right;">2010</td>
-<td>DOI 10.1109/icpr.2010.112 (<a
-href="https://doi.org/10.1109/icpr.2010.112">open</a>)</td>
-</tr>
-<tr>
-<td>[christensen2024learning]</td>
-<td>Is Learning in Biological Neural Networks Based on Stochastic
-Gradient Descent? An Analysis Using Stochastic Processes</td>
+<td><span class="citation" data-cites="iutzeler2024derivatives">(<a
+href="#ref-iutzeler2024derivatives"
+role="doc-biblioref"><strong>iutzeler2024derivatives?</strong></a>)</span></td>
+<td>Derivatives of Stochastic Gradient Descent in parametric
+optimization</td>
 <td style="text-align: right;">2024</td>
-<td>DOI 10.1162/neco_a_01668 (<a
-href="https://doi.org/10.1162/neco_a_01668">open</a>)</td>
+<td>DOI 10.52202/079017-3775 (<a
+href="https://doi.org/10.52202/079017-3775">open</a>)</td>
 </tr>
 <tr>
-<td>[archibald2020stochastic]</td>
-<td>A Stochastic Gradient Descent Approach for Stochastic Optimal
-Control</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.4208/eajam.190420.200420 (<a
-href="https://doi.org/10.4208/eajam.190420.200420">open</a>)</td>
+<td><span class="citation" data-cites="jiao2024emergence">(<a
+href="#ref-jiao2024emergence"
+role="doc-biblioref"><strong>jiao2024emergence?</strong></a>)</span></td>
+<td>Emergence of heavy tails in homogenized stochastic gradient
+descent</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.52202/079017-0450 (<a
+href="https://doi.org/10.52202/079017-0450">open</a>)</td>
 </tr>
 <tr>
-<td>[mukhopadhyay2020stochastic]</td>
-<td>Stochastic gradient descent for linear systems with sequential
-matrix entry accumulation</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.1016/j.sigpro.2020.107494 (<a
-href="https://doi.org/10.1016/j.sigpro.2020.107494">open</a>)</td>
+<td><span class="citation" data-cites="cui2019acoustic">(<a
+href="#ref-cui2019acoustic"
+role="doc-biblioref"><strong>cui2019acoustic?</strong></a>)</span></td>
+<td>Acoustic Model Optimization Based on Evolutionary Stochastic
+Gradient Descent with Anchors for Automatic Speech Recognition</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.21437/interspeech.2019-2620 (<a
+href="https://doi.org/10.21437/interspeech.2019-2620">open</a>)</td>
 </tr>
 <tr>
-<td>[patel2022global]</td>
-<td>Global Convergence and Stability of Stochastic Gradient Descent</td>
-<td style="text-align: right;">2022</td>
-<td>DOI 10.52202/068431-2610 (<a
-href="https://doi.org/10.52202/068431-2610">open</a>)</td>
+<td><span class="citation" data-cites="ferrarotti2019synthesis">(<a
+href="#ref-ferrarotti2019synthesis"
+role="doc-biblioref"><strong>ferrarotti2019synthesis?</strong></a>)</span></td>
+<td>Synthesis of Optimal Feedback Controllers from Data via Stochastic
+Gradient Descent</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.23919/ecc.2019.8796130 (<a
+href="https://doi.org/10.23919/ecc.2019.8796130">open</a>)</td>
 </tr>
 <tr>
-<td>[wang2014robust]</td>
+<td><span class="citation" data-cites="wang2014robust">(<a
+href="#ref-wang2014robust"
+role="doc-biblioref"><strong>wang2014robust?</strong></a>)</span></td>
 <td>Robust pose graph optimization using stochastic gradient
 descent</td>
 <td style="text-align: right;">2014</td>
@@ -3210,35 +3593,111 @@ descent</td>
 href="https://doi.org/10.1109/icra.2014.6907482">open</a>)</td>
 </tr>
 <tr>
-<td>[koren2022benign]</td>
+<td><span class="citation" data-cites="wijnhoven2010fast">(<a
+href="#ref-wijnhoven2010fast"
+role="doc-biblioref"><strong>wijnhoven2010fast?</strong></a>)</span></td>
+<td>Fast Training of Object Detection Using Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2010</td>
+<td>DOI 10.1109/icpr.2010.112 (<a
+href="https://doi.org/10.1109/icpr.2010.112">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="sharma2018guided">(<a
+href="#ref-sharma2018guided"
+role="doc-biblioref"><strong>sharma2018guided?</strong></a>)</span></td>
+<td>Guided Stochastic Gradient Descent Algorithm for inconsistent
+datasets</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1016/j.asoc.2018.09.038 (<a
+href="https://doi.org/10.1016/j.asoc.2018.09.038">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2020testing">(<a
+href="#ref-anon2020testing"
+role="doc-biblioref"><strong>anon2020testing?</strong></a>)</span></td>
+<td>Testing of the stochastic parallel gradient descent algorithm to the
+alignment of a two-mirror telescope</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.17586/1023-5086-2020-87-05-31-41 (<a
+href="https://doi.org/10.17586/1023-5086-2020-87-05-31-41">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="koren2022benign">(<a
+href="#ref-koren2022benign"
+role="doc-biblioref"><strong>koren2022benign?</strong></a>)</span></td>
 <td>Benign Underfitting of Stochastic Gradient Descent</td>
 <td style="text-align: right;">2022</td>
 <td>DOI 10.52202/068431-1425 (<a
 href="https://doi.org/10.52202/068431-1425">open</a>)</td>
 </tr>
 <tr>
-<td>[mahboubi2024study]</td>
-<td>Study on Stochastic Gradient Descent Without Explicit Error
-Backpropagation with Momentum</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.1109/cai59869.2024.00241 (<a
-href="https://doi.org/10.1109/cai59869.2024.00241">open</a>)</td>
+<td><span class="citation" data-cites="afshar2009gradient">(<a
+href="#ref-afshar2009gradient"
+role="doc-biblioref"><strong>afshar2009gradient?</strong></a>)</span></td>
+<td>Gradient descent optimisation for ILC-based stochastic distribution
+control</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.1109/icca.2009.5410612 (<a
+href="https://doi.org/10.1109/icca.2009.5410612">open</a>)</td>
 </tr>
 <tr>
-<td>[sa2022gradient]</td>
-<td>From Gradient Flow on Population Loss to Learning with Stochastic
-Gradient Descent</td>
-<td style="text-align: right;">2022</td>
-<td>DOI 10.52202/068431-2245 (<a
-href="https://doi.org/10.52202/068431-2245">open</a>)</td>
+<td><span class="citation" data-cites="anon2025neural">(<a
+href="#ref-anon2025neural"
+role="doc-biblioref"><strong>anon2025neural?</strong></a>)</span></td>
+<td>Neural Networks, Backpropagation, and Stochastic Gradient
+Descent</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.1017/9781009509435.009 (<a
+href="https://doi.org/10.1017/9781009509435.009">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="li2021fast">(<a
+href="#ref-li2021fast"
+role="doc-biblioref"><strong>li2021fast?</strong></a>)</span></td>
+<td>Fast Distributed Stochastic Nesterov Gradient Descent Algorithm for
+Image Classification</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.1109/cac53003.2021.9727635 (<a
+href="https://doi.org/10.1109/cac53003.2021.9727635">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="mukhopadhyay2020stochastic">(<a
+href="#ref-mukhopadhyay2020stochastic"
+role="doc-biblioref"><strong>mukhopadhyay2020stochastic?</strong></a>)</span></td>
+<td>Stochastic gradient descent for linear systems with sequential
+matrix entry accumulation</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1016/j.sigpro.2020.107494 (<a
+href="https://doi.org/10.1016/j.sigpro.2020.107494">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="christensen2024learning">(<a
+href="#ref-christensen2024learning"
+role="doc-biblioref"><strong>christensen2024learning?</strong></a>)</span></td>
+<td>Is Learning in Biological Neural Networks Based on Stochastic
+Gradient Descent? An Analysis Using Stochastic Processes</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.1162/neco_a_01668 (<a
+href="https://doi.org/10.1162/neco_a_01668">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="archibald2020stochastic">(<a
+href="#ref-archibald2020stochastic"
+role="doc-biblioref"><strong>archibald2020stochastic?</strong></a>)</span></td>
+<td>A Stochastic Gradient Descent Approach for Stochastic Optimal
+Control</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.4208/eajam.190420.200420 (<a
+href="https://doi.org/10.4208/eajam.190420.200420">open</a>)</td>
 </tr>
 </tbody>
 </table>
 <h2 data-number="9.3" id="reproducible-research"><span
 class="header-section-number">9.3</span> reproducible research</h2>
 <p><em>Papers retrieved:</em> <strong>100</strong> · <em>per-source
-contributions:</em> arxiv=100, crossref=100, paperclip=94 · <em>backend
-errors:</em> none</p>
+contributions:</em> arxiv=100, crossref=100 · <em>backend errors:</em>
+none</p>
 <table>
 <colgroup>
 <col style="width: 23%" />
@@ -3256,84 +3715,117 @@ errors:</em> none</p>
 </thead>
 <tbody>
 <tr>
-<td>[gandrud2018introducing]</td>
+<td><span class="citation" data-cites="gandrud2018introducing">(<a
+href="#ref-gandrud2018introducing"
+role="doc-biblioref"><strong>gandrud2018introducing?</strong></a>)</span></td>
 <td>Introducing Reproducible Research</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315382548-1 (<a
 href="https://doi.org/10.1201/9781315382548-1">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2020introducing]</td>
+<td><span class="citation" data-cites="gandrud2020introducing">(<a
+href="#ref-gandrud2020introducing"
+role="doc-biblioref"><strong>gandrud2020introducing?</strong></a>)</span></td>
 <td>Introducing Reproducible Research</td>
 <td style="text-align: right;">2020</td>
 <td>DOI 10.1201/9780429031854-2 (<a
 href="https://doi.org/10.1201/9780429031854-2">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2020getting]</td>
-<td>Getting Started with Reproducible Research</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.1201/9780429031854-3 (<a
-href="https://doi.org/10.1201/9780429031854-3">open</a>)</td>
-</tr>
-<tr>
-<td>[gandrud2018getting]</td>
+<td><span class="citation" data-cites="gandrud2018getting">(<a
+href="#ref-gandrud2018getting"
+role="doc-biblioref"><strong>gandrud2018getting?</strong></a>)</span></td>
 <td>Getting Started with Reproducible Research</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315382548-2 (<a
 href="https://doi.org/10.1201/9781315382548-2">open</a>)</td>
 </tr>
 <tr>
-<td>[hoefling2018reproducible]</td>
+<td><span class="citation" data-cites="gandrud2020getting">(<a
+href="#ref-gandrud2020getting"
+role="doc-biblioref"><strong>gandrud2020getting?</strong></a>)</span></td>
+<td>Getting Started with Reproducible Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.1201/9780429031854-3 (<a
+href="https://doi.org/10.1201/9780429031854-3">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hoefling2018reproducible">(<a
+href="#ref-hoefling2018reproducible"
+role="doc-biblioref"><strong>hoefling2018reproducible?</strong></a>)</span></td>
 <td>Reproducible Research for Large-Scale Data Analysis</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315373461-8 (<a
 href="https://doi.org/10.1201/9781315373461-8">open</a>)</td>
 </tr>
 <tr>
-<td>[xie2018knitr]</td>
+<td><span class="citation" data-cites="xie2018knitr">(<a
+href="#ref-xie2018knitr"
+role="doc-biblioref"><strong>xie2018knitr?</strong></a>)</span></td>
 <td>knitr: A Comprehensive Tool for Reproducible Research in R</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315373461-1 (<a
 href="https://doi.org/10.1201/9781315373461-1">open</a>)</td>
 </tr>
 <tr>
-<td>[baker2022reproducible]</td>
+<td><span class="citation" data-cites="baker2022reproducible">(<a
+href="#ref-baker2022reproducible"
+role="doc-biblioref"><strong>baker2022reproducible?</strong></a>)</span></td>
 <td>Reproducible data analysis</td>
 <td style="text-align: right;">2022</td>
 <td>DOI 10.1093/hesc/9780192896599.003.0019 (<a
 href="https://doi.org/10.1093/hesc/9780192896599.003.0019">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2019reproducible]</td>
+<td><span class="citation" data-cites="anonninbioinformatics">(<a
+href="#ref-anonninbioinformatics"
+role="doc-biblioref"><strong>anonninbioinformatics?</strong></a>)</span></td>
+<td>NinBioinformatics Reproducible Research Reports</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.21428/3c290898 (<a
+href="https://doi.org/10.21428/3c290898">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2019reproducible">(<a
+href="#ref-anon2019reproducible"
+role="doc-biblioref"><strong>anon2019reproducible?</strong></a>)</span></td>
 <td>Reproducible Workflow</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.2307/j.ctvpb3xkg.16 (<a
 href="https://doi.org/10.2307/j.ctvpb3xkg.16">open</a>)</td>
 </tr>
 <tr>
-<td>[preeyanon2018reproducible]</td>
+<td><span class="citation" data-cites="preeyanon2018reproducible">(<a
+href="#ref-preeyanon2018reproducible"
+role="doc-biblioref"><strong>preeyanon2018reproducible?</strong></a>)</span></td>
 <td>Reproducible Bioinformatics Research for Biologists</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315373461-7 (<a
 href="https://doi.org/10.1201/9781315373461-7">open</a>)</td>
 </tr>
 <tr>
-<td>[davison2018sumatra]</td>
+<td><span class="citation" data-cites="davison2018sumatra">(<a
+href="#ref-davison2018sumatra"
+role="doc-biblioref"><strong>davison2018sumatra?</strong></a>)</span></td>
 <td>Sumatra: A Toolkit for Reproducible Research</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315373461-3 (<a
 href="https://doi.org/10.1201/9781315373461-3">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2019eleven]</td>
+<td><span class="citation" data-cites="anon2019eleven">(<a
+href="#ref-anon2019eleven"
+role="doc-biblioref"><strong>anon2019eleven?</strong></a>)</span></td>
 <td>ELEVEN. Reproducible Workflow</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.1525/9780520969230-014 (<a
 href="https://doi.org/10.1525/9780520969230-014">open</a>)</td>
 </tr>
 <tr>
-<td>[hrynaszkiewicz2018open]</td>
+<td><span class="citation" data-cites="hrynaszkiewicz2018open">(<a
+href="#ref-hrynaszkiewicz2018open"
+role="doc-biblioref"><strong>hrynaszkiewicz2018open?</strong></a>)</span></td>
 <td>Open Science and the Role of Publishers in Reproducible
 Research</td>
 <td style="text-align: right;">2018</td>
@@ -3341,14 +3833,36 @@ Research</td>
 href="https://doi.org/10.1201/9781315373461-15">open</a>)</td>
 </tr>
 <tr>
-<td>[anonsupplemental]</td>
+<td><span class="citation" data-cites="anonsupplemental">(<a
+href="#ref-anonsupplemental"
+role="doc-biblioref"><strong>anonsupplemental?</strong></a>)</span></td>
 <td>Supplemental Information 1: Reproducible Research Instructions.</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.7717/peerj-cs.904/supp-1 (<a
 href="https://doi.org/10.7717/peerj-cs.904/supp-1">open</a>)</td>
 </tr>
 <tr>
-<td>[kedron2023reproducible]</td>
+<td><span class="citation" data-cites="stodden2014implementing">(<a
+href="#ref-stodden2014implementing"
+role="doc-biblioref"><strong>stodden2014implementing?</strong></a>)</span></td>
+<td>Implementing Reproducible Research</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.1201/b16868 (<a
+href="https://doi.org/10.1201/b16868">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anonreproducible">(<a
+href="#ref-anonreproducible"
+role="doc-biblioref"><strong>anonreproducible?</strong></a>)</span></td>
+<td>Reproducible Research Data and Software</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.12688/f1000research.channels.908 (<a
+href="https://doi.org/10.12688/f1000research.channels.908">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="kedron2023reproducible">(<a
+href="#ref-kedron2023reproducible"
+role="doc-biblioref"><strong>kedron2023reproducible?</strong></a>)</span></td>
 <td>Reproducible Research Practices and Barriers to Reproducible
 Research in Geography: Insights from a Survey</td>
 <td style="text-align: right;">2023</td>
@@ -3356,175 +3870,270 @@ Research in Geography: Insights from a Survey</td>
 href="https://doi.org/10.31219/osf.io/nyrq9">open</a>)</td>
 </tr>
 <tr>
-<td>[stodden2014implementing]</td>
-<td>Implementing Reproducible Research</td>
-<td style="text-align: right;">2014</td>
-<td>DOI 10.1201/b16868 (<a
-href="https://doi.org/10.1201/b16868">open</a>)</td>
-</tr>
-<tr>
-<td>[anonreproducible]</td>
-<td>Reproducible Research Data and Software</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.12688/f1000research.channels.908 (<a
-href="https://doi.org/10.12688/f1000research.channels.908">open</a>)</td>
-</tr>
-<tr>
-<td>[murrayrust2018reproducible]</td>
+<td><span class="citation" data-cites="murrayrust2018reproducible">(<a
+href="#ref-murrayrust2018reproducible"
+role="doc-biblioref"><strong>murrayrust2018reproducible?</strong></a>)</span></td>
 <td>Reproducible Physical Science and the Declaratron</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315373461-5 (<a
 href="https://doi.org/10.1201/9781315373461-5">open</a>)</td>
 </tr>
 <tr>
-<td>[burgess2018reproducible]</td>
+<td><span class="citation" data-cites="burgess2018reproducible">(<a
+href="#ref-burgess2018reproducible"
+role="doc-biblioref"><strong>burgess2018reproducible?</strong></a>)</span></td>
 <td>Reproducible research article collection</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.14293/s2199-1006.1.sor-uncat.clsuuhc.v1 (<a
 href="https://doi.org/10.14293/s2199-1006.1.sor-uncat.clsuuhc.v1">open</a>)</td>
 </tr>
 <tr>
-<td>[solt2016pewdata]</td>
+<td><span class="citation" data-cites="solt2016pewdata">(<a
+href="#ref-solt2016pewdata"
+role="doc-biblioref"><strong>solt2016pewdata?</strong></a>)</span></td>
 <td>pewdata: Reproducible Retrieval of Pew Research Center Datasets</td>
 <td style="text-align: right;">2016</td>
 <td>DOI 10.32614/cran.package.pewdata (<a
 href="https://doi.org/10.32614/cran.package.pewdata">open</a>)</td>
 </tr>
 <tr>
-<td>[edmunds2016reproducible]</td>
+<td><span class="citation" data-cites="basu2017reproducible">(<a
+href="#ref-basu2017reproducible"
+role="doc-biblioref"><strong>basu2017reproducible?</strong></a>)</span></td>
+<td>Reproducible research with jupyter notebooks</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.22541/au.151460905.57485984 (<a
+href="https://doi.org/10.22541/au.151460905.57485984">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="edmunds2016reproducible">(<a
+href="#ref-edmunds2016reproducible"
+role="doc-biblioref"><strong>edmunds2016reproducible?</strong></a>)</span></td>
 <td>Reproducible Research Resources for Research(ing) Parasites</td>
 <td style="text-align: right;">2016</td>
 <td>DOI 10.59350/63nv3-fa097 (<a
 href="https://doi.org/10.59350/63nv3-fa097">open</a>)</td>
 </tr>
 <tr>
-<td>[edmunds2016reproduciblea]</td>
+<td><span class="citation" data-cites="edmunds2016reproduciblea">(<a
+href="#ref-edmunds2016reproduciblea"
+role="doc-biblioref"><strong>edmunds2016reproduciblea?</strong></a>)</span></td>
 <td>Reproducible Research Resources for Research(ing) Parasites</td>
 <td style="text-align: right;">2016</td>
 <td>DOI 10.59350/vhpgg-ec668 (<a
 href="https://doi.org/10.59350/vhpgg-ec668">open</a>)</td>
 </tr>
 <tr>
-<td>[hinsen2013platforms]</td>
-<td>Platforms for reproducible research</td>
-<td style="text-align: right;">2013</td>
-<td>DOI 10.59350/s56jr-3cn95 (<a
-href="https://doi.org/10.59350/s56jr-3cn95">open</a>)</td>
-</tr>
-<tr>
-<td>[edmunds2015fermenting]</td>
-<td>Fermenting a Reproducible Research Revolution</td>
-<td style="text-align: right;">2015</td>
-<td>DOI 10.59350/0hs8b-m2239 (<a
-href="https://doi.org/10.59350/0hs8b-m2239">open</a>)</td>
-</tr>
-<tr>
-<td>[hector2021reproducible]</td>
+<td><span class="citation" data-cites="hector2021reproducible">(<a
+href="#ref-hector2021reproducible"
+role="doc-biblioref"><strong>hector2021reproducible?</strong></a>)</span></td>
 <td>Reproducible Research</td>
 <td style="text-align: right;">2021</td>
 <td>DOI 10.1093/oso/9780198798170.003.0004 (<a
 href="https://doi.org/10.1093/oso/9780198798170.003.0004">open</a>)</td>
 </tr>
 <tr>
-<td>[edmunds2015fermentinga]</td>
+<td><span class="citation" data-cites="edmunds2015fermenting">(<a
+href="#ref-edmunds2015fermenting"
+role="doc-biblioref"><strong>edmunds2015fermenting?</strong></a>)</span></td>
 <td>Fermenting a Reproducible Research Revolution</td>
 <td style="text-align: right;">2015</td>
 <td>DOI 10.59350/ejn9k-s7c54 (<a
 href="https://doi.org/10.59350/ejn9k-s7c54">open</a>)</td>
 </tr>
 <tr>
-<td>[kunisato2019introduction]</td>
+<td><span class="citation" data-cites="kunisato2019introduction">(<a
+href="#ref-kunisato2019introduction"
+role="doc-biblioref"><strong>kunisato2019introduction?</strong></a>)</span></td>
 <td>Introduction to reproducible psychological research</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.31234/osf.io/x8js5 (<a
 href="https://doi.org/10.31234/osf.io/x8js5">open</a>)</td>
 </tr>
 <tr>
-<td>[suber2008oa]</td>
+<td><span class="citation" data-cites="suber2008oa">(<a
+href="#ref-suber2008oa"
+role="doc-biblioref"><strong>suber2008oa?</strong></a>)</span></td>
 <td>OA for reproducible research</td>
 <td style="text-align: right;">2008</td>
 <td>DOI 10.63485/4jjac-1dd97 (<a
 href="https://doi.org/10.63485/4jjac-1dd97">open</a>)</td>
 </tr>
 <tr>
-<td>[turek2019case]</td>
+<td><span class="citation" data-cites="hinsen2013platforms">(<a
+href="#ref-hinsen2013platforms"
+role="doc-biblioref"><strong>hinsen2013platforms?</strong></a>)</span></td>
+<td>Platforms for reproducible research</td>
+<td style="text-align: right;">2013</td>
+<td>DOI 10.59350/s56jr-3cn95 (<a
+href="https://doi.org/10.59350/s56jr-3cn95">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="edmunds2015fermentinga">(<a
+href="#ref-edmunds2015fermentinga"
+role="doc-biblioref"><strong>edmunds2015fermentinga?</strong></a>)</span></td>
+<td>Fermenting a Reproducible Research Revolution</td>
+<td style="text-align: right;">2015</td>
+<td>DOI 10.59350/0hs8b-m2239 (<a
+href="https://doi.org/10.59350/0hs8b-m2239">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="turek2019case">(<a
+href="#ref-turek2019case"
+role="doc-biblioref"><strong>turek2019case?</strong></a>)</span></td>
 <td>Case Studies in Reproducible Research</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.1525/9780520967779-006 (<a
 href="https://doi.org/10.1525/9780520967779-006">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2020reproducible]</td>
+<td><span class="citation" data-cites="gandrud2020reproducible">(<a
+href="#ref-gandrud2020reproducible"
+role="doc-biblioref"><strong>gandrud2020reproducible?</strong></a>)</span></td>
 <td>Reproducible Research with R and RStudio</td>
 <td style="text-align: right;">2020</td>
 <td>DOI 10.1201/9780429031854 (<a
 href="https://doi.org/10.1201/9780429031854">open</a>)</td>
 </tr>
 <tr>
-<td>[basu2018reproducible]</td>
+<td><span class="citation" data-cites="basu2018reproducible">(<a
+href="#ref-basu2018reproducible"
+role="doc-biblioref"><strong>basu2018reproducible?</strong></a>)</span></td>
 <td>Reproducible research using minimalist plain text tools</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.32388/649864 (<a
 href="https://doi.org/10.32388/649864">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2018reproducible]</td>
+<td><span class="citation" data-cites="charlton2016how">(<a
+href="#ref-charlton2016how"
+role="doc-biblioref"><strong>charlton2016how?</strong></a>)</span></td>
+<td>How do we ensure that research is reproducible?</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.15200/winn.146397.78741 (<a
+href="https://doi.org/10.15200/winn.146397.78741">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="gandrud2018reproducible">(<a
+href="#ref-gandrud2018reproducible"
+role="doc-biblioref"><strong>gandrud2018reproducible?</strong></a>)</span></td>
 <td>Reproducible Research with R and RStudio</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315382548 (<a
 href="https://doi.org/10.1201/9781315382548">open</a>)</td>
 </tr>
 <tr>
-<td>[edmunds2014carmen]</td>
-<td>CARMEN, reproducible research and push-button papers</td>
-<td style="text-align: right;">2014</td>
-<td>DOI 10.59350/xx4rg-zcd90 (<a
-href="https://doi.org/10.59350/xx4rg-zcd90">open</a>)</td>
-</tr>
-<tr>
-<td>[gandrud2013reproducible]</td>
-<td>Reproducible Research with R and R Studio</td>
-<td style="text-align: right;">2013</td>
-<td>DOI 10.1201/b15100 (<a
-href="https://doi.org/10.1201/b15100">open</a>)</td>
-</tr>
-<tr>
-<td>[basureproducible]</td>
-<td>Reproducible research with jupyter notebooks</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.22541/au.151460905.57485984 (<a
-href="https://doi.org/10.22541/au.151460905.57485984">open</a>)</td>
-</tr>
-<tr>
-<td>[bahlai2016open]</td>
+<td><span class="citation" data-cites="bahlai2016open">(<a
+href="#ref-bahlai2016open"
+role="doc-biblioref"><strong>bahlai2016open?</strong></a>)</span></td>
 <td>The open science and reproducible research course</td>
 <td style="text-align: right;">2016</td>
 <td>DOI 10.7490/f1000research.1112876.1 (<a
 href="https://doi.org/10.7490/f1000research.1112876.1">open</a>)</td>
 </tr>
 <tr>
-<td>[white2018software]</td>
-<td>Software skills for reproducible data-intensive research</td>
-<td style="text-align: right;">2018</td>
-<td>DOI 10.7490/f1000research.1115901.1 (<a
-href="https://doi.org/10.7490/f1000research.1115901.1">open</a>)</td>
+<td><span class="citation" data-cites="gandrud2013reproducible">(<a
+href="#ref-gandrud2013reproducible"
+role="doc-biblioref"><strong>gandrud2013reproducible?</strong></a>)</span></td>
+<td>Reproducible Research with R and R Studio</td>
+<td style="text-align: right;">2013</td>
+<td>DOI 10.1201/b15100 (<a
+href="https://doi.org/10.1201/b15100">open</a>)</td>
 </tr>
 <tr>
-<td>[missingvalueplatforms]</td>
+<td><span class="citation" data-cites="edmunds2014carmen">(<a
+href="#ref-edmunds2014carmen"
+role="doc-biblioref"><strong>edmunds2014carmen?</strong></a>)</span></td>
+<td>CARMEN, reproducible research and push-button papers</td>
+<td style="text-align: right;">2014</td>
+<td>DOI 10.59350/xx4rg-zcd90 (<a
+href="https://doi.org/10.59350/xx4rg-zcd90">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="kitzes2019basic">(<a
+href="#ref-kitzes2019basic"
+role="doc-biblioref"><strong>kitzes2019basic?</strong></a>)</span></td>
+<td>The Basic Reproducible Workflow Template</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-005 (<a
+href="https://doi.org/10.1525/9780520967779-005">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="missingvalueplatforms">(<a
+href="#ref-missingvalueplatforms"
+role="doc-biblioref"><strong>missingvalueplatforms?</strong></a>)</span></td>
 <td>Platforms</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1201/b16868-20 (<a
 href="https://doi.org/10.1201/b16868-20">open</a>)</td>
 </tr>
 <tr>
-<td>[edmunds2014carmena]</td>
+<td><span class="citation" data-cites="white2018software">(<a
+href="#ref-white2018software"
+role="doc-biblioref"><strong>white2018software?</strong></a>)</span></td>
+<td>Software skills for reproducible data-intensive research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.7490/f1000research.1115901.1 (<a
+href="https://doi.org/10.7490/f1000research.1115901.1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="weisbrod2026exampleproject">(<a
+href="#ref-weisbrod2026exampleproject"
+role="doc-biblioref"><strong>weisbrod2026exampleproject?</strong></a>)</span></td>
+<td>example-project: A Reproducible Empirical Research Template</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.31235/osf.io/yx7af_v1 (<a
+href="https://doi.org/10.31235/osf.io/yx7af_v1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2020transparent">(<a
+href="#ref-anon2020transparent"
+role="doc-biblioref"><strong>anon2020transparent?</strong></a>)</span></td>
+<td>Transparent and Reproducible Data Analysis</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.4135/9781526421036926480 (<a
+href="https://doi.org/10.4135/9781526421036926480">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="suber2008open">(<a
+href="#ref-suber2008open"
+role="doc-biblioref"><strong>suber2008open?</strong></a>)</span></td>
+<td>Open licensing to enable reproducible research</td>
+<td style="text-align: right;">2008</td>
+<td>DOI 10.63485/8k73p-vrh09 (<a
+href="https://doi.org/10.63485/8k73p-vrh09">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2016reproducible">(<a
+href="#ref-anon2016reproducible"
+role="doc-biblioref"><strong>anon2016reproducible?</strong></a>)</span></td>
+<td>Reproducible Research with R and R Studio, Second Edition</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1201/b18546 (<a
+href="https://doi.org/10.1201/b18546">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="missingvaluetools">(<a
+href="#ref-missingvaluetools"
+role="doc-biblioref"><strong>missingvaluetools?</strong></a>)</span></td>
+<td>Tools</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.1201/b16868-6 (<a
+href="https://doi.org/10.1201/b16868-6">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="edmunds2014carmena">(<a
+href="#ref-edmunds2014carmena"
+role="doc-biblioref"><strong>edmunds2014carmena?</strong></a>)</span></td>
 <td>CARMEN, reproducible research and push-button papers</td>
 <td style="text-align: right;">2014</td>
 <td>DOI 10.59350/p6xyp-h2p77 (<a
 href="https://doi.org/10.59350/p6xyp-h2p77">open</a>)</td>
 </tr>
 <tr>
-<td>[anonfigure]</td>
+<td><span class="citation" data-cites="anonfigure">(<a
+href="#ref-anonfigure"
+role="doc-biblioref"><strong>anonfigure?</strong></a>)</span></td>
 <td>Figure 2: The final reproducible research criteria used for the
 evaluation.</td>
 <td style="text-align: right;">n.d.</td>
@@ -3532,49 +4141,9 @@ evaluation.</td>
 href="https://doi.org/10.7717/peerj.5072/fig-2">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2020transparent]</td>
-<td>Transparent and Reproducible Data Analysis</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.4135/9781526421036926480 (<a
-href="https://doi.org/10.4135/9781526421036926480">open</a>)</td>
-</tr>
-<tr>
-<td>[kitzes2019basic]</td>
-<td>The Basic Reproducible Workflow Template</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.1525/9780520967779-005 (<a
-href="https://doi.org/10.1525/9780520967779-005">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2016reproducible]</td>
-<td>Reproducible Research with R and R Studio, Second Edition</td>
-<td style="text-align: right;">2016</td>
-<td>DOI 10.1201/b18546 (<a
-href="https://doi.org/10.1201/b18546">open</a>)</td>
-</tr>
-<tr>
-<td>[missingvaluetools]</td>
-<td>Tools</td>
-<td style="text-align: right;">n.d.</td>
-<td>DOI 10.1201/b16868-6 (<a
-href="https://doi.org/10.1201/b16868-6">open</a>)</td>
-</tr>
-<tr>
-<td>[suber2008open]</td>
-<td>Open licensing to enable reproducible research</td>
-<td style="text-align: right;">2008</td>
-<td>DOI 10.63485/8k73p-vrh09 (<a
-href="https://doi.org/10.63485/8k73p-vrh09">open</a>)</td>
-</tr>
-<tr>
-<td>[hinsen2016reproducible]</td>
-<td>From reproducible to verifiable computer-aided research</td>
-<td style="text-align: right;">2016</td>
-<td>DOI 10.59350/fj0g3-5yv59 (<a
-href="https://doi.org/10.59350/fj0g3-5yv59">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2025preparing]</td>
+<td><span class="citation" data-cites="anon2025preparing">(<a
+href="#ref-anon2025preparing"
+role="doc-biblioref"><strong>anon2025preparing?</strong></a>)</span></td>
 <td>Preparing for Transparent and Reproducible Quantitative Social
 Science Research</td>
 <td style="text-align: right;">2025</td>
@@ -3582,28 +4151,99 @@ Science Research</td>
 href="https://doi.org/10.4135/9781036230647">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2016reproduciblea]</td>
-<td>Reproducible Research</td>
+<td><span class="citation" data-cites="hinsen2016reproducible">(<a
+href="#ref-hinsen2016reproducible"
+role="doc-biblioref"><strong>hinsen2016reproducible?</strong></a>)</span></td>
+<td>From reproducible to verifiable computer-aided research</td>
 <td style="text-align: right;">2016</td>
-<td>DOI 10.1201/b15166-10 (<a
-href="https://doi.org/10.1201/b15166-10">open</a>)</td>
+<td>DOI 10.59350/fj0g3-5yv59 (<a
+href="https://doi.org/10.59350/fj0g3-5yv59">open</a>)</td>
 </tr>
 <tr>
-<td>[suber2009more]</td>
+<td><span class="citation" data-cites="suber2009more">(<a
+href="#ref-suber2009more"
+role="doc-biblioref"><strong>suber2009more?</strong></a>)</span></td>
 <td>More on OA to facilitate reproducible research</td>
 <td style="text-align: right;">2009</td>
 <td>DOI 10.63485/tys9t-3y862 (<a
 href="https://doi.org/10.63485/tys9t-3y862">open</a>)</td>
 </tr>
 <tr>
-<td>[geertreproducible]</td>
+<td><span class="citation" data-cites="anon1061686udeac59432">(<a
+href="#ref-anon1061686udeac59432"
+role="doc-biblioref"><strong>anon1061686udeac59432?</strong></a>)</span></td>
+<td>10.61686/udeac59432</td>
+<td style="text-align: right;">n.d.</td>
+<td>DOI 10.61686/udeac59432 (<a
+href="https://doi.org/10.61686/udeac59432">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="geertreproducible">(<a
+href="#ref-geertreproducible"
+role="doc-biblioref"><strong>geertreproducible?</strong></a>)</span></td>
 <td>Reproducible research reports with Quarto</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.21428/1192f2f8.fb1a1b7f (<a
 href="https://doi.org/10.21428/1192f2f8.fb1a1b7f">open</a>)</td>
 </tr>
 <tr>
-<td>[marwick2019case]</td>
+<td><span class="citation" data-cites="anon2016reproduciblea">(<a
+href="#ref-anon2016reproduciblea"
+role="doc-biblioref"><strong>anon2016reproduciblea?</strong></a>)</span></td>
+<td>Reproducible Research</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.1201/b15166-10 (<a
+href="https://doi.org/10.1201/b15166-10">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2018implementing">(<a
+href="#ref-anon2018implementing"
+role="doc-biblioref"><strong>anon2018implementing?</strong></a>)</span></td>
+<td>Implementing Reproducible Research</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.1201/9781315373461 (<a
+href="https://doi.org/10.1201/9781315373461">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="heston2023statistics">(<a
+href="#ref-heston2023statistics"
+role="doc-biblioref"><strong>heston2023statistics?</strong></a>)</span></td>
+<td>Statistics, Ethics, and the Promotion of Reproducible Research</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.22541/au.169627960.06669688/v1 (<a
+href="https://doi.org/10.22541/au.169627960.06669688/v1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="moresi2018alaska">(<a
+href="#ref-moresi2018alaska"
+role="doc-biblioref"><strong>moresi2018alaska?</strong></a>)</span></td>
+<td>Alaska Moho Model (Reproducible research with containers)</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.59350/pn8gh-98592 (<a
+href="https://doi.org/10.59350/pn8gh-98592">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hinsen2013python">(<a
+href="#ref-hinsen2013python"
+role="doc-biblioref"><strong>hinsen2013python?</strong></a>)</span></td>
+<td>Python as a platform for reproducible research</td>
+<td style="text-align: right;">2013</td>
+<td>DOI 10.59350/85pnj-bak53 (<a
+href="https://doi.org/10.59350/85pnj-bak53">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="wiebels2021leveraging">(<a
+href="#ref-wiebels2021leveraging"
+role="doc-biblioref"><strong>wiebels2021leveraging?</strong></a>)</span></td>
+<td>Leveraging Containers for Reproducible Psychological Research</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.31234/osf.io/h7tkg (<a
+href="https://doi.org/10.31234/osf.io/h7tkg">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="marwick2019case">(<a
+href="#ref-marwick2019case"
+role="doc-biblioref"><strong>marwick2019case?</strong></a>)</span></td>
 <td>Case Study 12: Using R and Related Tools for Reproducible Research
 in Archaeology</td>
 <td style="text-align: right;">2019</td>
@@ -3611,43 +4251,9 @@ in Archaeology</td>
 href="https://doi.org/10.1525/9780520967779-021">open</a>)</td>
 </tr>
 <tr>
-<td>[maerz2024quarto]</td>
-<td>Quarto in RStudio: Writing Reproducible &amp; Dynamic Research
-Papers</td>
-<td style="text-align: right;">2024</td>
-<td>DOI 10.61700/pdeaaefq62n681556 (<a
-href="https://doi.org/10.61700/pdeaaefq62n681556">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2018implementing]</td>
-<td>Implementing Reproducible Research</td>
-<td style="text-align: right;">2018</td>
-<td>DOI 10.1201/9781315373461 (<a
-href="https://doi.org/10.1201/9781315373461">open</a>)</td>
-</tr>
-<tr>
-<td>[hinsen2013python]</td>
-<td>Python as a platform for reproducible research</td>
-<td style="text-align: right;">2013</td>
-<td>DOI 10.59350/85pnj-bak53 (<a
-href="https://doi.org/10.59350/85pnj-bak53">open</a>)</td>
-</tr>
-<tr>
-<td>[wiebels2021leveraging]</td>
-<td>Leveraging Containers for Reproducible Psychological Research</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.31234/osf.io/h7tkg (<a
-href="https://doi.org/10.31234/osf.io/h7tkg">open</a>)</td>
-</tr>
-<tr>
-<td>[moresi2018alaska]</td>
-<td>Alaska Moho Model (Reproducible research with containers)</td>
-<td style="text-align: right;">2018</td>
-<td>DOI 10.59350/pn8gh-98592 (<a
-href="https://doi.org/10.59350/pn8gh-98592">open</a>)</td>
-</tr>
-<tr>
-<td>[roskar2022renku]</td>
+<td><span class="citation" data-cites="roskar2022renku">(<a
+href="#ref-roskar2022renku"
+role="doc-biblioref"><strong>roskar2022renku?</strong></a>)</span></td>
 <td>Renku: a platform for collaborative, reusable and reproducible
 research</td>
 <td style="text-align: right;">2022</td>
@@ -3655,29 +4261,28 @@ research</td>
 href="https://doi.org/10.5194/egusphere-egu22-10697">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2020conclusion]</td>
+<td><span class="citation" data-cites="gandrud2020conclusion">(<a
+href="#ref-gandrud2020conclusion"
+role="doc-biblioref"><strong>gandrud2020conclusion?</strong></a>)</span></td>
 <td>Conclusion</td>
 <td style="text-align: right;">2020</td>
 <td>DOI 10.1201/9780429031854-17 (<a
 href="https://doi.org/10.1201/9780429031854-17">open</a>)</td>
 </tr>
 <tr>
-<td>[hediyehzadeh2016computational]</td>
-<td>Computational workflows for research students: towards a
-reproducible research</td>
-<td style="text-align: right;">2016</td>
-<td>DOI 10.7490/f1000research.1113332.1 (<a
-href="https://doi.org/10.7490/f1000research.1113332.1">open</a>)</td>
+<td><span class="citation" data-cites="maerz2024quarto">(<a
+href="#ref-maerz2024quarto"
+role="doc-biblioref"><strong>maerz2024quarto?</strong></a>)</span></td>
+<td>Quarto in RStudio: Writing Reproducible &amp; Dynamic Research
+Papers</td>
+<td style="text-align: right;">2024</td>
+<td>DOI 10.61700/pdeaaefq62n681556 (<a
+href="https://doi.org/10.61700/pdeaaefq62n681556">open</a>)</td>
 </tr>
 <tr>
-<td>[heston2023statistics]</td>
-<td>Statistics, Ethics, and the Promotion of Reproducible Research</td>
-<td style="text-align: right;">2023</td>
-<td>DOI 10.22541/au.169627960.06669688/v1 (<a
-href="https://doi.org/10.22541/au.169627960.06669688/v1">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2021decision]</td>
+<td><span class="citation" data-cites="anon2021decision">(<a
+href="#ref-anon2021decision"
+role="doc-biblioref"><strong>anon2021decision?</strong></a>)</span></td>
 <td>Decision letter: Is preclinical research in cancer biology
 reproducible enough?</td>
 <td style="text-align: right;">2021</td>
@@ -3685,35 +4290,38 @@ reproducible enough?</td>
 href="https://doi.org/10.7554/elife.67527.sa1">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2018conclusion]</td>
+<td><span class="citation"
+data-cites="hediyehzadeh2016computational">(<a
+href="#ref-hediyehzadeh2016computational"
+role="doc-biblioref"><strong>hediyehzadeh2016computational?</strong></a>)</span></td>
+<td>Computational workflows for research students: towards a
+reproducible research</td>
+<td style="text-align: right;">2016</td>
+<td>DOI 10.7490/f1000research.1113332.1 (<a
+href="https://doi.org/10.7490/f1000research.1113332.1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="gandrud2018conclusion">(<a
+href="#ref-gandrud2018conclusion"
+role="doc-biblioref"><strong>gandrud2018conclusion?</strong></a>)</span></td>
 <td>Conclusion</td>
 <td style="text-align: right;">2018</td>
 <td>DOI 10.1201/9781315382548-14 (<a
 href="https://doi.org/10.1201/9781315382548-14">open</a>)</td>
 </tr>
 <tr>
-<td>[missingvaluepractices]</td>
+<td><span class="citation" data-cites="missingvaluepractices">(<a
+href="#ref-missingvaluepractices"
+role="doc-biblioref"><strong>missingvaluepractices?</strong></a>)</span></td>
 <td>Practices and Guidelines</td>
 <td style="text-align: right;">n.d.</td>
 <td>DOI 10.1201/b16868-12 (<a
 href="https://doi.org/10.1201/b16868-12">open</a>)</td>
 </tr>
 <tr>
-<td>[boettiger2019case]</td>
-<td>Case Study 3: A Reproducible R Notebook Using Docker</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.1525/9780520967779-012 (<a
-href="https://doi.org/10.1525/9780520967779-012">open</a>)</td>
-</tr>
-<tr>
-<td>[moresi2018alaskaa]</td>
-<td>Alaska Moho Model (Reproducible research with containers)</td>
-<td style="text-align: right;">2018</td>
-<td>DOI 10.59350/15qd1-96r10 (<a
-href="https://doi.org/10.59350/15qd1-96r10">open</a>)</td>
-</tr>
-<tr>
-<td>[limarereproducible]</td>
+<td><span class="citation" data-cites="limarereproducible">(<a
+href="#ref-limarereproducible"
+role="doc-biblioref"><strong>limarereproducible?</strong></a>)</span></td>
 <td>Reproducible research, software quality, online interfaces and
 publishing for image processing</td>
 <td style="text-align: right;">n.d.</td>
@@ -3721,83 +4329,36 @@ publishing for image processing</td>
 href="https://doi.org/10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc">open</a>)</td>
 </tr>
 <tr>
-<td>[solt2016icpsrdata]</td>
+<td><span class="citation" data-cites="moresi2018alaskaa">(<a
+href="#ref-moresi2018alaskaa"
+role="doc-biblioref"><strong>moresi2018alaskaa?</strong></a>)</span></td>
+<td>Alaska Moho Model (Reproducible research with containers)</td>
+<td style="text-align: right;">2018</td>
+<td>DOI 10.59350/15qd1-96r10 (<a
+href="https://doi.org/10.59350/15qd1-96r10">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="boettiger2019case">(<a
+href="#ref-boettiger2019case"
+role="doc-biblioref"><strong>boettiger2019case?</strong></a>)</span></td>
+<td>Case Study 3: A Reproducible R Notebook Using Docker</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.1525/9780520967779-012 (<a
+href="https://doi.org/10.1525/9780520967779-012">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="solt2016icpsrdata">(<a
+href="#ref-solt2016icpsrdata"
+role="doc-biblioref"><strong>solt2016icpsrdata?</strong></a>)</span></td>
 <td>icpsrdata: Reproducible Data Retrieval from the ICPSR Archive</td>
 <td style="text-align: right;">2016</td>
 <td>DOI 10.32614/cran.package.icpsrdata (<a
 href="https://doi.org/10.32614/cran.package.icpsrdata">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025reviewer]</td>
-<td>Reviewer #1 (Public review): Spyglass: a framework for reproducible
-and shareable neuroscience research</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.7554/elife.108089.1.sa1 (<a
-href="https://doi.org/10.7554/elife.108089.1.sa1">open</a>)</td>
-</tr>
-<tr>
-<td>[peyrache2025elife]</td>
-<td>eLife Assessment: Spyglass: a framework for reproducible and
-shareable neuroscience research</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.7554/elife.108089.1.sa2 (<a
-href="https://doi.org/10.7554/elife.108089.1.sa2">open</a>)</td>
-</tr>
-<tr>
-<td>[lebeau2020reproducible]</td>
-<td>Reproducible Analyses in Educational Research</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.17077/pp.005637 (<a
-href="https://doi.org/10.17077/pp.005637">open</a>)</td>
-</tr>
-<tr>
-<td>[gavel2025ensuring]</td>
-<td>Ensuring Your Quantitative Research is Replicable and
-Reproducible</td>
-<td style="text-align: right;">2025</td>
-<td>DOI 10.4135/9781036216696 (<a
-href="https://doi.org/10.4135/9781036216696">open</a>)</td>
-</tr>
-<tr>
-<td>[hinsen2017sustainable]</td>
-<td>Sustainable software and reproducible research: dealing with
-software collapse</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.59350/7tavk-2hf75 (<a
-href="https://doi.org/10.59350/7tavk-2hf75">open</a>)</td>
-</tr>
-<tr>
-<td>[basu2021how]</td>
-<td>How to use orgmode for reproducible research, rough cut version
-1</td>
-<td style="text-align: right;">2021</td>
-<td>DOI 10.32388/b5rvo7 (<a
-href="https://doi.org/10.32388/b5rvo7">open</a>)</td>
-</tr>
-<tr>
-<td>[alston2020beginners]</td>
-<td>A Beginner’s Guide to Conducting Reproducible Research</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.32942/osf.io/h5r6n (<a
-href="https://doi.org/10.32942/osf.io/h5r6n">open</a>)</td>
-</tr>
-<tr>
-<td>[hinsen2017reproducible]</td>
-<td>Reproducible research in the Python ecosystem: a reality check</td>
-<td style="text-align: right;">2017</td>
-<td>DOI 10.59350/wgebd-68y68 (<a
-href="https://doi.org/10.59350/wgebd-68y68">open</a>)</td>
-</tr>
-<tr>
-<td>[turner2010sweave]</td>
-<td>Sweave for Reproducible Research and Beatiful Statistical
-Reports</td>
-<td style="text-align: right;">2010</td>
-<td>DOI 10.59350/pexqx-j5g86 (<a
-href="https://doi.org/10.59350/pexqx-j5g86">open</a>)</td>
-</tr>
-<tr>
-<td>[peyrache2026elife]</td>
+<td><span class="citation" data-cites="peyrache2026elife">(<a
+href="#ref-peyrache2026elife"
+role="doc-biblioref"><strong>peyrache2026elife?</strong></a>)</span></td>
 <td>eLife Assessment: Spyglass: a framework for reproducible and
 shareable neuroscience research</td>
 <td style="text-align: right;">2026</td>
@@ -3805,15 +4366,49 @@ shareable neuroscience research</td>
 href="https://doi.org/10.7554/elife.108089.2.sa3">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2026reviewer]</td>
-<td>Reviewer #2 (Public review): Spyglass: a framework for reproducible
+<td><span class="citation" data-cites="anon2025reviewer">(<a
+href="#ref-anon2025reviewer"
+role="doc-biblioref"><strong>anon2025reviewer?</strong></a>)</span></td>
+<td>Reviewer #1 (Public review): Spyglass: a framework for reproducible
 and shareable neuroscience research</td>
-<td style="text-align: right;">2026</td>
-<td>DOI 10.7554/elife.108089.2.sa1 (<a
-href="https://doi.org/10.7554/elife.108089.2.sa1">open</a>)</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.7554/elife.108089.1.sa1 (<a
+href="https://doi.org/10.7554/elife.108089.1.sa1">open</a>)</td>
 </tr>
 <tr>
-<td>[turner2010sweavea]</td>
+<td><span class="citation" data-cites="gavel2025ensuring">(<a
+href="#ref-gavel2025ensuring"
+role="doc-biblioref"><strong>gavel2025ensuring?</strong></a>)</span></td>
+<td>Ensuring Your Quantitative Research is Replicable and
+Reproducible</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.4135/9781036216696 (<a
+href="https://doi.org/10.4135/9781036216696">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hinsen2017sustainable">(<a
+href="#ref-hinsen2017sustainable"
+role="doc-biblioref"><strong>hinsen2017sustainable?</strong></a>)</span></td>
+<td>Sustainable software and reproducible research: dealing with
+software collapse</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.59350/7tavk-2hf75 (<a
+href="https://doi.org/10.59350/7tavk-2hf75">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="basu2021how">(<a
+href="#ref-basu2021how"
+role="doc-biblioref"><strong>basu2021how?</strong></a>)</span></td>
+<td>How to use orgmode for reproducible research, rough cut version
+1</td>
+<td style="text-align: right;">2021</td>
+<td>DOI 10.32388/b5rvo7 (<a
+href="https://doi.org/10.32388/b5rvo7">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="turner2010sweave">(<a
+href="#ref-turner2010sweave"
+role="doc-biblioref"><strong>turner2010sweave?</strong></a>)</span></td>
 <td>Sweave for Reproducible Research and Beatiful Statistical
 Reports</td>
 <td style="text-align: right;">2010</td>
@@ -3821,29 +4416,37 @@ Reports</td>
 href="https://doi.org/10.59350/247k5-kfv86">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2026reviewera]</td>
-<td>Reviewer #1 (Public review): Spyglass: a framework for reproducible
-and shareable neuroscience research</td>
-<td style="text-align: right;">2026</td>
-<td>DOI 10.7554/elife.108089.2.sa2 (<a
-href="https://doi.org/10.7554/elife.108089.2.sa2">open</a>)</td>
+<td><span class="citation" data-cites="turner2009seminar">(<a
+href="#ref-turner2009seminar"
+role="doc-biblioref"><strong>turner2009seminar?</strong></a>)</span></td>
+<td>Seminar: Reproducible Research with R, LaTeX, &amp;amp; Sweave</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.59350/2958f-vdz74 (<a
+href="https://doi.org/10.59350/2958f-vdz74">open</a>)</td>
 </tr>
 <tr>
-<td>[strand2019publishing]</td>
-<td>Publishing open, reproducible research with undergraduates</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.31234/osf.io/f7kuy (<a
-href="https://doi.org/10.31234/osf.io/f7kuy">open</a>)</td>
+<td><span class="citation" data-cites="peyrache2025elife">(<a
+href="#ref-peyrache2025elife"
+role="doc-biblioref"><strong>peyrache2025elife?</strong></a>)</span></td>
+<td>eLife Assessment: Spyglass: a framework for reproducible and
+shareable neuroscience research</td>
+<td style="text-align: right;">2025</td>
+<td>DOI 10.7554/elife.108089.1.sa2 (<a
+href="https://doi.org/10.7554/elife.108089.1.sa2">open</a>)</td>
 </tr>
 <tr>
-<td>[hastings2023ai]</td>
-<td>AI for Reproducible Research</td>
-<td style="text-align: right;">2023</td>
-<td>DOI 10.1201/9781003226642-4 (<a
-href="https://doi.org/10.1201/9781003226642-4">open</a>)</td>
+<td><span class="citation" data-cites="lebeau2020reproducible">(<a
+href="#ref-lebeau2020reproducible"
+role="doc-biblioref"><strong>lebeau2020reproducible?</strong></a>)</span></td>
+<td>Reproducible Analyses in Educational Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.17077/pp.005637 (<a
+href="https://doi.org/10.17077/pp.005637">open</a>)</td>
 </tr>
 <tr>
-<td>[yildiz2023dataintegrated]</td>
+<td><span class="citation" data-cites="yildiz2023dataintegrated">(<a
+href="#ref-yildiz2023dataintegrated"
+role="doc-biblioref"><strong>yildiz2023dataintegrated?</strong></a>)</span></td>
 <td>Data-integrated executable publications for reproducible geohazards
 research</td>
 <td style="text-align: right;">2023</td>
@@ -3851,14 +4454,28 @@ research</td>
 href="https://doi.org/10.5194/egusphere-egu23-7417">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2017fostering]</td>
+<td><span class="citation" data-cites="anon2017fostering">(<a
+href="#ref-anon2017fostering"
+role="doc-biblioref"><strong>anon2017fostering?</strong></a>)</span></td>
 <td>Fostering reproducible fMRI research</td>
 <td style="text-align: right;">2017</td>
 <td>DOI 10.1038/ncomms14748 (<a
 href="https://doi.org/10.1038/ncomms14748">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2025reviewera]</td>
+<td><span class="citation" data-cites="anon2026reviewer">(<a
+href="#ref-anon2026reviewer"
+role="doc-biblioref"><strong>anon2026reviewer?</strong></a>)</span></td>
+<td>Reviewer #2 (Public review): Spyglass: a framework for reproducible
+and shareable neuroscience research</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.7554/elife.108089.2.sa1 (<a
+href="https://doi.org/10.7554/elife.108089.2.sa1">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2025reviewera">(<a
+href="#ref-anon2025reviewera"
+role="doc-biblioref"><strong>anon2025reviewera?</strong></a>)</span></td>
 <td>Reviewer #2 (Public review): Spyglass: a framework for reproducible
 and shareable neuroscience research</td>
 <td style="text-align: right;">2025</td>
@@ -3866,14 +4483,74 @@ and shareable neuroscience research</td>
 href="https://doi.org/10.7554/elife.108089.1.sa0">open</a>)</td>
 </tr>
 <tr>
-<td>[chow2019reproducible]</td>
+<td><span class="citation" data-cites="chow2019reproducible">(<a
+href="#ref-chow2019reproducible"
+role="doc-biblioref"><strong>chow2019reproducible?</strong></a>)</span></td>
 <td>Reproducible Research</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.1201/9780429275067-9 (<a
 href="https://doi.org/10.1201/9780429275067-9">open</a>)</td>
 </tr>
 <tr>
-<td>[hinsen2012unifying]</td>
+<td><span class="citation" data-cites="alston2020beginners">(<a
+href="#ref-alston2020beginners"
+role="doc-biblioref"><strong>alston2020beginners?</strong></a>)</span></td>
+<td>A Beginner’s Guide to Conducting Reproducible Research</td>
+<td style="text-align: right;">2020</td>
+<td>DOI 10.32942/osf.io/h5r6n (<a
+href="https://doi.org/10.32942/osf.io/h5r6n">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hinsen2017reproducible">(<a
+href="#ref-hinsen2017reproducible"
+role="doc-biblioref"><strong>hinsen2017reproducible?</strong></a>)</span></td>
+<td>Reproducible research in the Python ecosystem: a reality check</td>
+<td style="text-align: right;">2017</td>
+<td>DOI 10.59350/wgebd-68y68 (<a
+href="https://doi.org/10.59350/wgebd-68y68">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="turner2010sweavea">(<a
+href="#ref-turner2010sweavea"
+role="doc-biblioref"><strong>turner2010sweavea?</strong></a>)</span></td>
+<td>Sweave for Reproducible Research and Beatiful Statistical
+Reports</td>
+<td style="text-align: right;">2010</td>
+<td>DOI 10.59350/pexqx-j5g86 (<a
+href="https://doi.org/10.59350/pexqx-j5g86">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hastings2023ai">(<a
+href="#ref-hastings2023ai"
+role="doc-biblioref"><strong>hastings2023ai?</strong></a>)</span></td>
+<td>AI for Reproducible Research</td>
+<td style="text-align: right;">2023</td>
+<td>DOI 10.1201/9781003226642-4 (<a
+href="https://doi.org/10.1201/9781003226642-4">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="anon2026reviewera">(<a
+href="#ref-anon2026reviewera"
+role="doc-biblioref"><strong>anon2026reviewera?</strong></a>)</span></td>
+<td>Reviewer #1 (Public review): Spyglass: a framework for reproducible
+and shareable neuroscience research</td>
+<td style="text-align: right;">2026</td>
+<td>DOI 10.7554/elife.108089.2.sa2 (<a
+href="https://doi.org/10.7554/elife.108089.2.sa2">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="strand2019publishing">(<a
+href="#ref-strand2019publishing"
+role="doc-biblioref"><strong>strand2019publishing?</strong></a>)</span></td>
+<td>Publishing open, reproducible research with undergraduates</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.31234/osf.io/f7kuy (<a
+href="https://doi.org/10.31234/osf.io/f7kuy">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="hinsen2012unifying">(<a
+href="#ref-hinsen2012unifying"
+role="doc-biblioref"><strong>hinsen2012unifying?</strong></a>)</span></td>
 <td>Unifying version control and dependency management for reproducible
 research</td>
 <td style="text-align: right;">2012</td>
@@ -3881,29 +4558,9 @@ research</td>
 href="https://doi.org/10.59350/986d5-0he30">open</a>)</td>
 </tr>
 <tr>
-<td>[turner2009seminar]</td>
-<td>Seminar: Reproducible Research with R, LaTeX, &amp;amp; Sweave</td>
-<td style="text-align: right;">2009</td>
-<td>DOI 10.59350/2958f-vdz74 (<a
-href="https://doi.org/10.59350/2958f-vdz74">open</a>)</td>
-</tr>
-<tr>
-<td>[poldrack2019case]</td>
-<td>Case Study 29: Developing a Reproducible Workflow for Large-Scale
-Phenotyping</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.1525/9780520967779-038 (<a
-href="https://doi.org/10.1525/9780520967779-038">open</a>)</td>
-</tr>
-<tr>
-<td>[turner2009seminara]</td>
-<td>Seminar: Reproducible Research with R, LaTeX, &amp;amp; Sweave</td>
-<td style="text-align: right;">2009</td>
-<td>DOI 10.59350/d3cd0-5jy93 (<a
-href="https://doi.org/10.59350/d3cd0-5jy93">open</a>)</td>
-</tr>
-<tr>
-<td>[mittal2025explainable]</td>
+<td><span class="citation" data-cites="mittal2025explainable">(<a
+href="#ref-mittal2025explainable"
+role="doc-biblioref"><strong>mittal2025explainable?</strong></a>)</span></td>
 <td>Explainable AI-Augmented DevSecOps for Secure and Reproducible
 Cloud-Native Research Software</td>
 <td style="text-align: right;">2025</td>
@@ -3911,14 +4568,9 @@ Cloud-Native Research Software</td>
 href="https://doi.org/10.36227/techrxiv.175617187.78775647/v1">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2019replication]</td>
-<td>Replication</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.2307/j.ctvpb3xkg.14 (<a
-href="https://doi.org/10.2307/j.ctvpb3xkg.14">open</a>)</td>
-</tr>
-<tr>
-<td>[ohta2015containerbased]</td>
+<td><span class="citation" data-cites="ohta2015containerbased">(<a
+href="#ref-ohta2015containerbased"
+role="doc-biblioref"><strong>ohta2015containerbased?</strong></a>)</span></td>
 <td>Container-based sequence data analysis workflow for reproducible
 research</td>
 <td style="text-align: right;">2015</td>
@@ -3926,7 +4578,27 @@ research</td>
 href="https://doi.org/10.7490/f1000research.1110170.1">open</a>)</td>
 </tr>
 <tr>
-<td>[baggerly2024importance]</td>
+<td><span class="citation" data-cites="turner2009seminara">(<a
+href="#ref-turner2009seminara"
+role="doc-biblioref"><strong>turner2009seminara?</strong></a>)</span></td>
+<td>Seminar: Reproducible Research with R, LaTeX, &amp;amp; Sweave</td>
+<td style="text-align: right;">2009</td>
+<td>DOI 10.59350/d3cd0-5jy93 (<a
+href="https://doi.org/10.59350/d3cd0-5jy93">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="butland2019community">(<a
+href="#ref-butland2019community"
+role="doc-biblioref"><strong>butland2019community?</strong></a>)</span></td>
+<td>Community Call - Reproducible Research with R</td>
+<td style="text-align: right;">2019</td>
+<td>DOI 10.59350/v7xr3-6sn63 (<a
+href="https://doi.org/10.59350/v7xr3-6sn63">open</a>)</td>
+</tr>
+<tr>
+<td><span class="citation" data-cites="baggerly2024importance">(<a
+href="#ref-baggerly2024importance"
+role="doc-biblioref"><strong>baggerly2024importance?</strong></a>)</span></td>
 <td>The Importance of Reproducible Research in High-Throughput
 Biology</td>
 <td style="text-align: right;">2024</td>
@@ -3934,53 +4606,41 @@ Biology</td>
 href="https://doi.org/10.52519/00193">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2019introduction]</td>
+<td><span class="citation" data-cites="anon2019introduction">(<a
+href="#ref-anon2019introduction"
+role="doc-biblioref"><strong>anon2019introduction?</strong></a>)</span></td>
 <td>Introduction</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.2307/j.ctvpb3xkg.6 (<a
 href="https://doi.org/10.2307/j.ctvpb3xkg.6">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2019tables]</td>
+<td><span class="citation" data-cites="anon2019tables">(<a
+href="#ref-anon2019tables"
+role="doc-biblioref"><strong>anon2019tables?</strong></a>)</span></td>
 <td>Tables</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.1525/9780520969230-002 (<a
 href="https://doi.org/10.1525/9780520969230-002">open</a>)</td>
 </tr>
 <tr>
-<td>[gandrud2020presenting]</td>
-<td>Presenting with LaTeX</td>
-<td style="text-align: right;">2020</td>
-<td>DOI 10.1201/9780429031854-15 (<a
-href="https://doi.org/10.1201/9780429031854-15">open</a>)</td>
-</tr>
-<tr>
-<td>[butland2019community]</td>
-<td>Community Call - Reproducible Research with R</td>
+<td><span class="citation" data-cites="poldrack2019case">(<a
+href="#ref-poldrack2019case"
+role="doc-biblioref"><strong>poldrack2019case?</strong></a>)</span></td>
+<td>Case Study 29: Developing a Reproducible Workflow for Large-Scale
+Phenotyping</td>
 <td style="text-align: right;">2019</td>
-<td>DOI 10.59350/v7xr3-6sn63 (<a
-href="https://doi.org/10.59350/v7xr3-6sn63">open</a>)</td>
+<td>DOI 10.1525/9780520967779-038 (<a
+href="https://doi.org/10.1525/9780520967779-038">open</a>)</td>
 </tr>
 <tr>
-<td>[anon2019what]</td>
+<td><span class="citation" data-cites="anon2019what">(<a
+href="#ref-anon2019what"
+role="doc-biblioref"><strong>anon2019what?</strong></a>)</span></td>
 <td>What Is Ethical Research?</td>
 <td style="text-align: right;">2019</td>
 <td>DOI 10.2307/j.ctvpb3xkg.7 (<a
 href="https://doi.org/10.2307/j.ctvpb3xkg.7">open</a>)</td>
-</tr>
-<tr>
-<td>[simaan2023reproducible]</td>
-<td>Reproducible Research in Portfolio Selection</td>
-<td style="text-align: right;">2023</td>
-<td>DOI 10.2139/ssrn.4318828 (<a
-href="https://doi.org/10.2139/ssrn.4318828">open</a>)</td>
-</tr>
-<tr>
-<td>[anon2019conclusion]</td>
-<td>Conclusion</td>
-<td style="text-align: right;">2019</td>
-<td>DOI 10.2307/j.ctvpb3xkg.17 (<a
-href="https://doi.org/10.2307/j.ctvpb3xkg.17">open</a>)</td>
 </tr>
 </tbody>
 </table>
@@ -4027,5 +4687,39 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href=
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/manuscript/references.bib <span class="at">--strict</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/manuscript/references_deep.bib <span class="at">--strict</span></span></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-boyd2004convex" class="csl-entry" role="listitem">
+Boyd, Stephen, and Lieven Vandenberghe. 2004. <em>Convex
+Optimization</em>. Cambridge University Press. <a
+href="https://doi.org/10.1017/CBO9780511804441">https://doi.org/10.1017/CBO9780511804441</a>.
+</div>
+<div id="ref-kingma2014adam" class="csl-entry" role="listitem">
+Kingma, Diederik P, and Jimmy Ba. 2014. <span>“Adam: A Method for
+Stochastic Optimization.”</span> <em>ICLR</em>. <a
+href="https://arxiv.org/abs/1412.6980">https://arxiv.org/abs/1412.6980</a>.
+</div>
+<div id="ref-nesterov2013gradient" class="csl-entry" role="listitem">
+Nesterov, Yurii. 2013. <span>“Gradient Methods for Minimizing Composite
+Functions.”</span> <em>Mathematical Programming</em> 140 (1): 125–61. <a
+href="https://doi.org/10.1007/s10107-012-0629-5">https://doi.org/10.1007/s10107-012-0629-5</a>.
+</div>
+<div id="ref-nocedal2006numerical" class="csl-entry" role="listitem">
+Nocedal, Jorge, and Stephen Wright. 2006. <em>Numerical
+Optimization</em>. 2nd ed. Springer Science &amp; Business Media. <a
+href="https://doi.org/10.1007/978-0-387-40065-5">https://doi.org/10.1007/978-0-387-40065-5</a>.
+</div>
+<div id="ref-peng2011reproducible" class="csl-entry" role="listitem">
+Peng, Roger D. 2011. <span>“Reproducible Research in Computational
+Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
+href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
+</div>
+<div id="ref-reddi2018convergence" class="csl-entry" role="listitem">
+Reddi, Sashank J, Satyen Kale, and Sanjiv Kumar. 2018. <span>“On the
+Convergence of Adam and Beyond.”</span> <em>ICLR</em>. <a
+href="https://arxiv.org/abs/1904.09237">https://arxiv.org/abs/1904.09237</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

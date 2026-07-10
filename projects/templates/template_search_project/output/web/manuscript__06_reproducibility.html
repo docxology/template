@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,11 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:reproducibility">Reproducibility</h1>
 <p>Reproducibility in computational research has well-documented
 prerequisites: open data, open code, and a deterministic build that can
@@ -277,11 +280,10 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="
 that directory to the repo and the pipeline becomes reproducible across
 machines without further configuration changes.</p>
 <h2 id="determinism-guarantees">Determinism guarantees</h2>
-<p>The full determinism contract is itemised in <span class="citation"
-data-cites="tbl:determinism">[@tbl:determinism]</span>: every pipeline
-stage is annotated as fully, conditionally, or non-deterministic, with
-an explicit mechanism column so reviewers can audit each row
-independently.</p>
+<p>The full determinism contract is itemised in [tbl:determinism]: every
+pipeline stage is annotated as fully, conditionally, or
+non-deterministic, with an explicit mechanism column so reviewers can
+audit each row independently.</p>
 <table id="tbl:determinism">
 <caption>Determinism contract by pipeline stage. Cached stages are
 byte-stable across reruns; live stages depend on the upstream source and
@@ -365,13 +367,11 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <code>output/search/cache/search_*.json</code>, where
 <code>_cached_at</code> is wall-clock time at write.</p>
 <h2 id="limitations">Limitations</h2>
-<p>The reproducibility contract enumerated in <span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span> (items
-1–5 and <span class="citation"
-data-cites="tbl:determinism">[@tbl:determinism]</span>) does not
-eliminate the following well-defined sources of non-reproducibility,
-which are surfaced here so reviewers can audit them explicitly rather
-than inferring from the contract table:</p>
+<p>The reproducibility contract enumerated in [sec:reproducibility]
+(items 1–5 and [tbl:determinism]) does not eliminate the following
+well-defined sources of non-reproducibility, which are surfaced here so
+reviewers can audit them explicitly rather than inferring from the
+contract table:</p>
 <ul>
 <li><strong>Live search drift.</strong> When
 <code>config.search.sources</code> includes <code>arxiv</code> or
@@ -405,10 +405,10 @@ or DOI assignment upstream will alter the cache on the next cold-start
 invocation.</li>
 </ul>
 <p>These limitations bound <em>what</em> the cache + seed + corpus
-pinning achieves. Inside those bounds, the contract in <span
-class="citation" data-cites="tbl:determinism">[@tbl:determinism]</span>
+pinning achieves. Inside those bounds, the contract in [tbl:determinism]
 is total: every cached pipeline stage is byte-stable across reruns
 (verified by
 <code>tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns</code>).</p>
+</main>
 </body>
 </html>

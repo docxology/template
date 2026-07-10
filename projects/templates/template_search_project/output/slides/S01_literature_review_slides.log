@@ -1,6 +1,5 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  2 JUL 2026 05:28
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
 entering extended mode
- \write18 enabled.
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
 t/output/slides/S01_literature_review_slides.tex
@@ -1201,37 +1200,40 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
+\c@proposition=\count397
+\c@hypothesis=\count398
+
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count397
+\BKM@id=\count399
 ))
 (/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.aux)
 \openout1 = `S01_literature_review_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1267,7 +1269,7 @@ LaTeX Font Info:    ... okay on input line 129.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 129.
+Package hyperref Info: Link coloring OFF on input line 132.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -1294,19 +1296,19 @@ tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 129.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 132.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 129.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 132.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 129.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 132.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 129.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 132.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 129.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 132.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 129.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 132.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 129.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 132.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1337,7 +1339,7 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 129.
+(Font)              scaled to size 11.28015pt on input line 132.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1380,18 +1382,18 @@ dern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 129.
+(Font)              scaled to size 11.28015pt on input line 132.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 129.
+(Font)              `operators' in the math version `normal' on input line 132.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 129.
+ line 132.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 129.
+(Font)              `operators' in the math version `bold' on input line 132.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 129.
+t line 132.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1465,15 +1467,15 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 129.
+(Font)              `symbols' in the math version `normal' on input line 132.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 129.
+t line 132.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 129.
+(Font)              `symbols' in the math version `bold' on input line 132.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 129.
+t line 132.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1542,23 +1544,23 @@ t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-29.
+32.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 129.
+t line 132.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 129
+(Font)              `largesymbols' in the math version `bold' on input line 132
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 129.
-LaTeX Info: Redefining \microtypecontext on input line 129.
-Package microtype Info: Applying patch `item' on input line 129.
-Package microtype Info: Applying patch `toc' on input line 129.
-Package microtype Info: Applying patch `eqnum' on input line 129.
-Package microtype Info: Applying patch `footnote' on input line 129.
-Package microtype Info: Applying patch `verbatim' on input line 129.
-LaTeX Info: Redefining \microtypesetup on input line 129.
+t line 132.
+LaTeX Info: Redefining \microtypecontext on input line 132.
+Package microtype Info: Applying patch `item' on input line 132.
+Package microtype Info: Applying patch `toc' on input line 132.
+Package microtype Info: Applying patch `eqnum' on input line 132.
+Package microtype Info: Applying patch `footnote' on input line 132.
+Package microtype Info: Applying patch `verbatim' on input line 132.
+LaTeX Info: Redefining \microtypesetup on input line 132.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1587,263 +1589,263 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 ) [3
 
 ]
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804441.005 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804441.004 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781108699211.006 
- []
-
-
-Overfull \hbox (7.03297pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.03297pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1561/9781638280538.ch1 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781108699211.006 
+ []
+
+
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781108699211.015 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804441.003 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1515/9783110361629.117 
  []
 
 Missing character: There is no α (U+03B1) in font [lmsans8-regular]:mapping=tex
 -text;!
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781009510561.012 
  []
 
 
-Overfull \hbox (8.69498pt too wide) in paragraph at lines 482--482
+Overfull \hbox (8.69498pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1080/02331930500096270 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781009510561.021 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804458.002 
  []
 
 
-Overfull \hbox (4.09297pt too wide) in paragraph at lines 482--482
+Overfull \hbox (4.09297pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1515/9783110361629.30 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781108980647.012 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.002 
- []
-
-
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781009510561.024 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.001 
- []
-
-
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781108377447.033 
- []
-
-
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009510561.003 
- []
-
-
-Overfull \hbox (7.03297pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1002/9781119804093.ch2 
- []
-
-
-Overfull \hbox (7.03297pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.03297pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1002/9781119804093.ch3 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009510561.013 
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781108377447.033 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.016 
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.001 
  []
 
 
-Overfull \hbox (8.69498pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009510561.003 
+ []
+
+
+Overfull \hbox (7.03297pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1002/9781119804093.ch2 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.002 
+ []
+
+
+Overfull \hbox (8.69498pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1080/02331939908844436 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009510561.020 
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009510561.013 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009510561.015 
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.016 
+ []
+
+
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009510561.020 
  []
 
 Missing character: There is no ★ (U+2605) in font [lmsans8-regular]:mapping=tex
 -text;!
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781009510561.023 
  []
 
 
-Overfull \hbox (9.69098pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 ton/9780691197296.001.0001 
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009510561.015 
  []
 
 
-Overfull \hbox (0.78098pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1023/a:1021792726715 
- []
-
-
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.010 
- []
-
-
-Overfull \hbox (8.02296pt too wide) in paragraph at lines 482--482
+Overfull \hbox (8.02296pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1016/j.disopt.2014.12.001 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.009 
+Overfull \hbox (9.69098pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 ton/9780691197296.001.0001 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (0.78098pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1023/a:1021792726715 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.010 
+ []
+
+
+Overfull \hbox (0.78098pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1023/a:1017532225395 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804441.008 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.013 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.009 
  []
 
 Missing character: There is no ★ (U+2605) in font [lmsans8-regular]:mapping=tex
 -text;!
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/9781009510561.025 
  []
 
 
-Overfull \hbox (0.78098pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1023/a:1017532225395 
- []
-
-
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.013 
- []
-
-
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009510561.009 
- []
-
-
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009493512.006 
- []
-
-
-Overfull \hbox (8.69498pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1080/02331939208843789 
- []
-
-
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804458.010 
- []
-
-
-Overfull \hbox (7.03297pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1002/9781119804093.ch4 
- []
-
-
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/9781009428095.021 
- []
-
-
-Overfull \hbox (33.79297pt too wide) in paragraph at lines 482--482
+Overfull \hbox (33.79297pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1093/oso/9780195100563.003.0006 
  []
 
 
-Overfull \hbox (0.90697pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804458.010 
+ []
+
+
+Overfull \hbox (7.03297pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1002/9781119804093.ch4 
+ []
+
+
+Overfull \hbox (0.90697pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.2478/9783110426045.4 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009493512.006 
+ []
+
+
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009510561.009 
+ []
+
+
+Overfull \hbox (8.69498pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1080/02331939208843789 
+ []
+
+
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/9781009428095.021 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804441.011 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9780511804441.007 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9780511804441.006 
- []
-
-
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
-\TU/lmss/m/n/6 10.1017/cbo9781139924672.002 
- []
-
-
-Overfull \hbox (18.60698pt too wide) in paragraph at lines 482--482
+Overfull \hbox (18.60698pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1080/02331934.2024.2388200 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9780511804441.006 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
+\TU/lmss/m/n/6 10.1017/cbo9781139924672.002 
+ []
+
+
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9781139924672.003 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9781139924672.001 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 485--485
 \TU/lmss/m/n/6 10.1017/cbo9781139924672.007 
  []
 
@@ -1867,250 +1869,249 @@ Overfull \hbox (16.77097pt too wide) in paragraph at lines 482--482
 ] [10
 
 
-] [11
+]
+Overfull \vbox (6.7118pt too high) detected at line 485
+ []
+
+[11
 
 
 ] [12
 
 
 ]
-Overfull \hbox (19.72298pt too wide) in paragraph at lines 865--865
+Overfull \hbox (19.72298pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.7490/f1000research.1115776.1 
  []
 
 
-Overfull \hbox (18.28897pt too wide) in paragraph at lines 865--865
+Overfull \hbox (18.28897pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.32614/cran.package.coxphsgd 
  []
 
 
-Overfull \hbox (16.77097pt too wide) in paragraph at lines 865--865
+Overfull \hbox (16.77097pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1017/cbo9781107298019.015 
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.2305101.5783306294001|  
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.2305101.5783306294001 
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.2512817.6013939792001|  
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.2512817.6013939792001 
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.2643564.6314793833112|  
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.2643564.6314793833112 
  []
 
 
-Overfull \hbox (5.50897pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.5220/0012687400003702 
- []
-
-
-Overfull \hbox (65.82697pt too wide) in paragraph at lines 865--865
+Overfull \hbox (65.82697pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.70675/f938eaabz37fcz4483zba85z57f0849e7747 
  []
 
 
-Overfull \hbox (13.71097pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.36227/techrxiv.19350536.v1 
+Overfull \hbox (5.50897pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.5220/0012687400003702 
  []
 
 
-Overfull \hbox (17.65897pt too wide) in paragraph at lines 865--865
+Overfull \hbox (17.65897pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/tsp.2025.3546574/mm1 
  []
 
 
-Overfull \hbox (5.81497pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.36227/techrxiv.19350536 
+Overfull \hbox (13.71097pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.36227/techrxiv.19350536.v1 
  []
 
 
-Overfull \hbox (45.57097pt too wide) in paragraph at lines 865--865
+Overfull \hbox (45.57097pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.36227/techrxiv.176162233.33076025/v1 
  []
 
 
-Overfull \hbox (12.64297pt too wide) in paragraph at lines 865--865
+Overfull \hbox (5.81497pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.36227/techrxiv.19350536 
+ []
+
+
+Overfull \hbox (12.64297pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.3028105.e628af96- 
  []
 
 
-Overfull \hbox (12.64297pt too wide) in paragraph at lines 865--865
+Overfull \hbox (12.64297pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.3028105.e628af96- 
  []
 
 
-Overfull \hbox (21.86497pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1109/wsc60868.2023.10408023 
- []
-
-
-Overfull \hbox (21.77498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (21.77498pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.32614/cran.package.bigsurvsgd 
  []
 
 
-Overfull \hbox (5.50897pt too wide) in paragraph at lines 865--865
+Overfull \hbox (21.86497pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.1109/wsc60868.2023.10408023 
+ []
+
+
+Overfull \hbox (5.50897pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.5220/0011795500003411 
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.2599744.6269411057001|  
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.2599744.6269411057001 
  []
 
 
-Overfull \hbox (69.77496pt too wide) in paragraph at lines 865--865
+Overfull \hbox (69.77496pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.70675/674d4873zb009z425cz9c8ezb792c820253d 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 865--865
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1017/9781108860604.006 
  []
 
 
-Overfull \hbox (18.69098pt too wide) in paragraph at lines 865--865
+Overfull \hbox (18.69098pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/icpr48806.2021.9412831 
  []
 
 
-Overfull \hbox (24.85898pt too wide) in paragraph at lines 865--865
+Overfull \hbox (24.85898pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/tpami.2025.3610169/mm1 
  []
 
 
-Overfull \hbox (2.07097pt too wide) in paragraph at lines 865--865
+Overfull \hbox (2.07097pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.3788/col202018.101403 
  []
 
 
-Overfull \hbox (0.90697pt too wide) in paragraph at lines 865--865
+Overfull \hbox (0.90697pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1145/3411408.3411436 
  []
 
 
-Overfull \hbox (11.91698pt too wide) in paragraph at lines 865--865
+Overfull \hbox (11.91698pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.53759/7669/jmc202404032 
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.2525953.6062680904001|  
  []
 
 
-Overfull \hbox (28.16498pt too wide) in paragraph at lines 865--865
+Overfull \hbox (28.16498pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.2525953.6062680904001 
  []
 
 
-Overfull \hbox (5.10097pt too wide) in paragraph at lines 865--865
+Overfull \hbox (5.10097pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1016/j.asoc.2021.107084 
  []
 
 
-Overfull \hbox (5.02898pt too wide) in paragraph at lines 865--865
+Overfull \hbox (5.02898pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.23919/acc.2017.7963007 
  []
 
 
-Overfull \hbox (16.83098pt too wide) in paragraph at lines 865--865
+Overfull \hbox (16.83098pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/isit44484.2020.9174363 
  []
 
 
-Overfull \hbox (5.02898pt too wide) in paragraph at lines 865--865
+Overfull \hbox (5.02898pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.23919/acc.2019.8814666 
  []
 
 
-Overfull \hbox (13.33897pt too wide) in paragraph at lines 865--865
+Overfull \hbox (13.33897pt too wide) in paragraph at lines 869--869
 []|\TU/lmss/m/n/6 10.1117/12.3026153.0df877b5- 
  []
 
 
-Overfull \hbox (13.33897pt too wide) in paragraph at lines 865--865
+Overfull \hbox (13.33897pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1117/12.3026153.0df877b5- 
  []
 
 
-Overfull \hbox (2.35297pt too wide) in paragraph at lines 865--865
+Overfull \hbox (2.35297pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/ssci.2016.7849933 
  []
 
 
-Overfull \hbox (3.36098pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1109/icca.2009.5410612 
- []
-
-
-Overfull \hbox (4.18896pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.21437/interspeech.2019- 
- []
-
-
-Overfull \hbox (4.80096pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.23919/ecc.2019.8796130 
- []
-
-
-Overfull \hbox (3.68497pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1016/j.asoc.2018.09.038 
- []
-
-
-Overfull \hbox (17.65897pt too wide) in paragraph at lines 865--865
+Overfull \hbox (17.65897pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/tsp.2023.3297053/mm1 
  []
 
 
-Overfull \hbox (7.27898pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1017/9781009509435.009 
+Overfull \hbox (4.18896pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.21437/interspeech.2019- 
  []
 
 
-Overfull \hbox (17.77296pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1109/cac53003.2021.9727635 
+Overfull \hbox (4.80096pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.23919/ecc.2019.8796130 
  []
 
 
-Overfull \hbox (9.02498pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1016/j.sigpro.2020.107494 
- []
-
-
-Overfull \hbox (2.70697pt too wide) in paragraph at lines 865--865
+Overfull \hbox (2.70697pt too wide) in paragraph at lines 869--869
 \TU/lmss/m/n/6 10.1109/icra.2014.6907482 
  []
 
 
-Overfull \hbox (10.08698pt too wide) in paragraph at lines 865--865
-\TU/lmss/m/n/6 10.1109/cai59869.2024.00241 
+Overfull \hbox (3.68497pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.1016/j.asoc.2018.09.038 
+ []
+
+
+Overfull \hbox (3.36098pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.1109/icca.2009.5410612 
+ []
+
+
+Overfull \hbox (7.27898pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.1017/9781009509435.009 
+ []
+
+
+Overfull \hbox (17.77296pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.1109/cac53003.2021.9727635 
+ []
+
+
+Overfull \hbox (9.02498pt too wide) in paragraph at lines 869--869
+\TU/lmss/m/n/6 10.1016/j.sigpro.2020.107494 
  []
 
 [13
@@ -2121,42 +2122,34 @@ Overfull \hbox (10.08698pt too wide) in paragraph at lines 865--865
 ] [15
 
 
-] [16
+]
+Overfull \vbox (9.48775pt too high) detected at line 869
+ []
+
+[16
 
 
 ]
-Overfull \vbox (2.48775pt too high) detected at line 865
+Overfull \vbox (2.48775pt too high) detected at line 869
  []
 
 [17
 
 
-]
-Overfull \vbox (8.79376pt too high) detected at line 865
- []
-
-[18
+] [18
 
 
 ] [19
 
 
-]
-Overfull \vbox (2.48775pt too high) detected at line 865
- []
-
-[20
+] [20
 
 
-]
-Overfull \vbox (1.79376pt too high) detected at line 865
- []
-
-[21
+] [21
 
 
 ]
-Overfull \vbox (1.79376pt too high) detected at line 865
+Overfull \vbox (1.79376pt too high) detected at line 869
  []
 
 [22
@@ -2165,7 +2158,11 @@ Overfull \vbox (1.79376pt too high) detected at line 865
 ] [23
 
 
-] [24
+]
+Overfull \vbox (22.79376pt too high) detected at line 869
+ []
+
+[24
 
 
 ] [25
@@ -2182,13 +2179,18 @@ Overfull \hbox (36.37897pt too wide) in paragraph at lines 42--45
  []
 
 
-Overfull \hbox (29.54497pt too wide) in paragraph at lines 71--73
+Overfull \hbox (29.54497pt too wide) in paragraph at lines 70--72
 \TU/lmss/m/n/6 10.12688/f1000research.channels.908 
  []
 
 
-Overfull \hbox (16.38097pt too wide) in paragraph at lines 80--82
+Overfull \hbox (16.38097pt too wide) in paragraph at lines 83--85
 \TU/lmss/m/n/6 10.32614/cran.package.pewdata 
+ []
+
+
+Overfull \hbox (21.77498pt too wide) in paragraph at lines 86--88
+\TU/lmss/m/n/6 10.22541/au.151460905.57485984 
  []
 
 
@@ -2197,8 +2199,8 @@ Overfull \hbox (33.79297pt too wide) in paragraph at lines 94--97
  []
 
 
-Overfull \hbox (21.77498pt too wide) in paragraph at lines 125--127
-\TU/lmss/m/n/6 10.22541/au.151460905.57485984 
+Overfull \hbox (8.76697pt too wide) in paragraph at lines 122--124
+\TU/lmss/m/n/6 10.15200/winn.146397.78741 
  []
 
 
@@ -2207,82 +2209,82 @@ Overfull \hbox (19.72298pt too wide) in paragraph at lines 128--130
  []
 
 
-Overfull \hbox (19.72298pt too wide) in paragraph at lines 131--133
+Overfull \hbox (19.72298pt too wide) in paragraph at lines 142--144
 \TU/lmss/m/n/6 10.7490/f1000research.1115901.1 
  []
 
 
-Overfull \hbox (15.06697pt too wide) in paragraph at lines 142--144
+Overfull \hbox (15.06697pt too wide) in paragraph at lines 148--150
 \TU/lmss/m/n/6 10.4135/9781526421036926480 
  []
 
 
-Overfull \hbox (5.61098pt too wide) in paragraph at lines 167--169
+Overfull \hbox (5.61098pt too wide) in paragraph at lines 177--179
 \TU/lmss/m/n/6 10.21428/1192f2f8.fb1a1b7f 
  []
 
 
-Overfull \hbox (10.29697pt too wide) in paragraph at lines 174--176
-\TU/lmss/m/n/6 10.61700/pdeaaefq62n681556 
- []
-
-
-Overfull \hbox (19.72298pt too wide) in paragraph at lines 195--198
-\TU/lmss/m/n/6 10.7490/f1000research.1113332.1 
- []
-
-
-Overfull \hbox (31.08698pt too wide) in paragraph at lines 199--201
+Overfull \hbox (31.08698pt too wide) in paragraph at lines 185--187
 \TU/lmss/m/n/6 10.22541/au.169627960.06669688/v1 
  []
 
 
-Overfull \hbox (63.07297pt too wide) in paragraph at lines 216--219
+Overfull \hbox (10.29697pt too wide) in paragraph at lines 207--209
+\TU/lmss/m/n/6 10.61700/pdeaaefq62n681556 
+ []
+
+
+Overfull \hbox (19.72298pt too wide) in paragraph at lines 213--216
+\TU/lmss/m/n/6 10.7490/f1000research.1113332.1 
+ []
+
+
+Overfull \hbox (63.07297pt too wide) in paragraph at lines 222--225
 \TU/lmss/m/n/6 10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc 
  []
 
 
-Overfull \hbox (17.98297pt too wide) in paragraph at lines 220--222
+Overfull \hbox (17.98297pt too wide) in paragraph at lines 232--234
 \TU/lmss/m/n/6 10.32614/cran.package.icpsrdata 
  []
 
 
-Overfull \hbox (1.48297pt too wide) in paragraph at lines 224--226
-\TU/lmss/m/n/6 10.7554/elife.108089.1.sa1 
- []
-
-
-Overfull \hbox (1.48297pt too wide) in paragraph at lines 227--230
-\TU/lmss/m/n/6 10.7554/elife.108089.1.sa2 
- []
-
-
-Overfull \hbox (1.48297pt too wide) in paragraph at lines 253--256
+Overfull \hbox (1.48297pt too wide) in paragraph at lines 235--238
 \TU/lmss/m/n/6 10.7554/elife.108089.2.sa3 
  []
 
 
-Overfull \hbox (1.48297pt too wide) in paragraph at lines 258--260
+Overfull \hbox (1.48297pt too wide) in paragraph at lines 240--242
+\TU/lmss/m/n/6 10.7554/elife.108089.1.sa1 
+ []
+
+
+Overfull \hbox (1.48297pt too wide) in paragraph at lines 259--262
+\TU/lmss/m/n/6 10.7554/elife.108089.1.sa2 
+ []
+
+
+Overfull \hbox (1.48297pt too wide) in paragraph at lines 274--276
 \TU/lmss/m/n/6 10.7554/elife.108089.2.sa1 
  []
 
 
-Overfull \hbox (1.48297pt too wide) in paragraph at lines 265--267
-\TU/lmss/m/n/6 10.7554/elife.108089.2.sa2 
- []
-
-
-Overfull \hbox (1.48297pt too wide) in paragraph at lines 282--284
+Overfull \hbox (1.48297pt too wide) in paragraph at lines 278--280
 \TU/lmss/m/n/6 10.7554/elife.108089.1.sa0 
  []
 
 
-Overfull \hbox (45.57097pt too wide) in paragraph at lines 301--304
+Overfull \hbox (1.48297pt too wide) in paragraph at lines 297--299
+\TU/lmss/m/n/6 10.7554/elife.108089.2.sa2 
+ []
+
+
+Overfull \hbox (45.57097pt too wide) in paragraph at lines 306--309
 \TU/lmss/m/n/6 10.36227/techrxiv.175617187.78775647/v1 
  []
 
 
-Overfull \hbox (19.72298pt too wide) in paragraph at lines 308--311
+Overfull \hbox (19.72298pt too wide) in paragraph at lines 310--313
 \TU/lmss/m/n/6 10.7490/f1000research.1110170.1 
  []
 
@@ -2300,24 +2302,20 @@ Overfull \hbox (19.72298pt too wide) in paragraph at lines 308--311
 ] [30
 
 
-] [31
-
-
 ]
-Overfull \vbox (15.09978pt too high) detected at line 1208
+Overfull \vbox (0.40579pt too high) detected at line 1212
  []
 
-[32
+[31
+
+
+] [32
 
 
 ] [33
 
 
-]
-Overfull \vbox (1.09978pt too high) detected at line 1208
- []
-
-[34
+] [34
 
 
 ] [35
@@ -2347,10 +2345,10 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 30981 strings out of 468168
- 622845 string characters out of 5432815
- 1356801 words of memory out of 5000000
- 59186 multiletter control sequences out of 15000+600000
+ 30997 strings out of 468168
+ 623063 string characters out of 5432815
+ 1357077 words of memory out of 5000000
+ 59202 multiletter control sequences out of 15000+600000
  628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1118b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s

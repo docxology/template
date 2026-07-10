@@ -7,7 +7,7 @@ paper:
   subtitle: "A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software"
   short_title: "Pools, Rules, and Tools"
   version: "1.0.0"
-  date: "2026-07-05"
+  date: "2026-07-10"
   keywords:
     - research software engineering
     - monorepo architecture
@@ -28,14 +28,16 @@ authors:
     corresponding: true
 
 publication:
-  doi: ""
-  version_doi: ""
+  doi: "10.5281/zenodo.21298888"
+  doi_status: "reserved (draft deposition; awaiting first publication)"
+  version_doi: "10.5281/zenodo.21298889"
   github_repository: "docxology/template"
   license: "CC-BY-4.0"
   venue: "Journal of Open Source Software"
   status: "preprint"
   preprint_server: "arXiv"
   preprint_id: "2026.00000"
+  version_record: "https://zenodo.org/records/21298889"
 
 # Strong-rule semantic validation context (see scripts/04_validate_strong_rules.py)
 strong_rules:

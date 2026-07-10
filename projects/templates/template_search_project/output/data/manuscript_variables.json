@@ -13,6 +13,6 @@
   "deep_max_results_per_keyword": 100,
   "deep_keyword_count": 3,
   "deep_keywords_joined": "convex optimization; stochastic gradient descent; reproducible research",
-  "deep_sources": "arxiv, crossref, paperclip",
+  "deep_sources": "arxiv, crossref",
   "deep_unique_papers": "<deep-search not run>"
 }

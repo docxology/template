@@ -1,0 +1,27 @@
+flowchart TB
+    CFG[deep_search block of config.yaml]
+    CFG --> KW{{For each keyword}}
+    KW --> SEARCH[SearchQuery · max_results_per_keyword]
+    SEARCH --> CLIENT["LiteratureClient<br/>aggregates arxiv · crossref · local · paperclip"]
+    CLIENT --> ENRICH["AbstractFetcher + FulltextFetcher<br/>cached on disk"]
+    ENRICH --> KEYS["paper_to_bibentry<br/>collision-free keys"]
+    KEYS --> LLMQ{LLM per-paper?}
+    LLMQ -- yes --> LLM["Ollama LLMClient<br/>DEEP_PROMPT · 7 sections"]
+    LLMQ -- no --> SKIP[skip synthesis · no placeholder]
+    LLM --> NOTE[output/deep_search/&lt;slug&gt;/per_paper/&lt;safe_id&gt;.md]
+    SKIP --> NOTE
+    NOTE --> KR[KeywordResult]
+
+    KR --> AGG[merge_papers across all keywords]
+    AGG --> BIB["unified BibTeX<br/>references_deep.bib"]
+    AGG --> AJSON[aggregate.json]
+    AGG --> AMD[aggregate_report.md]
+
+    classDef cfg fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef llm fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef out fill:#0f766e,stroke:#0f172a,color:#fff
+    class CFG,KW,LLMQ cfg
+    class SEARCH,CLIENT,ENRICH,KEYS,KR,AGG proc
+    class LLM,SKIP llm
+    class NOTE,BIB,AJSON,AMD out

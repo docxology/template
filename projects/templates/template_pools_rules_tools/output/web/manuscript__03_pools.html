@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -242,6 +242,7 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:pools">Pools: Fonds as Passive Data Resources</h1>
 <h2 id="what-is-a-fond">What Is a Fond?</h2>
 <p>A <strong>fond</strong> is a versioned, read-only data pool that any
@@ -271,8 +272,8 @@ canonical representation (BibTeX for citations, YAML for structured
 contact records, YAML for dataset metadata).</p>
 <figure id="fig:taxonomy">
 <img src="figures/fond_taxonomy.png" style="width:85.0%"
-alt="Schema taxonomy comparison across the three fond types. Each fond declares a manifest and a type field; source-of-truth format, secondary mirror, and dedup key differ by category." />
-<figcaption aria-hidden="true">Schema taxonomy comparison across the
+alt="Schema taxonomy comparison across the three fond types." />
+<figcaption>Schema taxonomy comparison across the
 three fond types. Each fond declares a manifest and a <code>type</code>
 field; source-of-truth format, secondary mirror, and dedup key differ by
 category.</figcaption>
@@ -408,5 +409,6 @@ existence-check-then-parse pattern repeats identically across
 is why <span class="citation"
 data-cites="fig:resilience">@fig:resilience</span> presents it as one
 repeated design, not three independent ad-hoc fixes.</p>
+</main>
 </body>
 </html>

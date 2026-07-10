@@ -1,6 +1,5 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  2 JUL 2026 05:28
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:28
 entering extended mode
- \write18 enabled.
  %&-line parsing enabled.
 **_combined_manuscript.tex
 (./_combined_manuscript.tex
@@ -593,12 +592,49 @@ Package graphics Info: Driver file: xetex.def on input line 106.
 )
 \pandoc@box=\box65
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2026/03/08 v26.4 The multilingual framework for LuaLaTeX, pdfLaT
+eX and XeLaTeX
+\babel@savecnt=\count327
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
+ne 2078.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
+ne 2080.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
+e 2082.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
+e 2083.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
+on input line 2084.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
+on input line 2086.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
+on input line 2111.
+\U@D=\dimen183
+\l@unhyphenated=\language91
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/babel/xebabel.def)
+\bbl@readstream=\read3
+\bbl@dirlevel=\count328
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/babel/locale/en/babel-english.t
+ex)
+Package babel Info: Importing font and identification data for english
+(babel)             from babel-en.ini. Reported on input line 4330.
+ (/usr/local/texlive/2026/texmf-dist/tex/generic/babel-english/english.ldf
+Language: english 2017/06/06 v3.3r English support from the babel system
+Package babel Info: Hyphen rules for 'canadian' set to \l@english
+(babel)             (\language0). Reported on input line 102.
+Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
+(babel)             (\language22). Reported on input line 105.
+Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
+(babel)             (\language22). Reported on input line 108.
+)) (/usr/local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip64
 \bibsep=\skip65
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count327
+\c@NAT@ctr=\count329
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/caption/subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
@@ -608,40 +644,40 @@ Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
-\caption@tempdima=\dimen183
-\captionmargin=\dimen184
-\caption@leftmargin=\dimen185
-\caption@rightmargin=\dimen186
-\caption@width=\dimen187
-\caption@indent=\dimen188
-\caption@parindent=\dimen189
-\caption@hangindent=\dimen190
+\caption@tempdima=\dimen184
+\captionmargin=\dimen185
+\caption@leftmargin=\dimen186
+\caption@rightmargin=\dimen187
+\caption@width=\dimen188
+\caption@indent=\dimen189
+\caption@parindent=\dimen190
+\caption@hangindent=\dimen191
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count328
-\c@continuedfloat=\count329
+\c@caption@flags=\count330
+\c@continuedfloat=\count331
 Package caption Info: longtable package is loaded.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ))
 Package caption Info: New subtype `subfigure' on input line 238.
-\c@subfigure=\count330
+\c@subfigure=\count332
 Package caption Info: New subtype `subtable' on input line 238.
-\c@subtable=\count331
+\c@subtable=\count333
 )
-\c@pandoccrossref@subfigures@footnote@counter=\count332
+\c@pandoccrossref@subfigures@footnote@counter=\count334
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count333
+\c@float@type=\count335
 \float@exts=\toks28
 \float@box=\box66
 \@float@everytoks=\toks29
 \@floatcapt=\box67
 )
 \@float@every@codelisting=\toks30
-\c@codelisting=\count334
+\c@codelisting=\count336
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
@@ -679,14 +715,14 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count335
+\c@section@level=\count337
 ) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen191
-\Hy@linkcounter=\count336
-\Hy@pagecounter=\count337
+\@linkdim=\dimen192
+\Hy@linkcounter=\count338
+\Hy@pagecounter=\count339
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
@@ -694,7 +730,7 @@ File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
 (/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count338
+\Hy@SavedSpaceFactor=\count340
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
@@ -707,14 +743,14 @@ Package hyperref Info: Plain pages OFF on input line 4216.
 Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
-\c@Hy@tempcnt=\count339
+\c@Hy@tempcnt=\count341
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip19
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
-\XeTeXLinkMargin=\dimen192
+\XeTeXLinkMargin=\dimen193
 
 (/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -723,9 +759,9 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count340
-\Field@Width=\dimen193
-\Fld@charsize=\dimen194
+\Fld@menulength=\count342
+\Field@Width=\dimen194
+\Fld@charsize=\dimen195
 Package hyperref Info: Hyper figures OFF on input line 6084.
 Package hyperref Info: Link nesting OFF on input line 6089.
 Package hyperref Info: Hyper index ON on input line 6092.
@@ -733,19 +769,19 @@ Package hyperref Info: backreferencing OFF on input line 6099.
 Package hyperref Info: Link coloring OFF on input line 6104.
 Package hyperref Info: Link coloring with OCG OFF on input line 6109.
 Package hyperref Info: PDF/A mode OFF on input line 6114.
-\Hy@abspage=\count341
-\c@Item=\count342
-\c@Hfootnote=\count343
+\Hy@abspage=\count343
+\c@Item=\count344
+\c@Hfootnote=\count345
 )
 Package hyperref Info: Driver (autodetected): hxetex.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
 File: hxetex.def 2026-01-29 v7.01p Hyperref driver for XeTeX
 \pdfm@box=\box68
-\c@Hy@AnnotLevel=\count344
-\HyField@AnnotCount=\count345
-\Fld@listcount=\count346
-\c@bookmark@seq@number=\count347
+\c@Hy@AnnotLevel=\count346
+\HyField@AnnotCount=\count347
+\Fld@listcount=\count348
+\c@bookmark@seq@number=\count349
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
@@ -759,12 +795,12 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip66
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count348
+\BKM@id=\count350
 ))
 (/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 151.
+Package hyperref Info: Option `colorlinks' set `true' on input line 163.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/seqsplit/seqsplit.sty
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
@@ -776,17 +812,17 @@ Package: geometry 2026/03/07 v6.0 Page Geometry
 (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count349
-\Gm@cntv=\count350
-\c@Gm@tempcnt=\count351
-\Gm@bindingoffset=\dimen195
-\Gm@wd@mp=\dimen196
-\Gm@odd@mp=\dimen197
-\Gm@even@mp=\dimen198
-\Gm@layoutwidth=\dimen199
-\Gm@layoutheight=\dimen256
-\Gm@layouthoffset=\dimen257
-\Gm@layoutvoffset=\dimen258
+\Gm@cnth=\count351
+\Gm@cntv=\count352
+\c@Gm@tempcnt=\count353
+\Gm@bindingoffset=\dimen196
+\Gm@wd@mp=\dimen197
+\Gm@odd@mp=\dimen198
+\Gm@even@mp=\dimen199
+\Gm@layoutwidth=\dimen256
+\Gm@layoutheight=\dimen257
+\Gm@layouthoffset=\dimen258
+\Gm@layoutvoffset=\dimen259
 \Gm@dimlist=\toks31
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty
@@ -805,26 +841,26 @@ LaTeX Info: Redefining \labelcpageref on input line 2370.
 )
 ==> First Aid for cleveref.sty applied!
 (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count352
+\lst@mode=\count354
 \lst@gtempboxa=\box69
 \lst@token=\toks32
-\lst@length=\count353
-\lst@currlwidth=\dimen259
-\lst@column=\count354
-\lst@pos=\count355
-\lst@lostspace=\dimen260
-\lst@width=\dimen261
-\lst@newlines=\count356
-\lst@lineno=\count357
-\lst@maxwidth=\dimen262
+\lst@length=\count355
+\lst@currlwidth=\dimen260
+\lst@column=\count356
+\lst@pos=\count357
+\lst@lostspace=\dimen261
+\lst@width=\dimen262
+\lst@newlines=\count358
+\lst@lineno=\count359
+\lst@maxwidth=\dimen263
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-\c@lstnumber=\count358
-\lst@skipnumbers=\count359
+\c@lstnumber=\count360
+\lst@skipnumbers=\count361
 \lst@framebox=\box70
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
@@ -838,44 +874,44 @@ Package: listings 2025/11/14 1.11b (Carsten Heinz)
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-Package hyperref Info: Option `colorlinks' set `true' on input line 174.
+Package hyperref Info: Option `colorlinks' set `true' on input line 188.
 (./_combined_manuscript.aux)
 \openout1 = `_combined_manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 176.
-LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 190.
+LaTeX Font Info:    ... okay on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 176.
+(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 176.
+(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 176.
+(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 176.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 176.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 176.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 190.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 176.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 190.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -906,7 +942,7 @@ pt=math;language=dflt;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 176.
+(Font)              scaled to size 10.0pt on input line 190.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -949,18 +985,18 @@ ath.otf]/OT:script=math;language=dflt;+ssty=1;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 176.
+(Font)              scaled to size 10.0pt on input line 190.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 176.
+(Font)              `operators' in the math version `normal' on input line 190.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 176.
+ line 190.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 176.
+(Font)              `operators' in the math version `bold' on input line 190.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 176.
+t line 190.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1034,15 +1070,15 @@ ript=math;language=dflt;"<6-8.5>s*[1.000096459334209]"[latinmodern-math.otf]/OT
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 176.
+(Font)              `symbols' in the math version `normal' on input line 190.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/cmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 176.
+t line 190.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 176.
+(Font)              `symbols' in the math version `bold' on input line 190.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/cmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 176.
+t line 190.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1111,23 +1147,23 @@ pt=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-76.
+90.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 176.
+t line 190.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 176
+(Font)              `largesymbols' in the math version `bold' on input line 190
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 176.
-LaTeX Info: Redefining \microtypecontext on input line 176.
-Package microtype Info: Applying patch `item' on input line 176.
-Package microtype Info: Applying patch `toc' on input line 176.
-Package microtype Info: Applying patch `eqnum' on input line 176.
-Package microtype Info: Applying patch `footnote' on input line 176.
-Package microtype Info: Applying patch `verbatim' on input line 176.
-LaTeX Info: Redefining \microtypesetup on input line 176.
+t line 190.
+LaTeX Info: Redefining \microtypecontext on input line 190.
+Package microtype Info: Applying patch `item' on input line 190.
+Package microtype Info: Applying patch `toc' on input line 190.
+Package microtype Info: Applying patch `eqnum' on input line 190.
+Package microtype Info: Applying patch `footnote' on input line 190.
+Package microtype Info: Applying patch `verbatim' on input line 190.
+LaTeX Info: Redefining \microtypesetup on input line 190.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1148,7 +1184,7 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 176.
+Package hyperref Info: Link coloring ON on input line 190.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1184,27 +1220,28 @@ Package hyperref Info: Link coloring ON on input line 176.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@lstlisting=\count360
+\c@lstlisting=\count362
 [1
 
 ] (./_combined_manuscript.toc
+Package cleveref Info: loaded `english' language definitions on input line 1.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 4.
+(Font)              scaled to size 7.0pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 4.
+(Font)              scaled to size 5.0pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 4.
+(Font)              scaled to size 10.00092pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 4.
+(Font)              scaled to size 7.00064pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 4.
+(Font)              scaled to size 5.00046pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 4.
+(Font)              scaled to size 9.99893pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 4.
+(Font)              scaled to size 6.99925pt on input line 5.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 4.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 4.
+(Font)              scaled to size 4.99947pt on input line 5.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 5.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1212,7 +1249,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 4.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 5.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1225,7 +1262,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
  [1]
 [2] [3]
-Underfull \hbox (badness 1533) in paragraph at lines 431--436
+Underfull \hbox (badness 1533) in paragraph at lines 443--448
 []\TU/lmtt/m/n/10 AbstractFetcher \TU/lmr/m/n/10 — currently fetches arXiv abst
 racts via the export API, writes them to
  []
@@ -1239,861 +1276,857 @@ File: ../figures/score_distribution.png Graphic file (type bmp)
 <../figures/score_distribution.png>
  [6] [7] [8] [9]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 796.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 808.
  [10]
+File: ../figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png Graphic fi
+le (type bmp)
+<../figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png>
 
-LaTeX Warning: Float too large for page by 579.95998pt on input line 942.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 976--979
+Underfull \hbox (badness 10000) in paragraph at lines 886--889
 []\TU/lmtt/m/n/10 ../figures/{papers_per_source,year_histogram,score_distributi
 on}.png \TU/lmr/m/n/10 — diagnostic
  []
 
-[11] [12] [13] [14]
-ignored: Infinite glue shrinkage found in box being split [15] [16]
-Overfull \hbox (18.49498pt too wide) in paragraph at lines 1374--1374
-[]    \TU/lmtt/m/n/10 SEARCH --> CLIENT["LiteratureClient<br/>aggregates arxiv 
-· crossref · local · paperclip"][] 
- []
-
-[17] [18] [19] [20]
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1600--1603
+[11]
+File: ../figures/mermaid_inline/inline_mermaid_0002_99a3f6d43208.png Graphic fi
+le (type bmp)
+<../figures/mermaid_inline/inline_mermaid_0002_99a3f6d43208.png>
+ [12]
+ignored: Infinite glue shrinkage found in box being split [13] [14]
+File: ../figures/mermaid_inline/inline_mermaid_0003_80a863d1871e.png Graphic fi
+le (type bmp)
+<../figures/mermaid_inline/inline_mermaid_0003_80a863d1871e.png>
+ [15] [16]
+File: ../figures/mermaid_inline/inline_mermaid_0004_7fdb10e9eb30.png Graphic fi
+le (type bmp)
+<../figures/mermaid_inline/inline_mermaid_0004_7fdb10e9eb30.png>
+ [17] [18]
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1417--1420
 \TU/lmr/m/n/10 10.1017/cbo9780511804441.005 
  []
 
 
-Overfull \hbox (34.87741pt too wide) in paragraph at lines 1603--1606
+Overfull \hbox (34.87741pt too wide) in paragraph at lines 1420--1423
 \TU/lmr/m/n/10 10.1017/cbo9780511804441.004 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1609--1612
-\TU/lmr/m/n/10 10.1017/9781108699211.006 
- []
-
-
-Overfull \hbox (18.66742pt too wide) in paragraph at lines 1612--1615
+Overfull \hbox (18.66742pt too wide) in paragraph at lines 1426--1429
 \TU/lmr/m/n/10 10.1561/9781638280538.ch1 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1616--1618
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1429--1432
+\TU/lmr/m/n/10 10.1017/9781108699211.006 
+ []
+
+
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1433--1435
 \TU/lmr/m/n/10 10.1017/9781108699211.015 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1627--1630
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1444--1447
 \TU/lmr/m/n/10 10.1017/cbo9780511804441.003 
  []
 
 
-Overfull \hbox (19.44742pt too wide) in paragraph at lines 1639--1642
+Overfull \hbox (19.44742pt too wide) in paragraph at lines 1456--1459
 \TU/lmr/m/n/10 10.1515/9783110361629.117 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1666--1669
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1483--1486
 \TU/lmr/m/n/10 10.1017/9781009510561.012 
  []
 
 
-Overfull \hbox (21.91742pt too wide) in paragraph at lines 1675--1678
+Overfull \hbox (21.91742pt too wide) in paragraph at lines 1492--1495
 \TU/lmr/m/n/10 10.1080/02331930500096270 
  []
 
 
-Overfull \hbox (18.94742pt too wide) in paragraph at lines 1679--1681
+Overfull \hbox (18.94742pt too wide) in paragraph at lines 1496--1498
 \TU/lmr/m/n/10 10.1017/9781009510561.021 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1687--1689
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1502--1504
 \TU/lmr/m/n/10 10.1017/cbo9780511804458.002 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 1695--1698
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 1515--1518
 \TU/lmr/m/n/10 10.1515/9780691200316- 
  []
 
 
-Overfull \hbox (14.69742pt too wide) in paragraph at lines 1701--1704
+Overfull \hbox (14.69742pt too wide) in paragraph at lines 1518--1521
 \TU/lmr/m/n/10 10.1515/9783110361629.30 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1704--1707
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1521--1524
 \TU/lmr/m/n/10 10.1017/9781108980647.012 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 1707--1710
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 1524--1527
 \TU/lmr/m/n/10 10.1201/9781315366920- 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1716--1719
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.002 
- []
-
-
-Overfull \hbox (19.59741pt too wide) in paragraph at lines 1720--1722
+Overfull \hbox (19.59741pt too wide) in paragraph at lines 1534--1536
 \TU/lmr/m/n/10 10.1017/9781009510561.024 
  []
 
 
-Overfull \hbox (34.22742pt too wide) in paragraph at lines 1731--1734
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.001 
- []
-
-
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1735--1737
-\TU/lmr/m/n/10 10.1017/9781108377447.033 
- []
-
-
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1740--1743
-\TU/lmr/m/n/10 10.1017/9781009510561.003 
- []
-
-
-Overfull \hbox (19.41742pt too wide) in paragraph at lines 1743--1746
-\TU/lmr/m/n/10 10.1002/9781119804093.ch2 
- []
-
-
-Overfull \hbox (19.41742pt too wide) in paragraph at lines 1746--1749
+Overfull \hbox (19.41742pt too wide) in paragraph at lines 1536--1539
 \TU/lmr/m/n/10 10.1002/9781119804093.ch3 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1750--1752
-\TU/lmr/m/n/10 10.1017/9781009510561.013 
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1546--1548
+\TU/lmr/m/n/10 10.1017/9781108377447.033 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1756--1759
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.016 
+Overfull \hbox (34.22742pt too wide) in paragraph at lines 1551--1554
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.001 
  []
 
 
-Overfull \hbox (21.91742pt too wide) in paragraph at lines 1764--1766
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1554--1557
+\TU/lmr/m/n/10 10.1017/9781009510561.003 
+ []
+
+
+Overfull \hbox (19.41742pt too wide) in paragraph at lines 1557--1560
+\TU/lmr/m/n/10 10.1002/9781119804093.ch2 
+ []
+
+
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1563--1566
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.002 
+ []
+
+
+Overfull \hbox (21.91742pt too wide) in paragraph at lines 1568--1570
 \TU/lmr/m/n/10 10.1080/02331939908844436 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1770--1772
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1571--1573
+\TU/lmr/m/n/10 10.1017/9781009510561.013 
+ []
+
+
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1577--1580
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.016 
+ []
+
+
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1587--1589
 \TU/lmr/m/n/10 10.1017/9781009510561.020 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1776--1778
-\TU/lmr/m/n/10 10.1017/9781009510561.015 
- []
-
-
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1779--1781
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1593--1595
 \TU/lmr/m/n/10 10.1017/9781009510561.023 
  []
 
 
-Overfull \hbox (23.89743pt too wide) in paragraph at lines 1782--1784
-\TU/lmr/m/n/10 ton/9780691197296.001.0001 
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1596--1598
+\TU/lmr/m/n/10 10.1017/9781009510561.015 
  []
 
 
-Overfull \hbox (9.69742pt too wide) in paragraph at lines 1789--1791
-\TU/lmr/m/n/10 10.1023/a:1021792726715 
- []
-
-
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1794--1797
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.010 
- []
-
-
-Overfull \hbox (22.07742pt too wide) in paragraph at lines 1798--1801
+Overfull \hbox (22.07742pt too wide) in paragraph at lines 1599--1602
 \TU/lmr/m/n/10 10.1016/j.disopt.2014.12.001 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1804--1807
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.009 
+Overfull \hbox (23.89743pt too wide) in paragraph at lines 1603--1605
+\TU/lmr/m/n/10 ton/9780691197296.001.0001 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1807--1810
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.008 
+Overfull \hbox (9.69742pt too wide) in paragraph at lines 1610--1612
+\TU/lmr/m/n/10 10.1023/a:1021792726715 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1811--1813
-\TU/lmr/m/n/10 10.1017/9781009510561.025 
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1615--1618
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.010 
  []
 
 
-Overfull \hbox (9.69742pt too wide) in paragraph at lines 1814--1816
+Overfull \hbox (9.69742pt too wide) in paragraph at lines 1619--1621
 \TU/lmr/m/n/10 10.1023/a:1017532225395 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1816--1819
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1621--1624
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.008 
+ []
+
+
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1624--1627
 \TU/lmr/m/n/10 10.1017/cbo9780511804441.013 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1820--1822
-\TU/lmr/m/n/10 10.1017/9781009510561.009 
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1627--1630
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.009 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 1822--1825
-\TU/lmr/m/n/10 10.1017/9781009493512.006 
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1634--1636
+\TU/lmr/m/n/10 10.1017/9781009510561.025 
  []
 
 
-Overfull \hbox (21.91742pt too wide) in paragraph at lines 1826--1828
-\TU/lmr/m/n/10 10.1080/02331939208843789 
- []
-
-
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1829--1831
-\TU/lmr/m/n/10 10.1017/cbo9780511804458.010 
- []
-
-
-Overfull \hbox (19.31741pt too wide) in paragraph at lines 1832--1834
-\TU/lmr/m/n/10 10.1002/9781119804093.ch4 
- []
-
-
-Overfull \hbox (18.94742pt too wide) in paragraph at lines 1834--1837
-\TU/lmr/m/n/10 10.1017/9781009428095.021 
- []
-
-
-Overfull \hbox (61.41742pt too wide) in paragraph at lines 1840--1843
+Overfull \hbox (61.41742pt too wide) in paragraph at lines 1636--1639
 \TU/lmr/m/n/10 10.1093/oso/9780195100563.003.0006 
  []
 
 
-Overfull \hbox (9.59741pt too wide) in paragraph at lines 1843--1846
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1640--1642
+\TU/lmr/m/n/10 10.1017/cbo9780511804458.010 
+ []
+
+
+Overfull \hbox (19.31741pt too wide) in paragraph at lines 1646--1648
+\TU/lmr/m/n/10 10.1002/9781119804093.ch4 
+ []
+
+
+Overfull \hbox (9.59741pt too wide) in paragraph at lines 1648--1651
 \TU/lmr/m/n/10 10.2478/9783110426045.4 
  []
 
 
-Overfull \hbox (34.22742pt too wide) in paragraph at lines 1860--1862
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1651--1654
+\TU/lmr/m/n/10 10.1017/9781009493512.006 
+ []
+
+
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1655--1657
+\TU/lmr/m/n/10 10.1017/9781009510561.009 
+ []
+
+
+Overfull \hbox (21.91742pt too wide) in paragraph at lines 1658--1660
+\TU/lmr/m/n/10 10.1080/02331939208843789 
+ []
+
+
+Overfull \hbox (18.94742pt too wide) in paragraph at lines 1663--1666
+\TU/lmr/m/n/10 10.1017/9781009428095.021 
+ []
+
+
+Overfull \hbox (34.22742pt too wide) in paragraph at lines 1674--1676
 \TU/lmr/m/n/10 10.1017/cbo9780511804441.011 
  []
 
 
-Overfull \hbox (34.72742pt too wide) in paragraph at lines 1862--1865
+Overfull \hbox (34.72742pt too wide) in paragraph at lines 1676--1679
 \TU/lmr/m/n/10 10.1017/cbo9780511804441.007 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1868--1871
-\TU/lmr/m/n/10 10.1017/cbo9780511804441.006 
- []
-
-
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1871--1874
-\TU/lmr/m/n/10 10.1017/cbo9781139924672.002 
- []
-
-
-Overfull \hbox (37.47742pt too wide) in paragraph at lines 1876--1878
+Overfull \hbox (37.47742pt too wide) in paragraph at lines 1684--1686
 \TU/lmr/m/n/10 10.1080/02331934.2024.2388200 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1881--1884
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1692--1695
+\TU/lmr/m/n/10 10.1017/cbo9780511804441.006 
+ []
+
+
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1695--1698
+\TU/lmr/m/n/10 10.1017/cbo9781139924672.002 
+ []
+
+
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1705--1708
 \TU/lmr/m/n/10 10.1017/cbo9781139924672.003 
  []
 
 
-Overfull \hbox (34.22742pt too wide) in paragraph at lines 1887--1889
+Overfull \hbox (34.22742pt too wide) in paragraph at lines 1708--1710
 \TU/lmr/m/n/10 10.1017/cbo9781139924672.001 
  []
 
 
-Overfull \hbox (34.72742pt too wide) in paragraph at lines 1900--1903
+Overfull \hbox (34.72742pt too wide) in paragraph at lines 1714--1717
 \TU/lmr/m/n/10 10.1017/cbo9781139924672.007 
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [21]
+ignored: Infinite glue shrinkage found in box being split [19]
 ignored: Infinite glue shrinkage fo
-und in box being split [22]
-ignored: Infinite glue shrinkage found in box being split [23
+und in box being split [20]
+ignored: Infinite glue shrinkage found in box being split [21
 ]
-ignored: Infinite glue shrinkage found in box being split [24]
+ignored: Infinite glue shrinkage found in box being split [22]
 ignored: Infinite glue shrinkage f
-ound in box being split [25]
+ound in box being split [23]
 ignored: Infinite glue shrinkage found in box being split [2
-6]
-Overfull \hbox (40.16742pt too wide) in paragraph at lines 1936--1939
+4]
+Overfull \hbox (40.16742pt too wide) in paragraph at lines 1753--1756
 \TU/lmr/m/n/10 10.7490/f1000research.1115776.1 
  []
 
 
-Overfull \hbox (41.14742pt too wide) in paragraph at lines 1942--1945
+Overfull \hbox (41.14742pt too wide) in paragraph at lines 1759--1762
 \TU/lmr/m/n/10 10.32614/cran.package.coxphsgd 
  []
 
 
-Overfull \hbox (34.97742pt too wide) in paragraph at lines 1954--1957
+Overfull \hbox (34.97742pt too wide) in paragraph at lines 1771--1774
 \TU/lmr/m/n/10 10.1017/cbo9781107298019.015 
  []
 
 
-Overfull \hbox (53.22742pt too wide) in paragraph at lines 1958--1958
+Overfull \hbox (53.22742pt too wide) in paragraph at lines 1775--1775
 []|\TU/lmr/m/n/10 10.1117/12.2305101.5783306294001|  
  []
 
 
-Overfull \hbox (51.72742pt too wide) in paragraph at lines 1958--1961
+Overfull \hbox (51.72742pt too wide) in paragraph at lines 1775--1778
 \TU/lmr/m/n/10 10.1117/12.2305101.5783306294001 
  []
 
 
-Overfull \hbox (53.22742pt too wide) in paragraph at lines 1962--1962
+Overfull \hbox (53.22742pt too wide) in paragraph at lines 1782--1782
 []|\TU/lmr/m/n/10 10.1117/12.2512817.6013939792001|  
  []
 
 
-Overfull \hbox (51.72742pt too wide) in paragraph at lines 1962--1965
+Overfull \hbox (51.72742pt too wide) in paragraph at lines 1782--1785
 \TU/lmr/m/n/10 10.1117/12.2512817.6013939792001 
  []
 
 
-Overfull \hbox (53.22742pt too wide) in paragraph at lines 1969--1969
+Overfull \hbox (53.22742pt too wide) in paragraph at lines 1786--1786
 []|\TU/lmr/m/n/10 10.1117/12.2643564.6314793833112|  
  []
 
 
-Overfull \hbox (52.47742pt too wide) in paragraph at lines 1969--1972
+Overfull \hbox (52.47742pt too wide) in paragraph at lines 1786--1789
 \TU/lmr/m/n/10 10.1117/12.2643564.6314793833112 
  []
 
 
-Overfull \hbox (4.14743pt too wide) in paragraph at lines 1973--1976
+Overfull \hbox (4.14743pt too wide) in paragraph at lines 1790--1793
 \TU/lmr/m/n/10 10.25148/etd.fidc009555 
  []
 
 
-Overfull \hbox (16.91742pt too wide) in paragraph at lines 1989--1991
-\TU/lmr/m/n/10 10.5220/0012687400003702 
- []
-
-
-Overfull \hbox (113.04742pt too wide) in paragraph at lines 1993--1995
+Overfull \hbox (113.04742pt too wide) in paragraph at lines 1804--1806
 \TU/lmr/m/n/10 10.70675/f938eaabz37fcz4483zba85z57f0849e7747 
  []
 
 
-Overfull \hbox (8.65742pt too wide) in paragraph at lines 1996--1999
+Overfull \hbox (16.91742pt too wide) in paragraph at lines 1807--1809
+\TU/lmr/m/n/10 10.5220/0012687400003702 
+ []
+
+
+Overfull \hbox (8.65742pt too wide) in paragraph at lines 1813--1816
 \TU/lmr/m/n/10 10.3329/dujs.v64i2.54490 
  []
 
 
-Overfull \hbox (32.31741pt too wide) in paragraph at lines 2000--2003
-\TU/lmr/m/n/10 10.36227/techrxiv.19350536.v1 
- []
-
-
-Overfull \hbox (36.77742pt too wide) in paragraph at lines 2005--2007
+Overfull \hbox (36.77742pt too wide) in paragraph at lines 1818--1820
 \TU/lmr/m/n/10 10.1109/tsp.2025.3546574/mm1 
  []
 
 
-Overfull \hbox (20.00743pt too wide) in paragraph at lines 2008--2011
-\TU/lmr/m/n/10 10.36227/techrxiv.19350536 
+Overfull \hbox (32.31741pt too wide) in paragraph at lines 1821--1824
+\TU/lmr/m/n/10 10.36227/techrxiv.19350536.v1 
  []
 
 
-Overfull \hbox (82.31741pt too wide) in paragraph at lines 2012--2015
+Overfull \hbox (82.31741pt too wide) in paragraph at lines 1825--1828
 \TU/lmr/m/n/10 10.36227/techrxiv.176162233.33076025/v1 
  []
 
 
-Overfull \hbox (27.38742pt too wide) in paragraph at lines 2016--2016
+Overfull \hbox (20.00743pt too wide) in paragraph at lines 1829--1832
+\TU/lmr/m/n/10 10.36227/techrxiv.19350536 
+ []
+
+
+Overfull \hbox (27.38742pt too wide) in paragraph at lines 1833--1833
 []|\TU/lmr/m/n/10 10.1117/12.3028105.e628af96- 
  []
 
 
-Overfull \hbox (26.88742pt too wide) in paragraph at lines 2016--2019
+Overfull \hbox (26.88742pt too wide) in paragraph at lines 1833--1836
 \TU/lmr/m/n/10 10.1117/12.3028105.e628af96- 
  []
 
 
-Overfull \hbox (43.07742pt too wide) in paragraph at lines 2020--2022
-\TU/lmr/m/n/10 10.1109/wsc60868.2023.10408023 
- []
-
-
-Overfull \hbox (47.62743pt too wide) in paragraph at lines 2023--2026
+Overfull \hbox (47.62743pt too wide) in paragraph at lines 1837--1840
 \TU/lmr/m/n/10 10.32614/cran.package.bigsurvsgd 
  []
 
 
-Overfull \hbox (16.16742pt too wide) in paragraph at lines 2046--2049
+Overfull \hbox (43.07742pt too wide) in paragraph at lines 1841--1843
+\TU/lmr/m/n/10 10.1109/wsc60868.2023.10408023 
+ []
+
+
+Overfull \hbox (16.16742pt too wide) in paragraph at lines 1864--1867
 \TU/lmr/m/n/10 10.5220/0011795500003411 
  []
 
 
-Overfull \hbox (53.22742pt too wide) in paragraph at lines 2050--2050
+Overfull \hbox (53.22742pt too wide) in paragraph at lines 1875--1875
 []|\TU/lmr/m/n/10 10.1117/12.2599744.6269411057001|  
  []
 
 
-Overfull \hbox (51.72742pt too wide) in paragraph at lines 2050--2053
+Overfull \hbox (51.72742pt too wide) in paragraph at lines 1875--1878
 \TU/lmr/m/n/10 10.1117/12.2599744.6269411057001 
  []
 
 
-Overfull \hbox (119.92741pt too wide) in paragraph at lines 2059--2061
+Overfull \hbox (119.92741pt too wide) in paragraph at lines 1880--1882
 \TU/lmr/m/n/10 10.70675/674d4873zb009z425cz9c8ezb792c820253d 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 2068--2071
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 1889--1892
 \TU/lmr/m/n/10 10.1017/9781108860604.006 
  []
 
 
-Overfull \hbox (38.42741pt too wide) in paragraph at lines 2087--2090
+Overfull \hbox (38.42741pt too wide) in paragraph at lines 1905--1908
 \TU/lmr/m/n/10 10.1109/icpr48806.2021.9412831 
  []
 
 
-Overfull \hbox (5.11743pt too wide) in paragraph at lines 2091--2094
+Overfull \hbox (5.11743pt too wide) in paragraph at lines 1921--1924
 \TU/lmr/m/n/10 10.15607/rss.2015.xi.002 
  []
 
 
-Overfull \hbox (48.94742pt too wide) in paragraph at lines 2123--2126
+Overfull \hbox (48.94742pt too wide) in paragraph at lines 1943--1946
 \TU/lmr/m/n/10 10.1109/tpami.2025.3610169/mm1 
  []
 
 
-Overfull \hbox (11.91742pt too wide) in paragraph at lines 2134--2137
+Overfull \hbox (11.91742pt too wide) in paragraph at lines 1963--1966
 \TU/lmr/m/n/10 10.3788/col202018.101403 
  []
 
 
-Overfull \hbox (9.69742pt too wide) in paragraph at lines 2150--2152
+Overfull \hbox (9.69742pt too wide) in paragraph at lines 1984--1986
 \TU/lmr/m/n/10 10.1145/3411408.3411436 
  []
 
 
-Overfull \hbox (27.74742pt too wide) in paragraph at lines 2165--2167
+Overfull \hbox (27.74742pt too wide) in paragraph at lines 1991--1993
 \TU/lmr/m/n/10 10.53759/7669/jmc202404032 
  []
 
 
-Overfull \hbox (53.22742pt too wide) in paragraph at lines 2168--2168
+Overfull \hbox (53.22742pt too wide) in paragraph at lines 1997--1997
 []|\TU/lmr/m/n/10 10.1117/12.2525953.6062680904001|  
  []
 
 
-Overfull \hbox (51.72742pt too wide) in paragraph at lines 2168--2171
+Overfull \hbox (51.72742pt too wide) in paragraph at lines 1997--2000
 \TU/lmr/m/n/10 10.1117/12.2525953.6062680904001 
  []
 
 
-Overfull \hbox (16.87741pt too wide) in paragraph at lines 2185--2187
+Overfull \hbox (16.87741pt too wide) in paragraph at lines 2012--2014
 \TU/lmr/m/n/10 10.1016/j.asoc.2021.107084 
  []
 
 
-Overfull \hbox (16.10742pt too wide) in paragraph at lines 2188--2191
+Overfull \hbox (16.10742pt too wide) in paragraph at lines 2015--2018
 \TU/lmr/m/n/10 10.23919/acc.2017.7963007 
  []
 
 
-Overfull \hbox (35.86742pt too wide) in paragraph at lines 2196--2199
+Overfull \hbox (35.86742pt too wide) in paragraph at lines 2019--2022
 \TU/lmr/m/n/10 10.1109/isit44484.2020.9174363 
  []
 
 
-Overfull \hbox (16.35742pt too wide) in paragraph at lines 2200--2202
+Overfull \hbox (16.35742pt too wide) in paragraph at lines 2023--2025
 \TU/lmr/m/n/10 10.23919/acc.2019.8814666 
  []
 
 
-Overfull \hbox (29.06743pt too wide) in paragraph at lines 2203--2203
+Overfull \hbox (29.06743pt too wide) in paragraph at lines 2026--2026
 []|\TU/lmr/m/n/10 10.1117/12.3026153.0df877b5- 
  []
 
 
-Overfull \hbox (28.56743pt too wide) in paragraph at lines 2203--2206
+Overfull \hbox (28.56743pt too wide) in paragraph at lines 2026--2029
 \TU/lmr/m/n/10 10.1117/12.3026153.0df877b5- 
  []
 
 
-Overfull \hbox (12.57742pt too wide) in paragraph at lines 2210--2212
+Overfull \hbox (12.57742pt too wide) in paragraph at lines 2043--2045
 \TU/lmr/m/n/10 10.1109/ssci.2016.7849933 
  []
 
 
-Overfull \hbox (4.42743pt too wide) in paragraph at lines 2221--2223
-\TU/lmr/m/n/10 10.1109/mlhpc.2016.010 
- []
-
-
-Overfull \hbox (14.13742pt too wide) in paragraph at lines 2224--2226
-\TU/lmr/m/n/10 10.1109/icca.2009.5410612 
- []
-
-
-Overfull \hbox (15.29742pt too wide) in paragraph at lines 2234--2236
-\TU/lmr/m/n/10 10.21437/interspeech.2019- 
- []
-
-
-Overfull \hbox (15.79742pt too wide) in paragraph at lines 2237--2240
-\TU/lmr/m/n/10 10.23919/ecc.2019.8796130 
- []
-
-
-Overfull \hbox (14.75743pt too wide) in paragraph at lines 2241--2243
-\TU/lmr/m/n/10 10.1016/j.asoc.2018.09.038 
- []
-
-
-Overfull \hbox (36.77742pt too wide) in paragraph at lines 2248--2251
+Overfull \hbox (36.77742pt too wide) in paragraph at lines 2054--2057
 \TU/lmr/m/n/10 10.1109/tsp.2023.3297053/mm1 
  []
 
 
-Overfull \hbox (19.69742pt too wide) in paragraph at lines 2252--2254
-\TU/lmr/m/n/10 10.1017/9781009509435.009 
+Overfull \hbox (4.42743pt too wide) in paragraph at lines 2058--2060
+\TU/lmr/m/n/10 10.1109/mlhpc.2016.010 
  []
 
 
-Overfull \hbox (36.35742pt too wide) in paragraph at lines 2255--2258
-\TU/lmr/m/n/10 10.1109/cac53003.2021.9727635 
+Overfull \hbox (15.29742pt too wide) in paragraph at lines 2068--2070
+\TU/lmr/m/n/10 10.21437/interspeech.2019- 
  []
 
 
-Overfull \hbox (1.35742pt too wide) in paragraph at lines 2267--2269
-\TU/lmr/m/n/10 10.1162/neco_a_01668 
+Overfull \hbox (15.79742pt too wide) in paragraph at lines 2071--2074
+\TU/lmr/m/n/10 10.23919/ecc.2019.8796130 
  []
 
 
-Overfull \hbox (24.41742pt too wide) in paragraph at lines 2273--2276
-\TU/lmr/m/n/10 10.1016/j.sigpro.2020.107494 
- []
-
-
-Overfull \hbox (13.61743pt too wide) in paragraph at lines 2280--2282
+Overfull \hbox (13.61743pt too wide) in paragraph at lines 2075--2077
 \TU/lmr/m/n/10 10.1109/icra.2014.6907482 
  []
 
 
-Overfull \hbox (23.94742pt too wide) in paragraph at lines 2286--2289
-\TU/lmr/m/n/10 10.1109/cai59869.2024.00241 
+Overfull \hbox (14.75743pt too wide) in paragraph at lines 2081--2083
+\TU/lmr/m/n/10 10.1016/j.asoc.2018.09.038 
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [27]
+Overfull \hbox (14.13742pt too wide) in paragraph at lines 2091--2093
+\TU/lmr/m/n/10 10.1109/icca.2009.5410612 
+ []
+
+
+Overfull \hbox (19.69742pt too wide) in paragraph at lines 2094--2096
+\TU/lmr/m/n/10 10.1017/9781009509435.009 
+ []
+
+
+Overfull \hbox (36.35742pt too wide) in paragraph at lines 2097--2100
+\TU/lmr/m/n/10 10.1109/cac53003.2021.9727635 
+ []
+
+
+Overfull \hbox (24.41742pt too wide) in paragraph at lines 2101--2104
+\TU/lmr/m/n/10 10.1016/j.sigpro.2020.107494 
+ []
+
+
+Overfull \hbox (1.35742pt too wide) in paragraph at lines 2106--2108
+\TU/lmr/m/n/10 10.1162/neco_a_01668 
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [25]
 ignored: Infinite glue shrinkage fo
-und in box being split [28]
-ignored: Infinite glue shrinkage found in box being split [29
+und in box being split [26]
+ignored: Infinite glue shrinkage found in box being split [27
 ]
-ignored: Infinite glue shrinkage found in box being split [30]
+ignored: Infinite glue shrinkage found in box being split [28]
 ignored: Infinite glue shrinkage f
-ound in box being split [31]
+ound in box being split [29]
 ignored: Infinite glue shrinkage found in box being split [3
-2]
-ignored: Infinite glue shrinkage found in box being split [33]
+0]
+ignored: Infinite glue shrinkage found in box being split [31]
 ignored: Infinite glue shrinkage 
-found in box being split [34]
+found in box being split [32]
 ignored: Infinite glue shrinkage found in box being split [
-35]
-ignored: Infinite glue shrinkage found in box being split [36]
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2322--2324
+33]
+ignored: Infinite glue shrinkage found in box being split [34]
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2140--2142
 \TU/lmr/m/n/10 10.1201/9781315382548- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2325--2327
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2143--2145
 \TU/lmr/m/n/10 10.1201/9780429031854- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2328--2330
-\TU/lmr/m/n/10 10.1201/9780429031854- 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2331--2333
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2146--2148
 \TU/lmr/m/n/10 10.1201/9781315382548- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2334--2336
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2149--2151
+\TU/lmr/m/n/10 10.1201/9780429031854- 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2152--2154
 \TU/lmr/m/n/10 10.1201/9781315373461- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2337--2339
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2155--2157
 \TU/lmr/m/n/10 10.1201/9781315373461- 
  []
 
 
-Overfull \hbox (65.85742pt too wide) in paragraph at lines 2339--2342
+Overfull \hbox (65.85742pt too wide) in paragraph at lines 2157--2160
 \TU/lmr/m/n/10 10.1093/hesc/9780192896599.003.0019 
  []
 
 
-Overfull \hbox (0.82742pt too wide) in paragraph at lines 2342--2345
+Overfull \hbox (0.82742pt too wide) in paragraph at lines 2163--2166
 \TU/lmr/m/n/10 10.2307/j.ctvpb3xkg.16 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2346--2348
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2167--2169
 \TU/lmr/m/n/10 10.1201/9781315373461- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2349--2351
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2170--2172
 \TU/lmr/m/n/10 10.1201/9781315373461- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2351--2354
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2172--2175
 \TU/lmr/m/n/10 10.1525/9780520969230- 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2355--2357
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2176--2178
 \TU/lmr/m/n/10 10.1201/9781315373461- 
  []
 
 
-Overfull \hbox (57.91742pt too wide) in paragraph at lines 2368--2370
+Overfull \hbox (57.91742pt too wide) in paragraph at lines 2185--2187
 \TU/lmr/m/n/10 10.12688/f1000research.channels.908 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2371--2373
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2192--2194
 \TU/lmr/m/n/10 10.1201/9781315373461- 
  []
 
 
-Overfull \hbox (38.03741pt too wide) in paragraph at lines 2377--2379
+Overfull \hbox (38.03741pt too wide) in paragraph at lines 2198--2200
 \TU/lmr/m/n/10 10.32614/cran.package.pewdata 
  []
 
 
-Overfull \hbox (61.31741pt too wide) in paragraph at lines 2391--2394
-\TU/lmr/m/n/10 10.1093/oso/9780198798170.003.0004 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2404--2406
-\TU/lmr/m/n/10 10.1525/9780520967779- 
- []
-
-
-Overfull \hbox (1.81741pt too wide) in paragraph at lines 2407--2409
-\TU/lmr/m/n/10 10.1201/9780429031854 
- []
-
-
-Overfull \hbox (1.91742pt too wide) in paragraph at lines 2413--2415
-\TU/lmr/m/n/10 10.1201/9781315382548 
- []
-
-
-Overfull \hbox (42.93741pt too wide) in paragraph at lines 2422--2424
+Overfull \hbox (42.93741pt too wide) in paragraph at lines 2201--2203
 \TU/lmr/m/n/10 10.22541/au.151460905.57485984 
  []
 
 
-Overfull \hbox (40.16742pt too wide) in paragraph at lines 2425--2427
+Overfull \hbox (61.31741pt too wide) in paragraph at lines 2209--2212
+\TU/lmr/m/n/10 10.1093/oso/9780198798170.003.0004 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2228--2230
+\TU/lmr/m/n/10 10.1525/9780520967779- 
+ []
+
+
+Overfull \hbox (1.81741pt too wide) in paragraph at lines 2231--2233
+\TU/lmr/m/n/10 10.1201/9780429031854 
+ []
+
+
+Overfull \hbox (22.84743pt too wide) in paragraph at lines 2237--2239
+\TU/lmr/m/n/10 10.15200/winn.146397.78741 
+ []
+
+
+Overfull \hbox (1.91742pt too wide) in paragraph at lines 2240--2242
+\TU/lmr/m/n/10 10.1201/9781315382548 
+ []
+
+
+Overfull \hbox (40.16742pt too wide) in paragraph at lines 2243--2245
 \TU/lmr/m/n/10 10.7490/f1000research.1112876.1 
  []
 
 
-Overfull \hbox (40.16742pt too wide) in paragraph at lines 2428--2430
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2252--2254
+\TU/lmr/m/n/10 10.1525/9780520967779- 
+ []
+
+
+Overfull \hbox (40.16742pt too wide) in paragraph at lines 2257--2259
 \TU/lmr/m/n/10 10.7490/f1000research.1115901.1 
  []
 
 
-Overfull \hbox (31.91742pt too wide) in paragraph at lines 2439--2441
+Overfull \hbox (10.12743pt too wide) in paragraph at lines 2260--2262
+\TU/lmr/m/n/10 10.31235/osf.io/yx7af_v1 
+ []
+
+
+Overfull \hbox (31.91742pt too wide) in paragraph at lines 2263--2265
 \TU/lmr/m/n/10 10.4135/9781526421036926480 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2442--2444
-\TU/lmr/m/n/10 10.1525/9780520967779- 
- []
-
-
-Overfull \hbox (1.66742pt too wide) in paragraph at lines 2456--2458
+Overfull \hbox (1.66742pt too wide) in paragraph at lines 2280--2282
 \TU/lmr/m/n/10 10.4135/9781036230647 
  []
 
 
-Overfull \hbox (18.30742pt too wide) in paragraph at lines 2464--2466
+Overfull \hbox (18.30742pt too wide) in paragraph at lines 2292--2294
 \TU/lmr/m/n/10 10.21428/1192f2f8.fb1a1b7f 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2467--2470
-\TU/lmr/m/n/10 10.1525/9780520967779- 
- []
-
-
-Overfull \hbox (26.09743pt too wide) in paragraph at lines 2471--2473
-\TU/lmr/m/n/10 10.61700/pdeaaefq62n681556 
- []
-
-
-Overfull \hbox (1.16742pt too wide) in paragraph at lines 2474--2476
+Overfull \hbox (1.16742pt too wide) in paragraph at lines 2297--2299
 \TU/lmr/m/n/10 10.1201/9781315373461 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2488--2491
-\TU/lmr/m/n/10 10.1201/9780429031854- 
- []
-
-
-Overfull \hbox (40.16742pt too wide) in paragraph at lines 2492--2495
-\TU/lmr/m/n/10 10.7490/f1000research.1113332.1 
- []
-
-
-Overfull \hbox (57.56741pt too wide) in paragraph at lines 2496--2498
+Overfull \hbox (57.56741pt too wide) in paragraph at lines 2300--2302
 \TU/lmr/m/n/10 10.22541/au.169627960.06669688/v1 
  []
 
 
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2501--2504
-\TU/lmr/m/n/10 10.1201/9781315382548- 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2507--2509
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2312--2315
 \TU/lmr/m/n/10 10.1525/9780520967779- 
  []
 
 
-Overfull \hbox (108.81741pt too wide) in paragraph at lines 2513--2516
-\TU/lmr/m/n/10 10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc 
- []
-
-
-Overfull \hbox (41.17741pt too wide) in paragraph at lines 2517--2519
-\TU/lmr/m/n/10 10.32614/cran.package.icpsrdata 
- []
-
-
-Overfull \hbox (10.94742pt too wide) in paragraph at lines 2521--2523
-\TU/lmr/m/n/10 10.7554/elife.108089.1.sa1 
- []
-
-
-Overfull \hbox (11.69742pt too wide) in paragraph at lines 2524--2527
-\TU/lmr/m/n/10 10.7554/elife.108089.1.sa2 
- []
-
-
-Overfull \hbox (1.91742pt too wide) in paragraph at lines 2531--2533
-\TU/lmr/m/n/10 10.4135/9781036216696 
- []
-
-
-Overfull \hbox (11.69742pt too wide) in paragraph at lines 2550--2553
-\TU/lmr/m/n/10 10.7554/elife.108089.2.sa3 
- []
-
-
-Overfull \hbox (10.94742pt too wide) in paragraph at lines 2555--2557
-\TU/lmr/m/n/10 10.7554/elife.108089.2.sa1 
- []
-
-
-Overfull \hbox (11.69742pt too wide) in paragraph at lines 2562--2564
-\TU/lmr/m/n/10 10.7554/elife.108089.2.sa2 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2567--2570
-\TU/lmr/m/n/10 10.1201/9781003226642- 
- []
-
-
-Overfull \hbox (11.69742pt too wide) in paragraph at lines 2579--2581
-\TU/lmr/m/n/10 10.7554/elife.108089.1.sa0 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2581--2584
-\TU/lmr/m/n/10 10.1201/9780429275067- 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2591--2594
-\TU/lmr/m/n/10 10.1525/9780520967779- 
- []
-
-
-Overfull \hbox (82.31741pt too wide) in paragraph at lines 2598--2601
-\TU/lmr/m/n/10 10.36227/techrxiv.175617187.78775647/v1 
- []
-
-
-Overfull \hbox (0.72742pt too wide) in paragraph at lines 2601--2604
-\TU/lmr/m/n/10 10.2307/j.ctvpb3xkg.14 
- []
-
-
-Overfull \hbox (40.16742pt too wide) in paragraph at lines 2605--2608
-\TU/lmr/m/n/10 10.7490/f1000research.1110170.1 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2614--2616
-\TU/lmr/m/n/10 10.1525/9780520969230- 
- []
-
-
-Overfull \hbox (3.82742pt too wide) in paragraph at lines 2616--2619
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2318--2321
 \TU/lmr/m/n/10 10.1201/9780429031854- 
  []
 
 
-Overfull \hbox (0.57742pt too wide) in paragraph at lines 2628--2631
-\TU/lmr/m/n/10 10.2307/j.ctvpb3xkg.17 
+Overfull \hbox (26.09743pt too wide) in paragraph at lines 2322--2324
+\TU/lmr/m/n/10 10.61700/pdeaaefq62n681556 
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [37]
-ignored: Infinite glue shrinkage fo
-und in box being split [38]
-ignored: Infinite glue shrinkage found in box being split [39
-]
-ignored: Infinite glue shrinkage found in box being split [40]
-ignored: Infinite glue shrinkage f
-ound in box being split [41]
-ignored: Infinite glue shrinkage found in box being split [4
-2]
-ignored: Infinite glue shrinkage found in box being split [43] [44] [45] (./_combined_
-manuscript.bbl
-[46
+Overfull \hbox (40.16742pt too wide) in paragraph at lines 2328--2331
+\TU/lmr/m/n/10 10.7490/f1000research.1113332.1 
+ []
 
-] [47]
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2331--2334
+\TU/lmr/m/n/10 10.1201/9781315382548- 
+ []
+
+
+Overfull \hbox (108.81741pt too wide) in paragraph at lines 2337--2340
+\TU/lmr/m/n/10 10.70675/d17fee18z3990z46f0z8820zb7fa496e2ffc 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2344--2346
+\TU/lmr/m/n/10 10.1525/9780520967779- 
+ []
+
+
+Overfull \hbox (41.17741pt too wide) in paragraph at lines 2347--2349
+\TU/lmr/m/n/10 10.32614/cran.package.icpsrdata 
+ []
+
+
+Overfull \hbox (11.69742pt too wide) in paragraph at lines 2350--2353
+\TU/lmr/m/n/10 10.7554/elife.108089.2.sa3 
+ []
+
+
+Overfull \hbox (10.94742pt too wide) in paragraph at lines 2355--2357
+\TU/lmr/m/n/10 10.7554/elife.108089.1.sa1 
+ []
+
+
+Overfull \hbox (1.91742pt too wide) in paragraph at lines 2358--2360
+\TU/lmr/m/n/10 10.4135/9781036216696 
+ []
+
+
+Overfull \hbox (11.69742pt too wide) in paragraph at lines 2374--2377
+\TU/lmr/m/n/10 10.7554/elife.108089.1.sa2 
+ []
+
+
+Overfull \hbox (10.94742pt too wide) in paragraph at lines 2389--2391
+\TU/lmr/m/n/10 10.7554/elife.108089.2.sa1 
+ []
+
+
+Overfull \hbox (11.69742pt too wide) in paragraph at lines 2393--2395
+\TU/lmr/m/n/10 10.7554/elife.108089.1.sa0 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2395--2398
+\TU/lmr/m/n/10 10.1201/9780429275067- 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2407--2410
+\TU/lmr/m/n/10 10.1201/9781003226642- 
+ []
+
+
+Overfull \hbox (11.69742pt too wide) in paragraph at lines 2412--2414
+\TU/lmr/m/n/10 10.7554/elife.108089.2.sa2 
+ []
+
+
+Overfull \hbox (82.31741pt too wide) in paragraph at lines 2421--2424
+\TU/lmr/m/n/10 10.36227/techrxiv.175617187.78775647/v1 
+ []
+
+
+Overfull \hbox (40.16742pt too wide) in paragraph at lines 2425--2428
+\TU/lmr/m/n/10 10.7490/f1000research.1110170.1 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2440--2442
+\TU/lmr/m/n/10 10.1525/9780520969230- 
+ []
+
+
+Overfull \hbox (3.82742pt too wide) in paragraph at lines 2443--2446
+\TU/lmr/m/n/10 10.1525/9780520967779- 
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [35]
+ignored: Infinite glue shrinkage fo
+und in box being split [36]
+ignored: Infinite glue shrinkage found in box being split [37
+]
+ignored: Infinite glue shrinkage found in box being split [38]
+ignored: Infinite glue shrinkage f
+ound in box being split [39]
+ignored: Infinite glue shrinkage found in box being split [4
+0]
+ignored: Infinite glue shrinkage found in box being split [41] [42] [43] (./_combined_
+manuscript.bbl
+[44
+
+] [45]
 Missing character: There is no ★ (U+2605) in font [lmroman10-italic]:mapping=te
 x-text;!
 Missing character: There is no ★ (U+2605) in font [lmroman10-italic]:mapping=te
 x-text;!
-[48] [49] [50] [51]
+[46] [47] [48] [49]
 Missing character: There is no О (U+041E) in font [lmroman10-italic]:mapping=te
 x-text;!
 Missing character: There is no п (U+043F) in font [lmroman10-italic]:mapping=te
@@ -2126,34 +2159,36 @@ Missing character: There is no а (U+0430) in font [lmroman10-italic]:mapping=te
 x-text;!
 Missing character: There is no л (U+043B) in font [lmroman10-italic]:mapping=te
 x-text;!
-[52]
+[50]
 Missing character: There is no α (U+03B1) in font [lmroman10-italic]:mapping=te
 x-text;!
-[53] [54]
-Underfull \hbox (badness 1024) in paragraph at lines 1391--1396
+[51] [52]
+Underfull \hbox (badness 1024) in paragraph at lines 1403--1408
 []\TU/lmr/m/n/10 Yurii Nesterov.  \TU/lmr/m/it/10 Smooth Convex Optimization\TU
 /lmr/m/n/10 .  Springer International Publishing, 2018b.  ISBN
  []
 
-[55] [56] [57]
-Underfull \hbox (badness 1038) in paragraph at lines 1777--1782
+[53] [54] [55]
+Underfull \hbox (badness 1038) in paragraph at lines 1770--1775
 []\TU/lmr/m/n/10 Victoria Stodden.  \TU/lmr/m/it/10 Implementing Reproducible R
 esearch\TU/lmr/m/n/10 .  Chapman and Hall/CRC, 2014.  ISBN
  []
 
-[58] [59]) [60] (./_combined_manuscript.aux)
+[56] [57]) [58] (./_combined_manuscript.aux
+Package cleveref Info: loaded `english' language definitions on input line 8.
+)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 25019 strings out of 468168
- 468262 string characters out of 5432815
- 1183711 words of memory out of 5000000
- 53460 multiletter control sequences out of 15000+600000
+ 26129 strings out of 468168
+ 490939 string characters out of 5432815
+ 1220675 words of memory out of 5000000
+ 54550 multiletter control sequences out of 15000+600000
  630218 words of font info for 73 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,9n,114p,1017b,1145s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (61 pages).
+Output written on _combined_manuscript.pdf (59 pages).

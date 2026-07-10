@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,33 +173,28 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:results">Results</h1>
 <p><strong>Run snapshot.</strong> With the bundled
 <code>manuscript/config.yaml</code> the most recent execution evaluated
 the query <em>“reproducible research optimization”</em> against local,
 returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an
 abstract); the per-source breakdown is local=6 and recorded backend
-errors are none. The deep-search workflow (<span class="citation"
-data-cites="sec:deep_search">[@sec:deep_search]</span>) covered 3
+errors are none. The deep-search workflow ([sec:deep_search]) covered 3
 keyword(s) — <em>convex optimization; stochastic gradient descent;
-reproducible research</em> — drawn from arxiv, crossref, paperclip,
-producing <deep-search not run> unique paper(s) after cross-keyword
+reproducible research</em> — drawn from arxiv, crossref, producing
+<deep-search not run> unique paper(s) after cross-keyword
 deduplication.</p>
-<p>The diagnostic figures generated for this run are catalogued in <span
-class="citation" data-cites="sec:methodology">[@sec:methodology]</span>:
-<span class="citation"
-data-cites="fig:papers_per_source">[@fig:papers_per_source]</span>
-surfaces per-backend coverage, <span class="citation"
-data-cites="fig:year_histogram">[@fig:year_histogram]</span> surfaces
-the temporal distribution, and <span class="citation"
-data-cites="fig:score_distribution">[@fig:score_distribution]</span>
-surfaces the relevance-score profile. The full determinism contract for
-each stage is itemised in <span class="citation"
-data-cites="tbl:determinism">[@tbl:determinism]</span> of <span
-class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
+<p>The diagnostic figures generated for this run are catalogued in
+[sec:methodology]: [fig:papers_per_source] surfaces per-backend
+coverage, [fig:year_histogram] surfaces the temporal distribution, and
+[fig:score_distribution] surfaces the relevance-score profile. The full
+determinism contract for each stage is itemised in [tbl:determinism] of
+[sec:reproducibility].</p>
 <h2 id="interpreting-the-run-snapshot">Interpreting the run
 snapshot</h2>
 <p>The numerical values in the run-snapshot paragraph that opens this
@@ -207,27 +202,22 @@ section are read directly from <code>output/run_summary.json</code> and
 <code>output/data/manuscript_variables.json</code> so they always
 reflect the most recent run rather than a stale claim hand-typed into
 the prose. Three properties are worth highlighting (the formal
-determinism contract for each underlying stage is enumerated in <span
-class="citation"
-data-cites="tbl:determinism">[@tbl:determinism]</span>):</p>
+determinism contract for each underlying stage is enumerated in
+[tbl:determinism]):</p>
 <ul>
 <li><strong>Cache reuse is observable.</strong> A second invocation
 against the same config produces a byte-identical artifact tree (modulo
 the wall-clock timestamp inside
 <code>output/search/cache/search_&lt;hash&gt;.json</code> itself); see
-also the <em>Search (cached hit)</em> row of <span class="citation"
-data-cites="tbl:determinism">[@tbl:determinism]</span> and the
-verification recipe in <span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span>. The
-cache file thus doubles as a cryptographic seal: re-running is a file
-read, not a network round-trip.</li>
+also the <em>Search (cached hit)</em> row of [tbl:determinism] and the
+verification recipe in [sec:reproducibility]. The cache file thus
+doubles as a cryptographic seal: re-running is a file read, not a
+network round-trip.</li>
 <li><strong>Deduplication is signal-preserving.</strong> The aggregator
 merges by DOI → arXiv id → normalised (title, year), keeping the
 highest-scored copy and filling missing fields from the loser (see
-<em>Dedup / merge</em> in <span class="citation"
-data-cites="tbl:determinism">[@tbl:determinism]</span> and the
-per-backend pre-dedup view in <span class="citation"
-data-cites="fig:papers_per_source">[@fig:papers_per_source]</span>). The
+<em>Dedup / merge</em> in [tbl:determinism] and the per-backend
+pre-dedup view in [fig:papers_per_source]). The
 <code>RESULT_NUM_PAPERS</code> figure therefore equals “papers a
 reviewer needs to read”, not “raw backend hit count” — the per-source
 contributions in <code>RESULT_PER_SOURCE</code> are the pre-dedup
@@ -237,11 +227,9 @@ view.</li>
 fields the corpus or the <code>AbstractFetcher</code> actually
 populated, never values inferred. When a paper is missing a DOI it is
 excluded from the DOI count even if its arXiv id resolves to one
-upstream. The temporal coverage of those papers is summarised by <span
-class="citation"
-data-cites="fig:year_histogram">[@fig:year_histogram]</span>, and their
-backend-reported relevance scores by <span class="citation"
-data-cites="fig:score_distribution">[@fig:score_distribution]</span>.</li>
+upstream. The temporal coverage of those papers is summarised by
+[fig:year_histogram], and their backend-reported relevance scores by
+[fig:score_distribution].</li>
 </ul>
 <h2 id="output-artefacts">Output artefacts</h2>
 <p>After running <code>scripts/run_search_pipeline.py</code> against the
@@ -274,8 +262,8 @@ report.</li>
 </ul>
 <p>When the LLM stack is genuinely unreachable, the
 <code>output/llm/</code> artefacts are simply absent — no placeholder
-file is ever written into the archive (see <span class="citation"
-data-cites="sec:pipeline_internals">[@sec:pipeline_internals]</span>).</p>
+file is ever written into the archive (see
+[sec:pipeline_internals]).</p>
 <p>Because the search cache and abstract cache are deterministic, a
 second run with identical <code>config.yaml</code> produces
 byte-identical artifacts (modulo timestamp metadata in the cache files
@@ -296,5 +284,6 @@ upgrades.</li>
 </ol>
 <p>With those three steps, every run from the same commit produces the
 same outputs.</p>
+</main>
 </body>
 </html>

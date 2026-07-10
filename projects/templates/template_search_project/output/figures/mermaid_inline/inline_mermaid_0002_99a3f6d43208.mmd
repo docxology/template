@@ -1,0 +1,41 @@
+flowchart TB
+    P["projects/templates/template_search_project/"]
+    P --> DAT["data/<br/>committed"]
+    P --> OUT["output/<br/>regeneratable · gitignored"]
+    P --> MAN["manuscript/"]
+
+    DAT --> CORP_IN["corpus.json<br/>bundled offline corpus<br/>CI-safe default"]
+
+    OUT --> SR["search/"]
+    OUT --> CC["cache/"]
+    OUT --> LD["llm/"]
+    OUT --> FIG["figures/"]
+    OUT --> DD["data/"]
+    OUT --> CORP_OUT["corpus.json<br/>enriched · LocalBackend-compatible"]
+    OUT --> ELOG["enrichment_log.json<br/>per-fetch status"]
+    OUT --> RR[reading_report.md]
+    OUT --> RS[run_summary.json]
+
+    SR --> SR_R["results.json<br/>SearchResult"]
+    SR --> SR_C["cache/search_HASH.json<br/>deterministic SearchCache"]
+
+    CC --> CC_A["abs/SAFE_ID.txt"]
+    CC --> CC_P["pdf/SAFE_ID.pdf and .txt"]
+
+    LD --> LD_S[synthesis.md]
+    LD --> LD_PP["per_paper/SAFE_ID.md"]
+
+    FIG --> F1[papers_per_source.png]
+    FIG --> F2[year_histogram.png]
+    FIG --> F3[score_distribution.png]
+
+    DD --> MV[manuscript_variables.json]
+
+    MAN --> BIB["references.bib<br/>auto-populated · Pandoc-ready"]
+
+    classDef dir fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,DAT,OUT,MAN,SR,CC,LD,FIG,DD dir
+    class CORP_OUT,ELOG,RR,RS,SR_R,SR_C,CC_A,CC_P,LD_S,LD_PP,F1,F2,F3,MV,BIB gen
+    class CORP_IN src

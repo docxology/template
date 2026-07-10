@@ -23,9 +23,10 @@ authors:
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: ""  # Concept DOI — reserved on first real publish, not fabricated here
-  version_doi: ""
-  version_record: ""
+  doi: "10.5281/zenodo.21298885"
+  doi_status: "reserved (draft deposition; awaiting first publication)" # Concept DOI — reserved on first real publish, not fabricated here
+  version_doi: "10.5281/zenodo.21298886"
+  version_record: "https://zenodo.org/records/21298886"
   github_repository: ""
   transmission_bookends:
     enabled: false

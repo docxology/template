@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -177,6 +177,7 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:integration">Integration: Unified Pipeline and Token
 Injection</h1>
 <h2 id="architecture-overview">Architecture Overview</h2>
@@ -214,8 +215,8 @@ integration run. Tokens are resolved by
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
 <img src="figures/resource_counts.png" style="width:75.0%"
-alt="Runtime integration counts from manuscript_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run." />
-<figcaption aria-hidden="true">Runtime integration counts from
+alt="Runtime integration counts from manuscript_variables.json." />
+<figcaption>Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
 and tools discovered during a single pipeline run.</figcaption>
 </figure>
@@ -240,8 +241,8 @@ representation):</p>
 <td>2</td>
 </tr>
 <tr>
-<td><code>3</code></td>
-<td>3</td>
+<td><code>4</code></td>
+<td>4</td>
 </tr>
 <tr>
 <td><code>8</code></td>
@@ -314,14 +315,14 @@ project’s own tree</td>
 <figure id="fig:pipelineflow">
 <img src="figures/pipeline_flow.png" style="width:95.0%"
 alt="The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step." />
-<figcaption aria-hidden="true">The six-script pipeline from source
+<figcaption>The six-script pipeline from source
 validation through token hydration, ending at the combined-PDF render
 step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
 <img src="figures/status_dashboard.png" style="width:85.0%"
-alt="Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing." />
-<figcaption aria-hidden="true">Integration status dashboard showing
+alt="Integration status dashboard showing per-resource validation results." />
+<figcaption>Integration status dashboard showing
 per-resource validation results. Green indicates ok, amber indicates
 partial, red indicates missing.</figcaption>
 </figure>
@@ -372,7 +373,7 @@ to invoke a non-existent script.</p></li>
 <figure id="fig:resilience">
 <img src="figures/resilience_layers.png" style="width:85.0%"
 alt="The integration layer’s three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response." />
-<figcaption aria-hidden="true">The integration layer’s three-level
+<figcaption>The integration layer’s three-level
 resilience design: resource absence, schema malformation, and script
 absence, each with its own graceful-degradation response.</figcaption>
 </figure>
@@ -432,5 +433,6 @@ adds a negative control: it monkeypatches
 <code>run_integration_demo()</code>’s return value and asserts the
 derived tokens actually change, proving the token-generation function is
 live-wired to its source rather than emitting a hard-coded constant.</p>
+</main>
 </body>
 </html>

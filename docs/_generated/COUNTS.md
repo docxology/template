@@ -150,7 +150,7 @@ Result: **372** project-scope infrastructure tests collected and **660** publish
 | `template_autoresearch_project` | 220 | 92.81 % |
 | `template_autoscientists` | 87 | 99.60 % |
 | `template_code_project` | 236 | 98.78 % |
-| `template_data_descriptor` | 4 | 92.11 % |
+| `template_data_descriptor` | 36 | 99.13 % |
 | `template_eda_notebook` | 62 | 100.00 % |
 | `template_formal` | 277 | 96.03 % |
 | `template_gold_refinement` | 248 | 97.55 % |
@@ -161,8 +161,8 @@ Result: **372** project-scope infrastructure tests collected and **660** publish
 | `template_pitch_deck` | 110 | 97.70 % |
 | `template_pools_rules_tools` | 204 | 90.95 % |
 | `template_prose_project` | 78 | 100.00 % |
-| `template_redacted_report` | 50 | 99.05 % |
-| `template_registered_report` | 7 | 99.25 % |
+| `template_redacted_report` | 67 | 97.77 % |
+| `template_registered_report` | 30 | 96.37 % |
 | `template_search_project` | 296 | 95.13 % |
 | `template_sia` | 40 | 97.16 % |
 | `template_storybook` | 10 | 93.92 % |

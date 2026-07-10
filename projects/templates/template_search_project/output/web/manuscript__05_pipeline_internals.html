@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,11 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:pipeline_internals">Pipeline Internals</h1>
 <p>This supplemental section documents the data structures and on-disk
 artifacts the pipeline produces, for readers who want to extend or audit
@@ -387,9 +390,8 @@ these keys verbatim, so the LLM synthesis and the BibTeX file always
 agree.</p>
 <p>The deep-search workflow has its own collision handler in
 <code>src/deep_search.py::run_deep_search</code> that operates over the
-post-deduplication aggregate roster — see <span class="citation"
-data-cites="sec:deep_search">[@sec:deep_search]</span> — and the unified
-<code>references_deep.bib</code> reflects the same mapping.</p>
+post-deduplication aggregate roster — see [sec:deep_search] — and the
+unified <code>references_deep.bib</code> reflects the same mapping.</p>
 <h2 id="failure-isolation">Failure isolation</h2>
 <ul>
 <li><strong>A backend is unreachable.</strong>
@@ -410,5 +412,6 @@ sections. No placeholder text is ever written into the archive, so a
 missing LLM is observable from the absence of those sections rather than
 from a fake “(LLM unavailable)” string.</li>
 </ul>
+</main>
 </body>
 </html>

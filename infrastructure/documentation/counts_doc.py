@@ -71,7 +71,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
     ExemplarSnapshot("template_code_project", 236, "98.78 %"),
-    ExemplarSnapshot("template_data_descriptor", 4, "92.11 %"),
+    ExemplarSnapshot("template_data_descriptor", 36, "99.13 %"),
     ExemplarSnapshot("template_eda_notebook", 62, "100.00 %"),
     ExemplarSnapshot("template_formal", 277, "96.03 %"),
     ExemplarSnapshot("template_gold_refinement", 248, "97.55 %"),
@@ -82,12 +82,11 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
-    # Re-measured 2026-07-10 after closing the visuals.py coverage debt (CI run
-    # 29098773585 had measured 55.91 % with 7 tests): the proof-PDF renderer,
-    # verifier, and kmyth subprocess helpers now have real no-mocks tests; only
-    # the repo-root steganography processor call stays pragma no-cover.
-    ExemplarSnapshot("template_redacted_report", 50, "99.05 %"),
-    ExemplarSnapshot("template_registered_report", 7, "99.25 %"),
+    # Re-measured 2026-07-10 after the coverage-debt closure: 45 real no-mock
+    # tests added over visuals.py (was 55.91 % when the 1500-line kmyth/TPM
+    # proof module landed with only 7 tests).
+    ExemplarSnapshot("template_redacted_report", 67, "97.77 %"),
+    ExemplarSnapshot("template_registered_report", 30, "96.37 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
     ExemplarSnapshot("template_storybook", 10, "93.92 %"),

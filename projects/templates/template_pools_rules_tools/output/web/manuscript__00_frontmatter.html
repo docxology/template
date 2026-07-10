@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -177,6 +177,7 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1
 id="pools-rules-and-tools-a-template-integrated-resource-architecture">Pools,
 Rules, and Tools: A Template-Integrated Resource Architecture</h1>
@@ -314,8 +315,8 @@ checks)</td>
 <tr>
 <td>Combined PDF</td>
 <td>full project pipeline, Stage 6 (4-pass xelatex + bibtex)</td>
-<td><code>pdftotext</code> scan for <code>??</code> and page-scale
-raster read</td>
+<td><code>pdftotext</code> scan for unresolved-reference markers and
+page-scale raster read</td>
 </tr>
 </tbody>
 </table>
@@ -332,5 +333,6 @@ these numbers are hand-typed; a
 in <code>tests/test_manuscript_variables.py</code> proves the
 token-generation function actually tracks its source rather than
 emitting a fixed constant.</p>
+</main>
 </body>
 </html>

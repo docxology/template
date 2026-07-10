@@ -1,0 +1,101 @@
+classDiagram
+    class SearchQuery {
+        +str text
+        +int max_results
+        +int|None year_min
+        +int|None year_max
+        +list~str~ sources
+        +list~str~ fields
+        +matches_year(year) bool
+    }
+
+    class Paper {
+        +str id
+        +str title
+        +list~str~ authors
+        +int|None year
+        +str|None doi
+        +str|None url
+        +str|None abstract
+        +str|None pdf_url
+        +str|None fulltext
+        +str|None venue
+        +str|None venue_type
+        +str|None volume
+        +str|None issue
+        +str|None pages
+        +str|None publisher
+        +str|None edition
+        +str|None isbn
+        +list~str~ keywords
+        +str|None source
+        +float score
+        +dict raw
+        +to_dict() dict
+        +from_dict(d) Paper
+    }
+
+    class SearchResult {
+        +SearchQuery query
+        +list~Paper~ papers
+        +dict per_source_counts
+        +dict errors
+        +to_dict() dict
+        +to_json() str
+    }
+
+    class BibEntry {
+        +str entry_type
+        +str citation_key
+        +OrderedDict fields
+    }
+
+    class BibDatabase {
+        +list~BibEntry~ entries
+        +str|None preamble
+        +find(key) BibEntry
+    }
+
+    class LiteratureRunArtifacts {
+        +SearchResult result
+        +Path|None corpus_path
+        +Path|None bibtex_path
+        +list~FetchResult~ enrichment_log
+        +Path|None cache_dir
+        +dict citation_keys
+        +papers() list~Paper~
+    }
+
+    class ManuscriptVariables {
+        +str config_query
+        +int config_max_results
+        +str config_sources
+        +int result_num_papers
+        +int result_num_sources
+        +str result_per_source
+        +str result_errors
+        +str result_year_min
+        +str result_year_max
+        +int result_with_abstract
+        +int result_with_doi
+        +int deep_max_results_per_keyword
+        +int deep_keyword_count
+        +str deep_keywords_joined
+        +str deep_sources
+        +str deep_unique_papers
+        +as_dict() dict
+        +as_uppercase_keys() dict
+    }
+
+    class SynthesisResult {
+        +str kind
+        +str prompt
+        +str text
+        +str|None paper_id
+    }
+
+    SearchResult --> SearchQuery
+    SearchResult --> "*" Paper
+    LiteratureRunArtifacts --> SearchResult
+    LiteratureRunArtifacts --> "*" BibEntry : via paper_to_bibentry
+    BibDatabase --> "*" BibEntry

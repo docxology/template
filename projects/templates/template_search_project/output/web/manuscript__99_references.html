@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,11 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:references">References</h1>
 <p>This project can produce <strong>two</strong> BibTeX files; the
 template combined-PDF path uses Pandoc <code>--natbib</code> plus BibTeX
@@ -252,10 +255,9 @@ resolution:</p>
 <li><a
 href="references_deep.bib"><code>manuscript/references_deep.bib</code></a>
 — deduplicated multi-keyword deep-search output
-(<code>scripts/run_deep_search.py</code>). Every citation in <span
-class="citation"
-data-cites="sec:supplemental_s1">[@sec:supplemental_s1]</span> resolves
-against this file. The supplemental section is auto-composed by
+(<code>scripts/run_deep_search.py</code>). Every citation in
+[sec:supplemental_s1] resolves against this file. The supplemental
+section is auto-composed by
 <code>scripts/s_compose_literature_review.py</code>; do not edit by
 hand.</li>
 </ul>
@@ -274,5 +276,6 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/manuscript/references.bib <span class="at">--strict</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_search_project/manuscript/references_deep.bib <span class="at">--strict</span></span></code></pre></div>
+</main>
 </body>
 </html>

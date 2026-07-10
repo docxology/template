@@ -12,6 +12,13 @@ M.~Hirschberger *.
 \newblock \emph{Optimization}, 54\penalty0 (3):\penalty0 283--304, 2005.
 \newblock \doi{10.1080/02331930500096270}.
 
+\bibitem[Abrolbekov(2026)]{abrolbekov2026high}
+Makhamadamin Abrolbekov.
+\newblock High probability convergence bounds for non-convex stochastic
+  gradient descent with sub-weibull noise.
+\newblock 2026.
+\newblock \doi{10.2139/ssrn.6738058}.
+
 \bibitem[Abubaker et~al.(2022{\natexlab{a}})Abubaker, Karsavuran, and
   Aykanat]{abubaker2022scaling}
 Nabil Abubaker, M.~Ozan Karsavuran, and Cevdet Aykanat.
@@ -73,12 +80,6 @@ Anonymous.
 \newblock \emph{Physical Review E}, 2025.
 \newblock \doi{10.1103/zjq6-nzwd}.
 
-\bibitem[Anonymous(2026)]{anonymous2026absorbing}
-Anonymous.
-\newblock Absorbing state dynamics of stochastic gradient descent.
-\newblock \emph{Physical Review E}, 2026.
-\newblock \doi{10.1103/sbv7-syp7}.
-
 \bibitem[Archibald et~al.(2020)Archibald, Bao, and
   Yong]{archibald2020stochastic}
 Richard Archibald, Feng Bao, and Jiongmin Yong.
@@ -139,10 +140,10 @@ Feng Bao and Thomas Maier.
   2020.
 \newblock \doi{10.3934/fods.2020001}.
 
-\bibitem[Basu()]{basureproducible}
+\bibitem[Basu(2017)]{basu2017reproducible}
 Arindam Basu.
 \newblock Reproducible research with jupyter notebooks.
-\newblock \emph{Authorea}.
+\newblock 2017.
 \newblock \doi{10.22541/au.151460905.57485984}.
 
 \bibitem[Basu(2018)]{basu2018reproducible}
@@ -351,7 +352,7 @@ Zhengao Cai, Aiguo Chen, Yi~Luo, and Jiahao Li.
 \newblock ISBN 9781108980647.
 \newblock \doi{10.1017/9781108980647.012}.
 
-\bibitem[{Cambridge University Press}(2021{\natexlab{c}})]{anon2021convexb}
+\bibitem[{Cambridge University Press}(2021{\natexlab{c}})]{anon2021convexc}
 {Cambridge University Press}.
 \newblock Convex analysis and convex optimization.
 \newblock \emph{Compressive Imaging: Structure, Sampling, Learning}, pages
@@ -509,6 +510,12 @@ Hongxiang Chang, Jiachao Xi, Rongtao Su, Pengfei Ma, Yanxing Ma, and Pu~Zhou.
 \newblock ISBN 9781315373461.
 \newblock \doi{10.1201/9781315373461}.
 
+\bibitem[Charlton(2016)]{charlton2016how}
+Bruce Charlton.
+\newblock How do we ensure that research is reproducible?
+\newblock 2016.
+\newblock \doi{10.15200/winn.146397.78741}.
+
 \bibitem[Chen et~al.(2025)Chen, Feng, and Wang]{chen2025revisit}
 Kang Chen, Yasong Feng, and Tianyu Wang.
 \newblock Revisit stochastic gradient descent for strongly convex objectives:
@@ -528,6 +535,14 @@ Wei Chen.
 \newblock Distributed stochastic gradient descent with staleness: A stochastic
   delay differential equation based framework\_supp1-3546574.pdf.
 \newblock \doi{10.1109/tsp.2025.3546574/mm1}.
+
+\bibitem[Chen et~al.(2026)Chen, Wenchao, Xuan, and
+  Wang]{chen2026fractionalorder}
+Yuquan Chen, Hong Wenchao, Mo~Xuan, and Bing Wang.
+\newblock Fractional-order dynamics driven stochastic gradient descent method
+  with momentum.
+\newblock 2026.
+\newblock \doi{10.2139/ssrn.6902318}.
 
 \bibitem[Cheng et~al.(2025)Cheng, Jin, and Zhang]{cheng2025convergence}
 Difei Cheng, Ruinan Jin, and Bo~Zhang.
@@ -664,19 +679,16 @@ Andrew~P. Davison, Michele Mattioni, Dmitry Samarkanov, and Bartosz Teleńczuk.
 \newblock De Gruyter Open Poland, 2014.
 \newblock \doi{10.2478/9783110426045.4}.
 
-\bibitem[Doshi et~al.(2022)Doshi, Eun, and Hu]{doshi2022efficiency}
-Vishwaraj Doshi, Do-Young Eun, and Jie Hu.
-\newblock Efficiency ordering of stochastic gradient descent.
-\newblock In \emph{Advances in Neural Information Processing Systems 35}, pages
-  15875--15888. Neural Information Processing Systems Foundation, Inc.
-  (NeurIPS), 2022.
-\newblock \doi{10.52202/068431-1155}.
-
 \bibitem[Dragomirescu and Ivan(1992)]{dragomirescu1992smallest}
 F.~Dragomirescu and C.~Ivan.
 \newblock The smallest convex extensions of a convex function.
 \newblock \emph{Optimization}, 24\penalty0 (3-4):\penalty0 193--206, 1992.
 \newblock \doi{10.1080/02331939208843789}.
+
+\bibitem[{Dutch Research Council (NWO)}()]{anon1061686udeac59432}
+{Dutch Research Council (NWO)}.
+\newblock 10.61686/udeac59432.
+\newblock \doi{10.61686/udeac59432}.
 
 \bibitem[Dutta(2014)]{dutta2014barrier}
 Joydeep Dutta.
@@ -702,13 +714,13 @@ Scott Edmunds.
 Scott Edmunds.
 \newblock Fermenting a reproducible research revolution.
 \newblock 2015{\natexlab{a}}.
-\newblock \doi{10.59350/0hs8b-m2239}.
+\newblock \doi{10.59350/ejn9k-s7c54}.
 
 \bibitem[Edmunds(2015{\natexlab{b}})]{edmunds2015fermentinga}
 Scott Edmunds.
 \newblock Fermenting a reproducible research revolution.
 \newblock 2015{\natexlab{b}}.
-\newblock \doi{10.59350/ejn9k-s7c54}.
+\newblock \doi{10.59350/0hs8b-m2239}.
 
 \bibitem[Edmunds(2016{\natexlab{a}})]{edmunds2016reproducible}
 Scott Edmunds.
@@ -866,17 +878,10 @@ Christopher Gandrud.
 \newblock ISBN 9780429031854.
 \newblock \doi{10.1201/9780429031854-2}.
 
-\bibitem[Gandrud(2020{\natexlab{d}})]{gandrud2020presenting}
-Christopher Gandrud.
-\newblock \emph{Presenting with LaTeX}.
-\newblock Chapman and Hall/CRC, 2020{\natexlab{d}}.
-\newblock ISBN 9780429031854.
-\newblock \doi{10.1201/9780429031854-15}.
-
-\bibitem[Gandrud(2020{\natexlab{e}})]{gandrud2020reproducible}
+\bibitem[Gandrud(2020{\natexlab{d}})]{gandrud2020reproducible}
 Christopher Gandrud.
 \newblock \emph{Reproducible Research with R and RStudio}.
-\newblock Chapman and Hall/CRC, 2020{\natexlab{e}}.
+\newblock Chapman and Hall/CRC, 2020{\natexlab{d}}.
 \newblock ISBN 9780429031854.
 \newblock \doi{10.1201/9780429031854}.
 
@@ -1009,6 +1014,14 @@ Han Hu.
   federated learning\_supp1-3610169.pdf.
 \newblock \doi{10.1109/tpami.2025.3610169/mm1}.
 
+\bibitem[Hu et~al.(2022)Hu, Doshi, and Eun]{hu2022efficiency}
+Jie Hu, Vishwaraj Doshi, and Do-Young Eun.
+\newblock Efficiency ordering of stochastic gradient descent.
+\newblock In \emph{Advances in Neural Information Processing Systems 35}, pages
+  15875--15888. Neural Information Processing Systems Foundation, Inc.
+  (NeurIPS), 2022.
+\newblock \doi{10.52202/068431-1155}.
+
 \bibitem[Hua et~al.(2023)Hua, Luo, Corre, and Fan]{hua2023machinelearning}
 Yuchao Hua, Lingai Luo, Steven~Le Corre, and Yilin Fan.
 \newblock Machine-learning topology optimization with stochastic gradient
@@ -1028,6 +1041,13 @@ Shun ichi Amari.
   alignment of a two-mirror telescope.
 \newblock \emph{Оптический журнал}, 2020.
 \newblock \doi{10.17586/1023-5086-2020-87-05-31-41}.
+
+\bibitem[Ito and Onoue(2026)]{ito2026constrained}
+Haruki Ito and Yosuke Onoue.
+\newblock Constrained graph drawing by stochastic gradient descent.
+\newblock In \emph{2026 IEEE 19th Pacific Visualization Conference
+  (PacificVis)}, pages 11--21. IEEE, 2026.
+\newblock \doi{10.1109/pacificvis68791.2026.00006}.
 
 \bibitem[Iutzeler et~al.(2024)Iutzeler, Pauwels, and
   Vaiter]{iutzeler2024derivatives}
@@ -1255,14 +1275,6 @@ Seraphine Maerz.
   papers.
 \newblock Technical report, 2024.
 
-\bibitem[Mahboubi and Ninomiya(2024)]{mahboubi2024study}
-Shahrzad Mahboubi and Hiroshi Ninomiya.
-\newblock Study on stochastic gradient descent without explicit error
-  backpropagation with momentum.
-\newblock In \emph{2024 IEEE Conference on Artificial Intelligence (CAI)},
-  pages 1357--1358. IEEE, 2024.
-\newblock \doi{10.1109/cai59869.2024.00241}.
-
 \bibitem[Marwick(2019)]{marwick2019case}
 Ben Marwick.
 \newblock \emph{Case Study 12: Using R and Related Tools for Reproducible
@@ -1422,21 +1434,6 @@ Figen~S. Oktem, Liang Gao, and Farzad Kamalabadi.
 \newblock ISBN 9783319616087.
 \newblock \doi{10.1007/978-3-319-61609-4_5}.
 
-\bibitem[Onn(2008)]{onn2008convex}
-Shmuel Onn.
-\newblock \emph{Convex Discrete Optimization}.
-\newblock Springer US, 2008.
-\newblock ISBN 9780387747583.
-\newblock \doi{10.1007/978-0-387-74759-0_94}.
-
-\bibitem[Patel et~al.(2022)Patel, Tian, and Zhang]{patel2022global}
-Vivak Patel, Bowen Tian, and Shushu Zhang.
-\newblock Global convergence and stability of stochastic gradient descent.
-\newblock In \emph{Advances in Neural Information Processing Systems 35}, pages
-  36014--36025. Neural Information Processing Systems Foundation, Inc.
-  (NeurIPS), 2022.
-\newblock \doi{10.52202/068431-2610}.
-
 \bibitem[{PeerJ}({\natexlab{a}})]{anonalgorithm}
 {PeerJ}.
 \newblock Algorithm 1 : Convex optimization with regularized feature selection.
@@ -1534,6 +1531,11 @@ Likit Preeyanon, Alexis~Black Pyrkosz, and C.~Titus Brown.
 \newblock ISBN 9780691200316.
 \newblock \doi{10.1515/9780691200316-013}.
 
+\bibitem[{PubPub}()]{anonninbioinformatics}
+{PubPub}.
+\newblock Ninbioinformatics reproducible research reports.
+\newblock \doi{10.21428/3c290898}.
+
 \bibitem[Ramos and Ott(2015)]{ramos2015hilbert}
 Fabio Ramos and Lionel Ott.
 \newblock Hilbert maps: scalable continuous occupancy mapping with stochastic
@@ -1570,16 +1572,6 @@ Michael Rübsamen, Amr El-Keyi, Alex~B. Gershman, and Thia Kirubarajan.
   optimization}.
 \newblock Cambridge University Press, 2009.
 \newblock \doi{10.1017/cbo9780511804458.010}.
-
-\bibitem[Sa et~al.(2022)Sa, Kale, Lee, Sekhari, and Sridharan]{sa2022gradient}
-Christopher~De Sa, Satyen Kale, Jason Lee, Ayush Sekhari, and Karthik
-  Sridharan.
-\newblock From gradient flow on population loss to learning with stochastic
-  gradient descent.
-\newblock In \emph{Advances in Neural Information Processing Systems 35}, pages
-  30963--30976. Neural Information Processing Systems Foundation, Inc.
-  (NeurIPS), 2022.
-\newblock \doi{10.52202/068431-2245}.
 
 \bibitem[{SAGE Publications Ltd}(2020)]{anon2020transparent}
 {SAGE Publications Ltd}.
@@ -1623,12 +1615,6 @@ Sapna Shrimali, Govind~S. Sharma, and Sunil~K. Srivastava.
 \newblock In \emph{AIP Conference Proceedings}, volume 2768, page 020002. AIP
   Publishing, 2023.
 \newblock \doi{10.1063/5.0148736}.
-
-\bibitem[Simaan(2023)]{simaan2023reproducible}
-Majeed Simaan.
-\newblock Reproducible research in portfolio selection.
-\newblock \emph{SSRN Electronic Journal}, 2023.
-\newblock \doi{10.2139/ssrn.4318828}.
 
 \bibitem[Singer(2001)]{singer2001duality}
 I.~Singer.
@@ -1767,6 +1753,13 @@ Chongya Song, Alexander Pons, and Kang Yen.
 \newblock \emph{SpringerReference}, {\natexlab{e}}.
 \newblock \doi{10.1007/springerreference_72642}.
 
+\bibitem[Srinivasan(2026)]{srinivasan2026intelligent}
+Ashwin~Kumar Srinivasan.
+\newblock An intelligent predictive  cpu scheduling algorithm using online
+  multiple linear regression and stochastic gradient descent.
+\newblock 2026.
+\newblock \doi{10.2139/ssrn.6956552}.
+
 \bibitem[Stillwell(2019)]{stillwell2019statistical}
 John Stillwell.
 \newblock Statistical inference via convex optimization.
@@ -1897,13 +1890,13 @@ Stephen Turner.
 Stephen Turner.
 \newblock Sweave for reproducible research and beatiful statistical reports.
 \newblock 2010{\natexlab{a}}.
-\newblock \doi{10.59350/pexqx-j5g86}.
+\newblock \doi{10.59350/247k5-kfv86}.
 
 \bibitem[Turner(2010{\natexlab{b}})]{turner2010sweavea}
 Stephen Turner.
 \newblock Sweave for reproducible research and beatiful statistical reports.
 \newblock 2010{\natexlab{b}}.
-\newblock \doi{10.59350/247k5-kfv86}.
+\newblock \doi{10.59350/pexqx-j5g86}.
 
 \bibitem[Tuy()]{tuypartly}
 Hoang Tuy.
@@ -1940,50 +1933,36 @@ Hoang Tuy.
 \newblock ISBN 9783319314822.
 \newblock \doi{10.1007/978-3-319-31484-6_1}.
 
-\bibitem[{University of California
-  Press}(2019{\natexlab{a}})]{anon2019conclusion}
-{University of California Press}.
-\newblock \emph{Conclusion}.
-\newblock University of California Press, 2019{\natexlab{a}}.
-\newblock \doi{10.2307/j.ctvpb3xkg.17}.
-
-\bibitem[{University of California Press}(2019{\natexlab{b}})]{anon2019eleven}
+\bibitem[{University of California Press}(2019{\natexlab{a}})]{anon2019eleven}
 {University of California Press}.
 \newblock \emph{ELEVEN. Reproducible Workflow}.
-\newblock University of California Press, 2019{\natexlab{b}}.
+\newblock University of California Press, 2019{\natexlab{a}}.
 \newblock \doi{10.1525/9780520969230-014}.
 
 \bibitem[{University of California
-  Press}(2019{\natexlab{c}})]{anon2019introduction}
+  Press}(2019{\natexlab{b}})]{anon2019introduction}
 {University of California Press}.
 \newblock \emph{Introduction}.
-\newblock University of California Press, 2019{\natexlab{c}}.
+\newblock University of California Press, 2019{\natexlab{b}}.
 \newblock \doi{10.2307/j.ctvpb3xkg.6}.
 
 \bibitem[{University of California
-  Press}(2019{\natexlab{d}})]{anon2019replication}
-{University of California Press}.
-\newblock \emph{Replication}.
-\newblock University of California Press, 2019{\natexlab{d}}.
-\newblock \doi{10.2307/j.ctvpb3xkg.14}.
-
-\bibitem[{University of California
-  Press}(2019{\natexlab{e}})]{anon2019reproducible}
+  Press}(2019{\natexlab{c}})]{anon2019reproducible}
 {University of California Press}.
 \newblock \emph{Reproducible Workflow}.
-\newblock University of California Press, 2019{\natexlab{e}}.
+\newblock University of California Press, 2019{\natexlab{c}}.
 \newblock \doi{10.2307/j.ctvpb3xkg.16}.
 
-\bibitem[{University of California Press}(2019{\natexlab{f}})]{anon2019tables}
+\bibitem[{University of California Press}(2019{\natexlab{d}})]{anon2019tables}
 {University of California Press}.
 \newblock \emph{Tables}.
-\newblock University of California Press, 2019{\natexlab{f}}.
+\newblock University of California Press, 2019{\natexlab{d}}.
 \newblock \doi{10.1525/9780520969230-002}.
 
-\bibitem[{University of California Press}(2019{\natexlab{g}})]{anon2019what}
+\bibitem[{University of California Press}(2019{\natexlab{e}})]{anon2019what}
 {University of California Press}.
 \newblock \emph{What Is Ethical Research?}
-\newblock University of California Press, 2019{\natexlab{g}}.
+\newblock University of California Press, 2019{\natexlab{e}}.
 \newblock \doi{10.2307/j.ctvpb3xkg.7}.
 
 \bibitem[Wang and Murphy(2018)]{wang2018stochastic}
@@ -1998,6 +1977,12 @@ John Wang and Edwin Olson.
 \newblock In \emph{2014 IEEE International Conference on Robotics and
   Automation (ICRA)}, pages 4284--4289. IEEE, 2014.
 \newblock \doi{10.1109/icra.2014.6907482}.
+
+\bibitem[Weisbrod(2026)]{weisbrod2026exampleproject}
+Eric Weisbrod.
+\newblock example-project: A reproducible empirical research template.
+\newblock 2026.
+\newblock \doi{10.31235/osf.io/yx7af_v1}.
 
 \bibitem[White(2018)]{white2018software}
 Ethan~P. White.
@@ -2018,17 +2003,17 @@ R.G.J. Wijnhoven and P.H.N. de~With.
   pages 424--427. IEEE, 2010.
 \newblock \doi{10.1109/icpr.2010.112}.
 
-\bibitem[{Wiley}(2021{\natexlab{a}})]{anon2021convexc}
+\bibitem[{Wiley}(2021{\natexlab{a}})]{anon2021convexb}
 {Wiley}.
-\newblock Convex sets.
-\newblock \emph{Convex Optimization}, pages 29--66, 2021{\natexlab{a}}.
-\newblock \doi{10.1002/9781119804093.ch2}.
+\newblock Convex functions.
+\newblock \emph{Convex Optimization}, pages 67--109, 2021{\natexlab{a}}.
+\newblock \doi{10.1002/9781119804093.ch3}.
 
 \bibitem[{Wiley}(2021{\natexlab{b}})]{anon2021convexd}
 {Wiley}.
-\newblock Convex functions.
-\newblock \emph{Convex Optimization}, pages 67--109, 2021{\natexlab{b}}.
-\newblock \doi{10.1002/9781119804093.ch3}.
+\newblock Convex sets.
+\newblock \emph{Convex Optimization}, pages 29--66, 2021{\natexlab{b}}.
+\newblock \doi{10.1002/9781119804093.ch2}.
 
 \bibitem[{Wiley}(2021{\natexlab{c}})]{anon2021generalizations}
 {Wiley}.
@@ -2102,17 +2087,24 @@ Erik Zamora and Humberto Sossa.
   (SSCI)}, pages 1--8. IEEE, 2016.
 \newblock \doi{10.1109/ssci.2016.7849933}.
 
-\bibitem[Zaslavski(2020{\natexlab{a}})]{zaslavski2020nonsmooth}
+\bibitem[Zaslavski(2020{\natexlab{a}})]{zaslavski2020minimization}
+Alexander~J. Zaslavski.
+\newblock \emph{Minimization of Sharp Weakly Convex Functions}.
+\newblock Springer International Publishing, 2020{\natexlab{a}}.
+\newblock ISBN 9783030378219.
+\newblock \doi{10.1007/978-3-030-37822-6_11}.
+
+\bibitem[Zaslavski(2020{\natexlab{b}})]{zaslavski2020nonsmooth}
 Alexander~J. Zaslavski.
 \newblock \emph{Nonsmooth Convex Optimization}.
-\newblock Springer International Publishing, 2020{\natexlab{a}}.
+\newblock Springer International Publishing, 2020{\natexlab{b}}.
 \newblock ISBN 9783030602994.
 \newblock \doi{10.1007/978-3-030-60300-7_2}.
 
-\bibitem[Zaslavski(2020{\natexlab{b}})]{zaslavski2020pdabased}
+\bibitem[Zaslavski(2020{\natexlab{c}})]{zaslavski2020pdabased}
 Alexander~J. Zaslavski.
 \newblock \emph{PDA-Based Method for Convex Optimization}.
-\newblock Springer International Publishing, 2020{\natexlab{b}}.
+\newblock Springer International Publishing, 2020{\natexlab{c}}.
 \newblock ISBN 9783030378219.
 \newblock \doi{10.1007/978-3-030-37822-6_9}.
 

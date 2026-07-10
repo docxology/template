@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Pools, Rules, and Tools: A Template-Integrated Resource
 Architecture</title>
   <style>
@@ -308,34 +309,34 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -390,13 +391,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -411,13 +412,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -435,7 +444,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -443,11 +452,13 @@ a:hover {
 </style>
 </head>
 <body>
+<main id="main-content">
 <header id="title-block-header">
 <h1 class="title">Pools, Rules, and Tools: A Template-Integrated
 Resource Architecture</h1>
 <p class="subtitle">A Meta-Project Demonstrating Fonds, Rules, and Tools
 Integration in Research Software</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -791,8 +802,8 @@ checks)</td>
 <tr>
 <td>Combined PDF</td>
 <td>full project pipeline, Stage 6 (4-pass xelatex + bibtex)</td>
-<td><code>pdftotext</code> scan for <code>??</code> and page-scale
-raster read</td>
+<td><code>pdftotext</code> scan for unresolved-reference markers and
+page-scale raster read</td>
 </tr>
 </tbody>
 </table>
@@ -855,7 +866,7 @@ href="#fig:toolcontract">4</a>), a three-level resilience diagram
 (fig. <a href="#fig:pipelineflow">6</a>) — so that every structural
 claim in the prose has a corresponding visual.</p>
 <p>In a representative pipeline run, the integration demo loaded 3
-fonds, validated 2 rule sets, discovered 3 tools, and processed 8
+fonds, validated 2 rule sets, discovered 4 tools, and processed 8
 bibliography entries — all reported as structured JSON that populates
 manuscript variable tokens at render time. Tests covering the eight
 <code>src/</code> modules (across nine test files) achieve well above
@@ -956,8 +967,8 @@ module:</p>
 </table>
 <figure id="fig:architecture">
 <img src="figures/architecture_overview.png" style="width:90.0%"
-alt="Figure 1: Three-layer resource architecture of template_pools_rules_tools. Fonds (left) provide read-only data pools; Rules (centre) provide governance constraints; Tools (right) provide executable entry points. The Integration layer (bottom) orchestrates all three." />
-<figcaption aria-hidden="true">Figure 1: Three-layer resource
+alt="Figure 1: Three-layer resource architecture of template_pools_rules_tools." />
+<figcaption>Figure 1: Three-layer resource
 architecture of template_pools_rules_tools. Fonds (left) provide
 read-only data pools; Rules (centre) provide governance constraints;
 Tools (right) provide executable entry points. The Integration layer
@@ -1072,8 +1083,8 @@ naturally different canonical representation (BibTeX for citations, YAML
 for structured contact records, YAML for dataset metadata).</p>
 <figure id="fig:taxonomy">
 <img src="figures/fond_taxonomy.png" style="width:85.0%"
-alt="Figure 2: Schema taxonomy comparison across the three fond types. Each fond declares a manifest and a type field; source-of-truth format, secondary mirror, and dedup key differ by category." />
-<figcaption aria-hidden="true">Figure 2: Schema taxonomy comparison
+alt="Figure 2: Schema taxonomy comparison across the three fond types." />
+<figcaption>Figure 2: Schema taxonomy comparison
 across the three fond types. Each fond declares a manifest and a
 <code>type</code> field; source-of-truth format, secondary mirror, and
 dedup key differ by category.</figcaption>
@@ -1316,7 +1327,7 @@ incomplete.</p>
 <figure id="fig:rulehier">
 <img src="figures/rule_hierarchy.png" style="width:85.0%"
 alt="Figure 3: Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch and a guidance-only soft/ branch." />
-<figcaption aria-hidden="true">Figure 3: Rule hierarchy: the two
+<figcaption>Figure 3: Rule hierarchy: the two
 template rule sets, each split into a machine-enforceable
 <code>strong/</code> branch and a guidance-only <code>soft/</code>
 branch.</figcaption>
@@ -1561,7 +1572,7 @@ any tool generically without knowing its payload schema.</p>
 <figure id="fig:toolcontract">
 <img src="figures/tool_contract.png" style="width:90.0%"
 alt="Figure 4: Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape." />
-<figcaption aria-hidden="true">Figure 4: Invocation contract for the
+<figcaption>Figure 4: Invocation contract for the
 three template tools: stdin payload, tool behaviour, and
 stdout/exit-code shape.</figcaption>
 </figure>
@@ -1674,7 +1685,7 @@ manifest’s <code>entrypoints</code> list and checks each path against
 the filesystem. It returns a structured result distinguishing between
 tools that are fully ready (<code>"ok"</code>), partially configured
 (<code>"partial"</code> — some scripts missing), and entirely absent
-(<code>"missing"</code>). In the current integration run, <strong>3
+(<code>"missing"</code>). In the current integration run, <strong>4
 tools</strong> were discovered (fig. <a href="#fig:counts">5</a>), all
 with valid manifests.</p>
 <h2 data-number="6.5" id="tool-discovery-and-reproducibility"><span
@@ -1815,8 +1826,8 @@ integration run. Tokens are resolved by
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
 <img src="figures/resource_counts.png" style="width:75.0%"
-alt="Figure 5: Runtime integration counts from manuscript_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run." />
-<figcaption aria-hidden="true">Figure 5: Runtime integration counts from
+alt="Figure 5: Runtime integration counts from manuscript_variables.json." />
+<figcaption>Figure 5: Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
 and tools discovered during a single pipeline run.</figcaption>
 </figure>
@@ -1840,8 +1851,8 @@ visual representation):</p>
 <td>2</td>
 </tr>
 <tr>
-<td><code>3</code></td>
-<td>3</td>
+<td><code>4</code></td>
+<td>4</td>
 </tr>
 <tr>
 <td><code>8</code></td>
@@ -1916,14 +1927,14 @@ href="#sec:rules">5</a>) against this project’s own tree</td>
 <figure id="fig:pipelineflow">
 <img src="figures/pipeline_flow.png" style="width:95.0%"
 alt="Figure 6: The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step." />
-<figcaption aria-hidden="true">Figure 6: The six-script pipeline from
+<figcaption>Figure 6: The six-script pipeline from
 source validation through token hydration, ending at the combined-PDF
 render step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
 <img src="figures/status_dashboard.png" style="width:85.0%"
-alt="Figure 7: Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing." />
-<figcaption aria-hidden="true">Figure 7: Integration status dashboard
+alt="Figure 7: Integration status dashboard showing per-resource validation results." />
+<figcaption>Figure 7: Integration status dashboard
 showing per-resource validation results. Green indicates ok, amber
 indicates partial, red indicates missing.</figcaption>
 </figure>
@@ -1975,7 +1986,7 @@ to invoke a non-existent script.</p></li>
 <figure id="fig:resilience">
 <img src="figures/resilience_layers.png" style="width:85.0%"
 alt="Figure 8: The integration layer’s three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response." />
-<figcaption aria-hidden="true">Figure 8: The integration layer’s
+<figcaption>Figure 8: The integration layer’s
 three-level resilience design: resource absence, schema malformation,
 and script absence, each with its own graceful-degradation
 response.</figcaption>
@@ -2069,7 +2080,7 @@ prose to integration runtime statistics through
 <code>{{UPPERCASE_KEY}}</code> tokens, ensuring that quantitative claims
 in the manuscript are always generated by the pipeline rather than
 authored manually. In the current run this covered 3 fonds, 2 rule sets,
-3 tools, and 8 bibliography entries.</p></li>
+4 tools, and 8 bibliography entries.</p></li>
 <li><p><strong>A three-level resilience design</strong> — resource
 absence, schema malformation, and script absence — that allows the
 pipeline to degrade gracefully and report failures informatively rather
@@ -2280,5 +2291,6 @@ Practices for Scientific Computing.”</span> <em>PLoS Biology</em> 12
 href="https://doi.org/10.1371/journal.pbio.1001745">https://doi.org/10.1371/journal.pbio.1001745</a>.
 </div>
 </div>
+</main>
 </body>
 </html>

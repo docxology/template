@@ -78,7 +78,7 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 | `none` | `SearchResult.errors` rendered as text |
 | `3` | distinct keywords in the deep-search aggregate |
 | `convex optimization; stochastic gradient descent; reproducible research` | keyword list rendered as `; `-joined string |
-| `arxiv, crossref, paperclip` | `config.deep_search.sources` (joined) |
+| `arxiv, crossref` | `config.deep_search.sources` (joined) |
 | `<deep-search not run>` | unique papers across all keywords (or `<deep-search not run>`) |
 | `100` | `config.deep_search.max_results_per_keyword` |
 

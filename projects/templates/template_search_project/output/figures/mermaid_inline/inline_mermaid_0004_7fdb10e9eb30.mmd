@@ -1,0 +1,22 @@
+flowchart TB
+    P["projects/templates/template_search_project/"]
+    P --> OUT["output/deep_search/"]
+    P --> BIB["manuscript/references_deep.bib<br/>auto-generated · deduplicated"]
+
+    OUT --> AGG["aggregate.json<br/>every unique paper"]
+    OUT --> AMD["aggregate_report.md<br/>cross-keyword summary"]
+    OUT --> RS["run_summary.json<br/>one-line metadata"]
+    OUT --> KW1["&lt;keyword_slug_1&gt;/"]
+    OUT --> KW2["&lt;keyword_slug_2&gt;/"]
+    OUT --> KW3["&lt;keyword_slug_3&gt;/"]
+
+    KW1 --> KW1_P[papers.json]
+    KW1 --> KW1_R[reading_report.md]
+    KW1 --> KW1_PP["per_paper/<br/>SAFE_ID.md per paper"]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef bib fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,OUT,KW1,KW2,KW3,KW1_PP d
+    class AGG,AMD,RS,KW1_P,KW1_R f
+    class BIB bib

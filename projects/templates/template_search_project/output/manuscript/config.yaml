@@ -10,17 +10,20 @@ paper:
   date: ""
 
 authors:
-  - name: "Research Template Author"
-    orcid: "0000-0000-0000-1234"
-    email: "author@research-template.org"
-    affiliation: "Research Template Institute"
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
 
 publication:
-  doi: ""
+  doi: "10.5281/zenodo.21298894"
+  doi_status: "reserved (draft deposition; awaiting first publication)"
   journal: ""
   year: "2026"
   github_repository: "docxology/template_search_project"
+  version_doi: "10.5281/zenodo.21298895"
+  version_record: "https://zenodo.org/records/21298895"
 
 keywords:
   - "literature search"
@@ -141,7 +144,12 @@ deep_search:
   sources:
     - "arxiv"
     - "crossref"
-    - "paperclip"               # gracefully degrades on missing key or 405
+    # 'paperclip' intentionally omitted from the default: PaperclipBackend
+    # construction raises RuntimeError (fail-fast, by design and tested in
+    # tests/test_deep_search.py) when PAPERCLIP_API_KEY is unset, and that
+    # exception aborts backend construction before arxiv/crossref run too.
+    # Add "paperclip" here only alongside a real PAPERCLIP_API_KEY (see
+    # .env.example) — it does not gracefully degrade.
   year_min: null
   year_max: null
   crossref_mailto: "you@example.org"

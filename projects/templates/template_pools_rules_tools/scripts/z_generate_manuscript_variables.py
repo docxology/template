@@ -23,6 +23,9 @@ import sys
 
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PROJECT_DIR))
+# Repo root for `infrastructure.*` imports when the rendering pipeline invokes
+# this script as a subprocess (sibling z_generate convention, e.g. gold_refinement).
+sys.path.insert(0, str(_PROJECT_DIR.parents[2]))
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
 

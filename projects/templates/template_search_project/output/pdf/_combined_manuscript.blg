@@ -5,6 +5,7 @@ The style file: plainnat.bst
 Reallocated field_info (elt_size=4) to 13568 items from 5000.
 Database file #1: references.bib
 Database file #2: references_deep.bib
+Warning--empty journal in abrolbekov2026high
 Warning--empty journal in abubaker2022scaling
 Warning--empty journal in abubaker2022scalinga
 Warning--empty journal in ali2023comparing
@@ -12,8 +13,7 @@ Warning--empty journal in alonso2025mathematics
 Warning--empty journal in alston2020beginners
 Warning--empty journal in azimjonov2023stochastic
 Warning--empty journal in bahlai2016open
-Warning--empty year in basureproducible
-Warning--empty year in basureproducible
+Warning--empty journal in basu2017reproducible
 Warning--empty journal in basu2018reproducible
 Warning--empty journal in basu2021how
 Warning--empty journal in burgess2018reproducible
@@ -23,11 +23,16 @@ Warning--empty year in anonbackground
 Warning--empty year in anoneconomics
 Warning--empty year in anonintroduction
 Warning--empty year in anonpreface
+Warning--empty journal in charlton2016how
 Warning--empty journal in chen2025revisit
 Warning--empty journal in chendistributed
 Warning--empty year in chendistributed
 Warning--empty year in chendistributed
+Warning--empty journal in chen2026fractionalorder
 Warning--empty journal in cheng2025convergence
+Warning--empty journal in anon1061686udeac59432
+Warning--empty year in anon1061686udeac59432
+Warning--empty year in anon1061686udeac59432
 Warning--empty journal in edmunds2014carmen
 Warning--empty journal in edmunds2014carmena
 Warning--empty journal in edmunds2015fermenting
@@ -100,6 +105,9 @@ Warning--empty journal in peyrache2026elife
 Warning--empty school in pillaudvivienlearning
 Warning--empty year in pillaudvivienlearning
 Warning--empty year in pillaudvivienlearning
+Warning--empty journal in anonninbioinformatics
+Warning--empty year in anonninbioinformatics
+Warning--empty year in anonninbioinformatics
 Warning--empty journal in roskar2022renku
 Warning--empty journal in anon2025preparing
 Warning--empty school in songanglebased
@@ -124,6 +132,7 @@ Warning--empty year in anonconvexa
 Warning--empty year in anonduality
 Warning--empty year in anonglobal
 Warning--empty year in anonreverse
+Warning--empty journal in srinivasan2026intelligent
 Warning--empty journal in stillwell2019statistical
 Warning--empty journal in strand2019publishing
 Warning--empty journal in suber2008oa
@@ -140,6 +149,7 @@ Warning--empty journal in turner2010sweave
 Warning--empty journal in turner2010sweavea
 Warning--empty year in tuypartly
 Warning--empty year in tuypartly
+Warning--empty journal in weisbrod2026exampleproject
 Warning--empty journal in white2018software
 Warning--empty journal in wiebels2021leveraging
 Warning--empty journal in williams2022stochastic
@@ -148,43 +158,43 @@ Warning--empty journal in yang2022adaptive
 Warning--empty journal in yildiz2023dataintegrated
 You've used 306 entries,
             2773 wiz_defined-function locations,
-            2065 strings with 44430 characters,
-and the built_in function-call counts, 115847 in all, are:
-= -- 10675
-> -- 4477
-< -- 313
-+ -- 1731
-- -- 1335
-* -- 7672
-:= -- 18199
-add.period$ -- 1345
+            2064 strings with 44641 characters,
+and the built_in function-call counts, 114995 in all, are:
+= -- 10574
+> -- 4448
+< -- 312
++ -- 1720
+- -- 1326
+* -- 7609
+:= -- 18107
+add.period$ -- 1340
 call.type$ -- 306
 change.case$ -- 1236
-chr.to.int$ -- 216
-cite$ -- 753
-duplicate$ -- 6521
-empty$ -- 10581
-format.name$ -- 1735
-if$ -- 24572
-int.to.chr$ -- 91
+chr.to.int$ -- 218
+cite$ -- 763
+duplicate$ -- 6479
+empty$ -- 10510
+format.name$ -- 1726
+if$ -- 24346
+int.to.chr$ -- 89
 int.to.str$ -- 1
-missing$ -- 422
-newline$ -- 1933
+missing$ -- 419
+newline$ -- 1930
 num.names$ -- 1224
-pop$ -- 3221
+pop$ -- 3224
 preamble$ -- 1
-purify$ -- 1057
+purify$ -- 1054
 quote$ -- 0
-skip$ -- 4347
+skip$ -- 4304
 stack$ -- 0
-substring$ -- 2612
-swap$ -- 777
-text.length$ -- 43
+substring$ -- 2500
+swap$ -- 735
+text.length$ -- 41
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 2751
-warning$ -- 141
-while$ -- 1084
+type$ -- 2766
+warning$ -- 151
+while$ -- 1078
 width$ -- 0
-write$ -- 4475
-(There were 141 warnings)
+write$ -- 4458
+(There were 151 warnings)
