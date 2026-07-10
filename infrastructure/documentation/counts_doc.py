@@ -85,7 +85,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # Union of two independent 2026-07-10 coverage-debt closures (both real
     # no-mock suites over visuals.py, written in parallel sessions): 95 tests,
     # 99.05 % — was 55.91 % when the 1500-line kmyth/TPM module landed with 7.
-    ExemplarSnapshot("template_redacted_report", 95, "99.05 %"),
+    ExemplarSnapshot("template_redacted_report", 98, "98.83 %"),
     ExemplarSnapshot("template_registered_report", 30, "96.37 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),

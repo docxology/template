@@ -80,6 +80,29 @@ PDF_BACKGROUND_MODES = (
 _STYLE_BY_NAME = {profile.name: profile for profile in REDACTION_VISUAL_STYLES}
 _BACKGROUND_BY_NAME = {profile.name: profile for profile in PDF_BACKGROUND_MODES}
 
+_CONFIG_PATH = Path(__file__).resolve().parents[2] / "manuscript" / "config.yaml"
+
+
+def publication_author_and_date() -> tuple[str, str]:
+    """Author name and paper date from ``manuscript/config.yaml``.
+
+    The proof PDFs stamp authorship on every title page and into the
+    steganography metadata; sourcing it from the manuscript config keeps a
+    single source of truth (a hardcoded scaffold author shipped in every
+    tracked proof PDF before this). Both values are fixed strings from the
+    config, so the deterministic-bytes guarantee is preserved.
+    """
+    try:
+        import yaml
+
+        data = yaml.safe_load(_CONFIG_PATH.read_text(encoding="utf-8")) or {}
+        authors = data.get("authors") or []
+        name = str(authors[0].get("name", "")) if authors else ""
+        date = str((data.get("paper") or {}).get("date", ""))
+        return (name or "Template Author", date)
+    except Exception:  # noqa: BLE001 - safety net: proof PDFs must still render standalone without a readable config; falls back to a neutral byline
+        return ("Template Author", "")
+
 
 def normalize_redaction_style(value: str) -> RedactionVisualProfile:
     """Return the configured visual redaction style."""
@@ -665,10 +688,12 @@ class _ProofPDFRenderer:
             "Disclosure Control and Release Audit with TPM-Backed Sealed Sidecars",
         )
 
-        # Author / date
+        # Author / date — from manuscript/config.yaml (single source of truth)
+        author, paper_date = publication_author_and_date()
         self.doc.setFont("Helvetica", 9)
-        self.doc.drawCentredString(self.page_width / 2, self.page_height - 175, "Research Template Author")
-        self.doc.drawCentredString(self.page_width / 2, self.page_height - 190, "2026-07-09")
+        self.doc.drawCentredString(self.page_width / 2, self.page_height - 175, author)
+        if paper_date:
+            self.doc.drawCentredString(self.page_width / 2, self.page_height - 190, paper_date)
 
         # Visual treatment badge
         badge_y = self.page_height - 230
@@ -1053,7 +1078,11 @@ class _ProofPDFRenderer:
         self.y -= 10
 
     def render(self, segments: Sequence[RedactionSegment], decisions: Sequence[RedactionDecision]) -> None:
-        self.doc = self.Canvas(str(self.output_pdf), pagesize=self.pagesize, pageCompression=1)
+        # invariant=1 pins reportlab's CreationDate and document /ID so the
+        # sixteen-variant proof matrix is byte-reproducible run-to-run — the
+        # variant_matrix.json sha256 bindings are only meaningful if the same
+        # inputs regenerate the same bytes.
+        self.doc = self.Canvas(str(self.output_pdf), pagesize=self.pagesize, pageCompression=1, invariant=1)
 
         # Title page
         self._draw_title_page()
@@ -1220,7 +1249,7 @@ def _write_steganography_pdf(
         base_pdf,
         output_pdf=secure_pdf,
         title=title,
-        authors=["Research Template Author"],
+        authors=[publication_author_and_date()[0]],
         keywords=["redaction", "visual-proof", style.name, background.name],
     )
 

@@ -174,6 +174,68 @@ def test_write_dev_variant_pdfs_emits_all_sixteen_base_pdfs(
     assert kmyth["sidecars_created"] == 0
 
 
+def test_variant_generation_is_byte_deterministic(
+    tmp_path: Path,
+    packet: tuple[list[RedactionSegment], list[RedactionDecision]],
+    base_variants_dir: tuple[Path, dict[str, object]],
+) -> None:
+    """The 4x4 proof matrix must regenerate byte-identically run-to-run.
+
+    variant_matrix.json binds each artifact to a sha256; those bindings are
+    only auditable if the same inputs reproduce the same bytes. Regression
+    pin for the reportlab Canvas invariant=1 flag — without it, CreationDate
+    and the document /ID churn on every run and this test fails.
+    """
+    segments, decisions = packet
+    first_dir, first_result = base_variants_dir
+    second_dir = tmp_path / "again"
+    write_dev_variant_pdfs(segments, decisions, second_dir, include_steganography=False, include_kmyth=False)
+    first = json.loads((first_dir / "variant_matrix.json").read_text(encoding="utf-8"))
+    second = json.loads((second_dir / "variant_matrix.json").read_text(encoding="utf-8"))
+    first_hashes = {v["variant_id"]: v["base_pdf_sha256"] for v in first["variants"]}
+    second_hashes = {v["variant_id"]: v["base_pdf_sha256"] for v in second["variants"]}
+    assert first_hashes == second_hashes
+    # And the recorded hash is really the file's hash, not a stored constant.
+    sample = second["variants"][0]
+    digest = hashlib.sha256((second_dir / str(sample["base_pdf"])).read_bytes()).hexdigest()
+    assert digest == sample["base_pdf_sha256"]
+
+
+def test_config_declared_matrix_dimensions_match_implementation() -> None:
+    """manuscript/config.yaml declares the style/background lists; bind them.
+
+    The config advertises the combinatoric space (render.redaction_visual);
+    a style added or dropped in only one place would silently desynchronize
+    the declared matrix from the generated one.
+    """
+    import yaml
+
+    config = yaml.safe_load(
+        (Path(__file__).resolve().parents[1] / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+    )
+    declared = config["render"]["redaction_visual"]
+    assert tuple(declared["redaction_styles"]) == tuple(p.name for p in visuals.REDACTION_VISUAL_STYLES)
+    assert tuple(declared["pdf_backgrounds"]) == tuple(p.name for p in visuals.PDF_BACKGROUND_MODES)
+
+
+def test_title_page_author_comes_from_manuscript_config(
+    base_variants_dir: tuple[Path, dict[str, object]],
+) -> None:
+    """Proof-PDF bylines must trace to config.yaml, never a hardcoded scaffold author."""
+    import yaml
+
+    config = yaml.safe_load(
+        (Path(__file__).resolve().parents[1] / "manuscript" / "config.yaml").read_text(encoding="utf-8")
+    )
+    config_author = config["authors"][0]["name"]
+    assert visuals.publication_author_and_date()[0] == config_author
+    output_dir, _result = base_variants_dir
+    reader = PdfReader(str(output_dir / "blackout_on_white.pdf"))
+    first_page_text = reader.pages[0].extract_text()
+    assert config_author in first_page_text
+    assert "Research Template Author" not in first_page_text
+
+
 def test_written_matrix_records_real_sizes_and_hashes(
     base_variants_dir: tuple[Path, dict[str, object]],
 ) -> None:

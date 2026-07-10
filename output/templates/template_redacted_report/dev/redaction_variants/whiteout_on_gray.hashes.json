@@ -1,13 +1,13 @@
 {
   "source_file": "whiteout_on_gray.pdf",
-  "timestamp": "2026-07-09T17:54:22-07:00",
+  "timestamp": "2026-07-10T10:46:03-07:00",
   "hashes": {
-    "sha256": "f831181ae26cdc607dad88eb6413e3f21d9bfd631909197b9b1fc7e018c03e45",
-    "sha512": "34d98433ef5bed72692e3ef413d453a8a6d482ebdf92068df09a564b85dca4428f1cb1000987e3bc968f5e2a00e44a6af2ea99bf45f07867fe23cec971f210e5"
+    "sha256": "1353140c84ab21ef19220682c868531a5eaf5b608ec5bc771f9dbf576d746fc8",
+    "sha512": "134faab9f09f8662e72ea00a1efc27116540cbf489ede1f47580d29a4e3217176390d468ef6419f38d8efff2db5110c98a84f10911cabd0088aab78887a50c02"
   },
-  "document_id": "75843def6ffc1874ec7490349efe88d9",
-  "source_size_bytes": 2090,
-  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
+  "document_id": "12aff773774fb3d57116132426c73029",
+  "source_size_bytes": 21444,
+  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

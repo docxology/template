@@ -1,13 +1,13 @@
 {
   "source_file": "grayout_on_blur.pdf",
-  "timestamp": "2026-07-09T17:54:22-07:00",
+  "timestamp": "2026-07-10T10:46:03-07:00",
   "hashes": {
-    "sha256": "647ac52ff3c22fb67f7ca542436691ae7b64490706dffd38cfb8e93507f08ac4",
-    "sha512": "dfac7bc12fcbcb59b190e9e68ea528939dccc45867593a0607fee5769988768217c6290be00d85464f2f7abd8e29b0a353c54b63f0fd543513f896f240902b8f"
+    "sha256": "dfb9abf616e27b6760787b2ebc79322224f30d9a861f1fc25b8fa15f03be7cc8",
+    "sha512": "baceb5963a52f0edb1fd1f15f65ff3d2e75987d8d8d4f73d0ccfb1e7ed69cc63996fa84c25c06f55a9da3db9e7428c9c99094a7d8ce16df4ee410e5242056173"
   },
-  "document_id": "75843def6ffc1874ec7490349efe88d9",
-  "source_size_bytes": 2474,
-  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
+  "document_id": "12aff773774fb3d57116132426c73029",
+  "source_size_bytes": 36681,
+  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

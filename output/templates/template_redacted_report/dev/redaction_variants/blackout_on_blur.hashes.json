@@ -1,13 +1,13 @@
 {
   "source_file": "blackout_on_blur.pdf",
-  "timestamp": "2026-07-09T17:54:22-07:00",
+  "timestamp": "2026-07-10T10:46:03-07:00",
   "hashes": {
-    "sha256": "798052ee61ec04bea942a23c2bcf08b3294c928732a420dc8e5c7c889a71e989",
-    "sha512": "54a860a4f142231ef3efd434ce8374f6e80da65c3a6f71ea1c1800d19fbb2b64e0c6cfe07f82cf713077f5b660dc568cbaae94325ad2420440d8fa93be0f9dda"
+    "sha256": "a348573763f967742b9ef068483e68e31b381f3d41eae8b6c7d5bf980684ff0b",
+    "sha512": "74f52c3c98e9462d32ba8357629c393a5d090a545f08d0c71485067b87692fd7e9844a89c4318fa341c41d323e9c7806bbf739cb83685fb72747b13392ba9958"
   },
-  "document_id": "75843def6ffc1874ec7490349efe88d9",
-  "source_size_bytes": 2465,
-  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
+  "document_id": "12aff773774fb3d57116132426c73029",
+  "source_size_bytes": 36626,
+  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

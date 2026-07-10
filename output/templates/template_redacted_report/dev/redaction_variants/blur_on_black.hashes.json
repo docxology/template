@@ -1,13 +1,13 @@
 {
   "source_file": "blur_on_black.pdf",
-  "timestamp": "2026-07-09T17:54:22-07:00",
+  "timestamp": "2026-07-10T10:46:03-07:00",
   "hashes": {
-    "sha256": "4077f0445e2552145fc117f7ef144f097736ac6e1e0f01b3716d7be92b54eb94",
-    "sha512": "181cb69f942f4d0a62f5453fcc142ce8cbf81a35e58ce6fbe94d6278e85b0f2ea4b3695f10e2434c79dbcdf0c4222e811e18ea39f5182bbea192122672130307"
+    "sha256": "94aaeae63f3797b67250aae8dbe1ef708be8aaad6edcbe7a20befcc4a9c9a572",
+    "sha512": "fcbc4402c72e08b5348f745282d18b2041223891d37229d6574b9ee1c9d8f76c31dd618051ba6557df33bcc9bcc92ea15fe41ca187cd538f26b8df1475ce40bb"
   },
-  "document_id": "75843def6ffc1874ec7490349efe88d9",
-  "source_size_bytes": 2180,
-  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
+  "document_id": "12aff773774fb3d57116132426c73029",
+  "source_size_bytes": 21968,
+  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
   "git_commit_available": true,
   "steganography_applied": "true"
 }
