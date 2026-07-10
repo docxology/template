@@ -201,8 +201,8 @@ def test_dev_variant_output_verifier_enforces_filenames_and_hashes(
 
 def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypatch: pytest.MonkeyPatch) -> None:
     class FakeAvailability:
-        seal_path = Path("/tmp/kmyth-seal")
-        unseal_path = Path("/tmp/kmyth-unseal")
+        seal_path = Path("/tmp/kmyth-seal")  # nosec B108 - fake path constant on a test double, never touched
+        unseal_path = Path("/tmp/kmyth-unseal")  # nosec B108 - fake path constant on a test double, never touched
 
         def __init__(self, available: bool) -> None:
             self.available = available

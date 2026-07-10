@@ -17,4 +17,4 @@ from template_formal.agent.agent import Agent, BeliefState
 def bad_usage() -> None:
     preference = BeliefState(mean=0.0, variance=1.0)
     # error: Argument 1 to "Agent" has incompatible type "UUID"; expected "AgentId"
-    Agent(uuid4(), Path("/tmp/bad-agent.sqlite3"), preference)
+    Agent(uuid4(), Path("/tmp/bad-agent.sqlite3"), preference)  # nosec B108 - known-bad mypy fixture, never executed

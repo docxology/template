@@ -37,10 +37,10 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROXY_SCRIPT = SCRIPT_DIR / "swtpm_mssim_proxy.py"
 KMYTH_PREFIX = Path.home() / ".kmyth-prefix"
 
-SWTPM_STATE_DIR = Path("/tmp/swtpm-kmyth-state")
-SWTPM_LOG = Path("/tmp/swtpm-kmyth.log")
-SWTPM_PID_FILE = Path("/tmp/swtpm-kmyth.pid")
-PROXY_PID_FILE = Path("/tmp/swtpm-kmyth-proxy.pid")
+SWTPM_STATE_DIR = Path("/tmp/swtpm-kmyth-state")  # nosec B108 - local dev TPM emulator state, fixed rendezvous path
+SWTPM_LOG = Path("/tmp/swtpm-kmyth.log")  # nosec B108 - local dev TPM emulator log
+SWTPM_PID_FILE = Path("/tmp/swtpm-kmyth.pid")  # nosec B108 - local dev TPM emulator pidfile
+PROXY_PID_FILE = Path("/tmp/swtpm-kmyth-proxy.pid")  # nosec B108 - local dev TPM emulator proxy pidfile
 
 SWTPM_DATA_PORT = 3321
 SWTPM_CTRL_PORT = 3322

@@ -168,7 +168,7 @@ class QueryBuilder(Generic[RowT]):
         """Return every row in the table, or ``Err`` on a connection failure."""
         validate_sql_identifier(self.table.name, what="table name")
         try:
-            cursor = self.database.connection.execute(f"SELECT * FROM {self.table.name}")
+            cursor = self.database.connection.execute(f"SELECT * FROM {self.table.name}")  # nosec B608 - identifier pre-validated by validate_sql_identifier
             rows = [self.row_factory(row) for row in cursor.fetchall()]
         except sqlite3.Error as exc:
             return Err(StorageError(kind="connection_error", message=str(exc)))
@@ -187,7 +187,7 @@ class QueryBuilder(Generic[RowT]):
             )
         validate_sql_identifier(self.table.name, what="table name")
         try:
-            cursor = self.database.connection.execute(f"SELECT * FROM {self.table.name} WHERE {column} = ?", (value,))
+            cursor = self.database.connection.execute(f"SELECT * FROM {self.table.name} WHERE {column} = ?", (value,))  # nosec B608 - identifiers pre-validated; value parameterized
             rows = [self.row_factory(row) for row in cursor.fetchall()]
         except sqlite3.Error as exc:
             return Err(StorageError(kind="connection_error", message=str(exc)))
@@ -229,7 +229,7 @@ class QueryBuilder(Generic[RowT]):
         placeholders = ", ".join("?" for _ in values)
         try:
             cursor = self.database.connection.execute(
-                f"INSERT INTO {self.table.name} ({columns}) VALUES ({placeholders})",
+                f"INSERT INTO {self.table.name} ({columns}) VALUES ({placeholders})",  # nosec B608 - identifiers pre-validated; values parameterized
                 tuple(values.values()),
             )
         except sqlite3.IntegrityError as exc:
