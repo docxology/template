@@ -78,17 +78,17 @@
   "public_exemplar_roster_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
     "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
-    "value": 19,
+    "value": 23,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.project.public_scope.public_project_names",
     "verifier_args": {"repo_root": ".", "read": "len"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf",
-    "refreshed_on": "2026-07-07",
-    "refreshed_by": "EXEMPLAR-AUDIT-2026-07-07",
-    "refresh_commit": "646bb159",
-    "refresh_reason": "public_project_names() returns 18 (template_autoscientists and template_pools_rules_tools were added to PUBLIC_PROJECT_NAMES since the 2026-07-01 pin at 16)."
+    "refreshed_on": "2026-07-10",
+    "refreshed_by": "template-sync-cohere-20260710",
+    "refresh_commit": "d4aef518",
+    "refresh_reason": "public_project_names() returns 23: template_formal (local stream) plus template_data_descriptor, template_redacted_report, template_registered_report (remote stream) joined PUBLIC_PROJECT_NAMES since the 2026-07-07 refresh at 19."
   },
   "module_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",
