@@ -1,28 +1,35 @@
 {
-  "creators": [
-    {
-      "affiliation": "Active Inference Institute",
-      "name": "Template Author, Research",
-      "orcid": "0000-0002-0000-0001"
-    },
-    {
-      "affiliation": "Active Inference Institute",
-      "name": "Collaborator, Template",
-      "orcid": "0000-0002-0000-0002"
-    }
-  ],
-  "description": "Source code for Pools, Rules, and Tools: A Template-Integrated Resource Architecture (2026). A meta-project demonstrating fonds, rules, and tools integration in research software.",
-  "keywords": [
-    "research software engineering",
-    "monorepo architecture",
-    "reproducibility",
-    "fonds",
-    "governance rules",
-    "tool discovery",
-    "graceful degradation"
-  ],
-  "license": "CC-BY-4.0",
-  "title": "Pools, Rules, and Tools: A Template-Integrated Resource Architecture",
-  "upload_type": "software",
-  "version": "1.0.0"
+ "creators": [
+  {
+   "affiliation": "Active Inference Institute",
+   "name": "Template Author, Research",
+   "orcid": "0000-0002-0000-0001"
+  },
+  {
+   "affiliation": "Active Inference Institute",
+   "name": "Collaborator, Template",
+   "orcid": "0000-0002-0000-0002"
+  }
+ ],
+ "description": "Source code for Pools, Rules, and Tools: A Template-Integrated Resource Architecture (2026). A meta-project demonstrating fonds, rules, and tools integration in research software.",
+ "keywords": [
+  "research software engineering",
+  "monorepo architecture",
+  "reproducibility",
+  "fonds",
+  "governance rules",
+  "tool discovery",
+  "graceful degradation"
+ ],
+ "license": "CC-BY-4.0",
+ "title": "Pools, Rules, and Tools: A Template-Integrated Resource Architecture",
+ "upload_type": "software",
+ "version": "1.0.0",
+ "related_identifiers": [
+  {
+   "relation": "isVersionOf",
+   "identifier": "10.5281/zenodo.21298888",
+   "scheme": "doi"
+  }
+ ]
 }

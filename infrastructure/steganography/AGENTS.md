@@ -91,7 +91,7 @@ swtpm's native socket protocol.
 
 ```bash
 # Start the TPM backend (swtpm + proxy)
-eval "$(python3 infrastructure/steganography/start_tpm_backend.py start)"
+eval "$(uv run python infrastructure/steganography/start_tpm_backend.py start)"
 
 # Run the pipeline with Kmyth sealing
 uv run python projects/templates/template_redacted_report/scripts/generate_dev_variants.py \
@@ -99,7 +99,7 @@ uv run python projects/templates/template_redacted_report/scripts/generate_dev_v
     --kmyth-timeout-seconds 15
 
 # Stop the TPM backend when done
-python3 infrastructure/steganography/start_tpm_backend.py stop
+uv run python infrastructure/steganography/start_tpm_backend.py stop
 ```
 
 ### How It Works

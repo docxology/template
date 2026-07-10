@@ -84,14 +84,14 @@ macOS has no hardware TPM. Use the bundled swtpm + proxy:
 
 ```bash
 # Start TPM backend
-eval "$(python3 infrastructure/steganography/start_tpm_backend.py start)"
+eval "$(uv run python infrastructure/steganography/start_tpm_backend.py start)"
 
 # Run pipeline with Kmyth sealing
 uv run python projects/templates/template_redacted_report/scripts/generate_dev_variants.py \
     --kmyth-binary-dir infrastructure/steganography/kmyth/bin
 
 # Stop when done
-python3 infrastructure/steganography/start_tpm_backend.py stop
+uv run python infrastructure/steganography/start_tpm_backend.py stop
 ```
 
 See [AGENTS.md](AGENTS.md#tpm-backend-setup-macos) for full TPM setup details.

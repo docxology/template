@@ -102,21 +102,16 @@ def generate_figures(project_root: Path | None = None) -> list[Path]:
 
 
 def main() -> None:
-    """CLI entry point."""
+    """Render figures, mirroring each into disposable ``output/figures/``
+    (the Beamer slide renderer resolves ``../figures/`` against ``output/``;
+    ``manuscript/figures/`` stays the git-tracked canonical location)."""
     import shutil
 
-    written = generate_figures()
-    # manuscript/figures/ is the git-tracked canonical location; the Beamer
-    # slide renderer resolves ../figures/ against output/, so mirror a
-    # disposable copy to output/figures/ (sibling convention, e.g.
-    # template_pools_rules_tools scripts/05_generate_figures.py).
     output_figures = Path(__file__).resolve().parents[1] / "output" / "figures"
     output_figures.mkdir(parents=True, exist_ok=True)
-    for figure_path in written:
-        mirrored = output_figures / figure_path.name
-        shutil.copy2(figure_path, mirrored)
+    for figure_path in generate_figures():
         print(figure_path)
-        print(mirrored)
+        print(shutil.copy2(figure_path, output_figures / figure_path.name))
 
 
 if __name__ == "__main__":

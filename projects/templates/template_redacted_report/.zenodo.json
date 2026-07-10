@@ -1,7 +1,14 @@
 {
-  "title": "template_redacted_report",
-  "version": "0.1.0",
-  "upload_type": "publication",
-  "publication_type": "technicalnote",
-  "license": "cc-by-4.0"
+ "title": "template_redacted_report",
+ "version": "0.1.0",
+ "upload_type": "publication",
+ "publication_type": "technicalnote",
+ "license": "cc-by-4.0",
+ "related_identifiers": [
+  {
+   "relation": "isVersionOf",
+   "identifier": "10.5281/zenodo.21298890",
+   "scheme": "doi"
+  }
+ ]
 }
