@@ -8,6 +8,15 @@ Context keys (all optional; missing keys skip semantic checks for that rule):
 - ``forbidden_sections_found``: ``list[str]`` — headings that must not appear.
 - ``references``: ``list[dict[str, object]]`` — reference records for schema checks.
 - ``project_root``: :class:`pathlib.Path` — project tree for module-structure rules.
+- ``fond_freshness``: ``list[dict[str, object]]`` — one record per fond, each with
+  ``name`` (str), ``manifest_mtime`` (float), ``latest_data_mtime`` (float), for
+  ``manifest_freshness`` rules.
+
+``manifest_freshness`` is implemented here (dispatch + evaluator + synthetic-dict
+unit tests) but deliberately has no corresponding strong-rule YAML file under
+``rules/templates/*/strong/`` yet — adding one would mean writing into the shared
+``rules/`` tree, which this project's own read-only invariant reserves for an
+explicit, separately-considered decision (see ``manuscript/07_conclusion.md``).
 """
 
 from __future__ import annotations
@@ -29,6 +38,7 @@ __all__ = [
     "evaluate_strong_rule",
     "evaluate_strong_rules",
     "load_rule_context_from_project",
+    "parse_bib_entries",
 ]
 
 logger = logging.getLogger(__name__)
@@ -103,6 +113,7 @@ def evaluate_strong_rule(
         "section_schema": _evaluate_section_schema,
         "module_structure": _evaluate_module_structure,
         "reference_schema": _evaluate_reference_schema,
+        "manifest_freshness": _evaluate_manifest_freshness,
     }
     evaluator = dispatch.get(rule_name)
     if evaluator is None:
@@ -375,12 +386,59 @@ def _evaluate_reference_schema(
     return violations
 
 
+def _evaluate_manifest_freshness(
+    rule_name: str,
+    filename: str,
+    _rule: dict[str, object],
+    context: dict[str, object],
+) -> list[StrongRuleViolation]:
+    """Flag a fond whose ``fonds.yaml`` was not touched despite its ``data/``
+    files changing more recently — the manifest ``version`` field cannot have
+    been bumped in step with a manifest mtime that predates the data change."""
+    records = context.get("fond_freshness")
+    if not isinstance(records, list):
+        return []
+
+    violations: list[StrongRuleViolation] = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        name = record.get("name")
+        manifest_mtime = record.get("manifest_mtime")
+        latest_data_mtime = record.get("latest_data_mtime")
+        if not isinstance(name, str):
+            continue
+        if not isinstance(manifest_mtime, (int, float)) or not isinstance(
+            latest_data_mtime, (int, float)
+        ):
+            continue
+        if latest_data_mtime > manifest_mtime:
+            violations.append(
+                StrongRuleViolation(
+                    rule_name=rule_name,
+                    filename=filename,
+                    message=(
+                        f"fond '{name}': data/ changed after fonds.yaml was last "
+                        "modified — version field may need bumping"
+                    ),
+                )
+            )
+    return violations
+
+
 def _normalize_heading(raw: str) -> str:
     heading = raw.removeprefix("# ").strip()
     return re.sub(r"\s*\{#.*\}\s*$", "", heading).strip()
 
 
-def _parse_bib_entries(bib_text: str) -> list[dict[str, object]]:
+def parse_bib_entries(bib_text: str) -> list[dict[str, object]]:
+    """Parse a BibTeX string into a list of entry dicts (``key``, ``type``, fields).
+
+    Deliberately simple line-oriented parser (no full BibTeX grammar); shared by
+    ``load_rule_context_from_project()`` for ``reference_schema`` evaluation and by
+    ``src/integration.py``'s cross-fond citation overlap check, so both consumers
+    agree on exactly what counts as a cite key.
+    """
     references: list[dict[str, object]] = []
     entry: dict[str, object] = {}
     for line in bib_text.splitlines():
@@ -441,7 +499,7 @@ def load_rule_context_from_project(project_root: pathlib.Path) -> dict[str, obje
     references: list[dict[str, object]] = []
     bib_path = manuscript_dir / "references.bib"
     if bib_path.is_file():
-        references = _parse_bib_entries(bib_path.read_text(encoding="utf-8"))
+        references = parse_bib_entries(bib_path.read_text(encoding="utf-8"))
 
     coverage = config_block.get("coverage")
     forbidden_set = {"TODO", "FIXME", "Draft", "PLACEHOLDER", "Scratch", "Notes"}

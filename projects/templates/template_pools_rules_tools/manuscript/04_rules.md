@@ -13,7 +13,7 @@ A **rule set** in the template repository is a directory under `rules/<scope>/<n
 └── strong/          — YAML constraint schemas (machine-enforceable)
 ```
 
-This two-tier architecture reflects the distinction between *guidance* (which humans follow approximately) and *constraints* (which pipelines enforce precisely) — a distinction also recognised in enterprise application architecture [@Fowler2002patterns].
+This two-tier architecture reflects the distinction between *guidance* (which humans follow approximately) and *constraints* (which pipelines enforce precisely) — a distinction also recognised in enterprise application architecture [@Fowler2002patterns]. @fig:rulehier shows both template rule sets split into their soft and strong branches: each branch is independently discoverable, so a consumer that only cares about machine-enforceable constraints never has to parse guideline prose, and vice versa.
 
 ## Soft Rules: Style and Process Guidelines
 
@@ -43,6 +43,8 @@ rule:
 
 The `enforcement: fail_on_violation` field signals that a pipeline must halt and report when this rule is violated. Strong rules are suitable for invariants that, if broken, indicate a genuine defect rather than a style preference: coverage below 90% means tests are missing; a manuscript section without an abstract means the document is incomplete.
 
+![Rule hierarchy: the two template rule sets, each split into a machine-enforceable `strong/` branch and a guidance-only `soft/` branch.](figures/rule_hierarchy.png){#fig:rulehier width=85%}
+
 ## The Two Template Rule Sets
 
 ### `template_project_rules`
@@ -65,7 +67,7 @@ This rule set governs research manuscripts. Its strong rules comprise:
 | `strong/reference-schema.yaml` | Required BibTeX fields and cite-key format constraints |
 | `strong/section-schema.yaml` | Required manuscript sections, ordering, and minimum word counts |
 
-In the current pipeline run, **{{integration.rules_sets_ok}} of 2 rule sets** validated successfully (@fig:counts).
+In the current pipeline run, **{{RULES_SETS_OK}} of 2 rule sets** validated successfully (@fig:counts).
 
 ## The `rules_applier` Module
 
@@ -88,4 +90,29 @@ result = validate_against_rules("template_project_rules")
 
 ## Rules and Manuscript Variables
 
-Strong rule validation counts are injected into the manuscript through the token system. The token `{{integration.rules_sets_ok}}` expands to the count of rule sets that returned `status="ok"` during the integration run. This creates a verifiable link between the pipeline's actual behaviour and the manuscript's claims — the manuscript cannot assert successful validation without the pipeline having actually succeeded.
+Strong rule validation counts are injected into the manuscript through the token system. The token `{{RULES_SETS_OK}}` expands to the count of rule sets that returned `status="ok"` during the integration run. This creates a verifiable link between the pipeline's actual behaviour and the manuscript's claims — the manuscript cannot assert successful validation without the pipeline having actually succeeded.
+
+## Beyond Structural Validation: The `strong_rule_evaluator` Module
+
+`validate_against_rules()` (described above) performs *structural* validation only: it confirms that `rules.yaml` and every file in `soft/`/`strong/` parse as YAML. It does not check whether the constraints those strong-rule files declare are actually satisfied by the current project. That semantic layer lives in a separate module, `src/strong_rule_evaluator.py`, exposed via `scripts/04_validate_strong_rules.py`:
+
+```python
+from src.strong_rule_evaluator import evaluate_strong_rules, load_rule_context_from_project
+
+context = load_rule_context_from_project(project_root)
+result = evaluate_strong_rules("template_project_rules", context)
+# → {"rule_set": ..., "evaluations": [...], "passed": bool, "violation_count": int}
+```
+
+`evaluate_strong_rules()` dispatches each strong-rule YAML file to a rule-kind-specific evaluator function keyed by its declared kind, via a small dispatch table covering all four strong-rule kinds that exist across both rule sets:
+
+| Kind | Evaluator | Checks |
+|---|---|---|
+| `coverage_threshold` | `_evaluate_coverage_threshold` | Measured coverage percentages (from `context["coverage"]`) against each constraint's declared `minimum_line_coverage` |
+| `module_structure` | `_evaluate_module_structure` | Required project directory layout (`src/`, `tests/`, `scripts/`, `manuscript/`) actually exists |
+| `section_schema` | `_evaluate_section_schema` | Required manuscript sections, ordering, and forbidden placeholder headings (`TODO`, `Draft`, etc.) |
+| `reference_schema` | `_evaluate_reference_schema` | Required BibTeX fields and cite-key format constraints on every parsed reference entry |
+
+Each evaluator distinguishes structured violation *reasons* rather than collapsing everything to a boolean — for example, `coverage_threshold` reports separately whether a key was absent from context (a context-completeness issue), non-numeric (a context-shape issue), or numeric-but-below-minimum (a genuine rule violation). This is what lets the pipeline tell a maintainer *why* a rule failed, not merely *that* it failed — directly addressing the "actionable defect" distinction introduced in the previous section.
+
+Crucially, `section_schema` and `reference_schema` are not evaluated against synthetic fixtures — `load_rule_context_from_project()` (in `scripts/04_validate_strong_rules.py`) builds their context by parsing *this project's own, current* `manuscript/references.bib` into structured reference entries and extracting the real `# `-level headings from every file under `manuscript/*.md`. Running `uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py` therefore semantically validates this exact manuscript's own bibliography and section structure, live, on every invocation — re-run that command to see the current evaluation and violation counts rather than trusting a number printed here, since either count can legitimately change as the manuscript grows.

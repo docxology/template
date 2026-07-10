@@ -5,7 +5,10 @@ Tests skip gracefully when tool directories are absent.
 
 from __future__ import annotations
 
+import json
 import pathlib
+import shutil
+import subprocess
 import sys
 
 import pytest
@@ -13,9 +16,9 @@ import pytest
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
 from src.tools_invoker import (
-    get_tools_root,
     discover_tools,
     get_tool_entrypoints,
+    get_tools_root,
     validate_tool_scripts_exist,
 )
 
@@ -166,3 +169,99 @@ def test_validate_missing_tool_returns_empty_valid():
     assert result["entrypoints"] == []
     assert result["missing"] == []
     assert result["valid"] is True  # no entrypoints → nothing missing
+
+
+# ---------------------------------------------------------------------------
+# Real subprocess invocation — proves the entrypoints actually run, not just
+# that they exist on disk. Deliberately test-only: src/tools_invoker.py's own
+# public API stays existence-checking only (invoking arbitrary tool scripts
+# from library code would violate this project's own "never raise" graceful-
+# degradation contract). Each test is skipif-guarded on its real runtime
+# dependency so a missing binary skips cleanly instead of failing CI.
+# ---------------------------------------------------------------------------
+
+_CODE_EXECUTOR_RUN_SH = get_tools_root() / "template_code_executor" / "scripts" / "run.sh"
+_VALIDATOR_VALIDATE_SH = get_tools_root() / "template_validator" / "scripts" / "validate.sh"
+
+_HAS_TIMEOUT_AND_JQ = (
+    shutil.which("timeout") is not None or shutil.which("gtimeout") is not None
+) and shutil.which("jq") is not None
+
+try:
+    import jsonschema  # noqa: F401
+
+    _HAS_JSONSCHEMA = True
+except ImportError:
+    _HAS_JSONSCHEMA = False
+
+
+@pytest.mark.skipif(
+    not _CODE_EXECUTOR_RUN_SH.is_file(), reason="template_code_executor/scripts/run.sh not present"
+)
+@pytest.mark.skipif(
+    not _HAS_TIMEOUT_AND_JQ, reason="run.sh requires `timeout` (or `gtimeout`) and `jq` on PATH"
+)
+class TestInvokeCodeExecutor:
+    def test_run_sh_executes_real_python(self):
+        payload = json.dumps({"code": "print(2 + 2)", "language": "python", "timeout_s": 5})
+        proc = subprocess.run(  # noqa: S603
+            ["bash", str(_CODE_EXECUTOR_RUN_SH)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        result = json.loads(proc.stdout)
+        assert result["exit_code"] == 0
+        assert "4" in result["stdout"]
+
+    def test_run_sh_reports_nonzero_exit_on_real_failure(self):
+        payload = json.dumps({"code": "raise SystemExit(3)", "language": "python", "timeout_s": 5})
+        proc = subprocess.run(  # noqa: S603
+            ["bash", str(_CODE_EXECUTOR_RUN_SH)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        result = json.loads(proc.stdout)
+        assert result["exit_code"] == 3
+
+
+@pytest.mark.skipif(
+    not _VALIDATOR_VALIDATE_SH.is_file(),
+    reason="template_validator/scripts/validate.sh not present",
+)
+@pytest.mark.skipif(
+    not _HAS_JSONSCHEMA, reason="validate.sh's real schema check requires the jsonschema package"
+)
+class TestInvokeValidator:
+    def test_validate_sh_accepts_schema_conformant_document(self):
+        payload = json.dumps({"name": "template_pools_rules_tools", "version": "1.0.0"})
+        proc = subprocess.run(  # noqa: S603
+            ["bash", str(_VALIDATOR_VALIDATE_SH)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        assert proc.returncode == 0
+        assert "VALID" in proc.stdout
+        assert (
+            "jsonschema not installed" not in proc.stdout
+        )  # must be the real schema path, not the fallback
+
+    def test_validate_sh_rejects_document_missing_required_version_field(self):
+        # tools/templates/template_validator/scripts/schema.json declares
+        # "required": ["name", "version"] — omitting version is a genuine,
+        # schema-verified violation, not an assumed one.
+        payload = json.dumps({"name": "template_pools_rules_tools"})
+        proc = subprocess.run(  # noqa: S603
+            ["bash", str(_VALIDATOR_VALIDATE_SH)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        assert proc.returncode == 1
+        assert "INVALID" in proc.stdout

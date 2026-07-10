@@ -9,6 +9,7 @@ variable injection.
 from __future__ import annotations
 
 import logging
+import pathlib
 
 from .fonds_reader import (
     read_bibliography_fond,
@@ -16,11 +17,13 @@ from .fonds_reader import (
     read_datasets_fond,
 )
 from .rules_applier import validate_against_rules
+from .strong_rule_evaluator import parse_bib_entries
 from .tools_invoker import discover_tools, validate_tool_scripts_exist
 from .type_defs import (
     AllFondsResult,
     BibliographyFondResult,
     ContactsFondResult,
+    CrossFondOverlapResult,
     DatasetsFondResult,
     FigureDataRow,
     IntegrationResult,
@@ -32,7 +35,24 @@ from .type_defs import (
 __all__ = [
     "run_integration_demo",
     "generate_figure_data",
+    "derive_dashboard_data",
+    "check_bibliography_overlap",
 ]
+
+# projects/templates/template_pools_rules_tools/src/integration.py -> project root
+_PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
+
+# Human-readable labels for the status dashboard, keyed by generate_figure_data()'s
+# machine labels.
+_FOND_LABELS: dict[str, str] = {
+    "bibliography": "Bibliography Fond",
+    "contacts": "Contacts Fond",
+    "datasets": "Datasets Fond",
+}
+_RULE_SET_LABELS: dict[str, str] = {
+    "template_project_rules": "Project Rules",
+    "template_manuscript_rules": "Manuscript Rules",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -210,3 +230,78 @@ def generate_figure_data(result: IntegrationResult | None = None) -> list[Figure
         )
 
     return rows
+
+
+def derive_dashboard_data(
+    result: IntegrationResult | None = None,
+) -> tuple[dict[str, int], dict[str, str]]:
+    """Derive real (counts, statuses) dicts for the resource_counts and
+    status_dashboard figures from an actual integration run.
+
+    Binds ``src/figures.py``'s ``generate_resource_counts()`` and
+    ``generate_status_dashboard()`` to the same data the manuscript's
+    ``{{FONDS_LOADED}}``/``{{RULES_SETS_OK}}``/``{{TOOLS_DISCOVERED}}``
+    tokens report, rather than their illustrative hard-coded defaults.
+    """
+    if result is None:
+        result = run_integration_demo()
+
+    summary = result["summary"]
+    counts: dict[str, int] = {
+        "Fonds": summary["fonds_loaded"],
+        "Rules": summary["rules_sets_ok"],
+        "Tools": summary["tools_discovered"],
+    }
+
+    statuses: dict[str, str] = {}
+    for row in generate_figure_data(result):
+        if row["category"] == "fond":
+            statuses[_FOND_LABELS.get(row["label"], row["label"])] = row["status"]
+        elif row["category"] == "rule_set":
+            statuses[_RULE_SET_LABELS.get(row["label"], row["label"])] = row["status"]
+        elif row["category"] == "tool":
+            nice_name = row["label"].removeprefix("template_").replace("_", " ").title()
+            statuses[nice_name] = "ok" if row["status"] == "valid" else "missing"
+
+    return counts, statuses
+
+
+def check_bibliography_overlap(
+    project_root: pathlib.Path | None = None,
+) -> CrossFondOverlapResult:
+    """Report cite-key overlap between this project's own bibliography and the
+    shared ``template_bibliography`` fond.
+
+    Deliberately reports overlap/project_only/fond_only counts rather than
+    asserting either is a subset of the other: this project's manuscript cites
+    software-engineering sources the curated fond does not carry, and the fond
+    curates ML sources this manuscript does not cite. Both are legitimate.
+    Returns empty lists (never raises) if either source is unreadable, per this
+    project's graceful-degradation convention.
+    """
+    root = project_root if project_root is not None else _PROJECT_ROOT
+    bib_path = root / "manuscript" / "references.bib"
+
+    project_keys: list[str] = []
+    if bib_path.is_file():
+        try:
+            entries = parse_bib_entries(bib_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError):
+            entries = []
+        project_keys = sorted({str(e["key"]) for e in entries if "key" in e})
+
+    fond_keys: list[str] = []
+    bib_fond = read_bibliography_fond()
+    if bib_fond is not None:
+        fond_keys = sorted({row["key"] for row in bib_fond["csv_rows"] if row.get("key")})
+
+    project_set = set(project_keys)
+    fond_set = set(fond_keys)
+
+    return CrossFondOverlapResult(
+        project_keys=project_keys,
+        fond_keys=fond_keys,
+        overlap=sorted(project_set & fond_set),
+        project_only=sorted(project_set - fond_set),
+        fond_only=sorted(fond_set - project_set),
+    )

@@ -10,12 +10,13 @@ name = "template_pools_rules_tools"
 version = "1.0.0"
 description = "Meta-project demonstrating fonds, tools, and rules integration"
 authors = [
-    {name = "Research Template Author", email = "author@research-template.org"}
+    {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
 requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0",
     "matplotlib>=3.7.0",
+    "jsonschema>=4.0.0",
 ]
 
 [project.optional-dependencies]

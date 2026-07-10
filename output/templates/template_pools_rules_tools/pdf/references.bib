@@ -1,0 +1,159 @@
+% manuscript/references.bib
+% Pools, Rules, and Tools: A Template-Integrated Resource Architecture
+%
+% BibTeX references for this manuscript.
+% Cite keys mirror fonds/templates/template_bibliography/data/references.bib
+% where entries are shared; architecture-specific references are added below.
+
+% ============================================================
+% Shared with template_bibliography fond
+% ============================================================
+
+@article{Vaswani2017attention,
+  author    = {Ashish Vaswani and Noam Shazeer and Niki Parmar and Jakob Uszkoreit
+               and Llion Jones and Aidan N. Gomez and Łukasz Kaiser and Illia Polosukhin},
+  title     = {Attention Is All You Need},
+  journal   = {Advances in Neural Information Processing Systems},
+  year      = {2017},
+  volume    = {30},
+  pages     = {5998--6008},
+  doi       = {10.48550/arXiv.1706.03762}
+}
+
+@article{LeCun1998gradient,
+  author    = {Yann LeCun and Léon Bottou and Yoshua Bengio and Patrick Haffner},
+  title     = {Gradient-Based Learning Applied to Document Recognition},
+  journal   = {Proceedings of the IEEE},
+  year      = {1998},
+  volume    = {86},
+  number    = {11},
+  pages     = {2278--2324},
+  doi       = {10.1109/5.726791}
+}
+
+@inproceedings{He2016deep,
+  author    = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+  title     = {Deep Residual Learning for Image Recognition},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  year      = {2016},
+  pages     = {770--778},
+  doi       = {10.1109/CVPR.2016.90}
+}
+
+@article{Brown2020gpt3,
+  author    = {Tom B. Brown and Benjamin Mann and Nick Ryder and Melanie Subbiah
+               and Jared Kaplan and Prafulla Dhariwal and Arvind Neelakantan
+               and Pranav Shyam and Girish Sastry and Amanda Askell
+               and Sandhini Agarwal and Ariel Herbert-Voss and Gretchen Krueger
+               and Tom Henighan and Rewon Child and Aditya Ramesh and Daniel M. Ziegler
+               and Jeffrey Wu and Clemens Winter and Christopher Hesse and Mark Chen
+               and Eric Sigler and Mateusz Litwin and Scott Gray and Benjamin Chess
+               and Jack Clark and Christopher Berner and Sam McCandlish
+               and Alec Radford and Ilya Sutskever and Dario Amodei},
+  title     = {Language Models are Few-Shot Learners},
+  journal   = {Advances in Neural Information Processing Systems},
+  year      = {2020},
+  volume    = {33},
+  pages     = {1877--1901},
+  doi       = {10.48550/arXiv.2005.14165}
+}
+
+% ============================================================
+% Architecture and software-engineering references
+% ============================================================
+
+@book{Gamma1994design,
+  author    = {Erich Gamma and Richard Helm and Ralph Johnson and John Vlissides},
+  title     = {Design Patterns: Elements of Reusable Object-Oriented Software},
+  publisher = {Addison-Wesley},
+  year      = {1994},
+  isbn      = {0-201-63361-2},
+  note      = {Foundational reference for the Facade and Template Method patterns
+               that inform the module architecture described in this paper.}
+}
+
+@book{Fowler2002patterns,
+  author    = {Martin Fowler},
+  title     = {Patterns of Enterprise Application Architecture},
+  publisher = {Addison-Wesley},
+  year      = {2002},
+  isbn      = {0-321-12521-5},
+  note      = {Repository and Registry patterns referenced in the fonds and rules
+               layer design.}
+}
+
+@book{Raymond2003art,
+  author    = {Eric S. Raymond},
+  title     = {The Art of {UNIX} Programming},
+  publisher = {Addison-Wesley},
+  year      = {2003},
+  isbn      = {0-13-142901-9},
+  note      = {Rule of Modularity and Rule of Composition cited in the integration section.}
+}
+
+@article{Wilson2014best,
+  author    = {Greg Wilson and D. A. Aruliah and C. Titus Brown
+               and Neil P. Chue Hong and Matt Davis and Richard T. Guy
+               and Steven H. D. Haddock and Kathryn D. Huff
+               and Ian M. Mitchell and Mark D. Plumbley and Ben Waugh
+               and Ethan P. White and Paul Wilson},
+  title     = {Best Practices for Scientific Computing},
+  journal   = {PLoS Biology},
+  year      = {2014},
+  volume    = {12},
+  number    = {1},
+  pages     = {e1001745},
+  doi       = {10.1371/journal.pbio.1001745}
+}
+
+@article{Taschuk2017ten,
+  author    = {Morgan Taschuk and Greg Wilson},
+  title     = {Ten Simple Rules for Making Research Software More Robust},
+  journal   = {PLoS Computational Biology},
+  year      = {2017},
+  volume    = {13},
+  number    = {4},
+  pages     = {e1005412},
+  doi       = {10.1371/journal.pcbi.1005412}
+}
+
+% ============================================================
+% Monorepo and reproducibility references
+% ============================================================
+
+@article{Guo2012cde,
+  author    = {Philip J. Guo and Dawson Engler},
+  title     = {{CDE}: Using System Call Interposition to Automatically Create
+               Portable Software Packages},
+  journal   = {USENIX ATC},
+  year      = {2012},
+  note      = {Motivates portable, self-contained package design referenced in
+               the resilience discussion.}
+}
+
+@article{Stodden2016enhancing,
+  author    = {Victoria Stodden and Matan Guo and Zhaokun Ma},
+  title     = {Toward Reproducible Computational Research: An Empirical Analysis
+               of Data and Code Policy Adoption by Journals},
+  journal   = {PLoS ONE},
+  year      = {2013},
+  volume    = {8},
+  number    = {6},
+  pages     = {e67111},
+  doi       = {10.1371/journal.pone.0067111}
+}
+
+@inproceedings{Kluyver2016jupyter,
+  author    = {Thomas Kluyver and Benjamin Ragan-Kelley and Fernando Pérez
+               and Brian E. Granger and Matthias Bussonnier and Jonathan Frederic
+               and Kyle Kelley and Jessica B. Hamrick and Jason Grout
+               and Sylvain Corlay and Paul Ivanov and Damián Avila
+               and Safia Abdalla and Carol Willing},
+  title     = {Jupyter Notebooks — a Publishing Format for Reproducible
+               Computational Science},
+  booktitle = {Positioning and Power in Academic Publishing: Players, Agents
+               and Agendas},
+  year      = {2016},
+  pages     = {87--90},
+  doi       = {10.3233/978-1-61499-649-1-87}
+}

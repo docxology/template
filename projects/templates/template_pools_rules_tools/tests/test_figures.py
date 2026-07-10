@@ -35,8 +35,14 @@ if _MATPLOTLIB_AVAILABLE:
     from src.figures import (
         all_figures,
         generate_architecture_overview,
+        generate_cover_art,
+        generate_fond_taxonomy,
+        generate_pipeline_flow,
+        generate_resilience_layers,
         generate_resource_counts,
+        generate_rule_hierarchy,
         generate_status_dashboard,
+        generate_tool_contract,
     )
 
 
@@ -185,7 +191,17 @@ class TestAllFigures:
 
     def test_expected_keys(self, tmp_path: pathlib.Path):
         result = all_figures(output_dir=tmp_path)
-        expected = {"architecture_overview", "resource_counts", "status_dashboard"}
+        expected = {
+            "architecture_overview",
+            "resource_counts",
+            "status_dashboard",
+            "fond_taxonomy",
+            "rule_hierarchy",
+            "tool_contract",
+            "resilience_layers",
+            "pipeline_flow",
+            "cover_art",
+        }
         assert set(result.keys()) == expected
 
     def test_all_values_are_paths(self, tmp_path: pathlib.Path):
@@ -195,7 +211,7 @@ class TestAllFigures:
 
     def test_all_files_exist(self, tmp_path: pathlib.Path):
         result = all_figures(output_dir=tmp_path)
-        for key, path in result.items():
+        for path in result.values():
             _assert_png(path)
 
     def test_output_dir_created_if_absent(self, tmp_path: pathlib.Path):
@@ -221,6 +237,112 @@ class TestGenerateStatusDashboardIntegrationResult:
             integration_result=StatusCarrier(),
             output_dir=tmp_path,
         )
+        _assert_png(result)
+
+
+# ---------------------------------------------------------------------------
+# generate_fond_taxonomy
+# ---------------------------------------------------------------------------
+
+
+class TestGenerateFondTaxonomy:
+    def test_creates_file(self, tmp_path: pathlib.Path):
+        result = generate_fond_taxonomy(output_dir=tmp_path)
+        _assert_png(result)
+
+    def test_default_filename(self, tmp_path: pathlib.Path):
+        result = generate_fond_taxonomy(output_dir=tmp_path)
+        assert result.name == "fond_taxonomy.png"
+
+    def test_custom_filename(self, tmp_path: pathlib.Path):
+        result = generate_fond_taxonomy(output_dir=tmp_path, filename="tax.png")
+        assert result.name == "tax.png"
+        _assert_png(result)
+
+
+# ---------------------------------------------------------------------------
+# generate_rule_hierarchy
+# ---------------------------------------------------------------------------
+
+
+class TestGenerateRuleHierarchy:
+    def test_creates_file(self, tmp_path: pathlib.Path):
+        result = generate_rule_hierarchy(output_dir=tmp_path)
+        _assert_png(result)
+
+    def test_default_filename(self, tmp_path: pathlib.Path):
+        result = generate_rule_hierarchy(output_dir=tmp_path)
+        assert result.name == "rule_hierarchy.png"
+
+
+# ---------------------------------------------------------------------------
+# generate_tool_contract
+# ---------------------------------------------------------------------------
+
+
+class TestGenerateToolContract:
+    def test_creates_file(self, tmp_path: pathlib.Path):
+        result = generate_tool_contract(output_dir=tmp_path)
+        _assert_png(result)
+
+    def test_default_filename(self, tmp_path: pathlib.Path):
+        result = generate_tool_contract(output_dir=tmp_path)
+        assert result.name == "tool_contract.png"
+
+
+# ---------------------------------------------------------------------------
+# generate_resilience_layers
+# ---------------------------------------------------------------------------
+
+
+class TestGenerateResilienceLayers:
+    def test_creates_file(self, tmp_path: pathlib.Path):
+        result = generate_resilience_layers(output_dir=tmp_path)
+        _assert_png(result)
+
+    def test_default_filename(self, tmp_path: pathlib.Path):
+        result = generate_resilience_layers(output_dir=tmp_path)
+        assert result.name == "resilience_layers.png"
+
+
+# ---------------------------------------------------------------------------
+# generate_pipeline_flow
+# ---------------------------------------------------------------------------
+
+
+class TestGeneratePipelineFlow:
+    def test_creates_file(self, tmp_path: pathlib.Path):
+        result = generate_pipeline_flow(output_dir=tmp_path)
+        _assert_png(result)
+
+    def test_default_filename(self, tmp_path: pathlib.Path):
+        result = generate_pipeline_flow(output_dir=tmp_path)
+        assert result.name == "pipeline_flow.png"
+
+
+# ---------------------------------------------------------------------------
+# generate_cover_art
+# ---------------------------------------------------------------------------
+
+
+class TestGenerateCoverArt:
+    def test_creates_file(self, tmp_path: pathlib.Path):
+        result = generate_cover_art(output_dir=tmp_path)
+        _assert_png(result)
+
+    def test_default_filename(self, tmp_path: pathlib.Path):
+        result = generate_cover_art(output_dir=tmp_path)
+        assert result.name == "cover_art.png"
+
+    def test_custom_filename(self, tmp_path: pathlib.Path):
+        result = generate_cover_art(output_dir=tmp_path, filename="my_cover.png")
+        assert result.name == "my_cover.png"
+        _assert_png(result)
+
+    def test_output_dir_created_if_absent(self, tmp_path: pathlib.Path):
+        nested = tmp_path / "cover" / "out"
+        result = generate_cover_art(output_dir=nested)
+        assert nested.is_dir()
         _assert_png(result)
 
 

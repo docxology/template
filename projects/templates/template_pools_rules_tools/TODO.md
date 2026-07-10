@@ -31,12 +31,12 @@ project's perspective).
 
 ## Test and validator gaps
 
-- Add negative-control fixtures for malformed fonds/rules/tools payloads to exercise the fallback paths.
+- ~~Add negative-control fixtures for malformed fonds/rules/tools payloads to exercise the fallback paths.~~ **Done** — `tests/test_strong_rule_evaluator.py` gained 20+ negative-control tests (malformed YAML, real rule violations, type-mismatched context values), raising `strong_rule_evaluator.py` from 81.87% to the mid-90s%; each was spot-verified to actually fail when its target guard is removed (regression-discriminating, not coverage-padding). Run `uv run pytest … --cov-report=term-missing` for the current number.
 - Extend strong-rule semantic evaluation coverage as new formal constraints are added under `rules/templates/`.
 
 ## Ordered improvement ladder
 
-1. Add a fourth fond type (e.g. `template_models`) once that fond exemplar exists.
-2. Broaden strong-rule programmatic evaluation as new constraint families ship.
+1. Add a fourth fond type (e.g. `template_models`) once that fond exemplar exists. **Still blocked** — needs the fond exemplar to exist first, and touches shared allowlists/docs outside this project; ask before starting.
+2. Broaden strong-rule programmatic evaluation as new constraint families ship. **Partially done**: a fifth evaluator (`manifest_freshness`) is implemented and unit-tested in `src/strong_rule_evaluator.py`, but deliberately not wired to a real strong-rule YAML file — that would mean writing into the shared `rules/templates/*/strong/` tree, which needs an explicit go-ahead first (one new file in an existing directory; mechanically low blast-radius, but still crosses this project's read-only boundary). Ask before adding that file.
 3. Add per-resource schema assertions whenever a pool gains required fields.
-4. Refresh generated docs and the SKILL manifest after any public-surface change.
+4. ~~Refresh generated docs and the SKILL manifest after any public-surface change.~~ **Done** — `.agents/skills/template-pools-rules-tools/SKILL.md`'s Quick Reference and Pitfalls sections updated to cover `04_validate_strong_rules.py`, `05_generate_figures.py`, `z_generate_manuscript_variables.py`, and this session's gotchas (preamble fence, token case, figure-registry-is-metadata-only, tcolorbox-vs-Beamer).

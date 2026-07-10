@@ -186,3 +186,19 @@ class FigureDataRow(TypedDict):
     count: int
     category: str  # "fond" | "rule_set" | "tool"
     status: str  # "ok" | "partial" | "missing" | "valid" | "invalid"
+
+
+class CrossFondOverlapResult(TypedDict):
+    """Returned by ``check_bibliography_overlap()``.
+
+    Reports overlap counts only — never asserts full containment in either
+    direction, since this project's own manuscript legitimately cites sources
+    (software-engineering references) outside the curated fond, and the fond
+    legitimately curates sources (e.g. GANs, LSTM) this manuscript never cites.
+    """
+
+    project_keys: list[str]
+    fond_keys: list[str]
+    overlap: list[str]
+    project_only: list[str]
+    fond_only: list[str]

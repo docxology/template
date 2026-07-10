@@ -1,7 +1,27 @@
 # Run Lessons
 
-- **pipeline_failure** [error] stage 6 (PDF Rendering): Stage exited with code 1
+- **pause_recommendation** [info] stage 0 (Evidence registry): pause recommended
+- **pause_recommendation** [info] stage 0 (Figure registry): pause recommended
 - **pause_recommendation** [info] stage 0 (PDF Rendering): pause recommended
-- **pause_recommendation** [info] stage 0 (Project Tests): pause recommended
-- **slow_telemetry** [warning] stage 0 (Project Tests): Stage 'Project Tests' took 18.6s (2.0× the average 5.9s)
-- **slow_telemetry** [warning] stage 0 (PDF Rendering): Stage 'PDF Rendering' took 12.9s (2.0× the average 5.9s)
+- **validation_defect** [warning] stage 0 (validation): Figure registry did not pass
+- **validation_defect** [warning] stage 0 (validation): Evidence registry did not pass
+- **validation_defect** [warning] stage 0 (validation): 00_frontmatter.md: unsupported number 10.5281
+- **validation_defect** [warning] stage 0 (validation): 00_frontmatter.md: unsupported number 9
+- **validation_defect** [warning] stage 0 (validation): 00_frontmatter.md: unsupported number 8
+- **validation_defect** [warning] stage 0 (validation): 00_frontmatter.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 00_frontmatter.md: unsupported number 6
+- **validation_defect** [warning] stage 0 (validation): 01_abstract.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 04_rules.md: unsupported number 80%
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 8
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 9
+- **validation_defect** [warning] stage 0 (validation): 02_introduction.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 03_pools.md: unsupported number 85%
+- **validation_defect** [warning] stage 0 (validation): 04_rules.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 04_rules.md: unsupported number 85%
+- **validation_defect** [warning] stage 0 (validation): 05_tools.md: unsupported number 90%
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 75%
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 95%
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 85%
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 112
+- **validation_defect** [warning] stage 0 (validation): 06_integration.md: unsupported number 90%
+- **slow_telemetry** [warning] stage 0 (PDF Rendering): Stage 'PDF Rendering' took 39.2s (2.0× the average 9.0s)

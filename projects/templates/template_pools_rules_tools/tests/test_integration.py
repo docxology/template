@@ -14,8 +14,8 @@ import pytest
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.integration import run_integration_demo
 from src.fonds_reader import get_fonds_root
+from src.integration import run_integration_demo
 from src.rules_applier import get_rules_root
 from src.tools_invoker import get_tools_root
 
@@ -113,6 +113,56 @@ class TestIntegrationFonds:
     def test_datasets_has_entries(self):
         result = run_integration_demo()
         assert result["summary"]["datasets"] > 0
+
+
+# ---------------------------------------------------------------------------
+# Cross-fond citation overlap
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.skipif(not _FONDS_OK, reason="One or more fond exemplars not present")
+class TestBibliographyOverlap:
+    def test_real_project_overlap_counts(self):
+        """Pinned to this project's actual manuscript/references.bib vs. the fond.
+
+        A future edit to either source can legitimately change these numbers —
+        that is a feature (it proves this check runs against live content, not
+        a frozen fixture), not a defect. If it fails after an intentional
+        bibliography edit, update the pinned counts in this test.
+        """
+        from src.integration import check_bibliography_overlap
+
+        result = check_bibliography_overlap()
+        assert len(result["project_keys"]) == 12
+        assert len(result["fond_keys"]) == 8
+        assert result["overlap"] == [
+            "Brown2020gpt3",
+            "He2016deep",
+            "LeCun1998gradient",
+            "Vaswani2017attention",
+        ]
+        assert set(result["overlap"]) <= set(result["project_keys"])
+        assert set(result["overlap"]) <= set(result["fond_keys"])
+
+    def test_never_asserts_full_subset(self):
+        """Negative control: project_only and fond_only must both be non-empty today.
+
+        Proves this check reports overlap honestly rather than only ever
+        succeeding when one side happens to be a full subset of the other.
+        """
+        from src.integration import check_bibliography_overlap
+
+        result = check_bibliography_overlap()
+        assert result["project_only"], "expected some project-only cite keys"
+        assert result["fond_only"], "expected some fond-only cite keys"
+
+    def test_missing_manuscript_returns_empty_project_keys(self, tmp_path: pathlib.Path):
+        """A project root with no manuscript/references.bib degrades to empty, not an exception."""
+        from src.integration import check_bibliography_overlap
+
+        result = check_bibliography_overlap(project_root=tmp_path)
+        assert result["project_keys"] == []
+        assert result["overlap"] == []
 
 
 # ---------------------------------------------------------------------------

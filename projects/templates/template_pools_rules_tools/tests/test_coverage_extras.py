@@ -244,7 +244,6 @@ def test_generate_figure_data_builds_rows() -> None:
     from src.integration import generate_figure_data
     from src.type_defs import (
         AllFondsResult,
-        FigureDataRow,
         IntegrationResult,
         IntegrationSummary,
         RuleSetResult,
@@ -297,6 +296,74 @@ def test_generate_figure_data_builds_rows() -> None:
     assert all(isinstance(row, dict) for row in rows)
     categories = {row["category"] for row in rows}
     assert {"fond", "rule_set", "tool"} <= categories
+
+
+def test_derive_dashboard_data_binds_to_ground_truth() -> None:
+    """derive_dashboard_data() must reflect a degraded run, not a hard-coded default."""
+    from src.integration import derive_dashboard_data
+    from src.type_defs import (
+        AllFondsResult,
+        IntegrationResult,
+        IntegrationSummary,
+        RuleSetResult,
+        ToolEntryWithValidation,
+        ToolValidationResult,
+    )
+
+    result = IntegrationResult(
+        fonds=AllFondsResult(bibliography=None, contacts=None, datasets=None),
+        rules={
+            "template_project_rules": RuleSetResult(
+                rule_set="template_project_rules",
+                manifest=None,
+                soft_rules_count=1,
+                strong_rules_count=0,
+                soft_rules=["guide"],
+                strong_rules=[],
+                soft_rules_loaded=["guide.md"],
+                strong_rules_loaded=[],
+                status="partial",
+                warnings=["demo"],
+            )
+        },
+        tools=[
+            ToolEntryWithValidation(
+                name="demo_tool",
+                path=pathlib.Path("demo"),
+                manifest=None,
+                validation=ToolValidationResult(
+                    tool="demo_tool",
+                    entrypoints=["scripts/run.sh"],
+                    missing=["scripts/run.sh"],
+                    valid=False,
+                ),
+            )
+        ],
+        summary=IntegrationSummary(
+            fonds_loaded=0,
+            rules_sets_ok=0,
+            rules_sets_total=1,
+            tools_discovered=1,
+            tools_valid=0,
+            bib_entries=0,
+            contacts=0,
+            datasets=0,
+        ),
+    )
+
+    counts, statuses = derive_dashboard_data(result)
+
+    # Counts must come from the degraded summary, not an illustrative default.
+    assert counts == {"Fonds": 0, "Rules": 0, "Tools": 1}
+
+    # Every fond is missing (the synthetic result has none loaded).
+    assert statuses["Bibliography Fond"] == "missing"
+    assert statuses["Contacts Fond"] == "missing"
+    assert statuses["Datasets Fond"] == "missing"
+    # The one rule set present is genuinely partial.
+    assert statuses["Project Rules"] == "partial"
+    # The one tool present failed validation, so it maps to "missing", not "ok".
+    assert statuses["Demo Tool"] == "missing"
 
 
 def test_discover_tools_with_validation(tmp_path: pathlib.Path) -> None:

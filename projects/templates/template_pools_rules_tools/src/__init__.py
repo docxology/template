@@ -3,8 +3,14 @@
 from .figures import (
     all_figures,
     generate_architecture_overview,
+    generate_cover_art,
+    generate_fond_taxonomy,
+    generate_pipeline_flow,
+    generate_resilience_layers,
     generate_resource_counts,
+    generate_rule_hierarchy,
     generate_status_dashboard,
+    generate_tool_contract,
 )
 from .fonds_reader import (
     count_summary,
@@ -14,7 +20,12 @@ from .fonds_reader import (
     read_contacts_fond,
     read_datasets_fond,
 )
-from .integration import generate_figure_data, run_integration_demo
+from .integration import (
+    check_bibliography_overlap,
+    derive_dashboard_data,
+    generate_figure_data,
+    run_integration_demo,
+)
 from .rules_applier import (
     get_rules_root,
     load_all_manuscript_rules,
@@ -39,6 +50,7 @@ from .type_defs import (
     AllRulesResult,
     BibliographyFondResult,
     ContactsFondResult,
+    CrossFondOverlapResult,
     DatasetsFondResult,
     FigureDataRow,
     FondsSummary,
@@ -78,16 +90,25 @@ __all__ = [
     # Integration
     "run_integration_demo",
     "generate_figure_data",
+    "derive_dashboard_data",
+    "check_bibliography_overlap",
     # Figures
     "all_figures",
     "generate_architecture_overview",
     "generate_resource_counts",
     "generate_status_dashboard",
+    "generate_fond_taxonomy",
+    "generate_rule_hierarchy",
+    "generate_tool_contract",
+    "generate_resilience_layers",
+    "generate_pipeline_flow",
+    "generate_cover_art",
     # Types
     "AllFondsResult",
     "AllRulesResult",
     "BibliographyFondResult",
     "ContactsFondResult",
+    "CrossFondOverlapResult",
     "DatasetsFondResult",
     "FigureDataRow",
     "FondsSummary",

@@ -1,14 +1,14 @@
 # Pipeline Execution Report
 
-**Generated:** 2026-07-07T06:52:50.502561
-**Total Duration:** 42s
+**Generated:** 2026-07-09T16:39:34.338416
+**Total Duration:** 1m 12s
 
 ## Summary
 
-- **Stages Executed:** 6
-- **Stages Passed:** 5
-- **Stages Failed:** 1
-- **Success Rate:** 83.3%
+- **Stages Executed:** 8
+- **Stages Passed:** 8
+- **Stages Failed:** 0
+- **Success Rate:** 100.0%
 
 ## Stage Results
 
@@ -16,10 +16,12 @@
 |-------|--------|----------|-----------|
 | Clean Output Directories | ✅ passed | 0s | 0 |
 | Environment Setup | ✅ passed | 0s | 0 |
-| Infrastructure Tests | ✅ passed | 9s | 0 |
-| Project Tests | ✅ passed | 18s | 0 |
-| Project Analysis | ✅ passed | 1s | 0 |
-| PDF Rendering | ❌ failed | 12s | 1 |
+| Infrastructure Tests | ✅ passed | 11s | 0 |
+| Project Tests | ✅ passed | 15s | 0 |
+| Project Analysis | ✅ passed | 3s | 0 |
+| PDF Rendering | ✅ passed | 39s | 0 |
+| Output Validation | ✅ passed | 0s | 0 |
+| Copy Outputs | ✅ passed | 0s | 0 |
 
 ## Output Statistics
 
