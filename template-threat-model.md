@@ -263,7 +263,7 @@ Non-capabilities assumed:
      and periodic ownership-map review for sensitive tags.
 
 9. AskOS promotion without closing auth/export policy gaps.
-   - Path: `projects/askos` becomes active/public/deployed while TODO gaps remain
+   - Path: `projects/ongoing/askos` becomes active/public/deployed while TODO gaps remain
      for JWT verification, policy evaluation, redaction, vault, route tests, and
      MCP tests.
    - Current controls: AskOS appears adjacent/local in this analysis, not the
@@ -286,7 +286,7 @@ Non-capabilities assumed:
 | TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS:23`, `public_scope.py:19` | Generate CODEOWNERS project stanza or add a parity test against `PUBLIC_PROJECT_NAMES` |
 | TM-010 | Security-sensitive ownership has bus factor 1 | High | Medium-High | High | `security-analysis/ownership-map/summary.json` | Add formal sensitive-area owner map, required reviews, and periodic ownership-map report |
 | TM-011 | Generated artifacts or oversized outputs are force-added | Low-Medium | High | High | `git_guards.py:102`, `git_guards.py:202`, `.pre-commit-config.yaml:72` | Keep generated-artifact guard required in CI and pre-push; extend patterns when new output roots appear |
-| TM-012 | AskOS auth/policy/export gaps become in-scope without promotion gate | Medium if promoted | Critical | Conditional Critical | `projects/askos/TODO.md:26`, `projects/askos/TODO.md:35`, `projects/askos/TODO.md:46`, `projects/askos/TODO.md:177` | Add an AskOS promotion checklist requiring JWT, policy, redaction, vault, route, and MCP test closure before active/public/deployed status |
+| TM-012 | AskOS auth/policy/export gaps become in-scope without promotion gate | Medium if promoted | Critical | Conditional Critical | `projects/ongoing/askos/TODO.md:26`, `projects/ongoing/askos/TODO.md:35`, `projects/ongoing/askos/TODO.md:46`, `projects/ongoing/askos/TODO.md:177` | Add an AskOS promotion checklist requiring JWT, policy, redaction, vault, route, and MCP test closure before active/public/deployed status |
 
 ## TODO Scope
 
@@ -386,7 +386,7 @@ Review these paths first for a deep security audit:
 - `infrastructure/rendering/pdf_renderer.py`
 - `infrastructure/rendering/web_renderer.py`
 - `infrastructure/steganography/`
-- `projects/askos/TODO.md` if AskOS is promoted into active/public/deployed
+- `projects/ongoing/askos/TODO.md` if AskOS is promoted into active/public/deployed
   scope.
 
 ## Quality Check
