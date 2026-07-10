@@ -50,7 +50,7 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
   credential-source summary, and local-only path refusal. Acceptance: non-dry-run
   publish refuses any local-only project/resource path and records the exact
   public files to upload. Out of scope: provider API redesign.
-- **SECURITY-ASKOS-PROMOTION-1:** Problem: `projects/askos/TODO.md` still lists
+- **SECURITY-ASKOS-PROMOTION-1:** Problem: `projects/ongoing/askos/TODO.md` still lists
   JWT, policy, redaction, vault, route-handler, MCP, and export-test gaps. Why it
   matters: those are control-plane risks if AskOS enters active/public/deployed
   scope. Smallest next step: add an AskOS promotion checklist/gate. Acceptance:

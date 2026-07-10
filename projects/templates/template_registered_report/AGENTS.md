@@ -15,3 +15,5 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 ## Contracts and boundaries
 
 Do not let post-run result prose rewrite preregistered intent. Keep confirmatory claims, deviations, sensitivity checks, ethics/stage metadata, and exploratory claims separated in source, tests, review packets, and manuscript.
+
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.

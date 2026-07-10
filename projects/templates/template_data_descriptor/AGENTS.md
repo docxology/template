@@ -17,3 +17,5 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 ## Contracts and boundaries
 
 Keep scripts thin if project-local orchestration is added. Business logic belongs in `src/data_descriptor/`; tests use real fixture descriptors. Publication claims must stay bound to descriptor validity, schema completeness, field constraints, provenance, license state, metadata-only release manifests, and reproducibility TODO evidence.
+
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.

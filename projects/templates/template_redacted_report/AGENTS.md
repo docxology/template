@@ -15,3 +15,5 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 ## Contracts and boundaries
 
 Keep this exemplar limited to lawful redaction, declassification support, public-records release review, taxonomy normalization, source-safe ledgers, reviewer approval gates, sanitized packet export, and source-protection auditing. Do not add targeting, collection, evasion, or surveillance operational guidance. All committed examples must be invented fixtures.
+
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.

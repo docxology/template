@@ -45,7 +45,7 @@ The main residual risks are:
 - LLM, rendering, and steganography surfaces intentionally process manuscript
   content and external/local model inputs. They need strong scoping,
   sanitization, and "do not upload private paths" guarantees.
-- `projects/askos/TODO.md` is an adjacent high-risk backlog if AskOS is ever
+- `projects/ongoing/askos/TODO.md` is an adjacent high-risk backlog if AskOS is ever
   promoted into this repository's shipped/public/deployed boundary.
 
 ## Scope And Assumptions
@@ -277,7 +277,7 @@ Non-capabilities assumed:
 | --- | --- | --- | --- | --- | --- | --- |
 | TM-001 | Private/local project names or content leak into public docs/manifests/published artifacts | Medium | Critical | Critical | `docs/maintenance/review-remediation-2026-07.md:123`, `git_guards.py:122`, `public_scope.py:19` | Add tracked/public-scope invariant tests for every discovery and manifest generator; keep R2-style regression close to affected code |
 | TM-002 | Real publish/deposit uploads wrong payload or local-only files | Medium | High | High | `publish_project_release.py:104`, `archive_publication.py:66`, `_adapter_http.py:39` | Require redacted payload manifest and local-only path refusal before any non-dry-run publish |
-| TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `credentials.py:64`, `publish_project_release.py:47`, `projects/askos/TODO.md:22` | Add reusable secret-redaction helper to publish receipts/logging and test token-shaped URL redaction |
+| TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `credentials.py:64`, `publish_project_release.py:47`, `projects/ongoing/askos/TODO.md:22` | Add reusable secret-redaction helper to publish receipts/logging and test token-shaped URL redaction |
 | TM-004 | CI/release workflow modified to weaken security gates or run with excess permissions | Medium | High | High | `.github/workflows/ci.yml:14`, `.github/workflows/release.yml:13`, `.pre-commit-config.yaml:115` | Protect workflow files through CODEOWNERS and branch protection; audit `permissions` deltas in CI |
 | TM-005 | Dependency/action supply chain compromise | Medium | High | High | `.github/workflows/ci.yml:45`, `.github/workflows/ci.yml:649`, `bandit.yaml:44` | Keep action pins immutable, keep pip-audit ignore file time-bounded, and require review for lockfile/security config deltas |
 | TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `sanitization.py:37`, `client.py:163`, `client.py:224` | Restrict `query_raw()` to named internal call sites, add tests preventing raw calls on project/manuscript text |
