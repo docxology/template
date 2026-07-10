@@ -1,0 +1,184 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Introduction}\label{sec:introduction}
+
+\begin{frame}[allowframebreaks]{Introduction}
+A \emph{data descriptor} (or data paper) publishes a dataset as a
+citable research object. Unlike an analysis paper, its contribution is
+not a statistical finding but a \textbf{contract}: a precise,
+machine-readable account of what the dataset contains, how it was
+produced, how it is licensed, and what quality guarantees it carries.
+The FAIR guiding principles --- Findable, Accessible, Interoperable,
+Reusable \breakseq{[@wilkinson2016fair]} --- frame why this matters: a dataset
+is only reusable to the extent that its structure and provenance are
+legible to both humans and machines.
+\end{frame}
+
+\begin{frame}[allowframebreaks]{What this template provides}
+\protect\phantomsection\label{what-this-template-provides}
+This exemplar packages the recurring moving parts of a data descriptor
+so that a fork can start from a working, tested baseline:
+
+\begin{itemize}
+\tightlist
+\item
+  A \textbf{schema / data dictionary}: named fields with declared types,
+  nullability, units, and value constraints (patterns, enumerations,
+  numeric bounds).
+\item
+  A \textbf{file inventory}: each shipped file with its media type, a
+  sha256 checksum, and a row count.
+\item
+  A \textbf{provenance chain}: the ordered steps and agents that
+  produced the release.
+\item
+  A \textbf{license boundary}: an explicit reuse license, and the
+  discipline of publishing \emph{metadata and checksums} rather than
+  bundling restricted bytes.
+\item
+  A \textbf{validation gate}: a tested library that rejects malformed,
+  unsafe, or incomplete descriptors and verifies declared checksums
+  against real bytes.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Scope and honesty}
+\protect\phantomsection\label{scope-and-honesty}
+The shipped dataset is \textbf{synthetic and deliberately small} --- it
+exists to make the workflow runnable and testable, not to support any
+empirical claim. Its values are generated deterministically.
+Accordingly, this manuscript restricts its claims to dataset
+\emph{structure, provenance, quality, and release readiness}. When a
+real dataset is forked in, the same validation and figure code applies
+unchanged; only the descriptor and fixture files are replaced. The
+sections that follow describe the demonstration dataset
+(\breakseq{[@sec:data]}), its schema (\breakseq{[@sec:schema]}), its provenance
+(\breakseq{[@sec:provenance]}), and the quality gate that binds the descriptor
+to the bytes it names (\breakseq{[@sec:quality]}), and close with usage and
+forking notes (\breakseq{[@sec:usage]}).
+\end{frame}
+
+\end{document}

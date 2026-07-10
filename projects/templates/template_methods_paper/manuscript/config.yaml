@@ -27,6 +27,7 @@ publication:
   version_doi: "10.5281/zenodo.21086549" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/21086549"
   github_repository: "docxology/template_methods_paper"
+  repository_url: "https://github.com/docxology/template_methods_paper"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/Qmc9puHs6KiEnCraVgWUXVxcyAZyT7nt9EMXXLBhy2bAou"
     huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_methods_paper"

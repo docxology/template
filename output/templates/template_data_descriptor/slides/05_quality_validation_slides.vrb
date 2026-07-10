@@ -1,0 +1,8 @@
+\frametitle{Validation evidence}
+\protect\phantomsection\label{validation-evidence}
+Every capability above is exercised by the zero-mock \texttt{tests/}
+suite: structural validation and negative controls, order-independent
+schema fingerprints, byte-level verification against real temporary
+files, figure-data preparation, and an integration test that runs the
+figure script end to end and asserts real PNGs are written. Coverage
+exceeds the 90\% project gate with no mocks.

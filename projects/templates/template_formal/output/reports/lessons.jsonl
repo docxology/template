@@ -1,0 +1,2 @@
+{"category": "pause_recommendation", "message": "pause recommended", "severity": "info", "source": "reports/pause_recommendations.json", "stage_name": "Project Tests", "stage_num": 0, "timestamp": "2026-07-10T20:15:23+00:00"}
+{"category": "slow_telemetry", "message": "Stage 'Project Tests' took 208.4s (2.0\u00d7 the average 31.3s)", "severity": "warning", "source": "reports/telemetry.json", "stage_name": "Project Tests", "stage_num": 0, "timestamp": "2026-07-10T20:15:23+00:00"}

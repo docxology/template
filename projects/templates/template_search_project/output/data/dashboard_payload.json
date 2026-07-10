@@ -1,0 +1,331 @@
+{
+  "title": "Literature Search Coverage Dashboard",
+  "subtitle": "6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.",
+  "project": "template_search_project",
+  "generated_utc": "2026-07-10T19:25:29Z",
+  "git_rev": "d87ca592",
+  "git_dirty": true,
+  "hyperparameters": {
+    "corpus_path": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project/output/corpus.json",
+    "aggregate_path": null,
+    "year_min_filter": null,
+    "year_max_filter": null,
+    "doi_floor": 0.5,
+    "abstract_floor": 0.5,
+    "year_floor": 0.7,
+    "min_per_keyword": 1,
+    "n_papers": 6,
+    "n_keywords": 0
+  },
+  "meta": {},
+  "payload": {
+    "n_total": 6,
+    "year_distribution": {
+      "2004": 1,
+      "2006": 1,
+      "2011": 1,
+      "2013": 1,
+      "2014": 1,
+      "2018": 1
+    },
+    "source_distribution": {
+      "local": 6
+    },
+    "venue_type_distribution": {
+      "journal": 2,
+      "conference": 2,
+      "book": 2
+    },
+    "coverage": {
+      "doi": 0.6666666666666666,
+      "abstract": 1.0,
+      "year": 1.0
+    },
+    "keywords": [],
+    "keyword_overlap_matrix": [],
+    "papers_preview": [
+      {
+        "id": "doi:10.1126/science.1213847",
+        "title": "Reproducible research in computational science",
+        "year": 2011,
+        "doi": "10.1126/science.1213847",
+        "venue": "Science"
+      },
+      {
+        "id": "arxiv:2003.06070",
+        "title": "On the Convergence of Adam and Beyond",
+        "year": 2018,
+        "doi": null,
+        "venue": "ICLR"
+      },
+      {
+        "id": "arxiv:1412.6980",
+        "title": "Adam: A Method for Stochastic Optimization",
+        "year": 2014,
+        "doi": null,
+        "venue": "ICLR"
+      },
+      {
+        "id": "doi:10.1007/s10107-012-0629-5",
+        "title": "Gradient methods for minimizing composite functions",
+        "year": 2013,
+        "doi": "10.1007/s10107-012-0629-5",
+        "venue": "Mathematical Programming"
+      },
+      {
+        "id": "doi:10.1007/978-0-387-40065-5",
+        "title": "Numerical Optimization",
+        "year": 2006,
+        "doi": "10.1007/978-0-387-40065-5",
+        "venue": "Springer Science & Business Media"
+      },
+      {
+        "id": "doi:10.1017/CBO9780511804441",
+        "title": "Convex Optimization",
+        "year": 2004,
+        "doi": "10.1017/CBO9780511804441",
+        "venue": "Cambridge University Press"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "panel_id": "year_distribution",
+      "title": "Papers per year",
+      "description": "Distribution of publication years across the corpus.",
+      "traces": [
+        {
+          "type": "bar",
+          "x": [
+            "2004",
+            "2006",
+            "2011",
+            "2013",
+            "2014",
+            "2018"
+          ],
+          "y": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "marker": {
+            "color": "#38bdf8"
+          }
+        }
+      ],
+      "layout": {
+        "xaxis": {
+          "title": "year"
+        },
+        "yaxis": {
+          "title": "count"
+        }
+      },
+      "driven_by": [],
+      "update_fn": "",
+      "preview_rows": 10
+    },
+    {
+      "panel_id": "source_distribution",
+      "title": "Papers per source backend",
+      "description": "arXiv / Crossref / local / OpenAlex breakdown.",
+      "traces": [
+        {
+          "type": "bar",
+          "x": [
+            "local"
+          ],
+          "y": [
+            6
+          ],
+          "marker": {
+            "color": "#a78bfa"
+          }
+        }
+      ],
+      "layout": {
+        "xaxis": {
+          "title": "source"
+        },
+        "yaxis": {
+          "title": "count"
+        }
+      },
+      "driven_by": [],
+      "update_fn": "",
+      "preview_rows": 10
+    },
+    {
+      "panel_id": "venue_type",
+      "title": "Venue-type breakdown",
+      "description": "Conference / journal / book / preprint distribution.",
+      "traces": [
+        {
+          "type": "pie",
+          "labels": [
+            "journal",
+            "conference",
+            "book"
+          ],
+          "values": [
+            2,
+            2,
+            2
+          ],
+          "marker": {
+            "colors": [
+              "#22c55e",
+              "#fb923c",
+              "#a78bfa",
+              "#94a3b8",
+              "#f5f5f5"
+            ]
+          }
+        }
+      ],
+      "layout": {},
+      "driven_by": [],
+      "update_fn": "",
+      "preview_rows": 10
+    },
+    {
+      "panel_id": "coverage",
+      "title": "Metadata coverage",
+      "description": "DOI / abstract / year coverage; floors at 50% / 50% / 70%.",
+      "traces": [
+        {
+          "type": "bar",
+          "x": [
+            "DOI",
+            "abstract",
+            "year"
+          ],
+          "y": [
+            0.6666666666666666,
+            1.0,
+            1.0
+          ],
+          "marker": {
+            "color": [
+              "#22c55e",
+              "#fb923c",
+              "#38bdf8"
+            ]
+          },
+          "name": "actual"
+        },
+        {
+          "type": "scatter",
+          "mode": "markers",
+          "name": "floor",
+          "x": [
+            "DOI",
+            "abstract",
+            "year"
+          ],
+          "y": [
+            0.5,
+            0.5,
+            0.7
+          ],
+          "marker": {
+            "color": "#ef4444",
+            "size": 12,
+            "symbol": "diamond"
+          }
+        }
+      ],
+      "layout": {
+        "yaxis": {
+          "title": "fraction",
+          "range": [
+            0,
+            1.05
+          ]
+        },
+        "legend": {
+          "orientation": "h",
+          "y": -0.2
+        }
+      },
+      "driven_by": [],
+      "update_fn": "",
+      "preview_rows": 10
+    }
+  ],
+  "controls": [],
+  "invariants": [
+    {
+      "name": "paper_field_present_id",
+      "passed": true,
+      "kind": "equal",
+      "tolerance": 0.0,
+      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
+      "description": "every paper has a non-empty `id`; missing at indices []"
+    },
+    {
+      "name": "paper_field_present_title",
+      "passed": true,
+      "kind": "equal",
+      "tolerance": 0.0,
+      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
+      "description": "every paper has a non-empty `title`; missing at indices []"
+    },
+    {
+      "name": "paper_id_unique",
+      "passed": true,
+      "kind": "equal",
+      "tolerance": 0.0,
+      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
+      "description": "paper IDs must be unique; duplicates: []"
+    },
+    {
+      "name": "doi_coverage_above_floor",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "0.666667 >= 0.5 - 0.0e+00",
+      "description": "|papers with DOI| / N = 66.67% ≥ 50%"
+    },
+    {
+      "name": "abstract_coverage_above_floor",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "1 >= 0.5 - 0.0e+00",
+      "description": "|papers with abstract| / N = 100.00% ≥ 50%"
+    },
+    {
+      "name": "year_coverage_above_floor",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "1 >= 0.7 - 0.0e+00",
+      "description": "|papers with year| / N = 100.00% ≥ 70%"
+    },
+    {
+      "name": "year_min_plausible",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "2004 >= 1900 - 0.0e+00",
+      "description": "earliest paper year = 2004"
+    },
+    {
+      "name": "year_max_plausible",
+      "passed": true,
+      "kind": "le",
+      "tolerance": 0.0,
+      "witness": "2018 <= 2027 + 0.0e+00",
+      "description": "latest paper year = 2018"
+    }
+  ],
+  "tables": {},
+  "notes": [
+    "Coverage floors are CLI-overridable and reflected in the invariants gate (default: 50% DOI / abstract, 70% year)."
+  ]
+}

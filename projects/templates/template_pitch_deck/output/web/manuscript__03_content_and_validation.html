@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -177,7 +177,9 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:validation">Content and Validation</h1>
+<h2 id="methods">Methods</h2>
 <h2 id="the-flagship-pitch">The flagship pitch</h2>
 <p>The shipped content pitches <a
 href="../../template_template/"><code>template_template</code></a> —
@@ -200,8 +202,8 @@ governance/confidentiality walkthrough and an appendix.</p>
 (<code>\{\{[A-Z][A-Z0-9_]*\}\}</code>), scoped to
 <code>manuscript/deck_content_*.yaml</code> instead of
 <code>manuscript/*.md</code>. <code>resolve_tokens</code> raises if any
-token in the content has no matching key in
-<code>manuscript/deck_tokens.yaml</code> — mirroring
+token in the content has no matching key in the live token set from
+<code>src/deck_tokens.py</code> — mirroring
 <code>template_madlib</code>’s
 <code>test_all_manuscript_tokens_are_generated</code> pre-substitution
 coverage check, adapted to deck content.
@@ -217,5 +219,6 @@ checked against every resolved slide across all three lengths as part of
 the same audit script, and — like the token check — is proven to fire on
 a deliberately cliché-laden sentence before the real content’s
 cleanliness is trusted.</p>
+</main>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -242,10 +242,11 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:reproducibility">Reproducibility</h1>
 <p><code>scripts/render_decks.py</code> is deterministic: given the same
-repository state (<code>manuscript/deck_content_*.yaml</code>,
-<code>manuscript/deck_tokens.yaml</code>, and the live facts
+repository state (<code>manuscript/deck_content_*.yaml</code>, the live
+tokens from <code>src/deck_tokens.py</code>, and the live facts
 <code>src/deck_tokens.py</code> reads from
 <code>template_template</code>’s own files and the public exemplar
 roster), two consecutive runs produce byte-identical PDF and PPTX
@@ -269,5 +270,6 @@ and requires no LLM/Ollama stage — deck content is authored and
 token-resolved, not generated at render time by a model call, which
 keeps the artifact deterministic and the core pipeline
 Ollama-optional.</p>
+</main>
 </body>
 </html>

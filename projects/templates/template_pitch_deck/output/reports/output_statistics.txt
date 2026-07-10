@@ -1,0 +1,34 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 48
+Total Size: 2.13 MB
+
+Files by Category:
+  • pdf: 13 files (1.40 MB)
+  • web: 9 files (0.07 MB)
+  • figures: 12 files (0.36 MB)
+  • reports: 13 files (0.30 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • template_template_pitch_long.pdf: 0.62 MB (pdf)
+  • template_template_pitch_medium.pdf: 0.53 MB (pdf)
+  • artifact_manifest.json: 0.16 MB (reports)
+  • template_template_pitch_short.pdf: 0.10 MB (pdf)
+  • infra_subpackage_sizes.png: 0.09 MB (figures)
+
+File Types:
+  • .json: 14 file(s)
+  • .html: 7 file(s)
+  • .png: 6 file(s)
+  • .pdf: 4 file(s)
+  • .md: 4 file(s)
+  • .log: 3 file(s)
+  • .mmd: 3 file(s)
+  • .aux: 1 file(s)
+  • .blg: 1 file(s)
+  • .bib: 1 file(s)

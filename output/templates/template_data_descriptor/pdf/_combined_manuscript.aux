@@ -1,4 +1,4 @@
-\relax 
+\relax
 \providecommand\hyper@newdestlabel[2]{}
 \providecommand*\HyPL@Entry[1]{}
 \bibstyle{plainnat}
@@ -6,9 +6,71 @@
 \HyPL@Entry{1<</S/D>>}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Abstract}{2}{section.1}\protected@file@percent }
 \newlabel{abstract}{{1}{2}{Abstract}{section.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Methods}{3}{section.2}\protected@file@percent }
-\newlabel{methods}{{2}{3}{Methods}{section.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Results}{4}{section.3}\protected@file@percent }
-\newlabel{results}{{3}{4}{Results}{section.3}{}}
+\citation{wilkinson2016fair}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Introduction}{3}{section.2}\protected@file@percent }
+\newlabel{sec:introduction}{{2}{3}{Introduction}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}What this template provides}{3}{subsection.2.1}\protected@file@percent }
+\newlabel{what-this-template-provides}{{2.1}{3}{What this template provides}{subsection.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Scope and honesty}{3}{subsection.2.2}\protected@file@percent }
+\newlabel{scope-and-honesty}{{2.2}{3}{Scope and honesty}{subsection.2.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Data description}{4}{section.3}\protected@file@percent }
+\newlabel{sec:data}{{3}{4}{Data description}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}File inventory}{4}{subsection.3.1}\protected@file@percent }
+\newlabel{file-inventory}{{3.1}{4}{File inventory}{subsection.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces File inventory: declared row counts per file, from \breaktt {file\_inventory\_rows()}. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as \texttt {text/csv}. The bar values are the row counts recorded in the descriptor, not re-derived here --- the quality gate (sec.~\ref {sec:quality}) is where declared and actual counts are reconciled.}}{4}{figure.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:file_inventory}{{1}{4}{File inventory: declared row counts per file, from \protect \breaktt {file\_inventory\_rows()}. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as \protect \texttt {text/csv}. The bar values are the row counts recorded in the descriptor, not re-derived here --- the quality gate (sec.~\ref {sec:quality}) is where declared and actual counts are reconciled}{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Release boundary}{4}{subsection.3.2}\protected@file@percent }
+\newlabel{release-boundary}{{3.2}{4}{Release boundary}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Schema and data dictionary}{5}{section.4}\protected@file@percent }
+\newlabel{sec:schema}{{4}{5}{Schema and data dictionary}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from \breaktt {schema\_table\_rows()}. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from \breaktt {data/example\_descriptor.json} and cannot silently disagree with it.}}{5}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:schema_overview}{{2}{5}{Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from \protect \breaktt {schema\_table\_rows()}. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from \protect \breaktt {data/example\_descriptor.json} and cannot silently disagree with it}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Field contract}{5}{subsection.4.1}\protected@file@percent }
+\newlabel{field-contract}{{4.1}{5}{Field contract}{subsection.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Schema fingerprint}{5}{subsection.4.2}\protected@file@percent }
+\newlabel{schema-fingerprint}{{4.2}{5}{Schema fingerprint}{subsection.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Constraint validation}{6}{subsection.4.3}\protected@file@percent }
+\newlabel{constraint-validation}{{4.3}{6}{Constraint validation}{subsection.4.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Provenance}{7}{section.5}\protected@file@percent }
+\newlabel{sec:provenance}{{5}{7}{Provenance}{section.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Provenance chain: the ordered steps that produced the release, from \breaktt {provenance\_steps()}. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.}}{7}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:provenance_flow}{{3}{7}{Provenance chain: the ordered steps that produced the release, from \protect \breaktt {provenance\_steps()}. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest}{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Methods: the provenance chain}{7}{subsection.5.1}\protected@file@percent }
+\newlabel{methods-the-provenance-chain}{{5.1}{7}{Methods: the provenance chain}{subsection.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Why depth matters}{7}{subsection.5.2}\protected@file@percent }
+\newlabel{why-depth-matters}{{5.2}{7}{Why depth matters}{subsection.5.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Quality validation}{8}{section.6}\protected@file@percent }
+\newlabel{sec:quality}{{6}{8}{Quality validation}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}The validation gate reacts to defects}{8}{subsection.6.1}\protected@file@percent }
+\newlabel{the-validation-gate-reacts-to-defects}{{6.1}{8}{The validation gate reacts to defects}{subsection.6.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data --- it exists only to prove the gate reacts. Counts come from \breaktt {severity\_counts()}.}}{8}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:quality_gate}{{4}{8}{Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data --- it exists only to prove the gate reacts. Counts come from \protect \breaktt {severity\_counts()}}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Descriptor\ensuremath  {\leftrightarrow }file verification}{8}{subsection.6.2}\protected@file@percent }
+\newlabel{descriptorfile-verification}{{6.2}{8}{Descriptor\texorpdfstring {\ensuremath {\leftrightarrow }}{<->}file verification}{subsection.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Machine-readable release manifest}{8}{subsection.6.3}\protected@file@percent }
+\newlabel{machine-readable-release-manifest}{{6.3}{8}{Machine-readable release manifest}{subsection.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Descriptor\ensuremath  {\leftrightarrow }file verification: declared versus recomputed row counts and checksum agreement per file, from \breaktt {verify\_descriptor\_files()}. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.}}{9}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:checksum_verification}{{5}{9}{Descriptor\texorpdfstring {\ensuremath {\leftrightarrow }}{<->}file verification: declared versus recomputed row counts and checksum agreement per file, from \protect \breaktt {verify\_descriptor\_files()}. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Validation evidence}{9}{subsection.6.4}\protected@file@percent }
+\newlabel{validation-evidence}{{6.4}{9}{Validation evidence}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Usage notes}{10}{section.7}\protected@file@percent }
+\newlabel{sec:usage}{{7}{10}{Usage notes}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Regenerating the artifacts}{10}{subsection.7.1}\protected@file@percent }
+\newlabel{regenerating-the-artifacts}{{7.1}{10}{Regenerating the artifacts}{subsection.7.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Forking in a real dataset}{10}{subsection.7.2}\protected@file@percent }
+\newlabel{forking-in-a-real-dataset}{{7.2}{10}{Forking in a real dataset}{subsection.7.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Boundaries and claims}{10}{subsection.7.3}\protected@file@percent }
+\newlabel{boundaries-and-claims}{{7.3}{10}{Boundaries and claims}{subsection.7.3}{}}
+\citation{wilkinson2016fair}
+\citation{gebru2021datasheets}
+\citation{moreau2013prov}
+\citation{frictionless2023datapackage}
+\@writefile{toc}{\contentsline {section}{\numberline {8}References}{11}{section.8}\protected@file@percent }
+\newlabel{sec:references}{{8}{11}{References}{section.8}{}}
 \bibdata{references}
-\gdef \@abspage@last{6}
+\bibcite{frictionless2023datapackage}{{1}{2023}{{Frictionless Data}}{{}}}
+\bibcite{gebru2021datasheets}{{2}{2021}{{Gebru et~al.}}{{Gebru, Morgenstern, Vecchione, Vaughan, Wallach, Daum{\'e}~III, and Crawford}}}
+\bibcite{moreau2013prov}{{3}{2013}{{Moreau and Missier}}{{}}}
+\bibcite{wilkinson2016fair}{{4}{2016}{{Wilkinson et~al.}}{{Wilkinson, Dumontier, Aalbersberg, et~al.}}}
+\gdef \@abspage@last{13}

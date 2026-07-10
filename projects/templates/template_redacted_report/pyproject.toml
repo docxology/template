@@ -11,6 +11,7 @@ requires-python = ">=3.10"
 # visuals.py renders proof PDFs with reportlab and re-parses them with pypdf;
 # the isolated per-project interpreter needs both (mirrors template_pitch_deck).
 dependencies = [
+    "pyyaml>=6.0",
     "reportlab>=4.0.0",
     "pypdf>=6.12.0",
 ]

@@ -22,6 +22,7 @@ publication:
   journal: ""
   year: "2026"
   github_repository: "docxology/template_search_project"
+  repository_url: "https://github.com/docxology/template_search_project"
   version_doi: "10.5281/zenodo.21298895"
   version_record: "https://zenodo.org/records/21298895"
 

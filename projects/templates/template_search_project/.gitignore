@@ -11,3 +11,4 @@ __pycache__/
 # Local secrets — never commit. See .env.example for the schema.
 .env
 .env.local
+output/search/cache/

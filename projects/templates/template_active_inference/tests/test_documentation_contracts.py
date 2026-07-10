@@ -166,3 +166,40 @@ def test_documentation_contract_requires_labeled_historical_counts(tmp_path: Pat
     )
     issues = check_historical_test_evidence(tmp_path)
     assert [issue.code for issue in issues] == ["historical-evidence-unlabeled"]
+
+
+def test_documentation_contract_accepts_forward_only_evidence(tmp_path: Path) -> None:
+    """The forward-only form — full-suite command + COUNTS.md deferral, no pinned
+    numbers — counts as the singular current evidence line."""
+    (tmp_path / "TODO.md").write_text(
+        "The full suite runs via `uv run pytest tests/ --cov=src --cov-fail-under=90`;\n"
+        "live test counts, coverage, and timings are read from\n"
+        "[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here.\n",
+        encoding="utf-8",
+    )
+    assert check_historical_test_evidence(tmp_path) == []
+
+    # Without the canonical "not pinned here" seal the paragraph does NOT count
+    # as evidence — the exactly-one rule then fails on zero lines.
+    (tmp_path / "TODO.md").write_text(
+        "Counts via `uv run pytest tests/ --cov=src --cov-fail-under=90`; see\n"
+        "[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md).\n",
+        encoding="utf-8",
+    )
+    issues = check_historical_test_evidence(tmp_path)
+    assert [issue.code for issue in issues] == ["current-evidence-count"]
+
+    # Proof-of-detection: two sealed forward-only paragraphs must still fail the
+    # exactly-one rule.
+    (tmp_path / "TODO.md").write_text(
+        "The full suite runs via `uv run pytest tests/ --cov=src --cov-fail-under=90`;\n"
+        "live counts are read from [`docs/_generated/COUNTS.md`](x/COUNTS.md), not pinned here.\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "README.md").write_text(
+        "Counts via `uv run pytest tests/ --cov=src --cov-fail-under=90` live in\n"
+        "[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), not pinned here.\n",
+        encoding="utf-8",
+    )
+    issues = check_historical_test_evidence(tmp_path)
+    assert [issue.code for issue in issues] == ["current-evidence-count"]

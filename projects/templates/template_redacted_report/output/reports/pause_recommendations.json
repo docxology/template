@@ -1,0 +1,35 @@
+{
+  "generated_at": "2026-07-10T20:16:11+00:00",
+  "recommendations": [
+    {
+      "evidence": [
+        "validation_failed: Evidence registry",
+        "evidence_error: 02_results.md: unsupported number 1.0",
+        "evidence_error: 01_methods.md: unsupported number 11",
+        "evidence_error: 01_methods.md: unsupported number 20"
+      ],
+      "reason_codes": [
+        "validation_failed",
+        "evidence_error"
+      ],
+      "score": 2.0,
+      "stage_name": "Evidence registry",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-07-10T20:16:11+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'Project Tests' took 21.5s (2.0\u00d7 the average 5.9s)"
+      ],
+      "reason_codes": [
+        "slow_telemetry"
+      ],
+      "score": 1.0,
+      "stage_name": "Project Tests",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-07-10T20:16:11+00:00"
+    }
+  ]
+}

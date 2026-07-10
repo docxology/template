@@ -38,7 +38,7 @@
       "qualified_name": "templates/template_data_descriptor",
       "title": "template_data_descriptor",
       "use_when": "Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication.",
-      "test_file_count": 1,
+      "test_file_count": 4,
       "coverage_floor": 90
     },
     {
@@ -54,7 +54,7 @@
       "qualified_name": "templates/template_formal",
       "title": "Formal — Strongly-Typed Multiagent Ant-Robot Colony Exemplar",
       "use_when": "Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent.",
-      "test_file_count": 22,
+      "test_file_count": 24,
       "coverage_floor": 90
     },
     {
@@ -86,7 +86,7 @@
       "qualified_name": "templates/template_pools_rules_tools",
       "title": "template_pools_rules_tools",
       "use_when": "Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science.",
-      "test_file_count": 8,
+      "test_file_count": 9,
       "coverage_floor": 90
     },
     {
@@ -126,7 +126,7 @@
       "qualified_name": "templates/template_redacted_report",
       "title": "template_redacted_report",
       "use_when": "Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published.",
-      "test_file_count": 1,
+      "test_file_count": 3,
       "coverage_floor": 90
     },
     {
@@ -134,7 +134,7 @@
       "qualified_name": "templates/template_registered_report",
       "title": "template_registered_report",
       "use_when": "Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted.",
-      "test_file_count": 1,
+      "test_file_count": 3,
       "coverage_floor": 90
     },
     {

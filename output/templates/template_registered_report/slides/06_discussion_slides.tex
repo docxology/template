@@ -1,0 +1,191 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Discussion}\label{sec:discussion}
+
+\begin{frame}[fragile,allowframebreaks]{What the demonstration does and
+does not show}
+\protect\phantomsection\label{what-the-demonstration-does-and-does-not-show}
+The demonstration shows that the registered analysis, run against seeded
+data with a genuine effect (\texttt{Normal(0.8,\ 1)} treatment versus
+\texttt{Normal(0,\ 1)} control), recovers a significant confirmatory
+result: an observed mean difference of \texttt{1.003} with a two-sided
+permutation p-value of \texttt{0.0005}. It does \textbf{not} show
+anything about any real-world phenomenon. The data are synthetic and the
+effect is injected by construction; the number exists to prove that the
+locked plan, when executed, produces an auditable statistic --- not to
+support a scientific claim. This is the honest reading of a template:
+the value is a property of the code path, not evidence about the world.
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Why the boundaries are enforced
+in code}
+\protect\phantomsection\label{why-the-boundaries-are-enforced-in-code}
+Prose conventions for ``confirmatory versus exploratory'' are easy to
+blur once results are in view. Here the boundary is a function contract:
+\breaktt{compare\_analysis\_to\_registration} refuses unregistered
+outcomes without a documented deviation,
+\breaktt{build\_deviation\_ledger} assigns a severity to every executed
+element, and \breaktt{build\_review\_packet} partitions confirmatory from
+exploratory outcomes deterministically. The content hash on the frozen
+registration makes silent edits to the locked plan detectable
+(\texttt{hash\_mismatch}). Together these turn registered-report
+discipline into checks that fail loudly rather than guidance that can be
+quietly ignored.
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Limitations and scope}
+\protect\phantomsection\label{limitations-and-scope}
+\begin{itemize}
+\tightlist
+\item
+  The demonstration uses a single hypothesis and a single confirmatory
+  outcome; real registrations will declare several, and the same helpers
+  scale to them.
+\item
+  A permutation test is used because it is exact, deterministic, and
+  dependency-free; forks may register any primary model by naming it in
+  the plan.
+\item
+  Ethics-review and registered-report-stage metadata in the fixture are
+  synthetic (\texttt{status:\ exempt},
+  \breaktt{authority:\ synthetic-fixture-review}) and must be replaced
+  with real values before any submission.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Using this template}
+\protect\phantomsection\label{using-this-template}
+Fork with \breaktt{scripts/audit/copy\_exemplar.py}, replace
+\breaktt{data/example\_registration.json} with your own preregistration,
+swap the synthetic generator in
+\breaktt{src/registered\_report/demo\_study.py} for real data collection,
+record stage and ethics metadata, and rerun the tests and figure
+generation. Keep confirmatory claims tied to registered outcomes, record
+every departure in the deviation ledger, and never let post-run result
+prose rewrite the preregistered intent.
+\end{frame}
+
+\end{document}

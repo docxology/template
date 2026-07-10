@@ -5,7 +5,7 @@
   "path": "output/reports/snapshots/stage-02-environment-setup.json",
   "stage_name": "Environment Setup",
   "stage_num": 2,
-  "timestamp": "2026-07-08T23:19:20+00:00",
+  "timestamp": "2026-07-10T20:16:52+00:00",
   "validation_summary": {
     "checks": {},
     "summary": {}

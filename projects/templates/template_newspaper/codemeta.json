@@ -14,7 +14,7 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_newspaper",
-  "dateModified": "2026-05-31",
+  "dateModified": "2026-07-10",
   "identifier": "10.5281/zenodo.20533675",
   "keywords": [
     "newspaper layout",
@@ -25,5 +25,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine",
-  "version": "1.0.0"
+  "version": "1.0.2"
 }

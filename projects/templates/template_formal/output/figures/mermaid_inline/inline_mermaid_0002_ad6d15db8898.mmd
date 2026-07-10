@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Handshaking: open()
+    Idle --> Established: accept_hello() Ok
+    Idle --> IdleRejected: accept_hello() Err
+    Handshaking --> Established: complete() Ok
+    Handshaking --> HandshakingRejected: complete() Err
+    Established --> Closed: close()
+    Closed --> [*]
+
+    Idle --> WireFault: bus.try_recv() corrupt
+    Handshaking --> WireFault: bus.try_recv() corrupt
+
+    state IdleRejected: Result.Err(ProtocolViolation)\nconsumed, no phase advance (ISC-23)
+    state HandshakingRejected: Result.Err(ProtocolViolation)\nconsumed, no phase advance (ISC-23)
+    state WireFault: Result.Err(MalformedMessage)\ndecode fails before any phase method runs (ISC-24)

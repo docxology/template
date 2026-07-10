@@ -32,6 +32,7 @@ publication:
   # This exemplar has since been deposited (see README.md's generated
   # publishing-status table for the current per-platform status).
   github_repository: "docxology/template_newspaper"
+  repository_url: "https://github.com/docxology/template_newspaper"
   doi: "10.5281/zenodo.20533675"  # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.20932039" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20932039"

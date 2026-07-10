@@ -1,0 +1,43 @@
+{
+  "name": "infrastructure_usage",
+  "type": "custom",
+  "exit_code": 0,
+  "stdout": "],\n      \"infrastructure.reference.citation\": [\n        \"composition.py\",\n        \"deep_search.py\",\n        \"pipeline.py\"\n      ],\n      \"infrastructure.reporting.interactive_dashboard\": [\n        \"dashboard.py\"\n      ],\n      \"infrastructure.search.literature\": [\n        \"deep_search.py\",\n        \"figures.py\",\n        \"pipeline.py\",\n        \"report.py\",\n        \"synthesis.py\"\n      ],\n      \"infrastructure.llm\": [\n        \"llm_runtime.py\"\n      ]\n    },\n    \"issues\": []\n  },\n  \"exit_code\": 0\n}\n",
+  "stderr": "<frozen runpy>:128: RuntimeWarning: 'src.analysis' found in sys.modules after import of package 'src', but prior to execution of 'src.analysis'; this may result in unpredictable behaviour\n",
+  "success": true,
+  "result": {
+    "name": "infrastructure_usage",
+    "status": "passed",
+    "message": "All 14 infra imports resolve",
+    "details": {
+      "infrastructure_imports": {
+        "infrastructure.core.logging.utils": [
+          "composition.py",
+          "deep_search_cli.py",
+          "llm_runtime.py",
+          "search_pipeline_cli.py"
+        ],
+        "infrastructure.reference.citation": [
+          "composition.py",
+          "deep_search.py",
+          "pipeline.py"
+        ],
+        "infrastructure.reporting.interactive_dashboard": [
+          "dashboard.py"
+        ],
+        "infrastructure.search.literature": [
+          "deep_search.py",
+          "figures.py",
+          "pipeline.py",
+          "report.py",
+          "synthesis.py"
+        ],
+        "infrastructure.llm": [
+          "llm_runtime.py"
+        ]
+      },
+      "issues": []
+    },
+    "exit_code": 0
+  }
+}

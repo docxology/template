@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -177,6 +177,7 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:introduction">Introduction</h1>
 <p>Every other public exemplar in this monorepo renders a manuscript:
 prose, figures, citations, a combined PDF. None of them render a
@@ -193,15 +194,15 @@ source of truth, a validation gate, and a reproducibility guarantee.
 Three properties make that possible.</p>
 <p><strong>One content source, six artifacts.</strong>
 <code>manuscript/deck_content_{short,medium,long}.yaml</code> define the
-slide-by-slide narrative at three lengths;
-<code>manuscript/deck_tokens.yaml</code> supplies the facts.
+slide-by-slide narrative at three lengths; the live token builder
+(<code>src/deck_tokens.py</code>) supplies the facts.
 <code>scripts/render_decks.py</code> resolves tokens once and calls both
 renderers — <code>infrastructure.rendering.slide_deck.render_pdf</code>
 and <code>infrastructure.rendering.pptx_deck.render_pptx</code> —
 against the identical resolved content, so PDF and PPTX cannot drift
 from each other.</p>
-<p><strong>Facts, not fabrication.</strong> Every numeric claim in
-<code>deck_tokens.yaml</code> about the pitch subject
+<p><strong>Facts, not fabrication.</strong> Every numeric claim produced
+by <code>src/deck_tokens.py</code> about the pitch subject
 (<code>template_template</code>) is generated from a live read of that
 project’s own <code>README.md</code>/<code>AGENTS.md</code> or the
 repository’s public exemplar roster — never hand-typed, never a
@@ -216,14 +217,12 @@ pitch that reads as generic — regardless of how factually accurate it is
 — fails the same way an uncovered line of code fails a coverage
 gate.</p>
 <p>The remainder of this manuscript covers the deck-rendering
-architecture (<span class="citation"
-data-cites="sec:architecture">[@sec:architecture]</span>), the
-validation model (<span class="citation"
-data-cites="sec:validation">[@sec:validation]</span>), and the
-reproducibility guarantees (<span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span>) that let
+architecture ([sec:architecture]), the validation model
+([sec:validation]), and the reproducibility guarantees
+([sec:reproducibility]) that let
 <code>uv run python scripts/render_decks.py --project templates/template_pitch_deck</code>
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.</p>
+</main>
 </body>
 </html>

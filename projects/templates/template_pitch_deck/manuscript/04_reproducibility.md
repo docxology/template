@@ -1,7 +1,7 @@
 # Reproducibility {#sec:reproducibility}
 
 `scripts/render_decks.py` is deterministic: given the same repository state
-(`manuscript/deck_content_*.yaml`, `manuscript/deck_tokens.yaml`, and the
+(`manuscript/deck_content_*.yaml`, the live tokens from `src/deck_tokens.py`, and the
 live facts `src/deck_tokens.py` reads from `template_template`'s own files
 and the public exemplar roster), two consecutive runs produce byte-identical
 PDF and PPTX output. No wall-clock timestamps appear in slide content; the

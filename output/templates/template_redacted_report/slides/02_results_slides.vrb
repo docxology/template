@@ -1,16 +1,37 @@
-\frametitle{Results}
-The fixture release packet shows how invented high-side markers are
-redacted before a public narrative is generated. The public export
-contains redacted text only, paragraph audit rows, release authority
-metadata, source-safe ledger hashes, review-gate status, and
-residual-marker findings for review; it does not contain operational
-source text beyond invented fixture residue used by tests.
+\frametitle{Residual Risk Detection}
+\protect\phantomsection\label{residual-risk-detection}
+The residual-risk detector scans sanitized text for common
+public-release leaks:
 
-The development proof matrix produces sixteen visual PDFs and, when
-steganography is enabled, sixteen companion provenance PDFs with hash
-sidecars. The matrix also records Kmyth runtime status and \texttt{.ski}
-sidecar counts so TPM sealing is evidenced as an observed output rather
-than a prose claim. This confirms that visual presentation choices
-remain orthogonal to the release gate: the same source-safe decisions
-drive every blackout, whiteout, grayout, blur, white-background,
-gray-background, black-background, and blur-background output.
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5625}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4375}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Pattern
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Regex
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Email address &
+\texttt{\textbackslash{}b{[}A-Za-z0-9.\_\%+-{]}+@{[}A-Za-z0-9.-{]}+\textbackslash{}.{[}A-Za-z{]}\{2,\}\textbackslash{}b} \\
+IPv4 address &
+\texttt{\textbackslash{}b(?:\textbackslash{}d\{1,3\}\textbackslash{}.)\{3\}\textbackslash{}d\{1,3\}\textbackslash{}b} \\
+Coordinate pair &
+\texttt{\textbackslash{}b-?\textbackslash{}d\{1,2\}\textbackslash{}.\textbackslash{}d\{3,\},\textbackslash{}s*-?\textbackslash{}d\{1,3\}\textbackslash{}.\textbackslash{}d\{3,\}\textbackslash{}b} \\
+Controlled dissemination &
+\texttt{\textbackslash{}b(?:NOFORN\textbackslash{}\textbar{}ORCON\textbackslash{}\textbar{}REL\textbackslash{}s+TO)\textbackslash{}b} \\
+Collection discipline &
+\texttt{\textbackslash{}b(?:HUMINT\textbackslash{}\textbar{}SIGINT\textbackslash{}\textbar{}IMINT\textbackslash{}\textbar{}MASINT\textbackslash{}\textbar{}OSINT)\textbackslash{}b} \\
+Compartment marker &
+\texttt{\textbackslash{}b(?:SCI\textbackslash{}\textbar{}TS\_SCI\textbackslash{}\textbar{}TOP\textbackslash{}s+SECRET)\textbackslash{}b} \\
+Sensitive markers & \texttt{HUMINT}, \texttt{SIGINT}, \texttt{source},
+\texttt{selector}, \texttt{location}, \texttt{2026-} \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Each detected marker generates a warning finding. The mosaic risk score
+aggregates residual markers across all segments.

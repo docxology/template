@@ -1,0 +1,14 @@
+{
+  "name": "bibtex_validation",
+  "type": "infra",
+  "module": "infrastructure.reference.citation.cli",
+  "command": "validate",
+  "args": [
+    "manuscript/references.bib",
+    "--strict"
+  ],
+  "exit_code": 0,
+  "stdout": "Parsed 6 entries from manuscript/references.bib (0 with missing fields)\n",
+  "stderr": "",
+  "success": true
+}

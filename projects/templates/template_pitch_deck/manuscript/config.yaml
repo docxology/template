@@ -1,7 +1,7 @@
 # Template Pitch Deck Configuration
 # This is the "about this template" manuscript config — the deck content itself
 # (short/medium/long, PDF+PPTX) lives in manuscript/deck_content_*.yaml and
-# manuscript/deck_tokens.yaml, and is NOT rendered through this LaTeX/pandoc
+# live tokens from src/deck_tokens.py, and is NOT rendered through this LaTeX/pandoc
 # manuscript path. This config exists to satisfy the standard exemplar
 # registration contract (infrastructure/project/drift/checks_exemplar.py) and
 # to document the project the way every other public template does.
@@ -44,7 +44,7 @@ metadata:
   language: "en"
 
 # Render format toggles — this manuscript is prose-only (about-the-template);
-# the deck artifacts themselves are produced by scripts/render_decks.py via
+# the deck artifacts themselves are produced by scripts/20_render_decks.py via
 # infrastructure/rendering/{slide_deck,pptx_deck}.py, not this pipeline.
 render:
   formats:
@@ -60,9 +60,9 @@ testing:
   max_infra_test_failures: 0
   max_project_test_failures: 0
 
-# Deck-generation parameters — read by scripts/render_decks.py and
+# Deck-generation parameters — read by scripts/20_render_decks.py and
 # src/deck_tokens.py. `pitch_subject` names which manuscript/deck_content_*.yaml
-# + deck_tokens.yaml pair to render; the schema supports adding future pitches
+# + live-token pair (src/deck_tokens.py) to render; the schema supports adding future pitches
 # (e.g. a distinct meta-science-group deck) by adding a new subject key here.
 deck:
   pitch_subject: "template_template"

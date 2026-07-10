@@ -150,6 +150,7 @@ graph TD
         P19[templates/template_pitch_deck<br/>Pitch deck exemplar · see canonical facts]
         P20[templates/template_redacted_report<br/>Redacted release-review exemplar · see canonical facts]
         P21[templates/template_registered_report<br/>Registered report exemplar · see canonical facts]
+        P22[templates/template_formal<br/>Strongly-typed colony exemplar · see canonical facts]
         Pn[active/* rotating hot-seat workspaces<br/>see docs/_generated/active_projects.md]
     end
 

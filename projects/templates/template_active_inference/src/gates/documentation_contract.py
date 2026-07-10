@@ -27,6 +27,13 @@ CURRENT_EVIDENCE_RE = re.compile(
     r"uv run pytest tests/ --cov=src --cov-fail-under=90`\s+passed \d+ tests with\s+\d+(?:\.\d+)?% coverage",
     re.MULTILINE,
 )
+# Forward-only evidence form: the full-suite command plus an explicit deferral of
+# live counts to the generated COUNTS.md, sealed by the canonical "not pinned
+# here" phrase (no pinned numbers to go stale). Counts as the singular
+# current-evidence line when the paragraph is not marked historical/stale.
+FORWARD_EVIDENCE_COMMAND = "uv run pytest tests/ --cov=src --cov-fail-under=90"
+FORWARD_EVIDENCE_POINTER = "COUNTS.md"
+FORWARD_EVIDENCE_SEAL = "not pinned here"
 LEGACY_EVIDENCE_RE = re.compile(r"(153-test|92\.03%|348 tests|364 tests|90\.70%)")
 FORBIDDEN_COMMAND_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
@@ -337,6 +344,17 @@ def check_historical_test_evidence(project_root: Path) -> list[DocumentationIssu
                 )
             else:
                 current_evidence.append(location)
+        for paragraph in _paragraphs(text):
+            lower = paragraph.lower()
+            if (
+                FORWARD_EVIDENCE_COMMAND in paragraph
+                and FORWARD_EVIDENCE_POINTER in paragraph
+                and FORWARD_EVIDENCE_SEAL in lower
+                and "historical" not in lower
+                and "stale" not in lower
+                and not CURRENT_EVIDENCE_RE.search(paragraph)
+            ):
+                current_evidence.append(f"{rel}:forward-only")
         for paragraph in _paragraphs(text):
             if not LEGACY_EVIDENCE_RE.search(paragraph):
                 continue

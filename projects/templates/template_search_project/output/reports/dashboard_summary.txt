@@ -1,0 +1,27 @@
+Literature Search Coverage Dashboard
+====================================
+6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.
+
+project:           template_search_project
+generated:         2026-07-10T19:25:30Z
+git rev:           d87ca592
+panels:            4
+controls:          0
+invariants:        8
+
+hyperparameters
+---------------
+  abstract_floor: 0.5
+  aggregate_path: None
+  corpus_path: /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project/output/corpus.json
+  doi_floor: 0.5
+  min_per_keyword: 1
+  n_keywords: 0
+  n_papers: 6
+  year_floor: 0.7
+  year_max_filter: None
+  year_min_filter: None
+
+notes
+-----
+  - Coverage floors are CLI-overridable and reflected in the invariants gate (default: 50% DOI / abstract, 70% year).

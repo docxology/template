@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_deviations.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:deviations">Deviation register</h1>
+<p>A registered report must state, explicitly, every way the executed
+analysis departed from the frozen plan. This template treats that
+register as a first-class artifact: <code>build_deviation_ledger</code>
+produces one row per executed outcome and model, classifying each as
+<code>ok</code> (registered), <code>warning</code> (an unregistered
+element carried with a documented rationale), or <code>error</code> (an
+unregistered element with no rationale).
+<code>compare_analysis_to_registration</code> downgrades a documented
+model change from <code>error</code> to <code>warning</code> and refuses
+to accept any deviation whose <code>rationale</code> is empty.</p>
+<h2 id="demonstration-deviations">Demonstration deviations</h2>
+<p>To exercise the machinery, the demonstration executes a deliberately
+plan-divergent analysis: it adds a <code>secondary_score</code> endpoint
+and swaps the registered <code>permutation_test</code> for a
+<code>linear_model</code>, each accompanied by a rationale. The
+resulting ledger is:</p>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Kind</th>
+<th>Target</th>
+<th>Registered</th>
+<th>Documented</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>outcome</td>
+<td><code>primary_score</code></td>
+<td>yes</td>
+<td>—</td>
+<td><code>ok</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>outcome</td>
+<td><code>secondary_score</code></td>
+<td>no</td>
+<td>yes</td>
+<td><code>warning</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>model</td>
+<td><code>linear_model</code></td>
+<td>no</td>
+<td>yes</td>
+<td><code>warning</code></td>
+</tr>
+</tbody>
+</table>
+<p>Because both departures are documented, the review packet remains
+valid: it reports <code>primary_score</code> as the only confirmatory
+outcome, <code>secondary_score</code> as exploratory, and an integrity
+score of <code>0.9</code> (a single <code>0.10</code> warning penalty
+against a perfect plan). Had either deviation lacked a rationale, the
+same code would have raised a blocking
+<code>deviation_without_rationale</code> or
+<code>unregistered_outcome</code> error, and the packet would be
+invalid. [fig:deviation_timeline] plots this register along the
+registered-to-executed axis.</p>
+<figure id="fig:deviation_timeline">
+<img src="figures/deviation_timeline.png"
+alt="Preregistration-versus-executed deviation ledger timeline, rendered by plot_deviation_timeline from build_deviation_ledger and deviation_timeline ." />
+<figcaption>Preregistration-versus-executed deviation
+ledger timeline, rendered by <code>plot_deviation_timeline</code> from
+<code>build_deviation_ledger</code> and <code>deviation_timeline</code>.
+Each marker is a ledger row coloured by severity: the registered
+<code>primary_score</code> outcome is green (<code>ok</code>), while the
+added <code>secondary_score</code> endpoint and the
+<code>linear_model</code> substitution are amber (<code>warning</code>,
+documented deviations). No marker is red because every departure carries
+a rationale. An undocumented departure would appear in red and
+invalidate the review packet.</figcaption>
+</figure>
+<h2 id="reading-the-register">Reading the register</h2>
+<p>The register is the mechanism that keeps [sec:results] honest: the
+confirmatory claim is restricted to the registered
+<code>primary_score</code> outcome, and the exploratory
+<code>secondary_score</code> endpoint is visible, labelled, and excluded
+from confirmatory interpretation. Forks should extend this ledger —
+never edit the frozen registration — whenever the executed analysis must
+diverge from plan.</p>
+</main>
+</body>
+</html>

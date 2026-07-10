@@ -1,0 +1,10 @@
+graph TD
+    A[scripts/02_run_analysis.py] --> B[src/template_formal/colony/]
+    B --> C[src/template_formal/agent/agent.py]
+    C --> D[src/template_formal/storage/]
+    C --> E[src/template_formal/protocol/session.py]
+    C --> F[src/template_formal/agent/agent.py::decide]
+    D --> G[per-agent SQLite file]
+    E --> H[src/template_formal/network/bus.py]
+    B --> I[src/template_formal/colony/pheromone.py]
+    F --> J[expected_free_energy — Friston 2005 framing]

@@ -1,17 +1,29 @@
-\frametitle{Methods}
-The method audits each segment against a public classification ceiling,
-validates redaction spans, checks orphan decisions, checks
-source-control coverage, normalizes classification taxonomies, exports
-sanitized release packets, builds source-safe redaction ledgers, records
-segment source/public hashes, evaluates reviewer approval gates, builds
-paragraph-level audit tables, and scores residual mosaic risk.
+\frametitle{Layer Three: Kmyth TPM Sealing}
+\protect\phantomsection\label{layer-three-kmyth-tpm-sealing}
+Kmyth TPM sealing wraps each hash manifest and steganography PDF in a
+\texttt{.ski} sidecar sealed against the TPM2-TSS storage hierarchy. The
+sealed objects are bound to PCR selections and policy or-values,
+ensuring that unsealing requires the same platform configuration.
 
-Visual proofing is parameterized separately from the release-audit text
-path. Development renders enumerate four redaction treatments (blackout,
-whiteout, grayout, blur) across four PDF backgrounds (white, gray,
-black, blur) while preserving source-safe ledgers. The secure proof path
-post-processes each proof PDF with the repository steganography layer:
-hash manifests, provenance overlays, invisible text, barcodes, PDF
-metadata, XMP metadata, embedded manifest attachments, and optional
-Kmyth TPM \texttt{.ski} sidecars for the proof PDF and source-safe hash
-manifest when runnable Kmyth tools and TPM access are available.
+On macOS, which lacks a hardware TPM, a software TPM emulator (swtpm)
+and an mssim-to-swtpm protocol proxy bridge the TPM2-TSS mssim TCTI to
+swtpm's native socket protocol. The proxy:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Control channel}: intercepts MS simulator platform commands
+  (POWER\_ON=1, NV\_ON=11, TPM\_SESSION\_END=20) and returns success,
+  since swtpm's \breaktt{-\/-flags\ startup-clear} handles TPM
+  initialization.
+\item
+  \textbf{Data channel}: strips the 9-byte mssim wire header (4B
+  cmd\_type + 1B locality + 4B tpm\_size), forwards raw TPM commands to
+  swtpm, and wraps responses back in mssim format.
+\end{itemize}
+
+The kmyth-seal binary was patched to call
+\breaktt{Tss2\_Sys\_FlushContext} for the storage key handle before
+freeing TPM2 resources. Without this patch, consecutive kmyth-seal
+invocations exhaust the swtpm transient object slots (typically three),
+causing ``out of memory for object contexts'' errors on the second seal.

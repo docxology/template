@@ -30,6 +30,8 @@ keywords:
 metadata:
   license: "MIT"
   language: "en"
+  # Optional page geometry forwarded to pandoc as `-V geometry:` (see config.yaml)
+  # geometry: "margin=0.5in"
 
 render:
   formats:

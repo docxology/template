@@ -1,0 +1,207 @@
+{
+  "timestamp": "2026-07-10T13:17:44.095919",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": true,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "evidence_issues": [
+      "02_deck_architecture.md: unsupported number 22",
+      "02_deck_architecture.md: unsupported number 45",
+      "02_deck_architecture.md: unsupported number 16",
+      "02_deck_architecture.md: unsupported number 9",
+      "03_content_and_validation.md: unsupported number 90%",
+      "03_content_and_validation.md: unsupported number 60%",
+      "README.md: unsupported number 03"
+    ],
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [
+          "Combined PDF is unusually small: 0.06 MB",
+          "slides/ directory is empty",
+          "data/ directory is empty"
+        ],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 0.06,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 13,
+            "size_mb": 1.4,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 9,
+            "size_mb": 0.07,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 12,
+            "size_mb": 0.36,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 9,
+            "size_mb": 0.17,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 13,
+          "size_mb": "1.40",
+          "largest_file": "template_template_pitch_long.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 9,
+          "size_mb": "0.07",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 12,
+          "size_mb": "0.36",
+          "largest_file": "infra_subpackage_sizes.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 9,
+          "size_mb": "0.17",
+          "largest_file": "artifact_manifest.json"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "llm": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
+        }
+      },
+      "file_counts": {
+        "pdf": 13,
+        "web": 9,
+        "slides": 0,
+        "figures": 12,
+        "data": 0,
+        "reports": 9,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
+      },
+      "total_size_mb": 1.9929628372192383,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [
+          "Combined PDF is unusually small: 0.06 MB"
+        ],
+        "info": [
+          "slides/ directory is empty",
+          "data/ directory is empty"
+        ]
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 13,
+      "size_mb": 1.3967409133911133
+    },
+    "figures": {
+      "files": 12,
+      "size_mb": 0.3574256896972656
+    },
+    "data": {
+      "files": 0,
+      "size_mb": 0.0
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
+  },
+  "recommendations": []
+}

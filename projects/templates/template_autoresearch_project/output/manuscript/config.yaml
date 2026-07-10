@@ -16,6 +16,7 @@ publication:
   version_record: "https://zenodo.org/records/20931907"
   year: "2026"
   github_repository: "docxology/template_autoresearch_project"
+  repository_url: "https://github.com/docxology/template_autoresearch_project"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmZvS2v7ZpqS4T8ZufeW9sA4gNBteAdVfmLH4LcoAqrUhv"
     huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_autoresearch_project"

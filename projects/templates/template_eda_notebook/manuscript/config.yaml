@@ -26,6 +26,7 @@ publication:
   version_doi: "10.5281/zenodo.21086293" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/21086293"
   github_repository: "docxology/template_eda_notebook"
+  repository_url: "https://github.com/docxology/template_eda_notebook"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmSsHhWo2JC76gQSy6rQuN6uKTP1gH9vtj3kGKLgY5oU4E"
     huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_eda_notebook"

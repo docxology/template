@@ -1,0 +1,36 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 424
+Total Size: 5.48 MB
+
+Files by Category:
+  • pdf: 10 files (0.85 MB)
+  • web: 10 files (0.38 MB)
+  • slides: 57 files (1.01 MB)
+  • figures: 8 files (0.16 MB)
+  • data: 325 files (2.53 MB)
+  • reports: 13 files (0.55 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • template_formal_combined.pdf: 0.53 MB (pdf)
+  • artifact_manifest.json: 0.33 MB (reports)
+  • 05_results_discussion_slides.pdf: 0.20 MB (slides)
+  • index.html: 0.14 MB (web)
+  • _combined_manuscript.tex: 0.12 MB (pdf)
+
+File Types:
+  • .sqlite3: 323 file(s)
+  • .json: 15 file(s)
+  • .log: 10 file(s)
+  • .tex: 9 file(s)
+  • .aux: 8 file(s)
+  • .pdf: 8 file(s)
+  • .toc: 8 file(s)
+  • .html: 8 file(s)
+  • .nav: 7 file(s)
+  • .vrb: 7 file(s)

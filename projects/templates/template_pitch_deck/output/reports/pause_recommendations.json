@@ -1,18 +1,37 @@
 {
-  "generated_at": "2026-07-08T23:19:29+00:00",
+  "generated_at": "2026-07-10T20:17:44+00:00",
   "recommendations": [
     {
       "evidence": [
-        "slow_telemetry: Stage 'Infrastructure Tests' took 8.9s (2.0\u00d7 the average 0.1s)"
+        "evidence_error: 02_deck_architecture.md: unsupported number 22",
+        "evidence_error: 02_deck_architecture.md: unsupported number 45",
+        "evidence_error: 02_deck_architecture.md: unsupported number 16",
+        "evidence_error: 02_deck_architecture.md: unsupported number 9",
+        "evidence_error: 03_content_and_validation.md: unsupported number 90%",
+        "evidence_error: 03_content_and_validation.md: unsupported number 60%",
+        "evidence_error: README.md: unsupported number 03"
+      ],
+      "reason_codes": [
+        "evidence_error"
+      ],
+      "score": 1.0,
+      "stage_name": "Evidence registry",
+      "stage_num": 0,
+      "suggested_action": "review before continuing",
+      "timestamp": "2026-07-10T20:17:44+00:00"
+    },
+    {
+      "evidence": [
+        "slow_telemetry: Stage 'Project Tests' took 31.0s (2.0\u00d7 the average 6.6s)"
       ],
       "reason_codes": [
         "slow_telemetry"
       ],
       "score": 1.0,
-      "stage_name": "Infrastructure Tests",
+      "stage_name": "Project Tests",
       "stage_num": 0,
       "suggested_action": "review before continuing",
-      "timestamp": "2026-07-08T23:19:29+00:00"
+      "timestamp": "2026-07-10T20:17:44+00:00"
     }
   ]
 }

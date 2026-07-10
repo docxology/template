@@ -1,0 +1,232 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Quality validation}\label{sec:quality}
+
+\begin{frame}[allowframebreaks]{Quality validation}
+The quality gate is what separates a descriptor that merely
+\emph{claims} to describe a dataset from one that \emph{provably} does.
+It has two layers: structural validation of the descriptor, and
+byte-level reconciliation of the descriptor against the files it names.
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{The validation gate reacts to
+defects}
+\protect\phantomsection\label{the-validation-gate-reacts-to-defects}
+\breaktt{validate\_descriptor()} emits severity-tagged findings for
+missing required keys, unsafe or duplicate file paths, malformed
+checksums, unknown media types, duplicate or malformed fields,
+constraint violations, missing primary keys, and thin provenance.
+\breaktt{build\_descriptor\_report()} folds these into a readiness score,
+penalising each error and warning.
+
+To show the gate is not vacuous, \breakseq{[@fig:quality\_gate]} compares the
+shipped fixture against a deliberately-perturbed copy produced by
+\breaktt{demo\_broken\_descriptor()} (which strips the license, corrupts
+a checksum, zeroes a row count, and removes a unit). The clean fixture
+produces zero findings; the perturbed demo produces several errors and
+warnings.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data --- it exists only to prove the gate reacts. Counts come from severity\_counts().}]{../figures/quality_gate.png}}
+\caption{Quality gate: validation findings by severity for the clean
+fixture descriptor (left, zero findings) versus a deliberately-broken
+demonstration copy (right). The demonstration perturbation is clearly
+named in code and never treated as real data --- it exists only to prove
+the gate reacts. Counts come from
+\protect\breaktt{severity\_counts()}.}\label{fig:quality_gate}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Descriptor↔file verification}
+\protect\phantomsection\label{descriptorfile-verification}
+A checksum is only meaningful if something checks it.
+\breaktt{verify\_descriptor\_files()} recomputes the sha256 digest and
+data-row count of every declared file that is present on disk and
+compares them to the descriptor's declarations, reporting each file as
+\texttt{verified}, \breaktt{checksum\_mismatch}, \texttt{row\_mismatch},
+or \texttt{absent}. Files a descriptor references but does not bundle
+are reported as \texttt{absent} rather than as failures --- verification
+is asserted only for bytes that are actually present, which is what
+makes the metadata-only release boundary honest.
+
+\breakseq{[@fig:checksum\_verification]} shows this reconciliation for the
+shipped fixture: both files verify, declared and actual row counts
+agree, and each recomputed checksum matches its declaration, so the
+readiness score is unpenalised.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from verify\_descriptor\_files(). Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.}]{../figures/checksum_verification.png}}
+\caption{Descriptor↔file verification: declared versus recomputed row
+counts and checksum agreement per file, from
+\protect\breaktt{verify\_descriptor\_files()}. Both shipped fixture files
+verify against their bytes on disk; the title reports the descriptor's
+readiness score. If a fixture file were edited without updating the
+descriptor, the corresponding row would flip to a mismatch status and
+the test suite would fail.}\label{fig:checksum_verification}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Machine-readable release
+manifest}
+\protect\phantomsection\label{machine-readable-release-manifest}
+\breaktt{build\_release\_bundle\_manifest()} packages the above into a
+deterministic, JSON-ready manifest containing the schema fingerprint,
+per-file checksums and row counts, field-level unit/bounds/enumeration
+summaries, provenance steps, and the readiness verdict --- carrying
+metadata and checksums, never the dataset bytes. The thin script
+\href{../scripts/generate_release_artifacts.py}{\breaktt{scripts/generate\_release\_artifacts.py}}
+writes this manifest (plus the readiness report and constraint summary)
+under \texttt{output/reports/} for pre-publication review.
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Validation evidence}
+\protect\phantomsection\label{validation-evidence}
+Every capability above is exercised by the zero-mock \texttt{tests/}
+suite: structural validation and negative controls, order-independent
+schema fingerprints, byte-level verification against real temporary
+files, figure-data preparation, and an integration test that runs the
+figure script end to end and asserts real PNGs are written. Coverage
+exceeds the 90\% project gate with no mocks.
+\end{frame}
+
+\end{document}

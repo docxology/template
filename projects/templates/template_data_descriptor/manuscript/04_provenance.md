@@ -7,9 +7,11 @@ list is an ordered chain of steps, each naming the agent responsible.
 
 ![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](figures/provenance_flow.png){#fig:provenance_flow}
 
-## The provenance chain
+## Methods: the provenance chain
 
-The shipped descriptor declares four steps:
+The provenance chain is this descriptor's methods section — it records the
+generation and processing methodology step by step. The shipped descriptor
+declares four steps:
 
 1. **collect** — a synthetic fixture generator emits the deterministic
    measurement and subject tables.

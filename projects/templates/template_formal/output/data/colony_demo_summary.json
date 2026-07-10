@@ -1,0 +1,63 @@
+{
+  "agent_db_paths": [
+    "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_0.sqlite3",
+    "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_1.sqlite3",
+    "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_2.sqlite3"
+  ],
+  "choice_history": [
+    [
+      "north",
+      "north",
+      "north"
+    ],
+    [
+      "north",
+      "north",
+      "north"
+    ],
+    [
+      "north",
+      "north",
+      "north"
+    ],
+    [
+      "north",
+      "north",
+      "north"
+    ],
+    [
+      "north",
+      "north",
+      "north"
+    ]
+  ],
+  "concentration_history": [
+    {
+      "north": 2.94,
+      "south": 0.0
+    },
+    {
+      "north": 5.821199999999999,
+      "south": 0.0
+    },
+    {
+      "north": 8.644775999999998,
+      "south": 0.0
+    },
+    {
+      "north": 11.411880479999999,
+      "south": 0.0
+    },
+    {
+      "north": 14.1236428704,
+      "south": 0.0
+    }
+  ],
+  "num_agents": 3,
+  "num_ticks": 5,
+  "observation_counts": {
+    "110ba805-0d00-4b53-90b6-9155fe4f1923": 5,
+    "1c9d12c1-dcd0-490e-b489-f187694d513f": 5,
+    "91e1a7ee-2dbf-48ad-8719-48d000843912": 5
+  }
+}

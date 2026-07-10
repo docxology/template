@@ -17,7 +17,13 @@ formal/lean/.lake/
 formal/lean/build/
 
 # Disposable working outputs (per-agent SQLite files, demo summaries)
-output/
+# output/ artifacts are tracked (repro-manifest contract); caches below stay ignored.
+output/data/**/*.sqlite3
+output/data/stats_sweep/
+output/**/_*.log
+output/**/*.aux
+output/**/*.toc
+output/**/*.vrb
 formal/tla/tla2tools.jar
 
 # TLC (TLA+ model checker) scratch/checkpoint directory -- created as a

@@ -1,0 +1,16 @@
+{
+  "fig:convergence-tick-distribution": {
+    "caption": "Consensus-tick distribution across 40 heterogeneous, noisy trials -- the earned statistical result.",
+    "filename": "colony_convergence_tick_distribution.png",
+    "generated_by": "template_formal.colony.visualization.write_convergence_tick_histogram",
+    "label": "fig:convergence-tick-distribution",
+    "section": "Colony convergence"
+  },
+  "fig:demo-convergence": {
+    "caption": "Deterministic demo colony: pheromone concentration and winner share over 5 ticks (guaranteed by construction, not emergence).",
+    "filename": "colony_demo_convergence.png",
+    "generated_by": "template_formal.colony.visualization.write_demo_convergence_figure",
+    "label": "fig:demo-convergence",
+    "section": "Colony convergence"
+  }
+}

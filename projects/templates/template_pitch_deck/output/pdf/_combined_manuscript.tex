@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -85,6 +86,14 @@
 % Allow footnotes in longtable head/foot
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -132,10 +141,15 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={template\_pitch\_deck: Reproducible{,} Validated Pitch-Deck Generation},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{template\_pitch\_deck: Reproducible, Validated Pitch-Deck
+Generation}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -173,7 +187,6 @@
 \usepackage{natbib}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{2cm}
@@ -191,7 +204,6 @@
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \section{Abstract}\label{sec:abstract}
 
@@ -246,16 +258,16 @@ properties make that possible.
 
 \textbf{One content source, six artifacts.}
 \texttt{manuscript/deck\_content\_\{short,medium,long\}.yaml} define the
-slide-by-slide narrative at three lengths;
-\breaktt{manuscript/deck\_tokens.yaml} supplies the facts.
+slide-by-slide narrative at three lengths; the live token builder
+(\breaktt{src/deck\_tokens.py}) supplies the facts.
 \breaktt{scripts/render\_decks.py} resolves tokens once and calls both
 renderers --- \breaktt{infrastructure.rendering.slide\_deck.render\_pdf}
 and \breaktt{infrastructure.rendering.pptx\_deck.render\_pptx} ---
 against the identical resolved content, so PDF and PPTX cannot drift
 from each other.
 
-\textbf{Facts, not fabrication.} Every numeric claim in
-\breaktt{deck\_tokens.yaml} about the pitch subject
+\textbf{Facts, not fabrication.} Every numeric claim produced by
+\breaktt{src/deck\_tokens.py} about the pitch subject
 (\breaktt{template\_template}) is generated from a live read of that
 project's own \texttt{README.md}/\texttt{AGENTS.md} or the repository's
 public exemplar roster --- never hand-typed, never a plausible-sounding
@@ -341,6 +353,8 @@ artifacts under \texttt{output/\{pdf,pptx\}/}.
 
 \section{Content and Validation}\label{sec:validation}
 
+\subsection{Methods}\label{methods}
+
 \subsection{The flagship pitch}\label{the-flagship-pitch}
 
 The shipped content pitches
@@ -365,9 +379,8 @@ governance/confidentiality walkthrough and an appendix.
 (\texttt{\textbackslash{}\{\textbackslash{}\{{[}A-Z{]}{[}A-Z0-9\_{]}*\textbackslash{}\}\textbackslash{}\}}),
 scoped to \breaktt{manuscript/deck\_content\_*.yaml} instead of
 \texttt{manuscript/*.md}. \texttt{resolve\_tokens} raises if any token
-in the content has no matching key in
-\breaktt{manuscript/deck\_tokens.yaml} --- mirroring
-\texttt{template\_madlib}'s
+in the content has no matching key in the live token set from
+\breaktt{src/deck\_tokens.py} --- mirroring \texttt{template\_madlib}'s
 \breaktt{test\_all\_manuscript\_tokens\_are\_generated} pre-substitution
 coverage check, adapted to deck content.
 \breaktt{scripts/audit\_deck\_content.py} runs this check plus the cliché
@@ -390,8 +403,8 @@ cleanliness is trusted.
 \section{Reproducibility}\label{sec:reproducibility}
 
 \breaktt{scripts/render\_decks.py} is deterministic: given the same
-repository state (\breaktt{manuscript/deck\_content\_*.yaml},
-\breaktt{manuscript/deck\_tokens.yaml}, and the live facts
+repository state (\breaktt{manuscript/deck\_content\_*.yaml}, the live
+tokens from \breaktt{src/deck\_tokens.py}, and the live facts
 \breaktt{src/deck\_tokens.py} reads from \breaktt{template\_template}'s
 own files and the public exemplar roster), two consecutive runs produce
 byte-identical PDF and PPTX output. No wall-clock timestamps appear in

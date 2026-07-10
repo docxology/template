@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-07-08T16:19:29.299175",
-  "total_duration": 9.142903804779053,
+  "timestamp": "2026-07-10T13:17:44.867806",
+  "total_duration": 52.678916454315186,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.00506591796875,
+      "duration": 0.016174793243408203,
       "timestamp": "",
       "completed": true,
       "status": "passed",
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.2663078308105469,
+      "duration": 0.2565479278564453,
       "timestamp": "",
       "completed": true,
       "status": "passed",
@@ -22,11 +22,56 @@
     },
     {
       "name": "Infrastructure Tests",
-      "exit_code": 1,
-      "duration": 8.871530055999756,
+      "exit_code": 0,
+      "duration": 7.552132844924927,
       "timestamp": "",
       "completed": true,
-      "status": "failed",
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 31.02386498451233,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 6.825914144515991,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 5.812927961349487,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.6413798332214355,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
+      "context": {}
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.5499739646911621,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed",
       "context": {}
     }
   ],
@@ -38,19 +83,65 @@
     "directories": {
       "pdf": {
         "exists": true,
-        "file_count": 0,
-        "size_mb": "0.00",
-        "total_size_bytes": 0,
-        "largest_files": [],
-        "extensions": {}
+        "file_count": 13,
+        "size_mb": "1.40",
+        "total_size_bytes": 1464589,
+        "largest_files": [
+          {
+            "name": "template_template_pitch_long.pdf",
+            "size_mb": "0.62",
+            "path": "pdf/template_template_pitch_long.pdf"
+          },
+          {
+            "name": "template_template_pitch_medium.pdf",
+            "size_mb": "0.53",
+            "path": "pdf/template_template_pitch_medium.pdf"
+          },
+          {
+            "name": "template_template_pitch_short.pdf",
+            "size_mb": "0.10",
+            "path": "pdf/template_template_pitch_short.pdf"
+          }
+        ],
+        "extensions": {
+          ".pdf": 4,
+          ".md": 1,
+          ".log": 2,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1
+        }
       },
       "web": {
         "exists": true,
-        "file_count": 0,
-        "size_mb": "0.00",
-        "total_size_bytes": 0,
-        "largest_files": [],
-        "extensions": {}
+        "file_count": 9,
+        "size_mb": "0.07",
+        "total_size_bytes": 76078,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.03",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.01",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "manuscript__04_reproducibility.html",
+            "size_mb": "0.01",
+            "path": "web/manuscript__04_reproducibility.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".ico": 1,
+          ".html": 7
+        }
       },
       "slides": {
         "exists": true,
@@ -62,11 +153,31 @@
       },
       "figures": {
         "exists": true,
-        "file_count": 0,
-        "size_mb": "0.00",
-        "total_size_bytes": 0,
-        "largest_files": [],
-        "extensions": {}
+        "file_count": 12,
+        "size_mb": "0.36",
+        "total_size_bytes": 374788,
+        "largest_files": [
+          {
+            "name": "infra_subpackage_sizes.png",
+            "size_mb": "0.09",
+            "path": "figures/infra_subpackage_sizes.png"
+          },
+          {
+            "name": "coverage_by_exemplar.png",
+            "size_mb": "0.09",
+            "path": "figures/coverage_by_exemplar.png"
+          },
+          {
+            "name": "test_count_vs_coverage.png",
+            "size_mb": "0.05",
+            "path": "figures/test_count_vs_coverage.png"
+          }
+        ],
+        "extensions": {
+          ".mmd": 3,
+          ".json": 3,
+          ".png": 6
+        }
       },
       "data": {
         "exists": true,
@@ -78,31 +189,31 @@
       },
       "reports": {
         "exists": true,
-        "file_count": 9,
-        "size_mb": "0.01",
-        "total_size_bytes": 5458,
+        "file_count": 22,
+        "size_mb": "0.38",
+        "total_size_bytes": 397558,
         "largest_files": [
           {
-            "name": "telemetry.json",
-            "size_mb": "0.00",
-            "path": "reports/telemetry.json"
+            "name": "artifact_manifest.json",
+            "size_mb": "0.21",
+            "path": "reports/artifact_manifest.json"
           },
           {
-            "name": "telemetry.txt",
-            "size_mb": "0.00",
-            "path": "reports/telemetry.txt"
+            "name": "evidence_registry.json",
+            "size_mb": "0.07",
+            "path": "reports/evidence_registry.json"
           },
           {
-            "name": "lessons.jsonl",
-            "size_mb": "0.00",
-            "path": "reports/lessons.jsonl"
+            "name": "stage-08-copy-outputs.json",
+            "size_mb": "0.02",
+            "path": "reports/snapshots/stage-08-copy-outputs.json"
           }
         ],
         "extensions": {
-          ".json": 5,
+          ".json": 15,
           ".jsonl": 1,
-          ".txt": 1,
-          ".md": 2
+          ".txt": 2,
+          ".md": 4
         }
       },
       "simulations": {
@@ -125,7 +236,7 @@
         "exists": true,
         "file_count": 1,
         "size_mb": "0.00",
-        "total_size_bytes": 303,
+        "total_size_bytes": 198,
         "largest_files": [
           {
             "name": "pipeline.log",
@@ -138,58 +249,103 @@
         }
       }
     },
-    "total_files": 10,
-    "total_size_mb": 0.005494117736816406,
+    "total_files": 57,
+    "total_size_mb": 2.206049919128418,
     "largest_files": [
       {
-        "name": "telemetry.json",
-        "size_mb": "0.00",
-        "category": "reports",
-        "path": "reports/telemetry.json"
+        "name": "template_template_pitch_long.pdf",
+        "size_mb": "0.62",
+        "category": "pdf",
+        "path": "pdf/template_template_pitch_long.pdf"
       },
       {
-        "name": "telemetry.txt",
-        "size_mb": "0.00",
-        "category": "reports",
-        "path": "reports/telemetry.txt"
+        "name": "template_template_pitch_medium.pdf",
+        "size_mb": "0.53",
+        "category": "pdf",
+        "path": "pdf/template_template_pitch_medium.pdf"
       },
       {
-        "name": "lessons.jsonl",
-        "size_mb": "0.00",
+        "name": "artifact_manifest.json",
+        "size_mb": "0.21",
         "category": "reports",
-        "path": "reports/lessons.jsonl"
+        "path": "reports/artifact_manifest.json"
       },
       {
-        "name": "pipeline.log",
-        "size_mb": "0.00",
-        "category": "logs",
-        "path": "logs/pipeline.log"
+        "name": "template_template_pitch_short.pdf",
+        "size_mb": "0.10",
+        "category": "pdf",
+        "path": "pdf/template_template_pitch_short.pdf"
+      },
+      {
+        "name": "infra_subpackage_sizes.png",
+        "size_mb": "0.09",
+        "category": "figures",
+        "path": "figures/infra_subpackage_sizes.png"
+      },
+      {
+        "name": "coverage_by_exemplar.png",
+        "size_mb": "0.09",
+        "category": "figures",
+        "path": "figures/coverage_by_exemplar.png"
+      },
+      {
+        "name": "evidence_registry.json",
+        "size_mb": "0.07",
+        "category": "reports",
+        "path": "reports/evidence_registry.json"
+      },
+      {
+        "name": "test_count_vs_coverage.png",
+        "size_mb": "0.05",
+        "category": "figures",
+        "path": "figures/test_count_vs_coverage.png"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.03",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "stage-08-copy-outputs.json",
+        "size_mb": "0.02",
+        "category": "reports",
+        "path": "reports/snapshots/stage-08-copy-outputs.json"
       }
     ],
-    "missing_expected_files": [
-      "template_pitch_deck_combined.pdf"
-    ],
+    "missing_expected_files": [],
     "sizes_by_category": {
-      "pdf": 0.0,
-      "web": 0.0,
+      "pdf": 1.3967409133911133,
+      "web": 0.07255363464355469,
       "slides": 0.0,
-      "figures": 0.0,
+      "figures": 0.3574256896972656,
       "data": 0.0,
-      "reports": 0.0052051544189453125,
+      "reports": 0.37914085388183594,
       "simulations": 0.0,
       "llm": 0.0,
-      "logs": 0.00028896331787109375
+      "logs": 0.0001888275146484375
     },
     "file_counts_by_type": {
-      ".json": 5,
+      ".pdf": 4,
+      ".md": 6,
+      ".log": 3,
+      ".aux": 1,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 1,
+      ".toc": 1,
+      ".bbl": 1,
+      ".ico": 1,
+      ".html": 7,
+      ".mmd": 3,
+      ".json": 18,
+      ".png": 6,
       ".jsonl": 1,
-      ".txt": 1,
-      ".md": 2,
-      ".log": 1
+      ".txt": 2
     },
     "log_file": {
       "exists": true,
-      "size": 303,
+      "size": 198,
       "path": "output/logs/pipeline.log"
     }
   }

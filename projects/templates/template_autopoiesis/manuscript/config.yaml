@@ -97,6 +97,13 @@ publication:
   version_doi: "10.5281/zenodo.21229620"
   version_record: "https://zenodo.org/records/21229620"
   github_repository: "docxology/template_autopoiesis"
+  repository_url: "https://github.com/docxology/template_autopoiesis"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V"
     osf: "https://osf.io/ksmzp/"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false

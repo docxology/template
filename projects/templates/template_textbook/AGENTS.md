@@ -68,7 +68,7 @@ Before claiming a change is done:
       formalism, diagram, summary/terms/reading/practice)?
 - [ ] New figure or diagram? Regenerate with `scripts/generate_figures.py` /
       `scripts/generate_diagrams.py` (deterministic, fixed seed).
-- [ ] `uv run --extra dev python -m pytest <tests/> --cov=<src> --cov-fail-under=90`
+- [ ] `uv run python -m pytest <tests/> --cov=<src> --cov-fail-under=90`
       passes (collected > 0, ≥90%).
 - [ ] `scripts/audit_textbook_quality.py` passes.
 

@@ -46,7 +46,7 @@ incomplete scan-set is not the same claim as "the type architecture
 works," and this template's own build process needed a second, adversarial
 pass to catch the gap between the two.
 
-## Fault-injected protocol negative controls
+## Protocol fault-injection negative controls
 
 `tests/network/test_bus.py` and `tests/network/test_handshake_over_bus.py`
 drive a real handshake through the in-process bus (`network/bus.py`) with
@@ -900,7 +900,7 @@ while `iSentHello` is still `FALSE`), proving `NoFalseEstablishment` genuinely d
 holding, and clause (iii) above is now worded to the guarantee actually established rather than the
 broader one the original phrasing implied.
 
-**Lean 4** (`formal/lean/AntProtocol.lean`) grew from 3 theorems to 7, all
+**Lean 4** (`formal/lean/AntProtocol.lean`) grew from 3 theorems to 7 audited property theorems (plus 3 reachability-witness theorems used as their preconditions, 10 declarations total), all
 zero-`sorry`, and — per the file's own `#print axioms` lines, re-confirmed
 by a clean `lake build` — depending on no axioms beyond Lean's own kernel:
 `phase_exhaustive` (the four `Phase` constructors are the only inhabitants
@@ -939,7 +939,7 @@ about the `Step` relation itself ("every transition into `closed` comes
 from `idle`, `established`, or `handshaking` — never anything else"),
 false if a hypothetical sixth constructor targeted `closed` from elsewhere
 — was promoted to a named, `#print axioms`-checked theorem in its place.
-The theorem count stays at 7; the set of what is proved changed to remove
+The audited theorem count stays at 7 (10 declarations including the 3 reachability witnesses); the set of what is proved changed to remove
 the vacuous member.
 
 **TLA+** gained two things, not one. First, `AntProtocol.tla` added a
@@ -969,7 +969,7 @@ immediately after the original `AntProtocol` check, and now a *third* time
 against the negative control `AntProtocolFaultyNegControl.cfg`/`.tla`
 described above (with inverted pass/fail logic) — all three TLC runs plus
 the Lean build must pass for the script to exit zero. Re-verified end to
-end: `lake build` (7 theorems, zero `sorry`) → `PASS`; TLC on
+end: `lake build` (7 audited + 3 witness theorems, zero `sorry`) → `PASS`; TLC on
 `AntProtocol.tla` (liveness included) → `PASS`; TLC on
 `AntProtocolFaulty.tla` (494 states generated, 92 distinct) → `PASS`; TLC
 on `AntProtocolFaultyNegControl.tla` → violation correctly detected in a

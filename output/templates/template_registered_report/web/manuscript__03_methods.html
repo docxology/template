@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_methods.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:methods">Methods and analysis plan</h1>
+<p>The method is the registered-report workflow itself, implemented as
+tested code. It has four locked stages that complete before any result
+is observed, followed by two interpretation stages that run only after
+the deviation ledger is built. [fig:analysis_dag] shows this ordering
+and the lock boundary it protects.</p>
+<figure id="fig:analysis_dag">
+<img src="figures/analysis_dag.png"
+alt="Registered-report analysis workflow, rendered from analysis_plan_stages() in src/registered_report/demo_study.py ." />
+<figcaption>Registered-report analysis workflow,
+rendered from <code>analysis_plan_stages()</code> in
+<code>src/registered_report/demo_study.py</code>. The four blue stages —
+freeze registration, validate completeness, collect/simulate data, and
+execute the registered analysis — lock before results are revealed
+(dashed boundary). The two purple stages — compare to plan and build the
+deviation ledger, then interpret confirmatory claims — run only
+afterwards. The <code>locks_before_results</code> flag on each stage is
+what enforces the boundary in code.</figcaption>
+</figure>
+<h2 id="frozen-registration">Frozen registration</h2>
+<p><code>freeze_registration</code> deep-copies the registration, strips
+any pre-existing hash, and stamps a canonical SHA-256 hash over the
+sorted-key JSON encoding. <code>validate_registration</code> then checks
+that <code>title</code>, <code>version</code>, <code>hypotheses</code>,
+<code>outcomes</code>, <code>exclusion_rules</code>, and
+<code>analysis_plan</code> are present; that each hypothesis has a
+unique <code>id</code> and a <code>claim</code>; that each outcome names
+a <code>measure</code> and <code>analysis</code>; that
+<code>analysis_plan.primary_model</code> and <code>seed</code> are set;
+and that registered-report stage and ethics-review metadata are
+supplied. For the demonstration registration this validation returns no
+findings.</p>
+<h2 id="registered-analysis-plan">Registered analysis plan</h2>
+<p>The analysis plan is fixed before execution:</p>
+<ul>
+<li><strong>Primary model</strong> — a two-sided label-permutation test
+on the group mean difference.</li>
+<li><strong>Significance threshold</strong> —
+<code>alpha = 0.05</code>.</li>
+<li><strong>Seed</strong> — <code>20260709</code>, used for both data
+synthesis and the permutation schedule so the result is
+reproducible.</li>
+<li><strong>Permutations</strong> — <code>2000</code> label shuffles;
+the two-sided p-value uses the add-one correction
+<code>(k + 1) / (permutations + 1)</code> and is therefore strictly
+positive.</li>
+</ul>
+<h2 id="deterministic-demonstration-data">Deterministic demonstration
+data</h2>
+<p>Because this is a template, the “data collection” stage is a seeded
+synthetic generator (<code>generate_demo_dataset</code>),
+<strong>not</strong> a real study. It draws <code>n = 24</code> control
+observations from <code>Normal(0, 1)</code> and <code>n = 24</code>
+treatment observations from <code>Normal(0.8, 1)</code> using a single
+seeded generator, so the entire dataset is a pure function of the plan
+seed. <code>run_registered_analysis</code> reads the seed and
+<code>alpha</code> back out of the frozen plan and executes the
+registered permutation test against this dataset, guaranteeing the
+executed analysis honours the locked plan. The executed summary is
+written to <code>output/data/demo_analysis.json</code> and is the single
+source of truth for every number in [sec:results].</p>
+<p>Forks replace this generator with genuine data collection while
+keeping the same <code>run_registered_analysis</code> contract, so the
+confirmatory analysis remains bound to the frozen plan rather than to
+post-hoc choices.</p>
+</main>
+</body>
+</html>

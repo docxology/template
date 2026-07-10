@@ -31,6 +31,7 @@ publication:
   doi_status: "DOI published"
   version_doi: "10.5281/zenodo.21298889"
   github_repository: "docxology/template_pools_rules_tools"
+  repository_url: "https://github.com/docxology/template_pools_rules_tools"
   license: "CC-BY-4.0"
   venue: "Journal of Open Source Software"
   status: "preprint"

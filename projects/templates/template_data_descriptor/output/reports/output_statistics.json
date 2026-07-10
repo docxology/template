@@ -1,0 +1,286 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.30",
+      "total_size_bytes": 313894,
+      "largest_files": [
+        {
+          "name": "template_data_descriptor_combined.pdf",
+          "size_mb": "0.19",
+          "path": "pdf/template_data_descriptor_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.05",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.03",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".pdf": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 11,
+      "size_mb": "0.11",
+      "total_size_bytes": 113502,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.04",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.02",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__06_usage_notes.html",
+          "size_mb": "0.01",
+          "path": "web/manuscript__06_usage_notes.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".ico": 1,
+        ".html": 9
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 64,
+      "size_mb": "0.84",
+      "total_size_bytes": 878951,
+      "largest_files": [
+        {
+          "name": "05_quality_validation_slides.pdf",
+          "size_mb": "0.07",
+          "path": "slides/05_quality_validation_slides.pdf"
+        },
+        {
+          "name": "03_schema_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/03_schema_slides.log"
+        },
+        {
+          "name": "02_data_description_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/02_data_description_slides.log"
+        }
+      ],
+      "extensions": {
+        ".nav": 8,
+        ".pdf": 8,
+        ".tex": 9,
+        ".toc": 8,
+        ".vrb": 7,
+        ".aux": 8,
+        ".snm": 8,
+        ".log": 8
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 5,
+      "size_mb": "0.11",
+      "total_size_bytes": 117305,
+      "largest_files": [
+        {
+          "name": "schema_overview.png",
+          "size_mb": "0.03",
+          "path": "figures/schema_overview.png"
+        },
+        {
+          "name": "quality_gate.png",
+          "size_mb": "0.02",
+          "path": "figures/quality_gate.png"
+        },
+        {
+          "name": "checksum_verification.png",
+          "size_mb": "0.02",
+          "path": "figures/checksum_verification.png"
+        }
+      ],
+      "extensions": {
+        ".png": 5
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 17,
+      "size_mb": "0.12",
+      "total_size_bytes": 128153,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.07",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "artifact_manifest.json",
+          "size_mb": "0.03",
+          "path": "reports/artifact_manifest.json"
+        },
+        {
+          "name": "stage-07-output-validation.json",
+          "size_mb": "0.01",
+          "path": "reports/snapshots/stage-07-output-validation.json"
+        }
+      ],
+      "extensions": {
+        ".json": 15,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 203,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
+    }
+  },
+  "total_files": 108,
+  "total_size_mb": 1.4801101684570312,
+  "largest_files": [
+    {
+      "name": "template_data_descriptor_combined.pdf",
+      "size_mb": "0.19",
+      "category": "pdf",
+      "path": "pdf/template_data_descriptor_combined.pdf"
+    },
+    {
+      "name": "05_quality_validation_slides.pdf",
+      "size_mb": "0.07",
+      "category": "slides",
+      "path": "slides/05_quality_validation_slides.pdf"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.07",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "03_schema_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/03_schema_slides.log"
+    },
+    {
+      "name": "02_data_description_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/02_data_description_slides.log"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.05",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.04",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.03",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "schema_overview.png",
+      "size_mb": "0.03",
+      "category": "figures",
+      "path": "figures/schema_overview.png"
+    },
+    {
+      "name": "artifact_manifest.json",
+      "size_mb": "0.03",
+      "category": "reports",
+      "path": "reports/artifact_manifest.json"
+    }
+  ],
+  "missing_expected_files": [],
+  "sizes_by_category": {
+    "pdf": 0.29935264587402344,
+    "web": 0.10824394226074219,
+    "slides": 0.8382329940795898,
+    "figures": 0.11187076568603516,
+    "data": 0.0,
+    "reports": 0.12221622467041016,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.00019359588623046875
+  },
+  "file_counts_by_type": {
+    ".md": 4,
+    ".log": 11,
+    ".aux": 9,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 10,
+    ".pdf": 9,
+    ".toc": 9,
+    ".bbl": 1,
+    ".ico": 1,
+    ".html": 9,
+    ".nav": 8,
+    ".vrb": 7,
+    ".snm": 8,
+    ".png": 5,
+    ".json": 15
+  }
+}

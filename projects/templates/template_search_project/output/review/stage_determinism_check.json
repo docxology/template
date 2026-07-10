@@ -1,0 +1,23 @@
+{
+  "name": "determinism_check",
+  "type": "custom",
+  "exit_code": 0,
+  "stdout": "{\n  \"name\": \"determinism_check\",\n  \"status\": \"passed\",\n  \"message\": \"Determinism artifacts present (cache, seed, temperature)\",\n  \"details\": {\n    \"findings\": {\n      \"pipeline_completed\": true,\n      \"papers_found\": 6,\n      \"search_cache_files\": 2,\n      \"llm_seed\": 42,\n      \"llm_temperature\": 0.0\n    }\n  },\n  \"exit_code\": 0\n}\n",
+  "stderr": "<frozen runpy>:128: RuntimeWarning: 'src.analysis' found in sys.modules after import of package 'src', but prior to execution of 'src.analysis'; this may result in unpredictable behaviour\n",
+  "success": true,
+  "result": {
+    "name": "determinism_check",
+    "status": "passed",
+    "message": "Determinism artifacts present (cache, seed, temperature)",
+    "details": {
+      "findings": {
+        "pipeline_completed": true,
+        "papers_found": 6,
+        "search_cache_files": 2,
+        "llm_seed": 42,
+        "llm_temperature": 0.0
+      }
+    },
+    "exit_code": 0
+  }
+}

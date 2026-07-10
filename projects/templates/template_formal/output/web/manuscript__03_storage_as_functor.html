@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_storage_as_functor.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:storage-functor">Storage as a Functor</h1>
+<h2 id="the-framing">The framing</h2>
+<div class="theorem-box definition">
+<p><strong>Definition 1</strong> (Schema-as-category design lens). A has
+one object per table and one morphism per foreign key. A is a functor
+from the schema category into (), sending each table object to the set
+of its rows and each foreign-key morphism to the corresponding function
+between row-sets. This template uses the term as a design lens (below),
+not as a mechanically checked property.</p>
+</div>
+<p><code>src/template_formal/storage/schema.py</code> documents the
+agent-local SQLite schema as an instance of Fong and Spivak’s functorial
+view of databases (<span class="citation"
+data-cites="fong2018seven">@fong2018seven</span>; see also the Ologs
+framework of <span class="citation"
+data-cites="spivak2012ologs">@spivak2012ologs</span>) per the definition
+above. <code>Column</code> and <code>TableSchema</code> — the typed
+dataclasses this module defines — play the role of that schema
+category’s objects: a <code>Column</code> is a typed field of a table,
+and a <code>TableSchema</code> is a table’s full column list plus the
+SQL DDL it compiles to, generated programmatically rather than
+hand-written at each call site (ISC-9).</p>
+<h2 id="what-this-framing-is-and-is-not">What this framing is, and is
+not</h2>
+<p>This is stated here exactly as it is stated in the source docstring:
+a <em>design lens</em>, not a load-bearing mathematical claim. Nothing
+in <code>storage/schema.py</code>, <code>storage/db.py</code>, or their
+tests checks the actual category-theoretic functoriality laws —
+identity-preservation and composition-preservation — against this
+schema. A forker who wanted that stronger guarantee would need a genuine
+categorical-database library (or a proof assistant encoding) checking
+those laws against the schema’s foreign keys; this template does not
+attempt that, and does not claim to. The value the framing does deliver,
+honestly: it gives the typed query builder (<code>storage/db.py</code>’s
+<code>QueryBuilder[RowT]</code>, generic over the row type) a principled
+vocabulary for what a “row set” and a “schema” are, and it makes
+explicit that a schema <em>is</em> structured data with morphisms
+between its parts — a genuinely useful design lens for reasoning about
+foreign-key integrity — without over-promising a machine-checked proof
+the codebase does not deliver.</p>
+<h2
+id="affine-discipline-transactions-over-that-instance">Affine-discipline
+transactions over that instance</h2>
+<p>Every write to an agent’s schema-instance goes through exactly one
+<code>TransactionHandle</code> per transaction
+(<code>storage/transaction.py</code>), consumed at most once (<span
+class="citation"
+data-cites="sec:honesty-line">@sec:honesty-line</span>). A real on-disk
+SQLite file (<code>tmp_path</code>-backed, never
+<code>:memory:</code>-only, per ISC-66) is used in every test that makes
+a durability claim, including the rollback test that asserts — via a
+real <code>SELECT</code>, not an assumption — that a rolled-back
+transaction leaves the database in its exact pre-transaction state
+(ISC-14). The typed query builder never raises for an <em>expected</em>
+failure mode (a missing row, a constraint violation); those come back as
+<code>Result.Err(StorageError(...))</code> (ISC-10), keeping expected
+failure on the ADT side of the line drawn in <span class="citation"
+data-cites="sec:honesty-line">@sec:honesty-line</span> and reserving
+raised exceptions for genuine programmer errors such as affine-handle
+reuse.</p>
+<h2 id="per-agent-isolation">Per-agent isolation</h2>
+<p>Per the ISA’s decentralization framing (<code>Out of Scope</code>:
+“independent local DB … per agent, no shared global state”), each
+<code>Agent</code> (<code>src/template_formal/agent/agent.py</code>)
+opens its own <code>Database</code> at construction time and never
+exposes it — there is no public attribute or method on
+<code>Agent</code> that returns a <code>Path</code>,
+<code>sqlite3.Connection</code>, or <code>Database</code>, and none that
+accepts one either. <code>tests/agent/test_agent_isolation.py</code>
+confirms this structurally (ISC-30): a second agent’s storage file path
+is unreachable through the first agent’s public API, not merely
+unreached in the tests that happen to exist.</p>
+</main>
+</body>
+</html>

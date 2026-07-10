@@ -14,7 +14,7 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_autoscientists",
-  "dateModified": "2026-06-03",
+  "dateModified": "2026-07-10",
   "identifier": "10.5281/zenodo.20533669",
   "keywords": [
     "agent coordination",
@@ -26,5 +26,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "A Deterministic Testbed for Self-Organizing Agent-Team Coordination",
-  "version": "1.0.0"
+  "version": "1.0.2"
 }

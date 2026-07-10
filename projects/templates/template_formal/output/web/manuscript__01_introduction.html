@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:introduction">Introduction</h1>
+<h2 id="why-ant-robots">Why ant robots</h2>
+<p>Ant colonies coordinate at scale without any individual ant holding a
+global view of the colony’s state: each ant senses locally, acts
+locally, and influences its nestmates only indirectly, through shared,
+persistent traces in the environment — a mode of coordination biologists
+call <em>stigmergy</em>. This is not a decorative metaphor for this
+template; it is the actual reason the domain was chosen (per the
+governing ISA’s Principles: “the ant-robot domain is chosen because
+bounded local computation, local sensing, and stigmergic … coordination
+are actually true of ant colonies and actually motivate per-agent local
+DB + local networking — the domain must earn its place scientifically,
+not decoratively”). A decentralized multiagent simulation with
+<strong>no shared global state</strong> — each agent owns its own
+database file and its own network endpoint — is a direct computational
+analogue of that biological constraint, and it happens to be exactly the
+setting where illegal-state bugs (a corrupted message reaching the wrong
+agent’s database, a half-finished handshake silently treated as
+complete) are both easy to introduce and easy to make structurally
+impossible.</p>
+<h2
+id="why-strong-typing-is-the-research-subject-not-an-implementation-detail">Why
+strong typing is the research subject, not an implementation detail</h2>
+<p>Twenty existing exemplars in this monorepo
+(<code>projects/templates/*</code>) cover numerical analysis, prose
+composition, textbooks, and Active Inference modeling, but none of them
+makes strongly-typed program design the load- bearing research claim.
+This gap has a specific character: Python is gradually, optionally,
+structurally typed — <code>mypy --strict</code> can reject a genuinely
+broad class of illegal programs at edit-time and in CI, but Python has
+no compiler-enforced affine or structural-linearity discipline and no
+dependent-type checker in its standard toolchain. A template that wants
+to <em>demonstrate</em> strong typing honestly therefore has to draw a
+line between what the type checker actually proves and what remains a
+runtime discipline that a determined caller could still violate — and
+then back every claim on either side of that line with a test that would
+fail if the claim were false. <span class="citation"
+data-cites="sec:type-architecture">@sec:type-architecture</span> states
+that line explicitly; <span class="citation"
+data-cites="sec:honesty-line">@sec:honesty-line</span> pins each strong
+claim in it to a numbered test.</p>
+<h2 id="readers-guide-to-the-manuscript">Reader’s guide to the
+manuscript</h2>
+<ul>
+<li><strong><span class="citation"
+data-cites="sec:type-architecture">@sec:type-architecture</span></strong>
+walks the ADT (<code>Result[T, E]</code>), nominal-ID
+(<code>AgentId</code>/<code>MessageId</code>/<code>TxnId</code>),
+session-typed protocol
+(<code>IdleSession</code>/<code>HandshakingSession</code>/<code>EstablishedSession</code>/<code>ClosedSession</code>),
+and affine-discipline (<code>TransactionHandle</code>) layers, each
+grounded in <span class="citation"
+data-cites="wadler2015propositions">@wadler2015propositions</span>,
+<span class="citation"
+data-cites="pierce2002types">@pierce2002types</span>, <span
+class="citation" data-cites="milner1978theory">@milner1978theory</span>,
+<span class="citation"
+data-cites="honda1998language">@honda1998language</span>, and <span
+class="citation" data-cites="jung2018rustbelt">@jung2018rustbelt</span>,
+and closes with <span class="citation"
+data-cites="sec:honesty-line">@sec:honesty-line</span> — the explicit
+proof-scoping section.</li>
+<li><strong><span class="citation"
+data-cites="sec:storage-functor">@sec:storage-functor</span></strong>
+frames the per-agent SQLite schema as a functor <span
+class="math inline">\(\mathrm{Schema} \to \mathbf{Set}\)</span>, per
+<span class="citation" data-cites="fong2018seven">@fong2018seven</span>
+and <span class="citation"
+data-cites="spivak2012ologs">@spivak2012ologs</span>, and states plainly
+that this is a design lens, not a machine-checked functoriality
+proof.</li>
+<li><strong><span class="citation"
+data-cites="sec:active-inference">@sec:active-inference</span></strong>
+frames each agent’s per-tick decision as an approximate
+expected-free-energy minimization, citing <span class="citation"
+data-cites="friston2005theory">@friston2005theory</span>, and connects
+it to collective biological organization via the Memory Evolutive
+Systems framework of [ehresmann2007memory].</li>
+<li><strong><span class="citation"
+data-cites="sec:results-discussion">@sec:results-discussion</span></strong>
+reports the multi-agent colony integration test’s stigmergic convergence
+result (honestly scoped as a real mechanism, not yet a claim of
+emergence), the mypy-oracle proof-of-detection results, and discusses
+what evidence would be needed to widen any of these claims.</li>
+<li><strong><span class="citation"
+data-cites="sec:references">@sec:references</span></strong> points to
+the full bibliography.</li>
+</ul>
+<h2 id="related-empirical-grounding">Related empirical grounding</h2>
+<p>Two further citations anchor the paper’s claim that static typing has
+measurable, non-hypothetical value, and that value has documented
+limits: <span class="citation"
+data-cites="gao2017type">@gao2017type</span> quantified detectable bug
+categories in a large corpus of JavaScript projects and found a
+meaningful — but bounded — fraction of real-world bugs are the kind a
+type system would have caught; the Google Security Blog’s 2024
+retrospective (<span class="citation"
+data-cites="google2024eliminating">@google2024eliminating</span>)
+reports a measured drop in memory-safety vulnerabilities in
+newly-written, memory-safe-by-default Android code, evidence from a
+production codebase rather than a benchmark suite. Neither claim
+licenses an inference that <em>any</em> particular typed discipline in
+this template’s code prevents <em>any</em> particular class of bug
+beyond what its own paired test demonstrates — they establish only that
+the general research question (does typing prevent real bugs?) has real,
+cited, non-anecdotal answers in the literature this template draws
+on.</p>
+<p>Finally, <span class="citation"
+data-cites="ongaro2014search">@ongaro2014search</span> (Raft) is cited
+not because this template implements distributed consensus — it
+explicitly does not (see <code>Out of Scope</code>: “No production
+consensus/Raft/Paxos implementation”) — but because the colony’s typed
+shared “pheromone field” substrate
+(<code>src/template_formal/colony/pheromone.py</code>) is a deliberately
+minimal, documentary stand-in for the kind of shared-coordination-state
+problem Raft solves in full; the comparison is drawn explicitly, not
+left implicit, in <span class="citation"
+data-cites="sec:results-discussion">@sec:results-discussion</span>.</p>
+</main>
+</body>
+</html>

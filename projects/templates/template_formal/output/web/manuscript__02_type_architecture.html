@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_type_architecture.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:type-architecture">Type Architecture</h1>
+<h2 id="module-layout">Module layout</h2>
+<p>The typed surface described in this section is not spread arbitrarily
+across the codebase — each layer below owns exactly one of the concerns
+this paper argues for (ADTs, nominal identifiers, session types, affine
+handles), and each layer is exercised by the colony coordination loop at
+the bottom, never bypassed:</p>
+<pre class="mermaid"><code>graph TD
+    A[scripts/02_run_analysis.py] --&gt; B[src/template_formal/colony/]
+    B --&gt; C[src/template_formal/agent/agent.py]
+    C --&gt; D[src/template_formal/storage/]
+    C --&gt; E[src/template_formal/protocol/session.py]
+    C --&gt; F[src/template_formal/agent/agent.py::decide]
+    D --&gt; G[per-agent SQLite file]
+    E --&gt; H[src/template_formal/network/bus.py]
+    B --&gt; I[src/template_formal/colony/pheromone.py]
+    F --&gt; J[expected_free_energy — Friston 2005 framing]</code></pre>
+<h2 id="algebraic-data-types-resultt-e">Algebraic data types:
+<code>Result[T, E]</code></h2>
+<p><code>src/template_formal/types/result.py</code> defines
+<code>Result[T, E]</code> as a tagged union of two frozen dataclasses,
+<code>Ok[T]</code> and <code>Err[E]</code>, each carrying a
+<code>Literal["ok"]</code>/<code>Literal["err"]</code> tag field. This
+is the closest structural analogue Python offers to the sum types of
+ML-family languages (<span class="citation"
+data-cites="milner1978theory">@milner1978theory</span>) and to the
+Curry–Howard “propositions as types” reading of a disjoint union as a
+proof of “either <span class="math inline">\(A\)</span> or <span
+class="math inline">\(B\)</span>” (<span class="citation"
+data-cites="wadler2015propositions">@wadler2015propositions</span>): a
+function returning <code>Result[T, E]</code> documents, in its
+signature, that failure is an ordinary, structurally-typed value — never
+an uncaught exception for an <em>expected</em> failure mode.
+<code>match</code>/<code>case</code> narrowing on the <code>tag</code>
+field, combined with <code>typing.assert_never</code> in the default
+arm, makes an exhaustiveness bug — a <code>match</code> that handles
+<code>Ok</code> and forgets <code>Err</code> — a real
+<code>mypy --strict</code> type error, not a runtime surprise.</p>
+<h2 id="nominal-identifiers-agentid-messageid-txnid">Nominal
+identifiers: <code>AgentId</code>, <code>MessageId</code>,
+<code>TxnId</code></h2>
+<p><code>src/template_formal/types/ids.py</code> wraps
+<code>uuid.UUID</code> three times via <code>typing.NewType</code>:
+<code>AgentId</code>, <code>MessageId</code>, <code>TxnId</code>. All
+three are, at runtime, plain <code>UUID</code> values —
+indistinguishable from one another and from a bare <code>UUID</code>.
+The distinction exists <strong>only</strong> at the type-checker level:
+<code>mypy --strict</code> rejects passing an <code>AgentId</code> where
+a <code>MessageId</code> is expected, even though nothing about the
+underlying bytes differs. This is Pierce’s (<span class="citation"
+data-cites="pierce2002types">@pierce2002types</span>) textbook case for
+nominal typing over structural typing where the underlying
+representation is shared but the domain meaning is not.</p>
+<h2 id="session-typed-protocol-state-machine">Session-typed protocol
+state machine</h2>
+<p><code>src/template_formal/protocol/session.py</code> implements a
+session-typed handshake protocol in the tradition of
+[honda1998language]: four distinct classes — <code>IdleSession</code>,
+<code>HandshakingSession</code>, <code>EstablishedSession</code>,
+<code>ClosedSession</code> — each parameterizing
+<code>SessionEndpoint[PhaseT]</code> with exactly one phase marker from
+<code>types/phase.py</code>. Each phase-transition method returns the
+<em>next</em> phase’s concrete class
+(e.g. <code>IdleSession.open() -&gt; HandshakingSession</code>), never a
+union that also includes an illegal successor. Data-transfer methods
+(<code>send</code>/<code>receive</code>) exist <strong>only</strong> on
+<code>EstablishedSession</code> — they are not defined at all on
+<code>IdleSession</code> or <code>HandshakingSession</code> — so calling
+them on the wrong phase is an outright attribute-resolution type error
+under <code>mypy --strict</code>, not a caught exception at runtime.</p>
+<p>The diagram below is the real phase state machine, not a
+simplification of it: every solid edge is a phase-transition method that
+exists in <code>src/template_formal/protocol/session.py</code>, and
+every dashed edge is one of the two fault-injected error paths ISC-23/24
+test through the in-process bus (<code>network/bus.py</code>) —
+<code>Result.Err(ProtocolViolation(...))</code> when a session method
+rejects an out-of-order or mis-addressed frame, and
+<code>Result.Err(MalformedMessage(...))</code> when
+<code>decode_wire_message</code> rejects corrupted wire bytes
+<em>before</em> any phase method ever runs. Neither error path advances
+the session to a new phase class; both are represented as terminal
+outcomes of the attempted transition, matching the code exactly
+(<code>accept_hello</code>/<code>complete</code> mark
+<code>_consumed = True</code> and return <code>Err(...)</code> from the
+<em>same</em> phase object, they do not construct a next-phase
+class).</p>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Idle
+    Idle --&gt; Handshaking: open()
+    Idle --&gt; Established: accept_hello() Ok
+    Idle --&gt; IdleRejected: accept_hello() Err
+    Handshaking --&gt; Established: complete() Ok
+    Handshaking --&gt; HandshakingRejected: complete() Err
+    Established --&gt; Closed: close()
+    Closed --&gt; [*]
+
+    Idle --&gt; WireFault: bus.try_recv() corrupt
+    Handshaking --&gt; WireFault: bus.try_recv() corrupt
+
+    state IdleRejected: Result.Err(ProtocolViolation)&lt;br/&gt;consumed, no phase advance (ISC-23)
+    state HandshakingRejected: Result.Err(ProtocolViolation)&lt;br/&gt;consumed, no phase advance (ISC-23)
+    state WireFault: Result.Err(MalformedMessage)&lt;br/&gt;decode fails before any phase method runs (ISC-24)</code></pre>
+<p><em>The real
+<code>IdleSession → HandshakingSession → EstablishedSession → ClosedSession</code>
+phase machine plus its two fault-injected error edges — dropped frames
+surface as <code>ProtocolViolation</code> at the session-method
+boundary, corrupted frames surface as <code>MalformedMessage</code> at
+the wire-decode boundary, and neither ever crashes or silently advances
+the phase (<span class="citation"
+data-cites="sec:results-discussion">@sec:results-discussion</span>,
+“Fault-injected protocol negative controls”).</em></p>
+<h2 id="affine-discipline-resource-handles">Affine-discipline resource
+handles</h2>
+<div class="theorem-box definition">
+<p><strong>Definition 1</strong> (Affine-discipline resource handle). An
+is an object that (i) is immutable after construction (, -restricted, no
+public mutator), (ii) carries a private consumed flag set exactly once
+by its first consuming call, and (iii) raises a dedicated exception on
+every subsequent consuming call rather than silently re-executing or
+returning stale state. () and every protocol-phase class () satisfy this
+definition, checked at runtime, not at edit time.</p>
+</div>
+<p><code>src/template_formal/storage/transaction.py</code>’s
+<code>TransactionHandle</code> and the protocol-phase classes above are
+what this paper calls <strong>affine-discipline</strong> handles per the
+definition above: frozen, <code>__slots__</code>-restricted objects
+carrying a private consumed flag, checked and raised
+(<code>ConsumedHandleError</code>/<code>SessionConsumedError</code>) on
+every consuming method call. The term is chosen deliberately over
+describing Python’s guarantee here as compiler-enforced structural
+linearity of the kind <span class="citation"
+data-cites="jung2018rustbelt">@jung2018rustbelt</span> formalize for
+Rust’s ownership/borrowing system: Rust’s borrow checker rejects a
+double-move or a use-after-move <strong>at compile time</strong>, as a
+type error; Python’s runtime here rejects a double-commit <strong>at
+runtime</strong>, as a raised exception, one call after the type checker
+has already let the program through. Both defend the same invariant — a
+resource is consumed at most once — but by different mechanisms, and
+this paper is careful never to claim Python achieves the compile-time
+version.</p>
+<h2 id="sec:honesty-line">What mypy –strict proves vs. what is a runtime
+discipline</h2>
+<p>This section states, claim by claim, exactly which invariants above
+are edit-time/CI-time type-checker guarantees and which are
+runtime-checked disciplines — and cites the ISC (Ideal-State Criterion)
+number of the test that would fail if the claim were false.</p>
+<div class="theorem-box proposition">
+<p><strong>Proposition 2</strong> (Static type-safety guarantees,
+edit-time/CI-time only). Each of the following is rejected by before the
+program ever runs, and each rejection is exercised by a real subprocess
+invocation over a negative-control fixture (never a hand-inspected
+signature): nominal identifier confusion ( for ), a non-exhaustive over
+, a phase-inappropriate method call on a session-typed handle, an
+out-of- isolation level, an constructed from a bare /, and a
+structurally-nonconforming . See the itemized list below for the exact
+fixture and ISC bound to each claim.</p>
+</div>
+<p><strong>Proved by mypy –strict (edit-time/CI-time only):</strong></p>
+<ul>
+<li>An <code>AgentId</code> cannot be passed where a
+<code>MessageId</code> is expected (ISC-2,
+<code>tests/mypy_fixtures/bad_id_mixing.py</code>).</li>
+<li>A <code>match</code> over <code>Result</code> that omits the
+<code>Err</code> arm is rejected via <code>assert_never</code> in the
+<code>Ok</code>-only branch (ISC-4,
+<code>tests/mypy_fixtures/bad_result_nonexhaustive.py</code>).</li>
+<li>An <code>Established</code>-only method cannot be called on an
+<code>Idle</code>-phase handle (ISC-18,
+<code>tests/mypy_fixtures/bad_phase_transition.py</code>).</li>
+<li>A <code>TransactionHandle</code>’s isolation level cannot be
+constructed from an arbitrary string outside
+<code>Literal["deferred", "immediate", "exclusive"]</code> (ISC-15,
+<code>tests/mypy_fixtures/bad_isolation_level.py</code>).</li>
+<li>An <code>Agent</code> cannot be constructed from a bare
+<code>str</code>/<code>UUID</code> in place of an <code>AgentId</code>
+(ISC-31,
+<code>tests/mypy_fixtures/bad_agent_id_construction.py</code>).</li>
+<li>An object that almost, but not quite, structurally conforms to the
+<code>PheromoneField</code> <code>Protocol</code> — <code>deposit</code>
+requiring an extra argument beyond <code>(location, amount)</code> —
+cannot be assigned to a <code>PheromoneField</code>-typed variable
+(ISC-32,
+<code>tests/mypy_fixtures/bad_pheromone_protocol_violation.py</code>).</li>
+<li>All six fixtures above are run as real <code>mypy --strict</code>
+<strong>subprocess</strong> invocations (never a hand-inspected type
+signature) by <code>tests/test_mypy_oracle.py</code>, which additionally
+asserts a <strong>zero</strong> exit code against the real
+<code>src/</code> tree (ISC-37, ISC-38, ISC-39) — proof the main code is
+actually clean, not merely that the fixtures are broken. Three more
+fixtures are <strong>positive</strong> controls, each guarding a
+generic-API or structural-conformance surface <code>src/</code>-only
+type-checking cannot see because <code>src/</code> itself never
+instantiates that surface with a concrete type argument:
+<code>good_agent_belief_instantiation.py</code> asserts
+<code>Agent[BeliefState]</code> (the template’s own flagship generic
+instantiation) type-checks cleanly — it exists because an earlier
+revision of <code>GaussianBelief</code> declared its
+<code>mean</code>/<code>variance</code> members as plain mutable
+attributes rather than read-only <code>@property</code> members, which a
+<code>frozen=True</code> dataclass can never satisfy, and a cross-vendor
+audit caught the break (see ISA.md Changelog);
+<code>good_bus_wire_message_instantiation.py</code> asserts
+<code>InProcessBus[WireMessage]</code> binds and type-checks cleanly
+(ISC-20/26); and <code>good_pheromone_conformance.py</code> is the
+paired positive control proving <code>InMemoryPheromoneField</code>
+actually does satisfy <code>PheromoneField</code> (ISC-32), so the
+negative control above is shown to reject a genuinely broken
+conformance, not an unsatisfiable one.</li>
+</ul>
+<div class="theorem-box proposition">
+<p><strong>Proposition 3</strong> (Runtime-only disciplines, not
+type-checker guarantees). None of the following is ill-typed under :
+each is instead caught only at runtime, by an explicit consumed-flag
+check or an explicit wire-decode validation, and each is exercised by a
+real fault-injected test (a seeded, reproducible fault sequence through
+the in-process bus, never a fault-free-only happy path). This is the
+affine-discipline handle of the definition above paying off dynamically
+where Python’s static type system structurally cannot.</p>
+</div>
+<p><strong>Runtime disciplines only — not type-checker
+guarantees:</strong></p>
+<ul>
+<li>Reusing a consumed <code>TransactionHandle</code> (calling
+<code>.commit()</code> twice, or after <code>.rollback()</code>) is not
+ill-typed; it is caught by a runtime <code>_consumed</code> flag and
+raises <code>ConsumedHandleError</code> (ISC-12, ISC-13).</li>
+<li>Reusing a consumed protocol-phase instance (calling
+<code>.open()</code> twice on the same <code>IdleSession</code> without
+reassignment) is not ill-typed either; a runtime consumed-flag check
+raises <code>SessionConsumedError</code> (ISC-19), pairing this dynamic
+proof with the static proof of ISC-18 above.</li>
+<li>Malformed bytes arriving at a real, untyped network boundary — the
+wire format
+<code>encode_wire_message</code>/<code>decode_wire_message</code>
+round-trips through real <code>bytes</code>, not passed-by-reference
+Python objects (ISC-26) — are detected only at runtime, returning a
+typed <code>Result.Err(MalformedMessage(...))</code> (ISC-24), never a
+compile-time guarantee, because no static type system can characterize
+the well-formedness of bytes received from outside the type-checked
+program.</li>
+<li>Every one of the above runtime disciplines is exercised by a real
+fault-injected test through the in-process bus
+(<code>network/bus.py</code>), with a seeded, reproducible fault
+sequence (ISC-22) and no test that exercises only the fault-free happy
+path without a paired negative control (ISC-25 anti).</li>
+</ul>
+<p><strong>What this section explicitly does not claim:</strong> no
+sentence in this manuscript, and no docstring in
+<code>src/template_formal/</code>, asserts that Python’s type system
+enforces resource-affine or resource-structural-linear discipline at
+compile time, or that it performs the kind of type-level
+proof-obligation checking a proof assistant’s value-indexed type theory
+performs. Affine-discipline handles here are runtime-guarded, full stop;
+a grep for the two named classes of compile-time guarantee this
+paragraph deliberately does not use, run against this manuscript,
+returns zero matches (ISC-44) — there is no limitations subsection that
+needs the exemption, because the template makes neither claim anywhere
+to begin with.</p>
+</main>
+</body>
+</html>

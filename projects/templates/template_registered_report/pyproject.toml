@@ -8,7 +8,8 @@ version = "0.1.0"
 description = "Preregistration and registered-report validation exemplar"
 authors = [{name = "Research Template Author", email = "author@research-template.org"}]
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "matplotlib>=3.8.0",]
 
 [project.optional-dependencies]
 dev = [

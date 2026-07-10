@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_active_inference.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:active-inference">The Active Inference Framing of the
+Decision Loop</h1>
+<h2 id="the-decision-loop">The decision loop</h2>
+<p><code>src/template_formal/agent/agent.py</code>’s
+<code>Agent.decide</code> scores each candidate action by a closed-form
+quantity, formalized here once and cited by number everywhere else in
+this manuscript that uses it:</p>
+<div class="theorem-box definition">
+<p><strong>Definition 1</strong> (Expected free energy of a candidate
+action). For a scalar Gaussian belief (Q(o ) = (_q, _q^2)) about the
+outcome a candidate action would produce, and a fixed Gaussian
+preference (P(o) = (_p, _p^2)), subject to (_q^2 &gt; 0) and (_p^2 &gt;
+0) (enforced at construction by , ISC-81), the of the action is the sum
+of a KL-divergence risk term and a differential-entropy ambiguity term
+over (Q), given in . selects the candidate action minimizing this
+quantity.</p>
+</div>
+<p><span class="math display">\[
+G(\text{action}) = \mathrm{KL}\!\left[Q(o \mid \text{action}) \,\|\,
+P(o)\right] + \mathrm{H}\!\left[Q(o \mid \text{action})\right]
+\]</span> {#eq:expected-free-energy}</p>
+<p>Both terms of <span class="citation"
+data-cites="eq:expected-free-energy">@eq:expected-free-energy</span> are
+ordinary, exactly-computable closed forms — the univariate Gaussian
+KL-divergence and the univariate Gaussian differential entropy — and
+<code>tests/agent/test_agent_free_energy.py</code> checks the
+implementation against a hand-derived numeric expectation (ISC-29), not
+merely a “runs without error” smoke assertion.</p>
+<p>A third adversarial pass (FirstPrinciples and an independent security
+review, converging on the same finding without coordinating) caught a
+real gap here: <code>BeliefState.variance</code> — the divisor in <span
+class="citation"
+data-cites="eq:expected-free-energy">@eq:expected-free-energy</span>’s
+KL term and the argument to <span class="math inline">\(\log\)</span> in
+its entropy term — carried no validation, so
+<code>BeliefState(mean=0.0, variance=0.0)</code> constructed silently
+and only failed three calls later with an undocumented
+<code>ZeroDivisionError</code>. <code>BeliefState</code> now validates
+<code>variance</code> (finite, <code>&gt; 0.0</code>) at construction
+(ISC-81), mirroring the same construction-time-guard pattern the storage
+layer’s SQL identifiers and the colony harness’s
+<code>decay</code>/<code>sensing_noise_std</code> already use.
+<code>tests/agent/test_agent_free_energy.py</code> proves the fix is
+load-bearing: the <code>ValueError</code> now fires at
+<code>BeliefState.__init__</code>, not deep inside <span
+class="math inline">\(G\)</span>’s computation.</p>
+<h2 id="what-this-borrows-from-friston-2005-and-what-it-does-not">What
+this borrows from Friston (2005), and what it does not</h2>
+<p>The general framing — that adaptive behavior can be cast as
+approximate minimization of a variational free energy over beliefs about
+hidden or observed states — traces to <span class="citation"
+data-cites="friston2005theory">@friston2005theory</span>, “A Theory of
+Cortical Responses.” That paper establishes the free-energy principle
+for perception; it does not itself present the risk/ambiguity
+decomposition of <em>expected</em> free energy used above, which was
+formalized in later active-inference literature building on it. This
+template borrows only the general framing — behavior as free-energy
+minimization over a belief distribution — and states the borrowed
+formula explicitly in the source docstring rather than presenting it as
+a verbatim reproduction of Friston’s 2005 equations. What a
+research-grade active-inference implementation would additionally
+require — hierarchical generative models, policy-conditioned rollouts
+over multi-step futures, precision-weighting of prediction errors, and
+message-passing (variational) inference over a structured generative
+model — is out of scope for this template and is not claimed to be
+present.</p>
+<h2
+id="from-individual-free-energy-minimization-to-collective-organization">From
+individual free-energy minimization to collective organization</h2>
+<p>The colony’s convergence behavior (<span class="citation"
+data-cites="sec:results-discussion">@sec:results-discussion</span>; not
+claimed as emergence in the stronger sense there defined) is not
+produced by any single agent’s free-energy calculation; it is produced
+by many agents independently minimizing <span
+class="math inline">\(G\)</span> against a <strong>shared,
+environment-mediated</strong> substrate — the pheromone field
+(<code>src/template_formal/colony/pheromone.py</code>). This is exactly
+the bridge Ehresmann and Vanbremeersch’s Memory Evolutive Systems
+framework (<span class="citation"
+data-cites="ehresmann2007memory">@ehresmann2007memory</span>) is built
+to describe: a hierarchy in which lower-level components (individual
+agents, each running its own local free-energy minimization) interact
+through a shared structure to produce higher-level, emergent
+organizational patterns, formalized category-theoretically as colimits
+over evolving diagrams of interacting sub-systems. This template does
+not implement or check Ehresmann and Vanbremeersch’s formal colimit
+construction — the connection drawn here is, like <span class="citation"
+data-cites="sec:storage-functor">@sec:storage-functor</span>’s
+functorial framing, a conceptual bridge from an individual-level
+computational mechanism (expected-free-energy minimization) to a
+collective-level phenomenon (stigmergic convergence), not a claim that
+this template’s code constitutes a formal Memory Evolutive System.</p>
+<h2 id="structural-boundary-the-decision-loop-respects">Structural
+boundary the decision loop respects</h2>
+<p><code>Agent.decide</code> and <code>Agent.record_observation</code>
+never read or write another agent’s storage file; the type system and
+the <code>Agent</code> class’s public surface make this structurally
+true rather than merely conventionally true (ISC-30, <span
+class="citation"
+data-cites="sec:storage-functor">@sec:storage-functor</span>). The
+colony coordinator that drives many agents through repeated ticks holds
+references only to each agent’s public interface and to the shared
+<code>PheromoneField</code> <code>Protocol</code> — never to an agent’s
+internal <code>Database</code> or protocol <code>SessionEndpoint</code>
+(ISC-34). This keeps the “many local free-energy minimizers coordinating
+through a shared environment, with no shared internal state” framing
+honest at the code level, not just at the level of the manuscript’s
+prose.</p>
+</main>
+</body>
+</html>

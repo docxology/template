@@ -1,0 +1,218 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Slide layout defaults for warning-clean scientific decks.
+\usepackage{etoolbox}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+\setlength{\emergencystretch}{6em}
+\tolerance=5000
+\hbadness=10000
+\hfuzz=1pt
+\setlength{\tabcolsep}{2pt}
+\AtBeginEnvironment{longtable}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+\AtBeginEnvironment{tabular}{\tiny\renewcommand{\arraystretch}{0.86}\setlength{\tabcolsep}{1pt}}
+
+% Natbib and cross-reference fallbacks — slides don't load natbib
+% or cleveref, but combined-PDF manuscript prose may emit these
+% commands. The fallback renders citations as a bracketed key list
+% and cross-references as detokenized labels so slides don't fail on
+% undefined control sequences or raw underscores. \providecommand is
+% a no-op if packages load later.
+\providecommand{\citep}[1]{[#1]}
+\providecommand{\citet}[1]{#1}
+\providecommand{\citealp}[1]{#1}
+\providecommand{\citeauthor}[1]{#1}
+\providecommand{\citeyear}[1]{#1}
+\providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
+\providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Schema and data dictionary}\label{sec:schema}
+
+\begin{frame}[fragile,allowframebreaks]{Schema and data dictionary}
+The descriptor's \texttt{fields} list is the dataset's \textbf{data
+dictionary}: it names each column of the primary measurement table and
+declares its type, nullability, optional unit, and value constraints.
+\breakseq{[@fig:schema\_overview]} renders this dictionary directly from the
+descriptor via \breaktt{schema\_table\_rows()} in
+\breaktt{src/data\_descriptor/figures.py}.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from schema\_table\_rows(). Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from data/example\_descriptor.json and cannot silently disagree with it.}]{../figures/schema_overview.png}}
+\caption{Field schema / data dictionary: one row per declared field,
+with type, nullability, unit, and a compact constraint label, from
+\protect\breaktt{schema\_table\_rows()}. Identifier fields carry
+regular-expression patterns; the categorical fields carry closed
+enumerations; the quantitative field carries a unit and numeric bounds.
+The table is generated from
+\protect\breaktt{data/example\_descriptor.json} and cannot silently
+disagree with it.}\label{fig:schema_overview}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Field contract}
+\protect\phantomsection\label{field-contract}
+The six declared fields exercise the constraint vocabulary the validator
+understands:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{sample\_id}} (\texttt{string}, not null) --- the
+  primary key, constrained to the pattern
+  \texttt{\^{}S{[}0-9{]}\{3\}\$}.
+\item
+  \textbf{\texttt{subject\_id}} (\texttt{string}, not null) --- foreign
+  key into \breaktt{fixtures/subjects.csv}, constrained to
+  \texttt{\^{}P{[}0-9{]}\{3\}\$}.
+\item
+  \textbf{\texttt{group}} (\texttt{category}, not null) --- a closed
+  enumeration of \texttt{control} and \texttt{treatment}.
+\item
+  \textbf{\texttt{value}} (\texttt{number}, not null) --- the
+  measurement, carrying the unit \breaktt{normalized\_score} and numeric
+  bounds \texttt{{[}0,\ 1{]}}.
+\item
+  \textbf{\texttt{collected\_on}} (\texttt{date}, not null) --- an
+  ISO-8601 collection date.
+\item
+  \textbf{\texttt{instrument}} (\texttt{category}, not null) --- a
+  closed enumeration of \texttt{sensor\_a} and \texttt{sensor\_b}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Schema fingerprint}
+\protect\phantomsection\label{schema-fingerprint}
+\breaktt{descriptor\_fingerprint()} reduces the field list to a stable,
+order-independent sha256 fingerprint over
+\breaktt{(name,\ type,\ nullable)} triples. Reordering the fields leaves
+the fingerprint unchanged, so two descriptors with the same schema hash
+identically regardless of authoring order --- the property is asserted
+directly in the test suite. The fingerprint is what lets a release
+manifest reference ``the schema'' by a single value that changes if and
+only if the field contract changes.
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Constraint validation}
+\protect\phantomsection\label{constraint-validation}
+The validator flags quantitative fields that lack a unit, categorical
+fields that lack allowed values, enumerations that are present but
+empty, numeric bounds where the minimum exceeds the maximum, and
+patterns declared on non-text fields. On the shipped descriptor none of
+these fire --- the data dictionary above is complete, so the readiness
+score is unpenalised (see \breakseq{[@sec:quality]}).
+\end{frame}
+
+\end{document}

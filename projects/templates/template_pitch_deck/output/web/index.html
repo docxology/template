@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>template_pitch_deck: Reproducible, Validated Pitch-Deck
 Generation</title>
   <style>
@@ -308,34 +309,34 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -390,13 +391,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -411,13 +412,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -435,7 +444,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -443,11 +452,13 @@ a:hover {
 </style>
 </head>
 <body>
+<main id="main-content">
 <header id="title-block-header">
 <h1 class="title">template_pitch_deck: Reproducible, Validated
 Pitch-Deck Generation</h1>
 <p class="subtitle">Short/Medium/Long PDF+PPTX decks from one
 token-resolved content source</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -469,12 +480,14 @@ class="toc-section-number">3.3</span> Project-side content</a></li>
 <li><a href="#sec:validation" id="toc-sec:validation"><span
 class="toc-section-number">4</span> Content and Validation</a>
 <ul>
+<li><a href="#methods" id="toc-methods"><span
+class="toc-section-number">4.1</span> Methods</a></li>
 <li><a href="#the-flagship-pitch" id="toc-the-flagship-pitch"><span
-class="toc-section-number">4.1</span> The flagship pitch</a></li>
+class="toc-section-number">4.2</span> The flagship pitch</a></li>
 <li><a href="#token-resolution" id="toc-token-resolution"><span
-class="toc-section-number">4.2</span> Token resolution</a></li>
+class="toc-section-number">4.3</span> Token resolution</a></li>
 <li><a href="#cliché-lint" id="toc-cliché-lint"><span
-class="toc-section-number">4.3</span> Cliché lint</a></li>
+class="toc-section-number">4.4</span> Cliché lint</a></li>
 </ul></li>
 <li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
 class="toc-section-number">5</span> Reproducibility</a></li>
@@ -528,15 +541,15 @@ source of truth, a validation gate, and a reproducibility guarantee.
 Three properties make that possible.</p>
 <p><strong>One content source, six artifacts.</strong>
 <code>manuscript/deck_content_{short,medium,long}.yaml</code> define the
-slide-by-slide narrative at three lengths;
-<code>manuscript/deck_tokens.yaml</code> supplies the facts.
+slide-by-slide narrative at three lengths; the live token builder
+(<code>src/deck_tokens.py</code>) supplies the facts.
 <code>scripts/render_decks.py</code> resolves tokens once and calls both
 renderers — <code>infrastructure.rendering.slide_deck.render_pdf</code>
 and <code>infrastructure.rendering.pptx_deck.render_pptx</code> —
 against the identical resolved content, so PDF and PPTX cannot drift
 from each other.</p>
-<p><strong>Facts, not fabrication.</strong> Every numeric claim in
-<code>deck_tokens.yaml</code> about the pitch subject
+<p><strong>Facts, not fabrication.</strong> Every numeric claim produced
+by <code>src/deck_tokens.py</code> about the pitch subject
 (<code>template_template</code>) is generated from a live read of that
 project’s own <code>README.md</code>/<code>AGENTS.md</code> or the
 repository’s public exemplar roster — never hand-typed, never a
@@ -612,8 +625,10 @@ renderers together into the six published artifacts under
 <hr />
 <h1 data-number="4" id="sec:validation"><span
 class="header-section-number">4</span> Content and Validation</h1>
-<h2 data-number="4.1" id="the-flagship-pitch"><span
-class="header-section-number">4.1</span> The flagship pitch</h2>
+<h2 data-number="4.1" id="methods"><span
+class="header-section-number">4.1</span> Methods</h2>
+<h2 data-number="4.2" id="the-flagship-pitch"><span
+class="header-section-number">4.2</span> The flagship pitch</h2>
 <p>The shipped content pitches <a
 href="../../template_template/"><code>template_template</code></a> —
 this monorepo’s autopoietic meta-project, which introspects the
@@ -628,16 +643,16 @@ publishing surface <code>template_template</code> itself already
 reaches), and an ask. Medium and long variants add landscape,
 architecture, and roadmap detail; long adds a full
 governance/confidentiality walkthrough and an appendix.</p>
-<h2 data-number="4.2" id="token-resolution"><span
-class="header-section-number">4.2</span> Token resolution</h2>
+<h2 data-number="4.3" id="token-resolution"><span
+class="header-section-number">4.3</span> Token resolution</h2>
 <p><code>src/token_resolution.py</code> implements the same
 <code>{{TOKEN}}</code> convention used by
 <code>infrastructure/rendering/manuscript_injection.py</code>
 (<code>\{\{[A-Z][A-Z0-9_]*\}\}</code>), scoped to
 <code>manuscript/deck_content_*.yaml</code> instead of
 <code>manuscript/*.md</code>. <code>resolve_tokens</code> raises if any
-token in the content has no matching key in
-<code>manuscript/deck_tokens.yaml</code> — mirroring
+token in the content has no matching key in the live token set from
+<code>src/deck_tokens.py</code> — mirroring
 <code>template_madlib</code>’s
 <code>test_all_manuscript_tokens_are_generated</code> pre-substitution
 coverage check, adapted to deck content.
@@ -645,8 +660,8 @@ coverage check, adapted to deck content.
 cliché lint in one pass and exits non-zero on either class of failure;
 both failure modes are proven to actually fire (a deliberately-broken
 fixture triggers each) before the real content is checked clean.</p>
-<h2 data-number="4.3" id="cliché-lint"><span
-class="header-section-number">4.3</span> Cliché lint</h2>
+<h2 data-number="4.4" id="cliché-lint"><span
+class="header-section-number">4.4</span> Cliché lint</h2>
 <p><code>src/cliche_lint.py</code> maintains a word-boundary-safe
 denylist of pitch-deck stock phrases (“synergy,” “disrupt,” “10x,”
 “game-changing,” “rocket ship,” “paradigm shift,” and more). It is
@@ -658,8 +673,8 @@ cleanliness is trusted.</p>
 <h1 data-number="5" id="sec:reproducibility"><span
 class="header-section-number">5</span> Reproducibility</h1>
 <p><code>scripts/render_decks.py</code> is deterministic: given the same
-repository state (<code>manuscript/deck_content_*.yaml</code>,
-<code>manuscript/deck_tokens.yaml</code>, and the live facts
+repository state (<code>manuscript/deck_content_*.yaml</code>, the live
+tokens from <code>src/deck_tokens.py</code>, and the live facts
 <code>src/deck_tokens.py</code> reads from
 <code>template_template</code>’s own files and the public exemplar
 roster), two consecutive runs produce byte-identical PDF and PPTX
@@ -689,5 +704,6 @@ class="header-section-number">6</span> References</h1>
 <div id="refs" role="list">
 
 </div>
+</main>
 </body>
 </html>

@@ -1,4 +1,8 @@
-output/
+# output/ artifacts are tracked (repro-manifest contract); caches below stay ignored.
+output/**/_*.log
+output/**/*.aux
+output/**/*.toc
+output/**/*.vrb
 .venv/
 .pytest_cache/
 __pycache__/

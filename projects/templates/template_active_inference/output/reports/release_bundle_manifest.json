@@ -2,12 +2,12 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 38,
-  "bundle_hash": "2c8c3a30dbf00a15b5a5fef254574a61773b2f4266893161753d7fc94da26147",
+  "bundle_hash": "404a814811efdf9d0040ca1ba0af3bfdc19cd31b95a33911c151bc792cd629e5",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
     "all_required_sources_present": false,
-    "copied_root": "/Users/4d/Documents/GitHub/template/output/templates/template_active_inference",
+    "copied_root": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/output/templates/template_active_inference",
     "copied_root_exists": true,
     "pre_copy_stage": true,
     "row_count": 38,
@@ -17,11 +17,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/sheaf_gluing_certificate.json",
-        "copied_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+        "copied_sha256": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209",
+        "source_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
         "status": "deferred"
       },
       {
@@ -41,11 +41,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/artifact_provenance.json",
-        "copied_sha256": "405302d28e0e7062dc6c57b791c6768b06f6a112582bac05106c5e5facbd9aec",
+        "copied_sha256": "666ac05f41088c55ab2a0425ac17cf2345a100609d12d8e68ca8f9a6cced3786",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "fd92930b13b3ff2328eea04da811b0e02518ad4abba3c51b452931880d761a8d",
+        "source_sha256": "9878cab95870b1f4a59aad3aa9c723bfd4a38158702953718f3564150b93462c",
         "status": "deferred"
       },
       {
@@ -53,11 +53,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/replay_matrix.json",
-        "copied_sha256": "dd1fb59295b115375a7cb4f683489878a6a69682d7f53f39c8092cc23419a645",
+        "copied_sha256": "b9cb457f48da6348109b2ad9c274c7502b508cf0e7fcb6df121c126f4d41e871",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "b9cb457f48da6348109b2ad9c274c7502b508cf0e7fcb6df121c126f4d41e871",
+        "source_sha256": "0438bf0149a3d1ff8a9e2639c8bc2c2472a751bb23e4493576df9df809dd1d0d",
         "status": "deferred"
       },
       {
@@ -182,15 +182,15 @@
       },
       {
         "artifact": "output/reports/security_posture_audit.json",
-        "comparison_deferred_until_copy": false,
+        "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/security_posture_audit.json",
         "copied_sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
-        "hash_matches": true,
+        "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad",
-        "status": "matched"
+        "source_sha256": "c8e1fa3aeca311d59332b8201a55edfd1f90f35258a5ad75d807eaec4f4e375f",
+        "status": "deferred"
       },
       {
         "artifact": "output/data/track_lane_matrix.json",
@@ -209,11 +209,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/artifact_contract_index.json",
-        "copied_sha256": "46d0f0fe24ea395e6a324496479cdecf7b0cf85004cb87a338aab8c54f34f250",
+        "copied_sha256": "2c7d076435e7dba4e0c270b4f6d14bc6b4202b29a83dd3b8d98c1f1d8496837f",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "c4a466cebcde81f9f87c743b2ce2587d68343574379b16e8a65a17b0d0f65094",
+        "source_sha256": "b399a941f445469fc8a3210b31102b42b7943a6f814623f940a1459381c75e12",
         "status": "deferred"
       },
       {
@@ -353,11 +353,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/artifact_diffoscope.json",
-        "copied_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+        "copied_sha256": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3",
+        "source_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
         "status": "deferred"
       },
       {
@@ -461,11 +461,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/release_attestation.json",
-        "copied_sha256": "a198e06f45bf61b1b02fb70f2d14eef859cc10812082088f65c2615d6ba64d4c",
+        "copied_sha256": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315",
+        "source_sha256": "ed02ca188572e4dcdf6147de2f115d38e4945e00feba547e177c6bea49df0e21",
         "status": "deferred"
       }
     ]
@@ -476,7 +476,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "3f02abd5d276ccbf1243c59cd79b1dc26e3d4752171897847f3ca4e673926209"
+      "source_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439"
     },
     {
       "artifact": "output/data/validation_dependency_graph.json",
@@ -490,14 +490,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "fd92930b13b3ff2328eea04da811b0e02518ad4abba3c51b452931880d761a8d"
+      "source_sha256": "9878cab95870b1f4a59aad3aa9c723bfd4a38158702953718f3564150b93462c"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "b9cb457f48da6348109b2ad9c274c7502b508cf0e7fcb6df121c126f4d41e871"
+      "source_sha256": "0438bf0149a3d1ff8a9e2639c8bc2c2472a751bb23e4493576df9df809dd1d0d"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -574,7 +574,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "63f9d0d4c4aa3938af7a16eb6a5a325dc68e99e02405666ab3fcf68720e928ad"
+      "source_sha256": "c8e1fa3aeca311d59332b8201a55edfd1f90f35258a5ad75d807eaec4f4e375f"
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -588,7 +588,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c4a466cebcde81f9f87c743b2ce2587d68343574379b16e8a65a17b0d0f65094"
+      "source_sha256": "b399a941f445469fc8a3210b31102b42b7943a6f814623f940a1459381c75e12"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -672,7 +672,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "d84e0c2350c644a40a223cf97d6b961cf7c923f0dd226f1f3beca93ffc71b9b3"
+      "source_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -735,7 +735,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "b251586814a2dbbabf5dbd93dad695e9e2254fd04bf48dbe2bb140c5219cf315"
+      "source_sha256": "ed02ca188572e4dcdf6147de2f115d38e4945e00feba547e177c6bea49df0e21"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",

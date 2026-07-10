@@ -5,7 +5,7 @@ description: Core orchestration guidelines and MCP interactions for the src/ lib
 
 # Instructions
 
-You are interfacing with the `src/` directory of the literature meta-analysis project. This directory contains 45+ public APIs spread across 5 submodules.
+You are interfacing with the `src/` directory of the literature meta-analysis project. This directory contains 45+ public APIs spread across 6 submodules.
 
 ## Agentic Interface (MCP Strategy)
 

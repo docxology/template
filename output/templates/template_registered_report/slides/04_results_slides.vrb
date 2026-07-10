@@ -1,0 +1,9 @@
+\frametitle{Claim boundary}
+\protect\phantomsection\label{claim-boundary}
+The registration preregisters exactly one confirmatory outcome. The
+review packet built by \breaktt{build\_review\_packet} records
+\texttt{primary\_score} as the sole confirmatory outcome and returns an
+integrity score of \texttt{1.0} for a plan-faithful execution. Any other
+endpoint examined during analysis is exploratory and is reported under
+{[}Section @sec:deviations{]}, never here. This separation is enforced
+in code, not merely asserted in prose.

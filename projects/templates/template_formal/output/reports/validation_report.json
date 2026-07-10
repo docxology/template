@@ -1,0 +1,189 @@
+{
+  "timestamp": "2026-07-10T13:15:22.711332",
+  "checks": {
+    "PDF validation": true,
+    "Transmission bookends": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": true,
+    "Project design overlays": true,
+    "Artifact manifest": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 0.53,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 0.85,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 0.38,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 57,
+            "size_mb": 1.01,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 8,
+            "size_mb": 0.16,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 325,
+            "size_mb": 2.53,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 9,
+            "size_mb": 0.3,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "0.85",
+          "largest_file": "template_formal_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "0.38",
+          "largest_file": "index.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 57,
+          "size_mb": "1.01",
+          "largest_file": "05_results_discussion_slides.pdf"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 8,
+          "size_mb": "0.16",
+          "largest_file": "inline_mermaid_0001_e0b519d89719.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 325,
+          "size_mb": "2.53",
+          "largest_file": "agent_7.sqlite3"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 9,
+          "size_mb": "0.30",
+          "largest_file": "artifact_manifest.json"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "llm": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
+        }
+      },
+      "file_counts": {
+        "pdf": 10,
+        "web": 10,
+        "slides": 57,
+        "figures": 8,
+        "data": 325,
+        "reports": 9,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
+      },
+      "total_size_mb": 5.2295331954956055,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 10,
+      "size_mb": 0.8463449478149414
+    },
+    "figures": {
+      "files": 3,
+      "size_mb": 0.07676029205322266
+    },
+    "data": {
+      "files": 5,
+      "size_mb": 0.02544689178466797
+    }
+  },
+  "summary": {
+    "total_checks": 8,
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
+  },
+  "recommendations": []
+}

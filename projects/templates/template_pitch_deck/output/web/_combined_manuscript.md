@@ -48,13 +48,13 @@ a manuscript: as a build artifact with a single source of truth, a validation
 gate, and a reproducibility guarantee. Three properties make that possible.
 
 **One content source, six artifacts.** `manuscript/deck_content_{short,medium,long}.yaml`
-define the slide-by-slide narrative at three lengths; `manuscript/deck_tokens.yaml`
+define the slide-by-slide narrative at three lengths; the live token builder (`src/deck_tokens.py`)
 supplies the facts. `scripts/render_decks.py` resolves tokens once and calls
 both renderers — `infrastructure.rendering.slide_deck.render_pdf` and
 `infrastructure.rendering.pptx_deck.render_pptx` — against the identical
 resolved content, so PDF and PPTX cannot drift from each other.
 
-**Facts, not fabrication.** Every numeric claim in `deck_tokens.yaml` about the
+**Facts, not fabrication.** Every numeric claim produced by `src/deck_tokens.py` about the
 pitch subject (`template_template`) is generated from a live read of that
 project's own `README.md`/`AGENTS.md` or the repository's public exemplar
 roster — never hand-typed, never a plausible-sounding invented metric.
@@ -132,6 +132,9 @@ together into the six published artifacts under
 
 # Content and Validation {#sec:validation}
 
+## Methods
+
+
 ## The flagship pitch
 
 The shipped content pitches [`template_template`](../../template_template/) — this
@@ -152,7 +155,7 @@ long adds a full governance/confidentiality walkthrough and an appendix.
 `infrastructure/rendering/manuscript_injection.py`
 (`\{\{[A-Z][A-Z0-9_]*\}\}`), scoped to `manuscript/deck_content_*.yaml`
 instead of `manuscript/*.md`. `resolve_tokens` raises if any token in the
-content has no matching key in `manuscript/deck_tokens.yaml` — mirroring
+content has no matching key in the live token set from `src/deck_tokens.py` — mirroring
 `template_madlib`'s `test_all_manuscript_tokens_are_generated` pre-substitution
 coverage check, adapted to deck content. `scripts/audit_deck_content.py`
 runs this check plus the cliché lint in one pass and exits non-zero on either
@@ -178,7 +181,7 @@ before the real content's cleanliness is trusted.
 # Reproducibility {#sec:reproducibility}
 
 `scripts/render_decks.py` is deterministic: given the same repository state
-(`manuscript/deck_content_*.yaml`, `manuscript/deck_tokens.yaml`, and the
+(`manuscript/deck_content_*.yaml`, the live tokens from `src/deck_tokens.py`, and the
 live facts `src/deck_tokens.py` reads from `template_template`'s own files
 and the public exemplar roster), two consecutive runs produce byte-identical
 PDF and PPTX output. No wall-clock timestamps appear in slide content; the

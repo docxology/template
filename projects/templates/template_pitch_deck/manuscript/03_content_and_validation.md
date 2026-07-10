@@ -23,7 +23,7 @@ long adds a full governance/confidentiality walkthrough and an appendix.
 `infrastructure/rendering/manuscript_injection.py`
 (`\{\{[A-Z][A-Z0-9_]*\}\}`), scoped to `manuscript/deck_content_*.yaml`
 instead of `manuscript/*.md`. `resolve_tokens` raises if any token in the
-content has no matching key in `manuscript/deck_tokens.yaml` — mirroring
+content has no matching key in the live token set from `src/deck_tokens.py` — mirroring
 `template_madlib`'s `test_all_manuscript_tokens_are_generated` pre-substitution
 coverage check, adapted to deck content. `scripts/audit_deck_content.py`
 runs this check plus the cliché lint in one pass and exits non-zero on either

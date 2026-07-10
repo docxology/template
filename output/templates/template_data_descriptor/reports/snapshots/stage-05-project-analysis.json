@@ -1,0 +1,24 @@
+{
+  "artifact_manifest_hash": "d35f45acfd83f9106771692d77719e2754c0aca1f37604dba502d524a6a39b77",
+  "artifacts": {
+    "output/figures/checksum_verification.png": "2ced41ebc9302e7be2e33e4d90e6ba7a20b67ab18c77925a286fb7259944d1fd",
+    "output/figures/file_inventory.png": "acf23fbd569e0a7352f8a713636a0788d1bffe0cd32f9f2a5f19f517dd0d6dee",
+    "output/figures/provenance_flow.png": "dfb2961f552f29b8d383cc08b0843d21828ca9cb58d16e650d5f6c8afb877b76",
+    "output/figures/quality_gate.png": "fe5070b3adb3839fde682596fa32675de9f21b7f2482ce48068abaf5e17adae2",
+    "output/figures/schema_overview.png": "407ae952f5283a68ab847cea7102cb7ec809f50ab24bb0e648c2daba8eae27d6",
+    "output/reports/descriptor_report.json": "bbec5decb71a26fe2336f235c22fbfc750e1635062d7db97be09b579a2d58936",
+    "output/reports/field_constraints.json": "52f9d6b2a437c631af88b51b902b87062dcc0ed0fe5ce76e12dd78baca40901f",
+    "output/reports/release_bundle_manifest.json": "a5c473c009517970bb8d52c4edf9b8092f752120a616538006b3edd92d44a9e9",
+    "output/reports/test_results.json": "9826076e83612fb863dd60722ab857e454a75796c2228ad6abe96d73fef49960",
+    "output/reports/test_results.md": "b4764bc4b57ebf6bf99760f3785846356c6a7b9a616bfef90fb38fbdeb342cd5"
+  },
+  "evidence_fact_count": 0,
+  "path": "output/reports/snapshots/stage-05-project-analysis.json",
+  "stage_name": "Project Analysis",
+  "stage_num": 5,
+  "timestamp": "2026-07-10T20:10:49+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

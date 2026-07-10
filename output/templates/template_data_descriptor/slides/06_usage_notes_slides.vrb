@@ -1,0 +1,29 @@
+\frametitle{Forking in a real dataset}
+\protect\phantomsection\label{forking-in-a-real-dataset}
+To adapt this template to a real dataset:
+
+\begin{enumerate}
+\tightlist
+\item
+  Replace the fixture files under \texttt{data/fixtures/} with your data
+  files (or, for restricted data, leave them out and publish descriptor
+  + checksums only).
+\item
+  Edit \breaktt{data/example\_descriptor.json}: update \texttt{name},
+  \texttt{license}, the \texttt{files} inventory (path, media type,
+  sha256 checksum, row count), the \texttt{fields} data dictionary,
+  \texttt{primary\_key}, and the \texttt{provenance} chain.
+\item
+  Recompute each file's checksum and row count and record them in the
+  descriptor. For present files, \breaktt{verify\_descriptor\_files()}
+  will confirm the descriptor matches the bytes; a mismatch fails the
+  test suite.
+\item
+  Extend field constraints (patterns, enumerations, numeric bounds,
+  units) before publishing real data, and keep the provenance chain
+  honest --- cite real tools, versions, and operators.
+\end{enumerate}
+
+Use \breaktt{scripts/audit/copy\_exemplar.py} from the monorepo to fork
+the template cleanly, and keep \breaktt{domain\_profile.yaml} and
+\breaktt{experiment\_plan.yaml} aligned with your dataset.

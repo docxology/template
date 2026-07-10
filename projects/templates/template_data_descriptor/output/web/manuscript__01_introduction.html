@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="sec:introduction">Introduction</h1>
+<p>A <em>data descriptor</em> (or data paper) publishes a dataset as a
+citable research object. Unlike an analysis paper, its contribution is
+not a statistical finding but a <strong>contract</strong>: a precise,
+machine-readable account of what the dataset contains, how it was
+produced, how it is licensed, and what quality guarantees it carries.
+The FAIR guiding principles — Findable, Accessible, Interoperable,
+Reusable [wilkinson2016fair] — frame why this matters: a dataset is only
+reusable to the extent that its structure and provenance are legible to
+both humans and machines.</p>
+<h2 id="what-this-template-provides">What this template provides</h2>
+<p>This exemplar packages the recurring moving parts of a data
+descriptor so that a fork can start from a working, tested baseline:</p>
+<ul>
+<li>A <strong>schema / data dictionary</strong>: named fields with
+declared types, nullability, units, and value constraints (patterns,
+enumerations, numeric bounds).</li>
+<li>A <strong>file inventory</strong>: each shipped file with its media
+type, a sha256 checksum, and a row count.</li>
+<li>A <strong>provenance chain</strong>: the ordered steps and agents
+that produced the release.</li>
+<li>A <strong>license boundary</strong>: an explicit reuse license, and
+the discipline of publishing <em>metadata and checksums</em> rather than
+bundling restricted bytes.</li>
+<li>A <strong>validation gate</strong>: a tested library that rejects
+malformed, unsafe, or incomplete descriptors and verifies declared
+checksums against real bytes.</li>
+</ul>
+<h2 id="scope-and-honesty">Scope and honesty</h2>
+<p>The shipped dataset is <strong>synthetic and deliberately
+small</strong> — it exists to make the workflow runnable and testable,
+not to support any empirical claim. Its values are generated
+deterministically. Accordingly, this manuscript restricts its claims to
+dataset <em>structure, provenance, quality, and release readiness</em>.
+When a real dataset is forked in, the same validation and figure code
+applies unchanged; only the descriptor and fixture files are replaced.
+The sections that follow describe the demonstration dataset
+([sec:data]), its schema ([sec:schema]), its provenance
+([sec:provenance]), and the quality gate that binds the descriptor to
+the bytes it names ([sec:quality]), and close with usage and forking
+notes ([sec:usage]).</p>
+</main>
+</body>
+</html>

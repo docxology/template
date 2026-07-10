@@ -1,0 +1,25 @@
+Invariants for Literature Search Coverage Dashboard
+===================================================
+generated:    2026-07-10T19:25:30Z
+project:      template_search_project
+git rev:      d87ca592
+git status:   dirty (uncommitted changes)
+
+summary:      8/8 passed, 0 failed
+
+  [PASS] paper_field_present_id         equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+         every paper has a non-empty `id`; missing at indices []
+  [PASS] paper_field_present_title      equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+         every paper has a non-empty `title`; missing at indices []
+  [PASS] paper_id_unique                equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+         paper IDs must be unique; duplicates: []
+  [PASS] doi_coverage_above_floor       ge     0.666667 >= 0.5 - 0.0e+00
+         |papers with DOI| / N = 66.67% ≥ 50%
+  [PASS] abstract_coverage_above_floor  ge     1 >= 0.5 - 0.0e+00
+         |papers with abstract| / N = 100.00% ≥ 50%
+  [PASS] year_coverage_above_floor      ge     1 >= 0.7 - 0.0e+00
+         |papers with year| / N = 100.00% ≥ 70%
+  [PASS] year_min_plausible             ge     2004 >= 1900 - 0.0e+00
+         earliest paper year = 2004
+  [PASS] year_max_plausible             le     2018 <= 2027 + 0.0e+00
+         latest paper year = 2018

@@ -25,8 +25,9 @@ artifacts before validation. `validate_outputs.py` is green for the current
 artifact tree, including the 23 registered figures, GIF evidence, auxiliary
 visualization classification, 21 connected scholarship rows, and toy-only
 scope-boundary checks. The full suite runs via
-`uv run pytest projects/templates/template_active_inference/tests/ --cov=projects/templates/template_active_inference/src --cov-fail-under=90`;
-live test counts, coverage, and timings are read from
+`uv run pytest tests/ --cov=src --cov-fail-under=90` (from the project
+directory; prefix both paths with the exemplar folder when running from the
+template root); live test counts, coverage, and timings are read from
 [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here.
 
 ## Promotion rule

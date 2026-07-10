@@ -4,7 +4,7 @@
 
 - A funder or reviewer can clone the repository and regenerate the exact figures and counts cited in the manuscript, on their own machine.
 - The same no-mocks, coverage-gated testing discipline that verifies the code also verifies the claims made about the code.
-- The pattern generalizes across the whole projects/templates/ folder — all 19 exemplars, not just one cherry-picked example — follow the identical thin-orchestrator, two-layer architecture.
+- The pattern generalizes across the whole projects/templates/ folder — all 23 exemplars, not just one cherry-picked example — follow the identical thin-orchestrator, two-layer architecture.
 
 ---
 

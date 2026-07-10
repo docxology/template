@@ -14,13 +14,13 @@ a manuscript: as a build artifact with a single source of truth, a validation
 gate, and a reproducibility guarantee. Three properties make that possible.
 
 **One content source, six artifacts.** `manuscript/deck_content_{short,medium,long}.yaml`
-define the slide-by-slide narrative at three lengths; `manuscript/deck_tokens.yaml`
+define the slide-by-slide narrative at three lengths; the live token builder (`src/deck_tokens.py`)
 supplies the facts. `scripts/render_decks.py` resolves tokens once and calls
 both renderers — `infrastructure.rendering.slide_deck.render_pdf` and
 `infrastructure.rendering.pptx_deck.render_pptx` — against the identical
 resolved content, so PDF and PPTX cannot drift from each other.
 
-**Facts, not fabrication.** Every numeric claim in `deck_tokens.yaml` about the
+**Facts, not fabrication.** Every numeric claim produced by `src/deck_tokens.py` about the
 pitch subject (`template_template`) is generated from a live read of that
 project's own `README.md`/`AGENTS.md` or the repository's public exemplar
 roster — never hand-typed, never a plausible-sounding invented metric.
