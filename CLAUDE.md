@@ -203,6 +203,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
 - [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) — dataset descriptor/data-paper contract (schema, file inventory, provenance, quality checks, license boundary)
 - [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) — exploratory data analysis exemplar (tabular load, missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures)
+- [`projects/templates/template_formal/`](projects/templates/template_formal/) — strongly typed multiagent colony exemplar (illegal-state-unrepresentable types, session-typed protocols, affine resource handles, Lean/TLA+ formal side-specs)
 - [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection)
 - [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) — generic literature meta-analysis template (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
 - [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract
