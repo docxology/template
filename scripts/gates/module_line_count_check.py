@@ -17,8 +17,19 @@ from infrastructure.validation.line_count import (  # noqa: E402
     scan_repository_tests,
 )
 
-# Split complete — allowlist removed after sheaf_tracks/semantic decomposition.
-LINE_COUNT_ALLOWLIST: frozenset[str] = frozenset()
+# Temporary grandfathers for the 2026-07 exemplar merge — each entry is open
+# refactoring debt, not an accepted end state (precedent: the sheaf_tracks
+# allowlist, removed once that split landed). Remove the entry when the module
+# is decomposed:
+# - template_pools_rules_tools figures.py (952): split per-figure builders out.
+# - template_redacted_report visuals.py (1500): split redaction profiles /
+#   PDF proof / steganography adapter into submodules.
+LINE_COUNT_ALLOWLIST: frozenset[str] = frozenset(
+    {
+        "projects/templates/template_pools_rules_tools/src/figures.py",
+        "projects/templates/template_redacted_report/src/redacted_report/visuals.py",
+    }
+)
 
 
 def main(argv: list[str] | None = None) -> int:

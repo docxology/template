@@ -82,7 +82,10 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
-    ExemplarSnapshot("template_redacted_report", 7, "100.00 %"),
+    # Coverage re-measured by CI run 29098773585 after the 1500-line visuals.py
+    # (kmyth/TPM proof pipeline) landed with only 7 tests — the env-gated TPM
+    # paths never execute on CI. Open debt: raise back over the 90 % floor.
+    ExemplarSnapshot("template_redacted_report", 7, "55.91 %"),
     ExemplarSnapshot("template_registered_report", 7, "99.25 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),

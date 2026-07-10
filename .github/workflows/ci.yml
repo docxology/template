@@ -302,7 +302,7 @@ jobs:
       # MacTeX is a multi-GB install and macOS breadth is a 3.12 smoke lane.
       - name: Cache TeX Live packages
         if: runner.os == 'Linux'
-        uses: actions/cache@d4323354652e1f5bf13207d857b2d211c1ca1c2e # v4.2.2
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: |
             /var/cache/apt
@@ -736,7 +736,7 @@ jobs:
           node-version: "20"
 
       - name: Cache puppeteer / chrome-headless-shell
-        uses: actions/cache@d4323354652e1f5bf13207d857b2d211c1ca1c2e # v4.2.2
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.cache/puppeteer
           key: puppeteer-chrome-headless-shell-${{ runner.os }}-v1

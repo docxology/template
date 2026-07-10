@@ -42,6 +42,7 @@ calibration), not tuned to sit exactly at the 0.8 boundary.
 from __future__ import annotations
 
 import math
+import os
 import time
 from statistics import pstdev
 
@@ -51,12 +52,15 @@ from template_formal.colony.experiment import ColonyTrialConfig, ColonyTrialResu
 from template_formal.colony.stats import convergence_rate, pearson_r, wilson_score_interval
 
 _MAIN_N = 150
-_WALL_CLOCK_BUDGET_SECONDS = 45.0
+_WALL_CLOCK_BUDGET_SECONDS = 45.0 * (4.0 if os.environ.get("CI") else 1.0)
 """Generous soft budget: calibration runs of N=150 trials measured ~9s
 locally. A budget well above that (rather than a tight one) avoids a
 flaky CI failure on a slower runner while still catching a genuine
 performance regression (e.g. an accidental O(n^2) blowup) that would push
-the real number an order of magnitude higher."""
+the real number an order of magnitude higher. On CI the budget is scaled
+4x: shared runners under coverage instrumentation measured >45s on the
+py3.10 lane (run 29098773585) while py3.12 passed — runner noise, not a
+regression; the O(n^2)-blowup tripwire survives the wider margin."""
 
 _GOOD_CONFIG_KWARGS: dict[str, object] = {
     "num_agents": 8,

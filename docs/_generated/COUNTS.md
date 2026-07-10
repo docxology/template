@@ -161,7 +161,7 @@ Result: **372** project-scope infrastructure tests collected and **660** publish
 | `template_pitch_deck` | 110 | 97.70 % |
 | `template_pools_rules_tools` | 204 | 90.95 % |
 | `template_prose_project` | 78 | 100.00 % |
-| `template_redacted_report` | 7 | 100.00 % |
+| `template_redacted_report` | 7 | 55.91 % |
 | `template_registered_report` | 7 | 99.25 % |
 | `template_search_project` | 296 | 95.13 % |
 | `template_sia` | 40 | 97.16 % |
