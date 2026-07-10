@@ -4,17 +4,17 @@
 <<
 /Producer (infrastructure\056steganography)
 /Creator (Research Template Steganography Module)
-/CreationDate (2026\05507\05509T15\07206\07245\05507\07200)
-/ModDate (2026\05507\05509T15\07206\07245\05507\07200)
+/CreationDate (2026\05507\05509T17\07254\07222\05507\07200)
+/ModDate (2026\05507\05509T17\07254\07222\05507\07200)
 /Title (Redacted Report Visual Proof Matrix)
 /Author (Research Template Author)
 /Keywords (redaction\073 visual\055proof\073 blur\073 blur)
-/Subject (Document ID\072 f048de67c10ab4a17e89d43bf3b9d565)
-/DocumentID (f048de67c10ab4a17e89d43bf3b9d565)
-/Hash_SHA256 (992610951647d5863eea1c24b545c27f0387de6be86e07cafad7d7e926538b13)
-/Hash_SHA512 (0f0b37e9755c7104a660e8675ccfd5639937e22c8bc140849b639be74612131849b18042c394fbf9b95e936448933b7e457278d10866cc37d6b1f1631473f124)
-/SteganographyTimestamp (2026\05507\05509T15\07206\07245\05507\07200)
-/GitCommit (67f2d5c2662febb0bfae48fd52754713f9530eb4)
+/Subject (Document ID\072 75843def6ffc1874ec7490349efe88d9)
+/DocumentID (75843def6ffc1874ec7490349efe88d9)
+/Hash_SHA256 (ca2d40f799da90305ee451f53b126ade9455899bcbab974b92580820852b3990)
+/Hash_SHA512 (cacbaa5ec3a0a7d9be6d7e1421eb10c4f6e0f353be750464f1eb2ecf148da600245bb27b5a261c8ff3d0ecd3ef3fc10c7c376cb4fffbd3ac536ece02c01e590d)
+/SteganographyTimestamp (2026\05507\05509T17\07254\07222\05507\07200)
+/GitCommit (4e85a4149398e3ae06bce4d6959c66610a4efe1e)
 /GitCommitAvailable (true)
 >>
 endobj
@@ -57,8 +57,8 @@ endobj
 /XObject <<
 /FormXob.2398c89f67a8ef9bdbc45f4e2f84eddb 19 0 R
 /FormXob.7f3a4a656b5b73f67d564dd9163a7f63 20 0 R
-/FormXob.b37e1d5e4c9ff6d979a3315c6769a97b 21 0 R
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 22 0 R
+/FormXob.835a097773377bed13bf2229cddde5db 21 0 R
+/FormXob.932532e1caf4b20b0ab8c3bfd30fa8f3 22 0 R
 >>
 >>
 /Rotate 0
@@ -323,7 +323,7 @@ BT
 ET
 BT
 1 0 0 1 18 74 Tm
-(ID\072 f048de67c10a  ) Tj
+(ID\072 75843def6ffc  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
@@ -347,13 +347,13 @@ BT
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  SHA256 \050compiled PDF\051\072 992610951647d586  ) Tj
+(  SHA256 \050compiled PDF\051\072 ca2d40f799da9030  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  2026\05507\05509T15\07206\07245\05507\07200) Tj
+(  2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -379,7 +379,7 @@ ET
 BT
 1 0 0 1 0 0 Tm
 3 Tr
-(STEG\137ID\072f048de67c10ab4a17e89d43bf3b9d565\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\072992610951647d586) Tj
+(STEG\137ID\07275843def6ffc1874ec7490349efe88d9\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\072ca2d40f799da9030) Tj
 T*
 ET
 Q
@@ -391,7 +391,7 @@ endstream
 endobj
 7 0 obj
 <<
-/Length 1479
+/Length 1495
 >>
 stream
 q
@@ -405,7 +405,7 @@ BT
 ET
 q
 50 0 0 50 14 16 cm
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 Do
+/FormXob.835a097773377bed13bf2229cddde5db Do
 Q
 q
 BT
@@ -453,7 +453,7 @@ ET
 Q
 q
 50 0 0 50 446 16 cm
-/FormXob.b37e1d5e4c9ff6d979a3315c6769a97b Do
+/FormXob.932532e1caf4b20b0ab8c3bfd30fa8f3 Do
 Q
 q
 BT
@@ -487,12 +487,8 @@ n
 513 62 l
 S
 n
-514 20 m
-514 62 l
-S
-n
-515 20 m
-515 62 l
+514.5 20 m
+514.5 62 l
 S
 n
 516.5 20 m
@@ -507,12 +503,12 @@ n
 520 62 l
 S
 n
-522 20 m
-522 62 l
+521 20 m
+521 62 l
 S
 n
-523 20 m
-523 62 l
+522.5 20 m
+522.5 62 l
 S
 n
 524.5 20 m
@@ -523,20 +519,24 @@ n
 525.5 62 l
 S
 n
-527 20 m
-527 62 l
+526.5 20 m
+526.5 62 l
 S
 n
-528 20 m
-528 62 l
+527.5 20 m
+527.5 62 l
+S
+n
+528.5 20 m
+528.5 62 l
 S
 n
 529.5 20 m
 529.5 62 l
 S
 n
-531.5 20 m
-531.5 62 l
+531 20 m
+531 62 l
 S
 n
 533 20 m
@@ -569,7 +569,7 @@ ET
 0.4 0.4 0.4 rg
 BT
 1 0 0 1 508 6 Tm
-(ID\072f048de67c10ab4a1\174P\0721) Tj
+(ID\07275843def6ffc1874\174P\0721) Tj
 T*
 ET
 Q
@@ -581,7 +581,7 @@ ET
 0.5 0.5 0.5 rg
 BT
 1 0 0 1 553.5 68 Tm
-(2026\05507\05509T15\07206\07245\05507\07200) Tj
+(2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -727,14 +727,14 @@ endobj
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
 /Filter [ /ASCII85Decode /FlateDecode ]
-/Height 105
+/Height 117
 /Subtype /Image
 /Type /XObject
-/Width 105
-/Length 972
+/Width 117
+/Length 1532
 >>
 stream
-Gb"/b;3orj$j1kV9;`#6Q5tL;PHM_t=X#P`Qe/:el26&&B/d^p04K/`7!t:W^9HnhL!NWZeQACO>i_):OWoc<X?(]:e\/(7Bd';B<ta,J[-F[:i;.$M]ZhL!e]e]*c<c12:u\Ld[gVZSnlaE9_Q'pY5$8mD8Y%5[KF[@3"HTqTCso>i8P-Kplt]C_UfD&k<h2r'T6O@slNYf4<1Q/_<9IhTcJH\9do+]b>fn6'aAa0R-a0,CDHVpGOrD=nVbVtCnk.V`cA$F$FY\W5=465P2PeNqP8(X<O8oc;iY59k.b%[)F]Gp(,MA/LacP]6AjK\PrG1ATIJKD'8:]-0BsSp7(FnAP&^lN6AQbenll&l:f3#$tT?d,?@AM8MH^cWnY.@^&InDV_bJ_'Fq1bk0H`G@4dV$''f+L:c.&9%i%I#XiP,bBS"q%>jA4*q%ZD=M"PCZ'c6Yq!MhI`aePU1<@c\Wb7]]rlmeZ%erBCBm=-]faBID!q,S#>P'l@oRbR<4a6aC^Kklkr:0OnqV>4YGu_(GUl%,P@0[HX+uH04L<rOC1FJpEEM)cV\plEPQXbcV\plEPQXb4c8R'jb^qD2,)PV(L*JmXC];LZQ"A.3q?MWoJVn0ZIoU3>bo\$_V7aNa_!2jE03?-#]DL*-(DSE_R9;0.$gF;:lgN6>t.@!U^r<D69Qr!FVu?"O?OpV$MCo"<RNQ9.^:Z*&7j)t_=@4u?.EeR^!=M:M2RlTbBnb>#H-kR+e=t+Ul_rg02%qMXE.<_p,l.liUUrjGK;.'bAncBWOf,,:3EO;98`$A!L,2IYEktpWc%f(6HQ.gW$=/j0esfU[nu'.29>CJNX$tDV%u[.U]u*.h!kB@XOKRnMprlqLHB%?PjVCn>g'4KZa6[Wc8qk`%&r1dP(lltWiN_'dQadm$s?,;Up<N#cUQGbh581PFl#Z_bNGjeC.N]OY3J";%AB=fk9KR7Jl(Ci~>
+Gb"/`gMu%G$j4t.dn'SlKC"2Sic3%8*PD(BpYFZ]?+OCL,<Eb+k]BT'r7i2Ln!CkH%^ENh^C3SRL^!<HZZL;`ZT_?]YHMs;hRl'ehC]WofEE4''Pi,VFhqsf+e@[;XS"I%"hT2;FHVE`f%8OelqE$8d36Y:]bG6fYVQ_(7#*1/ohql6_9Ol>&07LXeP!0u"dMh18<0o\=CYW5l#_O<#j[1%ech=6-V09%?<C^N"W;@uXA]UrkLN`O,i&Q<bCY8VTfUbj+R'qL>8@@s%Fq`%.'1_?psS!C$bpe-o>30:IEoHI`'W!WVlQcRm;CcNn)gac<3P^\*^Y@ML"_V6g^6M+PGj%]oB+7BC7p(2H+V4)pud6Ge`jkR/P(hoE_##edt+u3O;L@HNkSMk!u&6aPLLbuC:^RnE,\^ZlUAIB]6YA",>j5]"*gjM#u?dW$l+^h*EEYX66?Q7KPH2!:autVG@!YQY0Iep.h;Z)?:2Q3c5("B%fn2a/rp@:FG:W4-O=lI_CWUI_dH[c<@8&q/]''Vb/7Uk(f_phFtGcL:CO5(^k"qGe1Bn7L0_#[E!mXfjGC8-:2SVe$O+#TJOQ/$Msc<=W\k&O2=7:,1(t&GSZo](8l4c6n6KX8Tt1n<(KCbk*>6*09Is0;i<;Nq67isTjGAOk@,a@4AP.\T3i&EP9S&&tn<>@>9'MFhC,#l=mRi8=<)ZeYGcC1IZ#q`lW%>M5b"IFq?VH#B6=nPm;-kaMqI0fe"X@E_:Y2YJXL]'!=eik;YSogPU6L9?WC+I3N=HW;C'6DP;@Ya`%KVbNSpOB-ofBqKP;S:bo%^l:n&51^c:bg)4)Y9A$Bd-]:Do13o6uP,Gp2s:H-(do.#0[7o\j8M=/R%R2t,#gg:RP%PWM1]PgG\UZ?QCkoA7,bkKS:a?@asr&q6bm0P[jX-W)tVn49+D:;Dr#$(XKO=MlA+L,o?&2C*C@UBJ1Gh/te0SH)^5`0:ON0tOuBDr)\*lIB<60Ci[fd:$!u`?NbC%-^3p$nXN!lE46"3eANgaHrShLZoE]]bHD&MZE1*#a0idlIJcPMt@A7mYDuW8>9u2eZhZK!:GjQP([+b,1p='GbRmGW*+rROFHe5pEBLtc0h,t2cM_olE46(Q4Ucg9#@W\+ed=]$&OB$hDJ:Kh(0_CdSU=-L$IMP%BQ7)LJcNCR>2Qro]Ei4J'tu6(T%R9*Oq"n^s?GDGOs\(Ig*#c5's9p/<p%9Ng`E0,"E!'mTjC81%ZYNWY[ZnOEBq@.uU);d8@TuF`^Wf>@[FbC_8Ae(5d8+=pr<\Gp-J$:a6AV%\H9jFXfN$;-uYK0&c;V1f^Hj'-6`l`97gDT1Dn'.Ql*%]t.TWAefd9lIJd<?,8/+_C2UJeZGOX\q444Ki).sX'7r:FX&;GP*lSn\J'no&Y;o2(."j.&U.]h5/MB`_'8)b/E0DUa9Z!$eT=>(:8]QlSX\53^3RKP]\S]-Pa?.=FmluSn;87i8`hWKfgc?l?<qeE%tZ'JQ]UR/"?Wfhn99)#s7?0iDstCH~>
 endstream
 endobj
 22 0 obj
@@ -742,14 +742,14 @@ endobj
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
 /Filter [ /ASCII85Decode /FlateDecode ]
-/Height 117
+/Height 105
 /Subtype /Image
 /Type /XObject
-/Width 117
-/Length 1424
+/Width 105
+/Length 974
 >>
 stream
-Gb"/`95Y_H$j1SN90:l.'?F1LH5suRZCf'2ouG+tc-=Ki^Ue^@;-qq9$=>,ZF*N$ticTM'N-?s%=.)LCGs-o9;-/P)m\m2(CNn:YODnm5Lm?-#Z816>-<Gs]?7&a/2dRh4l[jaXVG%+cpZH4k$YBR!q]K"P5=]3h0Io]L#Jnje3>ufIgu@pq+F2\8YqEO]@pP0YD:)H%>c4hZ8=m8'ONd!ibZ"5X@]\$<]SH5G^mg=@qMi4"F*QZ1C^r,rP0GN6XW_"^N7*=9rFb<_5!"ICcM[Nm4HVZmO<i&EQ<uCDg"#C%;-"6aNd<1iA>$6/f-d;o+:oRd<.;qS.DZG0(6&_hQC09746ii)=qXcW>FEV(YbSADW$O1+]Tnm9%m/iEJU1']#qCkW92U*IbEe/$<#1m'_"J'c><5AQ=_(h>gV6Ka=k-C;g!3WifB&1niLP*$03nK[]Hq3224P2"9(u"^>od7PXKE&:<E<0I9JTa_!h=Y[9\9*)k?GcWSa9!]]$@39h[2:.A7%+@GOelI2C)6VZLB-5\l(7R_S[>5+:/QsS66FK:Sj`,9\c9;Q.[8'FB$,pCNWUnT7`ImAT^V"_\4aN0t(J%/Q=C/]G9f&rc#NHNoL!579O/-8uFcn=q$!t7t"5MR?u>Nc\E9gT\<7MPXX`2FNX3KKqb985*ncffm4hGZT8F6fdZNk03_5J?rfdk,<KHXok!HG'RVOc+@r*T1Qs7tCdlU]eC/_U11cEHW0ruu>0fm>N'Z7LcIWh2]gtJ!YuQnP*8\1Jff?^Rf6UAY-PP:X1F+N<<PbduR6(_@jV\\sbGsK$S]mW-bOQ&JbN6%TE()=dH=]f,/1SZ46S+J$\l'*\H)@)h,s&t2RAqb@JXgAq=]:T`9UN6/]S9u!MD-;:Wk3#.=cgcuB2Bp].VdXB[E'miAYh12'/()CX*[<g4Cu]=k$a\M;H1i<L\L</jlc-5fj\'p.u*?eSM5hPl=o)Qn36.:*V$/RA=5jA_NIo"F\&*H$hEEK`YRXY:W?W<!k%X-:ZOI6-SgH9INiiXj/9#)[2;AUcS@"L'r)c!,)_TV.e=(G.RlFu72@-6<TY/m<K(rtMtP4s$+DIABm-mJUkS)/]LiQ@RU*$+Bq`*OYL8#iAli+h&llK+bbX0_WVSq2;i[IV&hheBKTMV%0;LAbpmE8p;GBdiRAp$L._d-/L5qd:?L,bp]Y$;<o6GV(Gis,_,9rN9)0Rc36q9PaBFn`$3-86F,[oA*6-*^NAL0<X=3Djtfi18YBFna,7<QqN&tSTMKNFS,WNm@aZD^0hHm7NLAn@tnL7KkFd4(\YGa2F"B$9HIRI"[%YpH>"%W@m#n32`=]M]&9Md^o+OqAq,L\#=b\K>.iXP==>N'S)>n1#88?Oor,'#DK_=.R5jS!N$bn_W'Vh#'1I!VbJJY5~>
+Gb"/_d;d,j$j+n-dn'S3O^Z3hGqo0.6NZuY]@6"lhL+^&3&k"K@O8#hrdgs:K11P+^'C2A?J/4MPq<2K89h:Or*[q2K.fXe/&;ECek6U]VX]:-LCY.@4ud@-"dOb`*Qs$lN?9..h,dVi.X*EOehhhpA9M<_8Z:FL/6LBr6)EMfMbVUX.69ReU/T(;=:P_28m$0p@F=%eM?OqLl5t:S2D$uF[-2JXpaE$&.M$gMe4i]ciHZS-(0([<0XTW;bXrr-X6=N+U;O[10H%.3_MZ1(1-S?Nd1oq&h=?KC(hOY%cn%nn(e#h'@:)HI+u9=tLki*3Ak"!d6_RqFQ-.:oN(,pa6GjEdQ'[mj)Tn@D:`8BQd+%'MoO<*1?:?6!MpBSBLm8gCf<W\@7u:Yc<n<2SSYCH8SL(^</ITa["g\[S*BmSIqs]4beXc68[O`uQn5lmf[<,J">?f"9V1g,%^6\1ZASZ(kF3\7a>/%4LR>:G](+Vl>V<D6GcE^9Z;Apj9`L4P9*@s7!Yite'"q/FrfO?\'0bamc6:G.$70h1B;3`f8=/tKt6>CrE<HS$%4m8IO>Jr([<h?/PYDA,)jlhF\8jVQsGpuTh(<T:t\P\:Q.(U*mbB00!d_lY3h$Hg'\XIar`QQE!N)D%[IC[Y9X?=WRFlM5DlcdPpUPr(uhL/NS*_[.rlUp:_]V8gGfTt'97!68IA0/T<)?tb0=kuSIpZkH6+oJmUU+2S7RZn!I$F77&_0T7,Qj*'gZFZ%3H<GBX"nP>d<e=U/X;7eZ6]=tt2FWD!kX;Zg_hr3V(h+o]W>:dgb-^B:l+]`dKMP`!&/:,SJe]iJH&D#Wd1';/Yu8WRr8`1HP_k;.MdM:#I4:gk0C'ae(c6&eos1#AMl"#hJShYu<`<UmEaN]=FNQm\Q?Q4<fN-DYXnSJuUNBSUbCc*ml$h0e3>^4,BPEe#<t1X?;6>J:B'J1:F?XAe!6`R7"T~>
 endstream
 endobj
 23 0 obj
@@ -782,12 +782,12 @@ stream
             <rdf:li>blur</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <xmp:CreateDate>2026-07-09T15:06:45-07:00</xmp:CreateDate>
-        <xmp:ModifyDate>2026-07-09T15:06:45-07:00</xmp:ModifyDate>
+        <xmp:CreateDate>2026-07-09T17:54:22-07:00</xmp:CreateDate>
+        <xmp:ModifyDate>2026-07-09T17:54:22-07:00</xmp:ModifyDate>
         <xmp:CreatorTool>Research Template Steganography</xmp:CreatorTool>
-        <steg:document_id>f048de67c10ab4a17e89d43bf3b9d565</steg:document_id>
-        <steg:hash_sha256>992610951647d5863eea1c24b545c27f0387de6be86e07cafad7d7e926538b13</steg:hash_sha256>
-        <steg:hash_sha512>0f0b37e9755c7104a660e8675ccfd5639937e22c8bc140849b639be74612131849b18042c394fbf9b95e936448933b7e457278d10866cc37d6b1f1631473f124</steg:hash_sha512>
+        <steg:document_id>75843def6ffc1874ec7490349efe88d9</steg:document_id>
+        <steg:hash_sha256>ca2d40f799da90305ee451f53b126ade9455899bcbab974b92580820852b3990</steg:hash_sha256>
+        <steg:hash_sha512>cacbaa5ec3a0a7d9be6d7e1421eb10c4f6e0f353be750464f1eb2ecf148da600245bb27b5a261c8ff3d0ecd3ef3fc10c7c376cb4fffbd3ac536ece02c01e590d</steg:hash_sha512>
     </rdf:Description>
   </rdf:RDF>
 </x:xmpmeta>
@@ -801,13 +801,13 @@ endobj
 >>
 stream
 {
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "hashes": {
-    "sha256": "992610951647d5863eea1c24b545c27f0387de6be86e07cafad7d7e926538b13",
-    "sha512": "0f0b37e9755c7104a660e8675ccfd5639937e22c8bc140849b639be74612131849b18042c394fbf9b95e936448933b7e457278d10866cc37d6b1f1631473f124"
+    "sha256": "ca2d40f799da90305ee451f53b126ade9455899bcbab974b92580820852b3990",
+    "sha512": "cacbaa5ec3a0a7d9be6d7e1421eb10c4f6e0f353be750464f1eb2ecf148da600245bb27b5a261c8ff3d0ecd3ef3fc10c7c376cb4fffbd3ac536ece02c01e590d"
   },
   "title": "Redacted Report Visual Proof Matrix",
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": true
 }
@@ -842,26 +842,26 @@ xref
 0000001511 00000 n 
 0000001542 00000 n 
 0000008360 00000 n 
-0000009891 00000 n 
-0000010035 00000 n 
-0000010142 00000 n 
-0000010250 00000 n 
-0000010358 00000 n 
-0000010466 00000 n 
-0000010574 00000 n 
-0000010687 00000 n 
-0000010800 00000 n 
-0000010906 00000 n 
-0000011012 00000 n 
-0000011096 00000 n 
-0000011940 00000 n 
-0000013577 00000 n 
-0000014738 00000 n 
-0000016352 00000 n 
-0000017951 00000 n 
-0000018499 00000 n 
-0000018588 00000 n 
-0000018632 00000 n 
+0000009907 00000 n 
+0000010051 00000 n 
+0000010158 00000 n 
+0000010266 00000 n 
+0000010374 00000 n 
+0000010482 00000 n 
+0000010590 00000 n 
+0000010703 00000 n 
+0000010816 00000 n 
+0000010922 00000 n 
+0000011028 00000 n 
+0000011112 00000 n 
+0000011956 00000 n 
+0000013593 00000 n 
+0000015315 00000 n 
+0000016478 00000 n 
+0000018077 00000 n 
+0000018625 00000 n 
+0000018714 00000 n 
+0000018758 00000 n 
 trailer
 <<
 /Size 28
@@ -869,5 +869,5 @@ trailer
 /Info 1 0 R
 >>
 startxref
-18700
+18826
 %%EOF

@@ -4,17 +4,17 @@
 <<
 /Producer (infrastructure\056steganography)
 /Creator (Research Template Steganography Module)
-/CreationDate (2026\05507\05509T15\07206\07245\05507\07200)
-/ModDate (2026\05507\05509T15\07206\07245\05507\07200)
+/CreationDate (2026\05507\05509T17\07254\07222\05507\07200)
+/ModDate (2026\05507\05509T17\07254\07222\05507\07200)
 /Title (Redacted Report Visual Proof Matrix)
 /Author (Research Template Author)
 /Keywords (redaction\073 visual\055proof\073 whiteout\073 blur)
-/Subject (Document ID\072 f048de67c10ab4a17e89d43bf3b9d565)
-/DocumentID (f048de67c10ab4a17e89d43bf3b9d565)
-/Hash_SHA256 (d140444450c6511ced2683606e967c618b2ec6dc7dd2796efacbf747a89fa4fe)
-/Hash_SHA512 (036b8dfeeb556a08a21b58ac0c6d0ef02c11e9a2e099eb5b3c6e80337ac9923ada8126e9fec60e1727ffefe1f0e9ee961ef47b621b21ea8ff1fafcff5d7fa5c5)
-/SteganographyTimestamp (2026\05507\05509T15\07206\07245\05507\07200)
-/GitCommit (67f2d5c2662febb0bfae48fd52754713f9530eb4)
+/Subject (Document ID\072 75843def6ffc1874ec7490349efe88d9)
+/DocumentID (75843def6ffc1874ec7490349efe88d9)
+/Hash_SHA256 (b7a73712867fa6d1d4d4c7a7a60fa9f1f47327df17e3f1f1b3958836d52bf6ab)
+/Hash_SHA512 (f299c3854e9421722aa8189478569eaf1896dc42cbb2117487f2476b64e1470267d403b7b8e5b98156a56cca772455de4c0cfefa4818501977c49fe96ebca591)
+/SteganographyTimestamp (2026\05507\05509T17\07254\07222\05507\07200)
+/GitCommit (4e85a4149398e3ae06bce4d6959c66610a4efe1e)
 /GitCommitAvailable (true)
 >>
 endobj
@@ -56,9 +56,9 @@ endobj
 >>
 /XObject <<
 /FormXob.2398c89f67a8ef9bdbc45f4e2f84eddb 19 0 R
-/FormXob.6a5dfbb317d8edec668b5b2891e7c939 20 0 R
-/FormXob.7f3a4a656b5b73f67d564dd9163a7f63 21 0 R
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 22 0 R
+/FormXob.7f3a4a656b5b73f67d564dd9163a7f63 20 0 R
+/FormXob.835a097773377bed13bf2229cddde5db 21 0 R
+/FormXob.cdbcdc005f916f8fc7b168ea975c40b4 22 0 R
 >>
 >>
 /Rotate 0
@@ -314,7 +314,7 @@ BT
 ET
 BT
 1 0 0 1 18 74 Tm
-(ID\072 f048de67c10a  ) Tj
+(ID\072 75843def6ffc  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
@@ -338,13 +338,13 @@ BT
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  SHA256 \050compiled PDF\051\072 d140444450c6511c  ) Tj
+(  SHA256 \050compiled PDF\051\072 b7a73712867fa6d1  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  2026\05507\05509T15\07206\07245\05507\07200) Tj
+(  2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -370,7 +370,7 @@ ET
 BT
 1 0 0 1 0 0 Tm
 3 Tr
-(STEG\137ID\072f048de67c10ab4a17e89d43bf3b9d565\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\072d140444450c6511c) Tj
+(STEG\137ID\07275843def6ffc1874ec7490349efe88d9\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\072b7a73712867fa6d1) Tj
 T*
 ET
 Q
@@ -382,7 +382,7 @@ endstream
 endobj
 7 0 obj
 <<
-/Length 1479
+/Length 1495
 >>
 stream
 q
@@ -396,7 +396,7 @@ BT
 ET
 q
 50 0 0 50 14 16 cm
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 Do
+/FormXob.835a097773377bed13bf2229cddde5db Do
 Q
 q
 BT
@@ -444,7 +444,7 @@ ET
 Q
 q
 50 0 0 50 446 16 cm
-/FormXob.6a5dfbb317d8edec668b5b2891e7c939 Do
+/FormXob.cdbcdc005f916f8fc7b168ea975c40b4 Do
 Q
 q
 BT
@@ -478,12 +478,8 @@ n
 513 62 l
 S
 n
-514 20 m
-514 62 l
-S
-n
-515 20 m
-515 62 l
+514.5 20 m
+514.5 62 l
 S
 n
 516.5 20 m
@@ -498,12 +494,12 @@ n
 520 62 l
 S
 n
-522 20 m
-522 62 l
+521 20 m
+521 62 l
 S
 n
-523 20 m
-523 62 l
+522.5 20 m
+522.5 62 l
 S
 n
 524.5 20 m
@@ -514,20 +510,24 @@ n
 525.5 62 l
 S
 n
-527 20 m
-527 62 l
+526.5 20 m
+526.5 62 l
 S
 n
-528 20 m
-528 62 l
+527.5 20 m
+527.5 62 l
+S
+n
+528.5 20 m
+528.5 62 l
 S
 n
 529.5 20 m
 529.5 62 l
 S
 n
-531.5 20 m
-531.5 62 l
+531 20 m
+531 62 l
 S
 n
 533 20 m
@@ -560,7 +560,7 @@ ET
 0.4 0.4 0.4 rg
 BT
 1 0 0 1 508 6 Tm
-(ID\072f048de67c10ab4a1\174P\0721) Tj
+(ID\07275843def6ffc1874\174P\0721) Tj
 T*
 ET
 Q
@@ -572,7 +572,7 @@ ET
 0.5 0.5 0.5 rg
 BT
 1 0 0 1 553.5 68 Tm
-(2026\05507\05509T15\07206\07245\05507\07200) Tj
+(2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -703,14 +703,14 @@ endobj
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
 /Filter [ /ASCII85Decode /FlateDecode ]
-/Height 105
+/Height 117
 /Subtype /Image
 /Type /XObject
-/Width 105
-/Length 1014
+/Width 117
+/Length 1447
 >>
 stream
-Gb"/`;3o'q$pnV,Rs#QT`=%MceWS81&E*9Pk]AlC2h/.GGDHFE,BcV]oqk1@:=7%E`NXqsEXP3GOX29QU3#e)+"Y"@W$I,j6:OAN<9m8:Y3=`BY)c?!8KH!tZ8eQBqE`O[o<KoBBY&YSoZFftM\DOseKLe6#+8o'U+<f^6>&/]LHq.s0FPb%l2&5jM\"YL>rKRZZ7j+m72Im7]"%"f`l]iU`8rf@S2j"Sc[F/C;6:FSXC.>_<fi[a?.$?k3"m=SCjB.iXj!(IWGGud;fqODSNBm%X;@"';9<?h/!rcC>.2'h1S_QABW6`/a?buWa<`X;]/XK'L;A\gP$86pK%Y/[/F,Ka>7!)(eoDNWlTUP;#r<LNEY`Jl4)l?S-7qbB16U"2pS)`,kTII\9C*(DOb?kL.u%.Y3djgU(S*`<QE;0*-Td\A*;7N)&">b`L'NVh556)\X;C1XBjl9uGH@.W`?8*$Y`?6kX6?k5l]ng#R0ECClm6h40&A$<m?Pf8-P;r/310@O(088FS9uO>8M>+P]EenGi)!04Omo._\P-=_`E'f`0Od<p1X4u)][a(HMJ`TgeNtfk&BGlTON=aFA9l@VaK7NL+d$ClaRYW5O^!$#66a`bOQBnMdXnumK9kb&*jJ)0ki+$P2ffa%1sK3+;6r<Z`Kh<c&L6@>dpX9F@`s\BL_93Zl*(Y3OjP;K<p%UVMa7u5(ZM%:+i,obAB+`t&rILbT%,"#1+ZtV![SJ:(ZM%Z,'BuaUs:Zo(!O7QjUj4<_P0,N5n\W(3YKZB+KDO6Zc_jE@ZXC:cB_)DM_<;&I<8[\lB#R$([aXjdX4/G(XEQ<#u`UR]CflO6"l&jia-_^0>tQf%UY%(e]UjQba)<7_<R;bZ=RKKFKVY-%Pq<dXZXIYW3V&AKb]5B&67*ub)*.^%cs*n^&,.kZER#\Y3936^Cd#Z3ErpuLmKtf=*3%^8*3Lqn?RR@FS^%*`Ks@cQ]6,X1sIS+mUF65?eH-!4Ej9Hl#a'ms*g%TV>~>
+Gb"/`gL8o7%)][Vdcg`jAH>EK;uH9M.$/n)4.T-EUd$X=+8)GFa?$m2>T6c5e]X#&rHcB/DQE(n%4aca9MU\OX4QK3>?A#QV7&o[<Qg\LQm'B5.?r0/HhIARjqlVG>cU9XqUKA(og6Pk^TcQK',7Tn.1#MM['=L>ifJ:l8-fOJF)@utOuR!C(_T0Po3<5?#muVRX\73Me],2ZeU-t<@_J<Hl8SRfl0<t03aKGg9;gBfT2W8&Gd`>kV1e#RoffCVpYDSI,?.1'LE\hf9[/5q_r2.s3=eQ''UY<q\VA!FNcH1un0ftJ'6:(H'F%\f-$8X0LL?5:i@U4n>:1j6#!"u:$(/lloeTi#.22tH6'qtGb-(Ra:E=M#FBI&DDudLrkJLA>p)+@@HHB)&%dHr68%YQ(?5[(_(1%kb]bXol&g#I*ObtsU+m[:+3'S47kl!i?i?@O0LH%L7LZn\'TA^sZb(hsW-R)QfJlc<83bFX?bUDWaPsk&S&9Z2HH^I[U*@cp$I3ImC<VA,A8g#qG/[DNS&0E**fL8hX$u_8NFb9B"&]66,C1DLHXK*#QLPQe%)3nYJ3G`h6C-;uL4JACMYqE=k<_m!?YJVAVkbi3tMl`;r;qK%TE5rXg+i><)0iVMk>=r1hjSCQjMG2r`4Io#.&kC3.3%?\7+7aLt!D/ei/jcMpQ*sG@h\9fC2Knb"^#-;*L!cId84+TL+mDK[I7bIEL.&j*eC(%F)$2^4A)34ppk2hZ3`J4MAh/Rm6_)8E0N:/&A;d+\'%E4f-L8KEnIUg7JuVF>>KWA8#=HHdKNGo2W67pE];MdN\q%]b_s>ILHeN59$TQ?o]WM[TVlm:D6Bt-0]6+2+q%,oY68<EO1L);8SI[IA3[DpRr=%9a=Q`$[]+,Q!JQFX5dao@:h6980ip+4'Io<sar<2:94#s";'<lB:l@iX%bgd*;\f((g73;Gdi7!7>IQD*6eBMg'&t]XbBZR9H\sY-LimWG^%@PbqHACcR([sZ^@35!h25Z+.)iBCf%TAH!]Cd=L\4(#N$">kf5s"A`'pqT3SeRRO+b\[qE**hiD@o6f6+#1^\m`ZKT#*'g82,k.g/p9B\\aPfXC_aNHKsEMShAq:=Ej`/L!JNI?Wcd_M6<dpL85r/$uZ_p0aIJklT*Is>=;]>!P[<7%X%(Q;9->G&=Hpf>[-MueU9]`iRZPkW2hk\G9UT.S[T#7SY,e"oj5<rWSZ7)+L2_9#`i0X,-)F(("I/,]bt=iFnNTaL@AJH"\(?@l'b]*YMQ=H_ftERX^8t6e1m/0($@U,Nb=//A1$Ulc?#p)cOb6?9\*46k>6q<>sNP'332B2nB+RED%R8Keb+'0AZ3&G#`$^jqA)3@OL^he!K$Doo0c[Keb]I6m1ar&:L/k:QASA='16eUrFoA5\"t:4lbnn?>(7G+eSV;,_s=5LkniV<\Z#Y0~>
 endstream
 endobj
 21 0 obj
@@ -722,10 +722,10 @@ endobj
 /Subtype /Image
 /Type /XObject
 /Width 117
-/Length 1447
+/Length 1532
 >>
 stream
-Gb"/`gL8o7%)][Vdcg`jAH>EK;uH9M.$/n)4.T-EUd$X=+8)GFa?$m2>T6c5e]X#&rHcB/DQE(n%4aca9MU\OX4QK3>?A#QV7&o[<Qg\LQm'B5.?r0/HhIARjqlVG>cU9XqUKA(og6Pk^TcQK',7Tn.1#MM['=L>ifJ:l8-fOJF)@utOuR!C(_T0Po3<5?#muVRX\73Me],2ZeU-t<@_J<Hl8SRfl0<t03aKGg9;gBfT2W8&Gd`>kV1e#RoffCVpYDSI,?.1'LE\hf9[/5q_r2.s3=eQ''UY<q\VA!FNcH1un0ftJ'6:(H'F%\f-$8X0LL?5:i@U4n>:1j6#!"u:$(/lloeTi#.22tH6'qtGb-(Ra:E=M#FBI&DDudLrkJLA>p)+@@HHB)&%dHr68%YQ(?5[(_(1%kb]bXol&g#I*ObtsU+m[:+3'S47kl!i?i?@O0LH%L7LZn\'TA^sZb(hsW-R)QfJlc<83bFX?bUDWaPsk&S&9Z2HH^I[U*@cp$I3ImC<VA,A8g#qG/[DNS&0E**fL8hX$u_8NFb9B"&]66,C1DLHXK*#QLPQe%)3nYJ3G`h6C-;uL4JACMYqE=k<_m!?YJVAVkbi3tMl`;r;qK%TE5rXg+i><)0iVMk>=r1hjSCQjMG2r`4Io#.&kC3.3%?\7+7aLt!D/ei/jcMpQ*sG@h\9fC2Knb"^#-;*L!cId84+TL+mDK[I7bIEL.&j*eC(%F)$2^4A)34ppk2hZ3`J4MAh/Rm6_)8E0N:/&A;d+\'%E4f-L8KEnIUg7JuVF>>KWA8#=HHdKNGo2W67pE];MdN\q%]b_s>ILHeN59$TQ?o]WM[TVlm:D6Bt-0]6+2+q%,oY68<EO1L);8SI[IA3[DpRr=%9a=Q`$[]+,Q!JQFX5dao@:h6980ip+4'Io<sar<2:94#s";'<lB:l@iX%bgd*;\f((g73;Gdi7!7>IQD*6eBMg'&t]XbBZR9H\sY-LimWG^%@PbqHACcR([sZ^@35!h25Z+.)iBCf%TAH!]Cd=L\4(#N$">kf5s"A`'pqT3SeRRO+b\[qE**hiD@o6f6+#1^\m`ZKT#*'g82,k.g/p9B\\aPfXC_aNHKsEMShAq:=Ej`/L!JNI?Wcd_M6<dpL85r/$uZ_p0aIJklT*Is>=;]>!P[<7%X%(Q;9->G&=Hpf>[-MueU9]`iRZPkW2hk\G9UT.S[T#7SY,e"oj5<rWSZ7)+L2_9#`i0X,-)F(("I/,]bt=iFnNTaL@AJH"\(?@l'b]*YMQ=H_ftERX^8t6e1m/0($@U,Nb=//A1$Ulc?#p)cOb6?9\*46k>6q<>sNP'332B2nB+RED%R8Keb+'0AZ3&G#`$^jqA)3@OL^he!K$Doo0c[Keb]I6m1ar&:L/k:QASA='16eUrFoA5\"t:4lbnn?>(7G+eSV;,_s=5LkniV<\Z#Y0~>
+Gb"/`gMu%G$j4t.dn'SlKC"2Sic3%8*PD(BpYFZ]?+OCL,<Eb+k]BT'r7i2Ln!CkH%^ENh^C3SRL^!<HZZL;`ZT_?]YHMs;hRl'ehC]WofEE4''Pi,VFhqsf+e@[;XS"I%"hT2;FHVE`f%8OelqE$8d36Y:]bG6fYVQ_(7#*1/ohql6_9Ol>&07LXeP!0u"dMh18<0o\=CYW5l#_O<#j[1%ech=6-V09%?<C^N"W;@uXA]UrkLN`O,i&Q<bCY8VTfUbj+R'qL>8@@s%Fq`%.'1_?psS!C$bpe-o>30:IEoHI`'W!WVlQcRm;CcNn)gac<3P^\*^Y@ML"_V6g^6M+PGj%]oB+7BC7p(2H+V4)pud6Ge`jkR/P(hoE_##edt+u3O;L@HNkSMk!u&6aPLLbuC:^RnE,\^ZlUAIB]6YA",>j5]"*gjM#u?dW$l+^h*EEYX66?Q7KPH2!:autVG@!YQY0Iep.h;Z)?:2Q3c5("B%fn2a/rp@:FG:W4-O=lI_CWUI_dH[c<@8&q/]''Vb/7Uk(f_phFtGcL:CO5(^k"qGe1Bn7L0_#[E!mXfjGC8-:2SVe$O+#TJOQ/$Msc<=W\k&O2=7:,1(t&GSZo](8l4c6n6KX8Tt1n<(KCbk*>6*09Is0;i<;Nq67isTjGAOk@,a@4AP.\T3i&EP9S&&tn<>@>9'MFhC,#l=mRi8=<)ZeYGcC1IZ#q`lW%>M5b"IFq?VH#B6=nPm;-kaMqI0fe"X@E_:Y2YJXL]'!=eik;YSogPU6L9?WC+I3N=HW;C'6DP;@Ya`%KVbNSpOB-ofBqKP;S:bo%^l:n&51^c:bg)4)Y9A$Bd-]:Do13o6uP,Gp2s:H-(do.#0[7o\j8M=/R%R2t,#gg:RP%PWM1]PgG\UZ?QCkoA7,bkKS:a?@asr&q6bm0P[jX-W)tVn49+D:;Dr#$(XKO=MlA+L,o?&2C*C@UBJ1Gh/te0SH)^5`0:ON0tOuBDr)\*lIB<60Ci[fd:$!u`?NbC%-^3p$nXN!lE46"3eANgaHrShLZoE]]bHD&MZE1*#a0idlIJcPMt@A7mYDuW8>9u2eZhZK!:GjQP([+b,1p='GbRmGW*+rROFHe5pEBLtc0h,t2cM_olE46(Q4Ucg9#@W\+ed=]$&OB$hDJ:Kh(0_CdSU=-L$IMP%BQ7)LJcNCR>2Qro]Ei4J'tu6(T%R9*Oq"n^s?GDGOs\(Ig*#c5's9p/<p%9Ng`E0,"E!'mTjC81%ZYNWY[ZnOEBq@.uU);d8@TuF`^Wf>@[FbC_8Ae(5d8+=pr<\Gp-J$:a6AV%\H9jFXfN$;-uYK0&c;V1f^Hj'-6`l`97gDT1Dn'.Ql*%]t.TWAefd9lIJd<?,8/+_C2UJeZGOX\q444Ki).sX'7r:FX&;GP*lSn\J'no&Y;o2(."j.&U.]h5/MB`_'8)b/E0DUa9Z!$eT=>(:8]QlSX\53^3RKP]\S]-Pa?.=FmluSn;87i8`hWKfgc?l?<qeE%tZ'JQ]UR/"?Wfhn99)#s7?0iDstCH~>
 endstream
 endobj
 22 0 obj
@@ -733,14 +733,14 @@ endobj
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
 /Filter [ /ASCII85Decode /FlateDecode ]
-/Height 117
+/Height 105
 /Subtype /Image
 /Type /XObject
-/Width 117
-/Length 1424
+/Width 105
+/Length 939
 >>
 stream
-Gb"/`95Y_H$j1SN90:l.'?F1LH5suRZCf'2ouG+tc-=Ki^Ue^@;-qq9$=>,ZF*N$ticTM'N-?s%=.)LCGs-o9;-/P)m\m2(CNn:YODnm5Lm?-#Z816>-<Gs]?7&a/2dRh4l[jaXVG%+cpZH4k$YBR!q]K"P5=]3h0Io]L#Jnje3>ufIgu@pq+F2\8YqEO]@pP0YD:)H%>c4hZ8=m8'ONd!ibZ"5X@]\$<]SH5G^mg=@qMi4"F*QZ1C^r,rP0GN6XW_"^N7*=9rFb<_5!"ICcM[Nm4HVZmO<i&EQ<uCDg"#C%;-"6aNd<1iA>$6/f-d;o+:oRd<.;qS.DZG0(6&_hQC09746ii)=qXcW>FEV(YbSADW$O1+]Tnm9%m/iEJU1']#qCkW92U*IbEe/$<#1m'_"J'c><5AQ=_(h>gV6Ka=k-C;g!3WifB&1niLP*$03nK[]Hq3224P2"9(u"^>od7PXKE&:<E<0I9JTa_!h=Y[9\9*)k?GcWSa9!]]$@39h[2:.A7%+@GOelI2C)6VZLB-5\l(7R_S[>5+:/QsS66FK:Sj`,9\c9;Q.[8'FB$,pCNWUnT7`ImAT^V"_\4aN0t(J%/Q=C/]G9f&rc#NHNoL!579O/-8uFcn=q$!t7t"5MR?u>Nc\E9gT\<7MPXX`2FNX3KKqb985*ncffm4hGZT8F6fdZNk03_5J?rfdk,<KHXok!HG'RVOc+@r*T1Qs7tCdlU]eC/_U11cEHW0ruu>0fm>N'Z7LcIWh2]gtJ!YuQnP*8\1Jff?^Rf6UAY-PP:X1F+N<<PbduR6(_@jV\\sbGsK$S]mW-bOQ&JbN6%TE()=dH=]f,/1SZ46S+J$\l'*\H)@)h,s&t2RAqb@JXgAq=]:T`9UN6/]S9u!MD-;:Wk3#.=cgcuB2Bp].VdXB[E'miAYh12'/()CX*[<g4Cu]=k$a\M;H1i<L\L</jlc-5fj\'p.u*?eSM5hPl=o)Qn36.:*V$/RA=5jA_NIo"F\&*H$hEEK`YRXY:W?W<!k%X-:ZOI6-SgH9INiiXj/9#)[2;AUcS@"L'r)c!,)_TV.e=(G.RlFu72@-6<TY/m<K(rtMtP4s$+DIABm-mJUkS)/]LiQ@RU*$+Bq`*OYL8#iAli+h&llK+bbX0_WVSq2;i[IV&hheBKTMV%0;LAbpmE8p;GBdiRAp$L._d-/L5qd:?L,bp]Y$;<o6GV(Gis,_,9rN9)0Rc36q9PaBFn`$3-86F,[oA*6-*^NAL0<X=3Djtfi18YBFna,7<QqN&tSTMKNFS,WNm@aZD^0hHm7NLAn@tnL7KkFd4(\YGa2F"B$9HIRI"[%YpH>"%W@m#n32`=]M]&9Md^o+OqAq,L\#=b\K>.iXP==>N'S)>n1#88?Oor,'#DK_=.R5jS!N$bn_W'Vh#'1I!VbJJY5~>
+Gb"/_d<,OW$j+n-dnU!ob(."8fE\%\P(7hkWiGnXrTkdM*/:;g;YXIb`X`iUIILIgOmpQ:,fUH`.Poa-3kK+RfhK.fd["uffdi>ukj6M^B4np^STMnFkc*c^'qMH;6770n02G#LX6=Aj6q9XS8DTWK,Z)[]nUj8C++,h):Wr7:]I]NfS_^[:m&"b3?K<V:H+<Ha<HPYjLb9EbH'$hOlD/a&RS&iDGJ#u9?E'f"jjY<S:9'Ws6cqd]U^B^*85p4.g6.m;GNn$`;H+98g6.m;GNn$`;H+:cK0X+30<$BL89CD:dFkBcB:CM,P@8Jl-&G*=?+NCXalSbEcIPR/6rHu;ZPRc:P%^Z^GaF>+:0;W0jWu>G[B(U@%[)Q<Me,lY7Dbtn8.`G9<)iEW_Pcrq&A0US0%'0mGi;S*hFu>M1I\4e&:)+55n@l`TbR010QQ[>KMp<`_8sH>'1u-8K2N`<ijsbKY6,P/B3Q)+S6</e.SJ_,?IE::Q+BVc?8&TAbRb/]`F(0<QV>)!A8@PU(/g(,1tCD$5$>p1?ZoeZ9/NGQd[aVaesG3ZlOjY@Quj^BL\56QlRjiG$%s"t!u==,FFQog(qbS>n"A`1^8)XGKm/Wk'\tlVFO4"(iZ0"p8Tgh]dT=iL?U\UWH0Dno.5,CNWK_,E"_W^15=696VUsoQlf=o+k0$3f&a3+I;SgF8dF*WV%pMI]]+8*V7$gf/O49DA&U3J[>X`;kJ`oX(dNV+rfmQCN]T?Ggp\'=5._<)BUmK\tCluqo(P1KneUjk98Z!cZMU&/"$aNMQR?BZ_3hoS)]_,^Q]5q7ia^$YR3gci/<8EIm%$MOhZ?.JEICW[+p3P->lhBu?_L"+;mUSu])GK2MMp;f^!*st&:3D(0GtCuK?H]IFZa[XiSYmX;\*eMN]u\gR_Gek8H8<(3WrBb^!MXK<h>~>
 endstream
 endobj
 23 0 obj
@@ -773,12 +773,12 @@ stream
             <rdf:li>blur</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <xmp:CreateDate>2026-07-09T15:06:45-07:00</xmp:CreateDate>
-        <xmp:ModifyDate>2026-07-09T15:06:45-07:00</xmp:ModifyDate>
+        <xmp:CreateDate>2026-07-09T17:54:22-07:00</xmp:CreateDate>
+        <xmp:ModifyDate>2026-07-09T17:54:22-07:00</xmp:ModifyDate>
         <xmp:CreatorTool>Research Template Steganography</xmp:CreatorTool>
-        <steg:document_id>f048de67c10ab4a17e89d43bf3b9d565</steg:document_id>
-        <steg:hash_sha256>d140444450c6511ced2683606e967c618b2ec6dc7dd2796efacbf747a89fa4fe</steg:hash_sha256>
-        <steg:hash_sha512>036b8dfeeb556a08a21b58ac0c6d0ef02c11e9a2e099eb5b3c6e80337ac9923ada8126e9fec60e1727ffefe1f0e9ee961ef47b621b21ea8ff1fafcff5d7fa5c5</steg:hash_sha512>
+        <steg:document_id>75843def6ffc1874ec7490349efe88d9</steg:document_id>
+        <steg:hash_sha256>b7a73712867fa6d1d4d4c7a7a60fa9f1f47327df17e3f1f1b3958836d52bf6ab</steg:hash_sha256>
+        <steg:hash_sha512>f299c3854e9421722aa8189478569eaf1896dc42cbb2117487f2476b64e1470267d403b7b8e5b98156a56cca772455de4c0cfefa4818501977c49fe96ebca591</steg:hash_sha512>
     </rdf:Description>
   </rdf:RDF>
 </x:xmpmeta>
@@ -792,13 +792,13 @@ endobj
 >>
 stream
 {
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "hashes": {
-    "sha256": "d140444450c6511ced2683606e967c618b2ec6dc7dd2796efacbf747a89fa4fe",
-    "sha512": "036b8dfeeb556a08a21b58ac0c6d0ef02c11e9a2e099eb5b3c6e80337ac9923ada8126e9fec60e1727ffefe1f0e9ee961ef47b621b21ea8ff1fafcff5d7fa5c5"
+    "sha256": "b7a73712867fa6d1d4d4c7a7a60fa9f1f47327df17e3f1f1b3958836d52bf6ab",
+    "sha512": "f299c3854e9421722aa8189478569eaf1896dc42cbb2117487f2476b64e1470267d403b7b8e5b98156a56cca772455de4c0cfefa4818501977c49fe96ebca591"
   },
   "title": "Redacted Report Visual Proof Matrix",
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": true
 }
@@ -833,26 +833,26 @@ xref
 0000001515 00000 n 
 0000001546 00000 n 
 0000007934 00000 n 
-0000009465 00000 n 
-0000009609 00000 n 
-0000009716 00000 n 
-0000009824 00000 n 
-0000009932 00000 n 
-0000010040 00000 n 
-0000010148 00000 n 
-0000010261 00000 n 
-0000010374 00000 n 
-0000010480 00000 n 
-0000010586 00000 n 
-0000010670 00000 n 
-0000011514 00000 n 
-0000012718 00000 n 
-0000014355 00000 n 
-0000015969 00000 n 
-0000017572 00000 n 
-0000018120 00000 n 
-0000018209 00000 n 
-0000018253 00000 n 
+0000009481 00000 n 
+0000009625 00000 n 
+0000009732 00000 n 
+0000009840 00000 n 
+0000009948 00000 n 
+0000010056 00000 n 
+0000010164 00000 n 
+0000010277 00000 n 
+0000010390 00000 n 
+0000010496 00000 n 
+0000010602 00000 n 
+0000010686 00000 n 
+0000011530 00000 n 
+0000013167 00000 n 
+0000014889 00000 n 
+0000016017 00000 n 
+0000017620 00000 n 
+0000018168 00000 n 
+0000018257 00000 n 
+0000018301 00000 n 
 trailer
 <<
 /Size 28
@@ -860,5 +860,5 @@ trailer
 /Info 1 0 R
 >>
 startxref
-18321
+18369
 %%EOF

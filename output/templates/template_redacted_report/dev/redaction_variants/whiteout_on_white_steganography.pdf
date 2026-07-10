@@ -4,17 +4,17 @@
 <<
 /Producer (infrastructure\056steganography)
 /Creator (Research Template Steganography Module)
-/CreationDate (2026\05507\05509T15\07206\07245\05507\07200)
-/ModDate (2026\05507\05509T15\07206\07245\05507\07200)
+/CreationDate (2026\05507\05509T17\07254\07222\05507\07200)
+/ModDate (2026\05507\05509T17\07254\07222\05507\07200)
 /Title (Redacted Report Visual Proof Matrix)
 /Author (Research Template Author)
 /Keywords (redaction\073 visual\055proof\073 whiteout\073 white)
-/Subject (Document ID\072 f048de67c10ab4a17e89d43bf3b9d565)
-/DocumentID (f048de67c10ab4a17e89d43bf3b9d565)
-/Hash_SHA256 (25037d6fc8644e1452ccca70ed72c3b4da0a03917f3c09bf436bea6990ae88a5)
-/Hash_SHA512 (ab255316b4c9e416bfe1275595b7a138c091806cbb9555b344b356bddc2af3b08e9094bf770e2ad02060f7a01a94284f0b25a59a8310dcedb87d6a946fc0a953)
-/SteganographyTimestamp (2026\05507\05509T15\07206\07245\05507\07200)
-/GitCommit (67f2d5c2662febb0bfae48fd52754713f9530eb4)
+/Subject (Document ID\072 75843def6ffc1874ec7490349efe88d9)
+/DocumentID (75843def6ffc1874ec7490349efe88d9)
+/Hash_SHA256 (8c66afd5da697d046e656e8cd5fa3701a1e5302e86dda813ab9473c9c809dfad)
+/Hash_SHA512 (d79ed39921c433680d0aabbf9a042ab63e21600c2f8a3b038fbadf873985ffe1511f2b9850c2c1396cd70a5758b1ab14878627d7f23ea24987206b6d96eedec2)
+/SteganographyTimestamp (2026\05507\05509T17\07254\07222\05507\07200)
+/GitCommit (4e85a4149398e3ae06bce4d6959c66610a4efe1e)
 /GitCommitAvailable (true)
 >>
 endobj
@@ -55,10 +55,10 @@ endobj
 >>
 >>
 /XObject <<
-/FormXob.2398c89f67a8ef9bdbc45f4e2f84eddb 19 0 R
-/FormXob.7f3a4a656b5b73f67d564dd9163a7f63 20 0 R
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 21 0 R
-/FormXob.e8abc36257015490e076d5422c46f363 22 0 R
+/FormXob.1a201b6f5520cab653b4a5904f56d3c8 19 0 R
+/FormXob.2398c89f67a8ef9bdbc45f4e2f84eddb 20 0 R
+/FormXob.7f3a4a656b5b73f67d564dd9163a7f63 21 0 R
+/FormXob.835a097773377bed13bf2229cddde5db 22 0 R
 >>
 >>
 /Rotate 0
@@ -254,7 +254,7 @@ BT
 ET
 BT
 1 0 0 1 18 74 Tm
-(ID\072 f048de67c10a  ) Tj
+(ID\072 75843def6ffc  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
@@ -278,13 +278,13 @@ BT
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  SHA256 \050compiled PDF\051\072 25037d6fc8644e14  ) Tj
+(  SHA256 \050compiled PDF\051\072 8c66afd5da697d04  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  2026\05507\05509T15\07206\07245\05507\07200) Tj
+(  2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -310,7 +310,7 @@ ET
 BT
 1 0 0 1 0 0 Tm
 3 Tr
-(STEG\137ID\072f048de67c10ab4a17e89d43bf3b9d565\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\07225037d6fc8644e14) Tj
+(STEG\137ID\07275843def6ffc1874ec7490349efe88d9\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\0728c66afd5da697d04) Tj
 T*
 ET
 Q
@@ -322,7 +322,7 @@ endstream
 endobj
 7 0 obj
 <<
-/Length 1479
+/Length 1495
 >>
 stream
 q
@@ -336,7 +336,7 @@ BT
 ET
 q
 50 0 0 50 14 16 cm
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 Do
+/FormXob.835a097773377bed13bf2229cddde5db Do
 Q
 q
 BT
@@ -384,7 +384,7 @@ ET
 Q
 q
 50 0 0 50 446 16 cm
-/FormXob.e8abc36257015490e076d5422c46f363 Do
+/FormXob.1a201b6f5520cab653b4a5904f56d3c8 Do
 Q
 q
 BT
@@ -418,12 +418,8 @@ n
 513 62 l
 S
 n
-514 20 m
-514 62 l
-S
-n
-515 20 m
-515 62 l
+514.5 20 m
+514.5 62 l
 S
 n
 516.5 20 m
@@ -438,12 +434,12 @@ n
 520 62 l
 S
 n
-522 20 m
-522 62 l
+521 20 m
+521 62 l
 S
 n
-523 20 m
-523 62 l
+522.5 20 m
+522.5 62 l
 S
 n
 524.5 20 m
@@ -454,20 +450,24 @@ n
 525.5 62 l
 S
 n
-527 20 m
-527 62 l
+526.5 20 m
+526.5 62 l
 S
 n
-528 20 m
-528 62 l
+527.5 20 m
+527.5 62 l
+S
+n
+528.5 20 m
+528.5 62 l
 S
 n
 529.5 20 m
 529.5 62 l
 S
 n
-531.5 20 m
-531.5 62 l
+531 20 m
+531 62 l
 S
 n
 533 20 m
@@ -500,7 +500,7 @@ ET
 0.4 0.4 0.4 rg
 BT
 1 0 0 1 508 6 Tm
-(ID\072f048de67c10ab4a1\174P\0721) Tj
+(ID\07275843def6ffc1874\174P\0721) Tj
 T*
 ET
 Q
@@ -512,7 +512,7 @@ ET
 0.5 0.5 0.5 rg
 BT
 1 0 0 1 553.5 68 Tm
-(2026\05507\05509T15\07206\07245\05507\07200) Tj
+(2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -628,6 +628,21 @@ endobj
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
 /Filter [ /ASCII85Decode /FlateDecode ]
+/Height 105
+/Subtype /Image
+/Type /XObject
+/Width 105
+/Length 871
+>>
+stream
+Gb"/`=a%_K$j(MM9.'t3GmX`?=`!kT9*i\T^K"9^T7/O=T5YXt3S1Y%W/Ak9]&b7118?ESc[+'7'>qT#E#?;O3[Jk"!r7(e9@J%$U9b;eDDkIKPo.ZJ\%^D"k_eekkg32G\`eprfXa1+77mtV,NQ1R6>=#K=EM"1S^D]iq7Pf^fX0l/VF>,V?'fS2q6JQL>gmg1SZNj*;f6H[#^s/4'k`6Hn5OKuB/h,X_ot/AjQ"cfL/G-_VWbr3O#'3PSj5dX%J2Ic,9"Wn0gtT$U)(hJkc!IZd!:Aeft6?s6:\_WU9eKi:-=*1%q!WD)/b-ud0sbeFEWS:RtY;[[hPJ-b(I%;fk]OULI[9J5'er*?4=3;g`!o"/MA9iX9:o9?Ano:\)eo(R?_1$fo%RMn@#u_l^>6QK]1>0j1=71<A(lY<m_pVkM\kqatP<TAN4LO]o&uV%\`J,U*n7l3@g@0B4\d?SiR\D;0;+1'g>/p6Bh^`;,hYGMJh"U3q!Ln7TEWF#uMb>0N]/lBb;[[H'#mN@8s(Wnt\ZB8&Kp_H,:>14cG9$UDR=/YQ\2@US@'&L6j9(JS)Qm+Z$-nkW.#i%+blYF"TN.q&8JJ%Ds$]]D#6cL8[_&(Ha,M'uQdC;KTu6%'RV%U?^Q4es1nW-i+OJQnX2d>Z[@D$53nR$Itkt\lEjU6+8/i<(Vn#LDVGGEai<CBBt<9L<>Cd(aplFFm`qjfggtG53gCc/TasCJ79Y=p$:R;dFh`J7]5l>Q[)\'7u%jd_4mE!FPhd)AEY=-L0MT\?q!#TkWTQKE]l8OJggl:bXH/W0"O1:ee\)uhTR[d<I)cck\Qlc'D$HG;&uL+QY2[_JgjKeMU'eDd8a3>q>(3`cF=t~>
+endstream
+endobj
+20 0 obj
+<<
+/BitsPerComponent 8
+/ColorSpace /DeviceRGB
+/Filter [ /ASCII85Decode /FlateDecode ]
 /Height 93
 /Subtype /Image
 /Type /XObject
@@ -638,7 +653,7 @@ stream
 Gb"/_>B5B^$j1SN9.'t[jesae[4K`RKD"Hch^FA*o],3$@n*-_obG:u%Rl+V&YFg>qUB1ZCrR$_Rk*&!K;C6pX]WeQB)/Pmk)*OQQLe4CX!SiUgp\J0Jjka1cOfJ1kpKQ6)[8rLpoRX4h:E3$SQrF;(bFdtUTr%=coCj?>S/OKMI7l7X@k"GS1C-@bh5muPkm-dboGier!1b;L9lHI;YgMhl-l.Q59h7,)&XVI`.B:;rcM85Am+G"Q(O2#TfFf/qPrbZ.>E:8M8f*a$rJ)MmsPUW9@;)%noQG*/lYh*7%mhKQ!M3=/A#$.)ND($ebltWd<ng6#>5pH/H'imA!StkW.^U'_%J:/Q7\_soBZhdKo2Sp_,<J1&.;B79^/XC^MgDu5#\\MH4Q>7o&s>XJZ9n]1FlSMVtXRbF1)9&L*d$;&M1cX?tm"0dl8kJ&RL\Z)]1,SH+I1'rd68So;iIsJ`\@Yq?0Ik-!3PdVA':lT:$k^F.\&\YFuXt4u5P>bOljs`1gM1/@/-VP^S.[m*hIT6?A5bQI6=)UBjgV=C-\Ml+E:Xlr#1*c:X(($'t0bckdC2qOiSZ&hG,b`@Tm`DJ]oM?s1=?B`/9$>sZ`\B2q`6"j=6VbgcF3C7)Vt@]7UH_9tCq:Ck;T7F=eY$L[Qg~>
 endstream
 endobj
-20 0 obj
+21 0 obj
 <<
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
@@ -653,7 +668,7 @@ stream
 Gb"/`gL8o7%)][Vdcg`jAH>EK;uH9M.$/n)4.T-EUd$X=+8)GFa?$m2>T6c5e]X#&rHcB/DQE(n%4aca9MU\OX4QK3>?A#QV7&o[<Qg\LQm'B5.?r0/HhIARjqlVG>cU9XqUKA(og6Pk^TcQK',7Tn.1#MM['=L>ifJ:l8-fOJF)@utOuR!C(_T0Po3<5?#muVRX\73Me],2ZeU-t<@_J<Hl8SRfl0<t03aKGg9;gBfT2W8&Gd`>kV1e#RoffCVpYDSI,?.1'LE\hf9[/5q_r2.s3=eQ''UY<q\VA!FNcH1un0ftJ'6:(H'F%\f-$8X0LL?5:i@U4n>:1j6#!"u:$(/lloeTi#.22tH6'qtGb-(Ra:E=M#FBI&DDudLrkJLA>p)+@@HHB)&%dHr68%YQ(?5[(_(1%kb]bXol&g#I*ObtsU+m[:+3'S47kl!i?i?@O0LH%L7LZn\'TA^sZb(hsW-R)QfJlc<83bFX?bUDWaPsk&S&9Z2HH^I[U*@cp$I3ImC<VA,A8g#qG/[DNS&0E**fL8hX$u_8NFb9B"&]66,C1DLHXK*#QLPQe%)3nYJ3G`h6C-;uL4JACMYqE=k<_m!?YJVAVkbi3tMl`;r;qK%TE5rXg+i><)0iVMk>=r1hjSCQjMG2r`4Io#.&kC3.3%?\7+7aLt!D/ei/jcMpQ*sG@h\9fC2Knb"^#-;*L!cId84+TL+mDK[I7bIEL.&j*eC(%F)$2^4A)34ppk2hZ3`J4MAh/Rm6_)8E0N:/&A;d+\'%E4f-L8KEnIUg7JuVF>>KWA8#=HHdKNGo2W67pE];MdN\q%]b_s>ILHeN59$TQ?o]WM[TVlm:D6Bt-0]6+2+q%,oY68<EO1L);8SI[IA3[DpRr=%9a=Q`$[]+,Q!JQFX5dao@:h6980ip+4'Io<sar<2:94#s";'<lB:l@iX%bgd*;\f((g73;Gdi7!7>IQD*6eBMg'&t]XbBZR9H\sY-LimWG^%@PbqHACcR([sZ^@35!h25Z+.)iBCf%TAH!]Cd=L\4(#N$">kf5s"A`'pqT3SeRRO+b\[qE**hiD@o6f6+#1^\m`ZKT#*'g82,k.g/p9B\\aPfXC_aNHKsEMShAq:=Ej`/L!JNI?Wcd_M6<dpL85r/$uZ_p0aIJklT*Is>=;]>!P[<7%X%(Q;9->G&=Hpf>[-MueU9]`iRZPkW2hk\G9UT.S[T#7SY,e"oj5<rWSZ7)+L2_9#`i0X,-)F(("I/,]bt=iFnNTaL@AJH"\(?@l'b]*YMQ=H_ftERX^8t6e1m/0($@U,Nb=//A1$Ulc?#p)cOb6?9\*46k>6q<>sNP'332B2nB+RED%R8Keb+'0AZ3&G#`$^jqA)3@OL^he!K$Doo0c[Keb]I6m1ar&:L/k:QASA='16eUrFoA5\"t:4lbnn?>(7G+eSV;,_s=5LkniV<\Z#Y0~>
 endstream
 endobj
-21 0 obj
+22 0 obj
 <<
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
@@ -662,25 +677,10 @@ endobj
 /Subtype /Image
 /Type /XObject
 /Width 117
-/Length 1424
+/Length 1532
 >>
 stream
-Gb"/`95Y_H$j1SN90:l.'?F1LH5suRZCf'2ouG+tc-=Ki^Ue^@;-qq9$=>,ZF*N$ticTM'N-?s%=.)LCGs-o9;-/P)m\m2(CNn:YODnm5Lm?-#Z816>-<Gs]?7&a/2dRh4l[jaXVG%+cpZH4k$YBR!q]K"P5=]3h0Io]L#Jnje3>ufIgu@pq+F2\8YqEO]@pP0YD:)H%>c4hZ8=m8'ONd!ibZ"5X@]\$<]SH5G^mg=@qMi4"F*QZ1C^r,rP0GN6XW_"^N7*=9rFb<_5!"ICcM[Nm4HVZmO<i&EQ<uCDg"#C%;-"6aNd<1iA>$6/f-d;o+:oRd<.;qS.DZG0(6&_hQC09746ii)=qXcW>FEV(YbSADW$O1+]Tnm9%m/iEJU1']#qCkW92U*IbEe/$<#1m'_"J'c><5AQ=_(h>gV6Ka=k-C;g!3WifB&1niLP*$03nK[]Hq3224P2"9(u"^>od7PXKE&:<E<0I9JTa_!h=Y[9\9*)k?GcWSa9!]]$@39h[2:.A7%+@GOelI2C)6VZLB-5\l(7R_S[>5+:/QsS66FK:Sj`,9\c9;Q.[8'FB$,pCNWUnT7`ImAT^V"_\4aN0t(J%/Q=C/]G9f&rc#NHNoL!579O/-8uFcn=q$!t7t"5MR?u>Nc\E9gT\<7MPXX`2FNX3KKqb985*ncffm4hGZT8F6fdZNk03_5J?rfdk,<KHXok!HG'RVOc+@r*T1Qs7tCdlU]eC/_U11cEHW0ruu>0fm>N'Z7LcIWh2]gtJ!YuQnP*8\1Jff?^Rf6UAY-PP:X1F+N<<PbduR6(_@jV\\sbGsK$S]mW-bOQ&JbN6%TE()=dH=]f,/1SZ46S+J$\l'*\H)@)h,s&t2RAqb@JXgAq=]:T`9UN6/]S9u!MD-;:Wk3#.=cgcuB2Bp].VdXB[E'miAYh12'/()CX*[<g4Cu]=k$a\M;H1i<L\L</jlc-5fj\'p.u*?eSM5hPl=o)Qn36.:*V$/RA=5jA_NIo"F\&*H$hEEK`YRXY:W?W<!k%X-:ZOI6-SgH9INiiXj/9#)[2;AUcS@"L'r)c!,)_TV.e=(G.RlFu72@-6<TY/m<K(rtMtP4s$+DIABm-mJUkS)/]LiQ@RU*$+Bq`*OYL8#iAli+h&llK+bbX0_WVSq2;i[IV&hheBKTMV%0;LAbpmE8p;GBdiRAp$L._d-/L5qd:?L,bp]Y$;<o6GV(Gis,_,9rN9)0Rc36q9PaBFn`$3-86F,[oA*6-*^NAL0<X=3Djtfi18YBFna,7<QqN&tSTMKNFS,WNm@aZD^0hHm7NLAn@tnL7KkFd4(\YGa2F"B$9HIRI"[%YpH>"%W@m#n32`=]M]&9Md^o+OqAq,L\#=b\K>.iXP==>N'S)>n1#88?Oor,'#DK_=.R5jS!N$bn_W'Vh#'1I!VbJJY5~>
-endstream
-endobj
-22 0 obj
-<<
-/BitsPerComponent 8
-/ColorSpace /DeviceRGB
-/Filter [ /ASCII85Decode /FlateDecode ]
-/Height 105
-/Subtype /Image
-/Type /XObject
-/Width 105
-/Length 1095
->>
-stream
-Gb"/__0'!K%)^MCdnTr;@mET^]oJrLN'r9qppdlFq0DRE2U3h_'1)d#5gjekX%j'%_Wlk%%'MuL7$'fcJ9`QQKlPXWN1X5.3X3tTVM)K0@@2.B0N_:\NgX9k-!_;q(6t4r-5]rYT+kO[))ArZl+5eQGLaAtOGr5!Pcq[Ll`0iUeQ%9,bZ,T-o';IA$XRsZn2FG3L@k(T0>jSeSPFL]l(egu_$FEOrnSc:buL\)^TWZJOZ6m>SA.ge7'7m#HqV9,.?hj'"J'H;pc;t!\XK0i=V)U?b:/4;?pU)/Ycl78F^.d=3U?kVZ<Vs/>un/hMK6jJ-WlIA(U0@d[>"/H.gV:k(T1^h;`3\k>X.2j`Mo6H</imHf2)0^EOM5VaRq,k@BR2Bm]l%@f<Wq8L#L#T%-M&e-sq*uSRAV#,<G88\Nc1?#X4o&eS1STY14]>Y'FL8^77VO&'J&1<VK:5=5E`KelB,ar_e/EJlP'[<UHm&<*tnu(!p5d46nQMf)nBbL@r-.jQ`bgJlgd;<u5ldcNt,-+j6._gUZVAc;cg\+XIQ3#T+^1=)M8@&odV7Z4fQFji/Sm!Jb#-4!>kNDHn/*890jaXiOMC_2DPYe8S.cf6Mt[o-.6G24P>rFe7OZ]Z:gJYJ,U8Q*fhS_B:/7.md>AXE5rRYS/]]$1<Z^<WO_A8ic5@$rTE77<DcAE_^_VX%JdjYGTH;^kMljX%JdjYGTH;^kMljX%Jdj-Uia16]=X*TN2g2[5&a,,Wni48jP!6C1TF789gYFQ%E*LeB68eF^M;2/^tp,#_tOm<s<ctBs8[YSO4]cX'B1?Y+`.B^Zr3'<L7p<k-IKqYBYk`ZQOj$SS#V$1iq"Mb@IWK>ER#_;;Q>;;q43X*'F%;0>u[@<=@K"nDqd+3;;^\2)[jF(ll0'E[e.PS`2S07fk_;G<Usj9uRcd"_B(Fc:KTuLJ5Z#EWp#%kfuaOA;<jt'649<l=C6.F\"2W/X<s.EB;%4Jg[LMfss0cVaE!bG_/PTS\*o*EJWijSkPE_8kO=X_5m"(gJ'u:.^7k7_6(d_3`hm'\a&>HKW!6A8V]DCo2U"b]iB262`L1iIfYN2SN?~>
+Gb"/`gMu%G$j4t.dn'SlKC"2Sic3%8*PD(BpYFZ]?+OCL,<Eb+k]BT'r7i2Ln!CkH%^ENh^C3SRL^!<HZZL;`ZT_?]YHMs;hRl'ehC]WofEE4''Pi,VFhqsf+e@[;XS"I%"hT2;FHVE`f%8OelqE$8d36Y:]bG6fYVQ_(7#*1/ohql6_9Ol>&07LXeP!0u"dMh18<0o\=CYW5l#_O<#j[1%ech=6-V09%?<C^N"W;@uXA]UrkLN`O,i&Q<bCY8VTfUbj+R'qL>8@@s%Fq`%.'1_?psS!C$bpe-o>30:IEoHI`'W!WVlQcRm;CcNn)gac<3P^\*^Y@ML"_V6g^6M+PGj%]oB+7BC7p(2H+V4)pud6Ge`jkR/P(hoE_##edt+u3O;L@HNkSMk!u&6aPLLbuC:^RnE,\^ZlUAIB]6YA",>j5]"*gjM#u?dW$l+^h*EEYX66?Q7KPH2!:autVG@!YQY0Iep.h;Z)?:2Q3c5("B%fn2a/rp@:FG:W4-O=lI_CWUI_dH[c<@8&q/]''Vb/7Uk(f_phFtGcL:CO5(^k"qGe1Bn7L0_#[E!mXfjGC8-:2SVe$O+#TJOQ/$Msc<=W\k&O2=7:,1(t&GSZo](8l4c6n6KX8Tt1n<(KCbk*>6*09Is0;i<;Nq67isTjGAOk@,a@4AP.\T3i&EP9S&&tn<>@>9'MFhC,#l=mRi8=<)ZeYGcC1IZ#q`lW%>M5b"IFq?VH#B6=nPm;-kaMqI0fe"X@E_:Y2YJXL]'!=eik;YSogPU6L9?WC+I3N=HW;C'6DP;@Ya`%KVbNSpOB-ofBqKP;S:bo%^l:n&51^c:bg)4)Y9A$Bd-]:Do13o6uP,Gp2s:H-(do.#0[7o\j8M=/R%R2t,#gg:RP%PWM1]PgG\UZ?QCkoA7,bkKS:a?@asr&q6bm0P[jX-W)tVn49+D:;Dr#$(XKO=MlA+L,o?&2C*C@UBJ1Gh/te0SH)^5`0:ON0tOuBDr)\*lIB<60Ci[fd:$!u`?NbC%-^3p$nXN!lE46"3eANgaHrShLZoE]]bHD&MZE1*#a0idlIJcPMt@A7mYDuW8>9u2eZhZK!:GjQP([+b,1p='GbRmGW*+rROFHe5pEBLtc0h,t2cM_olE46(Q4Ucg9#@W\+ed=]$&OB$hDJ:Kh(0_CdSU=-L$IMP%BQ7)LJcNCR>2Qro]Ei4J'tu6(T%R9*Oq"n^s?GDGOs\(Ig*#c5's9p/<p%9Ng`E0,"E!'mTjC81%ZYNWY[ZnOEBq@.uU);d8@TuF`^Wf>@[FbC_8Ae(5d8+=pr<\Gp-J$:a6AV%\H9jFXfN$;-uYK0&c;V1f^Hj'-6`l`97gDT1Dn'.Ql*%]t.TWAefd9lIJd<?,8/+_C2UJeZGOX\q444Ki).sX'7r:FX&;GP*lSn\J'no&Y;o2(."j.&U.]h5/MB`_'8)b/E0DUa9Z!$eT=>(:8]QlSX\53^3RKP]\S]-Pa?.=FmluSn;87i8`hWKfgc?l?<qeE%tZ'JQ]UR/"?Wfhn99)#s7?0iDstCH~>
 endstream
 endobj
 23 0 obj
@@ -713,12 +713,12 @@ stream
             <rdf:li>white</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <xmp:CreateDate>2026-07-09T15:06:45-07:00</xmp:CreateDate>
-        <xmp:ModifyDate>2026-07-09T15:06:45-07:00</xmp:ModifyDate>
+        <xmp:CreateDate>2026-07-09T17:54:22-07:00</xmp:CreateDate>
+        <xmp:ModifyDate>2026-07-09T17:54:22-07:00</xmp:ModifyDate>
         <xmp:CreatorTool>Research Template Steganography</xmp:CreatorTool>
-        <steg:document_id>f048de67c10ab4a17e89d43bf3b9d565</steg:document_id>
-        <steg:hash_sha256>25037d6fc8644e1452ccca70ed72c3b4da0a03917f3c09bf436bea6990ae88a5</steg:hash_sha256>
-        <steg:hash_sha512>ab255316b4c9e416bfe1275595b7a138c091806cbb9555b344b356bddc2af3b08e9094bf770e2ad02060f7a01a94284f0b25a59a8310dcedb87d6a946fc0a953</steg:hash_sha512>
+        <steg:document_id>75843def6ffc1874ec7490349efe88d9</steg:document_id>
+        <steg:hash_sha256>8c66afd5da697d046e656e8cd5fa3701a1e5302e86dda813ab9473c9c809dfad</steg:hash_sha256>
+        <steg:hash_sha512>d79ed39921c433680d0aabbf9a042ab63e21600c2f8a3b038fbadf873985ffe1511f2b9850c2c1396cd70a5758b1ab14878627d7f23ea24987206b6d96eedec2</steg:hash_sha512>
     </rdf:Description>
   </rdf:RDF>
 </x:xmpmeta>
@@ -732,13 +732,13 @@ endobj
 >>
 stream
 {
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "hashes": {
-    "sha256": "25037d6fc8644e1452ccca70ed72c3b4da0a03917f3c09bf436bea6990ae88a5",
-    "sha512": "ab255316b4c9e416bfe1275595b7a138c091806cbb9555b344b356bddc2af3b08e9094bf770e2ad02060f7a01a94284f0b25a59a8310dcedb87d6a946fc0a953"
+    "sha256": "8c66afd5da697d046e656e8cd5fa3701a1e5302e86dda813ab9473c9c809dfad",
+    "sha512": "d79ed39921c433680d0aabbf9a042ab63e21600c2f8a3b038fbadf873985ffe1511f2b9850c2c1396cd70a5758b1ab14878627d7f23ea24987206b6d96eedec2"
   },
   "title": "Redacted Report Visual Proof Matrix",
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": true
 }
@@ -773,26 +773,26 @@ xref
 0000001516 00000 n 
 0000001547 00000 n 
 0000005625 00000 n 
-0000007156 00000 n 
-0000007300 00000 n 
-0000007407 00000 n 
-0000007515 00000 n 
-0000007623 00000 n 
-0000007731 00000 n 
-0000007839 00000 n 
-0000007952 00000 n 
-0000008065 00000 n 
-0000008171 00000 n 
-0000008277 00000 n 
-0000008361 00000 n 
-0000009205 00000 n 
-0000010842 00000 n 
-0000012456 00000 n 
-0000013741 00000 n 
-0000015345 00000 n 
-0000015893 00000 n 
-0000015982 00000 n 
-0000016026 00000 n 
+0000007172 00000 n 
+0000007316 00000 n 
+0000007423 00000 n 
+0000007531 00000 n 
+0000007639 00000 n 
+0000007747 00000 n 
+0000007855 00000 n 
+0000007968 00000 n 
+0000008081 00000 n 
+0000008187 00000 n 
+0000008293 00000 n 
+0000008377 00000 n 
+0000009437 00000 n 
+0000010281 00000 n 
+0000011918 00000 n 
+0000013640 00000 n 
+0000015244 00000 n 
+0000015792 00000 n 
+0000015881 00000 n 
+0000015925 00000 n 
 trailer
 <<
 /Size 28
@@ -800,5 +800,5 @@ trailer
 /Info 1 0 R
 >>
 startxref
-16094
+15993
 %%EOF

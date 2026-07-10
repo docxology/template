@@ -1,13 +1,13 @@
 {
   "source_file": "whiteout_on_blur.pdf",
-  "timestamp": "2026-07-09T15:06:45-07:00",
+  "timestamp": "2026-07-09T17:54:22-07:00",
   "hashes": {
-    "sha256": "d140444450c6511ced2683606e967c618b2ec6dc7dd2796efacbf747a89fa4fe",
-    "sha512": "036b8dfeeb556a08a21b58ac0c6d0ef02c11e9a2e099eb5b3c6e80337ac9923ada8126e9fec60e1727ffefe1f0e9ee961ef47b621b21ea8ff1fafcff5d7fa5c5"
+    "sha256": "b7a73712867fa6d1d4d4c7a7a60fa9f1f47327df17e3f1f1b3958836d52bf6ab",
+    "sha512": "f299c3854e9421722aa8189478569eaf1896dc42cbb2117487f2476b64e1470267d403b7b8e5b98156a56cca772455de4c0cfefa4818501977c49fe96ebca591"
   },
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "source_size_bytes": 2430,
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

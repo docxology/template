@@ -53,6 +53,49 @@ from infrastructure.steganography.overlays import create_watermark_overlay
 overlay_bytes = create_watermark_overlay(page_width=612, page_height=792, text="CONFIDENTIAL", opacity=0.08)
 ```
 
+## Kmyth TPM Sealing (`kmyth_adapter.py`)
+
+Optional TPM-backed sealing of hash manifests and steganography PDFs
+into `.ski` sidecar files using the Kmyth toolkit.
+
+```python
+from infrastructure.steganography.kmyth_adapter import (
+    KmythSealOptions, seal_file_with_kmyth, validate_kmyth_installation,
+)
+
+# Validate that kmyth-seal/kmyth-unseal are available
+avail = validate_kmyth_installation(binary_dir="infrastructure/steganography/kmyth/bin")
+print(avail.summary())
+
+# Seal a file (requires running TPM backend on macOS)
+ski_path = seal_file_with_kmyth(
+    Path("output.pdf"),
+    options=KmythSealOptions(
+        binary_dir=Path("infrastructure/steganography/kmyth/bin"),
+        tcti_config="mssim:host=127.0.0.1,port=2321",
+        timeout_seconds=15,
+    ),
+)
+```
+
+### TPM Backend (macOS)
+
+macOS has no hardware TPM. Use the bundled swtpm + proxy:
+
+```bash
+# Start TPM backend
+eval "$(python3 infrastructure/steganography/start_tpm_backend.py start)"
+
+# Run pipeline with Kmyth sealing
+uv run python projects/templates/template_redacted_report/scripts/generate_dev_variants.py \
+    --kmyth-binary-dir infrastructure/steganography/kmyth/bin
+
+# Stop when done
+python3 infrastructure/steganography/start_tpm_backend.py stop
+```
+
+See [AGENTS.md](AGENTS.md#tpm-backend-setup-macos) for full TPM setup details.
+
 ## Documentation Signposting
 >
 > **Master Documentation**: For comprehensive details regarding the framework structure, refer directly to the central docs hub:

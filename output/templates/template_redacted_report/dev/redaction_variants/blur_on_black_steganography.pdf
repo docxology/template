@@ -4,17 +4,17 @@
 <<
 /Producer (infrastructure\056steganography)
 /Creator (Research Template Steganography Module)
-/CreationDate (2026\05507\05509T15\07206\07245\05507\07200)
-/ModDate (2026\05507\05509T15\07206\07245\05507\07200)
+/CreationDate (2026\05507\05509T17\07254\07222\05507\07200)
+/ModDate (2026\05507\05509T17\07254\07222\05507\07200)
 /Title (Redacted Report Visual Proof Matrix)
 /Author (Research Template Author)
 /Keywords (redaction\073 visual\055proof\073 blur\073 black)
-/Subject (Document ID\072 f048de67c10ab4a17e89d43bf3b9d565)
-/DocumentID (f048de67c10ab4a17e89d43bf3b9d565)
-/Hash_SHA256 (b1cc8193fad6d89a73a91383bb69a5deac025626ee87d55215977fd85a154efa)
-/Hash_SHA512 (5f2a9ce618e191b1b3057155d4d40dd8df2dd62b8fd03feb332cd9b1342ab7d71485cf719099ce14b7d78a9f01059f17c699ab8acb23ae149e57f8a197eba854)
-/SteganographyTimestamp (2026\05507\05509T15\07206\07245\05507\07200)
-/GitCommit (67f2d5c2662febb0bfae48fd52754713f9530eb4)
+/Subject (Document ID\072 75843def6ffc1874ec7490349efe88d9)
+/DocumentID (75843def6ffc1874ec7490349efe88d9)
+/Hash_SHA256 (4077f0445e2552145fc117f7ef144f097736ac6e1e0f01b3716d7be92b54eb94)
+/Hash_SHA512 (181cb69f942f4d0a62f5453fcc142ce8cbf81a35e58ce6fbe94d6278e85b0f2ea4b3695f10e2434c79dbcdf0c4222e811e18ea39f5182bbea192122672130307)
+/SteganographyTimestamp (2026\05507\05509T17\07254\07222\05507\07200)
+/GitCommit (4e85a4149398e3ae06bce4d6959c66610a4efe1e)
 /GitCommitAvailable (true)
 >>
 endobj
@@ -56,9 +56,9 @@ endobj
 >>
 /XObject <<
 /FormXob.2398c89f67a8ef9bdbc45f4e2f84eddb 19 0 R
-/FormXob.7f3a4a656b5b73f67d564dd9163a7f63 20 0 R
-/FormXob.d6afb08cf2aed7305dc6086b7dd41a97 21 0 R
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 22 0 R
+/FormXob.246f71817d8f8d2396c2cd276a3702d0 20 0 R
+/FormXob.7f3a4a656b5b73f67d564dd9163a7f63 21 0 R
+/FormXob.835a097773377bed13bf2229cddde5db 22 0 R
 >>
 >>
 /Rotate 0
@@ -263,7 +263,7 @@ BT
 ET
 BT
 1 0 0 1 18 74 Tm
-(ID\072 f048de67c10a  ) Tj
+(ID\072 75843def6ffc  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
@@ -287,13 +287,13 @@ BT
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  SHA256 \050compiled PDF\051\072 b1cc8193fad6d89a  ) Tj
+(  SHA256 \050compiled PDF\051\072 4077f0445e255214  ) Tj
 /F3 4.5 Tf
 5.4 TL
 (n) Tj
 /F2-1 4.5 Tf
 5.4 TL
-(  2026\05507\05509T15\07206\07245\05507\07200) Tj
+(  2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -319,7 +319,7 @@ ET
 BT
 1 0 0 1 0 0 Tm
 3 Tr
-(STEG\137ID\072f048de67c10ab4a17e89d43bf3b9d565\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\072b1cc8193fad6d89a) Tj
+(STEG\137ID\07275843def6ffc1874ec7490349efe88d9\174TITLE\072Redacted Report Visual Proof Matrix\174HASHES\0724077f0445e255214) Tj
 T*
 ET
 Q
@@ -331,7 +331,7 @@ endstream
 endobj
 7 0 obj
 <<
-/Length 1479
+/Length 1495
 >>
 stream
 q
@@ -345,7 +345,7 @@ BT
 ET
 q
 50 0 0 50 14 16 cm
-/FormXob.dc8b6feed07a5170b070cb1cf2b130d8 Do
+/FormXob.835a097773377bed13bf2229cddde5db Do
 Q
 q
 BT
@@ -393,7 +393,7 @@ ET
 Q
 q
 50 0 0 50 446 16 cm
-/FormXob.d6afb08cf2aed7305dc6086b7dd41a97 Do
+/FormXob.246f71817d8f8d2396c2cd276a3702d0 Do
 Q
 q
 BT
@@ -427,12 +427,8 @@ n
 513 62 l
 S
 n
-514 20 m
-514 62 l
-S
-n
-515 20 m
-515 62 l
+514.5 20 m
+514.5 62 l
 S
 n
 516.5 20 m
@@ -447,12 +443,12 @@ n
 520 62 l
 S
 n
-522 20 m
-522 62 l
+521 20 m
+521 62 l
 S
 n
-523 20 m
-523 62 l
+522.5 20 m
+522.5 62 l
 S
 n
 524.5 20 m
@@ -463,20 +459,24 @@ n
 525.5 62 l
 S
 n
-527 20 m
-527 62 l
+526.5 20 m
+526.5 62 l
 S
 n
-528 20 m
-528 62 l
+527.5 20 m
+527.5 62 l
+S
+n
+528.5 20 m
+528.5 62 l
 S
 n
 529.5 20 m
 529.5 62 l
 S
 n
-531.5 20 m
-531.5 62 l
+531 20 m
+531 62 l
 S
 n
 533 20 m
@@ -509,7 +509,7 @@ ET
 0.4 0.4 0.4 rg
 BT
 1 0 0 1 508 6 Tm
-(ID\072f048de67c10ab4a1\174P\0721) Tj
+(ID\07275843def6ffc1874\174P\0721) Tj
 T*
 ET
 Q
@@ -521,7 +521,7 @@ ET
 0.5 0.5 0.5 rg
 BT
 1 0 0 1 553.5 68 Tm
-(2026\05507\05509T15\07206\07245\05507\07200) Tj
+(2026\05507\05509T17\07254\07222\05507\07200) Tj
 T*
 ET
 Q
@@ -652,6 +652,21 @@ endobj
 /BitsPerComponent 8
 /ColorSpace /DeviceRGB
 /Filter [ /ASCII85Decode /FlateDecode ]
+/Height 105
+/Subtype /Image
+/Type /XObject
+/Width 105
+/Length 985
+>>
+stream
+Gb"/`6"7_s$j->+:T"`U<ZOGKdKGS:8IYCaW2f._kpmFX1X$E%E+V7IX&IR6C_7&L!R-1_!cIOQ8_4K]3r<<c;Zh>iL^)@J4\XSp>+MqtC=NdZk6u>@$1CR!IP?]o'&K$urEpHi,ePpIGgLLZVW>$Nf]lYr4&ncrD+V-+nAO=tUohp;g?S%#?7l<QZ<tJEXj0\qlKk<BdD/,@4KgX=VlJ;#HF)l@M_gBh)r/-c_*)%AFnU-^;qE<LmuEVh`&OC+@4uZRL,?Ps+_<%=?KA="Bm:"Qb"d\fFX^D%/m\21KOBt0A?eQo/ec]V0ZctnfHMT-M<R&<\KgWhQ_f>_\o]XuC3?ZH2r.VB3)!.3Ar0?9-^S$X<3*X/3oVd6l\F7=_br_:QbgAcc![[Add"nbBnhl1&PB0OVF4`B@0tfAYYG6lVF4`B@0tfAYYG6lVF6*X,91=.2S:Cjl2!^1c7m`4D"oriNXQG&OsCGHN''[>&i1^',[kq*j@KE:QjKH6$,Zii:D0$oJqk9$=mqFloM!@f+WLup-XAt#R?D\Z3#l1!\pi!^*S.'hFY>N:\W\\!7B:3HLAQ:>Tt@ZXXa:9X$P-8.o"_o6XmVsa$S@*AOs5::EXcAB[5qNo:/qQh#hMq/-cn4C?`gK]4gDTaT#__oJi"h!$sV?V6SQTmA0KJiAqmGRqB6\d?*]Q,+Z%#:Qur:e(R]LWP.\FhX_p>d7;d5tTi@lo7WNc'L^6eWZ[#`Fc*K$ZLMTP%[bU9FM-?IP&$1f,'/1%HbjN`#VWVp!K*T`]<X0/,_aARa%,'?l9FcB%;Mm%6agBTt>HR<`AhRl.je_H7%^nE3+jIC*f;UAB%[3(7/^ma5S$kB41ou]W,a#RO,ZCF<fBW@jP"^^';Bk@u#NkOfG6pr8.\W"Q&'X&WmLknO<'hm,*gju8ga+Y;e.X"tZ4@`:AZdg&&_%BPSFI(]?6M*:5n,Qo)=O6Z<E7RrkSj`GFuT~>
+endstream
+endobj
+21 0 obj
+<<
+/BitsPerComponent 8
+/ColorSpace /DeviceRGB
+/Filter [ /ASCII85Decode /FlateDecode ]
 /Height 117
 /Subtype /Image
 /Type /XObject
@@ -660,21 +675,6 @@ endobj
 >>
 stream
 Gb"/`gL8o7%)][Vdcg`jAH>EK;uH9M.$/n)4.T-EUd$X=+8)GFa?$m2>T6c5e]X#&rHcB/DQE(n%4aca9MU\OX4QK3>?A#QV7&o[<Qg\LQm'B5.?r0/HhIARjqlVG>cU9XqUKA(og6Pk^TcQK',7Tn.1#MM['=L>ifJ:l8-fOJF)@utOuR!C(_T0Po3<5?#muVRX\73Me],2ZeU-t<@_J<Hl8SRfl0<t03aKGg9;gBfT2W8&Gd`>kV1e#RoffCVpYDSI,?.1'LE\hf9[/5q_r2.s3=eQ''UY<q\VA!FNcH1un0ftJ'6:(H'F%\f-$8X0LL?5:i@U4n>:1j6#!"u:$(/lloeTi#.22tH6'qtGb-(Ra:E=M#FBI&DDudLrkJLA>p)+@@HHB)&%dHr68%YQ(?5[(_(1%kb]bXol&g#I*ObtsU+m[:+3'S47kl!i?i?@O0LH%L7LZn\'TA^sZb(hsW-R)QfJlc<83bFX?bUDWaPsk&S&9Z2HH^I[U*@cp$I3ImC<VA,A8g#qG/[DNS&0E**fL8hX$u_8NFb9B"&]66,C1DLHXK*#QLPQe%)3nYJ3G`h6C-;uL4JACMYqE=k<_m!?YJVAVkbi3tMl`;r;qK%TE5rXg+i><)0iVMk>=r1hjSCQjMG2r`4Io#.&kC3.3%?\7+7aLt!D/ei/jcMpQ*sG@h\9fC2Knb"^#-;*L!cId84+TL+mDK[I7bIEL.&j*eC(%F)$2^4A)34ppk2hZ3`J4MAh/Rm6_)8E0N:/&A;d+\'%E4f-L8KEnIUg7JuVF>>KWA8#=HHdKNGo2W67pE];MdN\q%]b_s>ILHeN59$TQ?o]WM[TVlm:D6Bt-0]6+2+q%,oY68<EO1L);8SI[IA3[DpRr=%9a=Q`$[]+,Q!JQFX5dao@:h6980ip+4'Io<sar<2:94#s";'<lB:l@iX%bgd*;\f((g73;Gdi7!7>IQD*6eBMg'&t]XbBZR9H\sY-LimWG^%@PbqHACcR([sZ^@35!h25Z+.)iBCf%TAH!]Cd=L\4(#N$">kf5s"A`'pqT3SeRRO+b\[qE**hiD@o6f6+#1^\m`ZKT#*'g82,k.g/p9B\\aPfXC_aNHKsEMShAq:=Ej`/L!JNI?Wcd_M6<dpL85r/$uZ_p0aIJklT*Is>=;]>!P[<7%X%(Q;9->G&=Hpf>[-MueU9]`iRZPkW2hk\G9UT.S[T#7SY,e"oj5<rWSZ7)+L2_9#`i0X,-)F(("I/,]bt=iFnNTaL@AJH"\(?@l'b]*YMQ=H_ftERX^8t6e1m/0($@U,Nb=//A1$Ulc?#p)cOb6?9\*46k>6q<>sNP'332B2nB+RED%R8Keb+'0AZ3&G#`$^jqA)3@OL^he!K$Doo0c[Keb]I6m1ar&:L/k:QASA='16eUrFoA5\"t:4lbnn?>(7G+eSV;,_s=5LkniV<\Z#Y0~>
-endstream
-endobj
-21 0 obj
-<<
-/BitsPerComponent 8
-/ColorSpace /DeviceRGB
-/Filter [ /ASCII85Decode /FlateDecode ]
-/Height 105
-/Subtype /Image
-/Type /XObject
-/Width 105
-/Length 1000
->>
-stream
-Gb"/`gMt+r$j4t.dnTq8E3K=<;Jbjo7,kIt]fM_0s-oWs#/MttMQ5m1CUu-#FLL-%T_"VT@mLn)2D$sEquq\io#IM(np'@\pN)b?VX&hk"`cho3Gc8ZW)t2:F.'qCl[kfZHJ&o^\t[Y\[KI\(c4fi9Q1Ln2>o,''01Ud1Y.lB^+]W)V\LKZ;Wp&fM+ceC2`FE8lVF>,V/NUN."f%Fp45TeHQ+*XSm.kmJ./XWmCY;@jjb9SqlmXuB4SPrpb5%-3aQsX(VsJOr=Ho@t"j\WEh%:E6k?L<KXE]"+b"Ls$.&0R1YH@;mNY2H)H[M'2K@a.K<(Ddrgc[hn_SHW1#ns&3>Cp:.ceVeX\p90.*2Vm8%503JX5k.a_dGoG#:mASG9mGsp@)s^7lj(?F>opmFHg@u'*@8!)jELDU+8:\iZ(!J#A$AV+Utf2?Be6a.H7*.,3<bK]dTLL;oD0<7*=HuH<L9$&h4&PM_I99>]d<!d9V]+=Ul)hA]5A.OBLh%@\=L8Q_NhX<_O)@0*Z0BH7@!CB#PHm6$]mO?4[O9HS#r8iQ<rF?=#=-m^5m(L+CRaH$R6Q\^s1<;Q^3E`,Mc;ie:ipFjNeFKuW^N0u?!8-1jOaH(c(r_J=^e]pHRPbG-c`Y/4',TU3L3bG.>lY/4',TU3L3bG.<f=+a887o<;\#Bt)V=l(W1FEYKpZg2j5'iX3$,oj'!QM"WSB*TruGm@J##uM(acQF'NKfdG_dK8eE;3>8M(%*Kn8di!^6q)^$(Y\E)Q!f6)7g$:PK'9l2B'#c!#2RiY1!lim*H+bd:FD[,Zf__DSI9UY:p9?l`@/<l]*t5Hrir>X`UF8^q7.9MQkl60H4.<._1uQ%JgnlO_4n7D(7e`M*?B0%/<iFt4[+b8QNt2H$P^>=^(['3XOOf4!];R@U0Fl.d4'^Nd(`\TXiaj/kXt)^!npuf]ujP?kXt)^!npuf]um8i$Kcb'$+E+#T,4&H??GhPe*/uEIK=Xj=K2~>
 endstream
 endobj
 22 0 obj
@@ -686,10 +686,10 @@ endobj
 /Subtype /Image
 /Type /XObject
 /Width 117
-/Length 1424
+/Length 1532
 >>
 stream
-Gb"/`95Y_H$j1SN90:l.'?F1LH5suRZCf'2ouG+tc-=Ki^Ue^@;-qq9$=>,ZF*N$ticTM'N-?s%=.)LCGs-o9;-/P)m\m2(CNn:YODnm5Lm?-#Z816>-<Gs]?7&a/2dRh4l[jaXVG%+cpZH4k$YBR!q]K"P5=]3h0Io]L#Jnje3>ufIgu@pq+F2\8YqEO]@pP0YD:)H%>c4hZ8=m8'ONd!ibZ"5X@]\$<]SH5G^mg=@qMi4"F*QZ1C^r,rP0GN6XW_"^N7*=9rFb<_5!"ICcM[Nm4HVZmO<i&EQ<uCDg"#C%;-"6aNd<1iA>$6/f-d;o+:oRd<.;qS.DZG0(6&_hQC09746ii)=qXcW>FEV(YbSADW$O1+]Tnm9%m/iEJU1']#qCkW92U*IbEe/$<#1m'_"J'c><5AQ=_(h>gV6Ka=k-C;g!3WifB&1niLP*$03nK[]Hq3224P2"9(u"^>od7PXKE&:<E<0I9JTa_!h=Y[9\9*)k?GcWSa9!]]$@39h[2:.A7%+@GOelI2C)6VZLB-5\l(7R_S[>5+:/QsS66FK:Sj`,9\c9;Q.[8'FB$,pCNWUnT7`ImAT^V"_\4aN0t(J%/Q=C/]G9f&rc#NHNoL!579O/-8uFcn=q$!t7t"5MR?u>Nc\E9gT\<7MPXX`2FNX3KKqb985*ncffm4hGZT8F6fdZNk03_5J?rfdk,<KHXok!HG'RVOc+@r*T1Qs7tCdlU]eC/_U11cEHW0ruu>0fm>N'Z7LcIWh2]gtJ!YuQnP*8\1Jff?^Rf6UAY-PP:X1F+N<<PbduR6(_@jV\\sbGsK$S]mW-bOQ&JbN6%TE()=dH=]f,/1SZ46S+J$\l'*\H)@)h,s&t2RAqb@JXgAq=]:T`9UN6/]S9u!MD-;:Wk3#.=cgcuB2Bp].VdXB[E'miAYh12'/()CX*[<g4Cu]=k$a\M;H1i<L\L</jlc-5fj\'p.u*?eSM5hPl=o)Qn36.:*V$/RA=5jA_NIo"F\&*H$hEEK`YRXY:W?W<!k%X-:ZOI6-SgH9INiiXj/9#)[2;AUcS@"L'r)c!,)_TV.e=(G.RlFu72@-6<TY/m<K(rtMtP4s$+DIABm-mJUkS)/]LiQ@RU*$+Bq`*OYL8#iAli+h&llK+bbX0_WVSq2;i[IV&hheBKTMV%0;LAbpmE8p;GBdiRAp$L._d-/L5qd:?L,bp]Y$;<o6GV(Gis,_,9rN9)0Rc36q9PaBFn`$3-86F,[oA*6-*^NAL0<X=3Djtfi18YBFna,7<QqN&tSTMKNFS,WNm@aZD^0hHm7NLAn@tnL7KkFd4(\YGa2F"B$9HIRI"[%YpH>"%W@m#n32`=]M]&9Md^o+OqAq,L\#=b\K>.iXP==>N'S)>n1#88?Oor,'#DK_=.R5jS!N$bn_W'Vh#'1I!VbJJY5~>
+Gb"/`gMu%G$j4t.dn'SlKC"2Sic3%8*PD(BpYFZ]?+OCL,<Eb+k]BT'r7i2Ln!CkH%^ENh^C3SRL^!<HZZL;`ZT_?]YHMs;hRl'ehC]WofEE4''Pi,VFhqsf+e@[;XS"I%"hT2;FHVE`f%8OelqE$8d36Y:]bG6fYVQ_(7#*1/ohql6_9Ol>&07LXeP!0u"dMh18<0o\=CYW5l#_O<#j[1%ech=6-V09%?<C^N"W;@uXA]UrkLN`O,i&Q<bCY8VTfUbj+R'qL>8@@s%Fq`%.'1_?psS!C$bpe-o>30:IEoHI`'W!WVlQcRm;CcNn)gac<3P^\*^Y@ML"_V6g^6M+PGj%]oB+7BC7p(2H+V4)pud6Ge`jkR/P(hoE_##edt+u3O;L@HNkSMk!u&6aPLLbuC:^RnE,\^ZlUAIB]6YA",>j5]"*gjM#u?dW$l+^h*EEYX66?Q7KPH2!:autVG@!YQY0Iep.h;Z)?:2Q3c5("B%fn2a/rp@:FG:W4-O=lI_CWUI_dH[c<@8&q/]''Vb/7Uk(f_phFtGcL:CO5(^k"qGe1Bn7L0_#[E!mXfjGC8-:2SVe$O+#TJOQ/$Msc<=W\k&O2=7:,1(t&GSZo](8l4c6n6KX8Tt1n<(KCbk*>6*09Is0;i<;Nq67isTjGAOk@,a@4AP.\T3i&EP9S&&tn<>@>9'MFhC,#l=mRi8=<)ZeYGcC1IZ#q`lW%>M5b"IFq?VH#B6=nPm;-kaMqI0fe"X@E_:Y2YJXL]'!=eik;YSogPU6L9?WC+I3N=HW;C'6DP;@Ya`%KVbNSpOB-ofBqKP;S:bo%^l:n&51^c:bg)4)Y9A$Bd-]:Do13o6uP,Gp2s:H-(do.#0[7o\j8M=/R%R2t,#gg:RP%PWM1]PgG\UZ?QCkoA7,bkKS:a?@asr&q6bm0P[jX-W)tVn49+D:;Dr#$(XKO=MlA+L,o?&2C*C@UBJ1Gh/te0SH)^5`0:ON0tOuBDr)\*lIB<60Ci[fd:$!u`?NbC%-^3p$nXN!lE46"3eANgaHrShLZoE]]bHD&MZE1*#a0idlIJcPMt@A7mYDuW8>9u2eZhZK!:GjQP([+b,1p='GbRmGW*+rROFHe5pEBLtc0h,t2cM_olE46(Q4Ucg9#@W\+ed=]$&OB$hDJ:Kh(0_CdSU=-L$IMP%BQ7)LJcNCR>2Qro]Ei4J'tu6(T%R9*Oq"n^s?GDGOs\(Ig*#c5's9p/<p%9Ng`E0,"E!'mTjC81%ZYNWY[ZnOEBq@.uU);d8@TuF`^Wf>@[FbC_8Ae(5d8+=pr<\Gp-J$:a6AV%\H9jFXfN$;-uYK0&c;V1f^Hj'-6`l`97gDT1Dn'.Ql*%]t.TWAefd9lIJd<?,8/+_C2UJeZGOX\q444Ki).sX'7r:FX&;GP*lSn\J'no&Y;o2(."j.&U.]h5/MB`_'8)b/E0DUa9Z!$eT=>(:8]QlSX\53^3RKP]\S]-Pa?.=FmluSn;87i8`hWKfgc?l?<qeE%tZ'JQ]UR/"?Wfhn99)#s7?0iDstCH~>
 endstream
 endobj
 23 0 obj
@@ -722,12 +722,12 @@ stream
             <rdf:li>black</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <xmp:CreateDate>2026-07-09T15:06:45-07:00</xmp:CreateDate>
-        <xmp:ModifyDate>2026-07-09T15:06:45-07:00</xmp:ModifyDate>
+        <xmp:CreateDate>2026-07-09T17:54:22-07:00</xmp:CreateDate>
+        <xmp:ModifyDate>2026-07-09T17:54:22-07:00</xmp:ModifyDate>
         <xmp:CreatorTool>Research Template Steganography</xmp:CreatorTool>
-        <steg:document_id>f048de67c10ab4a17e89d43bf3b9d565</steg:document_id>
-        <steg:hash_sha256>b1cc8193fad6d89a73a91383bb69a5deac025626ee87d55215977fd85a154efa</steg:hash_sha256>
-        <steg:hash_sha512>5f2a9ce618e191b1b3057155d4d40dd8df2dd62b8fd03feb332cd9b1342ab7d71485cf719099ce14b7d78a9f01059f17c699ab8acb23ae149e57f8a197eba854</steg:hash_sha512>
+        <steg:document_id>75843def6ffc1874ec7490349efe88d9</steg:document_id>
+        <steg:hash_sha256>4077f0445e2552145fc117f7ef144f097736ac6e1e0f01b3716d7be92b54eb94</steg:hash_sha256>
+        <steg:hash_sha512>181cb69f942f4d0a62f5453fcc142ce8cbf81a35e58ce6fbe94d6278e85b0f2ea4b3695f10e2434c79dbcdf0c4222e811e18ea39f5182bbea192122672130307</steg:hash_sha512>
     </rdf:Description>
   </rdf:RDF>
 </x:xmpmeta>
@@ -741,13 +741,13 @@ endobj
 >>
 stream
 {
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "hashes": {
-    "sha256": "b1cc8193fad6d89a73a91383bb69a5deac025626ee87d55215977fd85a154efa",
-    "sha512": "5f2a9ce618e191b1b3057155d4d40dd8df2dd62b8fd03feb332cd9b1342ab7d71485cf719099ce14b7d78a9f01059f17c699ab8acb23ae149e57f8a197eba854"
+    "sha256": "4077f0445e2552145fc117f7ef144f097736ac6e1e0f01b3716d7be92b54eb94",
+    "sha512": "181cb69f942f4d0a62f5453fcc142ce8cbf81a35e58ce6fbe94d6278e85b0f2ea4b3695f10e2434c79dbcdf0c4222e811e18ea39f5182bbea192122672130307"
   },
   "title": "Redacted Report Visual Proof Matrix",
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": true
 }
@@ -782,26 +782,26 @@ xref
 0000001512 00000 n 
 0000001543 00000 n 
 0000006049 00000 n 
-0000007580 00000 n 
-0000007724 00000 n 
-0000007831 00000 n 
-0000007939 00000 n 
-0000008047 00000 n 
-0000008155 00000 n 
-0000008263 00000 n 
-0000008376 00000 n 
-0000008489 00000 n 
-0000008595 00000 n 
-0000008701 00000 n 
-0000008785 00000 n 
-0000009629 00000 n 
-0000011266 00000 n 
+0000007596 00000 n 
+0000007740 00000 n 
+0000007847 00000 n 
+0000007955 00000 n 
+0000008063 00000 n 
+0000008171 00000 n 
+0000008279 00000 n 
+0000008392 00000 n 
+0000008505 00000 n 
+0000008611 00000 n 
+0000008717 00000 n 
+0000008801 00000 n 
+0000009645 00000 n 
+0000010819 00000 n 
 0000012456 00000 n 
-0000014070 00000 n 
-0000015670 00000 n 
-0000016218 00000 n 
-0000016307 00000 n 
-0000016351 00000 n 
+0000014178 00000 n 
+0000015778 00000 n 
+0000016326 00000 n 
+0000016415 00000 n 
+0000016459 00000 n 
 trailer
 <<
 /Size 28
@@ -809,5 +809,5 @@ trailer
 /Info 1 0 R
 >>
 startxref
-16419
+16527
 %%EOF

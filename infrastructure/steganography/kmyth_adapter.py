@@ -21,6 +21,7 @@ KMYTH_SUBMODULE_DIRNAME = "kmyth"
 KMYTH_SEAL = "kmyth-seal"
 KMYTH_UNSEAL = "kmyth-unseal"
 SUPPORTED_SEAL_ARTIFACTS = frozenset({"pdf", "hash_manifest"})
+KMYTH_PREFIX = Path.home() / ".kmyth-prefix"
 
 
 class KmythError(RuntimeError):
@@ -70,6 +71,13 @@ class KmythSealOptions:
     output_suffix: str = ".ski"
     overwrite: bool = True
     timeout_seconds: int = 120
+    tcti_config: str | None = None
+    """TCTI connection string for the TPM (e.g., ``mssim:host=127.0.0.1,port=2321``).
+
+    When set, the adapter passes ``TSS2_TCTI_DEFAULT`` to the kmyth-seal
+    subprocess so it connects to the specified TPM backend instead of
+    attempting hardware TCTI auto-discovery.
+    """
 
     @classmethod
     def from_config(cls, config: Any) -> "KmythSealOptions":
@@ -84,6 +92,7 @@ class KmythSealOptions:
             output_suffix=getattr(config, "kmyth_output_suffix", ".ski") or ".ski",
             overwrite=bool(getattr(config, "kmyth_overwrite", True)),
             timeout_seconds=int(getattr(config, "kmyth_timeout_seconds", 120) or 120),
+            tcti_config=getattr(config, "kmyth_tcti_config", None) or None,
         )
 
 
@@ -183,6 +192,7 @@ def seal_file_with_kmyth(
             capture_output=True,
             text=True,
             timeout=opts.timeout_seconds,
+            env=_build_subprocess_env(opts),
         )
     except subprocess.TimeoutExpired as exc:
         raise KmythCommandError(f"kmyth-seal timed out after {opts.timeout_seconds} seconds") from exc
@@ -244,6 +254,25 @@ def normalize_kmyth_seal_artifacts(value: Any) -> list[str]:
     return normalized or ["hash_manifest"]
 
 
+def _build_subprocess_env(options: KmythSealOptions) -> dict[str, str]:
+    """Build the environment for the kmyth-seal subprocess.
+
+    Inherits the current process environment and adds:
+    - ``TSS2_TCTI_DEFAULT``: if ``options.tcti_config`` is set
+    - ``DYLD_LIBRARY_PATH``: ensures TPM2-TSS and OpenSSL libs are found
+    """
+    env = dict(os.environ)
+    if options.tcti_config:
+        env["TSS2_TCTI_DEFAULT"] = options.tcti_config
+    # Ensure .so symlinks exist for dlopen
+    kmyth_lib = KMYTH_PREFIX / "lib"
+    if kmyth_lib.exists():
+        existing = env.get("DYLD_LIBRARY_PATH", "")
+        parts = [str(kmyth_lib)] + ([existing] if existing else [])
+        env["DYLD_LIBRARY_PATH"] = ":".join(parts)
+    return env
+
+
 def _optional_path(value: str | Path | None) -> Path | None:
     if value is None:
         return None
@@ -270,6 +299,7 @@ def _resolve_tool(name: str, *, binary_dir: Path | None, source_dir: Path) -> Pa
 
 
 __all__ = [
+    "KMYTH_PREFIX",
     "KMYTH_REPOSITORY_URL",
     "KMYTH_SEAL",
     "KMYTH_SUBMODULE_DIRNAME",

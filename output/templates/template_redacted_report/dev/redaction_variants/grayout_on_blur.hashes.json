@@ -1,13 +1,13 @@
 {
   "source_file": "grayout_on_blur.pdf",
-  "timestamp": "2026-07-09T15:06:45-07:00",
+  "timestamp": "2026-07-09T17:54:22-07:00",
   "hashes": {
-    "sha256": "b0d8900ec159fa65e878497178fd6b90a5f87193e6b522cbdb41737af98bac9f",
-    "sha512": "eeec3221d7521d56ec7a026213c0f69adc179a8980f35fc24cabc2847fd656efa23e5e74e9f9dbdddd763a3f7939e569afd955229c59af5f74630b8698b22a17"
+    "sha256": "647ac52ff3c22fb67f7ca542436691ae7b64490706dffd38cfb8e93507f08ac4",
+    "sha512": "dfac7bc12fcbcb59b190e9e68ea528939dccc45867593a0607fee5769988768217c6290be00d85464f2f7abd8e29b0a353c54b63f0fd543513f896f240902b8f"
   },
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "source_size_bytes": 2474,
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

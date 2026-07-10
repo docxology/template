@@ -1,13 +1,13 @@
 {
   "source_file": "blur_on_white.pdf",
-  "timestamp": "2026-07-09T15:06:45-07:00",
+  "timestamp": "2026-07-09T17:54:22-07:00",
   "hashes": {
-    "sha256": "24851ee8f6517980a67af5178ca6a2a272eb5142b7994592f4bf911172ef8b19",
-    "sha512": "02bc80e2a0c485fe8bf6a168ea1c2d6c837fe13d6ea1256ada40a1b65914c9661612079d6a206efe674820d1970a3d40429d4b6a553f2793022493d4eeafd225"
+    "sha256": "4964793c93f9fc41f5dbed67bf556c05bfeecd9547f37aef9ac944fd3bd855d4",
+    "sha512": "ea9a3ce3e738dfd822e88962327951f5d52e5f4a4874625eddf9e76bd139ca800d80e4d457c57f28d17f9452d54463857f9ade69631027cd50b727df892afd6e"
   },
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "source_size_bytes": 2179,
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

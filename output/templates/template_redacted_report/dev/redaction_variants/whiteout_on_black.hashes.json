@@ -1,13 +1,13 @@
 {
   "source_file": "whiteout_on_black.pdf",
-  "timestamp": "2026-07-09T15:06:45-07:00",
+  "timestamp": "2026-07-09T17:54:22-07:00",
   "hashes": {
-    "sha256": "0982d9a83737a042384c5a2c04860e8992f9644e401098636ccbfc17862e3c0d",
-    "sha512": "1a0aa31d528c9e64bc3aedf1a9ba42d0c7530af978e1c99e1cfc980daf3f4a2c9f79eeb9ad5c6655b42b9f8eeddcfd7d91bcecca576b2783b36d64527e1969fe"
+    "sha256": "9410fc68a17bfe0fa5106c31a30bc748b071956e023484d51d9f434a72e87770",
+    "sha512": "e1207e776baa094549bb42a20b7adc73e26eb69318876be6ef567425ba9af6f333418c5dbf7f0b723477ecb2e21e192ccd7fcd86f7e8c4162d105d046a6cabd1"
   },
-  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "document_id": "75843def6ffc1874ec7490349efe88d9",
   "source_size_bytes": 2089,
-  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit": "4e85a4149398e3ae06bce4d6959c66610a4efe1e",
   "git_commit_available": true,
   "steganography_applied": "true"
 }
