@@ -17,6 +17,27 @@ from simulation.pymdp_config import (
 from simulation.pymdp_runtime import write_runtime_diagnostics
 from simulation.si_loop import SIRunResult, run_si_tmaze
 
+# WHY: reproducibility_replay hash-compares these artifacts against an in-test
+# rebuild on every CI lane. Raw exp/log-derived floats differ at ULP level
+# between libm/SIMD builds (observed: x86_64 numpy 2.2.6 vs every other
+# supported lane), so unrounded payloads make the byte-hash contract
+# platform-dependent. 10 decimals is ~1e5 coarser than the observed drift and
+# far finer than any downstream claim tolerance (>=1e-9).
+_FLOAT_DECIMALS = 10
+
+
+def _round_floats(value: Any, *, ndigits: int = _FLOAT_DECIMALS) -> Any:
+    """Recursively round floats so artifact bytes are platform-invariant."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, float):
+        return round(value, ndigits)
+    if isinstance(value, dict):
+        return {key: _round_floats(item, ndigits=ndigits) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_round_floats(item, ndigits=ndigits) for item in value]
+    return value
+
 
 def write_si_artifacts(
     project_root: Path,
@@ -214,6 +235,7 @@ def write_policy_comparison(
             ),
         },
     }
+    payload = _round_floats(payload)
     out = root / "output" / "data" / "si_policy_comparison.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -265,6 +287,7 @@ def write_policy_posterior_grid(
         "all_available_posteriors_normalized": bool(available) and all(row["normalized"] for row in available),
         "all_unavailable_rows_explained": all(bool(row["fallback_reason"]) for row in unavailable),
     }
+    grid = _round_floats(grid)
     out = root / "output" / "data" / "pymdp_policy_posterior_grid.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(grid, indent=2, sort_keys=True) + "\n", encoding="utf-8")

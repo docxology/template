@@ -62,11 +62,11 @@ class ExemplarSnapshot:
 # after re-running the per-project gates; the rows are keyed by public-scope name
 # so the consistency test gates membership, not the numbers.
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    # template_active_inference coverage is preserved from the prior measurement
-    # (2026-06-05): its project-local .venv pins a numpy/Python ABI that cannot be
-    # exercised from the repo-root interpreter, so the gate is re-derived in its
-    # own environment, not here. The collected-test count is from --collect-only.
-    ExemplarSnapshot("template_active_inference", 382, "91.35 %"),
+    # template_active_inference is measured from its own project-local gate run
+    # (last re-derived 2026-07-10): its project-local .venv pins a numpy/Python
+    # ABI that cannot be exercised from the repo-root interpreter, so the gate is
+    # re-derived in its own environment, not here.
+    ExemplarSnapshot("template_active_inference", 498, "91.02 %"),
     ExemplarSnapshot("template_autopoiesis", 493, "96.41 %"),
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
@@ -264,7 +264,7 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (latest recorded measurements; table membership last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (latest recorded measurements; table membership last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` measured from its 2026-07-10 project-local gate run — see note below):
 
 {_exemplar_table()}
 

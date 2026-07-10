@@ -56,6 +56,65 @@ def test_policy_comparison_artifact_records_modes_horizons_and_seeds(project_roo
     assert payload["summary"]["run_count"] == 4
 
 
+def _assert_floats_rounded(value: object, where: str) -> None:
+    if isinstance(value, bool):
+        return
+    if isinstance(value, float):
+        assert round(value, 10) == value, f"{where} carries over-precise float {value!r}"
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            _assert_floats_rounded(item, f"{where}.{key}")
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            _assert_floats_rounded(item, f"{where}[{index}]")
+
+
+def test_si_policy_artifacts_bound_float_precision(project_root: Path, tmp_path: Path) -> None:
+    """Replay-hash-gated SI artifacts must not embed platform-varying float tails.
+
+    reproducibility_replay byte-hashes si_policy_comparison.json against an
+    in-test rebuild on every CI lane; raw exp/log-derived floats drift at ULP
+    level between libm/SIMD builds, so the writers round to a fixed grain.
+    """
+    from simulation.si_artifacts import _round_floats, write_policy_posterior_grid
+
+    assert _round_floats({"x": [0.12345678901234567]}) == {"x": [round(0.12345678901234567, 10)]}
+    assert _round_floats(True) is True
+    assert _round_floats([1, "a", None]) == [1, "a", None]
+
+    for rel in (
+        "output/data/si_policy_comparison.json",
+        "output/data/pymdp_policy_posterior_grid.json",
+    ):
+        payload = json.loads((project_root / rel).read_text(encoding="utf-8"))
+        _assert_floats_rounded(payload, rel)
+
+    # The grid writer itself must bound precision for fresh, unrounded payloads,
+    # not merely leave already-rounded committed artifacts untouched.
+    over_precise_comparison = {
+        "runs": [
+            {
+                "mode": "policy_inference",
+                "horizon": 2,
+                "seed": 0,
+                "policy_posterior_steps": [
+                    {
+                        "step": 0,
+                        "posterior_available": True,
+                        "posterior_source": "expected_utility_fallback",
+                        "q_pi": [0.12345678901234567, 0.87654321098765433],
+                        "q_pi_sum": 1.0000000000000002,
+                        "q_pi_entropy": 0.37677016125643675,
+                        "fallback_reason": None,
+                    }
+                ],
+            }
+        ]
+    }
+    fresh = write_policy_posterior_grid(tmp_path, comparison=over_precise_comparison)
+    _assert_floats_rounded(json.loads(fresh.read_text(encoding="utf-8")), "fresh policy posterior grid")
+
+
 def test_graph_world_extension_writes_real_summary_and_trace(project_root: Path) -> None:
     from simulation.graph_world import write_graph_world_artifacts
 

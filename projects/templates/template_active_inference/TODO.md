@@ -8,7 +8,7 @@ registries rather than in this file.
 
 ## Current validation evidence
 
-Current evidence on 2026-06-23:
+Current evidence on 2026-07-10:
 
 ```bash
 uv run python scripts/validate_outputs.py
@@ -19,14 +19,17 @@ uv run pytest tests/test_figures.py tests/test_figure_style.py tests/test_semant
 COVERAGE_FILE=/tmp/template_ai_publication.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q
 ```
 
-The publication-readiness pass regenerated animation, integration-audit,
-sheaf-track, manuscript-variable, scholarship, figure, and method-inventory
-artifacts before validation. `validate_outputs.py` is green for the current
+The 2026-07-10 recertification pass regenerated the simulation, validation-spine,
+toy-sweep, formal-interop, integration-audit, sheaf-track, manuscript-variable,
+and method-inventory artifacts before validation, and bounded SI policy-artifact
+float precision so replay hashes are platform-invariant.
+`uv run pytest tests/ --cov=src --cov-fail-under=90` passed 498 tests with
+91.02% coverage in 792.73s (0:13:12), run with `--durations=20` and `-q`. `validate_outputs.py` is green for the current
 artifact tree, including the 23 registered figures, GIF evidence, auxiliary
 visualization classification, 21 connected scholarship rows, and toy-only
-scope-boundary checks. The full suite runs via
-`uv run pytest projects/templates/template_active_inference/tests/ --cov=projects/templates/template_active_inference/src --cov-fail-under=90`;
-live test counts, coverage, and timings are read from
+scope-boundary checks. The full suite runs from this project root via
+`uv run pytest tests/ --cov=src --cov-fail-under=90`; live test counts,
+coverage, and timings are read from
 [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here.
 
 ## Promotion rule

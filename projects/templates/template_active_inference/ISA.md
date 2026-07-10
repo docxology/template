@@ -6,7 +6,7 @@ phase: archived
 progress: "historical ISA; live contract implemented elsewhere"
 mode: algorithm
 started: 2026-05-28
-updated: 2026-06-08
+updated: 2026-07-10
 ---
 
 # ISA — Sheaf Paradigm Integrity (template_active_inference)
@@ -191,10 +191,21 @@ claim fully earned.
   subagent Write is denied here). Authoring is single-author by necessity (template repo blocks
   subagent Edit/Write) — show-your-math: a producer agent would be denied on disk, so producing
   code via Forge would waste a fan-out; Forge's value here is the cross-vendor audit.
+- 2026-07-10: Recertification pass after repo-wide docstring commits (9a4225e5, 9c5eb52a) and the
+  TODO forward-only rewrite (834e0b49) left method-inventory/doc-evidence stale and CI py3.10
+  red. Root cause of the py3.10-only replay failures: `si_policy_comparison.json` embedded raw
+  exp/log-derived floats; x86_64 numpy 2.2.6 rebuilds drift at ULP level from every other
+  supported lane, so the byte-hash replay contract was platform-dependent. Fixed at the artifact
+  write boundary (`_round_floats`, 10 dp) in `src/simulation/si_artifacts.py` — not by relaxing
+  any gate — then reran the full regeneration order and refreshed the TODO evidence line.
 
 ## Changelog
 
-(appended at LEARN)
+- 2026-07-10: conjecture — regeneration alone would recertify; refuted-by — CI py3.10 rebuilds
+  diverge from any committed bytes regardless of generation host; learned — hash-gated artifacts
+  must quantize transcendental-derived floats at the write boundary; criterion-now —
+  `test_si_policy_artifacts_bound_float_precision` binds the committed artifacts to ≤10-decimal
+  floats and fails on any unrounded regeneration.
 
 ## Verification
 

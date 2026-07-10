@@ -40,10 +40,10 @@
       "posterior_available": true,
       "posterior_source": "expected_utility_fallback",
       "q_pi": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
-      "q_pi_entropy": 0.552884661279386,
+      "q_pi_entropy": 0.5528846613,
       "q_pi_sum": 1.0,
       "run_index": 1,
       "seed": 0,
@@ -57,10 +57,10 @@
       "posterior_available": true,
       "posterior_source": "expected_utility_fallback",
       "q_pi": [
-        0.5196750308559565,
-        0.48032496914404355
+        0.5196750309,
+        0.4803249691
       ],
-      "q_pi_entropy": 0.6923727669554519,
+      "q_pi_entropy": 0.692372767,
       "q_pi_sum": 1.0,
       "run_index": 1,
       "seed": 0,
@@ -116,10 +116,10 @@
       "posterior_available": true,
       "posterior_source": "expected_utility_fallback",
       "q_pi": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
-      "q_pi_entropy": 0.552884661279386,
+      "q_pi_entropy": 0.5528846613,
       "q_pi_sum": 1.0,
       "run_index": 3,
       "seed": 0,
@@ -133,10 +133,10 @@
       "posterior_available": true,
       "posterior_source": "expected_utility_fallback",
       "q_pi": [
-        0.5196750308559565,
-        0.48032496914404355
+        0.5196750309,
+        0.4803249691
       ],
-      "q_pi_entropy": 0.6923727669554519,
+      "q_pi_entropy": 0.692372767,
       "q_pi_sum": 1.0,
       "run_index": 3,
       "seed": 0,
@@ -150,10 +150,10 @@
       "posterior_available": true,
       "posterior_source": "expected_utility_fallback",
       "q_pi": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
-      "q_pi_entropy": 0.552884661279386,
+      "q_pi_entropy": 0.5528846613,
       "q_pi_sum": 1.0,
       "run_index": 3,
       "seed": 0,

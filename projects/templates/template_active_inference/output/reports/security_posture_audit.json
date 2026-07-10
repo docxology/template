@@ -263,7 +263,7 @@
   "schema": "template_active_inference.security_posture_audit.v1",
   "secret_finding_count": 0,
   "secret_scan": {
-    "file_count": 396,
+    "file_count": 413,
     "findings": [],
     "pattern_count": 4,
     "scan_root_count": 7
