@@ -1,0 +1,23 @@
+conditions:
+  - name: unregistered_analysis
+    role: reference
+    description: Analysis run without a locked plan.
+  - name: registered_analysis
+    role: proposed
+    description: Analysis run against a frozen plan.
+  - name: posthoc_outcome_added
+    role: variant
+    description: Negative-control analysis with undeclared outcome.
+metrics:
+  primary:
+    name: registration_integrity_score
+    direction: maximize
+protocol: "Freeze the plan, run analysis comparison, then classify deviations before claims are written."
+expected_figures:
+  - fig:registration_flow
+expected_tables:
+  - tbl:deviation_ledger
+baselines:
+  - unregistered_analysis
+ablations:
+  - posthoc_outcome_added

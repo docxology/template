@@ -195,6 +195,7 @@ ever git-tracked/pushed:
 - [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) — deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives)
 - [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
+- [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) — dataset descriptor/data-paper contract (schema, file inventory, provenance, quality checks, license boundary)
 - [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) — exploratory data analysis exemplar (tabular load, missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures)
 - [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection)
 - [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) — generic literature meta-analysis template (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
@@ -204,6 +205,8 @@ ever git-tracked/pushed:
 - [`projects/templates/template_pitch_deck/`](projects/templates/template_pitch_deck/) — reproducible short/medium/long PDF+PPTX pitch decks (token-validated, cliché-linted, diligence-cited; new `infrastructure/rendering/{slide_deck,pptx_deck,mermaid_figure}.py` primitives; flagship deck pitches `template_template`)
 - [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) — meta-project exemplar demonstrating integration of the `fonds/`, `rules/`, and `tools/` top-level resource-pool directories
 - [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
+- [`projects/templates/template_redacted_report/`](projects/templates/template_redacted_report/) — formal redaction and public release-review report (classification ceiling, authority, ledger, mosaic-risk checks)
+- [`projects/templates/template_registered_report/`](projects/templates/template_registered_report/) — preregistered/registered-report workflow (hypotheses, outcomes, analysis plan, deviations)
 - [`projects/templates/template_search_project/`](projects/templates/template_search_project/) — literature-search → BibTeX → LLM-synthesis template
 - [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
 - [`projects/templates/template_storybook/`](projects/templates/template_storybook/) — full-page illustrated storybook PDF template

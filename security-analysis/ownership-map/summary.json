@@ -1,0 +1,4045 @@
+{
+  "generated_at": "2026-07-09T22:46:04.657727+00:00",
+  "repo": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template",
+  "parameters": {
+    "since": null,
+    "until": null,
+    "half_life_days": 180.0,
+    "bus_factor_threshold": 1,
+    "stale_days": 365,
+    "owner_threshold": 0.5,
+    "sensitive_config": "security-analysis/sensitive-paths.csv",
+    "identity": "author",
+    "date_field": "author",
+    "include_merges": false,
+    "cochange_enabled": true,
+    "cochange_max_files": 120,
+    "cochange_min_count": 2,
+    "cochange_min_jaccard": 0.05,
+    "cochange_default_excludes": true,
+    "cochange_excludes": [
+      "**/Cargo.lock",
+      "**/Cargo.toml",
+      "**/package-lock.json",
+      "**/yarn.lock",
+      "**/pnpm-lock.yaml",
+      "**/go.sum",
+      "**/go.mod",
+      "**/Gemfile.lock",
+      "**/Pipfile.lock",
+      "**/poetry.lock",
+      "**/composer.lock",
+      "**/.github/**",
+      "**/.gitignore",
+      "**/.gitattributes",
+      "**/.gitmodules",
+      "**/.editorconfig",
+      "**/.vscode/**",
+      "**/.idea/**"
+    ],
+    "author_default_excludes": true,
+    "author_exclude_regexes": [
+      "dependabot"
+    ],
+    "community_top_owners": 8
+  },
+  "orphaned_sensitive_code": [],
+  "hidden_owners": [
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of orchestration code",
+      "category": "orchestration",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of rendering_subprocess code",
+      "category": "rendering_subprocess",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of external_api code",
+      "category": "external_api",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of dependency_policy code",
+      "category": "dependency_policy",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of ci_cd code",
+      "category": "ci_cd",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of publishing code",
+      "category": "publishing",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of security_policy code",
+      "category": "security_policy",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of security_gate code",
+      "category": "security_gate",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of credentials code",
+      "category": "credentials",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of entrypoint code",
+      "category": "entrypoint",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of confidentiality_guard code",
+      "category": "confidentiality_guard",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of artifact_guard code",
+      "category": "artifact_guard",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of provenance_crypto code",
+      "category": "provenance_crypto",
+      "share": 1.0
+    },
+    {
+      "person": "danielarifriedman@gmail.com",
+      "name": "Daniel Ari Friedman",
+      "controls": "100% of ownership_policy code",
+      "category": "ownership_policy",
+      "share": 1.0
+    }
+  ],
+  "bus_factor_hotspots": [
+    {
+      "path": "infrastructure/orchestration/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-08T05:00:30-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/web_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-08T05:00:30-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/arxiv.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-07T07:42:39-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "pyproject.toml",
+      "bus_factor": 1,
+      "last_touch": "2026-07-07T07:42:39-07:00",
+      "sensitivity_tags": [
+        "dependency_policy"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "uv.lock",
+      "bus_factor": 1,
+      "last_touch": "2026-07-07T07:42:39-07:00",
+      "sensitivity_tags": [
+        "dependency_policy"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-07T04:41:11-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T17:36:24-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/publish_project_release.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T14:21:43-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/SECURITY.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd",
+        "security_policy"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/workflows/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/workflows/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".pre-commit-config.yaml",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "security_gate"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/core/credentials.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "credentials"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/compositions/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/menu.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/executable_bundle.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/release_workflow.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/repro_bundle.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/dockerfile_gen.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "run.sh",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "entrypoint"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/upload_template_project.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "secure_run.sh",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:35:15-07:00",
+      "sensitivity_tags": [
+        "entrypoint"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:23:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:23:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/base.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:23:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:23:05-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/runner/archive_publication.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-06T06:23:05-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/http.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:09:49-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/biorxiv.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/crossref.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/europepmc.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/openalex.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/pdb.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/semantic_scholar.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/impl/uniprot.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/registry.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/connectors/types.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/audit/check_tracked_all.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "confidentiality_guard"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/audit/check_tracked_generated_artifacts.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T22:03:05-07:00",
+      "sensitivity_tags": [
+        "artifact_guard"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/project/public_scope.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T20:30:46-07:00",
+      "sensitivity_tags": [
+        "confidentiality_guard"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/link_sync.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T18:31:31-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/project/git_guards.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T17:04:49-07:00",
+      "sensitivity_tags": [
+        "confidentiality_guard"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/core/sidecar_linking.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T16:45:27-07:00",
+      "sensitivity_tags": [
+        "confidentiality_guard"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/metadata_package.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T16:45:27-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/metadata_stage.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T16:45:27-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/THREAT_MODEL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-05T14:55:36-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/status_report.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T11:32:06-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/pip-audit-ignore.txt",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T09:13:20-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/ebook_stage.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T09:13:20-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/credential_check.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/export_bundle.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/platforms.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/registry.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_combined_exports.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/docx_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/ebook_bundle.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/epub_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/mobi_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/export_for_publishing.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-03T08:41:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/secure_run.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/_adapter_http.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival/providers.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/arxiv/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/arxiv/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/arxiv/submission.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/huggingface/adapter.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/osf/adapter.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_title_page.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_title_page_config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_title_page_images.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_title_page_latex.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_title_page_publishing.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T16:37:51-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "bandit.yaml",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T15:01:22-07:00",
+      "sensitivity_tags": [
+        "security_gate"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/upload_runner.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T15:01:22-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/upload_gold_refinement.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T15:01:22-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/transmission_bookends.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-02T07:24:32-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/upload.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-01T10:49:02-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi_release.py",
+      "bus_factor": 1,
+      "last_touch": "2026-07-01T10:49:02-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-07-01T10:49:02-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-30T05:56:14-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-30T05:56:14-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_manuscript_source.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-30T05:29:43-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pipeline_summary.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-30T05:29:43-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-28T19:59:39-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T21:03:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T21:03:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/http.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T21:03:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T21:03:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T18:25:16-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival/orchestrate.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/huggingface/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/huggingface/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/huggingface/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/osf/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/osf/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/osf/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/build.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/cloudflare_pages.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/github_pages.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/netlify.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/registry.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-27T15:28:51-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/api.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/github/release.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/http.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/http_constants.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/adapter.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/pypi/verify.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/static_site/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/client.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T21:16:28-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_pandoc.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T08:41:55-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/ide_style.css",
+      "bus_factor": 1,
+      "last_touch": "2026-06-26T06:34:45-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/cli/main.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:56:06-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/metadata_from_config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-22T10:50:42-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "bus_factor": 1,
+      "last_touch": "2026-06-20T15:07:32-07:00",
+      "sensitivity_tags": [
+        "ci_cd",
+        "ownership_policy"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/chrome.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:20:46-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/actions/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:14:23-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/actions/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:14:23-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/actions/setup-python-env/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:14:23-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/actions/setup-python-env/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:14:23-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/actions/setup-python-env/action.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:14:23-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_mermaid.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-17T11:14:23-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_section_titles.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-15T22:02:28-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/latex_utils.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T09:39:43-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T08:45:54-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T08:45:54-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/project_context.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T08:45:54-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/pipeline.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:28:03-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/render_all_cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:28:03-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/cli/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/templates/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-12T05:00:36-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T18:31:12-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T16:04:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/client.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T16:04:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/gemini.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T16:04:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/openai.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T16:04:15-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_latex_pipeline.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:50:50-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:43:08-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/References/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:25:41-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/References/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:25:41-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/References/function-signatures.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:25:41-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:25:41-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:19:17-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/core.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:19:17-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/poster_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T13:19:17-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/arxiv_backend.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T11:44:41-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/test_pypi.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T11:10:32-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/latex_texttt.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/artifacts.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/prompting.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/deep_research/retry.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/core.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/kmyth",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/kmyth_adapter.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-11T08:32:38-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/saving.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-08T16:34:38-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/pipeline_runner.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-08T16:34:38-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/stage_logger.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-08T16:34:38-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/latex_package_validator.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-08T16:34:38-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/pdf_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-06T19:28:50-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/crossref_backend.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-06T14:38:22-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/metadata_export_cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-05T13:58:37-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-06-05T13:46:26-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/workflows/stale.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-06-05T13:46:26-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/release_workflow_zenodo.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:25:53-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:25:53-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:25:53-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/publish.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:25:53-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_preamble.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:25:53-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_latex_helpers.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:25:53-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/workflows/dependabot-automerge.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-06-03T10:24:49-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/fulltext.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T20:05:06-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/http_client.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T20:05:06-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/cli/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/CAPABILITIES.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/answer/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/answer/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/answer/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/answer/interface.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/client.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/contents/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/contents/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/contents/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/contents/interface.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/errors.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/find_similar/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/find_similar/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/find_similar/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/find_similar/interface.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/search/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/search/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/search/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/exa/search/interface.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-06-02T19:58:09-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/documentation.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-30T17:10:36-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/discovery.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-30T17:10:36-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_latex_log_parse.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_prevalidate.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/backends.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/backends/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/backends/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/backends/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/base.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/local_backend.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/paperclip_backend.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/paperclip_text_parser.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-29T14:17:31-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/abstract_plaintext.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-28T16:42:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/transmission_barcode_strip.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-28T16:42:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/transmission_figure.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-28T16:42:44-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_transmission.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T16:48:47-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/config_doi.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T16:17:07-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_bibliography.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T14:54:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_latex.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T14:54:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_markdown.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T14:54:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_combined_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T14:54:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/arxiv/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/deposit_filename.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/github/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/github/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/github/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/metadata_export.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/publication_ledger.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/release_pairing.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/test_pypi.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/transmission_page_check.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/zenodo_urls.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/manuscript_discovery.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/manuscript_injection.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-27T11:38:21-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "scripts/publish/verify_install.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-25T07:49:15-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/server.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-24T19:42:22-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/slides_renderer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-24T19:42:22-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_stream_helpers.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-24T11:04:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/composer.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-24T11:04:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/preflight.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-24T11:04:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/barcodes.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-24T11:04:29-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/encryption.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-22T04:01:09-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/archival_cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-21T17:56:16-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/manifest.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-21T17:56:16-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_prompt_availability.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_stream_impl.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_text_utils.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/client.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/context.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/log_preview.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/response_saver.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/sanitization.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/_fragment_builders.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/compositions/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/loader.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/templates/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/formatting.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/generation.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/generator.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/io.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/metrics.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/ollama_setup.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/pipeline_runner.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/quality.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review/review_analysis.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/base.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/helpers.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/literature_analysis.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/manuscript.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/manuscript_reviews.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/manuscript_suggestions.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/manuscript_translation.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/paper_summarization.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates/research.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/heartbeat.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/utils/ollama.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/core.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/detection.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/format.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/repetition.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/similarity.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation/structure.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/__main__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/_metadata_extraction.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/_metadata_reporting.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/announcement.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/checklist.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/citations.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/metadata.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/package.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/publish_cli.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/readiness.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_figure_paths.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_latex_bibliography.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_latex_validation.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_markdown_combine.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_math_delimiters.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_pandoc_engine.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_preflight.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_tex_transforms.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_pdf_unicode_remap.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/latex_discovery.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/latex_log_quality.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/latex_validation.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/cache.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/client.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/models.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/barcode_generators.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/barcode_payload.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/hashing.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/metadata.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/steganography/overlays.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-15T21:16:29-07:00",
+      "sensitivity_tags": [
+        "provenance_crypto"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-05-07T14:41:39-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_connection.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:43:07-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_structured_queries.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:43:07-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/config.py",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:43:07-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:35:25-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:35:25-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/orchestration/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:35:25-07:00",
+      "sensitivity_tags": [
+        "orchestration"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/AGENTS.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:35:25-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/search/literature/SKILL.md",
+      "bus_factor": 1,
+      "last_touch": "2026-05-03T15:35:25-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/_beamer_allowframebreaks.lua",
+      "bus_factor": 1,
+      "last_touch": "2026-04-24T12:12:28-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "bus_factor": 1,
+      "last_touch": "2026-04-13T06:45:03-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-04-03T08:44:33-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/cli/README.md",
+      "bus_factor": 1,
+      "last_touch": "2026-04-03T08:44:33-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/cli/__init__.py",
+      "bus_factor": 1,
+      "last_touch": "2026-04-03T08:44:33-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_client_streaming.py",
+      "bus_factor": 1,
+      "last_touch": "2026-03-27T23:47:48-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/rendering/convert_latex_images.lua",
+      "bus_factor": 1,
+      "last_touch": "2026-03-20T15:15:34-07:00",
+      "sensitivity_tags": [
+        "rendering_subprocess"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core/_streaming_shortcuts.py",
+      "bus_factor": 1,
+      "last_touch": "2026-03-15T02:09:07-07:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "bus_factor": 1,
+      "last_touch": "2026-03-10T17:07:49-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/publishing/core.py",
+      "bus_factor": 1,
+      "last_touch": "2026-03-06T17:37:59-08:00",
+      "sensitivity_tags": [
+        "publishing"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/compositions/retry_prompts.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/content_requirements.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/format_requirements.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/section_structures.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/system_prompts.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/token_budget_awareness.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/fragments/validation_hints.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/templates/manuscript_reviews.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/prompts/templates/paper_summarization.json",
+      "bus_factor": 1,
+      "last_touch": "2025-12-16T07:03:47-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/cli.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/config.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/context.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/core.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/ollama_utils.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review_generator.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review_io.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/review_metrics.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates_base.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates_helpers.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates_manuscript.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/templates_research.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation_format.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation_repetition.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": "infrastructure/llm/validation_structure.py",
+      "bus_factor": 1,
+      "last_touch": "2025-12-12T08:36:23-08:00",
+      "sensitivity_tags": [
+        "external_api"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/TOPICS",
+      "bus_factor": 1,
+      "last_touch": "2025-10-13T17:19:42-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "bus_factor": 1,
+      "last_touch": "2025-10-13T17:19:42-07:00",
+      "sensitivity_tags": [
+        "ci_cd"
+      ],
+      "top_owner": "danielarifriedman@gmail.com"
+    }
+  ],
+  "stats": {
+    "commits": 1008,
+    "commits_seen": 1012,
+    "commits_excluded_identities": 3,
+    "commits_excluded_merges": 0,
+    "edges": 74582,
+    "people": 3,
+    "files": 22381,
+    "cochange_pairs_total": 216437,
+    "cochange_edges": 35192,
+    "cochange_commits_used": 690,
+    "cochange_commits_skipped": 152,
+    "cochange_commits_filtered": 12,
+    "cochange_files_excluded": 148
+  }
+}

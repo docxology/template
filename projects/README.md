@@ -9,7 +9,7 @@ shared `infrastructure/` modules.
 
 ## Run surface
 
-All nine permanent exemplars under `projects/templates/` are **tested, analyzed,
+All public canonical exemplars under `projects/templates/` are **tested, analyzed,
 PDF-rendered, and CI-gated only through the public
 [docxology/template](https://github.com/docxology/template) monorepo**. Clone
 that repository, run `uv sync` at the repository root, then drive any exemplar
@@ -20,13 +20,16 @@ and render checkout.
 
 ## Active Projects
 
-Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is:
+Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is mirrored in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md):
 
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
+- [`templates/template_data_descriptor/`](templates/template_data_descriptor/) — dataset descriptor/data-paper exemplar (schema, inventory, provenance, quality checks, license boundary)
 - [`templates/template_gold_refinement/`](templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → nine-nines, mega-madlib token injection)
 - [`templates/template_literature_meta_analysis/`](templates/template_literature_meta_analysis/) — generic literature meta-analysis (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
 - [`templates/template_methods_paper/`](templates/template_methods_paper/) — controlled-method specification DSL with staged validation and deterministic compilation
 - [`templates/template_prose_project/`](templates/template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
+- [`templates/template_redacted_report/`](templates/template_redacted_report/) — formal redaction and release-review exemplar (classification ceiling, authority, ledger, mosaic-risk checks)
+- [`templates/template_registered_report/`](templates/template_registered_report/) — registered-report/preregistration exemplar (hypotheses, outcomes, analysis plan, deviations)
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
 - [`templates/template_active_inference/`](templates/template_active_inference/) — Active Inference multi-track exemplar (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
@@ -62,6 +65,7 @@ projects.
 | Exemplar | Purpose | Algorithm? | Mutates `references.bib`? | Embeds figures? | Tests | Coverage |
 |---|---|---|---|---|---|---|
 | [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
+| [`template_data_descriptor`](templates/template_data_descriptor/) | Dataset descriptor/data-paper contract | yes (`src/data_descriptor/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_gold_refinement`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition | yes (`src/refinery.py`, `src/composition.py`) | no (curated) | no (planned) | see canonical facts | see canonical facts |
 | [`template_literature_meta_analysis`](templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics) | yes (`src/retrieval.py`) | no (curated) | yes (bibliometric figures) | see canonical facts | see canonical facts |
 | [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
@@ -71,6 +75,8 @@ projects.
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
 | [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
 | [`template_methods_paper`](templates/template_methods_paper/) | Controlled-method specification DSL with staged validation | yes (`src/methods_dsl/*`) | no (curated) | step-count figure | see canonical facts | see canonical facts |
+| [`template_redacted_report`](templates/template_redacted_report/) | Formal redaction and release-review report | yes (`src/redacted_report/*`) | no (curated) | no | see canonical facts | see canonical facts |
+| [`template_registered_report`](templates/template_registered_report/) | Registered report / preregistration workflow | yes (`src/registered_report/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
 | [`template_pitch_deck`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold | see canonical facts | see canonical facts | see canonical facts | see canonical facts |
 | [`template_search_project`](templates/template_search_project/) | Literature-search pipeline with auto-populated BibTeX | no (orchestration over search/reference/LLM infrastructure) | yes (`references.bib` + `references_deep.bib`) | 3 figures | see canonical facts | see canonical facts |
@@ -85,10 +91,11 @@ The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
 [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md).
 The permanent exemplars cover Active Inference, computational research,
-prose-review, deterministic AutoResearch, AutoScientists coordination tests,
-conditional token injection, newspaper layout, SIA harnesses, meta-template
-introspection, modular fillable textbooks, and literature discovery with
-auto-populated BibTeX or optional LLM synthesis.
+dataset descriptor/data-paper release, prose-review, registered reports,
+formal redaction/release review, deterministic AutoResearch, AutoScientists
+coordination tests, conditional token injection, newspaper layout, SIA
+harnesses, meta-template introspection, modular fillable textbooks, and
+literature discovery with auto-populated BibTeX or optional LLM synthesis.
 **Important:** run each
 project's `tests/` in **its own** `pytest` invocation — pointing pytest at
 `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because
@@ -183,6 +190,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
 | `templates/template_autopoiesis/` | Combinatoric-grammar project-generation exemplar | see canonical facts | see canonical facts |
 | `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
+| `templates/template_data_descriptor/` | Dataset descriptor/data-paper exemplar | see canonical facts | see canonical facts |
 | `templates/template_gold_refinement/` | Gold-refining analogy exemplar (ore → nine-nines, mega-madlib token injection) | see canonical facts | see canonical facts |
 | `templates/template_literature_meta_analysis/` | Generic literature meta-analysis exemplar (multi-engine retrieval, de-dup, full-text, embeddings) | see canonical facts | see canonical facts |
 | `templates/template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
@@ -194,6 +202,8 @@ between lifecycle folders instead of committing it here.
 | `templates/template_newspaper/` | Newspaper layout/typography exemplar | see canonical facts | see canonical facts |
 | [`template_pitch_deck`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold | see canonical facts | see canonical facts | see canonical facts | see canonical facts |
 | `templates/template_pools_rules_tools/` | Fonds/rules/tools resource-pool integration exemplar | see canonical facts | see canonical facts |
+| `templates/template_redacted_report/` | Redacted release-review exemplar | see canonical facts | see canonical facts |
+| `templates/template_registered_report/` | Registered report / preregistration exemplar | see canonical facts | see canonical facts |
 | `templates/template_search_project/` | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | `templates/template_sia/` | SIA self-improvement harness exemplar | see canonical facts | see canonical facts |
 | `templates/template_storybook/` | Full-page illustrated storybook PDF exemplar | see canonical facts | see canonical facts |
@@ -959,6 +969,7 @@ infrastructure compliance:
 - **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoscientists**: AutoScientists coordination exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_data_descriptor**: Dataset descriptor/data-paper exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_eda_notebook**: EDA notebook exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_gold_refinement**: Metallurgical gold-refining analogy exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_literature_meta_analysis**: Generic literature meta-analysis exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
@@ -968,6 +979,8 @@ infrastructure compliance:
 - **template_pitch_deck**: Pitch deck exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_pools_rules_tools**: Fonds/rules/tools resource-pool integration exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_redacted_report**: Redacted release-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_registered_report**: Registered report / preregistration exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_search_project**: Literature-search exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_sia**: SIA harness exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_storybook**: Full-page illustrated storybook exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

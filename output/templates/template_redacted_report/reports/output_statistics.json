@@ -1,0 +1,252 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.09",
+      "total_size_bytes": 91661,
+      "largest_files": [
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.04",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "template_redacted_report_combined.pdf",
+          "size_mb": "0.03",
+          "path": "pdf/template_redacted_report_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.01",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".pdf": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 6,
+      "size_mb": "0.03",
+      "total_size_bytes": 26732,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.01",
+          "path": "web/index.html"
+        },
+        {
+          "name": "manuscript__01_methods.html",
+          "size_mb": "0.00",
+          "path": "web/manuscript__01_methods.html"
+        },
+        {
+          "name": "manuscript__02_results.html",
+          "size_mb": "0.00",
+          "path": "web/manuscript__02_results.html"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".ico": 1,
+        ".html": 4
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 24,
+      "size_mb": "0.23",
+      "total_size_bytes": 239648,
+      "largest_files": [
+        {
+          "name": "01_methods_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/01_methods_slides.log"
+        },
+        {
+          "name": "02_results_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/02_results_slides.log"
+        },
+        {
+          "name": "00_abstract_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/00_abstract_slides.log"
+        }
+      ],
+      "extensions": {
+        ".tex": 4,
+        ".toc": 3,
+        ".vrb": 2,
+        ".pdf": 3,
+        ".log": 3,
+        ".snm": 3,
+        ".aux": 3,
+        ".nav": 3
+      }
+    },
+    "figures": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "data": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 8,
+      "size_mb": "0.05",
+      "total_size_bytes": 54340,
+      "largest_files": [
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.04",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "output_statistics.json",
+          "size_mb": "0.01",
+          "path": "reports/output_statistics.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        }
+      ],
+      "extensions": {
+        ".json": 5,
+        ".txt": 1,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "llm": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 48,
+  "total_size_mb": 0.3932771682739258,
+  "largest_files": [
+    {
+      "name": "01_methods_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/01_methods_slides.log"
+    },
+    {
+      "name": "02_results_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/02_results_slides.log"
+    },
+    {
+      "name": "00_abstract_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/00_abstract_slides.log"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.04",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.04",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "template_redacted_report_combined.pdf",
+      "size_mb": "0.03",
+      "category": "pdf",
+      "path": "pdf/template_redacted_report_combined.pdf"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.01",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.01",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "output_statistics.json",
+      "size_mb": "0.01",
+      "category": "reports",
+      "path": "reports/output_statistics.json"
+    },
+    {
+      "name": "manuscript__01_methods.html",
+      "size_mb": "0.00",
+      "category": "web",
+      "path": "web/manuscript__01_methods.html"
+    }
+  ],
+  "missing_expected_files": [
+    "figures/ directory",
+    "data/ directory",
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 0.08741474151611328,
+    "web": 0.025493621826171875,
+    "slides": 0.228546142578125,
+    "reports": 0.051822662353515625
+  },
+  "file_counts_by_type": {
+    ".md": 4,
+    ".log": 5,
+    ".aux": 4,
+    ".blg": 1,
+    ".pdf": 4,
+    ".bib": 1,
+    ".tex": 5,
+    ".toc": 4,
+    ".bbl": 1,
+    ".ico": 1,
+    ".html": 4,
+    ".vrb": 2,
+    ".snm": 3,
+    ".nav": 3,
+    ".json": 5,
+    ".txt": 1
+  }
+}

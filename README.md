@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_data_descriptor`, `template_eda_notebook`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_redacted_report`, `template_registered_report`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -127,6 +127,7 @@ inside that exemplar.
 | `template-autopoiesis` | `template_autopoiesis` | Combinatoric grammar generating whole child projects |
 | `template-autoresearch-project` | `template_autoresearch_project` | Bounded AutoResearch loop |
 | `template-autoscientists` | `template_autoscientists` | Agent-team coordination testbed |
+| `template-data-descriptor` | `template_data_descriptor` | Dataset descriptor and data-paper contract |
 | `template-template` | `template_template` | Self-referential meta-template |
 | `template-newspaper` | `template_newspaper` | Data-driven print layout |
 | `template-textbook` | `template_textbook` | Book-length manuscript scaffold |
@@ -137,6 +138,8 @@ inside that exemplar.
 | `template-literature-meta-analysis` | `template_literature_meta_analysis` | Literature meta-analysis |
 | `template-methods-paper` | `template_methods_paper` | Methods DSL specification |
 | `template-eda-notebook` | `template_eda_notebook` | EDA notebook extraction |
+| `template-redacted-report` | `template_redacted_report` | Formal redaction and release-review audit |
+| `template-registered-report` | `template_registered_report` | Preregistered/registered-report workflow |
 | `template-search-project` | `template_search_project` | Literature search pipeline |
 | `template-sia` | `template_sia` | SIA harness evaluation |
 | `template-pools-rules-tools` | `template_pools_rules_tools` | Fonds/rules/tools resource-pool integration |
@@ -180,6 +183,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
 | [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | Coordination-mechanism testbed (deterministic ablatable agent-team primitives, honest no-speedup framing) | see canonical facts | see canonical facts |
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
+| [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) | Dataset descriptor/data-paper scaffold (schema, file inventory, provenance chain, data dictionary, quality checks, license boundary) | see canonical facts | see canonical facts |
 | [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) | Exploratory data analysis on tabular data (missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures) | see canonical facts | see canonical facts |
 | [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection) | see canonical facts | see canonical facts |
 | [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics; default term `modafinil`) | see canonical facts | see canonical facts |
@@ -187,6 +191,8 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) | Methods paper: a tested controlled-method specification DSL (staged validation, deterministic compilation), informed by BPL as an upstream domain language | see canonical facts | see canonical facts |
 | [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) | Newspaper layout engine (data-driven 12-page broadsheet from YAML via ReportLab) | see canonical facts | see canonical facts |
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
+| [`projects/templates/template_redacted_report/`](projects/templates/template_redacted_report/) | Redacted release-report scaffold (classification ceiling, source-control markings, release authority, redaction ledger, mosaic-risk checks) | see canonical facts | see canonical facts |
+| [`projects/templates/template_registered_report/`](projects/templates/template_registered_report/) | Registered-report scaffold (hypothesis lock, outcome registry, analysis plan, deviation ledger, confirmatory/exploratory boundaries) | see canonical facts | see canonical facts |
 | [`projects/templates/template_search_project/`](projects/templates/template_search_project/) | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
 | [`projects/templates/template_sia/`](projects/templates/template_sia/) | SIA harness (meta → target → feedback loop, fixture replay) | see canonical facts | see canonical facts |
 | [`projects/templates/template_storybook/`](projects/templates/template_storybook/) | Full-page illustrated storybook PDF (shape-character generation, page scripts, text overlays, and symbolic raster art) | see canonical facts | see canonical facts |

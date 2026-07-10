@@ -1,0 +1,13 @@
+{
+  "source_file": "grayout_on_white.pdf",
+  "timestamp": "2026-07-09T15:06:45-07:00",
+  "hashes": {
+    "sha256": "2982936b0a0fc03d3dc0708da54080920d38376cc9d45de8402bb281fdac0778",
+    "sha512": "be2b6d040d286820617df2660600f7b962dc0de65ecd81e05e08fe492a8fdcaaff42a742f35aa25bf651edbe1c43f0c9d82a24211119e40de749ddcb3f3ecb2d"
+  },
+  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "source_size_bytes": 2128,
+  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit_available": true,
+  "steganography_applied": "true"
+}

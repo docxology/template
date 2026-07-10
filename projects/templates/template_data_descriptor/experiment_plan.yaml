@@ -1,0 +1,23 @@
+conditions:
+  - name: minimal_descriptor
+    role: reference
+    description: Descriptor with required fields only.
+  - name: fair_descriptor
+    role: proposed
+    description: Descriptor with schema, license, provenance, and quality gates.
+  - name: missing_license
+    role: variant
+    description: Negative-control descriptor missing reuse boundary.
+metrics:
+  primary:
+    name: readiness_score
+    direction: maximize
+protocol: "Validate each descriptor with the same required-field and provenance gates."
+expected_figures:
+  - fig:schema_overview
+expected_tables:
+  - tbl:data_dictionary
+baselines:
+  - minimal_descriptor
+ablations:
+  - missing_license

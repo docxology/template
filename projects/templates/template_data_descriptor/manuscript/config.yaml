@@ -1,0 +1,24 @@
+paper:
+  title: "Data Descriptor Template: Schema, Provenance, and Release Readiness"
+  subtitle: "A FAIR-style exemplar for dataset papers"
+  version: "0.1.0"
+  date: "2026-07-09"
+authors:
+  - name: "Research Template Author"
+    email: "author@research-template.org"
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: ""
+  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_data_descriptor"
+  license: "CC-BY-4.0"
+keywords:
+  - data descriptor
+  - FAIR data
+  - provenance
+  - schema validation
+render:
+  engine: "pandoc"
+  number_sections: true
+  toc: true

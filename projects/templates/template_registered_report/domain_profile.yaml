@@ -1,0 +1,31 @@
+domain: registered_report
+display_name: Registered Report
+required_packages: [pytest]
+preferred_outputs: [pdf, html, json]
+validation_gates:
+  - preregistration_lock
+  - deviation_ledger
+  - confirmatory_claim_boundary
+  - reproducibility
+figure_types:
+  - registration_flow
+  - deviation_matrix
+citation_policy: official_or_scholarly
+llm_prompt_guidance: "Separate registered claims from exploratory interpretation and never backfill intent after results."
+review_gates:
+  - preregistration_completeness
+  - analysis_plan_lock
+  - deviation_review
+source_policy: "Use committed registration artifacts and explicit deviation records."
+artifact_expectations:
+  - output/reports/registration_audit.json
+  - output/data/deviation_ledger.json
+benchmark_rubric:
+  name: registered-report-readiness
+  dimensions:
+    - name: preregistration_completeness
+      weight: 2.0
+    - name: deviation_transparency
+      weight: 2.0
+    - name: claim_boundary_clarity
+      weight: 1.0

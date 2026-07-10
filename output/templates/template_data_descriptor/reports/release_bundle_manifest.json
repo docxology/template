@@ -1,0 +1,51 @@
+{
+  "descriptor_hash": "266c09181367c956ac20b78dbea6107483b3106cb7d2890b2d2a67e750f177ef",
+  "field_constraints": [
+    {
+      "allowed_values_count": 0,
+      "field_type": "string",
+      "has_bounds": false,
+      "has_pattern": true,
+      "name": "sample_id",
+      "unit": ""
+    },
+    {
+      "allowed_values_count": 2,
+      "field_type": "category",
+      "has_bounds": false,
+      "has_pattern": false,
+      "name": "group",
+      "unit": ""
+    },
+    {
+      "allowed_values_count": 0,
+      "field_type": "number",
+      "has_bounds": true,
+      "has_pattern": false,
+      "name": "value",
+      "unit": "normalized_score"
+    }
+  ],
+  "field_count": 3,
+  "file_count": 1,
+  "files": [
+    {
+      "checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "media_type": "text/csv",
+      "path": "measurements.csv",
+      "rows": 12
+    }
+  ],
+  "findings": [],
+  "license": "CC-BY-4.0",
+  "name": "example_measurements",
+  "provenance_steps": [
+    "collect",
+    "validate"
+  ],
+  "readiness_score": 1.0,
+  "release_boundary": "metadata-and-checksums-only",
+  "schema_fingerprint": "0a9ba0e979ec6083ff6156e420e983f4be3a35955e7b416cd7cb19d7c6d2b860",
+  "valid": true,
+  "version": "0.1.0"
+}

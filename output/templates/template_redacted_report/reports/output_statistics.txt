@@ -1,0 +1,40 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: output
+
+Total Files: 48
+Total Size: 0.39 MB
+
+Files by Category:
+  • pdf: 10 files (0.09 MB)
+  • web: 6 files (0.03 MB)
+  • slides: 24 files (0.23 MB)
+  • reports: 8 files (0.05 MB)
+
+Largest Files:
+  • 01_methods_slides.log: 0.06 MB (slides)
+  • 02_results_slides.log: 0.06 MB (slides)
+  • 00_abstract_slides.log: 0.06 MB (slides)
+  • _combined_manuscript.log: 0.04 MB (pdf)
+  • evidence_registry.json: 0.04 MB (reports)
+
+Missing Expected Files:
+  ⚠  figures/ directory
+  ⚠  data/ directory
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
+  ⚠  logs/ directory
+
+File Types:
+  • .log: 5 file(s)
+  • .tex: 5 file(s)
+  • .json: 5 file(s)
+  • .md: 4 file(s)
+  • .aux: 4 file(s)
+  • .pdf: 4 file(s)
+  • .toc: 4 file(s)
+  • .html: 4 file(s)
+  • .snm: 3 file(s)
+  • .nav: 3 file(s)

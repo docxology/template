@@ -1,0 +1,13 @@
+{
+  "source_file": "blur_on_gray.pdf",
+  "timestamp": "2026-07-09T15:06:45-07:00",
+  "hashes": {
+    "sha256": "07d9be3410ef923f0b819b95f1c8da1a8fefb8156f25ed6d09ef86925f614ff8",
+    "sha512": "e979ae7fe310618cd23e2c18cc039897d7b33ccfef867fc52e16233fb3ffaa1a9a5477aea4b6b95d3305407e5046f7838bdd7a8188e345bcdc9d320d9bf47adf"
+  },
+  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "source_size_bytes": 2187,
+  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit_available": true,
+  "steganography_applied": "true"
+}

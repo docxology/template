@@ -1,0 +1,13 @@
+{
+  "source_file": "grayout_on_blur.pdf",
+  "timestamp": "2026-07-09T15:06:45-07:00",
+  "hashes": {
+    "sha256": "b0d8900ec159fa65e878497178fd6b90a5f87193e6b522cbdb41737af98bac9f",
+    "sha512": "eeec3221d7521d56ec7a026213c0f69adc179a8980f35fc24cabc2847fd656efa23e5e74e9f9dbdddd763a3f7939e569afd955229c59af5f74630b8698b22a17"
+  },
+  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "source_size_bytes": 2474,
+  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit_available": true,
+  "steganography_applied": "true"
+}

@@ -1,0 +1,24 @@
+paper:
+  title: "Registered Report Template: Preregistration, Deviations, and Claim Boundaries"
+  subtitle: "A reproducible exemplar for registered analysis plans"
+  version: "0.1.0"
+  date: "2026-07-09"
+authors:
+  - name: "Research Template Author"
+    email: "author@research-template.org"
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: ""
+  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_registered_report"
+  license: "CC-BY-4.0"
+keywords:
+  - registered report
+  - preregistration
+  - replication
+  - deviation ledger
+render:
+  engine: "pandoc"
+  number_sections: true
+  toc: true

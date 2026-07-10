@@ -1,0 +1,47 @@
+paper:
+  title: "Redacted Report Template: Disclosure Control and Release Audit"
+  subtitle: "A public exemplar for sanitized release workflows"
+  version: "0.1.0"
+  date: "2026-07-09"
+authors:
+  - name: "Research Template Author"
+    email: "author@research-template.org"
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: ""
+  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_redacted_report"
+  license: "CC-BY-4.0"
+keywords:
+  - redaction
+  - disclosure control
+  - release audit
+  - source protection
+render:
+  engine: "pandoc"
+  number_sections: true
+  toc: true
+  redaction_visual:
+    default_redaction_style: "blackout"
+    default_pdf_background: "white"
+    redaction_styles: ["blackout", "whiteout", "grayout", "blur"]
+    pdf_backgrounds: ["white", "gray", "black", "blur"]
+    margin_left: "0.16in"
+    margin_right: "0.16in"
+    dev_matrix_output: "output/dev/redaction_variants"
+    kmyth_requested: true
+    kmyth_required: false
+    kmyth_binary_dir: "infrastructure/steganography/kmyth/bin"
+    kmyth_seal_artifacts: ["hash_manifest", "pdf"]
+    steganography_methods:
+      - sha256_sha512_hash_manifest
+      - diagonal_watermark_overlay
+      - footer_provenance_overlay
+      - first_page_invisible_text_overlay
+      - qr_payload_barcode
+      - code128_page_barcode
+      - pdf_info_metadata
+      - xmp_metadata
+      - embedded_stego_manifest_attachment
+      - kmyth_tpm_sidecar_sealing_requested

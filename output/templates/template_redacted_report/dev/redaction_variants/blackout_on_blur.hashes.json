@@ -1,0 +1,13 @@
+{
+  "source_file": "blackout_on_blur.pdf",
+  "timestamp": "2026-07-09T15:06:45-07:00",
+  "hashes": {
+    "sha256": "902040b64ef342082bafecf7abe9d3211fceb67760496b1287c334362ebc3071",
+    "sha512": "bafb3a12cc442939a7401214d3c28f0901a09db65d11a634f0a5d7b454ad6947b1d856c9ae5ec265e8218f48eec6d911e5d9e995b72c19ef100384bddfbdd80f"
+  },
+  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "source_size_bytes": 2465,
+  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit_available": true,
+  "steganography_applied": "true"
+}

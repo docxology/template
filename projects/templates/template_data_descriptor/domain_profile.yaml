@@ -1,0 +1,31 @@
+domain: data_descriptor
+display_name: Data Descriptor
+required_packages: [pytest]
+preferred_outputs: [pdf, html, json]
+validation_gates:
+  - schema_contract
+  - provenance_chain
+  - license_boundary
+  - publication_readiness
+figure_types:
+  - schema_overview
+  - provenance_flow
+citation_policy: official_or_scholarly
+llm_prompt_guidance: "Keep claims limited to dataset structure, provenance, validation, and reuse boundaries."
+review_gates:
+  - schema_completeness
+  - provenance_traceability
+  - license_review
+source_policy: "Use committed descriptors and documented data dictionaries; avoid untracked private data."
+artifact_expectations:
+  - output/reports/descriptor_report.json
+  - output/data/dataset_descriptor.json
+benchmark_rubric:
+  name: data-descriptor-readiness
+  dimensions:
+    - name: schema_completeness
+      weight: 2.0
+    - name: provenance_traceability
+      weight: 2.0
+    - name: reuse_boundary_clarity
+      weight: 1.0

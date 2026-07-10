@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+title: template_redacted_report
+message: "If you use this exemplar, cite the Research Project Template repository."
+version: "0.1.0"
+authors:
+  - family-names: "Template Author"
+    given-names: "Research"

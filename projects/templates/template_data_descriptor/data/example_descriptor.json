@@ -1,0 +1,42 @@
+{
+  "name": "example_measurements",
+  "version": "0.1.0",
+  "license": "CC-BY-4.0",
+  "provenance": [
+    {"step": "collect", "agent": "synthetic fixture generator"},
+    {"step": "validate", "agent": "template_data_descriptor"}
+  ],
+  "files": [
+    {
+      "path": "measurements.csv",
+      "media_type": "text/csv",
+      "checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rows": 12
+    }
+  ],
+  "fields": [
+    {
+      "name": "sample_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Stable synthetic sample identifier",
+      "constraints": {"pattern": "^S[0-9]{3}$"}
+    },
+    {
+      "name": "group",
+      "type": "category",
+      "nullable": false,
+      "description": "Synthetic assignment group",
+      "constraints": {"allowed_values": ["control", "treatment"]}
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "nullable": false,
+      "unit": "normalized_score",
+      "description": "Bounded synthetic measurement",
+      "constraints": {"minimum": 0, "maximum": 1}
+    }
+  ],
+  "primary_key": ["sample_id"]
+}

@@ -34,6 +34,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_data_descriptor",
+      "qualified_name": "templates/template_data_descriptor",
+      "title": "template_data_descriptor",
+      "use_when": "Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication.",
+      "test_file_count": 1,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_eda_notebook",
       "qualified_name": "templates/template_eda_notebook",
       "title": "EDA Notebook — Exploratory Data Analysis Exemplar",
@@ -103,6 +111,22 @@
       "title": "A Domain Language for Specifying Controlled Methods — Methods Paper Exemplar",
       "use_when": "Use this template when the paper you are writing **describes a methodology** rather than reports results: a procedure, protocol, or specification language, where the contribution is the controlled vocabulary and its guarantees (dimensional safety, staged validation, deterministic compilation) rather than a numeric outcome.",
       "test_file_count": 11,
+      "coverage_floor": 90
+    },
+    {
+      "name": "template_redacted_report",
+      "qualified_name": "templates/template_redacted_report",
+      "title": "template_redacted_report",
+      "use_when": "Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published.",
+      "test_file_count": 1,
+      "coverage_floor": 90
+    },
+    {
+      "name": "template_registered_report",
+      "qualified_name": "templates/template_registered_report",
+      "title": "template_registered_report",
+      "use_when": "Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted.",
+      "test_file_count": 1,
       "coverage_floor": 90
     },
     {

@@ -1,0 +1,44 @@
+{
+  "release_authority": "public-affairs-review",
+  "release_policy": "intelligence_release_review",
+  "public_ceiling": "UNCLASSIFIED",
+  "segments": [
+    {
+      "id": "s1",
+      "classification": "UNCLASSIFIED",
+      "text": "The public summary describes a logistics disruption and omits source details.",
+      "source_controls": []
+    },
+    {
+      "id": "s2",
+      "classification": "SECRET",
+      "text": "HUMINT source Alpha reported the location selector at 2026-07-09T10:00Z.",
+      "source_controls": ["HUMINT"]
+    }
+  ],
+  "redactions": [
+    {"segment_id": "s2", "start": 0, "end": 20, "reason": "source_identity"},
+    {"segment_id": "s2", "start": 33, "end": 50, "reason": "operational_detail"},
+    {"segment_id": "s2", "start": 54, "end": 71, "reason": "time_place_selector"}
+  ],
+  "reviews": [
+    {
+      "reviewer": "originator-a",
+      "role": "originator",
+      "decision": "approve",
+      "rationale": "invented fixture source equities reviewed"
+    },
+    {
+      "reviewer": "classification-reviewer",
+      "role": "classification_reviewer",
+      "decision": "approve",
+      "rationale": "invented fixture markings checked"
+    },
+    {
+      "reviewer": "release-board",
+      "role": "release_authority",
+      "decision": "approve",
+      "rationale": "invented fixture authorized for public example use"
+    }
+  ]
+}

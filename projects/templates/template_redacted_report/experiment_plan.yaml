@@ -1,0 +1,23 @@
+conditions:
+  - name: unreviewed_release
+    role: reference
+    description: Public text without a redaction ledger.
+  - name: audited_release
+    role: proposed
+    description: Sanitized text with classification ceiling and release authority.
+  - name: residual_marker_release
+    role: variant
+    description: Negative-control release with uncovered sensitive marker.
+metrics:
+  primary:
+    name: release_safety_score
+    direction: maximize
+protocol: "Audit every segment against the release ceiling, redaction ledger, sensitive markers, and mosaic-risk threshold."
+expected_figures:
+  - fig:redaction_flow
+expected_tables:
+  - tbl:redaction_ledger
+baselines:
+  - unreviewed_release
+ablations:
+  - residual_marker_release

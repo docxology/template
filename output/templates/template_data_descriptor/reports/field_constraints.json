@@ -1,0 +1,30 @@
+{
+  "constraints": [
+    {
+      "allowed_values_count": 0,
+      "field_type": "string",
+      "has_bounds": false,
+      "has_pattern": true,
+      "name": "sample_id",
+      "unit": ""
+    },
+    {
+      "allowed_values_count": 2,
+      "field_type": "category",
+      "has_bounds": false,
+      "has_pattern": false,
+      "name": "group",
+      "unit": ""
+    },
+    {
+      "allowed_values_count": 0,
+      "field_type": "number",
+      "has_bounds": true,
+      "has_pattern": false,
+      "name": "value",
+      "unit": "normalized_score"
+    }
+  ],
+  "field_count": 3,
+  "schema_fingerprint": "0a9ba0e979ec6083ff6156e420e983f4be3a35955e7b416cd7cb19d7c6d2b860"
+}

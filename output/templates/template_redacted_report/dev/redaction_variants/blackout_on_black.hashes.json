@@ -1,0 +1,13 @@
+{
+  "source_file": "blackout_on_black.pdf",
+  "timestamp": "2026-07-09T15:06:45-07:00",
+  "hashes": {
+    "sha256": "d55c6bbf75db16f7a5050f993f25be005f21fdd4ca806bdbeb660049749d16ae",
+    "sha512": "72cac1526f1345956b7c03f4807714ece4cad34554075a05addcd21309544278a5c04d55894863a9bc6e76708adb07d745b74bc6db67dff35bf8b9b91c313035"
+  },
+  "document_id": "f048de67c10ab4a17e89d43bf3b9d565",
+  "source_size_bytes": 2113,
+  "git_commit": "67f2d5c2662febb0bfae48fd52754713f9530eb4",
+  "git_commit_available": true,
+  "steganography_applied": "true"
+}

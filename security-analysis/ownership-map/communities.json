@@ -1,0 +1,2004 @@
+[
+  {
+    "id": 1,
+    "size": 409,
+    "files": [
+      ".coveragerc",
+      ".cursor/hooks/state/continual-learning-index.json",
+      ".cursor/hooks/state/continual-learning.json",
+      ".cursor/operations_manifest.json",
+      ".cursor/skill_manifest.json",
+      ".cursorrules",
+      ".env.template",
+      ".pre-commit-config.yaml",
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "ISA.md",
+      "README.md",
+      "STATUS.md",
+      "TO-DO.md",
+      "bandit.yaml",
+      "conftest.py",
+      "docs/AGENTS.md",
+      "docs/CLOUD_DEPLOY.md",
+      "docs/PAI.md",
+      "docs/README.md",
+      "docs/RUN_GUIDE.md",
+      "docs/TESTING_GUIDE.md",
+      "docs/_generated/AGENTS.md",
+      "docs/_generated/COUNTS.md",
+      "docs/_generated/README.md",
+      "docs/_generated/active_projects.md",
+      "docs/_generated/canonical_facts.md",
+      "docs/_generated/exemplar_roster.md",
+      "docs/_generated/publication_records.md",
+      "docs/_generated/skills_index.md",
+      "docs/accessibility.md",
+      "docs/architecture/AGENTS.md",
+      "docs/architecture/adrs/004-zero-mock-testing-policy.md",
+      "docs/architecture/adrs/AGENTS.md",
+      "docs/architecture/capability-surfaces.md",
+      "docs/architecture/testing-strategy.md",
+      "docs/architecture/two-layer-architecture.md",
+      "docs/audit/AGENTS.md",
+      "docs/audit/README.md",
+      "docs/audit/archived/act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md",
+      "docs/audit/archived/documentation-review-report-2026-05-04.md",
+      "docs/audit/archived/documentation-review-summary-2026-05-15.md",
+      "docs/audit/archived/filepath-audit-report-2026-05-16.md",
+      "docs/audit/archived/literature-modules-audit-2026-05-01.md",
+      "docs/audit/archived/pai-v5-upgrade-audit-2026-05-15.md",
+      "docs/audit/archived/thermo-nuclear-code-quality-2026-06-08.md",
+      "docs/audit/archived/thermo-nuclear-code-quality-2026-06-11-staged-closeout.md",
+      "docs/audit/archived/thermo-nuclear-code-quality-2026-06-11-v2.md",
+      "docs/audit/archived/thermo-nuclear-code-quality-2026-06-11.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 4405,
+        "touch_share": 0.9928,
+        "recency_share": 0.991,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "agent@humos.local",
+        "name": "Hermes Agent",
+        "touches": 32,
+        "touch_share": 0.0072,
+        "recency_share": 0.009,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 4437,
+      "recency_weight": 3527.377147,
+      "sensitive_weight": 288.1
+    }
+  },
+  {
+    "id": 2,
+    "size": 342,
+    "files": [
+      ".desloppify/config.json",
+      ".desloppify/query.json",
+      ".desloppify/review_packet_blind.json",
+      ".desloppify/state-python.json",
+      "docs/development/coverage-gaps.md",
+      "docs/modules/guides/scientific-module.md",
+      "infrastructure/core/__init__.py",
+      "infrastructure/core/_optional_deps.py",
+      "infrastructure/core/_rate_limiting.py",
+      "infrastructure/core/_validation.py",
+      "infrastructure/core/checkpoint.py",
+      "infrastructure/core/cli.py",
+      "infrastructure/core/config/loader.py",
+      "infrastructure/core/config/schema.py",
+      "infrastructure/core/config_cli.py",
+      "infrastructure/core/config_loader.py",
+      "infrastructure/core/config_queries.py",
+      "infrastructure/core/coverage_cleanup.py",
+      "infrastructure/core/credentials.py",
+      "infrastructure/core/env_deps.py",
+      "infrastructure/core/environment.py",
+      "infrastructure/core/eta.py",
+      "infrastructure/core/exceptions.py",
+      "infrastructure/core/file_cleanup.py",
+      "infrastructure/core/file_inventory.py",
+      "infrastructure/core/file_operations.py",
+      "infrastructure/core/files/cleanup.py",
+      "infrastructure/core/files/cleanup_helpers.py",
+      "infrastructure/core/files/coverage_cleanup.py",
+      "infrastructure/core/files/inventory.py",
+      "infrastructure/core/files/project_lock.py",
+      "infrastructure/core/function_profiler.py",
+      "infrastructure/core/health_check.py",
+      "infrastructure/core/logging/constants.py",
+      "infrastructure/core/logging/diagnostic.py",
+      "infrastructure/core/logging/pipeline_logging.py",
+      "infrastructure/core/logging/utils.py",
+      "infrastructure/core/logging_constants.py",
+      "infrastructure/core/logging_formatters.py",
+      "infrastructure/core/logging_helpers.py",
+      "infrastructure/core/logging_progress.py",
+      "infrastructure/core/logging_utils.py",
+      "infrastructure/core/menu.py",
+      "infrastructure/core/multi_project.py",
+      "infrastructure/core/performance.py",
+      "infrastructure/core/performance_monitor.py",
+      "infrastructure/core/pipeline.py",
+      "infrastructure/core/pipeline/AGENTS.md",
+      "infrastructure/core/pipeline/_monitor_types.py",
+      "infrastructure/core/pipeline/_stage_tracker.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 4335,
+        "touch_share": 0.9998,
+        "recency_share": 0.9997,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "agent@humos.local",
+        "name": "Hermes Agent",
+        "touches": 1,
+        "touch_share": 0.0002,
+        "recency_share": 0.0003,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 4336,
+      "recency_weight": 2876.195323,
+      "sensitive_weight": 1286.7
+    }
+  },
+  {
+    "id": 3,
+    "size": 159,
+    "files": [
+      "DOCUMENTATION_IMPLEMENTATION_SUMMARY.md",
+      "docs/00_preamble.md",
+      "docs/ADVANCED_MODULES_GUIDE.md",
+      "docs/ADVANCED_USAGE.md",
+      "docs/API_REFERENCE.md",
+      "docs/ARCHITECTURE.md",
+      "docs/BACKUP_RECOVERY.md",
+      "docs/BEST_PRACTICES.md",
+      "docs/BUILD_OUTPUT_ANALYSIS.md",
+      "docs/BUILD_SYSTEM.md",
+      "docs/BUILD_SYSTEM_FIX_SUMMARY.md",
+      "docs/BUILD_VERIFICATION_REPORT.md",
+      "docs/CI_CD_INTEGRATION.md",
+      "docs/CODE_OF_CONDUCT.md",
+      "docs/COMMON_WORKFLOWS.md",
+      "docs/CONTRIBUTING.md",
+      "docs/COPYPASTA.md",
+      "docs/DEPENDENCY_MANAGEMENT.md",
+      "docs/DOCUMENTATION_INDEX.md",
+      "docs/DOCUMENTATION_SCAN_REPORT.md",
+      "docs/EXAMPLES.md",
+      "docs/EXAMPLES_SHOWCASE.md",
+      "docs/FAQ.md",
+      "docs/GETTING_STARTED.md",
+      "docs/GLOSSARY.md",
+      "docs/HOW_TO_USE.md",
+      "docs/HYPERLINK_SUMMARY.md",
+      "docs/INTERMEDIATE_USAGE.md",
+      "docs/MANUSCRIPT_NUMBERING_SYSTEM.md",
+      "docs/MARKDOWN_DIRECTORY_ELIMINATION.md",
+      "docs/MARKDOWN_TEMPLATE_GUIDE.md",
+      "docs/MIGRATION_GUIDE.md",
+      "docs/MULTI_PROJECT_MANAGEMENT.md",
+      "docs/PDF_VALIDATION.md",
+      "docs/PDF_VALIDATION_SUMMARY.md",
+      "docs/PERFORMANCE_OPTIMIZATION.md",
+      "docs/QUICK_START_CHEATSHEET.md",
+      "docs/ROADMAP.md",
+      "docs/SECURITY.md",
+      "docs/TEMPLATE_DESCRIPTION.md",
+      "docs/THIN_ORCHESTRATOR_SUMMARY.md",
+      "docs/TROUBLESHOOTING_GUIDE.md",
+      "docs/VERSION_CONTROL.md",
+      "docs/WORKFLOW.md",
+      "docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md",
+      "docs/archive/README.md",
+      "generate_pdf_from_scratch.sh",
+      "invalid/path/report.json",
+      "manuscript/00_preamble.md",
+      "manuscript/01_abstract.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 1085,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 1085,
+      "recency_weight": 454.45013,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 4,
+    "size": 135,
+    "files": [
+      "DOCUMENTATION_VERIFICATION_REPORT.md",
+      "RUN_GUIDE.md",
+      "docs/LOGGING_GUIDE.md",
+      "infrastructure/literature/AGENTS.md",
+      "infrastructure/literature/README.md",
+      "infrastructure/literature/core.py",
+      "infrastructure/literature/library_index.py",
+      "infrastructure/literature/pdf_handler.py",
+      "infrastructure/literature/workflow.py",
+      "infrastructure/llm/templates.py",
+      "literature/AGENTS.md",
+      "literature/library.json",
+      "literature/references.bib",
+      "literature/summaries/friston2010freeenergy_summary.md",
+      "literature/summarization_progress.1764701121.json",
+      "literature/summarization_progress.1764702413.json",
+      "literature/summarization_progress.json",
+      "output/figures/analysis_comparison.pdf",
+      "output/figures/analysis_comparison.png",
+      "output/figures/convergence_analysis.pdf",
+      "output/figures/convergence_analysis.png",
+      "output/figures/scatter_correlation.pdf",
+      "output/figures/scatter_correlation.png",
+      "output/figures/scientific_simulation_timeseries.pdf",
+      "output/figures/scientific_simulation_timeseries.png",
+      "output/figures/statistical_comparison.pdf",
+      "output/figures/statistical_comparison.png",
+      "output/figures/time_series_analysis.pdf",
+      "output/figures/time_series_analysis.png",
+      "output/pdf/_combined_manuscript.log",
+      "output/reports/analysis_report.md",
+      "output/reports/simulation_report.md",
+      "output/reports/validation_report.json",
+      "output/reports/validation_report.md",
+      "output/simulations/checkpoint_000000.json",
+      "output/simulations/simulation_example.json",
+      "output/simulations/simulation_example.npz",
+      "output/slides/01_abstract_slides.log",
+      "output/slides/01_abstract_slides.pdf",
+      "output/slides/02_introduction_slides.log",
+      "output/slides/03_methodology_slides.log",
+      "output/slides/04_experimental_results_slides.log",
+      "output/slides/05_discussion_slides.log",
+      "output/slides/05_discussion_slides.pdf",
+      "output/slides/06_conclusion_slides.log",
+      "output/slides/06_conclusion_slides.pdf",
+      "output/slides/08_acknowledgments_slides.log",
+      "output/slides/08_acknowledgments_slides.pdf",
+      "output/slides/09_appendix_slides.log",
+      "output/slides/09_appendix_slides.pdf"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 3399,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 3399,
+      "recency_weight": 1519.123352,
+      "sensitive_weight": 44.1
+    }
+  },
+  {
+    "id": 5,
+    "size": 123,
+    "files": [
+      "coverage_project.json",
+      "infrastructure/publishing/cli.py",
+      "infrastructure/scientific/documentation.py",
+      "infrastructure/scientific/templates.py",
+      "manuscript_verification.log",
+      "output/code_project/.checkpoints/pipeline_checkpoint.json",
+      "output/code_project/code_project_combined.pdf",
+      "output/code_project/figures/performance_benchmark.png",
+      "output/code_project/logs/pipeline.log",
+      "output/code_project/pdf/_combined_manuscript.aux",
+      "output/code_project/pdf/_combined_manuscript.blg",
+      "output/code_project/pdf/_combined_manuscript.log",
+      "output/code_project/pdf/_combined_manuscript.md",
+      "output/code_project/pdf/_combined_manuscript.tex",
+      "output/code_project/pdf/_combined_manuscript.toc",
+      "output/code_project/pdf/_xelatex_stdout.log",
+      "output/code_project/pdf/code_project_combined.pdf",
+      "output/code_project/reports/analysis_performance.json",
+      "output/code_project/reports/performance_benchmark.json",
+      "output/code_project/reports/test_results.json",
+      "output/code_project/reports/test_results.md",
+      "output/code_project/reports/validation_report.json",
+      "output/code_project/reports/validation_report.md",
+      "output/code_project/slides/00_abstract_slides.log",
+      "output/code_project/slides/00_abstract_slides.pdf",
+      "output/code_project/slides/01_introduction_slides.log",
+      "output/code_project/slides/01_introduction_slides.pdf",
+      "output/code_project/slides/02_methodology_slides.log",
+      "output/code_project/slides/02_methodology_slides.pdf",
+      "output/code_project/slides/03_results_slides.log",
+      "output/code_project/slides/03_results_slides.pdf",
+      "output/code_project/slides/04_conclusion_slides.log",
+      "output/code_project/slides/04_conclusion_slides.pdf",
+      "output/code_project/slides/SYNTAX_slides.log",
+      "output/code_project/slides/SYNTAX_slides.pdf",
+      "output/code_project/slides/SYNTAX_slides.tex",
+      "output/code_project/slides/SYNTAX_slides.vrb",
+      "output/code_project/web/00_abstract.html",
+      "output/code_project/web/01_introduction.html",
+      "output/code_project/web/02_methodology.html",
+      "output/code_project/web/03_results.html",
+      "output/code_project/web/04_conclusion.html",
+      "output/code_project/web/SYNTAX.html",
+      "output/code_project/web/_combined_manuscript.md",
+      "output/code_project/web/index.html",
+      "output/figures/figure_registry.json",
+      "output/multi_project_summary/multi_project_pipeline.log",
+      "output/multi_project_summary/multi_project_summary.json",
+      "output/multi_project_summary/multi_project_summary.md",
+      "output/pdf/source.pdf"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 3870,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 3870,
+      "recency_weight": 2422.067632,
+      "sensitive_weight": 77.0
+    }
+  },
+  {
+    "id": 6,
+    "size": 116,
+    "files": [
+      "infrastructure/core/pipeline/artifacts.py",
+      "output/templates/template_active_inference/data/artifact_contract_index.json",
+      "output/templates/template_active_inference/data/artifact_provenance.json",
+      "output/templates/template_active_inference/data/manuscript_evidence_tables.json",
+      "output/templates/template_active_inference/data/manuscript_token_provenance.json",
+      "output/templates/template_active_inference/data/manuscript_variables.json",
+      "output/templates/template_active_inference/data/sheaf_gluing_certificate.json",
+      "output/templates/template_active_inference/logs/pymdp_runs.jsonl",
+      "output/templates/template_active_inference/manuscript/16_appendix_full_sheaf.md",
+      "output/templates/template_active_inference/reports/artifact_diffoscope.json",
+      "output/templates/template_active_inference/reports/artifact_manifest.json",
+      "output/templates/template_active_inference/reports/evidence_registry.json",
+      "output/templates/template_active_inference/reports/manuscript_staleness_report.json",
+      "output/templates/template_active_inference/reports/output_statistics.json",
+      "output/templates/template_active_inference/reports/output_statistics.txt",
+      "output/templates/template_active_inference/reports/release_attestation.json",
+      "output/templates/template_active_inference/reports/release_bundle_manifest.json",
+      "output/templates/template_active_inference/reports/replay_matrix.json",
+      "output/templates/template_active_inference/reports/stale_artifact_report.json",
+      "output/templates/template_active_inference/reports/validation_report.json",
+      "output/templates/template_active_inference/reports/validation_report.md",
+      "projects/templates/template_active_inference/TODO.md",
+      "projects/templates/template_active_inference/data/claim_ledger.yaml",
+      "projects/templates/template_active_inference/docs/README.md",
+      "projects/templates/template_active_inference/docs/reference/AGENTS.md",
+      "projects/templates/template_active_inference/docs/reference/README.md",
+      "projects/templates/template_active_inference/docs/reference/method-inventory.md",
+      "projects/templates/template_active_inference/docs/reference/rendering-reproducibility.md",
+      "projects/templates/template_active_inference/figures.yaml",
+      "projects/templates/template_active_inference/lean/TemplateActiveInference.lean",
+      "projects/templates/template_active_inference/manuscript/00_00_sheaf_coverage.md",
+      "projects/templates/template_active_inference/manuscript/07_methods_lean.md",
+      "projects/templates/template_active_inference/manuscript/08_methods_sheaf.md",
+      "projects/templates/template_active_inference/manuscript/12_results_si_tmaze.md",
+      "projects/templates/template_active_inference/manuscript/16_appendix_full_sheaf.md",
+      "projects/templates/template_active_inference/manuscript/sections/imrad/methods_lean/prose.md",
+      "projects/templates/template_active_inference/manuscript/sections/imrad/results_si_tmaze/prose.md",
+      "projects/templates/template_active_inference/output/data/artifact_contract_index.json",
+      "projects/templates/template_active_inference/output/data/artifact_provenance.json",
+      "projects/templates/template_active_inference/output/data/manuscript_variables.json",
+      "projects/templates/template_active_inference/output/logs/pymdp_runs.jsonl",
+      "projects/templates/template_active_inference/output/manuscript/00_abstract.md",
+      "projects/templates/template_active_inference/output/manuscript/08_methods_sheaf.md",
+      "projects/templates/template_active_inference/output/manuscript/15_discussion_outlook.md",
+      "projects/templates/template_active_inference/output/manuscript/16_appendix_full_sheaf.md",
+      "projects/templates/template_active_inference/output/reports/manuscript_staleness_report.json",
+      "projects/templates/template_active_inference/output/reports/output_statistics.json",
+      "projects/templates/template_active_inference/output/reports/output_statistics.txt",
+      "projects/templates/template_active_inference/output/reports/release_attestation.json",
+      "projects/templates/template_active_inference/output/reports/release_bundle_manifest.json"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 855,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 855,
+      "recency_weight": 767.970288,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 7,
+    "size": 98,
+    "files": [
+      "project/output/data/convergence_data.npz",
+      "project/output/data/example_data.csv",
+      "project/output/data/example_data.npz",
+      "project/output/data/performance_comparison.csv",
+      "project/output/figures/ablation_study.png",
+      "project/output/figures/analysis_comparison.png",
+      "project/output/figures/convergence_plot.png",
+      "project/output/figures/data_structure.png",
+      "project/output/figures/example_figure.png",
+      "project/output/figures/experimental_setup.png",
+      "project/output/figures/figure_registry.json",
+      "project/output/figures/image_classification_results.png",
+      "project/output/figures/recommendation_scalability.png",
+      "project/output/figures/scalability_analysis.png",
+      "project/output/figures/scatter_correlation.png",
+      "project/output/figures/scientific_simulation_timeseries.png",
+      "project/output/figures/statistical_comparison.png",
+      "project/output/figures/time_series_analysis.png",
+      "project/output/latex_temp/preamble.tex",
+      "project/output/pdf/01_abstract.bbl",
+      "project/output/pdf/01_abstract.blg",
+      "project/output/pdf/01_abstract.pdf",
+      "project/output/pdf/01_abstract_compile.log",
+      "project/output/pdf/02_introduction.bbl",
+      "project/output/pdf/02_introduction.blg",
+      "project/output/pdf/02_introduction.pdf",
+      "project/output/pdf/02_introduction_compile.log",
+      "project/output/pdf/03_methodology.bbl",
+      "project/output/pdf/03_methodology.blg",
+      "project/output/pdf/03_methodology.pdf",
+      "project/output/pdf/03_methodology_compile.log",
+      "project/output/pdf/04_experimental_results.bbl",
+      "project/output/pdf/04_experimental_results.blg",
+      "project/output/pdf/04_experimental_results.pdf",
+      "project/output/pdf/04_experimental_results_compile.log",
+      "project/output/pdf/05_discussion.bbl",
+      "project/output/pdf/05_discussion.blg",
+      "project/output/pdf/05_discussion.pdf",
+      "project/output/pdf/05_discussion_compile.log",
+      "project/output/pdf/06_conclusion.bbl",
+      "project/output/pdf/06_conclusion.blg",
+      "project/output/pdf/06_conclusion.pdf",
+      "project/output/pdf/06_conclusion_compile.log",
+      "project/output/pdf/08_acknowledgments.bbl",
+      "project/output/pdf/08_acknowledgments.blg",
+      "project/output/pdf/08_acknowledgments.pdf",
+      "project/output/pdf/08_acknowledgments_compile.log",
+      "project/output/pdf/09_appendix.bbl",
+      "project/output/pdf/09_appendix.blg",
+      "project/output/pdf/09_appendix.pdf"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 785,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 785,
+      "recency_weight": 328.245911,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 8,
+    "size": 93,
+    "files": [
+      "output/template_code_project/.checkpoints/pipeline_checkpoint.json",
+      "output/template_code_project/.pipeline/artifacts/stage-03-project-tests.json",
+      "output/template_code_project/.pipeline/artifacts/stage-04-project-analysis.json",
+      "output/template_code_project/.pipeline/artifacts/stage-05-pdf-rendering.json",
+      "output/template_code_project/.pipeline/artifacts/stage-06-output-validation.json",
+      "output/template_code_project/data/dashboard_payload.json",
+      "output/template_code_project/data/manuscript_variables.json",
+      "output/template_code_project/docx/template_code_project_combined.docx",
+      "output/template_code_project/epub/template_code_project_combined.epub",
+      "output/template_code_project/figures/performance_benchmark.png",
+      "output/template_code_project/logs/pipeline.log",
+      "output/template_code_project/manuscript/05_experimental_setup.md",
+      "output/template_code_project/pdf/_combined_manuscript.log",
+      "output/template_code_project/pdf/_combined_manuscript.md",
+      "output/template_code_project/pdf/_combined_manuscript.tex",
+      "output/template_code_project/pdf/template_code_project_combined.pdf",
+      "output/template_code_project/reports/artifact_manifest.json",
+      "output/template_code_project/reports/dashboard_invariants.txt",
+      "output/template_code_project/reports/dashboard_summary.txt",
+      "output/template_code_project/reports/evidence_registry.json",
+      "output/template_code_project/reports/performance_benchmark.json",
+      "output/template_code_project/reports/snapshots/stage-01-clean-output-directories.json",
+      "output/template_code_project/reports/snapshots/stage-02-environment-setup.json",
+      "output/template_code_project/reports/snapshots/stage-03-project-tests.json",
+      "output/template_code_project/reports/snapshots/stage-04-project-analysis.json",
+      "output/template_code_project/reports/snapshots/stage-05-pdf-rendering.json",
+      "output/template_code_project/reports/snapshots/stage-06-output-validation.json",
+      "output/template_code_project/reports/test_results.json",
+      "output/template_code_project/reports/test_results.md",
+      "output/template_code_project/reports/validation_report.json",
+      "output/template_code_project/reports/validation_report.md",
+      "output/template_code_project/slides/00_abstract_slides.log",
+      "output/template_code_project/slides/00_abstract_slides.pdf",
+      "output/template_code_project/slides/01_introduction_slides.log",
+      "output/template_code_project/slides/01_introduction_slides.pdf",
+      "output/template_code_project/slides/02_methodology_slides.log",
+      "output/template_code_project/slides/02_methodology_slides.pdf",
+      "output/template_code_project/slides/03_results_slides.log",
+      "output/template_code_project/slides/03_results_slides.pdf",
+      "output/template_code_project/slides/04_conclusion_slides.log",
+      "output/template_code_project/slides/04_conclusion_slides.pdf",
+      "output/template_code_project/slides/05_experimental_setup_slides.log",
+      "output/template_code_project/slides/05_experimental_setup_slides.pdf",
+      "output/template_code_project/slides/05_experimental_setup_slides.tex",
+      "output/template_code_project/slides/06_reproducibility_slides.log",
+      "output/template_code_project/slides/06_reproducibility_slides.pdf",
+      "output/template_code_project/slides/07_scope_and_related_work_slides.log",
+      "output/template_code_project/slides/07_scope_and_related_work_slides.pdf",
+      "output/template_code_project/slides/99_references_slides.log",
+      "output/template_code_project/slides/99_references_slides.pdf"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 885,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 885,
+      "recency_weight": 738.54438,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 9,
+    "size": 76,
+    "files": [
+      "docs/modules/guides/project-module.md",
+      "infrastructure/autoresearch/__init__.py",
+      "infrastructure/autoresearch/validation.py",
+      "infrastructure/rendering/_pipeline_summary.py",
+      "infrastructure/rendering/pipeline.py",
+      "infrastructure/reporting/pipeline_io.py",
+      "infrastructure/validation/evidence_registry.py",
+      "infrastructure/validation/output/pipeline.py",
+      "projects/template_autoresearch_project/AGENTS.md",
+      "projects/template_autoresearch_project/README.md",
+      "projects/template_autoresearch_project/TODO.md",
+      "projects/template_autoresearch_project/autoresearch.yaml",
+      "projects/template_autoresearch_project/data/AGENTS.md",
+      "projects/template_autoresearch_project/data/README.md",
+      "projects/template_autoresearch_project/data/mnist_tiny.npz",
+      "projects/template_autoresearch_project/data/mnist_tiny_provenance.json",
+      "projects/template_autoresearch_project/docs/README.md",
+      "projects/template_autoresearch_project/docs/configuration.md",
+      "projects/template_autoresearch_project/docs/outputs.md",
+      "projects/template_autoresearch_project/docs/runbook.md",
+      "projects/template_autoresearch_project/domain_profile.yaml",
+      "projects/template_autoresearch_project/experiment_plan.yaml",
+      "projects/template_autoresearch_project/manuscript/00_abstract.md",
+      "projects/template_autoresearch_project/manuscript/01_introduction.md",
+      "projects/template_autoresearch_project/manuscript/02_methodology.md",
+      "projects/template_autoresearch_project/manuscript/03_results.md",
+      "projects/template_autoresearch_project/manuscript/04_conclusion.md",
+      "projects/template_autoresearch_project/manuscript/config.yaml",
+      "projects/template_autoresearch_project/manuscript/references.bib",
+      "projects/template_autoresearch_project/manuscript/source_ledger.yaml",
+      "projects/template_autoresearch_project/mnist_task.yaml",
+      "projects/template_autoresearch_project/program.md",
+      "projects/template_autoresearch_project/pyproject.toml",
+      "projects/template_autoresearch_project/seed_ideas.yaml",
+      "projects/template_autoresearch_project/src/README.md",
+      "projects/template_autoresearch_project/src/__init__.py",
+      "projects/template_autoresearch_project/src/artifact_schemas.py",
+      "projects/template_autoresearch_project/src/config.py",
+      "projects/template_autoresearch_project/src/diagnostics.py",
+      "projects/template_autoresearch_project/src/diagnostics_intervals.py",
+      "projects/template_autoresearch_project/src/diagnostics_metrics.py",
+      "projects/template_autoresearch_project/src/diagnostics_records.py",
+      "projects/template_autoresearch_project/src/diagnostics_reports.py",
+      "projects/template_autoresearch_project/src/figure_registry.py",
+      "projects/template_autoresearch_project/src/figure_registry_contract.py",
+      "projects/template_autoresearch_project/src/figures.py",
+      "projects/template_autoresearch_project/src/figures_core.py",
+      "projects/template_autoresearch_project/src/figures_ml.py",
+      "projects/template_autoresearch_project/src/figures_process.py",
+      "projects/template_autoresearch_project/src/figures_security.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 503,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 503,
+      "recency_weight": 420.470644,
+      "sensitive_weight": 33.3
+    }
+  },
+  {
+    "id": 10,
+    "size": 62,
+    "files": [
+      "output/templates/template_gold_refinement/data/manuscript_variables.json",
+      "output/templates/template_gold_refinement/manuscript/06_reproducibility.md",
+      "output/templates/template_gold_refinement/pdf/_combined_manuscript.log",
+      "output/templates/template_gold_refinement/pdf/_combined_manuscript.md",
+      "output/templates/template_gold_refinement/pdf/_combined_manuscript.tex",
+      "output/templates/template_gold_refinement/pdf/template_gold_refinement_combined.pdf",
+      "output/templates/template_gold_refinement/reports/evidence_registry.json",
+      "output/templates/template_gold_refinement/reports/output_statistics.json",
+      "output/templates/template_gold_refinement/reports/validation_report.json",
+      "output/templates/template_gold_refinement/reports/validation_report.md",
+      "output/templates/template_gold_refinement/template_gold_refinement_combined.pdf",
+      "output/templates/template_gold_refinement/web/_combined_manuscript.md",
+      "output/templates/template_gold_refinement/web/index.html",
+      "output/templates/template_gold_refinement/web/manuscript__06_reproducibility.html",
+      "projects/templates/template_gold_refinement/manuscript/config.yaml",
+      "projects/templates/template_gold_refinement/output/dashboard.html",
+      "projects/templates/template_gold_refinement/output/data/manuscript_variables.json",
+      "projects/templates/template_gold_refinement/output/figures/claim_evidence_assay.png",
+      "projects/templates/template_gold_refinement/output/figures/claim_evidence_assay.svg",
+      "projects/templates/template_gold_refinement/output/figures/evidence_tier_ladder.png",
+      "projects/templates/template_gold_refinement/output/figures/evidence_tier_ladder.svg",
+      "projects/templates/template_gold_refinement/output/figures/formalism_traceability.png",
+      "projects/templates/template_gold_refinement/output/figures/formalism_traceability.svg",
+      "projects/templates/template_gold_refinement/output/figures/implementation_circuit.png",
+      "projects/templates/template_gold_refinement/output/figures/implementation_circuit.svg",
+      "projects/templates/template_gold_refinement/output/figures/integrity_gate_matrix.png",
+      "projects/templates/template_gold_refinement/output/figures/integrity_gate_matrix.svg",
+      "projects/templates/template_gold_refinement/output/figures/integrity_risk_matrix.png",
+      "projects/templates/template_gold_refinement/output/figures/integrity_risk_matrix.svg",
+      "projects/templates/template_gold_refinement/output/figures/karat_grading.png",
+      "projects/templates/template_gold_refinement/output/figures/karat_grading.svg",
+      "projects/templates/template_gold_refinement/output/figures/provenance_sankey.png",
+      "projects/templates/template_gold_refinement/output/figures/provenance_sankey.svg",
+      "projects/templates/template_gold_refinement/output/figures/purity_claim_scatter.png",
+      "projects/templates/template_gold_refinement/output/figures/purity_claim_scatter.svg",
+      "projects/templates/template_gold_refinement/output/figures/purity_progression.png",
+      "projects/templates/template_gold_refinement/output/figures/purity_progression.svg",
+      "projects/templates/template_gold_refinement/output/figures/token_density.png",
+      "projects/templates/template_gold_refinement/output/figures/token_density.svg",
+      "projects/templates/template_gold_refinement/output/figures/token_heatmap.png",
+      "projects/templates/template_gold_refinement/output/figures/token_heatmap.svg",
+      "projects/templates/template_gold_refinement/output/manuscript/03_results.md",
+      "projects/templates/template_gold_refinement/output/manuscript/05_conclusion.md",
+      "projects/templates/template_gold_refinement/output/manuscript/06_reproducibility.md",
+      "projects/templates/template_gold_refinement/output/manuscript/config.yaml",
+      "projects/templates/template_gold_refinement/output/pdf/_combined_manuscript.aux",
+      "projects/templates/template_gold_refinement/output/pdf/_combined_manuscript.log",
+      "projects/templates/template_gold_refinement/output/pdf/_combined_manuscript.md",
+      "projects/templates/template_gold_refinement/output/pdf/_combined_manuscript.tex",
+      "projects/templates/template_gold_refinement/output/pdf/_combined_manuscript.toc"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 528,
+        "touch_share": 0.9514,
+        "recency_share": 0.95,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "agent@humos.local",
+        "name": "Hermes Agent",
+        "touches": 27,
+        "touch_share": 0.0486,
+        "recency_share": 0.05,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 555,
+      "recency_weight": 536.041884,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 11,
+    "size": 33,
+    "files": [
+      "output/templates/template_autopoiesis/pdf/_combined_manuscript.log",
+      "output/templates/template_autopoiesis/pdf/template_autopoiesis_combined.pdf",
+      "output/templates/template_autopoiesis/reports/output_statistics.json",
+      "output/templates/template_autopoiesis/reports/output_statistics.txt",
+      "output/templates/template_autopoiesis/reports/test_results.json",
+      "output/templates/template_autopoiesis/reports/test_results.md",
+      "output/templates/template_autopoiesis/slides/00_abstract_slides.log",
+      "output/templates/template_autopoiesis/slides/00_abstract_slides.pdf",
+      "output/templates/template_autopoiesis/slides/01_introduction_slides.log",
+      "output/templates/template_autopoiesis/slides/01_introduction_slides.pdf",
+      "output/templates/template_autopoiesis/slides/02_methods_slides.log",
+      "output/templates/template_autopoiesis/slides/02_methods_slides.pdf",
+      "output/templates/template_autopoiesis/slides/03_results_slides.log",
+      "output/templates/template_autopoiesis/slides/03_results_slides.pdf",
+      "output/templates/template_autopoiesis/slides/04_honesty_slides.log",
+      "output/templates/template_autopoiesis/slides/04_honesty_slides.pdf",
+      "output/templates/template_autopoiesis/slides/05_reproducibility_slides.log",
+      "output/templates/template_autopoiesis/slides/05_reproducibility_slides.pdf",
+      "output/templates/template_autopoiesis/slides/06_limitations_slides.log",
+      "output/templates/template_autopoiesis/slides/06_limitations_slides.pdf",
+      "output/templates/template_autopoiesis/slides/99_references_slides.log",
+      "output/templates/template_autopoiesis/slides/99_references_slides.pdf",
+      "output/templates/template_autopoiesis/template_autopoiesis_combined.pdf",
+      "projects/templates/template_autopoiesis/.zenodo.json",
+      "projects/templates/template_autopoiesis/CITATION.cff",
+      "projects/templates/template_autopoiesis/README.md",
+      "projects/templates/template_autopoiesis/TODO.md",
+      "projects/templates/template_autopoiesis/codemeta.json",
+      "projects/templates/template_autopoiesis/coverage_project.json",
+      "projects/templates/template_autopoiesis/manuscript/00_abstract.md",
+      "projects/templates/template_autopoiesis/manuscript/config.yaml",
+      "projects/templates/template_autopoiesis/scripts/01_generate_manuscript_assets.py",
+      "projects/templates/template_autopoiesis/src/manuscript_figures.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 102,
+        "touch_share": 0.9903,
+        "recency_share": 0.9903,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "agent@humos.local",
+        "name": "Hermes Agent",
+        "touches": 1,
+        "touch_share": 0.0097,
+        "recency_share": 0.0097,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 103,
+      "recency_weight": 101.799035,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 12,
+    "size": 25,
+    "files": [
+      "projects/templates/template_autopoiesis/src/__pycache__/cli.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/common.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/cover_art.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/expand.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/figures.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/honesty.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/integrity.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/manuscript_variables.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/materialize.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/realize.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/sealing.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/__pycache__/verify.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/__init__.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/base.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/dynamics.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/graph.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/optimization.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/signal.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/src/primitives/__pycache__/statistics.cpython-312.pyc",
+      "projects/templates/template_autopoiesis/tests/__pycache__/test_cli.cpython-312-pytest-9.0.3.pyc",
+      "projects/templates/template_autopoiesis/tests/__pycache__/test_cover_art.cpython-312-pytest-9.0.3.pyc",
+      "projects/templates/template_autopoiesis/tests/__pycache__/test_figures.cpython-312-pytest-9.0.3.pyc",
+      "projects/templates/template_autopoiesis/tests/__pycache__/test_integrity_and_verify.cpython-312-pytest-9.0.3.pyc",
+      "projects/templates/template_autopoiesis/tests/__pycache__/test_manuscript_variables.cpython-312-pytest-9.0.3.pyc",
+      "projects/templates/template_autopoiesis/tests/__pycache__/test_sealing.cpython-312-pytest-9.0.3.pyc"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 52,
+        "touch_share": 0.6753,
+        "recency_share": 0.6744,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "agent@humos.local",
+        "name": "Hermes Agent",
+        "touches": 25,
+        "touch_share": 0.3247,
+        "recency_share": 0.3256,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 77,
+      "recency_weight": 76.096981,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 13,
+    "size": 24,
+    "files": [
+      "ARCHITECTURE.md",
+      "CODE_OF_CONDUCT.md",
+      "CONTRIBUTING.md",
+      "COPYPASTA.md",
+      "EXAMPLES.md",
+      "EXAMPLES_SHOWCASE.md",
+      "FAQ.md",
+      "HOW_TO_USE.md",
+      "HYPERLINK_SUMMARY.md",
+      "MARKDOWN_TEMPLATE_GUIDE.md",
+      "ROADMAP.md",
+      "SECURITY.md",
+      "TEMPLATE_DESCRIPTION.md",
+      "THIN_ORCHESTRATOR_SUMMARY.md",
+      "WORKFLOW.md",
+      "markdown/00_preamble.md",
+      "markdown/01_abstract.md",
+      "markdown/02_introduction.md",
+      "markdown/03_methodology.md",
+      "markdown/04_experimental_results.md",
+      "markdown/05_discussion.md",
+      "markdown/06_conclusion.md",
+      "project_name/repo_utilities/render_pdf.sh",
+      "repo_utilities/clean_output.sh"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 78,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 78,
+      "recency_weight": 28.312798,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 14,
+    "size": 16,
+    "files": [
+      "projects/templates/template_madlib/scripts/AGENTS.md",
+      "projects/templates/template_madlib/src/AGENTS.md",
+      "projects/templates/template_madlib/src/analysis.py",
+      "projects/templates/template_madlib/src/artifact_writers.py",
+      "projects/templates/template_madlib/tests/test_tokens_extended.py",
+      "projects/templates/template_pools_rules_tools/AGENTS.md",
+      "projects/templates/template_pools_rules_tools/README.md",
+      "projects/templates/template_pools_rules_tools/TODO.md",
+      "projects/templates/template_pools_rules_tools/manuscript/config.yaml.example",
+      "projects/templates/template_pools_rules_tools/src/__init__.py",
+      "projects/templates/template_pools_rules_tools/src/fonds_reader.py",
+      "projects/templates/template_pools_rules_tools/src/rules_applier.py",
+      "projects/templates/template_pools_rules_tools/src/strong_rule_evaluator.py",
+      "projects/templates/template_pools_rules_tools/src/tools_invoker.py",
+      "projects/templates/template_pools_rules_tools/src/types.py",
+      "projects/templates/template_pools_rules_tools/tests/test_coverage_extras.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 57,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 57,
+      "recency_weight": 55.941256,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 15,
+    "size": 14,
+    "files": [
+      "projects/templates/template_autoresearch_project/TODO.md",
+      "projects/templates/template_autoresearch_project/docs/validation-architecture.md",
+      "projects/templates/template_autoresearch_project/scripts/check_source_ledger.py",
+      "projects/templates/template_autoresearch_project/scripts/regenerate_mnist_fixture.py",
+      "projects/templates/template_autoresearch_project/scripts/run_autoresearch_loop.py",
+      "projects/templates/template_autoresearch_project/scripts/z_generate_manuscript_variables.py",
+      "projects/templates/template_autoresearch_project/src/loop.py",
+      "projects/templates/template_autoresearch_project/src/loop_phases.py",
+      "projects/templates/template_autoresearch_project/tests/AGENTS.md",
+      "projects/templates/template_autoresearch_project/tests/conftest.py",
+      "projects/templates/template_autoresearch_project/tests/test_loop.py",
+      "projects/templates/template_autoresearch_project/tests/test_reports.py",
+      "projects/templates/template_autoresearch_project/tests/test_writers.py",
+      "projects/templates/template_code_project/src/manuscript_variables.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 65,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 65,
+      "recency_weight": 58.069006,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 16,
+    "size": 14,
+    "files": [
+      "projects/fep_lean/docs/README.md",
+      "projects/fep_lean/docs/api.md",
+      "projects/fep_lean/docs/configuration.md",
+      "projects/fep_lean/docs/glossary.md",
+      "projects/fep_lean/docs/hermes.md",
+      "projects/fep_lean/docs/lean4.md",
+      "projects/fep_lean/docs/pipeline.md",
+      "projects/fep_lean/docs/troubleshooting.md",
+      "projects/fep_lean/manuscript/02a_introduction.md",
+      "projects/fep_lean/manuscript/03_methodology.md",
+      "projects/fep_lean/manuscript/03f_pipeline_architecture.md",
+      "projects/fep_lean/manuscript/05b_zero_mock_standard.md",
+      "projects/fep_lean/manuscript/06_conclusion.md",
+      "projects/fep_lean/src/llm/hermes.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 42,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 42,
+      "recency_weight": 31.019428,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 17,
+    "size": 13,
+    "files": [
+      "infrastructure/llm/cli/AGENTS.md",
+      "infrastructure/llm/prompts/AGENTS.md",
+      "infrastructure/llm/prompts/compositions/AGENTS.md",
+      "infrastructure/llm/prompts/fragments/AGENTS.md",
+      "infrastructure/llm/prompts/templates/AGENTS.md",
+      "infrastructure/llm/review/AGENTS.md",
+      "infrastructure/llm/templates/AGENTS.md",
+      "infrastructure/llm/utils/AGENTS.md",
+      "infrastructure/llm/validation/AGENTS.md",
+      "infrastructure/project/manuscript/AGENTS.md",
+      "tests/README.md",
+      "tests/infra_tests/AGENTS.md",
+      "tests/integration/AGENTS.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 152,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 152,
+      "recency_weight": 96.036573,
+      "sensitive_weight": 73.8
+    }
+  },
+  {
+    "id": 18,
+    "size": 11,
+    "files": [
+      "projects/code_project/manuscript/00_abstract.md",
+      "projects/code_project/manuscript/01_introduction.md",
+      "projects/code_project/manuscript/02_methodology.md",
+      "projects/code_project/manuscript/03_results.md",
+      "projects/code_project/manuscript/04_conclusion.md",
+      "projects/code_project/manuscript/AGENTS.md",
+      "projects/code_project/manuscript/README.md",
+      "projects/code_project/manuscript/config.yaml",
+      "projects/code_project/manuscript/config.yaml.example",
+      "projects/code_project/manuscript/preamble.md",
+      "projects/code_project/manuscript/references.bib"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 113,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 113,
+      "recency_weight": 67.597889,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 19,
+    "size": 8,
+    "files": [
+      "projects/template_code_project/README.md",
+      "projects/template_code_project/docs/testing_philosophy.md",
+      "projects/template_code_project/docs/troubleshooting.md",
+      "projects/template_code_project/manuscript/AGENTS.md",
+      "projects/template_prose_project/README.md",
+      "projects/template_prose_project/docs/rendering_pipeline.md",
+      "projects/template_prose_project/docs/testing_philosophy.md",
+      "projects/template_prose_project/manuscript/AGENTS.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 63,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 63,
+      "recency_weight": 51.579884,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 20,
+    "size": 5,
+    "files": [
+      "projects/template/scripts/generate_architecture_viz.py",
+      "projects/template/src/template/__init__.py",
+      "projects/template/src/template/introspection.py",
+      "projects/template/src/template/metrics.py",
+      "projects/template/tests/test_meta.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 41,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 41,
+      "recency_weight": 27.102767,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 21,
+    "size": 4,
+    "files": [
+      "infrastructure/core/runtime/_directories.py",
+      "infrastructure/validation/content/figure_validator.py",
+      "tests/infra_tests/core/test_directories.py",
+      "tests/infra_tests/validation/test_figure_validator.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 29,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 29,
+      "recency_weight": 22.846868,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 22,
+    "size": 4,
+    "files": [
+      "projects/templates/template_autoscientists/manuscript/04_conclusion.md",
+      "projects/templates/template_autoscientists/manuscript/05_experimental_setup.md",
+      "projects/templates/template_autoscientists/manuscript/06_reproducibility.md",
+      "projects/templates/template_autoscientists/manuscript/07_scope_and_related_work.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 8,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 8,
+      "recency_weight": 7.004041,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 23,
+    "size": 4,
+    "files": [
+      "projects/templates/template_active_inference/src/gates/claim_ledger.py",
+      "projects/templates/template_active_inference/src/gnn/concordance.py",
+      "projects/templates/template_active_inference/src/manuscript/invariant_counts.py",
+      "projects/templates/template_active_inference/tests/test_integrity_remediations.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 19,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 19,
+      "recency_weight": 16.331202,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 24,
+    "size": 4,
+    "files": [
+      "projects/template_code_project/docs/AGENTS.md",
+      "projects/template_code_project/pyproject.toml",
+      "projects/template_prose_project/src/STYLE.md",
+      "projects/template_prose_project/tests/PATTERNS.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 24,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 24,
+      "recency_weight": 19.804576,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 25,
+    "size": 4,
+    "files": [
+      "COMPLETION_REPORT.md",
+      "FINAL_VERIFICATION.md",
+      "IMPLEMENTATION_SUMMARY.md",
+      "SYSTEM_READY.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 12,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 12,
+      "recency_weight": 4.952464,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 26,
+    "size": 3,
+    "files": [
+      "scripts/08_connector_search.py",
+      "scripts/09_provenance_record.py",
+      "scripts/10_research_workflow.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 9,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 9,
+      "recency_weight": 8.894296,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 27,
+    "size": 3,
+    "files": [
+      "projects/templates/template_code_project/scripts/08_connector_search.py",
+      "projects/templates/template_code_project/scripts/09_provenance_record.py",
+      "projects/templates/template_code_project/scripts/10_research_workflow.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 7,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 7,
+      "recency_weight": 6.923831,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 28,
+    "size": 3,
+    "files": [
+      "projects/templates/template_autopoiesis/src/realize.py",
+      "projects/templates/template_autopoiesis/src/sealing.py",
+      "projects/templates/template_autopoiesis/src/verify.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 12,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 12,
+      "recency_weight": 11.826589,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 29,
+    "size": 3,
+    "files": [
+      "infrastructure/publishing/arxiv/AGENTS.md",
+      "infrastructure/publishing/arxiv/README.md",
+      "infrastructure/publishing/arxiv/submission.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.461127,
+      "sensitive_weight": 6.0
+    }
+  },
+  {
+    "id": 30,
+    "size": 3,
+    "files": [
+      "projects/templates/template_newspaper/src/newspaper/components.py",
+      "projects/templates/template_newspaper/src/newspaper/config.py",
+      "projects/templates/template_newspaper/src/newspaper/typography.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 10,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 10,
+      "recency_weight": 9.004446,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 31,
+    "size": 3,
+    "files": [
+      "projects/template_code_project/manuscript/preamble.md",
+      "projects/template_prose_project/manuscript/config.yaml.example",
+      "projects/template_prose_project/manuscript/preamble.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 11,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 11,
+      "recency_weight": 9.104611,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 32,
+    "size": 2,
+    "files": [
+      "infrastructure/core/pipeline/cli.py",
+      "tests/infra_tests/core/pipeline/test_pipeline_cli.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.805728,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 33,
+    "size": 2,
+    "files": [
+      "projects/templates/template_autopoiesis/src/cover_art.py",
+      "projects/templates/template_autopoiesis/src/manuscript_variables.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 6,
+        "touch_share": 0.8571,
+        "recency_share": 0.8564,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "agent@humos.local",
+        "name": "Hermes Agent",
+        "touches": 1,
+        "touch_share": 0.1429,
+        "recency_share": 0.1436,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 7,
+      "recency_weight": 6.91083,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 34,
+    "size": 2,
+    "files": [
+      "projects/templates/template_textbook/docs/testing_guide.md",
+      "projects/templates/template_textbook/docs/visualization_guide.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 5,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 5,
+      "recency_weight": 4.608782,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 35,
+    "size": 2,
+    "files": [
+      "infrastructure/core/pytest_marker_exprs.py",
+      "tests/infra_tests/core/test_pytest_marker_exprs.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 8,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 8,
+      "recency_weight": 6.842941,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 36,
+    "size": 2,
+    "files": [
+      "infrastructure/publishing/status_report.py",
+      "tests/infra_tests/publishing/test_status_report.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 4,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 4,
+      "recency_weight": 3.862588,
+      "sensitive_weight": 2.0
+    }
+  },
+  {
+    "id": 37,
+    "size": 2,
+    "files": [
+      "projects/templates/template_active_inference/.agents/skills/template-active-inference/SKILL.md",
+      "projects/templates/template_active_inference/docs/quickstart.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 5,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 5,
+      "recency_weight": 4.88425,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 38,
+    "size": 2,
+    "files": [
+      "projects/templates/template_literature_meta_analysis/.agents/skills/template-literature-meta-analysis/SKILL.md",
+      "projects/templates/template_template/.agents/skills/template-template/SKILL.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.862919,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 39,
+    "size": 2,
+    "files": [
+      "infrastructure/search/exa/cli.py",
+      "tests/infra_tests/search/test_exa.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 4,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 1.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 4,
+      "recency_weight": 3.607393,
+      "sensitive_weight": 1.8
+    }
+  },
+  {
+    "id": 40,
+    "size": 2,
+    "files": [
+      "infrastructure/prose/markdown.py",
+      "tests/infra_tests/prose/test_markdown_helpers.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 12,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 12,
+      "recency_weight": 10.412833,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 41,
+    "size": 2,
+    "files": [
+      "scripts/maintenance/split_semantic_modules.py",
+      "scripts/maintenance/split_sheaf_tracks_modules.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 4,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 4,
+      "recency_weight": 3.630186,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 42,
+    "size": 2,
+    "files": [
+      "projects/templates/template_autoresearch_project/src/writers/benchmark.py",
+      "projects/templates/template_autoresearch_project/src/writers/payloads.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.368348,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 43,
+    "size": 2,
+    "files": [
+      "projects/templates/template_autoscientists/src/__init__.py",
+      "projects/templates/template_autoscientists/src/agents.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 7,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 7,
+      "recency_weight": 6.286269,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 44,
+    "size": 2,
+    "files": [
+      "projects/templates/template_active_inference/manuscript/06_methods_pymdp.md",
+      "projects/templates/template_active_inference/manuscript/sections/imrad/methods_pymdp/prose.md"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 17,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 17,
+      "recency_weight": 14.811132,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 45,
+    "size": 2,
+    "files": [
+      "tests/infra_tests/core/test_credentials.py",
+      "tests/infra_tests/core/test_credentials_module.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 10,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 10,
+      "recency_weight": 7.266444,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 46,
+    "size": 2,
+    "files": [
+      "infrastructure/reporting/evidence_graph.py",
+      "tests/infra_tests/reporting/test_evidence_graph.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "pai@local",
+        "name": "PAI",
+        "touches": 2,
+        "touch_share": 0.5,
+        "recency_share": 0.5023,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      },
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 2,
+        "touch_share": 0.5,
+        "recency_share": 0.4977,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 4,
+      "recency_weight": 3.542031,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 47,
+    "size": 2,
+    "files": [
+      "projects/templates/template_autoscientists/src/figures.py",
+      "projects/templates/template_autoscientists/tests/test_figures.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 8,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 8,
+      "recency_weight": 7.262156,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 48,
+    "size": 2,
+    "files": [
+      "projects/templates/template_autoscientists/scripts/run_ablation.py",
+      "projects/templates/template_autoscientists/scripts/run_search_comparison.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.340369,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 49,
+    "size": 2,
+    "files": [
+      "projects/template_code_project/src/STYLE.md",
+      "scripts/check_template_drift.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 12,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 12,
+      "recency_weight": 9.883263,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 50,
+    "size": 2,
+    "files": [
+      "infrastructure/core/pipeline/multi_project.py",
+      "tests/infra_tests/core/test_multi_project.py"
+    ],
+    "maintainers": [
+      {
+        "person_id": "danielarifriedman@gmail.com",
+        "name": "Daniel Ari Friedman",
+        "touches": 18,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "-07:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 18,
+      "recency_weight": 13.036263,
+      "sensitive_weight": 0
+    }
+  }
+]

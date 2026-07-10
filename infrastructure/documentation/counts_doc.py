@@ -20,7 +20,7 @@ back out via the markers ``Last refreshed count: **N**`` and
 ``Result: **N** project-scope ... **N** publishing tests``.
 
 The per-exemplar test/coverage snapshot table is a *measured snapshot* rather
-than a live derivation: running nine projects' coverage gates on every ``--check``
+than a live derivation: running every project's coverage gate on every ``--check``
 would be prohibitively slow and environment-fragile (each exemplar pins its own
 ``.venv`` and toolchain). The measured values live in :data:`EXEMPLAR_SNAPSHOT`
 with an explicit measurement date; refresh them with ``--write`` after re-running
@@ -44,7 +44,7 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-06"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-09"
 
 
 @dataclass(frozen=True)
@@ -71,6 +71,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
     ExemplarSnapshot("template_code_project", 236, "98.78 %"),
+    ExemplarSnapshot("template_data_descriptor", 4, "92.11 %"),
     ExemplarSnapshot("template_eda_notebook", 62, "100.00 %"),
     ExemplarSnapshot("template_gold_refinement", 248, "97.55 %"),
     ExemplarSnapshot("template_literature_meta_analysis", 772, "96.74 %"),
@@ -80,6 +81,8 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
+    ExemplarSnapshot("template_redacted_report", 7, "100.00 %"),
+    ExemplarSnapshot("template_registered_report", 7, "99.25 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),
     ExemplarSnapshot("template_storybook", 10, "93.92 %"),

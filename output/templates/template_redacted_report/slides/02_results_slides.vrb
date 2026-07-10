@@ -1,0 +1,16 @@
+\frametitle{Results}
+The fixture release packet shows how invented high-side markers are
+redacted before a public narrative is generated. The public export
+contains redacted text only, paragraph audit rows, release authority
+metadata, source-safe ledger hashes, review-gate status, and
+residual-marker findings for review; it does not contain operational
+source text beyond invented fixture residue used by tests.
+
+The development proof matrix produces sixteen visual PDFs and, when
+steganography is enabled, sixteen companion provenance PDFs with hash
+sidecars. The matrix also records Kmyth runtime status and \texttt{.ski}
+sidecar counts so TPM sealing is evidenced as an observed output rather
+than a prose claim. This confirms that visual presentation choices
+remain orthogonal to the release gate: the same source-safe decisions
+drive every blackout, whiteout, grayout, blur, white-background,
+gray-background, black-background, and blur-background output.

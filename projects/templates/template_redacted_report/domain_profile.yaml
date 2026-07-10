@@ -1,0 +1,32 @@
+domain: redacted_report
+display_name: Redacted Release Report
+required_packages: [pytest]
+preferred_outputs: [pdf, html, json]
+validation_gates:
+  - classification_ceiling
+  - source_protection
+  - redaction_ledger
+  - mosaic_risk
+  - release_authority
+figure_types:
+  - redaction_flow
+  - disclosure_control_matrix
+citation_policy: official_or_scholarly
+llm_prompt_guidance: "Use only cleared public fixture text; focus on release-review process and never operational collection details."
+review_gates:
+  - classification_review
+  - disclosure_control
+  - release_authority_review
+source_policy: "High-side source material stays outside the public repository; commit only sanitized fixtures and ledgers."
+artifact_expectations:
+  - output/reports/redaction_audit.json
+  - output/data/release_ledger.json
+benchmark_rubric:
+  name: redacted-report-readiness
+  dimensions:
+    - name: source_protection
+      weight: 2.0
+    - name: redaction_traceability
+      weight: 2.0
+    - name: mosaic_risk_control
+      weight: 1.5

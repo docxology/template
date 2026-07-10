@@ -1,0 +1,32 @@
+{
+  "title": "Example preregistered robustness study",
+  "version": "0.1.0",
+  "registered_report_stage": "stage_1",
+  "ethics_review": {
+    "status": "exempt",
+    "authority": "synthetic-fixture-review",
+    "reference": "fixture-only"
+  },
+  "hypotheses": [
+    {"id": "H1", "claim": "The proposed condition improves the primary score."}
+  ],
+  "outcomes": [
+    {"name": "primary_score", "measure": "mean score difference", "analysis": "two-sided permutation test"}
+  ],
+  "exclusion_rules": [
+    "Exclude records missing the primary outcome before group assignment is inspected."
+  ],
+  "analysis_plan": {
+    "primary_model": "permutation_test",
+    "alpha": 0.05,
+    "seed": 20260709
+  },
+  "sensitivity_analyses": [
+    {
+      "name": "label_permutation_sensitivity",
+      "target": "primary_score",
+      "model": "permutation_test",
+      "decision": "robust"
+    }
+  ]
+}

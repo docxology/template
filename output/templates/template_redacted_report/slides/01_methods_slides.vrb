@@ -1,0 +1,17 @@
+\frametitle{Methods}
+The method audits each segment against a public classification ceiling,
+validates redaction spans, checks orphan decisions, checks
+source-control coverage, normalizes classification taxonomies, exports
+sanitized release packets, builds source-safe redaction ledgers, records
+segment source/public hashes, evaluates reviewer approval gates, builds
+paragraph-level audit tables, and scores residual mosaic risk.
+
+Visual proofing is parameterized separately from the release-audit text
+path. Development renders enumerate four redaction treatments (blackout,
+whiteout, grayout, blur) across four PDF backgrounds (white, gray,
+black, blur) while preserving source-safe ledgers. The secure proof path
+post-processes each proof PDF with the repository steganography layer:
+hash manifests, provenance overlays, invisible text, barcodes, PDF
+metadata, XMP metadata, embedded manifest attachments, and optional
+Kmyth TPM \texttt{.ski} sidecars for the proof PDF and source-safe hash
+manifest when runnable Kmyth tools and TPM access are available.
