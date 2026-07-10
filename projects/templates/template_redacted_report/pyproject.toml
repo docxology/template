@@ -8,7 +8,12 @@ version = "0.1.0"
 description = "Redacted release report and disclosure-control exemplar"
 authors = [{name = "Research Template Author", email = "author@research-template.org"}]
 requires-python = ">=3.10"
-dependencies = []
+# visuals.py renders proof PDFs with reportlab and re-parses them with pypdf;
+# the isolated per-project interpreter needs both (mirrors template_pitch_deck).
+dependencies = [
+    "reportlab>=4.0.0",
+    "pypdf>=6.12.0",
+]
 
 [project.optional-dependencies]
 dev = [

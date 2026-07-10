@@ -515,6 +515,39 @@ def test_unknown_classification_and_high_mosaic_risk_are_reported() -> None:
     assert "mosaic_risk" in codes
 
 
+def test_paragraph_audit_keeps_original_text_when_decisions_are_invalid() -> None:
+    segment = RedactionSegment("s1", "UNCLASSIFIED", "Contact analyst@example.org for details.")
+    decisions = [RedactionDecision("s1", 5, 999, "privacy")]
+
+    rows = paragraph_audit_table([segment], decisions)
+
+    assert rows[0]["decision_count"] == 1
+    assert rows[0]["redacted_length"] == len(segment.text)
+    assert "email_address" in rows[0]["residual_markers"]
+
+
+def test_hash_manifest_uses_empty_public_hash_when_redaction_fails() -> None:
+    segment = RedactionSegment("s1", "UNCLASSIFIED", "public text")
+    decisions = [RedactionDecision("s1", 5, 999, "privacy")]
+
+    rows = segment_hash_manifest([segment], decisions)
+
+    assert rows[0]["source_sha256"] == hashlib.sha256(segment.text.encode("utf-8")).hexdigest()
+    assert rows[0]["public_sha256"] == hashlib.sha256(b"").hexdigest()
+
+
+def test_duplicate_segment_ids_are_reported_as_errors() -> None:
+    segments = [
+        RedactionSegment("s1", "UNCLASSIFIED", "first copy"),
+        RedactionSegment("s1", "UNCLASSIFIED", "second copy"),
+    ]
+
+    audit = audit_release_packet(segments, [], release_authority="review-board")
+
+    assert audit.releasable is False
+    assert "duplicate_segment_id" in {finding.code for finding in audit.findings}
+
+
 def _test_file_digest(path: Path, algorithm: str) -> str:
     digest = hashlib.new(algorithm)
     digest.update(path.read_bytes())

@@ -395,7 +395,7 @@ def write_dev_variant_pdfs(
     kmyth_binary_dir: str | Path | None = None,
     kmyth_required: bool = False,
     kmyth_timeout_seconds: int = 120,
-) -> dict[str, object]:  # pragma: no cover - integration-tested by the dev generator
+) -> dict[str, object]:
     """Write one proof PDF per visual combination plus optional secure variants."""
     output_dir.mkdir(parents=True, exist_ok=True)
     kmyth_status = _resolve_kmyth_status(
@@ -429,7 +429,7 @@ def write_dev_variant_pdfs(
             variant["base_pdf_bytes"] = base_pdf.stat().st_size
             variant["base_pdf_sha256"] = _file_sha256(base_pdf)
 
-            if include_steganography:
+            if include_steganography:  # pragma: no cover - steganography branch needs the repo-root SteganographyProcessor; exercised by scripts/generate_dev_variants.py, not the per-project unit gate
                 secure_pdf = output_dir / str(variant["steganography_pdf"])
                 _write_steganography_pdf(
                     base_pdf,
@@ -498,7 +498,7 @@ def _write_visual_pdf(
     background: PDFBackgroundProfile,
     *,
     title: str,
-) -> None:  # pragma: no cover - integration-tested by the dev generator
+) -> None:
     try:
         from reportlab.lib.colors import Color
         from reportlab.lib.pagesizes import letter
@@ -1113,7 +1113,7 @@ def _draw_segment(
     background: PDFBackgroundProfile,
     color_factory: Any,
     string_width: Any,
-) -> float:  # pragma: no cover - integration-tested by the dev generator
+) -> float:
     redact_text(segment.text, list(decisions))
     cursor_x = x
     cursor_y = y
@@ -1151,7 +1151,7 @@ def _draw_redaction_box(
     width: float,
     style: RedactionVisualProfile,
     color_factory: Any,
-) -> None:  # pragma: no cover - integration-tested by the dev generator
+) -> None:
     doc.setStrokeColor(color_factory(style.border_rgb))
     doc.setFillColor(color_factory(style.fill_rgb))
     doc.rect(x, y - 2, width, 11, stroke=1, fill=1)
@@ -1171,7 +1171,7 @@ def _draw_blurred_text(
     y: float,
     background: PDFBackgroundProfile,
     color_factory: Any,
-) -> None:  # pragma: no cover - integration-tested by the dev generator
+) -> None:
     doc.setFillColor(color_factory(background.subdued_text_rgb))
     doc.setFont("Helvetica", 10)
     for dx, dy in ((-0.6, 0), (0.6, 0), (0, 0.6), (0, -0.6)):
@@ -1190,7 +1190,7 @@ def _write_steganography_pdf(
     kmyth_binary_dir: str | Path | None,
     kmyth_required: bool,
     kmyth_timeout_seconds: int,
-) -> None:  # pragma: no cover - integration-tested by the dev generator
+) -> None:  # pragma: no cover - needs the repo-root SteganographyProcessor; exercised by scripts/generate_dev_variants.py, not the per-project unit gate
     from infrastructure.steganography import SteganographyConfig, SteganographyProcessor
 
     for sidecar in _kmyth_sidecars_for(base_pdf, secure_pdf).values():
@@ -1347,7 +1347,7 @@ def _kmyth_sidecars_for(base_pdf: Path, secure_pdf: Path) -> dict[str, Path]:
 def _redaction_parts(
     text: str,
     decisions: Sequence[RedactionDecision],
-) -> tuple[tuple[str, str], ...]:  # pragma: no cover - integration-tested by the dev generator
+) -> tuple[tuple[str, str], ...]:
     parts: list[tuple[str, str]] = []
     cursor = 0
     for decision in sorted(decisions, key=lambda item: item.start):
@@ -1360,7 +1360,7 @@ def _redaction_parts(
     return tuple(parts)
 
 
-def _split_keep_spaces(text: str) -> tuple[str, ...]:  # pragma: no cover - integration-tested by the dev generator
+def _split_keep_spaces(text: str) -> tuple[str, ...]:
     tokens: list[str] = []
     for word in text.split(" "):
         if not tokens:
@@ -1377,7 +1377,7 @@ def _decisions_by_segment(decisions: Sequence[RedactionDecision]) -> dict[str, l
     return grouped
 
 
-def _file_sha256(path: Path) -> str:  # pragma: no cover - integration-tested by the dev generator
+def _file_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as fh:
         for chunk in iter(lambda: fh.read(1024 * 1024), b""):

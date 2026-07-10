@@ -44,7 +44,7 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-09"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-10"
 
 
 @dataclass(frozen=True)
@@ -82,10 +82,11 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
     ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
-    # Coverage re-measured by CI run 29098773585 after the 1500-line visuals.py
-    # (kmyth/TPM proof pipeline) landed with only 7 tests — the env-gated TPM
-    # paths never execute on CI. Open debt: raise back over the 90 % floor.
-    ExemplarSnapshot("template_redacted_report", 7, "55.91 %"),
+    # Re-measured 2026-07-10 after closing the visuals.py coverage debt (CI run
+    # 29098773585 had measured 55.91 % with 7 tests): the proof-PDF renderer,
+    # verifier, and kmyth subprocess helpers now have real no-mocks tests; only
+    # the repo-root steganography processor call stays pragma no-cover.
+    ExemplarSnapshot("template_redacted_report", 50, "99.05 %"),
     ExemplarSnapshot("template_registered_report", 7, "99.25 %"),
     ExemplarSnapshot("template_search_project", 296, "95.13 %"),
     ExemplarSnapshot("template_sia", 40, "97.16 %"),

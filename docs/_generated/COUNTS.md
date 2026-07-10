@@ -141,7 +141,7 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **372** project-scope infrastructure tests collected and **660** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (latest recorded measurements; table membership last updated 2026-07-09; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (latest recorded measurements; table membership last updated 2026-07-10; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
@@ -161,7 +161,7 @@ Result: **372** project-scope infrastructure tests collected and **660** publish
 | `template_pitch_deck` | 110 | 97.70 % |
 | `template_pools_rules_tools` | 204 | 90.95 % |
 | `template_prose_project` | 78 | 100.00 % |
-| `template_redacted_report` | 7 | 55.91 % |
+| `template_redacted_report` | 50 | 99.05 % |
 | `template_registered_report` | 7 | 99.25 % |
 | `template_search_project` | 296 | 95.13 % |
 | `template_sia` | 40 | 97.16 % |
