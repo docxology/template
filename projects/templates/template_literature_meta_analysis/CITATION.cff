@@ -1,5 +1,6 @@
 authors:
-- family-names: Friedman
+- affiliation: Active Inference Institute
+  family-names: Friedman
   given-names: Daniel Ari
   orcid: 0000-0001-6232-9096
 cff-version: 1.2.0

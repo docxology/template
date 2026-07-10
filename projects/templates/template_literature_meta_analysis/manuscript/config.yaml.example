@@ -19,8 +19,7 @@ authors:
   - name: "Your Name"
     orcid: "0000-0000-0000-0000"
     email: "you@example.org"
-    affiliations:
-      - "Your Institution"
+    affiliation: "Your Institution"
     corresponding: true
 
 publication:

@@ -502,10 +502,16 @@ def _normalize_orcid(value: str) -> str:
     generator emits the bare identifier; both name the same person and must not
     read as authorship drift.
     """
-    lowered = value.lower()
-    for prefix in ("https://orcid.org/", "http://orcid.org/"):
+    text = value.rstrip("/")
+    lowered = text.lower()
+    for prefix in ("https://", "http://"):
         if lowered.startswith(prefix):
-            return value[len(prefix) :]
+            text = text[len(prefix) :]
+            lowered = lowered[len(prefix) :]
+            break
+    for host in ("www.orcid.org/", "orcid.org/"):
+        if lowered.startswith(host):
+            return text[len(host) :]
     return value
 
 

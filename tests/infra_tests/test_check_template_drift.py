@@ -863,6 +863,16 @@ def test_metadata_export_url_form_orcid_is_not_drift(drift_module, tmp_path):
     assert any(f.rule == "metadata_export_author_drift" and "CITATION.cff" in f.message for f in rep.errors())
 
 
+def test_metadata_export_check_is_registered_in_project_checks():
+    """The production gate runs registry.PROJECT_CHECKS — direct-call unit tests
+    stay green even if the check is silently dropped from the registry, so the
+    registration itself must be pinned."""
+    from infrastructure.project.drift.checks_exemplar import check_metadata_export_current
+    from infrastructure.project.drift.registry import PROJECT_CHECKS
+
+    assert check_metadata_export_current in PROJECT_CHECKS
+
+
 def test_metadata_export_skips_when_no_derived_files(drift_module, tmp_path):
     """Exemplars that do not ship the derived metadata files are out of scope."""
     root = _scaffold_minimal_project(tmp_path)

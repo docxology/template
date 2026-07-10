@@ -16,8 +16,7 @@ authors:
   - name: "Daniel Ari Friedman"
     orcid: "0000-0001-6232-9096"
     email: "daniel@activeinference.institute"
-    affiliations:
-      - "Active Inference Institute"
+    affiliation: "Active Inference Institute"
     corresponding: true
 
 publication:
