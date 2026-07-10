@@ -1,13 +1,13 @@
 {
   "source_file": "whiteout_on_black.pdf",
-  "timestamp": "2026-07-10T10:46:03-07:00",
+  "timestamp": "2026-07-10T11:04:18-07:00",
   "hashes": {
     "sha256": "a00c5f843cfc992b09c51c0f08d5e74d1f2acbf2a3648b537da995a425c383fd",
     "sha512": "41e47e6aa549c06ee8f52e905e5a8a9a1e7fc17f45c78cef17cf23c8ae3b493899979d99c894833dcf220f31e2987040384080793c99a854a7f627c865460c23"
   },
-  "document_id": "12aff773774fb3d57116132426c73029",
+  "document_id": "2d3c33db7af54e45331a1fb8e709d3e6",
   "source_size_bytes": 21404,
-  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
+  "git_commit": "91ef372429204c0f13642469b11b812b75cd72ae",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

@@ -1,13 +1,13 @@
 {
   "source_file": "blackout_on_gray.pdf",
-  "timestamp": "2026-07-10T10:46:03-07:00",
+  "timestamp": "2026-07-10T11:04:18-07:00",
   "hashes": {
     "sha256": "6762242191bdc0ddc717c04b7374d8320397acc1cf3c89e36b321c925c2f884f",
     "sha512": "017d21ab5bec4e774797c2358188cf33fd1c54f34e01853b040ad2d37dba77c6f4636afa3aab5cd1e8a5ce10bb40345df62f12dde1cd95fbe7aebf20e07de77d"
   },
-  "document_id": "12aff773774fb3d57116132426c73029",
+  "document_id": "2d3c33db7af54e45331a1fb8e709d3e6",
   "source_size_bytes": 21632,
-  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
+  "git_commit": "91ef372429204c0f13642469b11b812b75cd72ae",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

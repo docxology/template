@@ -1,13 +1,13 @@
 {
   "source_file": "blur_on_blur.pdf",
-  "timestamp": "2026-07-10T10:46:03-07:00",
+  "timestamp": "2026-07-10T11:04:18-07:00",
   "hashes": {
     "sha256": "08840bd1da5a1424e3183bdf4a822ca9ffb46cacf00d25b2f9ba1f9092d45d68",
     "sha512": "6a4b9b7192546f0826a6b3f15a815a9e8b8fc66e781c2980ccf71ba0fa374552596b81df0c13e4445d2a48352229124dd96fce85f79f92ecae5290c6ef37bd77"
   },
-  "document_id": "12aff773774fb3d57116132426c73029",
+  "document_id": "2d3c33db7af54e45331a1fb8e709d3e6",
   "source_size_bytes": 36935,
-  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
+  "git_commit": "91ef372429204c0f13642469b11b812b75cd72ae",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

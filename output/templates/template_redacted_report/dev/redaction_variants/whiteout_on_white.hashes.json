@@ -1,13 +1,13 @@
 {
   "source_file": "whiteout_on_white.pdf",
-  "timestamp": "2026-07-10T10:46:03-07:00",
+  "timestamp": "2026-07-10T11:04:18-07:00",
   "hashes": {
     "sha256": "ed566ea3148c7fcdd7bcaef00072368db40ed8127abe7376f84ed6dfac57483c",
     "sha512": "68f2248ee491a5b6a9c8a2bec0b8d3f8ab44a1599ead869b0de4a2fb2263cf800df798151a456c551ca5dc46740053f8a677180b2ab299975e441bde2fec92bb"
   },
-  "document_id": "12aff773774fb3d57116132426c73029",
+  "document_id": "2d3c33db7af54e45331a1fb8e709d3e6",
   "source_size_bytes": 21339,
-  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
+  "git_commit": "91ef372429204c0f13642469b11b812b75cd72ae",
   "git_commit_available": true,
   "steganography_applied": "true"
 }

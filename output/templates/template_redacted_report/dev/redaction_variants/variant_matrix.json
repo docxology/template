@@ -352,7 +352,7 @@
       "base_pdf_sha256": "e8c9802b1a38c8abed2b08fefa8143d4be7fcfc910f25926edbcb823b3446410",
       "hash_manifest": "blackout_on_white.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "440358f61b94959c2936ebff8fca738d5c8e7e501d70ed2156310e15252e08b1",
+      "hash_manifest_sha256": "3f53e0f99406323fc811fed4a62ebdfd7a71a86908d778dc4d009bdcc0b034bf",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -372,8 +372,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blackout_on_white_steganography.pdf",
-      "steganography_pdf_bytes": 146856,
-      "steganography_pdf_sha256": "cdf058226856cb95bed1a4edd7d0f3e34ce28cf014e1a223af00ee2b8a55534c",
+      "steganography_pdf_bytes": 146898,
+      "steganography_pdf_sha256": "7f5997d6a8709cbc4add102b6412c6ded69efe3109b107f998283403ab347793",
       "variant_id": "blackout_on_white"
     },
     {
@@ -382,7 +382,7 @@
       "base_pdf_sha256": "ed566ea3148c7fcdd7bcaef00072368db40ed8127abe7376f84ed6dfac57483c",
       "hash_manifest": "whiteout_on_white.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "ad2141a5044d717edafaa9130377d681b6912bfea90c47c326596fbca470b32b",
+      "hash_manifest_sha256": "a801d370bca618ffb7f803b267a553fb27829eeee9ac6f990c0b55f0ae5c34f5",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -402,8 +402,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "whiteout_on_white_steganography.pdf",
-      "steganography_pdf_bytes": 146237,
-      "steganography_pdf_sha256": "974b917db8a21c085b30b38f50a2019cf237727aae0c98fe4147f6fc84518235",
+      "steganography_pdf_bytes": 146717,
+      "steganography_pdf_sha256": "bb37828b13c40e76e555885f244edf19b172840e3c4a494a3d53bed1c539f9a7",
       "variant_id": "whiteout_on_white"
     },
     {
@@ -412,7 +412,7 @@
       "base_pdf_sha256": "f6287c83d8fc95ec5a803768190ad8ea0dd448ec0a85e5cfaa7221022077e82c",
       "hash_manifest": "grayout_on_white.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "c2c4a3d4d2f8fb56a0a02b4b0f7d0c216a71b58e1ca85cb4815901737d1c97f3",
+      "hash_manifest_sha256": "41ff65d216412e9a7e04aa8ebb772511df31cbfff20c24427370fa3ffcdfc556",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -432,8 +432,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "grayout_on_white_steganography.pdf",
-      "steganography_pdf_bytes": 147903,
-      "steganography_pdf_sha256": "8af093dbb416077e7bf55ef0db93948cacdd21c2641d80e211563bd032ad632f",
+      "steganography_pdf_bytes": 147501,
+      "steganography_pdf_sha256": "bd0919e76f45ff3321afeb123fcc87b9979a67ccb2915fe26976448151cee4e9",
       "variant_id": "grayout_on_white"
     },
     {
@@ -442,7 +442,7 @@
       "base_pdf_sha256": "f6482f62cee0e013b8400fab446899be928ad1f4bfc81cf8647a993f7f4ad3f5",
       "hash_manifest": "blur_on_white.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "1d465892dc61967ed68dc64d8753b74d8c46175af2144f973a63d8a31fb59172",
+      "hash_manifest_sha256": "9de962647cefc7459a57d2c6b8f4557ac713f8255ccdd991dfdb433b5d859854",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -462,8 +462,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blur_on_white_steganography.pdf",
-      "steganography_pdf_bytes": 149677,
-      "steganography_pdf_sha256": "1ecb83331abd3bb3b272d65aa633c4b20f0e3966f12f49ed0a0efb9cdafe5284",
+      "steganography_pdf_bytes": 149581,
+      "steganography_pdf_sha256": "101995ac0cf71876f99da0f8e0481ff76863aced69de17f75082fe505209550c",
       "variant_id": "blur_on_white"
     },
     {
@@ -472,7 +472,7 @@
       "base_pdf_sha256": "6762242191bdc0ddc717c04b7374d8320397acc1cf3c89e36b321c925c2f884f",
       "hash_manifest": "blackout_on_gray.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "c6e8afe2d1e57ed5985d6e291d6ec2a3c02185f5797973268bbeec7de887fba5",
+      "hash_manifest_sha256": "090fdc5340ef1599778dbb0f5b05210adede32c4959c36bb4762b8488026f08b",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -492,8 +492,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blackout_on_gray_steganography.pdf",
-      "steganography_pdf_bytes": 146942,
-      "steganography_pdf_sha256": "4eebf4e1da79715078fe924657bc161fdedc28f96e0e2346e5d4d8b3ba17938b",
+      "steganography_pdf_bytes": 146990,
+      "steganography_pdf_sha256": "c3db53fd58ebcf498cb1986f16b5c39aa3ab065b203e8d981378ca7eb27c4bdf",
       "variant_id": "blackout_on_gray"
     },
     {
@@ -502,7 +502,7 @@
       "base_pdf_sha256": "1353140c84ab21ef19220682c868531a5eaf5b608ec5bc771f9dbf576d746fc8",
       "hash_manifest": "whiteout_on_gray.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "8ab87773479242538add0960688d9e9d27946713d36df08ea05697844024e64e",
+      "hash_manifest_sha256": "5257fea99d19fe89860e96ed80304a8c7882f97d099448d0184183738590de40",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -522,8 +522,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "whiteout_on_gray_steganography.pdf",
-      "steganography_pdf_bytes": 147260,
-      "steganography_pdf_sha256": "e045830bcaba546073b9ef465274a70bb1fddc64192b5b2de0c46d33f5e9e3a5",
+      "steganography_pdf_bytes": 146504,
+      "steganography_pdf_sha256": "15d1c163acd16d1f148338febee8c678d0ea4c0015093512267f5be332a8e727",
       "variant_id": "whiteout_on_gray"
     },
     {
@@ -532,7 +532,7 @@
       "base_pdf_sha256": "e8242c459cb2e1a592bb7814fd90f4d5723b298975625112a32c91e1fd52761d",
       "hash_manifest": "grayout_on_gray.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "ce3a89c2b9b41ae884f6343741df8a77b138f1fa29cd6d4a6d117cd06862c256",
+      "hash_manifest_sha256": "c86203b66e79eab5cb37354e32c6664abbf8adbe10fbee1e060e9913318d7c0d",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -552,8 +552,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "grayout_on_gray_steganography.pdf",
-      "steganography_pdf_bytes": 147883,
-      "steganography_pdf_sha256": "73ed1198e4771ca4d1120a6e7f44588314fc756376e8747e964da352f22fb7fc",
+      "steganography_pdf_bytes": 147205,
+      "steganography_pdf_sha256": "c64e9790a6c10dd583c517dd9df1d367c1daaf31582b2bfc135a3b6ec6da4db1",
       "variant_id": "grayout_on_gray"
     },
     {
@@ -562,7 +562,7 @@
       "base_pdf_sha256": "8017aa20de229014ba689060af56de4daee80c19d4b5de0a0c795bbc591b91ec",
       "hash_manifest": "blur_on_gray.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "536229dcdb84b32adabfc0293a4f0890538b62118dc21301ef7a22a04696aecd",
+      "hash_manifest_sha256": "b1e09ae5d2e0467460dbb28e11236442bade9fa8a31812c3d505208ddc417016",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -582,8 +582,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blur_on_gray_steganography.pdf",
-      "steganography_pdf_bytes": 149911,
-      "steganography_pdf_sha256": "fc6861d428378827ea114be2f30b85b7ad9f71c6a07adfd78db7b0e20b6241fd",
+      "steganography_pdf_bytes": 149437,
+      "steganography_pdf_sha256": "adc6d2a3acf678b2f5ed8c83da6130636e6947c7ba5147c764bb4a4308f88e76",
       "variant_id": "blur_on_gray"
     },
     {
@@ -592,7 +592,7 @@
       "base_pdf_sha256": "eefc5c2a975809de15cdbee326e7041b174f4741c834a4f577c233285570ebd6",
       "hash_manifest": "blackout_on_black.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "d4554e7930fb38b3c4f7f187f7b259ac90e5ce2ade73b3292abdea819ba330e0",
+      "hash_manifest_sha256": "2e8e2b80694e805bd39a4a540207c32d0f9ab8313703793cf47fc4656fb4f338",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -612,8 +612,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blackout_on_black_steganography.pdf",
-      "steganography_pdf_bytes": 147108,
-      "steganography_pdf_sha256": "5652f626dfc2e24ab05d82ec97381ec73acf150b151f08226211fb7ce7dbaf12",
+      "steganography_pdf_bytes": 146118,
+      "steganography_pdf_sha256": "70f6a64b6ca0adfdab0b7ba2b8f85e8d0a69fa398eaf77b9eed6d0ed96e48ca0",
       "variant_id": "blackout_on_black"
     },
     {
@@ -622,7 +622,7 @@
       "base_pdf_sha256": "a00c5f843cfc992b09c51c0f08d5e74d1f2acbf2a3648b537da995a425c383fd",
       "hash_manifest": "whiteout_on_black.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "a277150d4bda240cd1fd4213d561f6ef19aeacd8d7d2353887da24b08e34e043",
+      "hash_manifest_sha256": "7358fe64e0f0fe0298e99d6592d091ad500363d3a8c8b091215bed9e018af392",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -642,8 +642,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "whiteout_on_black_steganography.pdf",
-      "steganography_pdf_bytes": 146765,
-      "steganography_pdf_sha256": "2eeeac5bbc8aa3a6ab0124bcf16cc03c4ab57315718e64ae154691db9c05bbbb",
+      "steganography_pdf_bytes": 146381,
+      "steganography_pdf_sha256": "14cc0e0b81171a720c4f5b1eb59016d66e9fbee84993d1e3317d1eec60ce834e",
       "variant_id": "whiteout_on_black"
     },
     {
@@ -652,7 +652,7 @@
       "base_pdf_sha256": "ba37e46faac981efa0c979d030e7ec07a455f3fb189f31076296c671b17045ca",
       "hash_manifest": "grayout_on_black.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "526021408c2eebd3b934c65be53f3371bc2edecdcb50eb1bdf4aada9ffef7aec",
+      "hash_manifest_sha256": "f45b0c6728fcccf0df6c4048ed845ebcd3eb5a2f4ee87617f84c56c70d186792",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -672,8 +672,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "grayout_on_black_steganography.pdf",
-      "steganography_pdf_bytes": 147758,
-      "steganography_pdf_sha256": "914a9f236145b4f22c12b6aef1e3c4c4c6299fd7beafb0bae648f34479ede618",
+      "steganography_pdf_bytes": 147740,
+      "steganography_pdf_sha256": "78c6490be1b242a5ebcbce992d1a93bd5bb012c09f11898389a63859300225ec",
       "variant_id": "grayout_on_black"
     },
     {
@@ -682,7 +682,7 @@
       "base_pdf_sha256": "94aaeae63f3797b67250aae8dbe1ef708be8aaad6edcbe7a20befcc4a9c9a572",
       "hash_manifest": "blur_on_black.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "579b9da7d8c3aee16380024c747ff92bb433dab15d2f4fd473573d6a2e07d64d",
+      "hash_manifest_sha256": "7adf46905a0cd9d32f540b3439087b32cd520de454c167aaf5d50632f3176a4f",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -702,8 +702,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blur_on_black_steganography.pdf",
-      "steganography_pdf_bytes": 149606,
-      "steganography_pdf_sha256": "67aa3d1720a65b05239ae0e7492138bdf00df6c3733d6ee786469e477433f64e",
+      "steganography_pdf_bytes": 148976,
+      "steganography_pdf_sha256": "a38c4494eb17fd887ce27548c93c6c80aae6f7d7c047cbf74b479d6d422b8250",
       "variant_id": "blur_on_black"
     },
     {
@@ -712,7 +712,7 @@
       "base_pdf_sha256": "a348573763f967742b9ef068483e68e31b381f3d41eae8b6c7d5bf980684ff0b",
       "hash_manifest": "blackout_on_blur.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "dd4fff99a61537e2d3c73badb526d84eefeb0c16f8aaf953ed9a8eac7d4a7bed",
+      "hash_manifest_sha256": "93646fcd882bb0eb2078ced62a9ea22d99c6b4b2f5a751677408dfb287f05463",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -732,8 +732,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blackout_on_blur_steganography.pdf",
-      "steganography_pdf_bytes": 255052,
-      "steganography_pdf_sha256": "fdcd664e795f4c50f1efc156297e14c2f7f0e1145eeb33cc8b39ba6464becb15",
+      "steganography_pdf_bytes": 255124,
+      "steganography_pdf_sha256": "fb3d391cecc063bd4fa90a740ac66d521fe9d6ff5959c181ed18a6be814ec315",
       "variant_id": "blackout_on_blur"
     },
     {
@@ -742,7 +742,7 @@
       "base_pdf_sha256": "2b9f0d10b90e2ecf8f9ed268a4b5cd560f6443de357e4644ddd8db11aa6e720e",
       "hash_manifest": "whiteout_on_blur.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "8db87e130b784e177a8baba968b10e3d11e2524f766a9e828162697c8362ee4d",
+      "hash_manifest_sha256": "e5548e6a2dc1472f01dcb1251194a690f3eb40405563a2146c0530767c51f52e",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -762,8 +762,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "whiteout_on_blur_steganography.pdf",
-      "steganography_pdf_bytes": 254325,
-      "steganography_pdf_sha256": "83f2af5d748fb8cfd89f0a9cf589584b6d2601e7822f4af288d36e0827b35c55",
+      "steganography_pdf_bytes": 253989,
+      "steganography_pdf_sha256": "efee42cd9c73bdd579cef89872847b9c0e93e8d6e50e08e1f54e861a6566a679",
       "variant_id": "whiteout_on_blur"
     },
     {
@@ -772,7 +772,7 @@
       "base_pdf_sha256": "dfb9abf616e27b6760787b2ebc79322224f30d9a861f1fc25b8fa15f03be7cc8",
       "hash_manifest": "grayout_on_blur.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "1e59f56b344b33201c02678beb039c8ba25d01543ee6afab456672a216cec315",
+      "hash_manifest_sha256": "7232faad52507b80a69574d943f4446777bcafc38d43646ccf7584f091a88ff9",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -792,8 +792,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "grayout_on_blur_steganography.pdf",
-      "steganography_pdf_bytes": 255625,
-      "steganography_pdf_sha256": "46380d667324b689b13f731fb7c393b057c137211c9a5b5f33fc56109b0ab0d3",
+      "steganography_pdf_bytes": 255253,
+      "steganography_pdf_sha256": "75e0ae18fa22ac6655cdcbfb526cf5fd94539b00abd07fe89f1f1715751ee077",
       "variant_id": "grayout_on_blur"
     },
     {
@@ -802,7 +802,7 @@
       "base_pdf_sha256": "08840bd1da5a1424e3183bdf4a822ca9ffb46cacf00d25b2f9ba1f9092d45d68",
       "hash_manifest": "blur_on_blur.hashes.json",
       "hash_manifest_exists": true,
-      "hash_manifest_sha256": "92a8cd5e161e8b45ce88cd3bc68cf03cc4d5b9a5f7931e2ed0530b87621bb881",
+      "hash_manifest_sha256": "92fb7f1419f17a5e834cab3c2ff284f6fadbecaa8ca2765ef8dca61259f6c2c4",
       "kmyth_available": false,
       "kmyth_hash_manifest_sidecar": "",
       "kmyth_pdf_sidecar": "",
@@ -822,8 +822,8 @@
         "embedded_stego_manifest_attachment"
       ],
       "steganography_pdf": "blur_on_blur_steganography.pdf",
-      "steganography_pdf_bytes": 257837,
-      "steganography_pdf_sha256": "82f4438f043544ab164eee3bea84337ba7d2ce77aadcf1e0ee9c685fd38ae46e",
+      "steganography_pdf_bytes": 257465,
+      "steganography_pdf_sha256": "457375e2742c7dbab44ba18c48479845a619141e4e927f4d4fd625a01ba015c0",
       "variant_id": "blur_on_blur"
     }
   ]

@@ -9,10 +9,10 @@ import shutil
 import subprocess
 import tempfile
 from collections.abc import Sequence
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
 
+from redacted_report.publication_meta import publication_author_and_date  # noqa: F401 - byline API re-export
 from redacted_report.redaction import (
     RedactionDecision,
     RedactionSegment,
@@ -22,104 +22,19 @@ from redacted_report.redaction import (
 )
 
 
-ColorRGB = tuple[int, int, int]
-
-SECURITY_METHODS = (
-    "sha256_sha512_hash_manifest",
-    "diagonal_watermark_overlay",
-    "footer_provenance_overlay",
-    "first_page_invisible_text_overlay",
-    "qr_payload_barcode",
-    "code128_page_barcode",
-    "pdf_info_metadata",
-    "xmp_metadata",
-    "embedded_stego_manifest_attachment",
+from redacted_report.profiles import (  # noqa: F401 - canonical matrix-axis re-exports
+    KMYTH_SEAL_ARTIFACTS,
+    PDF_BACKGROUND_MODES,
+    REDACTION_VISUAL_STYLES,
+    SECURITY_METHODS,
+    ColorRGB,
+    PDFBackgroundProfile,
+    RedactionVisualProfile,
+    _BACKGROUND_BY_NAME,
+    _STYLE_BY_NAME,
+    normalize_pdf_background,
+    normalize_redaction_style,
 )
-
-KMYTH_SEAL_ARTIFACTS = ("hash_manifest", "pdf")
-
-
-@dataclass(frozen=True)
-class RedactionVisualProfile:
-    """Visual treatment for redacted spans in proof PDFs."""
-
-    name: str
-    label: str
-    token: str
-    fill_rgb: ColorRGB
-    text_rgb: ColorRGB
-    border_rgb: ColorRGB
-
-
-@dataclass(frozen=True)
-class PDFBackgroundProfile:
-    """Page background treatment for redaction proof PDFs."""
-
-    name: str
-    label: str
-    fill_rgb: ColorRGB
-    text_rgb: ColorRGB
-    subdued_text_rgb: ColorRGB
-    blur_context: bool = False
-
-
-REDACTION_VISUAL_STYLES = (
-    RedactionVisualProfile("blackout", "Blackout", "[BLACKOUT]", (0, 0, 0), (255, 255, 255), (0, 0, 0)),
-    RedactionVisualProfile("whiteout", "Whiteout", "[WHITEOUT]", (255, 255, 255), (110, 110, 110), (170, 170, 170)),
-    RedactionVisualProfile("grayout", "Grayout", "[GRAYOUT]", (132, 132, 132), (255, 255, 255), (92, 92, 92)),
-    RedactionVisualProfile("blur", "Blur", "[BLUR]", (214, 214, 214), (80, 80, 80), (150, 150, 150)),
-)
-
-PDF_BACKGROUND_MODES = (
-    PDFBackgroundProfile("white", "White", (255, 255, 255), (18, 18, 18), (120, 120, 120)),
-    PDFBackgroundProfile("gray", "Gray", (216, 216, 216), (20, 20, 20), (105, 105, 105)),
-    PDFBackgroundProfile("black", "Black", (0, 0, 0), (245, 245, 245), (165, 165, 165)),
-    PDFBackgroundProfile("blur", "Blur", (238, 238, 238), (34, 34, 34), (138, 138, 138), blur_context=True),
-)
-
-_STYLE_BY_NAME = {profile.name: profile for profile in REDACTION_VISUAL_STYLES}
-_BACKGROUND_BY_NAME = {profile.name: profile for profile in PDF_BACKGROUND_MODES}
-
-_CONFIG_PATH = Path(__file__).resolve().parents[2] / "manuscript" / "config.yaml"
-
-
-def publication_author_and_date() -> tuple[str, str]:
-    """Author name and paper date from ``manuscript/config.yaml``.
-
-    The proof PDFs stamp authorship on every title page and into the
-    steganography metadata; sourcing it from the manuscript config keeps a
-    single source of truth (a hardcoded scaffold author shipped in every
-    tracked proof PDF before this). Both values are fixed strings from the
-    config, so the deterministic-bytes guarantee is preserved.
-    """
-    try:
-        import yaml
-
-        data = yaml.safe_load(_CONFIG_PATH.read_text(encoding="utf-8")) or {}
-        authors = data.get("authors") or []
-        name = str(authors[0].get("name", "")) if authors else ""
-        date = str((data.get("paper") or {}).get("date", ""))
-        return (name or "Template Author", date)
-    except Exception:  # noqa: BLE001 - safety net: proof PDFs must still render standalone without a readable config; falls back to a neutral byline
-        return ("Template Author", "")
-
-
-def normalize_redaction_style(value: str) -> RedactionVisualProfile:
-    """Return the configured visual redaction style."""
-    key = value.strip().lower().replace("-", "_").replace(" ", "_")
-    if key not in _STYLE_BY_NAME:
-        expected = ", ".join(_STYLE_BY_NAME)
-        raise ValueError(f"unsupported redaction style: {value}; expected one of: {expected}")
-    return _STYLE_BY_NAME[key]
-
-
-def normalize_pdf_background(value: str) -> PDFBackgroundProfile:
-    """Return the configured proof-PDF background profile."""
-    key = value.strip().lower().replace("-", "_").replace(" ", "_")
-    if key not in _BACKGROUND_BY_NAME:
-        expected = ", ".join(_BACKGROUND_BY_NAME)
-        raise ValueError(f"unsupported PDF background: {value}; expected one of: {expected}")
-    return _BACKGROUND_BY_NAME[key]
 
 
 def style_redaction_decisions(
@@ -692,8 +607,7 @@ class _ProofPDFRenderer:
         author, paper_date = publication_author_and_date()
         self.doc.setFont("Helvetica", 9)
         self.doc.drawCentredString(self.page_width / 2, self.page_height - 175, author)
-        if paper_date:
-            self.doc.drawCentredString(self.page_width / 2, self.page_height - 190, paper_date)
+        self.doc.drawCentredString(self.page_width / 2, self.page_height - 190, paper_date or "")
 
         # Visual treatment badge
         badge_y = self.page_height - 230
@@ -1078,10 +992,7 @@ class _ProofPDFRenderer:
         self.y -= 10
 
     def render(self, segments: Sequence[RedactionSegment], decisions: Sequence[RedactionDecision]) -> None:
-        # invariant=1 pins reportlab's CreationDate and document /ID so the
-        # sixteen-variant proof matrix is byte-reproducible run-to-run — the
-        # variant_matrix.json sha256 bindings are only meaningful if the same
-        # inputs regenerate the same bytes.
+        # invariant=1 pins CreationDate + /ID: the matrix's sha256 bindings need byte-reproducible runs.
         self.doc = self.Canvas(str(self.output_pdf), pagesize=self.pagesize, pageCompression=1, invariant=1)
 
         # Title page

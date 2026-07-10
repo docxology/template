@@ -1,13 +1,13 @@
 {
   "source_file": "blackout_on_white.pdf",
-  "timestamp": "2026-07-10T10:46:03-07:00",
+  "timestamp": "2026-07-10T11:04:18-07:00",
   "hashes": {
     "sha256": "e8c9802b1a38c8abed2b08fefa8143d4be7fcfc910f25926edbcb823b3446410",
     "sha512": "7954416a50a292b63174709b1602d6bec57b703d308a893f1886d6a9ddaae82c91eb34058f081e2ac23a1ba3f8a1cf4d01cdc06ad2320f524503a670298e151f"
   },
-  "document_id": "12aff773774fb3d57116132426c73029",
+  "document_id": "2d3c33db7af54e45331a1fb8e709d3e6",
   "source_size_bytes": 21568,
-  "git_commit": "3a4476b783a124a6f90c66e08bb6d5db5bc324f6",
+  "git_commit": "91ef372429204c0f13642469b11b812b75cd72ae",
   "git_commit_available": true,
   "steganography_applied": "true"
 }
