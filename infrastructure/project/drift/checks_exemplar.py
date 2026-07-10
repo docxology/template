@@ -495,6 +495,144 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
                 )
 
 
+def _normalize_orcid(value: str) -> str:
+    """Strip an orcid.org URL prefix so bare and URL ORCID forms compare equal.
+
+    CFF files historically carry `https://orcid.org/0000-...` while the current
+    generator emits the bare identifier; both name the same person and must not
+    read as authorship drift.
+    """
+    lowered = value.lower()
+    for prefix in ("https://orcid.org/", "http://orcid.org/"):
+        if lowered.startswith(prefix):
+            return value[len(prefix) :]
+    return value
+
+
+def _author_rows(entries: object, keys: tuple[str, ...]) -> list[tuple[str, ...]]:
+    """Project an authors/creators list onto stripped, ORCID-normalized string tuples."""
+    rows: list[tuple[str, ...]] = []
+    if not isinstance(entries, list):
+        return rows
+    for entry in entries:
+        if isinstance(entry, dict):
+            rows.append(tuple(_normalize_orcid(str(entry.get(key) or "").strip()) for key in keys))
+    return rows
+
+
+def _zenodo_concept_identifier(payload: object) -> str:
+    """Return the normalized isVersionOf DOI from a .zenodo.json-shaped mapping."""
+    related = payload.get("related_identifiers") if isinstance(payload, dict) else None
+    if not isinstance(related, list):
+        return ""
+    for entry in related:
+        if isinstance(entry, dict) and str(entry.get("relation", "")).strip() == "isVersionOf":
+            return _normalize_doi(entry.get("identifier"))
+    return ""
+
+
+def check_metadata_export_current(project_root: Path, report: Report, project: str) -> None:
+    """Tracked CITATION.cff / .zenodo.json / codemeta.json must agree with
+    manuscript/config.yaml on authorship (names, ORCIDs) and concept DOI.
+
+    Catches: on 2026-07-10 five exemplars shipped the scaffold
+    "Research Template Author" (one with a fabricated ORCID) in these
+    config-DERIVED files after config.yaml itself had been corrected —
+    GitHub renders CITATION.cff live and Zenodo ingests .zenodo.json, and
+    no gate bound the derived files back to their source (a cross-vendor
+    audit caught it, not the gate suite). Expected values are re-derived
+    with the generator itself (infrastructure.publishing.metadata_export),
+    projecting only authorship and concept-DOI fields so version/date
+    churn — covered by check_publication_metadata_consistency — never
+    false-fires here.
+    """
+    config_path = project_root / "manuscript" / "config.yaml"
+    targets = ("CITATION.cff", ".zenodo.json", "codemeta.json")
+    if not config_path.is_file() or not any((project_root / name).is_file() for name in targets):
+        return
+
+    from infrastructure.publishing.metadata_export import (
+        build_citation_cff,
+        build_codemeta,
+        build_zenodo,
+    )
+
+    regen_hint = (
+        "regenerate with `uv run python -m infrastructure.publishing.metadata_export_cli "
+        f"metadata-export --project {project}`"
+    )
+
+    try:
+        config = _load_yaml_mapping(config_path)
+    except yaml.YAMLError as exc:
+        report.add(
+            "ERROR",
+            project,
+            "metadata_export_config_unparseable",
+            f"{_rel(config_path, project_root)} is not valid YAML — cannot derive expected metadata: {exc}",
+        )
+        return
+
+    specs: tuple[tuple[str, dict, str, tuple[str, ...], str | None], ...] = (
+        (
+            "CITATION.cff",
+            yaml.safe_load(build_citation_cff(config)) or {},
+            "authors",
+            ("family-names", "given-names", "orcid"),
+            "doi",
+        ),
+        (".zenodo.json", build_zenodo(config), "creators", ("name", "orcid"), None),
+        ("codemeta.json", build_codemeta(config), "author", ("familyName", "givenName", "@id"), "identifier"),
+    )
+    for rel_name, expected, authors_key, author_keys, doi_key in specs:
+        path = project_root / rel_name
+        if not path.is_file():
+            continue
+        try:
+            loaded: object = (
+                _load_yaml_mapping(path) if rel_name == "CITATION.cff" else json.loads(path.read_text(encoding="utf-8"))
+            )
+        except (yaml.YAMLError, json.JSONDecodeError) as exc:
+            report.add(
+                "ERROR",
+                project,
+                "metadata_export_unparseable",
+                f"{rel_name} cannot be parsed ({exc}) — {regen_hint}",
+            )
+            continue
+        actual: dict = loaded if isinstance(loaded, dict) else {}
+
+        expected_authors = _author_rows(expected.get(authors_key), author_keys)
+        actual_authors = _author_rows(actual.get(authors_key), author_keys)
+        if expected_authors != actual_authors:
+            report.add(
+                "ERROR",
+                project,
+                "metadata_export_author_drift",
+                (
+                    f"{rel_name} {authors_key} {actual_authors} disagree with manuscript/config.yaml "
+                    f"authorship {expected_authors} — {regen_hint}"
+                ),
+            )
+
+        if doi_key is None:
+            expected_doi = _zenodo_concept_identifier(expected)
+            actual_doi = _zenodo_concept_identifier(actual)
+        else:
+            expected_doi = _normalize_doi(expected.get(doi_key, ""))
+            actual_doi = _normalize_doi(actual.get(doi_key, ""))
+        if expected_doi != actual_doi:
+            report.add(
+                "ERROR",
+                project,
+                "metadata_export_doi_drift",
+                (
+                    f"{rel_name} concept DOI {actual_doi!r} disagrees with manuscript/config.yaml "
+                    f"concept DOI {expected_doi!r} — {regen_hint}"
+                ),
+            )
+
+
 def check_publishing_status_block_current(project_root: Path, report: Report, project: str) -> None:
     """README's generated `PUBLISHING-STATUS` block must exist and be in sync.
 
@@ -668,6 +806,7 @@ __all__ = [
     "check_config_example_parity",
     "check_coverage_floor_consistency",
     "check_function_name_drift",
+    "check_metadata_export_current",
     "check_mocks_absent_from_tests",
     "check_no_blanket_except_in_src",
     "check_no_oversize_src_files",
