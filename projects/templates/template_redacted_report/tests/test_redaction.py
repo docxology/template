@@ -9,6 +9,8 @@ from types import ModuleType, SimpleNamespace
 import pytest
 
 import redacted_report.visuals as visuals
+import redacted_report.visuals.stego_kmyth as stego_kmyth
+import redacted_report.visuals.verification as verification
 from redacted_report import (
     KMYTH_SEAL_ARTIFACTS,
     PDF_BACKGROUND_MODES,
@@ -181,7 +183,7 @@ def test_dev_variant_output_verifier_enforces_filenames_and_hashes(
 
     matrix = {**matrix, "variants": variants}
     (tmp_path / "variant_matrix.json").write_text(json.dumps(matrix, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    monkeypatch.setattr(visuals, "_pdf_page_count", lambda _path: 1)
+    monkeypatch.setattr(verification, "_pdf_page_count", lambda _path: 1)
 
     summary = visuals.verify_dev_variant_outputs(tmp_path)
 
@@ -216,7 +218,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypat
     monkeypatch.setitem(sys.modules, "infrastructure", infrastructure_module)
     monkeypatch.setitem(sys.modules, "infrastructure.steganography", steganography_module)
 
-    skipped = visuals._resolve_kmyth_status(
+    skipped = stego_kmyth._resolve_kmyth_status(
         include_kmyth=False,
         binary_dir=None,
         seal_probe_timeout_seconds=1,
@@ -226,7 +228,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypat
 
     unavailable = FakeAvailability(False)
     setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: unavailable)
-    missing = visuals._resolve_kmyth_status(
+    missing = stego_kmyth._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
@@ -236,9 +238,9 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypat
 
     available = FakeAvailability(True)
     setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: available)
-    monkeypatch.setattr(visuals, "_kmyth_help_error", lambda tool_path: "")
-    monkeypatch.setattr(visuals, "_kmyth_seal_probe_error", lambda tool_path, *, timeout_seconds: "no tpm")
-    no_tpm = visuals._resolve_kmyth_status(
+    monkeypatch.setattr(stego_kmyth, "_kmyth_help_error", lambda tool_path: "")
+    monkeypatch.setattr(stego_kmyth, "_kmyth_seal_probe_error", lambda tool_path, *, timeout_seconds: "no tpm")
+    no_tpm = stego_kmyth._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
@@ -247,8 +249,8 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypat
     assert no_tpm["tools_runnable"] is True
     assert "TPM seal probe failed" in str(no_tpm["summary"])
 
-    monkeypatch.setattr(visuals, "_kmyth_seal_probe_error", lambda tool_path, *, timeout_seconds: "")
-    ready = visuals._resolve_kmyth_status(
+    monkeypatch.setattr(stego_kmyth, "_kmyth_seal_probe_error", lambda tool_path, *, timeout_seconds: "")
+    ready = stego_kmyth._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
@@ -263,19 +265,19 @@ def test_kmyth_subprocess_helpers_and_sidecar_names(monkeypatch: pytest.MonkeyPa
             Path(argv[argv.index("--output") + 1]).write_text("sealed", encoding="utf-8")
         return SimpleNamespace(returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr(visuals.subprocess, "run", successful_run)
-    assert visuals._kmyth_help_error(Path("kmyth-seal")) == ""
-    assert visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1) == ""
+    monkeypatch.setattr(stego_kmyth.subprocess, "run", successful_run)
+    assert stego_kmyth._kmyth_help_error(Path("kmyth-seal")) == ""
+    assert stego_kmyth._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1) == ""
 
     monkeypatch.setattr(
-        visuals.subprocess,
+        stego_kmyth.subprocess,
         "run",
         lambda _argv, **_kwargs: SimpleNamespace(returncode=1, stdout="", stderr="no tpm"),
     )
-    assert "no tpm" in visuals._kmyth_help_error(Path("kmyth-seal"))
-    assert "no tpm" in visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1)
+    assert "no tpm" in stego_kmyth._kmyth_help_error(Path("kmyth-seal"))
+    assert "no tpm" in stego_kmyth._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1)
 
-    sidecars = visuals._kmyth_sidecars_for(Path("base.pdf"), Path("base_steganography.pdf"))
+    sidecars = stego_kmyth._kmyth_sidecars_for(Path("base.pdf"), Path("base_steganography.pdf"))
     assert sidecars["hash_manifest"].name == "base.hashes.json.ski"
     assert sidecars["pdf"].name == "base_steganography.pdf.ski"
 

@@ -2,4 +2,4 @@
 # steganography verifier (watermark embed + Kmyth TPM sealing validation) in
 # one adapter module. Everything else in src/ stays standalone.
 allow_infrastructure_imports:
-  - src/redacted_report/visuals.py
+  - src/redacted_report/visuals/stego_kmyth.py

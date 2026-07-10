@@ -350,9 +350,16 @@ class TestDefaultOutputDirectory:
     def test_generate_architecture_overview_uses_default_dir(
         self, tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
     ):
-        from src import figures as figures_mod
+        from src.figures import _theme
 
-        monkeypatch.setattr(figures_mod, "_default_output_dir", lambda: tmp_path / "default")
+        monkeypatch.setattr(_theme, "_default_output_dir", lambda: tmp_path / "default")
         result = generate_architecture_overview()
         _assert_png(result)
         assert result.parent == tmp_path / "default"
+
+    def test_default_output_dir_resolves_to_project_manuscript_figures(self):
+        """Pin the parents[N] repo-root resolution against package-nesting drift."""
+        from src.figures import _theme
+
+        project_root = pathlib.Path(__file__).resolve().parents[1]
+        assert _theme._default_output_dir() == project_root / "manuscript" / "figures"
