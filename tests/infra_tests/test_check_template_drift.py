@@ -51,6 +51,7 @@ def drift_module():
         check_template_signpost_contract=checks.check_template_signpost_contract,
         check_config_example_parity=checks.check_config_example_parity,
         check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
+        check_metadata_export_current=checks.check_metadata_export_current,
         check_publishing_status_block_current=checks.check_publishing_status_block_current,
         check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
         check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
@@ -734,6 +735,162 @@ def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_versi
     rep = drift_module.Report()
     drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
     assert any(f.rule == "publication_cff_zenodo_version_drift" for f in rep.findings)
+
+
+_GOOD_METADATA_CONFIG = (
+    "paper:\n"
+    "  title: Real Title\n"
+    "  version: '1.0'\n"
+    "  date: '2026-07-10'\n"
+    "authors:\n"
+    "  - name: 'Josiah Carberry'\n"
+    "    orcid: '0000-0002-1825-0097'\n"
+    "publication:\n"
+    "  doi: '10.5281/zenodo.11111'\n"
+)
+# The 2026-07-10 incident shape: scaffold author + fabricated ORCID riding in
+# the derived files after config.yaml itself was corrected.
+_STALE_METADATA_CONFIG = _GOOD_METADATA_CONFIG.replace("Josiah Carberry", "Research Template Author").replace(
+    "0000-0002-1825-0097", "0000-0000-0000-1234"
+)
+
+
+def _write_metadata_exports(root: Path, config_text: str) -> None:
+    """Generate CITATION.cff/.zenodo.json/codemeta.json from a config snippet
+    with the real generator — the same one the metadata-export CLI wraps."""
+    import yaml
+
+    from infrastructure.publishing.metadata_export import write_metadata_files
+
+    write_metadata_files(yaml.safe_load(config_text), root, released_date="2026-07-10")
+
+
+def test_metadata_export_negative_control_planted_author_mismatch_fires(drift_module, tmp_path):
+    """Negative control / proof-of-detection: config.yaml carries the corrected
+    author, but the tracked derived files still carry the scaffold
+    'Research Template Author' with fabricated ORCID 0000-0000-0000-1234
+    (the exact 2026-07-10 incident). All three files must raise ERROR."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    _write_metadata_exports(root, _STALE_METADATA_CONFIG)
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    author_errors = [f for f in rep.errors() if f.rule == "metadata_export_author_drift"]
+    flagged_files = {f.message.split(" ", 1)[0] for f in author_errors}
+    assert flagged_files == {"CITATION.cff", ".zenodo.json", "codemeta.json"}, [
+        (f.rule, f.message) for f in rep.findings
+    ]
+    assert any("0000-0000-0000-1234" in f.message for f in author_errors)
+    assert all("metadata_export_cli metadata-export --project fake_project" in f.message for f in author_errors)
+
+
+def test_metadata_export_accepts_regenerated_files(drift_module, tmp_path):
+    """Files regenerated from the same config must produce zero findings."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    _write_metadata_exports(root, _GOOD_METADATA_CONFIG)
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    assert not [f for f in rep.findings if f.rule.startswith("metadata_export")], [
+        (f.rule, f.message) for f in rep.findings
+    ]
+
+
+def test_metadata_export_flags_concept_doi_drift_in_all_three_files(drift_module, tmp_path):
+    """Derived files minted against a different concept DOI must raise in
+    CITATION.cff (doi), .zenodo.json (isVersionOf), and codemeta.json (identifier)."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    _write_metadata_exports(root, _GOOD_METADATA_CONFIG.replace("zenodo.11111", "zenodo.99999"))
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    doi_errors = [f for f in rep.errors() if f.rule == "metadata_export_doi_drift"]
+    assert {f.message.split(" ", 1)[0] for f in doi_errors} == {"CITATION.cff", ".zenodo.json", "codemeta.json"}
+    assert not any(f.rule == "metadata_export_author_drift" for f in rep.findings)
+
+
+def test_metadata_export_ignores_version_only_differences(drift_module, tmp_path):
+    """Version/date churn is check_publication_metadata_consistency's turf —
+    authorship+DOI agreement must NOT fire on a version-only difference."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    _write_metadata_exports(root, _GOOD_METADATA_CONFIG.replace("version: '1.0'", "version: '9.9'"))
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    assert not [f for f in rep.findings if f.rule.startswith("metadata_export")], [
+        (f.rule, f.message) for f in rep.findings
+    ]
+
+
+def test_metadata_export_authorless_config_fallback_is_clean(drift_module, tmp_path):
+    """A config with no authors block regenerates with the generator's
+    'Project Author' fallback on both sides — must be clean, not drift."""
+    root = _scaffold_minimal_project(tmp_path)
+    config = "paper:\n  title: Real Title\n  version: '1.0'\npublication: {}\n"
+    (root / "manuscript" / "config.yaml").write_text(config, encoding="utf-8")
+    _write_metadata_exports(root, config)
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    assert not [f for f in rep.findings if f.rule.startswith("metadata_export")]
+
+
+def test_metadata_export_url_form_orcid_is_not_drift(drift_module, tmp_path):
+    """A CITATION.cff carrying the URL ORCID form (`https://orcid.org/0000-...`)
+    names the same person as the generator's bare form — must NOT fire. A
+    genuinely different identifier in the same URL form still must."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    _write_metadata_exports(root, _GOOD_METADATA_CONFIG)
+    cff = root / "CITATION.cff"
+    cff.write_text(
+        cff.read_text(encoding="utf-8").replace(
+            "orcid: 0000-0002-1825-0097", "orcid: https://orcid.org/0000-0002-1825-0097"
+        ),
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    assert not [f for f in rep.findings if f.rule.startswith("metadata_export")], [
+        (f.rule, f.message) for f in rep.findings
+    ]
+    # Same URL form, different identifier → still drift.
+    cff.write_text(
+        cff.read_text(encoding="utf-8").replace("0000-0002-1825-0097", "0000-0002-9999-9999"),
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    assert any(f.rule == "metadata_export_author_drift" and "CITATION.cff" in f.message for f in rep.errors())
+
+
+def test_metadata_export_skips_when_no_derived_files(drift_module, tmp_path):
+    """Exemplars that do not ship the derived metadata files are out of scope."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")
+    assert rep.findings == []
+
+
+def test_metadata_export_flags_corrupt_json_without_crashing(drift_module, tmp_path):
+    """A truncated .zenodo.json must yield a clean ERROR, not an uncaught exception."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
+    _write_metadata_exports(root, _GOOD_METADATA_CONFIG)
+    (root / ".zenodo.json").write_text('{"creators": [', encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")  # must not raise
+    assert any(f.rule == "metadata_export_unparseable" and f.severity == "ERROR" for f in rep.findings)
+
+
+def test_metadata_export_flags_unparseable_config_without_crashing(drift_module, tmp_path):
+    """Malformed config.yaml must yield a clean ERROR, not an uncaught YAMLError."""
+    root = _scaffold_minimal_project(tmp_path)
+    _write_metadata_exports(root, _GOOD_METADATA_CONFIG)
+    (root / "manuscript" / "config.yaml").write_text("paper: {title: 'unterminated\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_metadata_export_current(root, rep, "fake_project")  # must not raise
+    assert any(f.rule == "metadata_export_config_unparseable" and f.severity == "ERROR" for f in rep.findings)
 
 
 def test_publishing_status_block_flags_missing_block(drift_module, tmp_path):
