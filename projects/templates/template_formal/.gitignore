@@ -29,3 +29,7 @@ formal/tla/states/
 # is found -- always, by design, for AntProtocolFaultyNegControl.tla.
 formal/tla/*_TTrace_*.tla
 formal/tla/*_TTrace_*.bin
+
+# Session working notes and local coverage HTML (never shipped)
+.debug-journal.md
+htmlcov/
