@@ -1,0 +1,22 @@
+{
+  "model_type": "linear_regression",
+  "feature_name": "hours_studied",
+  "target_name": "exam_score",
+  "intercept": 48.06666666666667,
+  "coefficient": 4.96969696969697,
+  "r_squared": 0.9976379541596933,
+  "training_data": [
+    {"hours_studied": 1, "exam_score": 52},
+    {"hours_studied": 2, "exam_score": 58},
+    {"hours_studied": 3, "exam_score": 63},
+    {"hours_studied": 4, "exam_score": 68},
+    {"hours_studied": 5, "exam_score": 74},
+    {"hours_studied": 6, "exam_score": 78},
+    {"hours_studied": 7, "exam_score": 84},
+    {"hours_studied": 8, "exam_score": 88},
+    {"hours_studied": 9, "exam_score": 92},
+    {"hours_studied": 10, "exam_score": 97}
+  ],
+  "training_method": "closed-form ordinary least squares (no external ML library)",
+  "provenance": "Coefficients computed directly from the training_data array above via the standard OLS formulas: slope = (n*sum_xy - sum_x*sum_y) / (n*sum_x2 - sum_x^2), intercept = (sum_y - slope*sum_x) / n. Deterministic and reproducible by any reader from the embedded data alone."
+}

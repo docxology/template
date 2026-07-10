@@ -1,0 +1,14 @@
+type: model
+description: "Pre-trained linear regression model exemplar — predicts a numeric target from a single feature using fixed, real coefficients computed via ordinary least squares on a small embedded dataset."
+version: "1.0"
+tags:
+  - curated
+  - exemplar
+  - model
+  - deterministic
+creator: "docxology/template"
+license: "CC0-1.0"
+entrypoints:
+  - scripts/predict.sh
+  - scripts/validate.sh
+  - model_weights.json

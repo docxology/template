@@ -261,6 +261,8 @@ tools/*
 tools/templates/*
 !tools/templates/template_code_executor/
 !tools/templates/template_code_executor/**
+!tools/templates/template_model/
+!tools/templates/template_model/**
 !tools/templates/template_skill/
 !tools/templates/template_skill/**
 !tools/templates/template_validator/
