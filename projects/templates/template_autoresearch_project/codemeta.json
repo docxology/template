@@ -14,7 +14,8 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_autoresearch_project",
-  "dateModified": "2026-05-27",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.20417016",
   "keywords": [
     "autoresearch",
     "reproducible research",
@@ -25,5 +26,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task",
-  "version": "0.3.0"
+  "version": "0.3.2"
 }

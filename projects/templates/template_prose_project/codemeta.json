@@ -14,7 +14,8 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_prose_project",
-  "dateModified": "2026-05-27",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.20417104",
   "keywords": [
     "prose analysis",
     "readability",
@@ -24,5 +25,5 @@
   ],
   "license": "https://spdx.org/licenses/MIT",
   "name": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
-  "version": "0.2"
+  "version": "0.4.2"
 }

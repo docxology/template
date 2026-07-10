@@ -6,7 +6,7 @@
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "An exploratory-data-analysis (EDA) computational-notebook exemplar: a walkthrough notebook that imports a fully-tested EDA library (load, clean, summarize, correlate, prepare figure data).",
+  "description": "Source code for Exploratory Data Analysis: A Reproducible Notebook Template (2026).",
   "keywords": [
     "exploratory data analysis",
     "computational notebook",

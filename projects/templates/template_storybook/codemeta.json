@@ -1,18 +1,29 @@
 {
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
-  "name": "template_storybook",
-  "version": "0.1.0",
-  "description": "Full-page illustrated storybook exemplar with deterministic shape-character rendering and PDF assembly.",
-  "programmingLanguage": "Python",
-  "license": "https://spdx.org/licenses/MIT.html",
-  "codeRepository": "https://github.com/docxology/template_storybook",
   "author": [
     {
+      "@id": "https://orcid.org/0000-0001-6232-9096",
       "@type": "Person",
-      "givenName": "Daniel Ari",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Active Inference Institute"
+      },
       "familyName": "Friedman",
-      "@id": "https://orcid.org/0000-0001-6232-9096"
+      "givenName": "Daniel Ari"
     }
-  ]
+  ],
+  "codeRepository": "https://github.com/docxology/template_storybook",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.21176000",
+  "keywords": [
+    "storybook",
+    "illustration",
+    "procedural graphics",
+    "reportlab",
+    "reproducible publishing"
+  ],
+  "license": "https://spdx.org/licenses/MIT",
+  "name": "The Shape Between: A Full-Page Illustrated Storybook Template",
+  "version": "0.1.0"
 }

@@ -1,35 +1,23 @@
 {
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
-  "name": "template_textbook",
-  "description": "Modular, fillable textbook scaffold: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone under src/, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine.",
-  "version": "0.1.2",
-  "license": "https://spdx.org/licenses/Apache-2.0",
-  "programmingLanguage": {
-    "@type": "ComputerLanguage",
-    "name": "Python",
-    "url": "https://www.python.org/"
-  },
-  "runtimePlatform": "Python 3.10+",
-  "keywords": [
-    "open textbook",
-    "modular manuscript",
-    "reproducible publishing",
-    "computational backbone",
-    "Python"
-  ],
   "author": [
     {
       "@id": "https://orcid.org/0000-0001-6232-9096",
       "@type": "Person",
-      "givenName": "Daniel Ari",
-      "familyName": "Friedman",
-      "email": "daniel@activeinference.institute",
       "affiliation": {
         "@type": "Organization",
         "name": "Active Inference Institute"
-      }
+      },
+      "familyName": "Friedman",
+      "givenName": "Daniel Ari"
     }
   ],
-  "codeRepository": "https://github.com/docxology/template_textbook"
+  "codeRepository": "https://github.com/docxology/template_textbook",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.20533125",
+  "keywords": [],
+  "license": "https://spdx.org/licenses/CC-BY-4.0",
+  "name": "Untitled Research",
+  "version": "0.0.0"
 }

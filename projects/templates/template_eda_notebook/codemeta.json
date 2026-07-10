@@ -14,7 +14,8 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_eda_notebook",
-  "dateModified": "2026-06-29",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.21086292",
   "keywords": [
     "exploratory data analysis",
     "computational notebook",

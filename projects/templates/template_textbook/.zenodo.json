@@ -1,25 +1,14 @@
 {
-  "title": "The Template Textbook",
-  "description": "A modular, fillable scaffold for book-length technical works: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine.",
-  "upload_type": "publication",
-  "publication_type": "book",
-  "license": "cc-by-4.0",
-  "version": "0.1.2",
-  "language": "eng",
   "creators": [
     {
-      "name": "Friedman, Daniel Ari",
       "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "keywords": [
-    "open textbook",
-    "modular manuscript",
-    "reproducible publishing",
-    "computational backbone",
-    "Python"
-  ],
+  "description": "Source code for Untitled Research.",
+  "keywords": [],
+  "license": "CC-BY-4.0",
   "related_identifiers": [
     {
       "identifier": "10.5281/zenodo.20533125",
@@ -27,5 +16,7 @@
       "scheme": "doi"
     }
   ],
-  "doi": "10.5281/zenodo.20932112"
+  "title": "Untitled Research",
+  "upload_type": "software",
+  "version": "0.0.0"
 }

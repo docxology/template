@@ -5,28 +5,29 @@
     {
       "@id": "https://orcid.org/0000-0001-6232-9096",
       "@type": "Person",
-      "affiliation": {
-        "@type": "Organization",
-        "name": "Active Inference Institute"
-      },
       "familyName": "Friedman",
       "givenName": "Daniel Ari"
     }
   ],
   "codeRepository": "https://github.com/docxology/template_literature_meta_analysis",
-  "dateModified": "2026-06-24",
+  "dateModified": "2026-07-10",
+  "identifier": "10.5281/zenodo.20931964",
   "keywords": [
-    "literature meta-analysis",
+    "modafinil",
+    "meta-analysis",
+    "literature retrieval",
     "bibliometrics",
-    "multi-engine retrieval",
     "record de-duplication",
     "full-text mining",
     "document embeddings",
-    "citation network analysis",
+    "citation network",
     "topic modeling",
+    "entity extraction",
+    "wakefulness",
+    "cognitive enhancement",
     "reproducible research"
   ],
   "license": "https://spdx.org/licenses/CC-BY-4.0",
-  "name": "A Generic Literature Meta-Analysis Template (default term: modafinil)",
+  "name": "A Living Meta-Analysis of the Modafinil Literature",
   "version": "0.1.0"
 }
