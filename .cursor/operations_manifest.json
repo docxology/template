@@ -1038,6 +1038,24 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.steganography.start_tpm_backend",
+      "invocation": "python -m infrastructure.steganography.start_tpm_backend",
+      "source_path": "infrastructure/steganography/start_tpm_backend.py",
+      "purpose": "Start a software TPM backend for Kmyth seal/unseal on macOS.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.steganography.swtpm_mssim_proxy",
+      "invocation": "python -m infrastructure.steganography.swtpm_mssim_proxy",
+      "source_path": "infrastructure/steganography/swtpm_mssim_proxy.py",
+      "purpose": "TCP proxy that bridges the Microsoft TPM Simulator (mssim) TCTI protocol",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.tools.linking",
       "invocation": "python -m infrastructure.tools.linking",
       "source_path": "infrastructure/tools/linking.py",
