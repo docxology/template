@@ -355,3 +355,7 @@ run.config.yml
 /.humos
 /Plans
 /$HOME
+
+# Standalone-repo staging dirs at repo root (own .git; published separately).
+# Guard against accidental monorepo commits of nested repo checkouts.
+template-pitch-deck/

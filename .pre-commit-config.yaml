@@ -36,7 +36,11 @@ repos:
             projects/templates/.*\.png|
             projects/templates/.*\.svg|
             projects/templates/.*\.pdf|
-            projects/templates/.*\.epub
+            projects/templates/.*\.epub|
+            output/templates/.*\.png|
+            output/templates/.*\.svg|
+            output/templates/.*\.pdf|
+            output/templates/.*\.epub
           )
       - id: check-merge-conflict
         name: check-merge-conflict (catch conflict markers)
