@@ -13,7 +13,7 @@ keywords:
 - source protection
 license: CC-BY-4.0
 message: If you use this software, please cite it using the metadata from this file.
-repository-code: https://github.com/docxology/template/tree/main/projects/templates/template_redacted_report
+repository-code: https://github.com/docxology/template_redacted_report
 title: 'Redacted Report Template: Disclosure Control and Release Audit'
 type: software
 version: 0.1.0

@@ -63,7 +63,7 @@ This paper presents `template_pools_rules_tools`, a meta-project exemplar that d
 
 The architecture (@fig:architecture) separates *resource ownership* from *resource consumption*. Resources live in top-level `fonds/`, `rules/`, and `tools/` directories and are never modified by consumers. Each resource exposes a typed manifest (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that the corresponding reader module uses for discovery and validation. All readers implement graceful fallbacks: they return `None` or empty collections when a resource is absent, log a warning via the standard library `logging` module, and allow the integration pipeline to continue. This revision extends the original three-figure presentation to eight content figures plus a cover illustration — a fond taxonomy (@fig:taxonomy), a rule hierarchy (@fig:rulehier), a tool invocation contract (@fig:toolcontract), a three-level resilience diagram (@fig:resilience), and a script pipeline flow (@fig:pipelineflow) — so that every structural claim in the prose has a corresponding visual.
 
-In a representative pipeline run, the integration demo loaded 3 fonds, validated 2 rule sets, discovered 4 tools, and processed 8 bibliography entries — all reported as structured JSON that populates manuscript variable tokens at render time. Tests covering the eight `src/` modules (across nine test files) achieve well above the required ≥90% combined line coverage and use real file paths rather than mocks, ensuring that reported counts are genuine — run `uv run pytest … --cov-report=term` for the current test count and coverage percentage rather than trusting a number printed here.
+In a representative pipeline run, the integration demo loaded 3 fonds, validated 2 rule sets, discovered 3 tools, and processed 8 bibliography entries — all reported as structured JSON that populates manuscript variable tokens at render time. Tests covering the eight `src/` modules (across nine test files) achieve well above the required ≥90% combined line coverage and use real file paths rather than mocks, ensuring that reported counts are genuine — run `uv run pytest … --cov-report=term` for the current test count and coverage percentage rather than trusting a number printed here.
 
 The `template_pools_rules_tools` exemplar provides a reference implementation that any project in the template repository can consult when designing its own resource-consumption layer.
 
@@ -414,7 +414,7 @@ result = validate_tool_scripts_exist("template_code_executor")
 
 `discover_tools()` scans `tools/templates/` and returns one `ToolEntry` per subdirectory, regardless of whether a manifest is present: a directory with a parseable `tools.yaml` gets `manifest={...}`; a directory with no manifest, or one that fails to parse, gets `manifest=None` plus a logged warning. Discovery itself never raises and never drops a directory from the result — the *interpretation* of "not a real tool yet" is left to the caller (`get_tool_entrypoints()` and `validate_tool_scripts_exist()` both return an empty/`"missing"` result for a `None` manifest), which keeps discovery and validation as separate, independently testable concerns.
 
-`validate_tool_scripts_exist()` iterates over the manifest's `entrypoints` list and checks each path against the filesystem. It returns a structured result distinguishing between tools that are fully ready (`"ok"`), partially configured (`"partial"` — some scripts missing), and entirely absent (`"missing"`). In the current integration run, **4 tools** were discovered (@fig:counts), all with valid manifests.
+`validate_tool_scripts_exist()` iterates over the manifest's `entrypoints` list and checks each path against the filesystem. It returns a structured result distinguishing between tools that are fully ready (`"ok"`), partially configured (`"partial"` — some scripts missing), and entirely absent (`"missing"`). In the current integration run, **3 tools** were discovered (@fig:counts), all with valid manifests.
 
 ## Tool Discovery and Reproducibility
 
@@ -478,7 +478,7 @@ The current `manuscript_variables.json` contains the following summary values (s
 |---|---|
 | `3` | 3 |
 | `2` | 2 |
-| `4` | 4 |
+| `3` | 3 |
 | `8` | 8 |
 
 This table is itself token-injected: the values shown are those produced by the pipeline, not hard-coded by the manuscript author. If the pipeline results change — for example, because a new fond is added — re-running `scripts/03_generate_manuscript.py` updates the manuscript automatically, without manual editing. This property is central to reproducibility: the manuscript's quantitative claims are always consistent with the code that generated them [@Stodden2016enhancing].
@@ -542,7 +542,7 @@ This paper has presented `template_pools_rules_tools`, a meta-project exemplar d
 
 2. **A typed manifest convention** (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that makes resource capabilities explicit and checkable at pipeline initialisation time, shifting failure detection from runtime to startup — a significant improvement for reproducibility [@Wilson2014best].
 
-3. **A token injection pipeline** that links manuscript prose to integration runtime statistics through `{{UPPERCASE_KEY}}` tokens, ensuring that quantitative claims in the manuscript are always generated by the pipeline rather than authored manually. In the current run this covered 3 fonds, 2 rule sets, 4 tools, and 8 bibliography entries.
+3. **A token injection pipeline** that links manuscript prose to integration runtime statistics through `{{UPPERCASE_KEY}}` tokens, ensuring that quantitative claims in the manuscript are always generated by the pipeline rather than authored manually. In the current run this covered 3 fonds, 2 rule sets, 3 tools, and 8 bibliography entries.
 
 4. **A three-level resilience design** — resource absence, schema malformation, and script absence — that allows the pipeline to degrade gracefully and report failures informatively rather than crashing, consistent with best practices for robust research software [@Taschuk2017ten].
 

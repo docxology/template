@@ -1,0 +1,23 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-07-10'
+doi: 10.5281/zenodo.21298885
+keywords:
+- strongly typed programming
+- session types
+- algebraic data types
+- category theory
+- active inference
+- multiagent systems
+- affine types
+- illegal state unrepresentable
+license: MIT
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template_formal
+title: Illegal States, Mostly Unrepresentable
+type: software
+version: 0.1.0

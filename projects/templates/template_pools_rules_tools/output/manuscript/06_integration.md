@@ -29,7 +29,7 @@ The current `manuscript_variables.json` contains the following summary values (s
 |---|---|
 | `3` | 3 |
 | `2` | 2 |
-| `4` | 4 |
+| `3` | 3 |
 | `8` | 8 |
 
 This table is itself token-injected: the values shown are those produced by the pipeline, not hard-coded by the manuscript author. If the pipeline results change — for example, because a new fond is added — re-running `scripts/03_generate_manuscript.py` updates the manuscript automatically, without manual editing. This property is central to reproducibility: the manuscript's quantitative claims are always consistent with the code that generated them [@Stodden2016enhancing].

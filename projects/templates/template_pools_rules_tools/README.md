@@ -93,12 +93,12 @@ This template is ideal for platform teams, CI engineers, and infrastructure main
 
 Concept DOI: [10.5281/zenodo.21298888](https://doi.org/10.5281/zenodo.21298888) | Version DOI: [10.5281/zenodo.21298889](https://zenodo.org/records/21298889) | Repository: —
 
-Publishing surface — 20 platforms, 1 published:
+Publishing surface — 20 platforms, 2 published:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
-| zenodo | first-class | 🔵 reserved | [10.5281/zenodo.21298888](https://doi.org/10.5281/zenodo.21298888) | `ZENODO_API_TOKEN` |
-| github | first-class | ✅ published | [docxology/template](https://github.com/docxology/template) | `GITHUB_TOKEN` |
+| zenodo | first-class | ✅ published | [10.5281/zenodo.21298888](https://doi.org/10.5281/zenodo.21298888) | `ZENODO_API_TOKEN` |
+| github | first-class | ✅ published | [docxology/template_pools_rules_tools](https://github.com/docxology/template_pools_rules_tools) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
 | pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
 | ipfs_pinata | first-class | ⚪ available | — | `PINATA_JWT` |

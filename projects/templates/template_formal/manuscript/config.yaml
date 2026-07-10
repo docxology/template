@@ -24,10 +24,10 @@ authors:
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
   doi: "10.5281/zenodo.21298885"
-  doi_status: "reserved (draft deposition; awaiting first publication)" # Concept DOI — reserved on first real publish, not fabricated here
+  doi_status: "DOI published" # Concept DOI — reserved on first real publish, not fabricated here
   version_doi: "10.5281/zenodo.21298886"
   version_record: "https://zenodo.org/records/21298886"
-  github_repository: ""
+  github_repository: "docxology/template_formal"
   transmission_bookends:
     enabled: false
     max_prior_releases: 5

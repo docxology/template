@@ -13,16 +13,20 @@
       "givenName": "Daniel Ari"
     }
   ],
-  "codeRepository": "https://github.com/docxology/template_registered_report",
+  "codeRepository": "https://github.com/docxology/template_formal",
   "dateModified": "2026-07-10",
-  "identifier": "10.5281/zenodo.21298892",
+  "identifier": "10.5281/zenodo.21298885",
   "keywords": [
-    "registered report",
-    "preregistration",
-    "replication",
-    "deviation ledger"
+    "strongly typed programming",
+    "session types",
+    "algebraic data types",
+    "category theory",
+    "active inference",
+    "multiagent systems",
+    "affine types",
+    "illegal state unrepresentable"
   ],
-  "license": "https://spdx.org/licenses/CC-BY-4.0",
-  "name": "Registered Report Template: Preregistration, Deviations, and Claim Boundaries",
+  "license": "https://spdx.org/licenses/MIT",
+  "name": "Illegal States, Mostly Unrepresentable",
   "version": "0.1.0"
 }

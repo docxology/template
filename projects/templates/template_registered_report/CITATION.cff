@@ -13,7 +13,7 @@ keywords:
 - deviation ledger
 license: CC-BY-4.0
 message: If you use this software, please cite it using the metadata from this file.
-repository-code: https://github.com/docxology/template/tree/main/projects/templates/template_registered_report
+repository-code: https://github.com/docxology/template_registered_report
 title: 'Registered Report Template: Preregistration, Deviations, and Claim Boundaries'
 type: software
 version: 0.1.0

@@ -13,7 +13,7 @@ keywords:
 - schema validation
 license: CC-BY-4.0
 message: If you use this software, please cite it using the metadata from this file.
-repository-code: https://github.com/docxology/template/tree/main/projects/templates/template_data_descriptor
+repository-code: https://github.com/docxology/template_data_descriptor
 title: 'Data Descriptor Template: Schema, Provenance, and Release Readiness'
 type: software
 version: 0.1.0

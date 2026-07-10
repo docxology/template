@@ -11,11 +11,11 @@ authors:
     corresponding: true
 publication:
   doi: "10.5281/zenodo.21298883"
-  doi_status: "reserved (draft deposition; awaiting first publication)"
+  doi_status: "DOI published"
   version_doi: "10.5281/zenodo.21298884"
   version_record: "https://zenodo.org/records/21298884"
-  github_repository: ""
-  repository_url: "https://github.com/docxology/template/tree/main/projects/templates/template_data_descriptor"
+  github_repository: "docxology/template_data_descriptor"
+  repository_url: "https://github.com/docxology/template_data_descriptor"
   license: "CC-BY-4.0"
 keywords:
   - data descriptor
