@@ -1,5 +1,20 @@
 """Registered-report validation helpers."""
 
+from registered_report.demo_study import (
+    AnalysisStage,
+    DemoDataset,
+    HypothesisOutcomeEdge,
+    PermutationResult,
+    TimelineEvent,
+    analysis_plan_stages,
+    deviation_timeline,
+    generate_demo_dataset,
+    hypothesis_outcome_map,
+    mean,
+    permutation_null_distribution,
+    run_permutation_test,
+    run_registered_analysis,
+)
 from registered_report.protocol import (
     DeviationLedgerRow,
     RegistrationFinding,
@@ -9,19 +24,32 @@ from registered_report.protocol import (
     compare_analysis_to_registration,
     freeze_registration,
     registration_hash,
-    validate_sensitivity_table,
     validate_registration,
+    validate_sensitivity_table,
 )
 
 __all__ = [
+    "AnalysisStage",
+    "DemoDataset",
     "DeviationLedgerRow",
+    "HypothesisOutcomeEdge",
+    "PermutationResult",
     "RegistrationFinding",
     "RegistrationReport",
+    "TimelineEvent",
+    "analysis_plan_stages",
     "build_deviation_ledger",
     "build_review_packet",
     "compare_analysis_to_registration",
+    "deviation_timeline",
     "freeze_registration",
+    "generate_demo_dataset",
+    "hypothesis_outcome_map",
+    "mean",
+    "permutation_null_distribution",
     "registration_hash",
-    "validate_sensitivity_table",
+    "run_permutation_test",
+    "run_registered_analysis",
     "validate_registration",
+    "validate_sensitivity_table",
 ]

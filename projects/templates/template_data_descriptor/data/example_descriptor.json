@@ -3,15 +3,23 @@
   "version": "0.1.0",
   "license": "CC-BY-4.0",
   "provenance": [
-    {"step": "collect", "agent": "synthetic fixture generator"},
-    {"step": "validate", "agent": "template_data_descriptor"}
+    {"step": "collect", "agent": "synthetic fixture generator", "description": "Emit deterministic measurement and subject tables."},
+    {"step": "clean", "agent": "template_data_descriptor", "description": "Normalize identifiers and bound the measurement range."},
+    {"step": "validate", "agent": "template_data_descriptor", "description": "Run schema, constraint, and byte-level checks."},
+    {"step": "package", "agent": "template_data_descriptor", "description": "Emit the metadata-only release manifest."}
   ],
   "files": [
     {
-      "path": "measurements.csv",
+      "path": "fixtures/measurements.csv",
       "media_type": "text/csv",
-      "checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "checksum": "sha256:fe37ddd309a14dabcebf2c6bde455b8a87683cff1715bc086754a093192b6912",
       "rows": 12
+    },
+    {
+      "path": "fixtures/subjects.csv",
+      "media_type": "text/csv",
+      "checksum": "sha256:82e7f56156b2c7795c2b618a8a5050599f6bd8b2e015a08fd3b8ed7394f04080",
+      "rows": 6
     }
   ],
   "fields": [
@@ -21,6 +29,13 @@
       "nullable": false,
       "description": "Stable synthetic sample identifier",
       "constraints": {"pattern": "^S[0-9]{3}$"}
+    },
+    {
+      "name": "subject_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Foreign key into fixtures/subjects.csv",
+      "constraints": {"pattern": "^P[0-9]{3}$"}
     },
     {
       "name": "group",
@@ -36,6 +51,19 @@
       "unit": "normalized_score",
       "description": "Bounded synthetic measurement",
       "constraints": {"minimum": 0, "maximum": 1}
+    },
+    {
+      "name": "collected_on",
+      "type": "date",
+      "nullable": false,
+      "description": "ISO-8601 collection date"
+    },
+    {
+      "name": "instrument",
+      "type": "category",
+      "nullable": false,
+      "description": "Synthetic capture device",
+      "constraints": {"allowed_values": ["sensor_a", "sensor_b"]}
     }
   ],
   "primary_key": ["sample_id"]
