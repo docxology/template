@@ -63,6 +63,13 @@ def run_comprehensive_audit(
     # Phase 1: Discovery
     md_files = discover_markdown_files(repo_root, scope="repo")
     logger.info(f"Found {len(md_files)} markdown files to audit")
+    if not md_files:
+        # A repo-wide scan that examines nothing must fail loud, never emit an
+        # "all validations passed" report (vacuous-green: N_examined must be > 0).
+        raise RuntimeError(
+            f"documentation audit discovered 0 markdown files under {repo_root} — "
+            "the scan scope is broken; refusing to report a vacuous pass"
+        )
 
     # Get project categorization
     doc_categories = categorize_documentation(md_files, repo_root)

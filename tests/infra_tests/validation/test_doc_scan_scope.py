@@ -33,6 +33,54 @@ def test_shared_scope_skips_local_and_generated_trees(tmp_path: Path) -> None:
     assert should_exclude_path(excluded_paths[0]) is True
 
 
+def test_scan_root_inside_excluded_component_is_not_self_excluded(tmp_path: Path) -> None:
+    """A checkout living under an excluded component name must still be scanned.
+
+    Agent worktrees live at ``<repo>/.claude/worktrees/<name>/``; evaluating
+    exclusions against the ABSOLUTE path silently excluded the entire checkout
+    and every doc gate returned a vacuous pass. Exclusions must bind to the
+    path relative to the scan root.
+    """
+    checkout = tmp_path / ".claude" / "worktrees" / "some-agent-worktree"
+    good = checkout / "docs" / "guide.md"
+    good.parent.mkdir(parents=True)
+    good.write_text("# Guide\n", encoding="utf-8")
+    # A NESTED excluded component inside the checkout must still be excluded.
+    nested = checkout / ".claude" / "worktrees" / "inner" / "scratch.md"
+    nested.parent.mkdir(parents=True)
+    nested.write_text("# Scratch\n", encoding="utf-8")
+
+    discovered = {path.relative_to(checkout) for path in iter_markdown_files([checkout])}
+
+    assert discovered == {Path("docs/guide.md")}
+
+
+def test_run_docs_lint_fails_loud_on_empty_scan(tmp_path: Path) -> None:
+    """A zero-file documentation scan must raise, never report a vacuous pass."""
+    import pytest
+
+    from infrastructure.validation.docs.lint_runner import run_docs_lint
+
+    empty_repo = tmp_path / "empty"
+    empty_repo.mkdir()
+
+    with pytest.raises(ValueError, match="0 markdown files"):
+        run_docs_lint(empty_repo, quiet=True)
+
+
+def test_comprehensive_audit_fails_loud_on_empty_scan(tmp_path: Path) -> None:
+    """The filepath auditor must refuse to write an all-passed report over 0 files."""
+    import pytest
+
+    from infrastructure.validation.repo.audit_orchestrator import run_comprehensive_audit
+
+    empty_repo = tmp_path / "empty"
+    empty_repo.mkdir()
+
+    with pytest.raises(RuntimeError, match="0 markdown files"):
+        run_comprehensive_audit(empty_repo)
+
+
 def test_discovery_and_link_validator_share_scope(tmp_path: Path) -> None:
     """The broad link validator uses the same exclusions as docs discovery."""
     readme = tmp_path / "README.md"

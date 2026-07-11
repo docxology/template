@@ -64,7 +64,14 @@ def iter_markdown_files(
     exclude_parts: Iterable[str] = DEFAULT_EXCLUDE_PARTS,
     exclude_globs: Iterable[str] = (),
 ) -> list[Path]:
-    """Return Markdown files under *roots* while applying shared exclusions."""
+    """Return Markdown files under *roots* while applying shared exclusions.
+
+    Exclusions are evaluated against the path RELATIVE to its scan root, never
+    the absolute path: a checkout whose own location contains an excluded
+    component (agent worktrees live under ``.claude/worktrees/<name>/``) must
+    not have its entire tree silently excluded — that failure mode made every
+    doc gate riding this discovery return a vacuous pass in worktrees.
+    """
     seen: set[Path] = set()
     out: list[Path] = []
     globs = tuple(exclude_globs)
@@ -75,7 +82,11 @@ def iter_markdown_files(
         for md in candidates:
             if md.suffix.lower() != ".md":
                 continue
-            if should_exclude_path(md, exclude_parts):
+            try:
+                scoped = md.relative_to(root)
+            except ValueError:
+                scoped = md
+            if should_exclude_path(scoped, exclude_parts):
                 continue
             if any(md.match(glob) for glob in globs):
                 continue

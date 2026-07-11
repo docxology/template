@@ -449,11 +449,13 @@ class TestDocumentationScannerFullRun:
         assert results.total_files >= 3
         assert len(report) > 0
 
-    def test_empty_repo(self, tmp_path):
+    def test_empty_repo_fails_loud(self, tmp_path):
+        # A scan root with zero markdown files means the scan scope is broken
+        # (this once silently excluded entire worktree checkouts); the scanner
+        # must refuse to produce a vacuous all-clean report.
         scanner = DocumentationScanner(tmp_path)
-        results, report = scanner.run_full_scan()
-        assert results.total_files == 0
-        assert isinstance(report, str)
+        with pytest.raises(ValueError, match="0 markdown files"):
+            scanner.run_full_scan()
 
     def test_statistics_populated(self, tmp_path):
         (tmp_path / "README.md").write_text("# README")

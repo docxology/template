@@ -218,6 +218,17 @@ def run_docs_lint(
     if only_flags > 1:
         raise ValueError("pass at most one of mermaid_only, links_only, consistency_only, doc_pairs_only")
 
+    from infrastructure.validation.docs.scan_scope import iter_markdown_files
+
+    if not iter_markdown_files([repo_root]):
+        # Every linter below rides this discovery; a zero-file scan means the
+        # scope itself is broken (it once silently excluded whole worktree
+        # checkouts) and each linter would return a vacuous pass. Fail loud.
+        raise ValueError(
+            f"documentation lint discovered 0 markdown files under {repo_root} — "
+            "scan scope is broken; refusing to report a vacuous pass"
+        )
+
     run_mermaid = not (links_only or consistency_only or doc_pairs_only)
     run_links = not (mermaid_only or consistency_only or doc_pairs_only)
     run_consistency = not (mermaid_only or links_only or doc_pairs_only)
