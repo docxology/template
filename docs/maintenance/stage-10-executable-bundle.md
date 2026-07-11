@@ -3,13 +3,16 @@
 > Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `bundle` / `archival` tags out of default runs; invoke `scripts/runner/bundle_executable.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
 >
 > **Naming note:** this guide and its filename predate the later insertion of
-> the Ebook Generation and Metadata Package stages into `pipeline.yaml`
+> the Ebook Generation, Metadata Package, Connector Search, and Provenance
+> Record stages into `pipeline.yaml`
 > (`docs/maintenance/publishing-export-pipeline.md` was fixed for the same
 > drift in a prior pass). In the *current* `pipeline.yaml` numbering,
-> Executable Bundle is **Stage 12** and Archival Publication is **Stage 13**
+> Executable Bundle is **Stage 14** and Archival Publication is **Stage 15**
 > (see CLAUDE.md's stage table); "Stage 10" in this filename/prose is the
 > historical name kept for URL/reference stability, not the live stage index.
-> The table below uses the current, correct numbering.
+> Do not trust any stage index in this file's prose without checking the
+> CLAUDE.md table — this note has already gone stale once (it said 12/13
+> after the ebook/metadata insertion and missed the science/provenance one).
 
 ## Why this stage exists
 
@@ -97,19 +100,21 @@ The manifest is **the contract** between this template and any future agentic ve
 | Stage 2: Infra tests | 60% coverage signal | existing |
 | Stage 3: Project tests | 90% coverage signal | existing |
 | Stage 4: Analysis | figures + data | existing |
-| Stage 5: PDF rendering | static PDF (archival artifact) | existing |
-| Stage 6: Validation | quality report | existing |
-| Stage 7: LLM draft assistance | LLM-aided review | existing (relabeled 2026-05-20) |
-| Stage 8: LLM translations | zh/hi/ru abstracts | existing |
-| Stage 9: Copy outputs | final deliverables to output/ | existing |
-| Stage 10: Ebook generation | EPUB/MOBI/DOCX | opt-in (`ebook` tag) |
-| Stage 11: Metadata package | ONIX/metadata.json/content.opf | opt-in (`metadata` tag) |
-| **Stage 12: Executable bundle** | **container + lockfile + manifest** | **implemented as an opt-in stage** |
-| **Stage 13: Archival publication** | **dry-run or committed archival manifest/deposits** | **implemented as an opt-in stage** |
+| Stage 5: Connector search | scientific-database search records | opt-in (`science` tag) |
+| Stage 6: Provenance record | content-addressed provenance entries | opt-in (`provenance` tag) |
+| Stage 7: PDF rendering | static PDF (archival artifact) | existing |
+| Stage 8: Validation | quality report | existing |
+| Stage 9: LLM scientific review | LLM-aided review | existing |
+| Stage 10: LLM translations | zh/hi/ru abstracts | existing |
+| Stage 11: Copy outputs | final deliverables to output/ | existing |
+| Stage 12: Ebook generation | EPUB/MOBI/DOCX | opt-in (`ebook` tag) |
+| Stage 13: Metadata package | ONIX/metadata.json/content.opf | opt-in (`metadata` tag) |
+| **Stage 14: Executable bundle** | **container + lockfile + manifest** | **implemented as an opt-in stage** |
+| **Stage 15: Archival publication** | **dry-run or committed archival manifest/deposits** | **implemented as an opt-in stage** |
 
 The declared Executable Bundle stage depends on PDF rendering and is filtered out of default runs by its `bundle` tag. Archival Publication depends on Executable Bundle and is filtered out by its `archival` tag. The default full run still ends with Copy Outputs; invoke these long-horizon stages directly when intentionally producing bundles or archival records.
 
-## Why "parallel to Stage 5" not "replacing Stage 5"
+## Why "parallel to PDF rendering (Stage 7)" not "replacing it"
 
 - PDF retains long-term archival value (LaTeX → PDF is 50+ year stable)
 - Zenodo DOIs bind to PDFs in current practice
@@ -139,7 +144,7 @@ Remaining hardening:
 - Cross-project bundles (multi-project deliverables) — single-project only initially
 - GPU support in the container — CPU only
 - Network access at reproduction time — bundle is self-contained
-- Re-execution of LLM stages (Stage 7/8) — these stay optional and skipped in the bundle
+- Re-execution of LLM stages (Stages 9/10) — these stay optional and skipped in the bundle
 
 ## Open questions
 
@@ -159,4 +164,4 @@ These need decisions before treating the bundle as a release gate.
 - [`README.md`](README.md) — guide hub
 - [`regression-testing.md`](regression-testing.md) — the `pinned_values/` source for the manifest's claims section
 - [`archival-targets.md`](archival-targets.md) — the archival receipts captured in the manifest
-- [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) — declared Stage 12 (Executable Bundle) and Stage 13 (Archival Publication) contracts
+- [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) — declared Stage 14 (Executable Bundle) and Stage 15 (Archival Publication) contracts

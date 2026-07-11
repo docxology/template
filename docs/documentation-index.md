@@ -213,6 +213,11 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 
 ### Per-Module Guides (`modules/guides/`)
 
+Thin pointer stubs: each entry redirects to the module's own
+`infrastructure/<module>/` README/SKILL docs, which are the substantive
+references. One stub per infrastructure module (plus the config/docker asset
+directories).
+
 - **[modules/guides/config-module.md](modules/guides/config-module.md)**
 - **[modules/guides/autoresearch-module.md](modules/guides/autoresearch-module.md)**
 - **[modules/guides/benchmark-module.md](modules/guides/benchmark-module.md)**
@@ -236,6 +241,12 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[modules/guides/reference-module.md](modules/guides/reference-module.md)**
 - **[modules/guides/methods-module.md](modules/guides/methods-module.md)**
 - **[modules/guides/sia-module.md](modules/guides/sia-module.md)**
+- **[modules/guides/fonds-module.md](modules/guides/fonds-module.md)**
+- **[modules/guides/logrotate-module.md](modules/guides/logrotate-module.md)**
+- **[modules/guides/provenance-module.md](modules/guides/provenance-module.md)**
+- **[modules/guides/research-module.md](modules/guides/research-module.md)**
+- **[modules/guides/rules-module.md](modules/guides/rules-module.md)**
+- **[modules/guides/tools-module.md](modules/guides/tools-module.md)**
 
 ---
 

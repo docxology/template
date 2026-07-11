@@ -38,8 +38,8 @@ This is a research project template with a test-driven development workflow, aut
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
 | Pre-push hooks | `pre-commit run --hook-stage pre-push --all-files` |
 | Local CI reproduction (act + fallback) | `./scripts/shell/ci_local.sh` (added 2026-05-20; see [`docs/maintenance/ci-local.md`](docs/maintenance/ci-local.md)) |
-| Executable bundle (opt-in Stage 10) | `uv run python scripts/runner/bundle_executable.py --project {name}` |
-| Archive publication dry-run (opt-in Stage 11) | `uv run python scripts/runner/archive_publication.py --project {name}` |
+| Executable bundle (opt-in Stage 14) | `uv run python scripts/runner/bundle_executable.py --project {name}` |
+| Archive publication dry-run (opt-in Stage 15) | `uv run python scripts/runner/archive_publication.py --project {name}` |
 | Archive publication real deposit | `uv run python scripts/runner/archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
 | Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
 | Reproduction bundle (single / all public exemplars) | `uv run python scripts/runner/repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
@@ -273,7 +273,7 @@ each independently overridable/skippable: `TEMPLATE_FONDS_ROOT` /
 #### Layer 1: Infrastructure (Generic, Reusable)
 
 - `infrastructure/` - Generic build and validation tools
-- `scripts/` - Subdirectory-organized stage orchestrators (`pipeline/`, `runner/`, `audit/`, `docgen/`, `shell/`, `publish/`)
+- `scripts/` - Subdirectory-organized stage orchestrators (`pipeline/`, `runner/`, `audit/`, `docgen/`, `gates/`, `maintenance/`, `shell/`, `publish/`; root-level `scripts/*.py` are backward-compatible shims — see `scripts/README.md`)
 - `tests/` - Infrastructure test suite
 
 #### Layer 2: Projects (Domain-Specific)
