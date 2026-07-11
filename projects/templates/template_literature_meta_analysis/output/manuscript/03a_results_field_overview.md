@@ -8,7 +8,7 @@ with 112 records that year. The growth curve is the first-order signal
 that the literature is active rather than dormant.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](figures/growth_curve.png "Publication Growth Curve"){{#fig:growth_curve}}
+![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](../output/figures/growth_curve.png "Publication Growth Curve"){{#fig:growth_curve}}
 
 ## RQ1: Field Size and Growth
 
@@ -54,13 +54,13 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 | Neuroscience | 41 | 1.9% |
 
 <!-- FIGURE: field_summary.png -->
-![Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](figures/field_summary.png "Field Summary"){{#fig:field_summary}}
+![Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../output/figures/field_summary.png "Field Summary"){{#fig:field_summary}}
 
 <!-- FIGURE: subfield_distribution.png -->
-![Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 64.3\%.](figures/subfield_distribution.png "Subfield Distribution"){{#fig:subfield_distribution}}
+![Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 64.3\%.](../output/figures/subfield_distribution.png "Subfield Distribution"){{#fig:subfield_distribution}}
 
 <!-- FIGURE: subfield_timeline.png -->
-![Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](figures/subfield_timeline.png "Subfield Timeline"){{#fig:subfield_timeline}}
+![Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../output/figures/subfield_timeline.png "Subfield Timeline"){{#fig:subfield_timeline}}
 
 ## Identifier and Full-Text Coverage
 
@@ -92,7 +92,7 @@ characteristic of scientific literature.
 | 500+ | 11 |
 
 <!-- FIGURE: citation_distribution.png -->
-![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](figures/citation_distribution.png "Citation Distribution"){{#fig:citation_distribution}}
+![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../output/figures/citation_distribution.png "Citation Distribution"){{#fig:citation_distribution}}
 
 **Table 4. Top publication venues.**
 
@@ -110,7 +110,7 @@ characteristic of scientific literature.
 | American Journal of Psychiatry | 23 |
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](figures/top_venues.png "Top Venues"){{#fig:top_venues}}
+![Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){{#fig:top_venues}}
 
 **Table 5. Top authors by publication count.**
 
@@ -128,4 +128,4 @@ characteristic of scientific literature.
 | 10 | Gert Lubec | 15 |
 
 <!-- FIGURE: author_productivity.png -->
-![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](figures/author_productivity.png "Author Productivity"){{#fig:author_productivity}}
+![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](../output/figures/author_productivity.png "Author Productivity"){{#fig:author_productivity}}

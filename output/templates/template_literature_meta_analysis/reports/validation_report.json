@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-25T17:04:31.695610",
+  "timestamp": "2026-07-10T18:36:41.428559",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -8,7 +8,7 @@
     "Figure registry": true,
     "Evidence registry": false,
     "Project design overlays": true,
-    "Artifact manifest": true
+    "Artifact manifest": false
   },
   "figure_issues": [],
   "output_statistics": {
@@ -19,11 +19,172 @@
       "02a_methods_retrieval.md: unsupported number 986",
       "01_introduction.md: unsupported number 429",
       "02d_methods_knowledge_graph.md: unsupported number -1",
-      "04a_discussion.md: unsupported number 1000",
-      "04a_discussion.md: unsupported number 986",
-      "04a_discussion.md: unsupported number 429",
-      "05_appendix_tooling.md: unsupported number 90",
-      "05_appendix_tooling.md: unsupported number 819"
+      "04_discussion.md: unsupported number 1000",
+      "04_discussion.md: unsupported number 986",
+      "04_discussion.md: unsupported number 429",
+      "06_appendix_tooling.md: unsupported number 90",
+      "06_appendix_tooling.md: unsupported number 819"
+    ],
+    "artifact_manifest_issues": [
+      "undeclared artifact: output/data/corpus.jsonl",
+      "undeclared artifact: output/data/citation_graph.gml",
+      "undeclared artifact: output/data/citation_network.json",
+      "undeclared artifact: output/data/deep_research_replay.json",
+      "undeclared artifact: output/data/descriptive_stats.json",
+      "undeclared artifact: output/data/embedding_analysis.json",
+      "undeclared artifact: output/data/entities.json",
+      "undeclared artifact: output/data/fulltext_assessment.json",
+      "undeclared artifact: output/data/keyphrases.json",
+      "undeclared artifact: output/data/literature_evaluation.json",
+      "undeclared artifact: output/data/subfield_classification.json",
+      "undeclared artifact: output/data/subfield_timeline.json",
+      "undeclared artifact: output/data/temporal_analysis.json",
+      "undeclared artifact: output/data/tfidf_data.json",
+      "undeclared artifact: output/data/topics.json",
+      "undeclared artifact: output/figures/author_productivity.png",
+      "undeclared artifact: output/figures/citation_distribution.png",
+      "changed artifact: output/figures/citation_network.png",
+      "undeclared artifact: output/figures/citation_network.png",
+      "undeclared artifact: output/figures/cooccurrence_matrix.png",
+      "undeclared artifact: output/figures/degree_distribution.png",
+      "undeclared artifact: output/figures/dendrogram.png",
+      "undeclared artifact: output/figures/entity_bar_chart.png",
+      "undeclared artifact: output/figures/field_summary.png",
+      "undeclared artifact: output/figures/figure_registry.json",
+      "undeclared artifact: output/figures/growth_curve.png",
+      "changed artifact: output/figures/hypothesis_dashboard.png",
+      "undeclared artifact: output/figures/hypothesis_dashboard.png",
+      "undeclared artifact: output/figures/pca_embeddings.png",
+      "undeclared artifact: output/figures/similarity_heatmap.png",
+      "undeclared artifact: output/figures/subfield_distribution.png",
+      "undeclared artifact: output/figures/subfield_timeline.png",
+      "undeclared artifact: output/figures/term_heatmap.png",
+      "undeclared artifact: output/figures/top_venues.png",
+      "undeclared artifact: output/figures/topic_term_bars.png",
+      "undeclared artifact: output/figures/word_cloud.png",
+      "undeclared artifact: output/manuscript/00_abstract.md",
+      "undeclared artifact: output/manuscript/01_introduction.md",
+      "undeclared artifact: output/manuscript/02_methods_overview.md",
+      "undeclared artifact: output/manuscript/02a_methods_retrieval.md",
+      "undeclared artifact: output/manuscript/02b_methods_extraction.md",
+      "undeclared artifact: output/manuscript/02c_methods_bibliometrics.md",
+      "undeclared artifact: output/manuscript/02d_methods_knowledge_graph.md",
+      "undeclared artifact: output/manuscript/02e_methods_viz_injection.md",
+      "changed artifact: output/manuscript/03_results_hypothesis.md",
+      "undeclared artifact: output/manuscript/03_results_hypothesis.md",
+      "undeclared artifact: output/manuscript/03a_results_field_overview.md",
+      "undeclared artifact: output/manuscript/03b_results_subfields.md",
+      "undeclared artifact: output/manuscript/03c_results_text_analytics.md",
+      "undeclared artifact: output/manuscript/03d_results_citation_network.md",
+      "undeclared artifact: output/manuscript/04_discussion.md",
+      "undeclared artifact: output/manuscript/05_conclusion.md",
+      "undeclared artifact: output/manuscript/06_appendix_tooling.md",
+      "undeclared artifact: output/manuscript/07_appendix_technical.md",
+      "undeclared artifact: output/manuscript/08_appendix_accessibility.md",
+      "undeclared artifact: output/manuscript/98_symbols_glossary.md",
+      "undeclared artifact: output/manuscript/99_references.md",
+      "undeclared artifact: output/manuscript/config.yaml",
+      "undeclared artifact: output/manuscript/config.yaml.example",
+      "undeclared artifact: output/manuscript/layer_contract.yaml",
+      "undeclared artifact: output/manuscript/preamble.md",
+      "undeclared artifact: output/manuscript/references.bib",
+      "undeclared artifact: output/pdf/_combined_manuscript.bbl",
+      "undeclared artifact: output/pdf/_combined_manuscript.blg",
+      "changed artifact: output/pdf/_combined_manuscript.md",
+      "undeclared artifact: output/pdf/_combined_manuscript.md",
+      "changed artifact: output/pdf/_combined_manuscript.tex",
+      "undeclared artifact: output/pdf/_combined_manuscript.tex",
+      "undeclared artifact: output/pdf/references.bib",
+      "changed artifact: output/pdf/template_literature_meta_analysis_combined.pdf",
+      "undeclared artifact: output/pdf/template_literature_meta_analysis_combined.pdf",
+      "changed artifact: output/slides/00_abstract_slides.pdf",
+      "undeclared artifact: output/slides/00_abstract_slides.pdf",
+      "undeclared artifact: output/slides/00_abstract_slides.tex",
+      "changed artifact: output/slides/01_introduction_slides.pdf",
+      "undeclared artifact: output/slides/01_introduction_slides.pdf",
+      "undeclared artifact: output/slides/01_introduction_slides.tex",
+      "changed artifact: output/slides/02_methods_overview_slides.pdf",
+      "undeclared artifact: output/slides/02_methods_overview_slides.pdf",
+      "undeclared artifact: output/slides/02_methods_overview_slides.tex",
+      "changed artifact: output/slides/02a_methods_retrieval_slides.pdf",
+      "undeclared artifact: output/slides/02a_methods_retrieval_slides.pdf",
+      "undeclared artifact: output/slides/02a_methods_retrieval_slides.tex",
+      "changed artifact: output/slides/02b_methods_extraction_slides.pdf",
+      "undeclared artifact: output/slides/02b_methods_extraction_slides.pdf",
+      "undeclared artifact: output/slides/02b_methods_extraction_slides.tex",
+      "changed artifact: output/slides/02c_methods_bibliometrics_slides.pdf",
+      "undeclared artifact: output/slides/02c_methods_bibliometrics_slides.pdf",
+      "undeclared artifact: output/slides/02c_methods_bibliometrics_slides.tex",
+      "changed artifact: output/slides/02d_methods_knowledge_graph_slides.pdf",
+      "undeclared artifact: output/slides/02d_methods_knowledge_graph_slides.pdf",
+      "undeclared artifact: output/slides/02d_methods_knowledge_graph_slides.tex",
+      "changed artifact: output/slides/02e_methods_viz_injection_slides.pdf",
+      "undeclared artifact: output/slides/02e_methods_viz_injection_slides.pdf",
+      "undeclared artifact: output/slides/02e_methods_viz_injection_slides.tex",
+      "changed artifact: output/slides/03_results_hypothesis_slides.pdf",
+      "undeclared artifact: output/slides/03_results_hypothesis_slides.pdf",
+      "changed artifact: output/slides/03_results_hypothesis_slides.tex",
+      "undeclared artifact: output/slides/03_results_hypothesis_slides.tex",
+      "changed artifact: output/slides/03a_results_field_overview_slides.pdf",
+      "undeclared artifact: output/slides/03a_results_field_overview_slides.pdf",
+      "undeclared artifact: output/slides/03a_results_field_overview_slides.tex",
+      "changed artifact: output/slides/03b_results_subfields_slides.pdf",
+      "undeclared artifact: output/slides/03b_results_subfields_slides.pdf",
+      "undeclared artifact: output/slides/03b_results_subfields_slides.tex",
+      "changed artifact: output/slides/03c_results_text_analytics_slides.pdf",
+      "undeclared artifact: output/slides/03c_results_text_analytics_slides.pdf",
+      "undeclared artifact: output/slides/03c_results_text_analytics_slides.tex",
+      "changed artifact: output/slides/03d_results_citation_network_slides.pdf",
+      "undeclared artifact: output/slides/03d_results_citation_network_slides.pdf",
+      "undeclared artifact: output/slides/03d_results_citation_network_slides.tex",
+      "changed artifact: output/slides/04_discussion_slides.pdf",
+      "undeclared artifact: output/slides/04_discussion_slides.pdf",
+      "undeclared artifact: output/slides/04_discussion_slides.tex",
+      "changed artifact: output/slides/05_conclusion_slides.pdf",
+      "undeclared artifact: output/slides/05_conclusion_slides.pdf",
+      "undeclared artifact: output/slides/05_conclusion_slides.tex",
+      "changed artifact: output/slides/06_appendix_tooling_slides.pdf",
+      "undeclared artifact: output/slides/06_appendix_tooling_slides.pdf",
+      "undeclared artifact: output/slides/06_appendix_tooling_slides.tex",
+      "changed artifact: output/slides/07_appendix_technical_slides.pdf",
+      "undeclared artifact: output/slides/07_appendix_technical_slides.pdf",
+      "undeclared artifact: output/slides/07_appendix_technical_slides.tex",
+      "changed artifact: output/slides/08_appendix_accessibility_slides.pdf",
+      "undeclared artifact: output/slides/08_appendix_accessibility_slides.pdf",
+      "undeclared artifact: output/slides/08_appendix_accessibility_slides.tex",
+      "changed artifact: output/slides/98_symbols_glossary_slides.pdf",
+      "undeclared artifact: output/slides/98_symbols_glossary_slides.pdf",
+      "undeclared artifact: output/slides/98_symbols_glossary_slides.tex",
+      "changed artifact: output/slides/99_references_slides.pdf",
+      "undeclared artifact: output/slides/99_references_slides.pdf",
+      "undeclared artifact: output/slides/99_references_slides.tex",
+      "undeclared artifact: output/slides/_slides_math_header.tex",
+      "changed artifact: output/web/_combined_manuscript.md",
+      "undeclared artifact: output/web/_combined_manuscript.md",
+      "undeclared artifact: output/web/favicon.ico",
+      "changed artifact: output/web/index.html",
+      "undeclared artifact: output/web/index.html",
+      "undeclared artifact: output/web/manuscript__00_abstract.html",
+      "undeclared artifact: output/web/manuscript__01_introduction.html",
+      "undeclared artifact: output/web/manuscript__02_methods_overview.html",
+      "undeclared artifact: output/web/manuscript__02a_methods_retrieval.html",
+      "undeclared artifact: output/web/manuscript__02b_methods_extraction.html",
+      "undeclared artifact: output/web/manuscript__02c_methods_bibliometrics.html",
+      "undeclared artifact: output/web/manuscript__02d_methods_knowledge_graph.html",
+      "undeclared artifact: output/web/manuscript__02e_methods_viz_injection.html",
+      "changed artifact: output/web/manuscript__03_results_hypothesis.html",
+      "undeclared artifact: output/web/manuscript__03_results_hypothesis.html",
+      "undeclared artifact: output/web/manuscript__03a_results_field_overview.html",
+      "undeclared artifact: output/web/manuscript__03b_results_subfields.html",
+      "undeclared artifact: output/web/manuscript__03c_results_text_analytics.html",
+      "undeclared artifact: output/web/manuscript__03d_results_citation_network.html",
+      "undeclared artifact: output/web/manuscript__04_discussion.html",
+      "undeclared artifact: output/web/manuscript__05_conclusion.html",
+      "undeclared artifact: output/web/manuscript__06_appendix_tooling.html",
+      "undeclared artifact: output/web/manuscript__07_appendix_technical.html",
+      "undeclared artifact: output/web/manuscript__08_appendix_accessibility.html",
+      "undeclared artifact: output/web/manuscript__98_symbols_glossary.html",
+      "undeclared artifact: output/web/manuscript__99_references.html"
     ],
     "detailed_validation": {
       "structure": {
@@ -35,20 +196,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 6.98,
+            "size_mb": 6.95,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 7.23,
+            "size_mb": 7.21,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 22,
-            "size_mb": 0.32,
+            "files": 23,
+            "size_mb": 0.34,
             "readable": true,
             "optional": false
           },
@@ -62,40 +223,43 @@
           "figures": {
             "exists": true,
             "files": 19,
-            "size_mb": 6.87,
+            "size_mb": 6.85,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 16,
+            "files": 19,
             "size_mb": 11.5,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 6,
-            "size_mb": 0.09,
+            "files": 26,
+            "size_mb": 0.32,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "logs": {
-            "exists": false,
-            "files": 0,
+            "exists": true,
+            "files": 1,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           }
         }
@@ -104,13 +268,13 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "7.23",
+          "size_mb": "7.21",
           "largest_file": "template_literature_meta_analysis_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 22,
-          "size_mb": "0.32",
+          "file_count": 23,
+          "size_mb": "0.34",
           "largest_file": "index.html"
         },
         "slides": {
@@ -122,74 +286,76 @@
         "figures": {
           "exists": true,
           "file_count": 19,
-          "size_mb": "6.87",
+          "size_mb": "6.85",
           "largest_file": "word_cloud.png"
         },
         "data": {
           "exists": true,
-          "file_count": 16,
+          "file_count": 19,
           "size_mb": "11.50",
           "largest_file": "tfidf_data.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 6,
-          "size_mb": "0.09",
-          "largest_file": "evidence_registry.json"
+          "file_count": 26,
+          "size_mb": "0.32",
+          "largest_file": "artifact_manifest.json"
         },
         "simulations": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "llm": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "logs": {
-          "exists": false,
-          "file_count": 0,
-          "size_mb": "0.00"
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
         }
       },
       "file_counts": {
         "pdf": 10,
-        "web": 22,
+        "web": 23,
         "slides": 154,
         "figures": 19,
-        "data": 16,
-        "reports": 6
+        "data": 19,
+        "reports": 26,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
       },
-      "total_size_mb": 34.83443355560303,
+      "total_size_mb": 35.0437707901001,
       "issues_by_severity": {
         "critical": [],
-        "warning": [
-          "Directory 'simulations/' missing or empty",
-          "Directory 'llm/' missing or empty",
-          "Directory 'logs/' missing or empty"
-        ],
+        "warning": [],
         "info": []
       },
       "recommendations": []
     },
     "pdf": {
       "files": 10,
-      "size_mb": 7.228403091430664
+      "size_mb": 7.211844444274902
     },
     "figures": {
       "files": 19,
-      "size_mb": 6.86977481842041
+      "size_mb": 6.8516845703125
     },
     "data": {
-      "files": 16,
-      "size_mb": 11.501909255981445
+      "files": 19,
+      "size_mb": 11.503894805908203
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
+    "passed": 6,
+    "failed": 2,
     "figure_issues_count": 0,
     "all_passed": false
   },
@@ -199,6 +365,12 @@
       "issue": "Evidence registry reported unsupported manuscript facts",
       "action": "Register generated facts or replace unsupported hard-coded claims",
       "file": "projects/templates/template_literature_meta_analysis/output/reports/evidence_registry.json"
+    },
+    {
+      "priority": "medium",
+      "issue": "Artifact manifest reported drift or missing declared outputs",
+      "action": "Regenerate declared outputs or update the stage contract",
+      "file": "projects/templates/template_literature_meta_analysis/output/reports/artifact_manifest.json"
     }
   ]
 }

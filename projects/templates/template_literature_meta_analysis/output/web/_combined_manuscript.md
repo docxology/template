@@ -50,7 +50,7 @@ concepts recur, and which claims the field actually tests. Answering those quest
 hand is slow, unrepeatable, and binds no number to evidence. Systematic reviews, while
 the gold standard for evidence synthesis, are labour-intensive and become stale between
 updates — the Cochrane review cycle, for instance, targets a two-year refresh interval
-that many fields outpace [page2021prisma]. Bibliometric dashboards (Scopus, Web of
+that many fields outpace [@page2021prisma]. Bibliometric dashboards (Scopus, Web of
 Science, Dimensions) offer breadth but no reproducible link from a reported statistic to
 a regenerable artifact, and they do not frame or test domain-specific hypotheses.
 
@@ -207,15 +207,15 @@ A single `manuscript/config.yaml` controls:
 Retrieval dispatches the configured query across 7 independent literature
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv). Each engine is an isolated adapter exposing a uniform
 `search(query) -> list[Record]` interface; engines that are keyless — arXiv, OpenAlex
-[priem2022openalex], Crossref [hendricks2020crossref], PubMed/Entrez
-[sayers2022entrez], SovietRxiv / RussiaRxiv, and ChinaRxiv — need no credentials,
-while Semantic Scholar [kinney2023semantic] uses a key when present. SovietRxiv is a
+[@priem2022openalex], Crossref [@hendricks2020crossref], PubMed/Entrez
+[@sayers2022entrez], SovietRxiv / RussiaRxiv, and ChinaRxiv — need no credentials,
+while Semantic Scholar [@kinney2023semantic] uses a key when present. SovietRxiv is a
 translated archive of Soviet-era scientific preprints sourced from Math-Net.Ru and
-CyberLeninka [sovietrxiv]; ChinaRxiv serves translated Chinese preprints from ChinaXiv
+CyberLeninka [@sovietrxiv]; ChinaRxiv serves translated Chinese preprints from ChinaXiv
 via the same unified API. Both retain original-language PDFs alongside each translation,
 and their polite rate-limit pool (300/min vs 30/min anonymous) is activated by an
 optional `X-API-Email` header. Optional full-text resolution queries Unpaywall
-[piwowar2018state] for open-access locations. **Multiple dispatch degrades gracefully**:
+[@piwowar2018state] for open-access locations. **Multiple dispatch degrades gracefully**:
 an engine that is disabled in the configuration, lacks a required key, or cannot reach
 the network returns a *skipped* status, and the run completes from the remaining engines
 plus the committed offline corpus.
@@ -308,7 +308,7 @@ modafinil literature.
 
 Every title, abstract, and full text is embedded into a shared vector space by a
 deterministic, offline method — TF-IDF followed by truncated SVD, i.e. latent semantic
-analysis [deerwester1990indexing]. The embedding dimensionality is 50 components (configurable
+analysis [@deerwester1990indexing]. The embedding dimensionality is 50 components (configurable
 via `project_config.embeddings.n_components`), and the TF-IDF vocabulary is capped at
 500 features (configurable via `project_config.embeddings.max_features`).
 The embedding is byte-stable across runs: the same input text always yields identical
@@ -365,13 +365,13 @@ time, enabling identification of emerging or declining research threads.
 
 ## Topic Modeling
 
-A TF-IDF term-weighting of titles and abstracts [salton1988term] feeds non-negative matrix
-factorization (NMF) [lee1999learning], implemented with scikit-learn
-[pedregosa2011scikit]. NMF decomposes the document-term matrix $\mathbf{V} \approx \mathbf{W} \mathbf{H}$,
+A TF-IDF term-weighting of titles and abstracts [@salton1988term] feeds non-negative matrix
+factorization (NMF) [@lee1999learning], implemented with scikit-learn
+[@pedregosa2011scikit]. NMF decomposes the document-term matrix $\mathbf{V} \approx \mathbf{W} \mathbf{H}$,
 where $\mathbf{W}$ is the document-topic matrix and $\mathbf{H}$ is the topic-term matrix. The
 factorization extracts 5 latent topics that cross-cut the keyword taxonomy.
 The random seed is fixed at 42 for reproducibility. The reporting follows established
-systematic-review practice [page2021prisma], with every figure and statistic traceable to
+systematic-review practice [@page2021prisma], with every figure and statistic traceable to
 a committed artifact.
 
 
@@ -387,7 +387,7 @@ evidence. For each record, a local language model (Ollama, default model `gemma3
 extracts structured *assertions* — each encoding a direction (supports / contradicts /
 neutral), a confidence score, and a short natural-language justification — against the
 6 hypotheses declared in configuration. Assertions are serialized as
-RDF-compatible nanopublications [kuhn2016decentralized] and scored by a
+RDF-compatible nanopublications [@kuhn2016decentralized] and scored by a
 citation-weighted evidence function.
 
 ## Assertion Model
@@ -542,7 +542,7 @@ The six hypotheses frame the evidence landscape for Modafinil:
   acceptability relative to alternative wakefulness agents.
 
 <!-- FIGURE: hypothesis_dashboard.png -->
-![Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](figures/hypothesis_dashboard.png "Hypothesis Dashboard"){{#fig:hypothesis_dashboard}}
+![Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](../figures/hypothesis_dashboard.png "Hypothesis Dashboard"){{#fig:hypothesis_dashboard}}
 
 
 
@@ -560,7 +560,7 @@ with 112 records that year. The growth curve is the first-order signal
 that the literature is active rather than dormant.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](figures/growth_curve.png "Publication Growth Curve"){{#fig:growth_curve}}
+![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](../figures/growth_curve.png "Publication Growth Curve"){{#fig:growth_curve}}
 
 ## RQ1: Field Size and Growth
 
@@ -606,13 +606,13 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 | Neuroscience | 41 | 1.9% |
 
 <!-- FIGURE: field_summary.png -->
-![Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](figures/field_summary.png "Field Summary"){{#fig:field_summary}}
+![Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../figures/field_summary.png "Field Summary"){{#fig:field_summary}}
 
 <!-- FIGURE: subfield_distribution.png -->
-![Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 64.3\%.](figures/subfield_distribution.png "Subfield Distribution"){{#fig:subfield_distribution}}
+![Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 64.3\%.](../figures/subfield_distribution.png "Subfield Distribution"){{#fig:subfield_distribution}}
 
 <!-- FIGURE: subfield_timeline.png -->
-![Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](figures/subfield_timeline.png "Subfield Timeline"){{#fig:subfield_timeline}}
+![Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../figures/subfield_timeline.png "Subfield Timeline"){{#fig:subfield_timeline}}
 
 ## Identifier and Full-Text Coverage
 
@@ -644,7 +644,7 @@ characteristic of scientific literature.
 | 500+ | 11 |
 
 <!-- FIGURE: citation_distribution.png -->
-![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](figures/citation_distribution.png "Citation Distribution"){{#fig:citation_distribution}}
+![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../figures/citation_distribution.png "Citation Distribution"){{#fig:citation_distribution}}
 
 **Table 4. Top publication venues.**
 
@@ -662,7 +662,7 @@ characteristic of scientific literature.
 | American Journal of Psychiatry | 23 |
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](figures/top_venues.png "Top Venues"){{#fig:top_venues}}
+![Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](../figures/top_venues.png "Top Venues"){{#fig:top_venues}}
 
 **Table 5. Top authors by publication count.**
 
@@ -680,7 +680,7 @@ characteristic of scientific literature.
 | 10 | Gert Lubec | 15 |
 
 <!-- FIGURE: author_productivity.png -->
-![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](figures/author_productivity.png "Author Productivity"){{#fig:author_productivity}}
+![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](../figures/author_productivity.png "Author Productivity"){{#fig:author_productivity}}
 
 
 
@@ -763,7 +763,7 @@ subfield taxonomy, revealing connections that the explicit classification does n
 capture.
 
 <!-- FIGURE: topic_term_bars.png -->
-![Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](figures/topic_term_bars.png "Topic-Term Weights"){{#fig:topic_term_bars}}
+![Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../figures/topic_term_bars.png "Topic-Term Weights"){{#fig:topic_term_bars}}
 
 ## Document Embeddings
 
@@ -773,10 +773,10 @@ vectors, so the derived similarity matrix, nearest-neighbour lists, clusters, an
 two-dimensional projection are all reproducible.
 
 <!-- FIGURE: pca_embeddings.png -->
-![PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](figures/pca_embeddings.png "PCA Embeddings"){{#fig:pca_embeddings}}
+![PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../figures/pca_embeddings.png "PCA Embeddings"){{#fig:pca_embeddings}}
 
 <!-- FIGURE: dendrogram.png -->
-![Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters.](figures/dendrogram.png "Document Dendrogram"){{#fig:dendrogram}}
+![Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters.](../figures/dendrogram.png "Document Dendrogram"){{#fig:dendrogram}}
 
 ## Term Analysis
 
@@ -784,7 +784,7 @@ The TF-IDF term heatmap reveals which terms discriminate between subfields: term
 high between-subfield variance (rather than high global mean) are selected for display.
 
 <!-- FIGURE: term_heatmap.png -->
-![Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms.](figures/term_heatmap.png "Term Heatmap"){{#fig:term_heatmap}}
+![Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms.](../figures/term_heatmap.png "Term Heatmap"){{#fig:term_heatmap}}
 
 ## Named Entity Analysis
 
@@ -813,7 +813,7 @@ vocabulary of the modafinil literature.
 | IH | 88 |
 
 <!-- FIGURE: entity_bar_chart.png -->
-![Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature.](figures/entity_bar_chart.png "Named Entities"){{#fig:entity_bar_chart}}
+![Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature.](../figures/entity_bar_chart.png "Named Entities"){{#fig:entity_bar_chart}}
 
 **Table 5. Top keyphrases by TF-IDF score.**
 
@@ -858,13 +858,13 @@ reveal the most closely related works in the corpus.
 | doi:10.1345/aph.1h302 | doi:10.1192/bjo.2024.75 | 0.9517 |
 
 <!-- FIGURE: similarity_heatmap.png -->
-![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](figures/similarity_heatmap.png "Similar Document Pairs"){{#fig:similarity_heatmap}}
+![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../figures/similarity_heatmap.png "Similar Document Pairs"){{#fig:similarity_heatmap}}
 
 <!-- FIGURE: word_cloud.png -->
-![Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary.](figures/word_cloud.png "Term Cloud"){{#fig:word_cloud}}
+![Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary.](../figures/word_cloud.png "Term Cloud"){{#fig:word_cloud}}
 
 <!-- FIGURE: cooccurrence_matrix.png -->
-![Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](figures/cooccurrence_matrix.png "Term Co-occurrence"){{#fig:cooccurrence_matrix}}
+![Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../figures/cooccurrence_matrix.png "Term Co-occurrence"){{#fig:cooccurrence_matrix}}
 
 These embeddings support semantic retrieval over the corpus and the visual map of the
 literature's topical geography.
@@ -880,7 +880,7 @@ literature's topical geography.
 ## RQ4: Citation Geometry
 
 Resolving each record's references against the corpus yields an intra-corpus citation
-graph (built and analyzed with NetworkX [hagberg2008exploring]) of 2204
+graph (built and analyzed with NetworkX [@hagberg2008exploring]) of 2204
 nodes and 8,772 edges across 1371 connected components,
 with a graph density of 0.18\% and a mean in-degree of
 4.0. Of 38,802 total outgoing references,
@@ -895,8 +895,8 @@ that cites the most other corpus members).
 
 ## Centrality Analysis
 
-Centrality scores (PageRank [page1999pagerank] and HITS) and modularity-based community
-detection [clauset2004finding] are rounded and ranked with a stable tiebreaker so the
+Centrality scores (PageRank [@page1999pagerank] and HITS) and modularity-based community
+detection [@clauset2004finding] are rounded and ranked with a stable tiebreaker so the
 reported hub and authority rankings are byte-reproducible across runs despite the
 floating-point non-associativity of the underlying iterative solvers.
 
@@ -936,10 +936,10 @@ cited by other corpus members. Hub papers, which cite many other corpus members,
 integrative reviews or meta-analyses that connect disparate threads of the literature.
 
 <!-- FIGURE: citation_network.png -->
-![Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1377 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](figures/citation_network.png "Citation Network"){{#fig:citation_network}}
+![Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1377 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../figures/citation_network.png "Citation Network"){{#fig:citation_network}}
 
 <!-- FIGURE: degree_distribution.png -->
-![Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](figures/degree_distribution.png "Degree Distribution"){{#fig:degree_distribution}}
+![Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../figures/degree_distribution.png "Degree Distribution"){{#fig:degree_distribution}}
 
 The heavy-tailed degree distribution is characteristic of citation networks: a small
 number of highly-cited papers anchor the structure, while the long tail of low-degree
@@ -975,66 +975,6 @@ Papers with high betweenness centrality serve as bridges between different topic
 communities in the citation network — their removal would fragment the graph into
 disconnected components. These bridging papers are often review articles or
 methodological papers that connect disparate research threads.
-
-
-
----
-
-
-
-# Conclusion
-
-We have presented a configurable, reproducible meta-analysis template that turns a single
-search term into a complete, evidence-bound portrait of its literature. Applied to
-**Modafinil**, it retrieved and de-duplicated 2302 records across
-7 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), classified them into 6 configurable
-subfields (with **Clinical Sleep** dominant at 64.3\%), extracted
-5 topics over a 500-feature vocabulary, computed
-reproducible document embeddings, mapped the citation network (2204 nodes,
-8,772 edges, 1377 communities), and framed
-6 hypotheses for optional evidence scoring.
-
-## Key Findings
-
-The analysis answers the four research questions posed in the introduction:
-
-1. **RQ1 (Growth)**: The modafinil literature spans 26 years
-   (2000--2026) and grows at a CAGR of 3.45\%, doubling every
-   11.3 years. The peak year 2025 produced 112
-   publications, indicating sustained and active research interest.
-
-2. **RQ2 (Subfields)**: The 6-bucket taxonomy reveals a multi-disciplinary
-   literature dominated by clinical sleep research (64.3\%), with
-   significant representation from cognition, psychiatry, and pharmacology.
-
-3. **RQ3 (Topics)**: NMF extracted 5 latent topics — cognitive enhancement,
-   ADHD treatment, pharmacological dose-response, sleep disorders, and psychiatric
-   fatigue — that cross-cut the explicit subfield taxonomy and reveal the thematic
-   structure of the field.
-
-4. **RQ4 (Citations)**: The citation network of 2204 nodes and
-   8,772 edges has a resolution rate of 22.6\%,
-   1377 communities, and a maximum in-degree of
-   165. The heavy-tailed degree distribution is characteristic of
-   citation networks, with a small number of foundational works anchoring the structure.
-
-## Architectural Contribution
-
-The contribution is architectural rather than topical: every domain-specific value flows
-from one configuration file and the pipeline's own outputs into a generated manuscript,
-so the same machinery re-targets to any topic by editing configuration alone. Combined
-with an offline, deterministic default run, this yields a *living literature review* — a
-synthesis that can be re-executed on demand as a field evolves, with every number
-traceable to a regenerable artifact.
-
-## Reproducibility
-
-This manuscript was generated from a live retrieval run using 7 engines.
-Every number, table, and figure in this document is injected from a committed artifact
-(`output/data/*.json`, `../figures/*.png`). Re-running the pipeline with the same
-configuration reproduces identical data outputs; the 18 figures are
-deterministic given fixed seeds, and the manuscript text is regenerated from the same
-template. No number in this document was typed by hand.
 
 
 
@@ -1116,6 +1056,66 @@ architecture.
 
 
 
+# Conclusion
+
+We have presented a configurable, reproducible meta-analysis template that turns a single
+search term into a complete, evidence-bound portrait of its literature. Applied to
+**Modafinil**, it retrieved and de-duplicated 2302 records across
+7 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), classified them into 6 configurable
+subfields (with **Clinical Sleep** dominant at 64.3\%), extracted
+5 topics over a 500-feature vocabulary, computed
+reproducible document embeddings, mapped the citation network (2204 nodes,
+8,772 edges, 1377 communities), and framed
+6 hypotheses for optional evidence scoring.
+
+## Key Findings
+
+The analysis answers the four research questions posed in the introduction:
+
+1. **RQ1 (Growth)**: The modafinil literature spans 26 years
+   (2000--2026) and grows at a CAGR of 3.45\%, doubling every
+   11.3 years. The peak year 2025 produced 112
+   publications, indicating sustained and active research interest.
+
+2. **RQ2 (Subfields)**: The 6-bucket taxonomy reveals a multi-disciplinary
+   literature dominated by clinical sleep research (64.3\%), with
+   significant representation from cognition, psychiatry, and pharmacology.
+
+3. **RQ3 (Topics)**: NMF extracted 5 latent topics — cognitive enhancement,
+   ADHD treatment, pharmacological dose-response, sleep disorders, and psychiatric
+   fatigue — that cross-cut the explicit subfield taxonomy and reveal the thematic
+   structure of the field.
+
+4. **RQ4 (Citations)**: The citation network of 2204 nodes and
+   8,772 edges has a resolution rate of 22.6\%,
+   1377 communities, and a maximum in-degree of
+   165. The heavy-tailed degree distribution is characteristic of
+   citation networks, with a small number of foundational works anchoring the structure.
+
+## Architectural Contribution
+
+The contribution is architectural rather than topical: every domain-specific value flows
+from one configuration file and the pipeline's own outputs into a generated manuscript,
+so the same machinery re-targets to any topic by editing configuration alone. Combined
+with an offline, deterministic default run, this yields a *living literature review* — a
+synthesis that can be re-executed on demand as a field evolves, with every number
+traceable to a regenerable artifact.
+
+## Reproducibility
+
+This manuscript was generated from a live retrieval run using 7 engines.
+Every number, table, and figure in this document is injected from a committed artifact
+(`output/data/*.json`, `../figures/*.png`). Re-running the pipeline with the same
+configuration reproduces identical data outputs; the 18 figures are
+deterministic given fixed seeds, and the manuscript text is regenerated from the same
+template. No number in this document was typed by hand.
+
+
+
+---
+
+
+
 # Appendix A: Tooling and Reproduction
 
 The pipeline is a two-layer system: generic infrastructure (rendering, validation,
@@ -1165,6 +1165,28 @@ Enable engines under `project_config.search.engines`, supply any optional creden
 engines degrade to skipped sources. The CLI supports per-engine skip flags:
 `--skip-arxiv`, `--skip-s2`, `--skip-openalex`, `--skip-crossref`, `--skip-pubmed`,
 `--skip-sovietrxiv`, `--skip-chinarxiv`.
+
+## Deep Research (Offline Fixture Replay)
+
+This exemplar also demonstrates the shared `infrastructure.search.deep_research`
+capability — provider-neutral dispatch to OpenAI and Gemini deep-research agents.
+Because deep research is a **paid, non-deterministic** service, the template never
+calls it live in CI. Instead, `src/deep_research/deep_research_adapter.py` wires the
+real infrastructure request/result models (`DeepResearchConfig`, `DeepResearchRequest`,
+`DeepResearchResult`, `DeepResearchClient`) and ships a deterministic, offline path:
+`scripts/08_deep_research_dispatch.py` builds the genuine provider-neutral request and
+then *replays* a recorded report fixture
+(`src/deep_research/fixtures/recorded_report.json`), normalizing it through the real
+`DeepResearchResult` model. Replay fails closed if the fixture is missing — it never
+fabricates a passing run — mirroring the fixture-replay idiom of `template_sia`. The
+same adapter exposes `build_offline_request`, the exact call-site a live `submit` would
+dispatch, so a fork can enable real providers by supplying `OPENAI_API_KEY` /
+`GEMINI_API_KEY`:
+
+```bash
+# Offline (default): replays the recorded report, no key required
+uv run python scripts/08_deep_research_dispatch.py
+```
 
 ## Test Suite
 
@@ -1232,7 +1254,7 @@ $$
 \min_{\mathbf{W}, \mathbf{H} \geq 0} \|\mathbf{V} - \mathbf{W} \mathbf{H}\|_F^2
 $$
 
-using multiplicative update rules [lee1999learning] with a fixed random seed for
+using multiplicative update rules [@lee1999learning] with a fixed random seed for
 reproducibility. The topic-term matrix $\mathbf{H}$ gives the top terms per topic; the
 document-topic matrix $\mathbf{W}$ gives each document's topic loadings.
 

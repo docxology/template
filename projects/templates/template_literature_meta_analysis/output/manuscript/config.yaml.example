@@ -16,11 +16,10 @@ paper:
   date: "" # Auto-generated
 
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliations:
-      - "Active Inference Institute"
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "you@example.org"
+    affiliation: "Your Institution"
     corresponding: true
 
 publication:
@@ -60,10 +59,35 @@ llm:
     languages:
       - zh
 
+validation:
+  prose_quality:
+    enabled: false
+  claim_verification:
+    enabled: false
+    max_workers: 4
+    max_results: 5
+
 testing:
   max_test_failures: 0
   max_infra_test_failures: 0
   max_project_test_failures: 0
+
+# Stage-02 analysis allowlist (deterministic, offline, network/LLM-free).
+# Without this allowlist the orchestrator globs every scripts/*.py, which would
+# include the live-network search (01) and the default LLM knowledge-graph
+# extraction (03) — neither is reproducible in CI. The scripts below run from
+# the committed fixture corpus with no network or API keys, matching the
+# `offline_fixture` reference condition in experiment_plan.yaml. Run the
+# network/LLM stages explicitly: scripts/01_literature_search.py and
+# scripts/03_build_knowledge_graph.py --max-papers 0 (see scripts/README.md).
+analysis:
+  scripts:
+    - 02_meta_analysis_pipeline.py
+    - 04_generate_figures.py
+    - 05_inject_variables.py
+    - 06_fulltext_assessment.py
+    - 07_literature_evaluation.py
+    - 08_deep_research_dispatch.py
 
 # Project-specific configuration namespace.
 # Keys under project_config are passed through without schema validation warnings.

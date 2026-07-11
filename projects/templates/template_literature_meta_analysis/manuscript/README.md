@@ -24,11 +24,11 @@ License: CC-BY-4.0
 | `03b_results_subfields.md` | Subfield analysis | Domain counts per A1/A2/B/C1–C5 | Stage 2 + 5 |
 | `03c_results_text_analytics.md` | Text analytics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `03d_results_citation_network.md` | Citation network | `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}` | Stage 2 + 5 |
-| `04_conclusion.md` | Conclusion | `{{CORPUS_SIZE}}`, `{{TOTAL_ASSERTIONS}}` | Stage 5 |
-| `04a_discussion.md` | Discussion | — | — |
-| `05_appendix_tooling.md` | Tooling appendix | — | — |
-| `06_appendix_technical.md` | Technical appendix | — | — |
-| `07_appendix_accessibility.md` | Accessibility appendix | — | — |
+| `04_discussion.md` | Discussion | — | — |
+| `05_conclusion.md` | Conclusion | `{{CORPUS_SIZE}}`, `{{TOTAL_ASSERTIONS}}` | Stage 5 |
+| `06_appendix_tooling.md` | Tooling appendix | — | — |
+| `07_appendix_technical.md` | Technical appendix | — | — |
+| `08_appendix_accessibility.md` | Accessibility appendix | — | — |
 | `98_symbols_glossary.md` | Notation + glossary | — | — |
 | `99_references.md` | Bibliography | — | — |
 

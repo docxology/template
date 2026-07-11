@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_discussion.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<main id="main-content">
+<h1 id="discussion">Discussion</h1>
+<h2 id="what-the-template-is-and-is-not">What the Template Is, and Is
+Not</h2>
+<p>The pipeline measures the <em>shape</em> of a literature — its size,
+growth, subfield composition, topical structure, citation geometry, and
+the hypotheses a field frames. It does not adjudicate scientific truth.
+The optional hypothesis scores summarize how the retrieved corpus
+<em>talks about</em> each claim, weighted by citation influence; they
+are an evidence-landscape instrument, not a verdict.</p>
+<p>The 5 topics extracted by NMF provide a data-driven complement to the
+keyword-based subfield taxonomy. Where the taxonomy assigns each paper
+to a single bucket, the topics reveal overlapping thematic structure: a
+paper on modafinil’s cognitive effects in ADHD patients belongs to the
+“Psychiatry” subfield but also loads on the “Cognitive Enhancement” and
+“ADHD Treatment” topics. This multi-resolution view is more informative
+than either approach alone.</p>
+<h2 id="engine-coverage-and-bias">Engine Coverage and Bias</h2>
+<p>For this live run, the corpus is dominated by OpenAlex (1,000
+records) and Crossref (1,000 records), with PubMed contributing 986
+records and arXiv contributing 1. Semantic Scholar was rate-limited
+(HTTP 429) and returned zero records — a known limitation of its
+unauthenticated API tier. SovietRxiv and ChinaRxiv returned zero records
+for the modafinil query, which is expected given their coverage
+domains.</p>
+<p>The max-results cap of 1,000 per engine means the full literature is
+larger than the retrieved corpus; the 2302 records represent a bounded
+sample rather than the complete literature. The citation network
+resolution rate of 22.6% reflects this: many cited works lie outside the
+retrieved slice. Increasing the cap or adding more engines would improve
+coverage but also increase runtime and API load.</p>
+<h2 id="honest-defaults">Honest Defaults</h2>
+<p>The committed seed corpus is synthetic (reserved test DOIs, generated
+authors) so that the whole pipeline runs offline and byte-identically.
+Its numbers demonstrate the machinery; they are not empirical findings
+about modafinil. Real claims require a live retrieval run with
+regenerated figures, reports, and manuscript variables — as produced in
+this instance.</p>
+<h2 id="limitations-and-extensions">Limitations and Extensions</h2>
+<p>Several limitations bound the interpretation of results:</p>
+<ul>
+<li><p><strong>Coverage is bounded by the enabled engines and the
+query.</strong> The max-results cap truncates each engine’s
+contribution. Semantic Scholar’s rate limiting excluded a major source;
+a Semantic Scholar API key would resolve this.</p></li>
+<li><p><strong>Subfield classification is keyword-based</strong> and
+only as good as the configured taxonomy. Ambiguous papers may be
+misclassified; a classifier based on embeddings or supervised learning
+could improve accuracy.</p></li>
+<li><p><strong>The default embeddings are lexical</strong> (TF-IDF/SVD).
+They capture term co-occurrence but not semantic similarity; a
+transformer backend (<code>embeddings</code> extra) would improve the
+quality of nearest-neighbour retrieval and clustering.</p></li>
+<li><p><strong>Hypothesis scoring depends on an external language
+model.</strong> Without Ollama running, scores read <em>pending</em>.
+The scoring is also sensitive to prompt design and model choice; the
+default <code>gemma3:4b</code> is a lightweight model suitable for
+demonstration but may miss nuanced assertions.</p></li>
+<li><p><strong>Abstract coverage is 55.5%.</strong> Text analytics
+operate only on the subset of records with abstracts, biasing topic
+models and embeddings toward well-indexed sources.</p></li>
+</ul>
+<p>Each limitation is a configuration or dependency choice rather than a
+change to the core architecture.</p>
+</main>
+</body>
+</html>

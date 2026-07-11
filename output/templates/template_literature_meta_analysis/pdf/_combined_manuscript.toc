@@ -1,3 +1,4 @@
+\babel@toc {english}{}\relax
 \contentsline {section}{\numberline {1}Abstract}{3}{section.1}%
 \contentsline {section}{\numberline {2}Introduction}{4}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Research Questions}{4}{subsection.2.1}%
@@ -44,32 +45,33 @@
 \contentsline {subsection}{\numberline {13.1}RQ4: Citation Geometry}{30}{subsection.13.1}%
 \contentsline {subsection}{\numberline {13.2}Centrality Analysis}{30}{subsection.13.2}%
 \contentsline {subsection}{\numberline {13.3}Advanced Network Metrics}{32}{subsection.13.3}%
-\contentsline {section}{\numberline {14}Conclusion}{33}{section.14}%
-\contentsline {subsection}{\numberline {14.1}Key Findings}{33}{subsection.14.1}%
-\contentsline {subsection}{\numberline {14.2}Architectural Contribution}{33}{subsection.14.2}%
-\contentsline {subsection}{\numberline {14.3}Reproducibility}{33}{subsection.14.3}%
-\contentsline {section}{\numberline {15}Discussion}{34}{section.15}%
-\contentsline {subsection}{\numberline {15.1}What the Template Is, and Is Not}{34}{subsection.15.1}%
-\contentsline {subsection}{\numberline {15.2}Engine Coverage and Bias}{34}{subsection.15.2}%
-\contentsline {subsection}{\numberline {15.3}Honest Defaults}{34}{subsection.15.3}%
-\contentsline {subsection}{\numberline {15.4}Limitations and Extensions}{34}{subsection.15.4}%
+\contentsline {section}{\numberline {14}Discussion}{33}{section.14}%
+\contentsline {subsection}{\numberline {14.1}What the Template Is, and Is Not}{33}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Engine Coverage and Bias}{33}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Honest Defaults}{33}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Limitations and Extensions}{33}{subsection.14.4}%
+\contentsline {section}{\numberline {15}Conclusion}{34}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Key Findings}{34}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Architectural Contribution}{34}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Reproducibility}{34}{subsection.15.3}%
 \contentsline {section}{\numberline {16}Appendix A: Tooling and Reproduction}{35}{section.16}%
 \contentsline {subsection}{\numberline {16.1}Reproduce the Offline Default Run}{35}{subsection.16.1}%
 \contentsline {subsection}{\numberline {16.2}Reproduce the Live Run}{35}{subsection.16.2}%
 \contentsline {subsection}{\numberline {16.3}Re-target to Another Topic}{35}{subsection.16.3}%
 \contentsline {subsection}{\numberline {16.4}Live Retrieval}{35}{subsection.16.4}%
-\contentsline {subsection}{\numberline {16.5}Test Suite}{35}{subsection.16.5}%
-\contentsline {section}{\numberline {17}Appendix B: Technical Notes}{36}{section.17}%
-\contentsline {subsection}{\numberline {17.1}Determinism}{36}{subsection.17.1}%
-\contentsline {subsection}{\numberline {17.2}Data Model}{36}{subsection.17.2}%
-\contentsline {subsection}{\numberline {17.3}NMF Mathematics}{36}{subsection.17.3}%
-\contentsline {subsection}{\numberline {17.4}Growth Rate Estimation}{36}{subsection.17.4}%
-\contentsline {subsection}{\numberline {17.5}Configuration Surface}{36}{subsection.17.5}%
-\contentsline {subsection}{\numberline {17.6}Artifacts}{36}{subsection.17.6}%
-\contentsline {section}{\numberline {18}Appendix C: Accessibility and Provenance}{38}{section.18}%
-\contentsline {subsection}{\numberline {18.1}Figure Accessibility}{38}{subsection.18.1}%
-\contentsline {subsection}{\numberline {18.2}Provenance Chain}{38}{subsection.18.2}%
-\contentsline {subsection}{\numberline {18.3}FAIR Data Principles}{38}{subsection.18.3}%
-\contentsline {subsection}{\numberline {18.4}Honesty}{38}{subsection.18.4}%
-\contentsline {section}{\numberline {19}Glossary}{39}{section.19}%
-\contentsline {section}{\numberline {20}References}{40}{section.20}%
+\contentsline {subsection}{\numberline {16.5}Deep Research (Offline Fixture Replay)}{35}{subsection.16.5}%
+\contentsline {subsection}{\numberline {16.6}Test Suite}{36}{subsection.16.6}%
+\contentsline {section}{\numberline {17}Appendix B: Technical Notes}{37}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Determinism}{37}{subsection.17.1}%
+\contentsline {subsection}{\numberline {17.2}Data Model}{37}{subsection.17.2}%
+\contentsline {subsection}{\numberline {17.3}NMF Mathematics}{37}{subsection.17.3}%
+\contentsline {subsection}{\numberline {17.4}Growth Rate Estimation}{37}{subsection.17.4}%
+\contentsline {subsection}{\numberline {17.5}Configuration Surface}{37}{subsection.17.5}%
+\contentsline {subsection}{\numberline {17.6}Artifacts}{37}{subsection.17.6}%
+\contentsline {section}{\numberline {18}Appendix C: Accessibility and Provenance}{39}{section.18}%
+\contentsline {subsection}{\numberline {18.1}Figure Accessibility}{39}{subsection.18.1}%
+\contentsline {subsection}{\numberline {18.2}Provenance Chain}{39}{subsection.18.2}%
+\contentsline {subsection}{\numberline {18.3}FAIR Data Principles}{39}{subsection.18.3}%
+\contentsline {subsection}{\numberline {18.4}Honesty}{39}{subsection.18.4}%
+\contentsline {section}{\numberline {19}Glossary}{40}{section.19}%
+\contentsline {section}{\numberline {20}References}{41}{section.20}%

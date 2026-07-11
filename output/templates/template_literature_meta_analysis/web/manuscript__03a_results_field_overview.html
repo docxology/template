@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,11 +173,21 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="results-field-overview">Results: Field Overview</h1>
 <p>The de-duplicated corpus for <strong>Modafinil</strong> contains
 <span class="math inline">\(N = 2302\)</span> records spanning 2000–2026
@@ -186,7 +196,8 @@
 2025 with 112 records that year. The growth curve is the first-order
 signal that the literature is active rather than dormant.</p>
 <!-- FIGURE: growth_curve.png -->
-<p><img src="figures/growth_curve.png" title="Publication Growth Curve"
+<p><img src="../figures/growth_curve.png"
+title="Publication Growth Curve"
 alt="Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025." />{{#fig:growth_curve}}</p>
 <h2 id="rq1-field-size-and-growth">RQ1: Field Size and Growth</h2>
 <p>The temporal analysis reveals a literature that has grown steadily
@@ -297,14 +308,14 @@ disorder, and obstructive sleep apnea.</p>
 </tbody>
 </table>
 <!-- FIGURE: field_summary.png -->
-<p><img src="figures/field_summary.png" title="Field Summary"
+<p><img src="../figures/field_summary.png" title="Field Summary"
 alt="Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel." />{{#fig:field_summary}}</p>
 <!-- FIGURE: subfield_distribution.png -->
-<p><img src="figures/subfield_distribution.png"
+<p><img src="../figures/subfield_distribution.png"
 title="Subfield Distribution"
 alt="Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 64.3%." />{{#fig:subfield_distribution}}</p>
 <!-- FIGURE: subfield_timeline.png -->
-<p><img src="figures/subfield_timeline.png" title="Subfield Timeline"
+<p><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
 alt="Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads." />{{#fig:subfield_timeline}}</p>
 <h2 id="identifier-and-full-text-coverage">Identifier and Full-Text
 Coverage</h2>
@@ -357,7 +368,7 @@ literature.</p>
 </tbody>
 </table>
 <!-- FIGURE: citation_distribution.png -->
-<p><img src="figures/citation_distribution.png"
+<p><img src="../figures/citation_distribution.png"
 title="Citation Distribution"
 alt="Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks." />{{#fig:citation_distribution}}</p>
 <p><strong>Table 4. Top publication venues.</strong></p>
@@ -412,7 +423,7 @@ alt="Citation distribution for Modafinil. The histogram shows the number of pape
 </tbody>
 </table>
 <!-- FIGURE: top_venues.png -->
-<p><img src="figures/top_venues.png" title="Top Venues"
+<p><img src="../figures/top_venues.png" title="Top Venues"
 alt="Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published." />{{#fig:top_venues}}</p>
 <p><strong>Table 5. Top authors by publication count.</strong></p>
 <table>
@@ -477,8 +488,9 @@ alt="Top publication venues for Modafinil. The horizontal bar chart shows the 15
 </tbody>
 </table>
 <!-- FIGURE: author_productivity.png -->
-<p><img src="figures/author_productivity.png"
+<p><img src="../figures/author_productivity.png"
 title="Author Productivity"
 alt="Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature." />{{#fig:author_productivity}}</p>
+</main>
 </body>
 </html>

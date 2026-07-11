@@ -1,21 +1,21 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 1214405,
+  "fact_count": 1214462,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 256,
+    "artifact": 286,
     "citation": 15,
     "equation": 1,
     "figure": 38,
-    "number": 1214092,
+    "number": 1214119,
     "string": 2,
     "table": 1
   },
-  "omitted_fact_count": 1214205,
+  "omitted_fact_count": 1214262,
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.year_counts.2000",
       "source_field": "$.year_counts.2000",
@@ -27,7 +27,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.year_counts.2001",
       "source_field": "$.year_counts.2001",
@@ -39,7 +39,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.smoothed_annual.2000",
       "source_field": "$.smoothed_annual.2000",
@@ -51,7 +51,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.cumulative.2000",
       "source_field": "$.cumulative.2000",
@@ -63,7 +63,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T23:42:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/descriptive_stats.json:$.descriptive_stats.counts_by_year.2000",
       "source_field": "$.descriptive_stats.counts_by_year.2000",
@@ -75,7 +75,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T23:42:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/descriptive_stats.json:$.descriptive_stats.counts_by_year.2001",
       "source_field": "$.descriptive_stats.counts_by_year.2001",
@@ -87,7 +87,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T23:42:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/descriptive_stats.json:$.descriptive_stats.counts_by_venue.PubMed",
       "source_field": "$.descriptive_stats.counts_by_venue.PubMed",
@@ -99,7 +99,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/subfield_timeline.json:$.clinical_sleep.2003",
       "source_field": "$.clinical_sleep.2003",
@@ -111,7 +111,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[12][0] (numeric variant)",
       "source_field": "$.matrix[12][0]",
@@ -123,7 +123,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[44][458] (numeric variant)",
       "source_field": "$.matrix[44][458]",
@@ -135,7 +135,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[107][360] (numeric variant)",
       "source_field": "$.matrix[107][360]",
@@ -147,7 +147,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[132][4] (numeric variant)",
       "source_field": "$.matrix[132][4]",
@@ -159,7 +159,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[250][369] (numeric variant)",
       "source_field": "$.matrix[250][369]",
@@ -171,7 +171,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[317][0] (numeric variant)",
       "source_field": "$.matrix[317][0]",
@@ -183,7 +183,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[341][6] (numeric variant)",
       "source_field": "$.matrix[341][6]",
@@ -195,7 +195,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[368][29] (numeric variant)",
       "source_field": "$.matrix[368][29]",
@@ -207,7 +207,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[382][332] (numeric variant)",
       "source_field": "$.matrix[382][332]",
@@ -219,7 +219,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[427][82] (numeric variant)",
       "source_field": "$.matrix[427][82]",
@@ -231,7 +231,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[432][406] (numeric variant)",
       "source_field": "$.matrix[432][406]",
@@ -243,7 +243,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[477][350] (numeric variant)",
       "source_field": "$.matrix[477][350]",
@@ -255,7 +255,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[482][286] (numeric variant)",
       "source_field": "$.matrix[482][286]",
@@ -267,7 +267,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[499][129] (numeric variant)",
       "source_field": "$.matrix[499][129]",
@@ -279,7 +279,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[567][61] (numeric variant)",
       "source_field": "$.matrix[567][61]",
@@ -291,7 +291,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[591][322] (numeric variant)",
       "source_field": "$.matrix[591][322]",
@@ -303,7 +303,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[592][207] (numeric variant)",
       "source_field": "$.matrix[592][207]",
@@ -315,7 +315,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[648][194] (numeric variant)",
       "source_field": "$.matrix[648][194]",
@@ -327,7 +327,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[658][15] (numeric variant)",
       "source_field": "$.matrix[658][15]",
@@ -339,7 +339,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[668][286] (numeric variant)",
       "source_field": "$.matrix[668][286]",
@@ -351,7 +351,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[679][471] (numeric variant)",
       "source_field": "$.matrix[679][471]",
@@ -363,7 +363,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[750][499] (numeric variant)",
       "source_field": "$.matrix[750][499]",
@@ -375,7 +375,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[792][290] (numeric variant)",
       "source_field": "$.matrix[792][290]",
@@ -387,7 +387,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[807][179] (numeric variant)",
       "source_field": "$.matrix[807][179]",
@@ -399,7 +399,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:33+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[817][109] (numeric variant)",
       "source_field": "$.matrix[817][109]",
@@ -411,7 +411,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[836][93] (numeric variant)",
       "source_field": "$.matrix[836][93]",
@@ -423,7 +423,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[854][156] (numeric variant)",
       "source_field": "$.matrix[854][156]",
@@ -435,7 +435,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[880][8] (numeric variant)",
       "source_field": "$.matrix[880][8]",
@@ -447,7 +447,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:25+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[888][284] (numeric variant)",
       "source_field": "$.matrix[888][284]",
@@ -459,7 +459,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[914][135] (numeric variant)",
       "source_field": "$.matrix[914][135]",
@@ -471,7 +471,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[952][5] (numeric variant)",
       "source_field": "$.matrix[952][5]",
@@ -483,7 +483,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[982][369] (numeric variant)",
       "source_field": "$.matrix[982][369]",
@@ -495,7 +495,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[998][101] (numeric variant)",
       "source_field": "$.matrix[998][101]",
@@ -507,7 +507,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1022][13] (numeric variant)",
       "source_field": "$.matrix[1022][13]",
@@ -519,7 +519,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1027][342] (numeric variant)",
       "source_field": "$.matrix[1027][342]",
@@ -531,7 +531,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1059][22] (numeric variant)",
       "source_field": "$.matrix[1059][22]",
@@ -543,7 +543,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1068][222] (numeric variant)",
       "source_field": "$.matrix[1068][222]",
@@ -555,7 +555,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1078][250] (numeric variant)",
       "source_field": "$.matrix[1078][250]",
@@ -567,7 +567,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:34+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1089][41] (numeric variant)",
       "source_field": "$.matrix[1089][41]",
@@ -579,7 +579,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:35+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1157][169] (numeric variant)",
       "source_field": "$.matrix[1157][169]",
@@ -591,7 +591,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:35+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1175][454] (numeric variant)",
       "source_field": "$.matrix[1175][454]",
@@ -603,7 +603,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:35+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1178][216] (numeric variant)",
       "source_field": "$.matrix[1178][216]",
@@ -615,7 +615,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:35+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1185][59] (numeric variant)",
       "source_field": "$.matrix[1185][59]",
@@ -627,7 +627,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:26+00:00",
+      "checked_at": "2026-07-11T01:26:35+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1195][276] (numeric variant)",
       "source_field": "$.matrix[1195][276]",
@@ -639,7 +639,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:27+00:00",
+      "checked_at": "2026-07-11T01:26:35+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1224][59] (numeric variant)",
       "source_field": "$.matrix[1224][59]",
@@ -651,7 +651,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.year_counts.2000 (numeric variant)",
       "source_field": "$.year_counts.2000",
@@ -663,7 +663,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.year_counts.2001 (numeric variant)",
       "source_field": "$.year_counts.2001",
@@ -675,7 +675,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.smoothed_annual.2000 (numeric variant)",
       "source_field": "$.smoothed_annual.2000",
@@ -687,7 +687,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/temporal_analysis.json:$.cumulative.2000 (numeric variant)",
       "source_field": "$.cumulative.2000",
@@ -699,7 +699,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T23:42:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/descriptive_stats.json:$.descriptive_stats.counts_by_year.2000 (numeric variant)",
       "source_field": "$.descriptive_stats.counts_by_year.2000",
@@ -711,7 +711,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T23:42:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/descriptive_stats.json:$.descriptive_stats.counts_by_year.2001 (numeric variant)",
       "source_field": "$.descriptive_stats.counts_by_year.2001",
@@ -723,7 +723,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T23:42:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/descriptive_stats.json:$.descriptive_stats.counts_by_venue.PubMed (numeric variant)",
       "source_field": "$.descriptive_stats.counts_by_venue.PubMed",
@@ -735,7 +735,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/subfield_timeline.json:$.clinical_sleep.2003 (numeric variant)",
       "source_field": "$.clinical_sleep.2003",
@@ -747,7 +747,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[1][145] (numeric variant)",
       "source_field": "$.matrix[1][145]",
@@ -759,7 +759,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[3][224] (numeric variant)",
       "source_field": "$.matrix[3][224]",
@@ -771,7 +771,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[7][22] (numeric variant)",
       "source_field": "$.matrix[7][22]",
@@ -783,7 +783,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[8][211] (numeric variant)",
       "source_field": "$.matrix[8][211]",
@@ -795,7 +795,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[11][14] (numeric variant)",
       "source_field": "$.matrix[11][14]",
@@ -807,7 +807,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[12][0] (numeric variant)",
       "source_field": "$.matrix[12][0]",
@@ -819,7 +819,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[15][177] (numeric variant)",
       "source_field": "$.matrix[15][177]",
@@ -831,7 +831,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[19][423] (numeric variant)",
       "source_field": "$.matrix[19][423]",
@@ -843,7 +843,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[21][311] (numeric variant)",
       "source_field": "$.matrix[21][311]",
@@ -855,7 +855,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[24][3] (numeric variant)",
       "source_field": "$.matrix[24][3]",
@@ -867,7 +867,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[25][198] (numeric variant)",
       "source_field": "$.matrix[25][198]",
@@ -879,7 +879,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[25][205] (numeric variant)",
       "source_field": "$.matrix[25][205]",
@@ -891,7 +891,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[26][93] (numeric variant)",
       "source_field": "$.matrix[26][93]",
@@ -903,7 +903,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[30][101] (numeric variant)",
       "source_field": "$.matrix[30][101]",
@@ -915,7 +915,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[38][206] (numeric variant)",
       "source_field": "$.matrix[38][206]",
@@ -927,7 +927,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[39][107] (numeric variant)",
       "source_field": "$.matrix[39][107]",
@@ -939,7 +939,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[44][89] (numeric variant)",
       "source_field": "$.matrix[44][89]",
@@ -951,7 +951,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[44][458] (numeric variant)",
       "source_field": "$.matrix[44][458]",
@@ -963,7 +963,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[48][266] (numeric variant)",
       "source_field": "$.matrix[48][266]",
@@ -975,7 +975,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[51][289] (numeric variant)",
       "source_field": "$.matrix[51][289]",
@@ -987,7 +987,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[53][0] (numeric variant)",
       "source_field": "$.matrix[53][0]",
@@ -999,7 +999,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[60][14] (numeric variant)",
       "source_field": "$.matrix[60][14]",
@@ -1011,7 +1011,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[71][340] (numeric variant)",
       "source_field": "$.matrix[71][340]",
@@ -1023,7 +1023,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[72][53] (numeric variant)",
       "source_field": "$.matrix[72][53]",
@@ -1035,7 +1035,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[73][82] (numeric variant)",
       "source_field": "$.matrix[73][82]",
@@ -1047,7 +1047,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[75][86] (numeric variant)",
       "source_field": "$.matrix[75][86]",
@@ -1059,7 +1059,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[80][12] (numeric variant)",
       "source_field": "$.matrix[80][12]",
@@ -1071,7 +1071,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[83][81] (numeric variant)",
       "source_field": "$.matrix[83][81]",
@@ -1083,7 +1083,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[84][343] (numeric variant)",
       "source_field": "$.matrix[84][343]",
@@ -1095,7 +1095,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[85][418] (numeric variant)",
       "source_field": "$.matrix[85][418]",
@@ -1107,7 +1107,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[88][318] (numeric variant)",
       "source_field": "$.matrix[88][318]",
@@ -1119,7 +1119,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[89][291] (numeric variant)",
       "source_field": "$.matrix[89][291]",
@@ -1131,7 +1131,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[89][305] (numeric variant)",
       "source_field": "$.matrix[89][305]",
@@ -1143,7 +1143,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[89][359] (numeric variant)",
       "source_field": "$.matrix[89][359]",
@@ -1155,7 +1155,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[90][46] (numeric variant)",
       "source_field": "$.matrix[90][46]",
@@ -1167,7 +1167,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[90][50] (numeric variant)",
       "source_field": "$.matrix[90][50]",
@@ -1179,7 +1179,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[95][45] (numeric variant)",
       "source_field": "$.matrix[95][45]",
@@ -1191,7 +1191,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[96][44] (numeric variant)",
       "source_field": "$.matrix[96][44]",
@@ -1203,7 +1203,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[98][233] (numeric variant)",
       "source_field": "$.matrix[98][233]",
@@ -1215,7 +1215,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[98][245] (numeric variant)",
       "source_field": "$.matrix[98][245]",
@@ -1227,7 +1227,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[101][235] (numeric variant)",
       "source_field": "$.matrix[101][235]",
@@ -1239,7 +1239,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[104][257] (numeric variant)",
       "source_field": "$.matrix[104][257]",
@@ -1251,7 +1251,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[106][0] (numeric variant)",
       "source_field": "$.matrix[106][0]",
@@ -1263,7 +1263,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[106][173] (numeric variant)",
       "source_field": "$.matrix[106][173]",
@@ -1275,7 +1275,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[107][360] (numeric variant)",
       "source_field": "$.matrix[107][360]",
@@ -1287,7 +1287,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[108][275] (numeric variant)",
       "source_field": "$.matrix[108][275]",
@@ -1299,7 +1299,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[117][121] (numeric variant)",
       "source_field": "$.matrix[117][121]",
@@ -1311,7 +1311,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[117][125] (numeric variant)",
       "source_field": "$.matrix[117][125]",
@@ -1323,7 +1323,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[117][141] (numeric variant)",
       "source_field": "$.matrix[117][141]",
@@ -1335,7 +1335,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[119][25] (numeric variant)",
       "source_field": "$.matrix[119][25]",
@@ -1347,7 +1347,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[120][195] (numeric variant)",
       "source_field": "$.matrix[120][195]",
@@ -1359,7 +1359,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[125][0] (numeric variant)",
       "source_field": "$.matrix[125][0]",
@@ -1371,7 +1371,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[131][317] (numeric variant)",
       "source_field": "$.matrix[131][317]",
@@ -1383,7 +1383,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[132][4] (numeric variant)",
       "source_field": "$.matrix[132][4]",
@@ -1395,7 +1395,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[136][15] (numeric variant)",
       "source_field": "$.matrix[136][15]",
@@ -1407,7 +1407,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[136][52] (numeric variant)",
       "source_field": "$.matrix[136][52]",
@@ -1419,7 +1419,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[137][359] (numeric variant)",
       "source_field": "$.matrix[137][359]",
@@ -1431,7 +1431,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[137][398] (numeric variant)",
       "source_field": "$.matrix[137][398]",
@@ -1443,7 +1443,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[138][16] (numeric variant)",
       "source_field": "$.matrix[138][16]",
@@ -1455,7 +1455,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[143][19] (numeric variant)",
       "source_field": "$.matrix[143][19]",
@@ -1467,7 +1467,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[143][119] (numeric variant)",
       "source_field": "$.matrix[143][119]",
@@ -1479,7 +1479,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[147][6] (numeric variant)",
       "source_field": "$.matrix[147][6]",
@@ -1491,7 +1491,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[148][364] (numeric variant)",
       "source_field": "$.matrix[148][364]",
@@ -1503,7 +1503,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[150][461] (numeric variant)",
       "source_field": "$.matrix[150][461]",
@@ -1515,7 +1515,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[150][482] (numeric variant)",
       "source_field": "$.matrix[150][482]",
@@ -1527,7 +1527,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[154][30] (numeric variant)",
       "source_field": "$.matrix[154][30]",
@@ -1539,7 +1539,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[158][80] (numeric variant)",
       "source_field": "$.matrix[158][80]",
@@ -1551,7 +1551,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[168][422] (numeric variant)",
       "source_field": "$.matrix[168][422]",
@@ -1563,7 +1563,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[168][467] (numeric variant)",
       "source_field": "$.matrix[168][467]",
@@ -1575,7 +1575,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:31+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[169][487] (numeric variant)",
       "source_field": "$.matrix[169][487]",
@@ -1587,7 +1587,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[181][132] (numeric variant)",
       "source_field": "$.matrix[181][132]",
@@ -1599,7 +1599,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[186][135] (numeric variant)",
       "source_field": "$.matrix[186][135]",
@@ -1611,7 +1611,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[187][462] (numeric variant)",
       "source_field": "$.matrix[187][462]",
@@ -1623,7 +1623,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[188][52] (numeric variant)",
       "source_field": "$.matrix[188][52]",
@@ -1635,7 +1635,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[188][471] (numeric variant)",
       "source_field": "$.matrix[188][471]",
@@ -1647,7 +1647,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[196][40] (numeric variant)",
       "source_field": "$.matrix[196][40]",
@@ -1659,7 +1659,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[198][340] (numeric variant)",
       "source_field": "$.matrix[198][340]",
@@ -1671,7 +1671,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[200][333] (numeric variant)",
       "source_field": "$.matrix[200][333]",
@@ -1683,7 +1683,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[203][413] (numeric variant)",
       "source_field": "$.matrix[203][413]",
@@ -1695,7 +1695,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[206][4] (numeric variant)",
       "source_field": "$.matrix[206][4]",
@@ -1707,7 +1707,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[206][47] (numeric variant)",
       "source_field": "$.matrix[206][47]",
@@ -1719,7 +1719,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[206][328] (numeric variant)",
       "source_field": "$.matrix[206][328]",
@@ -1731,7 +1731,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[211][6] (numeric variant)",
       "source_field": "$.matrix[211][6]",
@@ -1743,7 +1743,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[215][244] (numeric variant)",
       "source_field": "$.matrix[215][244]",
@@ -1755,7 +1755,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[219][253] (numeric variant)",
       "source_field": "$.matrix[219][253]",
@@ -1767,7 +1767,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[219][282] (numeric variant)",
       "source_field": "$.matrix[219][282]",
@@ -1779,7 +1779,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[222][446] (numeric variant)",
       "source_field": "$.matrix[222][446]",
@@ -1791,7 +1791,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[225][12] (numeric variant)",
       "source_field": "$.matrix[225][12]",
@@ -1803,7 +1803,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[227][356] (numeric variant)",
       "source_field": "$.matrix[227][356]",
@@ -1815,7 +1815,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[232][119] (numeric variant)",
       "source_field": "$.matrix[232][119]",
@@ -1827,7 +1827,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[235][14] (numeric variant)",
       "source_field": "$.matrix[235][14]",
@@ -1839,7 +1839,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[236][40] (numeric variant)",
       "source_field": "$.matrix[236][40]",
@@ -1851,7 +1851,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[247][248] (numeric variant)",
       "source_field": "$.matrix[247][248]",
@@ -1863,7 +1863,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[250][369] (numeric variant)",
       "source_field": "$.matrix[250][369]",
@@ -1875,7 +1875,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[255][84] (numeric variant)",
       "source_field": "$.matrix[255][84]",
@@ -1887,7 +1887,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[258][51] (numeric variant)",
       "source_field": "$.matrix[258][51]",
@@ -1899,7 +1899,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[261][19] (numeric variant)",
       "source_field": "$.matrix[261][19]",
@@ -1911,7 +1911,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[271][128] (numeric variant)",
       "source_field": "$.matrix[271][128]",
@@ -1923,7 +1923,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:23+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[280][114] (numeric variant)",
       "source_field": "$.matrix[280][114]",
@@ -1935,7 +1935,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[284][498] (numeric variant)",
       "source_field": "$.matrix[284][498]",
@@ -1947,7 +1947,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[286][4] (numeric variant)",
       "source_field": "$.matrix[286][4]",
@@ -1959,7 +1959,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[287][111] (numeric variant)",
       "source_field": "$.matrix[287][111]",
@@ -1971,7 +1971,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[292][35] (numeric variant)",
       "source_field": "$.matrix[292][35]",
@@ -1983,7 +1983,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[303][4] (numeric variant)",
       "source_field": "$.matrix[303][4]",
@@ -1995,7 +1995,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[306][90] (numeric variant)",
       "source_field": "$.matrix[306][90]",
@@ -2007,7 +2007,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[314][14] (numeric variant)",
       "source_field": "$.matrix[314][14]",
@@ -2019,7 +2019,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[314][194] (numeric variant)",
       "source_field": "$.matrix[314][194]",
@@ -2031,7 +2031,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[315][276] (numeric variant)",
       "source_field": "$.matrix[315][276]",
@@ -2043,7 +2043,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[317][0] (numeric variant)",
       "source_field": "$.matrix[317][0]",
@@ -2055,7 +2055,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[317][144] (numeric variant)",
       "source_field": "$.matrix[317][144]",
@@ -2067,7 +2067,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[322][337] (numeric variant)",
       "source_field": "$.matrix[322][337]",
@@ -2079,7 +2079,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[324][119] (numeric variant)",
       "source_field": "$.matrix[324][119]",
@@ -2091,7 +2091,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[327][65] (numeric variant)",
       "source_field": "$.matrix[327][65]",
@@ -2103,7 +2103,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[329][4] (numeric variant)",
       "source_field": "$.matrix[329][4]",
@@ -2115,7 +2115,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[329][347] (numeric variant)",
       "source_field": "$.matrix[329][347]",
@@ -2127,7 +2127,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[333][6] (numeric variant)",
       "source_field": "$.matrix[333][6]",
@@ -2139,7 +2139,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[338][307] (numeric variant)",
       "source_field": "$.matrix[338][307]",
@@ -2151,7 +2151,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[338][309] (numeric variant)",
       "source_field": "$.matrix[338][309]",
@@ -2163,7 +2163,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[341][6] (numeric variant)",
       "source_field": "$.matrix[341][6]",
@@ -2175,7 +2175,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[348][8] (numeric variant)",
       "source_field": "$.matrix[348][8]",
@@ -2187,7 +2187,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[350][59] (numeric variant)",
       "source_field": "$.matrix[350][59]",
@@ -2199,7 +2199,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[353][45] (numeric variant)",
       "source_field": "$.matrix[353][45]",
@@ -2211,7 +2211,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[354][126] (numeric variant)",
       "source_field": "$.matrix[354][126]",
@@ -2223,7 +2223,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[354][293] (numeric variant)",
       "source_field": "$.matrix[354][293]",
@@ -2235,7 +2235,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[355][4] (numeric variant)",
       "source_field": "$.matrix[355][4]",
@@ -2247,7 +2247,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[366][289] (numeric variant)",
       "source_field": "$.matrix[366][289]",
@@ -2259,7 +2259,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[366][305] (numeric variant)",
       "source_field": "$.matrix[366][305]",
@@ -2271,7 +2271,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[368][29] (numeric variant)",
       "source_field": "$.matrix[368][29]",
@@ -2283,7 +2283,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[370][117] (numeric variant)",
       "source_field": "$.matrix[370][117]",
@@ -2295,7 +2295,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[370][143] (numeric variant)",
       "source_field": "$.matrix[370][143]",
@@ -2307,7 +2307,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[372][0] (numeric variant)",
       "source_field": "$.matrix[372][0]",
@@ -2319,7 +2319,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[372][70] (numeric variant)",
       "source_field": "$.matrix[372][70]",
@@ -2331,7 +2331,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[373][206] (numeric variant)",
       "source_field": "$.matrix[373][206]",
@@ -2343,7 +2343,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[377][28] (numeric variant)",
       "source_field": "$.matrix[377][28]",
@@ -2355,7 +2355,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[379][153] (numeric variant)",
       "source_field": "$.matrix[379][153]",
@@ -2367,7 +2367,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[380][52] (numeric variant)",
       "source_field": "$.matrix[380][52]",
@@ -2379,7 +2379,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[380][60] (numeric variant)",
       "source_field": "$.matrix[380][60]",
@@ -2391,7 +2391,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[382][321] (numeric variant)",
       "source_field": "$.matrix[382][321]",
@@ -2403,7 +2403,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-06-25T20:59:24+00:00",
+      "checked_at": "2026-07-11T01:26:32+00:00",
       "kind": "number",
       "source": "output/data/tfidf_data.json:$.matrix[382][332] (numeric variant)",
       "source_field": "$.matrix[382][332]",
@@ -2416,10 +2416,10 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 296,
+    "artifact": 326,
     "bibliography": 15,
     "fixture": 1,
-    "generated_metric": 1214086,
+    "generated_metric": 1214113,
     "project_config": 3,
     "project_source": 4
   }

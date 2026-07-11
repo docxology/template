@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,11 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="results-citation-network">Results: Citation Network</h1>
 <h2 id="rq4-citation-geometry">RQ4: Citation Geometry</h2>
 <p>Resolving each record’s references against the corpus yields an
@@ -313,10 +316,10 @@ cited by other corpus members. Hub papers, which cite many other corpus
 members, serve as integrative reviews or meta-analyses that connect
 disparate threads of the literature.</p>
 <!-- FIGURE: citation_network.png -->
-<p><img src="figures/citation_network.png" title="Citation Network"
+<p><img src="../figures/citation_network.png" title="Citation Network"
 alt="Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1377 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility." />{{#fig:citation_network}}</p>
 <!-- FIGURE: degree_distribution.png -->
-<p><img src="figures/degree_distribution.png"
+<p><img src="../figures/degree_distribution.png"
 title="Degree Distribution"
 alt="Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks." />{{#fig:degree_distribution}}</p>
 <p>The heavy-tailed degree distribution is characteristic of citation
@@ -379,5 +382,6 @@ different topical communities in the citation network — their removal
 would fragment the graph into disconnected components. These bridging
 papers are often review articles or methodological papers that connect
 disparate research threads.</p>
+</main>
 </body>
 </html>

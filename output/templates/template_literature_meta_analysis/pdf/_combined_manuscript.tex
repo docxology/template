@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,14 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={A Living Meta-Analysis of the Modafinil Literature},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{A Living Meta-Analysis of the Modafinil Literature}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -252,7 +265,6 @@
 \DeclareMathOperator{\PageRank}{PageRank}  % PageRank operator
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{2cm}
@@ -270,7 +282,6 @@
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \section{Abstract}\label{abstract}
 
@@ -1543,81 +1554,6 @@ disparate research threads.
 
 \newpage
 
-\section{Conclusion}\label{conclusion}
-
-We have presented a configurable, reproducible meta-analysis template
-that turns a single search term into a complete, evidence-bound portrait
-of its literature. Applied to \textbf{Modafinil}, it retrieved and
-de-duplicated 2302 records across 7 engines (arXiv, OpenAlex, Semantic
-Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), classified them
-into 6 configurable subfields (with \textbf{Clinical Sleep} dominant at
-64.3\%), extracted 5 topics over a 500-feature vocabulary, computed
-reproducible document embeddings, mapped the citation network (2204
-nodes, 8,772 edges, 1377 communities), and framed 6 hypotheses for
-optional evidence scoring.
-
-\subsection{Key Findings}\label{key-findings}
-
-The analysis answers the four research questions posed in the
-introduction:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  \textbf{RQ1 (Growth)}: The modafinil literature spans 26 years
-  (2000--2026) and grows at a CAGR of 3.45\%, doubling every 11.3 years.
-  The peak year 2025 produced 112 publications, indicating sustained and
-  active research interest.
-\item
-  \textbf{RQ2 (Subfields)}: The 6-bucket taxonomy reveals a
-  multi-disciplinary literature dominated by clinical sleep research
-  (64.3\%), with significant representation from cognition, psychiatry,
-  and pharmacology.
-\item
-  \textbf{RQ3 (Topics)}: NMF extracted 5 latent topics --- cognitive
-  enhancement, ADHD treatment, pharmacological dose-response, sleep
-  disorders, and psychiatric fatigue --- that cross-cut the explicit
-  subfield taxonomy and reveal the thematic structure of the field.
-\item
-  \textbf{RQ4 (Citations)}: The citation network of 2204 nodes and 8,772
-  edges has a resolution rate of 22.6\%, 1377 communities, and a maximum
-  in-degree of
-
-  \begin{enumerate}
-  \def\labelenumii{\arabic{enumii}.}
-  \setcounter{enumii}{164}
-  \tightlist
-  \item
-    The heavy-tailed degree distribution is characteristic of citation
-    networks, with a small number of foundational works anchoring the
-    structure.
-  \end{enumerate}
-\end{enumerate}
-
-\subsection{Architectural
-Contribution}\label{architectural-contribution}
-
-The contribution is architectural rather than topical: every
-domain-specific value flows from one configuration file and the
-pipeline's own outputs into a generated manuscript, so the same
-machinery re-targets to any topic by editing configuration alone.
-Combined with an offline, deterministic default run, this yields a
-\emph{living literature review} --- a synthesis that can be re-executed
-on demand as a field evolves, with every number traceable to a
-regenerable artifact.
-
-\subsection{Reproducibility}\label{reproducibility}
-
-This manuscript was generated from a live retrieval run using 7 engines.
-Every number, table, and figure in this document is injected from a
-committed artifact (\breaktt{output/data/*.json},
-\breaktt{../figures/*.png}). Re-running the pipeline with the same
-configuration reproduces identical data outputs; the 18 figures are
-deterministic given fixed seeds, and the manuscript text is regenerated
-from the same template. No number in this document was typed by hand.
-
-\newpage
-
 \section{Discussion}\label{discussion}
 
 \subsection{What the Template Is, and Is
@@ -1701,6 +1637,81 @@ change to the core architecture.
 
 \newpage
 
+\section{Conclusion}\label{conclusion}
+
+We have presented a configurable, reproducible meta-analysis template
+that turns a single search term into a complete, evidence-bound portrait
+of its literature. Applied to \textbf{Modafinil}, it retrieved and
+de-duplicated 2302 records across 7 engines (arXiv, OpenAlex, Semantic
+Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), classified them
+into 6 configurable subfields (with \textbf{Clinical Sleep} dominant at
+64.3\%), extracted 5 topics over a 500-feature vocabulary, computed
+reproducible document embeddings, mapped the citation network (2204
+nodes, 8,772 edges, 1377 communities), and framed 6 hypotheses for
+optional evidence scoring.
+
+\subsection{Key Findings}\label{key-findings}
+
+The analysis answers the four research questions posed in the
+introduction:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{RQ1 (Growth)}: The modafinil literature spans 26 years
+  (2000--2026) and grows at a CAGR of 3.45\%, doubling every 11.3 years.
+  The peak year 2025 produced 112 publications, indicating sustained and
+  active research interest.
+\item
+  \textbf{RQ2 (Subfields)}: The 6-bucket taxonomy reveals a
+  multi-disciplinary literature dominated by clinical sleep research
+  (64.3\%), with significant representation from cognition, psychiatry,
+  and pharmacology.
+\item
+  \textbf{RQ3 (Topics)}: NMF extracted 5 latent topics --- cognitive
+  enhancement, ADHD treatment, pharmacological dose-response, sleep
+  disorders, and psychiatric fatigue --- that cross-cut the explicit
+  subfield taxonomy and reveal the thematic structure of the field.
+\item
+  \textbf{RQ4 (Citations)}: The citation network of 2204 nodes and 8,772
+  edges has a resolution rate of 22.6\%, 1377 communities, and a maximum
+  in-degree of
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \setcounter{enumii}{164}
+  \tightlist
+  \item
+    The heavy-tailed degree distribution is characteristic of citation
+    networks, with a small number of foundational works anchoring the
+    structure.
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Architectural
+Contribution}\label{architectural-contribution}
+
+The contribution is architectural rather than topical: every
+domain-specific value flows from one configuration file and the
+pipeline's own outputs into a generated manuscript, so the same
+machinery re-targets to any topic by editing configuration alone.
+Combined with an offline, deterministic default run, this yields a
+\emph{living literature review} --- a synthesis that can be re-executed
+on demand as a field evolves, with every number traceable to a
+regenerable artifact.
+
+\subsection{Reproducibility}\label{reproducibility}
+
+This manuscript was generated from a live retrieval run using 7 engines.
+Every number, table, and figure in this document is injected from a
+committed artifact (\breaktt{output/data/*.json},
+\breaktt{../figures/*.png}). Re-running the pipeline with the same
+configuration reproduces identical data outputs; the 18 figures are
+deterministic given fixed seeds, and the manuscript text is regenerated
+from the same template. No number in this document was typed by hand.
+
+\newpage
+
 \section{Appendix A: Tooling and
 Reproduction}\label{appendix-a-tooling-and-reproduction}
 
@@ -1764,6 +1775,36 @@ skipped sources. The CLI supports per-engine skip flags:
 \breaktt{-\/-skip-openalex}, \breaktt{-\/-skip-crossref},
 \texttt{-\/-skip-pubmed}, \breaktt{-\/-skip-sovietrxiv},
 \breaktt{-\/-skip-chinarxiv}.
+
+\subsection{Deep Research (Offline Fixture
+Replay)}\label{deep-research-offline-fixture-replay}
+
+This exemplar also demonstrates the shared
+\breaktt{infrastructure.search.deep\_research} capability ---
+provider-neutral dispatch to OpenAI and Gemini deep-research agents.
+Because deep research is a \textbf{paid, non-deterministic} service, the
+template never calls it live in CI. Instead,
+\breaktt{src/deep\_research/deep\_research\_adapter.py} wires the real
+infrastructure request/result models (\breaktt{DeepResearchConfig},
+\breaktt{DeepResearchRequest}, \breaktt{DeepResearchResult},
+\breaktt{DeepResearchClient}) and ships a deterministic, offline path:
+\breaktt{scripts/08\_deep\_research\_dispatch.py} builds the genuine
+provider-neutral request and then \emph{replays} a recorded report
+fixture (\breaktt{src/deep\_research/fixtures/recorded\_report.json}),
+normalizing it through the real \breaktt{DeepResearchResult} model.
+Replay fails closed if the fixture is missing --- it never fabricates a
+passing run --- mirroring the fixture-replay idiom of
+\texttt{template\_sia}. The same adapter exposes
+\breaktt{build\_offline\_request}, the exact call-site a live
+\texttt{submit} would dispatch, so a fork can enable real providers by
+supplying \texttt{OPENAI\_API\_KEY} / \texttt{GEMINI\_API\_KEY}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Offline (default): replays the recorded report, no key required}
+\ExtensionTok{uv}\NormalTok{ run python scripts/08\_deep\_research\_dispatch.py}
+\end{Highlighting}
+\end{Shaded}
 
 \subsection{Test Suite}\label{test-suite}
 

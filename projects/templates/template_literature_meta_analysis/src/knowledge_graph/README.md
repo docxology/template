@@ -76,7 +76,7 @@ High-level query helpers over `KnowledgeGraph`: `query_papers_by_hypothesis`,
 
 ## Scoring Formula
 
-See `manuscript/06_appendix_technical.md §Citation-Weighted Hypothesis Scoring Formula` and
+See `manuscript/07_appendix_technical.md §Citation-Weighted Hypothesis Scoring Formula` and
 `hypothesis.py:score_hypothesis()`. Key edge case: `score = 0` is ambiguous — it can mean no
 assertions OR perfectly balanced support/contradict. Always report assertion counts alongside scores.
 

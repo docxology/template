@@ -22,11 +22,11 @@ Source directory for the paper: all `.md` sections, `config.yaml`, `preamble.md`
 | `03b_results_subfields.md` | Detailed characterization of A1/A2/B/C1–C5 domains |
 | `03c_results_text_analytics.md` | NMF topic modeling, vocabulary analysis, document embeddings |
 | `03d_results_citation_network.md` | Citation network topology, degree distribution, hub analysis |
-| `04_conclusion.md` | Summary, methodological constraints, research agenda, open questions |
-| `04a_discussion.md` | Prior work comparison, tactical/strategic priorities, living review maintenance |
-| `05_appendix_tooling.md` | Software ecosystem survey, deep AIF, predictive coding, QA thresholds |
-| `06_appendix_technical.md` | Citation-weighted scoring math, NMF mathematics, growth rate estimation |
-| `07_appendix_accessibility.md` | FAIR data, cognitive ergonomics, decentralized science |
+| `04_discussion.md` | Prior work comparison, tactical/strategic priorities, living review maintenance |
+| `05_conclusion.md` | Summary, methodological constraints, research agenda, open questions |
+| `06_appendix_tooling.md` | Software ecosystem survey, deep AIF, predictive coding, QA thresholds |
+| `07_appendix_technical.md` | Citation-weighted scoring math, NMF mathematics, growth rate estimation |
+| `08_appendix_accessibility.md` | FAIR data, cognitive ergonomics, decentralized science |
 | `98_symbols_glossary.md` | Mathematical notation table and abbreviations |
 | `99_references.md` | BibTeX bibliography directive (points to `references.bib`) |
 | `references.bib` | BibTeX source file (100+ citations, 2000–2026) |
