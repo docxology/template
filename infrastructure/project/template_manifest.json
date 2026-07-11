@@ -6,7 +6,7 @@
       "qualified_name": "templates/template_active_inference",
       "title": "template_active_inference",
       "use_when": "Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation.",
-      "test_file_count": 66,
+      "test_file_count": 73,
       "coverage_floor": 90
     },
     {

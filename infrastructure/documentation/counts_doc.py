@@ -44,7 +44,7 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-06-30"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-10"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-11"
 
 
 @dataclass(frozen=True)
@@ -62,11 +62,13 @@ class ExemplarSnapshot:
 # after re-running the per-project gates; the rows are keyed by public-scope name
 # so the consistency test gates membership, not the numbers.
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    # template_active_inference coverage is preserved from the prior measurement
-    # (2026-06-05): its project-local .venv pins a numpy/Python ABI that cannot be
-    # exercised from the repo-root interpreter, so the gate is re-derived in its
-    # own environment, not here. The collected-test count is from --collect-only.
-    ExemplarSnapshot("template_active_inference", 382, "91.35 %"),
+    # template_active_inference coverage is re-derived in its OWN environment
+    # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
+    # cannot exercise): measured 2026-07-11 via
+    # `stage_01_test.py --project templates/template_active_inference
+    # --project-only --include-slow` (699 passed). Collected count from
+    # --collect-only in the project env.
+    ExemplarSnapshot("template_active_inference", 705, "93.55 %"),
     ExemplarSnapshot("template_autopoiesis", 493, "96.41 %"),
     ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
     ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),

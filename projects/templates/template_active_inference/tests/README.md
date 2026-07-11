@@ -28,6 +28,10 @@ computations and fixed seeds rather than mocks.
   `def` and `class` under `src/` and `scripts/`.
 - `test_support_modules.py`, `gates/` — `validate_manuscript` /
   `validate_outputs` / `build_lean` gates and negatives.
+- `test_*_direct.py` with `direct_recompute_support.py` — leg-deterministic
+  direct coverage of the recompute writers and validator failure branches,
+  exercised against isolated project-tree copies so the coverage floor never
+  depends on tracked-snapshot staleness (rules in `AGENTS.md`).
 
 ## Fast iteration
 
@@ -60,11 +64,10 @@ other state-free modules above.
 
 ## Slow full-suite gates
 
-The 2026-06-12 full run
-`COVERAGE_FILE=/tmp/template_ai.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q`
-passed 383 tests above the 90% gate (measured coverage tracked in
-[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)) in
-1385.87 seconds. The slowest tests are
+The canonical full-suite evidence line lives in `TODO.md`; live pass counts
+and measured coverage are tracked in
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md), so no
+suite counts or timings are pinned in this file. The slowest tests are
 expected to be the end-to-end generated-artifact gates: manuscript mutation
 negatives in `tests/gates/test_manuscript_gates.py`, claim-ledger negatives in
 `tests/gates/test_claim_ledger.py`, roadmap artifact promotion in
