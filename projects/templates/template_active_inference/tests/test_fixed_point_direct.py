@@ -17,8 +17,6 @@ from roadmap_tracks.fixed_point import (
     _fingerprint,
     _refresh_animation_outputs,
     _validate_fixed_point,
-    _write_final_validation_pass,
-    _write_fixed_point_pass,
     run_semantic_fixed_point,
 )
 
@@ -66,15 +64,6 @@ def test_fast_path_returns_existing_paths_when_valid(copied_root: Path) -> None:
 
 
 @pytest.mark.timeout(600)
-def test_write_pass_and_final_pass_settle_to_valid_state(copied_root: Path) -> None:
-    paths = _write_fixed_point_pass(copied_root, require_analysis_outputs=False)
-    assert paths, "fixed-point pass must write artifacts"
-    final_paths = _write_final_validation_pass(copied_root, require_analysis_outputs=False)
-    assert final_paths
-    assert _validate_fixed_point(copied_root) == []
-
-
-@pytest.mark.timeout(600)
 def test_stale_artifact_triggers_full_settlement(tmp_path_factory: pytest.TempPathFactory) -> None:
     stale_root = copy_project_tree(tmp_path_factory.mktemp("fixed_point_stale_tree"))
     target = stale_root / "output" / "data" / "interop_roundtrip_report.json"
@@ -86,3 +75,29 @@ def test_stale_artifact_triggers_full_settlement(tmp_path_factory: pytest.TempPa
     assert paths, "settlement must report written artifact paths"
     assert target.is_file(), "the deleted artifact must be regenerated"
     assert _validate_fixed_point(stale_root) == []
+
+
+@pytest.mark.timeout(600)
+def test_unfixable_source_defect_raises_instead_of_converging(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    """Negative control: the fixed point must FAIL, not launder, an unfixable defect.
+
+    Corrupting a SOURCE contract (an ontology annotation with no variable
+    declaration in a tracked GNN model) means every settlement pass rebuilds
+    artifacts that still fail validation — writers regenerate outputs from the
+    corrupted source, so no number of passes can converge. A fixed point that
+    returned successfully here would be green-by-construction. (First version
+    of this control exposed exactly that: validation bound only to SAVED
+    artifacts, so the corrupted source fast-pathed straight through — closed
+    by the saved-vs-live gnn_lint staleness check in
+    validate_formal_interop_artifacts.)
+    """
+    broken_root = copy_project_tree(tmp_path_factory.mktemp("fixed_point_broken_tree"))
+    gnn_model = broken_root / "gnn" / "si_tmaze.gnn.md"
+    gnn_model.write_text(
+        gnn_model.read_text(encoding="utf-8") + "\nghost_variable=FabricatedOntologyTerm\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="semantic fixed point"):
+        run_semantic_fixed_point(broken_root, require_analysis_outputs=False, max_passes=2)

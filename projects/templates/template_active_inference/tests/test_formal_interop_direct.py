@@ -178,6 +178,21 @@ def test_validate_formal_interop_flags_missing_artifacts(tmp_path: Path) -> None
 
 
 @pytest.mark.timeout(300)
+def test_validate_formal_interop_flags_gnn_source_drift(copied_root: Path) -> None:
+    """A corrupted GNN source with intact saved artifacts must read as stale."""
+    write_formal_interop_artifacts(copied_root)
+    gnn_model = copied_root / "gnn" / "si_tmaze.gnn.md"
+    original = gnn_model.read_text(encoding="utf-8")
+    try:
+        gnn_model.write_text(original + "\nghost_variable=FabricatedOntologyTerm\n", encoding="utf-8")
+        issues = validate_formal_interop_artifacts(copied_root)
+        assert any("gnn_lint_report.json is stale relative to gnn sources" in issue for issue in issues)
+    finally:
+        gnn_model.write_text(original, encoding="utf-8")
+    assert validate_formal_interop_artifacts(copied_root) == []
+
+
+@pytest.mark.timeout(300)
 def test_validate_formal_interop_flags_stale_lean_inventory(copied_root: Path) -> None:
     write_formal_interop_artifacts(copied_root)
     inventory_path = copied_root / "output" / "reports" / "lean_graph_world_inventory.json"

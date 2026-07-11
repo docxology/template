@@ -567,6 +567,17 @@ def validate_formal_interop_artifacts(project_root: Path) -> list[str]:
     if interop.get("all_lossless") is not True:
         issues.append("interop_roundtrip_report.json is not lossless")
     gnn_lint = _load_json(root / "output" / "reports" / "gnn_lint_report.json")
+    # Saved-vs-live staleness: without this, a corrupted GNN source with intact
+    # saved artifacts validates clean and the semantic fixed point fast-paths
+    # past the defect (same pattern as the lean inventory check below). The
+    # live rebuild is pure text parsing, so it is platform/leg stable.
+    live_gnn_lint = build_gnn_lint_report(root)
+    if gnn_lint and (
+        gnn_lint.get("rows") != live_gnn_lint.get("rows")
+        or gnn_lint.get("issues") != live_gnn_lint.get("issues")
+        or gnn_lint.get("all_variables_mapped_once") != live_gnn_lint.get("all_variables_mapped_once")
+    ):
+        issues.append("gnn_lint_report.json is stale relative to gnn sources")
     gnn_lint_rows_ok = all_rows(
         gnn_lint,
         lambda row: (

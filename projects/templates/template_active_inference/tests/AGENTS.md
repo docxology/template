@@ -13,6 +13,42 @@ Sheaf tests are split by concern: `test_sheaf_manifest.py`, `test_sheaf_registry
 `test_sheaf_compose.py`, `test_sheaf_coverage.py`, `test_sheaf_cli.py`,
 `test_coverage_pipeline.py`, `test_sweep_io.py` (no monolithic `test_sheaf.py`).
 
+## Leg-deterministic direct coverage (`test_*_direct.py`)
+
+The `test_*_direct.py` family exists so the 90% coverage floor never depends on
+whether the tracked `output/` snapshot happens to read stale on a given CI leg
+(py3.10 float drift used to be the only thing exercising the heavy recompute
+modules). These tests call the recompute writers directly against an isolated
+copy of the project tree built by `direct_recompute_support.copy_project_tree()`
+— the tracked snapshot is never rewritten. Rules for this family:
+
+- Never assert that the tracked snapshot (or a fresh copy of it) validates as
+  current BEFORE an in-session settlement — the py3.10 leg reads it stale.
+  Settle first, then assert the non-rewriting fast path.
+- Mutations of a copy restore byte-for-byte in `finally`, against the state
+  written THIS session (not the tracked bytes).
+- `gates/lean.py` subprocess/parse paths are driven by a scripted stub `lake`
+  executable on `PATH` (a real subprocess with test-scripted responses — the
+  CLI analogue of the sanctioned `pytest-httpserver` pattern), so they stay
+  covered on CI runners with no Lean toolchain.
+
+## Runtime and parallelism
+
+Measured cost structure (py3.12, serial): the suite is ~280s without coverage
+and roughly double that with it — branch coverage instrumentation is the
+single largest cost, and `COVERAGE_CORE=sysmon` cannot remove it before
+Python 3.14 (sys.monitoring cannot measure branches earlier; coverage.py falls
+back with a `no-sysmon` warning). Do not trade `branch = true` away for speed.
+
+This suite is NOT xdist-safe: gate tests compose and validate the REAL project
+tree and the autouse conftest fixture restores tracked sources/outputs after
+every test, so parallel workers race each other (observed corrupting readiness
+mid-run under `-n 6`) — and any test that merely READS the real tree races
+with another worker's restore-writes. Run it serially. The safe multi-core
+design, if wall-clock ever matters more than simplicity, is per-worker
+whole-tree copies (each worker gets its own project copy and a coverage
+`[paths]` remap), not in-process `-n N`.
+
 The gate tests call `compose_all_sections` / `ensure_coverage_artifacts` on the
 real project root, which rewrites tracked manuscript, GNN, ontology, and config
 sources to reflect whatever artifacts the run produced. The autouse fixture in
