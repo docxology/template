@@ -126,8 +126,8 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
-        "output/data/pymdp_policy_posterior_grid.json": "9513f33271013f594069aa97d5cfc7b4e6b6b37476a6a49f107aa12c82fcce61",
-        "output/data/si_policy_comparison.json": "2ff44eadc0db5f57abdc579b8a1d9f2e13f6e17370fe7d79d9be1c67c92783ed",
+        "output/data/pymdp_policy_posterior_grid.json": "c4f2911f2b8477aa642198b249f444f890646d0f9a109ca1795c36ab012ac05d",
+        "output/data/si_policy_comparison.json": "84c2d6c1ee8200eecd17ef664a8a9fccd670abf4320e467bf6a754eb6cd3e030",
         "output/data/si_tmaze_summary.json": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
         "output/data/si_tmaze_trace.json": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
         "output/reports/pymdp_runtime_diagnostics.json": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75",
@@ -250,7 +250,7 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
-        "output/reports/reproducibility_replay.json": "c14c0419111bd07e66c8cb83bf98d87ee006fbb6f6d4ae6e810f3cad9f94bcc4"
+        "output/reports/reproducibility_replay.json": "faf8c07ec7a573175e1d326a2db2702ae774954d98b56b6fb73b21e1f538497e"
       },
       "producer_script": "generate_validation_spine.py",
       "replay_method": "artifact_fingerprint"
@@ -291,7 +291,7 @@
         "output/data/si_efe_terms.json": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936",
         "output/data/si_graph_world_topology_sweep.json": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
         "output/data/si_graph_world_topology_traces.json": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
-        "output/data/si_policy_grid.json": "f49abb96cc04bcfa207c30205a38bdd344147fe52dcab95f586313e2da286490",
+        "output/data/si_policy_grid.json": "077724d21ba8f862f2a714b5f35109459e8e5493126125a5c94bef628cffb24c",
         "output/data/state_space_catalog.json": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
         "output/data/toy_benchmark_matrix.json": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
         "output/reports/graph_world_invariants.json": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9"
@@ -390,7 +390,7 @@
         "output/reports/producer_completeness.json": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
         "output/reports/release_notes_evidence.json": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
         "output/reports/scope_boundary_audit.json": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
-        "output/reports/stale_artifact_report.json": "ebe4d41d73c39c9acfc6c29013ce716adda9bd98b73a11ea398d3c3fa45c0c69",
+        "output/reports/stale_artifact_report.json": "32c2068c818d32061c5f1e16e3d7946cb925217fb4557324681e6e345ddf4136",
         "output/reports/visualization_quality_audit.json": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c"
       },
       "producer_script": "generate_integration_audit.py",
@@ -457,7 +457,7 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
-        "output/data/artifact_contract_index.json": "fe045aab334af602f0a34741e206c4f52c8147a616b5a8496933eddb639387df",
+        "output/data/artifact_contract_index.json": "5254d05eb15792202bb91877544c430cb37b0f6c424be95ae3e9dac0a645025e",
         "output/data/evidence_field_index.json": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
         "output/data/proof_dependency_graph.json": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
         "output/data/scholarship_source_matrix.json": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
@@ -467,15 +467,15 @@
         "output/data/state_transition_table.json": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
         "output/data/theorem_traceability_matrix.json": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
         "output/data/track_lane_matrix.json": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
-        "output/data/uncertainty_summary.json": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
+        "output/data/uncertainty_summary.json": "38aa92536daedd06514940347e6fda7164d9e6e59d6b0fc388fd044d5c5babe9",
         "output/reports/ablation_sensitivity_report.json": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
         "output/reports/adversarial_audit.json": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "a1b3c9626c58098760e2cef9dba895f3ff85361688526b3739548dffe66fd77f",
-        "output/reports/release_bundle_manifest.json": "d05a72e65f2c551f14113d879a1984d02ba30ea7153d33c4dde6b9f7b26bd008",
-        "output/reports/security_posture_audit.json": "c8e1fa3aeca311d59332b8201a55edfd1f90f35258a5ad75d807eaec4f4e375f",
+        "output/reports/release_attestation.json": "533d931d848de22a56622b1ca54fdd8fcb97d236541c191c6b0eeb0e9fa4285f",
+        "output/reports/release_bundle_manifest.json": "dc536dd62f642e022569accae8b7cc002beacc80149cb93c0c6aca4259dcc161",
+        "output/reports/security_posture_audit.json": "f07f14c684ef9c0854fba2e217f42125bc0190be9a5e53f9ee5db66fda4dbc89",
         "output/reports/sheaf_render_log.json": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0"
       },
       "producer_script": "generate_sheaf_tracks.py",

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 796
+Total documented definitions: 797
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -1078,10 +1078,11 @@ Total documented definitions: 796
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 21 | `function` | `write_si_artifacts` | docstring | Write si artifacts to the output path. |
-| 89 | `function` | `run_and_persist` | docstring | Run and persist. |
-| 107 | `function` | `write_policy_comparison` | docstring | Write deterministic state-vs-policy comparison rows without changing main SI artifacts. |
-| 225 | `function` | `write_policy_posterior_grid` | docstring | Write step-level PyMDP policy posterior normalization evidence. |
+| 31 | `function` | `quantize_replay_floats` | docstring | Round every float in a JSON-serializable payload to the replay grid. |
+| 48 | `function` | `write_si_artifacts` | docstring | Write si artifacts to the output path. |
+| 116 | `function` | `run_and_persist` | docstring | Run and persist. |
+| 134 | `function` | `write_policy_comparison` | docstring | Write deterministic state-vs-policy comparison rows without changing main SI artifacts. |
+| 253 | `function` | `write_policy_posterior_grid` | docstring | Write step-level PyMDP policy posterior normalization evidence. |
 
 ## `src/simulation/si_belief.py`
 

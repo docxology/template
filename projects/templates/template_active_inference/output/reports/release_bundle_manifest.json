@@ -2,12 +2,12 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 38,
-  "bundle_hash": "404a814811efdf9d0040ca1ba0af3bfdc19cd31b95a33911c151bc792cd629e5",
+  "bundle_hash": "21b5196e6a44cb7c04bea530141190ef9caaf527181eff788a7b8523f1185e51",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
     "all_required_sources_present": false,
-    "copied_root": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/output/templates/template_active_inference",
+    "copied_root": "/Users/4d/Documents/GitHub/template/.claude/worktrees/dazzling-merkle-d3ee6a/output/templates/template_active_inference",
     "copied_root_exists": true,
     "pre_copy_stage": true,
     "row_count": 38,
@@ -45,7 +45,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "9878cab95870b1f4a59aad3aa9c723bfd4a38158702953718f3564150b93462c",
+        "source_sha256": "18d36698674bed078b30c47de91333291ab5e2d7b86b0d9412783dccf14211c9",
         "status": "deferred"
       },
       {
@@ -57,7 +57,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "0438bf0149a3d1ff8a9e2639c8bc2c2472a751bb23e4493576df9df809dd1d0d",
+        "source_sha256": "e3d1f0904f460ce4621225e7b1f3809659b0d2230121f81672bc49090dd99ed3",
         "status": "deferred"
       },
       {
@@ -74,15 +74,15 @@
       },
       {
         "artifact": "output/data/uncertainty_summary.json",
-        "comparison_deferred_until_copy": false,
+        "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/uncertainty_summary.json",
         "copied_sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
-        "hash_matches": true,
+        "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797",
-        "status": "matched"
+        "source_sha256": "38aa92536daedd06514940347e6fda7164d9e6e59d6b0fc388fd044d5c5babe9",
+        "status": "deferred"
       },
       {
         "artifact": "output/reports/counterexample_matrix.json",
@@ -189,7 +189,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "c8e1fa3aeca311d59332b8201a55edfd1f90f35258a5ad75d807eaec4f4e375f",
+        "source_sha256": "f07f14c684ef9c0854fba2e217f42125bc0190be9a5e53f9ee5db66fda4dbc89",
         "status": "deferred"
       },
       {
@@ -213,7 +213,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "b399a941f445469fc8a3210b31102b42b7943a6f814623f940a1459381c75e12",
+        "source_sha256": "86b248b7bf30290e6390fabf6721c246fdec35f9077d2cccad44596731e47363",
         "status": "deferred"
       },
       {
@@ -357,7 +357,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830",
+        "source_sha256": "aa7844771e26ce4309a12eefd91a6604c3c024a236d10316eef0ecc660da410f",
         "status": "deferred"
       },
       {
@@ -465,7 +465,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "ed02ca188572e4dcdf6147de2f115d38e4945e00feba547e177c6bea49df0e21",
+        "source_sha256": "45dc9bf60477dd4e3cfb38284ab6db9a48a7b897fa9b443f2cfb8949a9430a62",
         "status": "deferred"
       }
     ]
@@ -490,14 +490,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "9878cab95870b1f4a59aad3aa9c723bfd4a38158702953718f3564150b93462c"
+      "source_sha256": "18d36698674bed078b30c47de91333291ab5e2d7b86b0d9412783dccf14211c9"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "0438bf0149a3d1ff8a9e2639c8bc2c2472a751bb23e4493576df9df809dd1d0d"
+      "source_sha256": "e3d1f0904f460ce4621225e7b1f3809659b0d2230121f81672bc49090dd99ed3"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -511,7 +511,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "adc47fd54967a3eee7cf595633ab1b20559f56177d290614c2115750ce4d9797"
+      "source_sha256": "38aa92536daedd06514940347e6fda7164d9e6e59d6b0fc388fd044d5c5babe9"
     },
     {
       "artifact": "output/reports/counterexample_matrix.json",
@@ -574,7 +574,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c8e1fa3aeca311d59332b8201a55edfd1f90f35258a5ad75d807eaec4f4e375f"
+      "source_sha256": "f07f14c684ef9c0854fba2e217f42125bc0190be9a5e53f9ee5db66fda4dbc89"
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -588,7 +588,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "b399a941f445469fc8a3210b31102b42b7943a6f814623f940a1459381c75e12"
+      "source_sha256": "86b248b7bf30290e6390fabf6721c246fdec35f9077d2cccad44596731e47363"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -672,7 +672,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "635deaa3bbf18951a1464e0f8666293cf69e7751a96b72839ca5f00a0aea7830"
+      "source_sha256": "aa7844771e26ce4309a12eefd91a6604c3c024a236d10316eef0ecc660da410f"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -735,7 +735,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "ed02ca188572e4dcdf6147de2f115d38e4945e00feba547e177c6bea49df0e21"
+      "source_sha256": "45dc9bf60477dd4e3cfb38284ab6db9a48a7b897fa9b443f2cfb8949a9430a62"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",

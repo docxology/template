@@ -17,6 +17,33 @@ from simulation.pymdp_config import (
 from simulation.pymdp_runtime import write_runtime_diagnostics
 from simulation.si_loop import SIRunResult, run_si_tmaze
 
+# Replay-hashed artifacts must be byte-stable across runner generations and
+# numpy versions. Raw exp/log-derived floats (softmax policy posteriors,
+# entropies, expected free energy) drift at ULP level between x86_64 numpy
+# builds, which flips the sha256 recorded by reproducibility_replay.json and
+# the sheaf replay matrix. Ten decimals sits ~1e5 above that drift and ~50x
+# below the tightest downstream claim tolerance (1e-9 posterior normalization
+# over length-2 q_pi vectors), so quantized bytes are platform-invariant
+# without weakening any gate.
+REPLAY_FLOAT_DECIMALS = 10
+
+
+def quantize_replay_floats(value: Any) -> Any:
+    """Round every float in a JSON-serializable payload to the replay grid.
+
+    Applied at the write boundary of artifacts whose bytes feed replay
+    hashing. Normalizes -0.0 to 0.0 so the serialized text is sign-stable.
+    """
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, float):
+        return round(value, REPLAY_FLOAT_DECIMALS) + 0.0
+    if isinstance(value, dict):
+        return {key: quantize_replay_floats(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [quantize_replay_floats(item) for item in value]
+    return value
+
 
 def write_si_artifacts(
     project_root: Path,
@@ -214,6 +241,7 @@ def write_policy_comparison(
             ),
         },
     }
+    payload = quantize_replay_floats(payload)
     out = root / "output" / "data" / "si_policy_comparison.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -265,6 +293,7 @@ def write_policy_posterior_grid(
         "all_available_posteriors_normalized": bool(available) and all(row["normalized"] for row in available),
         "all_unavailable_rows_explained": all(bool(row["fallback_reason"]) for row in unavailable),
     }
+    grid = quantize_replay_floats(grid)
     out = root / "output" / "data" / "pymdp_policy_posterior_grid.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(grid, indent=2, sort_keys=True) + "\n", encoding="utf-8")

@@ -17,7 +17,7 @@
       "horizon": 2,
       "measured": true,
       "mode": "policy_inference",
-      "policy_uncertainty": 0.6226287141174189,
+      "policy_uncertainty": 0.6226287141,
       "posterior_available_count": 2,
       "seed": 0
     },
@@ -37,7 +37,7 @@
       "horizon": 3,
       "measured": true,
       "mode": "policy_inference",
-      "policy_uncertainty": 0.5993806965047414,
+      "policy_uncertainty": 0.5993806965,
       "posterior_available_count": 3,
       "seed": 0
     }
