@@ -75,3 +75,27 @@ class TestCleanCoverageFiles:
         assert result is True
         assert not own_coverage.exists()
         assert sibling_coverage.exists()
+
+    def test_scope_dir_outside_repo_root_does_not_raise(self, tmp_path):
+        """A scope_dir resolved outside repo_root (e.g. a private-sidecar
+        symlink target on a separate filesystem path) must not crash the
+        relative-path label computation.
+
+        Regression test: private lifecycle projects (``projects/active/*``,
+        ``projects/working/*``, etc.) are symlinks that can resolve to a
+        directory with no ancestor relationship to ``repo_root`` at all —
+        ``Path.relative_to`` raises ``ValueError`` in that case, which used
+        to propagate out of ``clean_coverage_files`` and fail Stage 2
+        (Environment Setup) for any project reached this way.
+        """
+        repo_root = tmp_path / "repo"
+        external_project = tmp_path / "elsewhere" / "external_project"
+        repo_root.mkdir()
+        external_project.mkdir(parents=True)
+        stray_coverage = external_project / ".coverage"
+        stray_coverage.write_text("stray data")
+
+        result = clean_coverage_files(repo_root, scope_dir=external_project)
+
+        assert result is True
+        assert not stray_coverage.exists()

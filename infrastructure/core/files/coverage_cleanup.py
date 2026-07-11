@@ -7,6 +7,7 @@ Extracted from file_cleanup.py for file-size health.
 
 from pathlib import Path
 
+from infrastructure.core.files.serialization import relative_or_self
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -69,7 +70,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
                 # Glob pattern - search for matching files recursively
                 glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
                 for file_path in search_root.glob(glob_pattern):
-                    label = str(file_path.relative_to(repo_root))
+                    label = relative_or_self(file_path, repo_root)
                     removed, locked = _remove_file(file_path, label)
                     if removed:
                         removed_files.append(removed)
