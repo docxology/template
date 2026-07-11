@@ -99,38 +99,38 @@
     {
       "bin": "mid_entropy",
       "distribution": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.552884661279386,
+      "entropy": 0.5528846613282445,
       "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
       "id": "policy_2",
       "normalized": true,
       "posterior": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
-      "posterior_concentration": 0.7584284501427054,
+      "posterior_concentration": 0.7584284501,
       "posterior_sum": 1.0,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
       "bin": "mid_entropy",
       "distribution": [
-        0.5196750308559565,
-        0.48032496914404355
+        0.5196750309,
+        0.4803249691
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.6923727669554519,
+      "entropy": 0.6923727669519839,
       "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
       "id": "policy_3",
       "normalized": true,
       "posterior": [
-        0.5196750308559565,
-        0.48032496914404355
+        0.5196750309,
+        0.4803249691
       ],
-      "posterior_concentration": 0.5196750308559565,
+      "posterior_concentration": 0.5196750309,
       "posterior_sum": 1.0,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
@@ -188,57 +188,57 @@
     {
       "bin": "mid_entropy",
       "distribution": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.552884661279386,
+      "entropy": 0.5528846613282445,
       "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
       "id": "policy_7",
       "normalized": true,
       "posterior": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
-      "posterior_concentration": 0.7584284501427054,
+      "posterior_concentration": 0.7584284501,
       "posterior_sum": 1.0,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
       "bin": "mid_entropy",
       "distribution": [
-        0.5196750308559565,
-        0.48032496914404355
+        0.5196750309,
+        0.4803249691
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.6923727669554519,
+      "entropy": 0.6923727669519839,
       "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
       "id": "policy_8",
       "normalized": true,
       "posterior": [
-        0.5196750308559565,
-        0.48032496914404355
+        0.5196750309,
+        0.4803249691
       ],
-      "posterior_concentration": 0.5196750308559565,
+      "posterior_concentration": 0.5196750309,
       "posterior_sum": 1.0,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
       "bin": "mid_entropy",
       "distribution": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.552884661279386,
+      "entropy": 0.5528846613282445,
       "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
       "id": "policy_9",
       "normalized": true,
       "posterior": [
-        0.7584284501427054,
-        0.24157154985729454
+        0.7584284501,
+        0.2415715499
       ],
-      "posterior_concentration": 0.7584284501427054,
+      "posterior_concentration": 0.7584284501,
       "posterior_sum": 1.0,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     }

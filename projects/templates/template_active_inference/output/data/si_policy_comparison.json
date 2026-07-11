@@ -10,7 +10,7 @@
       "num_policies": 4,
       "goal_reached": true,
       "action_diversity": 2,
-      "mean_belief_entropy": 0.32508314364563223,
+      "mean_belief_entropy": 0.3250831436,
       "actions": [
         0,
         1
@@ -66,7 +66,7 @@
       "num_policies": 4,
       "goal_reached": false,
       "action_diversity": 1,
-      "mean_belief_entropy": 0.32508314364563223,
+      "mean_belief_entropy": 0.3250831436,
       "actions": [
         0,
         0
@@ -86,11 +86,11 @@
           "posterior_available": true,
           "posterior_source": "expected_utility_fallback",
           "q_pi": [
-            0.7584284501427054,
-            0.24157154985729454
+            0.7584284501,
+            0.2415715499
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.552884661279386,
+          "q_pi_entropy": 0.5528846613,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
@@ -100,11 +100,11 @@
           "posterior_available": true,
           "posterior_source": "expected_utility_fallback",
           "q_pi": [
-            0.5196750308559565,
-            0.48032496914404355
+            0.5196750309,
+            0.4803249691
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.6923727669554519,
+          "q_pi_entropy": 0.692372767,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
@@ -112,7 +112,7 @@
       ],
       "policy_posterior_available_count": 2,
       "policy_posterior_all_normalized": true,
-      "mean_policy_posterior_entropy": 0.6226287141174189,
+      "mean_policy_posterior_entropy": 0.6226287141,
       "expected_free_energy_values": [],
       "expected_free_energy_available": false,
       "expected_free_energy_fallback_reasons": [
@@ -128,7 +128,7 @@
       "num_policies": 8,
       "goal_reached": true,
       "action_diversity": 2,
-      "mean_belief_entropy": 0.32508314364563223,
+      "mean_belief_entropy": 0.3250831436,
       "actions": [
         0,
         1,
@@ -197,7 +197,7 @@
       "num_policies": 8,
       "goal_reached": true,
       "action_diversity": 1,
-      "mean_belief_entropy": 0.32508314364563223,
+      "mean_belief_entropy": 0.3250831436,
       "actions": [
         0,
         0,
@@ -219,11 +219,11 @@
           "posterior_available": true,
           "posterior_source": "expected_utility_fallback",
           "q_pi": [
-            0.7584284501427054,
-            0.24157154985729454
+            0.7584284501,
+            0.2415715499
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.552884661279386,
+          "q_pi_entropy": 0.5528846613,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
@@ -233,11 +233,11 @@
           "posterior_available": true,
           "posterior_source": "expected_utility_fallback",
           "q_pi": [
-            0.5196750308559565,
-            0.48032496914404355
+            0.5196750309,
+            0.4803249691
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.6923727669554519,
+          "q_pi_entropy": 0.692372767,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
@@ -247,11 +247,11 @@
           "posterior_available": true,
           "posterior_source": "expected_utility_fallback",
           "q_pi": [
-            0.7584284501427054,
-            0.24157154985729454
+            0.7584284501,
+            0.2415715499
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.552884661279386,
+          "q_pi_entropy": 0.5528846613,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
@@ -259,7 +259,7 @@
       ],
       "policy_posterior_available_count": 3,
       "policy_posterior_all_normalized": true,
-      "mean_policy_posterior_entropy": 0.5993806965047414,
+      "mean_policy_posterior_entropy": 0.5993806965,
       "expected_free_energy_values": [],
       "expected_free_energy_available": false,
       "expected_free_energy_fallback_reasons": [
