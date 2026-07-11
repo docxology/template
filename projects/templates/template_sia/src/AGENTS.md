@@ -2,7 +2,7 @@
 
 | Module | Role |
 | --- | --- |
-| `loop.py` | Thin wrapper → `infrastructure.sia.run_sia_loop` |
+| `loop.py` | Harness orchestration (`run_sia_loop_project()` / `build_run_config()`) → `infrastructure.sia.run_sia_loop` |
 | `loop_config.py` | Reads `sia:` block from `manuscript/config.yaml` |
 | `reports.py` | Loop markdown + manuscript variable hydration |
 | `artifact_manifest.py` | Artifact manifest writer (hashes + metadata) for SIA loop outputs |

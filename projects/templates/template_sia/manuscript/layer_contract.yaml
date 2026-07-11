@@ -1,0 +1,14 @@
+# SIA harness exemplar: the loop orchestration binds infrastructure.sia
+# (RunConfig / GenerationArtifacts / run_sia_loop) in one domain module,
+# declared here per the layer-boundary contract that
+# infrastructure/project/drift/checks_boundary.py enforces.
+#
+# src/loop.py is the harness orchestration — build_run_config() and
+# run_sia_loop_project() wire this project's settings/fixtures/reports onto
+# the shared Layer-1 SIA runner. Keeping it in src/ (rather than a scripts/
+# shim re-exported via sys.path injection) follows the thin-orchestrator
+# contract every other exemplar uses, matching the sibling harness exemplar
+# template_autoresearch_project. scripts/run_sia_loop.py is a thin caller.
+# Everything else under src/ imports only stdlib + the scientific stack.
+allow_infrastructure_imports:
+  - src/loop.py
