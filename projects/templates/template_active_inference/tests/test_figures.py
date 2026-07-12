@@ -152,14 +152,7 @@ def test_figure_sheaf_layers_overview_dimensions(project_root: Path) -> None:
 
 
 def test_appendix_formalism_uses_registry_tokens(project_root: Path) -> None:
-    path = (
-        project_root
-        / "manuscript"
-        / "sections"
-        / "imrad"
-        / "appendix_full_sheaf"
-        / "formalism.md"
-    )
+    path = project_root / "manuscript" / "sections" / "imrad" / "appendix_full_sheaf" / "formalism.md"
     text = path.read_text(encoding="utf-8")
     assert "{{appendix_sheaf_track_count}}" in text
     assert re.search(r"\|\s*\\mathcal\{T\}_\{.*full.*\}\s*\|\s*=\s*9", text) is None

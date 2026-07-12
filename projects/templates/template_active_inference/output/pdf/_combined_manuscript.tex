@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage[margin=0.5in]{geometry}
@@ -101,6 +102,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -148,10 +157,14 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Active Inference Multi-Track Exemplar},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Active Inference Multi-Track Exemplar}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -170,6 +183,7 @@
 \changefontsize[11pt]{9pt}
 
 \begin{document}
+\maketitle
 
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -228,7 +242,7 @@ SHA-512 & pending \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
 \caption{Integrity QR strip}
 \end{figure}
 
@@ -236,7 +250,7 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.35\linewidth,height=0.50\textheight,keepaspectratio,alt={Publication pairing flow}]{../figures/transmission_pairing.png}
+\includegraphics[width=0.35\linewidth,height=0.5\textheight,keepaspectratio,alt={Publication pairing flow}]{../figures/transmission_pairing.png}
 \caption{Publication pairing flow}
 \end{figure}
 
@@ -245,24 +259,6 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \end{samepage}
 \newpage
-
-\begin{titlepage}
-\centering
-\vspace*{2cm}
-{\LARGE\bfseries Active Inference Multi-Track Exemplar\par}
-\vspace{0.75em}
-{\large Sheaf-Composed Manuscript with pymdp Sophisticated Inference\par}
-\vfill
-\makeatletter
-{\@author\par}
-\vspace{1em}
-{\@date\par}
-\makeatother
-\vfill
-\end{titlepage}
-\thispagestyle{empty}
-\newpage
-
 \tableofcontents
 \newpage
 
@@ -332,7 +328,7 @@ Gray & \textbf{Missing} (bound but fragment file absent) \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Sheaf track coverage matrix: 17 IMRAD rows \texorpdfstring{\ensuremath{\times}}{x} 34 fragment columns. Black = present (P), white = absent (---), gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated from output/data/sheaf\_coverage\_matrix.json.}]{../figures/sheaf_coverage_heatmap.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Sheaf track coverage matrix: 17 IMRAD rows \texorpdfstring{\ensuremath{\times}}{x} 34 fragment columns. Black = present (P), white = absent (---), gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated from output/data/sheaf\_coverage\_matrix.json.}]{../figures/sheaf_coverage_heatmap.png}
 \caption{Sheaf track coverage matrix: 17 IMRAD rows \texorpdfstring{\ensuremath{\times}}{x} 34 fragment
 columns. Black = present (P), white = absent (---), gray = missing (M).
 Counts: 95 present / 95 bound / 0 missing. Generated from
@@ -449,7 +445,7 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to 31 pipeline gates and 34 composable fragment types.}]{../figures/multi_track_architecture.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to 31 pipeline gates and 34 composable fragment types.}]{../figures/multi_track_architecture.png}
 \caption{Multi-track architecture: analytical, pymdp, and sheaf
 composition lanes mapped to 31 pipeline gates and 34 composable fragment
 types.}\label{fig:multi_track_architecture}
@@ -539,7 +535,7 @@ empty assumption list fails the toy-sweep validation gate.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Closed-form I(\textbackslash lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to \textbackslash lambda\_\{\textbackslash max\} = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.}]{../figures/ising_mi_curve.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Closed-form I(\textbackslash lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to \textbackslash lambda\_\{\textbackslash max\} = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.}]{../figures/ising_mi_curve.png}
 \caption{Closed-form \(I(\lambda)\) and an independent exact
 recomputation via total correlation for the symmetric Bernoulli-Ising
 toy across 21 grid points up to \(\lambda_{\max}\) = 4; grid maximum
@@ -550,7 +546,7 @@ nats), not a sampling residual.}\label{fig:ising_mi_curve}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={GNN \textbackslash leftrightarrow ontology concordance for the Bernoulli--Ising toy (GNN v1.1).}]{../figures/gnn_ontology_concordance.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={GNN \textbackslash leftrightarrow ontology concordance for the Bernoulli--Ising toy (GNN v1.1).}]{../figures/gnn_ontology_concordance.png}
 \caption{GNN \(\leftrightarrow\) ontology concordance for the
 Bernoulli--Ising toy (GNN v1.1).}\label{fig:gnn_ontology_concordance}
 \end{figure}
@@ -658,7 +654,7 @@ validation failure before rendering.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={T-maze generative model schematic (2-step policy horizon, state\_inference mode).}]{../figures/tmaze_schematic.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={T-maze generative model schematic (2-step policy horizon, state\_inference mode).}]{../figures/tmaze_schematic.png}
 \caption{T-maze generative model schematic (2-step policy horizon,
 state\_inference mode).}\label{fig:tmaze_schematic}
 \end{figure}
@@ -702,7 +698,7 @@ the generated theorem, witness, and evidence-field rows agree.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Lean formalization boundary: module witnesses checked by lake build.}]{../figures/lean_boundary_status.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Lean formalization boundary: module witnesses checked by lake build.}]{../figures/lean_boundary_status.png}
 \caption{Lean formalization boundary: module witnesses checked by lake
 build.}\label{fig:lean_boundary_status}
 \end{figure}
@@ -948,7 +944,7 @@ law.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio,alt={Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 34 fragment types across 17 manifest rows (95 present / 95 bound / 0 missing), generated from output/data/sheaf\_coverage\_matrix.json.}]{../figures/sheaf_layers_overview.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio,alt={Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 34 fragment types across 17 manifest rows (95 present / 95 bound / 0 missing), generated from output/data/sheaf\_coverage\_matrix.json.}]{../figures/sheaf_layers_overview.png}
 \caption{Sheaf layers overview: registry stack (compose order, renderer
 ids) and IMRAD binding heatmap for 34 fragment types across 17 manifest
 rows (95 present / 95 bound / 0 missing), generated from
@@ -957,7 +953,7 @@ rows (95 present / 95 bound / 0 missing), generated from
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.}]{../figures/semantic_gluing_graph.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.}]{../figures/semantic_gluing_graph.png}
 \caption{Semantic gluing graph: configured producers, generated evidence
 artifacts, and validation consumers for the multi-track sheaf
 certificate.}\label{fig:semantic_gluing_graph}
@@ -965,7 +961,7 @@ certificate.}\label{fig:semantic_gluing_graph}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio,alt={Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true. Left: seven promotion-rule obligations; right: sheaf fragment bindings.}]{../figures/track_lane_promotion_map.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio,alt={Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true. Left: seven promotion-rule obligations; right: sheaf fragment bindings.}]{../figures/track_lane_promotion_map.png}
 \caption{Track-lane promotion map: 32 pipeline-to-sheaf rows with
 complete promotion status true. Left: seven promotion-rule obligations;
 right: sheaf fragment bindings.}\label{fig:track_lane_promotion_map}
@@ -973,7 +969,7 @@ right: sheaf fragment bindings.}\label{fig:track_lane_promotion_map}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio,alt={Artifact contract map: 85 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in output/data/artifact\_contract\_index.json.}]{../figures/artifact_contract_map.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio,alt={Artifact contract map: 85 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in output/data/artifact\_contract\_index.json.}]{../figures/artifact_contract_map.png}
 \caption{Artifact contract map: 85 generated artifact rows with complete
 contract status true and copied-output parity complete true. Cycle rows
 are explicit in
@@ -982,7 +978,7 @@ are explicit in
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Scholarship source map: 21 source rows across 21 method roles and 10 source families. Connected status: true; row evidence rederived: true.}]{../figures/scholarship_source_map.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Scholarship source map: 21 source rows across 21 method roles and 10 source families. Connected status: true; row evidence rederived: true.}]{../figures/scholarship_source_map.png}
 \caption{Scholarship source map: 21 source rows across 21 method roles
 and 10 source families. Connected status: true; row evidence rederived:
 true.}\label{fig:scholarship_source_map}
@@ -990,7 +986,7 @@ true.}\label{fig:scholarship_source_map}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.96\linewidth,height=0.50\textheight,keepaspectratio,alt={Security posture map: 9 controls, 7 enforced and 2 scoped as deferred; secret findings: 0; high-risk gaps: 0.}]{../figures/security_posture_map.png}
+\includegraphics[width=0.96\linewidth,height=0.5\textheight,keepaspectratio,alt={Security posture map: 9 controls, 7 enforced and 2 scoped as deferred; secret findings: 0; high-risk gaps: 0.}]{../figures/security_posture_map.png}
 \caption{Security posture map: 9 controls, 7 enforced and 2 scoped as
 deferred; secret findings: 0; high-risk gaps:
 0.}\label{fig:security_posture_map}
@@ -2461,12 +2457,12 @@ Negative
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1666}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1666}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1666}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1666}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1666}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1666}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Track
@@ -2573,7 +2569,7 @@ Both estimators are deterministic (no sampling, no RNG) and are
 evaluated on the same \(\lambda\) grid as the closed-form sweep
 (sec.~\ref{sec:methods_analytical}, fig.~\ref{fig:ising_mi_curve}).
 
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio]{../figures/ising_mi_curve.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio]{../figures/ising_mi_curve.png}
 
 \emph{Reproduced from fig.~\ref{fig:ising_mi_curve}. Closed-form
 \(I(\lambda)\) and an independent exact recomputation via total
@@ -2608,7 +2604,7 @@ nats.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points 21); relative to the entangled prior, the same posterior has identically zero free energy.}]{../figures/free_energy_curve.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points 21); relative to the entangled prior, the same posterior has identically zero free energy.}]{../figures/free_energy_curve.png}
 \caption{Free energy of the entangled posterior relative to the
 mean-field prior across the hyperparameter sweep (grid points 21);
 relative to the entangled prior, the same posterior has identically zero
@@ -2720,7 +2716,7 @@ log: \breaktt{output/logs/pymdp\_runs.jsonl}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Cue-then-reward T-maze where epistemic value is strictly necessary. Left: the cue carries 0.6931 nats of information and the cue-sampling agent reaches reward with a measured advantage of 4.0000 nats over a greedy agent. Right: flat Expected Free Energy scores the cue-first and greedy policies identically (identical), so the sophisticated observation- conditioned evaluator is what makes information-seeking required. Closed form (no sampling).}]{../figures/cue_tmaze_advantage.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Cue-then-reward T-maze where epistemic value is strictly necessary. Left: the cue carries 0.6931 nats of information and the cue-sampling agent reaches reward with a measured advantage of 4.0000 nats over a greedy agent. Right: flat Expected Free Energy scores the cue-first and greedy policies identically (identical), so the sophisticated observation- conditioned evaluator is what makes information-seeking required. Closed form (no sampling).}]{../figures/cue_tmaze_advantage.png}
 \caption{Cue-then-reward T-maze where epistemic value is strictly
 necessary. Left: the cue carries 0.6931 nats of information and the
 cue-sampling agent reaches reward with a measured advantage of 4.0000
@@ -2733,7 +2729,7 @@ sampling).}\label{fig:cue_tmaze_advantage}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Closed-form Expected Free Energy decomposition over the finite T-maze policies. Left: G(\textbackslash pi) = risk + ambiguity (stacked), with the goal-seeking minimiser marked. Right: the pragmatic and epistemic values, which sum to -G(\textbackslash pi). Both forms are computed in closed form (no sampling) and satisfy risk + ambiguity + pragmatic + epistemic = 0 to machine precision.}]{../figures/efe_decomposition.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Closed-form Expected Free Energy decomposition over the finite T-maze policies. Left: G(\textbackslash pi) = risk + ambiguity (stacked), with the goal-seeking minimiser marked. Right: the pragmatic and epistemic values, which sum to -G(\textbackslash pi). Both forms are computed in closed form (no sampling) and satisfy risk + ambiguity + pragmatic + epistemic = 0 to machine precision.}]{../figures/efe_decomposition.png}
 \caption{Closed-form Expected Free Energy decomposition over the finite
 T-maze policies. Left: \(G(\pi)\) = risk + ambiguity (stacked), with the
 goal-seeking minimiser marked. Right: the pragmatic and epistemic
@@ -2744,7 +2740,7 @@ to machine precision.}\label{fig:efe_decomposition}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Precision sweep over the closed-form T-maze policy posterior q(\textbackslash pi)\textbackslash propto\textbackslash exp(-\textbackslash gamma G) across 33 grid points up to \textbackslash gamma=16. Entropy falls from \textbackslash ln 4 to the \textbackslash ln|\textbackslash Pi\^{}\textbackslash star|{} floor (2 tied optima, second action irrelevant under the absorbing goal); the optimal-set mass crosses 0.99 at \textbackslash gamma=3. Entropy at \textbackslash gamma=1 is 1.1458 nats. Computed in closed form (no sampling).}]{../figures/precision_sweep.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Precision sweep over the closed-form T-maze policy posterior q(\textbackslash pi)\textbackslash propto\textbackslash exp(-\textbackslash gamma G) across 33 grid points up to \textbackslash gamma=16. Entropy falls from \textbackslash ln 4 to the \textbackslash ln|\textbackslash Pi\^{}\textbackslash star|{} floor (2 tied optima, second action irrelevant under the absorbing goal); the optimal-set mass crosses 0.99 at \textbackslash gamma=3. Entropy at \textbackslash gamma=1 is 1.1458 nats. Computed in closed form (no sampling).}]{../figures/precision_sweep.png}
 \caption{Precision sweep over the closed-form T-maze policy posterior
 \(q(\pi)\propto\exp(-\gamma G)\) across 33 grid points up to
 \(\gamma\)=16. Entropy falls from \(\ln 4\) to the \(\ln|\Pi^\star|\)
@@ -2756,7 +2752,7 @@ sampling).}\label{fig:precision_sweep}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={Dirichlet model learning: KL(A\_\{\textbackslash text\{true\}\} \textbackslash,\textbackslash|\textbackslash, A\_\{\textbackslash text\{learned\}\}) versus concentration-update step. The expected likelihood E{[}A{]} = pA / \textbackslash sum\_o pA converges monotonically to the true generative likelihood; the run reaches the convergence tolerance at step 3 with final KL 1.29e-03 nats. Deterministic (no sampling), so the curve is byte-reproducible.}]{../figures/dirichlet_convergence.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={Dirichlet model learning: KL(A\_\{\textbackslash text\{true\}\} \textbackslash,\textbackslash|\textbackslash, A\_\{\textbackslash text\{learned\}\}) versus concentration-update step. The expected likelihood E{[}A{]} = pA / \textbackslash sum\_o pA converges monotonically to the true generative likelihood; the run reaches the convergence tolerance at step 3 with final KL 1.29e-03 nats. Deterministic (no sampling), so the curve is byte-reproducible.}]{../figures/dirichlet_convergence.png}
 \caption{Dirichlet model learning:
 KL\((A_{\text{true}} \,\|\, A_{\text{learned}})\) versus
 concentration-update step. The expected likelihood
@@ -2768,21 +2764,21 @@ byte-reproducible.}\label{fig:dirichlet_convergence}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Belief entropy over time for the T-maze rollout (mean 0.3251 nats).}]{../figures/si_belief_entropy_curve.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Belief entropy over time for the T-maze rollout (mean 0.3251 nats).}]{../figures/si_belief_entropy_curve.png}
 \caption{Belief entropy over time for the T-maze rollout (mean 0.3251
 nats).}\label{fig:si_belief_entropy_curve}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Observation and action traces for the T-maze rollout (action diversity 2).}]{../figures/si_obs_action_trace.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Observation and action traces for the T-maze rollout (action diversity 2).}]{../figures/si_obs_action_trace.png}
 \caption{Observation and action traces for the T-maze rollout (action
 diversity 2).}\label{fig:si_obs_action_trace}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Discrete action index over time for the pymdp T-maze rollout (policy length 2).}]{../figures/si_tmaze_actions.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Discrete action index over time for the pymdp T-maze rollout (policy length 2).}]{../figures/si_tmaze_actions.png}
 \caption{Discrete action index over time for the pymdp T-maze rollout
 (policy length 2).}\label{fig:si_tmaze_actions}
 \end{figure}
@@ -2848,7 +2844,7 @@ deployed systems.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Invariant dashboard: 12 / 12 merged analytical and simulation checks from the validation registry.}]{../figures/invariant_dashboard.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Invariant dashboard: 12 / 12 merged analytical and simulation checks from the validation registry.}]{../figures/invariant_dashboard.png}
 \caption{Invariant dashboard: 12 / 12 merged analytical and simulation
 checks from the validation registry.}\label{fig:invariant_dashboard}
 \end{figure}
@@ -3201,7 +3197,7 @@ the staleness report compares each token's generated value against the
 resolved markdown so stale counts are caught after composition, not only
 during source-file linting.
 
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio]{../figures/ising_mi_curve.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio]{../figures/ising_mi_curve.png}
 
 \emph{Reproduced from fig.~\ref{fig:ising_mi_curve}. Closed-form
 \(I(\lambda)\) and an independent exact recomputation via total
@@ -3211,14 +3207,14 @@ are deterministic (no sampling), so the right panel is a
 cross-implementation agreement check (max residual 0 nats), not a
 sampling residual.}
 
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio]{../figures/si_tmaze_actions.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio]{../figures/si_tmaze_actions.png}
 
 \emph{Reproduced from fig.~\ref{fig:si_tmaze_actions}. Discrete action
 index over time for the pymdp T-maze rollout (policy length 2).}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={Theorem traceability graph generated from 17 linked theorem rows and 207 proof-dependency edges.}]{../figures/theorem_traceability_graph.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={Theorem traceability graph generated from 17 linked theorem rows and 207 proof-dependency edges.}]{../figures/theorem_traceability_graph.png}
 \caption{Theorem traceability graph generated from 17 linked theorem
 rows and 207 proof-dependency
 edges.}\label{fig:theorem_traceability_graph}
@@ -3226,39 +3222,39 @@ edges.}\label{fig:theorem_traceability_graph}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.92\linewidth,height=0.50\textheight,keepaspectratio,alt={Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true.}]{../figures/causal_ablation_heatmap.png}
+\includegraphics[width=0.92\linewidth,height=0.5\textheight,keepaspectratio,alt={Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true.}]{../figures/causal_ablation_heatmap.png}
 \caption{Causal-ablation heatmap: 36 source-backed rows joined to
 sensitivity and uncertainty artifacts; all effects source-backed:
 true.}\label{fig:causal_ablation_heatmap}
 \end{figure}
 
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio]{../figures/scholarship_source_map.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio]{../figures/scholarship_source_map.png}
 
 \emph{Reproduced from fig.~\ref{fig:scholarship_source_map}. Scholarship
 source map: 21 source rows across 21 method roles and 10 source
 families. Connected status: true; row evidence rederived: true.}
 
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio]{../figures/track_lane_promotion_map.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio]{../figures/track_lane_promotion_map.png}
 
 \emph{Reproduced from fig.~\ref{fig:track_lane_promotion_map}.
 Track-lane promotion map: 32 pipeline-to-sheaf rows with complete
 promotion status true. Left: seven promotion-rule obligations; right:
 sheaf fragment bindings.}
 
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio]{../figures/artifact_contract_map.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio]{../figures/artifact_contract_map.png}
 
 \emph{Reproduced from fig.~\ref{fig:artifact_contract_map}. Artifact
 contract map: 85 generated artifact rows with complete contract status
 true and copied-output parity complete true. Cycle rows are explicit in
 \breaktt{output/data/artifact\_contract\_index.json}.}
 
-\includegraphics[width=0.96\linewidth,height=0.50\textheight,keepaspectratio]{../figures/security_posture_map.png}
+\includegraphics[width=0.96\linewidth,height=0.5\textheight,keepaspectratio]{../figures/security_posture_map.png}
 
 \emph{Reproduced from fig.~\ref{fig:security_posture_map}. Security
 posture map: 9 controls, 7 enforced and 2 scoped as deferred; secret
 findings: 0; high-risk gaps: 0.}
 
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio]{../figures/sheaf_coverage_heatmap.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio]{../figures/sheaf_coverage_heatmap.png}
 
 \emph{Reproduced from fig.~\ref{fig:sheaf_coverage_heatmap}. Sheaf track
 coverage matrix: 17 IMRAD rows \texorpdfstring{\ensuremath{\times}}{x} 34 fragment columns. Black = present
@@ -3453,7 +3449,7 @@ SHA-256 \texttt{f191b48f9439…} \texorpdfstring{\ensuremath{\cdot}}{.} pairing 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.88\linewidth,height=0.50\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
+\includegraphics[width=0.88\linewidth,height=0.5\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
 \caption{Integrity QR strip}
 \end{figure}
 

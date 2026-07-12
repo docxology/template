@@ -64,8 +64,20 @@ def _set_value(path: tuple[str | int, ...], value: object) -> JsonMutation:
     def mutate(data: dict) -> None:
         target: object = data
         for key in path[:-1]:
-            target = target[key]  # type: ignore[index]
-        target[path[-1]] = value  # type: ignore[index]
+            if isinstance(target, dict):
+                target = target[key]
+            elif isinstance(target, list) and isinstance(key, int):
+                target = target[key]
+            else:
+                raise TypeError(f"cannot index {type(target).__name__} with {key!r}")
+
+        final_key = path[-1]
+        if isinstance(target, dict):
+            target[final_key] = value
+        elif isinstance(target, list) and isinstance(final_key, int):
+            target[final_key] = value
+        else:
+            raise TypeError(f"cannot set {final_key!r} on {type(target).__name__}")
 
     return mutate
 

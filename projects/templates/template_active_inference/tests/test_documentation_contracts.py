@@ -61,9 +61,7 @@ def test_documentation_contract_rejects_undefined_reference_style_usage(tmp_path
 
     issues = check_markdown_links(tmp_path)
 
-    assert [(issue.code, issue.target) for issue in issues] == [
-        ("markdown-reference-missing", "[docs][missing]")
-    ]
+    assert [(issue.code, issue.target) for issue in issues] == [("markdown-reference-missing", "[docs][missing]")]
 
     docs = tmp_path / "docs"
     docs.mkdir()

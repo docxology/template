@@ -54,12 +54,7 @@ def test_collect_malformed_token_names_flags_single_brace() -> None:
 def test_collect_malformed_token_names_ignores_latex_fenced_blocks() -> None:
     from manuscript.hydrate import collect_malformed_token_names
 
-    text = (
-        "```{=latex}\n"
-        "\\addcontentsline{toc}{section}{Introduction}\n"
-        "```\n"
-        "Valid {{pipeline_track_count}}.\n"
-    )
+    text = "```{=latex}\n\\addcontentsline{toc}{section}{Introduction}\n```\nValid {{pipeline_track_count}}.\n"
     assert collect_malformed_token_names(text) == []
 
 

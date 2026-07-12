@@ -17,6 +17,7 @@ import builtins
 import importlib
 import pkgutil
 from pathlib import Path
+from typing import Any, Callable, cast
 
 import pytest
 
@@ -70,16 +71,16 @@ def test_every_src_module_imports_with_infrastructure_blocked() -> None:
     every discovered src module. A standalone checkout has no `infrastructure`, so a
     hidden runtime dependency would surface here, not in production.
     """
-    real_import = builtins.__import__
+    real_import = cast(Callable[..., object], builtins.__import__)
 
-    def blocking_import(name: str, *args: object, **kwargs: object) -> object:
+    def blocking_import(name: str, *args: Any, **kwargs: Any) -> object:
         if name == "infrastructure" or name.startswith("infrastructure."):
             raise AssertionError(f"self-containment violation: imported {name}")
-        return real_import(name, *args, **kwargs)  # type: ignore[arg-type]
+        return real_import(name, *args, **kwargs)
 
     violations: list[str] = []
     imported = 0
-    builtins.__import__ = blocking_import  # type: ignore[assignment]
+    builtins.__dict__["__import__"] = blocking_import
     try:
         for mod in pkgutil.walk_packages([str(SRC)]):
             try:
@@ -91,7 +92,7 @@ def test_every_src_module_imports_with_infrastructure_blocked() -> None:
                 if "infrastructure" in str(exc):
                     violations.append(f"{mod.name}: {exc}")
     finally:
-        builtins.__import__ = real_import  # type: ignore[assignment]
+        builtins.__dict__["__import__"] = real_import
 
     assert imported > 0, "no src modules were discovered"
     assert not violations, "src modules require infrastructure at import time:\n" + "\n".join(violations)

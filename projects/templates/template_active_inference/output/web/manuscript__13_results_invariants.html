@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,29 +173,23 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:results_invariants">Validation invariants</h1>
 <!-- sheaf-track:prose -->
-<p>The analytical invariant registry runs before PDF rendering (<span
-class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>).
-On a clean checkout <strong>12 / 12</strong> checks pass in the merged
-validation report, which records simulation invariants when the pymdp
-harness ran (<span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>).</p>
-<p><span class="citation"
-data-cites="fig:invariant_dashboard">[@fig:invariant_dashboard]</span>
-lists each analytical and simulation gate; failures block publication
-artifacts. See <span class="citation"
-data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span> for how
+<p>The analytical invariant registry runs before PDF rendering
+([sec:methods_analytical]). On a clean checkout <strong>12 / 12</strong>
+checks pass in the merged validation report, which records simulation
+invariants when the pymdp harness ran ([sec:results_si_tmaze]).</p>
+<p>[fig:invariant_dashboard] lists each analytical and simulation gate;
+failures block publication artifacts. See [sec:methods_sheaf] for how
 invariant counts hydrate manuscript tokens.</p>
 <!-- sheaf-track:simulation -->
 <p>Simulation invariants merge into the analytical report after the
-pymdp harness runs (<span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>). <span
-class="citation"
-data-cites="fig:invariant_dashboard">[@fig:invariant_dashboard]</span>
+pymdp harness runs ([sec:results_si_tmaze]). [fig:invariant_dashboard]
 summarizes pass/fail status for both domains on the clean tree.</p>
 <!-- sheaf-track:replay_matrix -->
 <p>The replay matrix exposes deterministic rerun comparison as table
@@ -239,7 +233,7 @@ biological or deployed systems.</p>
 <img src="../figures/invariant_dashboard.png" style="width:90.0%"
 data-fig-alt="Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. 12 of 12 checks pass on the merged report."
 alt="Invariant dashboard: 12 / 12 merged analytical and simulation checks from the validation registry." />
-<figcaption aria-hidden="true">Invariant dashboard: 12 / 12 merged
+<figcaption>Invariant dashboard: 12 / 12 merged
 analytical and simulation checks from the validation
 registry.</figcaption>
 </figure>
@@ -257,5 +251,6 @@ ablations over finite preferences, likelihood-noise settings, and
 graph-topology perturbations. The matrix artifact is
 <code>output/data/causal_ablation_matrix.json</code>: it currently
 records 36 cells, with complete-grid status <code>true</code>.</p>
+</main>
 </body>
 </html>

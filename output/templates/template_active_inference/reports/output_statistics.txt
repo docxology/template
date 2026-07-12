@@ -4,12 +4,12 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 139
-Total Size: 12.08 MB
+Total Files: 141
+Total Size: 12.17 MB
 
 Files by Category:
-  • pdf: 10 files (4.44 MB)
-  • web: 18 files (0.56 MB)
+  • pdf: 11 files (4.52 MB)
+  • web: 19 files (0.57 MB)
   • figures: 27 files (3.79 MB)
   • data: 48 files (2.79 MB)
   • reports: 35 files (0.50 MB)
@@ -22,17 +22,12 @@ Largest Files:
   • scholarship_source_map.png: 0.45 MB (figures)
   • artifact_contract_map.png: 0.44 MB (figures)
 
-Missing Expected Files:
-  ⚠  slides/ directory
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-
 File Types:
   • .json: 81 file(s)
   • .png: 25 file(s)
   • .html: 17 file(s)
   • .md: 3 file(s)
-  • .log: 2 file(s)
+  • .log: 3 file(s)
   • .pdf: 1 file(s)
   • .aux: 1 file(s)
   • .blg: 1 file(s)

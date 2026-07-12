@@ -146,10 +146,9 @@ def add_simulation_checks(root: Path, checks: dict[str, bool]) -> dict[str, Any]
 def add_log_check(root: Path, checks: dict[str, bool]) -> None:
     """Add log check to the collection."""
     log_path = root / "output" / "logs" / "pymdp_runs.jsonl"
-    if pymdp_logging_expected(root):
-        checks["si_log_present"] = log_path.exists() and any(
-            line.strip() for line in log_path.read_text(encoding="utf-8").splitlines()
-        )
-
-    else:
-        checks["si_log_present"] = False
+    if not pymdp_logging_expected(root):
+        checks["si_log_present"] = True
+        return
+    checks["si_log_present"] = log_path.exists() and any(
+        line.strip() for line in log_path.read_text(encoding="utf-8").splitlines()
+    )

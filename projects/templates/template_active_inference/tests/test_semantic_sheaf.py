@@ -23,8 +23,7 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     assert cert["artifact_sources"]["si_summary"]["path"] == "output/data/si_tmaze_summary.json"
     assert cert["artifact_graph"]["output/data/si_graph_world_trace.json"]["producer"] == "simulate_si_graph_world.py"
     assert (
-        cert["artifact_graph"]["output/data/sheaf_section_status_matrix.json"]["producer"]
-        == "generate_sheaf_tracks.py"
+        cert["artifact_graph"]["output/data/sheaf_section_status_matrix.json"]["producer"] == "generate_sheaf_tracks.py"
     )
     assert cert["artifact_graph"]["output/reports/sheaf_render_log.json"]["producer"] == "generate_sheaf_tracks.py"
     assert (
@@ -36,13 +35,9 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
         == "generate_integration_audit.py"
     )
     assert (
-        cert["artifact_graph"]["output/reports/security_posture_audit.json"]["producer"]
-        == "generate_sheaf_tracks.py"
+        cert["artifact_graph"]["output/reports/security_posture_audit.json"]["producer"] == "generate_sheaf_tracks.py"
     )
-    assert (
-        cert["artifact_graph"]["output/data/artifact_contract_index.json"]["producer"]
-        == "generate_sheaf_tracks.py"
-    )
+    assert cert["artifact_graph"]["output/data/artifact_contract_index.json"]["producer"] == "generate_sheaf_tracks.py"
     assert "results_si_tmaze" in cert["artifact_graph"]["output/data/si_policy_comparison.json"]["consumers"]
     assert cert["artifact_graph"]["output/data/pymdp_policy_posterior_grid.json"]["producer"] == "simulate_si_tmaze.py"
     assert cert["restrictions"]["animation_frame_count"] >= 3
@@ -75,8 +70,7 @@ def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: 
     tracks_by_id = {track["id"]: track for track in cert["tracks"]}
     assert tracks_by_id["prose"]["paper_role"] == "Narrative framing and argument flow"
     assert (
-        tracks_by_id["visualization"]["paper_use"]
-        == "Injects registry figures into section-specific evidence blocks."
+        tracks_by_id["visualization"]["paper_use"] == "Injects registry figures into section-specific evidence blocks."
     )
 
     methods_pymdp = next(section for section in cert["sections"] if section["id"] == "methods_pymdp")
@@ -177,8 +171,7 @@ def test_semantic_certificate_is_written_as_generated_artifact(project_root: Pat
     assert path.relative_to(project_root).as_posix() == "output/data/sheaf_gluing_certificate.json"
     assert paths["crosswalk"].relative_to(project_root).as_posix() == "output/data/sheaf_evidence_crosswalk.json"
     assert (
-        paths["dependency_graph"].relative_to(project_root).as_posix()
-        == "output/data/validation_dependency_graph.json"
+        paths["dependency_graph"].relative_to(project_root).as_posix() == "output/data/validation_dependency_graph.json"
     )
     assert payload["ok"] is True
     assert payload["restrictions"]["coverage_missing"] == 0
@@ -198,12 +191,8 @@ def test_semantic_outputs_settle_contract_and_staleness_artifacts(project_root: 
     live_staleness = build_manuscript_staleness_report(project_root)
     staleness_keys = ("section", "token", "expected", "fresh")
     assert saved_staleness["all_fresh"] is True
-    assert [
-        {key: row.get(key) for key in staleness_keys}
-        for row in saved_staleness.get("rows", [])
-    ] == [
-        {key: row.get(key) for key in staleness_keys}
-        for row in live_staleness.get("rows", [])
+    assert [{key: row.get(key) for key in staleness_keys} for row in saved_staleness.get("rows", [])] == [
+        {key: row.get(key) for key in staleness_keys} for row in live_staleness.get("rows", [])
     ]
 
     contract_path = project_root / "output" / "data" / "artifact_contract_index.json"
@@ -219,6 +208,7 @@ def test_semantic_outputs_settle_contract_and_staleness_artifacts(project_root: 
         "validation_gates",
         "claim_ids",
     )
+
     def contract_projection(row: dict) -> dict:
         projected = {key: row.get(key) for key in contract_keys}
         if row.get("freshness_cycle_excluded"):

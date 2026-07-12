@@ -13,8 +13,7 @@ def test_integration_audit_figure_builders_keep_public_facade() -> None:
     assert integration_audit_artifacts.build_figure_source_map is integration_audit_figures.build_figure_source_map
     assert integration_audit.build_figure_hash_manifest is integration_audit_figures.build_figure_hash_manifest
     assert (
-        integration_audit_artifacts.build_figure_hash_manifest
-        is integration_audit_figures.build_figure_hash_manifest
+        integration_audit_artifacts.build_figure_hash_manifest is integration_audit_figures.build_figure_hash_manifest
     )
 
 

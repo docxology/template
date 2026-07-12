@@ -12,9 +12,7 @@ from analytical.sweep_io import read_parameter_sweep, summarize_sweep_file, summ
 def test_read_parameter_sweep_parses_fixture(tmp_path: Path) -> None:
     csv_path = tmp_path / "parameter_sweep.csv"
     csv_path.write_text(
-        "lambda,closed_form_mi,empirical_mi\n"
-        "0.0,0.1,0.11\n"
-        "0.5,0.2,0.19\n",
+        "lambda,closed_form_mi,empirical_mi\n0.0,0.1,0.11\n0.5,0.2,0.19\n",
         encoding="utf-8",
     )
     rows = read_parameter_sweep(csv_path)

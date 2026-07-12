@@ -10,6 +10,7 @@ from PIL import Image
 import pytest
 
 from gates.artifact_manifest import REQUIRED_OUTPUT_CHECK_KEYS, REQUIRED_OUTPUTS
+from gates.output_checks_simulation import add_log_check
 from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
@@ -29,6 +30,13 @@ def _write_png(path: Path, *, blank: bool = False) -> None:
     if not blank:
         image.putpixel((20, 20), (0, 0, 0))
     image.save(path, format="PNG")
+
+
+def test_log_check_passes_when_logging_is_not_expected(tmp_path: Path) -> None:
+    (tmp_path / "pymdp.yaml").write_text("logging:\n  enabled: false\n", encoding="utf-8")
+    checks: dict[str, bool] = {}
+    add_log_check(tmp_path, checks)
+    assert checks["si_log_present"] is True
 
 
 # Regenerates heavy sheaf/roadmap gate artifacts; ~57-59s locally and can exceed the

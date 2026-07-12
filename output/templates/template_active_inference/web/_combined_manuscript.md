@@ -135,13 +135,13 @@ We study a minimal Active Inference stack on toy models: a Bernoulli–Ising ana
 
 ## Scientific scope
 
-This manuscript couples three tracks on toy Active Inference models: a Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a sheaf-indexed assembly contract that binds 34 optional fragment tracks under an IMRAD outline. The conceptual lineage is the free-energy and active-inference literature [friston2010fep; buckley2017mathreview; parr2022active], with critical scope pressure from accounts that separate FEP's broad organizing role from direct empirical brain claims [gershman2019fepbrain]. Here that distinction is operational: the scientific claims stay within these models and their generated artifacts, not biological agents.
+This manuscript couples three tracks on toy Active Inference models: a Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a sheaf-indexed assembly contract that binds 34 optional fragment tracks under an IMRAD outline. The conceptual lineage is the free-energy and active-inference literature [@friston2010fep; @buckley2017mathreview; @parr2022active], with critical scope pressure from accounts that separate FEP's broad organizing role from direct empirical brain claims [@gershman2019fepbrain]. Here that distinction is operational: the scientific claims stay within these models and their generated artifacts, not biological agents.
 
 ## Manuscript structure
 
 Three **scientific tracks** (analytical, pymdp, sheaf composition) map onto 34 **composable fragment types** and 31 pipeline gates ([@fig:multi_track_architecture]). [@sec:sheaf_coverage] summarizes which fragment tracks bind to each manifest row. [@sec:methods_sheaf] documents the compose pipeline, coverage semantics ([@eq:coverage_cell]), and strict validation gates.
 
-The pymdp track follows the [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference) [pymdp2024] with a minimal T-maze and planning horizon `policy_len = 2`. Other sections cite [@sec:methods_pymdp] instead of repeating that reference.
+The pymdp track follows the [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference) [@pymdp2024] with a minimal T-maze and planning horizon `policy_len = 2`. Other sections cite [@sec:methods_pymdp] instead of repeating that reference.
 
 
 
@@ -194,7 +194,7 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 
 The analytical method is a finite **K=2 Bernoulli / Ising** oracle. The entangled joint [@eq:entangled_joint] gives closed-form mutual information $I(\lambda)$; `output/data/parameter_sweep.csv` then checks the same curve by an independent exact total-correlation recomputation before the value is used in [@sec:results_mi_sweep]. GNN and ontology rows share the same symbol surface ([@fig:gnn_ontology_concordance]), so the derivation, sweep, and model notation are one audited toy contract rather than parallel descriptions.
 
-The scope is intentionally small: finite variational quantities only, no sampling, and no empirical generalization. "Free energy" here means exactly computed variational functionals on this tiny discrete state-space, aligned with mathematical FEP reviews [buckley2017mathreview], not continuous-time or biological FEP dynamics [gershman2019fepbrain]. The generated sweep contains 21 grid points, and the merged invariant report records 12 / 12 passing checks.
+The scope is intentionally small: finite variational quantities only, no sampling, and no empirical generalization. "Free energy" here means exactly computed variational functionals on this tiny discrete state-space, aligned with mathematical FEP reviews [@buckley2017mathreview], not continuous-time or biological FEP dynamics [@gershman2019fepbrain]. The generated sweep contains 21 grid points, and the merged invariant report records 12 / 12 passing checks.
 
 <!-- sheaf-track:formalism -->
 
@@ -230,7 +230,7 @@ The index is deliberately narrow. It covers the Bernoulli-Ising toy equations, t
 
 <!-- sheaf-track:gnn -->
 
-The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` (GNN v1.1), following the GNN notation role described by Smekal and Friedman [gnn2023]. [@fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
+The Bernoulli toy is declared in `gnn/bernoulli_toy.gnn.md` (GNN v1.1), following the GNN notation role described by Smekal and Friedman [@gnn2023]. [@fig:gnn_ontology_concordance] links GNN variables to Active Inference Ontology terms bound in the analytical ontology fragment; round-trip parity is checked before render.
 
 Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbol map used in the concordance diagram.
 
@@ -257,7 +257,7 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 
 <!-- sheaf-track:prose -->
 
-**Sophisticated inference (planning horizon).** The pymdp method is a deterministic state-inference harness on a minimal T-maze ([@fig:tmaze_schematic]) with planning horizon `policy_len = 2`. The discrete-state framing follows finite POMDP active-inference treatments and sophisticated-inference analyses [dacosta2020discrete; smith2022tutorial; friston2021sophisticated; dacosta2023reward], and the implementation anchor is the pymdp software paper [pymdp2024]. The default `state_inference` rollout writes the summary/trace artifacts used in [@sec:results_si_tmaze]; mean belief entropy is 0.3251.
+**Sophisticated inference (planning horizon).** The pymdp method is a deterministic state-inference harness on a minimal T-maze ([@fig:tmaze_schematic]) with planning horizon `policy_len = 2`. The discrete-state framing follows finite POMDP active-inference treatments and sophisticated-inference analyses [@dacosta2020discrete; @smith2022tutorial; @friston2021sophisticated; @dacosta2023reward], and the implementation anchor is the pymdp software paper [@pymdp2024]. The default `state_inference` rollout writes the summary/trace artifacts used in [@sec:results_si_tmaze]; mean belief entropy is 0.3251.
 
 The method keeps runtime, posterior, and extension evidence separate. `output/data/si_policy_comparison.json` compares `state_inference` and `policy_inference` over declared toy horizons and seeds without replacing the default rollout (4 rows; complete-grid flag 1). Agent construction and backend warnings live in `output/reports/pymdp_runtime_diagnostics.json` (4 constructions, 4 known third-party warnings, 0 unexpected warnings). Posterior rows live in `output/data/pymdp_policy_posterior_grid.json` and must remain normalized (`1`).
 
@@ -275,7 +275,7 @@ SI artifacts (summary, trace, optional JSONL log) record step count, actions,
 observations, and belief entropy for [@sec:results_si_tmaze]. Steps recorded:
 2. Branching-time and variational formulations of active
 inference planning are treated here as related planning context
-[champion2021branching; nuijten2026efeplanning]; the live evidence remains the
+[@champion2021branching; @nuijten2026efeplanning]; the live evidence remains the
 finite local artifacts `si_policy_grid.json`, `si_efe_terms.json`, and
 `model_checking_witnesses.json`, not a claim about scalable planning
 performance.
@@ -360,7 +360,7 @@ constructive-token status `true`.
 
 Each manifest row in `manuscript/sheaf/manifest.yaml` binds fragment tracks from `manuscript/sheaf/tracks.yaml`. A track supplies a renderer, compose order, label, optional flag, general paper role, and paper-specific use statement; the composer then flattens the binding set into one Markdown section for PDF and web output.
 
-The operational claim is auditable binding. Analytical, simulation, pymdp, visualization, Lean, GNN, ontology, scholarship, and optional media fragments attach to IMRAD rows under [@eq:coverage_cell] (**P** present, **—** unbound, **M** missing). This is an applied local-to-global consistency contract in the spirit of cellular sheaf and sheaf-signal-processing work [curry2014sheaves; robinson2014topological], instantiated here as a finite artifact gate rather than a cohomology claim.
+The operational claim is auditable binding. Analytical, simulation, pymdp, visualization, Lean, GNN, ontology, scholarship, and optional media fragments attach to IMRAD rows under [@eq:coverage_cell] (**P** present, **—** unbound, **M** missing). This is an applied local-to-global consistency contract in the spirit of cellular sheaf and sheaf-signal-processing work [@curry2014sheaves; @robinson2014topological], instantiated here as a finite artifact gate rather than a cohomology claim.
 
 ## Coverage and figures
 
@@ -506,10 +506,11 @@ records 21 source rows across
 visualization-quality method roles; [@fig:scholarship_source_map] renders the
 resulting source-to-artifact map with 1
 locator kinds. The row set connects foundational
-free-energy and active-inference references [friston2010fep; buckley2017mathreview; dacosta2020discrete; parr2022active; smith2022tutorial], planning context
-[champion2021branching; nuijten2026efeplanning], implementation and notation
-anchors [pymdp2024; gnn2023], and applied sheaf/local-to-global sources
-[curry2014sheaves; robinson2014topological; bosca2026localglobal] to the
+free-energy and active-inference references [@friston2010fep; @buckley2017mathreview;
+@dacosta2020discrete; @parr2022active; @smith2022tutorial], planning context
+[@champion2021branching; @nuijten2026efeplanning], implementation and notation
+anchors [@pymdp2024; @gnn2023], and applied sheaf/local-to-global sources
+[@curry2014sheaves; @robinson2014topological; @bosca2026localglobal] to the
 exact artifact or method role they support.
 
 The validation claim is deliberately narrow: every row must have a bibliography
@@ -977,7 +978,7 @@ The pymdp harness rolls out a T-maze active-inference agent in `state_inference`
 
 Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over the rollout is traced in [@fig:si_belief_entropy_curve]; the paired observation and action indices are in [@fig:si_obs_action_trace]. `output/data/analysis_statistics.json` now records the trace as a small statistical object rather than a caption-only trace: action switches 1 times (rate 1.000 over adjacent steps), observation diversity is 1, entropy drop is 0.0000 nats from first to terminal step, and the saved trace/summary step counts agree: `true` with finite entropy values `true`. The default `state_inference` mode runs pymdp `infer_states` and **reports** the resulting posterior (belief entropy and the state-1 marginal), but the action is chosen by an open-loop scripted rule on the observation index — not by the posterior — so the inferred belief here is observed, not acted on. Under the toy transition model, expected-free-energy policy inference reaches the goal in 1 of its rows versus 2 for the scripted state-inference rule: no behavioral advantage on this two-state, horizon-2 maze, which is the measured content of the deliberately-too-small claim.
 
-Policy-comparison rows: 4 across state-inference and policy-inference modes; goal-reaching rows: 3. These rows are internal toy consistency checks under finite-horizon discrete active-inference assumptions [friston2021sophisticated; dacosta2023reward], not comparisons against external behavioral datasets. Graph-world extension rows: 4 over 4 nodes, with goal-reached flag 1.
+Policy-comparison rows: 4 across state-inference and policy-inference modes; goal-reaching rows: 3. These rows are internal toy consistency checks under finite-horizon discrete active-inference assumptions [@friston2021sophisticated; @dacosta2023reward], not comparisons against external behavioral datasets. Graph-world extension rows: 4 over 4 nodes, with goal-reached flag 1.
 
 The expected free energy that scores those policies decomposes in closed form ([@fig:efe_decomposition]). Across the 4 length-2 policies on the T-maze generative model, the expected-free-energy-minimising policy is `00` with $G$ = 2.2539 nats, splitting into risk 1.6037 (the pragmatic deviation of predicted outcomes from preferences) and ambiguity 0.6502 (the expected likelihood entropy) nats. The same $G$ splits equivalently into pragmatic value -2.2539 (expected log-preference) and epistemic value 0.0000 (state-outcome mutual information) nats — the term that drives information-seeking. The two forms are exactly equal: risk + ambiguity + pragmatic + epistemic vanishes to within 0.0e+00 across every policy, the action-selection twin of the analytical free-energy decomposition identity ([@sec:results_free_energy]).
 
@@ -1089,7 +1090,7 @@ records 36 cells, with complete-grid status
 
 ## What this demonstrates
 
-The result of this manuscript is a *discipline*, not a domain claim: across three toy models every reported number is hydrated from a generated artifact, 6 sheaf axioms are machine-checked before composition, and 25 negative controls keep each failure path live. That posture follows the caution that FEP and active-inference formalisms need explicit methodological scope before they become empirical brain claims [gershman2019fepbrain]. No statistic, figure, or cross-track claim here can drift from its artifact without failing a gate before the PDF is built.
+The result of this manuscript is a *discipline*, not a domain claim: across three toy models every reported number is hydrated from a generated artifact, 6 sheaf axioms are machine-checked before composition, and 25 negative controls keep each failure path live. That posture follows the caution that FEP and active-inference formalisms need explicit methodological scope before they become empirical brain claims [@gershman2019fepbrain]. No statistic, figure, or cross-track claim here can drift from its artifact without failing a gate before the PDF is built.
 
 ## Limitations
 
@@ -1118,7 +1119,7 @@ claim. That split keeps the paper from converting background authority into an
 unsupported empirical result.
 
 Sophisticated Learning is therefore cited as a future-only parameter-learning
-direction [hodson2023sophisticatedlearning]. It does not change the current
+direction [@hodson2023sophisticatedlearning]. It does not change the current
 T-maze state-inference default, does not promote an active-learning adapter, and
 does not alter the blocked major-scope ladder for empirical or non-toy claims.
 
@@ -1462,7 +1463,7 @@ view of validated JSON rather than a decorative restatement.
 
 <!-- sheaf-track:gnn -->
 
-GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [gnn2023]. [@fig:gnn_ontology_concordance] and [@sec:methods_analytical] document ontology concordance for the Bernoulli toy; SI notation extends the same pattern under [@sec:methods_pymdp].
+GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [@gnn2023]. [@fig:gnn_ontology_concordance] and [@sec:methods_analytical] document ontology concordance for the Bernoulli toy; SI notation extends the same pattern under [@sec:methods_pymdp].
 
 <!-- sheaf-track:ontology -->
 
@@ -1513,9 +1514,9 @@ blocked-scope status, with all-attested flag `true`.
 
 Analytical oracles ([@sec:methods_analytical]), pymdp rollouts ([@sec:results_si_tmaze]), and sheaf composition ([@sec:methods_sheaf]) share one auditable manuscript contract: measured artifacts hydrate 12 composed sections, [@sec:sheaf_coverage] reports binding state, and strict compose validation blocks gray matrix cells before PDF rendering.
 
-The T-maze harness runs in `state_inference` mode with config hash `81eb061f43b7bfd7`; sweep RMSE 0 nats summarizes analytical-empirical agreement on the toy coupling grid. [@sec:results_invariants] merges analytical and simulation gates; [@sec:discussion_outlook] states scope and extensions. Scientific claims remain confined to declared models, not empirical statements about biological agents [gershman2019fepbrain].
+The T-maze harness runs in `state_inference` mode with config hash `81eb061f43b7bfd7`; sweep RMSE 0 nats summarizes analytical-empirical agreement on the toy coupling grid. [@sec:results_invariants] merges analytical and simulation gates; [@sec:discussion_outlook] states scope and extensions. Scientific claims remain confined to declared models, not empirical statements about biological agents [@gershman2019fepbrain].
 
-The exemplar therefore sits at a narrow intersection: finite discrete active inference on POMDP-like toy models [dacosta2020discrete; friston2021sophisticated; dacosta2023reward], sheaf-style local-to-global checks for publication artifacts [curry2014sheaves; robinson2014topological], and GNN notation as an interop layer [gnn2023].
+The exemplar therefore sits at a narrow intersection: finite discrete active inference on POMDP-like toy models [@dacosta2020discrete; @friston2021sophisticated; @dacosta2023reward], sheaf-style local-to-global checks for publication artifacts [@curry2014sheaves; @robinson2014topological], and GNN notation as an interop layer [@gnn2023].
 
 
 

@@ -1,62 +1,63 @@
-\contentsline {section}{\numberline {1}Sheaf Track Coverage}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Introduction}{3}{subsection.1.1}%
-\contentsline {section}{\numberline {2}Abstract}{4}{section.2}%
-\contentsline {section}{Introduction}{5}{section*.8}%
-\contentsline {section}{\numberline {3}Motivation and scope}{5}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Scientific scope}{5}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Manuscript structure}{5}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Contributions}{6}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Scientific contributions}{6}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}Ontology bindings}{6}{subsubsection.4.1.1}%
-\contentsline {section}{Methods}{7}{section*.11}%
-\contentsline {section}{\numberline {5}Bernoulli--Ising analytical model}{7}{section.5}%
-\contentsline {subsubsection}{\numberline {5.0.1}Ontology bindings}{7}{subsubsection.5.0.1}%
-\contentsline {section}{\numberline {6}pymdp simulation harness}{9}{section.6}%
-\contentsline {subsubsection}{\numberline {6.0.1}Ontology bindings}{9}{subsubsection.6.0.1}%
-\contentsline {section}{\numberline {7}Lean formalization boundary}{11}{section.7}%
-\contentsline {subsubsection}{\numberline {7.0.1}Proof extraction track}{12}{subsubsection.7.0.1}%
-\contentsline {section}{\numberline {8}Sheaf composition}{13}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Compose contract}{13}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Coverage and figures}{13}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Compose commands}{13}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Law verification}{13}{subsection.8.4}%
-\contentsline {subsubsection}{\numberline {8.4.1}Base poset and presheaf}{13}{subsubsection.8.4.1}%
-\contentsline {subsubsection}{\numberline {8.4.2}Verified sheaf laws}{14}{subsubsection.8.4.2}%
-\contentsline {subsubsection}{\numberline {8.4.3}Scope (what is and is not claimed)}{14}{subsubsection.8.4.3}%
-\contentsline {subsubsection}{\numberline {8.4.4}Artifact diffoscope track}{14}{subsubsection.8.4.4}%
-\contentsline {subsubsection}{\numberline {8.4.5}Artifact license track}{16}{subsubsection.8.4.5}%
-\contentsline {subsection}{\numberline {8.5}Sheaf fragment track registry}{20}{subsection.8.5}%
-\contentsline {subsection}{\numberline {8.6}IMRAD binding matrix}{23}{subsection.8.6}%
-\contentsline {subsection}{\numberline {8.7}Section-track status}{24}{subsection.8.7}%
-\contentsline {subsection}{\numberline {8.8}Track status}{25}{subsection.8.8}%
-\contentsline {subsection}{\numberline {8.9}Render and logging summary}{26}{subsection.8.9}%
-\contentsline {subsection}{\numberline {8.10}Evidence crosswalk}{26}{subsection.8.10}%
-\contentsline {subsection}{\numberline {8.11}Artifact producer graph}{27}{subsection.8.11}%
-\contentsline {subsection}{\numberline {8.12}Semantic gluing restrictions}{29}{subsection.8.12}%
-\contentsline {subsection}{\numberline {8.13}Track-lane matrix}{30}{subsection.8.13}%
-\contentsline {subsection}{\numberline {8.14}Track improvement scope}{39}{subsection.8.14}%
-\contentsline {section}{Results}{40}{section*.26}%
-\contentsline {section}{\numberline {9}Mutual-information parameter sweep}{40}{section.9}%
-\contentsline {section}{\numberline {10}Free-energy decomposition}{41}{section.10}%
-\contentsline {section}{\numberline {11}T-maze active-inference rollout}{42}{section.11}%
-\contentsline {section}{\numberline {12}Validation invariants}{46}{section.12}%
-\contentsline {subsubsection}{\numberline {12.0.1}State-space catalog track}{46}{subsubsection.12.0.1}%
-\contentsline {subsubsection}{\numberline {12.0.2}Causal ablation track}{46}{subsubsection.12.0.2}%
-\contentsline {section}{Discussion}{47}{section*.37}%
-\contentsline {section}{\numberline {13}Limitations and outlook}{47}{section.13}%
-\contentsline {subsection}{\numberline {13.1}What this demonstrates}{47}{subsection.13.1}%
-\contentsline {subsection}{\numberline {13.2}Limitations}{47}{subsection.13.2}%
-\contentsline {subsection}{\numberline {13.3}Sheaf audit and outlook}{47}{subsection.13.3}%
-\contentsline {subsubsection}{\numberline {13.3.1}Ontology bindings}{48}{subsubsection.13.3.1}%
-\contentsline {subsubsection}{\numberline {13.3.2}Release notes evidence track}{48}{subsubsection.13.3.2}%
-\contentsline {section}{Appendix}{49}{section*.39}%
-\contentsline {section}{\numberline {14}Appendix: full track coverage}{49}{section.14}%
-\contentsline {subsubsection}{\numberline {14.0.1}Appendix track: artifact diffoscope}{49}{subsubsection.14.0.1}%
-\contentsline {subsubsection}{\numberline {14.0.2}Appendix track: artifact license}{50}{subsubsection.14.0.2}%
-\contentsline {subsubsection}{\numberline {14.0.3}Appendix track: proof extraction}{55}{subsubsection.14.0.3}%
-\contentsline {subsubsection}{\numberline {14.0.4}Appendix track: state-space catalog}{55}{subsubsection.14.0.4}%
-\contentsline {subsubsection}{\numberline {14.0.5}Appendix track: causal ablation}{55}{subsubsection.14.0.5}%
-\contentsline {subsubsection}{\numberline {14.0.6}Ontology bindings}{55}{subsubsection.14.0.6}%
-\contentsline {subsubsection}{\numberline {14.0.7}Appendix track: release notes evidence}{56}{subsubsection.14.0.7}%
-\contentsline {section}{\numberline {15}Conclusion}{57}{section.15}%
-\contentsline {section}{\numberline {16}References}{58}{section.16}%
+\babel@toc {english}{}\relax
+\contentsline {section}{\numberline {1}Sheaf Track Coverage}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Introduction}{4}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Abstract}{5}{section.2}%
+\contentsline {section}{Introduction}{6}{section*.8}%
+\contentsline {section}{\numberline {3}Motivation and scope}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Scientific scope}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Manuscript structure}{6}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Contributions}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Scientific contributions}{7}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Ontology bindings}{7}{subsubsection.4.1.1}%
+\contentsline {section}{Methods}{8}{section*.11}%
+\contentsline {section}{\numberline {5}Bernoulli--Ising analytical model}{8}{section.5}%
+\contentsline {subsubsection}{\numberline {5.0.1}Ontology bindings}{8}{subsubsection.5.0.1}%
+\contentsline {section}{\numberline {6}pymdp simulation harness}{10}{section.6}%
+\contentsline {subsubsection}{\numberline {6.0.1}Ontology bindings}{10}{subsubsection.6.0.1}%
+\contentsline {section}{\numberline {7}Lean formalization boundary}{12}{section.7}%
+\contentsline {subsubsection}{\numberline {7.0.1}Proof extraction track}{13}{subsubsection.7.0.1}%
+\contentsline {section}{\numberline {8}Sheaf composition}{14}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Compose contract}{14}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Coverage and figures}{14}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Compose commands}{14}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Law verification}{14}{subsection.8.4}%
+\contentsline {subsubsection}{\numberline {8.4.1}Base poset and presheaf}{14}{subsubsection.8.4.1}%
+\contentsline {subsubsection}{\numberline {8.4.2}Verified sheaf laws}{15}{subsubsection.8.4.2}%
+\contentsline {subsubsection}{\numberline {8.4.3}Scope (what is and is not claimed)}{15}{subsubsection.8.4.3}%
+\contentsline {subsubsection}{\numberline {8.4.4}Artifact diffoscope track}{15}{subsubsection.8.4.4}%
+\contentsline {subsubsection}{\numberline {8.4.5}Artifact license track}{17}{subsubsection.8.4.5}%
+\contentsline {subsection}{\numberline {8.5}Sheaf fragment track registry}{21}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}IMRAD binding matrix}{24}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}Section-track status}{25}{subsection.8.7}%
+\contentsline {subsection}{\numberline {8.8}Track status}{26}{subsection.8.8}%
+\contentsline {subsection}{\numberline {8.9}Render and logging summary}{27}{subsection.8.9}%
+\contentsline {subsection}{\numberline {8.10}Evidence crosswalk}{27}{subsection.8.10}%
+\contentsline {subsection}{\numberline {8.11}Artifact producer graph}{28}{subsection.8.11}%
+\contentsline {subsection}{\numberline {8.12}Semantic gluing restrictions}{30}{subsection.8.12}%
+\contentsline {subsection}{\numberline {8.13}Track-lane matrix}{31}{subsection.8.13}%
+\contentsline {subsection}{\numberline {8.14}Track improvement scope}{40}{subsection.8.14}%
+\contentsline {section}{Results}{41}{section*.26}%
+\contentsline {section}{\numberline {9}Mutual-information parameter sweep}{41}{section.9}%
+\contentsline {section}{\numberline {10}Free-energy decomposition}{42}{section.10}%
+\contentsline {section}{\numberline {11}T-maze active-inference rollout}{43}{section.11}%
+\contentsline {section}{\numberline {12}Validation invariants}{47}{section.12}%
+\contentsline {subsubsection}{\numberline {12.0.1}State-space catalog track}{47}{subsubsection.12.0.1}%
+\contentsline {subsubsection}{\numberline {12.0.2}Causal ablation track}{47}{subsubsection.12.0.2}%
+\contentsline {section}{Discussion}{48}{section*.37}%
+\contentsline {section}{\numberline {13}Limitations and outlook}{48}{section.13}%
+\contentsline {subsection}{\numberline {13.1}What this demonstrates}{48}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Limitations}{48}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Sheaf audit and outlook}{48}{subsection.13.3}%
+\contentsline {subsubsection}{\numberline {13.3.1}Ontology bindings}{49}{subsubsection.13.3.1}%
+\contentsline {subsubsection}{\numberline {13.3.2}Release notes evidence track}{49}{subsubsection.13.3.2}%
+\contentsline {section}{Appendix}{50}{section*.39}%
+\contentsline {section}{\numberline {14}Appendix: full track coverage}{50}{section.14}%
+\contentsline {subsubsection}{\numberline {14.0.1}Appendix track: artifact diffoscope}{50}{subsubsection.14.0.1}%
+\contentsline {subsubsection}{\numberline {14.0.2}Appendix track: artifact license}{51}{subsubsection.14.0.2}%
+\contentsline {subsubsection}{\numberline {14.0.3}Appendix track: proof extraction}{56}{subsubsection.14.0.3}%
+\contentsline {subsubsection}{\numberline {14.0.4}Appendix track: state-space catalog}{56}{subsubsection.14.0.4}%
+\contentsline {subsubsection}{\numberline {14.0.5}Appendix track: causal ablation}{56}{subsubsection.14.0.5}%
+\contentsline {subsubsection}{\numberline {14.0.6}Ontology bindings}{56}{subsubsection.14.0.6}%
+\contentsline {subsubsection}{\numberline {14.0.7}Appendix track: release notes evidence}{57}{subsubsection.14.0.7}%
+\contentsline {section}{\numberline {15}Conclusion}{58}{section.15}%
+\contentsline {section}{\numberline {16}References}{59}{section.16}%

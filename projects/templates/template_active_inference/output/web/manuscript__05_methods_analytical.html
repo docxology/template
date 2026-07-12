@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,26 +173,33 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:methods_analytical">Bernoulli–Ising analytical model</h1>
 <!-- sheaf-track:prose -->
 <p>The analytical method is a finite <strong>K=2 Bernoulli /
-Ising</strong> oracle. The entangled joint <span class="citation"
-data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> gives
+Ising</strong> oracle. The entangled joint [eq:entangled_joint] gives
 closed-form mutual information <span
 class="math inline">\(I(\lambda)\)</span>;
 <code>output/data/parameter_sweep.csv</code> then checks the same curve
 by an independent exact total-correlation recomputation before the value
-is used in <span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>. GNN
-and ontology rows share the same symbol surface (<span class="citation"
-data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>),
-so the derivation, sweep, and model notation are one audited toy
-contract rather than parallel descriptions.</p>
+is used in [sec:results_mi_sweep]. GNN and ontology rows share the same
+symbol surface ([fig:gnn_ontology_concordance]), so the derivation,
+sweep, and model notation are one audited toy contract rather than
+parallel descriptions.</p>
 <p>The scope is intentionally small: finite variational quantities only,
 no sampling, and no empirical generalization. “Free energy” here means
 exactly computed variational functionals on this tiny discrete
@@ -230,10 +237,8 @@ so the derivation is auditable rather than asserted.</p>
 <p>The analytical track writes a parameter sweep comparing closed-form
 mutual information with an independent exact recomputation of it (via
 total correlation) across <span class="math inline">\(\lambda \in [0,
-4]\)</span> on 21 grid points (<span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
-class="citation"
-data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
+4]\)</span> on 21 grid points ([sec:results_mi_sweep],
+[fig:ising_mi_curve]).</p>
 <!-- sheaf-track:assumption_index -->
 <p>The <code>assumption_index</code> fragment makes the analytical
 equations inspectable as a generated artifact instead of relying on
@@ -248,8 +253,8 @@ empty assumption list fails the toy-sweep validation gate.</p>
 <figure id="fig:ising_mi_curve">
 <img src="../figures/ising_mi_curve.png" style="width:90.0%"
 data-fig-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision."
-alt="Closed-form I(\lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to \lambda_{\max} = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual." />
-<figcaption aria-hidden="true">Closed-form <span
+alt="Closed-form I(lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to lambda_max = 4; grid maximum 0.6031 nats." />
+<figcaption>Closed-form <span
 class="math inline">\(I(\lambda)\)</span> and an independent exact
 recomputation via total correlation for the symmetric Bernoulli-Ising
 toy across 21 grid points up to <span
@@ -261,23 +266,20 @@ not a sampling residual.</figcaption>
 <figure id="fig:gnn_ontology_concordance">
 <img src="../figures/gnn_ontology_concordance.png" style="width:90.0%"
 data-fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."
-alt="GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
-<figcaption aria-hidden="true">GNN <span
+alt="GNN leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
+<figcaption>GNN <span
 class="math inline">\(\leftrightarrow\)</span> ontology concordance for
 the Bernoulli–Ising toy (GNN v1.1).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
 <p>The Bernoulli toy is declared in
 <code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1), following the GNN
-notation role described by Smekal and Friedman [gnn2023]. <span
-class="citation"
-data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>
-links GNN variables to Active Inference Ontology terms bound in the
-analytical ontology fragment; round-trip parity is checked before
-render.</p>
-<p>Measured MI and sweep artifacts in <span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> ground
-the same symbol map used in the concordance diagram.</p>
+notation role described by Smekal and Friedman [gnn2023].
+[fig:gnn_ontology_concordance] links GNN variables to Active Inference
+Ontology terms bound in the analytical ontology fragment; round-trip
+parity is checked before render.</p>
+<p>Measured MI and sweep artifacts in [sec:results_mi_sweep] ground the
+same symbol map used in the concordance diagram.</p>
 <!-- sheaf-track:ontology -->
 <h3 id="ontology-bindings">Ontology bindings</h3>
 <ul>
@@ -291,5 +293,6 @@ the same symbol map used in the concordance diagram.</p>
 <li><code>pi2</code> → <strong>Stream2PolicyVector</strong></li>
 <li><code>q_joint</code> → <strong>EntangledJointPosterior</strong></li>
 </ul>
+</main>
 </body>
 </html>
