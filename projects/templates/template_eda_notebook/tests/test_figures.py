@@ -7,6 +7,7 @@ import pytest
 from src.eda.cleaning import clean_dataset
 from src.eda.dataset import load_dataset
 from src.eda.figures import (
+    CORRELATION_COLOR_LIMITS,
     CorrelationFigureData,
     GroupCountFigureData,
     HistogramFigureData,
@@ -63,6 +64,9 @@ class TestCorrelationHeatmapData:
         data = correlation_heatmap_data(cleaned)
         for i in range(len(data.labels)):
             assert abs(data.values[i][i] - 1.0) < 1e-12
+
+    def test_color_scale_covers_full_pearson_range(self):
+        assert CORRELATION_COLOR_LIMITS == (-1.0, 1.0)
 
 
 class TestGroupCountData:

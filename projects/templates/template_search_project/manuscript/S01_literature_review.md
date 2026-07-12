@@ -327,7 +327,7 @@ _Papers retrieved:_ **100** · _per-source contributions:_ arxiv=100, crossref=1
 | [@poldrack2019case] | Case Study 29: Developing a Reproducible Workflow for Large-Scale Phenotyping | 2019 | DOI 10.1525/9780520967779-038 ([open](https://doi.org/10.1525/9780520967779-038)) |
 | [@anon2019what] | What Is Ethical Research? | 2019 | DOI 10.2307/j.ctvpb3xkg.7 ([open](https://doi.org/10.2307/j.ctvpb3xkg.7)) |
 
-_Per-paper synthesis omitted — no LLM Contribution paragraphs are present in the deep-search outputs (set `deep_search.llm_per_paper: true` and ensure Ollama is reachable to populate this section)._
+_Per-paper synthesis omitted — no LLM Contribution paragraphs are present in the deep-search outputs (set `project_config.deep_search.llm_per_paper: true` and ensure Ollama is reachable to populate this section)._
 
 ---
 

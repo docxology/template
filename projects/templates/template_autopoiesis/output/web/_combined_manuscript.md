@@ -101,7 +101,7 @@ generated child is checked against.
 
 The name is borrowed from Maturana and Varela's account of living systems as
 networks of processes that recursively produce the very components that
-constitute the network producing them [maturana_varela_1980]. That is a
+constitute the network producing them [@maturana_varela_1980]. That is a
 strong claim about biology, and this project makes no claim to implement
 autopoiesis in the biological sense — there is no self-repair, no membrane,
 no metabolism here. What is borrowed, deliberately and narrowly, is the
@@ -142,7 +142,7 @@ in question — rather than *rhetorically* asserted in prose. This matters
 for the same reason reproducible builds matter in software supply chains: a
 claim of "this artifact came from this source" is worthless unless a third
 party can recompute the artifact (or its fingerprint) from the source and
-get a bitwise match [reproducible_builds]. The project treats "trust the
+get a bitwise match [@reproducible_builds]. The project treats "trust the
 README" as a failure mode to be engineered around, not a baseline to build
 on.
 
@@ -172,7 +172,7 @@ something a test can actually check (`test_materialize_tree_hash_stable`,
 plus the Hypothesis-driven property suite in `test_property_invariants.py`,
 which additionally fuzzes seed boundaries and re-derives the invariant across
 many seeds rather than trusting a single example
-[claessen2000quickcheck; maciver2019hypothesis]). A generator whose output depends on wall-clock
+[@claessen2000quickcheck; @maciver2019hypothesis]). A generator whose output depends on wall-clock
 time, dict iteration order, or an unseeded RNG cannot make this promise, and
 would fail the very first time someone tried to hold it to its own claim.
 
@@ -190,7 +190,7 @@ tree-hash and Merkle-root constructions used here follow the general
 content-addressed provenance pattern of hashing over a canonical, sorted
 representation of content so that structurally identical inputs verify
 identically regardless of the order files were written or listed
-[merkle_tree_provenance].
+[@merkle_tree_provenance].
 
 ### Contributions of this exemplar
 
@@ -413,7 +413,7 @@ for `grammar_hash`.
 
 Two auxiliary functions extend `expand` to families of children rather than
 one: `derive_seed(base_seed, index)` hashes `f"{base_seed}\x1f{index}"` to
-produce a new seed masked to 63 bits (`& 0x7FFFFFFFFFFFFFFF`, keeping it a
+produce a new seed masked to 63 bits (keeping it a
 non-negative Python `int`), and `sample(grammar, count, base_seed=None)`
 calls `expand` once per derived seed to produce `count` independent `Spec`
 objects — independent in the sense that each is keyed off a distinct
@@ -515,7 +515,7 @@ rather than introducing a parallel reporting shape.
 Beyond the fixed example-based tests enumerated in the Honesty Contract's
 ground-truth table (§4), `tests/test_property_invariants.py` exercises the
 expansion and materialization functions against Hypothesis-generated inputs
-using the property-based testing paradigm [claessen2000quickcheck; maciver2019hypothesis]:
+using the property-based testing paradigm [@claessen2000quickcheck; @maciver2019hypothesis]:
 rather than asserting fixed input/output pairs, these tests assert
 invariants that must hold across a swept range of seeds — `product_size`
 equals the literal product of every slot's option count regardless of
@@ -540,7 +540,7 @@ guarded one.
 
 The tree-hash construction used at both Stage C and Stage D deliberately
 mirrors the general goal of reproducible software builds
-[reproducible_builds]: a build (here, a materialize call) is reproducible
+[@reproducible_builds]: a build (here, a materialize call) is reproducible
 exactly when independent re-derivations from the same inputs — grammar,
 seed, template source — produce byte-identical output, and that identity is
 checked by content hash rather than by trusting the process that produced
@@ -551,7 +551,7 @@ concatenation — is a flat, single-level structure, not a binary hash tree.
 (pairwise concatenate-and-hash up the tree, duplicating the final odd node
 when a level has odd cardinality), in the spirit of the hash-tree
 provenance idea introduced for digital signatures
-[merkle_tree_provenance]. As of this writing `merkle_root()` is a
+[@merkle_tree_provenance]. As of this writing `merkle_root()` is a
 standalone, independently-tested utility: `integrity_profile` is declared
 as a reserved grammar slot (options `sha256`, `merkle` in this project's
 own `config.yaml`; `SYNTAX.md` documents a longer illustrative option list
@@ -749,7 +749,7 @@ negative control; the remaining three (`analytic_minimizer`, `dft`, and
 computation or through algebraic invariants (Parseval's theorem, PageRank's
 stochastic-normalization property) that a broken implementation would be
 unlikely to satisfy by accident. This mirrors the property-based testing
-tradition [claessen2000quickcheck; maciver2019hypothesis]: rather than asserting a single hand-picked
+tradition [@claessen2000quickcheck; @maciver2019hypothesis]: rather than asserting a single hand-picked
 input/output pair, the suite asserts properties that must hold across a
 class of inputs — the same style used at the grammar level in
 `tests/test_property_invariants.py`, where `hypothesis`-generated seeds are
@@ -789,12 +789,11 @@ every other numeric token in this manuscript.
 
 The aggregate 96.28% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
-As of this measurement every module clears the 90% line; `common.py` and
-`cover_art.py` sit at 100% and `figures.py` at 98.41% after closing what were,
-in an earlier draft of this manuscript, the three lowest-coverage modules
-(see `CHANGELOG.md`'s Wave 10 entry for the specific branches that were
-untested and the tests added to close them); every module under
-`src/primitives/` and the honesty/integrity core sit at or near 100%. Both
+As of this measurement every module clears the configured 90% line. The exact
+module values are deliberately read from [@fig:coverage_by_module], rather
+than copied into prose where they would become stale; `CHANGELOG.md`'s Wave 10
+entry records the specific branches and tests behind an earlier coverage
+improvement. Both
 the aggregate number and this per-module breakdown are read from the same
 persisted `output/data/coverage_full.json` — a single generator run, not two
 separately-computed views that could silently drift apart. This is a
@@ -815,7 +814,7 @@ rather than trusted from a prior render whenever that question matters.
 A generator that produces a manuscript describing its own code faces an
 obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
-failure once — a hand-written "Tests: 371 · Coverage: 99.94%" line that no
+failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
 numbers with `493` / `96.28` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
@@ -827,7 +826,7 @@ than trusting the prose that asserts it.
 The framing is not incidental to a project named `template_autopoiesis`. An
 autopoietic system, in Maturana and Varela's original sense, is one whose
 components participate in producing and verifying the very network of
-processes that produced them [maturana_varela_1980] — organizational
+processes that produced them [@maturana_varela_1980] — organizational
 closure, not open-loop assertion. The honesty manifest is the narrow,
 literal, code-level analogue of that closure: the manuscript's claims about
 the code are checked *by the code*, not by a separate act of faith from the
@@ -939,7 +938,7 @@ as `"{filename}:{offset}: '{match}'"` in `manifest.unsupported_claims`.
 Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker — it
 will not catch a false quantitative claim phrased without one of those seven
-tokens (the "371 tests" incident described above would not have tripped it;
+tokens (the stale test-count incident described above would not have tripped it;
 that failure mode is closed instead by the `493` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
@@ -1044,9 +1043,9 @@ and a live pytest run (`src/manuscript_variables.py::measure_test_summary()`).
 Neither function accepts a hardcoded literal as a fallback: if the subprocess
 pytest run cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
-plausible-looking number [reproducible_builds]. This design choice is a direct
+plausible-looking number [@reproducible_builds]. This design choice is a direct
 consequence of an earlier failure mode in this project — a manuscript draft
-that stated fixed values ("Tests: 371 · Coverage: 99.94%") in prose instead of
+that stated fixed test and coverage values in prose instead of
 through the token pipeline. A number that cannot be traced back to a specific
 function call in `src/` is, for the purposes of this project, not a number
 this manuscript is permitted to assert.
@@ -1145,7 +1144,7 @@ hashes into one summary digest, and the project does not conflate them:
   full recompute over every path to detect *which* file changed — the digest
   itself carries no positional structure.
 - **`merkle_root()`** builds a binary Merkle tree
-  [merkle_tree_provenance] over an *ordered* list of hex digests: each level
+  [@merkle_tree_provenance] over an *ordered* list of hex digests: each level
   pairwise-concatenates adjacent nodes and hashes the concatenation, promoting
   an unpaired trailing node unchanged to the next level, until one root
   remains (the empty list is defined as the SHA-256 of the empty string,
@@ -1203,7 +1202,7 @@ without trusting any claim made in this document.
 - Python ≥ 3.10
 - `numpy`, `matplotlib`, `pyyaml` (runtime)
 - `pytest`, `pytest-cov` (test)
-- `hypothesis` [claessen2000quickcheck; maciver2019hypothesis] (declared
+- `hypothesis` [@claessen2000quickcheck; @maciver2019hypothesis] (declared
   under this project's `dev` optional-dependency group in `pyproject.toml`,
   but imported unconditionally at the top of `test_property_invariants.py` —
   a real dependency of that test module, not a soft, try/except-guarded one;
@@ -1298,7 +1297,7 @@ specific CPython minor version running `materialize()` — is not
 independently fuzzed across platforms in this suite. What is actually tested
 is determinism within one CPython version on one OS, a narrower claim than
 the cross-platform, bit-for-bit reproducibility discussed in the
-reproducible-builds literature [reproducible_builds]. A second CI leg that
+reproducible-builds literature [@reproducible_builds]. A second CI leg that
 materializes the same seed on a second OS/Python and diffs tree hashes would
 close this gap; it does not currently exist.
 
@@ -1306,7 +1305,7 @@ close this gap; it does not currently exist.
 
 The autopoiesis metaphor is figurative. Maturana and Varela's operational
 sense of autopoiesis is a system that continuously regenerates its own
-constitutive components through its own operation [maturana_varela_1980].
+constitutive components through its own operation [@maturana_varela_1980].
 Here the grammar (`manuscript/config.yaml`) is fixed input; `parse_grammar`
 and `expand` are pure functions of that input plus a seed; no code path
 feeds a materialized child back into the grammar or rewrites
@@ -1325,7 +1324,7 @@ external anchors them. An actor who can rewrite `provenance.json` can edit
 its `files` list and recompute a matching hash from whatever content they
 choose, and `verify_child` would report a match — it only checks internal
 consistency, not consistency against something outside the child's own
-directory [merkle_tree_provenance]. `verify_seal` similarly checks the
+directory [@merkle_tree_provenance]. `verify_seal` similarly checks the
 shape of an optional `seal.json` written by the same run it would need to
 audit. This detects accidental post-generation drift, the tested use case;
 it is not a defense against deliberate tampering with write access. Also
@@ -1366,7 +1365,8 @@ this section, and [@fig:coverage_by_module], exist as a per-module view
 rather than trusting one headline number. Property-based tests
 (`tests/test_property_invariants.py`, Hypothesis) and a stress/edge suite
 (`tests/test_stress_edge_cases.py`) cover invariants like boundary seeds and
-all-reserved-slot configurations [claessen2000quickcheck; maciver2019hypothesis], but generated inputs are not a substitute for
+all-reserved-slot configurations [@claessen2000quickcheck;
+@maciver2019hypothesis], but generated inputs are not a substitute for
 direct tests of the specific branches named above.
 
 This whole section is itself evidence for a point made elsewhere in this
@@ -1418,7 +1418,7 @@ bibliography.
 ## References
 
 The formal bibliography (author/year entries resolved from `manuscript/references.bib`
-via the `[citekey]` citations used throughout this manuscript) is generated by
+via the `[@citekey]` citations used throughout this manuscript) is generated by
 `pandoc-crossref`/`natbib` and appears immediately below this note. Every entry
 was verified this session via a live fetch (Crossref API, DBLP, or the
 publisher's own DOI resolver) — not taken from training-data memory — before
@@ -1428,26 +1428,26 @@ being added to `references.bib`; the fetch evidence is recorded in
 Annotated pointers, for readers who want the "why this reference" context
 that a bare bibliography entry doesn't carry:
 
-- **Maturana & Varela (1980), *Autopoiesis and Cognition*** [maturana_varela_1980] —
+- **Maturana & Varela (1980), *Autopoiesis and Cognition*** [@maturana_varela_1980] —
   the source of this project's own name. The book defines autopoiesis as the
   self-producing organization of living systems: a network of processes that
   continuously regenerates the components that in turn realize the network.
   This exemplar borrows the word deliberately, not decoratively — `expand()`
   and `materialize()` are the "self-producing" processes, and `grammar.py`'s
   seed is the invariant that the network regenerates around every run.
-- **Claessen & Hughes (2000), QuickCheck** [claessen2000quickcheck] and
-  **MacIver et al. (2019), Hypothesis** [maciver2019hypothesis] — the
+- **Claessen & Hughes (2000), QuickCheck** [@claessen2000quickcheck] and
+  **MacIver et al. (2019), Hypothesis** [@maciver2019hypothesis] — the
   property-based-testing lineage this project's own test suite descends
   from. `tests/test_property_invariants.py` uses Hypothesis directly (not
   merely an homage) to check invariants like "expansion is deterministic for
   any seed" across generated inputs rather than hand-picked examples.
-- **Lamb & Zacchiroli (2022), Reproducible Builds** [reproducible_builds] —
+- **Lamb & Zacchiroli (2022), Reproducible Builds** [@reproducible_builds] —
   the peer-reviewed framing for what `manuscript/05_reproducibility.md`
   claims operationally: that a build is reproducible when independent
   re-execution from the same source and environment produces
   bit-for-bit-identical (or hash-identical) output, and that this is a
   supply-chain-integrity property, not merely a convenience.
-- **Merkle (1987), digital signatures / hash trees** [merkle_tree_provenance] —
+- **Merkle (1987), digital signatures / hash trees** [@merkle_tree_provenance] —
   the theoretical basis for `src/integrity.py`'s content-addressed
   provenance: a tree of hashes lets a verifier recompute and confirm the
   integrity of a large structure from its leaves up, without trusting the

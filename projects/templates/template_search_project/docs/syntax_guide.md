@@ -69,9 +69,9 @@ The live token list is defined by the fields of `ManuscriptVariables` in `src/ma
 
 | Token | Source |
 |---|---|
-| `{{CONFIG_QUERY}}` | `config.search.query` |
-| `{{CONFIG_MAX_RESULTS}}` | `config.search.max_results` |
-| `{{CONFIG_SOURCES}}` | `config.search.sources`, joined with `, ` |
+| `{{CONFIG_QUERY}}` | `project_config.search.query` in `config.yaml` |
+| `{{CONFIG_MAX_RESULTS}}` | `project_config.search.max_results` in `config.yaml` |
+| `{{CONFIG_SOURCES}}` | `project_config.search.sources`, joined with `, ` |
 
 **RESULT_* — Derived from `output/search/results.json`**
 
@@ -86,14 +86,14 @@ The live token list is defined by the fields of `ManuscriptVariables` in `src/ma
 | `{{RESULT_WITH_ABSTRACT}}` | papers carrying a non-empty `abstract` |
 | `{{RESULT_WITH_DOI}}` | papers carrying a non-empty `doi` |
 
-**DEEP_* — Derived from `config.deep_search` and `output/deep_search/aggregate.json`**
+**DEEP_* — Derived from `project_config.deep_search` and `output/deep_search/aggregate.json`**
 
 | Token | Source |
 |---|---|
-| `{{DEEP_MAX_RESULTS_PER_KEYWORD}}` | `config.deep_search.max_results_per_keyword` |
-| `{{DEEP_KEYWORD_COUNT}}` | `len(config.deep_search.keywords)` |
+| `{{DEEP_MAX_RESULTS_PER_KEYWORD}}` | `project_config.deep_search.max_results_per_keyword` |
+| `{{DEEP_KEYWORD_COUNT}}` | `len(project_config.deep_search.keywords)` |
 | `{{DEEP_KEYWORDS_JOINED}}` | keywords joined with `; ` |
-| `{{DEEP_SOURCES}}` | `config.deep_search.sources`, joined with `, ` |
+| `{{DEEP_SOURCES}}` | `project_config.deep_search.sources`, joined with `, ` |
 | `{{DEEP_UNIQUE_PAPERS}}` | `len(aggregate.unique_papers)`, or the literal string `<deep-search not run>` when no aggregate exists |
 
 The "not run" sentinel is intentional: a missing aggregate produces a discoverable string rather than a silent dash, so reviewers can `grep '<deep-search not run>'` to spot stale renders.
@@ -205,7 +205,7 @@ Unlike `template_code_project` (single hand-curated `references.bib`), this proj
 
 `infrastructure.rendering.PDFRenderer.render_combined` runs Pandoc with `--natbib`; BibTeX is then invoked over `\bibliography{stem1,stem2,...}` constructed from every `manuscript/*.bib` (sorted). The pre-render citation gate (`infrastructure.validation.cli prerender`) unions the same files, so writing `[@key_only_in_deep]` resolves cleanly even though the key is absent from `references.bib`.
 
-**Consequence**: do not hand-edit either `.bib` file. Both are regenerated. Add curated entries by editing `data/corpus.json` (for the standard pipeline) or by extending `config.deep_search.keywords` (for the deep pipeline).
+**Consequence**: do not hand-edit either `.bib` file. Both are regenerated. Add curated entries by editing `data/corpus.json` (for the standard pipeline) or by extending `project_config.deep_search.keywords` (for the deep pipeline).
 
 Validate keys before render:
 

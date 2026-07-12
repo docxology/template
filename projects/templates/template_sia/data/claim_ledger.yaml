@@ -2,7 +2,7 @@ claims:
   - claim_id: max-generations
     kind: number
     value: 3
-    source: projects/templates/template_sia/manuscript/config.yaml sia.max_generations default
+    source: manuscript/config.yaml project_config.sia.max_generations default
     source_tier: project_source
     freshness: active
     artifact_path: output/data/sia_loop_result.json

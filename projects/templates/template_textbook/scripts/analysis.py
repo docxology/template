@@ -18,9 +18,7 @@ ensure_project_paths()
 
 def main() -> int:
     """CLI entry point."""
-    import numpy as np
-
-    from textbook import models
+    from textbook.analysis import build_worked_model_summary
     from textbook_io import write_text_atomic
     from textbook_logging import get_logger
 
@@ -29,21 +27,7 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, default=PROJECT_DIR / "output" / "data")
     args = parser.parse_args()
 
-    t = np.linspace(0, 10, 11)
-    growth = models.logistic_growth(t, r=0.8, carrying_capacity=100.0, initial=5.0)
-    decay = models.exponential_decay(t, initial=100.0, rate=0.5)
-    summary = {
-        "logistic_growth": {
-            "t": t.tolist(),
-            "N": growth.tolist(),
-            "stats": models.descriptive_statistics(growth),
-        },
-        "exponential_decay": {
-            "t": t.tolist(),
-            "y": decay.tolist(),
-            "half_life": models.half_life(0.5),
-        },
-    }
+    summary = build_worked_model_summary(PROJECT_DIR / "manuscript" / "assets" / "data" / "sample_dataset.csv")
     out_path = args.output_dir / "worked_model_summary.json"
     write_text_atomic(out_path, json.dumps(summary, indent=2, sort_keys=True))
     logger.info("wrote %s", out_path)

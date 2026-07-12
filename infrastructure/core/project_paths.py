@@ -22,6 +22,11 @@ from pathlib import Path
 #: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
 NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "published", "archive", "other"})
 
+_MANUSCRIPT_SOURCE_SUFFIXES: frozenset[str] = frozenset({".md", ".tex"})
+_MANUSCRIPT_AUXILIARY_NAMES: frozenset[str] = frozenset(
+    {"AGENTS.md", "README.md", "SKILL.md", "SYNTAX.md", "preamble.md"}
+)
+
 
 def find_repo_root() -> Path:
     """Return the repository root (the directory containing ``infrastructure/``).
@@ -32,6 +37,40 @@ def find_repo_root() -> Path:
     depth, which is fragile under file moves and easy to get off by one.
     """
     return Path(__file__).resolve().parents[2]
+
+
+def _has_manuscript_sources(directory: Path) -> bool:
+    """Return whether *directory* contains renderable manuscript source files."""
+    if not directory.is_dir():
+        return False
+    try:
+        return any(
+            path.is_file()
+            and path.suffix.lower() in _MANUSCRIPT_SOURCE_SUFFIXES
+            and path.name not in _MANUSCRIPT_AUXILIARY_NAMES
+            for path in directory.rglob("*")
+        )
+    except OSError:
+        return False
+
+
+def resolve_source_manuscript_dir(project_root: Path | str) -> Path:
+    """Return the canonical populated manuscript source directory for a project.
+
+    The conventional ``manuscript/`` tree wins when it contains real Markdown
+    or TeX source.  Projects that keep their manuscript under
+    ``docs/manuscript/`` are supported without a compatibility symlink.  A
+    config-only ``manuscript/`` directory therefore cannot shadow a populated
+    ``docs/manuscript/`` tree.  When neither candidate is populated, the
+    conventional path is returned so existing diagnostics remain stable.
+    """
+    root = Path(project_root)
+    conventional = root / "manuscript"
+    documentation = root / "docs" / "manuscript"
+    for candidate in (conventional, documentation):
+        if _has_manuscript_sources(candidate):
+            return candidate
+    return conventional
 
 
 def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
@@ -104,4 +143,9 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     return primary
 
 
-__all__ = ["NON_RENDERED_SUBDIRS", "find_repo_root", "resolve_project_root"]
+__all__ = [
+    "NON_RENDERED_SUBDIRS",
+    "find_repo_root",
+    "resolve_project_root",
+    "resolve_source_manuscript_dir",
+]

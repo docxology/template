@@ -131,6 +131,16 @@ figures, rendered manuscript) — everything there is disposable and regenerable
 output, and the project test suite plus the ≥90 % coverage gate validate `src/`
 before any figures or manuscript numbers are trusted.
 
+Run the project gate from the monorepo root through Stage 01 so it provisions
+the exemplar's isolated dependencies before collecting tests:
+
+```bash
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_literature_meta_analysis --project-only
+```
+
+The direct `pytest` form is only appropriate from an already-synchronized
+project environment; the Stage-01 command above is the fresh-clone contract.
+
 ## Determinism & honesty
 
 - The committed `data/fixtures/modafinil_corpus.jsonl` is **synthetic** (reserved

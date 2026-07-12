@@ -4,7 +4,6 @@ Reads:
 - ``manuscript/config.yaml``          — experiment parameters and paper metadata
 - ``output/data/optimization_results.csv``  — per-step-size convergence data
 - ``output/reports/stability_analysis.json``
-- ``output/reports/performance_benchmark.json``
 
 Returns a flat ``dict[str, str]`` of UPPERCASE_KEY → value for
 ``{{TOKEN}}`` substitution via
@@ -180,7 +179,6 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
             "Run projects/templates/template_code_project/scripts/optimization_analysis.py first."
         )
     stability = _load_json_report(project_root, "stability_analysis.json")
-    benchmark = _load_json_report(project_root, "performance_benchmark.json")
     artifact_counts = _count_output_artifacts(project_root)
 
     variables: dict[str, str] = {}
@@ -295,10 +293,6 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     # ---- Stability-derived ----
     variables["STABILITY_SCORE"] = f"{float(stability.get('stability_score', 0.0)):.2f}"
     variables["STABILITY_FUNCTION"] = str(stability.get("function_name", "N/A"))
-
-    # ---- Benchmark-derived ----
-    exec_time = benchmark.get("execution_time")
-    variables["BENCHMARK_AVG_TIME"] = f"{float(exec_time) * 1e6:.1f}" if exec_time else "N/A"
 
     # ---- Artifact counts ----
     variables["ARTIFACT_FIGURES"] = str(artifact_counts.get("figures", 0))

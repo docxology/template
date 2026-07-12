@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
@@ -1641,7 +1641,7 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  29883 strings out of 468168
  602707 string characters out of 5432815
- 1161713 words of memory out of 5000000
+ 1161707 words of memory out of 5000000
  58070 multiletter control sequences out of 15000+600000
  631240 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

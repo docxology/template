@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,18 +238,21 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="honesty-contract">Honesty Contract</h2>
 <h3 id="why-a-manifest-not-a-claim">Why a manifest, not a claim</h3>
 <p>A generator that produces a manuscript describing its own code faces
 an obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
-exactly this failure once — a hand-written “Tests: 371 · Coverage:
-99.94%” line that no generator step had computed — and was corrected by
-replacing the literal numbers with <code>493</code> / <code>96.28</code>
-tokens filled in at render time by
-<code>scripts/02_measure_test_coverage.py</code>.
+exactly this failure once — a hand-written test-count and coverage line
+that no generator step had computed — and was corrected by replacing the
+literal numbers with <code>493</code> / <code>96.28</code> tokens filled
+in at render time by <code>scripts/02_measure_test_coverage.py</code>.
 <code>src/honesty.py</code> exists to make that class of failure
 structurally harder: every load-bearing claim in this manuscript must
 resolve to a named function in a named file, and a dedicated module
@@ -417,7 +420,7 @@ to be rewritten). Each match is recorded as
 <p>Two honesty points about this scanner, stated plainly rather than
 left implicit. First, it is a fixed lexical denylist, not a semantic
 checker — it will not catch a false quantitative claim phrased without
-one of those seven tokens (the “371 tests” incident described above
+one of those seven tokens (the stale test-count incident described above
 would not have tripped it; that failure mode is closed instead by the
 <code>493</code> token substitution, a separate mechanism). Second,
 <code>unsupported_claims</code> <em>is</em> enforced, but only on one of
@@ -518,5 +521,6 @@ suites named in the ground-truth table, each independently gated at 90%
 coverage. What this section documents is narrower and more modest: the
 mechanism by which this manuscript’s claims are kept from silently
 diverging from the source code that is supposed to back them.</p>
+</main>
 </body>
 </html>

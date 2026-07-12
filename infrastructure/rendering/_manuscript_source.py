@@ -10,6 +10,7 @@ from infrastructure.core.exceptions import RenderingError, ValidationError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
@@ -30,7 +31,7 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
     """Return the manuscript directory to render from."""
     import shutil as _shutil
 
-    source_dir = project_root / "manuscript"
+    source_dir = resolve_source_manuscript_dir(project_root)
     injected_dir = project_root / "output" / "manuscript"
     if injected_dir.exists() and any(injected_dir.glob("*.md")):
         if source_dir.is_dir():

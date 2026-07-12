@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
@@ -1669,7 +1669,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 46.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 47.
 ) [8
 
 ]
@@ -1700,7 +1700,7 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  31581 strings out of 468168
  635390 string characters out of 5432815
- 1190125 words of memory out of 5000000
+ 1190119 words of memory out of 5000000
  59737 multiletter control sequences out of 15000+600000
  631272 words of font info for 74 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

@@ -1,23 +1,17 @@
 {
-  "timestamp": "2026-06-26T07:10:08.793929",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
     "Figure registry": true,
-    "Evidence registry": false,
+    "Evidence registry": true,
     "Project design overlays": true,
     "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "03_results.md: unsupported number 85%",
-      "03_results.md: unsupported number 80%",
-      "02_methodology.md: unsupported number 90%",
-      "02_methodology.md: unsupported number 80%"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -35,14 +29,14 @@
           },
           "pdf": {
             "exists": true,
-            "files": 10,
-            "size_mb": 0.29,
+            "files": 11,
+            "size_mb": 0.3,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 8,
+            "files": 9,
             "size_mb": 0.05,
             "readable": true,
             "optional": false
@@ -71,7 +65,7 @@
           "reports": {
             "exists": true,
             "files": 27,
-            "size_mb": 0.1,
+            "size_mb": 0.16,
             "readable": true,
             "optional": false
           },
@@ -101,13 +95,13 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "0.29",
+          "file_count": 11,
+          "size_mb": "0.30",
           "largest_file": "template_sia_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 8,
+          "file_count": 9,
           "size_mb": "0.05",
           "largest_file": "index.html"
         },
@@ -132,7 +126,7 @@
         "reports": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "0.10",
+          "size_mb": "0.16",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -155,8 +149,8 @@
         }
       },
       "file_counts": {
-        "pdf": 10,
-        "web": 8,
+        "pdf": 11,
+        "web": 9,
         "slides": 0,
         "figures": 5,
         "data": 2,
@@ -165,7 +159,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 0.6167535781860352,
+      "total_size_mb": 0.6911735534667969,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -176,8 +170,8 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 0.2898111343383789
+      "files": 11,
+      "size_mb": 0.2989492416381836
     },
     "figures": {
       "files": 5,
@@ -190,17 +184,10 @@
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
+    "passed": 8,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_sia/output/reports/evidence_registry.json"
-    }
-  ]
+  "recommendations": []
 }

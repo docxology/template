@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -62,6 +63,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -109,10 +118,25 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Self-Improvement Agent Harness: A Deterministic SIA Exemplar},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\ifXeTeX
+\special{pdf:trailerid [ <7a5805ea08b950edf6ddd972e4cef458> <7a5805ea08b950edf6ddd972e4cef458> ]}
+\fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ <7a5805ea08b950edf6ddd972e4cef458> <7a5805ea08b950edf6ddd972e4cef458> ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ <7a5805ea08b950edf6ddd972e4cef458> <7a5805ea08b950edf6ddd972e4cef458> ]}
+\fi
+
+\title{Self-Improvement Agent Harness: A Deterministic SIA Exemplar}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -126,7 +150,6 @@
 \usepackage{graphicx}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{2cm}
@@ -144,7 +167,6 @@
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \section{Abstract}\label{sec:abstract}
 
@@ -211,7 +233,7 @@ The harness implements a three-agent cycle:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Meta \texorpdfstring{\ensuremath{\to}}{->} Target \texorpdfstring{\ensuremath{\to}}{->} Feedback loop topology for the SIA harness, generated programmatically by write\_sia\_loop\_topology.}]{../figures/sia_loop_topology.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Meta \texorpdfstring{\ensuremath{\to}}{->} Target \texorpdfstring{\ensuremath{\to}}{->} Feedback loop topology for the SIA harness, generated programmatically by write\_sia\_loop\_topology.}]{../figures/sia_loop_topology.png}
 \caption{Meta \texorpdfstring{\ensuremath{\to}}{->} Target \texorpdfstring{\ensuremath{\to}}{->} Feedback loop topology for the SIA harness,
 generated programmatically by
 \protect\breaktt{write\_sia\_loop\_topology}.}\label{fig:sia-loop-topology}
@@ -258,7 +280,7 @@ and sample count, enabling at-a-glance comparison across runs.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\linewidth,height=0.50\textheight,keepaspectratio,alt={Per-generation metric heatmap showing accuracy and sample count across SIA generations.}]{../figures/sia_generation_heatmap.png}
+\includegraphics[width=0.8\linewidth,height=0.5\textheight,keepaspectratio,alt={Per-generation metric heatmap showing accuracy and sample count across SIA generations.}]{../figures/sia_generation_heatmap.png}
 \caption{Per-generation metric heatmap showing accuracy and sample count
 across SIA generations.}\label{fig:sia-generation-heatmap}
 \end{figure}
@@ -294,7 +316,7 @@ Final injected token: accuracy=0.8333 (n=6).
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={SIA metric progression across generations.}]{../figures/sia_metric_progression.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={SIA metric progression across generations.}]{../figures/sia_metric_progression.png}
 \caption{SIA metric progression across
 generations.}\label{fig:sia-metric-progression}
 \end{figure}
@@ -306,7 +328,7 @@ self-refinement signal at each step of the loop.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\linewidth,height=0.50\textheight,keepaspectratio,alt={Generation-over-generation metric delta (\texorpdfstring{\ensuremath{\Delta}}{Delta}accuracy) for the SIA loop, illustrating the incremental improvement at each self-refinement step.}]{../figures/sia_improvement_delta.png}
+\includegraphics[width=0.8\linewidth,height=0.5\textheight,keepaspectratio,alt={Generation-over-generation metric delta (\texorpdfstring{\ensuremath{\Delta}}{Delta}accuracy) for the SIA loop, illustrating the incremental improvement at each self-refinement step.}]{../figures/sia_improvement_delta.png}
 \caption{Generation-over-generation metric delta (\texorpdfstring{\ensuremath{\Delta}}{Delta}accuracy) for the SIA
 loop, illustrating the incremental improvement at each self-refinement
 step.}\label{fig:sia-improvement-delta}

@@ -9,7 +9,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 
 from .introspection import ModuleInfo, ProjectAnalysis
-from .viz_palette import ARCH_VIZ_COLORS, FONT_FLOOR, doc_badge
+from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR, doc_badge
 
 
 def generate_architecture_overview(
@@ -320,6 +320,6 @@ def generate_architecture_overview(
 
     plt.tight_layout(pad=0.3)
     path = output_dir / "architecture_overview.png"
-    plt.savefig(path, dpi=200, bbox_inches="tight", facecolor="white")
+    plt.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
     plt.close()
     return path

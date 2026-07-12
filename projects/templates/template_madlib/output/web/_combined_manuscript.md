@@ -513,9 +513,9 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | --- | --- | --- | --- |
 | Placeholder resolution | No unresolved uppercase manuscript placeholders remain in output/manuscript or rendered web output. | tests/test_manuscript_variables.py and rg unresolved-token scan. | `pytest` |
 | Token provenance coverage | Every selected token maps to category, selected value, section, and config pointer. | output/reports/injection_trace.json and output/data/token_inventory.json. | `analysis` |
-| Figure registry integrity | Every referenced figure label is present in ../figures/figure_registry.json. | scripts/04_validate_output.py figure registry check. | `validation` |
+| Figure registry integrity | Every referenced figure label is present in ../figures/figure_registry.json. | scripts/pipeline/stage_04_validate.py figure registry check. | `validation` |
 | Evidence registry cleanliness | Generated manuscript numbers and claims pass the project evidence registry. | output/reports/evidence_registry.json. | `validation` |
-| Copied-output readiness | PDF, HTML, slides, figures, data, and reports copy into output/templates/template_madlib. | scripts/05_copy_outputs.py output statistics. | `copy` |
+| Copied-output readiness | PDF, HTML, slides, figures, data, and reports copy into output/templates/template_madlib. | scripts/pipeline/stage_05_copy.py output statistics. | `copy` |
 | Reviewer packet completeness | Hydrated Markdown, rendered PDF, web output, slides, figures, data, reports, validation results, and copy statistics are all present for review. | Stage 04 validation report and Stage 05 output_statistics.json. | `copy` |
 | Method-invariant traceability | Token choices can be explained only by seed, slot, category, ordinal, and ordered category inventory. | tests/test_tokens.py and generated Methods digest prose. | `pytest` |
 
@@ -552,8 +552,10 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
-- Config hash: `3c4268ae54c35130`
-- Generated: `2026-06-26T14:00:22Z`
+- Config hash: `377db49c4154479a`
+- Generated: `not-recorded (set SOURCE_DATE_EPOCH)` (derived from `SOURCE_DATE_EPOCH`; an
+  explicit `not-recorded` marker is emitted when the reproducible timestamp is
+  not supplied)
 - Python: `3.12.13`
 - Platform: `Darwin arm64`
 

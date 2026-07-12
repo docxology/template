@@ -10,6 +10,7 @@ from pathlib import Path
 
 _FRONT_MATTER_RE = re.compile(r"^\s*---\s*\n.*?\n\s*---\s*\n", re.DOTALL)
 _FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+_LEADING_HTML_COMMENT_RE = re.compile(r"\A(?:\s*<!--[\s\S]*?-->)+\s*")
 _INLINE_CODE_RE = re.compile(r"`([^`\n]+)`")
 _LINK_RE = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\([^\)]+\)")
@@ -46,6 +47,11 @@ def strip_front_matter(text: str) -> str:
 def strip_fences(text: str) -> str:
     """Remove fenced code blocks (``` ... ```)."""
     return _FENCE_RE.sub("", text)
+
+
+def strip_leading_html_comments(text: str) -> str:
+    """Remove generated provenance comments before deposit headings."""
+    return _LEADING_HTML_COMMENT_RE.sub("", text, count=1)
 
 
 def strip_inline_code(text: str) -> str:
@@ -144,6 +150,7 @@ def normalise_for_deposit(text: str) -> str:
     """Convert manuscript markdown to plaintext suitable for Zenodo/GitHub deposits."""
     out = strip_front_matter(text)
     out = strip_fences(out)
+    out = strip_leading_html_comments(out)
     out = strip_leading_abstract_heading(out)
     out = strip_markdown_headers(out)
     out = strip_pandoc_attributes(out)

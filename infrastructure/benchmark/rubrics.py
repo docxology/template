@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from typing import Any, Mapping
 
@@ -25,17 +26,23 @@ class RubricSet:
     def from_dict(cls, payload: Mapping[str, Any]) -> "RubricSet":
         """Parse a rubric mapping from a benchmark manifest."""
         dimensions: list[RubricDimension] = []
+        seen_names: set[str] = set()
         for row in payload.get("dimensions", ()):
             if not isinstance(row, Mapping):
                 raise ValueError("rubric dimensions must be mappings")
-            dimensions.append(
-                RubricDimension(
-                    name=str(row.get("name", "") or ""),
-                    weight=float(row.get("weight", 1.0) or 0.0),
-                )
-            )
-        if any(not dimension.name for dimension in dimensions):
-            raise ValueError("rubric dimension names must not be empty")
+            name = str(row.get("name", "") or "")
+            if not name:
+                raise ValueError("rubric dimension names must not be empty")
+            if name in seen_names:
+                raise ValueError(f"duplicate rubric dimension: {name}")
+            seen_names.add(name)
+            try:
+                weight = float(row.get("weight", 1.0))
+            except (TypeError, ValueError) as exc:
+                raise ValueError(f"rubric weight for {name!r} must be numeric") from exc
+            if not math.isfinite(weight) or weight <= 0:
+                raise ValueError(f"rubric weight for {name!r} must be finite and greater than zero")
+            dimensions.append(RubricDimension(name=name, weight=weight))
         return cls(
             name=str(payload.get("name", "benchmark-rubric") or "benchmark-rubric"),
             dimensions=tuple(dimensions),

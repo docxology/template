@@ -25,7 +25,8 @@ Project-scoped skill for the in-repo exemplar at
 1. Read the project `AGENTS.md`.
 2. Edit story content in `content/story.yaml`.
 3. Put rendering behavior in `src/storybook/` (`models.py`, `characters.py`,
-   `story.py`, `illustration.py`, `rendering.py`) — never in `scripts/`.
+   `story.py`, `illustration.py`, `text_layout.py`, `rendering.py`) — never in
+   `scripts/`.
 4. Verify with tests and Stage-02 PDF generation.
 
 ## Quick Reference

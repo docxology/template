@@ -4,29 +4,33 @@ Technical specification for the template project test infrastructure.
 
 ## Test Inventory
 
-| File | Test Count | Coverage Target |
-|------|-----------:|-----------------|
-| `test_meta.py` | 63 tests | 90%+ on `introspection.py`, `inject_metrics.py` |
-| `test_metrics.py` | 13 tests | `metrics.py` helpers and integration sanity |
-| `test_architecture_viz.py` | 6 tests | `architecture_viz.py` matrix/data and PNG generation |
-| `test_confidentiality.py` | 9 tests | Public/private project discovery boundary |
-| `test_edge_cases.py` | 39 tests | Edge cases, error branches, sibling fallback, YAML errors |
-| **Total** | **130 tests** | **≥90% (see [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md))** |
+| File | Contract |
+|------|----------|
+| `test_meta.py` | Introspection, injection, and real-manuscript integration |
+| `test_metrics.py` | Metric helpers and live-repository integration |
+| `test_architecture_viz.py` | Matrix invariants and real PNG generation |
+| `test_confidentiality.py` | Public/private project discovery boundary |
+| `test_edge_cases.py` | Error branches, sibling fallback, and malformed-input handling |
+| `test_evidence_contract.py` | Executable policy binding, evidence completeness, and an invented-result negative control |
+| `test_script_entrypoints.py` | Sandboxed subprocess execution of the manuscript-metrics orchestrator |
+
+Do not hand-maintain counts here. Re-derive live test and coverage values through
+the commands above and the repository's generated counts report.
 
 ## Test Classes (`test_meta.py`)
 
-| Class | Tests | What It Validates |
-|-------|------:|-------------------|
-| `TestDiscoverInfrastructureModules` | 8 | Module discovery, sorting, `__init__.py` presence |
-| `TestDiscoverProjects` | 7 | Project workspace detection, config loading |
-| `TestCountPipelineStages` | 7 | Stage enumeration, sequential numbering |
-| `TestLoadPipelineStagesFromYaml` | 4 | YAML stage parsing, tags/method/failure_mode fields |
-| `TestResolveTemplateRepoRoot` | 1 | Layer-1 repo root resolution from a project path |
-| `TestEnumerateNumberedScripts` | 2 | `scripts/NN_*.py` enumeration |
-| `TestAnalyzeCoverageConfig` | 5 | Config parsing, threshold extraction |
-| `TestBuildInfrastructureReport` | 10 | Aggregated report, computed properties |
-| `TestInjectMetrics` | 17 | `load_metrics`, `render_chapter`, `render_all_chapters`, round-trip |
-| `TestSelfDescriptionPins` | 2 | Self-introspection pins (this project appears in its own report) |
+| Class | What It Validates |
+|-------|-------------------|
+| `TestDiscoverInfrastructureModules` | Module discovery, sorting, `__init__.py` presence |
+| `TestDiscoverProjects` | Project workspace detection and config loading |
+| `TestCountPipelineStages` | Stage enumeration and numbering |
+| `TestLoadPipelineStagesFromYaml` | YAML stage parsing, tags, methods, and failure modes |
+| `TestResolveTemplateRepoRoot` | Layer-1 repo-root resolution from a project path |
+| `TestEnumerateNumberedScripts` | `scripts/NN_*.py` enumeration |
+| `TestAnalyzeCoverageConfig` | Config parsing and threshold extraction |
+| `TestBuildInfrastructureReport` | Aggregated report and computed properties |
+| `TestInjectMetrics` | Metrics loading, chapter rendering, and round trips |
+| `TestSelfDescriptionPins` | This project appears in its own public report |
 
 ## Test Classes (`test_edge_cases.py`)
 
@@ -54,7 +58,9 @@ Technical specification for the template project test infrastructure.
 
 - `test_metrics.py`: verifies count helpers (`count_test_functions`, `count_docs_markdown_files`), `format_count`, `build_module_inventory_table`, and real-repo metric dictionary shape.
 - `test_architecture_viz.py`: verifies comparative matrix invariants (shape, value range, label count) and PNG file generation for all 4 figures.
-- `test_confidentiality.py`: negative-control tests proving private project names never reach public metrics or manuscript.
+- `test_confidentiality.py`: negative controls proving private project names never reach public metrics or manuscript.
+- `test_evidence_contract.py`: binds coverage and figure-policy tokens to executable sources, validates the full manuscript registry, and proves an unregistered result is rejected.
+- `test_script_entrypoints.py`: executes the metrics script from the repository root against a temporary project tree, preventing output-side effects.
 
 ## Known Unreachable Branches
 

@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,25 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={A Domain Language for Specifying Controlled Methods},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\ifXeTeX
+\special{pdf:trailerid [ <f90fda0ba0a77d543ba41d45db8f51f2> <f90fda0ba0a77d543ba41d45db8f51f2> ]}
+\fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ <f90fda0ba0a77d543ba41d45db8f51f2> <f90fda0ba0a77d543ba41d45db8f51f2> ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ <f90fda0ba0a77d543ba41d45db8f51f2> <f90fda0ba0a77d543ba41d45db8f51f2> ]}
+\fi
+
+\title{A Domain Language for Specifying Controlled Methods}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -227,7 +251,6 @@
 \setmathfont{latinmodern-math.otf}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{2cm}
@@ -245,7 +268,6 @@
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \section{Abstract}\label{sec:abstract}
 
@@ -269,7 +291,7 @@ A \texttt{Method} is a name, a set of typed parameters and resources,
 and an ordered, dependent set of steps --- constructed directly as
 frozen Python dataclasses (\breaktt{src/methods\_dsl/model.py}) rather
 than parsed from new text syntax. Every \texttt{Quantity} carries a unit
-that resolves to one of 18 controlled units across six dimensions, and
+that resolves to one of 18 controlled units across seven dimensions, and
 every step names one of 9 controlled-vocabulary intents
 (\breaktt{src/methods\_dsl/vocabulary.py}), executable on one of 3
 backends. 4 staged gates --- structural, semantic, plan, and target ---
@@ -294,12 +316,12 @@ the methods side, we show that a controlled vocabulary expressed as
 typed dataclasses --- not a parsed grammar --- is sufficient to
 reproduce BPL's core safety properties (dimensional safety, staged
 validation, deterministic compilation) at a scope appropriate for a
-template exemplar. On the architecture side, the DSL is covered above
-the 90\% project gate by a zero-mock test suite, generates 13 artifacts
-(1 figures, 6 data files, 6 reports) per pipeline run, and injects
-reproducibility metadata (configuration hash \breaktt{23b5981d45bdc598},
-build timestamp \breaktt{2026-06-30T23:02:10Z}) into
-sec.~\ref{sec:reproducibility}.
+template exemplar. On the architecture side, the DSL is exercised by a
+zero-mock test suite under the repository's configured project coverage
+gate, generates 14 artifacts (1 figures, 7 data files, 6 reports) per
+pipeline run, and injects reproducibility metadata (configuration hash
+\breaktt{a0f000565bef6a79}, build timestamp
+\breaktt{2026-07-12T02:08:51Z}) into sec.~\ref{sec:reproducibility}.
 
 \textbf{Keywords:} methods paper, domain-specific language, controlled
 methods, deterministic compilation, staged validation, dimensional
@@ -729,7 +751,7 @@ The results were validated through the zero-mock \texttt{tests/} suite:
   \breaktt{generate\_variables}.
 \end{itemize}
 
-All tests pass with coverage exceeding the 90\% project gate, with no
+All tests pass under the configured project coverage gate, with no
 mocks.
 
 \subsection{Discussion}\label{discussion}
@@ -1064,7 +1086,7 @@ From the repository root:
 \ExtensionTok{uv}\NormalTok{ run python projects/templates/template\_methods\_paper/scripts/z\_generate\_manuscript\_variables.py}
 
 \CommentTok{\# 4. Render the manuscript}
-\ExtensionTok{uv}\NormalTok{ run python scripts/03\_render\_pdf.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper}
+\ExtensionTok{uv}\NormalTok{ run python scripts/pipeline/stage\_03\_render.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1072,7 +1094,7 @@ Or, end to end via the orchestrated pipeline:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ExtensionTok{uv}\NormalTok{ run python scripts/execute\_pipeline.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper }\AttributeTok{{-}{-}core{-}only}
+\ExtensionTok{uv}\NormalTok{ run python scripts/runner/execute\_pipeline.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper }\AttributeTok{{-}{-}core{-}only}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1152,9 +1174,9 @@ variable sourced from a live analysis output or registered in
 \breaktt{data/claim\_ledger.yaml} for evidence-registry validation. The
 manuscript intentionally does not hand-transcribe volatile values, so
 prose and artifacts cannot disagree. Configuration provenance is itself
-injected: \breaktt{23b5981d45bdc598} is the SHA-256 of
+injected: \breaktt{a0f000565bef6a79} is the SHA-256 of
 \breaktt{manuscript/config.yaml} at build time, and
-\breaktt{2026-06-30T23:02:10Z} records when the variables were generated
+\breaktt{2026-07-12T02:08:51Z} records when the variables were generated
 (honoring \breaktt{SOURCE\_DATE\_EPOCH} for byte-reproducible builds).
 
 \newpage
@@ -1162,13 +1184,12 @@ injected: \breaktt{23b5981d45bdc598} is the SHA-256 of
 \section{Scope, Related Work, and Positioning}\label{sec:scope}
 
 This section situates the exemplar and states explicit boundaries. The
-goal is not to compete with BPL's full compiler pipeline \citep{bpl2026}
---- a about 32,000-line implementation with a Lark grammar, a
-robot backend, and a hash-chained audit/compliance layer --- but to show
-how a minimal, test-backed subset of BPL's domain-language design fits
-the template's reproducibility and rendering stack
-\citep{peng2011reproducible}, generalized from wet-lab protocols to any
-controlled procedure.
+goal is not to compete with BPL's substantially larger full compiler
+pipeline \citep{bpl2026} --- with its Lark grammar, robot backend, and
+hash-chained audit/compliance layer --- but to show how a minimal,
+test-backed subset of BPL's domain-language design fits the template's
+reproducibility and rendering stack \citep{peng2011reproducible},
+generalized from wet-lab protocols to any controlled procedure.
 
 \subsection{Domain-specific languages for controlled
 procedures}\label{domain-specific-languages-for-controlled-procedures}

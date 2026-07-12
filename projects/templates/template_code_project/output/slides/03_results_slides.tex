@@ -538,27 +538,26 @@ optimization problems:
 
 \begin{block}{Performance Benchmarking}
 \protect\phantomsection\label{performance-benchmarking}
-\breakseq{[@fig:benchmark]} shows how \breaktt{gradient\_descent()} scales with
-problem dimension by running the optimizer on identity-Hessian
-quadratics of dimension \(d \in \{1, 2, 5, 10, 20, 50\}\).
+\breakseq{[@fig:benchmark]} shows deterministic computational work and
+convergence iterations for \breaktt{gradient\_descent()} on
+identity-Hessian quadratics of dimension
+\(d \in \{1, 2, 5, 10, 20, 50\}\).
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Dimensional scaling from generate\_benchmark\_visualization(). Dimensions d \textbackslash in \textbackslash\{1, 2, 5, 10, 20, 50\textbackslash\} run on identity-Hessian quadratics with \textbackslash alpha=0.1 and gradient tolerance 10\^{}\{-10\} (both hardcoded in the script for benchmark stability). Left: mean wall-clock time per gradient\_descent() call (μs). The flat regime at d \textbackslash leq 20 reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at d=50 shows the O(d) matrix-vector cost beginning to dominate. Right: iterations-to-convergence rises only modestly across two decades of d (219 \textbackslash to 238). This near-invariance is expected: \textbackslash kappa(I\_d)=1 regardless of dimension, so the contraction factor \textbackslash rho=\textbar1-\textbackslash alpha\textbar=0.9 is identical for every d, and only the per-coordinate residual norm grows mildly.}]{../figures/performance_benchmark.png}}
-\caption{Dimensional scaling from
+\pandocbounded{\includegraphics[keepaspectratio,alt={Deterministic dimensional benchmark from generate\_benchmark\_visualization(). Dimensions d \textbackslash in \textbackslash\{1, 2, 5, 10, 20, 50\textbackslash\} run on identity-Hessian quadratics with \textbackslash alpha=0.1 and gradient tolerance 10\^{}\{-10\}. Left: the implementation-independent work proxy d \textbackslash times \textbackslash text\{iterations\}, proportional to scalar elements processed by the dense matrix-vector update. Right: exact iterations to convergence. Wall-clock microseconds are intentionally excluded because they vary with hardware and host load. The similar iteration counts are expected because \textbackslash kappa(I\_d)=1 and the contraction factor \textbackslash rho=\textbar1-\textbackslash alpha\textbar=0.9 is dimension-independent.}]{../figures/performance_benchmark.png}}
+\caption{Deterministic dimensional benchmark from
 \protect\breaktt{generate\_benchmark\_visualization()}. Dimensions
 \(d \in \{1, 2, 5, 10, 20, 50\}\) run on identity-Hessian quadratics
-with \(\alpha=0.1\) and gradient tolerance \(10^{-10}\) (both hardcoded
-in the script for benchmark stability). \textbf{Left}: mean wall-clock
-time per \protect\breaktt{gradient\_descent()} call (μs). The flat regime
-at \(d \leq 20\) reflects per-iteration overhead (Python dispatch, NumPy
-bookkeeping); the upturn at \(d=50\) shows the \(O(d)\) matrix-vector
-cost beginning to dominate. \textbf{Right}: iterations-to-convergence
-rises only modestly across two decades of \(d\) (\(219 \to 238\)). This
-near-invariance is expected: \(\kappa(I_d)=1\) regardless of dimension,
-so the contraction factor \(\rho=|1-\alpha|=0.9\) is identical for every
-\(d\), and only the per-coordinate residual norm grows
-mildly.}\label{fig:benchmark}
+with \(\alpha=0.1\) and gradient tolerance \(10^{-10}\). \textbf{Left}:
+the implementation-independent work proxy
+\(d \times \text{iterations}\), proportional to scalar elements
+processed by the dense matrix-vector update. \textbf{Right}: exact
+iterations to convergence. Wall-clock microseconds are intentionally
+excluded because they vary with hardware and host load. The similar
+iteration counts are expected because \(\kappa(I_d)=1\) and the
+contraction factor \(\rho=|1-\alpha|=0.9\) is
+dimension-independent.}\label{fig:benchmark}
 \end{figure}
 \end{block}
 

@@ -24,7 +24,12 @@ ARCH_VIZ_COLORS = {
     "divider": "#bbbbbb",
 }
 
+# Publication-policy constants live here so figures, tests, and manuscript
+# metrics all read the same values.  Keeping the render resolution beside the
+# palette also removes four independent ``dpi=...`` literals from the figure
+# builders.
 FONT_FLOOR = 16
+FIGURE_DPI = 200
 
 _TAG_COLORS = {
     "core": ARCH_VIZ_COLORS["pipeline"],

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,12 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="front-matter">Front Matter</h1>
 <!-- This file is the first front-matter document rendered (see
 `manuscript/config.yaml` → `front_matter.files`). It carries the dedication,
@@ -329,13 +333,14 @@ sections in declared order, and renders a PDF through Pandoc with
 citation.</p>
 <p>To build the book from the repository root:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/02_run_analysis.py <span class="at">--project</span> templates/template_textbook</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py    <span class="at">--project</span> templates/template_textbook</span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_02_analysis.py <span class="at">--project</span> templates/template_textbook</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py    <span class="at">--project</span> templates/template_textbook</span></code></pre></div>
 <p>or run the full pipeline with <code>./run.sh</code>. See <a
 href="README.md"><code>README.md</code></a> for the manuscript directory
 layout and <a href="SYNTAX.md"><code>SYNTAX.md</code></a> for the exact
 authoring syntax.</p>
 <!-- STUB: add a copyright line, ISBN, and edition statement here at
 publication time. The licence and edition are declared in config.yaml. -->
+</main>
 </body>
 </html>

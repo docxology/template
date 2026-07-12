@@ -38,10 +38,11 @@ analysis:
     - generate_cover_art.py
     - z_generate_manuscript_variables.py
 
-autopoiesis:
-  seed: 42
-  slots:
-    domain: [optimization, dynamics, statistics, signal, graph]
-  deps:
-    glossary_gen: vendor
-    logging: template
+project_config:
+  autopoiesis:
+    seed: 42
+    slots:
+      domain: [optimization, dynamics, statistics, signal, graph]
+    deps:
+      glossary_gen: vendor
+      logging: template

@@ -242,7 +242,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:rules">Rules: Soft and Strong Governance</h1>
 <h2 id="the-role-of-governance-rules">The Role of Governance Rules</h2>
 <p>Research software projects make dozens of implicit governance
@@ -302,14 +303,15 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">applies_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;projects/*/src/&quot;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enforcement</span><span class="kw">:</span><span class="at"> fail_on_violation</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">constraints</span><span class="kw">:</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">minimum_line_coverage</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">minimum_branch_coverage</span><span class="kw">:</span><span class="at"> </span><span class="dv">80</span></span></code></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">infrastructure</span><span class="kw">:</span><span class="at"> </span><span class="dv">60</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">project_src</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">public_api</span><span class="kw">:</span><span class="at"> </span><span class="dv">95</span></span></code></pre></div>
 <p>The <code>enforcement: fail_on_violation</code> field signals that a
 pipeline must halt and report when this rule is violated. Strong rules
 are suitable for invariants that, if broken, indicate a genuine defect
-rather than a style preference: coverage below 90% means tests are
-missing; a manuscript section without an abstract means the document is
-incomplete.</p>
+rather than a style preference: coverage below the source-declared
+threshold means tests are missing; a manuscript section without an
+abstract means the document is incomplete.</p>
 <figure id="fig:rulehier">
 <img src="figures/rule_hierarchy.png" style="width:85.0%"
 alt="Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch and a guidance-only soft/ branch." />
@@ -335,8 +337,8 @@ repository. Its strong rules currently comprise:</p>
 <tbody>
 <tr>
 <td><code>strong/coverage-gate.yaml</code></td>
-<td>Minimum line coverage 90%, branch coverage 80% for
-<code>src/</code></td>
+<td>Minimum coverage: infrastructure 60%, project <code>src/</code> 90%,
+public API 95%</td>
 </tr>
 <tr>
 <td><code>strong/module-structure.yaml</code></td>

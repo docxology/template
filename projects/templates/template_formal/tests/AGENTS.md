@@ -1,6 +1,6 @@
 # `tests/` — Agent Guide
 
-277 tests, one subdirectory per `src/template_formal/` subpackage. See
+278 tests, one subdirectory per `src/template_formal/` subpackage. See
 [`README.md`](README.md) for the full directory-to-responsibility map, the
 mypy-oracle harness mechanics, and measured xdist timing.
 

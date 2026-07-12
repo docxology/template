@@ -83,6 +83,19 @@ class TestWriteResolvedManuscriptTree:
         assert "{{TOTAL}}" not in out
         assert "Papers: 7." in out
 
+    def test_docs_manuscript_source_is_supported(self, tmp_path: Path):
+        root = tmp_path / "proj"
+        manuscript = root / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
+        (manuscript / "00_intro.md").write_text("Papers: {{TOTAL}}.\n", encoding="utf-8")
+        (manuscript / "config.yaml").write_text("paper:\n  title: Docs\n", encoding="utf-8")
+
+        write_resolved_manuscript_tree(root, {"TOTAL": "7"})
+
+        output = root / "output" / "manuscript"
+        assert (output / "00_intro.md").read_text(encoding="utf-8") == "Papers: 7.\n"
+        assert (output / "config.yaml").read_text(encoding="utf-8") == "paper:\n  title: Docs\n"
+
     def test_config_yaml_copied_verbatim(self, tmp_path: Path):
         root = tmp_path / "proj"
         ms = root / "manuscript"

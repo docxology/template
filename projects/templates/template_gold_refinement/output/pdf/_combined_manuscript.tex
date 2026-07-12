@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,15 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Refinement of Gold: A Metallurgical Analogy for Scientific
+Manuscript Composition}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -191,7 +205,6 @@
 \usepackage{natbib}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{0.55cm}
@@ -210,37 +223,34 @@
 {\@date\par}
 \makeatother
 \vfill
-\includegraphics[width=0.98\textwidth,height=0.60\textheight,keepaspectratio]{\detokenize{../figures/cover_visualization.png}}
+\includegraphics[width=0.98\textwidth,height=0.6\textheight,keepaspectratio]{\detokenize{../figures/cover_visualization.png}}
 \vfill
 \end{titlepage}
 \thispagestyle{empty}
 \tableofcontents
 \newpage
 
-
 \section{Abstract}\label{sec:abstract}
 
-This paper presents a metallurgical analogy for scientific manuscript
-composition, mapping gold-refining stages onto the template
-infrastructure pipeline. The refinery processes manuscript ore through 5
-stages - from raw draft (9K, about 37.5\% purity) through
-smelting, assaying, and cupellation - to an internal nine-nines
-certification target (99.9999999\%). The source domain is grounded in
-pre-1800 accounts of metals, assaying, parting, fineness, and marking
-\citep{pliny_natural_history_33, biringuccio_pirotechnia_1540, agricola_de_re_metallica_1556, badcock_touchstone_1678, cramer_assaying_metals_1741},
-while the target domain is a reproducible computational manuscript
-rather than a claim about universal writing quality.
+This paper presents a deterministic, artifact-based methods
+demonstration that maps gold-refining stages onto a reproducible
+manuscript pipeline. The executable refinery processes manuscript ore
+through 5 ordered stages---from raw draft (9K, approximately 37.5\%
+purity) through smelting, assaying, and cupellation---to a local
+nine-nines certification target (99.9999999\%). Pre-1800 accounts ground
+the relations among extraction, assay, parting, fineness, and marking
+\citep{pliny_natural_history_33, biringuccio_pirotechnia_1540, agricola_de_re_metallica_1556, badcock_touchstone_1678, cramer_assaying_metals_1741}.
+They do not establish a universal historical sequence or an empirical
+scale of writing quality.
 
-The analogy is \textbf{load-bearing}, not merely rhetorical: each
-metallurgical stage corresponds to a real template-infrastructure
-operation. This makes the paper an explicit structure-mapping exercise
-rather than a loose metaphor
-\citep{gentner1983structure, hesse1966models}. Smelting removes dross
-(filler, unsupported claims); assaying tests claims against evidence;
-cupellation resolves cross-references; certification validates the full
-pipeline. The mega-madlib token engine selects 24 domain tokens
-deterministically via seeded SHA-256 digest over category inventories,
-ensuring every prose element is traceable and reproducible.
+The analogy is load-bearing in a restricted, testable sense: each stage
+has an executable owner, ordered input and output states, generated
+evidence, and a failure condition. A reverse assay identifies the
+shortest ordered stage prefix that reaches a requested target, while a
+multi-objective purity vector keeps stage completion, claim support,
+token provenance, and figure quality distinct. The mega-madlib engine
+selects 24 configured terms by a seeded SHA-256 digest, recording each
+choice with its slot, category, ordinal, section, and source path.
 
 The contribution is also formalized: 7 equation-backed formalisms define
 purity, monotone refinement, token selection, claim support, gate
@@ -250,14 +260,15 @@ dynamic reports, and reproducible computational research
 \citep{knuth1984literate, leisch2002sweave, peng2011reproducible, sandve2013ten}.
 The project-local claim assay reports 9/9 supported contribution claims
 (100.00\%, passing), while the integrity model exposes 9 source-owned
-risk dimensions and the shared template evidence registry contributes 0
-source-tiered facts when the validation gate has run.
+risk dimensions and the shared template evidence registry contributes
+283 source-tiered facts when the validation gate has run.
 
-\textbf{Results:} The refinery achieves final purity of 99.9999999\%
-(nine-nines) (24K (nine-nines certified)) with a total purity gain of
-90.00\% across all stages. Nine-nines certification: Yes. The purity
-progression is shown in fig.~\ref{fig:purity_progression}, and the karat
-grading scale in fig.~\ref{fig:karat_grading}.
+\textbf{Results:} The canonical run reaches 99.9999999\% (nine-nines)
+(24K (nine-nines certified)), with a designed total gain of 90.00\%;
+local nine-nines predicate: Yes. The project-local claim assay reports
+9/9 registered claims supported. These are internal workflow results,
+not estimates of reader-perceived quality, scientific truth, security
+compliance, or external validity.
 
 \textbf{Keywords:} gold refining, manuscript composition, mega-madlib,
 token injection, scientific purity, assaying, karat grading, security
@@ -287,6 +298,17 @@ paper asks: can that historically plural pipeline serve as a
 \textbf{load-bearing} operational model for scientific manuscript
 composition - not merely a decorative analogy, but a real mapping from
 metallurgical stages to template-infrastructure operations?
+
+We operationalize that question through three narrower research
+questions. \textbf{RQ1:} Can each analogical stage be bound to an
+ordered executable transformation with a source owner and failure
+condition? \textbf{RQ2:} Can prose choices, claims, equations, and
+figures be regenerated with inspectable provenance? \textbf{RQ3:} Can
+the workflow state its stopping boundary clearly enough that local
+certification is not mistaken for domain truth, historical authority, or
+security compliance? The paper answers these questions by constructing
+and validating one exemplar; it does not compare writing interventions
+or estimate effects on readers.
 
 \subsection{The problem}\label{the-problem}
 
@@ -358,10 +380,14 @@ We map five gold-refining stages onto manuscript operations:
 \end{itemize}
 
 Each stage has a metallurgical operation, a manuscript operation, an
-input purity, and an output purity. Purity increases monotonically --- a
-constraint enforced by
-\breaktt{src/purity.py::assert\_monotone\_increase} and tested in
-\breaktt{tests/test\_refinery.py}.
+input purity, and an output purity. Purity increases monotonically,
+stage order is sequential, and each stage input must equal the preceding
+output. These invariants are enforced by
+\breaktt{src/refinery.py::run\_refinery} and
+\breaktt{src/purity.py::assert\_monotone\_increase} and exercised by
+positive and negative tests. \breaktt{stages\_to\_target()} supplies the
+inverse query: given a target, return the shortest valid prefix rather
+than selecting later stages out of order.
 
 \subsection{Mega-madlib token engine}\label{mega-madlib-token-engine}
 
@@ -411,23 +437,40 @@ breaks - a question the discussion addresses.
 
 \section{Methodology: The Refinery Pipeline}\label{sec:methodology}
 
-The refinery pipeline consists of 5 canonical stages, each mapping a
-metallurgical operation to a manuscript-composition operation. The
-pipeline is implemented in \texttt{src/refinery.py} and validated by
-\texttt{src/purity.py}. The methods surface now has four coupled layers:
-the refinery stages, the mega-madlib token plan, the generated formalism
-registry, and the scholarship boundary that determines which claims may
-be generalized beyond this exemplar.
+\subsection{Research design}\label{research-design}
 
-Methodologically, the paper treats composition as part of a research
-compendium: authored sources, executable scripts, generated reports,
-figures, and rendered manuscript outputs are separated but linked
-\citep{marwick2018packaging}. That design follows the executable-paper
-and notebook traditions in which narrative is coupled to runnable
-analysis rather than copied from it
-\citep{leisch2002sweave, rule2019jupyter}. The novelty claimed here is
-narrower: the token-level narrative choices are deterministic and
-provenance-bearing, not that a template can validate scientific truth.
+We conducted a deterministic, artifact-based methods demonstration. The
+research object is one executable manuscript compendium comprising
+authored configuration and Markdown, project source code, generated data
+and reports, registered figures, and rendered publication files. The
+unit of transformation is a refinery stage; the unit of lexical
+composition is a configured token slot; the unit of evidentiary
+evaluation is a registered claim or gate. No human participants,
+stochastic sampling, trained model, or inferential statistical test is
+involved.
+
+The method asks whether a metallurgical stage structure can be
+implemented as an inspectable manuscript workflow. It does \textbf{not}
+test whether the resulting purity values predict reader judgments,
+scientific validity, or editorial acceptance. Accordingly, all reported
+quantities are properties of this executable exemplar: stage outputs,
+token selections, registry contents, and validator outcomes.
+
+The implementation has four coupled layers: (1) a 5-stage refinery
+model, (2) a deterministic mega-madlib token plan, (3) source-owned
+formalisms and evidence registries, and (4) validation gates that
+constrain certification language. This separation follows
+research-compendium practice, in which narrative, code, data,
+environment, and outputs remain distinct but linked
+\citep{marwick2018packaging}. It also follows executable-paper and
+notebook traditions in coupling narrative to runnable analysis rather
+than copying results into prose
+\citep{leisch2002sweave, rule2019jupyter}. The narrower contribution
+here is provenance at the token and claim levels; the workflow does not
+purport to validate scientific truth.
+
+\subsection{Source-domain construction and analogy
+boundary}\label{source-domain-construction-and-analogy-boundary}
 
 Structured reporting guidelines provide the closest scholarly analogue
 for the gate layer, but they also set its limit. CONSORT, STROBE,
@@ -440,22 +483,46 @@ validation play a similar internal role: they make omissions visible and
 bind declarations to artifacts. They do not test whether an external
 study was designed well, executed correctly, or substantively true.
 
-The metallurgical side of the method is deliberately historical rather
-than modern-industrial. Pre-1800 sources support the relational
-structure - extraction, smelting or refining, assay,
-parting/cupellation, fineness, and public marking - but not a claim that
-all regions used the same sequence or that early practitioners held
-modern chemical theories. Pliny is useful for extraction and touchstone
-context; Biringuccio and Agricola are useful for staged metallurgical
-operations; Badcock's \emph{Touch-stone} and the Goldsmiths' Company
-chronology are useful for standards, weights, statutes, and marks;
-Cramer is useful for eighteenth-century assay discipline
+The source domain was constructed from pre-1800 descriptions of
+extraction, smelting or refining, assay, parting/cupellation, fineness,
+and public marking. Pliny supplies extraction and touchstone context;
+Biringuccio and Agricola describe staged metallurgical operations;
+Badcock and the Goldsmiths' Company chronology document standards,
+weights, statutes, and marks; and Cramer presents assay as a disciplined
+relation between theory and practice
 \citep{pliny_natural_history_33, biringuccio_pirotechnia_1540, agricola_de_re_metallica_1556, badcock_touchstone_1678, goldsmiths_hallmarking_history, cramer_assaying_metals_1741}.
-The normalized five-stage pipeline below is therefore an
-analogy-preserving abstraction, not a historical claim that ``ore
--\textgreater{} smelting -\textgreater{} assaying -\textgreater{}
-cupellation -\textgreater{} certification'' was a universal pre-1800
-production recipe.
+
+We normalized these historically plural practices into a five-stage
+relational model. The inclusion criterion was functional relevance to
+one of five target-domain operations: acquiring draft material, removing
+evident defects, testing claims, resolving document integrity, or
+recording a terminal validation state. The ordering preserves the
+refinement relation needed by the target workflow; it is not evidence
+that every historical workshop used this sequence or modern chemical
+theory. The analogy therefore transfers relations among separation,
+test, refinement, and marking---not regulatory authority, material
+equivalence, or empirical measures of prose quality
+\citep{gentner1983structure, hesse1966models}.
+
+\subsection{Inputs and source
+ownership}\label{inputs-and-source-ownership}
+
+The run begins from three authored inputs:
+\breaktt{manuscript/config.yaml}, the Markdown section shells in
+\texttt{manuscript/}, and executable functions in \texttt{src/}.
+Configuration owns the seed, lexicon inventories, slot declarations,
+contribution claims, audit rules, and security-assay rows. Source
+modules own stage calculations, token selection, formalism records,
+evidence aggregation, and figure specifications. Markdown owns
+interpretation and cross-references but consumes computed values only
+through generated variables.
+
+Generated files are observations, not editing surfaces. The analysis
+writes the refinery result, token plan, claim-support registry,
+integrity summaries, and figure-quality records; manuscript hydration
+then resolves variables into disposable Markdown. This ownership rule
+prevents a reported number or selected phrase from being corrected only
+in the rendered paper while its computational source remains unchanged.
 
 \subsection{Stage definitions}\label{stage-definitions}
 
@@ -494,23 +561,39 @@ certified) & Certify purity grade and stamp hallmark \\
 \end{longtable}
 }
 
-\subsection{Purity progression}\label{purity-progression}
+\subsection{Refinery model and purity
+measure}\label{refinery-model-and-purity-measure}
 
 The purity sequence across all stages is: 0.100000, 0.375000, 0.750000,
 0.916700, 0.999000, 1.000000
 
-Purity is strictly increasing --- enforced by
-\breaktt{assert\_monotone\_increase()} which raises \texttt{ValueError}
-if any stage's output purity does not exceed its input. Formally, for
-stages \(s_1, \ldots, s_n\) with input purity \(p_{\text{in}}^{(i)}\)
-and output purity \(p_{\text{out}}^{(i)}\):
+Each stage record contains an order, a metallurgical operation, its
+manuscript analogue, an input purity, and an output purity. The
+canonical values are design parameters declared in
+\texttt{src/refinery.py}; they are not estimated from a corpus or
+calibrated against external ratings. Their methodological role is to
+create a transparent ordinal progression on the bounded interval
+\([0,1]\).
+
+The primary invariants are strict monotonicity, sequential stage order,
+and adjacent-state continuity. \breaktt{assert\_monotone\_increase()}
+raises \texttt{ValueError} if a state fails to exceed its predecessor;
+\texttt{run\_refinery()} also rejects empty pipelines, nonsequential
+order, and any stage whose input differs from the preceding output. For
+stages \(s_1, \ldots, s_n\):
 
 \[
 p_{\text{out}}^{(i)} > p_{\text{in}}^{(i)} \quad \text{and} \quad p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1, \ldots, n-1\}
 \]
 
-The full purity progression is shown in
-fig.~\ref{fig:purity_progression} (see sec.~\ref{sec:results}).
+The reverse-assay function \breaktt{stages\_to\_target()} returns the
+shortest ordered prefix whose terminal output reaches a requested
+purity. Prefix restriction is essential: later stages depend on earlier
+states and cannot be selected as an unordered set. The full progression
+is reported in fig.~\ref{fig:purity_progression} (see
+sec.~\ref{sec:results}). Because the values are constructed, the
+analysis is descriptive and deterministic; no uncertainty interval or
+significance test is appropriate.
 
 \subsection{Formalism registry}\label{formalism-registry}
 
@@ -641,7 +724,8 @@ The adversarial assay defines scope and evidence requirements; it is not
 proof of compliance or live scan findings. Source:
 \breaktt{src/security\_assay.py::build\_security\_assay}.
 
-\subsection{Token selection}\label{token-selection}
+\subsection{Deterministic token
+composition}\label{deterministic-token-composition}
 
 The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:
@@ -650,12 +734,23 @@ categories using a deterministic digest:
 \text{index} = \text{int}\left(\text{SHA-256}\left(\text{seed} \mid \text{slot} \mid \text{category} \mid \text{ordinal} \mid \text{inventory}\right)[:12], 16\right) \mod n
 \]
 
-where \(n\) is the size of the lexicon category inventory. Selected
-metallurgical terms: assaying, parting, smelting. Selected manuscript
-terms: evidence, evidence. The same digest rule is formalized in
-eq.~\ref{eq:token_digest}, while the gate vocabulary for this section
-binds evidence validation, figure registry check, and citation
-validation to concrete validation surfaces.
+where \(n\) is the inventory size. For each declared slot, the procedure
+concatenates the seed, slot name, category, one-based ordinal, and the
+complete ordered inventory; hashes the UTF-8 string; converts the first
+12 hexadecimal characters to an integer; and reduces it modulo \(n\).
+Including the complete inventory makes selection sensitive to both
+membership and order. Replaying the same configuration reproduces the
+same plan; changing the seed, slot specification, or inventory may
+change it.
+
+Each selected value is recorded with its variable name, slot, category,
+section, ordinal, and configuration path. This record permits exact
+replay and source tracing but does not imply that the selected synonym
+is semantically superior. Selected metallurgical terms are assaying,
+parting, and smelting; selected manuscript terms are evidence and
+evidence. eq.~\ref{eq:token_digest} formalizes the rule, while evidence
+validation, figure registry check, and citation validation name the
+corresponding validation surfaces.
 
 \subsection{Config-owned lexicon}\label{config-owned-lexicon}
 
@@ -691,7 +786,8 @@ refinement\_verbs & 5 & assaying, certifying, refining\ldots{} \\
 \end{longtable}
 }
 
-\subsection{Karat grading}\label{karat-grading}
+\subsection{Derived grading
+vocabulary}\label{derived-grading-vocabulary}
 
 Karat grades map purity fractions to a gold-fineness vocabulary used
 here as an analogy surface. The pre-1800 evidence supports fineness as a
@@ -713,14 +809,14 @@ target used by this local software predicate
   Nine-nines = 99.9999999\% (certification stage)
 \end{itemize}
 
-The mapping is implemented in
-\breaktt{src/purity.py::karat\_for\_purity()}. The final nine-nines
-target is a deliberately stringent local certification predicate, not an
-assertion that all gold markets or manuscript-quality regimes use that
-threshold. The karat grading chart is shown in
+\breaktt{src/purity.py::karat\_for\_purity()} assigns the highest
+configured grade whose threshold does not exceed the stage purity. The
+nine-nines label is a deliberately stringent local predicate. It is
+neither a continuous measure of manuscript quality nor an assertion
+about a universal gold-market threshold. The grading chart appears in
 fig.~\ref{fig:karat_grading} (see sec.~\ref{sec:results}).
 
-\subsection{Pipeline phases}\label{pipeline-phases}
+\subsection{Execution procedure}\label{execution-procedure}
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -769,11 +865,41 @@ shared template pipeline & output/pdf and output/web & render command \\
 \end{longtable}
 }
 
-The pipeline table is intentionally operational rather than decorative:
-a fork that changes the stages must update the source function,
-generated variables, figures, and validation gates together.
+For each run, the procedure is:
 
-\subsection{Implementation trace}\label{implementation-trace}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Parse and validate the configuration, including lexicon categories,
+  slots, claims, audit rules, and policy declarations.
+\item
+  Execute the canonical stage sequence and reject discontinuous,
+  nonmonotone, empty, or misordered refinery definitions.
+\item
+  Generate the token plan and record every selection with its
+  configuration provenance.
+\item
+  Build claim-support, integrity, formalism, adversarial-assay, and
+  figure registries from their source owners.
+\item
+  Write analysis artifacts and manuscript variables, then hydrate the
+  Markdown section shells.
+\item
+  Render publication formats and run reference, evidence, figure, and
+  document validators.
+\item
+  Permit certification language only when the required local predicates
+  and gates pass.
+\end{enumerate}
+
+The phase table identifies the input, transformation, output, and guard
+for each step. A fork that modifies a stage or claim must update its
+source definition, generated variables, visualizations, and validators
+together.
+
+\subsection{Traceability and artifact
+lineage}\label{traceability-and-artifact-lineage}
 
 The implementation circuit shown in
 fig.~\ref{fig:implementation_circuit} is the method's wiring diagram. It
@@ -795,7 +921,29 @@ the ore, the furnace, or the assay, but it must do so in the source
 layer and then let the generated and validation layers expose the
 consequences.
 
-\subsection{Adversarial assay layer}\label{adversarial-assay-layer}
+\subsection{Evaluation and acceptance
+criteria}\label{evaluation-and-acceptance-criteria}
+
+Evaluation is criterion-based rather than comparative. The run is
+assessed against predeclared local invariants: complete token hydration,
+valid stage ordering and monotonicity, registered claim support,
+resolvable citations and cross-references, registry-aligned figures,
+successful rendering, and explicit security-claim boundaries.
+eq.~\ref{eq:integrity_vector} retains these outcomes as a vector so one
+strong surface cannot compensate for a failed required gate.
+eq.~\ref{eq:claim_support} reports the proportion of locally registered
+contribution claims with resolvable evidence pointers; it does not score
+the truth or importance of those claims.
+
+The terminal predicate in eq.~\ref{eq:certification_predicate} requires
+the configured final purity threshold and successful required gates.
+Consequently, ``certified'' means internally consistent and reproducibly
+generated under this project's declared rules. It does not mean peer
+reviewed, externally replicated, historically authoritative, secure, or
+compliant with a reporting standard. Detailed probes and audit rules are
+reported in sec.~\ref{sec:evaluation}.
+
+\subsubsection{Adversarial assay}\label{adversarial-assay}
 
 The implementation trace handles accidental drift: missing tokens,
 unsupported claims, malformed citations, stale figures, or broken
@@ -807,18 +955,18 @@ modeling, SBOM standards, and secure-by-design guidance as
 boundary-setting standards rather than proof of compliance
 \citep{nist_sp800_207_zero_trust, nist_sp800_218_ssdf, slsa_v1_2, sigstore_docs, mitre_attack, cyclonedx_spec, spdx_spec, cisa_secure_by_design}.
 
-This pass implements that layer as source-owned rows in
-\breaktt{gold\_refinement.security\_assay} and generated variables from
-\breaktt{src/security\_assay.py}. It does not run Codex Security or Deep
-Security Scan, and it does not report vulnerability findings. Instead,
-eq.~\ref{eq:adversarial_assay} requires every adversarial assay row to
-name a threat, standard or guidance source, local evidence surface,
-validator, and claim boundary before certification language is allowed
-to expand beyond ordinary template gates. The generated assay table
-appears in tbl.~\ref{tbl:security_assay}.
+The assay is implemented as source-owned rows in
+\breaktt{gold\_refinement.security\_assay} and generated records from
+\breaktt{src/security\_assay.py}. Each row must name a threat, standard
+or guidance source, local evidence surface, validator, and claim
+boundary, as specified by eq.~\ref{eq:adversarial_assay} and reported in
+tbl.~\ref{tbl:security_assay}. This study did not run Codex Security or
+Deep Security Scan and reports no vulnerability findings. Completeness
+of the assay schema therefore supports scope disclosure, not security
+compliance.
 
-\subsection{Scientific integrity
-model}\label{scientific-integrity-model}
+\subsubsection{Scientific-integrity risk
+model}\label{scientific-integrity-risk-model}
 
 The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
@@ -884,10 +1032,12 @@ I9 & Adversarial security assay & 15 & security assay &
 tests/test\_security\_assay.py and manuscript source review \\
 \end{longtable}
 
-The residual-risk score is deliberately simple: high severity and low
-detectability raise priority. The score is not a universal risk model;
-it is a local audit heuristic used to decide where a fork must add
-validators before expanding claims.
+The residual-risk score is an ordinal prioritization heuristic: higher
+severity and lower detectability raise review priority. It was not
+fitted to incident data, validated against external judgments, or
+designed for comparison across projects. Its sole use is to identify
+where this exemplar---or a fork---needs stronger ownership, evidence, or
+validation before expanding a claim.
 
 \begin{longtable}[]{@{}ll@{}}
 \caption{Integrity dimensions by owning
@@ -919,22 +1069,58 @@ registries; the manuscript consumes them through variables. Authored
 prose may interpret those values, but it should not silently restate
 them as hand-maintained facts.
 
+\subsubsection{Multi-objective purity}\label{multi-objective-purity}
+
+Scalar stage purity is retained only as the state variable of the
+refinery analogy. \breaktt{src/purity.py::PurityVector} separately
+records stage completion, claim support, token provenance, and figure
+quality on \([0,1]\). The vector exposes its weakest dimension and a
+conjunctive all-complete predicate but intentionally defines no weighted
+average. This prevents a perfect render or terminal stage value from
+numerically compensating for unsupported claims or missing provenance.
+Weighting these dimensions would require an external validation study
+and is outside the present design.
+
+\subsection{Reproducibility and validity
+safeguards}\label{reproducibility-and-validity-safeguards}
+
+Determinism is assessed by exact replay from the same ordered
+configuration and source revision. Provenance is assessed by the
+existence of a path from each reported token, claim, equation, and
+figure to an owning source and generated record. Negative controls in
+the test suite exercise malformed configuration and invalid refinery
+states; figure checks assess file presence, registry parity, dimensions,
+nonblank content, and color variance. Environment and regeneration
+details are given in sec.~\ref{sec:reproducibility}.
+
+Four validity limits govern interpretation. First, \textbf{construct
+validity} is limited because purity is a designed workflow state, not a
+validated measure of writing quality. Second, \textbf{external validity}
+is limited to this exemplar until other domains implement their own
+mappings and validators. Third, \textbf{historical validity} is bounded
+by the normalized analogy and should not be read as a universal account
+of metallurgical practice. Fourth, \textbf{criterion validity} is local:
+passing gates demonstrates source ownership and internal consistency,
+not correctness of domain claims. These limits are part of the method's
+acceptance rule, not qualifications added after results are known.
+
 \newpage
 
 \section{Results: Purity Progression and Karat
 Grading}\label{sec:results}
 
-The refinery pipeline produces a monotonically increasing purity
-sequence across 5 stages, reaching final purity of 99.9999999\%
-(nine-nines) (24K (nine-nines certified)).
+The canonical run completed 5 ordered, continuous stages and reached the
+configured terminal state of 99.9999999\% (nine-nines) (24K (nine-nines
+certified)). These values verify execution of the declared model; they
+are not empirical estimates of manuscript quality.
 
-\subsection{Purity progression}\label{purity-progression-1}
+\subsection{Purity progression}\label{purity-progression}
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Purity progression across refinery stages}]{../figures/purity_progression.png}}
-\caption{Purity progression across refinery
-stages}\label{fig:purity_progression}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Purity progression across the five refinery stages from ore (9K) to nine-nines certification.}]{../figures/purity_progression.png}}
+\caption{Purity progression across the five refinery stages from ore
+(9K) to nine-nines certification.}\label{fig:purity_progression}
 \end{figure}
 
 {\def\LTcaptype{none} % do not increment counter
@@ -976,9 +1162,9 @@ certified) & Certify purity grade and stamp hallmark \\
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Gold karat grading scale with refinery stage markers}]{../figures/karat_grading.png}}
-\caption{Gold karat grading scale with refinery stage
-markers}\label{fig:karat_grading}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Gold karat grading scale (9K--24K + nine-nines) with refinery stage markers.}]{../figures/karat_grading.png}}
+\caption{Gold karat grading scale (9K--24K + nine-nines) with refinery
+stage markers.}\label{fig:karat_grading}
 \end{figure}
 
 \subsection{Final certification}\label{final-certification}
@@ -1004,8 +1190,9 @@ lexicon categories.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Mega-madlib token distribution}]{../figures/token_density.png}}
-\caption{Mega-madlib token distribution}\label{fig:token_density}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Mega-madlib token distribution across manuscript sections and lexicon categories.}]{../figures/token_density.png}}
+\caption{Mega-madlib token distribution across manuscript sections and
+lexicon categories.}\label{fig:token_density}
 \end{figure}
 
 \subsubsection{Category distribution}\label{category-distribution}
@@ -1167,33 +1354,33 @@ table, and validation surfaces.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Provenance flow diagram}]{../figures/provenance_sankey.png}}
-\caption{Provenance flow diagram}\label{fig:provenance_sankey}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Provenance trace: ore \texorpdfstring{\ensuremath{\to}}{->} stages \texorpdfstring{\ensuremath{\to}}{->} certification purity flow.}]{../figures/provenance_sankey.png}}
+\caption{Provenance trace: ore \texorpdfstring{\ensuremath{\to}}{->} stages \texorpdfstring{\ensuremath{\to}}{->} certification purity
+flow.}\label{fig:provenance_sankey}
 \end{figure}
 
 \subsection{Purity vs claim support}\label{purity-vs-claim-support}
 
 The purity-versus-claim-support view in
-fig.~\ref{fig:purity_claim_scatter} places the metallurgical purity
-sequence beside the contribution ledger. This prevents the paper from
-treating purity as an isolated aesthetic score. A point can advance only
-when two surfaces agree: the refinery computation supplies the stage
-purity, and the claim-support registry supplies the cumulative evidence
-exposure for the claims being made at that level of refinement.
+fig.~\ref{fig:purity_claim_scatter} places two differently scoped
+measurements on explicit axes: stage output purity on the horizontal
+axis and the single project-level contribution-claim assay on the
+vertical axis. The same observed support rate is therefore repeated
+across stages. The figure does not fabricate a stagewise claim-support
+trajectory from a project-level aggregate.
 
 In the current generated assay, 9 of 9 contribution claims are supported
-(100.00\%). The figure is useful because it would make a weaker state
-visible immediately: a manuscript could still show late-stage material
-purity while failing to carry its claims along the evidence axis. In
-that case, the visual story would split, and the reader would see that
-certification prose had outrun claim support. Here the two axes are
-deliberately co-present, so the results section cannot celebrate purity
-while hiding unsupported contribution language in a separate paragraph.
+(100.00\%). The plot is diagnostic rather than correlational: five stage
+states and one ledger-level rate do not constitute independent
+observations suitable for association testing. Its purpose is to reveal
+disagreement between a late refinery state and weak overall claim
+support without combining the two into one score.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Purity vs claim support}]{../figures/purity_claim_scatter.png}}
-\caption{Purity vs claim support}\label{fig:purity_claim_scatter}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Stage purity plotted against the single project-level claim-support assay.}]{../figures/purity_claim_scatter.png}}
+\caption{Stage purity plotted against the single project-level
+claim-support assay.}\label{fig:purity_claim_scatter}
 \end{figure}
 
 \subsection{Token selection
@@ -1221,8 +1408,9 @@ claim that any particular synonym is scientifically superior.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Token selection heatmap}]{../figures/token_heatmap.png}}
-\caption{Token selection heatmap}\label{fig:token_heatmap}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Token selection heatmap: seed \texorpdfstring{\ensuremath{\times}}{x} category \texorpdfstring{\ensuremath{\to}}{->} selected index.}]{../figures/token_heatmap.png}}
+\caption{Token selection heatmap: seed \texorpdfstring{\ensuremath{\times}}{x} category \texorpdfstring{\ensuremath{\to}}{->} selected
+index.}\label{fig:token_heatmap}
 \end{figure}
 
 \subsection{Integrity gate matrix}\label{integrity-gate-matrix}
@@ -1253,8 +1441,9 @@ configured here, not against a universal publication-readiness standard.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Integrity-gate matrix}]{../figures/integrity_gate_matrix.png}}
-\caption{Integrity-gate matrix}\label{fig:integrity_gate_matrix}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts.}]{../figures/integrity_gate_matrix.png}}
+\caption{Integrity-gate matrix linking audit rules to tests, manuscript
+surfaces, and generated artifacts.}\label{fig:integrity_gate_matrix}
 \end{figure}
 
 \subsection{Formalism traceability}\label{formalism-traceability}
@@ -1284,8 +1473,9 @@ ornamentation.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Formalism traceability}]{../figures/formalism_traceability.png}}
-\caption{Formalism traceability}\label{fig:formalism_traceability}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Formalism traceability from source-owned equation identifiers to source evidence.}]{../figures/formalism_traceability.png}}
+\caption{Formalism traceability from source-owned equation identifiers
+to source evidence.}\label{fig:formalism_traceability}
 \end{figure}
 
 \subsection{Implementation circuit}\label{implementation-circuit-1}
@@ -1320,9 +1510,10 @@ the manuscript's definition of refinement.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Gold-refinement implementation circuit}]{../figures/implementation_circuit.png}}
-\caption{Gold-refinement implementation
-circuit}\label{fig:implementation_circuit}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback.}]{../figures/implementation_circuit.png}}
+\caption{Implementation circuit from config-owned ore through generated
+manuscript artifacts and validation
+feedback.}\label{fig:implementation_circuit}
 \end{figure}
 
 \subsection{Claim-evidence assay}\label{claim-evidence-assay}
@@ -1355,8 +1546,10 @@ evidence without pretending to certify the wider supply chain.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Claim-evidence assay}]{../figures/claim_evidence_assay.png}}
-\caption{Claim-evidence assay}\label{fig:claim_evidence_assay}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications.}]{../figures/claim_evidence_assay.png}}
+\caption{Claim-evidence assay showing supported contribution claims,
+evidence surfaces, and boundary
+classifications.}\label{fig:claim_evidence_assay}
 \end{figure}
 
 \subsection{Scientific-integrity risk
@@ -1394,9 +1587,10 @@ stronger language.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Scientific-integrity risk matrix}]{../figures/integrity_risk_matrix.png}}
-\caption{Scientific-integrity risk
-matrix}\label{fig:integrity_risk_matrix}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface.}]{../figures/integrity_risk_matrix.png}}
+\caption{Scientific-integrity risk matrix plotting severity,
+detectability, residual risk, and owning evidence
+surface.}\label{fig:integrity_risk_matrix}
 \end{figure}
 
 \subsection{Evidence-tier ladder}\label{evidence-tier-ladder}
@@ -1410,7 +1604,7 @@ bibliography records, source code, or disposable artifacts.
 
 The ladder complements the risk matrix by counting source tiers rather
 than plotting risks. When the shared evidence registry is available, the
-manuscript can report 0 source-tiered facts to the validation surface.
+manuscript can report 283 source-tiered facts to the validation surface.
 When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the
 evidentiary mix instead of receiving an undifferentiated assurance that
@@ -1429,8 +1623,9 @@ their claims inspectable.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Evidence-tier ladder}]{../figures/evidence_tier_ladder.png}}
-\caption{Evidence-tier ladder}\label{fig:evidence_tier_ladder}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.}]{../figures/evidence_tier_ladder.png}}
+\caption{Evidence-tier ladder summarizing source tiers available to the
+shared template evidence registry.}\label{fig:evidence_tier_ladder}
 \end{figure}
 
 \begin{longtable}[]{@{}lll@{}}
@@ -1446,23 +1641,21 @@ Source tier & Count & Role \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-artifact & 2 & Generated artifacts exposed to readers \\
-source\_code & 2 & Executable source files and symbols \\
-bibliography & 1 & Reference records and citation metadata \\
-claim\_ledger & 1 & Source-owned claim and fact declarations \\
-config & 1 & Author-controlled project configuration \\
-generated\_metric & 1 & Numbers regenerated from project analysis \\
-validation & 1 & Template gates and test results \\
+artifact & 125 & Generated artifacts exposed to readers \\
+generated\_metric & 94 & Numbers regenerated from project analysis \\
+bibliography & 47 & Reference records and citation metadata \\
+claim\_ledger & 17 & Source-owned claim and fact declarations \\
 \end{longtable}
 
 \subsection{Adversarial security
 assay}\label{adversarial-security-assay}
 
-The adversarial assay reports 5 adversarial assay rows mapping threats
-and standards to local evidence surfaces, validators, and claim
-boundaries; they are scope controls, not completed scan findings. No
-Codex Security or Deep Security Scan findings are claimed unless a scan
-artifact is generated, validated, and cited. The rows are generated from
+The adversarial assay reports 5 adversarial assay rows, 5
+schema-complete, mapping threats and standards to local evidence
+surfaces, validators, and claim boundaries; completeness is a scope
+control, not completed scan findings. No Codex Security or Deep Security
+Scan findings are claimed unless a scan artifact is generated,
+validated, and cited. The rows are generated from
 \breaktt{gold\_refinement.security\_assay} and are intentionally tabular
 rather than a new public figure, so the visual registry remains the
 stable 12-figure contract.
@@ -1597,7 +1790,7 @@ summary}\label{shared-evidence-registry-summary}
 
 When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 0.
+available to this variable pass: 283.
 
 \begin{longtable}[]{@{}ll@{}}
 \caption{Shared evidence-registry fact kinds when
@@ -1612,7 +1805,13 @@ Fact kind & Count \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-not generated & 0 \\
+artifact & 80 \\
+citation & 47 \\
+equation & 8 \\
+figure & 29 \\
+number & 102 \\
+section & 10 \\
+table & 7 \\
 \end{longtable}
 
 \subsection{Figure quality report}\label{figure-quality-report}
@@ -1674,27 +1873,27 @@ Status
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-claim\_evidence\_assay & yes & yes & 3947x2038 & 0.218 & 0.06041014 &
+claim\_evidence\_assay & yes & yes & 3952x2038 & 0.217 & 0.06027576 &
 pass \\
-evidence\_tier\_ladder & yes & yes & 3020x1724 & 0.216 & 0.05410730 &
+evidence\_tier\_ladder & yes & yes & 3349x1332 & 0.223 & 0.05598645 &
 pass \\
-formalism\_traceability & yes & yes & 3315x1797 & 0.140 & 0.04409869 &
+formalism\_traceability & yes & yes & 3315x1797 & 0.140 & 0.04434550 &
 pass \\
-implementation\_circuit & yes & yes & 2966x1846 & 0.069 & 0.02257238 &
+implementation\_circuit & yes & yes & 2966x1843 & 0.068 & 0.02205485 &
 pass \\
-integrity\_gate\_matrix & yes & yes & 1833x2060 & 0.406 & 0.16147143 &
+integrity\_gate\_matrix & yes & yes & 1818x2060 & 0.409 & 0.16204936 &
 pass \\
-integrity\_risk\_matrix & yes & yes & 2499x1909 & 0.379 & 0.01892053 &
+integrity\_risk\_matrix & yes & yes & 2499x1910 & 0.380 & 0.01852528 &
 pass \\
-karat\_grading & yes & yes & 2956x1699 & 0.279 & 0.07296687 & pass \\
-provenance\_sankey & yes & yes & 2850x1461 & 0.070 & 0.02170098 &
+karat\_grading & yes & yes & 2961x1698 & 0.279 & 0.07300982 & pass \\
+provenance\_sankey & yes & yes & 2850x1461 & 0.070 & 0.02178809 &
 pass \\
-purity\_claim\_scatter & yes & yes & 2347x1745 & 0.032 & 0.01429053 &
+purity\_claim\_scatter & yes & yes & 2336x1744 & 0.034 & 0.01607749 &
 pass \\
-purity\_progression & yes & yes & 3029x2125 & 0.182 & 0.03971092 &
+purity\_progression & yes & yes & 3024x2125 & 0.182 & 0.03967814 &
 pass \\
-token\_density & yes & yes & 3288x1858 & 0.234 & 0.06696808 & pass \\
-token\_heatmap & yes & yes & 2406x2412 & 0.621 & 0.12867696 & pass \\
+token\_density & yes & yes & 3289x1856 & 0.234 & 0.06699486 & pass \\
+token\_heatmap & yes & yes & 2397x2399 & 0.627 & 0.12908659 & pass \\
 \end{longtable}
 
 \newpage
@@ -1763,8 +1962,10 @@ evidence into strong domain evidence.
   remap stages to domain operations (e.g., clinical evidence, legal
   citation, engineering specification).
 \item
-  \textbf{Purity measurement}: adopt the purity fraction and karat grade
-  vocabulary for any staged quality process.
+  \textbf{Staged-state visualization}: reuse the purity and karat
+  vocabulary only when the fork declares what each state means, enforces
+  ordering and continuity, and avoids presenting designed values as
+  validated quality measurements.
 \item
   \textbf{Mega-madlib composition}: reuse the deterministic token engine
   for any config-owned lexical composition task.
@@ -1900,6 +2101,14 @@ gate coverage. A fork that cannot provide comparable source-owned gates
 should keep the gold-refining language as metaphor only and avoid
 publication-strength claims.
 
+The reverse assay clarifies a second boundary. It can identify the
+shortest prefix that reaches a \textbf{declared} target, but it cannot
+identify the cheapest, fairest, or scientifically best workflow unless
+stages have empirically justified costs and outcomes. Likewise, the
+multi-objective purity vector prevents compensatory averaging, but its
+dimensions are still local engineering observables rather than a
+validated psychometric scale.
+
 The practical rule is simple: do not add an impressive figure unless its
 path through fig.~\ref{fig:implementation_circuit} is visible. A visual
 can summarize an idea, but it only supports a manuscript claim when the
@@ -1947,9 +2156,12 @@ not produce.
 \section{Conclusion: Certification and Forking}\label{sec:conclusion}
 
 The gold-refinery pipeline demonstrates that a metallurgical analogy can
-be load-bearing: each stage maps to a real template-infrastructure
-operation, purity increases monotonically, and the final stage achieves
-nine-nines certification (99.9999999\% (nine-nines)).
+be made operationally accountable: each stage maps to an executable
+transformation, stage order and continuity are enforced, artifacts
+preserve provenance, and validators constrain the terminal claim. The
+canonical run reaches the local nine-nines state (99.9999999\%
+(nine-nines)); this is a software predicate, not a universal
+certification of manuscript quality.
 
 \subsection{Summary}\label{summary}
 
@@ -1977,6 +2189,10 @@ nine-nines certification (99.9999999\% (nine-nines)).
   Registered visual evidence spans purity progression, token coverage,
   formalism traceability, implementation flow, claim-evidence assay,
   risk-matrix, and evidence-tier surfaces.
+\item
+  Reverse assay returns the shortest ordered stage prefix for a declared
+  target, and multi-objective purity preserves distinct quality
+  dimensions without compensatory averaging.
 \end{itemize}
 
 \subsection{Forking responsibilities}\label{forking-responsibilities}
@@ -2021,6 +2237,13 @@ bounded by the evidence its sources actually contain
 \section{Reproducibility: Seeded
 Regeneration}\label{sec:reproducibility}
 
+Reproduction requires identity, execution, and verification---not merely
+access to a PDF. Identity fixes the source revision, configuration hash,
+software release, and environment. Execution rebuilds analysis artifacts
+before manuscript hydration. Verification checks that registered claims,
+figures, references, and rendered formats agree with their source
+owners.
+
 \subsection{Deterministic
 regeneration}\label{deterministic-regeneration}
 
@@ -2048,7 +2271,7 @@ source-owned inputs.
 \item
   \textbf{Config hash:} 8d3efef5bcbe8b23
 \item
-  \textbf{Generation timestamp:} 2026-07-03T16:58:43Z
+  \textbf{Generation timestamp:} 2026-07-11T04:09:00Z
 \item
   \textbf{Python version:} 3.12.13
 \end{itemize}
@@ -2064,9 +2287,9 @@ Category & Count \\
 \bottomrule\noalign{}
 \endlastfoot
 Figures & 26 \\
-Data files & 2 \\
-Reports & 16 \\
-\textbf{Total} & 44 \\
+Data files & 3 \\
+Reports & 12 \\
+\textbf{Total} & 41 \\
 \end{longtable}
 }
 
@@ -2084,6 +2307,13 @@ Reports & 16 \\
 \ExtensionTok{./run.sh} \AttributeTok{{-}{-}project}\NormalTok{ templates/template\_gold\_refinement }\AttributeTok{{-}{-}pipeline} \AttributeTok{{-}{-}core{-}only}
 \end{Highlighting}
 \end{Shaded}
+
+A reproduction report should record command exit status, the source
+revision, \breaktt{8d3efef5bcbe8b23}, Python 3.12.13, and whether the
+generated registries pass. Matching prose alone is insufficient if the
+token plan, claim registry, or figure registry differs. Conversely,
+timestamp or renderer metadata differences should be interpreted
+separately from substantive differences in source-owned values.
 
 \subsection{Config ownership}\label{config-ownership}
 
@@ -2174,6 +2404,9 @@ This exemplar demonstrates the gold-refining analogy as a
 \item
   That the analogy replaces domain-specific peer review or expert
   judgement
+\item
+  That reverse assay optimizes cost or scientific value, or that
+  multi-objective purity is a validated composite scale
 \end{itemize}
 
 \subsection{Related work}\label{related-work}
@@ -2310,6 +2543,13 @@ that wants secure-by-design, zero-trust, supply-chain, or
 vulnerability-scan claims must add the missing artifacts, validators,
 receipts, and external review before reusing that language.
 
+The software improvements in this version do not remove these
+limitations. Enforced continuity proves that the configured stages
+connect; reverse assay proves only that a prefix reaches a declared
+numerical target; and \texttt{PurityVector} prevents accidental
+compensatory averaging. None establishes that the chosen targets,
+dimensions, or stage meanings are externally valid.
+
 \newpage
 
 \section{Quality Probes}\label{sec:evaluation}
@@ -2318,7 +2558,7 @@ receipts, and external review before reusing that language.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1666}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2381}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3571}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2381}}@{}}
@@ -2387,6 +2627,14 @@ validation. They are intentionally narrower than peer review: they check
 source ownership, token coverage, figure registration, claim support,
 and rendering integrity before a human reviewer assesses the substantive
 analogy.
+
+Evaluation uses three noninterchangeable levels. \textbf{Invariant
+tests} reject invalid executable states such as nonmonotone,
+discontinuous, or misordered stages. \textbf{Artifact checks} establish
+presence, readability, provenance, and registry parity.
+\textbf{Claim-boundary review} asks whether the prose says no more than
+those tests and artifacts support. Certification requires all applicable
+levels; a pass at one level cannot compensate for failure at another.
 
 \subsection{Audit rules}\label{audit-rules}
 
@@ -2493,6 +2741,14 @@ of equally weighted boxes: token coverage, citation validity, claim
 support, and render readiness all matter, but a high-severity
 low-detectability failure should shape the next source edit before
 cosmetic manuscript polish.
+
+Figure review follows the same rule. File existence and nonblank pixels
+are necessary but not sufficient. The figure caption, encoding
+declaration, source data, and prose interpretation must describe the
+same measurement. This criterion specifically prohibits inferring a
+stagewise trend from a project-level aggregate, which is why
+fig.~\ref{fig:purity_claim_scatter} repeats one observed claim-support
+rate rather than inventing cumulative values.
 
 \newpage
 
@@ -2621,6 +2877,12 @@ between findings, mitigations, and remaining scope.
 \tightlist
 \item
   Do not hand-edit generated manuscript, PDFs, or figures
+\item
+  If using reverse assay, preserve ordered-prefix semantics and disclose
+  that the target is configured rather than empirically optimized
+\item
+  If using multi-objective purity, report dimensions separately unless
+  external evidence justifies an aggregation rule
 \end{enumerate}
 
 Do not hard-code equation, figure, or table numbers in prose. Use
@@ -2638,6 +2900,12 @@ The same rule applies to the adversarial assay. If a fork cannot name
 the threat, standard, local evidence surface, validator, and claim
 boundary for a security claim, the fork should keep the language as
 scoped guidance rather than certification.
+
+Visualization authorship is equally accountable. A technically valid
+image can still mislead through an unsupported axis, aggregation,
+annotation, or caption. Every figure change must therefore update its
+\texttt{FigureSpec}, source data declaration, tests, manuscript
+interpretation, and regenerated PNG/SVG pair as one reviewable unit.
 
 
 

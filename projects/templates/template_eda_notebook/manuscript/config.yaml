@@ -98,13 +98,14 @@ testing:
 
 # Dataset parameters — the EDA library reads the shipped CSV; these document the
 # schema for readers and downstream tooling.
-dataset:
-  csv_path: "data/measurements.csv"
-  id_column: "subject_id"
-  group_column: "group"
-  numeric_columns:
-    - "height_cm"
-    - "weight_kg"
-    - "resting_hr_bpm"
-  histogram_bins: 10
-  correlation_top_n: 3
+project_config:
+  dataset:
+    csv_path: "data/measurements.csv"
+    id_column: "subject_id"
+    group_column: "group"
+    numeric_columns:
+      - "height_cm"
+      - "weight_kg"
+      - "resting_hr_bpm"
+    histogram_bins: 10
+    correlation_top_n: 3

@@ -429,7 +429,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                 contract=stage_spec.contract,
             )
             aggregate_artifact_manifests(self.config.project_dir / "output")
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
             logger.warning(f"Failed to write artifact manifest: {exc}")
 
     def _write_snapshot(self, stage_num: int, stage_spec: StageSpec) -> None:

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,11 +173,22 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology</h1>
 <h2 id="sia-loop">SIA loop</h2>
 <p>The harness implements a three-agent cycle:</p>
@@ -192,8 +203,8 @@ class="math inline">\(n+1\)</span>.</li>
 </ol>
 <figure id="fig:sia-loop-topology">
 <img src="../figures/sia_loop_topology.png" style="width:90.0%"
-alt="Meta → Target → Feedback loop topology for the SIA harness, generated programmatically by write_sia_loop_topology." />
-<figcaption aria-hidden="true">Meta → Target → Feedback loop topology
+alt="Meta → Target → Feedback loop topology for the SIA harness, generated programmatically by write_sia_loop_topology ." />
+<figcaption>Meta → Target → Feedback loop topology
 for the SIA harness, generated programmatically by
 <code>write_sia_loop_topology</code>.</figcaption>
 </figure>
@@ -229,8 +240,9 @@ runs.</p>
 <figure id="fig:sia-generation-heatmap">
 <img src="../figures/sia_generation_heatmap.png" style="width:80.0%"
 alt="Per-generation metric heatmap showing accuracy and sample count across SIA generations." />
-<figcaption aria-hidden="true">Per-generation metric heatmap showing
+<figcaption>Per-generation metric heatmap showing
 accuracy and sample count across SIA generations.</figcaption>
 </figure>
+</main>
 </body>
 </html>

@@ -15,6 +15,7 @@ import yaml
 
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering.latex_log_quality import (
     collect_latex_log_findings,
     format_latex_findings,
@@ -25,16 +26,19 @@ logger = get_logger(__name__)
 
 
 def _manuscript_dir_for_verify(project_root: Path) -> Path:
-    """Prefer ``output/manuscript`` when populated (injected copy), else ``manuscript``."""
+    """Prefer the populated injected copy, else the canonical source manuscript."""
     injected = project_root / "output" / "manuscript"
     if injected.exists() and any(injected.glob("*.md")):
         return injected
-    return project_root / "manuscript"
+    return resolve_source_manuscript_dir(project_root)
 
 
 def _strict_latex_warning_policy_enabled(project_root: Path, manuscript_dir: Path) -> bool:
     """Return whether this project fails render verification on log warnings."""
-    candidates = [manuscript_dir / "config.yaml", project_root / "manuscript" / "config.yaml"]
+    candidates = [
+        manuscript_dir / "config.yaml",
+        resolve_source_manuscript_dir(project_root) / "config.yaml",
+    ]
     for config_path in candidates:
         if not config_path.is_file():
             continue

@@ -9,7 +9,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .viz_palette import ARCH_VIZ_COLORS, FONT_FLOOR
+from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR
 
 _CAPABILITY_GROUPS = [
     ("Core Pipeline", 0, 1),
@@ -194,6 +194,6 @@ def generate_comparative_feature_matrix(output_dir: Path) -> Path:
 
     plt.tight_layout(rect=(0, 0.03, 0.92, 1), pad=1.0)
     path = output_dir / "comparative_feature_matrix.png"
-    plt.savefig(path, dpi=200, bbox_inches="tight", facecolor="white")
+    plt.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
     plt.close()
     return path

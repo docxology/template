@@ -13,6 +13,11 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
+from infrastructure.documentation.publication_standalone import (
+    extract_standalone_publication_block,
+    render_standalone_publication_block,
+    replace_standalone_publication_block,
+)
 from infrastructure.project.public_scope import public_project_names
 
 README_BLOCK_BEGIN = "<!-- BEGIN:PUBLICATION_RECORDS -->"
@@ -35,9 +40,12 @@ class PublicationRecord:
     version_record: str
     github_repository: str
     repository_url: str
+    published_artifacts: tuple[tuple[str, str], ...]
+    standalone_path: Path
     config_path: Path
     citation_path: Path
     zenodo_json_path: Path
+    codemeta_path: Path
     citation_version: str = ""
     citation_doi: str = ""
     zenodo_json_version: str = ""
@@ -130,6 +138,12 @@ class PublicationRecord:
             statuses.extend(self.external_findings)
         return "; ".join(statuses)
 
+    @property
+    def declared_location_count(self) -> int:
+        """Count canonical GitHub/Zenodo locations plus extra declared artifacts."""
+        canonical = int(bool(self.github_display_url)) + int(bool(self.concept_doi))
+        return canonical + len(self.published_artifacts)
+
 
 def _load_json_mapping(path: Path) -> dict[str, Any]:
     if not path.is_file():
@@ -152,6 +166,20 @@ def _authors_from_config(config: dict[str, Any]) -> tuple[str, ...]:
         if isinstance(author, dict) and author.get("name"):
             names.append(str(author["name"]).strip())
     return tuple(name for name in names if name)
+
+
+def _published_artifacts(publication: dict[str, Any]) -> tuple[tuple[str, str], ...]:
+    """Return sorted, non-empty platform/URL pairs from source-owned config."""
+    raw = publication.get("published_artifacts")
+    if not isinstance(raw, dict):
+        return ()
+    return tuple(
+        sorted(
+            (str(platform).strip(), str(url).strip())
+            for platform, url in raw.items()
+            if str(platform).strip() and str(url).strip()
+        )
+    )
 
 
 def _doi_url(doi: str) -> str:
@@ -178,6 +206,13 @@ def _markdown_link(label: str, url: str) -> str:
     return f"[{label}]({url})" if url else label
 
 
+def _published_artifact_links(record: PublicationRecord) -> str:
+    """Render config-declared noncanonical publication locations compactly."""
+    if not record.published_artifacts:
+        return "n/a"
+    return "<br>".join(_markdown_link(platform, url) for platform, url in record.published_artifacts)
+
+
 def _relative_link(path: Path, repo_root: Path, from_dir: Path) -> str:
     rel = path.relative_to(repo_root)
     target = Path("..") / ".." / rel if from_dir.name == "_generated" else rel
@@ -190,11 +225,18 @@ def _sidecar_findings(
     concept_doi: str,
     citation: dict[str, Any],
     zenodo_json: dict[str, Any],
+    codemeta: dict[str, Any],
+    standalone_exists: bool,
 ) -> tuple[str, ...]:
     findings: list[str] = []
     cff_version = str(citation.get("version", "")).strip().strip("'\"")
     cff_doi = str(citation.get("doi", "")).strip()
     zenodo_version = str(zenodo_json.get("version", "")).strip()
+    codemeta_version = str(codemeta.get("version", "")).strip()
+    codemeta_doi = str(codemeta.get("identifier", "")).strip()
+
+    if not standalone_exists:
+        findings.append("missing STANDALONE.md")
 
     if not citation:
         findings.append("missing CITATION.cff")
@@ -207,6 +249,13 @@ def _sidecar_findings(
         findings.append("missing .zenodo.json")
     elif paper_version and zenodo_version != paper_version:
         findings.append(f".zenodo version {zenodo_version or 'empty'} != config {paper_version}")
+
+    if not codemeta:
+        findings.append("missing codemeta.json")
+    elif paper_version and codemeta_version != paper_version:
+        findings.append(f"codemeta version {codemeta_version or 'empty'} != config {paper_version}")
+    if codemeta and concept_doi and codemeta_doi != concept_doi:
+        findings.append(f"codemeta DOI {codemeta_doi or 'empty'} != concept {concept_doi}")
 
     return tuple(findings)
 
@@ -232,10 +281,13 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
         github_repository = str(publication.get("github_repository") or "").strip()
         repository_url = str(publication.get("repository_url") or "").strip() or _github_repo_url(github_repository)
 
+        standalone_path = project_root / "STANDALONE.md"
         citation_path = project_root / "CITATION.cff"
         zenodo_json_path = project_root / ".zenodo.json"
+        codemeta_path = project_root / "codemeta.json"
         citation = _load_yaml_mapping(citation_path)
         zenodo_json = _load_json_mapping(zenodo_json_path)
+        codemeta = _load_json_mapping(codemeta_path)
 
         records.append(
             PublicationRecord(
@@ -248,9 +300,12 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
                 version_record=version_record,
                 github_repository=github_repository,
                 repository_url=repository_url,
+                published_artifacts=_published_artifacts(publication),
+                standalone_path=standalone_path,
                 config_path=config_path,
                 citation_path=citation_path,
                 zenodo_json_path=zenodo_json_path,
+                codemeta_path=codemeta_path,
                 citation_version=str(citation.get("version", "")).strip().strip("'\""),
                 citation_doi=str(citation.get("doi", "")).strip(),
                 zenodo_json_version=str(zenodo_json.get("version", "")).strip(),
@@ -259,6 +314,8 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
                     concept_doi=concept_doi,
                     citation=citation,
                     zenodo_json=zenodo_json,
+                    codemeta=codemeta,
+                    standalone_exists=standalone_path.is_file(),
                 ),
             )
         )
@@ -360,6 +417,12 @@ def render_publication_records_doc(
     generated_at = generated_at or datetime.now(timezone.utc)
     generated_text = generated_at.isoformat(timespec="seconds")
     external_text = f"refreshed at `{generated_text}`" if refreshed_external else "not refreshed in this run"
+    record_count = len(records)
+    standalone_count = sum(record.standalone_path.is_file() for record in records)
+    github_count = sum(bool(record.github_display_url) for record in records)
+    doi_pair_count = sum(bool(record.concept_doi and record.version_doi) for record in records)
+    additional_location_count = sum(len(record.published_artifacts) for record in records)
+    multi_location_project_count = sum(bool(record.published_artifacts) for record in records)
 
     lines = [
         "# Publication Records",
@@ -369,6 +432,8 @@ def render_publication_records_doc(
         "Local source fields come from `infrastructure.project.public_scope`, each public exemplar's "
         "`manuscript/config.yaml`, `CITATION.cff`, and `.zenodo.json`. GitHub and Zenodo columns are "
         f"from public APIs when the generator runs with `--refresh-external` ({external_text}).",
+        "Additional publication locations are source-owned declarations from "
+        "`publication.published_artifacts`; they are indexed here but are not independently live-checked.",
         "",
         "Regenerate:",
         "",
@@ -376,19 +441,35 @@ def render_publication_records_doc(
         "uv run python scripts/docgen/publication_records.py --refresh-external",
         "```",
         "",
+        "## Coverage Summary",
+        "",
+        f"- Public exemplars indexed: **{record_count}**.",
+        f"- Standalone guides present: **{standalone_count}/{record_count}**.",
+        f"- Standalone GitHub repositories declared: **{github_count}/{record_count}**.",
+        f"- Concept and version DOI pairs declared: **{doi_pair_count}/{record_count}**.",
+        f"- Additional publication locations declared: **{additional_location_count}** across "
+        f"**{multi_location_project_count}** exemplars.",
+        "",
         "## Public Exemplar Publication Matrix",
         "",
-        "| Project | Config version | GitHub repo | Latest GitHub release | "
-        "Concept DOI | Latest version DOI | Zenodo version | Status |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Project | Config version | Standalone guide | GitHub repo | Latest GitHub release | "
+        "Concept DOI | Latest version DOI | Other locations | Zenodo version | Status |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for record in records:
         project_label = f"`{record.project_name}`"
+        standalone = _markdown_link(
+            "`STANDALONE.md`" if record.standalone_path.is_file() else "missing",
+            _relative_link(record.standalone_path, repo_root, repo_root / "docs" / "_generated")
+            if record.standalone_path.is_file()
+            else "",
+        )
         github = _markdown_link(record.github_display_label, record.github_display_url)
         release_label = record.github_latest_release_tag or record.github_release_status
         release = _markdown_link(release_label, record.github_latest_release_url)
         concept = _markdown_link(record.concept_doi, _doi_url(record.concept_doi))
         version = _markdown_link(record.version_doi, _doi_url(record.version_doi))
+        other_locations = _published_artifact_links(record)
         status = f"{record.sidecar_status}; {record.external_status}"
         lines.append(
             "| "
@@ -396,10 +477,12 @@ def render_publication_records_doc(
                 [
                     project_label,
                     record.paper_version or "n/a",
+                    standalone,
                     github,
                     release,
                     concept,
                     version,
+                    other_locations,
                     record.zenodo_record_version or "not checked",
                     status,
                 ]
@@ -412,11 +495,17 @@ def render_publication_records_doc(
             "",
             "## Local Source Paths",
             "",
-            "| Project | Config | Citation | Zenodo metadata |",
-            "| --- | --- | --- | --- |",
+            "| Project | Standalone guide | Config | Citation | Zenodo metadata | CodeMeta |",
+            "| --- | --- | --- | --- | --- | --- |",
         ]
     )
     for record in records:
+        standalone_link = _markdown_link(
+            "`STANDALONE.md`" if record.standalone_path.is_file() else "missing",
+            _relative_link(record.standalone_path, repo_root, repo_root / "docs" / "_generated")
+            if record.standalone_path.is_file()
+            else "",
+        )
         config_link = _markdown_link(
             "`manuscript/config.yaml`",
             _relative_link(record.config_path, repo_root, repo_root / "docs" / "_generated"),
@@ -429,7 +518,16 @@ def render_publication_records_doc(
             "`.zenodo.json`",
             _relative_link(record.zenodo_json_path, repo_root, repo_root / "docs" / "_generated"),
         )
-        lines.append(f"| `{record.project_name}` | {config_link} | {citation_link} | {zenodo_link} |")
+        codemeta_link = _markdown_link(
+            "`codemeta.json`" if record.codemeta_path.is_file() else "missing",
+            _relative_link(record.codemeta_path, repo_root, repo_root / "docs" / "_generated")
+            if record.codemeta_path.is_file()
+            else "",
+        )
+        lines.append(
+            f"| `{record.project_name}` | {standalone_link} | {config_link} | "
+            f"{citation_link} | {zenodo_link} | {codemeta_link} |"
+        )
 
     lines.extend(
         [
@@ -440,6 +538,10 @@ def render_publication_records_doc(
             "- `publication.version_doi` is the latest immutable Zenodo deposit DOI.",
             "- `publication.version_record` points at the latest immutable Zenodo record page.",
             "- `publication.github_repository` is the standalone public GitHub repository for the exemplar.",
+            "- `STANDALONE.md` documents what works outside the monorepo and what still requires "
+            "shared infrastructure.",
+            "- `publication.published_artifacts` records additional durable locations such as OSF, Software Heritage, "
+            "Hugging Face, IPFS, package indexes, and static sites; an absent entry is not treated as published.",
             "",
         ]
     )
@@ -452,17 +554,26 @@ def render_github_readme_publication_block(records: list[PublicationRecord]) -> 
         README_BLOCK_BEGIN,
         "<!-- This block is generated by scripts/docgen/publication_records.py. Do not hand-edit. -->",
         "",
-        "| Exemplar | Config version | GitHub | Latest release | Zenodo concept DOI | Latest version DOI |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| Exemplar | Config version | Standalone guide | GitHub | Latest release | "
+        "Zenodo concept DOI | Latest version DOI | Other locations |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for record in records:
         project = _markdown_link(f"`{record.project_name}`", f"../projects/{record.project_name}/")
+        standalone = _markdown_link(
+            "guide" if record.standalone_path.is_file() else "missing",
+            f"../projects/{record.project_name}/STANDALONE.md" if record.standalone_path.is_file() else "",
+        )
         github = _markdown_link(record.github_display_label, record.github_display_url)
         release_label = record.github_latest_release_tag or record.github_release_status
         release = _markdown_link(release_label, record.github_latest_release_url)
         concept = _markdown_link(record.concept_doi, _doi_url(record.concept_doi))
         version = _markdown_link(record.version_doi, _doi_url(record.version_doi))
-        lines.append(f"| {project} | {record.paper_version or 'n/a'} | {github} | {release} | {concept} | {version} |")
+        other_locations = _published_artifact_links(record)
+        lines.append(
+            f"| {project} | {record.paper_version or 'n/a'} | {standalone} | {github} | {release} | "
+            f"{concept} | {version} | {other_locations} |"
+        )
     lines.extend(
         [
             "",
@@ -503,32 +614,32 @@ def _project_label_from_cell(cell: str) -> str:
     return match.group(1) if match else cell.strip()
 
 
-def _publication_matrix_source_rows(text: str) -> dict[str, tuple[str, str, str, str]]:
-    rows: dict[str, tuple[str, str, str, str]] = {}
+def _publication_matrix_source_rows(text: str) -> dict[str, tuple[str, str, str, str, str, str]]:
+    rows: dict[str, tuple[str, str, str, str, str, str]] = {}
     for columns in _markdown_table_rows(text):
-        if len(columns) < 8:
+        if len(columns) < 10:
             continue
         project_name = _project_label_from_cell(columns[0])
         if not project_name.startswith("templates/"):
             continue
-        rows[project_name] = (columns[1], columns[2], columns[4], columns[5])
+        rows[project_name] = (columns[1], columns[2], columns[3], columns[5], columns[6], columns[7])
     return rows
 
 
-def _local_source_path_rows(text: str) -> dict[str, tuple[str, str, str]]:
-    rows: dict[str, tuple[str, str, str]] = {}
+def _local_source_path_rows(text: str) -> dict[str, tuple[str, str, str, str, str]]:
+    rows: dict[str, tuple[str, str, str, str, str]] = {}
     for columns in _markdown_table_rows(text):
-        if len(columns) != 4:
+        if len(columns) != 6:
             continue
         project_name = _project_label_from_cell(columns[0])
-        if not project_name.startswith("templates/") or "manuscript/config.yaml" not in columns[1]:
+        if not project_name.startswith("templates/") or "manuscript/config.yaml" not in columns[2]:
             continue
-        rows[project_name] = (columns[1], columns[2], columns[3])
+        rows[project_name] = (columns[1], columns[2], columns[3], columns[4], columns[5])
     return rows
 
 
-def _github_readme_source_rows(text: str) -> dict[str, tuple[str, str, str, str]]:
-    rows: dict[str, tuple[str, str, str, str]] = {}
+def _github_readme_source_rows(text: str) -> dict[str, tuple[str, str, str, str, str, str]]:
+    rows: dict[str, tuple[str, str, str, str, str, str]] = {}
     match = re.search(
         re.escape(README_BLOCK_BEGIN) + r"(?P<block>.*?)" + re.escape(README_BLOCK_END),
         text,
@@ -537,12 +648,12 @@ def _github_readme_source_rows(text: str) -> dict[str, tuple[str, str, str, str]
     if not match:
         return rows
     for columns in _markdown_table_rows(match.group("block")):
-        if len(columns) < 6:
+        if len(columns) < 8:
             continue
         project_name = _project_label_from_cell(columns[0])
         if not project_name.startswith("templates/"):
             continue
-        rows[project_name] = (columns[1], columns[2], columns[4], columns[5])
+        rows[project_name] = (columns[1], columns[2], columns[3], columns[5], columns[6], columns[7])
     return rows
 
 
@@ -618,6 +729,15 @@ def check_publication_records_doc(
                     _github_readme_source_rows(expected_readme),
                 )
             )
+    stale_standalone = [
+        record.project_name
+        for record in records
+        if not record.standalone_path.is_file()
+        or extract_standalone_publication_block(record.standalone_path.read_text(encoding="utf-8"))
+        != render_standalone_publication_block(record)
+    ]
+    if stale_standalone:
+        differences.append(f"standalone publication identity blocks drifted: {stale_standalone}")
     return differences
 
 
@@ -647,6 +767,15 @@ def write_publication_records_doc(
         block = render_github_readme_publication_block(records)
         readme_path.write_text(
             replace_github_readme_publication_block(readme_path.read_text(encoding="utf-8"), block),
+            encoding="utf-8",
+        )
+
+    for record in records:
+        if not record.standalone_path.is_file():
+            continue
+        current = record.standalone_path.read_text(encoding="utf-8")
+        record.standalone_path.write_text(
+            replace_standalone_publication_block(current, render_standalone_publication_block(record)),
             encoding="utf-8",
         )
 

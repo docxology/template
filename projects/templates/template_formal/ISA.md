@@ -218,8 +218,9 @@ Ship a complete, self-contained, registered public template `template_formal` un
 - [x] ISC-117: `experiment_plan.yaml`, project README/guides, manuscript contribution wording, and test-suite documentation agree with the live method surface: the two registered convergence figures, eight analyses across three experiment families, nine mypy fixtures, and the current 277-test/96.03%-coverage run. `tests/test_project_surface_sync.py` fails on stale counts or missing expected figure IDs.
 
 **Round 16 expansion (publication-asset fail-closed boundary and fork-command synchronization) — added 2026-07-10**
-- [ ] ISC-118: The committed cover-art publication path must fail closed when generation cannot produce an asset, while successful output must be a readable, non-trivial, non-blank PNG. `require_cover_art` must raise on an unwritable destination, the regeneration script must use that required wrapper, and cover-art tests must validate format, dimensions, and rendered-color diversity.
-- [ ] ISC-119: The README, standalone fork guide, and project skill must document the same `MYPYPATH`-qualified authoritative mypy command and current 26-source-file oracle result. A project synchronization test must fail if any surface reintroduces the unsafe bare command or stale source-file count.
+- [x] ISC-118: The committed cover-art publication path must fail closed when generation cannot produce an asset, while successful output must be a readable, non-trivial, non-blank PNG. `require_cover_art` must raise on an unwritable destination, the regeneration script must use that required wrapper, and cover-art tests must validate format, dimensions, and rendered-color diversity.
+- [x] ISC-119: The README, standalone fork guide, and project skill must document the same `MYPYPATH`-qualified authoritative mypy command and current 26-source-file oracle result. A project synchronization test must fail if any surface reintroduces the unsafe bare command or stale source-file count.
+- [x] ISC-120: `scripts/02_run_analysis.py` must be a genuinely thin entrypoint: sweep configuration, statistical aggregation, JSON serialization, required-figure checks, and figure-registry construction live in a tested `src/template_formal/colony/analysis.py` service. The script may resolve the project root, call that service once, and print returned artifact paths; the module-line gate must no longer warn on the script.
 
 ## Test Strategy
 
@@ -233,6 +234,7 @@ Ship a complete, self-contained, registered public template `template_formal` un
 | ISC-117 | synchronization | experiment-plan, manuscript-label, fixture-roster, and documentation consistency checks | no stale method counts; both figure IDs and current test/coverage surface present | `pytest` |
 | ISC-118 | publication-asset boundary | required cover-art wrapper + blocked-destination negative control + PNG quality assertions | generation failure raises; successful asset is readable, non-blank PNG with non-trivial dimensions | `pytest`, script |
 | ISC-119 | documentation synchronization | authoritative-command/source-count contract test | README, standalone guide, and skill agree on `MYPYPATH` command and 26-file oracle | `pytest` |
+| ISC-120 | thin-orchestrator boundary | source-owned analysis service + real artifact integration test + module-line gate | analysis script contains path wiring/call/printing only and emits complete real artifacts | `pytest`, drift gate, module-line gate |
 | ISC-16..26 | integration+fault | in-process bus with seeded fault injection | protocol violation produces typed `Result.Err`, never crash | `pytest` |
 | ISC-27..31 | unit+numeric | hand-computed expected-free-energy comparison | matches within float tolerance | `pytest` |
 | ISC-32..34 | multi-agent integration | N≥3 real agents through colony tick loop | aggregate property observed from real per-agent state | `pytest` |
@@ -682,3 +684,11 @@ Coverage (round 15, cumulative): 117/117 ISC groups passed, 117/117 artifact-bac
 - Shared publication hardening is now covered and re-verified: both LaTeX compilation paths use `-no-shell-escape`, Stage 05 materializes symlink targets instead of copying external links, and standalone Stage 04 validation creates a non-empty 372-entry artifact manifest from current outputs. The focused parent core/rendering lane passes 83 tests; the broader parent run reached its pre-existing Mermaid subprocess timeout after earlier tests passed, so that unrelated environment-dependent lane is not claimed green.
 
 Coverage (round 16, cumulative): 119/119 ISC groups passed, 119/119 artifact-backed (0 `[DEFERRED-VERIFY]`).
+
+**Round 17 (source-owned publication analysis and thin orchestration, 2026-07-12):** ISC-120 added and verified. The analysis entrypoint had accumulated calibrated sweep configuration, statistical aggregation, serialization, figure production, registry construction, and required-artifact checks. Those responsibilities now live in the typed `colony.analysis.run_publication_analysis` service; `scripts/02_run_analysis.py` is a 29-line adapter that resolves the project root, calls the service once, and prints the returned paths. A real temporary-project integration test verifies the complete non-empty artifact set, three real per-agent SQLite databases, calibrated `37/40` convergence result, and exact two-figure registry. The service returns typed `AnalysisArtifacts`, and `DemoSummary` plus the visualization boundary are typed without weakening the existing API.
+
+- Focused analysis/demo lane: **7 passed**; strict source-tree mypy oracle and the new integration test: **2 passed**.
+- Full authoritative project gate: **278/278 passed**, **95.91%** source coverage (90% required), including every real statistical experiment, negative control, mypy oracle, and synchronization check.
+- Strict mypy: **27 source files clean**; Ruff check/format clean; the repository module-line gate is clean and no longer reports the analysis script.
+
+Coverage (round 17, cumulative): 120/120 ISC groups passed, 120/120 artifact-backed (0 `[DEFERRED-VERIFY]`).

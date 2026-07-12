@@ -52,6 +52,7 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 | New user | `core/how-to-use.md` → `guides/getting-started.md` |
 | Developer | `core/architecture.md` → `architecture/two-layer-architecture.md` |
 | **New project** | **`guides/new-project-setup.md`** → **`guides/new-project-one-shot-prompt.md`** (optional LLM scaffold) → `architecture/thin-orchestrator-summary.md` |
+| Publication | `guides/publication-runbook.md` → `guides/publishing-guide.md` → `modules/guides/publishing-module.md` |
 | Contributor | `development/contributing.md` → `development/testing/` |
 | AI Agent | `prompts/SKILL.md` → `prompts/agentic-use/SKILL.md` → `rules/AGENTS.md` |
 | Troubleshooter | `operational/troubleshooting/` → `reference/faq.md` |

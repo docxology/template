@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="scalability-from-1-to-n-projects">Scalability: From 1 to N
 Projects</h2>
 <p>The Standalone Project Paradigm enables horizontal scaling: adding a
@@ -184,21 +188,23 @@ code changes, no <code>pyproject.toml</code> modifications, no CI
 configuration updates. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
-<p>We have validated scaling with 16 canonical exemplars under
+<p>We have validated scaling with 23 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (130 tests) as a
+<code>projects/templates/template_template</code> (138 tests) as a
 git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
 <li><strong><code>template_code_project</code></strong>: Numerical
-optimization example with gradient-descent narration, 236 tests, 90%+
-coverage. Minimal footprint: compact <code>src/</code>, scripted
-analysis, short manuscript sections.</li>
+optimization example with gradient-descent narration and 236 discovered
+tests. Its <code>pyproject.toml</code> declares the 90% project-source
+floor. Minimal footprint: compact <code>src/</code>, scripted analysis,
+short manuscript sections.</li>
 <li><strong><code>template_prose_project</code></strong>: Prose-heavy
 manuscript emphasizing narrative structure and bibliography discipline,
-120 tests, 90%+ coverage—tests exercise rendering and Markdown integrity
-without heavyweight numerics.</li>
+with 120 discovered tests and the same declared project-source floor;
+tests exercise rendering and Markdown integrity without heavyweight
+numerics.</li>
 <li><strong><code>template_autoresearch_project</code></strong>:
 AutoResearch readiness workflow invoking
 <code>projects/templates/template_search_project/scripts/</code> to run
@@ -212,8 +218,8 @@ deep-search aggregates, and report composition.</li>
 analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
-<p>These workspaces share no project-level code—only Layer 1 (23
-infrastructure subdirectories, ~616 Python files)—validating insulation
+<p>These workspaces share no project-level code—only Layer 1 (28
+infrastructure subdirectories, ~662 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 id="multi-project-orchestration">Multi-Project Orchestration</h3>
 <p>When the <code>--all-projects</code> flag is passed to
@@ -253,13 +259,13 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 <td>Test files</td>
 <td style="text-align: center;">12</td>
 <td style="text-align: center;">8</td>
-<td style="text-align: center;">17</td>
+<td style="text-align: center;">20</td>
 </tr>
 <tr>
 <td>Test count</td>
 <td style="text-align: center;">236</td>
 <td style="text-align: center;">120</td>
-<td style="text-align: center;">296</td>
+<td style="text-align: center;">300</td>
 </tr>
 <tr>
 <td>Manuscript chapters</td>
@@ -269,9 +275,9 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tr>
 <tr>
 <td>Analysis scripts</td>
-<td style="text-align: center;">7</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: center;">4</td>
-<td style="text-align: center;">4</td>
+<td style="text-align: center;">5</td>
 </tr>
 <tr>
 <td>Figures (auto-generated)</td>
@@ -282,8 +288,9 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tbody>
 </table>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 23 modules, the same 13 pipeline stages, the same
+project size: the same 28 modules, the same 16 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.</p>
+</main>
 </body>
 </html>

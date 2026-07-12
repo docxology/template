@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:experimental_setup">Experimental Setup</h1>
 <p>This section details the controlled vocabulary, worked examples, and
 software environment used to produce the results.</p>
@@ -251,9 +255,8 @@ a <code>HUMAN</code> <code>ANNOTATE</code> sign-off step</td>
 </tbody>
 </table>
 <p>The second example exists specifically to demonstrate that the
-controlled vocabulary generalizes beyond wet-lab protocols, as <span
-class="citation"
-data-cites="sec:introduction">[@sec:introduction]</span> claims.</p>
+controlled vocabulary generalizes beyond wet-lab protocols, as
+[sec:introduction] claims.</p>
 <h2 id="pipeline-conditions">Pipeline conditions</h2>
 <p>The experiment overlay (<code>experiment_plan.yaml</code>) declares
 three conditions:</p>
@@ -310,8 +313,7 @@ prose match the analysis that just completed.</li>
 </colgroup>
 <thead>
 <tr>
-<th>Result (<span class="citation"
-data-cites="sec:results">[@sec:results]</span>)</th>
+<th>Result ([sec:results])</th>
 <th>Producing function (<code>src/methods_dsl/</code>)</th>
 <th>Primary inputs</th>
 </tr>
@@ -346,5 +348,6 @@ data-cites="sec:results">[@sec:results]</span>)</th>
 </table>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
+</main>
 </body>
 </html>

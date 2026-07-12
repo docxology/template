@@ -18,6 +18,8 @@ review_gates:
   - fond_integrity
 artifact_expectations:
   - output/data/manuscript_variables.json
+  - output/figures/figure_registry.json
+  - data/claim_ledger.yaml
 benchmark_rubric:
   name: integration-readiness
   dimensions:

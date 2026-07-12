@@ -14,13 +14,15 @@ uv run pytest projects/templates/template_template/tests/ --cov=projects/templat
 
 ## Test Coverage
 
-| File | Tests | Target |
-|------|------:|--------|
-| `test_meta.py` | 63 | 90%+ on `introspection.py`, `inject_metrics.py` |
-| `test_metrics.py` | 13 | 90%+ on `metrics.py` |
-| `test_architecture_viz.py` | 6 | File existence + data shape |
-| `test_confidentiality.py` | 9 | Public/private discovery boundary |
-| `test_edge_cases.py` | 39 | Error branches, fallbacks |
-| **Total** | **130** | See [`AGENTS.md`](AGENTS.md) for the per-class breakdown |
+| File | Contract |
+|------|----------|
+| `test_meta.py` | Introspection, injection, and real-manuscript integration |
+| `test_metrics.py` | Metric computation and table generation |
+| `test_architecture_viz.py` | Real PNG generation and matrix invariants |
+| `test_confidentiality.py` | Public/private discovery boundary |
+| `test_edge_cases.py` | Error branches and filesystem fallbacks |
+| `test_evidence_contract.py` | Policy-source binding plus manuscript evidence fail-closed controls |
 
-All tests use real filesystem paths (Zero-Mock policy) — no mocking of `Path`, `os`, or `importlib`.
+Live test and coverage counts belong in the generated repository metrics, not
+this inventory. All tests use real filesystem paths and imports; the project
+suite introduces no prohibited mock framework.

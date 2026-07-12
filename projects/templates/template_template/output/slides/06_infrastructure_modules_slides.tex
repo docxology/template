@@ -112,6 +112,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -133,8 +136,8 @@ Reference}\label{infrastructure-module-reference}
 
 \begin{frame}[fragile,allowframebreaks]{Infrastructure Module Reference}
 This section inventories every Layer‑1 subdirectory returned by
-\texttt{23} \breaktt{discover\_infrastructure\_modules(repo\_root)}. File
-totals use \texttt{616} Python sources across infra + \texttt{7,968}
+\texttt{28} \breaktt{discover\_infrastructure\_modules(repo\_root)}. File
+totals use \texttt{662} Python sources across infra + \texttt{8,583}
 infra tests guarding them. Documentation Duality = paired
 \texttt{README.md} + \texttt{AGENTS.md}; optional \texttt{SKILL.md}
 manifests feed \breaktt{python\ -m\ infrastructure.skills}.
@@ -166,12 +169,13 @@ readiness validation CLI \\
 gates \\
 \texttt{config} & 0 & ✓ & ✓ & Repository defaults + hardened
 templates \\
-\texttt{core} & 110 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 112 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation scaffolding \\
 \texttt{doctor} & 14 & ✓ & ✓ & Checkout diagnose/fix/undo repairs \\
-\texttt{documentation} & 12 & ✓ & ✓ & \texttt{FigureManager},
+\texttt{documentation} & 13 & ✓ & ✓ & \texttt{FigureManager},
 \breaktt{generate\_glossary} \\
+\texttt{fonds} & 6 & ✓ & ✓ & --- \\
 \texttt{llm} & 54 & ✓ & ✓ & Ollama helpers, sanitization, review +
 translation pipelines \\
 \texttt{logrotate.d} & 0 & ✓ & ✓ & Rotation snippets
@@ -179,29 +183,33 @@ translation pipelines \\
 \texttt{methods} & 5 & ✓ & ✓ &
 \breaktt{build\_methods\_orchestration\_plan}, methods-stage contracts +
 validation \\
-\texttt{orchestration} & 8 & ✓ & ✓ & \texttt{PipelineRunner}, entry
+\texttt{orchestration} & 9 & ✓ & ✓ & \texttt{PipelineRunner}, entry
 point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
+\texttt{provenance} & 7 & ✓ & ✓ & --- \\
 \texttt{publishing} & 74 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
-\texttt{rendering} & 57 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 60 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & ✓ & ✓ & Coverage parsers, dashboards,
 executive artefacts \\
+\texttt{research} & 3 & ✓ & ✓ & --- \\
+\texttt{rules} & 6 & ✓ & ✓ & --- \\
 \texttt{scientific} & 4 & ✓ & ✓ & \breaktt{check\_numerical\_stability},
 \breaktt{benchmark\_function} \\
-\texttt{search} & 44 & ✓ & ✓ & \breaktt{infrastructure.search.literature}
+\texttt{search} & 62 & ✓ & ✓ & \breaktt{infrastructure.search.literature}
 clients + cache \\
 \texttt{sia} & 10 & ✓ & ✓ & Self-Improving-AI loop: task validation,
 harness, metric capture \\
 \texttt{skills} & 7 & ✓ & ✓ & \texttt{discover\_skills}, SKILL manifest
 regeneration \\
-\texttt{steganography} & 11 & ✓ & ✓ & Watermark overlays + hash
+\texttt{steganography} & 13 & ✓ & ✓ & Watermark overlays + hash
 manifests \\
-\texttt{validation} & 84 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
+\texttt{tools} & 6 & ✓ & ✓ & --- \\
+\texttt{validation} & 75 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -233,8 +241,8 @@ Repository-wide YAML templates and secure manifests
 configuration subdirectory rather than an importable package.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.core} (110 files)}
-\protect\phantomsection\label{infrastructure.core-110-files}
+\begin{block}{\breaktt{infrastructure.core} (112 files)}
+\protect\phantomsection\label{infrastructure.core-112-files}
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.
@@ -250,9 +258,17 @@ Checkout diagnose/fix/undo repairs for broken local workspace states.
 Pinned images / compose scaffolding for reproducible CI + remote builds.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.documentation} (12 files)}
-\protect\phantomsection\label{infrastructure.documentation-12-files}
+\begin{block}{\breaktt{infrastructure.documentation} (13 files)}
+\protect\phantomsection\label{infrastructure.documentation-13-files}
 Figure registries plus glossary tooling feeding manuscript automation.
+\end{block}
+
+\begin{block}{\breaktt{infrastructure.fonds} (6 files)}
+\protect\phantomsection\label{infrastructure.fonds-6-files}
+Resource pool management for curated fonds (tracked reference datasets,
+bibliographic collections, and evidence corpora). Fonds mirror
+\breaktt{projects/templates/} with git-tracked \texttt{templates/*}
+exemplars and sidecar-linked private lifecycle folders.
 \end{block}
 
 \begin{block}{\breaktt{infrastructure.llm} (54 files)}
@@ -270,8 +286,8 @@ validates an ordered methods plan for a research project so the
 manuscript's ``Methods'' track stays bound to executable stages.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.orchestration} (8 files)}
-\protect\phantomsection\label{infrastructure.orchestration-8-files}
+\begin{block}{\breaktt{infrastructure.orchestration} (9 files)}
+\protect\phantomsection\label{infrastructure.orchestration-9-files}
 \breaktt{python\ -m\ infrastructure.orchestration} exposes interactive
 menus, subprocess wiring for thin shell wrappers (\texttt{run.sh},
 \texttt{secure\_run.sh}), and stubs used in CI for menu parsing tests.
@@ -289,6 +305,17 @@ Readability metrics + Markdown tooling for prose-centric manuscripts /
 CI gates.
 \end{block}
 
+\begin{block}{\breaktt{infrastructure.provenance} (7 files)}
+\protect\phantomsection\label{infrastructure.provenance-7-files}
+Content-addressed provenance DAG. Records artifact lineage (which run
+produced which file, from which inputs) as a verifiable graph of
+artifact/run/source/claim nodes connected by
+produced/consumed/derived-from/supports/refutes edges. Includes a
+structured Review system with severity (blocking/major/minor/info) and
+verdict (refutes/supports). Features a CLI and pipeline integration
+hooks for automatic lineage recording after every stage.
+\end{block}
+
 \begin{block}{\breaktt{infrastructure.publishing} (74 files)}
 \protect\phantomsection\label{infrastructure.publishing-74-files}
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
@@ -300,8 +327,8 @@ Citation/BibTeX parsing + conversion utilities leveraged by manuscripts
 and retrieval scripts.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.rendering} (57 files)}
-\protect\phantomsection\label{infrastructure.rendering-57-files}
+\begin{block}{\breaktt{infrastructure.rendering} (60 files)}
+\protect\phantomsection\label{infrastructure.rendering-60-files}
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.
 \end{block}
@@ -312,16 +339,40 @@ Parses pytest + coverage artefacts for dashboards; pairs with Stage~01
 summaries and downstream executive exports.
 \end{block}
 
+\begin{block}{\breaktt{infrastructure.research} (3 files)}
+\protect\phantomsection\label{infrastructure.research-3-files}
+Seven-stage research workflow
+(SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) defined as
+typed ResearchStage data classes with explicit outputs, skills, and
+template commands per stage. Includes a full PRISMA-adapted literature
+review prompt and a research workflow prompt referencing template/
+infrastructure commands.
+\end{block}
+
+\begin{block}{\breaktt{infrastructure.rules} (6 files)}
+\protect\phantomsection\label{infrastructure.rules-6-files}
+Governance rules layer for validating project lifecycle transitions,
+sidecar sync policies, and pipeline gate orchestration. Rules mirror
+\breaktt{projects/templates/} with git-tracked \texttt{templates/*}
+exemplars.
+\end{block}
+
 \begin{block}{\breaktt{infrastructure.scientific} (4 files)}
 \protect\phantomsection\label{infrastructure.scientific-4-files}
 Stability probing, benchmarking hooks---consumed heavily by optimization
 exemplars (\breaktt{template\_code\_project} scripts).
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.search} (44 files)}
-\protect\phantomsection\label{infrastructure.search-44-files}
-\texttt{literature/} client stack (\texttt{client.py}, backends, caches)
-powering \breaktt{template\_search\_project} literature workflows.
+\begin{block}{\breaktt{infrastructure.search} (62 files)}
+\protect\phantomsection\label{infrastructure.search-62-files}
+Two-tier search architecture: the \texttt{literature/} client stack
+(client.py, backends, caches) powers literature search with arXiv,
+Crossref, local, and Paperclip backends. \texttt{connectors/} exposes
+the built-in scientific database adapters through a uniform
+\breaktt{ConnectorRegistry}; OpenAlex, UniProt, PDB, Semantic Scholar,
+European PMC, bioRxiv, and other registered adapters share list/search
+CLI commands with HTTP timeout, retry, and TTL caching. The live
+registry, not this prose, is authoritative for connector count.
 \end{block}
 
 \begin{block}{\breaktt{infrastructure.sia} (10 files)}
@@ -337,14 +388,21 @@ Discovers \texttt{SKILL.md} frontmatter →
 \breaktt{.cursor/skill\_manifest.json}.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.steganography} (11 files)}
-\protect\phantomsection\label{infrastructure.steganography-11-files}
+\begin{block}{\breaktt{infrastructure.steganography} (13 files)}
+\protect\phantomsection\label{infrastructure.steganography-13-files}
 Watermark overlays, hashing companions triggered by secure pipeline
 path.
 \end{block}
 
-\begin{block}{\breaktt{infrastructure.validation} (84 files)}
-\protect\phantomsection\label{infrastructure.validation-84-files}
+\begin{block}{\breaktt{infrastructure.tools} (6 files)}
+\protect\phantomsection\label{infrastructure.tools-6-files}
+Invocable tool definitions registered by resource-pool governance; tools
+mirror \breaktt{projects/templates/} with git-tracked
+\texttt{templates/*} exemplars.
+\end{block}
+
+\begin{block}{\breaktt{infrastructure.validation} (75 files)}
+\protect\phantomsection\label{infrastructure.validation-75-files}
 Markdown + PDF + integrity CLIs underpinning Stage~04 diagnostics.
 \end{block}
 

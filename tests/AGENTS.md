@@ -13,6 +13,22 @@ The `tests/` directory contains repository-wide tests for infrastructure, integr
 - Use temporary files and directories for filesystem behavior.
 - Use HTTP test servers for HTTP behavior.
 
+## Automated gate versus semantic inventory
+
+`scripts/audit/verify_no_mocks.py` defaults to the enforced lexical gate. Exit
+0 proves that prohibited mock-framework imports and calls are absent; it does
+not prove that every dependency is real. Run `--inventory` to classify
+`pytest.monkeypatch` operations. `setenv`, `delenv`, and `chdir` are reported as
+environment isolation, while `setattr`, `setitem`, and their deletion variants
+are conservatively reported as dependency-replacement debt. The inventory is
+advisory until [`TEST-STANDIN-DEBT-1`](../TO-DO.md#test-standin-debt-1--replace-semantic-monkeypatch-stand-ins)
+reaches zero.
+
+```bash
+uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py --inventory
+```
+
 ## Current Subtrees
 
 - `tests/_support/` - shared test helpers (canonical ephemeral project scaffold factory)

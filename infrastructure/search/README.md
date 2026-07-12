@@ -1,13 +1,14 @@
 # Search Module
 
-Discovery utilities for literature and the web. Each **search interface** is an
-independent subpackage; the literature side is modelled after
+Discovery utilities for literature, scientific databases, and the web. Each
+**search interface** is an independent subpackage; the literature side is modelled after
 [Paperclip](https://paperclip.gxl.ai)'s agent-native abstractions.
 
 ## Submodules
 
 | Submodule | Purpose |
 |---|---|
+| [`connectors`](connectors/) | Uniform registry for eight scientific databases plus the opt-in Stage 08 project workflow and normalized JSON evidence report. |
 | [`literature`](literature/) | Multi-source paper search across arXiv, Crossref, local JSON corpora, and Paperclip; deterministic caching; aggregator client; CLI. |
 | [`exa`](exa/) | General web search, content extraction, and grounded answers via the [Exa API](https://exa.ai). One subpackage per endpoint: [`search`](exa/search/), [`contents`](exa/contents/), [`answer`](exa/answer/), [`find_similar`](exa/find_similar/). Pure-stdlib transport, no SDK, no import-time network. |
 | [`deep_research`](deep_research/) | Provider-neutral deep research orchestration over OpenAI and Gemini with lazy SDK adapters, provider selection, and normalized job/result models. |

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,15 +173,39 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:q_part_III_case_studies">Question Bank — Case Studies</h1>
-<p>Linked chapter: <span class="citation"
-data-cites="sec:part_III_case_studies">[@sec:part_III_case_studies]</span>.
-Answers follow each question in italics.</p>
+<p>Linked chapter: [sec:part_III_case_studies]. Answers follow each
+question in italics.</p>
 <h2 id="recall">Recall</h2>
 <ol type="1">
 <li>What two summary numbers does the chapter report for each condition
@@ -191,14 +215,13 @@ class="math inline">\(3.50\)</span>, <span
 class="math inline">\(4.95\)</span> — plus an overall spread from
 <code>textbook.models.descriptive_statistics</code>, which returns mean,
 std, min, max, and count.)</em></li>
-<li>What do the slope and intercept of the fitted line <span
-class="citation"
-data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>
-represent? <em>(Answer: the slope (<span class="math inline">\(\approx
-1.375\)</span>) is the response added per dose step; the intercept
-(<span class="math inline">\(\approx 2.175\)</span>) is the predicted
-response at dose <span class="math inline">\(0\)</span>, which should
-match the control mean.)</em></li>
+<li>What do the slope and intercept of the fitted line
+[eq:part_III_case_studies_fit] represent? <em>(Answer: the slope (<span
+class="math inline">\(\approx 1.375\)</span>) is the response added per
+dose step; the intercept (<span class="math inline">\(\approx
+2.175\)</span>) is the predicted response at dose <span
+class="math inline">\(0\)</span>, which should match the control
+mean.)</em></li>
 </ol>
 <h2 id="application">Application</h2>
 <ol start="3" type="1">
@@ -228,5 +251,6 @@ Collecting more doses, especially higher ones, would reveal
 curvature/saturation and test whether the linear model generalises.
 Accept reasoned alternatives.)</em></li>
 </ol>
+</main>
 </body>
 </html>

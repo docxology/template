@@ -30,6 +30,7 @@ from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,
 )
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
+from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
@@ -221,7 +222,12 @@ class PDFRenderer:
 
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
-        combined_content = combine_manuscript_markdown_sections(source_files)
+        project_config, _ = _load_render_config(manuscript_dir)
+        rendering_options = _rendering_options(project_config)
+        combined_content = combine_manuscript_markdown_sections(
+            source_files,
+            section_breaks=rendering_options["section_breaks"],
+        )
 
         # Write combined markdown atomically. Any failure (disk full, encoding
         # error, race between write and replace) must still remove the partial
@@ -273,6 +279,8 @@ class PDFRenderer:
             tex_content,
             tagged_pdf=tagged_pdf,
             language=language,
+            figure_height_fraction=rendering_options["figure_height_fraction"],
+            front_matter_figure_height_fraction=rendering_options["front_matter_figure_height_fraction"],
         )
 
         # Step 5: Fix figure paths for LaTeX compilation

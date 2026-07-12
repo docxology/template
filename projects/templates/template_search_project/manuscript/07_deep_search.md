@@ -15,7 +15,7 @@ The `deep_search:` block in `manuscript/config.yaml` controls the run. The most-
 
 ## Pipeline shape
 
-The deep-search pipeline reads the `deep_search:` block from `manuscript/config.yaml`, runs one `SearchQuery` per keyword (capped at `max_results_per_keyword`), aggregates the per-backend results through `LiteratureClient`, enriches every paper via `AbstractFetcher` and `FulltextFetcher`, generates collision-free citation keys with `paper_to_bibentry`, and (when `llm_per_paper: true` and Ollama is reachable) calls the local LLM with `DEEP_PROMPT` to produce a seven-section reading note per paper. The per-keyword outputs are then merged by `merge_papers` to form a deduplicated aggregate roster which is written to `manuscript/references_deep.bib`, `output/deep_search/aggregate.json`, and `output/deep_search/aggregate_report.md`. A Mermaid flowchart in this subsection renders the same flow visually in the HTML build.
+The deep-search pipeline reads `project_config.deep_search` from `manuscript/config.yaml`, runs one `SearchQuery` per keyword (capped at `max_results_per_keyword`), aggregates the per-backend results through `LiteratureClient`, enriches every paper via `AbstractFetcher` and `FulltextFetcher`, generates collision-free citation keys with `paper_to_bibentry`, and (when `llm_per_paper: true` and Ollama is reachable) calls the local LLM with `DEEP_PROMPT` to produce a seven-section reading note per paper. The per-keyword outputs are then merged by `merge_papers` to form a deduplicated aggregate roster which is written to `manuscript/references_deep.bib`, `output/deep_search/aggregate.json`, and `output/deep_search/aggregate_report.md`. A Mermaid flowchart in this subsection renders the same flow visually in the HTML build.
 
 ```mermaid
 flowchart TB
@@ -121,7 +121,7 @@ Three caches make this workflow replayable:
 1. `SearchCache` (`output/search/cache/search_<hash>.json`) — keyed on canonical query identity per keyword.
 2. Abstract cache (`output/cache/abs/<safe_id>.txt`).
 3. Fulltext cache (`output/cache/pdf/<safe_id>.{pdf,txt}`).
-4. LLM seed (`deep_search.llm_seed: 42`) + temperature (`0.0`).
+4. LLM seed (`project_config.deep_search.llm_seed: 42`) + temperature (`0.0`).
 
 Commit any subset of these caches to version control to freeze a run.
 
@@ -132,7 +132,7 @@ by:
 
 1. Creating `projects/templates/template_search_project/.env` (gitignored) with
    your `PAPERCLIP_API_KEY=gxl_…` (template at `.env.example`).
-2. Including `paperclip` in `deep_search.sources`.
+2. Including `paperclip` in `project_config.deep_search.sources`.
 
 The orchestrator scripts auto-load `.env` via the lightweight
 `src.dotenv` module before constructing the backend list. The
@@ -142,8 +142,8 @@ and a JSON-RPC `tools/call` envelope. We support both the modern
 `structuredContent.papers` response shape and the older text-only
 `content[].text` shape (best-effort regex extraction).
 
-Failure-isolation: any per-backend error (including the migration-state
-HTTP 405 the production endpoint may currently return) is captured into
+Failure-isolation: any per-backend error (including a method-rejection response
+the production endpoint may return during migration) is captured into
 `SearchResult.errors[paperclip]` and the run continues. See
 `output/deep_search/<keyword>/papers.json` and the aggregate
 `run_summary.json` for the recorded errors.
@@ -151,7 +151,7 @@ HTTP 405 the production endpoint may currently return) is captured into
 ## CLI
 
 ```bash
-# Run with everything from config.yaml (assumes deep_search.enabled: true)
+# Run with everything from config.yaml (assumes project_config.deep_search.enabled: true)
 uv run python projects/templates/template_search_project/scripts/run_deep_search.py
 
 # Force-enable without touching config.yaml

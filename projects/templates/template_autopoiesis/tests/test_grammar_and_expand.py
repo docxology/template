@@ -1,4 +1,5 @@
 """Tests for grammar and expand modules."""
+
 from __future__ import annotations
 
 import pytest
@@ -10,6 +11,7 @@ from src.grammar import (
     GrammarError,
     GrammarSlot,
     force_domain,
+    load_grammar,
     parse_grammar,
 )
 from src.expand import (
@@ -171,6 +173,26 @@ def test_parse_grammar_different_seed_different_hash():
     assert g1.grammar_hash != g2.grammar_hash
 
 
+def test_load_grammar_reads_project_config_passthrough(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    manuscript.joinpath("config.yaml").write_text(
+        "project_config:\n"
+        "  autopoiesis:\n"
+        "    seed: 17\n"
+        "    slots:\n"
+        "      - name: primitive_domain\n"
+        "        options: [optimization]\n"
+        "    deps: []\n",
+        encoding="utf-8",
+    )
+
+    grammar = load_grammar(tmp_path)
+
+    assert grammar.seed == 17
+    assert grammar.slot("primitive_domain").options == ("optimization",)
+
+
 # ---------------------------------------------------------------------------
 # Grammar.slot()
 # ---------------------------------------------------------------------------
@@ -280,6 +302,7 @@ def test_expand_to_json():
     spec = expand(g)
     j = spec.to_json()
     import json
+
     d = json.loads(j)
     assert "spec_hash" not in d or True  # spec_hash is a property, may not be in to_dict
     assert "seed" in d
@@ -373,6 +396,7 @@ def test_write_spec(tmp_path):
     result = write_spec(spec, out)
     assert result.exists()
     import json
+
     d = json.loads(result.read_text())
     assert d["seed"] == g.seed
 

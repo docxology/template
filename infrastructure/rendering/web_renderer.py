@@ -1,7 +1,5 @@
 """Web/HTML rendering module."""
 
-import base64
-import html
 import re
 import shutil
 import subprocess
@@ -13,71 +11,14 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering import _web_postprocess as web_postprocess
 
 logger = get_logger(__name__)
 
-_MATHJAX_URL = "https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-_MATHJAX_INTEGRITY = "sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz"
-_MATHJAX_FONT_URL = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2"
-_MATHJAX_DYNAMIC_PREFIX = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-_MATHJAX_CONFIG_MARKER = "data-template-mathjax-config"
-_MATHJAX_CONFIG_SCRIPT = f"""<script {_MATHJAX_CONFIG_MARKER}>
-window.MathJax = window.MathJax || {{}};
-window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
-  fontURL: "{_MATHJAX_FONT_URL}",
-  dynamicPrefix: "{_MATHJAX_DYNAMIC_PREFIX}"
-}});
-</script>"""
-_FAVICON_MARKER = "data-template-favicon"
-_FAVICON_LINK = f'<link {_FAVICON_MARKER} rel="icon" href="favicon.ico">'
-_FAVICON_PNG = base64.b64decode(
-    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAALUlEQVR4nGNgGAWjYBSMglEwCkbBqBkFo2AUjIJRMApGwSgYBaNgFIwCABj7ABHX+aOtAAAAAElFTkSuQmCC"
-)
-_FAVICON_ICO = (
-    b"\x00\x00\x01\x00\x01\x00"
-    + bytes([16, 16, 0, 0])
-    + b"\x01\x00\x20\x00"
-    + len(_FAVICON_PNG).to_bytes(4, "little")
-    + (22).to_bytes(4, "little")
-    + _FAVICON_PNG
-)
-
-# Shared design-token + dark-mode block embedded ahead of the rendered CSS so
-# the web surface participates in the same design system (one --brand-1 source
-# and a prefers-color-scheme block) as the reporting HTML surfaces. Maps a few
-# of those tokens onto this renderer's existing serif/blue palette without
-# touching ide_style.css class names. Static string → deterministic output.
-_SHARED_DESIGN_TOKENS_CSS = """:root {
-  --brand-1: #5b6ee0;
-  --web-bg: #f8f8f8;
-  --web-surface: #ffffff;
-  --web-text: #2c3e50;
-  --web-border: #bdc3c7;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --brand-1: #7e8ce8;
-    --web-bg: #0f1420;
-    --web-surface: #161c2b;
-    --web-text: #e6eaf2;
-    --web-border: #2a3447;
-  }
-}
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \\newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
-.theorem-box {
-  border-left: 4px solid var(--brand-1);
-  background: var(--web-surface);
-  padding: 0.6em 1em;
-  margin: 1.1em 0;
-  border-radius: 0 4px 4px 0;
-}
-.theorem-box.definition { border-left-style: dashed; }
-.theorem-box > p:first-child { margin-top: 0; }
-.theorem-box > p:last-child { margin-bottom: 0; }"""
+_MATHJAX_URL = web_postprocess.MATHJAX_URL
+_MATHJAX_INTEGRITY = web_postprocess._MATHJAX_INTEGRITY
+_MATHJAX_FONT_URL = web_postprocess._MATHJAX_FONT_URL
+_MATHJAX_DYNAMIC_PREFIX = web_postprocess._MATHJAX_DYNAMIC_PREFIX
 
 
 class WebRenderer:
@@ -357,12 +298,15 @@ class WebRenderer:
         args.append("--metadata=linkReferences:true")
         title = paper.get("title")
         subtitle = paper.get("subtitle")
+        description = paper.get("description") or subtitle
         if title:
             title_text = str(title)
             args.append(f"--metadata=title:{title_text}")
             args.append(f"--metadata=pagetitle:{title_text}")
         if subtitle:
             args.append(f"--metadata=subtitle:{subtitle}")
+        if description:
+            args.append(f"--metadata=description:{description}")
         for entry in config.get("authors") or []:
             if isinstance(entry, dict) and entry.get("name"):
                 args.append(f"--metadata=author:{entry['name']}")
@@ -589,249 +533,40 @@ class WebRenderer:
 
     @staticmethod
     def _normalize_figure_paths(content: str) -> str:
-        """Rewrite manuscript figure paths for files emitted under ``output/web``."""
-        return (
-            content.replace("../../output/figures/", "../figures/")
-            .replace("../output/figures/", "../figures/")
-            .replace("output/figures/", "../figures/")
-        )
+        return web_postprocess.normalize_figure_paths(content)
 
-    @classmethod
-    def _normalize_figure_paths_in_file(cls, html_file: Path) -> None:
-        """Normalize figure paths in an emitted HTML file in place."""
-        html_content = html_file.read_text(encoding="utf-8")
-        normalized = cls._normalize_figure_paths(html_content)
-        if normalized == html_content:
-            return
-        _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
-        try:
-            _tmp.write_text(normalized, encoding="utf-8")
-            _tmp.replace(html_file)
-        except OSError:
-            _tmp.unlink(missing_ok=True)
-            raise
+    @staticmethod
+    def _normalize_figure_paths_in_file(html_file: Path) -> None:
+        web_postprocess.normalize_figure_paths_in_file(html_file)
 
-    @classmethod
-    def _enhance_accessibility(cls, html_file: Path, *, language: str = "en") -> None:
-        content = html_file.read_text(encoding="utf-8")
-        if not re.search(r"<html\b[^>]*\blang=", content, flags=re.IGNORECASE):
-            content = re.sub(
-                r"<html\b",
-                f'<html lang="{html.escape(language, quote=True)}"',
-                content,
-                count=1,
-                flags=re.IGNORECASE,
-            )
-        content = re.sub(
-            r"(<figcaption\b[^>]*)\saria-hidden=(?:\"true\"|'true')",
-            r"\1",
-            content,
-            flags=re.IGNORECASE,
-        )
-        content = cls._replace_figure_alts(content)
-        if not re.search(r"<main\b", content, flags=re.IGNORECASE):
-            content = re.sub(
-                r"(<body\b[^>]*>)",
-                r'\1\n<main id="main-content">',
-                content,
-                count=1,
-                flags=re.IGNORECASE,
-            )
-            content = re.sub(
-                r"</body>",
-                "</main>\n</body>",
-                content,
-                count=1,
-                flags=re.IGNORECASE,
-            )
-        cls._write_if_changed(html_file, content)
+    @staticmethod
+    def _enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
+        web_postprocess.enhance_accessibility(html_file, language=language)
 
-    @classmethod
-    def _replace_figure_alts(cls, content: str) -> str:
-        def _figure(match: re.Match[str]) -> str:
-            block = match.group(0)
-            caption_match = re.search(
-                r"<figcaption\b[^>]*>(?P<caption>.*?)</figcaption>",
-                block,
-                flags=re.IGNORECASE | re.DOTALL,
-            )
-            if caption_match is None:
-                return block
-            caption = re.sub(r"<[^>]+>", " ", caption_match.group("caption"))
-            caption = html.unescape(caption)
-            replacements = {
-                "delta": "delta",
-                "pi": "pi",
-                "sqrt": "square root",
-                "approx": "approximately",
-                "times": "times",
-            }
-            caption = re.sub(
-                r"\\([A-Za-z]+)",
-                lambda tex: replacements.get(tex.group(1), tex.group(1)),
-                caption,
-            )
-            caption = re.sub(r"\\[()\[\]]", "", caption)
-            caption = re.sub(r"[${}]+", "", caption)
-            caption = re.sub(r"\s+", " ", caption).strip()
-            sentence = re.split(r"(?<=[.!?])\s+", caption, maxsplit=1)[0]
-            concise = sentence[:240].rstrip()
-            if len(sentence) > 240:
-                concise = concise.rsplit(" ", 1)[0] + "…"
-            escaped = html.escape(concise, quote=True)
-            return re.sub(
-                r"(<img\b[^>]*\balt=)(?:\"[^\"]*\"|'[^']*')",
-                rf'\1"{escaped}"',
-                block,
-                count=1,
-                flags=re.IGNORECASE | re.DOTALL,
-            )
+    @staticmethod
+    def _replace_figure_alts(content: str) -> str:
+        return web_postprocess.replace_figure_alts(content)
 
-        return re.sub(
-            r"<figure\b[^>]*>.*?</figure>",
-            _figure,
-            content,
-            flags=re.IGNORECASE | re.DOTALL,
-        )
-
-    @classmethod
-    def _add_responsive_image_variants(cls, html_file: Path) -> None:
-        content = html_file.read_text(encoding="utf-8")
-
-        def _image(match: re.Match[str]) -> str:
-            tag = match.group(0)
-            src_match = re.search(r'\bsrc="([^"]+)"', tag, flags=re.IGNORECASE)
-            if src_match is None:
-                return tag
-            source = src_match.group(1)
-            source_path = Path(source)
-            if source_path.stem.endswith("_mobile"):
-                return tag
-            mobile_source = str(source_path.with_name(source_path.stem + "_mobile" + source_path.suffix))
-            mobile_file = (html_file.parent / mobile_source).resolve()
-            if not mobile_file.is_file():
-                return tag
-            return (
-                '<picture><source media="(max-width: 600px)" '
-                f'srcset="{html.escape(mobile_source, quote=True)}">{tag}</picture>'
-            )
-
-        updated = re.sub(r"<img\b[^>]*>", _image, content, flags=re.IGNORECASE)
-        cls._write_if_changed(html_file, updated)
+    @staticmethod
+    def _add_responsive_image_variants(html_file: Path) -> None:
+        web_postprocess.add_responsive_image_variants(html_file)
 
     @staticmethod
     def _write_if_changed(path: Path, content: str) -> None:
-        if content == path.read_text(encoding="utf-8"):
-            return
-        temporary = path.with_suffix(path.suffix + ".tmp")
-        try:
-            temporary.write_text(content, encoding="utf-8")
-            temporary.replace(path)
-        except OSError:
-            temporary.unlink(missing_ok=True)
-            raise
+        web_postprocess.write_if_changed(path, content)
 
     @staticmethod
     def _harden_mathjax_script(html_file: Path) -> None:
-        html_content = html_file.read_text(encoding="utf-8")
-        if _MATHJAX_URL not in html_content:
-            return
-        script_re = re.compile(r'(<script(?=[^>]*\bsrc="' + re.escape(_MATHJAX_URL) + r'")[^>]*)></script>')
-
-        def _replace(match: re.Match[str]) -> str:
-            tag = match.group(1)
-            if "integrity=" not in tag:
-                tag += f' integrity="{_MATHJAX_INTEGRITY}"'
-            if "crossorigin=" not in tag:
-                tag += ' crossorigin="anonymous"'
-            script = f"{tag}></script>"
-            if _MATHJAX_CONFIG_MARKER in html_content:
-                return script
-            return f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"
-
-        hardened = script_re.sub(_replace, html_content, count=1)
-        if hardened == html_content:
-            return
-        _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
-        try:
-            _tmp.write_text(hardened, encoding="utf-8")
-            _tmp.replace(html_file)
-        except OSError:
-            _tmp.unlink(missing_ok=True)
-            raise
+        web_postprocess.harden_mathjax_script(html_file)
 
     @staticmethod
     def _embed_favicon(html_file: Path) -> None:
-        html_content = html_file.read_text(encoding="utf-8")
-        if _FAVICON_MARKER in html_content:
-            return
-        if "</head>" not in html_content:
-            logger.warning("Could not find </head> tag in HTML, favicon not embedded")
-            return
-        updated = html_content.replace("</head>", f"\n{_FAVICON_LINK}\n</head>", 1)
-        _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
-        try:
-            _tmp.write_text(updated, encoding="utf-8")
-            _tmp.replace(html_file)
-        except OSError:
-            _tmp.unlink(missing_ok=True)
-            raise
+        web_postprocess.embed_favicon(html_file)
 
     @staticmethod
     def _write_favicon_file(output_dir: Path) -> None:
-        favicon_path = output_dir / "favicon.ico"
-        try:
-            favicon_path.write_bytes(_FAVICON_ICO)
-        except OSError as exc:
-            logger.warning("Failed to write favicon.ico: %s", exc)
+        web_postprocess.write_favicon_file(output_dir)
 
-    def _embed_css(self, html_file: Path) -> None:
-        """Embed CSS styling directly into HTML file.
-
-        Reads ide_style.css and inserts it into the <head> section of the HTML.
-
-        Args:
-            html_file: Path to HTML file to modify
-        """
-        try:
-            # Read CSS file
-            css_file = Path(__file__).parent / "ide_style.css"
-            if not css_file.exists():
-                logger.warning(f"CSS file not found: {css_file}, skipping CSS embedding")
-                return
-
-            # Prepend the shared design-token + dark-mode block so the web
-            # surface shares one --brand-1 source and a prefers-color-scheme
-            # block with the reporting HTML surfaces.
-            css_content = _SHARED_DESIGN_TOKENS_CSS + "\n" + css_file.read_text(encoding="utf-8")
-
-            # Read HTML file
-            html_content = html_file.read_text(encoding="utf-8")
-
-            # Find </head> tag and insert CSS before it
-            if "</head>" in html_content:
-                # Create style tag with CSS content
-                style_tag = f"\n<style>\n{css_content}\n</style>\n"
-                html_content = html_content.replace("</head>", style_tag + "</head>")
-            else:
-                # If no </head> tag, try to find <head> and insert after it
-                if "<head>" in html_content:
-                    style_tag = f"<head>\n<style>\n{css_content}\n</style>\n"
-                    html_content = html_content.replace("<head>", style_tag, 1)
-                else:
-                    logger.warning("Could not find <head> tag in HTML, CSS not embedded")
-                    return
-
-            # Write modified HTML back
-            _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
-            try:
-                _tmp.write_text(html_content, encoding="utf-8")
-                _tmp.replace(html_file)
-            except OSError:
-                _tmp.unlink(missing_ok=True)
-                raise
-            logger.debug(f"Embedded CSS from {css_file.name} into {html_file.name}")
-
-        except OSError as e:
-            logger.warning(f"Failed to embed CSS: {e}")
-            # Don't fail the entire process if CSS embedding fails
+    @staticmethod
+    def _embed_css(html_file: Path) -> None:
+        web_postprocess.embed_css(html_file, Path(__file__).parent / "ide_style.css")

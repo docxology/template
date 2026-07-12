@@ -38,6 +38,7 @@ flowchart LR
     SRC["src/"]
     SRC --> INIT[__init__.py<br/>public re-exports]
     SRC --> PP[project_paths.py<br/>output dir helpers]
+    SRC --> FS[figure_specs.py<br/>figure provenance contract]
     SRC --> MV[manuscript_variables.py<br/>TOKEN generation]
     SRC --> DSL["methods_dsl/"]
     DSL --> VOC[vocabulary.py<br/>StepKind · Target]
@@ -52,7 +53,7 @@ flowchart LR
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     class SRC,DSL d
-    class INIT,PP,MV,VOC,UNI,MDL,VAL,CMP,EXP,TRU,EX2 code
+    class INIT,PP,FS,MV,VOC,UNI,MDL,VAL,CMP,EXP,TRU,EX2 code
 ```
 
 ## Configuration as Source of Truth
@@ -114,6 +115,7 @@ uv run pytest projects/templates/template_methods_paper/tests -k "test_run_all_g
 | `methods_dsl/trust.py` | `ProvenanceTier`, `StateRecord`, `append_record`, `verify_chain` |
 | `methods_dsl/examples_methods.py` | `pbs_preparation_method`, `sensor_calibration_method`, `all_example_methods` |
 | `project_paths.py` | `project_output_dirs`, `resolve_project_root` (orchestration plumbing; not in `__all__`) |
+| `figure_specs.py` | `METHODS_FIGURE_SPECS`, `FIGURE_REGISTRY_SCHEMA` (immutable output provenance consumed by `methods_analysis.py`) |
 | `manuscript_variables.py` | `generate_variables`, `save_variables` (manuscript-rendering plumbing; not in `__all__`) |
 
 ## See Also

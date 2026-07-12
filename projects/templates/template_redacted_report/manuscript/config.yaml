@@ -22,6 +22,9 @@ keywords:
   - disclosure control
   - release audit
   - source protection
+analysis:
+  scripts:
+    - 01_generate_release_artifacts.py
 render:
   engine: "pandoc"
   number_sections: true

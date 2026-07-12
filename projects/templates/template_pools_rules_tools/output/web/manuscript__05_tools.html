@@ -242,7 +242,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:tools">Tools: Executable Entry Points</h1>
 <h2 id="what-is-a-tool">What Is a Tool?</h2>
 <p>A <strong>tool</strong> in the template repository is a directory
@@ -395,7 +396,7 @@ manifest’s <code>entrypoints</code> list and checks each path against
 the filesystem. It returns a structured result distinguishing between
 tools that are fully ready (<code>"ok"</code>), partially configured
 (<code>"partial"</code> — some scripts missing), and entirely absent
-(<code>"missing"</code>). In the current integration run, <strong>3
+(<code>"missing"</code>). In the current integration run, <strong>4
 tools</strong> were discovered (<span class="citation"
 data-cites="fig:counts">@fig:counts</span>), all with valid
 manifests.</p>

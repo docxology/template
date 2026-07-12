@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.content.ai_writing import analyze_prose
 
 logger = get_logger(__name__)
@@ -32,7 +33,7 @@ def load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
 
 def prose_quality_enabled(project_root: Path) -> bool:
     """Return whether the opt-in AI-writing prose gate is enabled."""
-    config = load_project_config_yaml(project_root / "manuscript")
+    config = load_project_config_yaml(resolve_source_manuscript_dir(project_root))
     if not config:
         return False
     validation = config.get("validation") or {}
@@ -43,7 +44,7 @@ def prose_quality_enabled(project_root: Path) -> bool:
 def validate_prose_quality(project_root: Path) -> bool:
     """Run the report-only AI-writing fingerprint scan over manuscript Markdown."""
     log_substep("Analyzing prose quality (AI-writing fingerprints)...", logger)
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.is_dir():
         logger.warning("Prose quality: manuscript directory not found at %s", manuscript_dir)
         return True

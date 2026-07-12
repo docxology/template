@@ -232,6 +232,27 @@ def test_skip_projects_excludes_named_project(synthetic_repo: Path) -> None:
     )
 
 
+def test_explicit_missing_project_fails_closed(synthetic_repo: Path) -> None:
+    assert run_per_project_pytest(synthetic_repo, projects=["missing"], fail_under=100) == 1
+
+
+def test_discovery_with_no_projects_fails_closed(synthetic_repo: Path) -> None:
+    assert run_per_project_pytest(synthetic_repo, fail_under=100) == 1
+
+
+def test_empty_tests_directory_is_not_runnable(synthetic_repo: Path) -> None:
+    project = synthetic_repo / "projects" / "empty"
+    (project / "src").mkdir(parents=True)
+    (project / "tests").mkdir()
+    (project / "src" / "__init__.py").write_text("", encoding="utf-8")
+
+    assert run_per_project_pytest(synthetic_repo, projects=["empty"], fail_under=100) == 1
+
+
+def test_allow_empty_requires_explicit_opt_in(synthetic_repo: Path) -> None:
+    assert run_per_project_pytest(synthetic_repo, projects=[], fail_under=100, allow_empty=True) == 0
+
+
 def test_default_fail_under_constant_matches_repo_threshold() -> None:
     """Combined-union project gate, reconciled to measured reality.
 

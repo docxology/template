@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>A Domain Language for Specifying Controlled Methods</title>
   <style>
     /* Default styles provided by pandoc.
@@ -237,7 +238,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -248,6 +268,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -286,34 +308,61 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -345,6 +394,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -352,7 +406,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -368,13 +422,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -389,13 +443,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -413,7 +475,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -421,11 +483,13 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">A Domain Language for Specifying Controlled
 Methods</h1>
 <p class="subtitle">Staged Validation and Deterministic Compilation for
 Method Specification, Informed by BPL</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -595,6 +659,7 @@ class="toc-section-number">8.4</span> Explicit limitations</a></li>
 class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This paper describes a small, tested <strong>domain language for
@@ -608,23 +673,27 @@ compiler, implemented in
 <code>projects/templates/template_methods_paper/src/methods_dsl/</code>
 and described section by section in sec. <a
 href="#sec:methodology">3</a>. The domain language’s vocabulary is
-informed by BPL (Biology Programming Language, [bpl2026]), an upstream
-reference that encodes laboratory protocols as programs with
-biology-native types, staged validation, and deterministic compilation;
-this exemplar generalizes BPL’s intent vocabulary and pipeline shape
-from wet-lab protocols to any controlled procedure.</p>
+informed by BPL (Biology Programming Language, <span class="citation"
+data-cites="bpl2026">(<a href="#ref-bpl2026" role="doc-biblioref">Bota
+Biosciences 2026</a>)</span>), an upstream reference that encodes
+laboratory protocols as programs with biology-native types, staged
+validation, and deterministic compilation; this exemplar generalizes
+BPL’s intent vocabulary and pipeline shape from wet-lab protocols to any
+controlled procedure.</p>
 <p>A <code>Method</code> is a name, a set of typed parameters and
 resources, and an ordered, dependent set of steps — constructed directly
 as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>)
 rather than parsed from new text syntax. Every <code>Quantity</code>
-carries a unit that resolves to one of 18 controlled units across six
+carries a unit that resolves to one of 18 controlled units across seven
 dimensions, and every step names one of 9 controlled-vocabulary intents
 (<code>src/methods_dsl/vocabulary.py</code>), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and target —
 validate a method before <code>compile_method</code>
 (<code>src/methods_dsl/compiler.py</code>) deterministically schedules
-it with Kahn’s algorithm [kahn1962topological] and hashes the canonical
-plan with SHA-256.</p>
+it with Kahn’s algorithm <span class="citation"
+data-cites="kahn1962topological">(<a href="#ref-kahn1962topological"
+role="doc-biblioref">Kahn 1962</a>)</span> and hashes the canonical plan
+with SHA-256.</p>
 <p>We demonstrate the language on 2 worked example methods spanning both
 domains BPL’s design targets and the domains it generalizes to: a manual
 wet-lab preparation (<code>PBSPreparation</code>, 5 steps, target
@@ -642,11 +711,11 @@ controlled vocabulary expressed as typed dataclasses — not a parsed
 grammar — is sufficient to reproduce BPL’s core safety properties
 (dimensional safety, staged validation, deterministic compilation) at a
 scope appropriate for a template exemplar. On the architecture side, the
-DSL is covered above the 90% project gate by a zero-mock test suite,
-generates 13 artifacts (1 figures, 6 data files, 6 reports) per pipeline
-run, and injects reproducibility metadata (configuration hash
-<code>23b5981d45bdc598</code>, build timestamp
-<code>2026-06-30T23:02:10Z</code>) into sec. <a
+DSL is exercised by a zero-mock test suite under the repository’s
+configured project coverage gate, generates 14 artifacts (1 figures, 7
+data files, 6 reports) per pipeline run, and injects reproducibility
+metadata (configuration hash <code>a0f000565bef6a79</code>, build
+timestamp <code>2026-07-12T02:08:51Z</code>) into sec. <a
 href="#sec:reproducibility">7</a>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
@@ -669,15 +738,19 @@ class="header-section-number">2.1</span> Why a methods paper needs its
 own DSL</h2>
 <p>A methods section in ordinary prose is ambiguous by construction:
 “add 10 mL of water, then mix” admits multiple readings of order, units,
-and what “mix” means operationally. BPL [bpl2026] makes the case for
-laboratory protocols directly: free-text instructions admit multiple
-interpretations, unit errors and reagent mismatches surface only at the
-bench, and re-executing a protocol on a different operator or instrument
-introduces silent variation. Fowler frames the general remedy as a
-<strong>domain-specific language</strong> [fowler2010dsl]: a small,
-purpose-built notation whose vocabulary is restricted exactly to the
-concepts the domain needs, so that what can be written down is exactly
-what is intended.</p>
+and what “mix” means operationally. BPL <span class="citation"
+data-cites="bpl2026">(<a href="#ref-bpl2026" role="doc-biblioref">Bota
+Biosciences 2026</a>)</span> makes the case for laboratory protocols
+directly: free-text instructions admit multiple interpretations, unit
+errors and reagent mismatches surface only at the bench, and
+re-executing a protocol on a different operator or instrument introduces
+silent variation. Fowler frames the general remedy as a
+<strong>domain-specific language</strong> <span class="citation"
+data-cites="fowler2010dsl">(<a href="#ref-fowler2010dsl"
+role="doc-biblioref">Fowler 2010</a>)</span>: a small, purpose-built
+notation whose vocabulary is restricted exactly to the concepts the
+domain needs, so that what can be written down is exactly what is
+intended.</p>
 <h2 data-number="2.2"
 id="what-this-exemplar-borrows-from-bpl-and-what-it-generalizes"><span
 class="header-section-number">2.2</span> What this exemplar borrows from
@@ -705,8 +778,10 @@ a full unit library.</li>
 <li><strong>Deterministic compilation.</strong> Same source, same
 options, same plan hash.
 <code>src/methods_dsl/compiler.py::compile_method</code> reproduces this
-with a canonical-JSON SHA-256 hash over a Kahn’s-algorithm
-[kahn1962topological] schedule.</li>
+with a canonical-JSON SHA-256 hash over a Kahn’s-algorithm <span
+class="citation" data-cites="kahn1962topological">(<a
+href="#ref-kahn1962topological" role="doc-biblioref">Kahn
+1962</a>)</span> schedule.</li>
 </ol>
 <p>What this exemplar does <strong>not</strong> carry over is BPL’s text
 grammar and parser: a <code>Method</code> here is constructed directly
@@ -770,9 +845,11 @@ protocol-execution system.</li>
 class="header-section-number">3</span> Methodology</h1>
 <p>The DSL is implemented as eight cooperating modules under
 <code>src/methods_dsl/</code>, each corresponding to one stage of a
-BPL-inspired pipeline [bpl2026]. This section walks the pipeline stage
-by stage, naming the function or class that implements each design
-decision so every claim below is directly checkable against
+BPL-inspired pipeline <span class="citation" data-cites="bpl2026">(<a
+href="#ref-bpl2026" role="doc-biblioref">Bota Biosciences
+2026</a>)</span>. This section walks the pipeline stage by stage, naming
+the function or class that implements each design decision so every
+claim below is directly checkable against
 <code>src/methods_dsl/</code>.</p>
 <h2 data-number="3.1" id="controlled-vocabulary-vocabulary.py"><span
 class="header-section-number">3.1</span> Controlled vocabulary
@@ -859,16 +936,17 @@ class="header-section-number">3.5</span> Deterministic compilation
 and raises <code>MethodValidationError</code> (carrying every failed
 gate’s issues) if any gate fails. On success,
 <code>topological_order</code> schedules the validated steps with Kahn’s
-algorithm [kahn1962topological]: repeatedly remove a step whose
-dependencies are all already scheduled, breaking ties by ascending
-<code>step_id</code> so the same method always yields the same order —
-Python does not guarantee dict/set iteration order is stable for this
-purpose, so the tie-break is explicit, not incidental. The scheduled
-steps are then encoded as a canonical, sort-keys JSON payload and hashed
-with SHA-256 (<code>_compute_plan_hash</code>) into
-<code>Plan.plan_hash</code>. Because the hash is computed purely from
-<code>method_name</code>, <code>method_version</code>,
-<code>target</code>, and each step’s
+algorithm <span class="citation" data-cites="kahn1962topological">(<a
+href="#ref-kahn1962topological" role="doc-biblioref">Kahn
+1962</a>)</span>: repeatedly remove a step whose dependencies are all
+already scheduled, breaking ties by ascending <code>step_id</code> so
+the same method always yields the same order — Python does not guarantee
+dict/set iteration order is stable for this purpose, so the tie-break is
+explicit, not incidental. The scheduled steps are then encoded as a
+canonical, sort-keys JSON payload and hashed with SHA-256
+(<code>_compute_plan_hash</code>) into <code>Plan.plan_hash</code>.
+Because the hash is computed purely from <code>method_name</code>,
+<code>method_version</code>, <code>target</code>, and each step’s
 <code>step_id</code>/<code>name</code>/<code>kind</code>/<code>target</code>/scheduled
 <code>order</code> — never from a wall-clock timestamp or a UUID —
 recompiling the same <code>Method</code> object always produces the same
@@ -895,13 +973,15 @@ class="header-section-number">3.7</span> Provenance
 generalizing BPL’s audit model. <code>append_record</code> extends an
 immutable hash-chain of <code>StateRecord</code>s, each hashing its own
 <code>key</code>/<code>value</code>/
-<code>tier</code>/<code>prev_hash</code> [merkle1987digital];
-<code>verify_chain</code> recomputes every record’s hash and checks it
-against the recorded <code>prev_hash</code> chain. This is a consistency
-check, not a cryptographic tamper-proof guarantee against an actor with
-write access to the whole stored chain: it detects in-chain tampering
-(any record after a tampered one no longer matches) but cannot detect a
-chain rewritten from record zero, exactly the boundary BPL’s own
+<code>tier</code>/<code>prev_hash</code> <span class="citation"
+data-cites="merkle1987digital">(<a href="#ref-merkle1987digital"
+role="doc-biblioref">Merkle 1987</a>)</span>; <code>verify_chain</code>
+recomputes every record’s hash and checks it against the recorded
+<code>prev_hash</code> chain. This is a consistency check, not a
+cryptographic tamper-proof guarantee against an actor with write access
+to the whole stored chain: it detects in-chain tampering (any record
+after a tampered one no longer matches) but cannot detect a chain
+rewritten from record zero, exactly the boundary BPL’s own
 “hash-chained” (not cryptographically signed) audit model claims.</p>
 <h2 data-number="3.8" id="zero-mock-testing-methodology"><span
 class="header-section-number">3.8</span> Zero-mock testing
@@ -988,8 +1068,8 @@ class="header-section-number">4.2</span> Step-count comparison</h2>
 compiled method.</p>
 <figure id="fig:step_counts">
 <img src="../figures/step_counts.png"
-alt="Figure 1: Steps per example method: a bar chart built from len(plan.steps) for each plan in output/data/compiled_plans.json, plotted by scripts/methods_analysis.py." />
-<figcaption aria-hidden="true">Figure 1: Steps per example method: a bar
+alt="Figure 1: Steps per example method: a bar chart built from len(plan.steps) for each plan in output/data/compiled_plans.json , plotted by scripts/methods_analysis.py ." />
+<figcaption>Figure 1: Steps per example method: a bar
 chart built from <code>len(plan.steps)</code> for each plan in
 <code>output/data/compiled_plans.json</code>, plotted by
 <code>scripts/methods_analysis.py</code>.</figcaption>
@@ -1040,7 +1120,7 @@ PNG figure are written.</li>
 generated-variable name used in <code>manuscript/*.md</code> is emitted
 by <code>generate_variables</code>.</li>
 </ul>
-<p>All tests pass with coverage exceeding the 90% project gate, with no
+<p>All tests pass under the configured project coverage gate, with no
 mocks.</p>
 <h2 data-number="4.7" id="discussion"><span
 class="header-section-number">4.7</span> Discussion</h2>
@@ -1056,11 +1136,13 @@ that would drift the moment the example methods changed.</p>
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
 <p>This paper presented a small, tested domain language for specifying
-controlled methods, informed by BPL’s [bpl2026] domain-language design
-for laboratory protocols and generalized to any controlled procedure. It
-validates a simple proposition: a controlled vocabulary expressed as
-typed, validated dataclasses — not a parsed text grammar — is sufficient
-to reproduce BPL’s core safety properties at a scope appropriate for a
+controlled methods, informed by BPL’s <span class="citation"
+data-cites="bpl2026">(<a href="#ref-bpl2026" role="doc-biblioref">Bota
+Biosciences 2026</a>)</span> domain-language design for laboratory
+protocols and generalized to any controlled procedure. It validates a
+simple proposition: a controlled vocabulary expressed as typed,
+validated dataclasses — not a parsed text grammar — is sufficient to
+reproduce BPL’s core safety properties at a scope appropriate for a
 template exemplar.</p>
 <h2 data-number="5.1" id="exemplar-achievements"><span
 class="header-section-number">5.1</span> Exemplar achievements</h2>
@@ -1104,9 +1186,11 @@ guarantee the implementation does not actually provide.</p>
 class="header-section-number">5.3</span> Key insights</h2>
 <ol type="1">
 <li><strong>Determinism follows from explicit tie-breaking</strong>:
-Kahn’s algorithm [kahn1962topological] alone does not guarantee a stable
-schedule across runs — the ascending-<code>step_id</code> tie-break is
-what makes <code>plan_hash</code> reproducible, and sec. <a
+Kahn’s algorithm <span class="citation"
+data-cites="kahn1962topological">(<a href="#ref-kahn1962topological"
+role="doc-biblioref">Kahn 1962</a>)</span> alone does not guarantee a
+stable schedule across runs — the ascending-<code>step_id</code>
+tie-break is what makes <code>plan_hash</code> reproducible, and sec. <a
 href="#sec:results">4</a> checks this live rather than asserting
 it.</li>
 <li><strong>Staged short-circuit avoids misleading errors</strong>:
@@ -1346,10 +1430,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Render the manuscript</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py <span class="at">--project</span> templates/template_methods_paper</span></code></pre></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py <span class="at">--project</span> templates/template_methods_paper</span></code></pre></div>
 <p>Or, end to end via the orchestrated pipeline:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/execute_pipeline.py <span class="at">--project</span> templates/template_methods_paper <span class="at">--core-only</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/runner/execute_pipeline.py <span class="at">--project</span> templates/template_methods_paper <span class="at">--core-only</span></span></code></pre></div>
 <h2 data-number="7.2" id="generated-artifact-registry"><span
 class="header-section-number">7.2</span> Generated artifact
 registry</h2>
@@ -1435,9 +1519,9 @@ either a generated variable sourced from a live analysis output or
 registered in <code>data/claim_ledger.yaml</code> for evidence-registry
 validation. The manuscript intentionally does not hand-transcribe
 volatile values, so prose and artifacts cannot disagree. Configuration
-provenance is itself injected: <code>23b5981d45bdc598</code> is the
+provenance is itself injected: <code>a0f000565bef6a79</code> is the
 SHA-256 of <code>manuscript/config.yaml</code> at build time, and
-<code>2026-06-30T23:02:10Z</code> records when the variables were
+<code>2026-07-12T02:08:51Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 <hr />
@@ -1445,28 +1529,35 @@ builds).</p>
 class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
 <p>This section situates the exemplar and states explicit boundaries.
-The goal is not to compete with BPL’s full compiler pipeline [bpl2026] —
-a ~32,000-line implementation with a Lark grammar, a robot backend, and
-a hash-chained audit/compliance layer — but to show how a minimal,
+The goal is not to compete with BPL’s substantially larger full compiler
+pipeline <span class="citation" data-cites="bpl2026">(<a
+href="#ref-bpl2026" role="doc-biblioref">Bota Biosciences
+2026</a>)</span> — with its Lark grammar, robot backend, and
+hash-chained audit/compliance layer — but to show how a minimal,
 test-backed subset of BPL’s domain-language design fits the template’s
-reproducibility and rendering stack [peng2011reproducible], generalized
-from wet-lab protocols to any controlled procedure.</p>
+reproducibility and rendering stack <span class="citation"
+data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>)</span>, generalized from wet-lab
+protocols to any controlled procedure.</p>
 <h2 data-number="8.1"
 id="domain-specific-languages-for-controlled-procedures"><span
 class="header-section-number">8.1</span> Domain-specific languages for
 controlled procedures</h2>
 <p>Encoding a procedure as a program rather than free text is a
 long-standing software-engineering pattern: Fowler’s treatment of
-domain-specific languages [fowler2010dsl] frames the general case — a
-notation restricted to exactly the concepts a domain needs. BPL
-[bpl2026] applies this specifically to laboratory protocols, adding
-biology-native types (reagents, labware, MW-aware concentrations),
-staged validation, and deterministic compilation to a robot or human
-execution target. The present manuscript restricts attention to the
-parts of that design that generalize beyond biology: a controlled
-vocabulary of step intents, a small dimensional-safety unit system,
-staged validation gates, and deterministic compilation to a hashed
-plan.</p>
+domain-specific languages <span class="citation"
+data-cites="fowler2010dsl">(<a href="#ref-fowler2010dsl"
+role="doc-biblioref">Fowler 2010</a>)</span> frames the general case — a
+notation restricted to exactly the concepts a domain needs. BPL <span
+class="citation" data-cites="bpl2026">(<a href="#ref-bpl2026"
+role="doc-biblioref">Bota Biosciences 2026</a>)</span> applies this
+specifically to laboratory protocols, adding biology-native types
+(reagents, labware, MW-aware concentrations), staged validation, and
+deterministic compilation to a robot or human execution target. The
+present manuscript restricts attention to the parts of that design that
+generalize beyond biology: a controlled vocabulary of step intents, a
+small dimensional-safety unit system, staged validation gates, and
+deterministic compilation to a hashed plan.</p>
 <h2 data-number="8.2"
 id="what-this-exemplar-does-not-implement-out-of-scope"><span
 class="header-section-number">8.2</span> What this exemplar does not
@@ -1538,7 +1629,7 @@ class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[key]</code> citation in the
+<code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
@@ -1547,5 +1638,36 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_methods_paper/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-bpl2026" class="csl-entry" role="listitem">
+Bota Biosciences. 2026. <em><span>BPL</span>: A Domain-Specific Language
+for Describing, Validating, and Executing Biology Laboratory
+Protocols</em>. <a
+href="https://gitlab.com/bota-biosciences-public/bpl-code"
+class="uri">Https://gitlab.com/bota-biosciences-public/bpl-code</a>.
+</div>
+<div id="ref-fowler2010dsl" class="csl-entry" role="listitem">
+Fowler, Martin. 2010. <em>Domain-Specific Languages</em>. Addison-Wesley
+Professional.
+</div>
+<div id="ref-kahn1962topological" class="csl-entry" role="listitem">
+Kahn, Arthur B. 1962. <span>“Topological Sorting of Large
+Networks.”</span> <em>Communications of the ACM</em> 5 (11): 558–62. <a
+href="https://doi.org/10.1145/368996.369025">https://doi.org/10.1145/368996.369025</a>.
+</div>
+<div id="ref-merkle1987digital" class="csl-entry" role="listitem">
+Merkle, Ralph C. 1987. <em>A Digital Signature Based on a Conventional
+Encryption Function</em>. Lecture notes in computer science, vol. 293:
+369–78. <a
+href="https://doi.org/10.1007/3-540-48184-2_32">https://doi.org/10.1007/3-540-48184-2_32</a>.
+</div>
+<div id="ref-peng2011reproducible" class="csl-entry" role="listitem">
+Peng, Roger D. 2011. <span>“Reproducible Research in Computational
+Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
+href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

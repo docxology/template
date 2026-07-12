@@ -34,3 +34,17 @@ claims:
     source_tier: generated_metric
     freshness: active
     artifact_path: output/reports/trust_chain_report.json
+  - claim_id: controlled-dimension-count
+    kind: number
+    value: 7
+    source: projects/templates/template_methods_paper/src/methods_dsl/units.py Dimension members
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/methods_dsl/units.py
+  - claim_id: config-hash-prefix-length
+    kind: number
+    value: 16
+    source: projects/templates/template_methods_paper/src/manuscript_variables.py CONFIG_HASH_LENGTH
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/manuscript_variables.py

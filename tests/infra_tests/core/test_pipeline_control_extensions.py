@@ -16,6 +16,8 @@ import pytest
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.artifacts import (
+    ArtifactManifest,
+    ArtifactManifestEntry,
     aggregate_artifact_manifests,
     validate_artifact_manifest,
     write_stage_artifact_manifest,
@@ -674,6 +676,90 @@ def test_aggregate_artifact_manifest_scans_outputs_without_stage_manifests(tmp_p
     assert aggregate.entries[0].path == "output/data/result.json"
     assert aggregate.entries[0].stage_name == "standalone-output-scan"
     assert validation.issues == ()
+
+
+@pytest.mark.parametrize("target_is_directory", [False, True])
+def test_artifact_manifests_reject_output_symlinks(tmp_path: Path, target_is_directory: bool) -> None:
+    repo_root = tmp_path / "repo"
+    project_dir = repo_root / "projects" / "p"
+    output_dir = project_dir / "output"
+    data_dir = output_dir / "data"
+    data_dir.mkdir(parents=True)
+    outside = tmp_path / ("outside-dir" if target_is_directory else "outside.txt")
+    if target_is_directory:
+        outside.mkdir()
+        (outside / "private.txt").write_text("private", encoding="utf-8")
+    else:
+        outside.write_text("private", encoding="utf-8")
+    linked = data_dir / "linked"
+    linked.symlink_to(outside, target_is_directory=target_is_directory)
+
+    stage = write_stage_artifact_manifest(
+        repo_root=repo_root,
+        project_dir=project_dir,
+        stage_num=4,
+        stage_name="Project Analysis",
+        contract=StageContract(output_artifacts=("projects/{project}/output/data/",)),
+    )
+    aggregate = aggregate_artifact_manifests(output_dir)
+    validation = validate_artifact_manifest(aggregate, project_dir=project_dir)
+
+    assert stage.entries == ()
+    assert "symlink artifact forbidden: data/linked" in stage.issues
+    assert all(entry.path != "output/data/linked" for entry in aggregate.entries)
+    assert "symlink artifact forbidden: data/linked" in validation.issues
+
+
+def test_artifact_manifest_validation_rejects_path_escape(tmp_path: Path) -> None:
+    project_dir = tmp_path / "project"
+    project_dir.mkdir()
+    outside = tmp_path / "private.txt"
+    outside.write_text("private", encoding="utf-8")
+    manifest = ArtifactManifest(
+        entries=(
+            ArtifactManifestEntry(
+                path="../private.txt",
+                size_bytes=outside.stat().st_size,
+                sha256="not-trusted",
+                stage_num=0,
+                stage_name="malicious",
+                contract_match=True,
+            ),
+        )
+    )
+
+    validation = validate_artifact_manifest(manifest, project_dir=project_dir)
+
+    assert validation.issues == ("unsafe artifact path: ../private.txt",)
+
+
+def test_manifest_writers_reject_symlinked_control_destinations(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    project_dir = repo_root / "projects" / "p"
+    output_dir = project_dir / "output"
+    output_dir.mkdir(parents=True)
+    outside_stage = tmp_path / "outside-stage"
+    outside_stage.mkdir()
+    (output_dir / ".pipeline").symlink_to(outside_stage, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="write a manifest through symlink"):
+        write_stage_artifact_manifest(
+            repo_root=repo_root,
+            project_dir=project_dir,
+            stage_num=1,
+            stage_name="Unsafe",
+            contract=StageContract(),
+        )
+    assert list(outside_stage.iterdir()) == []
+
+    (output_dir / ".pipeline").unlink()
+    outside_report = tmp_path / "outside-report"
+    outside_report.mkdir()
+    (output_dir / "reports").symlink_to(outside_report, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="aggregate manifest through symlink"):
+        aggregate_artifact_manifests(output_dir)
+    assert list(outside_report.iterdir()) == []
 
 
 def test_empty_project_manifest_is_not_accepted_when_outputs_exist(tmp_path: Path) -> None:

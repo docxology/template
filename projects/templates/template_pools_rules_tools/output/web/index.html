@@ -324,11 +324,38 @@ body {
   overflow-x: visible;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 @media (max-width: 600px) {
   body {
     width: 100%;
     max-width: 100%;
     padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
@@ -368,6 +395,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -375,7 +407,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -452,7 +484,7 @@ mjx-container[display="true"] {
 </style>
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Pools, Rules, and Tools: A Template-Integrated
 Resource Architecture</h1>
@@ -655,6 +687,7 @@ class="toc-section-number">8.4</span> Future Directions</a></li>
 </ul></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1"
 id="pools-rules-and-tools-a-template-integrated-resource-architecture"><span
 class="header-section-number">1</span> Pools, Rules, and Tools: A
@@ -710,7 +743,7 @@ href="https://github.com/docxology/template">docxology/template</a></td>
 </tr>
 <tr>
 <td><strong>DOI</strong></td>
-<td>10.5281/zenodo.template_pools_rules_tools</td>
+<td>10.5281/zenodo.21298888</td>
 </tr>
 <tr>
 <td><strong>Keywords</strong></td>
@@ -866,7 +899,7 @@ href="#fig:toolcontract">4</a>), a three-level resilience diagram
 (fig. <a href="#fig:pipelineflow">6</a>) — so that every structural
 claim in the prose has a corresponding visual.</p>
 <p>In a representative pipeline run, the integration demo loaded 3
-fonds, validated 2 rule sets, discovered 3 tools, and processed 8
+fonds, validated 2 rule sets, discovered 4 tools, and processed 8
 bibliography entries — all reported as structured JSON that populates
 manuscript variable tokens at render time. Tests covering the eight
 <code>src/</code> modules (across nine test files) achieve well above
@@ -1316,14 +1349,15 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">applies_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;projects/*/src/&quot;</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enforcement</span><span class="kw">:</span><span class="at"> fail_on_violation</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">constraints</span><span class="kw">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">minimum_line_coverage</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">minimum_branch_coverage</span><span class="kw">:</span><span class="at"> </span><span class="dv">80</span></span></code></pre></div>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">infrastructure</span><span class="kw">:</span><span class="at"> </span><span class="dv">60</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">project_src</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">public_api</span><span class="kw">:</span><span class="at"> </span><span class="dv">95</span></span></code></pre></div>
 <p>The <code>enforcement: fail_on_violation</code> field signals that a
 pipeline must halt and report when this rule is violated. Strong rules
 are suitable for invariants that, if broken, indicate a genuine defect
-rather than a style preference: coverage below 90% means tests are
-missing; a manuscript section without an abstract means the document is
-incomplete.</p>
+rather than a style preference: coverage below the source-declared
+threshold means tests are missing; a manuscript section without an
+abstract means the document is incomplete.</p>
 <figure id="fig:rulehier">
 <img src="figures/rule_hierarchy.png" style="width:85.0%"
 alt="Figure 3: Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch and a guidance-only soft/ branch." />
@@ -1353,8 +1387,8 @@ repository. Its strong rules currently comprise:</p>
 <tbody>
 <tr>
 <td><code>strong/coverage-gate.yaml</code></td>
-<td>Minimum line coverage 90%, branch coverage 80% for
-<code>src/</code></td>
+<td>Minimum coverage: infrastructure 60%, project <code>src/</code> 90%,
+public API 95%</td>
 </tr>
 <tr>
 <td><code>strong/module-structure.yaml</code></td>
@@ -1685,7 +1719,7 @@ manifest’s <code>entrypoints</code> list and checks each path against
 the filesystem. It returns a structured result distinguishing between
 tools that are fully ready (<code>"ok"</code>), partially configured
 (<code>"partial"</code> — some scripts missing), and entirely absent
-(<code>"missing"</code>). In the current integration run, <strong>3
+(<code>"missing"</code>). In the current integration run, <strong>4
 tools</strong> were discovered (fig. <a href="#fig:counts">5</a>), all
 with valid manifests.</p>
 <h2 data-number="6.5" id="tool-discovery-and-reproducibility"><span
@@ -1851,8 +1885,8 @@ visual representation):</p>
 <td>2</td>
 </tr>
 <tr>
-<td><code>3</code></td>
-<td>3</td>
+<td><code>4</code></td>
+<td>4</td>
 </tr>
 <tr>
 <td><code>8</code></td>
@@ -1949,16 +1983,17 @@ resolved manuscript that pandoc consumes. fig. <a
 href="#fig:pipeline">7</a> shows the corresponding per-component
 pass/partial/missing status from the same run.</p>
 <p>Each script imports all business logic from <code>src/</code> and
-stays free of computation of its own — the longest,
-<code>01_validate_sources.py</code> at 112 lines, is entirely CLI
-plumbing (argument parsing, console formatting) around calls into
-<code>src/fonds_reader.py</code>, <code>src/rules_applier.py</code>, and
+stays free of computation of its own — even
+<code>01_validate_sources.py</code>, the largest entry point in this
+project, is entirely CLI plumbing (argument parsing, console formatting)
+around calls into <code>src/fonds_reader.py</code>,
+<code>src/rules_applier.py</code>, and
 <code>src/tools_invoker.py</code>. This thin-orchestrator pattern <span
 class="citation" data-cites="Wilson2014best">(<a
 href="#ref-Wilson2014best" role="doc-biblioref">Wilson et al.
 2014</a>)</span> ensures that all testable logic is in <code>src/</code>
-at ≥ 90% coverage, while the scripts themselves remain readable without
-a dedicated test suite of their own.</p>
+under the configured project coverage gate, while the scripts themselves
+remain readable without a dedicated test suite of their own.</p>
 <h2 data-number="7.4" id="resilience-design"><span
 class="header-section-number">7.4</span> Resilience Design</h2>
 <p>The integration layer enforces resilience at three levels,
@@ -2080,7 +2115,7 @@ prose to integration runtime statistics through
 <code>{{UPPERCASE_KEY}}</code> tokens, ensuring that quantitative claims
 in the manuscript are always generated by the pipeline rather than
 authored manually. In the current run this covered 3 fonds, 2 rule sets,
-3 tools, and 8 bibliography entries.</p></li>
+4 tools, and 8 bibliography entries.</p></li>
 <li><p><strong>A three-level resilience design</strong> — resource
 absence, schema malformation, and script absence — that allows the
 pipeline to degrade gracefully and report failures informatively rather

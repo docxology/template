@@ -137,12 +137,23 @@ class ProjectConfig:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ProjectConfig":
-        """Build a :class:`ProjectConfig` from a parsed YAML mapping."""
+        """Build config, preferring schema-compliant project-owned settings.
+
+        Older standalone forks stored search settings at the YAML root. Those
+        keys remain readable, but new configs place them under
+        ``project_config`` so the shared Layer-1 loader can validate without
+        unknown-key warnings.
+        """
         paper = data.get("paper", {}) or {}
-        search_raw = data.get("search", {}) or {}
-        enrich_raw = data.get("enrichment", {}) or {}
+        project_raw = data.get("project_config", {}) or {}
+        if not isinstance(project_raw, dict):
+            raise ValueError("project_config must be a YAML mapping")
+        search_raw = project_raw.get("search", data.get("search", {})) or {}
+        enrich_raw = project_raw.get("enrichment", data.get("enrichment", {})) or {}
         llm_raw = data.get("llm", {}) or {}
         report_raw = data.get("report", {}) or {}
+        deep_search_raw = project_raw.get("deep_search", data.get("deep_search", {})) or {}
+        references_path = project_raw.get("references_path", data.get("references_path"))
 
         return cls(
             title=str(paper.get("title") or "Literature Search Project"),
@@ -185,8 +196,8 @@ class ProjectConfig:
                 include_per_paper=bool(report_raw.get("include_per_paper", True)),
                 include_corpus_synthesis=bool(report_raw.get("include_corpus_synthesis", True)),
             ),
-            deep_search=_parse_deep_search(data.get("deep_search") or {}),
-            references_path=str(data.get("references_path") or "manuscript/references.bib"),
+            deep_search=_parse_deep_search(deep_search_raw),
+            references_path=str(references_path or "manuscript/references.bib"),
         )
 
 

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-07T19:13:14.706359",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -8,13 +8,10 @@
     "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": false
+    "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "artifact_manifest_issues": [
-      "missing artifact: output/web/dashboard.html"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -30,15 +27,15 @@
           },
           "pdf": {
             "exists": true,
-            "files": 10,
-            "size_mb": 2.3,
+            "files": 11,
+            "size_mb": 2.31,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 12,
-            "size_mb": 0.25,
+            "size_mb": 0.24,
             "readable": true,
             "optional": false
           },
@@ -65,8 +62,8 @@
           },
           "reports": {
             "exists": true,
-            "files": 14,
-            "size_mb": 0.07,
+            "files": 27,
+            "size_mb": 0.18,
             "readable": true,
             "optional": false
           },
@@ -96,14 +93,14 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "2.30",
+          "file_count": 11,
+          "size_mb": "2.31",
           "largest_file": "template_code_project_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 12,
-          "size_mb": "0.25",
+          "size_mb": "0.24",
           "largest_file": "index.html"
         },
         "slides": {
@@ -126,9 +123,9 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 14,
-          "size_mb": "0.07",
-          "largest_file": "artifact_manifest.json"
+          "file_count": 27,
+          "size_mb": "0.18",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
           "exists": true,
@@ -150,17 +147,17 @@
         }
       },
       "file_counts": {
-        "pdf": 10,
+        "pdf": 11,
         "web": 12,
         "slides": 73,
         "figures": 10,
         "data": 5,
-        "reports": 14,
+        "reports": 27,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 7.658566474914551,
+      "total_size_mb": 7.770358085632324,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -169,31 +166,24 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 2.2977514266967773
+      "files": 11,
+      "size_mb": 2.310741424560547
     },
     "figures": {
       "files": 10,
-      "size_mb": 1.959564208984375
+      "size_mb": 1.9592304229736328
     },
     "data": {
       "files": 5,
-      "size_mb": 0.1767902374267578
+      "size_mb": 0.17676162719726562
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
+    "passed": 8,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/templates/template_code_project/output/reports/artifact_manifest.json"
-    }
-  ]
+  "recommendations": []
 }

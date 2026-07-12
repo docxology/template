@@ -39,9 +39,13 @@ Security authorship has the same rule. Standards and guidance can shape the thre
    uv run python scripts/z_generate_manuscript_variables.py
    ```
 11. Do not hand-edit generated manuscript, PDFs, or figures
+12. If using reverse assay, preserve ordered-prefix semantics and disclose that the target is configured rather than empirically optimized
+13. If using multi-objective purity, report dimensions separately unless external evidence justifies an aggregation rule
 
 Do not hard-code equation, figure, or table numbers in prose. Use `[@eq:...]`, `[@fig:...]`, `[@tbl:...]`, and `[@sec:...]` so the renderer owns numbering and the tests can detect dangling references.
 
 The authoring contract treats the risk matrix as a source checklist, not as a retrospective dashboard. If a fork cannot name who owns a high-severity integrity dimension, which validator detects it, and which evidence tier supports it, the fork should lower the claim boundary until that missing surface exists.
 
 The same rule applies to the adversarial assay. If a fork cannot name the threat, standard, local evidence surface, validator, and claim boundary for a security claim, the fork should keep the language as scoped guidance rather than certification.
+
+Visualization authorship is equally accountable. A technically valid image can still mislead through an unsupported axis, aggregation, annotation, or caption. Every figure change must therefore update its `FigureSpec`, source data declaration, tests, manuscript interpretation, and regenerated PNG/SVG pair as one reviewable unit.

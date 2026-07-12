@@ -8,6 +8,7 @@ from pathlib import Path
 _PROJECT_BUCKETS: frozenset[str] = frozenset(
     {"templates", "active", "working", "ongoing", "published", "archive", "other"}
 )
+_SCOPED_RESOURCE_ROOTS: frozenset[str] = frozenset({"projects", "fonds", "rules", "tools"})
 
 
 @lru_cache(maxsize=32)
@@ -31,7 +32,7 @@ def _get_actual_project_names(repo_root: Path) -> list[str]:
 
 
 @lru_cache(maxsize=4096)
-def _nearest_project_root_cached(source_file_key: str, repo_root_key: str) -> str | None:
+def _nearest_scoped_root_cached(source_file_key: str, repo_root_key: str) -> str | None:
     source_file = Path(source_file_key)
     repo_root = Path(repo_root_key)
     try:
@@ -43,43 +44,44 @@ def _nearest_project_root_cached(source_file_key: str, repo_root_key: str) -> st
             return None
 
     parts = relative.parts
-    if len(parts) < 2 or parts[0] != "projects":
+    if len(parts) < 2 or parts[0] not in _SCOPED_RESOURCE_ROOTS:
         return None
 
+    resource_kind = parts[0]
     if parts[1] in _PROJECT_BUCKETS:
         if len(parts) < 4:
             return None
-        return str(repo_root / "projects" / parts[1] / parts[2])
+        return str(repo_root / resource_kind / parts[1] / parts[2])
 
-    if len(parts) < 3 or not (repo_root / "projects" / parts[1]).is_dir():
+    if len(parts) < 3 or not (repo_root / resource_kind / parts[1]).is_dir():
         return None
 
-    return str(repo_root / "projects" / parts[1])
+    return str(repo_root / resource_kind / parts[1])
 
 
-def _nearest_project_root(source_file: Path | None, repo_root: Path) -> Path | None:
-    """Return the containing project root for docs under ``projects/``."""
+def _nearest_scoped_root(source_file: Path | None, repo_root: Path) -> Path | None:
+    """Return the containing project/fond/rule/tool root for a source file."""
     if source_file is None:
         return None
     source_file_key = str(source_file if source_file.is_absolute() else source_file.resolve())
     repo_root_key = str(repo_root if repo_root.is_absolute() else repo_root.resolve())
-    project_root = _nearest_project_root_cached(source_file_key, repo_root_key)
-    return Path(project_root) if project_root else None
+    scoped_root = _nearest_scoped_root_cached(source_file_key, repo_root_key)
+    return Path(scoped_root) if scoped_root else None
 
 
 def _resolve_template_path(path_ref: str, repo_root: Path, source_file: Path | None = None) -> Path | None:
     """Resolve template paths like projects/{name}/ to actual paths."""
     try:
-        project_root = _nearest_project_root(source_file, repo_root)
-        if project_root is not None and path_ref.startswith(("scripts/", "output/")):
-            project_relative = project_root / path_ref
-            if project_relative.exists():
-                return project_relative
+        scoped_root = _nearest_scoped_root(source_file, repo_root)
+        if scoped_root is not None and path_ref.startswith(("scripts/", "output/")):
+            scoped_relative = scoped_root / path_ref
+            if scoped_relative.exists():
+                return scoped_relative
             repo_relative = repo_root / path_ref
             if repo_relative.exists():
                 return repo_relative
             if path_ref.startswith("scripts/"):
-                return project_relative
+                return scoped_relative
 
         if path_ref.startswith("projects/project/"):
             project_names = _get_actual_project_names(repo_root)

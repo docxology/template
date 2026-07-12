@@ -7,6 +7,7 @@ from pathlib import Path
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 logger = get_logger(__name__)
 
@@ -15,7 +16,7 @@ def validate_manuscript_output_markdown(project_root: Path, repo_root: Path, pro
     """Validate manuscript markdown for Stage 04 without failing on advisory notes."""
     log_substep("Validating markdown files...", logger)
 
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.exists():
         logger.warning("Manuscript directory not found at expected location: %s", manuscript_dir)
         return True

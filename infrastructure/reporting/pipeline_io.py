@@ -8,6 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.determinism import resolve_build_timestamp
 from infrastructure.core.logging.utils import get_logger
 
 from .pipeline_markdown import _generate_pipeline_markdown
@@ -108,7 +109,7 @@ def save_validation_report(validation_results: dict[str, Any], output_dir: Path)
     # Overwrite explicit None (e.g. callers pre-allocating a placeholder) as
     # well as missing keys; a null timestamp is never useful downstream.
     if not validation_results.get("timestamp"):
-        validation_results["timestamp"] = datetime.now().isoformat()
+        validation_results["timestamp"] = resolve_build_timestamp(repo_root=Path.cwd())
 
     json_path = output_dir / "validation_report.json"
     try:
@@ -131,10 +132,11 @@ def save_validation_report(validation_results: dict[str, Any], output_dir: Path)
 
 def generate_validation_markdown(results: dict[str, Any]) -> str:
     """Return Markdown-formatted validation report for the given results dict."""
+    timestamp = str(results.get("timestamp") or resolve_build_timestamp(repo_root=Path.cwd()))
     lines = [
         "# Validation Report",
         "",
-        f"**Generated:** {datetime.now().isoformat()}",
+        f"**Generated:** {timestamp}",
         "",
     ]
 

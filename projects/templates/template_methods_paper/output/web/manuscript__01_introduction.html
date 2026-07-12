@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:introduction">Introduction</h1>
 <p>This <code>template_methods_paper</code> serves as the
 <strong>methods-paper exemplar</strong> for the <a
@@ -236,9 +240,8 @@ discipline in its typed, validated shape rather than in new concrete
 syntax — appropriate for a template exemplar’s scope — while the
 controlled vocabulary, dimensional safety, and deterministic compilation
 generalize unchanged from wet-lab protocols to any controlled procedure,
-demonstrated in <span class="citation"
-data-cites="sec:results">[@sec:results]</span> by one wet-lab-flavored
-method and one instrument-calibration method.</p>
+demonstrated in [sec:results] by one wet-lab-flavored method and one
+instrument-calibration method.</p>
 <h2 id="template-architecture-context">Template architecture
 context</h2>
 <p>The project sits on the repository’s three pillars:</p>
@@ -264,29 +267,22 @@ examples — manual bench preparation in BPL’s own domain, and
 <code>SensorCalibrationSweep</code>, a non-biology controlled procedure
 mixing automated measurement with a human sign-off step. The second
 example exists specifically to demonstrate that the DSL’s vocabulary
-generalizes beyond wet-lab protocols, as <span class="citation"
-data-cites="sec:introduction">[@sec:introduction]</span> claims.</p>
+generalizes beyond wet-lab protocols, as [sec:introduction] claims.</p>
 <h2 id="readers-guide-to-the-manuscript">Reader’s guide to the
 manuscript</h2>
 <ul>
-<li><strong><span class="citation"
-data-cites="sec:methodology">[@sec:methodology]</span></strong> ties
-each pipeline stage to its module in <code>src/methods_dsl/</code>.</li>
-<li><strong><span class="citation"
-data-cites="sec:results">[@sec:results]</span></strong> is
-artifact-centric: every reported number names the function or report
-file that produced it.</li>
-<li><strong><span class="citation"
-data-cites="sec:experimental_setup">[@sec:experimental_setup]</span></strong>
-lists the controlled vocabulary and software environment.</li>
-<li><strong><span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span></strong>
-records the artifact inventory and the exact commands to regenerate
-everything.</li>
-<li><strong><span class="citation"
-data-cites="sec:scope">[@sec:scope]</span></strong> states scope and
-related work so the exemplar is not mistaken for a general-purpose
-protocol-execution system.</li>
+<li><strong>[sec:methodology]</strong> ties each pipeline stage to its
+module in <code>src/methods_dsl/</code>.</li>
+<li><strong>[sec:results]</strong> is artifact-centric: every reported
+number names the function or report file that produced it.</li>
+<li><strong>[sec:experimental_setup]</strong> lists the controlled
+vocabulary and software environment.</li>
+<li><strong>[sec:reproducibility]</strong> records the artifact
+inventory and the exact commands to regenerate everything.</li>
+<li><strong>[sec:scope]</strong> states scope and related work so the
+exemplar is not mistaken for a general-purpose protocol-execution
+system.</li>
 </ul>
+</main>
 </body>
 </html>

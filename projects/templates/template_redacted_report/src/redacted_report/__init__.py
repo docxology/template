@@ -1,5 +1,16 @@
 """Redacted release-report validation helpers."""
 
+from redacted_report.artifacts import (
+    AUDIT_SCHEMA,
+    LEDGER_SCHEMA,
+    PublicReleaseArtifacts,
+    ReleaseArtifactPaths,
+    ReleaseFixture,
+    ReleaseInputError,
+    build_public_release_artifacts,
+    load_release_fixture,
+    write_release_artifacts,
+)
 from redacted_report.redaction import (
     ClassificationTaxonomy,
     DEFAULT_TAXONOMY,
@@ -46,16 +57,22 @@ from redacted_report.visuals import (
 )
 
 __all__ = [
+    "AUDIT_SCHEMA",
     "ClassificationTaxonomy",
     "DEFAULT_POLICY",
     "DEFAULT_RESIDUAL_PATTERNS",
     "DEFAULT_TAXONOMY",
+    "LEDGER_SCHEMA",
+    "PublicReleaseArtifacts",
     "RedactionDecision",
     "RedactionFinding",
     "RedactionPolicy",
     "RedactionSegment",
+    "ReleaseArtifactPaths",
     "ReleaseAudit",
+    "ReleaseFixture",
     "ReleaseGateReport",
+    "ReleaseInputError",
     "ResidualPattern",
     "ReviewRecord",
     "KMYTH_SEAL_ARTIFACTS",
@@ -66,6 +83,7 @@ __all__ = [
     "SECURITY_METHODS",
     "audit_release_packet",
     "build_comprehensive_release_packet",
+    "build_public_release_artifacts",
     "build_redaction_ledger",
     "build_release_packet",
     "build_visual_variant_matrix",
@@ -75,6 +93,7 @@ __all__ = [
     "expected_visual_variant_ids",
     "intelligence_agency_taxonomy",
     "intelligence_release_policy",
+    "load_release_fixture",
     "normalize_pdf_background",
     "normalize_redaction_style",
     "paragraph_audit_table",
@@ -86,4 +105,5 @@ __all__ = [
     "verify_dev_variant_outputs",
     "visual_redacted_segments",
     "write_dev_variant_pdfs",
+    "write_release_artifacts",
 ]

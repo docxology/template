@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from infrastructure.search.literature import Paper, SearchQuery, SearchResult
@@ -61,6 +62,12 @@ def test_generate_all_returns_stable_order(tmp_path: Path):
     first = [p.name for p in generate_all_figures(result, tmp_path)]
     second = [p.name for p in generate_all_figures(result, tmp_path)]
     assert first == second
+    registry = json.loads((tmp_path / "figure_registry.json").read_text(encoding="utf-8"))
+    assert [row["label"] for row in registry["figures"]] == [
+        "fig:papers_per_source",
+        "fig:score_distribution",
+        "fig:year_histogram",
+    ]
 
 
 def test_load_search_result_round_trip(tmp_path: Path):

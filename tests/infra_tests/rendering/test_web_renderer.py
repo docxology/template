@@ -97,6 +97,8 @@ class TestMathJaxIntegration:
         assert _MATHJAX_FONT_URL in content
         assert _MATHJAX_DYNAMIC_PREFIX in content
         assert content.index(_MATHJAX_FONT_URL) < content.index(_MATHJAX_URL)
+        assert "aria-roledescription" in content
+        assert "mathematical expression" in content
 
 
 class TestCssIntegration:
@@ -276,7 +278,8 @@ def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
     (manuscript_dir / "config.yaml").write_text(
-        "paper:\n  title: Test\nauthors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n",
+        "paper:\n  title: Test\n  subtitle: Accessible summary\n"
+        "authors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n",
         encoding="utf-8",
     )
 
@@ -285,6 +288,7 @@ def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
     assert "--metadata=linkReferences:true" in args
     assert "--metadata=author:Ada Lovelace" in args
     assert "--metadata=lang:en-GB" in args
+    assert "--metadata=description:Accessible summary" in args
 
 
 def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: Path) -> None:
@@ -301,9 +305,33 @@ def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: 
 
     content = html_file.read_text(encoding="utf-8")
     assert '<html lang="en-GB">' in content
-    assert '<main id="main-content">' in content
+    assert content.index('class="skip-link"') < content.index('<main id="main-content"')
+    assert '<a class="skip-link" href="#main-content">Skip to main content</a>' in content
+    assert '<main id="main-content" tabindex="-1">' in content
     assert "aria-hidden" not in content
     assert 'alt="Figure 1: Paired effect delta and likelihood A_k across seeds."' in content
+
+    WebRenderer._enhance_accessibility(html_file, language="en-GB")
+    content = html_file.read_text(encoding="utf-8")
+    assert content.count('class="skip-link"') == 1
+    assert content.count('<main id="main-content"') == 1
+
+
+def test_accessibility_main_starts_after_toc_so_skip_link_bypasses_it(tmp_path: Path) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><header><h1>Title</h1></header>'
+        '<nav id="TOC"><a href="#section">Section</a></nav>'
+        '<h1 id="section">Section</h1><p>Content</p></body></html>',
+        encoding="utf-8",
+    )
+
+    WebRenderer._enhance_accessibility(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert content.index('class="skip-link"') < content.index('<nav id="TOC">')
+    assert content.index("</nav>") < content.index('<main id="main-content"')
+    assert content.index('<main id="main-content"') < content.index('<h1 id="section">')
 
 
 def test_responsive_variant_uses_mobile_sibling_when_present(tmp_path: Path) -> None:
@@ -492,6 +520,10 @@ class TestEmbedCss:
         assert "prefers-color-scheme" in content
         assert 'mjx-container[display="true"]' in content
         assert "color: #b91c1c" in content
+        assert "text-decoration: underline" in content
+        assert "text-decoration: none" not in content
+        assert "min-height: 28px" in content
+        assert "#TOC a" in content
 
 
 class TestTheoremBlocks:

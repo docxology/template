@@ -23,7 +23,7 @@ general feature ideas.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` as the copy-and-customize template with
-  the same top-level sections as `config.yaml`, including the `dataset` block.
+  the same top-level sections as `config.yaml`, including the `project_config.dataset` block.
 - Add any future EDA parameters (e.g. correlation method, imputation strategy)
   under typed source loaders rather than reading ad hoc YAML from scripts.
 

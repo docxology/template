@@ -6,6 +6,7 @@ from pathlib import Path
 
 from template_template.introspection import ModuleInfo
 from template_template.metrics import (
+    _generated_timestamp,
     build_manuscript_metrics_dict,
     build_module_inventory_table,
     count_docs_markdown_files,
@@ -100,6 +101,16 @@ class TestFormatCount:
 
     def test_large_number_approx(self) -> None:
         assert format_count(2950, approx=True) == "~3,000"
+
+
+class TestGeneratedTimestamp:
+    """Build metadata must never smuggle wall-clock time into generated output."""
+
+    def test_missing_epoch_is_disclosed_without_a_timestamp(self) -> None:
+        assert _generated_timestamp(None) == "not-recorded (set SOURCE_DATE_EPOCH)"
+
+    def test_source_date_epoch_is_rendered_in_utc(self) -> None:
+        assert _generated_timestamp("0") == "1970-01-01T00:00:00Z"
 
 
 class TestBuildModuleInventoryTable:

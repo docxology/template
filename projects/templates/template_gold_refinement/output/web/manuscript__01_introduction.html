@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,11 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:introduction">Introduction: Ore to Nine-Nines</h1>
 <p>Gold refining is one of humanity’s oldest purification technologies.
 The pre-1800 record is not a single modern pipeline, but it gives the
@@ -197,6 +200,16 @@ asks: can that historically plural pipeline serve as a
 manuscript composition - not merely a decorative analogy, but a real
 mapping from metallurgical stages to template-infrastructure
 operations?</p>
+<p>We operationalize that question through three narrower research
+questions. <strong>RQ1:</strong> Can each analogical stage be bound to
+an ordered executable transformation with a source owner and failure
+condition? <strong>RQ2:</strong> Can prose choices, claims, equations,
+and figures be regenerated with inspectable provenance?
+<strong>RQ3:</strong> Can the workflow state its stopping boundary
+clearly enough that local certification is not mistaken for domain
+truth, historical authority, or security compliance? The paper answers
+these questions by constructing and validating one exemplar; it does not
+compare writing interventions or estimate effects on readers.</p>
 <h2 id="the-problem">The problem</h2>
 <p>A scientific manuscript accumulates impurities through its drafting
 lifecycle: unsupported claims, unresolved references, redundant prose,
@@ -236,10 +249,14 @@ ioannidis2005false].</p>
 </ol></li>
 </ul>
 <p>Each stage has a metallurgical operation, a manuscript operation, an
-input purity, and an output purity. Purity increases monotonically — a
-constraint enforced by
-<code>src/purity.py::assert_monotone_increase</code> and tested in
-<code>tests/test_refinery.py</code>.</p>
+input purity, and an output purity. Purity increases monotonically,
+stage order is sequential, and each stage input must equal the preceding
+output. These invariants are enforced by
+<code>src/refinery.py::run_refinery</code> and
+<code>src/purity.py::assert_monotone_increase</code> and exercised by
+positive and negative tests. <code>stages_to_target()</code> supplies
+the inverse query: given a target, return the shortest valid prefix
+rather than selecting later stages out of order.</p>
 <h2 id="mega-madlib-token-engine">Mega-madlib token engine</h2>
 <p>The manuscript’s domain vocabulary is not hand-authored prose but
 config-owned lexical data, selected deterministically by a seeded
@@ -277,5 +294,6 @@ source-domain properties into the target domain [gentner1983structure;
 hesse1966models; holyoak_thagard_1995]. The open question is not whether
 to use the analogy, but where the mapping breaks - a question the
 discussion addresses.</p>
+</main>
 </body>
 </html>

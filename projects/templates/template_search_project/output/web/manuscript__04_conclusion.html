@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:conclusion">Conclusion</h1>
 <p><code>template_search_project</code> packages a complete,
 configurable, reproducible literature workflow into the Research Project
@@ -218,8 +219,8 @@ project’s API.</li>
 Mendeley / Pandoc-CSL workflows from the same
 <code>BibDatabase</code>.</li>
 <li><strong>Vector recall on <code>LocalBackend</code></strong> for
-curated corpora exceeding ~1000 papers, gated behind an optional
-dependency.</li>
+sufficiently large curated corpora, gated behind an optional dependency
+and an explicit benchmark-derived crossover threshold.</li>
 </ol>
 <p>The infrastructure modules are deliberately small and stable; the
 project that exercises them is deliberately small and explicit. Together

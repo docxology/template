@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:conclusion">Conclusion</h1>
 <p>This paper presented a small, tested domain language for specifying
 controlled methods, informed by BPL’s [bpl2026] domain-language design
@@ -221,8 +225,7 @@ guarantee the implementation does not actually provide.</p>
 <li><strong>Determinism follows from explicit tie-breaking</strong>:
 Kahn’s algorithm [kahn1962topological] alone does not guarantee a stable
 schedule across runs — the ascending-<code>step_id</code> tie-break is
-what makes <code>plan_hash</code> reproducible, and <span
-class="citation" data-cites="sec:results">[@sec:results]</span> checks
+what makes <code>plan_hash</code> reproducible, and [sec:results] checks
 this live rather than asserting it.</li>
 <li><strong>Staged short-circuit avoids misleading errors</strong>:
 running <code>plan_gate</code> and <code>target_gate</code> against a
@@ -258,5 +261,6 @@ methods, wrote <code>output/data/compiled_plans.json</code>,
 <code>output/reports/gate_report.json</code>, and
 <code>output/reports/trust_chain_report.json</code>, and rendered this
 markdown together with <code>config.yaml</code> into PDF.</p>
+</main>
 </body>
 </html>

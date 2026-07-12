@@ -1,5 +1,6 @@
 {
   "budget": 60,
+  "noise_inflation_ratio_without_confirmation": 12.967265309358583,
   "rows": [
     {
       "clean_metric": 0.0,

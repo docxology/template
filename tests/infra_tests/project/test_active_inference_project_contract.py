@@ -22,6 +22,27 @@ def _project_root() -> Path:
     return _repo_root() / "projects" / "templates" / "template_active_inference"
 
 
+@pytest.fixture
+def isolated_project(tmp_path: Path) -> Path:
+    """Copy the exemplar without generated or environment-specific trees."""
+    destination = tmp_path / "template_active_inference"
+    shutil.copytree(
+        _project_root(),
+        destination,
+        ignore=shutil.ignore_patterns(
+            "output",
+            ".venv",
+            ".omo",
+            ".pytest_cache",
+            "__pycache__",
+            "htmlcov",
+            "dist",
+            ".lake",
+        ),
+    )
+    return destination
+
+
 def test_template_active_inference_is_public_and_discoverable() -> None:
     repo_root = _repo_root()
     names = {p.qualified_name for p in discover_projects(repo_root)}
@@ -64,14 +85,7 @@ def test_sheaf_coverage_page_exists() -> None:
 def test_full_sheaf_appendix_binds_registry_tracks() -> None:
     root = _project_root()
     path = root / "manuscript" / "16_appendix_full_sheaf.md"
-    if not path.is_file():
-        subprocess.run(
-            [sys.executable, str(root / "scripts" / "compose_manuscript.py")],
-            cwd=root,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+    assert path.is_file(), "composed appendix must be committed; run compose_manuscript.py"
     text = path.read_text(encoding="utf-8")
     import yaml
 
@@ -102,27 +116,24 @@ def test_full_sheaf_appendix_binds_registry_tracks() -> None:
 
 
 @pytest.mark.timeout(60)
-def test_coverage_json_schema_on_clean_tree() -> None:
-    root = _project_root()
+def test_coverage_json_schema_on_clean_tree(isolated_project: Path) -> None:
+    root = isolated_project
     json_path = root / "output" / "data" / "sheaf_coverage_matrix.json"
-    json_path.unlink(missing_ok=True)
-    if not json_path.is_file():
-        subprocess.run(
-            [sys.executable, str(root / "scripts" / "compose_manuscript.py")],
-            cwd=root,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+    subprocess.run(
+        [sys.executable, str(root / "scripts" / "compose_manuscript.py")],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
     import json
+    import yaml
 
-    sys.path.insert(0, str(root / "src"))
-    from manuscript.sheaf.counts import structural_counts
-
-    counts = structural_counts(root)
     data = json.loads(json_path.read_text(encoding="utf-8"))
-    assert len(data.get("tracks") or []) == counts["sheaf_track_count"]
-    assert len(data.get("sections") or []) == counts["imrad_manifest_rows"]
+    tracks = yaml.safe_load((root / "manuscript" / "sheaf" / "tracks.yaml").read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((root / "manuscript" / "sheaf" / "manifest.yaml").read_text(encoding="utf-8"))
+    assert len(data.get("tracks") or []) == len(tracks["tracks"])
+    assert len(data.get("sections") or []) == len(manifest["sections"])
     gray = sum(
         1
         for section in data.get("sections") or []
@@ -135,14 +146,7 @@ def test_coverage_json_schema_on_clean_tree() -> None:
 def test_methods_sheaf_layers_in_composed_manuscript() -> None:
     root = _project_root()
     path = root / "manuscript" / "08_methods_sheaf.md"
-    if not path.is_file():
-        subprocess.run(
-            [sys.executable, str(root / "scripts" / "compose_manuscript.py")],
-            cwd=root,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+    assert path.is_file(), "composed methods section must be committed; run compose_manuscript.py"
     text = path.read_text(encoding="utf-8")
     assert "sheaf_layers_overview.png" in text
     assert "<!-- sheaf-layers:registry -->" in text
@@ -150,7 +154,7 @@ def test_methods_sheaf_layers_in_composed_manuscript() -> None:
     assert "<!-- sheaf-layers:legend -->" in text
 
 
-def test_build_lean_when_present_must_succeed() -> None:
+def test_build_lean_when_present_must_succeed(isolated_project: Path) -> None:
     """Build the Lean package when lake is installed and the project ships one.
 
     Skipped when the lake toolchain is absent (e.g. standard CI workers that
@@ -158,7 +162,7 @@ def test_build_lean_when_present_must_succeed() -> None:
     """
     if shutil.which("lake") is None:
         pytest.skip("lake toolchain not installed — skipping Lean build contract")
-    root = _project_root()
+    root = isolated_project
     assert (root / "lean" / "lakefile.lean").is_file()
     sys.path.insert(0, str(root / "src"))
     from gates.validation import build_lean
@@ -168,8 +172,8 @@ def test_build_lean_when_present_must_succeed() -> None:
 
 
 @pytest.mark.timeout(60)
-def test_z_generate_writes_resolved_manuscript_without_tokens() -> None:
-    root = _project_root()
+def test_z_generate_writes_resolved_manuscript_without_tokens(isolated_project: Path) -> None:
+    root = isolated_project
     result = subprocess.run(
         [sys.executable, str(root / "scripts" / "z_generate_manuscript_variables.py"), "--allow-draft"],
         cwd=root,

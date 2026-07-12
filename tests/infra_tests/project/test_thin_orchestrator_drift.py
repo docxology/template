@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.project.drift.models import Report
 from infrastructure.project.drift.orchestrator import (
     check_project_scripts,
@@ -153,7 +155,7 @@ from infrastructure.project.drift.runner import (
     print_human_report,
     run_drift_checks,
 )
-from infrastructure.project.drift.models import Finding, Report
+from infrastructure.project.drift.models import Finding
 
 
 def _report_with(*findings: Finding) -> Report:
@@ -283,6 +285,7 @@ def test_exit_code_no_findings_returns_0() -> None:
     assert exit_code_for_report(report) == 0
 
 
+@pytest.mark.timeout(45)
 def test_subprocess_check_template_drift_no_flags() -> None:
     """check_template_drift script runs with no flags and exits without crashing."""
     repo_root = Path(__file__).resolve().parents[3]
@@ -291,11 +294,13 @@ def test_subprocess_check_template_drift_no_flags() -> None:
         [sys.executable, str(script)],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     # Exit code 0 (clean) or 1 (drift found) — not a crash code
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
 
 
+@pytest.mark.timeout(45)
 def test_subprocess_check_template_drift_strict_flag() -> None:
     """check_template_drift script runs with --strict flag and exits without crashing."""
     repo_root = Path(__file__).resolve().parents[3]
@@ -304,10 +309,12 @@ def test_subprocess_check_template_drift_strict_flag() -> None:
         [sys.executable, str(script), "--strict"],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
 
 
+@pytest.mark.timeout(45)
 def test_subprocess_check_template_drift_project_flag() -> None:
     """check_template_drift script runs with a valid --project flag."""
     from infrastructure.project.drift.runner import DEFAULT_PROJECT_NAMES
@@ -319,5 +326,6 @@ def test_subprocess_check_template_drift_project_flag() -> None:
         [sys.executable, str(script), "--project", project],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"

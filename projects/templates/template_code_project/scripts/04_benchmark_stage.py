@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Thin orchestrator: run the infra-backed benchmark and write a report.
+"""Thin orchestrator: run the infra-backed benchmark and write artifacts.
 
 Demonstrates ``infrastructure.benchmark`` from inside the code exemplar. All
 computation lives in ``src/benchmark_support.py``; this script only handles
-I/O — running the benchmark, writing the JSON report (and an optional figure),
-and printing artifact paths to stdout for manifest collection.
+I/O — writing a canonical JSON report and a deterministic objective-value
+figure, then printing artifact paths for manifest collection.
 """
 
 from __future__ import annotations
@@ -41,17 +41,17 @@ def main() -> int:
 
     payload = benchmark_payload(run)
     sizes = [m["input_size"] for m in payload["measurements"]]
-    times = [m["best_seconds"] for m in payload["measurements"]]
+    objectives = [m["objective_value"] for m in payload["measurements"]]
 
     try:
         import matplotlib.pyplot as plt
 
         figure_path.parent.mkdir(parents=True, exist_ok=True)
         fig, ax = plt.subplots(figsize=(5, 3))
-        ax.plot(sizes, times, marker="o")
+        ax.plot(sizes, objectives, marker="o")
         ax.set_xlabel("input size")
-        ax.set_ylabel("best wall-clock seconds")
-        ax.set_title("quadratic_function timing")
+        ax.set_ylabel("objective value")
+        ax.set_title("quadratic_function deterministic outputs")
         fig.tight_layout()
         fig.savefig(figure_path, dpi=120)
         plt.close(fig)

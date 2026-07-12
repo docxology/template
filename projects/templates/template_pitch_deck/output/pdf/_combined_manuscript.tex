@@ -147,6 +147,17 @@
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
+\ifXeTeX
+\special{pdf:trailerid [ <36e5f47b75a672f31ff110f192b2fb39> <36e5f47b75a672f31ff110f192b2fb39> ]}
+\fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ <36e5f47b75a672f31ff110f192b2fb39> <36e5f47b75a672f31ff110f192b2fb39> ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ <36e5f47b75a672f31ff110f192b2fb39> <36e5f47b75a672f31ff110f192b2fb39> ]}
+\fi
+
 \title{template\_pitch\_deck: Reproducible, Validated Pitch-Deck
 Generation}
 \author{Daniel Ari Friedman}
@@ -260,11 +271,12 @@ properties make that possible.
 \texttt{manuscript/deck\_content\_\{short,medium,long\}.yaml} define the
 slide-by-slide narrative at three lengths; the live token builder
 (\breaktt{src/deck\_tokens.py}) supplies the facts.
-\breaktt{scripts/render\_decks.py} resolves tokens once and calls both
-renderers --- \breaktt{infrastructure.rendering.slide\_deck.render\_pdf}
-and \breaktt{infrastructure.rendering.pptx\_deck.render\_pptx} ---
-against the identical resolved content, so PDF and PPTX cannot drift
-from each other.
+\breaktt{scripts/20\_render\_decks.py} resolves tokens once and calls
+both renderers ---
+\breaktt{infrastructure.rendering.slide\_deck.render\_pdf} and
+\breaktt{infrastructure.rendering.pptx\_deck.render\_pptx} --- against
+the identical resolved content, so PDF and PPTX cannot drift from each
+other.
 
 \textbf{Facts, not fabrication.} Every numeric claim produced by
 \breaktt{src/deck\_tokens.py} about the pitch subject
@@ -286,7 +298,7 @@ The remainder of this manuscript covers the deck-rendering architecture
 (sec.~\ref{sec:architecture}), the validation model
 (sec.~\ref{sec:validation}), and the reproducibility guarantees
 (sec.~\ref{sec:reproducibility}) that let
-\breaktt{uv\ run\ python\ scripts/render\_decks.py\ -\/-project\ templates/template\_pitch\_deck}
+\breaktt{uv\ run\ python\ projects/templates/template\_pitch\_deck/scripts/20\_render\_decks.py}
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.
 
@@ -309,10 +321,10 @@ format-agnostic content model shared by both renderers:
   \texttt{DeckContent} --- a deck title/subtitle plus an ordered tuple
   of \texttt{Slide}.
 \item
-  \texttt{SlideBudget} --- the three published lengths (\texttt{SHORT} \texorpdfstring{\ensuremath{\leq}}{<=}
-  10 slides, \texttt{MEDIUM} \texorpdfstring{\ensuremath{\leq}}{<=} 22, \texttt{LONG} \texorpdfstring{\ensuremath{\leq}}{<=} 45) and
-  \breaktt{filter\_deck\_for\_budget}, a pure function that truncates a
-  deck to a budget without mutating slide order or content.
+  \texttt{SlideBudget} --- the three published maximum lengths
+  (\texttt{SHORT} \texorpdfstring{\ensuremath{\leq}}{<=} 11 slides, \texttt{MEDIUM} \texorpdfstring{\ensuremath{\leq}}{<=} 38, \texttt{LONG} \texorpdfstring{\ensuremath{\leq}}{<=} 58)
+  and \breaktt{filter\_deck\_for\_budget}, a pure function that truncates
+  a deck to a budget without mutating slide order or content.
 \end{itemize}
 
 \subsection{Two renderers, one model}\label{two-renderers-one-model}
@@ -344,10 +356,10 @@ PDF page count equals the PPTX slide count.
 pitch-deck-domain code --- loading
 \breaktt{manuscript/deck\_content\_*.yaml} into \texttt{DeckContent}
 objects, resolving \texttt{\{\{TOKEN\}\}} values, and linting for cliché
---- never layout/drawing code. \breaktt{scripts/render\_decks.py} is the
-thin orchestrator that ties content loading, token resolution, cliché
-linting, and the two infra renderers together into the six published
-artifacts under \texttt{output/\{pdf,pptx\}/}.
+--- never layout/drawing code. \breaktt{scripts/20\_render\_decks.py} is
+the thin orchestrator that ties content loading, token resolution,
+cliché linting, and the two infra renderers together into the six
+published artifacts under \texttt{output/\{pdf,pptx\}/}.
 
 \newpage
 
@@ -402,7 +414,7 @@ cleanliness is trusted.
 
 \section{Reproducibility}\label{sec:reproducibility}
 
-\breaktt{scripts/render\_decks.py} is deterministic: given the same
+\breaktt{scripts/20\_render\_decks.py} is deterministic: given the same
 repository state (\breaktt{manuscript/deck\_content\_*.yaml}, the live
 tokens from \breaktt{src/deck\_tokens.py}, and the live facts
 \breaktt{src/deck\_tokens.py} reads from \breaktt{template\_template}'s
@@ -415,7 +427,7 @@ builds.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ExtensionTok{uv}\NormalTok{ run python scripts/render\_decks.py}
+\ExtensionTok{uv}\NormalTok{ run python scripts/20\_render\_decks.py}
 \CommentTok{\# → output/pdf/template\_template\_pitch\_\{short,medium,long\}.pdf}
 \CommentTok{\# → output/pptx/template\_template\_pitch\_\{short,medium,long\}.pptx}
 

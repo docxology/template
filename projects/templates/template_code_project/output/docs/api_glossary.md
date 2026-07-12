@@ -25,11 +25,11 @@
 | `dashboard` | `build_dashboard_html` | function | Build the dashboard with config defaults and write HTML to ``output/web/``. |
 | `dashboard` | `cli_main` | function | Build dashboard artifacts from CLI arguments. |
 | `dashboard` | `parse_dashboard_args` | function | Parse CLI arguments for the dashboard builder. |
-| `dashboard_panels` | `build_dashboard` | function |  |
-| `dashboard_panels` | `to_dashboard_invariant` | function |  |
-| `dashboard_payload` | `compute_payload` | function |  |
+| `dashboard_panels` | `build_dashboard` | function | Build dashboard. |
+| `dashboard_panels` | `to_dashboard_invariant` | function | Convert this object to dashboard invariant. |
+| `dashboard_payload` | `compute_payload` | function | Process compute payload. |
 | `dashboard_payload` | `load_yaml_defaults` | function | Load experiment defaults from ``manuscript/config.yaml``. |
-| `dashboard_payload` | `to_diagonal_A` | function |  |
+| `dashboard_payload` | `to_diagonal_A` | function | Convert this object to diagonal A. |
 | `documentation` | `build_api_reference_markdown` | function | Return markdown API reference for the optimization exemplar. |
 | `experiment_config` | `ExperimentConfig` | class | Frozen experiment parameters from ``config.yaml`` → ``experiment:``. |
 | `experiment_config` | `load_experiment_config` | function | Load experiment parameters from ``manuscript/config.yaml``. |
@@ -62,7 +62,7 @@
 | `optimizer` | `quadratic_optimum` | function | Return (x*, f*) for f(x) = ½ xᵀ A x − bᵀ x. |
 | `optimizer` | `simulate_trajectory` | function | Run gradient descent and return iteration/objective history. |
 | `project_paths` | `project_output_dirs` | function | Return common output directories for the code exemplar. |
-| `project_paths` | `resolve_project_root` | function |  |
+| `project_paths` | `resolve_project_root` | function | Process resolve project root. |
 | `sweeps` | `AlphaSweepConfig` | class | Knobs for :func:`run_alpha_sweep`. |
 | `sweeps` | `AlphaSweepResult` | class | Numerical payload for an α sweep. |
 | `sweeps` | `run_alpha_sweep` | function | Run gradient descent for each α and collect convergence diagnostics. |

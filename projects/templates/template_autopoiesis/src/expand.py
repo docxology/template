@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+from .common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
 from .grammar import Grammar
 
 SCHEMA_VERSION = "autopoiesis/spec/1"
@@ -67,7 +68,7 @@ class Spec:
     def spec_hash(self) -> str:
         """Process spec hash."""
         canonical = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":"))
-        return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+        return hashlib.sha256(canonical.encode()).hexdigest()[:HASH_PREFIX_HEX_LENGTH]
 
 
 # ---------------------------------------------------------------------------
@@ -129,7 +130,7 @@ def derive_seed(base_seed: int, index: int) -> int:
     """Derive a deterministic child seed from *base_seed* and *index*."""
     key = f"{base_seed}{_UNIT_SEP}{index}"
     digest = hashlib.sha256(key.encode()).digest()
-    return int.from_bytes(digest[:8], "big") & 0x7FFFFFFFFFFFFFFF
+    return int.from_bytes(digest[:8], "big") & ((1 << DERIVED_SEED_BITS) - 1)
 
 
 # ---------------------------------------------------------------------------

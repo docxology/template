@@ -24,7 +24,8 @@ Project-scoped skill for the in-repo exemplar at
 
 ```bash
 # From the repository root
-uv run pytest projects/templates/template_literature_meta_analysis/tests --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90
+# Canonical fresh-clone gate: provisions the project's isolated dependencies.
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_literature_meta_analysis --project-only
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_literature_meta_analysis
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_literature_meta_analysis
@@ -37,6 +38,9 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_lit
   `infrastructure/`, not in `scripts/`.
 - **No mocks.** All tests must use real data, real files, and real
   computation.
+- **Use the Stage-01 test command from the monorepo root.** A direct root
+  `pytest` invocation does not provision this exemplar's scientific
+  dependencies.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
 - **Run from the repo root.** Commands assume the template monorepo root

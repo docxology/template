@@ -21,7 +21,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/grammar.py` | Grammar parsing: `parse_grammar()`, `load_grammar()`, `force_domain()` |
 | `src/honesty.py` | Honesty manifest: `build_manifest()`, `verify_honesty()`, `STRUCTURAL_EVIDENCE` |
 | `src/integrity.py` | Integrity hashing: `sha256_text()`, `sha256_bytes()`, `tree_hash_from_content_hashes()`, `merkle_root()` |
-| `src/manuscript_figures.py` | Manuscript figure writers: renders `fig_coverage_by_module` for the exemplar |
+| `src/manuscript_figures.py` | Manuscript figure writers plus the label/filename provenance specs consumed by `output/figures/figure_registry.json` |
 | `src/manuscript_variables.py` | Manuscript token generation: `generate_variables()`, `save_variables()` |
 | `src/materialize.py` | Child project writer: `materialize()`, `child_name()`, `_build_tree()` |
 | `src/primitives/__init__.py` | Registry: `collect_primitives()` |
@@ -78,6 +78,11 @@ uv run python scripts/01_generate_manuscript_assets.py
 uv run python scripts/generate_cover_art.py
 uv run python scripts/z_generate_manuscript_variables.py
 ```
+
+`01_generate_manuscript_assets.py` requires the real per-module
+`output/data/coverage_full.json`; it fails closed if that input or any of the
+four referenced figures is missing, and writes the deterministic figure
+registry only after the complete set exists.
 
 ```bash
 # From repo root

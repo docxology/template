@@ -83,11 +83,6 @@ def _make_minimal_project(tmp_path: Path, *, with_results: bool = True) -> Path:
             json.dumps({"stability_score": 0.95, "function_name": "quadratic_function"}),
             encoding="utf-8",
         )
-        (reports_dir / "performance_benchmark.json").write_text(
-            json.dumps({"execution_time": 0.000123}),
-            encoding="utf-8",
-        )
-
     return tmp_path
 
 
@@ -172,14 +167,12 @@ def test_result_derived_values(tmp_path):
     assert v["RESULT_TABLE_ROWS"] != "| N/A | N/A | N/A | N/A | N/A |"
 
 
-def test_stability_and_benchmark_derived(tmp_path):
+def test_stability_derived(tmp_path):
     root = _make_minimal_project(tmp_path)
     v = generate_variables(root)
 
     assert v["STABILITY_SCORE"] == "0.95"
     assert v["STABILITY_FUNCTION"] == "quadratic_function"
-    assert v["BENCHMARK_AVG_TIME"] != "N/A"
-    assert float(v["BENCHMARK_AVG_TIME"]) > 0
 
 
 def test_fallback_sentinels_when_no_results(tmp_path):
@@ -190,7 +183,6 @@ def test_fallback_sentinels_when_no_results(tmp_path):
     assert v["RESULT_TABLE_ROWS"] == "| N/A | N/A | N/A | N/A | N/A |"
     assert v["RESULT_CONVERGENCE_FACTORS"] == "- No data available"
     assert v["STABILITY_SCORE"] == "0.00"
-    assert v["BENCHMARK_AVG_TIME"] == "N/A"
 
 
 def test_provenance_keys_populated(tmp_path):
@@ -250,7 +242,6 @@ def _make_project_with_rows(tmp_path: Path, rows: list[dict]) -> Path:
     (reports_dir / "stability_analysis.json").write_text(
         '{"stability_score": 0.8, "function_name": "f"}', encoding="utf-8"
     )
-    (reports_dir / "performance_benchmark.json").write_text('{"execution_time": 0.0001}', encoding="utf-8")
     return root
 
 

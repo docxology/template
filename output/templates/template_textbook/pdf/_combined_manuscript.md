@@ -87,8 +87,8 @@ citation.
 To build the book from the repository root:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_textbook
-uv run python scripts/03_render_pdf.py    --project templates/template_textbook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_03_render.py    --project templates/template_textbook
 ```
 
 or run the full pipeline with `./run.sh`. See [`README.md`](README.md) for the
@@ -253,13 +253,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0001_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -366,13 +360,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0002_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -479,13 +467,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0003_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -676,13 +658,7 @@ the test suite, so the prose and the code cannot silently disagree.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Choose state variables] --> B[Write a rate rule]
-  B --> C[Solve or simulate]
-  C --> D[Predict long-run behaviour]
-  D -->|compare to data| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0004_29eae841232d.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -792,13 +768,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0005_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -905,13 +875,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0006_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1036,13 +1000,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0007_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1149,13 +1107,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0008_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1262,13 +1214,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0009_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1393,13 +1339,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0010_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1557,14 +1497,7 @@ approaches its ceiling.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph LR
-  A[Raw measurements] --> B[Group + average]
-  B --> C[Fit a trend]
-  C --> D{Within data range?}
-  D -->|yes| E[Interpolate: defensible]
-  D -->|no| F[Extrapolate: flag the risk]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0011_258c2154784d.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1675,13 +1608,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0012_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -3023,8 +2950,8 @@ subscript, E = mc^2^ with a superscript, and a footnote.[^demo]
 [^demo]: Footnotes collect at the end of the document (or page, in PDF). Use them
 for asides that would interrupt the sentence.
 
-You can hard-break a line  
-with two trailing spaces, or separate paragraphs with a blank line. Escape
+You can hard-break a line with an explicit `<br>` element,<br>
+or separate paragraphs with a blank line. Escape
 literal Markdown with a backslash: \*not italic\*.
 
 ---
@@ -3099,6 +3026,9 @@ A simple table with column alignment and a cross-referencable caption
 ([@tbl:gallery_alignment]):
 
 : Column alignment — left, centre, right. {#tbl:gallery_alignment}
+
+The values below are mirrored in `manuscript/assets/data/format_gallery.csv` so
+rendering examples remain evidence-addressable fixtures rather than anonymous literals.
 
 | Left      |  Centre  |    Right |
 | :-------- | :------: | -------: |
@@ -3193,12 +3123,7 @@ Flowchart:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs] --> B[Model]
-  B --> C[Predictions]
-  C -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0013_0c47d0ecfd54.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -3208,13 +3133,7 @@ Sequence:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-sequenceDiagram
-  participant Author
-  participant Engine
-  Author ->> Engine: edit config.yaml
-  Engine -->> Author: rendered PDF
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0014_292217dd39b3.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -3224,13 +3143,7 @@ State:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-stateDiagram-v2
-  [*] --> Stub
-  Stub --> Drafted: fill
-  Drafted --> Reviewed: review
-  Reviewed --> [*]: publish
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0015_988c820acb70.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -3240,15 +3153,7 @@ Class:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-classDiagram
-  class ChapterRef {
-    +str part_id
-    +str file
-    +stem() str
-  }
-  ChapterRef --> TocEntry : numbered as
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0016_cfcd765b5afa.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -3258,11 +3163,7 @@ Entity-relationship:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-erDiagram
-  PART ||--o{ CHAPTER : contains
-  CHAPTER ||--|| LAB : has
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0017_7df2b5706613.png}
 \caption{Mermaid diagram}
 \end{figure}
 

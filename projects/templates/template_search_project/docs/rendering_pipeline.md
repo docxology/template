@@ -18,7 +18,7 @@ uv run python projects/templates/template_search_project/scripts/run_deep_search
 uv run python projects/templates/template_search_project/scripts/run_search_pipeline.py
 ```
 
-**Inputs**: `manuscript/config.yaml` (sections `search`, `enrichment`, `llm`, `deep_search`) plus `data/corpus.json` when `search.sources` includes `local`.
+**Inputs**: `manuscript/config.yaml` (`project_config.search`, `project_config.enrichment`, root `llm`, and `project_config.deep_search`) plus `data/corpus.json` when `project_config.search.sources` includes `local`.
 
 **`run_deep_search.py` outputs**:
 
@@ -157,22 +157,22 @@ The review CLI (`scripts/review`) reads `review_config.yaml` to enable / disable
 | `paper.title` | PDF title page and headers | `infrastructure/core/config/loader.py` → `pdf_renderer.py` |
 | `paper.version` | Title page metadata | same |
 | `authors[*]` | Author list | same |
-| `search.query` | Single-query search string; bound to `{{CONFIG_QUERY}}` | `src/pipeline.py`, `src/manuscript_variables.py` |
-| `search.sources` | Backends invoked (`arxiv`, `crossref`, `paperclip`, `local`); bound to `{{CONFIG_SOURCES}}` | same |
-| `search.year_min` / `year_max` | Defensive year filtering at search and aggregation | `src/pipeline.py` |
-| `search.max_results` | Cap on returned papers | `src/pipeline.py` |
-| `search.local_corpus` | Path to JSON corpus when `sources` includes `local` | `src/pipeline.py` |
-| `search.cache_dir`, `search.cache_ttl_seconds` | `SearchCache` location and TTL | `infrastructure.search.literature.SearchCache` |
-| `enrichment.fetch_abstracts`, `fetch_fulltext` | Per-paper enrichment toggles | `src/pipeline.py` |
-| `enrichment.abstract_cache_dir`, `fulltext_cache_dir`, `max_fulltext_chars` | Cache locations and truncation | `AbstractFetcher`, `FulltextFetcher` |
+| `project_config.search.query` | Single-query search string; bound to `{{CONFIG_QUERY}}` | `src/pipeline.py`, `src/manuscript_variables.py` |
+| `project_config.search.sources` | Backends invoked (`arxiv`, `crossref`, `paperclip`, `local`); bound to `{{CONFIG_SOURCES}}` | same |
+| `project_config.search.year_min` / `year_max` | Defensive year filtering at search and aggregation | `src/pipeline.py` |
+| `project_config.search.max_results` | Cap on returned papers | `src/pipeline.py` |
+| `project_config.search.local_corpus` | Path to JSON corpus when `sources` includes `local` | `src/pipeline.py` |
+| `project_config.search.cache_dir`, `cache_ttl_seconds` | `SearchCache` location and TTL | `infrastructure.search.literature.SearchCache` |
+| `project_config.enrichment.fetch_abstracts`, `fetch_fulltext` | Per-paper enrichment toggles | `src/pipeline.py` |
+| `project_config.enrichment.abstract_cache_dir`, `fulltext_cache_dir`, `max_fulltext_chars` | Cache locations and truncation | `AbstractFetcher`, `FulltextFetcher` |
 | `llm.enabled` | Whether `synthesise_per_paper` and `synthesise_corpus` run | `scripts/run_search_pipeline.py` |
 | `llm.model`, `seed`, `temperature` | LLM determinism knobs | `src/llm_runtime.py::build_llm_callable` |
 | `llm.context_window`, `long_max_tokens`, `max_input_length`, `review_timeout` | Ollama runtime budgets | same |
 | `report.output_path`, `include_per_paper`, `include_corpus_synthesis` | Reading-report assembly | `src/report.py::write_reading_report` |
-| `deep_search.enabled` | Whether `run_deep_search.py` performs work (exits 2 when disabled) | `scripts/run_deep_search.py` |
-| `deep_search.keywords`, `max_results_per_keyword`, `sources` | Fan-out parameters | `src/deep_search.py` |
-| `deep_search.write_unified_bibtex`, `unified_bibtex_path` | `references_deep.bib` controls | same |
-| `references_path` | Override the standard BibTeX output path | `src/pipeline.py` |
+| `project_config.deep_search.enabled` | Whether `run_deep_search.py` performs work (exits 2 when disabled) | `scripts/run_deep_search.py` |
+| `project_config.deep_search.keywords`, `max_results_per_keyword`, `sources` | Fan-out parameters | `src/deep_search.py` |
+| `project_config.deep_search.write_unified_bibtex`, `unified_bibtex_path` | `references_deep.bib` controls | same |
+| `project_config.references_path` | Override the standard BibTeX output path | `src/pipeline.py` |
 
 ## Troubleshooting
 
@@ -205,11 +205,11 @@ grep -rn "{{[A-Z_]*}}" projects/templates/template_search_project/output/manuscr
 
 ### `SearchCache` returns stale results
 
-**Symptom**: a config change to `search.year_min` / `year_max` / `query` has no effect.
+**Symptom**: a config change to `project_config.search.year_min` / `year_max` / `query` has no effect.
 
 **Cause**: cache is keyed on canonical query identity; two callers with the same key share the cache.
 
-**Fix**: pass `--no-cache` to the script, or delete `output/search/cache/`, or set `config.search.cache_ttl_seconds` to expire entries.
+**Fix**: pass `--no-cache` to the script, or delete `output/search/cache/`, or set `project_config.search.cache_ttl_seconds` to expire entries.
 
 ### Missing figure in PDF
 

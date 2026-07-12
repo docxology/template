@@ -94,7 +94,7 @@ Stability probing, benchmarking hooks—consumed heavily by optimization exempla
 
 ### `infrastructure.search` (${module_search_python_file_count} files)
 
-Two-tier search architecture: `literature/` client stack (client.py, backends, caches) powers literature search with arXiv, Crossref, local, and Paperclip backends. `connectors/` extends search to ~30 scientific databases through a uniform ConnectorRegistry pattern — each database (OpenAlex, UniProt, PDB, Semantic Scholar, European PMC, bioRxiv, etc.) implements a common Connector interface accessible through list-dbs/search CLI commands with HTTP timeout, retry, and TTL caching.
+Two-tier search architecture: the `literature/` client stack (client.py, backends, caches) powers literature search with arXiv, Crossref, local, and Paperclip backends. `connectors/` exposes the built-in scientific database adapters through a uniform `ConnectorRegistry`; OpenAlex, UniProt, PDB, Semantic Scholar, European PMC, bioRxiv, and other registered adapters share list/search CLI commands with HTTP timeout, retry, and TTL caching. The live registry, not this prose, is authoritative for connector count.
 
 ### `infrastructure.sia` (${module_sia_python_file_count} files)
 
@@ -120,7 +120,7 @@ Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.
 
 Operational templates for deployments (documentation-first; intentionally minimal Python footprint).
 
---- 
+---
 
 **Documentation maturity:** Coverage statements in Results pull from introspection—not hand-maintained denominators—so newly promoted modules automatically flow into manuscripts after `generate_manuscript_metrics.py`.
 

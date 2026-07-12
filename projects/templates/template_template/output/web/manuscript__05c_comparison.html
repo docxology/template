@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="comparison-to-existing-tools">Comparison to Existing Tools</h2>
 <p>The <a href="02_introduction.md#the-gap">gap analysis</a> established
 that no single tool integrates all six cross-cutting concerns. Here we
@@ -197,23 +201,23 @@ compilation cycle, is not one of the nine compared peers but could serve
 as an alternative rendering backend if a Pandoc writer were
 contributed.</p>
 <p>Second, the eight enforcement capabilities <code>template/</code>
-co-enforces—testing enforcement, coverage thresholds, steganographic
+co-locates—testing enforcement, coverage thresholds, steganographic
 watermarking, multi-project management, AI-agent documentation, the
 agentic skill protocol, an interactive TUI, and Zero-Mock policy—are
 individually straightforward (and several, such as multi-project
 management and AI-agent documentation, are matched in part by individual
-peers); their novelty lies in <em>co-enforcement</em> within a single
-pipeline, ensuring that a passing build guarantees documentation
-completeness, provenance embedding, and AI-navigability alongside
-computational correctness. The FAIR4RS principles [barker2022fair4rs;
-lamprecht2020towards] articulate what research software quality
-requires; FAIRsoft [garijo2024fairsoft] scores compliance
-observationally; <code>template/</code> operationalizes these standards
-by coupling them to pipeline gates that halt the build if coverage drops
-below 90% or provenance embedding fails. Cohen et al.’s four pillars of
-research software engineering [cohen2021four]—sustainability, quality,
-community, and policy—are operationalized by <code>template/</code>
-through the first two pillars via quality-gated automation.</p>
+peers). Their value here lies in a shared pipeline contract: required
+test and documentation gates run together, while selected provenance
+stages carry their own validation. The FAIR4RS principles
+[barker2022fair4rs; lamprecht2020towards] articulate what research
+software quality requires; FAIRsoft [garijo2024fairsoft] scores
+compliance observationally; <code>template/</code> operationalizes part
+of this agenda by failing project tests below the declared 90% floor and
+validating provenance artifacts when those stages are enabled. Cohen et
+al.’s four pillars of research software engineering
+[cohen2021four]—sustainability, quality, community, and policy—are
+addressed primarily through the first two pillars via quality-gated
+automation.</p>
 <p>Third, the AI-agent documentation dimension reveals an underserved
 need. Overleaf and Prism provide AI <em>writing</em> assistance, but
 neither exposes structured documentation for <em>external</em> agents to
@@ -254,5 +258,6 @@ reproduction environments; <code>template/</code> complements
 containerization by adding the testing enforcement, multi-project
 management, and provenance embedding layers that ERCs do not
 address.</p>
+</main>
 </body>
 </html>

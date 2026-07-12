@@ -13,12 +13,13 @@ No mocks: real deterministic objects only.
 
 from __future__ import annotations
 
-from dataclasses import replace
 from pathlib import Path
 
 import yaml
 
 from src.agents import DeterministicProposer
+from src.ablation import AblationRow, build_ablation_payload, run_ablations
+from src.comparison import build_objective, run_comparison
 from src.objective import SyntheticObjective
 from src.search import SearchConfig, run_search
 
@@ -70,29 +71,9 @@ def test_matched_budget_comparison_numbers_match_manuscript() -> None:
     assert baseline.redundant_experiments == 36
 
 
-def _run_ablation_rows() -> dict[str, dict[str, float | int]]:
-    """Mirror scripts/run_ablation.py::_run_ablations, keyed by configuration."""
-    objective = _objective()
-    proposer = DeterministicProposer()
-    base = SearchConfig(budget=BUDGET)
-    ablations = (
-        ("full coordination", {}),
-        ("no confirmation", {"use_confirmation": False}),
-        ("no dead-end registry", {"use_dead_ends": False}),
-        ("no effect-size ranking", {"use_ranking": False}),
-        ("no reorganization", {"use_reorganization": False}),
-    )
-    rows: dict[str, dict[str, float | int]] = {}
-    for label, overrides in ablations:
-        config = replace(base, **overrides) if overrides else base
-        result = run_search(objective, proposer, config)
-        rows[label] = {
-            "reported_metric": result.champion.metric,
-            "clean_metric": objective.clean(result.champion.params),
-            "experiments_used": len(result.trajectory),
-            "redundant_experiments": result.redundant_experiments,
-        }
-    return rows
+def _run_ablation_rows() -> dict[str, AblationRow]:
+    """Run the same source-layer study used by the output orchestrator."""
+    return {row["configuration"]: row for row in run_ablations(budget=BUDGET)}
 
 
 def test_ablation_table_numbers_match_manuscript() -> None:
@@ -127,6 +108,17 @@ def test_confirmation_noise_inflation_is_about_thirteenfold() -> None:
     no_conf = rows["no confirmation"]["reported_metric"]
     ratio = no_conf / full
     assert 12.0 < ratio < 14.0, f"noise-inflation ratio {ratio} no longer ~13x"
+
+    payload = build_ablation_payload(run_ablations(budget=BUDGET), budget=BUDGET)
+    assert payload["noise_inflation_ratio_without_confirmation"] == ratio
+
+
+def test_comparison_helpers_are_the_persisted_experiment_path() -> None:
+    """The reusable source layer reproduces the matched-budget comparison."""
+    objective = build_objective()
+    coordinated, baseline = run_comparison(objective, budget=BUDGET)
+    assert len(coordinated.trajectory) == 36
+    assert len(baseline.trajectory) == BUDGET
 
 
 def test_reported_metric_full_precision_is_pinned() -> None:

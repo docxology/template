@@ -16,7 +16,7 @@ This exemplar is limited to lawful redaction, declassification support, public-r
 4. A visual proof matrix that enumerates four redaction styles across four PDF backgrounds, producing sixteen variant PDFs with identical source-safe decisions.
 5. A steganography layer that post-processes each base PDF with nine security methods, producing provenance-enhanced companion PDFs with hash manifests.
 6. Optional Kmyth TPM sealing that wraps each hash manifest and steganography PDF in `.ski` sidecars sealed against the TPM2-TSS storage hierarchy.
-7. A comprehensive release packet that combines sanitized text, audit findings, ledger, hashes, review gate status, and paragraph audit tables.
+7. A comprehensive in-memory release packet plus deterministic public projections: a text-free audit and a hashed source-safe ledger.
 
 # Architecture
 

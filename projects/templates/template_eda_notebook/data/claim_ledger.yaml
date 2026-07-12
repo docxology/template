@@ -41,3 +41,17 @@ claims:
     source_tier: manuscript_claim
     freshness: active
     artifact_path: manuscript/03_results.md
+  - claim_id: correlation-color-scale-minimum
+    kind: number
+    value: -1
+    source: projects/templates/template_eda_notebook/src/eda/figures.py CORRELATION_COLOR_LIMITS[0]
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/eda/figures.py
+  - claim_id: correlation-color-scale-maximum
+    kind: number
+    value: 1
+    source: projects/templates/template_eda_notebook/src/eda/figures.py CORRELATION_COLOR_LIMITS[1]
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/eda/figures.py

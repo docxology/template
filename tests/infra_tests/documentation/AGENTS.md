@@ -11,6 +11,7 @@ flowchart LR
     T[tests/infra_tests/documentation/]
     T --> META[AGENTS.md · __init__.py]
     T --> FIG[test_figure_manager.py<br/>Figure management]
+    T --> GFIG[test_generated_figure_registry.py<br/>Generated registry contracts]
     T --> GCLI[test_generate_glossary_cli.py<br/>Glossary CLI]
     T --> GGEN[test_glossary_gen.py<br/>API glossary generation]
     T --> IMG[test_image_manager.py<br/>Image management]
@@ -20,7 +21,7 @@ flowchart LR
     classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class FIG,GCLI,GGEN,IMG,MD test
+    class FIG,GFIG,GCLI,GGEN,IMG,MD test
     class META doc
 ```
 
@@ -38,6 +39,7 @@ flowchart LR
 **Key Test Scenarios:**
 - Figure registration with metadata
 - Registry persistence to JSON files
+- Deterministic pipeline registries that fail on missing or deleted outputs
 - LaTeX code generation for figures
 - Reference resolution and validation
 - Error handling for invalid figures

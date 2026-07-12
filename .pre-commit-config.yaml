@@ -48,12 +48,16 @@ repos:
         name: trailing-whitespace (strip trailing whitespace)
         exclude: |
           (?x)^(
+            output/.*|
+            projects/templates/[^/]+/output/.*|
             projects/templates/.*\.svg
           )
       - id: end-of-file-fixer
         name: end-of-file-fixer (ensure trailing newline)
         exclude: |
           (?x)^(
+            output/.*|
+            projects/templates/[^/]+/output/.*|
             projects/templates/.*\.svg|
             projects/templates/.*\.png
           )
@@ -108,7 +112,7 @@ repos:
         verbose: true
 
       - id: pre-push-quick
-        name: generated-artifact guard + no mocks + hook smoke pytest
+        name: generated-artifact guard + lexical mock-framework gate + hook smoke pytest
         entry: bash
         args:
           - -eo

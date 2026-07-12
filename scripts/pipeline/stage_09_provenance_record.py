@@ -13,6 +13,7 @@ Exit codes:
     1: An unrecoverable error occurred.
     2: Graceful skip — provenance not configured or project not found.
 """
+
 from __future__ import annotations
 
 import sys
@@ -61,6 +62,7 @@ def main() -> int:
 
     if config_path.exists():
         import yaml
+
         try:
             cfg = yaml.safe_load(config_path.read_text()) or {}
             pc = cfg.get("provenance", {})
@@ -95,6 +97,7 @@ def main() -> int:
     # Record outputs if glob given
     if args.outputs:
         import glob as glob_mod
+
         for path_str in glob_mod.glob(str(project_dir / args.outputs), recursive=True):
             p = Path(path_str)
             if p.is_file():

@@ -1,6 +1,11 @@
 # tests/ - Test Suite
 
-The `tests/` tree covers infrastructure modules and integration behavior. Project-specific tests live under `projects/{name}/tests/`. All tests use real data, real subprocesses, and real services — **no mocks** (`MagicMock`, `mocker.patch`, `unittest.mock`) anywhere.
+The `tests/` tree covers infrastructure modules and integration behavior.
+Project-specific tests live under `projects/{name}/tests/`. Mock frameworks
+(`MagicMock`, `mocker.patch`, `unittest.mock`) are prohibited; real data,
+subprocesses, temporary files, and localhost services are preferred. Existing
+`pytest.monkeypatch` dependency replacements are measured by
+`scripts/audit/verify_no_mocks.py --inventory` and tracked as migration debt.
 
 ## Running Tests
 
@@ -46,7 +51,7 @@ flowchart TB
 
 ## Rules
 
-- Use the no-mocks policy.
+- Use the mock-framework prohibition and do not add semantic stand-in debt.
 - Prefer `uv run` for test commands.
 - Keep infrastructure tests separate from project tests.
 - Keep integration tests focused on end-to-end behavior.

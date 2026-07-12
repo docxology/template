@@ -9,7 +9,7 @@ validation gates, and a deterministic compiler, implemented in
 `projects/templates/template_methods_paper/src/methods_dsl/` and described
 section by section in [@sec:methodology]. The domain language's vocabulary is
 informed by BPL (Biology Programming Language,
-[bpl2026]), an upstream reference that encodes laboratory protocols as
+[@bpl2026]), an upstream reference that encodes laboratory protocols as
 programs with biology-native types, staged validation, and deterministic
 compilation; this exemplar generalizes BPL's intent vocabulary and pipeline
 shape from wet-lab protocols to any controlled procedure.
@@ -18,13 +18,13 @@ A `Method` is a name, a set of typed parameters and resources, and an
 ordered, dependent set of steps — constructed directly as frozen Python
 dataclasses (`src/methods_dsl/model.py`) rather than parsed from new text
 syntax. Every `Quantity` carries a unit that resolves to one of
-18 controlled units across six dimensions, and every step
+18 controlled units across seven dimensions, and every step
 names one of 9 controlled-vocabulary intents
 (`src/methods_dsl/vocabulary.py`), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and
 target — validate a method before `compile_method`
 (`src/methods_dsl/compiler.py`) deterministically schedules it with Kahn's
-algorithm [kahn1962topological] and hashes the canonical plan with SHA-256.
+algorithm [@kahn1962topological] and hashes the canonical plan with SHA-256.
 
 We demonstrate the language on 2 worked example
 methods spanning both domains BPL's design targets and the domains it
@@ -44,12 +44,12 @@ side, we show that a controlled vocabulary expressed as typed dataclasses —
 not a parsed grammar — is sufficient to reproduce BPL's core safety
 properties (dimensional safety, staged validation, deterministic
 compilation) at a scope appropriate for a template exemplar. On the
-architecture side, the DSL is covered above the 90% project gate by a
-zero-mock test suite, generates 13 artifacts
-(1 figures, 6 data files,
+architecture side, the DSL is exercised by a zero-mock test suite under the
+repository's configured project coverage gate, generates 14 artifacts
+(1 figures, 7 data files,
 6 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `23b5981d45bdc598`, build timestamp
-`2026-06-30T23:02:10Z`) into [@sec:reproducibility].
+metadata (configuration hash `a0f000565bef6a79`, build timestamp
+`2026-07-12T02:08:51Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -74,12 +74,12 @@ generated-variable-injected, multi-format rendering.
 
 A methods section in ordinary prose is ambiguous by construction: "add 10 mL
 of water, then mix" admits multiple readings of order, units, and what
-"mix" means operationally. BPL [bpl2026] makes the case for laboratory
+"mix" means operationally. BPL [@bpl2026] makes the case for laboratory
 protocols directly: free-text instructions admit multiple interpretations,
 unit errors and reagent mismatches surface only at the bench, and
 re-executing a protocol on a different operator or instrument introduces
 silent variation. Fowler frames the general remedy as a **domain-specific
-language** [fowler2010dsl]: a small, purpose-built notation whose vocabulary
+language** [@fowler2010dsl]: a small, purpose-built notation whose vocabulary
 is restricted exactly to the concepts the domain needs, so that what can be
 written down is exactly what is intended.
 
@@ -103,7 +103,7 @@ over directly into `src/methods_dsl/`:
 3. **Deterministic compilation.** Same source, same options, same plan hash.
    `src/methods_dsl/compiler.py::compile_method` reproduces this with a
    canonical-JSON SHA-256 hash over a Kahn's-algorithm
-   [kahn1962topological] schedule.
+   [@kahn1962topological] schedule.
 
 What this exemplar does **not** carry over is BPL's text grammar and parser:
 a `Method` here is constructed directly as frozen Python dataclasses
@@ -164,7 +164,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 
 The DSL is implemented as eight cooperating modules under
 `src/methods_dsl/`, each corresponding to one stage of a BPL-inspired
-pipeline [bpl2026]. This section walks the pipeline stage by stage,
+pipeline [@bpl2026]. This section walks the pipeline stage by stage,
 naming the function or class that implements each design decision so every
 claim below is directly checkable against `src/methods_dsl/`.
 
@@ -237,7 +237,7 @@ secondary failures.
 `compile_method` first calls `run_all_gates` and raises
 `MethodValidationError` (carrying every failed gate's issues) if any gate
 fails. On success, `topological_order` schedules the validated steps with
-Kahn's algorithm [kahn1962topological]: repeatedly remove a step whose
+Kahn's algorithm [@kahn1962topological]: repeatedly remove a step whose
 dependencies are all already scheduled, breaking ties by ascending
 `step_id` so the same method always yields the same order — Python does not
 guarantee dict/set iteration order is stable for this purpose, so the
@@ -264,7 +264,7 @@ independently verify `Plan.plan_hash` by re-hashing the exported file).
 `ProvenanceTier` orders three levels of trust — `DECLARED`, `CALIBRATED`,
 `VERIFIED` — generalizing BPL's audit model. `append_record` extends an
 immutable hash-chain of `StateRecord`s, each hashing its own `key`/`value`/
-`tier`/`prev_hash` [merkle1987digital]; `verify_chain` recomputes every
+`tier`/`prev_hash` [@merkle1987digital]; `verify_chain` recomputes every
 record's hash and checks it against the recorded `prev_hash` chain. This is
 a consistency check, not a cryptographic tamper-proof guarantee against an
 actor with write access to the whole stored chain: it detects in-chain
@@ -376,7 +376,7 @@ The results were validated through the zero-mock `tests/` suite:
 - **Manuscript-variable test** confirms every generated-variable name used in
   `manuscript/*.md` is emitted by `generate_variables`.
 
-All tests pass with coverage exceeding the 90% project gate, with no mocks.
+All tests pass under the configured project coverage gate, with no mocks.
 
 ## Discussion
 
@@ -398,7 +398,7 @@ the moment the example methods changed.
 # Conclusion {#sec:conclusion}
 
 This paper presented a small, tested domain language for specifying
-controlled methods, informed by BPL's [bpl2026] domain-language design for
+controlled methods, informed by BPL's [@bpl2026] domain-language design for
 laboratory protocols and generalized to any controlled procedure. It
 validates a simple proposition: a controlled vocabulary expressed as typed,
 validated dataclasses — not a parsed text grammar — is sufficient to
@@ -442,7 +442,7 @@ provide.
 ## Key insights
 
 1. **Determinism follows from explicit tie-breaking**: Kahn's algorithm
-   [kahn1962topological] alone does not guarantee a stable schedule across
+   [@kahn1962topological] alone does not guarantee a stable schedule across
    runs — the ascending-`step_id` tie-break is what makes `plan_hash`
    reproducible, and [@sec:results] checks this live rather than asserting it.
 2. **Staged short-circuit avoids misleading errors**: running `plan_gate`
@@ -598,13 +598,13 @@ uv run pytest projects/templates/template_methods_paper/tests \
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 
 # 4. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 Or, end to end via the orchestrated pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
 ```
 
 ## Generated artifact registry
@@ -645,9 +645,9 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `23b5981d45bdc598` is the
+Configuration provenance is itself injected: `a0f000565bef6a79` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-06-30T23:02:10Z` records when the variables were generated
+`2026-07-12T02:08:51Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 
@@ -659,19 +659,19 @@ SHA-256 of `manuscript/config.yaml` at build time, and
 # Scope, Related Work, and Positioning {#sec:scope}
 
 This section situates the exemplar and states explicit boundaries. The goal
-is not to compete with BPL's full compiler pipeline [bpl2026] — a
-~32,000-line implementation with a Lark grammar, a robot backend, and a
-hash-chained audit/compliance layer — but to show how a minimal,
+is not to compete with BPL's substantially larger full compiler pipeline
+[@bpl2026] — with its Lark grammar, robot backend, and hash-chained
+audit/compliance layer — but to show how a minimal,
 test-backed subset of BPL's domain-language design fits the template's
-reproducibility and rendering stack [peng2011reproducible], generalized
+reproducibility and rendering stack [@peng2011reproducible], generalized
 from wet-lab protocols to any controlled procedure.
 
 ## Domain-specific languages for controlled procedures
 
 Encoding a procedure as a program rather than free text is a long-standing
 software-engineering pattern: Fowler's treatment of domain-specific
-languages [fowler2010dsl] frames the general case — a notation restricted
-to exactly the concepts a domain needs. BPL [bpl2026] applies this
+languages [@fowler2010dsl] frames the general case — a notation restricted
+to exactly the concepts a domain needs. BPL [@bpl2026] applies this
 specifically to laboratory protocols, adding biology-native types
 (reagents, labware, MW-aware concentrations), staged validation, and
 deterministic compilation to a robot or human execution target. The present
@@ -742,7 +742,7 @@ a compiler implementation at BPL's full scale.
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
 

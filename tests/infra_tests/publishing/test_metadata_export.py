@@ -42,9 +42,7 @@ def test_book_version_and_year_fallback_for_booklength_projects(tmp_path: Path) 
     from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
 
     config = {"book": {"title": "The Template Textbook", "version": "0.1.1", "year": 2026}}
-    md = publication_metadata_from_config_dict(
-        config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True
-    )
+    md = publication_metadata_from_config_dict(config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True)
     assert md.paper_version == "0.1.1"
     assert md.publication_date == "2026"
 
@@ -57,12 +55,32 @@ def test_paper_version_takes_precedence_over_book_version(tmp_path: Path) -> Non
         "paper": {"title": "Paper Title", "version": "2.0.0", "date": "2026-01-01"},
         "book": {"title": "Book Title", "version": "0.1.1", "year": 2026},
     }
-    md = publication_metadata_from_config_dict(
-        config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True
-    )
+    md = publication_metadata_from_config_dict(config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True)
     assert md.title == "Paper Title"
     assert md.paper_version == "2.0.0"
     assert md.publication_date == "2026-01-01"
+
+
+def test_sidecar_builders_support_book_schema_and_paper_precedence() -> None:
+    """Every exported sidecar must use the same paper→book field fallback."""
+    book_config = {
+        "book": {"title": "The Template Textbook", "version": "0.1.2", "year": 2026},
+        "authors": [{"name": "Daniel Ari Friedman"}],
+        "publication": {"doi": "10.5281/zenodo.20533125"},
+    }
+
+    citation = yaml.safe_load(build_citation_cff(book_config, released_date="2026-07-12"))
+    codemeta = build_codemeta(book_config, released_date="2026-07-12")
+    zenodo = build_zenodo(book_config)
+
+    assert (citation["title"], citation["version"]) == ("The Template Textbook", "0.1.2")
+    assert (codemeta["name"], codemeta["version"]) == ("The Template Textbook", "0.1.2")
+    assert (zenodo["title"], zenodo["version"]) == ("The Template Textbook", "0.1.2")
+
+    book_config["paper"] = {"title": "Paper Override", "version": "2.0.0", "date": "2026-07-01"}
+    assert yaml.safe_load(build_citation_cff(book_config))["title"] == "Paper Override"
+    assert build_codemeta(book_config)["version"] == "2.0.0"
+    assert build_zenodo(book_config)["version"] == "2.0.0"
 
 
 def test_build_metadata_with_full_config() -> None:

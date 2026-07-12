@@ -1,4 +1,0 @@
-person_id,name,email,first_seen,last_seen,commit_count,touches,sensitive_touches,primary_tz_offset,primary_tz_minutes,timezone_offsets
-agent@humos.local,Hermes Agent,agent@humos.local,2026-07-07T08:26:55-07:00,2026-07-07T15:22:54-07:00,4,250,0.00,-07:00,-420,-07:00:4
-danielarifriedman@gmail.com,Daniel Ari Friedman,danielarifriedman@gmail.com,2025-08-18T09:48:42-07:00,2026-07-08T05:00:30-07:00,1003,74330,2854.50,-07:00,-420,-08:00:284;-07:00:719
-pai@local,PAI,pai@local,2026-06-09T06:43:04-07:00,2026-06-09T06:43:04-07:00,1,2,0.00,-07:00,-420,-07:00:1

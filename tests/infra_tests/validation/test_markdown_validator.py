@@ -417,6 +417,16 @@ class TestFindManuscriptDirectory:
 
         assert result == manuscript
 
+    def test_finds_docs_manuscript(self, tmp_path):
+        """A populated docs/manuscript tree is a supported source layout."""
+        manuscript = tmp_path / "projects" / "project" / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
+        (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+
+        result = find_manuscript_directory(tmp_path, "project")
+
+        assert result == manuscript
+
     def test_raises_when_not_found(self, tmp_path):
         """Test find_manuscript_directory raises when not found."""
         with pytest.raises(FileNotFoundError):

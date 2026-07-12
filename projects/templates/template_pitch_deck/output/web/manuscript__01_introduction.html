@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:introduction">Introduction</h1>
 <p>Every other public exemplar in this monorepo renders a manuscript:
 prose, figures, citations, a combined PDF. None of them render a
@@ -196,11 +197,12 @@ Three properties make that possible.</p>
 <code>manuscript/deck_content_{short,medium,long}.yaml</code> define the
 slide-by-slide narrative at three lengths; the live token builder
 (<code>src/deck_tokens.py</code>) supplies the facts.
-<code>scripts/render_decks.py</code> resolves tokens once and calls both
-renderers — <code>infrastructure.rendering.slide_deck.render_pdf</code>
-and <code>infrastructure.rendering.pptx_deck.render_pptx</code> —
-against the identical resolved content, so PDF and PPTX cannot drift
-from each other.</p>
+<code>scripts/20_render_decks.py</code> resolves tokens once and calls
+both renderers —
+<code>infrastructure.rendering.slide_deck.render_pdf</code> and
+<code>infrastructure.rendering.pptx_deck.render_pptx</code> — against
+the identical resolved content, so PDF and PPTX cannot drift from each
+other.</p>
 <p><strong>Facts, not fabrication.</strong> Every numeric claim produced
 by <code>src/deck_tokens.py</code> about the pitch subject
 (<code>template_template</code>) is generated from a live read of that
@@ -220,7 +222,7 @@ gate.</p>
 architecture ([sec:architecture]), the validation model
 ([sec:validation]), and the reproducibility guarantees
 ([sec:reproducibility]) that let
-<code>uv run python scripts/render_decks.py --project templates/template_pitch_deck</code>
+<code>uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py</code>
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.</p>
 </main>

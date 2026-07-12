@@ -47,6 +47,15 @@ class _ParsedAuthor:
         return self.family_name
 
 
+@dataclass(frozen=True)
+class _WorkMetadata:
+    """Title/version/date fields shared by paper- and book-schema projects."""
+
+    title: object
+    version: object
+    release_date: object
+
+
 def build_citation_cff(
     config: dict,
     *,
@@ -63,14 +72,14 @@ def build_citation_cff(
     Returns:
         YAML string for ``CITATION.cff`` with a trailing newline.
     """
-    paper = _mapping(config.get("paper"))
+    work = _work_metadata(config)
     citation: dict[str, Any] = {
         "cff-version": "1.2.0",
         "message": "If you use this software, please cite it using the metadata from this file.",
-        "title": _string_or_default(paper.get("title"), "Untitled Research"),
+        "title": _string_or_default(work.title, "Untitled Research"),
         "authors": [_citation_author(author) for author in _authors_from_config(config)],
-        "version": _string_or_default(paper.get("version"), "0.0.0"),
-        "date-released": _resolve_released_date(paper.get("date"), released_date),
+        "version": _string_or_default(work.version, "0.0.0"),
+        "date-released": _resolve_released_date(work.release_date, released_date),
         "license": _license_from_config(config),
         "keywords": _keywords_from_config(config),
         "type": "software",
@@ -108,16 +117,16 @@ def build_codemeta(
     Returns:
         Dictionary ready to serialize as ``codemeta.json``.
     """
-    paper = _mapping(config.get("paper"))
+    work = _work_metadata(config)
     codemeta: dict[str, Any] = {
         "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
         "@type": "SoftwareSourceCode",
         "author": [_codemeta_author(author) for author in _authors_from_config(config)],
-        "dateModified": _resolve_released_date(paper.get("date"), released_date),
+        "dateModified": _resolve_released_date(work.release_date, released_date),
         "keywords": _keywords_from_config(config),
         "license": _spdx_url(_license_from_config(config)),
-        "name": _string_or_default(paper.get("title"), "Untitled Research"),
-        "version": _string_or_default(paper.get("version"), "0.0.0"),
+        "name": _string_or_default(work.title, "Untitled Research"),
+        "version": _string_or_default(work.version, "0.0.0"),
     }
 
     normalized_doi = _normalize_doi(_mapping(config.get("publication")).get("doi"))
@@ -159,9 +168,9 @@ def build_zenodo(config: dict) -> dict[str, Any]:
     Returns:
         Dictionary ready to serialize as ``.zenodo.json``.
     """
-    paper = _mapping(config.get("paper"))
+    work = _work_metadata(config)
     publication = _mapping(config.get("publication"))
-    title = _string_or_default(paper.get("title"), "Untitled Research")
+    title = _string_or_default(work.title, "Untitled Research")
     normalized_doi = _normalize_doi(publication.get("doi"))
     publication_year = _string_or_none(publication.get("year"))
     description = f"Source code for {title}"
@@ -174,7 +183,7 @@ def build_zenodo(config: dict) -> dict[str, Any]:
         "upload_type": "software",
         "description": description,
         "creators": [_zenodo_creator(author) for author in _authors_from_config(config)],
-        "version": _string_or_default(paper.get("version"), "0.0.0"),
+        "version": _string_or_default(work.version, "0.0.0"),
         "license": _license_from_config(config),
         "keywords": _keywords_from_config(config),
     }
@@ -268,6 +277,17 @@ def write_metadata_for_config_path(
         out_dir,
         repo_url=repo_url,
         released_date=released_date,
+    )
+
+
+def _work_metadata(config: dict) -> _WorkMetadata:
+    """Resolve paper fields first, then fall back field-by-field to ``book``."""
+    paper = _mapping(config.get("paper"))
+    book = _mapping(config.get("book"))
+    return _WorkMetadata(
+        title=paper.get("title") or book.get("title"),
+        version=paper.get("version") or book.get("version"),
+        release_date=paper.get("date") or book.get("date") or book.get("year"),
     )
 
 

@@ -1,18 +1,16 @@
 {
-  "timestamp": "2026-07-10T13:16:51.022078",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": false,
+    "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
     "Artifact manifest": true
   },
-  "figure_issues": [
-    "Figure registry not found but 4 figure reference(s) found in manuscript"
-  ],
+  "figure_issues": [],
   "output_statistics": {
     "detailed_validation": {
       "structure": {
@@ -50,8 +48,8 @@
           },
           "figures": {
             "exists": true,
-            "files": 4,
-            "size_mb": 0.19,
+            "files": 5,
+            "size_mb": 0.2,
             "readable": true,
             "optional": false
           },
@@ -64,23 +62,21 @@
           },
           "reports": {
             "exists": true,
-            "files": 14,
-            "size_mb": 0.03,
+            "files": 31,
+            "size_mb": 0.16,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "logs": {
@@ -113,8 +109,8 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 4,
-          "size_mb": "0.19",
+          "file_count": 5,
+          "size_mb": "0.20",
           "largest_file": "permutation_result.png"
         },
         "data": {
@@ -125,21 +121,19 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 14,
-          "size_mb": "0.03",
-          "largest_file": "artifact_manifest.json"
+          "file_count": 31,
+          "size_mb": "0.16",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "llm": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
@@ -152,28 +146,29 @@
         "pdf": 10,
         "web": 11,
         "slides": 65,
-        "figures": 4,
+        "figures": 5,
         "data": 1,
-        "reports": 14,
-        "simulations": 0,
-        "llm": 0,
+        "reports": 31,
         "logs": 1
       },
-      "total_size_mb": 1.6530189514160156,
+      "total_size_mb": 1.7805824279785156,
       "issues_by_severity": {
         "critical": [],
-        "warning": [],
+        "warning": [
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty"
+        ],
         "info": []
       },
       "recommendations": []
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.3804903030395508
+      "size_mb": 0.3804893493652344
     },
     "figures": {
-      "files": 4,
-      "size_mb": 0.1945352554321289
+      "files": 5,
+      "size_mb": 0.19556045532226562
     },
     "data": {
       "files": 1,
@@ -182,17 +177,10 @@
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
-    "figure_issues_count": 1,
-    "all_passed": false
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "1 figure reference issue(s)",
-      "action": "Register missing figures or remove unused references",
-      "file": "projects/templates/template_registered_report/output/figures/figure_registry.json"
-    }
-  ]
+  "recommendations": []
 }

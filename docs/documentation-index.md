@@ -56,6 +56,7 @@ This index lists documentation files in the Research Project Template by categor
 | Literature search | [guides/literature-workflow-guide.md](guides/literature-workflow-guide.md) | [core/literature-data-flow.md](core/literature-data-flow.md), [modules/literature-search-and-references.md](modules/literature-search-and-references.md) |
 | Web search (Exa) | [modules/guides/search-module.md](modules/guides/search-module.md#exa-web-search-exa) | [../infrastructure/search/exa/CAPABILITIES.md](../infrastructure/search/exa/CAPABILITIES.md) |
 | Deep research (OpenAI/Gemini, paid opt-in) | [../infrastructure/search/deep_research/README.md](../infrastructure/search/deep_research/README.md) | [../infrastructure/search/deep_research/AGENTS.md](../infrastructure/search/deep_research/AGENTS.md), [../infrastructure/search/SKILL.md](../infrastructure/search/SKILL.md) |
+| Publication | [guides/publication-runbook.md](guides/publication-runbook.md) | [guides/publishing-guide.md](guides/publishing-guide.md), [guides/zenodo-doi-strategy.md](guides/zenodo-doi-strategy.md), [modules/guides/publishing-module.md](modules/guides/publishing-module.md), [_generated/publication_records.md](_generated/publication_records.md) |
 
 **Module package counts:** link [modules/modules-guide.md](modules/modules-guide.md) or regenerate from `infrastructure/` discovery — do not hand-edit competing literals across hub pages.
 
@@ -152,7 +153,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
 - **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/templates/template_code_project/`](../projects/templates/template_code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
 - **[guides/llm-integration-guide.md](guides/llm-integration-guide.md)** - AI-assisted research with Ollama
-- **[guides/publishing-guide.md](guides/publishing-guide.md)** - Publishing workflow across the 12-platform registry (DOI, Zenodo, GitHub, arXiv, PyPI, IPFS, Software Heritage, Hugging Face, OSF, static hosts), credential verification, and README status compilation
+- **[guides/publication-runbook.md](guides/publication-runbook.md)** - Front-door release runbook for standalone public GitHub mirrors, real Zenodo DOI minting, new-version releases, optional mirrors, status blocks, and archival handoff
+- **[guides/publishing-guide.md](guides/publishing-guide.md)** - Detailed publishing workflow across the first-class registry (DOI, Zenodo, GitHub, arXiv, PyPI, IPFS, Software Heritage, Hugging Face, OSF, static hosts), credential verification, and README status compilation
 - **[guides/zenodo-doi-strategy.md](guides/zenodo-doi-strategy.md)** - Concept vs version DOI layout for Zenodo deposits
 - **[guides/secure-research-guide.md](guides/secure-research-guide.md)** - PDF watermarking, provenance, and integrity
 - **[../projects/templates/template_code_project/README.md](../projects/templates/template_code_project/README.md)** - Control-positive exemplar under `projects/`
@@ -227,7 +229,7 @@ directories).
 - **[modules/guides/integrity-module.md](modules/guides/integrity-module.md)**
 - **[modules/guides/llm-module.md](modules/guides/llm-module.md)**
 - **[modules/guides/project-module.md](modules/guides/project-module.md)**
-- **[modules/guides/publishing-module.md](modules/guides/publishing-module.md)** - 12-platform registry, DOI/citations, credential verification, README status compilation, multi-platform upload dispatch
+- **[modules/guides/publishing-module.md](modules/guides/publishing-module.md)** - Publishing registry, DOI/citations, credential verification, README status compilation, multi-platform upload dispatch
 - **[modules/guides/rendering-module.md](modules/guides/rendering-module.md)**
 - **[modules/guides/reporting-module.md](modules/guides/reporting-module.md)**
 - **[modules/guides/scientific-module.md](modules/guides/scientific-module.md)**

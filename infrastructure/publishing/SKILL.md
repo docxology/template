@@ -7,6 +7,12 @@ description: Skill for the publishing infrastructure module providing academic p
 
 Academic publishing and dissemination tools for research projects.
 
+For the release-operator workflow, start with
+[`docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).
+It is the front door for standalone public GitHub mirrors, real Zenodo DOI
+minting, new-version releases, optional mirrors, status blocks, and archival
+handoff.
+
 ## Platform subpackages
 
 | Path | Use when |
@@ -132,7 +138,9 @@ Credentials: `GITHUB_TOKEN` (GitHub Pages), `CLOUDFLARE_API_TOKEN` (Cloudflare),
 
 ## Platform registry
 
-`registry.py` is the single source of truth for all adapter metadata (12 first-class platforms; `documented_platforms()` is currently empty).
+`registry.py` is the single source of truth for all adapter metadata. It
+currently records 12 first-class platforms plus documented ebook, print, retail,
+and payment targets that do not yet have live adapters.
 
 ```python
 from infrastructure.publishing.registry import get_platform, list_platforms, PublishingTier

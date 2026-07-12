@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
+
+import pytest
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[1]
 _SCRIPT = _PROJECT_ROOT / "scripts" / "eda_analysis.py"
@@ -27,8 +30,8 @@ class TestEdaAnalysisScript:
     def test_writes_figures_and_summary(self, tmp_path):
         module = _load_script_module()
         written = module.run_eda(project_root=tmp_path)
-        # Three figures + one summary CSV.
-        assert len(written) == 4
+        # Three figures + one summary CSV + one figure registry.
+        assert len(written) == 5
         for path in written:
             assert path.exists()
             assert path.stat().st_size > 0
@@ -52,3 +55,52 @@ class TestEdaAnalysisScript:
             "group_counts.png",
             "height_histogram.png",
         ]
+
+    def test_registry_binds_all_manuscript_labels_to_generated_files(self, tmp_path):
+        module = _load_script_module()
+        written = module.run_eda(project_root=tmp_path)
+        registry = tmp_path / "output" / "figures" / "figure_registry.json"
+        payload = json.loads(registry.read_text(encoding="utf-8"))
+
+        assert registry in written
+        assert {record["label"]: record["filename"] for record in payload["figures"]} == {
+            "fig:correlation_heatmap": "correlation_heatmap.png",
+            "fig:group_counts": "group_counts.png",
+            "fig:height_histogram": "height_histogram.png",
+        }
+        assert all((registry.parent / record["filename"]).is_file() for record in payload["figures"])
+
+    def test_incomplete_figure_set_cannot_write_registry(self, tmp_path):
+        module = _load_script_module()
+        module.run_eda(project_root=tmp_path)
+        figures = tmp_path / "output" / "figures"
+        bad_registry = tmp_path / "negative" / "figure_registry.json"
+
+        with pytest.raises(ValueError, match="missing generated figure file"):
+            module.write_generated_figure_registry(
+                bad_registry,
+                module.EDA_FIGURE_SPECS,
+                [figures / "height_histogram.png", figures / "group_counts.png"],
+                schema_version=module.FIGURE_REGISTRY_SCHEMA,
+            )
+
+        assert not bad_registry.exists()
+
+    def test_deleted_figure_cannot_regenerate_registry(self, tmp_path):
+        module = _load_script_module()
+        module.run_eda(project_root=tmp_path)
+        figures = tmp_path / "output" / "figures"
+        heatmap = figures / "correlation_heatmap.png"
+        heatmap.unlink()
+
+        with pytest.raises(ValueError, match="generated figure path.*do not exist"):
+            module.write_generated_figure_registry(
+                tmp_path / "negative" / "figure_registry.json",
+                module.EDA_FIGURE_SPECS,
+                [
+                    figures / "height_histogram.png",
+                    figures / "group_counts.png",
+                    heatmap,
+                ],
+                schema_version=module.FIGURE_REGISTRY_SCHEMA,
+            )

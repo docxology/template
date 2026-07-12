@@ -61,9 +61,10 @@ now satisfied. One follow-up requires a repo-admin action, not code: **add the
 new `Regression Tier` check to branch-protection required checks** so the
 "cannot merge until it passes" claim is literally enforced.
 
-The remaining open items (R5–R10, R13, R14, R18) are genuine multi-step
-refactors or design changes — each warrants its own focused PR per this repo's
-contribution model rather than being bundled into one large push.
+At that checkpoint, the remaining items (R5–R10, R13, R14, R18) were genuine
+multi-step refactors or design changes, so each was reserved for focused work
+rather than being bundled into one large push. The sections below record when
+those items subsequently shipped.
 
 ## Shipped 2026-07-02 (third pass — the deferred refactors, via worktree-isolated workflow)
 
@@ -95,6 +96,18 @@ the benchmark qualitatively. Both are content decisions on a public exemplar,
 left open for a maintainer. Acceptance unchanged; add: the manuscript must not
 regress to "N/A μs".
 
+## Shipped 2026-07-11 (R10 closure — deterministic benchmark boundary)
+
+**R10** is now shipped. The code exemplar still executes and logs real
+wall-clock timing as an untracked runtime diagnostic, while both tracked
+benchmark reports serialize only deterministic inputs, objective values,
+checks, and policy metadata. The canonical benchmark figure uses deterministic
+work units and convergence iterations instead of host timing. Manuscript source
+now states that boundary directly and no longer injects a microsecond value (or
+an `N/A μs` fallback) as a reproducible fact. Regression coverage runs the JSON
+report and PNG figure twice and asserts byte equality; the focused closure suite
+passed 39 tests.
+
 ## Open — High
 
 > R1 was shipped in the second pass above; retained for provenance. Nothing
@@ -116,9 +129,10 @@ enforced. The infra CI job runs `tests/infra_tests/`, not `tests/`.
 ## Open — Medium
 
 > All of R2–R9, R11, R12 were shipped in the second/third passes above (see
-> `## Shipped 2026-07-02` sections); the detailed entries below are retained
-> for provenance per that section's note. **R10 is the only item in this
-> repo-wide list still genuinely open.**
+> `## Shipped 2026-07-02` sections), and R10 shipped in the 2026-07-11 closure
+> pass. The detailed entries below are retained for provenance. No code item in
+> this repo-wide R1–R18 list remains open; the branch-protection admin action
+> noted above remains external to the repository.
 
 ### R2 · Scope skills discovery + `infrastructure.skills check` to tracked paths — ✅ SHIPPED
 `infrastructure/skills/discovery.py` `DEFAULT_SKILL_SEARCH_ROOTS` includes a
@@ -201,7 +215,7 @@ artifacts.
 - **Acceptance**: every public exemplar's repro manifest declares ≥1
   `output-artifact`; `... verify <manifest>` checks a non-empty artifact set.
 
-### R10 · Deterministic benchmark artifact
+### R10 · Deterministic benchmark artifact — ✅ SHIPPED
 The canonical reproduce command rewrites
 `template_code_project/output/reports/performance_benchmark.json` with
 wall-clock timing + a human timestamp, so the tracked artifact cannot reproduce
@@ -209,6 +223,9 @@ byte-identically.
 - **Acceptance**: re-running the reproduce command leaves the tracked JSON
   byte-identical (timings moved out of the tracked file, or timestamp pinned via
   the existing deterministic helper à la steganography).
+- **Closure**: tracked benchmark JSON omits wall-clock and timestamp fields;
+  runtime timing remains diagnostic-only, the manuscript makes no pinned
+  microsecond claim, and two-run JSON/PNG byte-equality tests pass.
 
 ### R11 · OSF uploader idempotency (real-publish hardening) — ✅ SHIPPED
 `upload_osf` builds `OSFConfig(title=...)` with no `node_id`, so every

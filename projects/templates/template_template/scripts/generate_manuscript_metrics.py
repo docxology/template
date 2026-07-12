@@ -13,9 +13,25 @@ SRC_DIR = PROJECT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
+# The package initializer imports shared infrastructure, so the repository root
+# must be available before importing even the package's path helper.
+_explicit_repo_root = os.environ.get("TEMPLATE_REPO_ROOT", "").strip()
+BOOTSTRAP_REPO_ROOT = (
+    Path(_explicit_repo_root).resolve()
+    if _explicit_repo_root
+    else next(
+        (candidate for candidate in (PROJECT_DIR, *PROJECT_DIR.parents) if (candidate / "infrastructure").is_dir()),
+        None,
+    )
+)
+if BOOTSTRAP_REPO_ROOT is None:
+    raise RuntimeError(f"Could not locate repository root above {PROJECT_DIR}")
+if str(BOOTSTRAP_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(BOOTSTRAP_REPO_ROOT))
+
 from template_template.paths import locate_repo_root  # noqa: E402
 
-REPO_ROOT = locate_repo_root(PROJECT_DIR)
+REPO_ROOT = locate_repo_root(BOOTSTRAP_REPO_ROOT)
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -52,9 +68,7 @@ def main() -> int:
 
     # Step 4: Render chapters into output/manuscript/
     written = render_all_chapters(MANUSCRIPT_DIR, loaded, OUTPUT_MANUSCRIPT_DIR)
-    logger.info(
-        f"Rendered {len(written)} files into {OUTPUT_MANUSCRIPT_DIR.relative_to(PROJECT_DIR)}"
-    )
+    logger.info(f"Rendered {len(written)} files into {OUTPUT_MANUSCRIPT_DIR.relative_to(PROJECT_DIR)}")
 
     logger.info("=== generate_manuscript_metrics: complete ===")
     return 0

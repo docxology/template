@@ -72,7 +72,7 @@ The results were validated through the zero-mock `tests/` suite:
 - **Manuscript-variable test** confirms every generated-variable name used in
   `manuscript/*.md` is emitted by `generate_variables`.
 
-All tests pass with coverage exceeding the 90% project gate, with no mocks.
+All tests pass under the configured project coverage gate, with no mocks.
 
 ## Discussion
 

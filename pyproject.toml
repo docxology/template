@@ -321,10 +321,6 @@ explicit_package_bases = true
 
 # Per-module strict overrides (progressively tightened)
 [[tool.mypy.overrides]]
-module = "infrastructure.core.health_check"
-disallow_untyped_defs = true
-
-[[tool.mypy.overrides]]
 module = "infrastructure.core.exceptions"
 disallow_untyped_defs = true
 
@@ -362,20 +358,14 @@ ignore_errors = true
 module = "infrastructure.search.*"
 ignore_errors = true
 
-[[tool.mypy.overrides]]
-module = "projects.template_prose_project.*"
-ignore_errors = true
-
 # template_active_inference lives under projects/templates/ and uses a src/
 # layout with top-level imports (conftest puts src/ on sys.path). With
-# explicit_package_bases, mypy resolves its modules under the project namespace
-# *and* as flat top-level names, so both forms are relaxed here. The old
-# `projects.template_active_inference.*` string never matched the real
-# projects/templates/ path. Mirrors the template_literature_meta_analysis and
-# template_search_project pattern (only infrastructure is held type-strict).
+# explicit_package_bases, mypy resolves its modules under the real project
+# namespace and selected flat top-level names. Mirrors the
+# template_literature_meta_analysis and template_search_project pattern (only
+# infrastructure is held type-strict).
 [[tool.mypy.overrides]]
 module = [
-    "projects.template_active_inference.*",
     "projects.templates.template_active_inference.*",
     "analysis.*",
     "analytical.*",
@@ -383,14 +373,11 @@ module = [
     "gates.*",
     "gnn.*",
     "invariants.*",
-    "json_io",
-    "json_io.*",
     "manuscript.*",
     "ontology.*",
     "orchestration.*",
     "roadmap_tracks.*",
     "simulation.*",
-    "validation_spine.*",
     "visualizations.*",
 ]
 ignore_errors = true
@@ -402,7 +389,6 @@ ignore_errors = true
 # These names are specific to this exemplar (others use the `src.*` namespace).
 [[tool.mypy.overrides]]
 module = [
-    "projects.template_literature_meta_analysis.*",
     "projects.templates.template_literature_meta_analysis.*",
 ]
 ignore_errors = true
@@ -413,7 +399,6 @@ ignore_errors = true
 # template_literature_meta_analysis above.
 [[tool.mypy.overrides]]
 module = [
-    "projects.template_search_project.*",
     "projects.templates.template_search_project.*",
 ]
 ignore_errors = true
@@ -429,31 +414,6 @@ module = [
     "projects.templates.template_formal.*",
     "template_formal.*",
 ]
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "projects.what_is_cogsec.*"
-ignore_errors = true
-
-# Rotating research projects (animation/visualization/numpy-heavy surface
-# intentionally NOT driven to the exemplar type-strictness floor). Public CI
-# resolves its mypy paths through infrastructure.project.public_scope, keeping
-# the gate on infrastructure + the canonical exemplars without a local private
-# or rotating research WIP blocking every contributor's commit and CI.
-[[tool.mypy.overrides]]
-module = "projects.BeeStack.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "beestack.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "projects.crescent_city.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "_figures.*"
 ignore_errors = true
 
 [tool.bandit]

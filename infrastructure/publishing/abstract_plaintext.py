@@ -27,6 +27,7 @@ __all__ = [
 _ABSTRACT_FILENAME = "00_abstract.md"
 _UPPER_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
 _SNAKE_TOKEN_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.(\d+)f)?\}\}")
+_LEADING_ABSTRACT_LABEL_RE = re.compile(r"\A\s*abstract\s*:\s*", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -142,6 +143,11 @@ def substitute_abstract_tokens(
     return text, [*upper_unresolved, *snake_unresolved]
 
 
+def strip_leading_abstract_label(text: str) -> str:
+    """Drop a redundant plaintext `Abstract:` label from deposit text."""
+    return _LEADING_ABSTRACT_LABEL_RE.sub("", text, count=1).strip()
+
+
 def render_abstract_plaintext(
     abstract_source: Path,
     *,
@@ -168,6 +174,8 @@ def render_abstract_plaintext(
                     ", ".join(sorted(set(unresolved))),
                 )
         body = normalise_for_deposit(raw)
+
+    body = strip_leading_abstract_label(body)
 
     if max_len is not None and len(body) > max_len:
         return body[:max_len].rstrip() + "..."

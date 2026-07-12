@@ -231,6 +231,12 @@ projects/templates/*/**/.coverage
 projects/templates/*/**/.coverage.*
 projects/templates/*/**/coverage_*.json
 projects/templates/*/**/coverage_*.xml
+# Re-ignore host and ad-hoc visual-QA scratch files after the broad canonical
+# exemplar negations above. These are local inspection aids, not reproducible
+# project outputs or publication evidence.
+projects/templates/*/**/.DS_Store
+projects/templates/*/output/playwright/
+projects/templates/*/output/pdf/_pages.txt
 
 # fonds/: only public template fonds under fonds/templates/ are tracked.
 fonds/*

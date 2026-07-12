@@ -5,7 +5,7 @@
 A generator that produces a manuscript describing its own code faces an
 obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
-failure once — a hand-written "Tests: 371 · Coverage: 99.94%" line that no
+failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
 numbers with `493` / `96.28` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
@@ -129,7 +129,7 @@ as `"{filename}:{offset}: '{match}'"` in `manifest.unsupported_claims`.
 Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker — it
 will not catch a false quantitative claim phrased without one of those seven
-tokens (the "371 tests" incident described above would not have tripped it;
+tokens (the stale test-count incident described above would not have tripped it;
 that failure mode is closed instead by the `493` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:

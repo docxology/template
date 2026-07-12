@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,16 +173,20 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="dag-pipeline-declared-by-pipeline.yaml">DAG Pipeline Declared by
 <code>pipeline.yaml</code></h2>
 <p>Single-project pipelines read
 <code>infrastructure/core/pipeline/pipeline.yaml</code>.
-<code>scripts/execute_pipeline.py</code> expands the declarative DAG,
-applies tag filters (<code>--core-only</code> skips <code>llm</code>
-stages), checkpoints between nodes, then dispatches numbered scripts
-(<code>scripts/NN_*.py</code>) or builtin methods
+<code>scripts/runner/execute_pipeline.py</code> expands the declarative
+DAG, applies tag filters (<code>--core-only</code> skips
+<code>llm</code> stages), checkpoints between nodes, then dispatches
+numbered scripts (<code>scripts/NN_*.py</code>) or builtin methods
 (<code>_run_clean_outputs</code>).</p>
 <p>The <strong>default YAML graph contains ten named stages</strong>
 (plus telemetry configuration metadata):</p>
@@ -196,10 +200,10 @@ validation.</li>
 discovery, scaffolding directories, <code>PYTHONPATH</code> wiring.</li>
 <li><strong>Infrastructure Tests</strong>
 (<code>01_run_tests.py --infra-only</code>) — <code>tests/</code> suite
-with infra coverage thresholds (≥60 %).</li>
+with the configured ≥60% source-coverage floor.</li>
 <li><strong>Project Tests</strong>
-(<code>01_run_tests.py --project-only</code>) — per-project suites with
-≥90 % coverage mandate.</li>
+(<code>01_run_tests.py --project-only</code>) — isolated per-project
+suites with each project’s declared floor (≥90% for this exemplar).</li>
 <li><strong>Project Analysis</strong> (<code>02_run_analysis.py</code>)
 — lexicographically ordered
 <code>projects/&lt;name&gt;/scripts/*.py</code>, each a thin
@@ -226,7 +230,7 @@ reproducible snapshots into canonical
 CLI switches; both depend only on validation so they can parallelize
 logically while remaining optional.</p>
 <p><strong>Executive reporting</strong>
-(<code>scripts/07_generate_executive_report.py</code>) is
+(<code>scripts/pipeline/stage_07_executive_report.py</code>) is
 <strong>not</strong> a YAML node inside the single-project executor.
 <code>--all-projects</code> / <code>execute_multi_project.py</code>
 invokes it once after iterating projects, consolidating cross-project
@@ -272,5 +276,6 @@ reproduction <strong>then</strong> invokes
 (<code>infrastructure.steganography</code>). Original PDFs stay
 immutable; hardened companions carry QR overlays plus hash manifests
 sidecars.</p>
+</main>
 </body>
 </html>

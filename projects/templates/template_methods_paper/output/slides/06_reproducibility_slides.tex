@@ -156,6 +156,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -199,7 +202,7 @@ From the repository root:
 \ExtensionTok{uv}\NormalTok{ run python projects/templates/template\_methods\_paper/scripts/z\_generate\_manuscript\_variables.py}
 
 \CommentTok{\# 4. Render the manuscript}
-\ExtensionTok{uv}\NormalTok{ run python scripts/03\_render\_pdf.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper}
+\ExtensionTok{uv}\NormalTok{ run python scripts/pipeline/stage\_03\_render.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper}
 \end{Highlighting}
 \end{Shaded}
 
@@ -207,7 +210,7 @@ Or, end to end via the orchestrated pipeline:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ExtensionTok{uv}\NormalTok{ run python scripts/execute\_pipeline.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper }\AttributeTok{{-}{-}core{-}only}
+\ExtensionTok{uv}\NormalTok{ run python scripts/runner/execute\_pipeline.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_methods\_paper }\AttributeTok{{-}{-}core{-}only}
 \end{Highlighting}
 \end{Shaded}
 \end{frame}
@@ -288,9 +291,9 @@ variable sourced from a live analysis output or registered in
 \breaktt{data/claim\_ledger.yaml} for evidence-registry validation. The
 manuscript intentionally does not hand-transcribe volatile values, so
 prose and artifacts cannot disagree. Configuration provenance is itself
-injected: \breaktt{23b5981d45bdc598} is the SHA-256 of
+injected: \breaktt{a0f000565bef6a79} is the SHA-256 of
 \breaktt{manuscript/config.yaml} at build time, and
-\breaktt{2026-06-30T23:02:10Z} records when the variables were generated
+\breaktt{2026-07-12T02:08:51Z} records when the variables were generated
 (honoring \breaktt{SOURCE\_DATE\_EPOCH} for byte-reproducible builds).
 \end{frame}
 

@@ -184,7 +184,7 @@ Ship `projects/templates/template_pitch_deck/` as a fully registered public exem
 | token-honesty | `src/token_resolution.py` + `scripts/audit_deck_content.py` | ISC-16..24 | infra-slide-pdf | yes |
 | cliche-lint | `src/cliche_lint.py` | ISC-25..28 | none | yes |
 | pitch-content | `manuscript/deck_content_{short,medium,long}.yaml` + `deck_tokens.yaml`, sourced from real `template_template` files | ISC-29..36 | token-honesty, cliche-lint | no (needs both validators to check against) |
-| pipeline-wiring | `scripts/render_decks.py` + standard stage scripts + pyproject.toml project config | ISC-37..43 | infra-slide-pdf, infra-pptx, pitch-content | no |
+| pipeline-wiring | `scripts/20_render_decks.py` + standard stage scripts + pyproject.toml project config | ISC-37..43 | infra-slide-pdf, infra-pptx, pitch-content | no |
 | tests | `tests/*.py` no-mocks suite | ISC-44..50 | all src/infra modules above | no (needs code to test) |
 | registration | docs roster, drift/lint gates, `.agents/skills/`, PUBLISHING-STATUS | ISC-51..61 | pipeline-wiring | no (needs the project to exist and pass first) |
 | determinism-pass | two-run diff + figure/seed checks | ISC-62..65 | pipeline-wiring | no |

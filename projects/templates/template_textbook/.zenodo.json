@@ -6,7 +6,7 @@
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "Source code for Untitled Research.",
+  "description": "Source code for The Template Textbook.",
   "keywords": [],
   "license": "CC-BY-4.0",
   "related_identifiers": [
@@ -16,7 +16,7 @@
       "scheme": "doi"
     }
   ],
-  "title": "Untitled Research",
+  "title": "The Template Textbook",
   "upload_type": "software",
-  "version": "0.0.0"
+  "version": "0.1.2"
 }

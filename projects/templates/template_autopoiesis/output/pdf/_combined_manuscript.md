@@ -38,13 +38,7 @@ real kernel from a deliberately-wrong one.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-    G["Grammar<br/>config.yaml"] --> E["Expand<br/>seed → Spec"]
-    E --> M["Materialize<br/>Spec → Child"]
-    M --> V["Verify<br/>tree-hash check"]
-    V --> S["Seal<br/>QR provenance"]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0001_ff729a67c0bb.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -54,16 +48,7 @@ flowchart LR
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-%% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
-%% (src/manuscript_variables.py) injected at render time, not literal mermaid
-flowchart TB
-    A[primitive_domain: 5] --> EP[Effective product: 45 cells]
-    T[track: 3] --> EP
-    S[section_set: 3] --> EP
-    EP --> TP[Total product: 360 cells]
-    R[3 reserved slots, 2 options each] --> TP
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0002_703011bc0713.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -295,13 +280,7 @@ network access; every stage takes an immutable input and returns an immutable
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-    A[Load Grammar] --> B[Expand Spec]
-    B --> C[Materialize Child]
-    C --> D[Verify Integrity]
-    D --> E[Seal + QR]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0003_70d9876b90a5.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -433,7 +412,7 @@ for `grammar_hash`.
 
 Two auxiliary functions extend `expand` to families of children rather than
 one: `derive_seed(base_seed, index)` hashes `f"{base_seed}\x1f{index}"` to
-produce a new seed masked to 63 bits (`& 0x7FFFFFFFFFFFFFFF`, keeping it a
+produce a new seed masked to 63 bits (keeping it a
 non-negative Python `int`), and `sample(grammar, count, base_seed=None)`
 calls `expand` once per derived seed to produce `count` independent `Spec`
 objects — independent in the sense that each is keyed off a distinct
@@ -810,12 +789,11 @@ every other numeric token in this manuscript.
 
 The aggregate 96.28% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
-As of this measurement every module clears the 90% line; `common.py` and
-`cover_art.py` sit at 100% and `figures.py` at 98.41% after closing what were,
-in an earlier draft of this manuscript, the three lowest-coverage modules
-(see `CHANGELOG.md`'s Wave 10 entry for the specific branches that were
-untested and the tests added to close them); every module under
-`src/primitives/` and the honesty/integrity core sit at or near 100%. Both
+As of this measurement every module clears the configured 90% line. The exact
+module values are deliberately read from [@fig:coverage_by_module], rather
+than copied into prose where they would become stale; `CHANGELOG.md`'s Wave 10
+entry records the specific branches and tests behind an earlier coverage
+improvement. Both
 the aggregate number and this per-module breakdown are read from the same
 persisted `output/data/coverage_full.json` — a single generator run, not two
 separately-computed views that could silently drift apart. This is a
@@ -837,7 +815,7 @@ rather than trusted from a prior render whenever that question matters.
 A generator that produces a manuscript describing its own code faces an
 obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
-failure once — a hand-written "Tests: 371 · Coverage: 99.94%" line that no
+failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
 numbers with `493` / `96.28` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
@@ -961,7 +939,7 @@ as `"{filename}:{offset}: '{match}'"` in `manifest.unsupported_claims`.
 Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker — it
 will not catch a false quantitative claim phrased without one of those seven
-tokens (the "371 tests" incident described above would not have tripped it;
+tokens (the stale test-count incident described above would not have tripped it;
 that failure mode is closed instead by the `493` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
@@ -1069,7 +1047,7 @@ pytest run cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
 plausible-looking number [@reproducible_builds]. This design choice is a direct
 consequence of an earlier failure mode in this project — a manuscript draft
-that stated fixed values ("Tests: 371 · Coverage: 99.94%") in prose instead of
+that stated fixed test and coverage values in prose instead of
 through the token pipeline. A number that cannot be traced back to a specific
 function call in `src/` is, for the purposes of this project, not a number
 this manuscript is permitted to assert.

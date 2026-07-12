@@ -51,7 +51,11 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_po
 - **Repo root resolution.** `src/*` resolves the monorepo root four levels above each module file.
 - **`manuscript/preamble.md` needs a closed ` ```latex ``` ` fence.** An unfenced file silently drops every multi-line directive (geometry, hypersetup, tcolorbox) via a whitelist fallback — only single-line `\usepackage{}`/`\newcommand{}` survive. Always verify with `extract_preamble()` after editing.
 - **Manuscript tokens must be `{{UPPERCASE_KEY}}`, never lowercase-dotted.** `infrastructure/rendering/manuscript_injection.py`'s regex only matches uppercase; a `{{integration.foo}}`-style token silently never resolves. The pipeline also requires `scripts/z_generate_manuscript_variables.py` to exist by that exact name — `run_manuscript_variable_script()` no-ops if it's absent.
-- **`config.yaml`'s `figures:` registry is metadata only.** It does not auto-insert images — every figure needs a real `![caption](figures/x.png){#fig:label}` block in the manuscript body, or its `@fig:` cross-reference renders as a literal `??`.
+- **`src/figures.py::FIGURE_SPECS` is the figure-provenance source.** It does not auto-insert images — every figure still needs a real `![caption](figures/x.png){#fig:label}` block in the manuscript body, or its `@fig:` cross-reference renders as a literal `??`.
+- **Generated provenance is separate from config metadata.**
+  `05_generate_figures.py` binds the eight real manuscript labels to the PNGs
+  produced in that run and writes `output/figures/figure_registry.json`; a
+  missing referenced PNG aborts publication instead of yielding a partial registry.
 - **Custom tcolorbox environments (`noteBox`/`warningBox`) break Beamer slide generation** even though they render fine in the combined PDF — pandoc's per-section slide splitting can separate `\begin`/`\end` across frame boundaries. Prefer plain Markdown emphasis for callouts.
 - **`run.sh`/`validate.sh` subprocess tests are real but environment-guarded.** `timeout`/`gtimeout` are absent on stock macOS — the code-executor tests skip there by design; don't "fix" a SKIPPED result by removing the skipif guard.
 

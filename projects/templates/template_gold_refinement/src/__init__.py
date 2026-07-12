@@ -72,6 +72,7 @@ from .purity import (
     KARAT_GRADES,
     NINE_NINES_PURITY,
     KaratGrade,
+    PurityVector,
     format_purity,
     karat_for_purity,
     purity_to_nines,
@@ -83,6 +84,7 @@ from .refinery import (
     run_refinery,
     stage_by_name,
     stage_by_order,
+    stages_to_target,
 )
 from .security_assay import (
     SecurityAssayRecord,
@@ -106,6 +108,7 @@ __all__ = [
     "run_refinery",
     "stage_by_name",
     "stage_by_order",
+    "stages_to_target",
     "SecurityAssayRecord",
     "build_security_assay",
     "security_assay_records",
@@ -115,6 +118,7 @@ __all__ = [
     "KARAT_GRADES",
     "NINE_NINES_PURITY",
     "KaratGrade",
+    "PurityVector",
     "format_purity",
     "karat_for_purity",
     "purity_to_nines",

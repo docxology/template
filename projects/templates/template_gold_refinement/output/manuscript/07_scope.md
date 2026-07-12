@@ -7,6 +7,7 @@ This exemplar demonstrates the gold-refining analogy as a **methods paper**. It 
 - Empirical validation of manuscript quality metrics against external standards
 - Generalizability of specific purity fractions to all scientific domains
 - That the analogy replaces domain-specific peer review or expert judgement
+- That reverse assay optimizes cost or scientific value, or that multi-objective purity is a validated composite scale
 
 ## Related work
 
@@ -44,3 +45,5 @@ The formalism registry is local to this exemplar. It states how this project map
 The same limitation applies to the integrity risk model. The current 9 dimensions are tuned to a template exemplar: token hydration, figure registration, claim support, citation hygiene, render readiness, and analogy boundaries. A fork that studies a real domain must add domain-specific risks, domain evidence tiers, and validators before treating [@fig:integrity_risk_matrix] as a publication-readiness claim.
 
 The adversarial assay is similarly local. It records 5 rows that make security scope inspectable, but it is not a security attestation. A fork that wants secure-by-design, zero-trust, supply-chain, or vulnerability-scan claims must add the missing artifacts, validators, receipts, and external review before reusing that language.
+
+The software improvements in this version do not remove these limitations. Enforced continuity proves that the configured stages connect; reverse assay proves only that a prefix reaches a declared numerical target; and `PurityVector` prevents accidental compensatory averaging. None establishes that the chosen targets, dimensions, or stage meanings are externally valid.

@@ -27,6 +27,7 @@ artifact_expectations:
   - output/figures/height_histogram.png
   - output/figures/correlation_heatmap.png
   - output/figures/group_counts.png
+  - output/figures/figure_registry.json
 benchmark_rubric:
   name: eda-notebook-readiness
   dimensions:

@@ -87,8 +87,8 @@ citation.
 To build the book from the repository root:
 
 ```bash
-uv run python scripts/02_run_analysis.py --project templates/template_textbook
-uv run python scripts/03_render_pdf.py    --project templates/template_textbook
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_textbook
+uv run python scripts/pipeline/stage_03_render.py    --project templates/template_textbook
 ```
 
 or run the full pipeline with `./run.sh`. See [`README.md`](README.md) for the
@@ -217,7 +217,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [lee2021systems]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@lee2021systems]. -->
 
 ---
 
@@ -225,7 +225,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Orientation to the Field*. Foundational treatments include
-[kim2020data; brown2017principles]. Key terms such as [**regulation**](#gl:regulation), [**boundary**](#gl:boundary), [**state**](#gl:state) are defined in the glossary.
+[@kim2020data; @brown2017principles]. Key terms such as [**regulation**](#gl:regulation), [**boundary**](#gl:boundary), [**state**](#gl:state) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -264,7 +264,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_0_orientation] and revisit the objectives above as you read. Further evidence:
-[kim2020data; brown2017principles].
+[@kim2020data; @brown2017principles].
 
 ## Summary
 
@@ -276,7 +276,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [wilson2021analysis].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@wilson2021analysis].
 
 ## Practice
 
@@ -323,7 +323,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [lee2021systems]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@lee2021systems]. -->
 
 ---
 
@@ -331,7 +331,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Core Methods and Tools*. Foundational treatments include
-[kim2020data; brown2017principles]. Key terms such as [**model**](#gl:model), [**parameter**](#gl:parameter), [**variable**](#gl:variable) are defined in the glossary.
+[@kim2020data; @brown2017principles]. Key terms such as [**model**](#gl:model), [**parameter**](#gl:parameter), [**variable**](#gl:variable) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -370,7 +370,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_0_core_methods] and revisit the objectives above as you read. Further evidence:
-[kim2020data; brown2017principles].
+[@kim2020data; @brown2017principles].
 
 ## Summary
 
@@ -382,7 +382,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [wilson2021analysis].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@wilson2021analysis].
 
 ## Practice
 
@@ -429,7 +429,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [kim2020data]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@kim2020data]. -->
 
 ---
 
@@ -437,7 +437,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Quantitative Foundations*. Foundational treatments include
-[smith2020foundations; doe2019methods]. Key terms such as [**feedback**](#gl:feedback), [**gradient**](#gl:gradient), [**threshold**](#gl:threshold) are defined in the glossary.
+[@smith2020foundations; @doe2019methods]. Key terms such as [**feedback**](#gl:feedback), [**gradient**](#gl:gradient), [**threshold**](#gl:threshold) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -476,7 +476,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_0_quantitative_foundations] and revisit the objectives above as you read. Further evidence:
-[smith2020foundations; doe2019methods].
+[@smith2020foundations; @doe2019methods].
 
 ## Summary
 
@@ -488,7 +488,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [lee2021systems].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@lee2021systems].
 
 ## Practice
 
@@ -658,7 +658,7 @@ graph TD
 
 This loop — choose, write, solve, predict, compare — is the first principle the
 rest of the book elaborates. Foundational treatments of model-building include
-[brown2017principles] and [patel2018models].
+[@brown2017principles] and [@patel2018models].
 
 ## Summary
 
@@ -727,7 +727,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [nguyen2023synthesis]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@nguyen2023synthesis]. -->
 
 ---
 
@@ -735,7 +735,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Building Blocks*. Foundational treatments include
-[taylor2019theory; smith2020foundations]. Key terms such as [**equilibrium**](#gl:equilibrium), [**feedback**](#gl:feedback), [**gradient**](#gl:gradient) are defined in the glossary.
+[@taylor2019theory; @smith2020foundations]. Key terms such as [**equilibrium**](#gl:equilibrium), [**feedback**](#gl:feedback), [**gradient**](#gl:gradient) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -774,7 +774,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_I_building_blocks] and revisit the objectives above as you read. Further evidence:
-[taylor2019theory; smith2020foundations].
+[@taylor2019theory; @smith2020foundations].
 
 ## Summary
 
@@ -786,7 +786,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [doe2019methods].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@doe2019methods].
 
 ## Practice
 
@@ -833,7 +833,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [wilson2021analysis]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@wilson2021analysis]. -->
 
 ---
 
@@ -841,7 +841,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Structure and Form*. Foundational treatments include
-[lee2021systems; garcia2022dynamics]. Key terms such as [**threshold**](#gl:threshold), [**network**](#gl:network), [**dynamics**](#gl:dynamics) are defined in the glossary.
+[@lee2021systems; @garcia2022dynamics]. Key terms such as [**threshold**](#gl:threshold), [**network**](#gl:network), [**dynamics**](#gl:dynamics) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -880,7 +880,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_I_structure_and_form] and revisit the objectives above as you read. Further evidence:
-[lee2021systems; garcia2022dynamics].
+[@lee2021systems; @garcia2022dynamics].
 
 ## Summary
 
@@ -892,7 +892,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [patel2018models].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@patel2018models].
 
 ## Practice
 
@@ -956,7 +956,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [smith2020foundations]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@smith2020foundations]. -->
 
 ---
 
@@ -964,7 +964,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Systems Overview*. Foundational treatments include
-[patel2018models; nguyen2023synthesis]. Key terms such as [**equilibrium**](#gl:equilibrium), [**feedback**](#gl:feedback), [**gradient**](#gl:gradient) are defined in the glossary.
+[@patel2018models; @nguyen2023synthesis]. Key terms such as [**equilibrium**](#gl:equilibrium), [**feedback**](#gl:feedback), [**gradient**](#gl:gradient) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -1003,7 +1003,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_II_systems_overview] and revisit the objectives above as you read. Further evidence:
-[patel2018models; nguyen2023synthesis].
+[@patel2018models; @nguyen2023synthesis].
 
 ## Summary
 
@@ -1015,7 +1015,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [kim2020data].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@kim2020data].
 
 ## Practice
 
@@ -1062,7 +1062,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [garcia2022dynamics]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@garcia2022dynamics]. -->
 
 ---
 
@@ -1070,7 +1070,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Dynamics and Change*. Foundational treatments include
-[brown2017principles; wilson2021analysis]. Key terms such as [**parameter**](#gl:parameter), [**variable**](#gl:variable), [**equilibrium**](#gl:equilibrium) are defined in the glossary.
+[@brown2017principles; @wilson2021analysis]. Key terms such as [**parameter**](#gl:parameter), [**variable**](#gl:variable), [**equilibrium**](#gl:equilibrium) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -1109,7 +1109,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_II_dynamics_and_change] and revisit the objectives above as you read. Further evidence:
-[brown2017principles; wilson2021analysis].
+[@brown2017principles; @wilson2021analysis].
 
 ## Summary
 
@@ -1121,7 +1121,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [taylor2019theory].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@taylor2019theory].
 
 ## Practice
 
@@ -1168,7 +1168,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [patel2018models]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@patel2018models]. -->
 
 ---
 
@@ -1176,7 +1176,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Regulation and Control*. Foundational treatments include
-[wilson2021analysis; taylor2019theory]. Key terms such as [**network**](#gl:network), [**dynamics**](#gl:dynamics), [**emergence**](#gl:emergence) are defined in the glossary.
+[@wilson2021analysis; @taylor2019theory]. Key terms such as [**network**](#gl:network), [**dynamics**](#gl:dynamics), [**emergence**](#gl:emergence) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -1215,7 +1215,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_II_regulation_and_control] and revisit the objectives above as you read. Further evidence:
-[wilson2021analysis; taylor2019theory].
+[@wilson2021analysis; @taylor2019theory].
 
 ## Summary
 
@@ -1227,7 +1227,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [smith2020foundations].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@smith2020foundations].
 
 ## Practice
 
@@ -1291,7 +1291,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [smith2020foundations]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@smith2020foundations]. -->
 
 ---
 
@@ -1299,7 +1299,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Applied Models*. Foundational treatments include
-[patel2018models; nguyen2023synthesis]. Key terms such as [**equilibrium**](#gl:equilibrium), [**feedback**](#gl:feedback), [**gradient**](#gl:gradient) are defined in the glossary.
+[@patel2018models; @nguyen2023synthesis]. Key terms such as [**equilibrium**](#gl:equilibrium), [**feedback**](#gl:feedback), [**gradient**](#gl:gradient) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -1338,7 +1338,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_III_applied_models] and revisit the objectives above as you read. Further evidence:
-[patel2018models; nguyen2023synthesis].
+[@patel2018models; @nguyen2023synthesis].
 
 ## Summary
 
@@ -1350,7 +1350,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [kim2020data].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@kim2020data].
 
 ## Practice
 
@@ -1491,7 +1491,7 @@ graph LR
 > but that number describes how well the line passes through three dots — not how
 > well it predicts the next experiment. Treat it as a reason to collect more data,
 > not as a conclusion. Foundational guidance on this trap appears in
-> [kim2020data] and [wilson2021analysis].
+> [@kim2020data] and [@wilson2021analysis].
 
 ## Summary
 
@@ -1559,7 +1559,7 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: TKTK — a motivating story**
 >
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [patel2018models]. -->
+> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@patel2018models]. -->
 
 ---
 
@@ -1567,7 +1567,7 @@ By the end of this chapter you should be able to:
 
 <!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
 the central ideas of *Frontiers and Open Problems*. Foundational treatments include
-[wilson2021analysis; taylor2019theory]. Key terms such as [**state**](#gl:state), [**observable**](#gl:observable), [**system**](#gl:system) are defined in the glossary.
+[@wilson2021analysis; @taylor2019theory]. Key terms such as [**state**](#gl:state), [**observable**](#gl:observable), [**system**](#gl:system) are defined in the glossary.
 
 ## A Worked Formalism
 
@@ -1606,7 +1606,7 @@ graph TD
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. --> See the overview in
 [@fig:part_III_frontiers] and revisit the objectives above as you read. Further evidence:
-[wilson2021analysis; taylor2019theory].
+[@wilson2021analysis; @taylor2019theory].
 
 ## Summary
 
@@ -1618,7 +1618,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [smith2020foundations].
+- <!-- STUB: annotated pointer --> TODO: one-line annotation [@smith2020foundations].
 
 ## Practice
 
@@ -2594,7 +2594,7 @@ network, dynamics, emergence, regulation, boundary, state, observable`.
 
 ## Step 6 — Add a Reference
 
-Citations are `[key]` and must resolve in [`references.bib`](../references.bib).
+Citations are `[@key]` and must resolve in [`references.bib`](../references.bib).
 Add a BibTeX entry, then cite it. Keep `CITATION_KEYS` in `constants.py` in sync
 if you add a key that the structural contract should track.
 
@@ -2905,8 +2905,8 @@ subscript, E = mc^2^ with a superscript, and a footnote.[^demo]
 [^demo]: Footnotes collect at the end of the document (or page, in PDF). Use them
 for asides that would interrupt the sentence.
 
-You can hard-break a line  
-with two trailing spaces, or separate paragraphs with a blank line. Escape
+You can hard-break a line with an explicit `<br>` element,<br>
+or separate paragraphs with a blank line. Escape
 literal Markdown with a backslash: \*not italic\*.
 
 ---
@@ -2981,6 +2981,9 @@ A simple table with column alignment and a cross-referencable caption
 ([@tbl:gallery_alignment]):
 
 : Column alignment — left, centre, right. {#tbl:gallery_alignment}
+
+The values below are mirrored in `manuscript/assets/data/format_gallery.csv` so
+rendering examples remain evidence-addressable fixtures rather than anonymous literals.
 
 | Left      |  Centre  |    Right |
 | :-------- | :------: | -------: |
@@ -3129,7 +3132,7 @@ supported — see `src/mermaid/diagram_specs.yaml` for a worked spec of each.
 Inline code: call `textbook.models.logistic_growth(t, r=..., ...)`.
 
 A fenced code block with a language (syntax-highlighted) and a caption
-([lst:gallery_code]):
+([@lst:gallery_code]):
 
 ```{#lst:gallery_code .python caption="Calling the tested computational backbone."}
 from textbook import models
@@ -3155,10 +3158,10 @@ Cross-references resolve by label: figure [@fig:gallery_line], table
 [@tbl:gallery_alignment], equation [@eq:gallery_logistic], and section
 [@sec:appendix_formalisms]. Never hand-number — Pandoc fills these in.
 
-Citations resolve against `references.bib`: a single source [smith2020foundations],
-multiple sources [doe2019methods; lee2021systems], and an in-text form —
+Citations resolve against `references.bib`: a single source [@smith2020foundations],
+multiple sources [@doe2019methods; @lee2021systems], and an in-text form —
 @garcia2022dynamics showed the effect first. A locator narrows the reference
-[patel2018models].
+[@patel2018models, pp. 12–14].
 
 ---
 

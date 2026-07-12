@@ -24,6 +24,16 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `single_stage.py` — `execute_single_stage()` subprocess runner
 - `stage_vocabulary.py` — stage names from `pipeline.yaml`
 - `pipeline.yaml` — default declared DAG definition consumed by the executor
+- `artifacts.py` — stage-provenance manifests plus an explicit, deterministic
+  current-output integrity snapshot for targeted renders
+
+After intentionally regenerating outputs outside `PipelineExecutor`, refresh
+their integrity baseline without inventing stage provenance:
+
+```bash
+uv run python scripts/maintenance/refresh_artifact_manifests.py \
+  --project templates/template_code_project
+```
 
 ## See Also
 

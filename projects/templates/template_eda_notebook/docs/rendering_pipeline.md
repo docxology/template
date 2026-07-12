@@ -46,6 +46,7 @@ uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 | `height_histogram.png` | `output/figures/` | Height distribution |
 | `correlation_heatmap.png` | `output/figures/` | Feature correlation heatmap |
 | `group_counts.png` | `output/figures/` | Rows per group |
+| `figure_registry.json` | `output/figures/` | Labels, filenames, captions, and qualified generators for all three PNGs |
 | `summary_statistics.csv` | `output/data/` | Per-column descriptive statistics |
 
 ### 2. PDF render

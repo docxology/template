@@ -266,7 +266,17 @@ def _run_project_tests_impl(
         cmd.extend(["-q"])
     prepend_uv_to_path(env)
 
-    log_discovered_tests(cmd, repo_root, env, f"project '{project_name}'")
+    # Large private projects can legitimately expose tens of thousands of
+    # parametrized tests. Use the full-suite discovery budget here; the former
+    # 30-second default produced a misleading warning even when collection
+    # completed successfully moments later.
+    log_discovered_tests(
+        cmd,
+        repo_root,
+        env,
+        f"project '{project_name}'",
+        timeout_seconds=parse_test_discovery_timeout("full"),
+    )
 
     try:
         config = TestSuiteConfig(

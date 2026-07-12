@@ -2,8 +2,8 @@
 
 | Module | Role |
 | --- | --- |
-| `loop.py` | Thin wrapper → `infrastructure.sia.run_sia_loop` |
-| `loop_config.py` | Reads `sia:` block from `manuscript/config.yaml` |
+| `loop.py` | Layer-2 adapter: project config/fixtures → `infrastructure.sia.run_sia_loop` → reports, variables, figures, and manifest |
+| `loop_config.py` | Reads `project_config.sia` from `manuscript/config.yaml` (legacy root fallback supported) |
 | `reports.py` | Loop markdown + manuscript variable hydration |
 | `artifact_manifest.py` | Artifact manifest writer (hashes + metadata) for SIA loop outputs |
 | `generation_records.py` | Loads SIA generation records from disk |
@@ -14,4 +14,5 @@
 | `figures/` | Figure subpackage (`figure_registry.py` + SIA loop/heatmap/improvement-delta/metrics figures) — see its own [`AGENTS.md`](figures/AGENTS.md) |
 | `fixtures/` | Recorded generation payloads for deterministic CI |
 
-Scripts under `../scripts/` must import from here — no business logic in scripts.
+Scripts under `../scripts/` must import from here — no business logic or
+compatibility implementation lives in scripts.

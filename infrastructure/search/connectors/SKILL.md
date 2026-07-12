@@ -13,24 +13,29 @@ description: >
 Uniform discovery layer over eight science databases (OpenAlex, arXiv,
 Semantic Scholar, CrossRef, Europe PMC, bioRxiv, UniProt, PDB) via the
 `Connector` protocol. All connectors are stdlib-only (`urllib`), retry-safe,
-and optionally disk-cached.
+and backed by an optional in-memory HTTP cache.
 
 ## Quick Start
 
 ```python
-from infrastructure.search.connectors import ConnectorRegistry, ConnectorDomain
+from infrastructure.search.connectors import (
+    ConnectorDomain,
+    get_registry,
+    list_connectors,
+    search_connector,
+)
 
-registry = ConnectorRegistry.default()                    # all eight connectors pre-registered
-hits = registry.search("protein folding", limit=10)       # query all connectors
-hits = registry.search("CRISPR", domain=ConnectorDomain.BIOLOGY, limit=5)  # filter by domain
-catalog = registry.list_all()                             # list registered connectors
+catalog = list_connectors()
+biology_connectors = get_registry().by_domain(ConnectorDomain.biology)
+hits = search_connector("openalex", "protein folding", max_results=10)
 ```
 
 ## Fetch by ID
 
 ```python
-hit = registry.fetch("uniprot", "P12345")      # fetch a specific record
-hit = registry.fetch("pdb", "4HHB")            # fetch a PDB structure entry
+registry = get_registry()
+protein = registry.get("uniprot").fetch("P12345")
+structure = registry.get("pdb").fetch("4HHB")
 ```
 
 ## Available Connectors
@@ -41,14 +46,14 @@ uv run python -m infrastructure.search.connectors list-dbs
 
 | ID | Database | Domain |
 | --- | --- | --- |
-| `openalex` | OpenAlex | multidisciplinary |
-| `arxiv` | arXiv | multidisciplinary |
-| `semantic_scholar` | Semantic Scholar | multidisciplinary |
-| `crossref` | CrossRef | multidisciplinary |
+| `openalex` | OpenAlex | literature |
+| `arxiv` | arXiv | physics |
+| `semantic_scholar` | Semantic Scholar | literature |
+| `crossref` | CrossRef | literature |
 | `europepmc` | Europe PMC | biology |
 | `biorxiv` | bioRxiv | biology |
-| `uniprot` | UniProt | biology |
-| `pdb` | Protein Data Bank | biology |
+| `uniprot` | UniProt | proteomics |
+| `pdb` | Protein Data Bank | structure |
 
 ## CLI
 
@@ -56,14 +61,11 @@ uv run python -m infrastructure.search.connectors list-dbs
 # List all registered databases with their domains and descriptions
 uv run python -m infrastructure.search.connectors list-dbs
 
-# Search across all connectors
-uv run python -m infrastructure.search.connectors search "protein folding" --limit 10
+# Search one connector
+uv run python -m infrastructure.search.connectors search openalex "protein folding" --max-results 10
 
-# Search a specific connector by id
-uv run python -m infrastructure.search.connectors search "CRISPR" --connector openalex
-
-# Search and filter by domain
-uv run python -m infrastructure.search.connectors search "membrane" --domain biology
+# Search all connectors (individual failures are reported as warnings)
+uv run python -m infrastructure.search.connectors search --all "membrane" --max-results 5
 ```
 
 ## Pipeline Orchestrator
@@ -72,8 +74,9 @@ uv run python -m infrastructure.search.connectors search "membrane" --domain bio
 # Run connector search for a named project
 uv run python scripts/pipeline/stage_08_connector_search.py --project my_project
 
-# Dry-run to see what would be searched
-uv run python scripts/pipeline/stage_08_connector_search.py --project my_project --dry-run
+# One-off override that bypasses project connector_search configuration
+uv run python scripts/pipeline/stage_08_connector_search.py \
+  --project my_project --connector arxiv --query "active inference" --max-results 5
 ```
 
 ## Config Integration
@@ -82,27 +85,34 @@ Set connector queries in `projects/{name}/manuscript/config.yaml`:
 
 ```yaml
 connector_search:
-  queries:
-    - "protein language model"
-    - "AlphaFold structure prediction"
-  domains:
-    - biology
-  limit: 20
-  cache_dir: output/connector_cache
+  enabled: true
+  max_results: 20
+  connectors:
+    arxiv:
+      - protein language model
+    openalex:
+      - AlphaFold structure prediction
 ```
+
+The default report path is
+`projects/{name}/output/data/connector_search/results.json`. Each configured
+connector/query pair has a `success` or `error` status and a normalized result
+list produced by `ConnectorHit.to_dict()`. No configuration, disabled
+configuration, or an empty connector map exits 2; malformed configuration or
+any connector error exits 1 after the report is written.
 
 ## Key Types
 
 ```python
 from infrastructure.search.connectors import (
     Connector,           # Protocol — search(query, opts) + fetch(id, opts)
-    ConnectorDomain,     # StrEnum: BIOLOGY, MULTIDISCIPLINARY, ...
+    ConnectorDomain,     # Enum: biology, literature, proteomics, ...
     ConnectorHit,        # Normalised result record
     CatalogEntry,        # Registry metadata for a connector
-    SearchOptions,       # limit, domain, cache_dir
-    FetchOptions,        # cache_dir
+    SearchOptions,       # max_results, year_min, year_max, extra
+    FetchOptions,        # include_abstract, extra
     ConnectorError,      # Base exception
-    ConnectorRegistry,   # register / list_all / search / fetch dispatch
+    ConnectorRegistry,   # register / get / catalog / domain filtering
 )
 ```
 
@@ -112,13 +122,17 @@ from infrastructure.search.connectors import (
   exponential-backoff retry.
 - **Per-connector failure isolation**: a network outage in one connector
   is recorded and does not abort others.
-- **Optional disk cache**: pass `cache_dir=` in `SearchOptions` / `FetchOptions`
-  for deterministic replay.
+- **Bounded HTTP cache**: `ConnectorHttpClient` provides a configurable
+  in-memory TTL cache; pass `ttl=0` when every request must reach the source.
+- **Pipeline evidence**: Stage 08 records errors alongside successful searches
+  rather than silently replacing failures with empty result lists.
 
 ## Testing
 
 ```bash
-uv run pytest tests/infra_tests/search/connectors/ -v
+uv run pytest \
+  tests/infra_tests/search/test_connectors.py \
+  tests/infra_tests/search/test_connector_scripts.py -v
 ```
 
 ## See Also

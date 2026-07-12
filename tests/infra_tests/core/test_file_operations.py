@@ -282,7 +282,7 @@ class TestCopyFinalDeliverables:
         assert stats["total_files"] > 0
         assert len(stats["errors"]) == 0
 
-    def test_copy_materializes_symlink_targets_inside_output(self, tmp_path):
+    def test_copy_rejects_file_symlink_targets_inside_output(self, tmp_path):
         project_root = tmp_path / "repo"
         project_output = project_root / "projects" / "project" / "output"
         (project_output / "data").mkdir(parents=True)
@@ -294,10 +294,42 @@ class TestCopyFinalDeliverables:
         stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         copied = output_dir / "data" / "linked.txt"
-        assert stats["errors"] == []
-        assert copied.is_file()
-        assert not copied.is_symlink()
-        assert copied.read_text(encoding="utf-8") == "private content"
+        assert len(stats["errors"]) == 1
+        assert "Refusing to publish source containing symlinks: data/linked.txt" in stats["errors"][0]
+        assert not copied.exists()
+
+    def test_copy_rejects_directory_symlink_targets_inside_output(self, tmp_path):
+        project_root = tmp_path / "repo"
+        project_output = project_root / "projects" / "project" / "output"
+        project_output.mkdir(parents=True)
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        (outside / "private.txt").write_text("private content", encoding="utf-8")
+        (project_output / "linked-data").symlink_to(outside, target_is_directory=True)
+
+        output_dir = tmp_path / "final_output" / "project"
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+
+        assert len(stats["errors"]) == 1
+        assert "Refusing to publish source containing symlinks: linked-data" in stats["errors"][0]
+        assert not (output_dir / "linked-data").exists()
+
+    def test_copy_rejects_preexisting_destination_symlink(self, tmp_path):
+        project_root = tmp_path / "repo"
+        project_output = project_root / "projects" / "project" / "output" / "data"
+        project_output.mkdir(parents=True)
+        (project_output / "result.txt").write_text("public", encoding="utf-8")
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+        (output_dir / "data").symlink_to(outside, target_is_directory=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+
+        assert len(stats["errors"]) == 1
+        assert "Refusing to publish destination containing symlinks: data" in stats["errors"][0]
+        assert not (outside / "result.txt").exists()
 
     def test_copy_with_missing_project_output(self, tmp_path):
         """Test copying when project output doesn't exist."""

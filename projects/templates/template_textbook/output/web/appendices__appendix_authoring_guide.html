@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,12 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:appendix_authoring_guide">Appendix A — Authoring Guide:
 Filling the Stubs</h1>
 <!-- chapter-metadata-badge -->
@@ -320,9 +324,9 @@ parameter table <code>{#tbl:...}</code></li>
 <strong>Further Reading</strong>, <strong>Practice</strong>
 sections</li>
 </ul>
-<p>Cross-reference syntax is pandoc-crossref: <code>[@fig:..]</code>,
-<code>[@tbl:..]</code>, <code>[@eq:..]</code>, <code>[@sec:..]</code>.
-Stub markers the audit counts are <code>&lt;!-- STUB --&gt;</code>,
+<p>Cross-reference syntax is pandoc-crossref: <code>[fig:..]</code>,
+<code>[tbl:..]</code>, <code>[eq:..]</code>, <code>[sec:..]</code>. Stub
+markers the audit counts are <code>&lt;!-- STUB --&gt;</code>,
 <code>TODO:</code>, and <code>TKTK</code> — drive these to zero as the
 chapter matures.</p>
 <h2 id="step-4-add-a-figure">Step 4 — Add a Figure</h2>
@@ -336,7 +340,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 <p>For diagrams, edit <code>src/mermaid/diagram_specs.yaml</code> and
 run <code>scripts/generate_diagrams.py</code> (PNG, or <code>.mmd</code>
 fallback). Reference the figure in prose with
-<code>[@fig:&lt;part&gt;_&lt;stem&gt;]</code> and give it alt text.</p>
+<code>[fig:&lt;part&gt;_&lt;stem&gt;]</code> and give it alt text.</p>
 <h2 id="step-5-add-a-glossary-term">Step 5 — Add a Glossary Term</h2>
 <p>Glossary anchors are a <strong>closed contract</strong>. To add a
 term you must update <strong>both</strong>:</p>
@@ -385,5 +389,6 @@ figure conventions — go here once you adopt the template. -->
 <p>See also: <a href="appendix_notation.md">Appendix B — Notation</a>,
 <a href="appendix_math_review.md">Appendix C — Mathematical Review</a>,
 and the <a href="README.md">appendices README</a>.</p>
+</main>
 </body>
 </html>

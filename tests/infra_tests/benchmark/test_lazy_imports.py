@@ -12,6 +12,9 @@ fresh ``importlib`` lookup of the real object afterwards.
 from __future__ import annotations
 
 import importlib
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -74,3 +77,18 @@ def test_nonexistent_attr_raises_attribute_error() -> None:
     """Unknown attribute access raises ``AttributeError``."""
     with pytest.raises(AttributeError, match="nonexistent"):
         _ = infrastructure.benchmark.nonexistent  # noqa: F841
+
+
+def test_package_module_exposes_real_cli_help() -> None:
+    """The documented package command must resolve to the real harness CLI."""
+    repo_root = Path(__file__).resolve().parents[3]
+    result = subprocess.run(
+        [sys.executable, "-m", "infrastructure.benchmark", "--help"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert "Run template benchmark manifests" in result.stdout

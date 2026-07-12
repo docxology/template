@@ -52,7 +52,10 @@ def _load_dotenv_fallback() -> None:
                 line = line[len("export ") :]
             key, _, value = line.partition("=")
             key = key.strip()
-            if key not in _DOTENV_KEYS or os.getenv(key):
+            # Presence, not truthiness, defines an explicit environment
+            # override. An empty value intentionally disables a provider and
+            # must not be repopulated from a repository dotenv file.
+            if key not in _DOTENV_KEYS or key in os.environ:
                 continue
             value = value.strip().strip('"').strip("'")
             if value:

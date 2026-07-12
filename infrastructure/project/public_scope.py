@@ -66,11 +66,12 @@ def public_project_names(repo_root: Path | str) -> list[str]:
 def public_ci_source_paths(repo_root: Path | str) -> list[Path]:
     """Return source paths for public CI lint/type checks.
 
-    Paths are repo-relative and intentionally exclude local-only symlinked
-    projects under ``projects/``.
+    Paths are repo-relative and cover reusable infrastructure, root pipeline
+    scripts, and public exemplar ``src/`` trees. Local-only symlinked projects
+    under ``projects/`` remain excluded.
     """
     root = Path(repo_root)
-    paths = [Path("infrastructure")]
+    paths = [Path("infrastructure"), Path("scripts")]
     for name in PUBLIC_PROJECT_NAMES:
         src = root / "projects" / name / "src"
         if src.is_dir():

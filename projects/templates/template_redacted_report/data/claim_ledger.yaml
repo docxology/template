@@ -1,0 +1,22 @@
+claims:
+  - claim_id: mssim-power-on-command
+    kind: number
+    value: 1
+    source: infrastructure/steganography/swtpm_mssim_proxy.py MS_SIM_POWER_ON
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/steganography/swtpm_mssim_proxy.py
+  - claim_id: mssim-nv-on-command
+    kind: number
+    value: 11
+    source: infrastructure/steganography/swtpm_mssim_proxy.py MS_SIM_NV_ON
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/steganography/swtpm_mssim_proxy.py
+  - claim_id: mssim-session-end-command
+    kind: number
+    value: 20
+    source: infrastructure/steganography/swtpm_mssim_proxy.py TPM_SESSION_END
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/steganography/swtpm_mssim_proxy.py

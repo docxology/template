@@ -168,7 +168,7 @@ Core infrastructure tests maintain high coverage:
 
 - **Target**: 60% minimum (live % → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md))
 - **Focus**: Critical path coverage
-- **Quality**: data, no mocks
+- **Quality**: real-first execution, mock frameworks prohibited, semantic stand-ins inventoried
 
 ## Running Tests
 

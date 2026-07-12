@@ -187,7 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:reproducibility">Reproducibility Certification</h1>
 <p>This section provides a machine-verifiable reproducibility
 certificate for the complete study. Every metric below is computed by
@@ -209,7 +210,7 @@ publication.</p>
 <tbody>
 <tr>
 <td>Config hash (SHA-256, truncated)</td>
-<td><code>7182b437c586a680</code></td>
+<td><code>292643985e5af3f2</code></td>
 </tr>
 <tr>
 <td>Paper version</td>
@@ -286,16 +287,16 @@ confirming uniform convergence across the entire parameter space.</p>
 <p>This exemplar also demonstrates
 <code>infrastructure.benchmark</code>. The thin orchestrator
 <code>scripts/04_benchmark_stage.py</code> calls
-<code>src/benchmark_support.py</code>, which times the pure
-<code>quadratic_function</code> across a fixed set of input sizes
-(deterministic seed, no network) and turns the timing facts into boolean
-rubric checks. Those checks are scored through the shared
+<code>src/benchmark_support.py</code>, which evaluates the pure
+<code>quadratic_function</code> across fixed seeded inputs and turns
+reproducible completion, finiteness, and output-stability facts into
+boolean rubric checks. Those checks are scored through
 <code>infrastructure.benchmark.score_rubric</code> against a weighted
-<code>RubricSet</code>, and the result is rendered with
-<code>scores_to_markdown</code> into
-<code>output/reports/benchmark_report.json</code> (plus an optional
-timing figure). This keeps the benchmark API exercised by a real
-exemplar, not by infrastructure tests alone.</p>
+<code>RubricSet</code>, then rendered with
+<code>scores_to_markdown</code> into the byte-stable
+<code>output/reports/benchmark_report.json</code> with a deterministic
+objective-value figure. Real timing still executes as a runtime
+diagnostic, but it is not serialized into tracked evidence.</p>
 <h2 id="madlib-injection-verification">Madlib Injection
 Verification</h2>
 <p>This manuscript demonstrates the template’s “madlib” capability:

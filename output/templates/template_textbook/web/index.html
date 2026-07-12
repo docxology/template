@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
@@ -237,10 +238,52 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -259,11 +302,6 @@
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -279,34 +317,61 @@
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -338,6 +403,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -345,7 +415,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -361,17 +431,24 @@ img {
 }
 
 a {
-  color: red;
-  text-decoration: none;
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -381,14 +458,32 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
-  color: red;
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -406,7 +501,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -414,6 +509,7 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <nav id="TOC" role="doc-toc">
 <ul>
 <li><a href="#front-matter" id="toc-front-matter"><span
@@ -1302,6 +1398,7 @@ class="toc-section-number">49.1</span> Placeholder Entries</a></li>
 </ul></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="front-matter"><span
 class="header-section-number">1</span> Front Matter</h1>
 <!-- This file is the first front-matter document rendered (see
@@ -1396,8 +1493,8 @@ sections in declared order, and renders a PDF through Pandoc with
 citation.</p>
 <p>To build the book from the repository root:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/02_run_analysis.py <span class="at">--project</span> templates/template_textbook</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py    <span class="at">--project</span> templates/template_textbook</span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_02_analysis.py <span class="at">--project</span> templates/template_textbook</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py    <span class="at">--project</span> templates/template_textbook</span></code></pre></div>
 <p>or run the full pipeline with <code>./run.sh</code>. See <a
 href="README.md"><code>README.md</code></a> for the manuscript directory
 layout and <a href="SYNTAX.md"><code>SYNTAX.md</code></a> for the exact
@@ -1473,9 +1570,12 @@ Methods</h1>
 <p>This part covers <strong>orientation and methods</strong>. It
 contains the following chapters:</p>
 <ul>
-<li><em>Orientation to the Field</em> — sec. 4</li>
-<li><em>Core Methods and Tools</em> — sec. 5</li>
-<li><em>Quantitative Foundations</em> — sec. 6</li>
+<li><em>Orientation to the Field</em> — sec. <a
+href="#sec:part_0_orientation">4</a></li>
+<li><em>Core Methods and Tools</em> — sec. <a
+href="#sec:part_0_core_methods">5</a></li>
+<li><em>Quantitative Foundations</em> — sec. <a
+href="#sec:part_0_quantitative_foundations">6</a></li>
 </ul>
 <blockquote>
 <p><strong>How to use this part.</strong>
@@ -1486,8 +1586,8 @@ contains the following chapters:</p>
 class="header-section-number">4</span> Orientation to the Field</h1>
 <figure id="fig:part_0_orientation">
 <img src="../figures/part_0_orientation.png" style="width:90.0%"
-alt="Figure 1: Overview schematic for “Orientation to the Field”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 1: Overview schematic for
+alt="Figure 1: Overview schematic for “Orientation to the Field”." />
+<figcaption>Figure 1: Overview schematic for
 “Orientation to the Field”. Replace this generated placeholder with a
 real figure produced by
 <code>src/visualization/plots.py</code>.</figcaption>
@@ -1518,43 +1618,47 @@ class="header-section-number">4.1.1</span> Study Blueprint</h3>
 href="#gl:regulation"><strong>regulation</strong></a>, <a
 href="#gl:boundary"><strong>boundary</strong></a>, <a
 href="#gl:state"><strong>state</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 1.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_0_orientation_model">1</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 19.</li>
-<li><strong>Question bank:</strong> sec. 31.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_0_orientation">19</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_0_orientation">31</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [lee2021systems]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@lee2021systems]. -->
 </blockquote>
 <hr />
 <h2 data-number="4.2" id="orientation"><span
 class="header-section-number">4.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Orientation to the
-Field</em>. Foundational treatments include [kim2020data;
-brown2017principles]. Key terms such as <a
+Field</em>. Foundational treatments include <span class="citation"
+data-cites="kim2020data brown2017principles">(<a href="#ref-kim2020data"
+role="doc-biblioref">Kim 2020</a>; <a href="#ref-brown2017principles"
+role="doc-biblioref">Brown 2017</a>)</span>. Key terms such as <a
 href="#gl:regulation"><strong>regulation</strong></a>, <a
 href="#gl:boundary"><strong>boundary</strong></a>, <a
 href="#gl:state"><strong>state</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="4.3" id="a-worked-formalism"><span
 class="header-section-number">4.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 1:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_0_orientation_model">1</a>:</p>
 <p><span id="eq:part_0_orientation_model"><span class="math display">\[
 N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}}
 \qquad{(1)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 1.</p>
+tbl. <a href="#tbl:part_0_orientation_parameters">1</a>.</p>
 <table id="tbl:part_0_orientation_parameters">
 <caption>Table 1: Parameters of the worked model for this
 chapter.</caption>
@@ -1597,8 +1701,12 @@ chapter.</caption>
 class="header-section-number">4.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 1 and revisit the objectives above as you
-read. Further evidence: [kim2020data; brown2017principles].</p>
+<p>See the overview in fig. <a href="#fig:part_0_orientation">1</a> and
+revisit the objectives above as you read. Further evidence: <span
+class="citation" data-cites="kim2020data brown2017principles">(<a
+href="#ref-kim2020data" role="doc-biblioref">Kim 2020</a>; <a
+href="#ref-brown2017principles" role="doc-biblioref">Brown
+2017</a>)</span>.</p>
 <h2 data-number="4.5" id="summary"><span
 class="header-section-number">4.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -1612,21 +1720,25 @@ href="#gl:network"><strong>network</strong></a>.</p>
 class="header-section-number">4.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [wilson2021analysis].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="wilson2021analysis">(<a href="#ref-wilson2021analysis"
+role="doc-biblioref">Wilson 2021</a>)</span>.</li>
 </ul>
 <h2 data-number="4.8" id="practice"><span
 class="header-section-number">4.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 19</li>
-<li><strong>Question bank:</strong> sec. 31</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_0_orientation">19</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_0_orientation">31</a></li>
 </ul>
 <hr />
 <h1 data-number="5" id="sec:part_0_core_methods"><span
 class="header-section-number">5</span> Core Methods and Tools</h1>
 <figure id="fig:part_0_core_methods">
 <img src="../figures/part_0_core_methods.png" style="width:90.0%"
-alt="Figure 2: Overview schematic for “Core Methods and Tools”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 2: Overview schematic for “Core
+alt="Figure 2: Overview schematic for “Core Methods and Tools”." />
+<figcaption>Figure 2: Overview schematic for “Core
 Methods and Tools”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -1656,43 +1768,47 @@ class="header-section-number">5.1.1</span> Study Blueprint</h3>
 href="#gl:model"><strong>model</strong></a>, <a
 href="#gl:parameter"><strong>parameter</strong></a>, <a
 href="#gl:variable"><strong>variable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 2.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_0_core_methods_model">2</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 20.</li>
-<li><strong>Question bank:</strong> sec. 32.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_0_core_methods">20</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_0_core_methods">32</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [lee2021systems]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@lee2021systems]. -->
 </blockquote>
 <hr />
 <h2 data-number="5.2" id="orientation-1"><span
 class="header-section-number">5.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Core Methods and
-Tools</em>. Foundational treatments include [kim2020data;
-brown2017principles]. Key terms such as <a
+Tools</em>. Foundational treatments include <span class="citation"
+data-cites="kim2020data brown2017principles">(<a href="#ref-kim2020data"
+role="doc-biblioref">Kim 2020</a>; <a href="#ref-brown2017principles"
+role="doc-biblioref">Brown 2017</a>)</span>. Key terms such as <a
 href="#gl:model"><strong>model</strong></a>, <a
 href="#gl:parameter"><strong>parameter</strong></a>, <a
 href="#gl:variable"><strong>variable</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="5.3" id="a-worked-formalism-1"><span
 class="header-section-number">5.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 2:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_0_core_methods_model">2</a>:</p>
 <p><span id="eq:part_0_core_methods_model"><span class="math display">\[
 N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}}
 \qquad{(2)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 2.</p>
+tbl. <a href="#tbl:part_0_core_methods_parameters">2</a>.</p>
 <table id="tbl:part_0_core_methods_parameters">
 <caption>Table 2: Parameters of the worked model for this
 chapter.</caption>
@@ -1735,8 +1851,12 @@ chapter.</caption>
 class="header-section-number">5.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 2 and revisit the objectives above as you
-read. Further evidence: [kim2020data; brown2017principles].</p>
+<p>See the overview in fig. <a href="#fig:part_0_core_methods">2</a> and
+revisit the objectives above as you read. Further evidence: <span
+class="citation" data-cites="kim2020data brown2017principles">(<a
+href="#ref-kim2020data" role="doc-biblioref">Kim 2020</a>; <a
+href="#ref-brown2017principles" role="doc-biblioref">Brown
+2017</a>)</span>.</p>
 <h2 data-number="5.5" id="summary-1"><span
 class="header-section-number">5.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -1750,13 +1870,17 @@ href="#gl:state"><strong>state</strong></a>.</p>
 class="header-section-number">5.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [wilson2021analysis].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="wilson2021analysis">(<a href="#ref-wilson2021analysis"
+role="doc-biblioref">Wilson 2021</a>)</span>.</li>
 </ul>
 <h2 data-number="5.8" id="practice-1"><span
 class="header-section-number">5.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 20</li>
-<li><strong>Question bank:</strong> sec. 32</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_0_core_methods">20</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_0_core_methods">32</a></li>
 </ul>
 <hr />
 <h1 data-number="6" id="sec:part_0_quantitative_foundations"><span
@@ -1764,8 +1888,8 @@ class="header-section-number">6</span> Quantitative Foundations</h1>
 <figure id="fig:part_0_quantitative_foundations">
 <img src="../figures/part_0_quantitative_foundations.png"
 style="width:90.0%"
-alt="Figure 3: Overview schematic for “Quantitative Foundations”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 3: Overview schematic for
+alt="Figure 3: Overview schematic for “Quantitative Foundations”." />
+<figcaption>Figure 3: Overview schematic for
 “Quantitative Foundations”. Replace this generated placeholder with a
 real figure produced by
 <code>src/visualization/plots.py</code>.</figcaption>
@@ -1796,43 +1920,48 @@ class="header-section-number">6.1.1</span> Study Blueprint</h3>
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a>, <a
 href="#gl:threshold"><strong>threshold</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 3.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_0_quantitative_foundations_model">3</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 21.</li>
-<li><strong>Question bank:</strong> sec. 33.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_0_quantitative_foundations">21</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_0_quantitative_foundations">33</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [kim2020data]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@kim2020data]. -->
 </blockquote>
 <hr />
 <h2 data-number="6.2" id="orientation-2"><span
 class="header-section-number">6.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Quantitative
-Foundations</em>. Foundational treatments include [smith2020foundations;
-doe2019methods]. Key terms such as <a
-href="#gl:feedback"><strong>feedback</strong></a>, <a
-href="#gl:gradient"><strong>gradient</strong></a>, <a
+Foundations</em>. Foundational treatments include <span class="citation"
+data-cites="smith2020foundations doe2019methods">(<a
+href="#ref-smith2020foundations" role="doc-biblioref">Smith 2020</a>; <a
+href="#ref-doe2019methods" role="doc-biblioref">Doe 2019</a>)</span>.
+Key terms such as <a href="#gl:feedback"><strong>feedback</strong></a>,
+<a href="#gl:gradient"><strong>gradient</strong></a>, <a
 href="#gl:threshold"><strong>threshold</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="6.3" id="a-worked-formalism-2"><span
 class="header-section-number">6.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 3:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_0_quantitative_foundations_model">3</a>:</p>
 <p><span id="eq:part_0_quantitative_foundations_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(3)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 3.</p>
+tbl. <a
+href="#tbl:part_0_quantitative_foundations_parameters">3</a>.</p>
 <table id="tbl:part_0_quantitative_foundations_parameters">
 <caption>Table 3: Parameters of the worked model for this
 chapter.</caption>
@@ -1875,8 +2004,13 @@ chapter.</caption>
 class="header-section-number">6.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 3 and revisit the objectives above as you
-read. Further evidence: [smith2020foundations; doe2019methods].</p>
+<p>See the overview in fig. <a
+href="#fig:part_0_quantitative_foundations">3</a> and revisit the
+objectives above as you read. Further evidence: <span class="citation"
+data-cites="smith2020foundations doe2019methods">(<a
+href="#ref-smith2020foundations" role="doc-biblioref">Smith 2020</a>; <a
+href="#ref-doe2019methods" role="doc-biblioref">Doe
+2019</a>)</span>.</p>
 <h2 data-number="6.5" id="summary-2"><span
 class="header-section-number">6.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -1890,13 +2024,17 @@ href="#gl:parameter"><strong>parameter</strong></a>.</p>
 class="header-section-number">6.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [lee2021systems].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="lee2021systems">(<a href="#ref-lee2021systems"
+role="doc-biblioref">Lee 2021</a>)</span>.</li>
 </ul>
 <h2 data-number="6.8" id="practice-2"><span
 class="header-section-number">6.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 21</li>
-<li><strong>Question bank:</strong> sec. 33</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_0_quantitative_foundations">21</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_0_quantitative_foundations">33</a></li>
 </ul>
 <hr />
 <h1 data-number="7" id="sec:part_I_intro"><span
@@ -1905,9 +2043,12 @@ class="header-section-number">7</span> Part I: Fundamentals</h1>
 <p>This part covers <strong>fundamentals</strong>. It contains the
 following chapters:</p>
 <ul>
-<li><em>First Principles</em> — sec. 8</li>
-<li><em>Building Blocks</em> — sec. 9</li>
-<li><em>Structure and Form</em> — sec. 10</li>
+<li><em>First Principles</em> — sec. <a
+href="#sec:part_I_first_principles">8</a></li>
+<li><em>Building Blocks</em> — sec. <a
+href="#sec:part_I_building_blocks">9</a></li>
+<li><em>Structure and Form</em> — sec. <a
+href="#sec:part_I_structure_and_form">10</a></li>
 </ul>
 <blockquote>
 <p><strong>How to use this part.</strong>
@@ -1918,8 +2059,8 @@ following chapters:</p>
 class="header-section-number">8</span> First Principles</h1>
 <figure id="fig:part_I_first_principles">
 <img src="../figures/logistic_growth.png" style="width:85.0%"
-alt="Figure 4: A logistic growth curve for three growth rates, approaching the carrying capacity K = 100. Produced deterministically by visualization.plots.plot_logistic_growth." />
-<figcaption aria-hidden="true">Figure 4: A logistic growth curve for
+alt="Figure 4: A logistic growth curve for three growth rates, approaching the carrying capacity K = 100 ." />
+<figcaption>Figure 4: A logistic growth curve for
 three growth rates, approaching the carrying capacity <span
 class="math inline">\(K = 100\)</span>. Produced deterministically by
 <code>visualization.plots.plot_logistic_growth</code>.</figcaption>
@@ -1967,14 +2108,17 @@ href="#gl:system"><strong>system</strong></a>, <a
 href="#gl:state"><strong>state</strong></a>, <a
 href="#gl:parameter"><strong>parameter</strong></a>, <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the logistic law in eq. 5.</li>
+<li><strong>Quantitative lens:</strong> the logistic law in eq. <a
+href="#eq:part_I_first_principles_model">5</a>.</li>
 <li><strong>Data skill:</strong> read an S-curve and estimate its
 carrying capacity by eye, then confirm numerically.</li>
 <li><strong>Common misconception to repair:</strong> “exponential” and
 “logistic” are not the same — unbounded growth is an early-time
 approximation, not the rule.</li>
-<li><strong>Primary lab:</strong> sec. 22.</li>
-<li><strong>Question bank:</strong> sec. 34.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_I_first_principles">22</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_I_first_principles">34</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.logistic_growth</code>.
 <!-- curriculum-scaffold-end --></li>
@@ -2012,22 +2156,26 @@ class="header-section-number">8.3</span> A first quantitative law</h2>
 <p>Unbounded (exponential) growth assumes nothing ever pushes back. Real
 systems saturate. The simplest law that grows fast when small and levels
 off when large is the <strong>logistic</strong> equation, written as a
-rate of change in eq. 4 and in closed form in eq. 5:</p>
+rate of change in eq. <a href="#eq:part_I_first_principles_rate">4</a>
+and in closed form in eq. <a
+href="#eq:part_I_first_principles_model">5</a>:</p>
 <p><span id="eq:part_I_first_principles_rate"><span
 class="math display">\[ \frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right)
 \qquad{(4)}\]</span></span></p>
 <p><span id="eq:part_I_first_principles_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(5)}\]</span></span></p>
-<p>Read eq. 4 aloud: the rate of change is proportional to how much
-there is (<span class="math inline">\(rN\)</span>) <em>times</em> how
-much room remains (<span class="math inline">\(1 - N/K\)</span>). When
-<span class="math inline">\(N\)</span> is small the second factor is
-near <span class="math inline">\(1\)</span> and growth is nearly
-exponential; as <span class="math inline">\(N\)</span> approaches <span
+<p>Read eq. <a href="#eq:part_I_first_principles_rate">4</a> aloud: the
+rate of change is proportional to how much there is (<span
+class="math inline">\(rN\)</span>) <em>times</em> how much room remains
+(<span class="math inline">\(1 - N/K\)</span>). When <span
+class="math inline">\(N\)</span> is small the second factor is near
+<span class="math inline">\(1\)</span> and growth is nearly exponential;
+as <span class="math inline">\(N\)</span> approaches <span
 class="math inline">\(K\)</span> the factor approaches <span
 class="math inline">\(0\)</span> and growth stalls. The parameters are
-collected in tbl. 4.</p>
+collected in tbl. <a
+href="#tbl:part_I_first_principles_parameters">4</a>.</p>
 <table id="tbl:part_I_first_principles_parameters">
 <caption>Table 4: Parameters of the logistic model. Variables change
 over time; parameters are held fixed while reasoning.</caption>
@@ -2086,16 +2234,16 @@ class="math inline">\(t = 5\)</span> with <span
 class="math inline">\(N(5) = 74.18\)</span>, and by <span
 class="math inline">\(t = 10\)</span> has all but arrived at <span
 class="math inline">\(N(10) = 99.37\)</span> — within one part in a
-hundred of the carrying capacity. This is the S-curve plotted in fig. 4:
-an early near-exponential rise, an inflection, and a long approach to
-the asymptote.</p>
+hundred of the carrying capacity. This is the S-curve plotted in fig. <a
+href="#fig:part_I_first_principles">4</a>: an early near-exponential
+rise, an inflection, and a long approach to the asymptote.</p>
 <p>The long-run behaviour is exact, not approximate. Because <span
 class="math inline">\(r &gt; 0\)</span>, the term <span
 class="math inline">\(e^{-rt} \to 0\)</span>, so <span
 class="math inline">\(N(t) \to K\)</span>. The proof is one line and is
-recorded as Theorem 1 in sec. 46; the same fact is asserted numerically
-by the test suite, so the prose and the code cannot silently
-disagree.</p>
+recorded as Theorem 1 in sec. <a href="#sec:appendix_formalisms">46</a>;
+the same fact is asserted numerically by the test suite, so the prose
+and the code cannot silently disagree.</p>
 <h2 data-number="8.5" id="how-the-pieces-connect"><span
 class="header-section-number">8.5</span> How the pieces connect</h2>
 <pre class="mermaid"><code>graph TD
@@ -2105,7 +2253,11 @@ class="header-section-number">8.5</span> How the pieces connect</h2>
   D --&gt;|compare to data| A</code></pre>
 <p>This loop — choose, write, solve, predict, compare — is the first
 principle the rest of the book elaborates. Foundational treatments of
-model-building include [brown2017principles] and [patel2018models].</p>
+model-building include <span class="citation"
+data-cites="brown2017principles">(<a href="#ref-brown2017principles"
+role="doc-biblioref">Brown 2017</a>)</span> and <span class="citation"
+data-cites="patel2018models">(<a href="#ref-patel2018models"
+role="doc-biblioref">Patel 2018</a>)</span>.</p>
 <h2 data-number="8.6" id="summary-3"><span
 class="header-section-number">8.6</span> Summary</h2>
 <p>A model trades completeness for clarity: a few <a
@@ -2126,21 +2278,23 @@ href="#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
 <h2 data-number="8.8" id="further-reading-3"><span
 class="header-section-number">8.8</span> Further Reading</h2>
 <ul>
-<li><span class="citation"
-data-cites="brown2017principles">[@brown2017principles]</span> — a
-readable introduction to reasoning from first principles; start with its
-opening chapter on what a model is for.</li>
-<li><span class="citation"
-data-cites="patel2018models">[@patel2018models]</span> — a broader
-survey of model families; use it to see where the logistic law sits
-among alternatives.</li>
+<li><span class="citation" data-cites="brown2017principles">Brown (<a
+href="#ref-brown2017principles" role="doc-biblioref">2017</a>)</span> —
+a readable introduction to reasoning from first principles; start with
+its opening chapter on what a model is for.</li>
+<li><span class="citation" data-cites="patel2018models">Patel (<a
+href="#ref-patel2018models" role="doc-biblioref">2018</a>)</span> — a
+broader survey of model families; use it to see where the logistic law
+sits among alternatives.</li>
 </ul>
 <h2 data-number="8.9" id="practice-3"><span
 class="header-section-number">8.9</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 22 — measure an S-curve and estimate its
-parameters.</li>
-<li><strong>Question bank:</strong> sec. 34 — recall through
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_I_first_principles">22</a> — measure an S-curve and
+estimate its parameters.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_I_first_principles">34</a> — recall through
 synthesis.</li>
 </ul>
 <hr />
@@ -2148,8 +2302,8 @@ synthesis.</li>
 class="header-section-number">9</span> Building Blocks</h1>
 <figure id="fig:part_I_building_blocks">
 <img src="../figures/part_I_building_blocks.png" style="width:90.0%"
-alt="Figure 5: Overview schematic for “Building Blocks”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 5: Overview schematic for
+alt="Figure 5: Overview schematic for “Building Blocks”." />
+<figcaption>Figure 5: Overview schematic for
 “Building Blocks”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -2179,43 +2333,48 @@ class="header-section-number">9.1.1</span> Study Blueprint</h3>
 href="#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 6.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_I_building_blocks_model">6</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 23.</li>
-<li><strong>Question bank:</strong> sec. 35.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_I_building_blocks">23</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_I_building_blocks">35</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [nguyen2023synthesis]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@nguyen2023synthesis]. -->
 </blockquote>
 <hr />
 <h2 data-number="9.2" id="orientation-3"><span
 class="header-section-number">9.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Building
-Blocks</em>. Foundational treatments include [taylor2019theory;
-smith2020foundations]. Key terms such as <a
+Blocks</em>. Foundational treatments include <span class="citation"
+data-cites="taylor2019theory smith2020foundations">(<a
+href="#ref-taylor2019theory" role="doc-biblioref">Taylor 2019</a>; <a
+href="#ref-smith2020foundations" role="doc-biblioref">Smith
+2020</a>)</span>. Key terms such as <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="9.3" id="a-worked-formalism-3"><span
 class="header-section-number">9.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 6:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_I_building_blocks_model">6</a>:</p>
 <p><span id="eq:part_I_building_blocks_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(6)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 5.</p>
+tbl. <a href="#tbl:part_I_building_blocks_parameters">5</a>.</p>
 <table id="tbl:part_I_building_blocks_parameters">
 <caption>Table 5: Parameters of the worked model for this
 chapter.</caption>
@@ -2258,8 +2417,12 @@ chapter.</caption>
 class="header-section-number">9.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 5 and revisit the objectives above as you
-read. Further evidence: [taylor2019theory; smith2020foundations].</p>
+<p>See the overview in fig. <a href="#fig:part_I_building_blocks">5</a>
+and revisit the objectives above as you read. Further evidence: <span
+class="citation" data-cites="taylor2019theory smith2020foundations">(<a
+href="#ref-taylor2019theory" role="doc-biblioref">Taylor 2019</a>; <a
+href="#ref-smith2020foundations" role="doc-biblioref">Smith
+2020</a>)</span>.</p>
 <h2 data-number="9.5" id="summary-4"><span
 class="header-section-number">9.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -2273,21 +2436,25 @@ href="#gl:model"><strong>model</strong></a>.</p>
 class="header-section-number">9.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [doe2019methods].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="doe2019methods">(<a href="#ref-doe2019methods"
+role="doc-biblioref">Doe 2019</a>)</span>.</li>
 </ul>
 <h2 data-number="9.8" id="practice-4"><span
 class="header-section-number">9.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 23</li>
-<li><strong>Question bank:</strong> sec. 35</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_I_building_blocks">23</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_I_building_blocks">35</a></li>
 </ul>
 <hr />
 <h1 data-number="10" id="sec:part_I_structure_and_form"><span
 class="header-section-number">10</span> Structure and Form</h1>
 <figure id="fig:part_I_structure_and_form">
 <img src="../figures/part_I_structure_and_form.png" style="width:90.0%"
-alt="Figure 6: Overview schematic for “Structure and Form”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 6: Overview schematic for
+alt="Figure 6: Overview schematic for “Structure and Form”." />
+<figcaption>Figure 6: Overview schematic for
 “Structure and Form”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -2317,43 +2484,48 @@ class="header-section-number">10.1.1</span> Study Blueprint</h3>
 href="#gl:threshold"><strong>threshold</strong></a>, <a
 href="#gl:network"><strong>network</strong></a>, <a
 href="#gl:dynamics"><strong>dynamics</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 7.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_I_structure_and_form_model">7</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 24.</li>
-<li><strong>Question bank:</strong> sec. 36.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_I_structure_and_form">24</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_I_structure_and_form">36</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [wilson2021analysis]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@wilson2021analysis]. -->
 </blockquote>
 <hr />
 <h2 data-number="10.2" id="orientation-4"><span
 class="header-section-number">10.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Structure and
-Form</em>. Foundational treatments include [lee2021systems;
-garcia2022dynamics]. Key terms such as <a
+Form</em>. Foundational treatments include <span class="citation"
+data-cites="lee2021systems garcia2022dynamics">(<a
+href="#ref-lee2021systems" role="doc-biblioref">Lee 2021</a>; <a
+href="#ref-garcia2022dynamics" role="doc-biblioref">Garcia
+2022</a>)</span>. Key terms such as <a
 href="#gl:threshold"><strong>threshold</strong></a>, <a
 href="#gl:network"><strong>network</strong></a>, <a
 href="#gl:dynamics"><strong>dynamics</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="10.3" id="a-worked-formalism-4"><span
 class="header-section-number">10.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 7:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_I_structure_and_form_model">7</a>:</p>
 <p><span id="eq:part_I_structure_and_form_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(7)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 6.</p>
+tbl. <a href="#tbl:part_I_structure_and_form_parameters">6</a>.</p>
 <table id="tbl:part_I_structure_and_form_parameters">
 <caption>Table 6: Parameters of the worked model for this
 chapter.</caption>
@@ -2396,8 +2568,13 @@ chapter.</caption>
 class="header-section-number">10.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 6 and revisit the objectives above as you
-read. Further evidence: [lee2021systems; garcia2022dynamics].</p>
+<p>See the overview in fig. <a
+href="#fig:part_I_structure_and_form">6</a> and revisit the objectives
+above as you read. Further evidence: <span class="citation"
+data-cites="lee2021systems garcia2022dynamics">(<a
+href="#ref-lee2021systems" role="doc-biblioref">Lee 2021</a>; <a
+href="#ref-garcia2022dynamics" role="doc-biblioref">Garcia
+2022</a>)</span>.</p>
 <h2 data-number="10.5" id="summary-5"><span
 class="header-section-number">10.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -2411,13 +2588,17 @@ href="#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
 class="header-section-number">10.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [patel2018models].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="patel2018models">(<a href="#ref-patel2018models"
+role="doc-biblioref">Patel 2018</a>)</span>.</li>
 </ul>
 <h2 data-number="10.8" id="practice-5"><span
 class="header-section-number">10.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 24</li>
-<li><strong>Question bank:</strong> sec. 36</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_I_structure_and_form">24</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_I_structure_and_form">36</a></li>
 </ul>
 <hr />
 <h1 data-number="11" id="sec:part_II_intro"><span
@@ -2426,9 +2607,12 @@ class="header-section-number">11</span> Part II: Core Systems</h1>
 <p>This part covers <strong>core systems</strong>. It contains the
 following chapters:</p>
 <ul>
-<li><em>Systems Overview</em> — sec. 12</li>
-<li><em>Dynamics and Change</em> — sec. 13</li>
-<li><em>Regulation and Control</em> — sec. 14</li>
+<li><em>Systems Overview</em> — sec. <a
+href="#sec:part_II_systems_overview">12</a></li>
+<li><em>Dynamics and Change</em> — sec. <a
+href="#sec:part_II_dynamics_and_change">13</a></li>
+<li><em>Regulation and Control</em> — sec. <a
+href="#sec:part_II_regulation_and_control">14</a></li>
 </ul>
 <blockquote>
 <p><strong>How to use this part.</strong>
@@ -2439,8 +2623,8 @@ following chapters:</p>
 class="header-section-number">12</span> Systems Overview</h1>
 <figure id="fig:part_II_systems_overview">
 <img src="../figures/part_II_systems_overview.png" style="width:90.0%"
-alt="Figure 7: Overview schematic for “Systems Overview”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 7: Overview schematic for “Systems
+alt="Figure 7: Overview schematic for “Systems Overview”." />
+<figcaption>Figure 7: Overview schematic for “Systems
 Overview”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -2470,43 +2654,48 @@ class="header-section-number">12.1.1</span> Study Blueprint</h3>
 href="#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 8.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_II_systems_overview_model">8</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 25.</li>
-<li><strong>Question bank:</strong> sec. 37.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_II_systems_overview">25</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_II_systems_overview">37</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [smith2020foundations]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@smith2020foundations]. -->
 </blockquote>
 <hr />
 <h2 data-number="12.2" id="orientation-5"><span
 class="header-section-number">12.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Systems
-Overview</em>. Foundational treatments include [patel2018models;
-nguyen2023synthesis]. Key terms such as <a
+Overview</em>. Foundational treatments include <span class="citation"
+data-cites="patel2018models nguyen2023synthesis">(<a
+href="#ref-patel2018models" role="doc-biblioref">Patel 2018</a>; <a
+href="#ref-nguyen2023synthesis" role="doc-biblioref">Nguyen
+2023</a>)</span>. Key terms such as <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="12.3" id="a-worked-formalism-5"><span
 class="header-section-number">12.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 8:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_II_systems_overview_model">8</a>:</p>
 <p><span id="eq:part_II_systems_overview_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(8)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 7.</p>
+tbl. <a href="#tbl:part_II_systems_overview_parameters">7</a>.</p>
 <table id="tbl:part_II_systems_overview_parameters">
 <caption>Table 7: Parameters of the worked model for this
 chapter.</caption>
@@ -2549,8 +2738,13 @@ chapter.</caption>
 class="header-section-number">12.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 7 and revisit the objectives above as you
-read. Further evidence: [patel2018models; nguyen2023synthesis].</p>
+<p>See the overview in fig. <a
+href="#fig:part_II_systems_overview">7</a> and revisit the objectives
+above as you read. Further evidence: <span class="citation"
+data-cites="patel2018models nguyen2023synthesis">(<a
+href="#ref-patel2018models" role="doc-biblioref">Patel 2018</a>; <a
+href="#ref-nguyen2023synthesis" role="doc-biblioref">Nguyen
+2023</a>)</span>.</p>
 <h2 data-number="12.5" id="summary-6"><span
 class="header-section-number">12.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -2564,13 +2758,17 @@ href="#gl:model"><strong>model</strong></a>.</p>
 class="header-section-number">12.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [kim2020data].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="kim2020data">(<a href="#ref-kim2020data"
+role="doc-biblioref">Kim 2020</a>)</span>.</li>
 </ul>
 <h2 data-number="12.8" id="practice-6"><span
 class="header-section-number">12.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 25</li>
-<li><strong>Question bank:</strong> sec. 37</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_II_systems_overview">25</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_II_systems_overview">37</a></li>
 </ul>
 <hr />
 <h1 data-number="13" id="sec:part_II_dynamics_and_change"><span
@@ -2578,8 +2776,8 @@ class="header-section-number">13</span> Dynamics and Change</h1>
 <figure id="fig:part_II_dynamics_and_change">
 <img src="../figures/part_II_dynamics_and_change.png"
 style="width:90.0%"
-alt="Figure 8: Overview schematic for “Dynamics and Change”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 8: Overview schematic for
+alt="Figure 8: Overview schematic for “Dynamics and Change”." />
+<figcaption>Figure 8: Overview schematic for
 “Dynamics and Change”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -2609,43 +2807,48 @@ class="header-section-number">13.1.1</span> Study Blueprint</h3>
 href="#gl:parameter"><strong>parameter</strong></a>, <a
 href="#gl:variable"><strong>variable</strong></a>, <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 9.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_II_dynamics_and_change_model">9</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 26.</li>
-<li><strong>Question bank:</strong> sec. 38.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_II_dynamics_and_change">26</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_II_dynamics_and_change">38</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [garcia2022dynamics]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@garcia2022dynamics]. -->
 </blockquote>
 <hr />
 <h2 data-number="13.2" id="orientation-6"><span
 class="header-section-number">13.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Dynamics and
-Change</em>. Foundational treatments include [brown2017principles;
-wilson2021analysis]. Key terms such as <a
+Change</em>. Foundational treatments include <span class="citation"
+data-cites="brown2017principles wilson2021analysis">(<a
+href="#ref-brown2017principles" role="doc-biblioref">Brown 2017</a>; <a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson
+2021</a>)</span>. Key terms such as <a
 href="#gl:parameter"><strong>parameter</strong></a>, <a
 href="#gl:variable"><strong>variable</strong></a>, <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a> are defined in
 the glossary.</p>
 <h2 data-number="13.3" id="a-worked-formalism-6"><span
 class="header-section-number">13.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 9:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_II_dynamics_and_change_model">9</a>:</p>
 <p><span id="eq:part_II_dynamics_and_change_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(9)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 8.</p>
+tbl. <a href="#tbl:part_II_dynamics_and_change_parameters">8</a>.</p>
 <table id="tbl:part_II_dynamics_and_change_parameters">
 <caption>Table 8: Parameters of the worked model for this
 chapter.</caption>
@@ -2688,8 +2891,13 @@ chapter.</caption>
 class="header-section-number">13.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 8 and revisit the objectives above as you
-read. Further evidence: [brown2017principles; wilson2021analysis].</p>
+<p>See the overview in fig. <a
+href="#fig:part_II_dynamics_and_change">8</a> and revisit the objectives
+above as you read. Further evidence: <span class="citation"
+data-cites="brown2017principles wilson2021analysis">(<a
+href="#ref-brown2017principles" role="doc-biblioref">Brown 2017</a>; <a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson
+2021</a>)</span>.</p>
 <h2 data-number="13.5" id="summary-7"><span
 class="header-section-number">13.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -2703,13 +2911,17 @@ href="#gl:observable"><strong>observable</strong></a>.</p>
 class="header-section-number">13.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [taylor2019theory].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="taylor2019theory">(<a href="#ref-taylor2019theory"
+role="doc-biblioref">Taylor 2019</a>)</span>.</li>
 </ul>
 <h2 data-number="13.8" id="practice-7"><span
 class="header-section-number">13.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 26</li>
-<li><strong>Question bank:</strong> sec. 38</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_II_dynamics_and_change">26</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_II_dynamics_and_change">38</a></li>
 </ul>
 <hr />
 <h1 data-number="14" id="sec:part_II_regulation_and_control"><span
@@ -2717,8 +2929,8 @@ class="header-section-number">14</span> Regulation and Control</h1>
 <figure id="fig:part_II_regulation_and_control">
 <img src="../figures/part_II_regulation_and_control.png"
 style="width:90.0%"
-alt="Figure 9: Overview schematic for “Regulation and Control”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 9: Overview schematic for
+alt="Figure 9: Overview schematic for “Regulation and Control”." />
+<figcaption>Figure 9: Overview schematic for
 “Regulation and Control”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -2748,43 +2960,48 @@ class="header-section-number">14.1.1</span> Study Blueprint</h3>
 href="#gl:network"><strong>network</strong></a>, <a
 href="#gl:dynamics"><strong>dynamics</strong></a>, <a
 href="#gl:emergence"><strong>emergence</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 10.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_II_regulation_and_control_model">10</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 27.</li>
-<li><strong>Question bank:</strong> sec. 39.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_II_regulation_and_control">27</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_II_regulation_and_control">39</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [patel2018models]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@patel2018models]. -->
 </blockquote>
 <hr />
 <h2 data-number="14.2" id="orientation-7"><span
 class="header-section-number">14.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Regulation and
-Control</em>. Foundational treatments include [wilson2021analysis;
-taylor2019theory]. Key terms such as <a
+Control</em>. Foundational treatments include <span class="citation"
+data-cites="wilson2021analysis taylor2019theory">(<a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson 2021</a>; <a
+href="#ref-taylor2019theory" role="doc-biblioref">Taylor
+2019</a>)</span>. Key terms such as <a
 href="#gl:network"><strong>network</strong></a>, <a
 href="#gl:dynamics"><strong>dynamics</strong></a>, <a
 href="#gl:emergence"><strong>emergence</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="14.3" id="a-worked-formalism-7"><span
 class="header-section-number">14.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 10:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_II_regulation_and_control_model">10</a>:</p>
 <p><span id="eq:part_II_regulation_and_control_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(10)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 9.</p>
+tbl. <a href="#tbl:part_II_regulation_and_control_parameters">9</a>.</p>
 <table id="tbl:part_II_regulation_and_control_parameters">
 <caption>Table 9: Parameters of the worked model for this
 chapter.</caption>
@@ -2827,8 +3044,13 @@ chapter.</caption>
 class="header-section-number">14.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 9 and revisit the objectives above as you
-read. Further evidence: [wilson2021analysis; taylor2019theory].</p>
+<p>See the overview in fig. <a
+href="#fig:part_II_regulation_and_control">9</a> and revisit the
+objectives above as you read. Further evidence: <span class="citation"
+data-cites="wilson2021analysis taylor2019theory">(<a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson 2021</a>; <a
+href="#ref-taylor2019theory" role="doc-biblioref">Taylor
+2019</a>)</span>.</p>
 <h2 data-number="14.5" id="summary-8"><span
 class="header-section-number">14.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -2842,13 +3064,17 @@ href="#gl:feedback"><strong>feedback</strong></a>.</p>
 class="header-section-number">14.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [smith2020foundations].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="smith2020foundations">(<a href="#ref-smith2020foundations"
+role="doc-biblioref">Smith 2020</a>)</span>.</li>
 </ul>
 <h2 data-number="14.8" id="practice-8"><span
 class="header-section-number">14.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 27</li>
-<li><strong>Question bank:</strong> sec. 39</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_II_regulation_and_control">27</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_II_regulation_and_control">39</a></li>
 </ul>
 <hr />
 <h1 data-number="15" id="sec:part_III_intro"><span
@@ -2858,9 +3084,12 @@ Synthesis</h1>
 <p>This part covers <strong>applications and synthesis</strong>. It
 contains the following chapters:</p>
 <ul>
-<li><em>Applied Models</em> — sec. 16</li>
-<li><em>Case Studies</em> — sec. 17</li>
-<li><em>Frontiers and Open Problems</em> — sec. 18</li>
+<li><em>Applied Models</em> — sec. <a
+href="#sec:part_III_applied_models">16</a></li>
+<li><em>Case Studies</em> — sec. <a
+href="#sec:part_III_case_studies">17</a></li>
+<li><em>Frontiers and Open Problems</em> — sec. <a
+href="#sec:part_III_frontiers">18</a></li>
 </ul>
 <blockquote>
 <p><strong>How to use this part.</strong>
@@ -2871,8 +3100,8 @@ contains the following chapters:</p>
 class="header-section-number">16</span> Applied Models</h1>
 <figure id="fig:part_III_applied_models">
 <img src="../figures/part_III_applied_models.png" style="width:90.0%"
-alt="Figure 10: Overview schematic for “Applied Models”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 10: Overview schematic for
+alt="Figure 10: Overview schematic for “Applied Models”." />
+<figcaption>Figure 10: Overview schematic for
 “Applied Models”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -2902,43 +3131,48 @@ class="header-section-number">16.1.1</span> Study Blueprint</h3>
 href="#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 11.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_III_applied_models_model">11</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 28.</li>
-<li><strong>Question bank:</strong> sec. 40.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_III_applied_models">28</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_III_applied_models">40</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [smith2020foundations]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@smith2020foundations]. -->
 </blockquote>
 <hr />
 <h2 data-number="16.2" id="orientation-8"><span
 class="header-section-number">16.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Applied Models</em>.
-Foundational treatments include [patel2018models; nguyen2023synthesis].
-Key terms such as <a
+Foundational treatments include <span class="citation"
+data-cites="patel2018models nguyen2023synthesis">(<a
+href="#ref-patel2018models" role="doc-biblioref">Patel 2018</a>; <a
+href="#ref-nguyen2023synthesis" role="doc-biblioref">Nguyen
+2023</a>)</span>. Key terms such as <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="#gl:feedback"><strong>feedback</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="16.3" id="a-worked-formalism-8"><span
 class="header-section-number">16.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 11:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_III_applied_models_model">11</a>:</p>
 <p><span id="eq:part_III_applied_models_model"><span
 class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \qquad{(11)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 10.</p>
+tbl. <a href="#tbl:part_III_applied_models_parameters">10</a>.</p>
 <table id="tbl:part_III_applied_models_parameters">
 <caption>Table 10: Parameters of the worked model for this
 chapter.</caption>
@@ -2981,8 +3215,13 @@ chapter.</caption>
 class="header-section-number">16.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 10 and revisit the objectives above as you
-read. Further evidence: [patel2018models; nguyen2023synthesis].</p>
+<p>See the overview in fig. <a
+href="#fig:part_III_applied_models">10</a> and revisit the objectives
+above as you read. Further evidence: <span class="citation"
+data-cites="patel2018models nguyen2023synthesis">(<a
+href="#ref-patel2018models" role="doc-biblioref">Patel 2018</a>; <a
+href="#ref-nguyen2023synthesis" role="doc-biblioref">Nguyen
+2023</a>)</span>.</p>
 <h2 data-number="16.5" id="summary-9"><span
 class="header-section-number">16.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -2996,21 +3235,25 @@ href="#gl:model"><strong>model</strong></a>.</p>
 class="header-section-number">16.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [kim2020data].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="kim2020data">(<a href="#ref-kim2020data"
+role="doc-biblioref">Kim 2020</a>)</span>.</li>
 </ul>
 <h2 data-number="16.8" id="practice-9"><span
 class="header-section-number">16.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 28</li>
-<li><strong>Question bank:</strong> sec. 40</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_III_applied_models">28</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_III_applied_models">40</a></li>
 </ul>
 <hr />
 <h1 data-number="17" id="sec:part_III_case_studies"><span
 class="header-section-number">17</span> Case Studies</h1>
 <figure id="fig:part_III_case_studies">
 <img src="../figures/gallery/gallery_errorbar.png" style="width:75.0%"
-alt="Figure 11: Group means with standard-error bars across six synthetic conditions, generated by visualization.gallery.errorbar_plot. In a real case study you would replace this gallery placeholder with your own measured group means." />
-<figcaption aria-hidden="true">Figure 11: Group means with
+alt="Figure 11: Group means with standard-error bars across six synthetic conditions, generated by visualization.gallery.errorbar_plot ." />
+<figcaption>Figure 11: Group means with
 standard-error bars across six synthetic conditions, generated by
 <code>visualization.gallery.errorbar_plot</code>. In a real case study
 you would replace this gallery placeholder with your own measured group
@@ -3026,9 +3269,9 @@ Principles</p>
 </blockquote>
 <blockquote>
 <p><strong>This chapter is a worked reference</strong> in a different
-style from sec. 8: where that chapter <em>derives</em> a model, this one
-<em>applies</em> one to a small dataset. The remaining chapters ship as
-stubs.</p>
+style from sec. <a href="#sec:part_I_first_principles">8</a>: where that
+chapter <em>derives</em> a model, this one <em>applies</em> one to a
+small dataset. The remaining chapters ship as stubs.</p>
 </blockquote>
 <h2 data-number="17.1" id="learning-objectives-10"><span
 class="header-section-number">17.1</span> Learning Objectives</h2>
@@ -3058,14 +3301,17 @@ href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a>, <a
 href="#gl:threshold"><strong>threshold</strong></a>.</li>
 <li><strong>Quantitative lens:</strong> a linear dose–response fit,
-eq. 12.</li>
+eq. <a href="#eq:part_III_case_studies_fit">12</a>.</li>
 <li><strong>Data skill:</strong> group, average, and fit; then
-sanity-check the fit against the raw numbers in tbl. 11.</li>
+sanity-check the fit against the raw numbers in tbl. <a
+href="#tbl:part_III_case_studies_data">11</a>.</li>
 <li><strong>Common misconception to repair:</strong> a high <span
 class="math inline">\(R^2\)</span> on three points is not strong
 evidence — it is an invitation to collect more.</li>
-<li><strong>Primary lab:</strong> sec. 29.</li>
-<li><strong>Question bank:</strong> sec. 41.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_III_case_studies">29</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_III_case_studies">41</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.linear_fit</code>,
 <code>descriptive_statistics</code>.
@@ -3086,8 +3332,8 @@ overreaching.</p>
 <h2 data-number="17.2" id="the-data"><span
 class="header-section-number">17.2</span> The data</h2>
 <p>The pilot produced six measurements across three conditions, recorded
-in <code>assets/data/sample_dataset.csv</code> and reproduced in
-tbl. 11.</p>
+in <code>assets/data/sample_dataset.csv</code> and reproduced in tbl. <a
+href="#tbl:part_III_case_studies_data">11</a>.</p>
 <table id="tbl:part_III_case_studies_data">
 <caption>Table 11: The pilot dataset: two replicates per
 condition.</caption>
@@ -3145,7 +3391,7 @@ class="math inline">\(4.95\)</span> (high). Across all six points the
 mean is <span class="math inline">\(3.55\)</span> with a standard
 deviation of <span class="math inline">\(1.13\)</span>
 (<code>textbook.models.descriptive_statistics</code>). The error-bar
-view is fig. 11.</p>
+view is fig. <a href="#fig:part_III_case_studies">11</a>.</p>
 <h2 data-number="17.3" id="fitting-a-trend"><span
 class="header-section-number">17.3</span> Fitting a trend</h2>
 <p>Encode the dose as <span class="math inline">\(0, 1, 2\)</span> for
@@ -3159,7 +3405,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a h
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> np.array([<span class="fl">2.20</span>, <span class="fl">3.50</span>, <span class="fl">4.95</span>])   <span class="co"># condition means</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> models.linear_fit(dose, response)</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.slope ≈ 1.375, fit.intercept ≈ 2.175, fit.r_squared ≈ 0.999</span></span></code></pre></div>
-<p>The fitted relationship in eq. 12 is</p>
+<p>The fitted relationship in eq. <a
+href="#eq:part_III_case_studies_fit">12</a> is</p>
 <p><span id="eq:part_III_case_studies_fit"><span class="math display">\[
 \widehat{y}(d) = 1.375\,d + 2.175 \qquad{(12)}\]</span></span></p>
 <p>with <span class="math inline">\(R^2 = 0.999\)</span>. The slope says
@@ -3170,16 +3417,17 @@ class="math inline">\(2.20\)</span>, a reassuring internal check.</p>
 <h2 data-number="17.4" id="interpolation-versus-extrapolation"><span
 class="header-section-number">17.4</span> Interpolation versus
 extrapolation</h2>
-<p>Using eq. 12 to estimate the response at an <em>intermediate</em>
-dose is reasonable: the model interpolates within the range it was fit
-on. Using it to predict a <em>much higher</em> dose — say <span
-class="math inline">\(d = 3\)</span>, giving <span
-class="math inline">\(\widehat{y} = 6.3\)</span> — is an
-<strong>extrapolation</strong> the data cannot support. Real
-dose–response curves usually saturate (recall the <a
+<p>Using eq. <a href="#eq:part_III_case_studies_fit">12</a> to estimate
+the response at an <em>intermediate</em> dose is reasonable: the model
+interpolates within the range it was fit on. Using it to predict a
+<em>much higher</em> dose — say <span class="math inline">\(d =
+3\)</span>, giving <span class="math inline">\(\widehat{y} =
+6.3\)</span> — is an <strong>extrapolation</strong> the data cannot
+support. Real dose–response curves usually saturate (recall the <a
 href="#gl:threshold"><strong>threshold</strong></a> behaviour of the
-saturating response in sec. 8); a straight line will overpredict once
-the system approaches its ceiling.</p>
+saturating response in sec. <a
+href="#sec:part_I_first_principles">8</a>); a straight line will
+overpredict once the system approaches its ceiling.</p>
 <pre class="mermaid"><code>graph LR
   A[Raw measurements] --&gt; B[Group + average]
   B --&gt; C[Fit a trend]
@@ -3192,7 +3440,11 @@ reports <span class="math inline">\(R^2 = 0.999\)</span>, but that
 number describes how well the line passes through three dots — not how
 well it predicts the next experiment. Treat it as a reason to collect
 more data, not as a conclusion. Foundational guidance on this trap
-appears in [kim2020data] and [wilson2021analysis].</p>
+appears in <span class="citation" data-cites="kim2020data">(<a
+href="#ref-kim2020data" role="doc-biblioref">Kim 2020</a>)</span> and
+<span class="citation" data-cites="wilson2021analysis">(<a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson
+2021</a>)</span>.</p>
 </blockquote>
 <h2 data-number="17.5" id="summary-10"><span
 class="header-section-number">17.5</span> Summary</h2>
@@ -3214,19 +3466,22 @@ href="#gl:model"><strong>model</strong></a>.</p>
 <h2 data-number="17.7" id="further-reading-10"><span
 class="header-section-number">17.7</span> Further Reading</h2>
 <ul>
-<li><span class="citation"
-data-cites="kim2020data">[@kim2020data]</span> — practical guidance on
-summarising and visualising small datasets before fitting anything.</li>
-<li><span class="citation"
-data-cites="wilson2021analysis">[@wilson2021analysis]</span> — on the
-difference between a good fit and a good prediction.</li>
+<li><span class="citation" data-cites="kim2020data">Kim (<a
+href="#ref-kim2020data" role="doc-biblioref">2020</a>)</span> —
+practical guidance on summarising and visualising small datasets before
+fitting anything.</li>
+<li><span class="citation" data-cites="wilson2021analysis">Wilson (<a
+href="#ref-wilson2021analysis" role="doc-biblioref">2021</a>)</span> —
+on the difference between a good fit and a good prediction.</li>
 </ul>
 <h2 data-number="17.8" id="practice-10"><span
 class="header-section-number">17.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 29 — re-run the grouping and fit, then
-add a fourth condition and watch the fit change.</li>
-<li><strong>Question bank:</strong> sec. 41 — recall through
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_III_case_studies">29</a> — re-run the grouping and
+fit, then add a fourth condition and watch the fit change.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_III_case_studies">41</a> — recall through
 synthesis.</li>
 </ul>
 <hr />
@@ -3234,8 +3489,8 @@ synthesis.</li>
 class="header-section-number">18</span> Frontiers and Open Problems</h1>
 <figure id="fig:part_III_frontiers">
 <img src="../figures/part_III_frontiers.png" style="width:90.0%"
-alt="Figure 12: Overview schematic for “Frontiers and Open Problems”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Figure 12: Overview schematic for
+alt="Figure 12: Overview schematic for “Frontiers and Open Problems”." />
+<figcaption>Figure 12: Overview schematic for
 “Frontiers and Open Problems”. Replace this generated placeholder with a
 real figure produced by
 <code>src/visualization/plots.py</code>.</figcaption>
@@ -3266,43 +3521,48 @@ class="header-section-number">18.1.1</span> Study Blueprint</h3>
 href="#gl:state"><strong>state</strong></a>, <a
 href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:system"><strong>system</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in
-eq. 13.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in eq. <a
+href="#eq:part_III_frontiers_model">13</a>.</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> sec. 30.</li>
-<li><strong>Question bank:</strong> sec. 42.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="#sec:lab_part_III_frontiers">30</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_III_frontiers">42</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
 <hr />
 <blockquote>
 <p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [patel2018models]. -->
+<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@patel2018models]. -->
 </blockquote>
 <hr />
 <h2 data-number="18.2" id="orientation-9"><span
 class="header-section-number">18.2</span> Orientation</h2>
 <!-- STUB: 2-4 paragraphs introducing the chapter. -->
 <p>This section introduces the central ideas of <em>Frontiers and Open
-Problems</em>. Foundational treatments include [wilson2021analysis;
-taylor2019theory]. Key terms such as <a
+Problems</em>. Foundational treatments include <span class="citation"
+data-cites="wilson2021analysis taylor2019theory">(<a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson 2021</a>; <a
+href="#ref-taylor2019theory" role="doc-biblioref">Taylor
+2019</a>)</span>. Key terms such as <a
 href="#gl:state"><strong>state</strong></a>, <a
 href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:system"><strong>system</strong></a> are defined in the
 glossary.</p>
 <h2 data-number="18.3" id="a-worked-formalism-9"><span
 class="header-section-number">18.3</span> A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in
-eq. 13:</p>
+<p>The recurring quantitative model for this chapter is shown in eq. <a
+href="#eq:part_III_frontiers_model">13</a>:</p>
 <p><span id="eq:part_III_frontiers_model"><span class="math display">\[
 N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}}
 \qquad{(13)}\]</span></span></p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-tbl. 12.</p>
+tbl. <a href="#tbl:part_III_frontiers_parameters">12</a>.</p>
 <table id="tbl:part_III_frontiers_parameters">
 <caption>Table 12: Parameters of the worked model for this
 chapter.</caption>
@@ -3345,8 +3605,12 @@ chapter.</caption>
 class="header-section-number">18.4</span> Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in fig. 12 and revisit the objectives above as you
-read. Further evidence: [wilson2021analysis; taylor2019theory].</p>
+<p>See the overview in fig. <a href="#fig:part_III_frontiers">12</a> and
+revisit the objectives above as you read. Further evidence: <span
+class="citation" data-cites="wilson2021analysis taylor2019theory">(<a
+href="#ref-wilson2021analysis" role="doc-biblioref">Wilson 2021</a>; <a
+href="#ref-taylor2019theory" role="doc-biblioref">Taylor
+2019</a>)</span>.</p>
 <h2 data-number="18.5" id="summary-11"><span
 class="header-section-number">18.5</span> Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
@@ -3360,13 +3624,17 @@ href="#gl:emergence"><strong>emergence</strong></a>.</p>
 class="header-section-number">18.7</span> Further Reading</h2>
 <ul>
 <li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [smith2020foundations].</li>
+TODO: one-line annotation <span class="citation"
+data-cites="smith2020foundations">(<a href="#ref-smith2020foundations"
+role="doc-biblioref">Smith 2020</a>)</span>.</li>
 </ul>
 <h2 data-number="18.8" id="practice-11"><span
 class="header-section-number">18.8</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. 30</li>
-<li><strong>Question bank:</strong> sec. 42</li>
+<li><strong>Lab:</strong> sec. <a
+href="#sec:lab_part_III_frontiers">30</a></li>
+<li><strong>Question bank:</strong> sec. <a
+href="#sec:q_part_III_frontiers">42</a></li>
 </ul>
 <hr />
 <h1 data-number="19" id="sec:lab_part_0_orientation"><span
@@ -3382,7 +3650,8 @@ class="header-section-number">19.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="19.2" id="background"><span
 class="header-section-number">19.2</span> Background</h2>
-<p>Linked chapter: sec. 4. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_0_orientation">4</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="19.3" id="procedure"><span
 class="header-section-number">19.3</span> Procedure</h2>
@@ -3419,7 +3688,8 @@ class="header-section-number">20.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="20.2" id="background-1"><span
 class="header-section-number">20.2</span> Background</h2>
-<p>Linked chapter: sec. 5. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_0_core_methods">5</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="20.3" id="procedure-1"><span
 class="header-section-number">20.3</span> Procedure</h2>
@@ -3456,7 +3726,9 @@ class="header-section-number">21.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="21.2" id="background-2"><span
 class="header-section-number">21.2</span> Background</h2>
-<p>Linked chapter: sec. 6. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a
+href="#sec:part_0_quantitative_foundations">6</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="21.3" id="procedure-2"><span
 class="header-section-number">21.3</span> Procedure</h2>
@@ -3495,11 +3767,13 @@ from a plot, and (3) recover the growth rate from data with a simple
 fit.</p>
 <h2 data-number="22.2" id="background-3"><span
 class="header-section-number">22.2</span> Background</h2>
-<p>This lab makes the chapter concrete: see sec. 8 for the logistic law
-and the meaning of <span class="math inline">\(r\)</span>, <span
+<p>This lab makes the chapter concrete: see sec. <a
+href="#sec:part_I_first_principles">8</a> for the logistic law and the
+meaning of <span class="math inline">\(r\)</span>, <span
 class="math inline">\(K\)</span>, and <span
 class="math inline">\(N_0\)</span>. You will produce the same S-curve
-shown in fig. 4 and then work backwards from numbers to parameters.</p>
+shown in fig. <a href="#fig:part_I_first_principles">4</a> and then work
+backwards from numbers to parameters.</p>
 <h2 data-number="22.3" id="procedure-3"><span
 class="header-section-number">22.3</span> Procedure</h2>
 <ol type="1">
@@ -3546,7 +3820,8 @@ class="header-section-number">22.6</span> Reflection</h2>
 parameter sets that value, and why is it independent of <span
 class="math inline">\(r\)</span>?</li>
 <li>A colleague claims the population “will keep growing forever.” Using
-eq. 5, explain in one sentence why it will not.</li>
+eq. <a href="#eq:part_I_first_principles_model">5</a>, explain in one
+sentence why it will not.</li>
 <li>If your measured data rose past <span
 class="math inline">\(K\)</span> and then fell back, what would that
 tell you about the adequacy of the logistic model for that system?</li>
@@ -3564,7 +3839,8 @@ class="header-section-number">23.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="23.2" id="background-4"><span
 class="header-section-number">23.2</span> Background</h2>
-<p>Linked chapter: sec. 9. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_I_building_blocks">9</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="23.3" id="procedure-4"><span
 class="header-section-number">23.3</span> Procedure</h2>
@@ -3600,7 +3876,8 @@ class="header-section-number">24.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="24.2" id="background-5"><span
 class="header-section-number">24.2</span> Background</h2>
-<p>Linked chapter: sec. 10. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_I_structure_and_form">10</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="24.3" id="procedure-5"><span
 class="header-section-number">24.3</span> Procedure</h2>
@@ -3636,7 +3913,8 @@ class="header-section-number">25.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="25.2" id="background-6"><span
 class="header-section-number">25.2</span> Background</h2>
-<p>Linked chapter: sec. 12. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_II_systems_overview">12</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="25.3" id="procedure-6"><span
 class="header-section-number">25.3</span> Procedure</h2>
@@ -3672,7 +3950,9 @@ class="header-section-number">26.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="26.2" id="background-7"><span
 class="header-section-number">26.2</span> Background</h2>
-<p>Linked chapter: sec. 13. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a
+href="#sec:part_II_dynamics_and_change">13</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="26.3" id="procedure-7"><span
 class="header-section-number">26.3</span> Procedure</h2>
@@ -3709,7 +3989,9 @@ class="header-section-number">27.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="27.2" id="background-8"><span
 class="header-section-number">27.2</span> Background</h2>
-<p>Linked chapter: sec. 14. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a
+href="#sec:part_II_regulation_and_control">14</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="27.3" id="procedure-8"><span
 class="header-section-number">27.3</span> Procedure</h2>
@@ -3745,7 +4027,8 @@ class="header-section-number">28.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="28.2" id="background-9"><span
 class="header-section-number">28.2</span> Background</h2>
-<p>Linked chapter: sec. 16. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_III_applied_models">16</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="28.3" id="procedure-9"><span
 class="header-section-number">28.3</span> Procedure</h2>
@@ -3783,8 +4066,10 @@ per-group means and an overall summary, (3) fit a dose–response trend,
 and (4) state where the fit may and may not be trusted.</p>
 <h2 data-number="29.2" id="background-10"><span
 class="header-section-number">29.2</span> Background</h2>
-<p>This lab operationalises sec. 17. You will reproduce the chapter’s
-numbers (group means <span class="math inline">\(2.20\)</span>, <span
+<p>This lab operationalises sec. <a
+href="#sec:part_III_case_studies">17</a>. You will reproduce the
+chapter’s numbers (group means <span
+class="math inline">\(2.20\)</span>, <span
 class="math inline">\(3.50\)</span>, <span
 class="math inline">\(4.95\)</span>; fitted slope <span
 class="math inline">\(\approx
@@ -3839,7 +4124,8 @@ a useful internal consistency check?</li>
 <li>Your four-point fit changed the slope. Which is the more honest
 summary of the system, and what would you measure next to decide?</li>
 <li>When is a straight-line dose–response model adequate, and when does
-the saturating model from sec. 8 become necessary?</li>
+the saturating model from sec. <a
+href="#sec:part_I_first_principles">8</a> become necessary?</li>
 </ol>
 <hr />
 <h1 data-number="30" id="sec:lab_part_III_frontiers"><span
@@ -3855,7 +4141,8 @@ class="header-section-number">30.1</span> Objectives</h2>
 <!-- STUB: what the learner will be able to do after this lab. -->
 <h2 data-number="30.2" id="background-11"><span
 class="header-section-number">30.2</span> Background</h2>
-<p>Linked chapter: sec. 18. <!-- STUB: bridge the chapter
+<p>Linked chapter: sec. <a href="#sec:part_III_frontiers">18</a>.
+<!-- STUB: bridge the chapter
 concepts to the hands-on activity. --></p>
 <h2 data-number="30.3" id="procedure-11"><span
 class="header-section-number">30.3</span> Procedure</h2>
@@ -3882,7 +4169,7 @@ class="header-section-number">30.6</span> Reflection</h2>
 <h1 data-number="31" id="sec:q_part_0_orientation"><span
 class="header-section-number">31</span> Question Bank — Orientation to
 the Field</h1>
-<p>Linked chapter: sec. 4.</p>
+<p>Linked chapter: sec. <a href="#sec:part_0_orientation">4</a>.</p>
 <h2 data-number="31.1" id="recall"><span
 class="header-section-number">31.1</span> Recall</h2>
 <ol type="1">
@@ -3909,7 +4196,7 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="32" id="sec:q_part_0_core_methods"><span
 class="header-section-number">32</span> Question Bank — Core Methods and
 Tools</h1>
-<p>Linked chapter: sec. 5.</p>
+<p>Linked chapter: sec. <a href="#sec:part_0_core_methods">5</a>.</p>
 <h2 data-number="32.1" id="recall-1"><span
 class="header-section-number">32.1</span> Recall</h2>
 <ol type="1">
@@ -3936,7 +4223,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="33" id="sec:q_part_0_quantitative_foundations"><span
 class="header-section-number">33</span> Question Bank — Quantitative
 Foundations</h1>
-<p>Linked chapter: sec. 6.</p>
+<p>Linked chapter: sec. <a
+href="#sec:part_0_quantitative_foundations">6</a>.</p>
 <h2 data-number="33.1" id="recall-2"><span
 class="header-section-number">33.1</span> Recall</h2>
 <ol type="1">
@@ -3963,8 +4251,9 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="34" id="sec:q_part_I_first_principles"><span
 class="header-section-number">34</span> Question Bank — First
 Principles</h1>
-<p>Linked chapter: sec. 8. Answers follow each question in italics; in a
-print build, move them to an answer key if you prefer.</p>
+<p>Linked chapter: sec. <a href="#sec:part_I_first_principles">8</a>.
+Answers follow each question in italics; in a print build, move them to
+an answer key if you prefer.</p>
 <h2 data-number="34.1" id="recall-3"><span
 class="header-section-number">34.1</span> Recall</h2>
 <ol type="1">
@@ -4018,7 +4307,7 @@ Accept reasoned alternatives.)</em></li>
 <h1 data-number="35" id="sec:q_part_I_building_blocks"><span
 class="header-section-number">35</span> Question Bank — Building
 Blocks</h1>
-<p>Linked chapter: sec. 9.</p>
+<p>Linked chapter: sec. <a href="#sec:part_I_building_blocks">9</a>.</p>
 <h2 data-number="35.1" id="recall-4"><span
 class="header-section-number">35.1</span> Recall</h2>
 <ol type="1">
@@ -4045,7 +4334,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="36" id="sec:q_part_I_structure_and_form"><span
 class="header-section-number">36</span> Question Bank — Structure and
 Form</h1>
-<p>Linked chapter: sec. 10.</p>
+<p>Linked chapter: sec. <a
+href="#sec:part_I_structure_and_form">10</a>.</p>
 <h2 data-number="36.1" id="recall-5"><span
 class="header-section-number">36.1</span> Recall</h2>
 <ol type="1">
@@ -4072,7 +4362,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="37" id="sec:q_part_II_systems_overview"><span
 class="header-section-number">37</span> Question Bank — Systems
 Overview</h1>
-<p>Linked chapter: sec. 12.</p>
+<p>Linked chapter: sec. <a
+href="#sec:part_II_systems_overview">12</a>.</p>
 <h2 data-number="37.1" id="recall-6"><span
 class="header-section-number">37.1</span> Recall</h2>
 <ol type="1">
@@ -4099,7 +4390,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="38" id="sec:q_part_II_dynamics_and_change"><span
 class="header-section-number">38</span> Question Bank — Dynamics and
 Change</h1>
-<p>Linked chapter: sec. 13.</p>
+<p>Linked chapter: sec. <a
+href="#sec:part_II_dynamics_and_change">13</a>.</p>
 <h2 data-number="38.1" id="recall-7"><span
 class="header-section-number">38.1</span> Recall</h2>
 <ol type="1">
@@ -4126,7 +4418,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="39" id="sec:q_part_II_regulation_and_control"><span
 class="header-section-number">39</span> Question Bank — Regulation and
 Control</h1>
-<p>Linked chapter: sec. 14.</p>
+<p>Linked chapter: sec. <a
+href="#sec:part_II_regulation_and_control">14</a>.</p>
 <h2 data-number="39.1" id="recall-8"><span
 class="header-section-number">39.1</span> Recall</h2>
 <ol type="1">
@@ -4153,7 +4446,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="40" id="sec:q_part_III_applied_models"><span
 class="header-section-number">40</span> Question Bank — Applied
 Models</h1>
-<p>Linked chapter: sec. 16.</p>
+<p>Linked chapter: sec. <a
+href="#sec:part_III_applied_models">16</a>.</p>
 <h2 data-number="40.1" id="recall-9"><span
 class="header-section-number">40.1</span> Recall</h2>
 <ol type="1">
@@ -4180,7 +4474,8 @@ TODO. <em>(Answer: <!-- STUB -->)</em></li>
 <h1 data-number="41" id="sec:q_part_III_case_studies"><span
 class="header-section-number">41</span> Question Bank — Case
 Studies</h1>
-<p>Linked chapter: sec. 17. Answers follow each question in italics.</p>
+<p>Linked chapter: sec. <a href="#sec:part_III_case_studies">17</a>.
+Answers follow each question in italics.</p>
 <h2 data-number="41.1" id="recall-10"><span
 class="header-section-number">41.1</span> Recall</h2>
 <ol type="1">
@@ -4191,12 +4486,13 @@ class="math inline">\(3.50\)</span>, <span
 class="math inline">\(4.95\)</span> — plus an overall spread from
 <code>textbook.models.descriptive_statistics</code>, which returns mean,
 std, min, max, and count.)</em></li>
-<li>What do the slope and intercept of the fitted line eq. 12 represent?
-<em>(Answer: the slope (<span class="math inline">\(\approx
-1.375\)</span>) is the response added per dose step; the intercept
-(<span class="math inline">\(\approx 2.175\)</span>) is the predicted
-response at dose <span class="math inline">\(0\)</span>, which should
-match the control mean.)</em></li>
+<li>What do the slope and intercept of the fitted line eq. <a
+href="#eq:part_III_case_studies_fit">12</a> represent? <em>(Answer: the
+slope (<span class="math inline">\(\approx 1.375\)</span>) is the
+response added per dose step; the intercept (<span
+class="math inline">\(\approx 2.175\)</span>) is the predicted response
+at dose <span class="math inline">\(0\)</span>, which should match the
+control mean.)</em></li>
 </ol>
 <h2 data-number="41.2" id="application-10"><span
 class="header-section-number">41.2</span> Application</h2>
@@ -4232,7 +4528,7 @@ Accept reasoned alternatives.)</em></li>
 <h1 data-number="42" id="sec:q_part_III_frontiers"><span
 class="header-section-number">42</span> Question Bank — Frontiers and
 Open Problems</h1>
-<p>Linked chapter: sec. 18.</p>
+<p>Linked chapter: sec. <a href="#sec:part_III_frontiers">18</a>.</p>
 <h2 data-number="42.1" id="recall-11"><span
 class="header-section-number">42.1</span> Recall</h2>
 <ol type="1">
@@ -4376,7 +4672,7 @@ The current anchors are
 <code>system, model, parameter, variable, equilibrium, feedback, gradient, threshold, network, dynamics, emergence, regulation, boundary, state, observable</code>.</p>
 <h2 data-number="43.7" id="step-6-add-a-reference"><span
 class="header-section-number">43.7</span> Step 6 — Add a Reference</h2>
-<p>Citations are <code>[key]</code> and must resolve in <a
+<p>Citations are <code>[@key]</code> and must resolve in <a
 href="../references.bib"><code>references.bib</code></a>. Add a BibTeX
 entry, then cite it. Keep <code>CITATION_KEYS</code> in
 <code>constants.py</code> in sync if you add a key that the structural
@@ -4640,7 +4936,8 @@ which trajectories converge.</p>
 class="header-section-number">46.2</span> 2. A theorem with proof</h2>
 <blockquote>
 <p><strong>Theorem 1 (Logistic limit).</strong> For the logistic model
-in eq. 14 with <span class="math inline">\(r &gt; 0\)</span> and <span
+in eq. <a href="#eq:formalisms_logistic">14</a> with <span
+class="math inline">\(r &gt; 0\)</span> and <span
 class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
 satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
 K\)</span>.</p>
@@ -4713,20 +5010,23 @@ variables:</p>
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
 \end{aligned}
 \]</span></p>
-<p>which recovers eq. 14. Each line is one algebraic move; show your
-work at this granularity so readers can follow without gaps.</p>
+<p>which recovers eq. <a href="#eq:formalisms_logistic">14</a>. Each
+line is one algebraic move; show your work at this granularity so
+readers can follow without gaps.</p>
 <hr />
 <h2 data-number="46.6" id="a-system-of-numbered-equations"><span
 class="header-section-number">46.6</span> 6. A system of numbered
 equations</h2>
 <p>A simple predator–prey system, with each equation individually
-referenceable (eq. 15, eq. 16):</p>
+referenceable (eq. <a href="#eq:formalisms_prey">15</a>, eq. <a
+href="#eq:formalisms_pred">16</a>):</p>
 <p><span id="eq:formalisms_prey"><span class="math display">\[
 \frac{dx}{dt} = \alpha x - \beta x y \qquad{(15)}\]</span></span></p>
 <p><span id="eq:formalisms_pred"><span class="math display">\[
 \frac{dy}{dt} = \delta x y - \gamma y \qquad{(16)}\]</span></span></p>
 <p>The vector-field figure style for such systems is demonstrated by the
-quiver plot in the format gallery (sec. 47).</p>
+quiver plot in the format gallery (sec. <a
+href="#sec:appendix_format_gallery">47</a>).</p>
 <hr />
 <h2 data-number="46.7" id="dimensioned-quantities"><span
 class="header-section-number">46.7</span> 7. Dimensioned quantities</h2>
@@ -4770,7 +5070,8 @@ dimensioned values.</caption>
 class="header-section-number">46.8</span> 8. Notation summary</h2>
 <!-- STUB: maintain a running notation table; cross-reference Appendix B. -->
 <p>Symbols used throughout are collected in the notation appendix
-(sec. 44); glossary definitions for narrative terms such as <a
+(sec. <a href="#sec:appendix_notation">44</a>); glossary definitions for
+narrative terms such as <a
 href="#gl:gradient"><strong>gradient</strong></a> and <a
 href="#gl:threshold"><strong>threshold</strong></a> are in the master
 glossary.</p>
@@ -4800,9 +5101,9 @@ italic</em></strong>, <code>inline code</code>,
 <del>strikethrough</del>, H<sub>2</sub>O with a subscript, E =
 mc<sup>2</sup> with a superscript, and a footnote.<a href="#fn1"
 class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>You can hard-break a line<br />
-with two trailing spaces, or separate paragraphs with a blank line.
-Escape literal Markdown with a backslash: *not italic*.</p>
+<p>You can hard-break a line with an explicit <code>&lt;br&gt;</code>
+element,<br> or separate paragraphs with a blank line. Escape literal
+Markdown with a backslash: *not italic*.</p>
 <hr />
 <h2 data-number="47.2" id="lists"><span
 class="header-section-number">47.2</span> 2. Lists</h2>
@@ -4893,9 +5194,14 @@ otherwise it renders as a normal block.</p>
 <h2 data-number="47.4" id="tables"><span
 class="header-section-number">47.4</span> 4. Tables</h2>
 <p>A simple table with column alignment and a cross-referencable caption
-(tbl. 14):</p>
-<table id="tbl:gallery_alignment">
-<caption>Table 14: Column alignment — left, centre, right.</caption>
+(tbl. <strong>¿tbl:gallery_alignment?</strong>):</p>
+<p>: Column alignment — left, centre, right.
+{#tbl:gallery_alignment}</p>
+<p>The values below are mirrored in
+<code>manuscript/assets/data/format_gallery.csv</code> so rendering
+examples remain evidence-addressable fixtures rather than anonymous
+literals.</p>
+<table>
 <thead>
 <tr>
 <th style="text-align: left;">Left</th>
@@ -4954,7 +5260,8 @@ text):</p>
 class="header-section-number">47.5</span> 5. Mathematics and units</h2>
 <p>Inline math: the half-life is <span class="math inline">\(t_{1/2} =
 \ln 2 / \lambda\)</span>.</p>
-<p>A numbered display equation, cross-referenced as eq. 17:</p>
+<p>A numbered display equation, cross-referenced as eq. <a
+href="#eq:gallery_logistic">17</a>:</p>
 <p><span id="eq:gallery_logistic"><span class="math display">\[ N(t) =
 \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}}
 \qquad{(17)}\]</span></span></p>
@@ -4984,11 +5291,11 @@ math-mode units are the portable choice.)</p>
 <h2 data-number="47.6" id="figures"><span
 class="header-section-number">47.6</span> 6. Figures</h2>
 <p>A single figure with caption, label, and alt text, cross-referenced
-as fig. 13:</p>
+as fig. <a href="#fig:gallery_line">13</a>:</p>
 <figure id="fig:gallery_line">
 <img src="../figures/gallery/gallery_line.png" style="width:80.0%"
-alt="Figure 13: A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot." />
-<figcaption aria-hidden="true">Figure 13: A multi-series line plot of
+alt="Figure 13: A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ." />
+<figcaption>Figure 13: A multi-series line plot of
 three sine waves, produced by
 <code>visualization.gallery.line_plot</code>.</figcaption>
 </figure>
@@ -4999,19 +5306,20 @@ stacked):</p>
 <figure id="fig:gallery_bar">
 <img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
 alt="Figure 14: Bar chart." />
-<figcaption aria-hidden="true">Figure 14: Bar chart.</figcaption>
+<figcaption>Figure 14: Bar chart.</figcaption>
 </figure>
 <figure id="fig:gallery_pie">
 <img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
 alt="Figure 15: Pie chart." />
-<figcaption aria-hidden="true">Figure 15: Pie chart.</figcaption>
+<figcaption>Figure 15: Pie chart.</figcaption>
 </figure>
 </div>
-<p>A multi-panel composite (fig. 16):</p>
+<p>A multi-panel composite (fig. <a
+href="#fig:gallery_multipanel">16</a>):</p>
 <figure id="fig:gallery_multipanel">
 <img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
 alt="Figure 16: A 2×2 composite: line, scatter, bar, and histogram panels." />
-<figcaption aria-hidden="true">Figure 16: A 2×2 composite: line,
+<figcaption>Figure 16: A 2×2 composite: line,
 scatter, bar, and histogram panels.</figcaption>
 </figure>
 <p>The full plot-type gallery lives in <code>../figures/gallery/</code>
@@ -5064,7 +5372,7 @@ class="header-section-number">47.8</span> 8. Code</h2>
 <p>Inline code: call
 <code>textbook.models.logistic_growth(t, r=..., ...)</code>.</p>
 <p>A fenced code block with a language (syntax-highlighted) and a
-caption ([lst:gallery_code]):</p>
+caption (lst. <a href="#lst:gallery_code">1</a>):</p>
 <div id="lst:gallery_code" class="listing python">
 <p>Listing 1: Calling the tested computational backbone.</p>
 <div class="sourceCode" id="cb38"><pre
@@ -5083,14 +5391,26 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href=
 <h2 data-number="47.9" id="cross-references-and-citations"><span
 class="header-section-number">47.9</span> 9. Cross-references and
 citations</h2>
-<p>Cross-references resolve by label: figure fig. 13, table tbl. 14,
-equation eq. 17, and section sec. 46. Never hand-number — Pandoc fills
+<p>Cross-references resolve by label: figure fig. <a
+href="#fig:gallery_line">13</a>, table
+tbl. <strong>¿tbl:gallery_alignment?</strong>, equation eq. <a
+href="#eq:gallery_logistic">17</a>, and section sec. <a
+href="#sec:appendix_formalisms">46</a>. Never hand-number — Pandoc fills
 these in.</p>
 <p>Citations resolve against <code>references.bib</code>: a single
-source [smith2020foundations], multiple sources [doe2019methods;
-lee2021systems], and an in-text form — <span class="citation"
-data-cites="garcia2022dynamics">[@garcia2022dynamics]</span> showed the
-effect first. A locator narrows the reference [patel2018models].</p>
+source <span class="citation" data-cites="smith2020foundations">(<a
+href="#ref-smith2020foundations" role="doc-biblioref">Smith
+2020</a>)</span>, multiple sources <span class="citation"
+data-cites="doe2019methods lee2021systems">(<a
+href="#ref-doe2019methods" role="doc-biblioref">Doe 2019</a>; <a
+href="#ref-lee2021systems" role="doc-biblioref">Lee 2021</a>)</span>,
+and an in-text form — <span class="citation"
+data-cites="garcia2022dynamics">Garcia (<a
+href="#ref-garcia2022dynamics" role="doc-biblioref">2022</a>)</span>
+showed the effect first. A locator narrows the reference <span
+class="citation" data-cites="patel2018models">(<a
+href="#ref-patel2018models" role="doc-biblioref">Patel 2018,
+12–14</a>)</span>.</p>
 <hr />
 <h2 data-number="47.10" id="media-and-data"><span
 class="header-section-number">47.10</span> 10. Media and data</h2>
@@ -5099,7 +5419,7 @@ figure):</p>
 <figure id="fig:gallery_media">
 <img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
 alt="Figure 17: A generated heatmap embedded as a raster image." />
-<figcaption aria-hidden="true">Figure 17: A generated heatmap embedded
+<figcaption>Figure 17: A generated heatmap embedded
 as a raster image.</figcaption>
 </figure>
 <p>Audio and video embed in HTML targets (PDF shows the caption + link).
@@ -5111,7 +5431,7 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb40-1">
 href="../assets/data/sample_dataset.csv"><code>assets/data/sample_dataset.csv</code></a>;
 its contents as a table:</p>
 <table id="tbl:gallery_data">
-<caption>Table 15: Sample dataset (mirrors
+<caption>Table 14: Sample dataset (mirrors
 <code>assets/data/sample_dataset.csv</code>).</caption>
 <thead>
 <tr>
@@ -5148,11 +5468,12 @@ its contents as a table:</p>
 </tr>
 </tbody>
 </table>
-<p>The error-bar figure fig. 18 visualises this kind of data:</p>
+<p>The error-bar figure fig. <a href="#fig:gallery_errorbar">18</a>
+visualises this kind of data:</p>
 <figure id="fig:gallery_errorbar">
 <img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
 alt="Figure 18: Means with standard-error bars." />
-<figcaption aria-hidden="true">Figure 18: Means with standard-error
+<figcaption>Figure 18: Means with standard-error
 bars.</figcaption>
 </figure>
 <hr />
@@ -5168,7 +5489,8 @@ identify which Markdown primitive to use for a given purpose.
 <p><strong>Worked example.</strong> Given <span class="math inline">\(r
 = 0.8\)</span>, <span class="math inline">\(K = 100\)</span>, <span
 class="math inline">\(N_0 = 5\)</span>, evaluate <span
-class="math inline">\(N(10)\)</span> via eq. 17 using
+class="math inline">\(N(10)\)</span> via eq. <a
+href="#eq:gallery_logistic">17</a> using
 <code>textbook.models.logistic_growth</code>. The result approaches
 <span class="math inline">\(K\)</span>.
 <!-- STUB: show the full numeric work. --></p>
@@ -5297,16 +5619,65 @@ href="../../src/textbook/constants.py"><code>src/textbook/constants.py</code></a
 class="header-section-number">49.1</span> Placeholder Entries</h2>
 <!-- STUB: replace with generated entries; format is `term — [@sec:...]`. -->
 <ul>
-<li><strong>dynamics</strong> — see sec. 13</li>
-<li><strong>equilibrium</strong> — see sec. 14</li>
-<li><strong>feedback</strong> — see sec. 14</li>
-<li><strong>model</strong> — see sec. 6</li>
-<li><strong>network</strong> — see sec. 10</li>
-<li><strong>system</strong> — see sec. 12</li>
+<li><strong>dynamics</strong> — see sec. <a
+href="#sec:part_II_dynamics_and_change">13</a></li>
+<li><strong>equilibrium</strong> — see sec. <a
+href="#sec:part_II_regulation_and_control">14</a></li>
+<li><strong>feedback</strong> — see sec. <a
+href="#sec:part_II_regulation_and_control">14</a></li>
+<li><strong>model</strong> — see sec. <a
+href="#sec:part_0_quantitative_foundations">6</a></li>
+<li><strong>network</strong> — see sec. <a
+href="#sec:part_I_structure_and_form">10</a></li>
+<li><strong>system</strong> — see sec. <a
+href="#sec:part_II_systems_overview">12</a></li>
 </ul>
 <!-- STUB: wire an index generator (scan glossary links + crossref labels) and
 emit this section automatically. -->
 <p>See also: <a href="../glossary.md">Appendix D — Glossary</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-brown2017principles" class="csl-entry" role="listitem">
+Brown, Casey. 2017. <em>First Principles: A Placeholder Reference</em>.
+Placeholder Press.
+</div>
+<div id="ref-doe2019methods" class="csl-entry" role="listitem">
+Doe, Jordan. 2019. <span>“Core Methods: A Placeholder Reference.”</span>
+<em>Journal of Placeholders</em> 1: 1–20.
+</div>
+<div id="ref-garcia2022dynamics" class="csl-entry" role="listitem">
+Garcia, Robin. 2022. <span>“Dynamics and Change: A Placeholder
+Reference.”</span> <em>Journal of Placeholders</em> 4: 88–110.
+</div>
+<div id="ref-kim2020data" class="csl-entry" role="listitem">
+Kim, Dana. 2020. <span>“Working with Data: A Placeholder
+Reference.”</span> <em>Journal of Placeholders</em> 2: 200–225.
+</div>
+<div id="ref-lee2021systems" class="csl-entry" role="listitem">
+Lee, Sam. 2021. <span>“Systems Thinking: A Placeholder
+Reference.”</span> <em>Journal of Placeholders</em> 3: 44–67.
+</div>
+<div id="ref-nguyen2023synthesis" class="csl-entry" role="listitem">
+Nguyen, Minh. 2023. <span>“Synthesis Across Scales: A Placeholder
+Reference.”</span> <em>Journal of Placeholders</em> 5: 12–34.
+</div>
+<div id="ref-patel2018models" class="csl-entry" role="listitem">
+Patel, Riya. 2018. <em>Modelling Practice: A Placeholder Reference</em>.
+Placeholder Press.
+</div>
+<div id="ref-smith2020foundations" class="csl-entry" role="listitem">
+Smith, Alex. 2020. <em>Foundations of the Field: A Placeholder
+Reference</em>. Placeholder Press.
+</div>
+<div id="ref-taylor2019theory" class="csl-entry" role="listitem">
+Taylor, Quinn. 2019. <span>“Toward a Theory: A Placeholder
+Reference.”</span> <em>Journal of Placeholders</em> 1: 300–330.
+</div>
+<div id="ref-wilson2021analysis" class="csl-entry" role="listitem">
+Wilson, Drew. 2021. <span>“Methods of Analysis: A Placeholder
+Reference.”</span> <em>Journal of Placeholders</em> 3: 130–58.
+</div>
+</div>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
@@ -5316,5 +5687,6 @@ in PDF). Use them for asides that would interrupt the sentence.<a
 href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
+</main>
 </body>
 </html>

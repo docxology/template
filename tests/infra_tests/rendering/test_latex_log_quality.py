@@ -79,6 +79,23 @@ def test_latex_texttt_helpers_make_paths_and_labels_breakable():
     assert "height=0.68\\textheight" in tex
 
 
+def test_front_matter_figure_can_use_a_distinct_height_fraction():
+    tex = (
+        r"\includegraphics[width=\linewidth,height=\textheight]{front.png}"
+        r"\includegraphics[width=\linewidth,height=\textheight]{body.png}"
+    )
+
+    tex, graphics_count = constrain_includegraphics_textheight(
+        tex,
+        "0.68",
+        first_fraction="0.64",
+    )
+
+    assert graphics_count == 2
+    assert tex.count(r"height=0.64\textheight") == 1
+    assert tex.count(r"height=0.68\textheight") == 1
+
+
 def test_long_camelcase_identifier_is_breakable_short_is_not():
     # Separator-less CamelCase rule names (no slash/underscore/dot) overflow
     # narrow table columns because Pandoc's \texttt{} is unbreakable. They must

@@ -32,7 +32,7 @@ artifact_expectations:
   - output/figures/architecture_overview.png
   - output/figures/pipeline_stages.png
   - output/figures/module_inventory.png
-  - output/figures/comparative_matrix.png
+  - output/figures/comparative_feature_matrix.png
 benchmark_rubric:
   name: template-meta-readiness
   dimensions:

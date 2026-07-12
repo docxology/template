@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="introduction">Introduction</h1>
 <p>Disclosure control—the process of sanitizing classified or sensitive
 information before public release—requires multiple layers of validation
@@ -221,9 +222,8 @@ manifests.</li>
 <li>Optional Kmyth TPM sealing that wraps each hash manifest and
 steganography PDF in <code>.ski</code> sidecars sealed against the
 TPM2-TSS storage hierarchy.</li>
-<li>A comprehensive release packet that combines sanitized text, audit
-findings, ledger, hashes, review gate status, and paragraph audit
-tables.</li>
+<li>A comprehensive in-memory release packet plus deterministic public
+projections: a text-free audit and a hashed source-safe ledger.</li>
 </ol>
 <h1 id="architecture">Architecture</h1>
 <p>The pipeline architecture consists of two layers. Layer one performs

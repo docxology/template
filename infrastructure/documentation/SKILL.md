@@ -7,6 +7,24 @@ description: Skill for the documentation infrastructure module providing figure 
 
 Figure management, image handling, and documentation integration for research manuscripts.
 
+## GeneratedFigureRegistry (`generated_figure_registry.py`)
+
+Use the fail-closed writer for deterministic project pipelines. Figure labels,
+filenames, captions, and qualified generator names remain project-owned; the
+shared writer verifies that every declared file exists before atomically
+writing `output/figures/figure_registry.json`.
+
+```python
+from infrastructure.documentation import publish_generated_figures
+
+written = publish_generated_figures(
+    output_dir,
+    PROJECT_FIGURE_SPECS,
+    generated_paths,
+    schema_version="my-project-figure-registry-v1",
+)
+```
+
 ## FigureManager (`figure_manager.py`)
 
 Automatic figure numbering, cross-referencing, and metadata tracking:

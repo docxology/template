@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -81,28 +83,35 @@ def test_save_variables_round_trip(tmp_path: Path) -> None:
     assert loaded["CONFIG_HASH"] == variables["CONFIG_HASH"]
 
 
-def test_source_date_epoch_controls_timestamp(monkeypatch) -> None:
-    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
-
-    assert _build_timestamp() == "1970-01-01T00:00:00Z"
+def test_source_date_epoch_controls_timestamp() -> None:
+    assert _build_timestamp("0") == "1970-01-01T00:00:00Z"
 
 
-def test_z_generate_script_resolves_output_manuscript() -> None:
-    script = PROJECT_ROOT / "scripts" / "z_generate_manuscript_variables.py"
+def test_missing_source_date_epoch_is_explicit_and_deterministic() -> None:
+    assert _build_timestamp("") == "not-recorded (set SOURCE_DATE_EPOCH)"
+
+
+def test_z_generate_script_resolves_output_manuscript_without_touching_tracked_outputs(tmp_path: Path) -> None:
+    isolated_project = tmp_path / "template_madlib"
+    for directory in ("manuscript", "scripts", "src"):
+        shutil.copytree(PROJECT_ROOT / directory, isolated_project / directory)
+    script = isolated_project / "scripts" / "z_generate_manuscript_variables.py"
+    environment = dict(os.environ)
+    environment["PYTHONPATH"] = os.pathsep.join(
+        [str(PROJECT_ROOT.parents[2]), environment.get("PYTHONPATH", "")]
+    ).rstrip(os.pathsep)
+    environment["SOURCE_DATE_EPOCH"] = "0"
     result = subprocess.run(
         [sys.executable, str(script)],
-        cwd=PROJECT_ROOT,
+        cwd=isolated_project,
         capture_output=True,
         text=True,
         timeout=120,
         check=False,
+        env=environment,
     )
 
     assert result.returncode == 0, result.stderr or result.stdout
-    output_dir = PROJECT_ROOT / "output" / "manuscript"
-    unresolved = [
-        path
-        for path in output_dir.glob("*.md")
-        if TOKEN_RE.search(path.read_text(encoding="utf-8"))
-    ]
+    output_dir = isolated_project / "output" / "manuscript"
+    unresolved = [path for path in output_dir.glob("*.md") if TOKEN_RE.search(path.read_text(encoding="utf-8"))]
     assert unresolved == []

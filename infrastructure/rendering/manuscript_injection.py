@@ -25,6 +25,7 @@ import shutil
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 logger = get_logger(__name__)
 
@@ -98,7 +99,7 @@ def write_resolved_manuscript_tree(
         Path to the ``output/manuscript/`` directory.
     """
     root = Path(project_root)
-    manuscript_dir = root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(root)
     out_dir = root / "output" / "manuscript"
     out_dir.mkdir(parents=True, exist_ok=True)
 

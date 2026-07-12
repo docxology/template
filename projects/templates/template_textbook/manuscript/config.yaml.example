@@ -89,6 +89,15 @@ render:
     docx: true
     slides: false
 
+# Teaching-time defaults used by the worked manuscript. Forks can tune these
+# values without editing prose or analysis code.
+project_config:
+  pedagogy:
+    default_lecture_minutes: 45
+    worked_chapter_read_minutes: 40
+    default_lab_minutes: 60
+    extended_case_study_lab_minutes: 75
+
 units:
   - id: part_I
     title: "Foundations"

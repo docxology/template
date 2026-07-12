@@ -49,6 +49,26 @@ class TestNormaliseForDeposit:
         assert not out.lower().startswith("abstract")
         assert out.startswith("This paper documents")
 
+    def test_generated_comment_before_abstract_heading_is_ignored(self, tmp_path: Path) -> None:
+        abstract_path = tmp_path / "00_abstract.md"
+        abstract_path.write_text(
+            "<!-- render-input: abc123 -->\n\n"
+            "# Abstract: A Redundant Deposit Heading\n\n"
+            "The actual abstract starts here.\n",
+            encoding="utf-8",
+        )
+        out = render_abstract_plaintext(abstract_path)
+        assert out == "The actual abstract starts here."
+
+    def test_override_drops_plaintext_abstract_label(self, tmp_path: Path) -> None:
+        abstract_path = tmp_path / "00_abstract.md"
+        abstract_path.write_text("# Abstract\n\nSource body.\n", encoding="utf-8")
+        out = render_abstract_plaintext(
+            abstract_path,
+            override_text="Abstract: Override body.",
+        )
+        assert out == "Override body."
+
     def test_rendered_abstract_drops_leading_label(self, tmp_path: Path) -> None:
         """The deposit description must start with the real abstract, not 'Abstract'."""
         abstract_path = tmp_path / "00_abstract.md"

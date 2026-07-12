@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,31 +238,35 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="quality-assurance">Quality Assurance</h2>
 <h3 id="zero-mock-testing-policy">Zero-Mock Testing Policy</h3>
-<p>All tests use real methods exclusively [martin2008clean;
-meszaros2007xunit]. No <code>unittest.mock</code>, no
-<code>MagicMock</code>, no <code>patch</code> decorators. Tests that
-require external services (Ollama, network) use <code>pytest.mark</code>
-markers for conditional execution. The philosophical
-motivation—analogizing mock objects to Simmons et al.’s <em>researcher
-degrees of freedom</em> [simmons2011falsepositive] and the
-pre-registration remedy [nosek2018preregistration]—is developed fully in
-the <a href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Zero-Mock
-Tradeoff</a> discussion. To our knowledge, no prior research software
-engineering framework has formalized a zero-mock policy as an
-<em>architectural invariant enforced by pipeline gates</em>, where mock
-usage is not merely discouraged but structurally prevented from passing
-the build.</p>
+<p>The repository policy prohibits mock frameworks such as
+<code>unittest.mock</code>, <code>MagicMock</code>, and
+<code>patch</code> decorators [martin2008clean; meszaros2007xunit]. A
+static gate rejects those imports, and a separate inventory surfaces
+semantic dependency-replacement patterns for review. Tests that require
+external services (Ollama or public networks) use explicit
+<code>pytest.mark</code> markers for conditional execution;
+deterministic network tests use real local HTTP servers. The
+philosophical motivation—analogizing excessive interaction mocking to
+Simmons et al.’s <em>researcher degrees of freedom</em>
+[simmons2011falsepositive] and the preregistration remedy
+[nosek2018preregistration]—is developed fully in the <a
+href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Zero-Mock
+Tradeoff</a> discussion.</p>
 <p>The following example, drawn from the infrastructure test suite,
 illustrates zero-mock compliance:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_discover_infrastructure_modules_returns_nonempty(tmp_path):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Real filesystem, real YAML parsing — no MagicMock anywhere</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    modules <span class="op">=</span> discover_infrastructure_modules(REPO_ROOT)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">len</span>(modules) <span class="op">&gt;=</span> <span class="dv">8</span>           <span class="co"># actual subpackages on disk</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> modules                     <span class="co"># actual subpackages on disk</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">any</span>(m.name <span class="op">==</span> <span class="st">&quot;core&quot;</span> <span class="cf">for</span> m <span class="kw">in</span> modules)</span></code></pre></div>
 <p>This test exercises the real
 <code>discover_infrastructure_modules</code> function against the real
@@ -294,32 +298,35 @@ discoverable at their expected paths.</p>
 <td>Project</td>
 <td><code>projects/*/src/</code></td>
 <td style="text-align: center;">90%</td>
-<td style="text-align: center;">90%+</td>
+<td style="text-align: center;">Reported by the current test
+artifact</td>
 <td>Domain code must be thoroughly validated</td>
 </tr>
 <tr>
 <td>Infrastructure</td>
 <td><code>infrastructure/</code></td>
 <td style="text-align: center;">60%</td>
-<td style="text-align: center;">83%+</td>
-<td>Broader scope, some code unreachable in test</td>
+<td style="text-align: center;">Reported by the current test
+artifact</td>
+<td>Broader shared surface</td>
 </tr>
 </tbody>
 </table>
-<p>These thresholds are enforced at Stage 01 of the pipeline. If project
-test coverage falls below 90%, the pipeline halts and refuses to produce
-a PDF—ensuring that no published artifact is backed by undertested
-source code.</p>
+<p>These thresholds are enforced at Stage 01 of the pipeline. A project
+test run below its declared 90% floor fails before downstream
+publication stages. This manuscript deliberately does not quote an
+achieved coverage percentage unless a fresh coverage artifact supplies
+it.</p>
 <h3 id="test-suite-composition">Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~7,968
-tests validating the 23 infrastructure subdirectories, covering logging,
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~8,583
+tests validating the 28 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
 <li><strong>Project tests</strong> (<code>projects/*/tests/</code>):
 Per-project suites whose sizes scale with each exemplar’s surface area —
-for example 296 tests in <code>template_autoresearch_project</code> and
+for example 300 tests in <code>template_autoresearch_project</code> and
 236 in <code>template_code_project</code>, with several exemplars larger
 still. (A true min/max span would require dedicated
 <code>project_test_count_min</code>/<code>project_test_count_max</code>
@@ -333,20 +340,23 @@ PDF.</li>
 <h3 id="visualization-standards">Visualization Standards</h3>
 <p>All generated figures must meet accessibility requirements:</p>
 <ul>
-<li>Minimum 16pt font size for all text elements (the accessibility
-floor).</li>
+<li>Shared 16pt font constant for primary text elements, with compact
+annotations derived from that constant.</li>
 <li>Colorblind-safe palettes (IBM Design / Wong palette) with
 high-contrast fallbacks.</li>
-<li>150–300 DPI rendering for publication quality.</li>
+<li>200 DPI PNG rendering, sourced from the same constant used by every
+figure writer.</li>
 <li>Descriptive axis labels and figure titles.</li>
 <li>No reliance on color alone to convey information—redundant encoding
 via shape, pattern, or annotation is used where applicable.</li>
 </ul>
-<p>These standards are validated by the
-<code>test_architecture_viz.py</code> test suite, which verifies that
-generated figures exist, have non-zero file size, and conform to
-expected output specifications. The 16pt font floor ensures readability
-in both screen and print contexts, while the DPI range balances file
-size against reproduction fidelity.</p>
+<p>The <code>test_architecture_viz.py</code> suite verifies that each
+real figure generator writes a non-empty PNG and that the comparative
+matrix has its declared shape and value domain. The font and
+render-resolution values above are injected from
+<code>viz_palette.py</code>, preventing prose and implementation from
+drifting even though visual accessibility still requires human
+inspection of rendered figures.</p>
+</main>
 </body>
 </html>

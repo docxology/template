@@ -34,6 +34,7 @@ _REPO_ROOT = ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, setup_logger, log_header, log_success
 from infrastructure.validation.repo.audit_orchestrator import (
+    actionable_issue_count,
     run_comprehensive_audit,
     generate_audit_report,
     format_audit_statistics,
@@ -42,7 +43,7 @@ from infrastructure.validation.repo.audit_orchestrator import (
 logger = get_logger(__name__)
 
 
-def main():
+def main() -> None:
     """Main entry point for the audit script."""
     parser = argparse.ArgumentParser(
         description="Comprehensive audit of filepaths and references in documentation",
@@ -110,10 +111,12 @@ Examples:
 
         # Print summary to console
         total_issues = sum(scan_results.statistics.values())
+        actionable_issues = actionable_issue_count(scan_results)
 
         log_header("AUDIT COMPLETE", logger)
         logger.info(f"Files scanned: {scan_results.scanned_files}")
         logger.info(f"Issues found: {total_issues}")
+        logger.info(f"Actionable issues: {actionable_issues}")
         logger.info(f"Duration: {scan_results.scan_duration:.2f}s")
         log_success(f"Report saved: {args.output}", logger)
 
@@ -121,7 +124,7 @@ Examples:
             logger.warning(line)
 
         # Exit with appropriate code
-        raise SystemExit(0 if total_issues == 0 else 1)
+        raise SystemExit(0 if actionable_issues == 0 else 1)
 
     except Exception as e:
         logger.error(f"Audit failed: {e}", exc_info=args.verbose)

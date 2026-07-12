@@ -31,8 +31,8 @@ ollama pull gemma3:4b
 uv run python scripts/run_sia_loop.py --live-sia
 ```
 
-The LLM model is read from `manuscript/config.yaml` (`sia.llm_model`), not a CLI flag.
-Set `sia.llm_model: "gemma3:4b"` in `manuscript/config.yaml` first — it ships empty
+The LLM model is read from `manuscript/config.yaml` (`project_config.sia.llm_model`), not a CLI flag.
+Set `project_config.sia.llm_model: "gemma3:4b"` in `manuscript/config.yaml` first — it ships empty
 (`llm_model: ""`), and an empty value produces **no LLM feedback note** even with Ollama
 running and a model pulled.
 

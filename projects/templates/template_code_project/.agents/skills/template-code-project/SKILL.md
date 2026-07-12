@@ -39,6 +39,9 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_cod
   computation.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
+- **Keep tracked benchmarks deterministic.** Serialize reproducible inputs,
+  objective values, and checks; keep wall-clock timing as a runtime-only
+  diagnostic.
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
 

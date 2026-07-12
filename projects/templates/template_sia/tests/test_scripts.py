@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -41,9 +42,13 @@ def test_run_sia_loop_script(tmp_path: Path):
     assert (project / "output" / "runs" / "run_1" / "run_summary.json").is_file()
 
 
-def test_generate_manuscript_variables_script():
+def test_generate_manuscript_variables_script(
+    tmp_path: Path,
+    copy_project_sandbox: Callable[[Path], Path],
+):
+    project = copy_project_sandbox(tmp_path / "proj")
     run_proc = subprocess.run(
-        [sys.executable, str(PROJECT_ROOT / "scripts" / "run_sia_loop.py")],
+        [sys.executable, str(project / "scripts" / "run_sia_loop.py"), "--project-root", str(project)],
         cwd=str(REPO_ROOT),
         env=_script_env(),
         capture_output=True,
@@ -52,7 +57,7 @@ def test_generate_manuscript_variables_script():
     )
     assert run_proc.returncode == 0, run_proc.stderr
     proc = subprocess.run(
-        [sys.executable, str(PROJECT_ROOT / "scripts" / "z_generate_manuscript_variables.py")],
+        [sys.executable, str(project / "scripts" / "z_generate_manuscript_variables.py")],
         cwd=str(REPO_ROOT),
         env=_script_env(),
         capture_output=True,
@@ -60,4 +65,4 @@ def test_generate_manuscript_variables_script():
         check=False,
     )
     assert proc.returncode == 0, proc.stderr
-    assert (PROJECT_ROOT / "output" / "data" / "manuscript_variables.json").is_file()
+    assert (project / "output" / "data" / "manuscript_variables.json").is_file()

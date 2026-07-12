@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -55,3 +57,18 @@ def test_project_root_returns_template_pitch_deck_directory():
     assert root.name in ("template_pitch_deck", "template-pitch-deck")
     assert (root / "src").is_dir()
     assert (root / "manuscript").is_dir()
+
+
+def test_render_script_help_is_read_only():
+    root = project_root()
+    result = subprocess.run(
+        [sys.executable, str(root / "scripts" / "20_render_decks.py"), "--help"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert "usage:" in result.stdout
+    assert "wrote PDF" not in result.stdout

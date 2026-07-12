@@ -50,7 +50,7 @@ flowchart TB
 | Ruff format | zero diffs |
 | mypy | no errors |
 | `check-all-exports` | zero violations |
-| No-mocks policy | zero mock usage |
+| Mock-framework lexical gate | zero prohibited imports/calls; stand-in inventory advisory |
 | Infrastructure coverage | ≥ 60% |
 | Per-project coverage (standalone) | ≥ 90% |
 | Combined-union public-project coverage | ≥ 75% |

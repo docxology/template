@@ -13,6 +13,7 @@ Pipeline output validation helpers.
 - `prose_quality.py`
 - `claim_verification.py`
 - `no_mock_enforcer.py`
+- `no_mock_audit.py`
 
 ## See Also
 

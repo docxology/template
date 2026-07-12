@@ -237,7 +237,7 @@ Library (tcolorbox): 'tcbskinsjigsaw.code.tex' version '6.9.0'
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 
-Package microtype Warning: Unable to apply patch `footnote' on input line 287.
+Package microtype Warning: Unable to apply patch `footnote' on input line 298.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
@@ -249,20 +249,20 @@ Package microtype Warning: Unable to apply patch `footnote' on input line 287.
 [2] [3] [4] [5] [6]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 726.
+(hyperref)                removing `subscript' on input line 737.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 747.
+(hyperref)                removing `subscript' on input line 758.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 759.
+(hyperref)                removing `subscript' on input line 770.
 
 [7]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 794.
+(hyperref)                removing `subscript' on input line 805.
 
 [8]
 Missing character: There is no ├ (U+251C) in font [lmmono8-regular]:!
@@ -288,54 +288,54 @@ Missing character: There is no ─ (U+2500) in font [lmmono8-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono8-regular]:!
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 988.
+(hyperref)                removing `subscript' on input line 1000.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 988.
+(hyperref)                removing `subscript' on input line 1000.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1018.
+(hyperref)                removing `subscript' on input line 1030.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1018.
+(hyperref)                removing `subscript' on input line 1030.
 
 [9]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1047.
+(hyperref)                removing `subscript' on input line 1059.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1088.
+(hyperref)                removing `subscript' on input line 1100.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1088.
+(hyperref)                removing `subscript' on input line 1100.
 
 [10] [11]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1236.
+(hyperref)                removing `subscript' on input line 1248.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1236.
+(hyperref)                removing `subscript' on input line 1248.
 
 [12]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1273.
+(hyperref)                removing `subscript' on input line 1285.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1283.
+(hyperref)                removing `subscript' on input line 1295.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1304.
+(hyperref)                removing `subscript' on input line 1316.
 
 [13] [14]
 Missing character: There is no ├ (U+251C) in font [lmmono8-regular]:!
@@ -361,7 +361,7 @@ Missing character: There is no ─ (U+2500) in font [lmmono8-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono8-regular]:!
 [15] [16] [17] [18] [19] (./_combined_manuscript.bbl)
 
-Package caption Warning: Unused \captionsetup[sub] on input line 183.
+Package caption Warning: Unused \captionsetup[sub] on input line 194.
 See the caption package documentation for explanation.
 
 [20] (./_combined_manuscript.aux) )

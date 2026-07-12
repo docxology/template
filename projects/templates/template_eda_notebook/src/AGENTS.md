@@ -95,7 +95,7 @@ uv run pytest projects/templates/template_eda_notebook/tests -k "TestCorrelation
 | `eda/cleaning.py` | `CleaningReport`, `clean_dataset`, `normalize_numeric` |
 | `eda/statistics.py` | `ColumnSummary`, `summary_statistics`, `group_means` |
 | `eda/correlation.py` | `correlation_matrix`, `strongest_pairs` |
-| `eda/figures.py` | `HistogramFigureData`, `CorrelationFigureData`, `GroupCountFigureData`, `histogram_data`, `correlation_heatmap_data`, `group_count_data` |
+| `eda/figures.py` | Plot-ready dataclasses/functions plus `EDA_FIGURE_SPECS`, the label/filename provenance contract consumed by the analysis script |
 | `project_paths.py` | `project_output_dirs`, `resolve_project_root` (orchestration plumbing; not in `__all__`) |
 
 ## See Also

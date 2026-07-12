@@ -96,7 +96,7 @@ def test_manuscript_sources_are_packaged_without_render(tmp_path: Path) -> None:
 
 def test_cli_providers_reports_environment_state(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "test-key-openai")
-    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setenv("GEMINI_API_KEY", "")
     monkeypatch.setenv("OPENAI_DEEP_RESEARCH_MODEL", "o3-deep-research")
     args = build_parser().parse_args(["providers"])
     payload = run(args)

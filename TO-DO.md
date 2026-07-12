@@ -19,11 +19,10 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
   against HEAD, 3 refuted). Safe bounded fixes shipped the same session.
 - **Detailed items (R1–R18)** with per-item acceptance lines live in
   [`docs/maintenance/review-remediation-2026-07.md`](docs/maintenance/review-remediation-2026-07.md).
-  Current detailed status: **R1/R2/R7 shipped** in the second/third remediation
-  passes; **R10** (benchmark determinism vs environment-dependent manuscript
-  timing claim) is the remaining repo-wide review item in that list. One
-  external repo-admin follow-up remains: require the `Regression Tier` check in
-  branch protection so the CI enforcement claim is literal.
+  Current detailed status: **R1–R18 shipped** across the remediation and R10
+  closure passes. One external repo-admin follow-up remains: require the
+  `Regression Tier` check in branch protection so the CI enforcement claim is
+  literal.
 
 ### SECURITY-2026-07-09 — Threat-model and ownership-map follow-ups
 
@@ -71,6 +70,29 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
   controls plus one end-to-end refresh characterization) are still open. This
   item closed the *correctness/timeout* blocker, not the full perf-tuning
   scope.
+
+### TEST-STANDIN-DEBT-1 — Replace semantic monkeypatch stand-ins
+
+- **Problem:** the enforced no-mocks check is a lexical mock-framework gate,
+  not proof that every test exercises a real dependency. The live
+  `uv run python scripts/audit/verify_no_mocks.py --inventory` scan on
+  2026-07-11 measured **375 dependency replacements** (`setattr`/`setitem` and
+  deletion variants), alongside 254 environment-isolation operations, 0
+  import-path operations, and 2 other scope operations in the live public test
+  scope.
+- **Why it matters:** replacing internal callables, clients, clocks, or modules
+  can make a test validate a stand-in rather than the production integration
+  even though no prohibited mocking framework is imported.
+- **Smallest next step:** migrate the highest-risk dependency replacements to
+  constructor/transport injection, localhost services, real subprocesses, or
+  deterministic clocks, and re-run the inventory after each bounded batch.
+- **Acceptance:**
+  `uv run python scripts/audit/verify_no_mocks.py --inventory --fail-on-dependency-replacement`
+  exits 0 with `dependency_replacement: 0`; only then may CI enable that strict
+  inventory flag.
+- **Out of scope:** pretending the current debt is already resolved, silently
+  gating CI on a known-red count, or classifying ordinary
+  `setenv`/`delenv`/`chdir` isolation as dependency replacement.
 
 ---
 

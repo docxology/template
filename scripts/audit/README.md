@@ -8,7 +8,7 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 |--------|-----------|
 | `lint_docs.py` | Documentation lint (mermaid, cross-links, consistency) |
 | `audit_documentation.py` | Advisory RedTeam docs audit |
-| `verify_no_mocks.py` | Mock-usage checker |
+| `verify_no_mocks.py` | Lexical mock-framework gate; `--inventory` reports monkeypatch stand-ins |
 | `audit_filepaths.py` | Filepath audit |
 | `check_template_drift.py` | Template drift check |
 | `check_tracked_projects.py` | Confidentiality guard |
@@ -26,6 +26,7 @@ uv run python scripts/audit/lint_docs.py
 uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py --inventory
 ```
 
 ## Notes
@@ -33,3 +34,6 @@ uv run python scripts/audit/verify_no_mocks.py
 - None of these run in the default pipeline — invoke directly.
 - Bootstrap uses `parents[2]` from `scripts/audit/` to reach repo root.
 - `check_tracked_projects.py` is also run in pre-push and CI hooks.
+- The default no-mocks exit 0 means no prohibited framework imports/calls were
+  found. Semantic dependency replacements are visible in advisory inventory
+  mode and are not yet a CI gate.

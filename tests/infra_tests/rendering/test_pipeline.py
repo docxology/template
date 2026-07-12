@@ -95,6 +95,36 @@ def test_resolve_manuscript_dir_falls_back_to_source(tmp_path: Path) -> None:
     assert result == tmp_path / "manuscript"
 
 
+def test_resolve_manuscript_dir_falls_back_to_docs_source(tmp_path: Path) -> None:
+    """Uses docs/manuscript directly when it is the populated source tree."""
+    source = tmp_path / "docs" / "manuscript"
+    source.mkdir(parents=True)
+    (source / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+
+    result = _resolve_manuscript_dir(tmp_path)
+
+    assert result == source
+
+
+def test_resolve_manuscript_dir_refreshes_injected_config_from_docs_source(tmp_path: Path) -> None:
+    """Injected Markdown retains the canonical docs/manuscript configuration."""
+    source = tmp_path / "docs" / "manuscript"
+    injected = tmp_path / "output" / "manuscript"
+    source.mkdir(parents=True)
+    injected.mkdir(parents=True)
+    (source / "01_intro.md").write_text("# Source\n", encoding="utf-8")
+    (source / "config.yaml").write_text("paper:\n  title: Fresh docs config\n", encoding="utf-8")
+    (source / "references.bib").write_text("@article{fresh,title={Fresh}}\n", encoding="utf-8")
+    (injected / "01_intro.md").write_text("# Injected\n", encoding="utf-8")
+    (injected / "config.yaml").write_text("paper:\n  title: Stale\n", encoding="utf-8")
+
+    result = _resolve_manuscript_dir(tmp_path)
+
+    assert result == injected
+    assert "Fresh docs config" in (injected / "config.yaml").read_text(encoding="utf-8")
+    assert "fresh" in (injected / "references.bib").read_text(encoding="utf-8")
+
+
 def test_resolve_manuscript_dir_returns_manuscript_path_when_absent(tmp_path: Path) -> None:
     """Returns manuscript/ even when neither injected nor source trees exist."""
     project_root = tmp_path / "project"

@@ -21,7 +21,7 @@ agent-facing documentation. Project-specific science stays in
 | Methods orchestration | `methods/` | Read-only mapping of pipeline contracts, methods prose, artifacts, evidence, validation commands. |
 | Skill discovery and manifests | `skills/` | Regenerates `docs/_generated/skills_index.md` and `.cursor/skill_manifest.json`. |
 | Optional companions | `search/`, `llm/`, `steganography/`, `sia/`, `autoresearch/` | Keep opt-in dependencies and generated state out of default CI/pipeline unless documented. |
-| Expose the agent surface over MCP | `mcp_server.py` | Opt-in self-contained stdio JSON-RPC server (`python -m infrastructure.mcp_server`) exposing `list_operations` / `describe_pipeline` / `list_skills` / `invoke_cli` as MCP tools. Standard-library only; not wired into CI/pipeline. |
+| Expose the agent surface over MCP | `mcp_server.py` | Opt-in self-contained stdio JSON-RPC server (`python -m infrastructure.mcp_server`) exposing `list_operations` / `describe_pipeline` / `list_skills` / `invoke_cli` as MCP tools. Dual-era: legacy `2024-11-05` initialize plus stateless `2026-07-28` `server/discover` and per-request metadata. Standard-library only; not wired into CI/pipeline. |
 
 ## Boundaries
 

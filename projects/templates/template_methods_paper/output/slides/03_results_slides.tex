@@ -133,6 +133,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -260,7 +263,7 @@ The results were validated through the zero-mock \texttt{tests/} suite:
   \breaktt{generate\_variables}.
 \end{itemize}
 
-All tests pass with coverage exceeding the 90\% project gate, with no
+All tests pass under the configured project coverage gate, with no
 mocks.
 \end{frame}
 

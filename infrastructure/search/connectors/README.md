@@ -24,25 +24,25 @@ from infrastructure.search.connectors import search_connector, list_connectors
 
 # List available connectors
 for entry in list_connectors():
-    print(entry.id, entry.domain, entry.description)
+    print(entry.name, entry.domain.value, entry.description)
 
 # Search
-hits = search_connector("openalex", "transformer neural network", limit=5)
+hits = search_connector("openalex", "transformer neural network", max_results=5)
 for h in hits:
-    print(h.id, h.title)
+    print(h.id, h.title, h.abstract)
 ```
 
 ## Registry
 
 ```python
-from infrastructure.search.connectors import ConnectorRegistry, _ALL_CONNECTORS
+from infrastructure.search.connectors import ConnectorDomain, ConnectorRegistry, _ALL_CONNECTORS
 
 registry = ConnectorRegistry()
-for c in _ALL_CONNECTORS:
-    registry.register(c)
+for connector_class in _ALL_CONNECTORS:
+    registry.register(connector_class())
 
 # By domain
-bio = registry.by_domain("biology")
+bio = registry.by_domain(ConnectorDomain.biology)
 # Serialisable catalog
 catalog = registry.catalog()   # list[CatalogEntry] — no callables
 ```
@@ -53,12 +53,38 @@ catalog = registry.catalog()   # list[CatalogEntry] — no callables
 # List all connectors
 uv run python -m infrastructure.search.connectors list-dbs
 
-# Filter by domain
-uv run python -m infrastructure.search.connectors list-dbs --domain proteomics
-
 # Search
-uv run python -m infrastructure.search.connectors search pdb "spike protein" --limit 3
+uv run python -m infrastructure.search.connectors search pdb "spike protein" --max-results 3
 ```
+
+## Pipeline Stage 08
+
+Configure reproducible project searches in `manuscript/config.yaml`:
+
+```yaml
+connector_search:
+  enabled: true
+  max_results: 10
+  connectors:
+    arxiv:
+      - active inference
+    openalex:
+      - reproducible generative research
+```
+
+Then run:
+
+```bash
+uv run python scripts/pipeline/stage_08_connector_search.py \
+  --project templates/template_code_project
+```
+
+The stage writes a normalized report to
+`output/data/connector_search/results.json` inside the project. Every search
+entry records its connector, query, status, error, and full
+`ConnectorHit.to_dict()` results, including the `abstract` field. A configured
+connector failure is isolated and persisted in the report, then makes the
+stage exit 1; absent or disabled configuration exits 2.
 
 ## HTTP helper
 
@@ -71,15 +97,19 @@ uv run python -m infrastructure.search.connectors search pdb "spike protein" --l
 ```python
 from infrastructure.search.connectors.http import ConnectorHttpClient
 
-client = ConnectorHttpClient(timeout=10, cache_ttl=60)
-resp = client.get("https://api.openalex.org/works", params={"search": "CRISPR"})
-data = resp.json()
+client = ConnectorHttpClient(timeout=10, ttl=60)
+data = client.get_json(
+    "https://api.openalex.org/works",
+    params={"search": "CRISPR"},
+)
 ```
 
 ## Testing
 
 ```bash
-uv run pytest tests/infra_tests/search/test_connectors.py -v
+uv run pytest \
+  tests/infra_tests/search/test_connectors.py \
+  tests/infra_tests/search/test_connector_scripts.py -v
 ```
 
 See `AGENTS.md` for the full agent guide.

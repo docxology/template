@@ -1,38 +1,27 @@
 # Results
 
-`template/` was evaluated through multi-project pipeline execution, measuring test coverage, pipeline timing, output integrity, and steganographic performance across the canonical exemplars under `projects/`.
+This section reports repository facts produced by the meta-project's live introspection pass. Test counts, module inventories, pipeline-stage counts, and figure data are injected from generated artifacts. Runtime and achieved-coverage claims are intentionally omitted when no versioned benchmark or coverage artifact backs them.
 
 ## Multi-Project Pipeline Execution
 
-Runs used the `./run.sh` interactive orchestrator (“all projects core (fast)” / menu key **`d`**) skipping infrastructure replication and optional LLM stages orchestrated via `python -m infrastructure.orchestration`. **Note:** lone menu **`d`** returns after success without redrawing the TUI banner.
+The `./run.sh` interactive orchestrator can execute the public roster through the shared DAG. The table below is a structural snapshot, not a timing benchmark: counts come from repository introspection, and the coverage column states each exemplar's declared policy floor rather than an unversioned observed percentage.
 
-| Project | Effective core stages¹ | Approx. duration | Tests² | Coverage |
-|---------|-----------------------|-----------------|--------|---------|
-| `template_code_project` | 8 | ~40 s | 236/236 | 90%+ |
-| `template_prose_project` | 8 | ~35 s | 120/120 | 90%+ |
-| `template_autoresearch_project` | 8 | ~30 s | 296/296 | 90%+ |
+| Project | Effective core stages¹ | Discovered tests | Declared project floor |
+|---------|-----------------------|-----------------:|-----------------------:|
+| `template_code_project` | 8 | 236 | 90% |
+| `template_prose_project` | 8 | 120 | 90% |
+| `template_autoresearch_project` | 8 | 300 | 90% |
 
-¹“Core-only” disables LLM-tagged YAML stages; durations exclude optional network-heavy LLM or long-running retrieval scripts when run with cached fixtures.
-
-
-²Counts show passing tests versus discovered tests for the sampled configuration.
-
-***Overall success:*** 100 % pipeline completion for sampled runs.
-
-
-*Timing illustrative (Apple Silicon workstation, SSD, fixed seeds).*
-
-
-Search-stage overhead dwarfs the optimization exemplar’s runtime—confirming Stage 02 remains the bottleneck for outbound API traffic while retaining Zero-Mock subprocess + filesystem checks downstream.
+¹“Core-only” excludes LLM-tagged and other opt-in stages according to the YAML stage tags. A fresh run must be used to establish completion status or wall-clock performance for a particular machine and dependency set.
 
 ## Infrastructure Test Suite
 
 | Metric | Value |
 |--------|-------|
-| Test files | 470+ |
-| Total tests | ~7,968 |
-| Infrastructure coverage gate | ≥60 % (repo ≥80 %+ during recent audits) |
-| Zero-mock imports | Verified via static scanning |
+| Test files | 504+ |
+| Total tests | ~8,583 |
+| Infrastructure coverage gate | ≥60% configured floor |
+| Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
 Exercises Pandoc/XeLaTeX paths, steganography hashing, telemetry, YAML-driven pipeline DAG resolution, HTTPS-bound optional suites (`pytest-httpserver`), and local Ollama-gated subsets.
 
@@ -45,28 +34,33 @@ The introspection module (`template_template.introspection`) emits the authorita
 | `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 3 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 110 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 112 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 12 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 13 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `fonds` | 6 | ✓ | ✓ | — |
 | `llm` | 54 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
 | `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |
 | `methods` | 5 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
-| `orchestration` | 8 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
+| `orchestration` | 9 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
 | `project` | 27 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
+| `provenance` | 7 | ✓ | ✓ | — |
 | `publishing` | 74 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 57 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `rendering` | 60 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `research` | 3 | ✓ | ✓ | — |
+| `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
-| `search` | 44 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
+| `search` | 62 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
 | `sia` | 10 | ✓ | ✓ | Self-Improving-AI loop: task validation, harness, metric capture |
 | `skills` | 7 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
-| `steganography` | 11 | ✓ | ✓ | Watermark overlays + hash manifests |
-| `validation` | 84 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
+| `tools` | 6 | ✓ | ✓ | — |
+| `validation` | 75 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
-All 23 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS.md` coverage wherever the Documentation Duality standard applies; subsets ship Tier‑3 `SKILL.md` descriptors for MCP routing (`infrastructure/skills` manifest generation).
+All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS.md` coverage wherever the Documentation Duality standard applies; subsets ship Tier‑3 `SKILL.md` descriptors for MCP routing (`infrastructure/skills` manifest generation).
 
 ## Agentic Skill Documentation Coverage
 
@@ -77,7 +71,7 @@ All 23 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`380+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`390+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
@@ -96,27 +90,21 @@ Stages below mirror `pipeline.yaml` (executor-topological order—not strict num
 | LLM Translations | `06_llm_review.py --translations-only` | Optional translations | Skippable |
 | Copy Outputs | `05_copy_outputs.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
 
-`scripts/07_generate_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
+`scripts/pipeline/stage_07_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
 
-## Steganographic Performance
+## Steganographic Performance Boundary
 
-| Project | Pages (approx.) | Metadata | SHA-256 | Overlay | QR Code | Total (approx.) |
-|---------|:--------------:|:--------:|:-------:|:-------:|:-------:|:---------------:|
-| `template_code_project` | ~20 | <0.3 s | <0.05 s | <0.8 s | <0.4 s | <1.5 s |
-| `template_prose_project` | ~25 | <0.3 s | <0.05 s | <0.9 s | <0.4 s | <1.6 s |
-| `template_autoresearch_project` | ~25 | <0.2 s | <0.04 s | <0.9 s | <0.3 s | <1.5 s |
-
-All measurements use single-threaded execution on Apple Silicon, and the totals are dominated by watermark-overlay complexity rather than by hashing or metadata embedding, which each stay well under one-tenth of a second per document.
+The steganography path exposes metadata injection, SHA-256 hashing, overlay generation, and optional QR-code insertion as separately testable operations. This revision makes no latency claim because the project does not currently generate a versioned benchmark artifact recording hardware, input PDF, warm-up policy, repetitions, and dispersion. A future performance table should be compiled from such an artifact rather than copied from an ad-hoc workstation run.
 
 ## Self-Referential Analysis
 
-Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `23`). Architecture figures stem from [`template_template.architecture_viz`](../src/template_template/architecture_viz.py)—font sizes constrained by §QA.
+Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `28`). Architecture figures stem from [`template_template.architecture_viz`](../src/template_template/architecture_viz.py)—font sizes constrained by §QA.
 
 ![Two-Layer Architecture Overview](../output/figures/architecture_overview.png)
-**Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `23` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
+**Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `28` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
 
 ![Pipeline Stage Flow](../output/figures/pipeline_stages.png)
-**Figure 2.** Pipeline DAG with 14 YAML-declared stages (core, LLM, ebook, metadata, bundle, archival tags).
+**Figure 2.** Pipeline DAG with 16 YAML-declared stages (core, LLM, ebook, metadata, bundle, archival tags).
 
 ![Infrastructure Module Inventory](../output/figures/module_inventory.png)
 **Figure 3.** Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first. The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.
@@ -129,7 +117,7 @@ Figure 4 summarizes the Appendix F capability matrix.
 ![Comparative Feature Analysis Heatmap](../output/figures/comparative_feature_matrix.png)
 **Figure 4.** 14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.
 
-¹ Nextflow 25.04.0: lineage records exist at workflow scope, not per rendered PDF citation graph.
+¹ Nextflow lineage records exist at workflow scope, not per rendered PDF citation graph.
 
 ² DVC: content-addressed artifacts without native prose rendering.
 

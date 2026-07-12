@@ -58,6 +58,49 @@ class GroupCountFigureData:
     counts: list[int]
 
 
+@dataclass(frozen=True)
+class EdaFigureSpec:
+    """Provenance metadata for one generated EDA figure."""
+
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_REGISTRY_SCHEMA = "template-eda-notebook-figure-registry-v1"
+CORRELATION_COLOR_LIMITS = (-1.0, 1.0)
+EDA_FIGURE_SPECS: tuple[EdaFigureSpec, ...] = (
+    EdaFigureSpec(
+        label="fig:height_histogram",
+        filename="height_histogram.png",
+        caption="Height distribution computed from complete-case histogram bins.",
+        generated_by="scripts.eda_analysis.run_eda",
+    ),
+    EdaFigureSpec(
+        label="fig:group_counts",
+        filename="group_counts.png",
+        caption="Complete-case row counts for each sorted study group.",
+        generated_by="scripts.eda_analysis.run_eda",
+    ),
+    EdaFigureSpec(
+        label="fig:correlation_heatmap",
+        filename="correlation_heatmap.png",
+        caption="Pearson feature-correlation matrix rendered on a fixed minus-one-to-one scale.",
+        generated_by="scripts.eda_analysis.run_eda",
+    ),
+)
+_FIGURE_SPEC_BY_LABEL = {spec.label: spec for spec in EDA_FIGURE_SPECS}
+
+
+def eda_figure_spec(label: str) -> EdaFigureSpec:
+    """Return the canonical EDA figure specification for ``label``."""
+    try:
+        return _FIGURE_SPEC_BY_LABEL[label]
+    except KeyError as exc:
+        raise KeyError(f"unknown EDA figure label: {label!r}") from exc
+
+
 def histogram_data(frame: pd.DataFrame, column: str, bins: int = 10) -> HistogramFigureData:
     """Compute histogram bin counts and edges for one numeric column.
 

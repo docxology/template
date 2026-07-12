@@ -47,18 +47,17 @@ def _make_minimal_project(
         "task_dir": str(project / "tasks" / "mini_classify"),
         "generations": generations,
     }
-    (summary_dir / "run_summary.json").write_text(
-        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
-    )
+    (summary_dir / "run_summary.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return project
 
 
-def test_figures_are_deterministic_pngs():
-    run_sia_loop_project(PROJECT_ROOT, live=False)
-    first = write_all_figures(PROJECT_ROOT)
+def test_figures_are_deterministic_pngs(tmp_path: Path, copy_project_sandbox: Copy):
+    project = copy_project_sandbox(tmp_path / "proj")
+    run_sia_loop_project(project, live=False)
+    first = write_all_figures(project)
     first_pngs = [path for path in first if path.suffix == ".png"]
     hashes_first = [hashlib.sha256(path.read_bytes()).hexdigest() for path in first_pngs]
-    second = write_all_figures(PROJECT_ROOT)
+    second = write_all_figures(project)
     second_pngs = [path for path in second if path.suffix == ".png"]
     hashes_second = [hashlib.sha256(path.read_bytes()).hexdigest() for path in second_pngs]
     assert hashes_first == hashes_second
@@ -66,7 +65,7 @@ def test_figures_are_deterministic_pngs():
         assert path.is_file()
         assert path.stat().st_size > 0
         assert path.suffix == ".png"
-    assert PROJECT_ROOT / "output" / "figures" / "figure_registry.json" in first
+    assert project / "output" / "figures" / "figure_registry.json" in first
 
 
 def test_figure_specs_match_manuscript():
@@ -83,12 +82,13 @@ def test_figure_specs_match_manuscript():
         assert spec.caption in combined, f"caption drift for {spec.figure_id}"
 
 
-def test_figure_registry_validates_manuscript_references():
-    run_sia_loop_project(PROJECT_ROOT, live=False)
-    paths = write_all_figures(PROJECT_ROOT)
-    registry = PROJECT_ROOT / "output" / "figures" / "figure_registry.json"
+def test_figure_registry_validates_manuscript_references(tmp_path: Path, copy_project_sandbox: Copy):
+    project = copy_project_sandbox(tmp_path / "proj")
+    run_sia_loop_project(project, live=False)
+    paths = write_all_figures(project)
+    registry = project / "output" / "figures" / "figure_registry.json"
 
-    ok, issues = validate_figure_registry(registry, PROJECT_ROOT / "manuscript")
+    ok, issues = validate_figure_registry(registry, project / "manuscript")
 
     assert registry in paths
     assert ok, issues

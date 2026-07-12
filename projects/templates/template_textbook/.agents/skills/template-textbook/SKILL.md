@@ -25,7 +25,10 @@ Project-scoped skill for the in-repo exemplar at
 ```bash
 # From the repository root
 uv run pytest projects/templates/template_textbook/tests --cov=projects/templates/template_textbook/src --cov-fail-under=90
+# Structural scaffold gate (reports stubs but allows them)
 uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py
+# Filled-manuscript gate (fails until every audited section has zero stubs)
+uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py --require-complete
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_textbook
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_textbook
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_textbook
@@ -40,6 +43,9 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_tex
   computation.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
+- **Choose the audit mode deliberately.** The default audit validates a fillable
+  scaffold; `--require-complete` is the opt-in zero-stub gate for a filled
+  manuscript.
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
 

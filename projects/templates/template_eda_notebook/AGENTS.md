@@ -55,14 +55,16 @@ project root.
   test first (TDD).
 - **Thin analysis script**: [`scripts/eda_analysis.py`](scripts/eda_analysis.py)
   runs the EDA headless (`MPLBACKEND=Agg`), writes figures + a summary CSV to
-  `output/`, and prints output paths for manifest collection.
+  `output/`, writes a fail-closed `output/figures/figure_registry.json`, and
+  prints output paths for manifest collection.
 
 ## Run via the template monorepo
 
 ```bash
 # From the repository root — run the analysis pipeline (thin orchestrator)
 uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
-# Writes output/figures/*.png and output/data/summary_statistics.csv
+# Writes output/figures/*.png, output/figures/figure_registry.json,
+# and output/data/summary_statistics.csv
 
 # Open the walkthrough notebook (calls the same tested src functions)
 #   notebooks/eda_walkthrough.ipynb

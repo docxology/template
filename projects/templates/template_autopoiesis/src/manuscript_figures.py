@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib
@@ -11,6 +12,46 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from .grammar import KNOWN_DOMAINS, load_grammar
+
+
+@dataclass(frozen=True)
+class ManuscriptFigureSpec:
+    """Registry metadata owned by a manuscript figure writer."""
+
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_REGISTRY_SCHEMA = "template-autopoiesis-figure-registry-v1"
+MANUSCRIPT_FIGURE_SPECS: tuple[ManuscriptFigureSpec, ...] = (
+    ManuscriptFigureSpec(
+        label="fig:stacked_product",
+        filename="fig_stacked_product.png",
+        caption="Options per effective grammar slot, shown as a stacked bar.",
+        generated_by="src.manuscript_figures.fig_stacked_product",
+    ),
+    ManuscriptFigureSpec(
+        label="fig:product_space",
+        filename="fig_product_space.png",
+        caption="Total, effective, and reserved-only grammar product sizes.",
+        generated_by="src.manuscript_figures.fig_product_space_annotation",
+    ),
+    ManuscriptFigureSpec(
+        label="fig:domain_coverage",
+        filename="fig_domain_coverage.png",
+        caption="The five primitive domains, shown with distinct type colors.",
+        generated_by="src.manuscript_figures.fig_domain_coverage",
+    ),
+    ManuscriptFigureSpec(
+        label="fig:coverage_by_module",
+        filename="fig_coverage_by_module.png",
+        caption="Measured branch coverage by source module with the 90 percent floor marked.",
+        generated_by="src.manuscript_figures.fig_coverage_by_module",
+    ),
+)
+_SPEC_BY_LABEL = {spec.label: spec for spec in MANUSCRIPT_FIGURE_SPECS}
 
 
 def _teal_slate_palette(n: int) -> list[str]:
@@ -56,7 +97,7 @@ def fig_stacked_product(project_root: Path, out_dir: Path) -> Path:
     ax.set_title("Effective grammar slots (stacked)")
     ax.legend(loc="upper right", fontsize=8)
     fig.tight_layout()
-    out = out_dir / "fig_stacked_product.png"
+    out = out_dir / _SPEC_BY_LABEL["fig:stacked_product"].filename
     fig.savefig(out, dpi=150)
     plt.close(fig)
     print(f"  ✓ {out.name}")
@@ -93,7 +134,7 @@ def fig_domain_coverage(out_dir: Path) -> Path:
     ax.set_title("Primitive domains (type-colored)")
     ax.set_ylim(0, 1.4)
     fig.tight_layout()
-    out = out_dir / "fig_domain_coverage.png"
+    out = out_dir / _SPEC_BY_LABEL["fig:domain_coverage"].filename
     fig.savefig(out, dpi=150)
     plt.close(fig)
     print(f"  ✓ {out.name}")
@@ -140,7 +181,7 @@ def fig_product_space_annotation(project_root: Path, out_dir: Path) -> Path:
     ax.set_ylabel("Count")
     ax.set_title(f"Grammar product space (seed={grammar.seed})")
     fig.tight_layout()
-    out = out_dir / "fig_product_space.png"
+    out = out_dir / _SPEC_BY_LABEL["fig:product_space"].filename
     fig.savefig(out, dpi=150)
     plt.close(fig)
     print(f"  ✓ {out.name}")
@@ -179,7 +220,7 @@ def fig_coverage_by_module(coverage_full_json: Path, out_dir: Path) -> Path:
     ax.set_xlabel("Branch coverage (%)")
     ax.set_title("Per-module test coverage (real, measured this build)")
     fig.tight_layout()
-    out = out_dir / "fig_coverage_by_module.png"
+    out = out_dir / _SPEC_BY_LABEL["fig:coverage_by_module"].filename
     fig.savefig(out, dpi=150)
     plt.close(fig)
     print(f"  ✓ {out.name}")

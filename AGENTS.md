@@ -33,7 +33,7 @@ This document provides documentation for the Research Project Template system, e
 
 **Ground truth:** Public CI/documentation project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` remains broader for local private symlinked workspaces. Measured numbers for documentation claims belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md); avoid inventing statistics.
 
-**Definition of done (code):** Ruff + mypy clean on the public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`; tests exercise real behaviour (no mocks); coverage still meets 60% (infra) / 90% (project `src/`) unless CI documents a rotating-project exception ([`.github/AGENTS.md`](.github/AGENTS.md)).
+**Definition of done (code):** Ruff + mypy clean on the public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`; tests exercise real behaviour, introduce no prohibited mock framework, and do not increase semantic dependency-replacement debt; coverage still meets 60% (infra) / 90% (project `src/`) unless CI documents a rotating-project exception ([`.github/AGENTS.md`](.github/AGENTS.md)).
 
 **Hooks:** [`.pre-commit-config.yaml`](.pre-commit-config.yaml) — commit stage runs Ruff and mypy; pre-push adds no-mocks verification, a short pytest smoke module, Bandit (`-c bandit.yaml`, exclusions in YAML), and `infrastructure.skills check` + `check-all-exports`. Install: `pre-commit install` and `pre-commit install --hook-type pre-push` after `uv sync`.
 
@@ -757,13 +757,25 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 - combined-union public-project gate (`01_run_tests.py --project-only --all-projects --public-projects`, `DEFAULT_FAIL_UNDER`) : 75% — deliberately lower than the per-project floor because per-project suites only cover their own `src/` while the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project, including rotating private symlinks. Per-project floors remain authoritative.
 - infrastructure/ : 60% minimum
 
-Tests use real data and computation.
+Tests should use real data and computation. The enforced no-mocks command is a
+lexical mock-framework gate; use its advisory `--inventory` mode to see current
+`pytest.monkeypatch` dependency-replacement debt.
 
 ## Testing Framework
 
-### ABSOLUTE PROHIBITION: No Mocks Policy
+### Mock-framework prohibition and semantic-stand-in inventory
 
-**CRITICAL REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use data and computations only.
+**CRITICAL REQUIREMENT**: Do not introduce `MagicMock`, `mocker.patch`,
+`unittest.mock`, or another mocking framework. Prefer real data, local services,
+subprocesses, and dependency injection. The lexical CI gate proves only that
+prohibited framework imports/calls are absent; `--inventory` separately records
+environment isolation and existing `monkeypatch.setattr`/`setitem` dependency
+replacement.
+
+```bash
+uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py --inventory
+```
 
 This policy ensures:
 
@@ -864,7 +876,7 @@ Tests follow the **thin orchestrator pattern** principles:
 
 - Import methods from `projects/{name}/src/` or `infrastructure/` modules
 - Use data and computation
-- Validate actual behavior (no mocks)
+- Validate actual behavior; avoid adding semantic dependency replacements
 - Ensure reproducible, deterministic results
 
 ### Test Categories

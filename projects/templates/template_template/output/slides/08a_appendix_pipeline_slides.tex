@@ -112,6 +112,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -178,6 +181,14 @@ Project Tests & \breaktt{01\_run\_tests.py\ -\/-project-only} &
 artefacts & blocking by default \\
 Project Analysis & \breaktt{02\_run\_analysis.py} & thin scripts &
 \texttt{figures/}, \texttt{data/}, reports & Blocking \\
+Connector Search & \breaktt{08\_connector\_search.py} &
+\breaktt{manuscript/config.yaml} &
+\breaktt{output/data/connector\_search/} & opt-in (\texttt{science} tag);
+skipped if not configured \\
+Provenance Record &
+\breaktt{09\_provenance\_record.py\ -\/-stage\ "Connector\ Search"} &
+prior stage outputs & \breaktt{.provenance/graph.json} & opt-in
+(\texttt{provenance} tag); skipped if not configured \\
 PDF Rendering & \breaktt{03\_render\_pdf.py} & \texttt{manuscript/},
 placeholders & \texttt{.pdf}/\texttt{.tex} bundles & Blocking \\
 Output Validation & \breaktt{04\_validate\_output.py} & render tree &
@@ -190,6 +201,12 @@ abstract metadata & multilingual snippets & Optional skip
 (\texttt{allow\_skip}) \\
 Copy Outputs & \breaktt{05\_copy\_outputs.py} & validated tree & mirrored
 \texttt{output/\textless{}name\textgreater{}/…} & soft fail logged \\
+Ebook Generation & \breaktt{11\_ebook\_generation.py} & rendered combined
+markdown & \texttt{output/ebook/} (EPUB/MOBI/DOCX) & opt-in
+(\texttt{ebook} tag); soft fail \\
+Metadata Package & \breaktt{12\_metadata\_package.py} &
+\breaktt{manuscript/config.yaml} & \breaktt{output/metadata/}
+(ONIX/JSON/OPF) & opt-in (\texttt{metadata} tag); soft fail \\
 Executable Bundle & \breaktt{08\_executable\_bundle.py} & project tree +
 outputs & container bundle manifest & opt-in (\texttt{bundle} tag) \\
 Archival Publication & \breaktt{09\_archive\_publication.py} & bundle +
@@ -199,7 +216,7 @@ tag) \\
 \end{longtable}
 }
 
-\breaktt{scripts/07\_generate\_executive\_report.py} is invoked
+\breaktt{scripts/pipeline/stage\_07\_executive\_report.py} is invoked
 \textbf{outside} this DAG whenever \breaktt{execute\_multi\_project.py}
 aggregates pipelines---supplying cross-project KPI dashboards absent
 from lone-project checkpoints.

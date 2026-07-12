@@ -5,7 +5,7 @@ variable sourced from a live analysis output or registered in
 \breaktt{data/claim\_ledger.yaml} for evidence-registry validation. The
 manuscript intentionally does not hand-transcribe volatile values, so
 prose and artifacts cannot disagree. Configuration provenance is itself
-injected: \breaktt{23b5981d45bdc598} is the SHA-256 of
+injected: \breaktt{a0f000565bef6a79} is the SHA-256 of
 \breaktt{manuscript/config.yaml} at build time, and
-\breaktt{2026-06-30T23:02:10Z} records when the variables were generated
+\breaktt{2026-07-12T02:08:51Z} records when the variables were generated
 (honoring \breaktt{SOURCE\_DATE\_EPOCH} for byte-reproducible builds).

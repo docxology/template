@@ -242,7 +242,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:deep_search">Deep Search</h1>
 <p>The deep-search workflow extends the standard literature pipeline
 along three axes: <strong>breadth</strong> (multi-keyword fan-out),
@@ -284,15 +285,16 @@ exactly the same way as the hand-curated
 <code>references.bib</code>.</li>
 </ul>
 <h2 id="pipeline-shape">Pipeline shape</h2>
-<p>The deep-search pipeline reads the <code>deep_search:</code> block
-from <code>manuscript/config.yaml</code>, runs one
-<code>SearchQuery</code> per keyword (capped at
-<code>max_results_per_keyword</code>), aggregates the per-backend
-results through <code>LiteratureClient</code>, enriches every paper via
-<code>AbstractFetcher</code> and <code>FulltextFetcher</code>, generates
-collision-free citation keys with <code>paper_to_bibentry</code>, and
-(when <code>llm_per_paper: true</code> and Ollama is reachable) calls
-the local LLM with <code>DEEP_PROMPT</code> to produce a seven-section
+<p>The deep-search pipeline reads
+<code>project_config.deep_search</code> from
+<code>manuscript/config.yaml</code>, runs one <code>SearchQuery</code>
+per keyword (capped at <code>max_results_per_keyword</code>), aggregates
+the per-backend results through <code>LiteratureClient</code>, enriches
+every paper via <code>AbstractFetcher</code> and
+<code>FulltextFetcher</code>, generates collision-free citation keys
+with <code>paper_to_bibentry</code>, and (when
+<code>llm_per_paper: true</code> and Ollama is reachable) calls the
+local LLM with <code>DEEP_PROMPT</code> to produce a seven-section
 reading note per paper. The per-keyword outputs are then merged by
 <code>merge_papers</code> to form a deduplicated aggregate roster which
 is written to <code>manuscript/references_deep.bib</code>,
@@ -411,8 +413,8 @@ canonical query identity per keyword.</li>
 (<code>output/cache/abs/&lt;safe_id&gt;.txt</code>).</li>
 <li>Fulltext cache
 (<code>output/cache/pdf/&lt;safe_id&gt;.{pdf,txt}</code>).</li>
-<li>LLM seed (<code>deep_search.llm_seed: 42</code>) + temperature
-(<code>0.0</code>).</li>
+<li>LLM seed (<code>project_config.deep_search.llm_seed: 42</code>) +
+temperature (<code>0.0</code>).</li>
 </ol>
 <p>Commit any subset of these caches to version control to freeze a
 run.</p>
@@ -425,7 +427,7 @@ opt-in. Enable it by:</p>
 (gitignored) with your <code>PAPERCLIP_API_KEY=gxl_…</code> (template at
 <code>.env.example</code>).</li>
 <li>Including <code>paperclip</code> in
-<code>deep_search.sources</code>.</li>
+<code>project_config.deep_search.sources</code>.</li>
 </ol>
 <p>The orchestrator scripts auto-load <code>.env</code> via the
 lightweight <code>src.dotenv</code> module before constructing the
@@ -436,15 +438,15 @@ JSON-RPC <code>tools/call</code> envelope. We support both the modern
 <code>structuredContent.papers</code> response shape and the older
 text-only <code>content[].text</code> shape (best-effort regex
 extraction).</p>
-<p>Failure-isolation: any per-backend error (including the
-migration-state HTTP 405 the production endpoint may currently return)
-is captured into <code>SearchResult.errors[paperclip]</code> and the run
-continues. See
+<p>Failure-isolation: any per-backend error (including a
+method-rejection response the production endpoint may return during
+migration) is captured into <code>SearchResult.errors[paperclip]</code>
+and the run continues. See
 <code>output/deep_search/&lt;keyword&gt;/papers.json</code> and the
 aggregate <code>run_summary.json</code> for the recorded errors.</p>
 <h2 id="cli">CLI</h2>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with everything from config.yaml (assumes deep_search.enabled: true)</span></span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with everything from config.yaml (assumes project_config.deep_search.enabled: true)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Force-enable without touching config.yaml</span></span>

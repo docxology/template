@@ -112,6 +112,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -136,22 +139,29 @@
 Summary}
 \protect\phantomsection\label{appendix-exemplars}
 \begin{table}[h]
-\caption{Three representative workspaces under \breaktt{projects/templates/} illustrating heterogeneous domains while sharing Layer~1. This is a hand-picked sample, not the full roster: the complete public exemplar set (currently nine workspaces) is enumerated dynamically from \breaktt{PUBLIC\_PROJECT\_NAMES} and listed below.}
+\caption{Three representative workspaces under \breaktt{projects/templates/} illustrating heterogeneous domains while sharing Layer~1. This is a hand-picked sample, not the full roster: the complete public exemplar set is enumerated dynamically from \breaktt{PUBLIC\_PROJECT\_NAMES} and listed below.}
 \label{tab:exemplar-projects}
 \end{table}
 
 The full public exemplar roster is:
 \breaktt{templates/template\_active\_inference},
+\breaktt{templates/template\_autopoiesis},
 \breaktt{templates/template\_autoresearch\_project},
 \breaktt{templates/template\_autoscientists},
 \breaktt{templates/template\_code\_project},
+\breaktt{templates/template\_data\_descriptor},
 \breaktt{templates/template\_eda\_notebook},
+\breaktt{templates/template\_formal},
 \breaktt{templates/template\_gold\_refinement},
 \breaktt{templates/template\_literature\_meta\_analysis},
 \breaktt{templates/template\_madlib},
 \breaktt{templates/template\_methods\_paper},
 \breaktt{templates/template\_newspaper},
+\breaktt{templates/template\_pitch\_deck},
+\breaktt{templates/template\_pools\_rules\_tools},
 \breaktt{templates/template\_prose\_project},
+\breaktt{templates/template\_redacted\_report},
+\breaktt{templates/template\_registered\_report},
 \breaktt{templates/template\_search\_project},
 \breaktt{templates/template\_sia},
 \breaktt{templates/template\_storybook},
@@ -183,12 +193,12 @@ Figures (Stage~02 hint)
 \midrule\noalign{}
 \endhead
 \breaktt{template\_code\_project} & Optimization tutorial & Convex demo
-figures, scripted tables & 236 @ 90\%+ gate & Controlled matplotlib
-exports \\
+figures, scripted tables & 236 discovered tests; 90\% declared gate &
+Controlled matplotlib exports \\
 \breaktt{template\_prose\_project} & Prose-heavy workflow & Validates
 narrative-only repos & 120 & Lightweight / optional plots \\
 \breaktt{template\_autoresearch\_project} & AutoResearch readiness &
-Planner + validation CLI & 296 & Readiness reports from Stage 02 \\
+Planner + validation CLI & 300 & Readiness reports from Stage 02 \\
 \bottomrule\noalign{}
 \end{longtable}
 }

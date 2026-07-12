@@ -133,7 +133,7 @@ def test_load_rule_context_reads_canonical_sections_from_config(tmp_path: pathli
     manuscript = project / "manuscript"
     manuscript.mkdir(parents=True)
     (manuscript / "config.yaml").write_text(
-        "strong_rules:\n  canonical_sections:\n    - Abstract\n",
+        "project_config:\n  strong_rules:\n    canonical_sections:\n      - Abstract\n",
         encoding="utf-8",
     )
     (manuscript / "01_abstract.md").write_text("# Abstract {#sec:abstract}\n", encoding="utf-8")

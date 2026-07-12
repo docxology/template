@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="architecture">Architecture</h1>
 <p>The storybook uses the same Layer-2 project contract as the other
 public templates:</p>
@@ -187,6 +191,8 @@ characters.</li>
 typed records.</li>
 <li><code>src/storybook/illustration.py</code> renders the full-page
 scenes.</li>
+<li><code>src/storybook/text_layout.py</code> owns deterministic
+typography, wrapping, and text overlays.</li>
 <li><code>src/storybook/rendering.py</code> assembles PNG pages into the
 PDF and writes the manifest.</li>
 <li><code>scripts/</code> contains the thin Stage-02 entry points.</li>
@@ -195,5 +201,6 @@ PDF and writes the manifest.</li>
 orchestration: cover, page 1, page 2, and so on. The repetition keeps
 the creative page surface easy to inspect while preventing scripts from
 becoming hidden rendering engines.</p>
+</main>
 </body>
 </html>

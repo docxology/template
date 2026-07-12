@@ -1,0 +1,22 @@
+claims:
+  - claim_id: infrastructure-coverage-threshold
+    kind: number
+    value: 60
+    source: rules/templates/template_project_rules/strong/coverage-gate.yaml rule.constraints.infrastructure
+    source_tier: project_source
+    freshness: active
+    artifact_path: ../../../rules/templates/template_project_rules/strong/coverage-gate.yaml
+  - claim_id: project-source-coverage-threshold
+    kind: number
+    value: 90
+    source: rules/templates/template_project_rules/strong/coverage-gate.yaml rule.constraints.project_src
+    source_tier: project_source
+    freshness: active
+    artifact_path: ../../../rules/templates/template_project_rules/strong/coverage-gate.yaml
+  - claim_id: public-api-coverage-threshold
+    kind: number
+    value: 95
+    source: rules/templates/template_project_rules/strong/coverage-gate.yaml rule.constraints.public_api
+    source_tier: project_source
+    freshness: active
+    artifact_path: ../../../rules/templates/template_project_rules/strong/coverage-gate.yaml

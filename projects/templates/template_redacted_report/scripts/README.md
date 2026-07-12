@@ -2,6 +2,24 @@
 
 Use monorepo pipeline scripts from the repository root for normal test/render stages.
 
+## Canonical Stage 02 analysis
+
+`manuscript/config.yaml` allowlists one normal analysis entrypoint:
+
+```bash
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report
+```
+
+This runs `01_generate_release_artifacts.py`, a thin wrapper around
+`redacted_report.write_release_artifacts()`. It reads
+`data/example_segments.json` and writes only
+`output/reports/redaction_audit.json` and
+`output/data/release_ledger.json`. Both files are canonical JSON and exclude
+source text. Run the script directly with `--input` and `--output-root` only for
+fixture testing or a standalone fork.
+
+## Development visual matrix
+
 `generate_dev_variants.py` creates the development proof matrix for every redaction style and PDF background combination. By default it also runs the template steganography/provenance post-processor on every proof PDF and writes `output/dev/redaction_variants/variant_matrix.json`.
 
 ```bash

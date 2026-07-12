@@ -57,11 +57,27 @@ def make_long_texttt_breakable(tex_content: str, *, min_chars: int = 16) -> tupl
     return updated, replacements
 
 
-def constrain_includegraphics_textheight(tex_content: str, fraction: str) -> tuple[str, int]:
-    """Replace Pandoc's full-textheight image bound with a safer fraction."""
+def constrain_includegraphics_textheight(
+    tex_content: str,
+    fraction: str,
+    *,
+    first_fraction: str | None = None,
+) -> tuple[str, int]:
+    """Replace Pandoc's full-textheight image bounds with safe configured fractions.
+
+    The first source-owned figure is the graphical abstract in the combined paper path, so it can
+    receive a distinct front-matter bound while all later figures use the ordinary figure bound.
+    """
     target = r"height=\textheight"
-    replacement = rf"height={fraction}\textheight"
-    return tex_content.replace(target, replacement), tex_content.count(target)
+    occurrences = tex_content.count(target)
+    if not occurrences:
+        return tex_content, 0
+    replacements = [first_fraction if first_fraction is not None else fraction] + [fraction] * (occurrences - 1)
+    parts = tex_content.split(target)
+    updated = parts[0]
+    for index, part in enumerate(parts[1:]):
+        updated += rf"height={replacements[index]}\textheight" + part
+    return updated, occurrences
 
 
 def make_known_literals_breakable(tex_content: str) -> tuple[str, int]:

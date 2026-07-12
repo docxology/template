@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -183,8 +183,12 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <p>This section presents the exploratory analysis of the shipped
 dataset. Every figure and the summary table are produced by the thin
@@ -205,14 +209,13 @@ numeric features: height (cm), weight (kg), and resting heart rate
 and reports the count. With the shipped data, four rows are removed,
 leaving a complete-case dataset for the analysis below.</p>
 <h2 id="distributions">Distributions</h2>
-<p><span class="citation"
-data-cites="fig:height_histogram">[@fig:height_histogram]</span> shows
-the distribution of height across the complete-case dataset, binned by
-<code>histogram_data()</code> and plotted by the analysis script.</p>
+<p>[fig:height_histogram] shows the distribution of height across the
+complete-case dataset, binned by <code>histogram_data()</code> and
+plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
 <img src="../figures/height_histogram.png"
-alt="Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process." />
-<figcaption aria-hidden="true">Height distribution: bin counts produced
+alt="Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py ." />
+<figcaption>Height distribution: bin counts produced
 by <code>histogram_data(frame, "height_cm", bins=10)</code> in
 <code>src/eda/figures.py</code> and plotted as a bar chart by
 <code>scripts/eda_analysis.py</code>. The bin counts sum to the number
@@ -220,30 +223,27 @@ of complete-case rows; the shape is the roughly bell-shaped spread
 expected from the generating process.</figcaption>
 </figure>
 <h2 id="group-composition">Group composition</h2>
-<p><span class="citation"
-data-cites="fig:group_counts">[@fig:group_counts]</span> reports how
-many complete-case rows fall in each group, computed by
-<code>group_count_data()</code> (labels sorted for deterministic
-output).</p>
+<p>[fig:group_counts] reports how many complete-case rows fall in each
+group, computed by <code>group_count_data()</code> (labels sorted for
+deterministic output).</p>
 <figure id="fig:group_counts">
 <img src="../figures/group_counts.png"
-alt="Rows per group: sorted category labels and aligned counts from group_count_data(). The three groups are of comparable, though not identical, size; the counts sum to the complete-case row total." />
-<figcaption aria-hidden="true">Rows per group: sorted category labels
+alt="Rows per group: sorted category labels and aligned counts from group_count_data() ." />
+<figcaption>Rows per group: sorted category labels
 and aligned counts from <code>group_count_data()</code>. The three
 groups are of comparable, though not identical, size; the counts sum to
 the complete-case row total.</figcaption>
 </figure>
 <h2 id="correlation-structure">Correlation structure</h2>
-<p><span class="citation"
-data-cites="fig:correlation_heatmap">[@fig:correlation_heatmap]</span>
-visualizes the Pearson correlation matrix of the three numeric features,
-computed by <code>correlation_matrix()</code> and prepared for the
-heatmap by <code>correlation_heatmap_data()</code>. The diagonal is
-unity by construction and the matrix is symmetric.</p>
+<p>[fig:correlation_heatmap] visualizes the Pearson correlation matrix
+of the three numeric features, computed by
+<code>correlation_matrix()</code> and prepared for the heatmap by
+<code>correlation_heatmap_data()</code>. The diagonal is unity by
+construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
 <img src="../figures/correlation_heatmap.png"
-alt="Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;)) rendered with a diverging colour map on the fixed range [-1, 1]. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two." />
-<figcaption aria-hidden="true">Feature correlation heatmap: values from
+alt="Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;) ) rendered with a diverging colour map on the fixed range [-1, 1] ." />
+<figcaption>Feature correlation heatmap: values from
 <code>correlation_heatmap_data()</code> (which wraps
 <code>correlation_matrix(method="pearson")</code>) rendered with a
 diverging colour map on the fixed range <span class="math inline">\([-1,
@@ -321,5 +321,6 @@ manuscript — which is the architectural point of the exemplar. Because
 every number is produced by a tested function and regenerated on demand,
 the prose here describes structure and provenance rather than
 transcribing values that would drift the moment the data changed.</p>
+</main>
 </body>
 </html>

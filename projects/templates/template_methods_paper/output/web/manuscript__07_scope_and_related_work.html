@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,13 +173,17 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:scope">Scope, Related Work, and Positioning</h1>
 <p>This section situates the exemplar and states explicit boundaries.
-The goal is not to compete with BPL’s full compiler pipeline [bpl2026] —
-a ~32,000-line implementation with a Lark grammar, a robot backend, and
-a hash-chained audit/compliance layer — but to show how a minimal,
+The goal is not to compete with BPL’s substantially larger full compiler
+pipeline [bpl2026] — with its Lark grammar, robot backend, and
+hash-chained audit/compliance layer — but to show how a minimal,
 test-backed subset of BPL’s domain-language design fits the template’s
 reproducibility and rendering stack [peng2011reproducible], generalized
 from wet-lab protocols to any controlled procedure.</p>
@@ -258,5 +262,6 @@ exemplar does not implement durable storage for a real audit trail.</li>
 the reproducibility concerns — tested functions, a thin script, and
 generated-variable-injected prose — remain visible rather than buried
 under a compiler implementation at BPL’s full scale.</p>
+</main>
 </body>
 </html>

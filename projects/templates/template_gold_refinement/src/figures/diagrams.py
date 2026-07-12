@@ -80,10 +80,11 @@ def generate_purity_claim_scatter(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    """Generate a scatter plot of purity vs claim support rate per stage.
+    """Plot stage purity against the project-level claim-support rate.
 
-    Each stage's output purity is plotted against the fraction of
-    contribution claims that are supported at that stage's evidence level.
+    Claim support is measured once for the contribution ledger. Repeating that
+    observed value across stages preserves the distinct units and avoids
+    inventing an unsupported stagewise trajectory.
     """
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
@@ -97,27 +98,37 @@ def generate_purity_claim_scatter(
         support_rate = ev.get("support_rate", 1.0)
 
     purities = [s.output_purity for s in result.stages]
-    support_rates = [min(1.0, support_rate * (i + 1) / len(purities)) for i in range(len(purities))]
+    support_rates = [support_rate] * len(purities)
 
     fig, ax = plt.subplots(figsize=(8.8, 6.4))
     sizes = [130 + 45 * _nines_score(stage.output_purity) for stage in result.stages]
     ax.scatter(purities, support_rates, c=STAGE_COLORS[: len(purities)], s=sizes, zorder=5, edgecolors="black")
 
+    label_offsets = ((8, 8), (8, 8), (-20, 18), (-78, -24), (8, 10))
     for i, stage in enumerate(result.stages):
         ax.annotate(
             stage.name,
             xy=(purities[i], support_rates[i]),
-            xytext=(purities[i] + 0.02, support_rates[i] + 0.02),
+            xytext=label_offsets[i],
+            textcoords="offset points",
             fontsize=9,
+            ha="right" if label_offsets[i][0] < 0 else "left",
         )
 
     ax.set_xlabel("Stage Output Purity (fraction)", fontsize=12)
-    ax.set_ylabel("Cumulative Claim Support Rate", fontsize=12)
-    ax.set_title("Purity vs Claim Support", fontsize=14)
+    ax.set_ylabel("Project Claim-Support Rate", fontsize=12)
+    ax.set_title("Stage Purity vs Project Claim Support", fontsize=14)
     ax.set_xlim(0, 1.1)
     ax.set_ylim(0, 1.15)
     ax.axhline(y=1.0, color="green", linestyle="--", alpha=0.3, label="Full support")
-    ax.text(0.02, 0.96, f"Project assay: {support_rate:.0%}", transform=ax.transAxes, fontsize=9, va="top")
+    ax.text(
+        0.02,
+        0.96,
+        f"One project-level assay ({support_rate:.0%}); no stagewise support trajectory is inferred",
+        transform=ax.transAxes,
+        fontsize=8.5,
+        va="top",
+    )
     ax.legend()
     _style_axes(ax)
 

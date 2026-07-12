@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import time
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -83,7 +82,7 @@ def generate_stability_visualization(stability_path: Any) -> Any:
 
 
 def generate_benchmark_visualization(benchmark_path: Any) -> Any:
-    """Generate dimensional scaling benchmark by running gradient_descent at d=1..50."""
+    """Generate a deterministic dimensional-work benchmark figure."""
     logger = get_logger()
     if not benchmark_path:
         return None
@@ -92,7 +91,7 @@ def generate_benchmark_visualization(benchmark_path: Any) -> Any:
     logger.info("Generating benchmark visualization...")
     exp_config = experiment_config()
     dimensions = list(exp_config.benchmark_dimensions)
-    times_us: list[float] = []
+    work_units: list[int] = []
     iter_counts: list[int] = []
 
     for d in dimensions:
@@ -100,38 +99,47 @@ def generate_benchmark_visualization(benchmark_path: Any) -> Any:
         b = np.ones(d)
         x0 = np.zeros(d)
         obj_func, grad_func = make_quadratic_problem(A, b)
-        elapsed = []
-        last_result = None
-        for _ in range(20):
-            t0 = time.perf_counter()
-            last_result = gradient_descent(
-                initial_point=x0,
-                objective_func=obj_func,
-                gradient_func=grad_func,
-                step_size=0.1,
-                max_iterations=500,
-                tolerance=1e-10,
-            )
-            elapsed.append(time.perf_counter() - t0)
-        times_us.append(float(np.mean(elapsed) * 1e6))
-        iter_counts.append(last_result.iterations if last_result else 0)
+        result = gradient_descent(
+            initial_point=x0,
+            objective_func=obj_func,
+            gradient_func=grad_func,
+            step_size=0.1,
+            max_iterations=500,
+            tolerance=1e-10,
+        )
+        iter_counts.append(result.iterations)
+        work_units.append(d * result.iterations)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=VIZ_CONFIG["figure"]["figsize_double"])
     color1 = VIZ_CONFIG["colors"]["primary"]
     color2 = VIZ_CONFIG["colors"]["secondary"]
 
-    ax1.bar(range(len(dimensions)), times_us, tick_label=[str(d) for d in dimensions], color=color1, alpha=0.85)
+    ax1.bar(
+        range(len(dimensions)),
+        work_units,
+        tick_label=[str(d) for d in dimensions],
+        color=color1,
+        alpha=0.85,
+    )
     ax1.set_xlabel("Problem Dimension (d)", fontsize=11, fontweight="medium")
-    ax1.set_ylabel("Execution Time (μs)", fontsize=11, fontweight="medium")
+    ax1.set_ylabel("Dimension × Iterations (work units)", fontsize=11, fontweight="medium")
     ax1.set_title(
-        "Execution Time vs Problem Dimension\ngradient_descent() wall-clock scaling",
+        "Deterministic Work Proxy vs Dimension\nd × convergence iterations",
         fontsize=12,
         fontweight="bold",
         pad=12,
     )
     ax1.grid(True, alpha=0.3, axis="y")
-    for i, val in enumerate(times_us):
-        ax1.text(i, val + max(times_us) * 0.02, f"{val:.0f}μs", ha="center", va="bottom", fontsize=9, fontweight="bold")
+    for i, val in enumerate(work_units):
+        ax1.text(
+            i,
+            val + max(work_units) * 0.02,
+            str(val),
+            ha="center",
+            va="bottom",
+            fontsize=9,
+            fontweight="bold",
+        )
 
     ax2.bar(range(len(dimensions)), iter_counts, tick_label=[str(d) for d in dimensions], color=color2, alpha=0.85)
     ax2.set_xlabel("Problem Dimension (d)", fontsize=11, fontweight="medium")

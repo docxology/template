@@ -60,6 +60,40 @@ class KaratGrade:
         return n
 
 
+@dataclass(frozen=True)
+class PurityVector:
+    """Independent local quality dimensions that must not be conflated."""
+
+    stage_completion: float
+    claim_support: float
+    token_provenance: float
+    figure_quality: float
+
+    def __post_init__(self) -> None:
+        for name, value in self.as_dict().items():
+            if not 0.0 <= value <= 1.0:
+                raise ValueError(f"{name} must be in [0, 1], got {value}")
+
+    def as_dict(self) -> dict[str, float]:
+        """Return dimension names and values in stable display order."""
+        return {
+            "stage_completion": self.stage_completion,
+            "claim_support": self.claim_support,
+            "token_provenance": self.token_provenance,
+            "figure_quality": self.figure_quality,
+        }
+
+    @property
+    def weakest_dimension(self) -> tuple[str, float]:
+        """Return the limiting dimension without collapsing the vector."""
+        return min(self.as_dict().items(), key=lambda item: item[1])
+
+    @property
+    def all_complete(self) -> bool:
+        """Whether every dimension is complete."""
+        return all(value == 1.0 for value in self.as_dict().values())
+
+
 def karat_for_purity(purity: float) -> KaratGrade:
     """Return the highest standard karat grade not exceeding *purity*.
 
@@ -143,6 +177,7 @@ __all__ = [
     "KARAT_GRADES",
     "NINE_NINES_PURITY",
     "KaratGrade",
+    "PurityVector",
     "assert_monotone_increase",
     "format_purity",
     "karat_for_purity",

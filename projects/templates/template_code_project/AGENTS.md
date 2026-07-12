@@ -8,8 +8,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 | Surface | Rule |
 | --- | --- |
-| `src/` (domain) | Pure optimization, figures, dashboard payload — **no** direct `infrastructure` imports |
-| `src/analysis/_infra.py`, `src/_runtime.py` | Optional monorepo adapters only (logging, publishing, figure registry, dashboard shell) |
+| `src/optimizer.py`, `src/invariants.py` (mathematical core) | Pure optimization and invariant logic — **no** direct `infrastructure` imports |
+| `src/analysis/_infra.py`, `src/_runtime.py`, `src/benchmark_support.py` | Declared monorepo adapters only (analysis services, rendering/runtime helpers, benchmark rubric) |
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
 
@@ -142,7 +142,7 @@ uv run python projects/templates/template_code_project/scripts/z_generate_manusc
 ### Scientific Analysis Features
 
 ```python
-from scripts.optimization_analysis import run_stability_analysis, run_performance_benchmarking
+from src.analysis import run_performance_benchmarking, run_stability_analysis
 
 # Assess numerical stability
 stability_path = run_stability_analysis()
@@ -375,8 +375,8 @@ This project complies with the template development standards in **[`docs/rules/
 # Test coverage verification
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90
 
-# Type hint verification
-uv run python -c "import ast; import inspect; # Type checking logic here"
+# Type hint verification (same project source surface used by CI)
+uv run mypy projects/templates/template_code_project/src
 
 # Documentation completeness check
 find . -name "*.py" -exec grep -L '"""' {} \;
@@ -458,7 +458,7 @@ quick reference commands, and pitfalls.
 Automated citation generation and metadata extraction:
 
 ```python
-from scripts.optimization_analysis import extract_optimization_metadata, generate_citations_from_metadata
+from src.analysis import extract_optimization_metadata, generate_citations_from_metadata
 
 # Extract metadata from optimization results
 metadata = extract_optimization_metadata(results)

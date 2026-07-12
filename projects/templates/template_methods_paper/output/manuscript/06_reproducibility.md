@@ -22,13 +22,13 @@ uv run pytest projects/templates/template_methods_paper/tests \
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 
 # 4. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 Or, end to end via the orchestrated pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
 ```
 
 ## Generated artifact registry
@@ -69,7 +69,7 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `23b5981d45bdc598` is the
+Configuration provenance is itself injected: `a0f000565bef6a79` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-06-30T23:02:10Z` records when the variables were generated
+`2026-07-12T02:08:51Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).

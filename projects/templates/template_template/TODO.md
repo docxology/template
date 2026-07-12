@@ -41,8 +41,9 @@ infrastructure and the public exemplar roster.
 - Add negative controls for stale generated metrics and accidental inclusion of
   local-only project paths.
 - Add schema tests before changing the metrics JSON consumed by the manuscript.
-- Bind generated count and percentage claims into the evidence registry so the
-  meta-template's introspection numbers validate without warnings.
+- Keep the manuscript evidence-contract test green as new generated metrics or
+  cited empirical values are introduced; live counts remain token-injected, and
+  policy percentages remain bound to executable configuration.
 - Add or document a stable final artifact-manifest refresh path for
   single-stage analysis, render, and copy checks.
 - Document the structurally unreachable introspection branches (the `dir()`

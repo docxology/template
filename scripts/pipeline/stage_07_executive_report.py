@@ -35,9 +35,7 @@ def main() -> int:
         return 0
 
     completed = [
-        project.qualified_name
-        for project in projects
-        if verify_project_completion(repo_root, project.qualified_name)
+        project.qualified_name for project in projects if verify_project_completion(repo_root, project.qualified_name)
     ]
     if not completed:
         logger.error("No projects completed the pipeline successfully")

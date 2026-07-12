@@ -7,10 +7,10 @@ changes, no \texttt{pyproject.toml} modifications, no CI configuration
 updates. The \texttt{run.sh} orchestrator automatically discovers new
 projects and presents them in its interactive menu.
 
-We have validated scaling with 16 canonical exemplars under
+We have validated scaling with 23 canonical exemplars under
 \breaktt{projects/templates/}---always present for onboarding and
 tooling---and with this manuscript from
-\breaktt{projects/templates/template\_template} (130 tests) as a
+\breaktt{projects/templates/template\_template} (138 tests) as a
 git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
@@ -19,14 +19,16 @@ Canonical trio:
 \tightlist
 \item
   \textbf{\breaktt{template\_code\_project}}: Numerical optimization
-  example with gradient-descent narration, 236 tests, 90\%+ coverage.
+  example with gradient-descent narration and 236 discovered tests. Its
+  \texttt{pyproject.toml} declares the 90\% project-source floor.
   Minimal footprint: compact \texttt{src/}, scripted analysis, short
   manuscript sections.
 \item
   \textbf{\breaktt{template\_prose\_project}}: Prose-heavy manuscript
-  emphasizing narrative structure and bibliography discipline, 120
-  tests, 90\%+ coverage---tests exercise rendering and Markdown
-  integrity without heavyweight numerics.
+  emphasizing narrative structure and bibliography discipline, with 120
+  discovered tests and the same declared project-source floor; tests
+  exercise rendering and Markdown integrity without heavyweight
+  numerics.
 \item
   \textbf{\breaktt{template\_autoresearch\_project}}: AutoResearch
   readiness workflow invoking
@@ -43,8 +45,8 @@ repository via \breaktt{src/template\_template/} introspection metrics;
 it now lives alongside the other public exemplars under
 \breaktt{projects/templates/}.
 
-These workspaces share no project-level code---only Layer~1 (23
-infrastructure subdirectories, \textasciitilde616 Python
+These workspaces share no project-level code---only Layer~1 (28
+infrastructure subdirectories, \textasciitilde662 Python
 files)---validating insulation between domain repos and reusable
 services.
 
@@ -82,17 +84,17 @@ Metric
 \midrule\noalign{}
 \endhead
 Source modules & 26 & 6 & 60 \\
-Test files & 12 & 8 & 17 \\
-Test count & 236 & 120 & 296 \\
+Test files & 12 & 8 & 20 \\
+Test count & 236 & 120 & 300 \\
 Manuscript chapters & 9 & 8 & 6 \\
-Analysis scripts & 7 & 4 & 4 \\
+Analysis scripts & 10 & 4 & 5 \\
 Figures (auto-generated) & 9 & 5 & 27 \\
 \bottomrule\noalign{}
 \end{longtable}
 }
 
 The infrastructure overhead per project is constant regardless of
-project size: the same 23 modules, the same 13 pipeline stages, the same
+project size: the same 28 modules, the same 16 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.
 \end{block}

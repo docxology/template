@@ -14,6 +14,7 @@ real recording callable / raising stub in place of the underlying validator.
 from __future__ import annotations
 
 import builtins
+from pathlib import Path
 
 import pytest
 
@@ -40,6 +41,30 @@ def test_missing_manuscript_dir_returns_true(tmp_path):
 def test_empty_manuscript_dir_returns_true(tmp_path):
     project_root = _make_project(tmp_path)
     assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is True
+
+
+def test_docs_manuscript_is_passed_to_markdown_validator(tmp_path, monkeypatch):
+    project_root = tmp_path / "project"
+    compatibility = project_root / "manuscript"
+    manuscript = project_root / "docs" / "manuscript"
+    compatibility.mkdir(parents=True)
+    manuscript.mkdir(parents=True)
+    (project_root / "output").mkdir()
+    (compatibility / "config.yaml").write_text("paper: {}\n", encoding="utf-8")
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    visited: list[Path] = []
+
+    def record_validate_md(directory, repo_root, strict=False):
+        visited.append(Path(directory))
+        return [], 0
+
+    monkeypatch.setattr(
+        "infrastructure.validation.content.markdown_validator.validate_markdown",
+        record_validate_md,
+    )
+
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is True
+    assert visited == [manuscript]
 
 
 def test_clean_markdown_returns_true(tmp_path, monkeypatch):

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T07:10:08.078609",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -8,40 +8,10 @@
     "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": false
+    "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "README.md: unsupported number 03"
-    ],
-    "artifact_manifest_issues": [
-      "changed artifact: output/pdf/_combined_manuscript.tex",
-      "changed artifact: output/pdf/template_newspaper_combined.pdf",
-      "changed artifact: output/slides/00_abstract_slides.pdf",
-      "changed artifact: output/slides/00_abstract_slides.tex",
-      "changed artifact: output/slides/01_introduction_slides.pdf",
-      "changed artifact: output/slides/01_introduction_slides.tex",
-      "changed artifact: output/slides/02_engine_architecture_slides.pdf",
-      "changed artifact: output/slides/02_engine_architecture_slides.tex",
-      "changed artifact: output/slides/03_typography_and_figures_slides.pdf",
-      "changed artifact: output/slides/03_typography_and_figures_slides.tex",
-      "changed artifact: output/slides/04_reproducibility_slides.pdf",
-      "changed artifact: output/slides/04_reproducibility_slides.tex",
-      "changed artifact: output/slides/99_references_slides.pdf",
-      "changed artifact: output/slides/99_references_slides.tex",
-      "changed artifact: output/web/index.html",
-      "changed artifact: output/web/manuscript__00_abstract.html",
-      "changed artifact: output/web/manuscript__01_introduction.html",
-      "changed artifact: output/web/manuscript__02_engine_architecture.html",
-      "changed artifact: output/web/manuscript__03_typography_and_figures.html",
-      "changed artifact: output/web/manuscript__04_reproducibility.html",
-      "changed artifact: output/web/manuscript__99_references.html",
-      "changed artifact: output/reports/validation_report.json",
-      "changed artifact: output/reports/validation_report.md",
-      "changed artifact: output/reports/output_statistics.json",
-      "changed artifact: output/reports/output_statistics.txt"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -95,7 +65,7 @@
           "reports": {
             "exists": true,
             "files": 27,
-            "size_mb": 0.13,
+            "size_mb": 0.16,
             "readable": true,
             "optional": false
           },
@@ -156,7 +126,7 @@
         "reports": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "0.13",
+          "size_mb": "0.16",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -189,7 +159,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 1.4740333557128906,
+      "total_size_mb": 1.5041074752807617,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -214,17 +184,10 @@
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
+    "passed": 8,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/templates/template_newspaper/output/reports/artifact_manifest.json"
-    }
-  ]
+  "recommendations": []
 }

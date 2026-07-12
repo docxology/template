@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="appendix-directory">Appendix: Repository Directory
 Structure</h2>
 <pre class="text"><code>template/
@@ -200,13 +204,14 @@ Structure</h2>
 │   ├── published/               # Non-rendered published (symlinked, private)
 │   ├── archive/                 # Non-rendered retired (symlinked, private)
 │   └── other/                   # Non-rendered misc (symlinked, private)
-├── docs/ (17 top-level areas, 380+ markdown files per live counter)
-├── tests/                       # Infra suites (470+ files)
+├── docs/ (18 top-level areas, 390+ markdown files per live counter)
+├── tests/                       # Infra suites (504+ files)
 ├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage</code></pre>
 <p>See <code>docs/_generated/active_projects.md</code> for regenerated
 slugs
-(<code>uv run python scripts/generate_active_projects_doc.py</code>).</p>
+(<code>uv run python scripts/docgen/active_projects.py</code>).</p>
+</main>
 </body>
 </html>

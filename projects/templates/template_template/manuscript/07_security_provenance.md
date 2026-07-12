@@ -20,7 +20,7 @@ The `inject_pdf_metadata` function writes structured metadata into both the PDF 
 
 - `/Creator`: Pipeline identifier
 - `/Producer`: Module path (`infrastructure.steganography`)
-- `/CreationDate`: UTC timestamp in ISO 8601 format
+- `/CreationDate`: UTC timestamp in `ISO 8601` format
 - `/Author`: From `config.yaml`
 - `/Title`: From `config.yaml`
 - Custom fields: DOI, ORCID, repository URL
@@ -52,7 +52,7 @@ A representative overlay text string takes the following form:
 template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | pipeline: v2.0.0 | project: template
 ```
 
-This single line, tiled across each page at 3–5% opacity, encodes the complete build provenance chain: the system identifier, ISO 8601 build timestamp, short Git commit hash, pipeline version, and project name. Together these fields allow a verifier to reconstruct—from the watermark alone—which version of the code, at which moment in time, produced the document.
+This single line, tiled across each page at 3–5% opacity, encodes the complete build provenance chain: the system identifier, `ISO 8601` build timestamp, short Git commit hash, pipeline version, and project name. Together these fields allow a verifier to reconstruct—from the watermark alone—which version of the code, at which moment in time, produced the document.
 
 ### Layer 4: QR Code Injection
 

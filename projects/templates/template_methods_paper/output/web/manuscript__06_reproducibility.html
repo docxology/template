@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,12 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:reproducibility">Reproducibility</h1>
 <p>This section explains how to regenerate every artifact in the study
 from a clean checkout. The exemplar’s reproducibility guarantee is
@@ -260,10 +264,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Render the manuscript</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py <span class="at">--project</span> templates/template_methods_paper</span></code></pre></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py <span class="at">--project</span> templates/template_methods_paper</span></code></pre></div>
 <p>Or, end to end via the orchestrated pipeline:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/execute_pipeline.py <span class="at">--project</span> templates/template_methods_paper <span class="at">--core-only</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/runner/execute_pipeline.py <span class="at">--project</span> templates/template_methods_paper <span class="at">--core-only</span></span></code></pre></div>
 <h2 id="generated-artifact-registry">Generated artifact registry</h2>
 <p>The analysis script writes the following artifacts under
 <code>projects/templates/template_methods_paper/output/</code>:</p>
@@ -339,16 +343,16 @@ merely asserted once in a test.</li>
 </ul>
 <h2 id="verification-no-hand-transcribed-numbers">Verification (no
 hand-transcribed numbers)</h2>
-<p>Every quantitative claim in <span class="citation"
-data-cites="sec:results">[@sec:results]</span> is either a generated
+<p>Every quantitative claim in [sec:results] is either a generated
 variable sourced from a live analysis output or registered in
 <code>data/claim_ledger.yaml</code> for evidence-registry validation.
 The manuscript intentionally does not hand-transcribe volatile values,
 so prose and artifacts cannot disagree. Configuration provenance is
-itself injected: <code>23b5981d45bdc598</code> is the SHA-256 of
+itself injected: <code>a0f000565bef6a79</code> is the SHA-256 of
 <code>manuscript/config.yaml</code> at build time, and
-<code>2026-06-30T23:02:10Z</code> records when the variables were
+<code>2026-07-12T02:08:51Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
+</main>
 </body>
 </html>

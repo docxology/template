@@ -254,6 +254,10 @@ saved_files = save_validation_report(validation_results, Path("output/reports"))
 - `save_pipeline_report()` - Save report in multiple formats (JSON, HTML, Markdown)
 - `generate_test_report()` - Generate test results report
 - `save_validation_report()` - Save validation report
+
+Validation JSON and Markdown use the same caller-supplied timestamp. When it is
+absent, `SOURCE_DATE_EPOCH` (or deterministic mode) controls both; otherwise the
+canonical build-time resolver preserves the normal wall-clock behavior.
 - `save_performance_report()` - Save performance metrics report
 - `save_error_summary()` - Save error summary report
 

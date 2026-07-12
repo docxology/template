@@ -10,12 +10,12 @@ Use `infrastructure.benchmark` for small, deterministic readiness benchmarks ove
 ## Common Workflows
 
 ```bash
-uv run python -m infrastructure.benchmark.template_harness --repo-root .
-uv run python -m infrastructure.benchmark.template_harness \
+uv run python -m infrastructure.benchmark --repo-root .
+uv run python -m infrastructure.benchmark \
   --repo-root . \
   --output-json /tmp/template_benchmark.json \
   --output-markdown /tmp/template_benchmark.md
-uv run python -m infrastructure.benchmark.template_harness \
+uv run python -m infrastructure.benchmark \
   --repo-root . \
   --write-default-manifest
 ```
@@ -25,11 +25,15 @@ uv run python -m infrastructure.benchmark.template_harness \
 - Keep benchmark manifests scoped to public template exemplars and generated output contracts.
 - Use real output files, manuscript sources, evidence registries, and artifact manifests.
 - Do not add network calls, LLM calls, mocks, or private-project paths.
-- Keep scoring dimensions explicit in the manifest so failed checks remain inspectable.
+- Keep scoring dimensions explicit and exactly aligned with manifest checks so
+  failed checks, weights, and partial scores remain inspectable.
+- Treat the default manifest as a fail-closed sweep of the full public roster;
+  never shrink it to make a readiness run green.
 
 ## Public Imports
 
 - `BenchmarkManifest`
+- `BenchmarkCheckResult`
 - `BenchmarkScore`
 - `RubricScore`
 - `RubricSet`

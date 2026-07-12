@@ -14,7 +14,7 @@
 | **Date** | 2026-07-05 |
 | **License** | CC-BY-4.0 |
 | **Repository** | [docxology/template](https://github.com/docxology/template) |
-| **DOI** | 10.5281/zenodo.template_pools_rules_tools |
+| **DOI** | 10.5281/zenodo.21298888 |
 | **Keywords** | research software engineering, monorepo architecture, reproducibility, fonds, governance rules, tool discovery, graceful degradation |
 
 ---

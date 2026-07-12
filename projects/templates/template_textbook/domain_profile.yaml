@@ -29,7 +29,7 @@ review_gates:
   - stub_honesty
   - publication_readiness
 artifact_expectations:
-  - output/data/manuscript_variables.json
+  - output/data/worked_model_summary.json
   - output/figures/part_0_orientation.png
   - output/figures/gallery/gallery_line.png
   - output/pdf/template_textbook_combined.pdf

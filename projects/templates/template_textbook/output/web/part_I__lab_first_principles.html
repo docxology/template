@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,11 +238,36 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:lab_part_I_first_principles">Lab — First Principles</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
@@ -255,15 +280,13 @@ for chosen parameters, (2) read its carrying capacity and half-rise time
 from a plot, and (3) recover the growth rate from data with a simple
 fit.</p>
 <h2 id="background">Background</h2>
-<p>This lab makes the chapter concrete: see <span class="citation"
-data-cites="sec:part_I_first_principles">[@sec:part_I_first_principles]</span>
-for the logistic law and the meaning of <span
-class="math inline">\(r\)</span>, <span
+<p>This lab makes the chapter concrete: see
+[sec:part_I_first_principles] for the logistic law and the meaning of
+<span class="math inline">\(r\)</span>, <span
 class="math inline">\(K\)</span>, and <span
 class="math inline">\(N_0\)</span>. You will produce the same S-curve
-shown in <span class="citation"
-data-cites="fig:part_I_first_principles">[@fig:part_I_first_principles]</span>
-and then work backwards from numbers to parameters.</p>
+shown in [fig:part_I_first_principles] and then work backwards from
+numbers to parameters.</p>
 <h2 id="procedure">Procedure</h2>
 <ol type="1">
 <li>Install the project: <code>uv sync</code>. Confirm the tests pass:
@@ -306,12 +329,12 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 parameter sets that value, and why is it independent of <span
 class="math inline">\(r\)</span>?</li>
 <li>A colleague claims the population “will keep growing forever.” Using
-<span class="citation"
-data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>,
-explain in one sentence why it will not.</li>
+[eq:part_I_first_principles_model], explain in one sentence why it will
+not.</li>
 <li>If your measured data rose past <span
 class="math inline">\(K\)</span> and then fell back, what would that
 tell you about the adequacy of the logistic model for that system?</li>
 </ol>
+</main>
 </body>
 </html>

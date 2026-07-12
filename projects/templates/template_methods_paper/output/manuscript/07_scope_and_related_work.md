@@ -1,9 +1,9 @@
 # Scope, Related Work, and Positioning {#sec:scope}
 
 This section situates the exemplar and states explicit boundaries. The goal
-is not to compete with BPL's full compiler pipeline [@bpl2026] — a
-~32,000-line implementation with a Lark grammar, a robot backend, and a
-hash-chained audit/compliance layer — but to show how a minimal,
+is not to compete with BPL's substantially larger full compiler pipeline
+[@bpl2026] — with its Lark grammar, robot backend, and hash-chained
+audit/compliance layer — but to show how a minimal,
 test-backed subset of BPL's domain-language design fits the template's
 reproducibility and rendering stack [@peng2011reproducible], generalized
 from wet-lab protocols to any controlled procedure.

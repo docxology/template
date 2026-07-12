@@ -324,11 +324,38 @@ body {
   overflow-x: visible;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 @media (max-width: 600px) {
   body {
     width: 100%;
     max-width: 100%;
     padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
@@ -368,6 +395,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -375,7 +407,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -452,7 +484,7 @@ mjx-container[display="true"] {
 </style>
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">template_pitch_deck: Reproducible, Validated
 Pitch-Deck Generation</h1>
@@ -495,6 +527,7 @@ class="toc-section-number">5</span> Reproducibility</a></li>
 class="toc-section-number">6</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Research groups routinely need to pitch their work — to funders,
@@ -543,11 +576,12 @@ Three properties make that possible.</p>
 <code>manuscript/deck_content_{short,medium,long}.yaml</code> define the
 slide-by-slide narrative at three lengths; the live token builder
 (<code>src/deck_tokens.py</code>) supplies the facts.
-<code>scripts/render_decks.py</code> resolves tokens once and calls both
-renderers — <code>infrastructure.rendering.slide_deck.render_pdf</code>
-and <code>infrastructure.rendering.pptx_deck.render_pptx</code> —
-against the identical resolved content, so PDF and PPTX cannot drift
-from each other.</p>
+<code>scripts/20_render_decks.py</code> resolves tokens once and calls
+both renderers —
+<code>infrastructure.rendering.slide_deck.render_pdf</code> and
+<code>infrastructure.rendering.pptx_deck.render_pptx</code> — against
+the identical resolved content, so PDF and PPTX cannot drift from each
+other.</p>
 <p><strong>Facts, not fabrication.</strong> Every numeric claim produced
 by <code>src/deck_tokens.py</code> about the pitch subject
 (<code>template_template</code>) is generated from a live read of that
@@ -567,7 +601,7 @@ gate.</p>
 architecture (sec. <a href="#sec:architecture">3</a>), the validation
 model (sec. <a href="#sec:validation">4</a>), and the reproducibility
 guarantees (sec. <a href="#sec:reproducibility">5</a>) that let
-<code>uv run python scripts/render_decks.py --project templates/template_pitch_deck</code>
+<code>uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py</code>
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.</p>
 <hr />
@@ -584,9 +618,9 @@ speaker-notes string, an optional local figure path, and a
 <code>content</code>).</li>
 <li><code>DeckContent</code> — a deck title/subtitle plus an ordered
 tuple of <code>Slide</code>.</li>
-<li><code>SlideBudget</code> — the three published lengths
-(<code>SHORT</code> ≤ 10 slides, <code>MEDIUM</code> ≤ 22,
-<code>LONG</code> ≤ 45) and <code>filter_deck_for_budget</code>, a pure
+<li><code>SlideBudget</code> — the three published maximum lengths
+(<code>SHORT</code> ≤ 11 slides, <code>MEDIUM</code> ≤ 38,
+<code>LONG</code> ≤ 58) and <code>filter_deck_for_budget</code>, a pure
 function that truncates a deck to a budget without mutating slide order
 or content.</li>
 </ul>
@@ -618,9 +652,9 @@ pitch-deck-domain code — loading
 <code>manuscript/deck_content_*.yaml</code> into
 <code>DeckContent</code> objects, resolving <code>{{TOKEN}}</code>
 values, and linting for cliché — never layout/drawing code.
-<code>scripts/render_decks.py</code> is the thin orchestrator that ties
-content loading, token resolution, cliché linting, and the two infra
-renderers together into the six published artifacts under
+<code>scripts/20_render_decks.py</code> is the thin orchestrator that
+ties content loading, token resolution, cliché linting, and the two
+infra renderers together into the six published artifacts under
 <code>output/{pdf,pptx}/</code>.</p>
 <hr />
 <h1 data-number="4" id="sec:validation"><span
@@ -672,9 +706,9 @@ cleanliness is trusted.</p>
 <hr />
 <h1 data-number="5" id="sec:reproducibility"><span
 class="header-section-number">5</span> Reproducibility</h1>
-<p><code>scripts/render_decks.py</code> is deterministic: given the same
-repository state (<code>manuscript/deck_content_*.yaml</code>, the live
-tokens from <code>src/deck_tokens.py</code>, and the live facts
+<p><code>scripts/20_render_decks.py</code> is deterministic: given the
+same repository state (<code>manuscript/deck_content_*.yaml</code>, the
+live tokens from <code>src/deck_tokens.py</code>, and the live facts
 <code>src/deck_tokens.py</code> reads from
 <code>template_template</code>’s own files and the public exemplar
 roster), two consecutive runs produce byte-identical PDF and PPTX
@@ -683,7 +717,7 @@ a generation time is recorded is deck metadata, following the
 <code>STEGANOGRAPHY_DETERMINISTIC</code>-style convention already used
 elsewhere in this repository for reproducible builds.</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/render_decks.py</span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/20_render_decks.py</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pdf/template_template_pitch_{short,medium,long}.pdf</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pptx/template_template_pitch_{short,medium,long}.pptx</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>

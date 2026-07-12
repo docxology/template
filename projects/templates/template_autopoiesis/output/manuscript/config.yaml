@@ -59,44 +59,52 @@ analysis:
 # Effective product size = 5 (primitive_domain) × 3 (track) × 3 (section_set) = 45
 # Total product size = 5 × 3 × 3 × 2 × 2 × 2 = 360
 
-autopoiesis:
-  seed: 42
-  slots:
-    - name: primitive_domain
-      options:
-        - optimization
-        - dynamics
-        - statistics
-        - signal
-        - graph
-    - name: track
-      options:
-        - analytical
-        - empirical
-        - hybrid
-    - name: section_set
-      options:
-        - minimal
-        - standard
-        - extended
-    - name: figure_profile
-      options:
-        - minimal
-        - full
-    - name: qr_profile
-      options:
-        - "off"
-        - "on"
-    - name: integrity_profile
-      options:
-        - sha256
-        - merkle
-  deps: []
+project_config:
+  autopoiesis:
+    seed: 42
+    slots:
+      - name: primitive_domain
+        options:
+          - optimization
+          - dynamics
+          - statistics
+          - signal
+          - graph
+      - name: track
+        options:
+          - analytical
+          - empirical
+          - hybrid
+      - name: section_set
+        options:
+          - minimal
+          - standard
+          - extended
+      - name: figure_profile
+        options:
+          - minimal
+          - full
+      - name: qr_profile
+        options:
+          - "off"
+          - "on"
+      - name: integrity_profile
+        options:
+          - sha256
+          - merkle
+    deps: []
 publication:
   doi: "10.5281/zenodo.21227869"
   version_doi: "10.5281/zenodo.21229620"
   version_record: "https://zenodo.org/records/21229620"
   github_repository: "docxology/template_autopoiesis"
+  repository_url: "https://github.com/docxology/template_autopoiesis"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V"
     osf: "https://osf.io/ksmzp/"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: false

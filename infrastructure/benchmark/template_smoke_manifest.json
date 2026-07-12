@@ -1,21 +1,43 @@
 {
+  "checks": [
+    "output_validity",
+    "evidence_grounding",
+    "reproducibility_bundle",
+    "artifact_manifest",
+    "render_success",
+    "publication_readiness"
+  ],
   "name": "template-smoke",
   "projects": [
+    "templates/template_active_inference",
+    "templates/template_autoresearch_project",
+    "templates/template_autopoiesis",
     "templates/template_code_project",
-    "templates/template_prose_project"
+    "templates/template_data_descriptor",
+    "templates/template_eda_notebook",
+    "templates/template_formal",
+    "templates/template_literature_meta_analysis",
+    "templates/template_madlib",
+    "templates/template_newspaper",
+    "templates/template_pools_rules_tools",
+    "templates/template_prose_project",
+    "templates/template_autoscientists",
+    "templates/template_gold_refinement",
+    "templates/template_methods_paper",
+    "templates/template_redacted_report",
+    "templates/template_registered_report",
+    "templates/template_search_project",
+    "templates/template_sia",
+    "templates/template_storybook",
+    "templates/template_template",
+    "templates/template_textbook",
+    "templates/template_pitch_deck"
   ],
   "required_outputs": [
     "output/pdf",
     "output/reports/validation_report.json"
   ],
-  "checks": [
-    "output_validity",
-    "evidence_grounding",
-    "reproducibility_bundle",
-    "artifact_manifest"
-  ],
   "rubric": {
-    "name": "template-publication-readiness",
     "dimensions": [
       {
         "name": "output_validity",
@@ -32,7 +54,16 @@
       {
         "name": "artifact_manifest",
         "weight": 1.0
+      },
+      {
+        "name": "render_success",
+        "weight": 1.0
+      },
+      {
+        "name": "publication_readiness",
+        "weight": 1.0
       }
-    ]
+    ],
+    "name": "template-publication-readiness"
   }
 }

@@ -182,9 +182,17 @@ uv run python -m infrastructure.validation.cli prose-quality projects/{name}/man
 
 ## Mock Validation (`output/no_mock_enforcer.py`)
 
-Validates that no mock/fake methods are used in the codebase (enforces the no-mocks policy):
+The enforced lexical API reports prohibited mock-framework imports/calls. It
+does not prove that monkeypatch dependency replacements are absent:
 
 ```python
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 violations = validate_no_mocks(tests_dir, repo_root)
+```
+
+Repository-level commands:
+
+```bash
+uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py --inventory
 ```

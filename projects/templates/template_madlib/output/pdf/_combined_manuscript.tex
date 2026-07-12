@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -62,6 +63,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -109,10 +118,15 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Template Madlib: Deterministic Token Injection for Conditional IMRAD Manuscripts},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Template Madlib: Deterministic Token Injection for Conditional
+IMRAD Manuscripts}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -189,7 +203,6 @@
 \setmathfont{latinmodern-math.otf}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{0.55cm}
@@ -197,24 +210,23 @@
 \vspace{0.4em}
 {\Large\sffamily A public exemplar for source-owned lexical composition\par}
 \vspace{0.75em}
-{\Large\sffamily\bfseries Daniel Ari Friedman\par}
-{\normalsize\sffamily Active Inference Institute\par}
-{\normalsize\sffamily\texttt{daniel@activeinference.institute}\par}
-{\normalsize\sffamily\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}\par}
-\vspace{0.18em}
-{\normalsize\sffamily DOI: \href{https://doi.org/10.5281/zenodo.20786638}{10.5281/zenodo.20786638}\par}
+{\large\sffamily\bfseries Daniel Ari Friedman\par}
+{\small\sffamily Active Inference Institute\par}
+{\small\sffamily\texttt{daniel@activeinference.institute}\par}
+{\small\sffamily\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}\par}
+\vspace{0.08em}
+{\small\sffamily DOI: \href{https://doi.org/10.5281/zenodo.20786638}{10.5281/zenodo.20786638}\par}
 \vspace{0.35em}
 \makeatletter
 {\@date\par}
 \makeatother
 \vfill
-\includegraphics[width=0.98\textwidth,height=0.60\textheight,keepaspectratio]{\detokenize{../figures/madlib_cover_overview.png}}
+\includegraphics[width=0.98\textwidth,height=0.6\textheight,keepaspectratio]{\detokenize{../figures/madlib_cover_overview.png}}
 \vfill
 \end{titlepage}
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \section{Abstract}\label{abstract}
 
@@ -1673,14 +1685,16 @@ selected value, section, and config pointer. &
 output/reports/injection\_trace.json and
 output/data/token\_inventory.json. & \texttt{analysis} \\
 Figure registry integrity & Every referenced figure label is present in
-../figures/figure\_registry.json. & scripts/04\_validate\_output.py
-figure registry check. & \texttt{validation} \\
+../figures/figure\_registry.json. &
+scripts/pipeline/stage\_04\_validate.py figure registry check. &
+\texttt{validation} \\
 Evidence registry cleanliness & Generated manuscript numbers and claims
 pass the project evidence registry. &
 output/reports/evidence\_registry.json. & \texttt{validation} \\
 Copied-output readiness & PDF, HTML, slides, figures, data, and reports
 copy into output/templates/template\_madlib. &
-scripts/05\_copy\_outputs.py output statistics. & \texttt{copy} \\
+scripts/pipeline/stage\_05\_copy.py output statistics. &
+\texttt{copy} \\
 Reviewer packet completeness & Hydrated Markdown, rendered PDF, web
 output, slides, figures, data, reports, validation results, and copy
 statistics are all present for review. & Stage 04 validation report and
@@ -1805,9 +1819,11 @@ the same validation gates passing.
 \begin{itemize}
 \tightlist
 \item
-  Config hash: \breaktt{3c4268ae54c35130}
+  Config hash: \breaktt{377db49c4154479a}
 \item
-  Generated: \breaktt{2026-06-26T14:00:22Z}
+  Generated: \breaktt{not-recorded\ (set\ SOURCE\_DATE\_EPOCH)} (derived
+  from \breaktt{SOURCE\_DATE\_EPOCH}; an explicit \texttt{not-recorded}
+  marker is emitted when the reproducible timestamp is not supplied)
 \item
   Python: \texttt{3.12.13}
 \item

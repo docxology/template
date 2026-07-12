@@ -17,6 +17,7 @@ Exit codes:
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -41,18 +42,42 @@ from src.manuscript_variables import (
 logger = get_logger(__name__)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """CLI entry point."""
-    results_path = _project_root / "output" / "search" / "results.json"
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--project-root",
+        default=str(_project_root),
+        help="Project root for manuscript and output paths (defaults to this script's project).",
+    )
+    parser.add_argument(
+        "--results",
+        default=None,
+        help="Override search results JSON (default: <project-root>/output/search/results.json).",
+    )
+    parser.add_argument(
+        "--config",
+        default=None,
+        help="Override manuscript config (default: <project-root>/manuscript/config.yaml).",
+    )
+    parser.add_argument(
+        "--variables-output",
+        default=None,
+        help="Override variables JSON output (default: <project-root>/output/data/manuscript_variables.json).",
+    )
+    args = parser.parse_args(argv)
+
+    project_root = Path(args.project_root).resolve()
+    results_path = Path(args.results).resolve() if args.results else project_root / "output" / "search" / "results.json"
     if not results_path.exists():
         logger.warning("No search results at %s; skipping.", results_path)
         return 2
 
-    config_path = _project_root / "manuscript" / "config.yaml"
+    config_path = Path(args.config).resolve() if args.config else project_root / "manuscript" / "config.yaml"
     config = load_project_config(config_path)
     payload = load_search_result_payload(results_path)
 
-    deep_dir = (_project_root / config.deep_search.output_dir).resolve()
+    deep_dir = (project_root / config.deep_search.output_dir).resolve()
     aggregate_path = deep_dir / "aggregate.json"
     aggregate = load_aggregate_payload(aggregate_path)
 
@@ -65,9 +90,13 @@ def main() -> int:
         aggregate_payload=aggregate,
     )
 
-    out_path = _project_root / "output" / "data" / "manuscript_variables.json"
+    out_path = (
+        Path(args.variables_output).resolve()
+        if args.variables_output
+        else project_root / "output" / "data" / "manuscript_variables.json"
+    )
     write_variables(variables, out_path)
-    resolved_dir = write_resolved_manuscript_tree(_project_root, variables)
+    resolved_dir = write_resolved_manuscript_tree(project_root, variables)
 
     logger.info(
         "Wrote %d manuscript variables → %s; resolved manuscript → %s",

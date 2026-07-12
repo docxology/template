@@ -4,7 +4,7 @@
 
 **Location:** `infrastructure/publishing/` — see [`infrastructure/publishing/AGENTS.md`](../../../infrastructure/publishing/AGENTS.md) for the full API index.
 
-**Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
+**Quick Reference:** [Publication runbook](../../guides/publication-runbook.md) | [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
 
@@ -41,10 +41,11 @@
 ## Platform Registry
 
 `registry.py` is the single source of truth for the publishing surface. It exposes
-**12 platforms, all `first_class`** (`tier=PublishingTier.FIRST_CLASS` — implemented,
-tested, and locally verifiable). Adding a platform here automatically surfaces it in
-the README status block (see [Publishing Status Report](#publishing-status-report))
-and the credential check.
+12 `first_class` platforms (`tier=PublishingTier.FIRST_CLASS` — implemented,
+tested, and locally verifiable) plus documented ebook, print, retail, and payment
+targets that do not yet have live adapters. Adding a platform here automatically
+surfaces it in the README status block (see [Publishing Status Report](#publishing-status-report))
+and the credential check when applicable.
 
 | Platform | Adapter (class / entry) | Env vars | Tier |
 | --- | --- | --- | --- |
@@ -359,9 +360,9 @@ uv run python -m infrastructure.publishing.publish_cli \
 # Archival dry-run (Stage 13)
 uv run python scripts/runner/archive_publication.py --project templates/template_code_project
 
-# Unified GitHub + Zenodo + DOI release (opt-in)
+# Unified GitHub + Zenodo + DOI release (opt-in; use a qualified project name)
 uv run python scripts/publish/publish_project_release.py \
-  --project template_code_project --tag v1.0.0 --repo owner/repo --dry-run
+  --project templates/template_code_project --tag v1.0.0 --repo owner/repo --dry-run
 
 # Read-only credential check (never prints token values; exits 1 if any present credential fails)
 uv run python -m infrastructure.publishing.credential_check --env-file .env

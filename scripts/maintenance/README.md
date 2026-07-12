@@ -18,11 +18,18 @@ validation gates (those live in [`scripts/gates/`](../gates/)).
 | `batch_cogsec_improve.py` | `infrastructure.core.source_improve` | Batch source-improvement orchestrator |
 | `setup_pre_commit.py` | (subprocess) | Install / refresh the pre-commit hook set |
 | `codegraph_local.py` | `infrastructure.project.codegraph` | Local CodeGraph index helper commands (optional, not a CI dependency) |
+| `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts` | Rebaseline integrity manifests after intentional targeted renders; records `current-output-snapshot`, not stage provenance |
 
 ## Running
 
 ```bash
 uv run python scripts/maintenance/<script>.py [args]
+```
+
+For example, after targeted public-exemplar renders:
+
+```bash
+uv run python scripts/maintenance/refresh_artifact_manifests.py --all-public
 ```
 
 The repo sets `[tool.uv] package = false`, so it is never installed into the

@@ -1,0 +1,29 @@
+{
+  "figures": [
+    {
+      "caption": "Measured branch coverage by source module with the 90 percent floor marked.",
+      "filename": "fig_coverage_by_module.png",
+      "generated_by": "src.manuscript_figures.fig_coverage_by_module",
+      "label": "fig:coverage_by_module"
+    },
+    {
+      "caption": "The five primitive domains, shown with distinct type colors.",
+      "filename": "fig_domain_coverage.png",
+      "generated_by": "src.manuscript_figures.fig_domain_coverage",
+      "label": "fig:domain_coverage"
+    },
+    {
+      "caption": "Total, effective, and reserved-only grammar product sizes.",
+      "filename": "fig_product_space.png",
+      "generated_by": "src.manuscript_figures.fig_product_space_annotation",
+      "label": "fig:product_space"
+    },
+    {
+      "caption": "Options per effective grammar slot, shown as a stacked bar.",
+      "filename": "fig_stacked_product.png",
+      "generated_by": "src.manuscript_figures.fig_stacked_product",
+      "label": "fig:stacked_product"
+    }
+  ],
+  "schema_version": "template-autopoiesis-figure-registry-v1"
+}

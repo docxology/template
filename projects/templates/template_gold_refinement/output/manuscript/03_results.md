@@ -1,6 +1,6 @@
 # Results: Purity Progression and Karat Grading {#sec:results}
 
-The refinery pipeline produces a monotonically increasing purity sequence across 5 stages, reaching final purity of 99.9999999% (nine-nines) (24K (nine-nines certified)).
+The canonical run completed 5 ordered, continuous stages and reached the configured terminal state of 99.9999999% (nine-nines) (24K (nine-nines certified)). These values verify execution of the declared model; they are not empirical estimates of manuscript quality.
 
 ## Purity progression
 
@@ -110,24 +110,11 @@ through the same graph, table, and validation surfaces.
 
 ## Purity vs claim support
 
-The purity-versus-claim-support view in [@fig:purity_claim_scatter] places the
-metallurgical purity sequence beside the contribution ledger. This prevents the
-paper from treating purity as an isolated aesthetic score. A point can advance
-only when two surfaces agree: the refinery computation supplies the stage purity,
-and the claim-support registry supplies the cumulative evidence exposure for
-the claims being made at that level of refinement.
+The purity-versus-claim-support view in [@fig:purity_claim_scatter] places two differently scoped measurements on explicit axes: stage output purity on the horizontal axis and the single project-level contribution-claim assay on the vertical axis. The same observed support rate is therefore repeated across stages. The figure does not fabricate a stagewise claim-support trajectory from a project-level aggregate.
 
-In the current generated assay, 9 of
-9 contribution claims are supported
-(100.00%). The figure is useful because it would make a weaker
-state visible immediately: a manuscript could still show late-stage material
-purity while failing to carry its claims along the evidence axis. In that case,
-the visual story would split, and the reader would see that certification prose
-had outrun claim support. Here the two axes are deliberately co-present, so the
-results section cannot celebrate purity while hiding unsupported contribution
-language in a separate paragraph.
+In the current generated assay, 9 of 9 contribution claims are supported (100.00%). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
 
-![Purity vs claim support rate scatter plot.](../output/figures/purity_claim_scatter.png){#fig:purity_claim_scatter}
+![Stage purity plotted against the single project-level claim-support assay.](../output/figures/purity_claim_scatter.png){#fig:purity_claim_scatter}
 
 ## Token selection sensitivity
 
@@ -273,7 +260,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 291 source-tiered facts to the validation
+can report 283 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -292,7 +279,7 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| artifact | 133 | Generated artifacts exposed to readers |
+| artifact | 125 | Generated artifacts exposed to readers |
 | generated_metric | 94 | Numbers regenerated from project analysis |
 | bibliography | 47 | Reference records and citation metadata |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
@@ -300,7 +287,7 @@ also which source tiers make their claims inspectable.
 
 ## Adversarial security assay
 
-The adversarial assay reports 5 adversarial assay rows mapping threats and standards to local evidence surfaces, validators, and claim boundaries; they are scope controls, not completed scan findings. No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, validated, and cited. The rows are generated from `gold_refinement.security_assay` and are intentionally tabular rather than a new public figure, so the visual registry remains the stable 12-figure contract.
+The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mapping threats and standards to local evidence surfaces, validators, and claim boundaries; completeness is a scope control, not completed scan findings. No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, validated, and cited. The rows are generated from `gold_refinement.security_assay` and are intentionally tabular rather than a new public figure, so the visual registry remains the stable 12-figure contract.
 
 | ID | Threat | Standard or guidance | Evidence surface | Validator or gate | Claim boundary |
 |----|--------|----------------------|------------------|-------------------|----------------|
@@ -329,11 +316,11 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 291.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 283.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 88 |
+| artifact | 80 |
 | citation | 47 |
 | equation | 8 |
 | figure | 29 |
@@ -348,16 +335,16 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
-| evidence_tier_ladder | yes | yes | 3339x1332 | 0.217 | 0.05471249 | pass |
-| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
-| implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
-| integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1909 | 0.379 | 0.01892053 | pass |
-| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
-| purity_claim_scatter | yes | yes | 2347x1745 | 0.032 | 0.01429053 | pass |
-| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
-| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
-| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
+| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06027576 | pass |
+| evidence_tier_ladder | yes | yes | 3349x1332 | 0.223 | 0.05598645 | pass |
+| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
+| implementation_circuit | yes | yes | 2966x1843 | 0.068 | 0.02205485 | pass |
+| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
+| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
+| purity_claim_scatter | yes | yes | 2336x1744 | 0.034 | 0.01607749 | pass |
+| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
+| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

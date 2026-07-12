@@ -187,7 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:abstract">Abstract</h1>
 <p>This paper documents <code>template_search_project</code>, the
 literature-search exemplar shipped with the <a
@@ -200,7 +201,7 @@ the same <code>infrastructure/search/</code> +
 <code>SearchQuery</code> end-to-end. The deep-search pipeline
 (<code>scripts/run_deep_search.py</code>, see [sec:deep_search]) fans
 out across a list of keywords (each capped at 100 papers per keyword
-from <code>deep_search.max_results_per_keyword</code> in
+from <code>project_config.deep_search.max_results_per_keyword</code> in
 <code>manuscript/config.yaml</code>), fully enriches every paper with
 its abstract and PDF fulltext, and (optionally) uses the local LLM to
 write a multi-section reading note for every paper. When a deep-search

@@ -5,7 +5,7 @@ rounds: round one shipped the shared pheromone substrate and a single
 deterministic demo; round two added the statistical-rigor trial harness,
 descriptive stats, and figure rendering; round three (scientific-depth) added
 a random-choice null-model baseline and a generic parameter-sweep runner to
-back eight pre-registered analyses grouped across three experiment families. Seven files, each with one distinct
+back eight pre-registered analyses grouped across three experiment families. Eight files, each with one distinct
 responsibility — read this map before adding a new one, since it is easy to
 misplace new logic into the wrong file once the package has this many
 adjacent concerns.
@@ -14,6 +14,7 @@ adjacent concerns.
 
 | File | Responsibility |
 | --- | --- |
+| `analysis.py` | The source-owned publication analysis service: executes the deterministic demo and calibrated real sweep, derives Wilson-bounded summary data, requires both figures, writes their registry, and returns a typed `AnalysisArtifacts` manifest to the thin script. |
 | `pheromone.py` | The shared stigmergic substrate. `PheromoneField` — a narrow three-method `Protocol` (`deposit`/`sense`/`evaporate`); `InMemoryPheromoneField` — the one reference implementation, backed by a private `dict` never exposed directly. |
 | `experiment.py` | The seeded, heterogeneous, real-agent trial harness: `ColonyTrialConfig`/`ColonyTrialResult`, `run_colony_trial` (real `Agent` instances, real per-trial SQLite files, real `InMemoryPheromoneField`), and `find_sustained_consensus_tick` — the shared "converged" definition every other module in this package reuses. |
 | `stats.py` | Stdlib-only statistics: `convergence_rate`, `wilson_score_interval`, `consensus_tick_summary`/`ConsensusTickSummary`, `pearson_r`, `fisher_exact_test_two_sided`. No numpy/scipy — every formula is closed-form and hand-checked against a fixture in `tests/colony/test_colony_stats_unit.py`. |
@@ -26,12 +27,13 @@ adjacent concerns.
 
 ```python
 from template_formal.colony import (
-    ColonyTrialConfig, ColonyTrialResult, ConsensusTickSummary, EmptySummaryError,
+    AnalysisArtifacts, ColonyTrialConfig, ColonyTrialResult, ConsensusTickSummary, EmptySummaryError,
     InMemoryPheromoneField, NullModelTrialConfig, NullModelTrialResult, PheromoneField,
     SweepPointResult,
     consensus_tick_summary, convergence_rate, find_sustained_consensus_tick,
     fisher_exact_test_two_sided, pearson_r,
     run_colony_trial, run_demo_colony, run_null_model_trial, run_parameter_sweep,
+    run_publication_analysis,
     run_statistics_sweep, wilson_score_interval,
     write_convergence_tick_histogram, write_demo_convergence_figure,
 )
@@ -78,10 +80,11 @@ collisions across seeds).
 
 ## Tests
 
-`tests/colony/` — ten files, each paired to one or more modules above:
+`tests/colony/` — eleven files, each paired to one or more modules above:
 
 | Test file | Covers |
 | --- | --- |
+| `test_analysis.py` | `analysis.py` — complete real artifact set, calibrated sweep result, and figure-registry binding. |
 | `test_pheromone.py` | `pheromone.py` — `PheromoneField`/`InMemoryPheromoneField`. |
 | `test_colony_integration.py` | The original N≥3 real-agent convergence demonstration and the coordinator-isolation anti-criterion (ISC-33, ISC-34). |
 | `test_colony_experiment_config.py` | `ColonyTrialConfig.__post_init__` validation boundaries (`decay`, `sensing_noise_std`, `preference_variance`; ISC-80, ISC-84). |

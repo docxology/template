@@ -45,8 +45,6 @@ class TestFallbackLogging:
 
     def test_log_success_fallback_is_noop(self, monkeypatch: pytest.MonkeyPatch):
         """log_success no-op fallback (lines 71-74) is callable and returns None."""
-        import logging
-
         monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
         # The fallback is only redefined at module import time; test via the no-op
         # directly by calling it when infrastructure is unavailable.
@@ -190,8 +188,10 @@ class TestScientificInfraPaths:
 
         path = run_performance_benchmarking()
         data = json.loads(path.read_text())
-        assert "memory_usage" in data
-        assert "timestamp" in data
+        assert data["schema_version"] == "template_code_project/performance_benchmark/v2"
+        assert data["timing_policy"]
+        assert "memory_usage" not in data
+        assert "timestamp" not in data
 
 
 class TestExtractMetadataExtended:

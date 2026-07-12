@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import json
 import sys
-from dataclasses import replace
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -22,51 +21,13 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from src import DeterministicProposer, SearchConfig, SyntheticObjective, run_search  # noqa: E402
-from src.figures import AblationRow, write_ablation_figure, write_efficiency_figure, write_figure_registry  # noqa: E402
-
-BUDGET = 60
-
-ABLATIONS: tuple[tuple[str, dict[str, bool]], ...] = (
-    ("full coordination", {}),
-    ("no confirmation", {"use_confirmation": False}),
-    ("no dead-end registry", {"use_dead_ends": False}),
-    ("no effect-size ranking", {"use_ranking": False}),
-    ("no reorganization", {"use_reorganization": False}),
-)
-
-
-def _run_ablations() -> list[AblationRow]:
-    objective = SyntheticObjective(dimensions=4, noise_scale=0.02)
-    proposer = DeterministicProposer()
-    base = SearchConfig(budget=BUDGET)
-
-    rows: list[AblationRow] = []
-    for label, overrides in ABLATIONS:
-        config = replace(base, **overrides) if overrides else base
-        result = run_search(objective, proposer, config)
-        reported = result.champion.metric
-        # Clean is the noise-free ground truth. A large reported-minus-clean gap
-        # means the configuration accepted a noise-inflated champion.
-        clean = objective.clean(result.champion.params)
-        rows.append(
-            {
-                "configuration": label,
-                "reported_metric": reported,
-                "clean_metric": clean,
-                "noise_inflation": reported - clean,
-                "confirmed_improvements": result.num_confirmed_improvements,
-                "experiments_used": len(result.trajectory),
-                "experiments_to_target": result.experiments_to_target,
-                "redundant_experiments": result.redundant_experiments,
-            }
-        )
-    return rows
+from src.ablation import DEFAULT_BUDGET, build_ablation_payload, run_ablations  # noqa: E402
+from src.figures import write_ablation_figure, write_efficiency_figure, write_figure_registry  # noqa: E402
 
 
 def main() -> int:
     """CLI entry point."""
-    rows = _run_ablations()
+    rows = run_ablations()
 
     figures_dir = PROJECT_ROOT / "output" / "figures"
     data_dir = PROJECT_ROOT / "output" / "data"
@@ -79,7 +40,10 @@ def main() -> int:
     write_ablation_figure(rows, figure_path)
     write_efficiency_figure(rows, efficiency_path)
     registry_path = write_figure_registry(figures_dir)
-    data_path.write_text(json.dumps({"budget": BUDGET, "rows": rows}, indent=2, sort_keys=True) + "\n")
+    data_path.write_text(
+        json.dumps(build_ablation_payload(rows, budget=DEFAULT_BUDGET), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
     print(figure_path)
     print(efficiency_path)

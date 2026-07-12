@@ -4,28 +4,31 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 94
-Total Size: 3.48 MB
+Total Files: 96
+Total Size: 3.54 MB
 
 Files by Category:
-  • pdf: 11 files (1.54 MB)
-  • web: 8 files (0.04 MB)
+  • pdf: 12 files (1.55 MB)
+  • web: 9 files (0.05 MB)
   • slides: 46 files (0.46 MB)
   • figures: 14 files (1.36 MB)
   • data: 1 files (0.01 MB)
-  • reports: 14 files (0.07 MB)
+  • reports: 14 files (0.12 MB)
 
 Largest Files:
   • the-shape-between.pdf: 1.42 MB (pdf)
   • 13_shared_home.png: 0.13 MB (figures)
   • 06_tetra_inside_cube.png: 0.12 MB (figures)
   • 10_tensegrity_lantern.png: 0.12 MB (figures)
-  • 02_architecture_slides.log: 0.06 MB (slides)
+  • evidence_registry.json: 0.08 MB (reports)
+
+Missing Expected Files:
+  ⚠  logs/ directory
 
 File Types:
   • .png: 14 file(s)
   • .json: 10 file(s)
-  • .log: 8 file(s)
+  • .log: 9 file(s)
   • .pdf: 8 file(s)
   • .tex: 8 file(s)
   • .aux: 7 file(s)

@@ -1,3 +1,4 @@
+\babel@toc {english}{}\relax 
 \contentsline {section}{\numberline {1}Abstract}{2}{section.1}%
 \contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Why a methods paper needs its own DSL}{3}{subsection.2.1}%

@@ -5,6 +5,7 @@ output files. Cleanup functions live in file_cleanup.py.
 """
 
 import hashlib
+import os
 import shutil
 from pathlib import Path
 from typing import Any, TypedDict
@@ -44,6 +45,36 @@ _SUBDIR_STATS_KEYS: dict[str, str] = {
     "llm": "llm_files",
     "logs": "logs_files",
 }
+
+
+def _find_symlinks(root: Path) -> list[Path]:
+    if root.is_symlink():
+        return [root]
+    if not root.exists():
+        return []
+
+    links: list[Path] = []
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                path = Path(entry.path)
+                if entry.is_symlink():
+                    links.append(path)
+                elif entry.is_dir(follow_symlinks=False):
+                    pending.append(path)
+    return sorted(links, key=lambda path: path.as_posix())
+
+
+def _symlink_error(label: str, root: Path, links: list[Path]) -> str:
+    displayed: list[str] = []
+    for path in links:
+        try:
+            displayed.append(path.relative_to(root).as_posix())
+        except ValueError:
+            displayed.append(path.as_posix())
+    return f"Refusing to publish {label} containing symlinks: {', '.join(displayed)}"
 
 
 def _collect_subdirectory_stats(output_dir: Path, stats: CopyStats, files_list: list[dict[str, Any]]) -> None:
@@ -189,13 +220,50 @@ def copy_final_deliverables(
         stats["errors"].append(msg)
         return stats
 
+    try:
+        source_links = _find_symlinks(project_output)
+        destination_links = _find_symlinks(output_dir)
+    except OSError as exc:
+        msg = f"Failed to verify publication output paths: {exc}"
+        logger.error(msg)
+        stats["errors"].append(msg)
+        return stats
+    if source_links:
+        msg = _symlink_error("source", project_output, source_links)
+        logger.error(msg)
+        stats["errors"].append(msg)
+        return stats
+    if destination_links:
+        msg = _symlink_error("destination", output_dir, destination_links)
+        logger.error(msg)
+        stats["errors"].append(msg)
+        return stats
+
     # Recursively copy entire project/output/ directory
     try:
         logger.debug(f"Recursively copying: {project_output} → {output_dir}")
-        shutil.copytree(project_output, output_dir, dirs_exist_ok=True, symlinks=False, ignore_dangling_symlinks=True)
+        shutil.copytree(project_output, output_dir, dirs_exist_ok=True, symlinks=True)
         log_success("Recursively copied project/output/ directory", logger)
     except (OSError, shutil.Error) as e:
         msg = f"Failed to copy project output directory: {e}"
+        logger.error(msg)
+        stats["errors"].append(msg)
+        return stats
+
+    try:
+        copied_links = _find_symlinks(output_dir)
+    except OSError as exc:
+        msg = f"Failed to verify copied publication outputs: {exc}"
+        logger.error(msg)
+        stats["errors"].append(msg)
+        return stats
+    if copied_links:
+        for path in copied_links:
+            try:
+                path.unlink()
+            except OSError as exc:
+                logger.error(f"Failed to remove unsafe copied symlink {path}: {exc}")
+        msg = _symlink_error("destination", output_dir, copied_links)
         logger.error(msg)
         stats["errors"].append(msg)
         return stats

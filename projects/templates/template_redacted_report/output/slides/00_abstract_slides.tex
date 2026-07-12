@@ -145,11 +145,11 @@ authority---each providing a non-empty rationale. A source-safe
 redaction ledger records SHA-256 hashes of each redacted span without
 exposing source text, and a segment hash manifest compares source and
 public SHA-256 digests for reproducible audit. The comprehensive release
-packet combines sanitized text, audit findings, ledger, hashes, review
-gate status, and paragraph-level audit tables into a single JSON-ready
-export. This exemplar confirms that visual presentation choices remain
-orthogonal to the release gate: the same source-safe decisions drive
-every output variant.
+packet is built in memory; canonical public JSON separates a text-free
+audit from the hashed ledger so neither artifact exposes narrative or
+source spans. This exemplar confirms that visual presentation choices
+remain orthogonal to the release gate: the same source-safe decisions
+drive every output variant.
 \end{frame}
 
 \end{document}

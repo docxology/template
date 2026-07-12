@@ -32,6 +32,8 @@ import yaml
 
 from .methods_dsl import StepKind, Target, all_example_methods, compile_method, known_units
 
+CONFIG_HASH_LENGTH = 16
+
 
 def _build_timestamp() -> str:
     """Build timestamp, honoring ``SOURCE_DATE_EPOCH`` for reproducible builds."""
@@ -78,7 +80,7 @@ def _compute_config_hash(project_root: Path) -> str:
     config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.exists():
         return "N/A"
-    return hashlib.sha256(config_path.read_bytes()).hexdigest()[:16]
+    return hashlib.sha256(config_path.read_bytes()).hexdigest()[:CONFIG_HASH_LENGTH]
 
 
 def _count_output_artifacts(project_root: Path) -> dict[str, int]:

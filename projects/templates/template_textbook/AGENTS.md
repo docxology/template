@@ -70,7 +70,11 @@ Before claiming a change is done:
       `scripts/generate_diagrams.py` (deterministic, fixed seed).
 - [ ] `uv run python -m pytest <tests/> --cov=<src> --cov-fail-under=90`
       passes (collected > 0, ≥90%).
-- [ ] `scripts/audit_textbook_quality.py` passes.
+- [ ] `scripts/audit_textbook_quality.py` passes for scaffold structure.
+- [ ] Before describing a fork as filled or complete,
+      `scripts/audit_textbook_quality.py --require-complete` passes with zero
+      per-section and total stub counts. The default mode intentionally allows
+      stubs in this fillable exemplar.
 
 ## Frozen vs. fillable
 

@@ -201,10 +201,12 @@ narrow parameter choice. The stability metric is computed for the
 Performance benchmarking spans problem dimensions
 \(d \in \{1, 2, 5, 10, 20, 50\}\), from the scalar case (\(d = 1\)) to
 moderate dimensionality (\(d = 50\)), using identity-Hessian quadratics
-to isolate algorithmic scaling from problem conditioning effects.
-Representative single-call execution time from the last benchmark run:
-\textbf{1.9 μs} (recorded in
-\breaktt{output/reports/performance\_benchmark.json}).
+to isolate algorithmic scaling from problem conditioning effects. The
+tracked \breaktt{output/reports/performance\_benchmark.json} records
+fixed inputs, exact objective values, and validation checks. Wall-clock
+timing is retained only as a runtime diagnostic because host load and
+hardware make microsecond values unsuitable as pinned reproducibility
+claims.
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Computational Environment}
@@ -218,7 +220,7 @@ Representative single-call execution time from the last benchmark run:
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-07-10T14:33:59Z
+  \textbf{Generated}: 2026-07-12T04:04:24Z
 \end{itemize}
 \end{frame}
 

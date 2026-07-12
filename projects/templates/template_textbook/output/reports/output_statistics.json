@@ -2,13 +2,13 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "1.36",
-      "total_size_bytes": 1428778,
+      "file_count": 11,
+      "size_mb": "1.55",
+      "total_size_bytes": 1624745,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "0.90",
+          "size_mb": "1.07",
           "path": "pdf/template_textbook_combined.pdf"
         },
         {
@@ -24,7 +24,7 @@
       ],
       "extensions": {
         ".md": 1,
-        ".log": 2,
+        ".log": 3,
         ".aux": 1,
         ".pdf": 1,
         ".blg": 1,
@@ -36,13 +36,13 @@
     },
     "web": {
       "exists": true,
-      "file_count": 51,
-      "size_mb": "0.74",
-      "total_size_bytes": 771428,
+      "file_count": 52,
+      "size_mb": "0.76",
+      "total_size_bytes": 802151,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.23",
+          "size_mb": "0.24",
           "path": "web/index.html"
         },
         {
@@ -58,7 +58,8 @@
       ],
       "extensions": {
         ".html": 50,
-        ".md": 1
+        ".md": 1,
+        ".ico": 1
       }
     },
     "slides": {
@@ -73,7 +74,7 @@
       "exists": true,
       "file_count": 96,
       "size_mb": "1.70",
-      "total_size_bytes": 1781573,
+      "total_size_bytes": 1781554,
       "largest_files": [
         {
           "name": "gallery_contour.png",
@@ -101,7 +102,7 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "0.00",
-      "total_size_bytes": 2051,
+      "total_size_bytes": 3047,
       "largest_files": [
         {
           "name": "worked_model_summary.json",
@@ -121,8 +122,8 @@
     "reports": {
       "exists": true,
       "file_count": 26,
-      "size_mb": "0.32",
-      "total_size_bytes": 331839,
+      "size_mb": "0.30",
+      "total_size_bytes": 318655,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -181,18 +182,18 @@
       }
     }
   },
-  "total_files": 186,
-  "total_size_mb": 4.11589241027832,
+  "total_files": 188,
+  "total_size_mb": 4.320439338684082,
   "largest_files": [
     {
       "name": "template_textbook_combined.pdf",
-      "size_mb": "0.90",
+      "size_mb": "1.07",
       "category": "pdf",
       "path": "pdf/template_textbook_combined.pdf"
     },
     {
       "name": "index.html",
-      "size_mb": "0.23",
+      "size_mb": "0.24",
       "category": "web",
       "path": "web/index.html"
     },
@@ -247,19 +248,19 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.362588882446289,
-    "web": 0.7356910705566406,
+    "pdf": 1.5494775772094727,
+    "web": 0.7649908065795898,
     "slides": 0.0,
-    "figures": 1.699040412902832,
-    "data": 0.0019559860229492188,
-    "reports": 0.3164663314819336,
+    "figures": 1.6990222930908203,
+    "data": 0.0029058456420898438,
+    "reports": 0.3038930892944336,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.00014972686767578125
   },
   "file_counts_by_type": {
     ".md": 7,
-    ".log": 3,
+    ".log": 4,
     ".aux": 1,
     ".pdf": 1,
     ".blg": 1,
@@ -268,6 +269,7 @@
     ".toc": 1,
     ".bbl": 1,
     ".html": 51,
+    ".ico": 1,
     ".png": 64,
     ".json": 20,
     ".mmd": 30,

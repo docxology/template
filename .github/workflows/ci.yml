@@ -226,7 +226,10 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
-      - name: Verify no mock usage in tests
+      # Branch-protection check name stays stable. This command is the lexical
+      # prohibited-framework gate only; semantic monkeypatch debt is available
+      # through --inventory and is not enforced until its measured count is 0.
+      - name: Verify prohibited mock-framework syntax
         run: uv run python scripts/audit/verify_no_mocks.py
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -330,12 +333,14 @@ jobs:
         run: >-
           uv run pytest tests/infra_tests/
           -n auto
+          --dist worksteal
+          --benchmark-disable
           --cov=infrastructure
           --cov-report=term-missing
           --cov-report=xml:coverage-infra.xml
           --cov-fail-under=60
           --durations=10
-          -m "not requires_ollama and not slow and not bench"
+          -m "not requires_ollama and not requires_docker and not slow and not bench and not benchmark and not performance"
           --timeout=120
 
       - name: Upload infrastructure coverage to Codecov

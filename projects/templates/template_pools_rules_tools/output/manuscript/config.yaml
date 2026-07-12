@@ -28,9 +28,10 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.21298888"
-  doi_status: "reserved (draft deposition; awaiting first publication)"
+  doi_status: "DOI published"
   version_doi: "10.5281/zenodo.21298889"
-  github_repository: "docxology/template"
+  github_repository: "docxology/template_pools_rules_tools"
+  repository_url: "https://github.com/docxology/template_pools_rules_tools"
   license: "CC-BY-4.0"
   venue: "Journal of Open Source Software"
   status: "preprint"
@@ -38,92 +39,25 @@ publication:
   preprint_id: "2026.00000"
   version_record: "https://zenodo.org/records/21298889"
 
-# Strong-rule semantic validation context (see scripts/04_validate_strong_rules.py)
-strong_rules:
-  canonical_sections:
-    - Abstract
-    - Introduction
-    - Related Work
-    - Methods
-    - Results
-    - Discussion
-    - Conclusion
-    - References
-  coverage:
-    infrastructure: 60
-    project_src: 90
-    public_api: 95
-
-# Manuscript section toggles
-sections:
-  frontmatter: true
-  abstract: true
-  introduction: true
-  pools: true
-  rules: true
-  tools: true
-  integration: true
-  conclusion: true
-
-# Integration demo parameters
-integration:
-  rule_sets:
-    - template_project_rules
-    - template_manuscript_rules
-  tools:
-    - template_code_executor
-    - template_validator
-    - template_skill
-  fonds:
-    - template_bibliography
-    - template_contacts
-    - template_datasets
-
-# Figure registry — paths relative to manuscript/
-figures:
-  architecture_overview:
-    path: "figures/architecture_overview.png"
-    caption: "Three-layer resource architecture of template_pools_rules_tools. Fonds (left) provide read-only data pools; Rules (centre) provide governance constraints; Tools (right) provide executable entry points. The Integration layer (bottom) orchestrates all three."
-    label: "fig:architecture"
-    width: "0.9\\linewidth"
-  resource_counts:
-    path: "figures/resource_counts.png"
-    caption: "Runtime integration counts from manuscript_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run."
-    label: "fig:counts"
-    width: "0.75\\linewidth"
-  status_dashboard:
-    path: "figures/status_dashboard.png"
-    caption: "Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing."
-    label: "fig:pipeline"
-    width: "0.85\\linewidth"
-  fond_taxonomy:
-    path: "figures/fond_taxonomy.png"
-    caption: "Schema taxonomy comparison across the three fond types. Each fond declares a manifest and a `type` field; source-of-truth format, secondary mirror, and dedup key differ by category."
-    label: "fig:taxonomy"
-    width: "0.85\\linewidth"
-  rule_hierarchy:
-    path: "figures/rule_hierarchy.png"
-    caption: "Rule hierarchy: the two template rule sets, each split into a machine-enforceable `strong/` branch and a guidance-only `soft/` branch."
-    label: "fig:rulehier"
-    width: "0.85\\linewidth"
-  tool_contract:
-    path: "figures/tool_contract.png"
-    caption: "Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape."
-    label: "fig:toolcontract"
-    width: "0.9\\linewidth"
-  resilience_layers:
-    path: "figures/resilience_layers.png"
-    caption: "The integration layer's three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response."
-    label: "fig:resilience"
-    width: "0.85\\linewidth"
-  pipeline_flow:
-    path: "figures/pipeline_flow.png"
-    caption: "The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step."
-    label: "fig:pipelineflow"
-    width: "0.95\\linewidth"
-
-# Manuscript variable token paths
-manuscript_variables_path: "output/data/manuscript_variables.json"
+# Project-owned settings are namespaced so the generic renderer can distinguish
+# them from infrastructure configuration. Figure provenance lives in
+# `src/figures.py::FIGURE_SPECS`; integration inputs are discovered from the
+# public resource pools rather than duplicated here.
+project_config:
+  strong_rules:
+    canonical_sections:
+      - Abstract
+      - Introduction
+      - Related Work
+      - Methods
+      - Results
+      - Discussion
+      - Conclusion
+      - References
+    coverage:
+      infrastructure: 60
+      project_src: 90
+      public_api: 95
 
 # Rendering options
 render:

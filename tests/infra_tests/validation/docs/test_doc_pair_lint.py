@@ -55,6 +55,7 @@ def test_generated_and_local_paths_are_excluded() -> None:
     assert is_doc_pair_excluded_path(Path("projects/demo/src/demo.egg-info"))
     assert is_doc_pair_excluded_path(Path("projects/demo/output"))
     assert is_doc_pair_excluded_path(Path(".cursor/hooks/state"))
+    assert is_doc_pair_excluded_path(Path("projects/demo/.codegraph/index.json"))
     assert is_doc_pair_excluded_path(Path("projects/templates/template_active_inference/.omo"))
     assert is_doc_pair_excluded_path(Path("docs/prompts/_skill-eval/latest/with_skill/outputs"))
     assert not is_doc_pair_excluded_path(Path("tests/fixtures"))
@@ -99,6 +100,21 @@ def test_find_doc_pair_issues_skips_skill_eval_workspace(tmp_path: Path) -> None
     _write(tmp_path / "docs" / "prompts" / "_skill-eval" / "latest" / "with_skill" / "outputs" / "response.md")
     issues = find_doc_pair_issues(tmp_path, roots=("docs",))
     assert all("_skill-eval" not in str(issue.path) for issue in issues)
+
+
+def test_doc_pair_walk_prunes_hidden_and_symlinked_trees(tmp_path: Path) -> None:
+    _write(tmp_path / "README.md")
+    _write(tmp_path / "AGENTS.md")
+    _write(tmp_path / "docs" / "README.md")
+    _write(tmp_path / "docs" / "AGENTS.md")
+    _write(tmp_path / "docs" / ".codegraph" / "nested" / "payload.json")
+    outside = tmp_path / "outside"
+    _write(outside / "private.txt")
+    (tmp_path / "docs" / "linked").symlink_to(outside, target_is_directory=True)
+
+    issues = find_doc_pair_issues(tmp_path, roots=("docs",))
+
+    assert issues == []
 
 
 def test_current_repo_has_complete_permanent_template_doc_pairs() -> None:

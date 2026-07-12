@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,25 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Exploratory Data Analysis: A Reproducible Notebook Template},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\ifXeTeX
+\special{pdf:trailerid [ <4ac795f04ed4811b0df5a4fbf6e17ca0> <4ac795f04ed4811b0df5a4fbf6e17ca0> ]}
+\fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ <4ac795f04ed4811b0df5a4fbf6e17ca0> <4ac795f04ed4811b0df5a4fbf6e17ca0> ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ <4ac795f04ed4811b0df5a4fbf6e17ca0> <4ac795f04ed4811b0df5a4fbf6e17ca0> ]}
+\fi
+
+\title{Exploratory Data Analysis: A Reproducible Notebook Template}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -227,7 +251,6 @@
 \setmathfont{latinmodern-math.otf}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{2cm}
@@ -245,7 +268,6 @@
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \section{Abstract}\label{sec:abstract}
 
@@ -900,7 +922,7 @@ From the repository root:
     \AttributeTok{{-}{-}cov}\OperatorTok{=}\NormalTok{projects/templates/template\_eda\_notebook/src }\AttributeTok{{-}{-}cov{-}fail{-}under}\OperatorTok{=}\NormalTok{90}
 
 \CommentTok{\# 3. Render the manuscript}
-\ExtensionTok{uv}\NormalTok{ run python scripts/03\_render\_pdf.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_eda\_notebook}
+\ExtensionTok{uv}\NormalTok{ run python scripts/pipeline/stage\_03\_render.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_eda\_notebook}
 \end{Highlighting}
 \end{Shaded}
 

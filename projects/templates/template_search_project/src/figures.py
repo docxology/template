@@ -13,6 +13,7 @@ functions and prints the resulting paths.
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
 
@@ -21,6 +22,7 @@ import matplotlib
 matplotlib.use("Agg")  # noqa: E402 — must precede pyplot import for headless CI
 import matplotlib.pyplot as plt
 
+from infrastructure.documentation.generated_figure_registry import write_generated_figure_registry
 from infrastructure.search.literature import Paper, SearchResult, SearchQuery
 
 # Colour-blind-safe categorical palette (Wong, 2011).
@@ -34,6 +36,38 @@ _PALETTE = [
     "#F0E442",
     "#999999",
 ]
+
+
+@dataclass(frozen=True)
+class FigureSpec:
+    """Evidence metadata for one manuscript-referenced search figure."""
+
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_SPECS: tuple[FigureSpec, ...] = (
+    FigureSpec(
+        label="fig:papers_per_source",
+        filename="papers_per_source.png",
+        caption="Per-source paper counts before cross-backend deduplication.",
+        generated_by="src.figures.plot_papers_per_source",
+    ),
+    FigureSpec(
+        label="fig:year_histogram",
+        filename="year_histogram.png",
+        caption="Publication-year distribution for the deduplicated paper roster.",
+        generated_by="src.figures.plot_year_histogram",
+    ),
+    FigureSpec(
+        label="fig:score_distribution",
+        filename="score_distribution.png",
+        caption="Backend-reported relevance scores ranked by paper.",
+        generated_by="src.figures.plot_score_distribution",
+    ),
+)
 
 
 def _ensure_outdir(path: Path | str) -> Path:
@@ -143,12 +177,20 @@ def plot_score_distribution(result: SearchResult, output_dir: Path | str) -> Pat
 
 
 def generate_all_figures(result: SearchResult, output_dir: Path | str) -> list[Path]:
-    """Run every figure generator. Order is stable across runs."""
-    return [
+    """Generate and register every declared figure in stable order."""
+    paths = [
         plot_papers_per_source(result, output_dir),
         plot_year_histogram(result, output_dir),
         plot_score_distribution(result, output_dir),
     ]
+    out_dir = Path(output_dir)
+    write_generated_figure_registry(
+        out_dir / "figure_registry.json",
+        FIGURE_SPECS,
+        paths,
+        schema_version="1.0",
+    )
+    return paths
 
 
 def load_search_result(path: Path | str) -> SearchResult:

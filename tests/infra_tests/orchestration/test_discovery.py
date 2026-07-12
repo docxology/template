@@ -43,6 +43,21 @@ def test_validate_project_slug_accepts_unique_bare_nested_template(tmp_path: Pat
     assert validate_project_slug("templates/template_demo", tmp_path) == "templates/template_demo"
 
 
+def test_validate_project_slug_accepts_explicit_ongoing_project(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "ongoing" / "platform"
+    (project / "src").mkdir(parents=True)
+    (project / "tests").mkdir()
+
+    assert validate_project_slug("ongoing/platform", tmp_path) == "ongoing/platform"
+
+
+def test_validate_project_slug_rejects_markerless_ongoing_directory(tmp_path: Path) -> None:
+    (tmp_path / "projects" / "ongoing" / "notes").mkdir(parents=True)
+
+    with pytest.raises(ValueError, match="not found"):
+        validate_project_slug("ongoing/notes", tmp_path)
+
+
 def test_validate_project_slug_rejects_empty(fake_repo: Path) -> None:
     with pytest.raises(ValueError, match="non-empty"):
         validate_project_slug("", fake_repo)

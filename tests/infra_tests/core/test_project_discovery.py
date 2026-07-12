@@ -8,7 +8,7 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 
-from infrastructure.core.project_paths import find_repo_root
+from infrastructure.core.project_paths import find_repo_root, resolve_source_manuscript_dir
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.project.metadata import get_project_metadata
 from infrastructure.project.validation import validate_project_structure
@@ -29,6 +29,38 @@ def test_find_repo_root_points_at_repository_root() -> None:
     from infrastructure.core import project_paths
 
     assert root == Path(project_paths.__file__).resolve().parents[2]
+
+
+class TestResolveSourceManuscriptDir:
+    """Canonical manuscript-source resolution across supported layouts."""
+
+    def test_prefers_populated_conventional_manuscript(self, tmp_path):
+        project = tmp_path / "project"
+        conventional = project / "manuscript"
+        documentation = project / "docs" / "manuscript"
+        conventional.mkdir(parents=True)
+        documentation.mkdir(parents=True)
+        (conventional / "01_intro.md").write_text("# Conventional\n", encoding="utf-8")
+        (documentation / "01_intro.md").write_text("# Documentation\n", encoding="utf-8")
+
+        assert resolve_source_manuscript_dir(project) == conventional
+
+    def test_config_only_conventional_tree_does_not_shadow_docs_manuscript(self, tmp_path):
+        project = tmp_path / "project"
+        conventional = project / "manuscript"
+        documentation = project / "docs" / "manuscript"
+        conventional.mkdir(parents=True)
+        documentation.mkdir(parents=True)
+        (conventional / "config.yaml").write_text("paper: {}\n", encoding="utf-8")
+        (conventional / "preamble.md").write_text("```latex\n% setup\n```\n", encoding="utf-8")
+        (documentation / "01_intro.md").write_text("# Documentation\n", encoding="utf-8")
+
+        assert resolve_source_manuscript_dir(project) == documentation
+
+    def test_returns_conventional_path_when_no_source_tree_is_populated(self, tmp_path):
+        project = tmp_path / "project"
+
+        assert resolve_source_manuscript_dir(project) == project / "manuscript"
 
 
 class TestValidateProjectStructure:

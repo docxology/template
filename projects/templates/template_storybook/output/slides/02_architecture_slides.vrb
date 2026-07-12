@@ -14,6 +14,9 @@ templates:
 \item
   \breaktt{src/storybook/illustration.py} renders the full-page scenes.
 \item
+  \breaktt{src/storybook/text\_layout.py} owns deterministic typography,
+  wrapping, and text overlays.
+\item
   \breaktt{src/storybook/rendering.py} assembles PNG pages into the PDF
   and writes the manifest.
 \item

@@ -32,7 +32,7 @@ Because the search cache and abstract cache are deterministic, a second run with
 
 The exact paper count, DOI list, and synthesis text depend on the live state of arXiv and Crossref at the time of the run — and are therefore not reproducible *across* runs in different weeks. Users seeking strict reproducibility should:
 
-1. Pin a `LocalBackend` corpus generated from a successful run (`infrastructure.search.literature.write_corpus`) and remove `arxiv` / `crossref` from `config.search.sources`.
+1. Pin a `LocalBackend` corpus generated from a successful run (`infrastructure.search.literature.write_corpus`) and remove `arxiv` / `crossref` from `project_config.search.sources`.
 2. Commit the `output/search/cache/` directory to version control.
 3. Pin the LLM seed (`config.llm.seed`) and avoid model upgrades.
 

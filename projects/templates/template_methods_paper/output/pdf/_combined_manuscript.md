@@ -18,7 +18,7 @@ A `Method` is a name, a set of typed parameters and resources, and an
 ordered, dependent set of steps — constructed directly as frozen Python
 dataclasses (`src/methods_dsl/model.py`) rather than parsed from new text
 syntax. Every `Quantity` carries a unit that resolves to one of
-18 controlled units across six dimensions, and every step
+18 controlled units across seven dimensions, and every step
 names one of 9 controlled-vocabulary intents
 (`src/methods_dsl/vocabulary.py`), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and
@@ -44,12 +44,12 @@ side, we show that a controlled vocabulary expressed as typed dataclasses —
 not a parsed grammar — is sufficient to reproduce BPL's core safety
 properties (dimensional safety, staged validation, deterministic
 compilation) at a scope appropriate for a template exemplar. On the
-architecture side, the DSL is covered above the 90% project gate by a
-zero-mock test suite, generates 13 artifacts
-(1 figures, 6 data files,
+architecture side, the DSL is exercised by a zero-mock test suite under the
+repository's configured project coverage gate, generates 14 artifacts
+(1 figures, 7 data files,
 6 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `23b5981d45bdc598`, build timestamp
-`2026-06-30T23:02:10Z`) into [@sec:reproducibility].
+metadata (configuration hash `a0f000565bef6a79`, build timestamp
+`2026-07-12T02:08:51Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -379,7 +379,7 @@ The results were validated through the zero-mock `tests/` suite:
 - **Manuscript-variable test** confirms every generated-variable name used in
   `manuscript/*.md` is emitted by `generate_variables`.
 
-All tests pass with coverage exceeding the 90% project gate, with no mocks.
+All tests pass under the configured project coverage gate, with no mocks.
 
 ## Discussion
 
@@ -604,13 +604,13 @@ uv run pytest projects/templates/template_methods_paper/tests \
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 
 # 4. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_methods_paper
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 Or, end to end via the orchestrated pipeline:
 
 ```bash
-uv run python scripts/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
 ```
 
 ## Generated artifact registry
@@ -651,9 +651,9 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `23b5981d45bdc598` is the
+Configuration provenance is itself injected: `a0f000565bef6a79` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-06-30T23:02:10Z` records when the variables were generated
+`2026-07-12T02:08:51Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 
@@ -666,9 +666,9 @@ SHA-256 of `manuscript/config.yaml` at build time, and
 # Scope, Related Work, and Positioning {#sec:scope}
 
 This section situates the exemplar and states explicit boundaries. The goal
-is not to compete with BPL's full compiler pipeline [@bpl2026] — a
-~32,000-line implementation with a Lark grammar, a robot backend, and a
-hash-chained audit/compliance layer — but to show how a minimal,
+is not to compete with BPL's substantially larger full compiler pipeline
+[@bpl2026] — with its Lark grammar, robot backend, and hash-chained
+audit/compliance layer — but to show how a minimal,
 test-backed subset of BPL's domain-language design fits the template's
 reproducibility and rendering stack [@peng2011reproducible], generalized
 from wet-lab protocols to any controlled procedure.

@@ -13,6 +13,10 @@ This template must stay honest about fixture replay versus live subprocess runs.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Style + type gates over public source paths:
   `uv run python -m infrastructure.project.public_scope source-paths` piped to ruff and mypy.
+- Thin-orchestrator boundary: `src/loop.py` owns project configuration, fixture
+  selection, shared-harness invocation, and derived artifacts; the CLI imports
+  that API. `tests/test_architecture_contract.py` rejects a return to
+  `src → scripts` imports or a second script-layer implementation.
 
 ## Integrity and template-status gaps
 
@@ -22,7 +26,7 @@ This template must stay honest about fixture replay versus live subprocess runs.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` aligned with the `sia:` block and safe defaults.
+- Keep `manuscript/config.yaml.example` aligned with the `project_config.sia` block and safe defaults.
 - Add typed config loading for new loop controls before exposing them in README commands.
 
 ## Documentation and signposting gaps

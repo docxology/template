@@ -63,12 +63,25 @@
       "effect": "read_only"
     },
     {
-      "module": "infrastructure.benchmark.template_harness",
-      "invocation": "python -m infrastructure.benchmark.template_harness",
-      "source_path": "infrastructure/benchmark/template_harness.py",
-      "purpose": "Small benchmark harness for canonical template exemplars.",
+      "module": "infrastructure.benchmark",
+      "invocation": "python -m infrastructure.benchmark",
+      "source_path": "infrastructure/benchmark/__main__.py",
+      "purpose": "Run the public-template benchmark harness as a package command.",
       "subcommands": [],
-      "exports": [],
+      "exports": [
+        "BenchmarkCheckResult",
+        "BenchmarkManifest",
+        "BenchmarkScore",
+        "RubricScore",
+        "RubricSet",
+        "load_benchmark_manifest",
+        "run_benchmark_manifest",
+        "score_project_against_manifest",
+        "score_rubric",
+        "scores_to_dict",
+        "scores_to_markdown",
+        "write_default_manifest"
+      ],
       "effect": "read_only"
     },
     {
@@ -266,8 +279,11 @@
       "purpose": "Self-contained stdio MCP server exposing the template's agent surface.",
       "subcommands": [],
       "exports": [
+        "LEGACY_PROTOCOL_VERSION",
+        "MODERN_PROTOCOL_VERSION",
         "PROTOCOL_VERSION",
         "SERVER_INFO",
+        "SUPPORTED_PROTOCOL_VERSIONS",
         "handle_request",
         "invoke_cli",
         "list_tools",

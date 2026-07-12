@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <p>This section reports the compiled plans for both worked example
 methods. Every number below is produced by the thin analysis script (<a
@@ -214,23 +218,19 @@ methods.</caption>
 </tr>
 </tbody>
 </table>
-<p><span class="citation"
-data-cites="tbl:compiled_plans">[@tbl:compiled_plans]</span> shows
-<code>PBSPreparation</code> (a manual, <code>HUMAN</code>-target bench
-preparation) alongside <code>SensorCalibrationSweep</code> (a mixed
+<p>[tbl:compiled_plans] shows <code>PBSPreparation</code> (a manual,
+<code>HUMAN</code>-target bench preparation) alongside
+<code>SensorCalibrationSweep</code> (a mixed
 <code>AUTOMATED</code>/<code>HUMAN</code> instrument-calibration
 procedure) — the second example exists specifically to demonstrate the
-controlled vocabulary generalizing beyond wet-lab protocols, as <span
-class="citation"
-data-cites="sec:introduction">[@sec:introduction]</span> claims.</p>
+controlled vocabulary generalizing beyond wet-lab protocols, as
+[sec:introduction] claims.</p>
 <h2 id="step-count-comparison">Step-count comparison</h2>
-<p><span class="citation"
-data-cites="fig:step_counts">[@fig:step_counts]</span> plots the step
-count for each compiled method.</p>
+<p>[fig:step_counts] plots the step count for each compiled method.</p>
 <figure id="fig:step_counts">
 <img src="../figures/step_counts.png"
-alt="Steps per example method: a bar chart built from len(plan.steps) for each plan in output/data/compiled_plans.json, plotted by scripts/methods_analysis.py." />
-<figcaption aria-hidden="true">Steps per example method: a bar chart
+alt="Steps per example method: a bar chart built from len(plan.steps) for each plan in output/data/compiled_plans.json , plotted by scripts/methods_analysis.py ." />
+<figcaption>Steps per example method: a bar chart
 built from <code>len(plan.steps)</code> for each plan in
 <code>output/data/compiled_plans.json</code>, plotted by
 <code>scripts/methods_analysis.py</code>.</figcaption>
@@ -250,10 +250,9 @@ failure.</p>
 <code>plan_hash</code> values yields: <strong>determinism check =
 Yes</strong>. This is a live re-compilation comparison performed by
 <code>src/manuscript_variables.py</code> at manuscript-build time, not a
-value asserted once and then transcribed — the same property <span
-class="citation" data-cites="sec:methodology">[@sec:methodology]</span>
-claims for <code>compile_method</code> is checked again here,
-independently, against the live build.</p>
+value asserted once and then transcribed — the same property
+[sec:methodology] claims for <code>compile_method</code> is checked
+again here, independently, against the live build.</p>
 <h2 id="provenance-demonstration">Provenance demonstration</h2>
 <p><code>scripts/methods_analysis.py</code> appends a 3-record
 demonstration hash-chain for one value (<code>calibration_offset</code>)
@@ -278,7 +277,7 @@ PNG figure are written.</li>
 generated-variable name used in <code>manuscript/*.md</code> is emitted
 by <code>generate_variables</code>.</li>
 </ul>
-<p>All tests pass with coverage exceeding the 90% project gate, with no
+<p>All tests pass under the configured project coverage gate, with no
 mocks.</p>
 <h2 id="discussion">Discussion</h2>
 <p>The results confirm the pipeline end to end: both worked examples
@@ -289,5 +288,6 @@ functions back the analysis script, the test suite, and this manuscript
 here is produced by a tested function and regenerated on demand, the
 prose describes structure and provenance rather than transcribing values
 that would drift the moment the example methods changed.</p>
+</main>
 </body>
 </html>

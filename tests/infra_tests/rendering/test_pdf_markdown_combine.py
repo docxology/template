@@ -27,3 +27,15 @@ def test_combine_strips_bom(tmp_path: Path) -> None:
     f.write_bytes(b"\xef\xbb\xbf# Title\n")
     out = combine_manuscript_markdown_sections([f])
     assert out.startswith("# Title")
+
+
+def test_section_breaks_are_configurable(tmp_path: Path) -> None:
+    first = tmp_path / "first.md"
+    second = tmp_path / "second.md"
+    first.write_text("# First\n", encoding="utf-8")
+    second.write_text("# Second\n", encoding="utf-8")
+
+    out = combine_manuscript_markdown_sections([first, second], section_breaks=False)
+
+    assert r"\newpage" not in out
+    assert "# First" in out and "# Second" in out

@@ -338,7 +338,7 @@ class TestBuildInfrastructureReport:
 class TestInjectMetrics:
     """Tests for the inject_metrics module (Zero-Mock policy)."""
 
-    def _write_metrics(self, tmp_path, data: dict) -> "Path":
+    def _write_metrics(self, tmp_path: Path, data: dict[str, object]) -> Path:
         """Write *data* as JSON to a temp metrics file and return its path."""
         import json
 
@@ -456,7 +456,8 @@ class TestInjectMetrics:
         """render_all_chapters works on the real template manuscript directory."""
         manuscript_dir = PROJECT_DIR / "manuscript"
         out_dir = tmp_path / "rendered"
-        # Use minimal metrics so tokens resolve without running full analysis
+        # A small fixture is sufficient for this file-copy smoke test; the live
+        # round-trip test below enforces complete token resolution.
         metrics = {
             "module_count": "12",
             "total_infra_python_files": "150",
@@ -541,6 +542,9 @@ class TestInjectMetrics:
         assert int(loaded["pipeline_stages_core_only"]) == 8
         assert int(loaded["total_infra_python_files"]) >= 50
         assert loaded["infrastructure_version"] != "unknown"
+        rendered_dir = tmp_path / "rendered"
+        render_all_chapters(PROJECT_DIR / "manuscript", loaded, rendered_dir)
+        assert validate_all_resolved(rendered_dir) == []
 
 
 class TestSelfDescriptionPins:
@@ -552,7 +556,7 @@ class TestSelfDescriptionPins:
     """
 
     def _section06_text(self) -> str:
-        return (PROJECT_DIR / "manuscript" / "06_infrastructure_modules.md").read_text(encoding="utf-8")
+        return Path(PROJECT_DIR / "manuscript" / "06_infrastructure_modules.md").read_text(encoding="utf-8")
 
     def test_every_importable_package_has_a_section06_subsection(self):
         modules = discover_infrastructure_modules(REPO_ROOT)

@@ -2,6 +2,10 @@
 
 Tools for academic publishing, citations, and platform integration.
 
+For a release operator's path through standalone GitHub mirrors, real Zenodo DOI
+minting, optional mirrors, and archival handoff, start with
+[`../../docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).
+
 The Python API exposes BibTeX, APA, and MLA citation helpers. The
 `generate-citation` CLI subcommand currently exposes BibTeX only.
 
@@ -48,7 +52,7 @@ print(f"Published with DOI: {result.doi}")
 | HuggingFace Hub | first_class | `infrastructure.publishing.huggingface` | `HUGGINGFACE_TOKEN` / `HF_TOKEN` |
 | OSF | first_class | `infrastructure.publishing.osf` | `OSF_TOKEN` |
 
-`first_class` = implemented, tested, locally verifiable. `documented` = future adapter; registered but no live implementation yet. All 12 registered platforms are currently `first_class`.
+`first_class` = implemented, tested, locally verifiable. `documented` = future adapter; registered but no live implementation yet. The registry currently has 12 first-class platforms plus documented ebook, print, retail, and payment targets.
 
 Use `infrastructure.publishing.registry` to enumerate or look up platforms programmatically:
 

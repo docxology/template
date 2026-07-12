@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="abstract">Abstract</h1>
 <p>This exemplar demonstrates a complete disclosure-control pipeline for
 sanitized public release reports. The methodology combines
@@ -198,9 +199,9 @@ authority—each providing a non-empty rationale. A source-safe redaction
 ledger records SHA-256 hashes of each redacted span without exposing
 source text, and a segment hash manifest compares source and public
 SHA-256 digests for reproducible audit. The comprehensive release packet
-combines sanitized text, audit findings, ledger, hashes, review gate
-status, and paragraph-level audit tables into a single JSON-ready
-export. This exemplar confirms that visual presentation choices remain
+is built in memory; canonical public JSON separates a text-free audit
+from the hashed ledger so neither artifact exposes narrative or source
+spans. This exemplar confirms that visual presentation choices remain
 orthogonal to the release gate: the same source-safe decisions drive
 every output variant.</p>
 </main>

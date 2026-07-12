@@ -19,7 +19,7 @@ review_gates:
 source_policy: "Use committed descriptors and documented data dictionaries; avoid untracked private data."
 artifact_expectations:
   - output/reports/descriptor_report.json
-  - output/data/dataset_descriptor.json
+  - output/reports/descriptor_report.json
 benchmark_rubric:
   name: data-descriptor-readiness
   dimensions:

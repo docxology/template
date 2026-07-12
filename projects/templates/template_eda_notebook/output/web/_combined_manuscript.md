@@ -147,7 +147,7 @@ the categorical column, sorted by group name for deterministic output.
 ## Correlation structure
 
 `src/eda/correlation.py::correlation_matrix()` returns the Pearson correlation
-matrix of the numeric columns [tukey1977eda]. The companion
+matrix of the numeric columns [@tukey1977eda]. The companion
 `strongest_pairs(matrix, top_n)` ranks the distinct off-diagonal feature pairs
 by absolute correlation while preserving sign — usually the single most useful
 artifact of a first pass, because it points directly at the relationships worth
@@ -466,7 +466,7 @@ uv run pytest projects/templates/template_eda_notebook/tests \
     --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
 
 # 3. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
 ## Generated artifact registry
@@ -513,17 +513,17 @@ cell defines its own logic.
 
 This section situates the exemplar and states explicit boundaries. The goal is
 not to compete with comprehensive treatments of exploratory data analysis
-[tukey1977eda] or statistical graphics [wilkinson2005grammar], but to show how
+[@tukey1977eda] or statistical graphics [@wilkinson2005grammar], but to show how
 a minimal, test-backed EDA story fits the template's reproducibility and
-rendering stack [peng2011reproducible].
+rendering stack [@peng2011reproducible].
 
 ## Exploratory data analysis
 
 The practice of examining a dataset before formal modelling — looking at
 distributions, missingness, and relationships — traces to Tukey's foundational
-work [tukey1977eda] and is supported in modern practice by the pandas data
-analysis toolkit [mckinney2010pandas] and the broader scientific-Python
-stack [harris2020numpy]. The present manuscript restricts attention to a
+work [@tukey1977eda] and is supported in modern practice by the pandas data
+analysis toolkit [@mckinney2010pandas] and the broader scientific-Python
+stack [@harris2020numpy]. The present manuscript restricts attention to a
 **first pass** on a **small tabular dataset**: load, surface missingness, compute
 descriptive statistics and per-group means, and rank features by Pearson
 correlation.
@@ -569,7 +569,7 @@ complexity.
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
 

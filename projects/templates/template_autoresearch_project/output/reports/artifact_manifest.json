@@ -5,702 +5,1215 @@
       "path": "output/data/autoresearch_claims.json",
       "sha256": "471b9b4711e81f5092ee5cbbeb709e2f83ef6e88759d5d786c5f3024fe8b5665",
       "size_bytes": 1766,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 1,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_evidence_overview.json",
-      "sha256": "d36e4074c07376f878e45bd9586b63b2d3ea9a9319f6ec31022ec17e2fc23e68",
+      "sha256": "fbb764263a4810aff9b2f995d29e44592369f175f757ed9b332607989e7138c1",
       "size_bytes": 4436,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 2,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_integrity_attestation.json",
-      "sha256": "3ca3f0f4d7d0870e072f491027c6ea415db92c21233446c0f074d84075740cee",
+      "sha256": "0130d47e3ef300efd1198786cf8d6c96efdd11ac7c05c29f6c662360b4ce5764",
       "size_bytes": 22755,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 3,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_inventory_export.json",
-      "sha256": "fb3a7abe7b2b345b2ce9ebd4b8e568cfa6d3bdf955eba6497b352f6743f32892",
-      "size_bytes": 20281,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 4,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "sha256": "c2a2cb449ae73901911d167d3aaa756ac9b01198b62db6654b5cc9c23c6454da",
+      "size_bytes": 20203,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_loop.json",
-      "sha256": "e61c5a2192b1912a160a044eb0ff3c60d1d397602faaa54f372a5d101a84a179",
+      "sha256": "761ae5d29ef417bdf31fed4f1972eacc99d82142e5ee43fd9c5111335de13a1c",
       "size_bytes": 16085,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 5,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_phase_ledger.json",
-      "sha256": "82f1ca2fd3a0f75af1bc884f029d82a4f31e25928aefd0d5b0e14ecfc4141019",
+      "sha256": "ccc217201c5c2eb6eba4886b1dacd8d8104c26c406e65c9b98535280032b8ea5",
       "size_bytes": 3779,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 6,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_plan.json",
-      "sha256": "0f8166005d311de66e0880c65bca45fe68522a87bdbd0006bbed42dd3e81493c",
-      "size_bytes": 19451,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 7,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "sha256": "06b1a8859111cab2938c6cb57e57f96ccd419c453d8ff1c374c3c3b528e72779",
+      "size_bytes": 19334,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_review_packet.json",
-      "sha256": "a4977842b488817c53c90da59a1293015f030112022cb085eeddb6a4654d40e5",
+      "sha256": "ca86ec03b9373cd8570ec81a75248ee3b593be98bad442f7f710ce99059ad051",
       "size_bytes": 16204,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 8,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_schema_manifest.json",
-      "sha256": "aaeb83807752a4ffd6996e871544d229378423417859029d8fc6cf5b07ed226e",
+      "sha256": "b3e01ee63c1dcd6854ea4282e3a36e92b61a67568e972dbc204eb1bab38a50b3",
       "size_bytes": 7226,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 9,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_security_profile.json",
-      "sha256": "1ba1f10df331fb5bade756888cffab8b1ba9a1f2653854c6796e7253949fe967",
+      "sha256": "8931e304a9419c4d6ea707803410868ed5d1870df51830ffff079b3d0551cf8a",
       "size_bytes": 1537,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 10,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_stage_matrix.csv",
       "sha256": "c055ba96454a7592b9c8da7ef1b708c40d6a6df84eebd91f7efde35eeebcd6d9",
       "size_bytes": 749,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 11,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_supply_chain_inventory.json",
-      "sha256": "389d3c542b3583815cac46a110cb8174c3183f33aee8ff3e00842639215dc44b",
-      "size_bytes": 21537,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 12,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "sha256": "7921e3bfd64e227e3b004c0790956540711bf55dd15a98eb4cffe51ae523c0c7",
+      "size_bytes": 21459,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/autoresearch_threat_model.json",
-      "sha256": "e6589b53ed172cd163eecd9054229c180c7939a6b38343879790e79020c31dcf",
+      "sha256": "4bceddaf90c2dd3ada181a5402cd2b23e1d6a815514a81464e189f15b1f4d962",
       "size_bytes": 6370,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 13,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/benchmark_boundary.json",
       "sha256": "254e4899219c95d52766497cd31283526f7a3884b28083b4184e5d864ebeb109",
       "size_bytes": 2363,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 14,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/benchmark_scores.json",
-      "sha256": "196a8caa7252f42f883a432da3ee4f6370f086abe72853d14afb22d7ad4d3437",
+      "sha256": "99343bca9dbee61f05550f297aa1789c185cf0cc2c1f6179b546625199451548",
       "size_bytes": 621,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 15,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/figure_quality_report.json",
-      "sha256": "cb02cb35503375753b0a4d95a2901f042e82beafef75ba686a8471bd50cc50b0",
+      "sha256": "a17dc7dd7cc2a7a7c6cffc753dfe9ad02432ebaec7a160e0ffc388520ba10d5b",
       "size_bytes": 16040,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 16,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/figure_style.json",
-      "sha256": "aa357ed53403f98fdef9ca7d8f1eb1950840d3e378bc7648df701b570aa90787",
+      "sha256": "43713c3676f3913a9bf117981e858ea2ea0215ddd82430418f2353c50544ee3a",
       "size_bytes": 1117,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 17,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/idea_ledger.json",
-      "sha256": "3858b347396399a31bf729d2bb5d7c0193e0b1ba5ad3c14f1fba03bb93c9a6bb",
+      "sha256": "e4949806dee08a01b8a6f52c246158055f7d08e49f7e66b4aacdcf8870066701",
       "size_bytes": 5233,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 18,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_figure_blocks.json",
       "sha256": "2c3b05b5d24821e97c2145d089b60f9c62ef94942cda945a44119a6e8bf4fd2d",
       "size_bytes": 13062,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 19,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_variable_provenance.json",
       "sha256": "67fe80c82bfb3723faee6b6a0d734bc2a10e6c7219e49cadcf20d7d80cfa60b6",
       "size_bytes": 30891,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 20,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "3a431866316d551ab62466cc800e0a2f1266673194348c2b0a1894daa3b3c48d",
+      "sha256": "0d23625c4c82fc12704d138013ae8e64ed78953d980b88bc8021123f6814e0ec",
       "size_bytes": 54968,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 21,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_bootstrap_intervals.json",
       "sha256": "c2f064d5b9fcbeacf22161e0f5d71e55d1c62336110f9056ce5d44eaa79034ca",
       "size_bytes": 615,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 22,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_calibration_bin_intervals.json",
       "sha256": "3c4bfd9647d4ef142a91f4b02dc0f2588e6c0d513dbd457fb1c73d0964aaa046",
       "size_bytes": 2879,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 23,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_calibration_report.json",
       "sha256": "66688f17c65f73a241c546a9c6088b0f9e3104d80671b257ce2b3639d001a729",
       "size_bytes": 2201,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 24,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_candidate_intervals.json",
       "sha256": "4a9a962e02ede0683c331008d3af6ccd1b13f5603a8bb3df356b5b7ca1829b8d",
       "size_bytes": 1577,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 25,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_candidate_ledger.json",
-      "sha256": "a1aa53c3146d7d6e6f6b4d85d2051b983a781dc3a34a78d8070af7bede9d6f71",
+      "sha256": "4d11f76830fecda58e7db99ea058c4358d47700d8c80e73c9fd5d710228778b6",
       "size_bytes": 570872,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 26,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_candidate_rank_stability.json",
       "sha256": "0ec9b7d69a77b3b34a0c260b6bf17cac4ef9a961b10f7c3c28202fd62bd3d6c2",
       "size_bytes": 3135,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 27,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_candidate_selection_audit.json",
       "sha256": "403b4c03b19df06aa578adced842ae730afa36983907c84ba9cb3a584422c912",
       "size_bytes": 2145,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 28,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_class_balance.json",
       "sha256": "f963ea4157257905e8fced1ff25c3020ad6c02a939dcf1fc14fb03e357b3908d",
       "size_bytes": 2393,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 29,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_classification_diagnostics.json",
       "sha256": "18c47e9219b48feb1f3fe4f968e1dc96356eb5096ee4b83741f6ab1c7078c784",
       "size_bytes": 4246,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 30,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_confusion_matrix.csv",
       "sha256": "1fb05684e12e2e7b822e19112b9c372aeda465cd5bed276e7bcafe7b3ac88acc",
       "size_bytes": 271,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 31,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_diagnostic_boundary.json",
       "sha256": "7e8a24d59f69fa81862740053cbb9a49db2b8ff604359108bc9c6ed32a723a2b",
       "size_bytes": 2064,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 32,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_error_examples.json",
       "sha256": "661c834edecaff3e4ee048e92732d4be452d97399353500cb3c2aef3df3a6e7b",
       "size_bytes": 989,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 33,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_paired_comparison.json",
       "sha256": "5b653f3b4ab801faec1f654f23a4ca0dd73348f87f344724076f8e9abe6f706a",
       "size_bytes": 470,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 34,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_prediction_records.json",
       "sha256": "776042f500647b929d3813dea6f7b372656c6adca3f27bdf074061eb3cf619fc",
       "size_bytes": 989913,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 35,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_probability_diagnostics.json",
       "sha256": "586e106d87a8acac55f4867796b724fd44e14fd9a8cea81f8869017d0b149373",
       "size_bytes": 3045,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 36,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_robustness_report.json",
       "sha256": "6c352cc10bf38e1b0e28589f27272192a7f73f70895ba930cb013b682541a366",
       "size_bytes": 3758,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 37,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_statistical_summary.json",
       "sha256": "8be7a0af61d556c49b283ee1e5c5c6d513c8e51906ed10415d63cf8e449d997b",
       "size_bytes": 3032,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 38,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_task_results.json",
       "sha256": "5a282269047ca90cce1176551807971eee71115025fc1f82369305d42825da7e",
       "size_bytes": 703566,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 39,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_training_diagnostics.json",
       "sha256": "93f0a3fa095bcfc1dcaa0bd5b1450cde4ddc6f1162ef85a2af990df11534a74b",
       "size_bytes": 2968,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 40,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/ml_training_history.csv",
       "sha256": "54d2600b742fd9a651da220944460d8d14d8b5cbfa79a6d3288e4f6818f5c1ad",
       "size_bytes": 6775,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 41,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/mnist_task_config.json",
       "sha256": "087ea62556a9315b8be8e53b12e5f569cf5116fa83e981a5e63ea69206d3ad13",
       "size_bytes": 3926,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 42,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/publication_ledger.json",
+      "sha256": "25b0099b9fb36603e9bf3c47b866f05fb9e4d94afd9449973eb37f8107260ba5",
+      "size_bytes": 1005,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/research_object_manifest.json",
-      "sha256": "2f5f72cabe2da910ded784a78a6edadcd296911dca1302cd6b8ba8ba202104b4",
+      "sha256": "f67e86bda4079ffbf6ad7e1ffe32add578c6d7c8bdd5880ba33811851b7177a8",
       "size_bytes": 20789,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 43,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/research_program.json",
       "sha256": "a7460fc55af47481844372bc82d9c7409e066b7217e472742ac7f1e6faa67e97",
       "size_bytes": 965,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 44,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/review_decisions.json",
-      "sha256": "61349dcdc8f8fc14196574bf8528f7079765218b9bd10b7d81c4c85dbeb634fb",
+      "sha256": "f3724be4549ae583156184f185458007f9d8ddace498536816f91096189ac019",
       "size_bytes": 669,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 45,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/run_ledger.json",
       "sha256": "617db1e431fbaa53ccd97199f28a444716f6af4e0ab00b3212724d62e6defbd9",
       "size_bytes": 328,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 46,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/transmission_manifest.json",
+      "sha256": "d51ff87e5f5828812d38b5529c584d955f6f116b66a0084bfa136b4be6666925",
+      "size_bytes": 503,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/autoresearch_candidate_lifecycle.png",
       "sha256": "354dc0441db875b66363f49aa61463bb74d97ba2c6d55c27d72efab8d6a9a3e8",
       "size_bytes": 28053,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 47,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/autoresearch_closure_flow.png",
       "sha256": "00c3cc768fa8a09a99a7024b852cd7b37675c04e4bfec942434d2bf2466c764c",
       "size_bytes": 40410,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 48,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/autoresearch_integrity_chain.png",
       "sha256": "a7909453ee5c7de2a1506fa7caa08049e235b651e8425a024e5223a9dc72b3aa",
       "size_bytes": 48256,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 49,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/autoresearch_security_control_matrix.png",
       "sha256": "6629296fbd39f2eac64efd1d2d406f3798459abcd38b2397fb8ea04f5d246586",
       "size_bytes": 86574,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 50,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/autoresearch_stage_matrix.png",
+      "sha256": "dd822dda0570f6b12c6b281c6b586961751bad4ccc074443d64167e391f48d26",
+      "size_bytes": 23476,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/figure_registry.json",
+      "sha256": "92a25316845b13fdef0e67d8b12efa7075135fc1af455dc2040353f7538add31",
+      "size_bytes": 30674,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_bootstrap_intervals.png",
       "sha256": "d3d091eebf234c989d071aa95b7ca2a4748bb1398b5249a8652c2292cb73c668",
       "size_bytes": 21834,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 51,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_calibration_reliability.png",
       "sha256": "e9bc3de9ed2158d485c1ad2e7353016614cb267843dff24cd420aab2f6fd6ab1",
       "size_bytes": 73889,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 52,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_candidate_rank_stability.png",
       "sha256": "3cd9a24d312d89820c0853ef39bee65731589d1c43025c9d91c2122b8d2ef952",
       "size_bytes": 43692,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 53,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_candidate_scores.png",
       "sha256": "2305c1114b3472bacadb35c5d5b906b61b0d26d0027b8572d6a6f2e8f94b58cc",
       "size_bytes": 59953,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 54,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_classification_metrics_heatmap.png",
       "sha256": "4c820e0a89f3be3b782887c94ddd17296690df5b44303c54633b0b2f138ce981",
       "size_bytes": 55092,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 55,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_complexity_accuracy.png",
       "sha256": "e23f67ede57fe940e461a2a4f084c091dbedb420ce5614f90f6c2dc22dbba2a7",
       "size_bytes": 35135,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 56,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_confusion_matrix.png",
       "sha256": "4336dd89e7526d5e7c533eea14f0535d7a51c88eedc0bf0b7c0127fc75e2c77b",
       "size_bytes": 65820,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 57,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_confusion_pairs.png",
       "sha256": "60fe19e6faa3bbd839f9e3c8d263e4afb12f54fa6d6197b74867359a7d56f843",
       "size_bytes": 33982,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 58,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_generalization_gap.png",
       "sha256": "32fe2408de8264302f1e33dc35702496e7b12231fb420afa4ed6dbc5d62af197",
       "size_bytes": 48512,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 59,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_learning_curves.png",
       "sha256": "089b17151fcadc9f774009d1d3d505a9684dbaba93d0e892ed6cefae77eeeb45",
       "size_bytes": 59258,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 60,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_paired_correctness.png",
       "sha256": "5150d3babec3156f603fcd6ab9d9c7e6a4fae16bde7222102f25522128f5f8f5",
       "size_bytes": 43309,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 61,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_per_class_accuracy.png",
       "sha256": "fa4f61e3db8bf755f00307b1233632de5973745862a889626f5d8bf265abb644",
       "size_bytes": 34800,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 62,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_probability_margin_distribution.png",
       "sha256": "e99d309275992555e638f012fc1de2851ddb957d82a58d09fffbfff31a487337",
       "size_bytes": 41754,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 63,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_probability_quality.png",
       "sha256": "72976993e66a6a09f5ef0ab2177ecc969fa370bb04695a5a5956ca9d6e56db1e",
       "size_bytes": 38071,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 64,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_robustness_matrix.png",
       "sha256": "4942489709a2cc818bc3eb2c20b2569cc6a20fc007f74a72c2307be863d708dd",
       "size_bytes": 51332,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 65,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_selective_accuracy.png",
       "sha256": "e36565ad26907a266a316a2f14a1e4ddcbc68e8474edc138d6c1c5d7a0e98f65",
       "size_bytes": 48274,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 66,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/ml_training_dynamics.png",
       "sha256": "48303b3ea34d5c8eea5d34e080294df3338c8dbd18bb01ab8c43b8dddfcb5082",
       "size_bytes": 51004,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 67,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/mnist_class_balance.png",
       "sha256": "cec99fcdfc647a462981d97e64a3ca8b9974b3c00032751108ecaadb1ca05831",
       "size_bytes": 27059,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 68,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/mnist_error_examples.png",
       "sha256": "904cf74239219fa74eafe4cdef5ea4b9493a809d1c124cfa1affa4da9b87fbd6",
       "size_bytes": 28431,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 69,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/mnist_subset_contact_sheet.png",
       "sha256": "1866523ca6835151b35426e11c5bf456a5908fcebe8b8d481ecb1a008fd0a8a3",
       "size_bytes": 23617,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 70,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/transmission_integrity_strip.png",
+      "sha256": "5452a9b10126273326e50e060d68fc704953b1f49b0be8968eb2e5bb93c1e63e",
+      "size_bytes": 18348,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/transmission_pairing.png",
+      "sha256": "2262f8b2a7a24d156ab8b548368afc23fdd1f138a7c862933b1ce9ebf3abed7a",
+      "size_bytes": 11286,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_00_transmission_begin.md",
+      "sha256": "89d1126ba576cbc35c36004927041432f25d8a428661f7af6115abd8871d7ac5",
+      "size_bytes": 1554,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "470d61e36035d7ff26a50ce49ba91dec4128fb34127c976e206292ba49c965d3",
+      "size_bytes": 1451,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "a4e65d9c77487099867a0e697c283b9d93db407e63b38ef67461df77a628fba5",
+      "size_bytes": 14774,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "06419f7500bf715a53c646dc08ccf4c12c29f26b2a3739898603ddbecea2f69e",
+      "size_bytes": 21097,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "0043aec5975822edbb72e08dd2a5125e401451a5c37167084385f5194173f4bb",
+      "size_bytes": 39363,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "cba092e7924f75792ecbe647b48d0bef5d4e25b45fceee2e502b361e813d8580",
+      "size_bytes": 2642,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "6271dead2e93c6e466455cf69267739182a8af69a06f6b2de2b52b439b08e4c6",
+      "size_bytes": 58,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/99_zz_transmission_end.md",
+      "sha256": "729c54987b84839234b2e24f269418ef426773c3f1242a27745d86cb40cc419a",
+      "size_bytes": 543,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml",
+      "sha256": "e3f203b53ac0f50ed5a4319ab173df1771eb72e0a1f0459c86f1d7803cdb1731",
+      "size_bytes": 3233,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/preamble.md",
+      "sha256": "2e57b50fd9410de943819e926cc5c2ead9421502f33427d349df00cefa683a8f",
+      "size_bytes": 137,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/references.bib",
+      "sha256": "f6487baa8544909233b59120b3815ea3206b2981616bea3e9d60eb29caa9000d",
+      "size_bytes": 23228,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.bbl",
+      "sha256": "c7877fe680eeb3e98e036afaa0b5e1dd8fbe021a8f9edfad2317a9b35e7c0395",
+      "size_bytes": 22341,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.blg",
+      "sha256": "9a19ba9200b19a1ad7ad58c69df155f3ff39e161feff89dbdbf0e4688f64629c",
+      "size_bytes": 1554,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.md",
+      "sha256": "ff02b82b6776fc8d79cddac372c7959468e31e3ac26156f1743804eff690b253",
+      "size_bytes": 81586,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/_combined_manuscript.tex",
+      "sha256": "b7e94c32a1c988d0e9128fb5f5b3e5f7293e049b637a4fad43bb1f9557fc807c",
+      "size_bytes": 124760,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/references.bib",
+      "sha256": "f6487baa8544909233b59120b3815ea3206b2981616bea3e9d60eb29caa9000d",
+      "size_bytes": 23228,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/pdf/template_autoresearch_project_combined.pdf",
+      "sha256": "e9a6411c60ea9f34d529c86c05aa7bbc07340dd9d2bab074763ce19917d61551",
+      "size_bytes": 1342096,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/autoresearch_evidence_overview.md",
       "sha256": "8460fe5ab473bdd599f051168a921a8c5c185671bf3f10bb36cd0f32ca747dfa",
       "size_bytes": 1136,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 71,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/autoresearch_loop.json",
-      "sha256": "e61c5a2192b1912a160a044eb0ff3c60d1d397602faaa54f372a5d101a84a179",
+      "sha256": "761ae5d29ef417bdf31fed4f1972eacc99d82142e5ee43fd9c5111335de13a1c",
       "size_bytes": 16085,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 72,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/autoresearch_loop.md",
+      "sha256": "5532eea4628a7031153787e5bbc5935ab882abf23a14ae26a6a9aa4f8d94165b",
+      "size_bytes": 1982,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/autoresearch_review_packet.md",
       "sha256": "f8469b3bee2826ba8084fb2ebb8451e5e891e031c3babc78260afe80e6472b2b",
       "size_bytes": 912,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 73,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/autoresearch_security_review.md",
       "sha256": "5058b90295cfba21f61bc68c15b570b419f7130c5e350fc9874f495a4e1f08d9",
       "size_bytes": 1104,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 74,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/autoresearch_summary.md",
       "sha256": "d0d47636e27fed27f9ed7825ea040944fb5904d85626bba26ab3790b8fe182b3",
       "size_bytes": 255,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 75,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/benchmark_readiness_smoke.json",
       "sha256": "a3e8b2cd314a9f669ea1cd13a90e6baff1441921eac7583e7578945e39cbb7f2",
       "size_bytes": 778,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 76,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/lessons.jsonl",
+      "sha256": "257bc29ceada9e78476c37dcd2db49c9c07254888bbf565ae1fd75f03616b6c5",
+      "size_bytes": 2684,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/lessons.md",
+      "sha256": "d05e94241a2b129c4080a101dc0d3a0ad0d0aac3cdb0d3c4358ed18d4e5684fa",
+      "size_bytes": 799,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/log_summary.txt",
+      "sha256": "7ea67445c9a30ed41194a1fcc5f94ca8ba40c50a2ede96c05702aede2b1fa566",
+      "size_bytes": 136,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/ml_benchmark_score.json",
       "sha256": "228e3d3db32e7dbf547b7c6ded6e32ba103cd2d1a3f406b71e1f6a3551a4c003",
       "size_bytes": 382,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 77,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/ml_experiment_report.md",
       "sha256": "9f13a07f6bf2d6051722f6548305e52889a7b45c08e93536dfeb9e6506018d7e",
       "size_bytes": 1687,
-      "stage_name": "AutoResearch loop",
-      "stage_num": 78,
-      "timestamp": "2026-07-10T20:15:15+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/next_run_context.md",
+      "sha256": "45a55f0d99371406d7d5c55e288e8c278eedf7ab3e0347e7b8dbb69cf279750f",
+      "size_bytes": 940,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/pause_recommendations.json",
+      "sha256": "d3db9b8110347ad9ecd37d89f49265e0db1d140d9145374b66912de21373cf5e",
+      "size_bytes": 1149,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/pipeline_report.html",
+      "sha256": "c5db798e6c131ad58fd746f0da536faf7797ef5c8c267f5a7b51b43462e03982",
+      "size_bytes": 5898,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/pipeline_report.json",
+      "sha256": "264a25d15c59694eb8a83b8e4e0697d9a914aa26106acf19b46ed69545210b1a",
+      "size_bytes": 9770,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/pipeline_report.md",
+      "sha256": "42b8056e2c7b079f9ae0d10a0b3c8fe1519828830ae08a89d2d9cd0698b08af6",
+      "size_bytes": 744,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/telemetry.json",
+      "sha256": "591a9b46303c6c715ec48ee951e5740acc613bb75ba23991c74d714ac38d5846",
+      "size_bytes": 3723,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/telemetry.txt",
+      "sha256": "5b72f43d1e190f6a30f528e853008a40f8e39d4572287e8309c1bd69e57eb1ad",
+      "size_bytes": 1431,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "fbc12a6c234358c95b86aca8fda70b6d28275ab163a437acac357d0a8201868e",
+      "size_bytes": 616,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "64b87674566c50752ebd6c81f24f565bddddc5661957919f5f7467ff1067b596",
+      "size_bytes": 293,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/00_abstract_slides.pdf",
+      "sha256": "3e0d49a50b8b7a626d9ba63f09d49d1e958df550de2b9bd1800dab4c2dfdc922",
+      "size_bytes": 15419,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/00_abstract_slides.tex",
+      "sha256": "6e7d986719d49d1fb03ff87c5beb5de65d2a1c4776235c3d1f410df4c2618a61",
+      "size_bytes": 5728,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/01_introduction_slides.pdf",
+      "sha256": "10e689def7a7b99d6989c79fdb2bd850bcd60473e6d5bd8338168c8d9adb52b2",
+      "size_bytes": 30739,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/01_introduction_slides.tex",
+      "sha256": "1d6a942d1d48b38811a3176361a031be1d928fbc010114eaad705cf40565e086",
+      "size_bytes": 20218,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/02_methodology_slides.pdf",
+      "sha256": "6c9e4fcb477c6fd3bc4e4e689f35df9a33419403024f5611a41066b69cda4e2e",
+      "size_bytes": 191202,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/02_methodology_slides.tex",
+      "sha256": "c25305305de565e84d8053358526f02fdfcf525c90e9d67f3168d1aac22ae5fc",
+      "size_bytes": 32222,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/03_results_slides.pdf",
+      "sha256": "8ad72ae5371f5d06dd2b1fe8349990eba074eec33d8d4ac6d8ed646fa2c3debf",
+      "size_bytes": 1060056,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/03_results_slides.tex",
+      "sha256": "367bdd81d2f094a31de7d2a768909df7a6b8617af49cceec39948aa4931f8317",
+      "size_bytes": 74132,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/04_conclusion_slides.pdf",
+      "sha256": "03e0fc8c4218b4f8c8dfcb264c5ce9db6e94f629d1cfe14bc5b60dff12af0b65",
+      "size_bytes": 15939,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/04_conclusion_slides.tex",
+      "sha256": "0e349d1e492d6dc4b6df4ce498a8a9040acb4dbca2ffff9a4a64ad6052ca6689",
+      "size_bytes": 6735,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/99_references_slides.pdf",
+      "sha256": "85c6562e8cdb6da350c44c1f3fe43e0ad83ec8b199e0e8eb7c5e92020ed092a6",
+      "size_bytes": 7623,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/99_references_slides.tex",
+      "sha256": "d0d16616c55288a56eddd1a2069b058b6d85c2d03a92291e58f0366937f437ec",
+      "size_bytes": 4124,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/slides/_slides_math_header.tex",
+      "sha256": "afdfb7576b414be14b82cd9a589a14504ed11b45710659e0aa13ec6a6b9f51bb",
+      "size_bytes": 1264,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "18411782921f42394319636107eb0bcfd5a4beae1e26b1c875da6009afcca122",
+      "size_bytes": 81389,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/index.html",
+      "sha256": "c1b047cd7216bcf1591557dabdfba8da1fd4881cd4df0abf64ca50d82114132e",
+      "size_bytes": 127633,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__00_abstract.html",
+      "sha256": "a74f37cd1dd2230500b9084200846a678873286dbd25ef99329726bcdb5e6c6f",
+      "size_bytes": 5627,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__01_introduction.html",
+      "sha256": "d66e666a1f4307c64a17e8f60f93ead32555e257c8b39799841822891bdb9243",
+      "size_bytes": 19028,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__02_methodology.html",
+      "sha256": "fdbb3839a2a26e915794f88614197f64b07d37037f26a3a5a03453fc80ae3390",
+      "size_bytes": 32746,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__03_results.html",
+      "sha256": "5311783c0a23ba6bdfd4644c9b95007fe24fee8d895ac6d3c5038441d0feea3c",
+      "size_bytes": 69087,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__04_conclusion.html",
+      "sha256": "2f8ff0b20c0e3e463cd04306a0c4b0ffac46e11c058f1222687865d42a4d87be",
+      "size_bytes": 6574,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/manuscript__99_references.html",
+      "sha256": "87bd000f0df0b4f966774b192ed0c9f5deb2bf9ef108c42f7cb0e962b1ab6edb",
+      "size_bytes": 3942,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": "2026-07-12T02:08:51+00:00"
     }
   ],
   "issues": []

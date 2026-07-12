@@ -128,12 +128,19 @@ def _check_code_path_match(
         is_valid_directory_reference,
     )
 
-    path_ref = match.group(0).strip().rstrip(":")
+    path_ref = match.group(0).strip().rstrip(".,:;")
     if len(path_ref) < 3:
         return None
 
     if is_code_block_artifact(path_ref) or is_mermaid_artifact(path_ref):
         return None
+
+    language = str(block.get("language", "")).lower()
+    block_content = str(block.get("content", ""))
+    if language in {"yaml", "yml"} and "entrypoints:" in block_content:
+        illustrative_markers = ("my_tool", "org/repo", "code_executor |", "Your ")
+        if any(marker in block_content for marker in illustrative_markers):
+            return None
 
     lines = path_ref.split("\n")
     if any(line.strip().startswith("#") for line in lines if line.strip()):
@@ -166,6 +173,9 @@ def _check_code_path_match(
             "type": "code_block_path",
         }
 
+    if _is_declared_make_output(resolved_path):
+        return None
+
     if resolved_path.suffix or not path_ref.endswith("/"):
         return {
             "file": str(file_path),
@@ -175,6 +185,20 @@ def _check_code_path_match(
             "type": "code_block_path",
         }
     return None
+
+
+def _is_declared_make_output(path: Path) -> bool:
+    """Return whether a missing directory is explicitly created by a sibling Makefile."""
+    if path.suffix or path.name != "bin":
+        return False
+    makefile = path.parent / "Makefile"
+    if not makefile.is_file():
+        return False
+    try:
+        content = makefile.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return False
+    return bool(re.search(r"(?m)^\s*BIN_DIR\s*\?=\s*bin\s*$", content))
 
 
 def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:

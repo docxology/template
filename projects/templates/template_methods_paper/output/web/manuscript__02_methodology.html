@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology</h1>
 <p>The DSL is implemented as eight cooperating modules under
 <code>src/methods_dsl/</code>, each corresponding to one stage of a
@@ -274,8 +278,7 @@ with SHA-256 (<code>_compute_plan_hash</code>) into
 <code>step_id</code>/<code>name</code>/<code>kind</code>/<code>target</code>/scheduled
 <code>order</code> — never from a wall-clock timestamp or a UUID —
 recompiling the same <code>Method</code> object always produces the same
-<code>plan_hash</code>, which <span class="citation"
-data-cites="sec:results">[@sec:results]</span> verifies live rather than
+<code>plan_hash</code>, which [sec:results] verifies live rather than
 asserts.</p>
 <h2 id="export-export.py">Export (<code>export.py</code>)</h2>
 <p>A compiled <code>Plan</code> renders to four formats, mirroring BPL’s
@@ -331,5 +334,6 @@ statement-coverage gate on
 figure is tracked in <a
 href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
 </ol>
+</main>
 </body>
 </html>

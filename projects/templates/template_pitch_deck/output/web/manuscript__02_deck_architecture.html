@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:architecture">Deck Rendering Architecture</h1>
 <h2 id="content-model">Content model</h2>
 <p><code>infrastructure/rendering/slide_deck.py</code> defines the
@@ -189,9 +190,9 @@ speaker-notes string, an optional local figure path, and a
 <code>content</code>).</li>
 <li><code>DeckContent</code> — a deck title/subtitle plus an ordered
 tuple of <code>Slide</code>.</li>
-<li><code>SlideBudget</code> — the three published lengths
-(<code>SHORT</code> ≤ 10 slides, <code>MEDIUM</code> ≤ 22,
-<code>LONG</code> ≤ 45) and <code>filter_deck_for_budget</code>, a pure
+<li><code>SlideBudget</code> — the three published maximum lengths
+(<code>SHORT</code> ≤ 11 slides, <code>MEDIUM</code> ≤ 38,
+<code>LONG</code> ≤ 58) and <code>filter_deck_for_budget</code>, a pure
 function that truncates a deck to a budget without mutating slide order
 or content.</li>
 </ul>
@@ -221,9 +222,9 @@ pitch-deck-domain code — loading
 <code>manuscript/deck_content_*.yaml</code> into
 <code>DeckContent</code> objects, resolving <code>{{TOKEN}}</code>
 values, and linting for cliché — never layout/drawing code.
-<code>scripts/render_decks.py</code> is the thin orchestrator that ties
-content loading, token resolution, cliché linting, and the two infra
-renderers together into the six published artifacts under
+<code>scripts/20_render_decks.py</code> is the thin orchestrator that
+ties content loading, token resolution, cliché linting, and the two
+infra renderers together into the six published artifacts under
 <code>output/{pdf,pptx}/</code>.</p>
 </main>
 </body>

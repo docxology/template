@@ -8,7 +8,7 @@ from typing import Sequence
 import matplotlib.pyplot as plt
 
 from .introspection import ModuleInfo
-from .viz_palette import ARCH_VIZ_COLORS, FONT_FLOOR, doc_badge
+from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR, doc_badge
 
 
 def generate_module_inventory(modules: Sequence[ModuleInfo], output_dir: Path) -> Path:
@@ -95,6 +95,6 @@ def generate_module_inventory(modules: Sequence[ModuleInfo], output_dir: Path) -
 
     plt.tight_layout(pad=1.2)
     path = output_dir / "module_inventory.png"
-    plt.savefig(path, dpi=200, bbox_inches="tight", facecolor="white")
+    plt.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
     plt.close()
     return path

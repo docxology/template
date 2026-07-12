@@ -18,8 +18,8 @@ review_gates:
   - deviation_review
 source_policy: "Use committed registration artifacts and explicit deviation records."
 artifact_expectations:
-  - output/reports/registration_audit.json
-  - output/data/deviation_ledger.json
+  - output/reports/adherence_report.json
+  - output/reports/deviation_ledger.json
 benchmark_rubric:
   name: registered-report-readiness
   dimensions:

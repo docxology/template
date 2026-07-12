@@ -1,6 +1,6 @@
 # Abstract
 
-This exemplar demonstrates a complete disclosure-control pipeline for sanitized public release reports. The methodology combines classification-ceiling enforcement, source-protection validation, mosaic-risk scoring, and TPM-backed sealed sidecars across a sixteen-variant visual proof matrix. Four redaction styles—blackout, whiteout, grayout, and blur—are rendered across four PDF backgrounds—white, gray, black, and blur—yielding sixteen base proof PDFs. Each receives nine steganographic security methods including SHA-256/SHA-512 hash manifests, diagonal watermark overlays, footer provenance stamps, invisible text, QR and Code128 barcodes, PDF Info and XMP metadata, and embedded manifest attachments. Optional Kmyth TPM sealing wraps each hash manifest and steganography PDF in a `.ski` sidecar sealed against the TPM2-TSS storage hierarchy, bound to PCR selections and policy or-values. The release gate requires three reviewer roles—originator, classification reviewer, and release authority—each providing a non-empty rationale. A source-safe redaction ledger records SHA-256 hashes of each redacted span without exposing source text, and a segment hash manifest compares source and public SHA-256 digests for reproducible audit. The comprehensive release packet combines sanitized text, audit findings, ledger, hashes, review gate status, and paragraph-level audit tables into a single JSON-ready export. This exemplar confirms that visual presentation choices remain orthogonal to the release gate: the same source-safe decisions drive every output variant.
+This exemplar demonstrates a complete disclosure-control pipeline for sanitized public release reports. The methodology combines classification-ceiling enforcement, source-protection validation, mosaic-risk scoring, and TPM-backed sealed sidecars across a sixteen-variant visual proof matrix. Four redaction styles—blackout, whiteout, grayout, and blur—are rendered across four PDF backgrounds—white, gray, black, and blur—yielding sixteen base proof PDFs. Each receives nine steganographic security methods including SHA-256/SHA-512 hash manifests, diagonal watermark overlays, footer provenance stamps, invisible text, QR and Code128 barcodes, PDF Info and XMP metadata, and embedded manifest attachments. Optional Kmyth TPM sealing wraps each hash manifest and steganography PDF in a `.ski` sidecar sealed against the TPM2-TSS storage hierarchy, bound to PCR selections and policy or-values. The release gate requires three reviewer roles—originator, classification reviewer, and release authority—each providing a non-empty rationale. A source-safe redaction ledger records SHA-256 hashes of each redacted span without exposing source text, and a segment hash manifest compares source and public SHA-256 digests for reproducible audit. The comprehensive release packet is built in memory; canonical public JSON separates a text-free audit from the hashed ledger so neither artifact exposes narrative or source spans. This exemplar confirms that visual presentation choices remain orthogonal to the release gate: the same source-safe decisions drive every output variant.
 
 
 
@@ -27,7 +27,7 @@ This exemplar is limited to lawful redaction, declassification support, public-r
 4. A visual proof matrix that enumerates four redaction styles across four PDF backgrounds, producing sixteen variant PDFs with identical source-safe decisions.
 5. A steganography layer that post-processes each base PDF with nine security methods, producing provenance-enhanced companion PDFs with hash manifests.
 6. Optional Kmyth TPM sealing that wraps each hash manifest and steganography PDF in `.ski` sidecars sealed against the TPM2-TSS storage hierarchy.
-7. A comprehensive release packet that combines sanitized text, audit findings, ledger, hashes, review gate status, and paragraph audit tables.
+7. A comprehensive in-memory release packet plus deterministic public projections: a text-free audit and a hashed source-safe ledger.
 
 # Architecture
 
@@ -104,6 +104,14 @@ The redaction ledger records each decision with:
 - A `source_span_sha256` hash of the redacted text—present only for valid spans, absent for invalid or orphan decisions.
 
 The ledger never exposes source text. It provides reproducible audit evidence without disclosure risk.
+
+The normal analysis stage writes this evidence to
+`output/data/release_ledger.json`. Its companion
+`output/reports/redaction_audit.json` contains policy outcomes, review-gate
+status, findings, scores, counts, and paragraph metadata. Both canonical files
+omit narrative text, review rationales, and reviewer identities; the
+comprehensive sanitized packet is evaluated in memory rather than serialized
+to the public output tree.
 
 ## Segment Hash Manifest
 

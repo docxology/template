@@ -152,12 +152,16 @@ uv run python projects/templates/template_textbook/scripts/generate_diagrams.py
 uv run python -m pytest projects/templates/template_textbook/tests/ \
   --cov=projects/templates/template_textbook/src --cov-fail-under=90
 
-# 5. Audit the manuscript against the structural contract
+# 5. Audit scaffold structure (default mode reports but allows stub markers)
 uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py
+
+# Before calling a filled fork complete, require zero stubs in audited sections
+uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py --require-complete
 ```
 
 > Exit code 0 alone is not proof: confirm the suite collected more than zero
-> tests and that coverage met the floor.
+> tests and that coverage met the floor. The default audit proves scaffold
+> structure; `--require-complete` is the explicit filled-manuscript gate.
 
 ## How to grow the book
 
@@ -173,7 +177,9 @@ The workflow is always **edit config, then scaffold**:
    Keep the labelled headings, the figure/equation/table cross-references, and the
    curriculum scaffold intact.
 4. Regenerate figures/diagrams if you added new ones, then run the tests and the
-   audit. Both must pass before rendering.
+   structural audit. Once every audited section is filled, also run the audit
+   with `--require-complete`; it reports each section's stub count and fails
+   until the total reaches zero.
 
 Because structure is declared once in YAML, the book can scale from this 12-chapter
 skeleton to an arbitrarily large work without renumbering anything by hand.

@@ -142,6 +142,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -190,8 +193,8 @@ Structure}
 \NormalTok{│   ├── published/               \# Non{-}rendered published (symlinked, private)}
 \NormalTok{│   ├── archive/                 \# Non{-}rendered retired (symlinked, private)}
 \NormalTok{│   └── other/                   \# Non{-}rendered misc (symlinked, private)}
-\NormalTok{├── docs/ (17 top{-}level areas, 380+ markdown files per live counter)}
-\NormalTok{├── tests/                       \# Infra suites (470+ files)}
+\NormalTok{├── docs/ (18 top{-}level areas, 390+ markdown files per live counter)}
+\NormalTok{├── tests/                       \# Infra suites (504+ files)}
 \NormalTok{├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml}
 \NormalTok{├── run.sh / secure\_run.sh}
 \NormalTok{└── output/ …                    \# Mirrors after copy stage}
@@ -199,7 +202,7 @@ Structure}
 \end{Shaded}
 
 See \breaktt{docs/\_generated/active\_projects.md} for regenerated slugs
-(\breaktt{uv\ run\ python\ scripts/generate\_active\_projects\_doc.py}).
+(\breaktt{uv\ run\ python\ scripts/docgen/active\_projects.py}).
 \end{frame}
 
 \end{document}

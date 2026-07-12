@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING
 
 import matplotlib
 
@@ -20,18 +20,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 if TYPE_CHECKING:  # pragma: no cover
     from .search import SearchResult
 
-
-class AblationRow(TypedDict):
-    """One ablation configuration's honest metrics."""
-
-    configuration: str
-    reported_metric: float
-    clean_metric: float
-    noise_inflation: float
-    confirmed_improvements: int
-    experiments_used: int
-    experiments_to_target: int | None
-    redundant_experiments: int
+from .ablation import AblationRow
 
 
 @dataclass(frozen=True)

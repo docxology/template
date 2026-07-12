@@ -1,31 +1,26 @@
 {
-  "timestamp": "2026-07-10T13:16:10.683897",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
     "Figure registry": true,
-    "Evidence registry": false,
+    "Evidence registry": true,
     "Project design overlays": true,
     "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "02_results.md: unsupported number 1.0",
-      "01_methods.md: unsupported number 11",
-      "01_methods.md: unsupported number 20"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
-        "issues": [],
+        "issues": [
+          "Missing directory: figures/"
+        ],
         "missing_files": [],
         "suspicious_sizes": [
-          "Combined PDF is unusually small: 0.06 MB",
-          "figures/ directory is empty",
-          "data/ directory is empty"
+          "Combined PDF is unusually small: 0.06 MB"
         ],
         "warnings": [],
         "directory_structure": {
@@ -56,38 +51,35 @@
             "optional": false
           },
           "figures": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 0,
-            "size_mb": 0.0,
+            "files": 1,
+            "size_mb": 0.01,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 9,
-            "size_mb": 0.06,
+            "files": 27,
+            "size_mb": 0.18,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "logs": {
@@ -119,34 +111,31 @@
           "largest_file": "02_results_slides.log"
         },
         "figures": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "data": {
           "exists": true,
-          "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "file_count": 1,
+          "size_mb": "0.01",
+          "largest_file": "release_ledger.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "0.06",
-          "largest_file": "artifact_manifest.json"
+          "file_count": 27,
+          "size_mb": "0.18",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "llm": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
@@ -159,52 +148,44 @@
         "pdf": 10,
         "web": 6,
         "slides": 25,
-        "figures": 0,
-        "data": 0,
-        "reports": 9,
-        "simulations": 0,
-        "llm": 0,
+        "data": 1,
+        "reports": 27,
         "logs": 1
       },
-      "total_size_mb": 0.5984697341918945,
+      "total_size_mb": 0.7388668060302734,
       "issues_by_severity": {
         "critical": [],
         "warning": [
+          "Directory 'figures/' missing or empty",
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty",
           "Combined PDF is unusually small: 0.06 MB"
         ],
-        "info": [
-          "figures/ directory is empty",
-          "data/ directory is empty"
-        ]
+        "info": []
       },
-      "recommendations": []
+      "recommendations": [
+        {
+          "priority": "medium",
+          "action": "Ensure analysis scripts generate figures",
+          "details": "Check projects/{name}/scripts/analysis_pipeline.py execution"
+        }
+      ]
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.15089702606201172
-    },
-    "figures": {
-      "files": 0,
-      "size_mb": 0.0
+      "size_mb": 0.15224266052246094
     },
     "data": {
-      "files": 0,
-      "size_mb": 0.0
+      "files": 1,
+      "size_mb": 0.010106086730957031
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 7,
-    "failed": 1,
+    "passed": 8,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_redacted_report/output/reports/evidence_registry.json"
-    }
-  ]
+  "recommendations": []
 }

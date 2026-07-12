@@ -14,7 +14,8 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 - `artifacts.py` - artifact manifest JSON parsing and current-manifest selection
 - `prose_quality.py` - opt-in, report-only AI-writing prose quality gate
 - `claim_verification.py` - optional web-grounded claim verification report for manuscript prose
-- `no_mock_enforcer.py` - mock-usage checks (line-based scan; one-line `"""..."""` / `'''...'''` docstrings are skipped so policy docs can name forbidden APIs)
+- `no_mock_enforcer.py` - AST/token lexical mock-framework scan plus classified monkeypatch stand-in inventory
+- `no_mock_audit.py` - shared repository CLI/report/exit semantics used by both script wrappers
 - `layout.py` - shared output directory layout constants (`OUTPUT_SUBDIR_NAMES`, `OPTIONAL_OUTPUT_SUBDIRS`)
 
 ## Key APIs

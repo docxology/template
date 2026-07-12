@@ -26,6 +26,7 @@ from infrastructure.validation.docs.models import (
     ScanResults,
 )
 from infrastructure.validation.repo.issue_categorizer import (
+    ValidationIssue,
     generate_issue_summary,
     get_severity_flag,
     prioritize_issues,
@@ -38,6 +39,21 @@ class _FileValidationResult(TypedDict):
     link_issues: list[LinkIssue]
     accuracy_issues: list[ScanAccuracyIssue]
     quality_issues: list[QualityIssue]
+
+
+def _all_issues(scan_results: ScanResults) -> list[ValidationIssue]:
+    """Return every unique audit finding in its canonical result-list order."""
+    return [
+        *scan_results.link_issues,
+        *scan_results.accuracy_issues,
+        *scan_results.quality_issues,
+        *scan_results.completeness_gaps,
+    ]
+
+
+def actionable_issue_count(scan_results: ScanResults) -> int:
+    """Count red/yellow findings; green known exceptions are non-actionable."""
+    return sum(get_severity_flag(issue) != "green" for issue in _all_issues(scan_results))
 
 
 def run_comprehensive_audit(
@@ -277,11 +293,7 @@ def generate_audit_report(
 ) -> str:
     """Generate a formatted audit report with red/yellow/green severity flag classification."""
     # Collect all issues
-    all_issues = []
-    all_issues.extend(scan_results.link_issues)
-    all_issues.extend(scan_results.accuracy_issues)
-    all_issues.extend(scan_results.quality_issues)
-    all_issues.extend(scan_results.completeness_gaps)
+    all_issues = _all_issues(scan_results)
 
     # Filter false positives and categorize by severity flag
     red_flags = []

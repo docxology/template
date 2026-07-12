@@ -14,10 +14,10 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_textbook",
-  "dateModified": "2026-07-10",
+  "dateModified": "2026-07-12",
   "identifier": "10.5281/zenodo.20533125",
   "keywords": [],
   "license": "https://spdx.org/licenses/CC-BY-4.0",
-  "name": "Untitled Research",
-  "version": "0.0.0"
+  "name": "The Template Textbook",
+  "version": "0.1.2"
 }

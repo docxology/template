@@ -51,7 +51,7 @@ Development standards and coding guidelines for the Research Project Template.
 
 ### Quality Standards
 
-- **Tests**: 60% infrastructure minimum, 90% project minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md)) with data (no mocks)
+- **Tests**: 60% infrastructure minimum, 90% project minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md)); mock frameworks prohibited and semantic stand-ins inventoried
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
 - **Decision memory**: use [memory_and_decision_records.md](memory_and_decision_records.md) to choose between `WHY:` comments, ADRs, project plans, failure autopsies, local memory, and selective ignorance

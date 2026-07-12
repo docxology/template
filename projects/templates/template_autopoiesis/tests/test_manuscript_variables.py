@@ -1,4 +1,5 @@
 """Tests for manuscript_variables module."""
+
 from __future__ import annotations
 
 import json
@@ -45,6 +46,7 @@ def test_md_table_shape():
     lines = [l for l in table.strip().split("\n") if l.strip()]
     # header + separator + one row per slot
     from src.grammar import load_grammar
+
     g = load_grammar(PROJECT_ROOT)
     expected_rows = 2 + len(g.slots)
     assert len(lines) == expected_rows
@@ -69,6 +71,21 @@ def test_generate_variables_uses_supplied_real_numbers():
     v = generate_variables(PROJECT_ROOT, test_count=42, coverage_pct="87.50")
     assert v["TEST_COUNT"] == 42
     assert v["COVERAGE_PCT"] == "87.50"
+
+
+def test_example_parameters_are_bound_to_executable_primitive_specs():
+    from src.common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
+    from src.primitives.graph import PAGERANK_ITERATIONS
+    from src.primitives.optimization import OPTIMIZATION_EXAMPLE_STEPS
+    from src.primitives.signal import SIGNAL_SAMPLE_POINTS
+
+    v = generate_variables(PROJECT_ROOT)
+
+    assert v["OPTIMIZATION_EXAMPLE_STEPS"] == OPTIMIZATION_EXAMPLE_STEPS == 200
+    assert v["SIGNAL_SAMPLE_POINTS"] == SIGNAL_SAMPLE_POINTS == 64
+    assert v["PAGERANK_ITERATIONS"] == PAGERANK_ITERATIONS == 50
+    assert v["HASH_PREFIX_HEX_LENGTH"] == HASH_PREFIX_HEX_LENGTH == 16
+    assert v["DERIVED_SEED_BITS"] == DERIVED_SEED_BITS == 63
 
 
 def test_honesty_manifest_tokens():

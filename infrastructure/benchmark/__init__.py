@@ -7,12 +7,14 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from infrastructure.benchmark.template_harness import (
+        BenchmarkCheckResult,
         BenchmarkManifest,
         BenchmarkScore,
     )
     from infrastructure.benchmark.rubrics import RubricScore, RubricSet
 
 __all__ = [
+    "BenchmarkCheckResult",
     "BenchmarkManifest",
     "BenchmarkScore",
     "RubricScore",

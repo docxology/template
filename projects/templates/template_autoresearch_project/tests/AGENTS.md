@@ -39,11 +39,10 @@ uv run pytest projects/templates/template_autoresearch_project/tests/ -q
 ## Editing Rules
 
 - Keep tests deterministic and local-only.
+- The session-scoped `project_root` fixture is a repo-shaped sandbox copy,
+  including baseline outputs; tests must never write the tracked public tree.
 - Do not add network, LLM, generated-code execution, or autonomous approval
   dependencies.
 - Prefer exercising real project files over mocked objects.
-- Use `tmp_path` scaffolds with `repo_root=Path(__file__).resolve().parents[4]`
-  when the test needs infrastructure `pipeline.yaml` without copying the full
-  repository. (`parents[4]` because this exemplar lives at
-  `projects/templates/<name>/tests/`; the `projects/templates/` lifecycle layout
-  adds one level over the legacy `projects/<name>/` path.)
+- Use the `repo_root` fixture when a test needs the real infrastructure
+  `pipeline.yaml`; use `tmp_path` for smaller isolated negative controls.

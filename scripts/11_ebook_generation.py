@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Stage 11: Generate ebook artifacts (EPUB, PDF) from rendered manuscript content."""
+
 from __future__ import annotations
 
 import argparse
@@ -25,8 +26,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-formats",
         default="",
-        help="Comma-separated list of formats to skip (epub,mobi,docx). "
-        "Example: --skip-formats mobi,docx",
+        help="Comma-separated list of formats to skip (epub,mobi,docx). Example: --skip-formats mobi,docx",
     )
     parser.add_argument(
         "--cover-image",

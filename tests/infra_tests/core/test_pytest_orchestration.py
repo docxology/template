@@ -207,6 +207,8 @@ def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -
     assert "pytest" in with_values
     assert "pytest-cov" in with_values
     assert "pytest-timeout" in with_values
+    assert "pytest-xdist" in with_values
+    assert "pytest-benchmark" in with_values
     assert f"coverage=={version('coverage')}" in with_values
 
 
@@ -257,28 +259,64 @@ def test_resolve_xdist_args_defaults_to_serial(monkeypatch: pytest.MonkeyPatch) 
 
 def test_resolve_xdist_args_auto(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
-    assert resolve_xdist_args("auto") == ["-n", "auto"]
+    assert resolve_xdist_args("auto") == [
+        "-n",
+        "auto",
+        "--dist",
+        "worksteal",
+        "--benchmark-disable",
+    ]
 
 
 def test_resolve_xdist_args_positive_int(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
-    assert resolve_xdist_args(6) == ["-n", "6"]
-    assert resolve_xdist_args("4") == ["-n", "4"]
+    assert resolve_xdist_args(6) == [
+        "-n",
+        "6",
+        "--dist",
+        "worksteal",
+        "--benchmark-disable",
+    ]
+    assert resolve_xdist_args("4") == [
+        "-n",
+        "4",
+        "--dist",
+        "worksteal",
+        "--benchmark-disable",
+    ]
 
 
 def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
     """PYTEST_XDIST_WORKERS is honoured only when no explicit arg is passed."""
     monkeypatch.setenv(ENV_XDIST_WORKERS, "auto")
-    assert resolve_xdist_args() == ["-n", "auto"]
+    assert resolve_xdist_args() == [
+        "-n",
+        "auto",
+        "--dist",
+        "worksteal",
+        "--benchmark-disable",
+    ]
     monkeypatch.setenv(ENV_XDIST_WORKERS, "3")
-    assert resolve_xdist_args() == ["-n", "3"]
+    assert resolve_xdist_args() == [
+        "-n",
+        "3",
+        "--dist",
+        "worksteal",
+        "--benchmark-disable",
+    ]
 
 
 def test_resolve_xdist_args_explicit_overrides_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(ENV_XDIST_WORKERS, "auto")
     # Explicit serial request wins over an env var that would parallelize.
     assert resolve_xdist_args(1) == []
-    assert resolve_xdist_args(8) == ["-n", "8"]
+    assert resolve_xdist_args(8) == [
+        "-n",
+        "8",
+        "--dist",
+        "worksteal",
+        "--benchmark-disable",
+    ]
 
 
 def test_resolve_xdist_args_one_worker_is_serial(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -320,6 +358,10 @@ def test_build_union_pytest_command_injects_xdist_when_parallel(tmp_path: Path) 
     )
     joined = " ".join(cmd_auto)
     assert "-n auto" in joined
+    assert "--dist worksteal" in joined
+    assert "--benchmark-disable" in cmd_auto
 
     cmd_n = build_union_pytest_command(repo, project, tests, is_first=True, marker_expr=None, timeout=30, parallel=4)
     assert "-n" in cmd_n and "4" in cmd_n
+    assert "--dist" in cmd_n and "worksteal" in cmd_n
+    assert "--benchmark-disable" in cmd_n

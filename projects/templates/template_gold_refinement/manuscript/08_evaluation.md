@@ -8,6 +8,8 @@
 
 The selected evaluation gate terms are {{EVALUATION_GATE_TERM_1}} and {{EVALUATION_GATE_TERM_2}}. They are intentionally narrower than peer review: they check source ownership, token coverage, figure registration, claim support, and rendering integrity before a human reviewer assesses the substantive analogy.
 
+Evaluation uses three noninterchangeable levels. **Invariant tests** reject invalid executable states such as nonmonotone, discontinuous, or misordered stages. **Artifact checks** establish presence, readability, provenance, and registry parity. **Claim-boundary review** asks whether the prose says no more than those tests and artifacts support. Certification requires all applicable levels; a pass at one level cannot compensate for failure at another.
+
 ## Audit rules
 
 | Rule | Check | Test |
@@ -25,3 +27,5 @@ Executable-compendium scholarship adds a more operational evaluation target: can
 The adversarial assay adds a security-specific evaluation target: can a reader distinguish declared threat scope from actual scan evidence? [@tbl:security_assay] maps zero-trust, secure-development, supply-chain, SBOM, attack-path, and secure-by-design guidance to local evidence surfaces and validators [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design]. The passing condition is bounded: the table must be complete and the prose must not claim compliance or Codex Security findings unless future scan artifacts are generated and integrated.
 
 The risk model adds prioritization to the gate list. [@fig:integrity_risk_matrix] separates easy-to-detect implementation failures from severe boundary failures that need clearer ownership. This keeps the evaluation surface from becoming a checklist of equally weighted boxes: token coverage, citation validity, claim support, and render readiness all matter, but a high-severity low-detectability failure should shape the next source edit before cosmetic manuscript polish.
+
+Figure review follows the same rule. File existence and nonblank pixels are necessary but not sufficient. The figure caption, encoding declaration, source data, and prose interpretation must describe the same measurement. This criterion specifically prohibits inferring a stagewise trend from a project-level aggregate, which is why [@fig:purity_claim_scatter] repeats one observed claim-support rate rather than inventing cumulative values.

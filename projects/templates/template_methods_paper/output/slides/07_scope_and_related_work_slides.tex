@@ -110,6 +110,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -130,13 +133,12 @@
 
 \begin{frame}[allowframebreaks]{Scope, Related Work, and Positioning}
 This section situates the exemplar and states explicit boundaries. The
-goal is not to compete with BPL's full compiler pipeline \breakseq{[@bpl2026]}
---- a \textasciitilde32,000-line implementation with a Lark grammar, a
-robot backend, and a hash-chained audit/compliance layer --- but to show
-how a minimal, test-backed subset of BPL's domain-language design fits
-the template's reproducibility and rendering stack
-\breakseq{[@peng2011reproducible]}, generalized from wet-lab protocols to any
-controlled procedure.
+goal is not to compete with BPL's substantially larger full compiler
+pipeline \breakseq{[@bpl2026]} --- with its Lark grammar, robot backend, and
+hash-chained audit/compliance layer --- but to show how a minimal,
+test-backed subset of BPL's domain-language design fits the template's
+reproducibility and rendering stack \breakseq{[@peng2011reproducible]},
+generalized from wet-lab protocols to any controlled procedure.
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Domain-specific languages for controlled

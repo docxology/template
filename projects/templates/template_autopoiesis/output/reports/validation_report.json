@@ -1,176 +1,17 @@
 {
-  "timestamp": "2026-07-06T21:41:52.244841",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": false,
-    "Evidence registry": false,
+    "Figure registry": true,
+    "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": false
+    "Artifact manifest": true
   },
-  "figure_issues": [
-    "Figure registry not found but 4 figure reference(s) found in manuscript"
-  ],
+  "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "03_results.md: unsupported number 85%",
-      "03_results.md: unsupported number 80%",
-      "03_results.md: unsupported number 200",
-      "03_results.md: unsupported number 0.1",
-      "03_results.md: unsupported number 64",
-      "03_results.md: unsupported number 50",
-      "03_results.md: unsupported number 90%",
-      "03_results.md: unsupported number 90",
-      "03_results.md: unsupported number 98.41%",
-      "02_methods.md: unsupported number 16",
-      "02_methods.md: unsupported number 63",
-      "04_honesty.md: unsupported number 371",
-      "04_honesty.md: unsupported number 99.94%",
-      "04_honesty.md: unsupported number 90%",
-      "05_reproducibility.md: unsupported number 371",
-      "05_reproducibility.md: unsupported number 99.94%",
-      "05_reproducibility.md: unsupported number 3.10",
-      "06_limitations.md: unsupported number 90%",
-      "06_limitations.md: unsupported number 90"
-    ],
-    "artifact_manifest_issues": [
-      "missing declared output: projects/templates/template_autopoiesis/output/data/connector_search",
-      "undeclared artifact: output/reports/test_results.json",
-      "undeclared artifact: output/reports/test_results.md",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/analysis.py",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/figures.py",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/manuscript/00_abstract.md",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/manuscript/01_introduction.md",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/manuscript/03_results.md",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/manuscript/06_limitations.md",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/primitives/__init__.py",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/primitives/base.py",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/primitives/dynamics.py",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/provenance.json",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/pyproject.toml",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/tests/__init__.py",
-      "undeclared artifact: output/children/child_dynamics_3360520340800701/tests/test_analysis.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/analysis.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/figures.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/manuscript/00_abstract.md",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/manuscript/01_introduction.md",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/manuscript/03_results.md",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/manuscript/06_limitations.md",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/primitives/__init__.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/primitives/base.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/primitives/graph.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/provenance.json",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/pyproject.toml",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/tests/__init__.py",
-      "undeclared artifact: output/children/child_graph_3ab0db5a3a6d706f/tests/test_analysis.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/analysis.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/figures.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/manuscript/00_abstract.md",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/manuscript/01_introduction.md",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/manuscript/03_results.md",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/manuscript/06_limitations.md",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/primitives/__init__.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/primitives/base.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/primitives/optimization.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/provenance.json",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/pyproject.toml",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/tests/__init__.py",
-      "undeclared artifact: output/children/child_optimization_b213e33489a645aa/tests/test_analysis.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/analysis.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/figures.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/manuscript/00_abstract.md",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/manuscript/01_introduction.md",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/manuscript/03_results.md",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/manuscript/06_limitations.md",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/primitives/__init__.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/primitives/base.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/primitives/signal.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/provenance.json",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/pyproject.toml",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/tests/__init__.py",
-      "undeclared artifact: output/children/child_signal_ca65891f32de3c6a/tests/test_analysis.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/analysis.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/figures.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/manuscript/00_abstract.md",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/manuscript/01_introduction.md",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/manuscript/03_results.md",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/manuscript/06_limitations.md",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/primitives/__init__.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/primitives/base.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/primitives/signal.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/provenance.json",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/pyproject.toml",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/tests/__init__.py",
-      "undeclared artifact: output/children/child_signal_f76d6946426ca9a1/tests/test_analysis.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/analysis.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/figures.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/manuscript/00_abstract.md",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/manuscript/01_introduction.md",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/manuscript/03_results.md",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/manuscript/06_limitations.md",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/primitives/__init__.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/primitives/base.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/primitives/statistics.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/provenance.json",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/pyproject.toml",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/seal.json",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/tests/__init__.py",
-      "undeclared artifact: output/children/child_statistics_653d938354430ade/tests/test_analysis.py",
-      "missing artifact: output/data/coverage_full.json",
-      "undeclared artifact: output/data/manuscript_variables.json",
-      "undeclared artifact: output/data/test_coverage_summary.json",
-      "undeclared artifact: output/figures/cover_art.png",
-      "undeclared artifact: output/figures/fig_coverage_by_module.png",
-      "undeclared artifact: output/figures/fig_domain_coverage.png",
-      "undeclared artifact: output/figures/fig_product_space.png",
-      "undeclared artifact: output/figures/fig_stacked_product.png",
-      "undeclared artifact: output/manuscript/00_abstract.md",
-      "undeclared artifact: output/manuscript/01_introduction.md",
-      "undeclared artifact: output/manuscript/02_methods.md",
-      "undeclared artifact: output/manuscript/03_results.md",
-      "undeclared artifact: output/manuscript/04_honesty.md",
-      "undeclared artifact: output/manuscript/05_reproducibility.md",
-      "undeclared artifact: output/manuscript/06_limitations.md",
-      "undeclared artifact: output/manuscript/99_references.md",
-      "undeclared artifact: output/manuscript/config.yaml",
-      "undeclared artifact: output/manuscript/preamble.md",
-      "undeclared artifact: output/manuscript/references.bib",
-      "undeclared artifact: output/pdf/_combined_manuscript.bbl",
-      "undeclared artifact: output/pdf/_combined_manuscript.blg",
-      "undeclared artifact: output/pdf/_combined_manuscript.md",
-      "undeclared artifact: output/pdf/_combined_manuscript.tex",
-      "undeclared artifact: output/pdf/references.bib",
-      "undeclared artifact: output/pdf/template_autopoiesis_combined.pdf",
-      "undeclared artifact: output/slides/00_abstract_slides.pdf",
-      "undeclared artifact: output/slides/00_abstract_slides.tex",
-      "undeclared artifact: output/slides/01_introduction_slides.pdf",
-      "undeclared artifact: output/slides/01_introduction_slides.tex",
-      "undeclared artifact: output/slides/02_methods_slides.pdf",
-      "undeclared artifact: output/slides/02_methods_slides.tex",
-      "undeclared artifact: output/slides/03_results_slides.pdf",
-      "undeclared artifact: output/slides/03_results_slides.tex",
-      "undeclared artifact: output/slides/04_honesty_slides.pdf",
-      "undeclared artifact: output/slides/04_honesty_slides.tex",
-      "undeclared artifact: output/slides/05_reproducibility_slides.pdf",
-      "undeclared artifact: output/slides/05_reproducibility_slides.tex",
-      "undeclared artifact: output/slides/06_limitations_slides.pdf",
-      "undeclared artifact: output/slides/06_limitations_slides.tex",
-      "undeclared artifact: output/slides/99_references_slides.pdf",
-      "undeclared artifact: output/slides/99_references_slides.tex",
-      "undeclared artifact: output/slides/_slides_math_header.tex",
-      "undeclared artifact: output/web/_combined_manuscript.md",
-      "undeclared artifact: output/web/index.html",
-      "undeclared artifact: output/web/manuscript__00_abstract.html",
-      "undeclared artifact: output/web/manuscript__01_introduction.html",
-      "undeclared artifact: output/web/manuscript__02_methods.html",
-      "undeclared artifact: output/web/manuscript__03_results.html",
-      "undeclared artifact: output/web/manuscript__04_honesty.html",
-      "undeclared artifact: output/web/manuscript__05_reproducibility.html",
-      "undeclared artifact: output/web/manuscript__06_limitations.html",
-      "undeclared artifact: output/web/manuscript__99_references.html"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -181,34 +22,34 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 0.48,
+            "size_mb": 0.52,
             "readable": true
           },
           "pdf": {
             "exists": true,
-            "files": 10,
-            "size_mb": 0.74,
+            "files": 11,
+            "size_mb": 0.79,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 10,
-            "size_mb": 0.33,
+            "files": 11,
+            "size_mb": 0.34,
             "readable": true,
             "optional": false
           },
           "slides": {
             "exists": true,
-            "files": 65,
-            "size_mb": 1.2,
+            "files": 1,
+            "size_mb": 0.0,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
-            "files": 5,
-            "size_mb": 0.31,
+            "files": 13,
+            "size_mb": 0.35,
             "readable": true,
             "optional": false
           },
@@ -221,8 +62,8 @@
           },
           "reports": {
             "exists": true,
-            "files": 11,
-            "size_mb": 0.21,
+            "files": 28,
+            "size_mb": 0.26,
             "readable": true,
             "optional": false
           },
@@ -252,26 +93,26 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "0.74",
+          "file_count": 11,
+          "size_mb": "0.79",
           "largest_file": "template_autopoiesis_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "0.33",
+          "file_count": 11,
+          "size_mb": "0.34",
           "largest_file": "index.html"
         },
         "slides": {
           "exists": true,
-          "file_count": 65,
-          "size_mb": "1.20",
-          "largest_file": "03_results_slides.pdf"
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "_slides_math_header.tex"
         },
         "figures": {
           "exists": true,
-          "file_count": 5,
-          "size_mb": "0.31",
+          "file_count": 13,
+          "size_mb": "0.35",
           "largest_file": "cover_art.png"
         },
         "data": {
@@ -282,9 +123,9 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "0.21",
-          "largest_file": "artifact_manifest.json"
+          "file_count": 28,
+          "size_mb": "0.26",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
           "exists": true,
@@ -306,17 +147,17 @@
         }
       },
       "file_counts": {
-        "pdf": 10,
-        "web": 10,
-        "slides": 65,
-        "figures": 5,
+        "pdf": 11,
+        "web": 11,
+        "slides": 1,
+        "figures": 13,
         "data": 2,
-        "reports": 11,
+        "reports": 28,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 2.8027048110961914,
+      "total_size_mb": 1.7442436218261719,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -325,43 +166,24 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 0.743800163269043
+      "files": 11,
+      "size_mb": 0.791865348815918
     },
     "figures": {
-      "files": 5,
-      "size_mb": 0.30701732635498047
+      "files": 6,
+      "size_mb": 0.30805397033691406
     },
     "data": {
       "files": 2,
-      "size_mb": 0.0011320114135742188
+      "size_mb": 0.0012798309326171875
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 5,
-    "failed": 3,
-    "figure_issues_count": 1,
-    "all_passed": false
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_autopoiesis/output/reports/evidence_registry.json"
-    },
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/templates/template_autopoiesis/output/reports/artifact_manifest.json"
-    },
-    {
-      "priority": "medium",
-      "issue": "1 figure reference issue(s)",
-      "action": "Register missing figures or remove unused references",
-      "file": "projects/templates/template_autopoiesis/output/figures/figure_registry.json"
-    }
-  ]
+  "recommendations": []
 }

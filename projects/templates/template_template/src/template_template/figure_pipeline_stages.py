@@ -9,7 +9,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 
 from .introspection import PipelineStage
-from .viz_palette import ARCH_VIZ_COLORS, FONT_FLOOR, short_stage_label, stage_color
+from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR, short_stage_label, stage_color
 
 
 def generate_pipeline_stages(stages: Sequence[PipelineStage], output_dir: Path) -> Path:
@@ -121,6 +121,6 @@ def generate_pipeline_stages(stages: Sequence[PipelineStage], output_dir: Path) 
 
     plt.tight_layout(pad=0.3)
     path = output_dir / "pipeline_stages.png"
-    plt.savefig(path, dpi=200, bbox_inches="tight", facecolor="white")
+    plt.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
     plt.close()
     return path

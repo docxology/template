@@ -18,7 +18,7 @@ Reproducibility and cost. Default runs copy recorded generations from `src/fixtu
 
 1. Copy `tasks/mini_classify/` to `tasks/<your_task>/`
 2. Keep `data/public/`, `data/private/`, `reference/`, and `evaluate.py`
-3. Point `sia.task_name` in `manuscript/config.yaml`
+3. Point `project_config.sia.task_name` in `manuscript/config.yaml`
 4. Add fixtures under `src/fixtures/recorded_generations/` for default replay
 5. Validate: `uv run python -m infrastructure.sia.cli validate tasks/<your_task>`
 

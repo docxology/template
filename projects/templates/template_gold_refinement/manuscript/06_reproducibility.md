@@ -1,5 +1,7 @@
 # {{TITLE_REPRODUCIBILITY}} {#sec:reproducibility}
 
+Reproduction requires identity, execution, and verification—not merely access to a PDF. Identity fixes the source revision, configuration hash, software release, and environment. Execution rebuilds analysis artifacts before manuscript hydration. Verification checks that registered claims, figures, references, and rendered formats agree with their source owners.
+
 ## Deterministic regeneration
 
 The refinery pipeline is fully deterministic. Given the same `manuscript/config.yaml` and `src/` code, every run produces identical output. This is the local version of a reproducible computational research norm: the reader should be able to inspect the source, rerun the workflow, and recover the same derived artifacts [@peng2011reproducible; @sandve2013ten].
@@ -32,6 +34,8 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 # Full pipeline (from repo root)
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 ```
+
+A reproduction report should record command exit status, the source revision, `{{CONFIG_HASH}}`, Python {{PYTHON_VERSION}}, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 

@@ -30,13 +30,20 @@ InfrastructureTestScope = Literal["full", "pipeline-smoke"]
 
 INFRASTRUCTURE_TEST_SCOPES: tuple[InfrastructureTestScope, ...] = ("full", "pipeline-smoke")
 
-TEST_RUNNER_BASE_DEPS: tuple[str, ...] = ("pytest", "pytest-cov", "pytest-timeout")
+TEST_RUNNER_BASE_DEPS: tuple[str, ...] = (
+    "pytest",
+    "pytest-cov",
+    "pytest-timeout",
+    "pytest-xdist",
+    "pytest-benchmark",
+)
 
 # Environment variable that opts a local test run into pytest-xdist parallelism
 # when no explicit ``parallel`` argument is threaded through. Mirrors the
 # opt-in ``MULTI_PROJECT_MAX_WORKERS`` convention used by the cross-project
 # parallel runner (``infrastructure.core.pipeline.multi_project_parallel``).
 ENV_XDIST_WORKERS: str = "PYTEST_XDIST_WORKERS"
+XDIST_DISTRIBUTION: str = "worksteal"
 
 # Values that mean "run serially" regardless of source (arg or env).
 _XDIST_SERIAL_TOKENS: frozenset[str] = frozenset({"", "0", "1", "none", "serial", "off"})
@@ -96,7 +103,7 @@ class TestSuiteResults(TypedDict, total=False):
 
 
 def resolve_xdist_args(parallel: str | int | None = None) -> list[str]:
-    """Return pytest-xdist ``-n`` argv for the requested parallelism, or ``[]``.
+    """Return safe pytest-xdist argv for requested parallelism, or ``[]``.
 
     Parallelism is **opt-in**: the default is serial. This preserves the
     load-contention safety the repo already documents (CLAUDE.md Testing
@@ -108,8 +115,8 @@ def resolve_xdist_args(parallel: str | int | None = None) -> list[str]:
         2. Otherwise the ``PYTEST_XDIST_WORKERS`` environment variable.
 
     Accepted values (from either source):
-        * ``"auto"`` → ``["-n", "auto"]`` (one worker per detected core).
-        * a positive integer > 1 → ``["-n", str(n)]``.
+        * ``"auto"`` → xdist with one worker per detected core.
+        * a positive integer > 1 → xdist with that fixed worker count.
         * ``None``/``""``/``"0"``/``"1"``/``"serial"``/``"off"`` or anything
           unparseable → ``[]`` (serial). A single worker is pure xdist
           overhead, so it collapses to serial rather than spawning one worker.
@@ -123,15 +130,23 @@ def resolve_xdist_args(parallel: str | int | None = None) -> list[str]:
     if value in _XDIST_SERIAL_TOKENS:
         return []
     if value == "auto":
-        return ["-n", "auto"]
-    try:
-        workers = int(value)
-    except ValueError:
-        logger.warning("Ignoring invalid %s=%r; running tests serially", ENV_XDIST_WORKERS, raw)
-        return []
-    if workers <= 1:
-        return []
-    return ["-n", str(workers)]
+        workers_value = "auto"
+    else:
+        try:
+            workers = int(value)
+        except ValueError:
+            logger.warning("Ignoring invalid %s=%r; running tests serially", ENV_XDIST_WORKERS, raw)
+            return []
+        if workers <= 1:
+            return []
+        workers_value = str(workers)
+    return [
+        "-n",
+        workers_value,
+        "--dist",
+        XDIST_DISTRIBUTION,
+        "--benchmark-disable",
+    ]
 
 
 def resolve_infrastructure_test_paths(repo_root: Path, scope: InfrastructureTestScope) -> list[str]:
@@ -322,7 +337,8 @@ def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> 
     dependencies (for example ``scikit-learn``) resolve from the project tree
     instead of the workspace interpreter.
 
-    Test-runner packages (``pytest``, ``pytest-cov``, ``pytest-timeout``) are
+    Test-runner packages (pytest plus coverage, timeout, xdist, and benchmark
+    plugins) are
     injected via ``--with`` so they are always available in the project's
     ephemeral env even when the project's own ``pyproject.toml`` does not declare
     them. Without this, projects that only declare scientific deps (numpy /
@@ -446,6 +462,7 @@ __all__ = [
     "InfrastructureTestScope",
     "PIPELINE_SMOKE_INFRA_TEST_PATHS",
     "TestSuiteResults",
+    "XDIST_DISTRIBUTION",
     "build_project_pytest_command",
     "build_union_pytest_command",
     "build_pythonpath",

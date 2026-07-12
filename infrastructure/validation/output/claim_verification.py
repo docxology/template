@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.output.prose_quality import load_project_config_yaml
 
 logger = get_logger(__name__)
@@ -311,7 +312,7 @@ def _normalize_claim_candidate(text: str) -> str:
 def claim_verification_enabled(project_root: Path | str) -> bool:
     """Process claim verification enabled."""
     project_root = Path(project_root)
-    config = load_project_config_yaml(project_root / "manuscript")
+    config = load_project_config_yaml(resolve_source_manuscript_dir(project_root))
     if not config:
         return False
     validation = config.get("validation") or {}
@@ -322,7 +323,7 @@ def claim_verification_enabled(project_root: Path | str) -> bool:
 def verify_project_claims(project_root: Path | str) -> ClaimVerificationReport:
     """Verify project claims."""
     project_root = Path(project_root)
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.is_dir():
         return ClaimVerificationReport(skipped=True, reason="manuscript directory missing")
     config = load_project_config_yaml(manuscript_dir) or {}

@@ -1,10 +1,16 @@
-"""Tests for infrastructure/validation/no_mock_enforcer.py.
+"""Tests for infrastructure/validation/output/no_mock_enforcer.py.
 
 Tests the no-mock validation utility using real files.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation.output.no_mock_enforcer import scan_test_roots, validate_no_mocks
+from infrastructure.validation.output.no_mock_enforcer import (
+    StandInCategory,
+    scan_lexical_mock_policy,
+    scan_semantic_standins,
+    scan_test_roots,
+    validate_no_mocks,
+)
 
 
 class TestValidateNoMocks:
@@ -146,3 +152,87 @@ class TestScanTestRoots:
         roots = scan_test_roots(tmp_path)
         for root in roots:
             assert root.exists()
+
+
+class TestSemanticStandInInventory:
+    """Classify monkeypatch operations without conflating them with the gate."""
+
+    def test_classifies_environment_dependency_and_scope_operations(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        (tests_dir / "test_inventory.py").write_text(
+            """\
+def test_inventory(monkeypatch, tmp_path):
+    monkeypatch.setenv("KEY", "value")
+    monkeypatch.delenv("KEY", raising=False)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.syspath_prepend(str(tmp_path))
+    monkeypatch.setattr("package.symbol", object())
+    monkeypatch.setitem({}, "key", "value")
+    monkeypatch.delitem({}, "key", raising=False)
+    with monkeypatch.context() as scoped:
+        scoped.setattr("package.other", object())
+    monkeypatch.undo()
+""",
+            encoding="utf-8",
+        )
+
+        result = scan_semantic_standins(tests_dir, tmp_path)
+        counts = {category: 0 for category in StandInCategory}
+        for use in result.uses:
+            counts[use.category] += 1
+
+        assert result.errors == ()
+        assert counts == {
+            StandInCategory.environment_isolation: 3,
+            StandInCategory.import_path_isolation: 1,
+            StandInCategory.dependency_replacement: 4,
+            StandInCategory.other: 2,
+        }
+
+    def test_inventory_records_are_path_and_line_sorted(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        (tests_dir / "test_z.py").write_text(
+            "def test_z(monkeypatch):\n    monkeypatch.setenv('Z', '1')\n",
+            encoding="utf-8",
+        )
+        (tests_dir / "test_a.py").write_text(
+            "def test_a(monkeypatch):\n    monkeypatch.setattr('a.b', 1)\n",
+            encoding="utf-8",
+        )
+
+        first = scan_semantic_standins(tests_dir, tmp_path)
+        second = scan_semantic_standins(tests_dir, tmp_path)
+
+        assert first == second
+        assert [use.path for use in first.uses] == [
+            "tests/test_a.py",
+            "tests/test_z.py",
+        ]
+
+    def test_fixture_payloads_are_excluded_from_both_scans(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        fixture_dir = tests_dir / "fixtures"
+        fixture_dir.mkdir(parents=True)
+        (fixture_dir / "sample.py").write_text(
+            "def sample(monkeypatch):\n    monkeypatch.setattr('a.b', 1)\n",
+            encoding="utf-8",
+        )
+
+        assert scan_semantic_standins(tests_dir, tmp_path).uses == ()
+        assert scan_lexical_mock_policy(tests_dir, tmp_path).files_scanned == 0
+
+    def test_scan_error_is_explicit_for_invalid_python(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        (tests_dir / "test_invalid.py").write_text(
+            "def incomplete(:\n",
+            encoding="utf-8",
+        )
+
+        lexical = scan_lexical_mock_policy(tests_dir, tmp_path)
+        inventory = scan_semantic_standins(tests_dir, tmp_path)
+
+        assert lexical.errors
+        assert inventory.errors

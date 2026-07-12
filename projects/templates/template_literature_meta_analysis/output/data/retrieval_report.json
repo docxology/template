@@ -1,0 +1,9 @@
+{
+  "corpus_records": 2302,
+  "engines": [],
+  "max_results_per_engine": 1000,
+  "query": "\"modafinil\" OR \"provigil\" OR \"armodafinil\"",
+  "route": {},
+  "run_mode": "resume_without_prior_retrieval_report",
+  "schema_version": "template-literature-retrieval-report-v1"
+}

@@ -19,6 +19,7 @@ DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
         ".benchmarks",
         ".cache",
         ".claude",
+        ".codegraph",
         ".codex",
         ".git",
         ".mypy_cache",

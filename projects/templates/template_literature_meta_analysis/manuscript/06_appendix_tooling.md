@@ -74,7 +74,7 @@ uv run python scripts/08_deep_research_dispatch.py
 
 Every stage is covered by a no-mocks test suite (real computation and
 `pytest-httpserver` for network adapters) gated at $\geq 90\%$ statement coverage on
-`src/`. The suite includes 819 tests covering:
+`src/`. The suite covers:
 
 - Record models and serialization (deduplication, canonical ID hierarchy)
 - All 7 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,

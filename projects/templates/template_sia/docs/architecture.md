@@ -24,13 +24,12 @@ flowchart TB
     REF[reference/]
   end
 
-  SCR[scripts/run_sia_loop.py] --> IMPL[scripts/sia_loop_impl.py]
-  IMPL --> LR
-  LOOP -.re-export shim.-> IMPL
+  SCR[scripts/run_sia_loop.py] --> LOOP
+  LOOP --> LR
   LR --> TL
   LR --> ER
   LR --> CL
-  IMPL --> TASK
+  LOOP --> TASK
   LR -->|live=False| FIX[src/fixtures/]
   LR -->|live=True| LLM[infrastructure/llm]
 ```
@@ -38,8 +37,8 @@ flowchart TB
 | Layer | Location | Owns |
 | --- | --- | --- |
 | Layer 1 | `infrastructure/sia/` | Task validation, evaluation subprocess, context ledger, generation state machine |
-| Layer 2 | `projects/templates/template_sia/src/` | Project config, fixture paths, manuscript variables, task-specific reference agent |
-| Orchestration | `scripts/` | CLI flags (`--live-sia`), stdout paths for manifest collection; `sia_loop_impl.py` holds the actual `build_run_config()`/`run_sia_loop_project()` orchestration, re-exported by `src/loop.py` as a compatibility shim |
+| Layer 2 | `projects/templates/template_sia/src/` | Project config, fixture paths, `RunConfig` adapter, project artifact orchestration, manuscript variables, task-specific reference agent |
+| CLI | `scripts/` | Parse `--project-root` / `--live-sia`, call `src.loop.run_sia_loop_project()`, and print output paths |
 
 ## Generation artifact tree
 

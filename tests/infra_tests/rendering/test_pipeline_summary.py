@@ -12,10 +12,35 @@ import pytest
 
 from infrastructure.rendering._pipeline_summary import (
     _check_citations_used,
+    _manuscript_dir_for_verify,
+    _strict_latex_warning_policy_enabled,
     generate_rendering_summary,
     log_rendering_summary,
     verify_pdf_outputs,
 )
+
+
+def test_manuscript_dir_for_verify_uses_docs_source(tmp_path: Path) -> None:
+    manuscript = tmp_path / "docs" / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+
+    assert _manuscript_dir_for_verify(tmp_path) == manuscript
+
+
+def test_strict_latex_warning_policy_falls_back_to_docs_config(tmp_path: Path) -> None:
+    manuscript = tmp_path / "docs" / "manuscript"
+    injected = tmp_path / "output" / "manuscript"
+    manuscript.mkdir(parents=True)
+    injected.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "rendering:\n  fail_on_latex_warnings: true\n",
+        encoding="utf-8",
+    )
+    (injected / "01_intro.md").write_text("# Injected\n", encoding="utf-8")
+
+    assert _strict_latex_warning_policy_enabled(tmp_path, injected) is True
 
 
 class TestGenerateRenderingSummary:

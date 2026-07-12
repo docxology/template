@@ -95,3 +95,22 @@ def test_verify_project_claims_extracts_candidates_and_summarizes(tmp_path: Path
 
     assert len(report.claims) == 2
     assert report.summary()["supported"] == 2
+
+
+def test_claim_verification_reads_docs_manuscript(tmp_path: Path, monkeypatch) -> None:
+    project_root = tmp_path / "project"
+    manuscript_dir = project_root / "docs" / "manuscript"
+    manuscript_dir.mkdir(parents=True)
+    (manuscript_dir / "config.yaml").write_text(
+        "validation:\n  claim_verification:\n    enabled: true\n",
+        encoding="utf-8",
+    )
+    (manuscript_dir / "01_intro.md").write_text(
+        "We observed 12 participants in the cohort.\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(mod.FactCheckVerifier, "from_env", classmethod(lambda cls, **kwargs: _FakeVerifier()))
+
+    assert mod.claim_verification_enabled(project_root) is True
+    report = mod.verify_project_claims(project_root)
+    assert report.claims == ["We observed 12 participants in the cohort."]

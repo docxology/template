@@ -321,9 +321,7 @@ class TestCandidateWorkspacesFlatChild:
         # Flat workspace directly under projects/ (no templates/ wrapper).
         proj = tmp_path / "projects" / "flat_project"
         (proj / "manuscript").mkdir(parents=True)
-        (proj / "manuscript" / "config.yaml").write_text(
-            "paper:\n  title: Flat\n", encoding="utf-8"
-        )
+        (proj / "manuscript" / "config.yaml").write_text("paper:\n  title: Flat\n", encoding="utf-8")
         (proj / "manuscript" / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
 
         result = discover_projects(tmp_path, public_only=False)
@@ -338,9 +336,7 @@ class TestCandidateWorkspacesFlatChild:
         (tmp_path / "pyproject.toml").write_text("[project]\nname='fake'\n", encoding="utf-8")
         nested = tmp_path / "projects" / "templates" / "nested_project"
         (nested / "manuscript").mkdir(parents=True)
-        (nested / "manuscript" / "config.yaml").write_text(
-            "paper:\n  title: Nested\n", encoding="utf-8"
-        )
+        (nested / "manuscript" / "config.yaml").write_text("paper:\n  title: Nested\n", encoding="utf-8")
         (nested / "manuscript" / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
 
         result = discover_projects(tmp_path, public_only=False)
@@ -418,6 +414,14 @@ class TestBuildInfrastructureReportVersionFallback:
         (tmp_path / "infrastructure").mkdir()
         (tmp_path / "pyproject.toml").write_text("[project]\nname='fake'\n", encoding="utf-8")
         (tmp_path / "scripts").mkdir()
+        (tmp_path / "visible.py").write_text("VALUE = 1\n", encoding="utf-8")
+        for hidden in (
+            tmp_path / "output" / "generated.py",
+            tmp_path / ".claude" / "worktrees" / "duplicate.py",
+            tmp_path / "projects" / "working" / "private.py",
+        ):
+            hidden.parent.mkdir(parents=True, exist_ok=True)
+            hidden.write_text("VALUE = 2\n", encoding="utf-8")
 
         report = build_infrastructure_report(tmp_path)
         assert isinstance(report, InfrastructureReport)
@@ -425,6 +429,7 @@ class TestBuildInfrastructureReportVersionFallback:
         assert report.projects == []
         assert report.pipeline_stages == []
         assert report.numbered_scripts == []
+        assert report.total_python_files == 1
         # version is either the real infrastructure version (importable from sys.path)
         # or 'unknown' — both are valid strings.
         assert isinstance(report.infrastructure_version, str)
@@ -651,13 +656,7 @@ class TestStageColorFallback:
             tags=["core"],
         )
         color = stage_color(stage)
-        # Should NOT be the default pipeline color.
-        import matplotlib.colors as mc
-        from template_template.viz_palette import ARCH_VIZ_COLORS
-
-        default = mc.to_rgba(ARCH_VIZ_COLORS["pipeline"])
-        # core maps to 'pipeline' color, so it equals default — but the branch IS taken.
-        # What matters: no exception; the first recognized tag branch ran.
+        # The recognized-tag branch returns a concrete RGBA tuple.
         assert len(color) == 4  # RGBA tuple
 
 

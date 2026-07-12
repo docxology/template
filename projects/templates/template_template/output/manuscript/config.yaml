@@ -19,6 +19,7 @@ publication:
   version_doi: "10.5281/zenodo.20976048" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20976048"
   github_repository: "docxology/template_template"
+  repository_url: "https://github.com/docxology/template_template"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmVr4UREM1NeaSfY1pNJdjFjrRrGMZLvnNqCY2cRaGadry"
     huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_template"

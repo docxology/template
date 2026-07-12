@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <p><strong>Run snapshot.</strong> With the bundled
 <code>manuscript/config.yaml</code> the most recent execution evaluated
@@ -276,7 +277,7 @@ Users seeking strict reproducibility should:</p>
 <li>Pin a <code>LocalBackend</code> corpus generated from a successful
 run (<code>infrastructure.search.literature.write_corpus</code>) and
 remove <code>arxiv</code> / <code>crossref</code> from
-<code>config.search.sources</code>.</li>
+<code>project_config.search.sources</code>.</li>
 <li>Commit the <code>output/search/cache/</code> directory to version
 control.</li>
 <li>Pin the LLM seed (<code>config.llm.seed</code>) and avoid model

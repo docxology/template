@@ -1,48 +1,17 @@
 {
-  "timestamp": "2026-06-26T07:10:00.075653",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
     "Figure registry": true,
-    "Evidence registry": false,
+    "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": false
+    "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "03_results.md: unsupported number 0.00121",
-      "03_results.md: unsupported number 0.01565",
-      "03_results.md: unsupported number 13",
-      "02_methodology.md: unsupported number 0.15",
-      "04_experimental_setup.md: unsupported number 0.15",
-      "04_experimental_setup.md: unsupported number 101",
-      "04_experimental_setup.md: unsupported number 202",
-      "04_experimental_setup.md: unsupported number 303",
-      "04_experimental_setup.md: unsupported number 7",
-      "06_scope_and_related_work.md: unsupported number 13"
-    ],
-    "artifact_manifest_issues": [
-      "changed artifact: output/pdf/_combined_manuscript.tex",
-      "changed artifact: output/pdf/template_autoscientists_combined.pdf",
-      "changed artifact: output/web/_combined_manuscript.md",
-      "changed artifact: output/web/index.html",
-      "changed artifact: output/web/manuscript__00_abstract.html",
-      "changed artifact: output/web/manuscript__01_introduction.html",
-      "changed artifact: output/web/manuscript__02_methodology.html",
-      "changed artifact: output/web/manuscript__03_results.html",
-      "changed artifact: output/web/manuscript__04_experimental_setup.html",
-      "changed artifact: output/web/manuscript__05_reproducibility.html",
-      "changed artifact: output/web/manuscript__06_scope_and_related_work.html",
-      "changed artifact: output/web/manuscript__07_conclusion.html",
-      "changed artifact: output/web/manuscript__99_references.html",
-      "changed artifact: output/reports/validation_report.json",
-      "changed artifact: output/reports/validation_report.md",
-      "changed artifact: output/reports/output_statistics.json",
-      "changed artifact: output/reports/output_statistics.txt"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -190,7 +159,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 0.8832340240478516,
+      "total_size_mb": 0.8856945037841797,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -210,28 +179,15 @@
     },
     "data": {
       "files": 3,
-      "size_mb": 0.0032033920288085938
+      "size_mb": 0.0032682418823242188
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 6,
-    "failed": 2,
+    "passed": 8,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_autoscientists/output/reports/evidence_registry.json"
-    },
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/templates/template_autoscientists/output/reports/artifact_manifest.json"
-    }
-  ]
+  "recommendations": []
 }

@@ -215,8 +215,8 @@ controls the run. The most-used knobs:
 
 \begin{frame}[fragile,allowframebreaks]{Pipeline shape}
 \protect\phantomsection\label{pipeline-shape}
-The deep-search pipeline reads the \texttt{deep\_search:} block from
-\breaktt{manuscript/config.yaml}, runs one \texttt{SearchQuery} per
+The deep-search pipeline reads \breaktt{project\_config.deep\_search}
+from \breaktt{manuscript/config.yaml}, runs one \texttt{SearchQuery} per
 keyword (capped at \breaktt{max\_results\_per\_keyword}), aggregates the
 per-backend results through \breaktt{LiteratureClient}, enriches every
 paper via \texttt{AbstractFetcher} and \texttt{FulltextFetcher},
@@ -380,8 +380,8 @@ Three caches make this workflow replayable:
   Fulltext cache
   (\texttt{output/cache/pdf/\textless{}safe\_id\textgreater{}.\{pdf,txt\}}).
 \item
-  LLM seed (\breaktt{deep\_search.llm\_seed:\ 42}) + temperature
-  (\texttt{0.0}).
+  LLM seed (\breaktt{project\_config.deep\_search.llm\_seed:\ 42}) +
+  temperature (\texttt{0.0}).
 \end{enumerate}
 
 Commit any subset of these caches to version control to freeze a run.
@@ -399,7 +399,8 @@ it by:
   (gitignored) with your \breaktt{PAPERCLIP\_API\_KEY=gxl\_…} (template
   at \texttt{.env.example}).
 \item
-  Including \texttt{paperclip} in \breaktt{deep\_search.sources}.
+  Including \texttt{paperclip} in
+  \breaktt{project\_config.deep\_search.sources}.
 \end{enumerate}
 
 The orchestrator scripts auto-load \texttt{.env} via the lightweight
@@ -411,9 +412,10 @@ envelope. We support both the modern \breaktt{structuredContent.papers}
 response shape and the older text-only \texttt{content{[}{]}.text} shape
 (best-effort regex extraction).
 
-Failure-isolation: any per-backend error (including the migration-state
-HTTP 405 the production endpoint may currently return) is captured into
-\texttt{SearchResult.errors{[}paperclip{]}} and the run continues. See
+Failure-isolation: any per-backend error (including a method-rejection
+response the production endpoint may return during migration) is
+captured into \texttt{SearchResult.errors{[}paperclip{]}} and the run
+continues. See
 \texttt{output/deep\_search/\textless{}keyword\textgreater{}/papers.json}
 and the aggregate \breaktt{run\_summary.json} for the recorded errors.
 \end{frame}
@@ -422,7 +424,7 @@ and the aggregate \breaktt{run\_summary.json} for the recorded errors.
 \protect\phantomsection\label{cli}
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Run with everything from config.yaml (assumes deep\_search.enabled: true)}
+\CommentTok{\# Run with everything from config.yaml (assumes project\_config.deep\_search.enabled: true)}
 \ExtensionTok{uv}\NormalTok{ run python projects/templates/template\_search\_project/scripts/run\_deep\_search.py}
 
 \CommentTok{\# Force{-}enable without touching config.yaml}

@@ -13,6 +13,7 @@ analysis stage rather than silently produce a PDF with stale visual evidence.
 from __future__ import annotations
 
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 
 from PIL import Image, UnidentifiedImageError
@@ -48,7 +49,7 @@ def _validate_rendered_png(output_path: Path) -> None:
 
 
 def write_demo_convergence_figure(
-    summary: dict[str, object], figures_dir: Path, *, num_agents: int, num_ticks: int
+    summary: Mapping[str, object], figures_dir: Path, *, num_agents: int, num_ticks: int
 ) -> Path | None:
     """Render the deterministic demo's concentration history: north/south + winner share.
 

@@ -127,6 +127,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -145,71 +148,52 @@
 
 \section{Results}\label{results}
 
-\begin{frame}[fragile,allowframebreaks]{Results}
-\texttt{template/} was evaluated through multi-project pipeline
-execution, measuring test coverage, pipeline timing, output integrity,
-and steganographic performance across the canonical exemplars under
-\texttt{projects/}.
+\begin{frame}[allowframebreaks]{Results}
+This section reports repository facts produced by the meta-project's
+live introspection pass. Test counts, module inventories, pipeline-stage
+counts, and figure data are injected from generated artifacts. Runtime
+and achieved-coverage claims are intentionally omitted when no versioned
+benchmark or coverage artifact backs them.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Multi-Project Pipeline
 Execution}
 \protect\phantomsection\label{multi-project-pipeline-execution}
-Runs used the \texttt{./run.sh} interactive orchestrator (``all projects
-core (fast)'' / menu key \textbf{\texttt{d}}) skipping infrastructure
-replication and optional LLM stages orchestrated via
-\breaktt{python\ -m\ infrastructure.orchestration}. \textbf{Note:} lone
-menu \textbf{\texttt{d}} returns after success without redrawing the TUI
-banner.
+The \texttt{./run.sh} interactive orchestrator can execute the public
+roster through the shared DAG. The table below is a structural snapshot,
+not a timing benchmark: counts come from repository introspection, and
+the coverage column states each exemplar's declared policy floor rather
+than an unversioned observed percentage.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1364}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3485}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2576}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1212}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1364}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1216}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3108}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2432}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3243}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Project
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Effective core stages¹
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Approx. duration
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Tests²
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Coverage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Discovered tests
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Declared project floor
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-\breaktt{template\_code\_project} & 8 & \textasciitilde40 s & 236/236 &
-90\%+ \\
-\breaktt{template\_prose\_project} & 8 & \textasciitilde35 s & 120/120 &
-90\%+ \\
-\breaktt{template\_autoresearch\_project} & 8 & \textasciitilde30 s &
-296/296 & 90\%+ \\
+\breaktt{template\_code\_project} & 8 & 236 & 90\% \\
+\breaktt{template\_prose\_project} & 8 & 120 & 90\% \\
+\breaktt{template\_autoresearch\_project} & 8 & 300 & 90\% \\
 \bottomrule\noalign{}
 \end{longtable}
 }
 
-¹``Core-only'' disables LLM-tagged YAML stages; durations exclude
-optional network-heavy LLM or long-running retrieval scripts when run
-with cached fixtures.
-
-²Counts show passing tests versus discovered tests for the sampled
-configuration.
-
-\textbf{\emph{Overall success:}} 100\,\% pipeline completion for sampled
-runs.
-
-\emph{Timing illustrative (Apple\,Silicon workstation, SSD, fixed
-seeds).}
-
-Search-stage overhead dwarfs the optimization exemplar's
-runtime---confirming Stage 02 remains the bottleneck for outbound API
-traffic while retaining Zero-Mock subprocess + filesystem checks
-downstream.
+¹``Core-only'' excludes LLM-tagged and other opt-in stages according to
+the YAML stage tags. A fresh run must be used to establish completion
+status or wall-clock performance for a particular machine and dependency
+set.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Infrastructure Test Suite}
@@ -226,11 +210,11 @@ Value
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-Test files & 470+ \\
-Total tests & \textasciitilde7,968 \\
-Infrastructure coverage gate & ≥60\,\% (repo ≥80\,\%+ during recent
-audits) \\
-Zero-mock imports & Verified via static scanning \\
+Test files & 504+ \\
+Total tests & \textasciitilde8,583 \\
+Infrastructure coverage gate & ≥60\% configured floor \\
+Prohibited mock-framework imports & Checked by the static no-mocks
+gate \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -273,12 +257,13 @@ readiness validation CLI \\
 gates \\
 \texttt{config} & 0 & ✓ & ✓ & Repository defaults + hardened
 templates \\
-\texttt{core} & 110 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 112 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation scaffolding \\
 \texttt{doctor} & 14 & ✓ & ✓ & Checkout diagnose/fix/undo repairs \\
-\texttt{documentation} & 12 & ✓ & ✓ & \texttt{FigureManager},
+\texttt{documentation} & 13 & ✓ & ✓ & \texttt{FigureManager},
 \breaktt{generate\_glossary} \\
+\texttt{fonds} & 6 & ✓ & ✓ & --- \\
 \texttt{llm} & 54 & ✓ & ✓ & Ollama helpers, sanitization, review +
 translation pipelines \\
 \texttt{logrotate.d} & 0 & ✓ & ✓ & Rotation snippets
@@ -286,34 +271,38 @@ translation pipelines \\
 \texttt{methods} & 5 & ✓ & ✓ &
 \breaktt{build\_methods\_orchestration\_plan}, methods-stage contracts +
 validation \\
-\texttt{orchestration} & 8 & ✓ & ✓ & \texttt{PipelineRunner}, entry
+\texttt{orchestration} & 9 & ✓ & ✓ & \texttt{PipelineRunner}, entry
 point for \texttt{./run.sh} \\
 \texttt{project} & 27 & ✓ & ✓ & \breaktt{discover\_projects}, workspace
 management \\
 \texttt{prose} & 9 & ✓ & ✓ & Markdown readability + prose tooling \\
+\texttt{provenance} & 7 & ✓ & ✓ & --- \\
 \texttt{publishing} & 74 & ✓ & ✓ & Zenodo, executable bundle, archival
 targets \\
 \texttt{reference} & 16 & ✓ & ✓ & BibTeX models, parsers, converters \\
-\texttt{rendering} & 57 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
+\texttt{rendering} & 60 & ✓ & ✓ & PDF/HTML/slide rendering, Pandoc
 filters \\
 \texttt{reporting} & 57 & ✓ & ✓ & Coverage parsers, dashboards,
 executive artefacts \\
+\texttt{research} & 3 & ✓ & ✓ & --- \\
+\texttt{rules} & 6 & ✓ & ✓ & --- \\
 \texttt{scientific} & 4 & ✓ & ✓ & \breaktt{check\_numerical\_stability},
 \breaktt{benchmark\_function} \\
-\texttt{search} & 44 & ✓ & ✓ & \breaktt{infrastructure.search.literature}
+\texttt{search} & 62 & ✓ & ✓ & \breaktt{infrastructure.search.literature}
 clients + cache \\
 \texttt{sia} & 10 & ✓ & ✓ & Self-Improving-AI loop: task validation,
 harness, metric capture \\
 \texttt{skills} & 7 & ✓ & ✓ & \texttt{discover\_skills}, SKILL manifest
 regeneration \\
-\texttt{steganography} & 11 & ✓ & ✓ & Watermark overlays + hash
+\texttt{steganography} & 13 & ✓ & ✓ & Watermark overlays + hash
 manifests \\
-\texttt{validation} & 84 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
+\texttt{tools} & 6 & ✓ & ✓ & --- \\
+\texttt{validation} & 75 & ✓ & ✓ & PDF + Markdown + integrity CLIs \\
 \bottomrule\noalign{}
 \end{longtable}
 }
 
-All 23 enumerated subdirectories carry Tier‑1/\texttt{README.md} and
+All 28 enumerated subdirectories carry Tier‑1/\texttt{README.md} and
 Tier‑2/\texttt{AGENTS.md} coverage wherever the Documentation Duality
 standard applies; subsets ship Tier‑3 \texttt{SKILL.md} descriptors for
 MCP routing (\breaktt{infrastructure/skills} manifest generation).
@@ -343,7 +332,7 @@ PAI capsule & Repository level \texttt{PAI.md} narratives \\
 \end{longtable}
 }
 
-\texttt{380+} Markdown shards under \texttt{docs/} capture operational
+\texttt{390+} Markdown shards under \texttt{docs/} capture operational
 knowledge without duplicating auto-generated inventories.
 \end{frame}
 
@@ -398,72 +387,35 @@ in logs \\
 \end{longtable}
 }
 
-\breaktt{scripts/07\_generate\_executive\_report.py} is
+\breaktt{scripts/pipeline/stage\_07\_executive\_report.py} is
 \textbf{multi-project orchestration glue} invoked after iterating active
 projects---not a tenth DAG node for single-repo runs
 (\breaktt{execute\_pipeline.py}).
 \end{frame}
 
-\begin{frame}[fragile,allowframebreaks]{Steganographic Performance}
-\protect\phantomsection\label{steganographic-performance}
-{\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1139}}
-  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.2025}}
-  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1266}}
-  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1139}}
-  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1139}}
-  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1139}}
-  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.2152}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-Project
-\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Pages (approx.)
-\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Metadata
-\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-SHA-256
-\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Overlay
-\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-QR Code
-\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Total (approx.)
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\breaktt{template\_code\_project} & \textasciitilde20 & \textless0.3\,s &
-\textless0.05\,s & \textless0.8\,s & \textless0.4\,s &
-\textless1.5\,s \\
-\breaktt{template\_prose\_project} & \textasciitilde25 & \textless0.3\,s
-& \textless0.05\,s & \textless0.9\,s & \textless0.4\,s &
-\textless1.6\,s \\
-\breaktt{template\_autoresearch\_project} & \textasciitilde25 &
-\textless0.2 s & \textless0.04 s & \textless0.9 s & \textless0.3 s &
-\textless1.5 s \\
-\bottomrule\noalign{}
-\end{longtable}
-}
-
-All measurements use single-threaded execution on Apple Silicon, and the
-totals are dominated by watermark-overlay complexity rather than by
-hashing or metadata embedding, which each stay well under one-tenth of a
-second per document.
+\begin{frame}[allowframebreaks]{Steganographic Performance Boundary}
+\protect\phantomsection\label{steganographic-performance-boundary}
+The steganography path exposes metadata injection, SHA-256 hashing,
+overlay generation, and optional QR-code insertion as separately
+testable operations. This revision makes no latency claim because the
+project does not currently generate a versioned benchmark artifact
+recording hardware, input PDF, warm-up policy, repetitions, and
+dispersion. A future performance table should be compiled from such an
+artifact rather than copied from an ad-hoc workstation run.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Self-Referential Analysis}
 \protect\phantomsection\label{self-referential-analysis}
 Rendered via \breaktt{projects/templates/template\_template}
 (\breaktt{generate\_manuscript\_metrics.py} → injected tokens such as
-\texttt{23}). Architecture figures stem from
+\texttt{28}). Architecture figures stem from
 \href{../src/template_template/architecture_viz.py}{\breaktt{template\_template.architecture\_viz}}---font
 sizes constrained by §QA.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Two-Layer Architecture Overview}]{../figures/architecture_overview.png}}
 \textbf{Figure 1.} Live rendering of the Two-Layer Architecture from
 repository introspection: the infrastructure layer (top) holds the
-\texttt{23} reusable subpackages, each annotated with its Python file
+\texttt{28} reusable subpackages, each annotated with its Python file
 count and a four-slot documentation badge---\texttt{A} AGENTS.md,
 \texttt{R} README.md, \texttt{S} SKILL.md, \texttt{P} PAI.md, with
 \texttt{·} marking an absent file---so a fully documented module reads
@@ -474,7 +426,7 @@ infrastructure, and every box was placed from the same live data the
 prose cites.
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Pipeline Stage Flow}]{../figures/pipeline_stages.png}}
-\textbf{Figure 2.} Pipeline DAG with 14 YAML-declared stages (core, LLM,
+\textbf{Figure 2.} Pipeline DAG with 16 YAML-declared stages (core, LLM,
 ebook, metadata, bundle, archival tags).
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Infrastructure Module Inventory}]{../figures/module_inventory.png}}
@@ -497,8 +449,8 @@ Figure 4 summarizes the Appendix F capability matrix.
 plugin-hosted, red \textbf{---} unavailable. Rows group \emph{Core
 Pipeline}, \emph{Quality \& Security}, then \emph{Ecosystem}.
 
-¹ Nextflow 25.04.0: lineage records exist at workflow scope, not per
-rendered PDF citation graph.
+¹ Nextflow lineage records exist at workflow scope, not per rendered PDF
+citation graph.
 
 ² DVC: content-addressed artifacts without native prose rendering.
 

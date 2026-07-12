@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,75 +173,65 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="results">Results</h1>
-<p><code>template/</code> was evaluated through multi-project pipeline
-execution, measuring test coverage, pipeline timing, output integrity,
-and steganographic performance across the canonical exemplars under
-<code>projects/</code>.</p>
+<p>This section reports repository facts produced by the meta-project’s
+live introspection pass. Test counts, module inventories, pipeline-stage
+counts, and figure data are injected from generated artifacts. Runtime
+and achieved-coverage claims are intentionally omitted when no versioned
+benchmark or coverage artifact backs them.</p>
 <h2 id="multi-project-pipeline-execution">Multi-Project Pipeline
 Execution</h2>
-<p>Runs used the <code>./run.sh</code> interactive orchestrator (“all
-projects core (fast)” / menu key <strong><code>d</code></strong>)
-skipping infrastructure replication and optional LLM stages orchestrated
-via <code>python -m infrastructure.orchestration</code>.
-<strong>Note:</strong> lone menu <strong><code>d</code></strong> returns
-after success without redrawing the TUI banner.</p>
+<p>The <code>./run.sh</code> interactive orchestrator can execute the
+public roster through the shared DAG. The table below is a structural
+snapshot, not a timing benchmark: counts come from repository
+introspection, and the coverage column states each exemplar’s declared
+policy floor rather than an unversioned observed percentage.</p>
 <table>
 <colgroup>
-<col style="width: 13%" />
-<col style="width: 34%" />
-<col style="width: 25%" />
 <col style="width: 12%" />
-<col style="width: 13%" />
+<col style="width: 31%" />
+<col style="width: 24%" />
+<col style="width: 32%" />
 </colgroup>
 <thead>
 <tr>
 <th>Project</th>
 <th>Effective core stages¹</th>
-<th>Approx. duration</th>
-<th>Tests²</th>
-<th>Coverage</th>
+<th style="text-align: right;">Discovered tests</th>
+<th style="text-align: right;">Declared project floor</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>template_code_project</code></td>
 <td>8</td>
-<td>~40 s</td>
-<td>236/236</td>
-<td>90%+</td>
+<td style="text-align: right;">236</td>
+<td style="text-align: right;">90%</td>
 </tr>
 <tr>
 <td><code>template_prose_project</code></td>
 <td>8</td>
-<td>~35 s</td>
-<td>120/120</td>
-<td>90%+</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">90%</td>
 </tr>
 <tr>
 <td><code>template_autoresearch_project</code></td>
 <td>8</td>
-<td>~30 s</td>
-<td>296/296</td>
-<td>90%+</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">90%</td>
 </tr>
 </tbody>
 </table>
-<p>¹“Core-only” disables LLM-tagged YAML stages; durations exclude
-optional network-heavy LLM or long-running retrieval scripts when run
-with cached fixtures.</p>
-<p>²Counts show passing tests versus discovered tests for the sampled
-configuration.</p>
-<p><strong><em>Overall success:</em></strong> 100 % pipeline completion
-for sampled runs.</p>
-<p><em>Timing illustrative (Apple Silicon workstation, SSD, fixed
-seeds).</em></p>
-<p>Search-stage overhead dwarfs the optimization exemplar’s
-runtime—confirming Stage 02 remains the bottleneck for outbound API
-traffic while retaining Zero-Mock subprocess + filesystem checks
-downstream.</p>
+<p>¹“Core-only” excludes LLM-tagged and other opt-in stages according to
+the YAML stage tags. A fresh run must be used to establish completion
+status or wall-clock performance for a particular machine and dependency
+set.</p>
 <h2 id="infrastructure-test-suite">Infrastructure Test Suite</h2>
 <table>
 <colgroup>
@@ -257,19 +247,19 @@ downstream.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>470+</td>
+<td>504+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~7,968</td>
+<td>~8,583</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
-<td>≥60 % (repo ≥80 %+ during recent audits)</td>
+<td>≥60% configured floor</td>
 </tr>
 <tr>
-<td>Zero-mock imports</td>
-<td>Verified via static scanning</td>
+<td>Prohibited mock-framework imports</td>
+<td>Checked by the static no-mocks gate</td>
 </tr>
 </tbody>
 </table>
@@ -323,7 +313,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">110</td>
+<td style="text-align: center;">112</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -345,10 +335,17 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>documentation</code></td>
-<td style="text-align: center;">12</td>
+<td style="text-align: center;">13</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
+</tr>
+<tr>
+<td><code>fonds</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
 </tr>
 <tr>
 <td><code>llm</code></td>
@@ -374,7 +371,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>orchestration</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">9</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>PipelineRunner</code>, entry point for
@@ -395,6 +392,13 @@ contracts + validation</td>
 <td>Markdown readability + prose tooling</td>
 </tr>
 <tr>
+<td><code>provenance</code></td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
+</tr>
+<tr>
 <td><code>publishing</code></td>
 <td style="text-align: center;">74</td>
 <td style="text-align: center;">✓</td>
@@ -410,7 +414,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">57</td>
+<td style="text-align: center;">60</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -423,6 +427,20 @@ contracts + validation</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
 </tr>
 <tr>
+<td><code>research</code></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>rules</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
+</tr>
+<tr>
 <td><code>scientific</code></td>
 <td style="text-align: center;">4</td>
 <td style="text-align: center;">✓</td>
@@ -432,7 +450,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>search</code></td>
-<td style="text-align: center;">44</td>
+<td style="text-align: center;">62</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>infrastructure.search.literature</code> clients + cache</td>
@@ -454,21 +472,28 @@ capture</td>
 </tr>
 <tr>
 <td><code>steganography</code></td>
-<td style="text-align: center;">11</td>
+<td style="text-align: center;">13</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Watermark overlays + hash manifests</td>
 </tr>
 <tr>
+<td><code>tools</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
+</tr>
+<tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">84</td>
+<td style="text-align: center;">75</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
 </tr>
 </tbody>
 </table>
-<p>All 23 enumerated subdirectories carry Tier‑1/<code>README.md</code>
+<p>All 28 enumerated subdirectories carry Tier‑1/<code>README.md</code>
 and Tier‑2/<code>AGENTS.md</code> coverage wherever the Documentation
 Duality standard applies; subsets ship Tier‑3 <code>SKILL.md</code>
 descriptors for MCP routing (<code>infrastructure/skills</code> manifest
@@ -506,7 +531,7 @@ Documentation Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>380+</code> Markdown shards under <code>docs/</code> capture
+<p><code>390+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
@@ -592,76 +617,29 @@ order—not strict numeric script filenames). Scripts live under
 </tr>
 </tbody>
 </table>
-<p><code>scripts/07_generate_executive_report.py</code> is
+<p><code>scripts/pipeline/stage_07_executive_report.py</code> is
 <strong>multi-project orchestration glue</strong> invoked after
 iterating active projects—not a tenth DAG node for single-repo runs
 (<code>execute_pipeline.py</code>).</p>
-<h2 id="steganographic-performance">Steganographic Performance</h2>
-<table>
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 20%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 21%" />
-</colgroup>
-<thead>
-<tr>
-<th>Project</th>
-<th style="text-align: center;">Pages (approx.)</th>
-<th style="text-align: center;">Metadata</th>
-<th style="text-align: center;">SHA-256</th>
-<th style="text-align: center;">Overlay</th>
-<th style="text-align: center;">QR Code</th>
-<th style="text-align: center;">Total (approx.)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>template_code_project</code></td>
-<td style="text-align: center;">~20</td>
-<td style="text-align: center;">&lt;0.3 s</td>
-<td style="text-align: center;">&lt;0.05 s</td>
-<td style="text-align: center;">&lt;0.8 s</td>
-<td style="text-align: center;">&lt;0.4 s</td>
-<td style="text-align: center;">&lt;1.5 s</td>
-</tr>
-<tr>
-<td><code>template_prose_project</code></td>
-<td style="text-align: center;">~25</td>
-<td style="text-align: center;">&lt;0.3 s</td>
-<td style="text-align: center;">&lt;0.05 s</td>
-<td style="text-align: center;">&lt;0.9 s</td>
-<td style="text-align: center;">&lt;0.4 s</td>
-<td style="text-align: center;">&lt;1.6 s</td>
-</tr>
-<tr>
-<td><code>template_autoresearch_project</code></td>
-<td style="text-align: center;">~25</td>
-<td style="text-align: center;">&lt;0.2 s</td>
-<td style="text-align: center;">&lt;0.04 s</td>
-<td style="text-align: center;">&lt;0.9 s</td>
-<td style="text-align: center;">&lt;0.3 s</td>
-<td style="text-align: center;">&lt;1.5 s</td>
-</tr>
-</tbody>
-</table>
-<p>All measurements use single-threaded execution on Apple Silicon, and
-the totals are dominated by watermark-overlay complexity rather than by
-hashing or metadata embedding, which each stay well under one-tenth of a
-second per document.</p>
+<h2 id="steganographic-performance-boundary">Steganographic Performance
+Boundary</h2>
+<p>The steganography path exposes metadata injection, SHA-256 hashing,
+overlay generation, and optional QR-code insertion as separately
+testable operations. This revision makes no latency claim because the
+project does not currently generate a versioned benchmark artifact
+recording hardware, input PDF, warm-up policy, repetitions, and
+dispersion. A future performance table should be compiled from such an
+artifact rather than copied from an ad-hoc workstation run.</p>
 <h2 id="self-referential-analysis">Self-Referential Analysis</h2>
 <p>Rendered via <code>projects/templates/template_template</code>
 (<code>generate_manuscript_metrics.py</code> → injected tokens such as
-<code>23</code>). Architecture figures stem from <a
+<code>28</code>). Architecture figures stem from <a
 href="../src/template_template/architecture_viz.py"><code>template_template.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
 <p><img src="../figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
 rendering of the Two-Layer Architecture from repository introspection:
-the infrastructure layer (top) holds the <code>23</code> reusable
+the infrastructure layer (top) holds the <code>28</code> reusable
 subpackages, each annotated with its Python file count and a four-slot
 documentation badge—<code>A</code> AGENTS.md, <code>R</code> README.md,
 <code>S</code> SKILL.md, <code>P</code> PAI.md, with <code>·</code>
@@ -673,7 +651,7 @@ infrastructure, and every box was placed from the same live data the
 prose cites.</p>
 <p><img src="../figures/pipeline_stages.png"
 alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 14 YAML-declared stages (core, LLM, ebook, metadata, bundle,
+with 16 YAML-declared stages (core, LLM, ebook, metadata, bundle,
 archival tags).</p>
 <p><img src="../figures/module_inventory.png"
 alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
@@ -692,8 +670,8 @@ alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
 native capability, yellow <strong>◐</strong> partial / plugin-hosted,
 red <strong>—</strong> unavailable. Rows group <em>Core Pipeline</em>,
 <em>Quality &amp; Security</em>, then <em>Ecosystem</em>.</p>
-<p>¹ Nextflow 25.04.0: lineage records exist at workflow scope, not per
-rendered PDF citation graph.</p>
+<p>¹ Nextflow lineage records exist at workflow scope, not per rendered
+PDF citation graph.</p>
 <p>² DVC: content-addressed artifacts without native prose
 rendering.</p>
 <p>³ DVC: remote object stores (S3, GCS, Azure) without turnkey CI
@@ -715,5 +693,6 @@ exercises the AutoResearch readiness planner
 <strong><code>template_search_project</code></strong> exercises
 literature-search workflows.</p></li>
 </ul>
+</main>
 </body>
 </html>

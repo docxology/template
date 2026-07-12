@@ -16,7 +16,9 @@ from data_descriptor import (
     schema_table_rows,
     severity_counts,
     validate_descriptor,
+    verification_table_rows,
 )
+from data_descriptor.verification import FileVerification
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -117,3 +119,18 @@ class TestSeverityCountsAndDemo:
         demo_broken_descriptor(descriptor)
         assert validate_descriptor(descriptor) == ()
         assert "license" in descriptor
+
+
+class TestVerificationTableRows:
+    """Verification display rows expose actual status without script logic."""
+
+    def test_verified_and_absent_rows(self) -> None:
+        checks = (
+            FileVerification("a.csv", "verified", "sha256:a", "sha256:a", 2, 2, True, True),
+            FileVerification("b.csv", "absent", "sha256:b", "", 3, -1, False, False),
+        )
+
+        assert verification_table_rows(checks) == (
+            ("a.csv", "2", "2", "match", "verified"),
+            ("b.csv", "3", "—", "absent", "absent"),
+        )

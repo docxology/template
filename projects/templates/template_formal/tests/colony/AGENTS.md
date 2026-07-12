@@ -6,7 +6,7 @@ per-file test breakdown.
 
 ## Speed profile — read this before running the whole suite locally
 
-**Eight of ten files here are fast** (unit tests, or fixed-scale
+**Nine of eleven files here are fast** (unit tests, or fixed-scale
 integration with at most a few dozen real trials). **Two are slow:**
 `test_colony_convergence_statistics.py` (~9s locally, 220 real trials) and
 `test_colony_experiments_extended.py` (~49s locally, 900 real trials across

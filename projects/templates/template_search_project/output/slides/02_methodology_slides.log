@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
@@ -1637,10 +1637,6 @@ File: ../figures/score_distribution.png Graphic file (type bmp)
 
 
 ]
-[18
-
-
-]
 \tf@nav=\write6
 \openout6 = `02_methodology_slides.nav'.
 
@@ -1659,13 +1655,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29963 strings out of 468168
- 605301 string characters out of 5432815
- 1162981 words of memory out of 5000000
- 58135 multiletter control sequences out of 15000+600000
+ 29961 strings out of 468168
+ 605285 string characters out of 5432815
+ 1162919 words of memory out of 5000000
+ 58133 multiletter control sequences out of 15000+600000
  631256 words of font info for 72 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1111b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
-te_search_project/output/slides/02_methodology_slides.pdf (18 pages).
+te_search_project/output/slides/02_methodology_slides.pdf (17 pages).

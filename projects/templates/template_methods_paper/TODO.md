@@ -24,7 +24,7 @@ ideas.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` as the copy-and-customize template
-  with the same top-level sections as `config.yaml`, including the `dsl`
+  with the same top-level sections as `config.yaml`, including the `project_config.dsl`
   block.
 - Add any future controlled vocabulary (units, step kinds, targets) under
   `src/methods_dsl/units.py` / `vocabulary.py`, never as ad hoc YAML read

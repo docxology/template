@@ -39,6 +39,9 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_eda
   computation.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
+- **Figure provenance is generated with the figures.** `eda_analysis.py`
+  writes `output/figures/figure_registry.json` only after all three registered
+  PNGs exist; incomplete sets raise instead of producing partial provenance.
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
 

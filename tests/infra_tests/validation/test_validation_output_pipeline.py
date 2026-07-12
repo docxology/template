@@ -103,6 +103,34 @@ class TestValidateTransmissionBookends:
         assert mod.validate_transmission_bookends("templates/demo") is True
         assert checked_paths == [pdf_path]
 
+    def test_docs_manuscript_config_enables_bookend_validation(self, tmp_path, monkeypatch) -> None:
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project_dir = tmp_path / "projects" / "ongoing" / "demo"
+        manuscript_dir = project_dir / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
+        (manuscript_dir / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+        (manuscript_dir / "config.yaml").write_text(
+            "publication:\n  transmission_bookends:\n    enabled: true\n",
+            encoding="utf-8",
+        )
+
+        pdf_path = project_dir / "output" / "pdf" / "demo_combined.pdf"
+        pdf_path.parent.mkdir(parents=True)
+        pdf_path.write_bytes(_minimal_structural_pdf())
+
+        from infrastructure.publishing import transmission_page_check
+
+        checked_paths = []
+
+        def record_page_check(path):
+            checked_paths.append(path)
+            return True
+
+        monkeypatch.setattr(transmission_page_check, "validate_transmission_bookend_pages", record_page_check)
+
+        assert mod.validate_transmission_bookends("ongoing/demo") is True
+        assert checked_paths == [pdf_path]
+
 
 class TestValidateMarkdown:
     """Test validate_manuscript_output_markdown()."""
@@ -343,7 +371,6 @@ class TestGenerateValidationReport:
         assert "checks" in result
         assert "summary" in result
 
-
 class TestExecuteValidationPipeline:
     """Test execute_validation_pipeline()."""
 
@@ -378,6 +405,35 @@ class TestExecuteValidationPipeline:
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Intro\n\nContent.")
         assert isinstance(mod.execute_validation_pipeline("test"), int)
+
+    def test_docs_manuscript_figure_references_reach_registry_validation(self, tmp_path, monkeypatch):
+        """Stage 04 must not pass a docs-only manuscript as if it had no figures."""
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project_dir = tmp_path / "projects" / "active" / "test"
+        manuscript_dir = project_dir / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
+        (manuscript_dir / "01_intro.md").write_text(
+            "# Intro\n\nSee @fig:docs-only for the result.\n",
+            encoding="utf-8",
+        )
+        pdf_dir = project_dir / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
+
+        captured: dict[str, object] = {}
+        real_generate_report = mod.generate_validation_report
+
+        def record_report(results, figure_issues, output_statistics, project, *args, **kwargs):
+            captured["results"] = list(results)
+            captured["figure_issues"] = list(figure_issues)
+            return real_generate_report(results, figure_issues, output_statistics, project, *args, **kwargs)
+
+        monkeypatch.setattr(mod, "generate_validation_report", record_report)
+
+        mod.execute_validation_pipeline("test")
+
+        assert ("Figure registry", False) in captured["results"]
+        assert captured["figure_issues"] == ["Figure registry not found but 1 figure reference(s) found in manuscript"]
 
     def test_with_output_subdirs(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
@@ -468,6 +524,20 @@ class TestProseQualityGate:
     def test_enabled_via_config(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
         self._scaffold(tmp_path, enabled=True, prose="# Intro\n\nShort prose here.")
+        assert mod._prose_quality_enabled("test") is True
+
+    def test_enabled_via_docs_manuscript_config(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project_dir = tmp_path / "projects" / "active" / "test"
+        manuscript_dir = project_dir / "docs" / "manuscript"
+        (project_dir / "output").mkdir(parents=True)
+        manuscript_dir.mkdir(parents=True)
+        (manuscript_dir / "01_intro.md").write_text("# Intro\n\nShort prose.\n", encoding="utf-8")
+        (manuscript_dir / "config.yaml").write_text(
+            "validation:\n  prose_quality:\n    enabled: true\n",
+            encoding="utf-8",
+        )
+
         assert mod._prose_quality_enabled("test") is True
 
     def test_explicit_false_config_stays_disabled(self, tmp_path, monkeypatch):

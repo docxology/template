@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:abstract">Abstract</h1>
 <p>This paper describes a small, tested <strong>domain language for
 specifying controlled methods</strong> — the <strong>methods-paper
@@ -185,8 +189,7 @@ methodology itself: a controlled vocabulary, a unit system with
 dimensional safety, four staged validation gates, and a deterministic
 compiler, implemented in
 <code>projects/templates/template_methods_paper/src/methods_dsl/</code>
-and described section by section in <span class="citation"
-data-cites="sec:methodology">[@sec:methodology]</span>. The domain
+and described section by section in [sec:methodology]. The domain
 language’s vocabulary is informed by BPL (Biology Programming Language,
 [bpl2026]), an upstream reference that encodes laboratory protocols as
 programs with biology-native types, staged validation, and deterministic
@@ -196,7 +199,7 @@ pipeline shape from wet-lab protocols to any controlled procedure.</p>
 resources, and an ordered, dependent set of steps — constructed directly
 as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>)
 rather than parsed from new text syntax. Every <code>Quantity</code>
-carries a unit that resolves to one of 18 controlled units across six
+carries a unit that resolves to one of 18 controlled units across seven
 dimensions, and every step names one of 9 controlled-vocabulary intents
 (<code>src/methods_dsl/vocabulary.py</code>), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and target —
@@ -221,14 +224,15 @@ controlled vocabulary expressed as typed dataclasses — not a parsed
 grammar — is sufficient to reproduce BPL’s core safety properties
 (dimensional safety, staged validation, deterministic compilation) at a
 scope appropriate for a template exemplar. On the architecture side, the
-DSL is covered above the 90% project gate by a zero-mock test suite,
-generates 13 artifacts (1 figures, 6 data files, 6 reports) per pipeline
-run, and injects reproducibility metadata (configuration hash
-<code>23b5981d45bdc598</code>, build timestamp
-<code>2026-06-30T23:02:10Z</code>) into <span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
+DSL is exercised by a zero-mock test suite under the repository’s
+configured project coverage gate, generates 14 artifacts (1 figures, 7
+data files, 6 reports) per pipeline run, and injects reproducibility
+metadata (configuration hash <code>a0f000565bef6a79</code>, build
+timestamp <code>2026-07-12T02:08:51Z</code>) into
+[sec:reproducibility].</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
 dimensional analysis</p>
+</main>
 </body>
 </html>

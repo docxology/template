@@ -94,12 +94,13 @@ testing:
 # DSL parameters — declare your own worked example methods and staged-gate
 # names; the DSL's controlled vocabulary itself stays in src/methods_dsl/,
 # never in this file.
-dsl:
-  example_methods:
-    - "YourMethodName"
-  staged_gates:
-    - "structural"
-    - "semantic"
-    - "plan"
-    - "target"
-  plan_hash_algorithm: "sha256"
+project_config:
+  dsl:
+    example_methods:
+      - "YourMethodName"
+    staged_gates:
+      - "structural"
+      - "semantic"
+      - "plan"
+      - "target"
+    plan_hash_algorithm: "sha256"

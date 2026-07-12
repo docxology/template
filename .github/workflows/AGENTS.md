@@ -112,7 +112,13 @@ action — not each job.
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Script:** [`scripts/audit/verify_no_mocks.py`](../../scripts/audit/verify_no_mocks.py) (repository root)
-- **Policy:** Absolutely no `MagicMock`, `mocker.patch`, `unittest.mock` in test files
+- **Enforced policy:** no configured prohibited mock-framework imports/calls
+  (`MagicMock`, `mocker.patch`, `unittest.mock`, and related lexical forms) in
+  test files.
+- **Boundary:** `--inventory` separately measures monkeypatch environment
+  isolation and dependency replacement. It remains advisory until the
+  dependency-replacement count reaches zero; CI does not pass the strict
+  inventory flag today.
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
 
@@ -201,7 +207,7 @@ action — not each job.
 | Ruff linting | zero violations | `lint` job |
 | Ruff formatting | zero diffs | `lint` job |
 | mypy type check | no errors | `lint` job |
-| No-mocks policy | zero mock usage | `verify-no-mocks` job |
+| Mock-framework lexical gate | zero prohibited imports/calls | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |
 | Combined-union public-project coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |

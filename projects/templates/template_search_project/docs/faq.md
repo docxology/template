@@ -57,7 +57,7 @@ The gate ensures `src/` orchestration is exercised. Lowering it weakens the exem
 
 | Concern | Offline default | Live |
 |---|---|---|
-| `config.search.sources` | `[local]` | `[arxiv, crossref]` (or `[paperclip]`, etc.) |
+| `project_config.search.sources` | `[local]` | `[arxiv, crossref]` (or `[paperclip]`, etc.) |
 | Inputs | `data/corpus.json` | HTTP responses from the configured backends |
 | Caches written | `output/search/cache/`, `output/cache/abs/`, `output/cache/pdf/` (mostly inert offline) | All three are populated by the first run |
 | Reproducibility | Byte-stable | Byte-stable after the first run, because subsequent runs hit the cache |
@@ -70,7 +70,7 @@ Once at the search backend (when supported) and again defensively in the aggrega
 
 ### `SearchCache` collisions — when do they happen?
 
-`SearchCache` keys on canonical query identity (sources + query string + year filters). Two distinct `SearchQuery` instances that canonicalise to the same key share a cache entry. If you change `config.search.max_results` without invalidating the cache, the cached result count is what you'll see — pass `--no-cache` or delete the cache directory to force a fresh fetch.
+`SearchCache` keys on canonical query identity (sources + query string + year filters). Two distinct `SearchQuery` instances that canonicalise to the same key share a cache entry. If you change `project_config.search.max_results` without invalidating the cache, the cached result count is what you'll see — pass `--no-cache` or delete the cache directory to force a fresh fetch.
 
 ## LLM
 
@@ -94,7 +94,7 @@ Ollama threads the seed through the sampler, so a pinned model + seed + zero-tem
 
 ### How do I add a tracked keyword to the deep-search?
 
-1. Edit `manuscript/config.yaml` → `deep_search.keywords:` and add the new entry.
+1. Edit `manuscript/config.yaml` → `project_config.deep_search.keywords:` and add the new entry.
 2. Re-run `scripts/run_deep_search.py`.
 3. The composer (`scripts/s_compose_literature_review.py`) will pick up the new keyword's `output/deep_search/<keyword_slug>/` tree and include it in `manuscript/S01_literature_review.md` on the next pipeline run.
 
@@ -124,7 +124,7 @@ Because `output/manuscript/references_deep.bib` is the copy the renderer reads, 
 
 ### My LLM call timed out
 
-`config.llm.review_timeout` (default `600.0` seconds) bounds individual LLM requests. Long fulltext + large context can exceed this. Either raise the timeout, lower `enrichment.max_fulltext_chars`, or use `config.deep_search.llm_review_timeout` to override per stage.
+`config.llm.review_timeout` (default `600.0` seconds) bounds individual LLM requests. Long fulltext + large context can exceed this. Either raise the timeout, lower `project_config.enrichment.max_fulltext_chars`, or use `project_config.deep_search.llm_review_timeout` to override per stage.
 
 ### A run mutated `manuscript/references.bib` even though I didn't touch the corpus
 

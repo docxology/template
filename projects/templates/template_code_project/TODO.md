@@ -12,6 +12,7 @@ thin-orchestrator control-positive path for code-centric research projects.
 - Stage 04 output validation: `uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project`
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Code quality: `uv run ruff check projects/templates/template_code_project/src/` and `uv run mypy projects/templates/template_code_project/src/` must both pass clean.
+- Benchmark reproducibility: tracked benchmark reports and figures contain only deterministic facts; wall-clock timing is logged as a runtime diagnostic, and two-run byte-equality tests enforce the boundary.
 - Live test count and measured coverage percentage → [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) (regenerated, never hardcoded here; both numbers drift faster than this file).
 
 ## Integrity and template-status gaps
