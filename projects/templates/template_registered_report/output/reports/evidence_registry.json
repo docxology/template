@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 1100,
+  "fact_count": 1110,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 133,
     "citation": 5,
     "figure": 9,
-    "number": 945,
+    "number": 955,
     "section": 8
   },
-  "omitted_fact_count": 900,
+  "omitted_fact_count": 910,
   "sample_facts": [
     {
       "active": true,
@@ -267,18 +267,6 @@
       "active": true,
       "checked_at": "2026-07-12T16:01:08+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.directories.reports.extensions..md",
-      "source_field": "$.directories.reports.extensions..md",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "2"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
       "source": "output/reports/telemetry.json:$.stages[1].stage_num",
       "source_field": "$.stages[1].stage_num",
       "source_path": "output/reports/telemetry.json",
@@ -399,18 +387,6 @@
       "active": true,
       "checked_at": "2026-07-12T16:01:08+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.directories.reports.extensions..md (numeric variant)",
-      "source_field": "$.directories.reports.extensions..md",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.02"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
       "source": "output/reports/output_statistics.json:$.sizes_by_category.logs (numeric variant)",
       "source_field": "$.sizes_by_category.logs",
       "source_path": "output/reports/output_statistics.json",
@@ -505,6 +481,30 @@
     },
     {
       "active": true,
+      "checked_at": "2026-07-12T22:15:34+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.figures.file_count (numeric variant)",
+      "source_field": "$.directories.figures.file_count",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T22:15:34+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.reports.extensions..md (numeric variant)",
+      "source_field": "$.directories.reports.extensions..md",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T16:01:08+00:00",
       "kind": "number",
       "source": "output/reports/frozen_registration.json:$.analysis_plan.alpha",
@@ -538,78 +538,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.05"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-10T20:16:51+00:00",
-      "kind": "number",
-      "source": "data/example_registration.json:$.analysis_plan.alpha (numeric variant)",
-      "source_field": "$.analysis_plan.alpha",
-      "source_path": "data/example_registration.json",
-      "source_tier": "data_source",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[4].context.stage_num",
-      "source_field": "$.stage_results[4].context.stage_num",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-10T20:16:51+00:00",
-      "kind": "number",
-      "source": "output/data/demo_analysis.json:$.alpha (numeric variant)",
-      "source_field": "$.alpha",
-      "source_path": "output/data/demo_analysis.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
-      "source": "output/reports/frozen_registration.json:$.analysis_plan.alpha (numeric variant)",
-      "source_field": "$.analysis_plan.alpha",
-      "source_path": "output/reports/frozen_registration.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
-      "source": "output/reports/telemetry.json:$.stages[4].stage_num",
-      "source_field": "$.stages[4].stage_num",
-      "source_path": "output/reports/telemetry.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
-      "source": "output/reports/snapshots/stage-05-project-analysis.json:$.stage_num",
-      "source_field": "$.stage_num",
-      "source_path": "output/reports/snapshots/stage-05-project-analysis.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
     },
     {
       "active": true,
@@ -747,8 +675,8 @@
       "active": true,
       "checked_at": "2026-07-12T16:01:08+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.sizes_by_category.reports (numeric variant)",
-      "source_field": "$.sizes_by_category.reports",
+      "source": "output/reports/output_statistics.json:$.file_counts_by_type..tex (numeric variant)",
+      "source_field": "$.file_counts_by_type..tex",
       "source_path": "output/reports/output_statistics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -757,10 +685,10 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
+      "checked_at": "2026-07-12T22:15:34+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.file_counts_by_type..tex (numeric variant)",
-      "source_field": "$.file_counts_by_type..tex",
+      "source": "output/reports/output_statistics.json:$.file_counts_by_type..html (numeric variant)",
+      "source_field": "$.file_counts_by_type..html",
       "source_path": "output/reports/output_statistics.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -778,6 +706,102 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-10T20:16:51+00:00",
+      "kind": "number",
+      "source": "data/example_registration.json:$.analysis_plan.alpha (numeric variant)",
+      "source_field": "$.analysis_plan.alpha",
+      "source_path": "data/example_registration.json",
+      "source_tier": "data_source",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:08+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[4].context.stage_num",
+      "source_field": "$.stage_results[4].context.stage_num",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-10T20:16:51+00:00",
+      "kind": "number",
+      "source": "output/data/demo_analysis.json:$.alpha (numeric variant)",
+      "source_field": "$.alpha",
+      "source_path": "output/data/demo_analysis.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T22:15:34+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.figures.file_count",
+      "source_field": "$.directories.figures.file_count",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T22:15:34+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.reports.extensions..md",
+      "source_field": "$.directories.reports.extensions..md",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:08+00:00",
+      "kind": "number",
+      "source": "output/reports/frozen_registration.json:$.analysis_plan.alpha (numeric variant)",
+      "source_field": "$.analysis_plan.alpha",
+      "source_path": "output/reports/frozen_registration.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:08+00:00",
+      "kind": "number",
+      "source": "output/reports/telemetry.json:$.stages[4].stage_num",
+      "source_field": "$.stages[4].stage_num",
+      "source_path": "output/reports/telemetry.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:08+00:00",
+      "kind": "number",
+      "source": "output/reports/snapshots/stage-05-project-analysis.json:$.stage_num",
+      "source_field": "$.stage_num",
+      "source_path": "output/reports/snapshots/stage-05-project-analysis.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
     },
     {
       "active": true,
@@ -885,7 +909,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1783710000"
+      "value": "1.78371e+07"
     },
     {
       "active": true,
@@ -897,7 +921,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1783710000"
+      "value": "1.78371e+07"
     },
     {
       "active": true,
@@ -909,7 +933,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1.78371e+07"
+      "value": "1783710000"
     },
     {
       "active": true,
@@ -921,7 +945,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1.78371e+07"
+      "value": "1783710000"
     },
     {
       "active": true,
@@ -2115,30 +2139,6 @@
       "active": true,
       "checked_at": "2026-07-12T16:01:08+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.sizes_by_category.simulations",
-      "source_field": "$.sizes_by_category.simulations",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
-      "source": "output/reports/output_statistics.json:$.sizes_by_category.llm",
-      "source_field": "$.sizes_by_category.llm",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:08+00:00",
-      "kind": "number",
       "source": "output/reports/output_statistics.json:$.sizes_by_category.logs (numeric variant)",
       "source_field": "$.sizes_by_category.logs",
       "source_path": "output/reports/output_statistics.json",
@@ -2418,6 +2418,6 @@
     "bibliography": 5,
     "configuration": 7,
     "data_source": 6,
-    "generated_metric": 932
+    "generated_metric": 942
   }
 }

@@ -142,7 +142,7 @@
       "exists": true,
       "file_count": 31,
       "size_mb": "0.16",
-      "total_size_bytes": 164961,
+      "total_size_bytes": 164844,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -198,7 +198,7 @@
     }
   },
   "total_files": 124,
-  "total_size_mb": 1.7793350219726562,
+  "total_size_mb": 1.7792234420776367,
   "largest_files": [
     {
       "name": "template_registered_report_combined.pdf",
@@ -271,7 +271,7 @@
     "slides": 0.9384794235229492,
     "figures": 0.19556045532226562,
     "data": 0.00038909912109375,
-    "reports": 0.1573190689086914,
+    "reports": 0.15720748901367188,
     "logs": 0.00019550323486328125
   },
   "file_counts_by_type": {
