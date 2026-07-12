@@ -4,18 +4,16 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import shutil
-import sys
 from pathlib import Path
 
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PROJECT_ROOT.parents[2]))
-
-from infrastructure.validation.content.figure_validator import validate_figure_registry  # noqa: E402
 
 SCRIPT_PATH = PROJECT_ROOT / "scripts" / "generate_figures.py"
+FIGURE_LABEL_RE = re.compile(r"\{#(fig:[A-Za-z0-9_:-]+)\}")
 
 EXPECTED_FIGURES = {
     "schema_overview.png",
@@ -24,6 +22,23 @@ EXPECTED_FIGURES = {
     "quality_gate.png",
     "checksum_verification.png",
 }
+
+
+def _validate_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+    """Validate the standalone registry without importing monorepo packages."""
+    payload = json.loads(registry_path.read_text(encoding="utf-8"))
+    records = {str(record["label"]): record for record in payload.get("figures", []) if isinstance(record, dict)}
+    references: set[str] = set()
+    for path in manuscript_dir.rglob("*.md"):
+        if path.name not in {"AGENTS.md", "README.md"}:
+            references.update(FIGURE_LABEL_RE.findall(path.read_text(encoding="utf-8")))
+
+    issues = [f"Unregistered figure reference: {label}" for label in sorted(references - set(records))]
+    for label in sorted(references & set(records)):
+        filename = records[label].get("filename")
+        if isinstance(filename, str) and filename and not (registry_path.parent / filename).is_file():
+            issues.append(f"Registered generated figure file is missing for {label}: {filename}")
+    return not issues, issues
 
 
 def _load_script_module():
@@ -75,7 +90,7 @@ class TestGenerateFigures:
             "fig:quality_gate",
             "fig:checksum_verification",
         }
-        ok, issues = validate_figure_registry(registry, tmp_path / "manuscript")
+        ok, issues = _validate_registry(registry, tmp_path / "manuscript")
         assert ok, issues
 
     def test_incomplete_render_set_cannot_publish_registry(self, tmp_path: Path) -> None:
@@ -101,7 +116,7 @@ class TestGenerateFigures:
         module.main(project_root=tmp_path)
         (tmp_path / "output" / "figures" / "quality_gate.png").unlink()
 
-        ok, issues = validate_figure_registry(
+        ok, issues = _validate_registry(
             tmp_path / "output" / "figures" / "figure_registry.json",
             tmp_path / "manuscript",
         )

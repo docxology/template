@@ -1,6 +1,6 @@
 {
   "pipeline_start_time": 1783714232.5751848,
-  "last_stage_completed": 7,
+  "last_stage_completed": 8,
   "stage_results": [
     {
       "name": "Clean Output Directories",
@@ -134,8 +134,27 @@
         "error_message": "",
         "exception_type": ""
       }
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.4545769691467285,
+      "timestamp": "2026-07-10 13:11:12",
+      "completed": true,
+      "status": "passed",
+      "context": {
+        "stage_num": 8,
+        "stage_name": "Copy Outputs",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     }
   ],
   "total_stages": 8,
-  "checkpoint_time": 1783714272.0819972
+  "checkpoint_time": 1783714272.562432
 }
