@@ -156,14 +156,13 @@
 
 \begin{frame}[fragile,allowframebreaks]{Results}
 This section presents the exploratory analysis of the shipped dataset.
-Every figure and the summary table are produced by the thin analysis
-script
-(\href{https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py}{\breaktt{scripts/eda\_analysis.py}}),
-which calls the tested figure-data preparers in
-\breaktt{src/eda/figures.py}. Running the script regenerates the figures
-under \texttt{output/figures/} and the summary CSV under
-\texttt{output/data/}; the prose below describes what those artifacts
-show.
+Every figure and the summary table are produced by the
+\href{https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py}{EDA
+analysis orchestrator} (\breaktt{scripts/eda\_analysis.py}), which calls
+the tested figure-data preparers in \breaktt{src/eda/figures.py}. Running
+the script regenerates the figures under \texttt{output/figures/} and
+the summary CSV under \texttt{output/data/}; the prose below describes
+what those artifacts show.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Dataset and missingness}

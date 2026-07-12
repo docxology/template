@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_experimental_setup.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
+<h1 id="sec:experimental_setup">Experimental Setup</h1>
+<p>This section details the controlled vocabulary, worked examples, and
+software environment used to produce the results.</p>
+<h2 id="controlled-vocabulary">Controlled vocabulary</h2>
+<p>The DSL’s vocabulary is declared once in code and consulted by every
+gate and the compiler — never re-declared per method:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Declares</th>
+<th>Cardinality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/methods_dsl/vocabulary.py</code></td>
+<td><code>StepKind</code>, <code>Target</code>,
+<code>target_accepts</code></td>
+<td>9 step kinds, 3 targets</td>
+</tr>
+<tr>
+<td><code>src/methods_dsl/units.py</code></td>
+<td><code>Dimension</code>, <code>Quantity</code>, the unit table</td>
+<td>18 controlled units across 7 dimensions</td>
+</tr>
+<tr>
+<td><code>src/methods_dsl/validation.py</code></td>
+<td>The four staged gates</td>
+<td>4 gates, fixed order</td>
+</tr>
+</tbody>
+</table>
+<h2 id="worked-examples">Worked examples</h2>
+<p><code>all_example_methods()</code>
+(<code>src/methods_dsl/examples_methods.py</code>) returns 2
+methods:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Domain</th>
+<th>Target</th>
+<th>Notable structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PBSPreparation</code></td>
+<td>Wet-lab bench preparation (BPL’s own domain; an original
+example)</td>
+<td><code>HUMAN</code></td>
+<td>A strict 5-step linear chain with a final <code>VALIDATE</code>
+step</td>
+</tr>
+<tr>
+<td><code>SensorCalibrationSweep</code></td>
+<td>Instrument calibration (a non-biology controlled procedure)</td>
+<td><code>AUTOMATED</code></td>
+<td>Mixed automated <code>MEASURE</code>/<code>COMPUTE</code> steps and
+a <code>HUMAN</code> <code>ANNOTATE</code> sign-off step</td>
+</tr>
+</tbody>
+</table>
+<p>The second example exists specifically to demonstrate that the
+controlled vocabulary generalizes beyond wet-lab protocols, as
+[sec:introduction] claims.</p>
+<h2 id="pipeline-conditions">Pipeline conditions</h2>
+<p>The experiment overlay (<code>experiment_plan.yaml</code>) declares
+three conditions:</p>
+<ul>
+<li><strong>declared_method</strong> (reference) — a method constructed
+directly as Python objects, before any validation gate has run.</li>
+<li><strong>validated_method</strong> (proposed) — the same method after
+passing all four staged gates and deterministic compilation to a
+scheduled <code>Plan</code>.</li>
+<li><strong>automated_target_variant</strong> (variant) —
+<code>PBSPreparation</code>’s steps recompiled against an
+<code>AUTOMATED</code> execution target, ablating the
+target-compatibility gate’s <code>HUMAN</code>/<code>AUTOMATED</code>
+step boundary (a <code>HUMAN</code> method’s steps must all be
+<code>HUMAN</code>-compatible; an <code>AUTOMATED</code> method’s steps
+may be either).</li>
+</ul>
+<p>The primary metric is gate pass rate: the fraction of staged-gate
+evaluations a method’s steps satisfy.</p>
+<h2 id="computational-environment">Computational environment</h2>
+<ul>
+<li><strong>Language</strong>: Python 3.12.13 on Darwin arm64 (see root
+<code>pyproject.toml</code> for the supported version range).</li>
+<li><strong>Core dependencies</strong>: <code>pyyaml</code>,
+<code>matplotlib</code> (declared in
+<code>domain_profile.yaml::required_packages</code>); the DSL library
+itself (<code>src/methods_dsl/</code>) has zero third-party dependencies
+beyond the standard library, with one declared
+<code>infrastructure</code> logging exception
+(<code>_logging.py</code>).</li>
+<li><strong>Headless plotting</strong>: the analysis script sets
+<code>MPLBACKEND=Agg</code> before importing matplotlib.</li>
+</ul>
+<h2 id="pipeline-ordering">Pipeline ordering</h2>
+<p>The typical analysis order is:</p>
+<ol type="1">
+<li><code>scripts/methods_analysis.py</code> — compiles every example
+method, runs all gates, exports worklist/CSV/Mermaid/JSON per method,
+demonstrates the provenance hash-chain, and writes
+<code>../figures/step_counts.png</code>, printing each output path for
+manifest collection.</li>
+<li><code>scripts/z_generate_manuscript_variables.py</code> — reads
+<code>manuscript/config.yaml</code> and the analysis outputs, then
+resolves every generated variable in <code>manuscript/*.md</code>.</li>
+<li>PDF rendering reads the resolved manuscript tree so figure paths and
+prose match the analysis that just completed.</li>
+</ol>
+<h2 id="relation-to-results">Relation to results</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Result ([sec:results])</th>
+<th>Producing function (<code>src/methods_dsl/</code>)</th>
+<th>Primary inputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compiled-plan summary</td>
+<td><code>compile_method()</code></td>
+<td><code>all_example_methods()</code></td>
+</tr>
+<tr>
+<td>Step-count figure</td>
+<td><code>len(plan.steps)</code> per method</td>
+<td><code>output/data/compiled_plans.json</code></td>
+</tr>
+<tr>
+<td>Gate pass tally</td>
+<td><code>run_all_gates()</code></td>
+<td>Each example method</td>
+</tr>
+<tr>
+<td>Determinism check</td>
+<td><code>compile_method()</code> called twice</td>
+<td><code>all_example_methods()</code></td>
+</tr>
+<tr>
+<td>Trust-chain verification</td>
+<td><code>append_record()</code> / <code>verify_chain()</code></td>
+<td>Demonstration chain in <code>scripts/methods_analysis.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>This table is descriptive documentation only; it is not executed as
+code during the build.</p>
+</main>
+</body>
+</html>

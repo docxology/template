@@ -256,7 +256,7 @@ Console report, non-zero exit on violation \\
 plus the cover illustration & 9 PNG files under
 \breaktt{manuscript/figures/} \\
 \breaktt{scripts/z\_generate\_manuscript\_variables.py} & Hydrate
-\texttt{\{\{TOKEN\}\}} values and inject them into
+declared manuscript-variable placeholders and inject them into
 \breaktt{output/manuscript/} immediately before rendering & JSON file +
 resolved manuscript tree \\
 \bottomrule\noalign{}
@@ -285,7 +285,7 @@ manuscript-variable token file and the strong-rule semantic evaluator;
 the figure-generation stage runs independently; and
 \breaktt{z\_generate\_manuscript\_variables.py} --- invoked automatically
 by the rendering pipeline immediately before the PDF render step --- is
-what actually substitutes every \texttt{\{\{TOKEN\}\}} and writes the
+what actually substitutes every declared placeholder and writes the
 resolved manuscript that pandoc consumes. @fig:pipeline shows the
 corresponding per-component pass/partial/missing status from the same
 run.

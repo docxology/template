@@ -110,6 +110,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -205,12 +208,14 @@ cannot enter unrecoverable states.
 
 \begin{block}{Performance Benchmarking}
 \protect\phantomsection\label{performance-benchmarking}
-Computational complexity is evaluated not just theoretically, but
-empirically via
-\href{https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py}{\breaktt{infrastructure.scientific.benchmarking.benchmark\_function}}.
-This module captures high-resolution execution timings and memory
-footprints across dimensionality sweeps, guaranteeing that the \(O(n)\)
-space-time complexity predictions hold true on the host architecture.
+The analysis exercises
+\href{https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py}{\breaktt{infrastructure.scientific.benchmarking.benchmark\_function}}
+as a runtime diagnostic. Host-dependent timing and memory observations
+are logged but excluded from tracked evidence. The canonical report
+records fixed inputs and exact objective values, while the dimensional
+figure reports deterministic convergence iterations and the proxy
+\(d \times \text{iterations}\); neither surface claims that one host run
+proves an asymptotic bound.
 \end{block}
 \end{frame}
 

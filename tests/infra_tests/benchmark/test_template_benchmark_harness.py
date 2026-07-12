@@ -10,6 +10,7 @@ import pytest
 from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests
 from infrastructure.benchmark.template_harness import (
     BenchmarkManifest,
+    BenchmarkScore,
     load_benchmark_manifest,
     main,
     run_benchmark_manifest,
@@ -102,6 +103,13 @@ def test_score_project_against_manifest_passes_grounded_project(tmp_path: Path) 
     assert score.score == 4
     assert score.max_score == 4
     assert all(result.passed for result in score.check_results)
+
+
+def test_scores_to_markdown_accepts_integer_runtime_scores() -> None:
+    """Python 3.10 integers lack ``is_integer``; score rendering remains portable."""
+    markdown = scores_to_markdown((BenchmarkScore(project="demo", passed=True, score=1, max_score=2),))
+
+    assert "| demo | yes | 1/2 |" in markdown
 
 
 def test_score_project_flags_missing_required_output(tmp_path: Path) -> None:

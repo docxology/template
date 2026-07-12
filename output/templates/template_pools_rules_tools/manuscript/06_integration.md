@@ -29,7 +29,7 @@ The current `manuscript_variables.json` contains the following summary values (s
 |---|---|
 | `3` | 3 |
 | `2` | 2 |
-| `3` | 3 |
+| `4` | 4 |
 | `8` | 8 |
 
 This table is itself token-injected: the values shown are those produced by the pipeline, not hard-coded by the manuscript author. If the pipeline results change — for example, because a new fond is added — re-running `scripts/03_generate_manuscript.py` updates the manuscript automatically, without manual editing. This property is central to reproducibility: the manuscript's quantitative claims are always consistent with the code that generated them [@Stodden2016enhancing].
@@ -45,15 +45,15 @@ Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @
 | `scripts/03_generate_manuscript.py` | Write `output/data/manuscript_variables.json` | JSON file |
 | `scripts/04_validate_strong_rules.py` | Semantic evaluation of strong-rule constraints (@sec:rules) against this project's own tree | Console report, non-zero exit on violation |
 | `scripts/05_generate_figures.py` | Render all 8 content figures plus the cover illustration | 9 PNG files under `manuscript/figures/` |
-| `scripts/z_generate_manuscript_variables.py` | Hydrate `{{TOKEN}}` values and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
+| `scripts/z_generate_manuscript_variables.py` | Hydrate declared manuscript-variable placeholders and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
 
 ![The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
 
 ![Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.](figures/status_dashboard.png){#fig:pipeline width=85%}
 
-@fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every `{{TOKEN}}` and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
+@fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every declared placeholder and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
 
-Each script imports all business logic from `src/` and stays free of computation of its own — the longest, `01_validate_sources.py` at 112 lines, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/fonds_reader.py`, `src/rules_applier.py`, and `src/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` at ≥ 90% coverage, while the scripts themselves remain readable without a dedicated test suite of their own.
+Each script imports all business logic from `src/` and stays free of computation of its own — even `01_validate_sources.py`, the largest entry point in this project, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/fonds_reader.py`, `src/rules_applier.py`, and `src/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` under the configured project coverage gate, while the scripts themselves remain readable without a dedicated test suite of their own.
 
 ## Resilience Design
 

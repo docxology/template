@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
+<h1 id="sec:introduction">Introduction</h1>
+<p>This <code>template_methods_paper</code> serves as the
+<strong>methods-paper exemplar</strong> for the <a
+href="https://github.com/docxology/template">Research Project
+Template</a> ecosystem: a manuscript whose subject is a methodology —
+here, a domain language for specifying controlled methods — rather than
+results produced by running one. The prose, the labelled figures, and
+the compiled-plan table are produced through the same auditable custody
+chain every exemplar in this template uses: tested functions in
+<code>src/</code>, a thin analysis script, and
+generated-variable-injected, multi-format rendering.</p>
+<h2 id="why-a-methods-paper-needs-its-own-dsl">Why a methods paper needs
+its own DSL</h2>
+<p>A methods section in ordinary prose is ambiguous by construction:
+“add 10 mL of water, then mix” admits multiple readings of order, units,
+and what “mix” means operationally. BPL [bpl2026] makes the case for
+laboratory protocols directly: free-text instructions admit multiple
+interpretations, unit errors and reagent mismatches surface only at the
+bench, and re-executing a protocol on a different operator or instrument
+introduces silent variation. Fowler frames the general remedy as a
+<strong>domain-specific language</strong> [fowler2010dsl]: a small,
+purpose-built notation whose vocabulary is restricted exactly to the
+concepts the domain needs, so that what can be written down is exactly
+what is intended.</p>
+<h2
+id="what-this-exemplar-borrows-from-bpl-and-what-it-generalizes">What
+this exemplar borrows from BPL, and what it generalizes</h2>
+<p>BPL’s architecture is a compiler pipeline — parse, semantic check,
+lower, schedule, execute, export — over a biology-native type system
+(units, dimensional analysis, MW-aware concentration), staged validation
+gates, and deterministic compilation with a stable plan hash. Three
+design choices carry over directly into
+<code>src/methods_dsl/</code>:</p>
+<ol type="1">
+<li><strong>Intent over instruction.</strong> BPL users write high-level
+intents (<code>transfer</code>, <code>add_reagent</code>,
+<code>incubate</code>); a compiler lowers them to backend-specific
+primitives. <code>src/methods_dsl/vocabulary.py</code>’s
+<code>StepKind</code> enum is the same idea, generalized:
+<code>TRANSFER</code>/<code>ADD</code>/<code>MIX</code> name
+<em>what</em> happens, never <em>how</em> a particular backend performs
+it.</li>
+<li><strong>Dimensional safety.</strong> BPL’s type system catches
+<code>mL + g</code> at compile time, not at the bench.
+<code>src/methods_dsl/units.py</code> implements the same guarantee with
+a small <code>Dimension</code>/<code>Quantity</code> system rather than
+a full unit library.</li>
+<li><strong>Deterministic compilation.</strong> Same source, same
+options, same plan hash.
+<code>src/methods_dsl/compiler.py::compile_method</code> reproduces this
+with a canonical-JSON SHA-256 hash over a Kahn’s-algorithm
+[kahn1962topological] schedule.</li>
+</ol>
+<p>What this exemplar does <strong>not</strong> carry over is BPL’s text
+grammar and parser: a <code>Method</code> here is constructed directly
+as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>),
+not parsed from <code>.bpl</code> source. This keeps the DSL’s
+discipline in its typed, validated shape rather than in new concrete
+syntax — appropriate for a template exemplar’s scope — while the
+controlled vocabulary, dimensional safety, and deterministic compilation
+generalize unchanged from wet-lab protocols to any controlled procedure,
+demonstrated in [sec:results] by one wet-lab-flavored method and one
+instrument-calibration method.</p>
+<h2 id="template-architecture-context">Template architecture
+context</h2>
+<p>The project sits on the repository’s three pillars:</p>
+<ol type="1">
+<li><strong><code>src/methods_dsl/</code> library</strong>: pure,
+side-effect-free dataclasses and functions — no plotting, no file I/O,
+and (with one declared logging exception) no <code>infrastructure</code>
+imports. This purity is what makes the library forkable and trivially
+testable.</li>
+<li><strong><code>tests/</code> framework</strong>: a zero-mock suite
+that exercises every gate, the compiler, and the exporters against real
+<code>Method</code> fixtures covering both the success path and every
+gate-failure mode.</li>
+<li><strong><code>docs/</code> knowledge base</strong>: the
+correspondence with BPL’s pipeline, the testing philosophy, and the
+operational rules that govern agents editing this tree.</li>
+</ol>
+<h2 id="the-worked-examples">The worked examples</h2>
+<p>We specify two methods with <code>all_example_methods()</code>
+(<code>src/methods_dsl/examples_methods.py</code>):
+<code>PBSPreparation</code>, an original — not copied from BPL’s shipped
+examples — manual bench preparation in BPL’s own domain, and
+<code>SensorCalibrationSweep</code>, a non-biology controlled procedure
+mixing automated measurement with a human sign-off step. The second
+example exists specifically to demonstrate that the DSL’s vocabulary
+generalizes beyond wet-lab protocols, as [sec:introduction] claims.</p>
+<h2 id="readers-guide-to-the-manuscript">Reader’s guide to the
+manuscript</h2>
+<ul>
+<li><strong>[sec:methodology]</strong> ties each pipeline stage to its
+module in <code>src/methods_dsl/</code>.</li>
+<li><strong>[sec:results]</strong> is artifact-centric: every reported
+number names the function or report file that produced it.</li>
+<li><strong>[sec:experimental_setup]</strong> lists the controlled
+vocabulary and software environment.</li>
+<li><strong>[sec:reproducibility]</strong> records the artifact
+inventory and the exact commands to regenerate everything.</li>
+<li><strong>[sec:scope]</strong> states scope and related work so the
+exemplar is not mistaken for a general-purpose protocol-execution
+system.</li>
+</ul>
+</main>
+</body>
+</html>

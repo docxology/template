@@ -31,7 +31,8 @@ All 9 figures (8 content + 1 cover) &
 \breaktt{uv\ run\ pytest\ …\ -\/-cov-fail-under=90} & CI + local pre-push
 gate \\
 Combined PDF & full project pipeline, Stage 6 (4-pass xelatex + bibtex)
-& \texttt{pdftotext} scan for \texttt{??} and page-scale raster read \\
+& \texttt{pdftotext} scan for unresolved-reference markers and
+page-scale raster read \\
 \bottomrule\noalign{}
 \end{longtable}
 }

@@ -1,0 +1,10 @@
+\frametitle{Discussion}
+\protect\phantomsection\label{discussion}
+The results confirm the pipeline end to end: both worked examples pass
+every staged gate, compile deterministically, and produce a stable plan
+hash across repeated builds. The same \breaktt{src/methods\_dsl/}
+functions back the analysis script, the test suite, and this manuscript
+--- which is the architectural point of the exemplar. Because every
+number here is produced by a tested function and regenerated on demand,
+the prose describes structure and provenance rather than transcribing
+values that would drift the moment the example methods changed.

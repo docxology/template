@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:introduction">Introduction</h1>
 <p>This <code>template_eda_notebook</code> serves as the
 exploratory-data-analysis exemplar for the <a
@@ -233,33 +237,25 @@ govern agents editing this tree.</li>
 <h2 id="the-dataset">The dataset</h2>
 <p>We analyze a small synthetic cohort of subject measurements — height
 (cm), weight (kg), and resting heart rate (bpm) across three groups —
-generated with a fixed seed so every statistic in <span class="citation"
-data-cites="sec:results">[@sec:results]</span> is reproducible. The data
-is shaped so that weight depends positively on height (a strong,
-easy-to-see correlation) while resting heart rate is only weakly
-related, and a few cells are left blank to exercise the missing-data
-path honestly.</p>
+generated with a fixed seed so every statistic in [sec:results] is
+reproducible. The data is shaped so that weight depends positively on
+height (a strong, easy-to-see correlation) while resting heart rate is
+only weakly related, and a few cells are left blank to exercise the
+missing-data path honestly.</p>
 <h2 id="readers-guide-to-the-manuscript">Reader’s guide to the
 manuscript</h2>
 <ul>
-<li><strong><span class="citation"
-data-cites="sec:methodology">[@sec:methodology]</span></strong> ties
-each EDA step to its function in <code>src/eda/</code>.</li>
-<li><strong><span class="citation"
-data-cites="sec:results">[@sec:results]</span></strong> is
-figure-centric: each panel names the figure-data preparer that produced
-it.</li>
-<li><strong><span class="citation"
-data-cites="sec:experimental_setup">[@sec:experimental_setup]</span></strong>
-lists the dataset schema and software environment.</li>
-<li><strong><span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span></strong>
-records the artifact inventory and the exact commands to regenerate
-everything.</li>
-<li><strong><span class="citation"
-data-cites="sec:scope">[@sec:scope]</span></strong> states scope and
-related literature so the exemplar is not mistaken for a general-purpose
-EDA toolkit.</li>
+<li><strong>[sec:methodology]</strong> ties each EDA step to its
+function in <code>src/eda/</code>.</li>
+<li><strong>[sec:results]</strong> is figure-centric: each panel names
+the figure-data preparer that produced it.</li>
+<li><strong>[sec:experimental_setup]</strong> lists the dataset schema
+and software environment.</li>
+<li><strong>[sec:reproducibility]</strong> records the artifact
+inventory and the exact commands to regenerate everything.</li>
+<li><strong>[sec:scope]</strong> states scope and related literature so
+the exemplar is not mistaken for a general-purpose EDA toolkit.</li>
 </ul>
+</main>
 </body>
 </html>

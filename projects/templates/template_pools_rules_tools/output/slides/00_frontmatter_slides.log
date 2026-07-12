@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:23
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 15:31
 entering extended mode
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_t
@@ -1594,48 +1594,9 @@ ols/output/slides/00_frontmatter_slides.vrb) [4
 
 
 (/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
-ols/output/slides/00_frontmatter_slides.vrb
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 5.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 5.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 5
-.
+ols/output/slides/00_frontmatter_slides.vrb) [6
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
-File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 5.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 5.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 5.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 5.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 5.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 5.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 5.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
-File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 5.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
-File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-)) [6
-
-]
-[7
+] [7
 
 ]
 \openout4 = `00_frontmatter_slides.vrb'.
@@ -1669,13 +1630,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 31060 strings out of 468168
- 625969 string characters out of 5432815
- 1182585 words of memory out of 5000000
- 59230 multiletter control sequences out of 15000+600000
- 631248 words of font info for 71 fonts, out of 8000000 for 9000
+ 30942 strings out of 468168
+ 622687 string characters out of 5432815
+ 1182591 words of memory out of 5000000
+ 59146 multiletter control sequences out of 15000+600000
+ 628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1114b,612s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1114b,557s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
 te_pools_rules_tools/output/slides/00_frontmatter_slides.pdf (9 pages).

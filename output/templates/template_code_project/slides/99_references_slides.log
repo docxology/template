@@ -1,6 +1,5 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  7 JUL 2026 19:12
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  11 JUL 2026 21:04
 entering extended mode
- \write18 enabled.
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_code_project/
 output/slides/99_references_slides.tex
@@ -1338,37 +1337,40 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
+\c@proposition=\count388
+\c@hypothesis=\count389
+
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count388
+\BKM@id=\count390
 ))
 (/Users/4d/Documents/GitHub/template/projects/templates/template_code_project/o
 utput/slides/99_references_slides.aux)
 \openout1 = `99_references_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 168.
+LaTeX Font Info:    ... okay on input line 168.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1404,7 +1406,7 @@ LaTeX Font Info:    ... okay on input line 165.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 165.
+Package hyperref Info: Link coloring OFF on input line 168.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -1432,26 +1434,26 @@ Dictionary: translator-theorem-dictionary, Language: English
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  TU/latinmodern-math.otf(1)/m/n --> TU/lmr/m/n on input 
-line 165.
+line 168.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 165.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 168.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 165.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 168.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 165.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 168.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 165.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 168.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 165.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 168.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 165.
-LaTeX Info: Redefining \microtypecontext on input line 165.
-Package microtype Info: Applying patch `item' on input line 165.
-Package microtype Info: Applying patch `toc' on input line 165.
-Package microtype Info: Applying patch `eqnum' on input line 165.
-Package microtype Info: Applying patch `footnote' on input line 165.
-Package microtype Info: Applying patch `verbatim' on input line 165.
-LaTeX Info: Redefining \microtypesetup on input line 165.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 168.
+LaTeX Info: Redefining \microtypecontext on input line 168.
+Package microtype Info: Applying patch `item' on input line 168.
+Package microtype Info: Applying patch `toc' on input line 168.
+Package microtype Info: Applying patch `eqnum' on input line 168.
+Package microtype Info: Applying patch `footnote' on input line 168.
+Package microtype Info: Applying patch `verbatim' on input line 168.
+LaTeX Info: Redefining \microtypesetup on input line 168.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1491,10 +1493,10 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29671 strings out of 468168
- 596681 string characters out of 5432815
- 1145915 words of memory out of 5000000
- 57900 multiletter control sequences out of 15000+600000
+ 29687 strings out of 468168
+ 596899 string characters out of 5432815
+ 1146085 words of memory out of 5000000
+ 57916 multiletter control sequences out of 15000+600000
  628397 words of font info for 52 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1108b,401s stack positions out of 10000i,1000n,20000p,200000b,200000s

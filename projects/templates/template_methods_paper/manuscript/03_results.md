@@ -1,8 +1,9 @@
 # Results {#sec:results}
 
 This section reports the compiled plans for both worked example methods.
-Every number below is produced by the thin analysis script
-([`scripts/methods_analysis.py`](https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/scripts/methods_analysis.py)),
+Every number below is produced by the
+[methods analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/scripts/methods_analysis.py)
+(`scripts/methods_analysis.py`),
 which calls `run_all_gates` and `compile_method` from `src/methods_dsl/` and
 writes `output/data/compiled_plans.json`, `output/reports/gate_report.json`,
 and `output/reports/trust_chain_report.json`. Running the script regenerates

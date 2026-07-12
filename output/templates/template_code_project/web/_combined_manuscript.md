@@ -104,7 +104,7 @@ where $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is a continuously differentiable 
 
 Rather than existing as isolated scripts, this project extensively leverages the `infrastructure` layer:
 
-- **Scientific Utilities**: Utilizing `infrastructure.scientific.stability` and `infrastructure.scientific.benchmarking` to guarantee numerical boundaries and performance scaling.
+- **Scientific Utilities**: Utilizing `infrastructure.scientific.stability` and `infrastructure.scientific.benchmarking` to check numerical boundaries and exercise runtime performance diagnostics without pinning host-dependent timings.
 - **Hermetic Validation**: Deploying `infrastructure.validation` components (`markdown_validator`, `output_validator`) to ensure generated artifacts are structurally valid and traceable.
 - **Reporting & Rendering**: Employing `infrastructure.rendering.pdf_renderer` and `infrastructure.reporting.executive_reporter` to automatically transform code outputs into this finalized manuscript.
 
@@ -178,7 +178,7 @@ Rather than writing ad-hoc validation code, the project imports `infrastructure.
 
 ### Performance Benchmarking
 
-Computational complexity is evaluated not just theoretically, but empirically via [`infrastructure.scientific.benchmarking.benchmark_function`](https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py). This module captures high-resolution execution timings and memory footprints across dimensionality sweeps, guaranteeing that the $O(n)$ space-time complexity predictions hold true on the host architecture.
+The analysis exercises [`infrastructure.scientific.benchmarking.benchmark_function`](https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py) as a runtime diagnostic. Host-dependent timing and memory observations are logged but excluded from tracked evidence. The canonical report records fixed inputs and exact objective values, while the dimensional figure reports deterministic convergence iterations and the proxy $d \times \text{iterations}$; neither surface claims that one host run proves an asymptotic bound.
 
 ## Convergence Analysis
 
@@ -377,9 +377,9 @@ The algorithm demonstrates efficient performance for small-scale optimization pr
 
 ### Performance Benchmarking
 
-[@fig:benchmark] shows how `gradient_descent()` scales with problem dimension by running the optimizer on identity-Hessian quadratics of dimension $d \in \{1, 2, 5, 10, 20, 50\}$.
+[@fig:benchmark] shows deterministic computational work and convergence iterations for `gradient_descent()` on identity-Hessian quadratics of dimension $d \in \{1, 2, 5, 10, 20, 50\}$.
 
-![Dimensional scaling from `generate_benchmark_visualization()`. Dimensions $d \in \{1, 2, 5, 10, 20, 50\}$ run on identity-Hessian quadratics with $\alpha=0.1$ and gradient tolerance $10^{-10}$ (both hardcoded in the script for benchmark stability). **Left**: mean wall-clock time per `gradient_descent()` call (μs). The flat regime at $d \leq 20$ reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at $d=50$ shows the $O(d)$ matrix-vector cost beginning to dominate. **Right**: iterations-to-convergence rises only modestly across two decades of $d$ ($219 \to 238$). This near-invariance is expected: $\kappa(I_d)=1$ regardless of dimension, so the contraction factor $\rho=|1-\alpha|=0.9$ is identical for every $d$, and only the per-coordinate residual norm grows mildly.](../figures/performance_benchmark.png){#fig:benchmark}
+![Deterministic dimensional benchmark from `generate_benchmark_visualization()`. Dimensions $d \in \{1, 2, 5, 10, 20, 50\}$ run on identity-Hessian quadratics with $\alpha=0.1$ and gradient tolerance $10^{-10}$. **Left**: the implementation-independent work proxy $d \times \text{iterations}$, proportional to scalar elements processed by the dense matrix-vector update. **Right**: exact iterations to convergence. Wall-clock microseconds are intentionally excluded because they vary with hardware and host load. The similar iteration counts are expected because $\kappa(I_d)=1$ and the contraction factor $\rho=|1-\alpha|=0.9$ is dimension-independent.](../figures/performance_benchmark.png){#fig:benchmark}
 
 ### Numerical Stability Analysis
 
@@ -521,14 +521,14 @@ To validate robustness, the optimizer is exercised across a grid of 8 starting p
 
 ## Dimensional Scaling
 
-Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. Representative single-call execution time from the last benchmark run: **1.9 μs** (recorded in `output/reports/performance_benchmark.json`).
+Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. The tracked `output/reports/performance_benchmark.json` records fixed inputs, exact objective values, and validation checks. Wall-clock timing is retained only as a runtime diagnostic because host load and hardware make microsecond values unsuitable as pinned reproducibility claims.
 
 ## Computational Environment
 
 - **Python**: 3.12.13
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-07-08T02:12:25Z
+- **Generated**: 2026-07-12T04:04:24Z
 
 ## Pipeline ordering
 
@@ -567,7 +567,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `7182b437c586a680`     |
+| Config hash (SHA-256, truncated)  | `292643985e5af3f2`     |
 | Paper version                     | 2.5.2    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
@@ -580,10 +580,10 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
-| Publication-quality figures        | 8   |
+| Publication-quality figures        | 9   |
 | Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 9   |
-| **Total artifacts**                | **22** |
+| Analysis reports                   | 19   |
+| **Total artifacts**                | **33** |
 
 ## Numerical Validation Summary
 
@@ -605,7 +605,7 @@ The stability analysis tested 48 parameter combinations (8 starting points $\tim
 
 ### Benchmark Demonstration
 
-This exemplar also demonstrates `infrastructure.benchmark`. The thin orchestrator `scripts/04_benchmark_stage.py` calls `src/benchmark_support.py`, which times the pure `quadratic_function` across a fixed set of input sizes (deterministic seed, no network) and turns the timing facts into boolean rubric checks. Those checks are scored through the shared `infrastructure.benchmark.score_rubric` against a weighted `RubricSet`, and the result is rendered with `scores_to_markdown` into `output/reports/benchmark_report.json` (plus an optional timing figure). This keeps the benchmark API exercised by a real exemplar, not by infrastructure tests alone.
+This exemplar also demonstrates `infrastructure.benchmark`. The thin orchestrator `scripts/04_benchmark_stage.py` calls `src/benchmark_support.py`, which evaluates the pure `quadratic_function` across fixed seeded inputs and turns reproducible completion, finiteness, and output-stability facts into boolean rubric checks. Those checks are scored through `infrastructure.benchmark.score_rubric` against a weighted `RubricSet`, then rendered with `scores_to_markdown` into the byte-stable `output/reports/benchmark_report.json` with a deterministic objective-value figure. Real timing still executes as a runtime diagnostic, but it is not serialized into tracked evidence.
 
 ## Madlib Injection Verification
 

@@ -32,14 +32,14 @@ To validate robustness, the optimizer is exercised across a grid of 8 starting p
 
 ## Dimensional Scaling
 
-Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. Representative single-call execution time from the last benchmark run: **1.9 μs** (recorded in `output/reports/performance_benchmark.json`).
+Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}$, from the scalar case ($d = 1$) to moderate dimensionality ($d = 50$), using identity-Hessian quadratics to isolate algorithmic scaling from problem conditioning effects. The tracked `output/reports/performance_benchmark.json` records fixed inputs, exact objective values, and validation checks. Wall-clock timing is retained only as a runtime diagnostic because host load and hardware make microsecond values unsuitable as pinned reproducibility claims.
 
 ## Computational Environment
 
 - **Python**: 3.12.13
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-07-08T02:12:25Z
+- **Generated**: 2026-07-12T04:04:24Z
 
 ## Pipeline ordering
 

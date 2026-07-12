@@ -261,17 +261,18 @@ named constraint:
 \AttributeTok{  }\FunctionTok{applies\_to}\KeywordTok{:}\AttributeTok{ }\StringTok{"projects/*/src/"}
 \AttributeTok{  }\FunctionTok{enforcement}\KeywordTok{:}\AttributeTok{ fail\_on\_violation}
 \AttributeTok{  }\FunctionTok{constraints}\KeywordTok{:}
-\AttributeTok{    }\FunctionTok{minimum\_line\_coverage}\KeywordTok{:}\AttributeTok{ }\DecValTok{90}
-\AttributeTok{    }\FunctionTok{minimum\_branch\_coverage}\KeywordTok{:}\AttributeTok{ }\DecValTok{80}
+\AttributeTok{    }\FunctionTok{infrastructure}\KeywordTok{:}\AttributeTok{ }\DecValTok{60}
+\AttributeTok{    }\FunctionTok{project\_src}\KeywordTok{:}\AttributeTok{ }\DecValTok{90}
+\AttributeTok{    }\FunctionTok{public\_api}\KeywordTok{:}\AttributeTok{ }\DecValTok{95}
 \end{Highlighting}
 \end{Shaded}
 
 The \breaktt{enforcement:\ fail\_on\_violation} field signals that a
 pipeline must halt and report when this rule is violated. Strong rules
 are suitable for invariants that, if broken, indicate a genuine defect
-rather than a style preference: coverage below 90\% means tests are
-missing; a manuscript section without an abstract means the document is
-incomplete.
+rather than a style preference: coverage below the source-declared
+threshold means tests are missing; a manuscript section without an
+abstract means the document is incomplete.
 
 \begin{figure}
 \centering
@@ -301,8 +302,8 @@ Constraint
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-\breaktt{strong/coverage-gate.yaml} & Minimum line coverage 90\%, branch
-coverage 80\% for \texttt{src/} \\
+\breaktt{strong/coverage-gate.yaml} & Minimum coverage: infrastructure
+60\%, project \texttt{src/} 90\%, public API 95\% \\
 \breaktt{strong/module-structure.yaml} & Required directory layout:
 \texttt{src/}, \texttt{tests/}, \texttt{scripts/},
 \texttt{manuscript/} \\

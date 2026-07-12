@@ -13,8 +13,8 @@
 | **Version** | 1.0.0 |
 | **Date** | 2026-07-05 |
 | **License** | CC-BY-4.0 |
-| **Repository** | [docxology/template](https://github.com/docxology/template) |
-| **DOI** | 10.5281/zenodo.template_pools_rules_tools |
+| **Repository** | [Public template repository](https://github.com/docxology/template) |
+| **DOI** | 10.5281/zenodo.21298888 |
 | **Keywords** | research software engineering, monorepo architecture, reproducibility, fonds, governance rules, tool discovery, graceful degradation |
 
 ---
@@ -29,7 +29,7 @@ The author thanks the Active Inference Institute for hosting the public template
 
 ## Data Availability
 
-All source code, configuration files, and exemplar resources described in this paper are available in the public template repository at <https://github.com/docxology/template> under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
+All source code, configuration files, and exemplar resources described in this paper are available in the [public template repository](https://github.com/docxology/template) under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
 
 ## Competing Interests
 
@@ -45,6 +45,6 @@ This exemplar targets full computational reproducibility for every quantitative 
 | Manuscript variable tokens | `scripts/03_generate_manuscript.py` | Rendered PDF contains no unresolved `{{...}}` tokens |
 | All 9 figures (8 content + 1 cover) | `scripts/05_generate_figures.py` | `tests/test_figures.py` (per-function file-existence checks) |
 | ≥90% `src/` line coverage | `uv run pytest … --cov-fail-under=90` | CI + local pre-push gate |
-| Combined PDF | full project pipeline, Stage 6 (4-pass xelatex + bibtex) | `pdftotext` scan for `??` and page-scale raster read |
+| Combined PDF | full project pipeline, Stage 6 (4-pass xelatex + bibtex) | `pdftotext` scan for unresolved-reference markers and page-scale raster read |
 
 A reader who clones the repository and runs the five commands above, in order, reproduces every number and image in this document without manual intervention. Every quantitative claim in this document — fond/rule/tool counts, test counts, coverage percentages, and both bar-chart figures (@fig:counts, @fig:pipeline) — is generated from the same `run_integration_demo()` call at render time. None of these numbers are hand-typed; a `test_reflects_changed_integration_result` negative control in `tests/test_manuscript_variables.py` proves the token-generation function actually tracks its source rather than emitting a fixed constant.

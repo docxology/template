@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:22
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 15:23
 entering extended mode
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_eda_notebook/
@@ -1639,11 +1639,11 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )) [10
 
 ]
-Underfull \vbox (badness 1112) detected at line 243
+Underfull \vbox (badness 1112) detected at line 242
  []
 
 
-Overfull \vbox (207.94336pt too high) detected at line 243
+Overfull \vbox (207.94336pt too high) detected at line 242
  []
 
 [11
@@ -1706,7 +1706,7 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  31224 strings out of 468168
  630636 string characters out of 5432815
- 1172048 words of memory out of 5000000
+ 1172054 words of memory out of 5000000
  59370 multiletter control sequences out of 15000+600000
  634158 words of font info for 90 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

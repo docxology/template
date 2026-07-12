@@ -13,7 +13,7 @@
 | **Version** | 1.0.0 |
 | **Date** | 2026-07-05 |
 | **License** | CC-BY-4.0 |
-| **Repository** | [docxology/template](https://github.com/docxology/template) |
+| **Repository** | [Public template repository](https://github.com/docxology/template) |
 | **DOI** | 10.5281/zenodo.21298888 |
 | **Keywords** | research software engineering, monorepo architecture, reproducibility, fonds, governance rules, tool discovery, graceful degradation |
 
@@ -29,7 +29,7 @@ The author thanks the Active Inference Institute for hosting the public template
 
 ## Data Availability
 
-All source code, configuration files, and exemplar resources described in this paper are available in the public template repository at <https://github.com/docxology/template> under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
+All source code, configuration files, and exemplar resources described in this paper are available in the [public template repository](https://github.com/docxology/template) under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
 
 ## Competing Interests
 
@@ -495,13 +495,13 @@ Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @
 | `scripts/03_generate_manuscript.py` | Write `output/data/manuscript_variables.json` | JSON file |
 | `scripts/04_validate_strong_rules.py` | Semantic evaluation of strong-rule constraints (@sec:rules) against this project's own tree | Console report, non-zero exit on violation |
 | `scripts/05_generate_figures.py` | Render all 8 content figures plus the cover illustration | 9 PNG files under `manuscript/figures/` |
-| `scripts/z_generate_manuscript_variables.py` | Hydrate `{{TOKEN}}` values and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
+| `scripts/z_generate_manuscript_variables.py` | Hydrate declared manuscript-variable placeholders and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
 
 ![The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
 
 ![Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.](figures/status_dashboard.png){#fig:pipeline width=85%}
 
-@fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every `{{TOKEN}}` and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
+@fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every declared placeholder and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
 
 Each script imports all business logic from `src/` and stays free of computation of its own — even `01_validate_sources.py`, the largest entry point in this project, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/fonds_reader.py`, `src/rules_applier.py`, and `src/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` under the configured project coverage gate, while the scripts themselves remain readable without a dedicated test suite of their own.
 
@@ -543,7 +543,7 @@ This paper has presented `template_pools_rules_tools`, a meta-project exemplar d
 
 2. **A typed manifest convention** (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that makes resource capabilities explicit and checkable at pipeline initialisation time, shifting failure detection from runtime to startup — a significant improvement for reproducibility [@Wilson2014best].
 
-3. **A token injection pipeline** that links manuscript prose to integration runtime statistics through `{{UPPERCASE_KEY}}` tokens, ensuring that quantitative claims in the manuscript are always generated by the pipeline rather than authored manually. In the current run this covered 3 fonds, 2 rule sets, 4 tools, and 8 bibliography entries.
+3. **A token injection pipeline** that links manuscript prose to integration runtime statistics through doubled-brace, uppercase-key placeholders, ensuring that quantitative claims in the manuscript are always generated by the pipeline rather than authored manually. In the current run this covered 3 fonds, 2 rule sets, 4 tools, and 8 bibliography entries.
 
 4. **A three-level resilience design** — resource absence, schema malformation, and script absence — that allows the pipeline to degrade gracefully and report failures informatively rather than crashing, consistent with best practices for robust research software [@Taschuk2017ten].
 

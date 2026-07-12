@@ -2,13 +2,13 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "1.38",
-      "total_size_bytes": 1450873,
+      "file_count": 11,
+      "size_mb": "1.50",
+      "total_size_bytes": 1577805,
       "largest_files": [
         {
           "name": "template_pools_rules_tools_combined.pdf",
-          "size_mb": "1.11",
+          "size_mb": "1.21",
           "path": "pdf/template_pools_rules_tools_combined.pdf"
         },
         {
@@ -24,7 +24,7 @@
       ],
       "extensions": {
         ".md": 1,
-        ".log": 2,
+        ".log": 3,
         ".aux": 1,
         ".pdf": 1,
         ".blg": 1,
@@ -37,8 +37,8 @@
     "web": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "0.28",
-      "total_size_bytes": 298327,
+      "size_mb": "0.29",
+      "total_size_bytes": 300240,
       "largest_files": [
         {
           "name": "index.html",
@@ -65,23 +65,23 @@
     "slides": {
       "exists": true,
       "file_count": 65,
-      "size_mb": "1.89",
-      "total_size_bytes": 1982068,
+      "size_mb": "1.97",
+      "total_size_bytes": 2070921,
       "largest_files": [
         {
           "name": "06_integration_slides.pdf",
-          "size_mb": "0.43",
+          "size_mb": "0.49",
           "path": "slides/06_integration_slides.pdf"
         },
         {
           "name": "02_introduction_slides.pdf",
-          "size_mb": "0.17",
+          "size_mb": "0.18",
           "path": "slides/02_introduction_slides.pdf"
         },
         {
-          "name": "03_pools_slides.pdf",
+          "name": "05_tools_slides.pdf",
           "size_mb": "0.17",
-          "path": "slides/03_pools_slides.pdf"
+          "path": "slides/05_tools_slides.pdf"
         }
       ],
       "extensions": {
@@ -97,35 +97,36 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.96",
-      "total_size_bytes": 1010510,
+      "file_count": 10,
+      "size_mb": "1.06",
+      "total_size_bytes": 1116300,
       "largest_files": [
         {
-          "name": "architecture_overview.png",
-          "size_mb": "0.14",
-          "path": "figures/architecture_overview.png"
-        },
-        {
           "name": "resilience_layers.png",
-          "size_mb": "0.13",
+          "size_mb": "0.16",
           "path": "figures/resilience_layers.png"
         },
         {
-          "name": "fond_taxonomy.png",
-          "size_mb": "0.12",
-          "path": "figures/fond_taxonomy.png"
+          "name": "architecture_overview.png",
+          "size_mb": "0.15",
+          "path": "figures/architecture_overview.png"
+        },
+        {
+          "name": "pipeline_flow.png",
+          "size_mb": "0.13",
+          "path": "figures/pipeline_flow.png"
         }
       ],
       "extensions": {
-        ".png": 9
+        ".png": 9,
+        ".json": 1
       }
     },
     "data": {
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 340,
+      "total_size_bytes": 356,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
@@ -139,29 +140,32 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 14,
-      "size_mb": "0.12",
-      "total_size_bytes": 129502,
+      "file_count": 26,
+      "size_mb": "0.17",
+      "total_size_bytes": 182863,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.05",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.04",
+          "size_mb": "0.02",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "stage-07-output-validation.json",
+          "name": "pipeline_report.json",
           "size_mb": "0.01",
-          "path": "reports/snapshots/stage-07-output-validation.json"
+          "path": "reports/pipeline_report.json"
         }
       ],
       "extensions": {
-        ".json": 12,
-        ".md": 2
+        ".json": 16,
+        ".jsonl": 1,
+        ".txt": 3,
+        ".md": 5,
+        ".html": 1
       }
     },
     "simulations": {
@@ -197,50 +201,50 @@
       }
     }
   },
-  "total_files": 111,
-  "total_size_mb": 4.646097183227539,
+  "total_files": 125,
+  "total_size_mb": 5.0055036544799805,
   "largest_files": [
     {
       "name": "template_pools_rules_tools_combined.pdf",
-      "size_mb": "1.11",
+      "size_mb": "1.21",
       "category": "pdf",
       "path": "pdf/template_pools_rules_tools_combined.pdf"
     },
     {
       "name": "06_integration_slides.pdf",
-      "size_mb": "0.43",
+      "size_mb": "0.49",
       "category": "slides",
       "path": "slides/06_integration_slides.pdf"
     },
     {
       "name": "02_introduction_slides.pdf",
-      "size_mb": "0.17",
+      "size_mb": "0.18",
       "category": "slides",
       "path": "slides/02_introduction_slides.pdf"
     },
     {
-      "name": "03_pools_slides.pdf",
+      "name": "05_tools_slides.pdf",
       "size_mb": "0.17",
       "category": "slides",
-      "path": "slides/03_pools_slides.pdf"
-    },
-    {
-      "name": "architecture_overview.png",
-      "size_mb": "0.14",
-      "category": "figures",
-      "path": "figures/architecture_overview.png"
+      "path": "slides/05_tools_slides.pdf"
     },
     {
       "name": "resilience_layers.png",
-      "size_mb": "0.13",
+      "size_mb": "0.16",
       "category": "figures",
       "path": "figures/resilience_layers.png"
     },
     {
-      "name": "fond_taxonomy.png",
-      "size_mb": "0.12",
+      "name": "architecture_overview.png",
+      "size_mb": "0.15",
       "category": "figures",
-      "path": "figures/fond_taxonomy.png"
+      "path": "figures/architecture_overview.png"
+    },
+    {
+      "name": "pipeline_flow.png",
+      "size_mb": "0.13",
+      "category": "figures",
+      "path": "figures/pipeline_flow.png"
     },
     {
       "name": "index.html",
@@ -255,27 +259,27 @@
       "path": "pdf/_combined_manuscript.tex"
     },
     {
-      "name": "_combined_manuscript.log",
-      "size_mb": "0.07",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.log"
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.3836603164672852,
-    "web": 0.28450679779052734,
-    "slides": 1.8902473449707031,
-    "figures": 0.9636974334716797,
-    "data": 0.000324249267578125,
-    "reports": 0.12350273132324219,
+    "pdf": 1.5047121047973633,
+    "web": 0.2863311767578125,
+    "slides": 1.9749841690063477,
+    "figures": 1.0645866394042969,
+    "data": 0.000339508056640625,
+    "reports": 0.1743917465209961,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.0001583099365234375
   },
   "file_counts_by_type": {
-    ".md": 4,
-    ".log": 11,
+    ".md": 7,
+    ".log": 12,
     ".aux": 9,
     ".pdf": 9,
     ".blg": 1,
@@ -284,11 +288,13 @@
     ".toc": 9,
     ".bbl": 1,
     ".ico": 1,
-    ".html": 9,
+    ".html": 10,
     ".snm": 8,
     ".vrb": 8,
     ".nav": 8,
     ".png": 9,
-    ".json": 13
+    ".json": 18,
+    ".jsonl": 1,
+    ".txt": 3
   }
 }

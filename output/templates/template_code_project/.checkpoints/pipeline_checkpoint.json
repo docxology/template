@@ -1,12 +1,12 @@
 {
   "pipeline_start_time": 1783476707.5200992,
-  "last_stage_completed": 6,
+  "last_stage_completed": 7,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
       "duration": 0.009181976318359375,
-      "timestamp": "2026-07-07 19:13:14",
+      "timestamp": "2026-07-07 19:13:15",
       "completed": true,
       "status": "passed",
       "context": {
@@ -25,7 +25,7 @@
       "name": "Environment Setup",
       "exit_code": 0,
       "duration": 0.3150019645690918,
-      "timestamp": "2026-07-07 19:13:14",
+      "timestamp": "2026-07-07 19:13:15",
       "completed": true,
       "status": "passed",
       "context": {
@@ -44,7 +44,7 @@
       "name": "Project Tests",
       "exit_code": 0,
       "duration": 32.27626609802246,
-      "timestamp": "2026-07-07 19:13:14",
+      "timestamp": "2026-07-07 19:13:15",
       "completed": true,
       "status": "passed",
       "context": {
@@ -63,7 +63,7 @@
       "name": "Project Analysis",
       "exit_code": 0,
       "duration": 5.062090158462524,
-      "timestamp": "2026-07-07 19:13:14",
+      "timestamp": "2026-07-07 19:13:15",
       "completed": true,
       "status": "passed",
       "context": {
@@ -82,7 +82,7 @@
       "name": "PDF Rendering",
       "exit_code": 0,
       "duration": 48.581787109375,
-      "timestamp": "2026-07-07 19:13:14",
+      "timestamp": "2026-07-07 19:13:15",
       "completed": true,
       "status": "passed",
       "context": {
@@ -101,7 +101,7 @@
       "name": "Output Validation",
       "exit_code": 0,
       "duration": 0.9633259773254395,
-      "timestamp": "2026-07-07 19:13:14",
+      "timestamp": "2026-07-07 19:13:15",
       "completed": true,
       "status": "passed",
       "context": {
@@ -115,8 +115,27 @@
         "error_message": "",
         "exception_type": ""
       }
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.5701272487640381,
+      "timestamp": "2026-07-07 19:13:15",
+      "completed": true,
+      "status": "passed",
+      "context": {
+        "stage_num": 7,
+        "stage_name": "Copy Outputs",
+        "success": true,
+        "exit_code": 0,
+        "hitl_pause": false,
+        "stage_completed": true,
+        "lessons": [],
+        "error_message": "",
+        "exception_type": ""
+      }
     }
   ],
   "total_stages": 7,
-  "checkpoint_time": 1783476794.786889
+  "checkpoint_time": 1783476795.391171
 }

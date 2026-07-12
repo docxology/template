@@ -1,0 +1,33 @@
+\frametitle{Relation to results}
+\protect\phantomsection\label{relation-to-results}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Result (\breakseq{[@sec:results]})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Producing function (\breaktt{src/methods\_dsl/})
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Primary inputs
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Compiled-plan summary & \breaktt{compile\_method()} &
+\breaktt{all\_example\_methods()} \\
+Step-count figure & \texttt{len(plan.steps)} per method &
+\breaktt{output/data/compiled\_plans.json} \\
+Gate pass tally & \texttt{run\_all\_gates()} & Each example method \\
+Determinism check & \breaktt{compile\_method()} called twice &
+\breaktt{all\_example\_methods()} \\
+Trust-chain verification & \texttt{append\_record()} /
+\texttt{verify\_chain()} & Demonstration chain in
+\breaktt{scripts/methods\_analysis.py} \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+This table is descriptive documentation only; it is not executed as code
+during the build.

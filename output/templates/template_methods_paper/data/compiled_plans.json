@@ -1,0 +1,16 @@
+[
+  {
+    "method_name": "PBSPreparation",
+    "method_version": "1.0",
+    "plan_hash": "313b9b17de98b637296ee3c1411ad00dc83a14538607ef49772d3761b45e145e",
+    "step_count": 5,
+    "target": "human"
+  },
+  {
+    "method_name": "SensorCalibrationSweep",
+    "method_version": "1.0",
+    "plan_hash": "d89cced19be6e52db2617e60d75ea89d338622ce5db201e040c358796b1a0e4a",
+    "step_count": 4,
+    "target": "automated"
+  }
+]

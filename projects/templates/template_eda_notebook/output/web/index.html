@@ -5,6 +5,7 @@
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Notebook-to-Tested-Source Extraction for Computational Research" />
   <title>Exploratory Data Analysis: A Reproducible Notebook
 Template</title>
   <style>
@@ -265,6 +266,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -289,11 +304,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -424,7 +434,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -433,7 +445,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -443,8 +460,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -871,10 +898,10 @@ code without inferring hidden defaults.</p>
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section presents the exploratory analysis of the shipped
-dataset. Every figure and the summary table are produced by the thin
-analysis script (<a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py"><code>scripts/eda_analysis.py</code></a>),
-which calls the tested figure-data preparers in
+dataset. Every figure and the summary table are produced by the <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py">EDA
+analysis orchestrator</a> (<code>scripts/eda_analysis.py</code>), which
+calls the tested figure-data preparers in
 <code>src/eda/figures.py</code>. Running the script regenerates the
 figures under <code>../figures/</code> and the summary CSV under
 <code>output/data/</code>; the prose below describes what those

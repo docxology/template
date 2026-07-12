@@ -125,6 +125,10 @@ The per-package symbol listings below the
 
 ## Package: `infrastructure.benchmark`
 
+### `BenchmarkCheckResult`
+
+*symbol — defined in `infrastructure.benchmark`*
+
 ### `BenchmarkManifest`
 
 *symbol — defined in `infrastructure.benchmark`*
@@ -555,6 +559,16 @@ build_api_index(src_dir: str) -> list[ApiEntry]
 
 Scan `src_dir` and collect public functions/classes with summaries.
 
+### `build_generated_figure_registry`
+
+*function — defined in `infrastructure.documentation.generated_figure_registry`*
+
+```python
+build_generated_figure_registry(specs: Iterable[FigureSpecLike], generated_paths: Iterable[Path], *, schema_version: str) -> dict[str, object]
+```
+
+Build a deterministic registry after checking every declared figure.
+
 ### `FigureManager`
 
 *class — defined in `infrastructure.documentation.figure_manager`*
@@ -574,6 +588,26 @@ class FigureMetadata
 ```
 
 Metadata for a figure.
+
+### `FigureRegistryError`
+
+*class — defined in `infrastructure.documentation.generated_figure_registry`*
+
+```python
+class FigureRegistryError(ValueError)
+```
+
+Raised when generated figures cannot satisfy their registry contract.
+
+### `FigureSpecLike`
+
+*class — defined in `infrastructure.documentation.generated_figure_registry`*
+
+```python
+class FigureSpecLike(Protocol)
+```
+
+Structural contract for project-owned figure specifications.
 
 ### `generate_markdown_table`
 
@@ -604,6 +638,26 @@ class MarkdownIntegration(manuscript_dir: Path | None=None, figure_manager: Figu
 ```
 
 Integrates figures and references into markdown files.
+
+### `publish_generated_figures`
+
+*function — defined in `infrastructure.documentation.generated_figure_registry`*
+
+```python
+publish_generated_figures(output_dir: Path, specs: Iterable[FigureSpecLike], generated_paths: Iterable[Path], *, schema_version: str) -> list[Path]
+```
+
+Validate, mirror, and register a complete generated figure set.
+
+### `write_generated_figure_registry`
+
+*function — defined in `infrastructure.documentation.generated_figure_registry`*
+
+```python
+write_generated_figure_registry(registry_path: Path, specs: Iterable[FigureSpecLike], generated_paths: Iterable[Path], *, schema_version: str) -> Path
+```
+
+Validate generated files and atomically write their registry JSON.
 
 ## Package: `infrastructure.fonds`
 

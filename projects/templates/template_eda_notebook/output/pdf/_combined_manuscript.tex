@@ -162,17 +162,6 @@
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\ifXeTeX
-\special{pdf:trailerid [ <4ac795f04ed4811b0df5a4fbf6e17ca0> <4ac795f04ed4811b0df5a4fbf6e17ca0> ]}
-\fi
-\ifPDFTeX
-\pdftrailerid{}
-\pdftrailer{/ID [ <4ac795f04ed4811b0df5a4fbf6e17ca0> <4ac795f04ed4811b0df5a4fbf6e17ca0> ]}
-\fi
-\ifLuaTeX
-\pdfvariable trailerid {[ <4ac795f04ed4811b0df5a4fbf6e17ca0> <4ac795f04ed4811b0df5a4fbf6e17ca0> ]}
-\fi
-
 \title{Exploratory Data Analysis: A Reproducible Notebook Template}
 \author{Daniel Ari Friedman}
 \date{}
@@ -525,14 +514,13 @@ inferring hidden defaults.
 \section{Results}\label{sec:results}
 
 This section presents the exploratory analysis of the shipped dataset.
-Every figure and the summary table are produced by the thin analysis
-script
-(\href{https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py}{\breaktt{scripts/eda\_analysis.py}}),
-which calls the tested figure-data preparers in
-\breaktt{src/eda/figures.py}. Running the script regenerates the figures
-under \texttt{../figures/} and the summary CSV under
-\texttt{output/data/}; the prose below describes what those artifacts
-show.
+Every figure and the summary table are produced by the
+\href{https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py}{EDA
+analysis orchestrator} (\breaktt{scripts/eda\_analysis.py}), which calls
+the tested figure-data preparers in \breaktt{src/eda/figures.py}. Running
+the script regenerates the figures under \texttt{../figures/} and the
+summary CSV under \texttt{output/data/}; the prose below describes what
+those artifacts show.
 
 \subsection{Dataset and missingness}\label{dataset-and-missingness}
 

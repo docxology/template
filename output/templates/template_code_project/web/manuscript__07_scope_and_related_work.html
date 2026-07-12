@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -187,6 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:scope">Scope, Related Work, and Positioning</h1>
 <p>This section situates the exemplar scientifically and states explicit
 boundaries. The goal is not to compete with monographs on nonlinear
@@ -202,9 +204,7 @@ of gradient convergence factors remains relevant when interpreting
 empirical iteration counts [polyak1964some]. The present manuscript
 restricts attention to <strong>fixed-step</strong> gradient descent on a
 <strong>convex quadratic</strong>, where rates reduce to scalar linear
-recurrences in the error (<span class="citation"
-data-cites="sec:results">[@sec:results]</span>, <span class="citation"
-data-cites="eq:scalar_linear_update">[@eq:scalar_linear_update]</span>).</p>
+recurrences in the error ([sec:results], [eq:scalar_linear_update]).</p>
 <h2 id="adaptive-and-stochastic-extensions">Adaptive and stochastic
 extensions</h2>
 <p>Practical machine-learning optimizers (e.g., Adam [kingma2014adam])
@@ -216,13 +216,10 @@ class="math inline">\(\alpha\)</span>, iteration caps) are interpretable
 without confounding from stochastic sampling or line-search logic.</p>
 <h2 id="what-this-project-proves-about-the-template">What this project
 proves about the template</h2>
-<p>The scientific claims through <span class="citation"
-data-cites="sec:introduction">[@sec:introduction]</span>, <span
-class="citation" data-cites="sec:methodology">[@sec:methodology]</span>,
-and <span class="citation"
-data-cites="sec:results">[@sec:results]</span> are standard textbook
-material. The <strong>non-standard</strong> contribution is procedural:
-configuration in <code>manuscript/config.yaml</code> drives
+<p>The scientific claims through [sec:introduction], [sec:methodology],
+and [sec:results] are standard textbook material. The
+<strong>non-standard</strong> contribution is procedural: configuration
+in <code>manuscript/config.yaml</code> drives
 <code>run_convergence_experiment()</code>, figures, CSV exports, and
 <code>{{RESULT_*}}</code> substitution
 (<code>scripts/z_generate_manuscript_variables.py</code>) so that PDF,
@@ -249,5 +246,6 @@ only; no interval or arbitrary-precision analysis.</li>
 that infrastructure concerns—tests, logging, figure registration, and
 PDF cross-references—remain visible rather than buried under algorithmic
 complexity.</p>
+</main>
 </body>
 </html>

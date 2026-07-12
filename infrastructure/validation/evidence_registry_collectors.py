@@ -5,11 +5,15 @@ from __future__ import annotations
 import csv
 import json
 import re
-import tomllib
 from pathlib import Path
 from typing import Any, Iterable
 
 import yaml
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised by the Python 3.10 CI lane
+    import tomli as tomllib  # type: ignore[no-redef]
 
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.evidence_registry import (

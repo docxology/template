@@ -1,0 +1,5 @@
+order,step_id,name,kind,target
+0,1,"Record reference baseline reading",measure,automated
+1,2,"Compute calibration offset",compute,automated
+2,3,"Operator sign-off on computed offset",annotate,human
+3,4,"Validate calibration within tolerance",validate,automated

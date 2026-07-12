@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -177,6 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:integration">Integration: Unified Pipeline and Token
 Injection</h1>
 <h2 id="architecture-overview">Architecture Overview</h2>
@@ -214,8 +216,8 @@ integration run. Tokens are resolved by
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
 <img src="figures/resource_counts.png" style="width:75.0%"
-alt="Runtime integration counts from manuscript_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run." />
-<figcaption aria-hidden="true">Runtime integration counts from
+alt="Runtime integration counts from manuscript_variables.json." />
+<figcaption>Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
 and tools discovered during a single pipeline run.</figcaption>
 </figure>
@@ -240,8 +242,8 @@ representation):</p>
 <td>2</td>
 </tr>
 <tr>
-<td><code>3</code></td>
-<td>3</td>
+<td><code>4</code></td>
+<td>4</td>
 </tr>
 <tr>
 <td><code>8</code></td>
@@ -305,8 +307,8 @@ project’s own tree</td>
 </tr>
 <tr>
 <td><code>scripts/z_generate_manuscript_variables.py</code></td>
-<td>Hydrate <code>{{TOKEN}}</code> values and inject them into
-<code>output/manuscript/</code> immediately before rendering</td>
+<td>Hydrate declared manuscript-variable placeholders and inject them
+into <code>output/manuscript/</code> immediately before rendering</td>
 <td>JSON file + resolved manuscript tree</td>
 </tr>
 </tbody>
@@ -314,14 +316,14 @@ project’s own tree</td>
 <figure id="fig:pipelineflow">
 <img src="figures/pipeline_flow.png" style="width:95.0%"
 alt="The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step." />
-<figcaption aria-hidden="true">The six-script pipeline from source
+<figcaption>The six-script pipeline from source
 validation through token hydration, ending at the combined-PDF render
 step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
 <img src="figures/status_dashboard.png" style="width:85.0%"
-alt="Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing." />
-<figcaption aria-hidden="true">Integration status dashboard showing
+alt="Integration status dashboard showing per-resource validation results." />
+<figcaption>Integration status dashboard showing
 per-resource validation results. Green indicates ok, amber indicates
 partial, red indicates missing.</figcaption>
 </figure>
@@ -332,20 +334,21 @@ whose summary feeds both the manuscript-variable token file and the
 strong-rule semantic evaluator; the figure-generation stage runs
 independently; and <code>z_generate_manuscript_variables.py</code> —
 invoked automatically by the rendering pipeline immediately before the
-PDF render step — is what actually substitutes every
-<code>{{TOKEN}}</code> and writes the resolved manuscript that pandoc
-consumes. <span class="citation"
-data-cites="fig:pipeline">@fig:pipeline</span> shows the corresponding
-per-component pass/partial/missing status from the same run.</p>
+PDF render step — is what actually substitutes every declared
+placeholder and writes the resolved manuscript that pandoc consumes.
+<span class="citation" data-cites="fig:pipeline">@fig:pipeline</span>
+shows the corresponding per-component pass/partial/missing status from
+the same run.</p>
 <p>Each script imports all business logic from <code>src/</code> and
-stays free of computation of its own — the longest,
-<code>01_validate_sources.py</code> at 112 lines, is entirely CLI
-plumbing (argument parsing, console formatting) around calls into
-<code>src/fonds_reader.py</code>, <code>src/rules_applier.py</code>, and
+stays free of computation of its own — even
+<code>01_validate_sources.py</code>, the largest entry point in this
+project, is entirely CLI plumbing (argument parsing, console formatting)
+around calls into <code>src/fonds_reader.py</code>,
+<code>src/rules_applier.py</code>, and
 <code>src/tools_invoker.py</code>. This thin-orchestrator pattern
 [Wilson2014best] ensures that all testable logic is in <code>src/</code>
-at ≥ 90% coverage, while the scripts themselves remain readable without
-a dedicated test suite of their own.</p>
+under the configured project coverage gate, while the scripts themselves
+remain readable without a dedicated test suite of their own.</p>
 <h2 id="resilience-design">Resilience Design</h2>
 <p>The integration layer enforces resilience at three levels,
 corresponding to the three failure modes a monorepo integration pipeline
@@ -372,7 +375,7 @@ to invoke a non-existent script.</p></li>
 <figure id="fig:resilience">
 <img src="figures/resilience_layers.png" style="width:85.0%"
 alt="The integration layer’s three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response." />
-<figcaption aria-hidden="true">The integration layer’s three-level
+<figcaption>The integration layer’s three-level
 resilience design: resource absence, schema malformation, and script
 absence, each with its own graceful-degradation response.</figcaption>
 </figure>
@@ -432,5 +435,6 @@ adds a negative control: it monkeypatches
 <code>run_integration_demo()</code>’s return value and asserts the
 derived tokens actually change, proving the token-generation function is
 live-wired to its source rather than emitting a hard-coded constant.</p>
+</main>
 </body>
 </html>

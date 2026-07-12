@@ -1,6 +1,5 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  7 JUL 2026 19:12
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  11 JUL 2026 21:04
 entering extended mode
- \write18 enabled.
  %&-line parsing enabled.
 **/Users/4d/Documents/GitHub/template/projects/templates/template_code_project/
 output/slides/03_results_slides.tex
@@ -1410,37 +1409,40 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
+\c@proposition=\count397
+\c@hypothesis=\count398
+
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count397
+\BKM@id=\count399
 ))
 (/Users/4d/Documents/GitHub/template/projects/templates/template_code_project/o
 utput/slides/03_results_slides.aux)
 \openout1 = `03_results_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1476,7 +1478,7 @@ LaTeX Font Info:    ... okay on input line 150.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 150.
+Package hyperref Info: Link coloring OFF on input line 153.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -1504,26 +1506,26 @@ Dictionary: translator-theorem-dictionary, Language: English
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  TU/latinmodern-math.otf(1)/m/n --> TU/lmr/m/n on input 
-line 150.
+line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 150.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 150.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 150.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 150.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 150.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 150.
-LaTeX Info: Redefining \microtypecontext on input line 150.
-Package microtype Info: Applying patch `item' on input line 150.
-Package microtype Info: Applying patch `toc' on input line 150.
-Package microtype Info: Applying patch `eqnum' on input line 150.
-Package microtype Info: Applying patch `footnote' on input line 150.
-Package microtype Info: Applying patch `verbatim' on input line 150.
-LaTeX Info: Redefining \microtypesetup on input line 150.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 153.
+LaTeX Info: Redefining \microtypecontext on input line 153.
+Package microtype Info: Applying patch `item' on input line 153.
+Package microtype Info: Applying patch `toc' on input line 153.
+Package microtype Info: Applying patch `eqnum' on input line 153.
+Package microtype Info: Applying patch `footnote' on input line 153.
+Package microtype Info: Applying patch `verbatim' on input line 153.
+LaTeX Info: Redefining \microtypesetup on input line 153.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1613,17 +1615,17 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 <../figures/step_size_sensitivity.png>
 )
-Underfull \vbox (badness 1112) detected at line 232
+Underfull \vbox (badness 1112) detected at line 235
  []
 
 [3
 
 ]
-Underfull \vbox (badness 1112) detected at line 232
+Underfull \vbox (badness 1112) detected at line 235
  []
 
 
-Overfull \vbox (622.44528pt too high) detected at line 232
+Overfull \vbox (622.44528pt too high) detected at line 235
  []
 
 [4
@@ -1664,17 +1666,17 @@ utput/slides/03_results_slides.vrb
 File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 <../figures/convergence_rate_comparison.png>
 )
-Underfull \vbox (badness 1112) detected at line 409
+Underfull \vbox (badness 1112) detected at line 412
  []
 
 [7
 
 ]
-Underfull \vbox (badness 1112) detected at line 409
+Underfull \vbox (badness 1112) detected at line 412
  []
 
 
-Overfull \vbox (850.60643pt too high) detected at line 409
+Overfull \vbox (850.60643pt too high) detected at line 412
  []
 
 [8
@@ -1697,25 +1699,20 @@ File: ../figures/algorithm_complexity.png Graphic file (type bmp)
 <../figures/algorithm_complexity.png>
 File: ../figures/performance_benchmark.png Graphic file (type bmp)
 <../figures/performance_benchmark.png>
-
-Missing character: There is no μ (U+03BC) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no μ (U+03BC) in font [lmsans10-regular]:mapping=te
-x-text;!
 File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
 )
-Underfull \vbox (badness 1112) detected at line 619
+Underfull \vbox (badness 1112) detected at line 621
  []
 
 [12
 
 ]
-Underfull \vbox (badness 1112) detected at line 619
+Underfull \vbox (badness 1112) detected at line 621
  []
 
 
-Overfull \vbox (1246.26074pt too high) detected at line 619
+Overfull \vbox (1222.26074pt too high) detected at line 621
  []
 
 [13
@@ -1760,11 +1757,11 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 31414 strings out of 468168
- 637439 string characters out of 5432815
- 1211884 words of memory out of 5000000
- 59532 multiletter control sequences out of 15000+600000
- 634222 words of font info for 98 fonts, out of 8000000 for 9000
+ 31440 strings out of 468168
+ 637952 string characters out of 5432815
+ 1211054 words of memory out of 5000000
+ 59556 multiletter control sequences out of 15000+600000
+ 634238 words of font info for 100 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,12n,123p,1610b,1041s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

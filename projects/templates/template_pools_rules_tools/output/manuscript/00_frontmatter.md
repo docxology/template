@@ -13,7 +13,7 @@
 | **Version** | 1.0.0 |
 | **Date** | 2026-07-05 |
 | **License** | CC-BY-4.0 |
-| **Repository** | [docxology/template](https://github.com/docxology/template) |
+| **Repository** | [Public template repository](https://github.com/docxology/template) |
 | **DOI** | 10.5281/zenodo.21298888 |
 | **Keywords** | research software engineering, monorepo architecture, reproducibility, fonds, governance rules, tool discovery, graceful degradation |
 
@@ -29,7 +29,7 @@ The author thanks the Active Inference Institute for hosting the public template
 
 ## Data Availability
 
-All source code, configuration files, and exemplar resources described in this paper are available in the public template repository at <https://github.com/docxology/template> under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
+All source code, configuration files, and exemplar resources described in this paper are available in the [public template repository](https://github.com/docxology/template) under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
 
 ## Competing Interests
 

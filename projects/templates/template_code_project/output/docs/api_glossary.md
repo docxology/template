@@ -11,16 +11,16 @@
 | `analysis.publishing` | `generate_citations_from_metadata` | function | Generate citations from optimization metadata. |
 | `analysis.publishing` | `save_publishing_materials` | function | Save publishing materials to output directory. |
 | `analysis.scientific_reports` | `register_figure` | function | Register generated figures for manuscript reference. |
-| `analysis.scientific_reports` | `run_performance_benchmarking` | function | Benchmark gradient descent performance. |
+| `analysis.scientific_reports` | `run_performance_benchmarking` | function | Run timing diagnostics and write a deterministic benchmark contract. |
 | `analysis.scientific_reports` | `run_stability_analysis` | function | Assess numerical stability of optimization algorithms. |
 | `analysis.scientific_reports` | `save_validation_report` | function | Save validation report to file. |
 | `analysis.scientific_reports` | `validate_generated_outputs` | function | Validate integrity of generated analysis outputs. |
 | `analysis.workflow` | `main` | function | Run the full optimization analysis pipeline. |
 | `analysis.workflow` | `run_analysis_pipeline` | function | Execute the full optimization analysis workflow. |
 | `benchmark_support` | `BenchmarkRun` | class | Full benchmark run: measurements plus infra-scored rubric result. |
-| `benchmark_support` | `TimingMeasurement` | class | One deterministic timing of ``quadratic_function`` at a fixed size. |
-| `benchmark_support` | `benchmark_payload` | function | Convert a benchmark run into a JSON-safe payload (infra-shaped). |
-| `benchmark_support` | `run_quadratic_benchmark` | function | Time the pure quadratic objective and score it with the infra rubric. |
+| `benchmark_support` | `TimingMeasurement` | class | One benchmark measurement; timing is a runtime-only diagnostic. |
+| `benchmark_support` | `benchmark_payload` | function | Convert a run into a byte-stable, JSON-safe canonical payload. |
+| `benchmark_support` | `run_quadratic_benchmark` | function | Evaluate the pure quadratic objective and score deterministic facts. |
 | `benchmark_support` | `write_benchmark_report` | function | Write the benchmark payload as JSON and return the path. |
 | `dashboard` | `build_dashboard_html` | function | Build the dashboard with config defaults and write HTML to ``output/web/``. |
 | `dashboard` | `cli_main` | function | Build dashboard artifacts from CLI arguments. |
@@ -43,7 +43,7 @@
 | `figures.scientific_complexity` | `generate_complexity_visualization` | function | Generate algorithm performance analysis with six informative panels. |
 | `figures.scientific_complexity` | `optimal_step_size` | function | Return the theoretically optimal step size ``α* = 1/L``. |
 | `figures.scientific_complexity` | `profile_stable_region` | function | Return ``(alpha_min, alpha_max)`` of the strictly stable step-size interval. |
-| `figures.scientific_stability` | `generate_benchmark_visualization` | function | Generate dimensional scaling benchmark by running gradient_descent at d=1..50. |
+| `figures.scientific_stability` | `generate_benchmark_visualization` | function | Generate a deterministic dimensional-work benchmark figure. |
 | `figures.scientific_stability` | `generate_stability_visualization` | function | Generate heatmap of optimizer accuracy across starting points and step sizes. |
 | `figures.sensitivity` | `generate_step_size_sensitivity_plot` | function | Generate step size sensitivity analysis with expanded range. |
 | `invariants` | `InvariantResult` | class | Witness record for one numerical invariant. |

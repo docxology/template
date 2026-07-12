@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T02:08:51Z",
+  "timestamp": "2026-07-12T22:25:22Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -62,7 +62,7 @@
           },
           "reports": {
             "exists": true,
-            "files": 27,
+            "files": 26,
             "size_mb": 0.16,
             "readable": true,
             "optional": false
@@ -123,7 +123,7 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 27,
+          "file_count": 26,
           "size_mb": "0.16",
           "largest_file": "evidence_registry.json"
         },
@@ -152,12 +152,12 @@
         "slides": 73,
         "figures": 4,
         "data": 2,
-        "reports": 27,
+        "reports": 26,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 1.6329851150512695,
+      "total_size_mb": 1.6319618225097656,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -167,7 +167,7 @@
     },
     "pdf": {
       "files": 11,
-      "size_mb": 0.32614707946777344
+      "size_mb": 0.3258829116821289
     },
     "figures": {
       "files": 4,

@@ -1,0 +1,11 @@
+{
+  "figures": [
+    {
+      "caption": "Step counts for each deterministically compiled example method.",
+      "filename": "step_counts.png",
+      "generated_by": "scripts.methods_analysis.run_methods_analysis",
+      "label": "fig:step_counts"
+    }
+  ],
+  "schema_version": "template-methods-paper-figure-registry-v1"
+}

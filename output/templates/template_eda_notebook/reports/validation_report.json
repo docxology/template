@@ -1,26 +1,17 @@
 {
-  "timestamp": "2026-06-30T15:43:53.375790",
+  "timestamp": "2026-07-12T22:25:22Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": false,
-    "Evidence registry": false,
+    "Figure registry": true,
+    "Evidence registry": true,
     "Project design overlays": true,
     "Artifact manifest": true
   },
-  "figure_issues": [
-    "Figure registry not found but 3 figure reference(s) found in manuscript"
-  ],
+  "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "00_abstract.md: unsupported number 90%",
-      "03_results.md: unsupported number -1",
-      "03_results.md: unsupported number 90%",
-      "02_methodology.md: unsupported number 90%",
-      "04_conclusion.md: unsupported number 90%"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -36,15 +27,15 @@
           },
           "pdf": {
             "exists": true,
-            "files": 10,
-            "size_mb": 0.31,
+            "files": 11,
+            "size_mb": 0.33,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 11,
-            "size_mb": 0.15,
+            "files": 12,
+            "size_mb": 0.16,
             "readable": true,
             "optional": false
           },
@@ -57,22 +48,22 @@
           },
           "figures": {
             "exists": true,
-            "files": 3,
+            "files": 4,
             "size_mb": 0.04,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 1,
+            "files": 2,
             "size_mb": 0.0,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 27,
-            "size_mb": 0.15,
+            "files": 26,
+            "size_mb": 0.16,
             "readable": true,
             "optional": false
           },
@@ -102,14 +93,14 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "0.31",
+          "file_count": 11,
+          "size_mb": "0.33",
           "largest_file": "template_eda_notebook_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "0.15",
+          "file_count": 12,
+          "size_mb": "0.16",
           "largest_file": "index.html"
         },
         "slides": {
@@ -120,20 +111,20 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 3,
+          "file_count": 4,
           "size_mb": "0.04",
           "largest_file": "correlation_heatmap.png"
         },
         "data": {
           "exists": true,
-          "file_count": 1,
+          "file_count": 2,
           "size_mb": "0.00",
-          "largest_file": "summary_statistics.csv"
+          "largest_file": "publication_ledger.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 27,
-          "size_mb": "0.15",
+          "file_count": 26,
+          "size_mb": "0.16",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -156,17 +147,17 @@
         }
       },
       "file_counts": {
-        "pdf": 10,
-        "web": 11,
+        "pdf": 11,
+        "web": 12,
         "slides": 73,
-        "figures": 3,
-        "data": 1,
-        "reports": 27,
+        "figures": 4,
+        "data": 2,
+        "reports": 26,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 1.6019105911254883,
+      "total_size_mb": 1.6319618225097656,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -175,37 +166,24 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 0.31478309631347656
+      "files": 11,
+      "size_mb": 0.3258829116821289
     },
     "figures": {
-      "files": 3,
-      "size_mb": 0.04383277893066406
+      "files": 4,
+      "size_mb": 0.04457855224609375
     },
     "data": {
-      "files": 1,
-      "size_mb": 0.00023174285888671875
+      "files": 2,
+      "size_mb": 0.0007295608520507812
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 6,
-    "failed": 2,
-    "figure_issues_count": 1,
-    "all_passed": false
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_eda_notebook/output/reports/evidence_registry.json"
-    },
-    {
-      "priority": "medium",
-      "issue": "1 figure reference issue(s)",
-      "action": "Register missing figures or remove unused references",
-      "file": "projects/templates/template_eda_notebook/output/figures/figure_registry.json"
-    }
-  ]
+  "recommendations": []
 }

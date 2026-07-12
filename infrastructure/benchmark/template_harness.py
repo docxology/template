@@ -528,8 +528,9 @@ def _display_project_path(project_root: Path) -> str:
     return project_root.as_posix()
 
 
-def _format_score(value: float) -> str:
-    return str(int(value)) if value.is_integer() else f"{value:g}"
+def _format_score(value: float | int) -> str:
+    numeric = float(value)
+    return str(int(numeric)) if numeric.is_integer() else f"{numeric:g}"
 
 
 def _markdown_cell(value: str) -> str:

@@ -1,0 +1,27 @@
+\frametitle{Explicit limitations}
+\protect\phantomsection\label{explicit-limitations}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Two worked examples}: \texttt{PBSPreparation} and
+  \breaktt{SensorCalibrationSweep} exercise every gate-success path but
+  are not a corpus; gate-failure coverage instead lives in
+  \breaktt{tests/conftest.py}'s dedicated fixtures.
+\item
+  \textbf{No backend lowering}: \texttt{Target} selects a compatibility
+  class, not a concrete execution backend; no robot or simulation
+  runtime exists in this exemplar.
+\item
+  \textbf{Unit table, not a full unit library}: seven dimensions and a
+  fixed unit table, not a general-purpose dimensional-analysis library
+  like \texttt{pint}.
+\item
+  \textbf{No persistence layer}: \texttt{trust.py}'s hash-chain lives in
+  memory for the duration of one script run; this exemplar does not
+  implement durable storage for a real audit trail.
+\end{enumerate}
+
+These limitations are intentional: they narrow the surface so that the
+reproducibility concerns --- tested functions, a thin script, and
+generated-variable-injected prose --- remain visible rather than buried
+under a compiler implementation at BPL's full scale.
