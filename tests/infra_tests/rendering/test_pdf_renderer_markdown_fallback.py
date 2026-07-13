@@ -7,7 +7,7 @@ from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 
 
-def test_render_markdown_falls_back_to_alternate_engine(tmp_path, monkeypatch) -> None:
+def test_render_markdown_falls_back_to_alternate_engine(tmp_path) -> None:
     source_file = tmp_path / "manuscript.md"
     source_file.write_text("# Title\n\nBody", encoding="utf-8")
 
@@ -17,8 +17,6 @@ def test_render_markdown_falls_back_to_alternate_engine(tmp_path, monkeypatch) -
         manuscript_dir=str(tmp_path),
         figures_dir=str(tmp_path / "figures"),
     )
-    renderer = PDFRenderer(config)
-
     availability = {"pandoc": "/usr/bin/pandoc", "xelatex": "/usr/bin/xelatex", "pdflatex": "/usr/bin/pdflatex"}
 
     def fake_which(name: str) -> str | None:
@@ -34,8 +32,11 @@ def test_render_markdown_falls_back_to_alternate_engine(tmp_path, monkeypatch) -
         output_file.write_bytes(b"%PDF-1.4\n%EOF")
         return subprocess.CompletedProcess(cmd, 0)
 
-    monkeypatch.setattr("infrastructure.rendering.pdf_renderer.shutil.which", fake_which)
-    monkeypatch.setattr("infrastructure.rendering.pdf_renderer.subprocess.run", fake_run)
+    renderer = PDFRenderer(
+        config,
+        executable_resolver=fake_which,
+        process_runner=fake_run,
+    )
 
     output = renderer.render_markdown(source_file)
 

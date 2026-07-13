@@ -158,9 +158,11 @@ def _default_output_dir() -> pathlib.Path:
 def _resolve_output(
     output_dir: str | pathlib.Path | None,
     filename: str,
+    *,
+    default_output_dir=_default_output_dir,
 ) -> pathlib.Path:
     if output_dir is None:
-        output_dir = _default_output_dir()
+        output_dir = default_output_dir()
     out_dir = pathlib.Path(output_dir)
     _ensure_dir(out_dir)
     return out_dir / filename
@@ -181,12 +183,14 @@ def _save(fig: Figure, dest: pathlib.Path) -> pathlib.Path:
 def generate_architecture_overview(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "architecture_overview.png",
+    *,
+    default_output_dir=_default_output_dir,
 ) -> pathlib.Path | None:
     """Generate a three-panel figure showing fonds → rules → tools architecture."""
     if not _MPL_AVAILABLE:
         return None
 
-    dest = _resolve_output(output_dir, filename)
+    dest = _resolve_output(output_dir, filename, default_output_dir=default_output_dir)
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.5), facecolor=BG)
     panel_titles = (
         "Fonds (Data Pools)",

@@ -22,7 +22,7 @@ def to_diagonal_A(diag: list[float]) -> np.ndarray:
     return np.diag(np.array(diag, dtype=np.float64))
 
 
-def compute_payload(args) -> dict:
+def compute_payload(args, *, sweep_runner=run_alpha_sweep) -> dict:
     """Process compute payload."""
     A = to_diagonal_A(args.A)
     b = np.array(args.b, dtype=np.float64)
@@ -45,7 +45,7 @@ def compute_payload(args) -> dict:
             "objectives": list(traj["objectives"]),
         }
 
-    sweep = run_alpha_sweep(
+    sweep = sweep_runner(
         AlphaSweepConfig(
             alpha_min=float(args.alpha_sweep_min),
             alpha_max=float(args.alpha_sweep_max),

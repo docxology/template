@@ -17,6 +17,7 @@ from src.figures import (
     generate_step_size_sensitivity_plot,
 )
 from src.optimizer import OptimizationResult, quadratic_optimum
+from src.project_paths import project_root_context
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -45,10 +46,10 @@ def _sample_results(cfg: ExperimentConfig) -> dict[float, OptimizationResult]:
 
 
 @pytest.fixture
-def figure_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    monkeypatch.setattr("src.figures.project_root", tmp_path)
+def figure_root(tmp_path: Path):
     (tmp_path / "output" / "figures").mkdir(parents=True)
-    return tmp_path
+    with project_root_context(tmp_path):
+        yield tmp_path
 
 
 class TestFiguresOrchestration:

@@ -347,12 +347,9 @@ class TestGenerateCoverArt:
 
 
 class TestDefaultOutputDirectory:
-    def test_generate_architecture_overview_uses_default_dir(
-        self, tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        from src import figures as figures_mod
-
-        monkeypatch.setattr(figures_mod, "_default_output_dir", lambda: tmp_path / "default")
-        result = generate_architecture_overview()
+    def test_generate_architecture_overview_uses_default_dir(self, tmp_path: pathlib.Path):
+        result = generate_architecture_overview(
+            default_output_dir=lambda: tmp_path / "default",
+        )
         _assert_png(result)
         assert result.parent == tmp_path / "default"

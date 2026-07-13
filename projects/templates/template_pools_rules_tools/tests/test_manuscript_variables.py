@@ -53,15 +53,12 @@ class TestGenerateVariables:
         assert result["FONDS_LOADED"].isdigit()
         assert result["TOOLS_DISCOVERED"].isdigit()
 
-    def test_reflects_changed_integration_result(self, monkeypatch):
+    def test_reflects_changed_integration_result(self):
         """Negative control: tokens must track their source, not be hard-coded.
 
-        Monkeypatches run_integration_demo's return value (not a mocking
-        framework — pytest's built-in monkeypatch fixture, already used
-        elsewhere in this suite, e.g. test_figures.py's
-        TestDefaultOutputDirectory) and asserts the derived token value
-        actually moves. A generator that ignored its input and emitted a
-        constant would pass every other test in this file but fail this one.
+        Injects run_integration_demo's return value and asserts the derived
+        token actually moves. A generator that ignored its input and emitted
+        a constant would pass every other test in this file but fail this one.
         """
         import src.manuscript_variables as mv
 
@@ -72,9 +69,7 @@ class TestGenerateVariables:
             "tools": real_result["tools"],
             "summary": {**real_result["summary"], "fonds_loaded": 999, "bib_entries": 777},
         }
-        monkeypatch.setattr(mv, "run_integration_demo", lambda: fake_result)
-
-        result = generate_variables()
+        result = generate_variables(integration_runner=lambda: fake_result)
         assert result["FONDS_LOADED"] == "999"
         assert result["BIB_ENTRIES"] == "777"
         assert result["FONDS_LOADED"] != str(real_result["summary"]["fonds_loaded"])

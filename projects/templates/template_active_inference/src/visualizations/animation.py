@@ -191,7 +191,11 @@ def _live_animation_contract(payload: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def validate_animation_frame_deltas(project_root: Path) -> list[str]:
+def validate_animation_frame_deltas(
+    project_root: Path,
+    *,
+    live_builder=build_animation_frame_deltas,
+) -> list[str]:
     """Return frame-delta manifest issues."""
     root = project_root.resolve()
     path = root / "output" / "data" / "animation_frame_deltas.json"
@@ -230,7 +234,7 @@ def validate_animation_frame_deltas(project_root: Path) -> list[str]:
         or payload.get("all_adjacent_hashes_distinct") != adjacent_hashes_distinct
     ):
         issues.append("animation_frame_deltas.json has duplicate frame hashes")
-    live = build_animation_frame_deltas(root)
+    live = live_builder(root)
     if payload and _live_animation_contract(payload) != _live_animation_contract(live):
         issues.append("animation_frame_deltas.json is stale relative to GIF frames")
     return issues

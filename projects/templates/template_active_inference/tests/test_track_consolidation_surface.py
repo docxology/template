@@ -25,15 +25,13 @@ from track_consolidation_support import (
 pytestmark = [pytest.mark.timeout(600)]
 
 
-def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path) -> None:
     from roadmap_tracks import sheaf_tracks
 
     def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
 
-    monkeypatch.setattr("roadmap_tracks.sheaf_tracks_io.subprocess.run", fake_run)
-
-    assert sheaf_tracks._source_commit(project_root) == "unknown"
+    assert sheaf_tracks._source_commit(project_root, process_runner=fake_run) == "unknown"
 
 
 def test_temporary_json_mutation_restores_after_exception(tmp_path: Path) -> None:

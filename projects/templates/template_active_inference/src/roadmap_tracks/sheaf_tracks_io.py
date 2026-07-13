@@ -132,9 +132,9 @@ def _artifact_maps() -> tuple[dict[str, str], dict[str, tuple[str, ...]], dict[s
     return ARTIFACT_PRODUCERS, ARTIFACT_CONSUMERS, ARTIFACT_GATES
 
 
-def _source_commit(root: Path) -> str:
+def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
     try:
-        result = subprocess.run(
+        result = process_runner(
             ["git", "-C", str(root), "rev-parse", "HEAD"],
             check=True,
             capture_output=True,

@@ -63,9 +63,13 @@ def build_dashboard_html(project_root: Path | None = None) -> Path:
     return Path(result["html"])
 
 
-def parse_dashboard_args(argv: list[str] | None = None) -> argparse.Namespace:
+def parse_dashboard_args(
+    argv: list[str] | None = None,
+    *,
+    defaults_loader=load_yaml_defaults,
+) -> argparse.Namespace:
     """Parse CLI arguments for the dashboard builder."""
-    cfg = load_yaml_defaults(CFG_DEFAULT)
+    cfg = defaults_loader(CFG_DEFAULT)
     a_diag = np.diag(cfg.A_array()).tolist()
     parser = argparse.ArgumentParser(
         description="Build the interactive optimization dashboard.",
@@ -103,11 +107,11 @@ def parse_dashboard_args(argv: list[str] | None = None) -> argparse.Namespace:
     return args
 
 
-def cli_main(argv: list[str] | None = None) -> None:
+def cli_main(argv: list[str] | None = None, *, dashboard_builder=build_dashboard) -> None:
     """Build dashboard artifacts from CLI arguments."""
     args = parse_dashboard_args(argv)
     payload = compute_payload(args)
-    dashboard = build_dashboard(args, payload)
+    dashboard = dashboard_builder(args, payload)
     outputs = dashboard.write(
         html_path=args.html_out,
         json_path=args.json_out,

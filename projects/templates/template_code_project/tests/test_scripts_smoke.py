@@ -44,10 +44,7 @@ def test_preflight_script_emits_diagnostics() -> None:
         assert any(token in combined for token in ("preflight", "puppeteer", "mmdc"))
 
 
-def test_run_api_doc_generation_continues_when_glossary_index_fails(
-    monkeypatch,
-    tmp_path: Path,
-) -> None:
+def test_run_api_doc_generation_continues_when_glossary_index_fails(tmp_path: Path) -> None:
     """Glossary index failure is logged; static api_reference.md still written."""
     repo_root = PROJECT_ROOT.parent.parent
     src_path = str(PROJECT_ROOT / "src")
@@ -63,10 +60,9 @@ def test_run_api_doc_generation_continues_when_glossary_index_fails(
     def _fail(_src: str) -> list:
         raise ValueError("glossary index unavailable")
 
-    monkeypatch.setattr(api_docs_mod, "build_api_index", _fail)
     project_root = tmp_path
     (project_root / "src").mkdir()
-    result = api_docs_mod.run_api_doc_generation(project_root)
+    result = api_docs_mod.run_api_doc_generation(project_root, api_index_builder=_fail)
     assert result is not None
     api_ref = project_root / "output" / "docs" / "api_reference.md"
     assert api_ref.is_file()
