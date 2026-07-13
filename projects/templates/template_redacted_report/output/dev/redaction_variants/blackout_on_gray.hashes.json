@@ -1,13 +1,13 @@
 {
   "source_file": "blackout_on_gray.pdf",
-  "timestamp": "2026-07-10T12:26:00-07:00",
+  "timestamp": "2026-07-13T10:55:01-07:00",
   "hashes": {
-    "sha256": "6762242191bdc0ddc717c04b7374d8320397acc1cf3c89e36b321c925c2f884f",
-    "sha512": "017d21ab5bec4e774797c2358188cf33fd1c54f34e01853b040ad2d37dba77c6f4636afa3aab5cd1e8a5ce10bb40345df62f12dde1cd95fbe7aebf20e07de77d"
+    "sha256": "19ee19dd5ec44ebbe79513ae4e3583c3d035bd2b80a95cd471f0ec1259acde4b",
+    "sha512": "dd4e7ce4a331c6e1dda44098e7255537d0b1f8411fc6a4f137cd159eb54ae998c20a90f3d4f324938253ee26b81974cb3165edc1a7bb41517bdaacd3d3af35f6"
   },
-  "document_id": "c4675bfe6ac433a1a8ea10346d9850d7",
-  "source_size_bytes": 21632,
-  "git_commit": "b7f7b140aef605a76f4f2cdf852974595658e26b",
+  "document_id": "40cc75c05c9cbf2e1535b6bffbeb78ed",
+  "source_size_bytes": 21592,
+  "git_commit": "d83200ef4578a11fba622ba1e7fb91fea111bddc",
   "git_commit_available": true,
   "steganography_applied": "true"
 }
