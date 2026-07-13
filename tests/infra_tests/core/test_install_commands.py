@@ -89,14 +89,7 @@ class TestBuildInstallCommandsFromInstallCommands:
 
     def test_darwin_no_brew(self):
         """On macOS without brew, should suggest brew install with a hint."""
-        import shutil as _shutil
-
-        original_which = _shutil.which
-        try:
-            _shutil.which = lambda name: None if name == "brew" else original_which(name)
-            result = build_install_commands("xelatex", system="darwin")
-        finally:
-            _shutil.which = original_which
+        result = build_install_commands("xelatex", system="darwin", which=lambda _name: None)
         assert any("brew install" in cmd for cmd in result)
 
     def test_custom_dependency_name(self):
@@ -111,120 +104,67 @@ class TestBuildInstallCommandsFromInstallCommands:
 
 
 class TestBuildInstallCommandsBranchCoverage:
-    """Branch-coverage tests using monkeypatch with real callables (no Mock objects).
+    """Branch coverage through the public platform and resolver seams."""
 
-    Each test patches platform.system and/or shutil.which with real lambda
-    functions that return deterministic string values, satisfying the No-Mocks
-    Policy while exercising every conditional branch in build_install_commands.
-    """
-
-    def test_linux_yum_branch(self, monkeypatch):
+    def test_linux_yum_branch(self):
         """On Linux where only yum is available, returns a yum install command."""
-        import platform as _platform
-
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Linux")
 
         def _which_yum_only(cmd: str) -> str | None:
             return "/usr/bin/yum" if cmd == "yum" else None
 
-        monkeypatch.setattr(_mod.shutil, "which", _which_yum_only)
-
-        result = _mod.build_install_commands("wget")
+        result = build_install_commands("wget", system="linux", which=_which_yum_only)
         assert any("yum install" in cmd for cmd in result)
         assert result[-1] == "which wget  # Verify installation"
 
-    def test_linux_dnf_branch(self, monkeypatch):
+    def test_linux_dnf_branch(self):
         """On Linux where only dnf is available, returns a dnf install command."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Linux")
 
         def _which_dnf_only(cmd: str) -> str | None:
             return "/usr/bin/dnf" if cmd == "dnf" else None
 
-        monkeypatch.setattr(_mod.shutil, "which", _which_dnf_only)
-
-        result = _mod.build_install_commands("ripgrep")
+        result = build_install_commands("ripgrep", system="linux", which=_which_dnf_only)
         assert any("dnf install" in cmd for cmd in result)
 
-    def test_linux_pacman_branch(self, monkeypatch):
+    def test_linux_pacman_branch(self):
         """On Linux where only pacman is available, returns a pacman install command."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Linux")
 
         def _which_pacman_only(cmd: str) -> str | None:
             return "/usr/bin/pacman" if cmd == "pacman" else None
 
-        monkeypatch.setattr(_mod.shutil, "which", _which_pacman_only)
-
-        result = _mod.build_install_commands("fd")
+        result = build_install_commands("fd", system="linux", which=_which_pacman_only)
         assert any("pacman -S" in cmd for cmd in result)
 
-    def test_linux_no_known_package_manager(self, monkeypatch):
+    def test_linux_no_known_package_manager(self):
         """On Linux with no known package manager, returns a comment placeholder."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Linux")
-        monkeypatch.setattr(_mod.shutil, "which", lambda cmd: None)
-
-        result = _mod.build_install_commands("mytool")
+        result = build_install_commands("mytool", system="linux", which=lambda _cmd: None)
         assert any("# Install mytool using your package manager" == cmd for cmd in result)
 
-    def test_darwin_no_brew(self, monkeypatch):
+    def test_darwin_no_brew(self):
         """On macOS without Homebrew, returns a comment suggesting brew install."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Darwin")
-        monkeypatch.setattr(_mod.shutil, "which", lambda cmd: None)
-
-        result = _mod.build_install_commands("pandoc")
+        result = build_install_commands("pandoc", system="darwin", which=lambda _cmd: None)
         assert any("# Install pandoc using Homebrew: brew install pandoc" == cmd for cmd in result)
 
-    def test_windows_platform_fallback(self, monkeypatch):
+    def test_windows_platform_fallback(self):
         """On Windows (or any non-linux/non-darwin OS), returns a generic comment."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Windows")
-
-        result = _mod.build_install_commands("cmake")
+        result = build_install_commands("cmake", system="windows")
         assert any("# Install cmake using your system's package manager" == cmd for cmd in result)
         assert result[-1] == "which cmake  # Verify installation"
 
-    def test_linux_apt_get_branch_explicit(self, monkeypatch):
+    def test_linux_apt_get_branch_explicit(self):
         """On Linux where apt-get is available, returns an apt-get install command."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Linux")
 
         def _which_apt_only(cmd: str) -> str | None:
             return "/usr/bin/apt-get" if cmd == "apt-get" else None
 
-        monkeypatch.setattr(_mod.shutil, "which", _which_apt_only)
-
-        result = _mod.build_install_commands("curl")
+        result = build_install_commands("curl", system="linux", which=_which_apt_only)
         assert any("apt-get" in cmd and "curl" in cmd for cmd in result)
         assert result[-1] == "which curl  # Verify installation"
 
-    def test_darwin_with_brew(self, monkeypatch):
+    def test_darwin_with_brew(self):
         """On macOS with Homebrew present, returns a brew install command."""
-        import platform as _platform
-        import infrastructure.core.install_commands as _mod
-
-        monkeypatch.setattr(_platform, "system", lambda: "Darwin")
 
         def _which_brew(cmd: str) -> str | None:
             return "/usr/local/bin/brew" if cmd == "brew" else None
 
-        monkeypatch.setattr(_mod.shutil, "which", _which_brew)
-
-        result = _mod.build_install_commands("git")
+        result = build_install_commands("git", system="darwin", which=_which_brew)
         assert any("brew install git" == cmd for cmd in result)
