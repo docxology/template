@@ -157,6 +157,7 @@ def test_table_variables_present(tmp_path):
     assert "EVIDENCE_TIER_TABLE" in v
     assert "SECURITY_ASSAY_TABLE" in v
     assert "FIGURE_QUALITY_TABLE" in v
+    assert "AUTHORING_OBLIGATIONS_TABLE" in v
 
 
 def test_title_variables_present(tmp_path):
@@ -212,6 +213,16 @@ def test_real_project_security_assay_variables_present():
     assert "MITRE ATT&CK" in v["SECURITY_ASSAY_TABLE"]
     assert "Codex Security" in v["SECURITY_ASSAY_TABLE"]
     assert "No Codex Security or Deep Security Scan findings are claimed" in v["SECURITY_ASSAY_BOUNDARY"]
+
+
+def test_real_project_authoring_obligations_table_present():
+    project_root = Path(__file__).resolve().parent.parent
+    v = generate_variables(project_root)
+    assert "Domain validator" in v["AUTHORING_OBLIGATIONS_TABLE"]
+    assert "Security evidence boundary" in v["AUTHORING_OBLIGATIONS_TABLE"]
+    # each configured obligation renders as one markdown table row
+    rows = [line for line in v["AUTHORING_OBLIGATIONS_TABLE"].splitlines() if line.strip()]
+    assert len(rows) == 7
 
 
 def test_figure_quality_variables_read_generated_report(tmp_path):

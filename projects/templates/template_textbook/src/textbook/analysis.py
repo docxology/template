@@ -13,7 +13,6 @@ from textbook import models
 LOGISTIC_PARAMETERS = {"r": 0.8, "carrying_capacity": 100.0, "initial": 5.0}
 DECAY_PARAMETERS = {"initial": 100.0, "rate": 0.5}
 LOGISTIC_SENSITIVITY_RATES = (0.4, 0.8, 1.2)
-SATURATING_PROBE_RESPONSE = 5.3
 
 
 def _build_case_study_summary(dataset_path: Path) -> dict[str, Any]:
@@ -42,7 +41,6 @@ def _build_case_study_summary(dataset_path: Path) -> dict[str, Any]:
         "extrapolation": {
             "dose": extrapolation_dose,
             "linear_prediction": fit.slope * extrapolation_dose + fit.intercept,
-            "saturating_probe_response": SATURATING_PROBE_RESPONSE,
         },
     }
 

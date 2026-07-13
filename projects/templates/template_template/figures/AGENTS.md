@@ -10,5 +10,6 @@ Automation guidance for `figures` in the `template_template` exemplar.
 - The manuscript references those rendered figures via `../output/figures/*.png`,
   matching the sibling exemplars (e.g. `template_code_project`). Do not commit
   hand-synced copies here; they drift from the live repository they depict.
-- To regenerate: run the project analysis stage (`02_run_analysis.py`) or invoke
+- To regenerate: run the project analysis stage
+  (`scripts/pipeline/stage_02_analysis.py`) or invoke
   `scripts/generate_architecture_viz.py` directly.

@@ -27,7 +27,7 @@ from __future__ import annotations
 import logging
 import pathlib
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +45,13 @@ try:
 except ImportError:
     _MPL_AVAILABLE = False
     logger.warning("figures: matplotlib not available; all figure functions return None")
+
+if TYPE_CHECKING:
+    # Only needed for the `_save()` type annotation below; matplotlib's own
+    # import above is intentionally guarded (this module must still import
+    # cleanly when matplotlib is absent), so this stays behind TYPE_CHECKING
+    # rather than adding an unconditional runtime import.
+    from matplotlib.figure import Figure
 
 # ---------------------------------------------------------------------------
 # Theme (matches docxology/template brand)
@@ -159,7 +166,7 @@ def _resolve_output(
     return out_dir / filename
 
 
-def _save(fig: Any, dest: pathlib.Path) -> pathlib.Path:
+def _save(fig: Figure, dest: pathlib.Path) -> pathlib.Path:
     fig.savefig(dest, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     logger.info("figures: saved %s", dest)
@@ -248,7 +255,7 @@ def generate_resource_counts(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "resource_counts.png",
     counts: dict[str, int] | None = None,
-    _data: Any = None,
+    _data: object = None,
 ) -> pathlib.Path | None:
     """Generate a bar chart of resource counts."""
     if not _MPL_AVAILABLE:
@@ -302,7 +309,7 @@ def generate_status_dashboard(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "status_dashboard.png",
     statuses: dict[str, str] | None = None,
-    integration_result: Any = None,
+    integration_result: object = None,
 ) -> pathlib.Path | None:
     """Generate a status dashboard of component validation results."""
     if not _MPL_AVAILABLE:
@@ -319,8 +326,9 @@ def generate_status_dashboard(
             "Validator": "ok",
             "Skill": "ok",
         }
-    if integration_result is not None and hasattr(integration_result, "statuses"):
-        statuses = integration_result.statuses
+    carried_statuses = getattr(integration_result, "statuses", None)
+    if carried_statuses is not None:
+        statuses = carried_statuses
 
     dest = _resolve_output(output_dir, filename)
     n = len(statuses)
@@ -969,7 +977,7 @@ def generate_cover_art(
 
 def all_figures(
     output_dir: str | pathlib.Path | None = None,
-    integration_result: Any = None,
+    integration_result: object = None,
     counts: dict[str, int] | None = None,
     statuses: dict[str, str] | None = None,
 ) -> dict[str, pathlib.Path | None] | None:

@@ -315,6 +315,11 @@ def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any,
         )
     variables["FAILURE_MODES_TABLE"] = "\n".join(failure_rows)
 
+    obligation_rows = []
+    for ob in gr_config.authoring_obligations:
+        obligation_rows.append(f"| {ob.get('name', '')} | {ob.get('obligation', '')} |")
+    variables["AUTHORING_OBLIGATIONS_TABLE"] = "\n".join(obligation_rows)
+
     security_records = build_security_assay(gr_config)
     variables["SECURITY_ASSAY_COUNT"] = str(len(security_records))
     variables["SECURITY_ASSAY_SUMMARY"] = security_assay_summary_line(security_records)

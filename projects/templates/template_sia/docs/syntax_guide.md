@@ -45,7 +45,7 @@ uv run python -m infrastructure.sia.cli validate projects/templates/template_sia
 ```json
 {
   "metric_name": "accuracy",
-  "metric_value": 0.8333,
+  "metric_value": 1.0,
   "n_samples": 6
 }
 ```

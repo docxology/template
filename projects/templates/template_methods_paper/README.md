@@ -81,7 +81,9 @@ paths are hardcoded anywhere.
   `Step`, `Resource`, `Parameter` as frozen dataclasses — constructed
   directly in Python rather than parsed from new text syntax.
 - **Dimensional safety** (`units.py`): every `Quantity` resolves to one of
-  seven dimensions (six physical plus dimensionless); incompatible-unit arithmetic raises `DimensionError`.
+  eight dimensions (seven physical, including separate molar- and
+  mass-concentration dimensions, plus dimensionless); incompatible-unit
+  arithmetic raises `DimensionError`.
 - **Four staged validation gates** (`validation.py`): structural, semantic,
   plan (DAG), and target compatibility — `run_all_gates` runs them in a
   fixed, short-circuiting order.

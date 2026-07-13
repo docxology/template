@@ -73,7 +73,10 @@ class LiteratureRunArtifacts:
 
     @property
     def papers(self) -> list[Paper]:
-        """Process papers."""
+        """Convenience accessor for ``self.result.papers`` as a plain list
+        (copies the underlying sequence so callers can't mutate the
+        wrapped :class:`SearchResult` in place).
+        """
         return list(self.result.papers)
 
 

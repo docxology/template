@@ -8,7 +8,7 @@ import csv
 from collections import Counter
 from pathlib import Path
 
-THRESHOLD = 0.5
+THRESHOLD = 0.25
 
 
 def majority_label(train_csv: Path) -> str:

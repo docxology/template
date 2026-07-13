@@ -25,7 +25,7 @@ long adds a full governance/confidentiality walkthrough and an appendix.
 instead of `manuscript/*.md`. `resolve_tokens` raises if any token in the
 content has no matching key in the live token set from `src/deck_tokens.py` — mirroring
 `template_madlib`'s `test_all_manuscript_tokens_are_generated` pre-substitution
-coverage check, adapted to deck content. `scripts/audit_deck_content.py`
+coverage check, adapted to deck content. `scripts/10_audit_deck_content.py`
 runs this check plus the cliché lint in one pass and exits non-zero on either
 class of failure; both failure modes are proven to actually fire (a
 deliberately-broken fixture triggers each) before the real content is

@@ -36,7 +36,6 @@ The open work below should add tests or validators before promoting new claim su
 | ID | Track | Future improvement | Proving artifact | Gate |
 | --- | --- | --- | --- | --- |
 | `LIT-ENGINE-POLITENESS-1` | Retrieval | Add per-engine persisted rate-limit/backoff metadata for live retrieval runs | `output/data/retrieval_run_manifest.json` | Live-run smoke with skipped/limited engine rows |
-| `LIT-FIXTURE-HONESTY-1` | Manuscript | Add a validator that fails if synthetic fixture results are phrased as empirical modafinil findings | fixture-claim audit report | Negative-control manuscript sentence fails |
 | `LIT-FULLTEXT-1` | Full text | Expand full-text availability report with provider, license, and checksum fields | `output/fulltext/fulltext_inventory.json` | Full-text report test with OA and non-OA fixtures |
 | `LIT-KG-CALIBRATION-1` | Knowledge graph | Add extraction-calibration fixtures for each configured hypothesis family | calibration fixture bundle | KG parser/scorer tests preserve score direction |
 

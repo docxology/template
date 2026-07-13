@@ -105,7 +105,7 @@ def draw_page_text(image: Image.Image, page: PageSpec) -> None:
     body_height = 48 * len(body_lines)
     box_height = title_height + body_height + 72
     top = height - box_height - 88
-    if page.slug in {"mega_symbol"}:
+    if page.caption_position == "top":
         top = 92
     if page.overlay_box:
         draw.rounded_rectangle(

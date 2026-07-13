@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import ast
 import datetime
+import importlib.util
 import json
 import os
 import re
@@ -23,7 +24,11 @@ import yaml
 
 
 def project_paths() -> tuple[Path, Path, Path]:
-    """Process project paths."""
+    """Resolve the three paths ``generate_review_report`` needs: this
+    project's root, the repository root (derived from this file's
+    location), and the ``output/review`` directory the report is written
+    into.
+    """
     project_root = Path(__file__).resolve().parent.parent
     # project_root is projects/templates/<name>/; repo root is three levels up.
     template_root = project_root.parents[2]
@@ -32,7 +37,9 @@ def project_paths() -> tuple[Path, Path, Path]:
 
 
 def H(text: str, level: int = 1) -> str:
-    """Process H."""
+    """Render *text* as a Markdown ATX heading at the given *level* (e.g.
+    ``H("Title", level=2)`` returns ``"## Title"``).
+    """
     return "#" * level + f" {text}"
 
 
@@ -103,7 +110,15 @@ def ensure_review_summary(project_root: Path, review_dir: Path) -> tuple[dict, i
 
 
 def collect_infra_imports(project_root: Path, template_root: Path) -> defaultdict[str, set[str]]:
-    """Process collect infra imports."""
+    """Scan every non-underscore ``src/*.py`` module via ``ast`` and record
+    which real ``infrastructure.*`` modules each one imports.
+
+    Returns a ``module -> {importing filenames}`` map (section 4 of the
+    review report renders this directly). An import is only counted when
+    the target module/package actually exists on disk under
+    ``template_root / "infrastructure"``; unresolvable imports are
+    silently skipped rather than reported as usage.
+    """
     infra_root_p = template_root / "infrastructure"
     infra_imports_used: defaultdict[str, set[str]] = defaultdict(set)
     for py in sorted((project_root / "src").glob("*.py")):
@@ -319,39 +334,86 @@ bespoke checks implemented in src.analysis.
     lines.append("")
 
     # 7. Gaps & recommendations (ASCII table)
+    #
+    # Every gap/action string below is derived from a live computation this
+    # function already performs (cite_keys, review_cfg stage list, real
+    # filesystem checks) rather than a fixed narrative string. This keeps the
+    # table internally consistent with sections 3/4/6 for any input, instead
+    # of hardcoding facts (e.g. "0 inline citations") that only matched one
+    # historical fixture and silently contradicted the live-computed count
+    # reported a few sections above.
     lines.append(H("7.  GAPS & IMMEDIATE RECOMMENDATIONS", 2))
     lines.append("")
+
+    def _stage_enabled(name: str) -> bool:
+        return next(
+            (bool(st.get("enabled", True)) for st in review_cfg["review"]["stages"] if st["name"] == name),
+            False,
+        )
+
+    if cite_keys:
+        bib_gap = f"99_references.md defers to .bib; {len(cite_keys)} inline citation(s) present in manuscript."
+        bib_action = "Citations present — confirm every key resolves in references.bib (see section 3)."
+    else:
+        bib_gap = "99_references.md defers to .bib; 0 inline citations in manuscript."
+        bib_action = "Manually insert citations OR regenerate after z script."
+
+    reading_report_present = (project_root / "output" / "reading_report.md").exists()
+    pdf_dir = project_root / "output" / "pdf"
+    pdf_present = pdf_dir.exists() and any(pdf_dir.glob("*_combined.pdf"))
+    output_gap = (
+        f"output/reading_report.md {'present' if reading_report_present else 'absent'}; "
+        f"final PDF {'present' if pdf_present else 'absent'}."
+    )
+    output_action = (
+        "Re-run the top-level PDF-rendering pipeline stage periodically to keep the PDF fresh."
+        if pdf_present
+        else "Run z_generate_manuscript_variables.py then render PDF."
+    )
+
+    links_enabled = _stage_enabled("markdown_links")
+    links_gap = (
+        "`markdown_links` stage is enabled — see output/review/stage_markdown_links.json for the current count."
+        if links_enabled
+        else "`markdown_links` stage is disabled by default (avoids false positives on infra/external docs)."
+    )
+    links_action = (
+        "Review stage_markdown_links.json and fix or allowlist flagged links."
+        if links_enabled
+        else "Enable `markdown_links` once an allowlist covers infra dirs + external docs."
+    )
+
+    prerender_enabled = _stage_enabled("prerender_validation")
+    prerender_gap = (
+        "`prerender_validation` stage is enabled — see "
+        "output/review/stage_prerender_validation.json for the current findings."
+        if prerender_enabled
+        else "`prerender_validation` stage is disabled by default."
+    )
+    prerender_action = (
+        "Add stub @misc entries for figure/section labels flagged as undefined citations."
+        if prerender_enabled
+        else "Enable `prerender_validation` once pandoc-crossref labels are allowlisted."
+    )
+
+    test_suite_enabled = _stage_enabled("test_suite_health")
+    pytest_available = importlib.util.find_spec("pytest") is not None
+    test_gap = (
+        f"`test_suite_health` stage is {'enabled' if test_suite_enabled else 'disabled by default'}; "
+        f"pytest is {'available' if pytest_available else 'unavailable'} in this environment."
+    )
+    test_action = (
+        "Enable `test_suite_health` to enforce the coverage gate as part of the review run."
+        if pytest_available
+        else "Install dev deps (`uv pip install -e .[dev]`) OR keep `test_suite_health` disabled."
+    )
+
     rows = [
-        (
-            "1",
-            "Bibliography",
-            "99_references.md defers to .bib; 0 inline citations in manuscript.",
-            "Manually insert citations OR regenerate after z script.",
-        ),
-        (
-            "2",
-            "Output artifacts",
-            "output/reading_report.md + JSON artefacts present; final PDF absent.",
-            "Run z_generate_manuscript_variables.py then render PDF.",
-        ),
-        (
-            "3",
-            "Markdown links",
-            "13 flagged broken links (false positives on infra dirs + external docs).",
-            "Disable `markdown_links` until links fixed OR extend allowlist.",
-        ),
-        (
-            "4",
-            "Prerender",
-            "`@fig:pipeline` flagged as undefined citation — actually a figure label.",
-            "Add stub @misc entry to .bib OR disable `prerender_validation`.",
-        ),
-        (
-            "5",
-            "Test suite",
-            "`pytest` unavailable in uv env (dev deps not installed).",
-            "Install dev deps (`uv pip install -e .[dev]`) OR disable `test_suite_health`.",
-        ),
+        ("1", "Bibliography", bib_gap, bib_action),
+        ("2", "Output artifacts", output_gap, output_action),
+        ("3", "Markdown links", links_gap, links_action),
+        ("4", "Prerender", prerender_gap, prerender_action),
+        ("5", "Test suite", test_gap, test_action),
     ]
     header = "| # | Category   | Gap                                          | Recommended Action                    |"  # noqa: E501
     divider = (
@@ -394,16 +456,28 @@ bespoke checks implemented in src.analysis.
     lines.extend(nxt)
 
     # 9. Intelligence augmentation facts
+    #
+    # As with section 7, these bullets reference the same live-computed
+    # variables used elsewhere in this report (infra_imports_used from
+    # section 4, cite_keys from section 3, pdf_present from section 7)
+    # instead of a separately hardcoded fact list that could drift out of
+    # sync with them.
     lines.append(H("9.  INTELLIGENCE AUGMENTATION — FACTS MEMORISED", 2))
+    infra_mods_summary = ", ".join(sorted(infra_imports_used)) if infra_imports_used else "none detected"
+    next_step = (
+        "run the top-level pipeline's PDF-rendering stage to refresh the combined PDF"
+        if pdf_present
+        else "run z_generate_manuscript_variables.py to substitute {{...}}, then enable "
+        "variables_resolved/output_integrity and proceed to PDF rendering"
+    )
     lines.append(
-        """
+        f"""
   • Template_search_project: literature-search exemplar using infrastructure.search
     + infrastructure.reference, orchestrated by thin scripts pipeline.
   • Review system: scripts/review + review_config.yaml + src/analysis.
-  • Infra usage: infrastructure.search.literature, infrastructure.reference.citation,
-    infrastructure.llm (OllamaClientConfig), infrastructure.core.logging.
-  • Next: run z_generate_manuscript_variables.py to substitute {{...}}, then enable
-    variables_resolved/output_integrity and proceed to PDF rendering.
+  • Infra usage ({len(infra_imports_used)} module(s)): {infra_mods_summary}.
+  • Bibliography: {len(cite_keys)} inline citation key(s) detected in manuscript (see section 3).
+  • Next: {next_step}.
 """
     )
 

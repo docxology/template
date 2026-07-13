@@ -20,10 +20,14 @@ protocol-level verbs (`add_reagent`, `transfer`, `incubate`): a step names
 
 ## Dimensional safety (`units.py`)
 
-Every `Quantity(value, unit)` resolves its `unit` to one of seven
-`Dimension` members (mass, volume, temperature, time, concentration, count,
-dimensionless) via `dimension_of`, drawing from a controlled table of
-{{DSL_UNIT_COUNT}} unit strings. `check_compatible` raises `DimensionError`
+Every `Quantity(value, unit)` resolves its `unit` to one of eight
+`Dimension` members (mass, volume, temperature, time, molar concentration,
+mass concentration, count, dimensionless) via `dimension_of`, drawing from a
+controlled table of {{DSL_UNIT_COUNT}} unit strings. Molar concentration
+(`mol/L`, `mM`) and mass concentration (`g/L`) are separate dimensions
+rather than one shared "concentration" dimension, since converting between
+them needs a substance's molar mass that this DSL does not carry.
+`check_compatible` raises `DimensionError`
 the moment two quantities with different dimensions are combined — the
 concrete realization of BPL's design principle that "the type system catches
 `mL + g` at compile time, not at the bench." Temperature is tracked as its

@@ -38,120 +38,134 @@
       "slug": "cover",
       "title": "The Shape Between",
       "scene": "cosmic_yinyang",
-      "overlay_box": false
+      "overlay_box": false,
+      "caption_position": "bottom"
     },
     {
       "number": 1,
       "slug": "publication_information",
       "title": "Publication Information",
       "scene": "publication_info",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 2,
       "slug": "square_house",
       "title": "The Square House",
       "scene": "cube_home",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 3,
       "slug": "pointed_house",
       "title": "The Pointed House",
       "scene": "tetra_home",
-      "overlay_box": false
+      "overlay_box": false,
+      "caption_position": "bottom"
     },
     {
       "number": 4,
       "slug": "valley_symbol",
       "title": "The Valley That Turned",
       "scene": "symbol_valley",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 5,
       "slug": "first_connection",
       "title": "The First Edge",
       "scene": "meeting",
-      "overlay_box": false
+      "overlay_box": false,
+      "caption_position": "bottom"
     },
     {
       "number": 6,
       "slug": "tetra_inside_cube",
       "title": "The Tetrahedron Inside",
       "scene": "tetra_stability",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 7,
       "slug": "mirror_families",
       "title": "Mirror Families",
       "scene": "mirror",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 8,
       "slug": "bridge_of_edges",
       "title": "Bridge of Edges",
       "scene": "bridge",
-      "overlay_box": false
+      "overlay_box": false,
+      "caption_position": "bottom"
     },
     {
       "number": 9,
       "slug": "shadow_school",
       "title": "The Shadow School",
       "scene": "shadow_school",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 10,
       "slug": "tensegrity_lantern",
       "title": "The Tensegrity Lantern",
       "scene": "tensegrity_lantern",
-      "overlay_box": false
+      "overlay_box": false,
+      "caption_position": "bottom"
     },
     {
       "number": 11,
       "slug": "vector_garden",
       "title": "The Vector Garden",
       "scene": "vector_garden",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "bottom"
     },
     {
       "number": 12,
       "slug": "mega_symbol",
       "title": "The Mega-Symbol",
       "scene": "mega_symbol",
-      "overlay_box": true
+      "overlay_box": true,
+      "caption_position": "top"
     },
     {
       "number": 13,
       "slug": "shared_home",
       "title": "The Shape Between",
       "scene": "shared_home",
-      "overlay_box": false
+      "overlay_box": false,
+      "caption_position": "bottom"
     }
   ],
   "render": {
-    "output_path": "<repo-root>/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
+    "output_path": "projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
     "page_count": 14,
     "image_paths": [
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/02_square_house.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/03_pointed_house.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/04_valley_symbol.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/05_first_connection.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/09_shadow_school.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/10_tensegrity_lantern.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/11_vector_garden.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/12_mega_symbol.png",
-      "<repo-root>/projects/templates/template_storybook/output/figures/storybook_pages/13_shared_home.png"
+      "projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/02_square_house.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/03_pointed_house.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/04_valley_symbol.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/05_first_connection.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/09_shadow_school.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/10_tensegrity_lantern.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/11_vector_garden.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/12_mega_symbol.png",
+      "projects/templates/template_storybook/output/figures/storybook_pages/13_shared_home.png"
     ],
-    "manifest_path": "<repo-root>/projects/templates/template_storybook/output/data/storybook_manifest.json",
-    "summary_path": "<repo-root>/projects/templates/template_storybook/output/reports/storybook_summary.md"
+    "manifest_path": "projects/templates/template_storybook/output/data/storybook_manifest.json",
+    "summary_path": "projects/templates/template_storybook/output/reports/storybook_summary.md"
   }
 }

@@ -7,8 +7,7 @@
     },
     "extrapolation": {
       "dose": 3.0,
-      "linear_prediction": 6.299999999999999,
-      "saturating_probe_response": 5.3
+      "linear_prediction": 6.299999999999999
     },
     "linear_fit": {
       "intercept": 2.1750000000000003,
@@ -22,7 +21,7 @@
       "min": 2.1,
       "std": 1.129527924990495
     },
-    "source": "<repo-root>/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"
+    "source": "/Users/4d/Documents/GitHub/template/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"
   },
   "exponential_decay": {
     "half_life": 1.3862943611198906,

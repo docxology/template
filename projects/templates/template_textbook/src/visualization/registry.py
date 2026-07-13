@@ -11,7 +11,13 @@ _SKIPPED_DOCS = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 
 @dataclass(frozen=True)
 class FigureRegistryEntry:
-    """Data container for FigureRegistryEntry."""
+    """One figure cross-referenced from manuscript prose to its generated file.
+
+    Captures the label used in `{#fig:...}` markdown attributes, the figure's
+    filename relative to `output/figures/`, its caption text, the manuscript
+    file that references it, and the script responsible for generating it —
+    the row shape written into `figure_registry.json`.
+    """
 
     label: str
     filename: str

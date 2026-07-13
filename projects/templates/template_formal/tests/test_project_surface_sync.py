@@ -30,6 +30,10 @@ def test_live_fixture_and_documentation_surfaces_are_synchronized() -> None:
     assert "95.91%" in tests_readme
     assert "three pre-registered" not in results.lower()
 
+    root_readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+    assert root_readme.count("95.91%") == 2
+    assert "95.93%" not in root_readme
+
 
 def test_authoritative_mypy_command_is_synchronized_across_fork_surfaces() -> None:
     expected_prefix = "MYPYPATH=projects/templates/template_formal/src"

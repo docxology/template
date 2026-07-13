@@ -1,4 +1,4 @@
-"""types.py — TypedDict definitions for template_pools_rules_tools.
+"""type_defs.py — TypedDict definitions for template_pools_rules_tools.
 
 All public return-type contracts for fonds_reader, rules_applier,
 tools_invoker, and integration are declared here and re-exported from
@@ -33,6 +33,7 @@ __all__ = [
     "IntegrationSummary",
     "IntegrationResult",
     "FigureDataRow",
+    "CrossFondOverlapResult",
 ]
 
 

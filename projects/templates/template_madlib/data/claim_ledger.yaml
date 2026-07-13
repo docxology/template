@@ -132,9 +132,9 @@ claims:
     source_tier: generated_metric
     freshness: active
     artifact_path: output/
-  - claim_id: no-live-standalone-doi
+  - claim_id: live-standalone-doi-published
     kind: boundary
-    value: "publication.doi and publication.version_doi are blank for this exemplar"
+    value: "publication.doi is 10.5281/zenodo.20786638 and publication.version_doi is 10.5281/zenodo.20932025 — both are real, deposited Zenodo records for this exemplar's standalone release, not placeholders"
     source: projects/templates/template_madlib/manuscript/config.yaml publication
     source_tier: project_source
     freshness: active

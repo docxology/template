@@ -16,10 +16,11 @@ The two public entry points are:
 
 The generator is **idempotent**: running it twice with no YAML change makes
 no diff. The "Stage" column reflects the 0-based position of each stage in
-the YAML; this index intentionally does **not** match the ``NN_*.py`` numeric
-prefixes used by the script filenames (e.g. stage 6 runs ``05_copy_outputs.py``).
-The caption notes this caveat explicitly so historical pitfalls are not
-re-introduced.
+the YAML; this index intentionally does **not** match the ``stage_NN_*.py``
+numeric prefixes used by the canonical script filenames under
+``scripts/pipeline/`` (e.g. stage 11, "Copy Outputs", runs
+``scripts/pipeline/stage_05_copy.py``). The caption notes this caveat
+explicitly so historical pitfalls are not re-introduced.
 """
 
 from pathlib import Path
@@ -62,8 +63,8 @@ def _stage_table_caption(yaml_link: str) -> str:
         f"[`{_PIPELINE_YAML_REL}`]({yaml_link}) "
         "by `scripts/docgen/stage_table.py`. Do not hand-edit. "
         "Stage indices are **0-based positions in the YAML** and intentionally do "
-        "**not** match the `scripts/NN_*.py` numeric prefixes "
-        "(for example, stage 9 runs `05_copy_outputs.py`). -->"
+        "**not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes "
+        "(for example, stage 11, \"Copy Outputs\", runs `scripts/pipeline/stage_05_copy.py`). -->"
     )
 
 

@@ -15,8 +15,7 @@ metrics:
 protocol: "Validate each descriptor with the same required-field and provenance gates."
 expected_figures:
   - fig:schema_overview
-expected_tables:
-  - tbl:data_dictionary
+expected_tables: []
 baselines:
   - minimal_descriptor
 ablations:

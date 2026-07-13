@@ -548,8 +548,18 @@ def _check_decisions(
         redact_text(segment.text, decisions)
     except ValueError as exc:
         findings.append(RedactionFinding("error", "bad_redaction_decision", f"{segment.id}: {exc}"))
-    for control in segment.source_controls:
-        if not any(decision.reason == "source_identity" for decision in decisions):
+    # Each distinct source control needs its *own* covering source_identity
+    # decision. Matching `_has_deviation`'s kind+target style binding (in
+    # registered_report.protocol) exactly isn't possible here because
+    # RedactionDecision carries no field naming which control it protects and
+    # a control's name need not appear verbatim in the segment text (see
+    # test_unique_sensitive_span_is_hashed_never_serialized). Instead we bind
+    # by count: the Nth source control requires the Nth source_identity
+    # decision to exist. A single decision anywhere in the segment can no
+    # longer vacuously "cover" every control regardless of how many there are.
+    source_identity_decisions = [decision for decision in decisions if decision.reason == "source_identity"]
+    for index, control in enumerate(segment.source_controls):
+        if index >= len(source_identity_decisions):
             findings.append(
                 RedactionFinding(
                     "error", "source_control_uncovered", f"{segment.id} source control {control} lacks source redaction"

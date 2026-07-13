@@ -9,8 +9,8 @@ drift from a hardcoded value.
 ## Dataset
 
 The analysis uses a shipped, deterministic CSV fixture
-(`data/measurements.csv`) generated once with a fixed NumPy seed. It contains
-120 subject records with the following columns:
+(`data/measurements.csv`): a static, committed file with fixed content. It
+contains 120 subject records with the following columns:
 
 | Column | Role | Type |
 |---|---|---|

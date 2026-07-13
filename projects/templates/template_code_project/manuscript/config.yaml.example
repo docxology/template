@@ -36,6 +36,7 @@ publication:
   version_doi: ""  # Latest Zenodo version DOI; updated by publish_project_release.py when split layout is used
   version_record: ""  # https://zenodo.org/records/{id} for the latest deposit
   github_repository: ""  # Pre-release bookends; e.g. docxology/template_code_project
+  # published_artifacts: {}  # optional; provider -> published-mirror URL, populated post-publication (e.g. ipfs_pinata, huggingface_hub, osf, pypi, netlify, github_pages, software_heritage)
   transmission_bookends:
     enabled: false
     max_prior_releases: 5

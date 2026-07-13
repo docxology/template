@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Project-specific **thin orchestrator scripts** for the Active Inference meta-analysis pipeline. Each script coordinates I/O and sequencing; all computational logic resides in `../src/` modules. Scripts are numbered to indicate execution order.
+Project-specific **thin orchestrator scripts** for the literature meta-analysis pipeline (modafinil literature exemplar). Each script coordinates I/O and sequencing; all computational logic resides in `../src/` modules. Scripts are numbered to indicate execution order.
 
 ## Architecture
 
@@ -16,6 +16,8 @@ scripts/
 ├── 04_generate_figures.py        # → visualization/figure_runner.py
 ├── 05_inject_variables.py        # → manuscript/variables/
 ├── 06_fulltext_assessment.py     # → literature/fulltext_assessment.py
+├── 07_literature_evaluation.py   # → literature/evaluation.py
+├── 08_deep_research_dispatch.py  # → deep_research/deep_research_adapter.py
 └── __pycache__/                  # Python bytecode cache (gitignored)
 ```
 
@@ -101,7 +103,11 @@ LLM-based assertion extraction and hypothesis scoring via Ollama.
 
 ### `04_generate_figures.py`
 
-Generates all 16 publication-quality figures from analysis JSON files.
+Generates publication-quality figures from analysis JSON files. The figure count is
+**computed dynamically**, not fixed: each figure is emitted only when its source JSON
+input is present, and the caption registry (`src/visualization/figure_runner.py` →
+`FIGURE_CAPTIONS`) currently defines 21 possible figures. Do not hardcode a figure count
+in docs — link this section or the registry instead.
 
 **Figure categories:**
 - **Field overview:** `field_summary.png`, `subfield_distribution.png`
@@ -153,10 +159,28 @@ Corpus-quality and routing coverage summary for the literature workflow.
 - `--corpus PATH` — corpus JSONL path
 - `--query TEXT` — optional query string for routing diagnostics
 - `--output-dir PATH` — output directory for `literature_evaluation.json`
+- `--fixture-honesty` — audit `manuscript/*.md` for undisclosed empirical claims on the
+  synthetic fixture corpus via `literature.fixture_honesty.validate_fixture_honesty`;
+  exits non-zero and logs each finding's `message`/`line_number` on violation
 
 **Reports:** total paper count, DOI coverage, preprint coverage, metadata completeness, duplicate-title groups, source distribution, query routing choice, and optional claim-verification summary.
 
-**Imports from `src/`:** `literature.corpus.Corpus`, `literature.evaluation.evaluate_corpus`.
+**Imports from `src/`:** `literature.corpus.Corpus`, `literature.evaluation.evaluate_corpus`, `literature.fixture_honesty.validate_fixture_honesty`.
+
+### `08_deep_research_dispatch.py`
+
+Thin wrapper around `infrastructure.search.deep_research` demonstrating the deep-research
+adapter without any network call or API key. By default it replays a recorded report
+fixture (deterministic, offline, CI-safe); it also exposes the real provider-neutral
+request a live `submit` would dispatch.
+
+**Key flags:**
+- `--query TEXT` — query used to build the (real) provider-neutral deep-research request
+- `--fixture PATH` — optional explicit recorded-report JSON to replay (defaults to the
+  bundled fixture)
+- `--output-dir PATH` — output directory for dispatch artifacts
+
+**Imports from `src/`:** `deep_research.deep_research_adapter.build_offline_request`, `deep_research.deep_research_adapter.list_provider_profile`, `deep_research.deep_research_adapter.replay_recorded_report`.
 
 ## Thin Orchestrator Pattern
 
@@ -196,7 +220,7 @@ output/
 │   ├── fulltext_assessment.json      # 06
 │   └── literature_evaluation.json   # 07
 ├── figures/                          # 04
-│   ├── *.png (16 figures)
+│   ├── *.png (count computed dynamically from available inputs — see caption registry)
 │   └── figure_registry.json
 └── manuscript/                       # 05
     └── *.md (rendered with variables)

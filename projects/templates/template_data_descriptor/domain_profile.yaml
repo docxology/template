@@ -9,7 +9,10 @@ validation_gates:
   - publication_readiness
 figure_types:
   - schema_overview
+  - file_inventory
   - provenance_flow
+  - quality_gate
+  - checksum_verification
 citation_policy: official_or_scholarly
 llm_prompt_guidance: "Keep claims limited to dataset structure, provenance, validation, and reuse boundaries."
 review_gates:
@@ -19,7 +22,8 @@ review_gates:
 source_policy: "Use committed descriptors and documented data dictionaries; avoid untracked private data."
 artifact_expectations:
   - output/reports/descriptor_report.json
-  - output/reports/descriptor_report.json
+  - output/reports/release_bundle_manifest.json
+  - output/reports/field_constraints.json
 benchmark_rubric:
   name: data-descriptor-readiness
   dimensions:

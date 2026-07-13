@@ -75,6 +75,39 @@ def test_build_llm_callable_returns_none_on_import_error(monkeypatch):
     assert result is None
 
 
+def test_build_llm_callable_returns_none_when_client_construction_raises(monkeypatch):
+    """Cover the second ``except Exception`` branch (lines 88-93): the
+    import succeeds but ``OllamaClientConfig.from_env()``/``LLMClient(...)``
+    construction raises (e.g. the Ollama server is unreachable). The
+    function must still return ``None`` rather than propagate.
+
+    Uses the same real-module-substitution pattern as
+    ``tests/test_deep_improvements.py::TestLLMRuntimeCallable`` (a
+    ``types.ModuleType`` stand-in swapped into ``sys.modules`` via
+    ``monkeypatch.setitem``) — no mock framework involved, only a real
+    (if deliberately broken) module object.
+    """
+    import sys
+    import types
+
+    class _BrokenConfig:
+        @classmethod
+        def from_env(cls) -> "_BrokenConfig":
+            raise RuntimeError("test-injected: cannot reach Ollama base_url")
+
+    class _UnreachableClient:
+        def __init__(self, _config) -> None:
+            raise AssertionError("should not be constructed once from_env() raises")
+
+    fake_mod = types.ModuleType("infrastructure.llm")
+    fake_mod.LLMClient = _UnreachableClient
+    fake_mod.OllamaClientConfig = _BrokenConfig
+    monkeypatch.setitem(sys.modules, "infrastructure.llm", fake_mod)
+
+    result = build_llm_callable(**_kwargs())
+    assert result is None
+
+
 def test_returned_callable_signature_is_str_to_str():
     """The returned callable has the documented ``Callable[[str], str]``
     signature. We don't invoke it (that would hit Ollama), but we can

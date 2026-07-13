@@ -124,4 +124,6 @@ needs a Chrome/Chromium binary. Two ways to point it at one:
 Without a reachable browser, diagrams degrade gracefully to fenced code blocks in
 the output and `src/mermaid` writes `.mmd` source instead of PNG — the build
 never hard-fails. With it, the combined PDF embeds the rendered diagrams (verified:
-17 inline diagrams render into the book).
+18 inline diagrams render into the book — one per chapter across the 12
+chapters in `manuscript/part_0/` through `manuscript/part_III/`, one in
+`appendix_authoring_guide.md`, and five in `appendix_format_gallery.md`).

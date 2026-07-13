@@ -218,6 +218,18 @@ def _live_feedback(state: GenerationState, prior: GenerationArtifacts) -> tuple[
         )
     improvement = gen_dir / "improvement.md"
     improvement.write_text(text, encoding="utf-8")
+    # WHY unconditional copy (deliberate, not an oversight): live mode re-runs the
+    # SAME reference scaffold every generation regardless of what `text` proposes.
+    # This is the documented "honest-stub" invariant for the public exemplar —
+    # applying LLM/heuristic-authored feedback as an actual code edit needs
+    # sandboxing, diff review, and rollback contracts this harness does not yet
+    # provide (see template_sia/TODO.md "Integrity and template-status gaps" and
+    # ordered-ladder item 4). Until those exist, cross-generation self-improvement
+    # is demonstrated only via fixture replay (src/fixtures/recorded_generations/),
+    # never by live mutation. `test_live_mode_does_not_mutate_target_code_across_generations`
+    # in tests/infra_tests/sia/test_loop_runner.py pins this as a tripwire — do not
+    # make this copy conditional on `text` without updating that test and the
+    # sandboxing/diff-review/rollback story first.
     reference = state.layout.reference_dir / "reference_target_agent.py"
     target = gen_dir / "target_agent.py"
     shutil.copy2(reference, target)

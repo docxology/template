@@ -8,7 +8,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from .characters import child_pair
+from .characters import character_by_id, child_pair
 from .models import Character, PageSpec, StorybookSpec
 from .text_layout import draw_page_text, load_font, pixel_wrapped_lines, text_height, text_width, wrapped_lines
 
@@ -560,6 +560,12 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
     image = _gradient(width, height, a, b)
     draw = ImageDraw.Draw(image, "RGBA")
     tessa, ciro = child_pair(spec.characters)
+    # "cube_family" / "tetra_family" (named "The Square House" / "The Pointed House" in
+    # content/story.yaml, matching the titles of the square_house/pointed_house pages)
+    # carry their own fill/accent for the family shapes drawn below. Fall back to the
+    # child's own colors if a fork's cast omits these optional family records.
+    cube_family = character_by_id(spec.characters, "cube_family") or tessa
+    tetra_family = character_by_id(spec.characters, "tetra_family") or ciro
     _draw_stars(draw, page.slug, width, height, _mix(c, (255, 255, 255), 0.35))
 
     if page.scene == "cosmic_yinyang":
@@ -599,7 +605,7 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
             draw.line((x, 310, x, 1000), fill=(*d, 42), width=3)
         for y_grid in range(390, 1000, 150):
             draw.line((150, y_grid, width - 150, y_grid), fill=(*d, 42), width=3)
-        _draw_family(draw, tessa, [(250, 1110), (470, 1030), (720, 1125), (965, 1038)], 170)
+        _draw_family(draw, cube_family, [(250, 1110), (470, 1030), (720, 1125), (965, 1038)], 170)
         _draw_character(draw, tessa, (width // 2, 680), 250)
         _draw_corner_witnesses(draw, [(235, 405), (995, 405), (995, 905), (235, 905)], color=c, alpha=130)
         draw.rectangle((90, 1240, width - 90, 1335), fill=_mix(a, d, 0.35))
@@ -616,7 +622,7 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
             alpha=46,
             rotation=math.pi / 3,
         )
-        _draw_family(draw, ciro, [(235, 1020), (455, 940), (810, 1010), (1045, 910)], 180)
+        _draw_family(draw, tetra_family, [(235, 1020), (455, 940), (810, 1010), (1045, 910)], 180)
         _draw_character(draw, ciro, (width // 2, 685), 250)
         for x in range(120, width, 170):
             draw.polygon(((x, 1320), (x + 80, 1210), (x + 160, 1320)), outline=d, fill=_mix(a, c, 0.25))
@@ -641,8 +647,8 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
             alpha=38,
             rotation=math.pi / 12,
         )
-        _draw_family(draw, tessa, [(315, 625), (260, 875)], 110)
-        _draw_family(draw, ciro, [(940, 625), (1010, 880)], 120)
+        _draw_family(draw, cube_family, [(315, 625), (260, 875)], 110)
+        _draw_family(draw, tetra_family, [(940, 625), (1010, 880)], 120)
     elif page.scene == "meeting":
         _draw_yinyang(draw, width // 2, 760, 380, _mix(a, (255, 255, 255), 0.35), _mix(d, (0, 0, 0), 0.15))
         for radius in (440, 510, 580):
@@ -670,8 +676,8 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
         draw.rectangle((width // 2 - 12, 250, width // 2 + 12, 1270), fill=(255, 255, 255, 140))
         for y_mark in range(320, 1210, 110):
             draw.line((width // 2 - 70, y_mark, width // 2 + 70, y_mark + 36), fill=(255, 255, 255, 80), width=3)
-        _draw_family(draw, tessa, [(250, 950), (420, 1040), (275, 1145)], 140)
-        _draw_family(draw, ciro, [(1010, 950), (850, 1040), (990, 1145)], 140)
+        _draw_family(draw, cube_family, [(250, 950), (420, 1040), (275, 1145)], 140)
+        _draw_family(draw, tetra_family, [(1010, 950), (850, 1040), (990, 1145)], 140)
         _draw_character(draw, tessa, (500, 690), 210)
         _draw_character(draw, ciro, (780, 690), 210)
     elif page.scene == "bridge":
@@ -740,8 +746,8 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
             alpha=42,
             rotation=math.pi / 9,
         )
-        _draw_family(draw, tessa, [(185, 900), (330, 990), (485, 925)], 106)
-        _draw_family(draw, ciro, [(755, 1110), (900, 1200), (1040, 1115)], 120)
+        _draw_family(draw, cube_family, [(185, 900), (330, 990), (485, 925)], 106)
+        _draw_family(draw, tetra_family, [(755, 1110), (900, 1200), (1040, 1115)], 120)
         _draw_character(draw, tessa, (515, 775), 190)
         _draw_character(draw, ciro, (770, 785), 190)
     else:

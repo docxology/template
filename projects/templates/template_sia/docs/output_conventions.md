@@ -11,7 +11,7 @@
 | `output/reports/sia_loop_report.md` | `src/reports.py` | Human review |
 | `output/data/manuscript_variables.json` | Variables script | Debugging, tokens audit |
 | `output/manuscript/*.md` | Injection pass | PDF renderer |
-| `output/pdf/template_sia_combined.pdf` | Stage 05 | Validation, publication |
+| `output/pdf/template_sia_combined.pdf` | Stage 03 (`stage_03_render.py`) | Validation, publication |
 
 The public template tracks this project-local `output/` tree and the copied
 `output/templates/template_sia/` tree as release artifacts when files stay below

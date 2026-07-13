@@ -37,8 +37,9 @@ source of truth.
 
 ## Determinism
 
-- The dataset (`data/measurements.csv`) is a static, committed fixture generated
-  once with a fixed NumPy seed, so every statistic is reproducible bit-for-bit.
+- The dataset (`data/measurements.csv`) is a static, committed fixture with
+  fixed content — the same file is read on every run, so every statistic is
+  reproducible bit-for-bit.
 - The figure-data preparers are pure transforms with no RNG; the same inputs
   always produce the same bin counts, correlation values, and group counts.
 - `clean_dataset()` reports exactly how many rows it removed, so the

@@ -28,6 +28,8 @@ def test_load_storybook_story_contract(project_root) -> None:
     assert "Synergetics" in spec.pages[1].text
     assert "tetrahedron inside the cube" in spec.page_by_number(6).text
     assert "struts that pushed and threads that pulled" in spec.page_by_number(10).text
+    assert spec.page_by_number(2).caption_position == "bottom"
+    assert spec.page_by_number(12).caption_position == "top"
 
 
 def test_child_pair_uses_opposite_family_shapes(project_root) -> None:

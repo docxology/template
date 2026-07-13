@@ -22,7 +22,8 @@ flowchart TB
 uv run pytest projects/templates/template_search_project/tests/ -q
 ```
 
-All 30+ tests should pass without an internet connection.
+All 301 tests should pass without an internet connection (verify the current
+count with `uv run pytest projects/templates/template_search_project/tests --collect-only -q`).
 
 ## 2. Run the orchestrator end-to-end (offline)
 
@@ -68,9 +69,11 @@ The infrastructure pipeline runner:
 3. Executes every `scripts/*.py` in alphabetical order: `run_deep_search.py`,
    `run_search_pipeline.py`, `s_compose_literature_review.py`,
    `y_generate_search_figures.py`, `z_generate_manuscript_variables.py`,
-   `zz_generate_review_report.py`. The composer runs *before* the
-   manuscript resolver so `output/manuscript/S01_literature_review.md`
-   always reflects the latest `references_deep.bib` keys.
+   `zz_generate_review_report.py`, `zzz_build_dashboard.py`. The composer
+   runs *before* the manuscript resolver so
+   `output/manuscript/S01_literature_review.md` always reflects the latest
+   `references_deep.bib` keys. The dashboard builder runs last since it
+   consumes the corpus + aggregate JSON produced by the earlier scripts.
 4. Renders the combined PDF (Pandoc `--natbib` + BibTeX; all `manuscript/*.bib` merged).
 5. Validates the PDF
 6. Optionally runs LLM review/translations

@@ -28,6 +28,7 @@ class PageSpec:
     text: str
     overlay_box: bool
     palette: tuple[str, str, str, str]
+    caption_position: str = "bottom"
 
     @property
     def filename(self) -> str:

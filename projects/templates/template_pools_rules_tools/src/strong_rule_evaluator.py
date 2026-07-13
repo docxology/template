@@ -484,19 +484,22 @@ def load_rule_context_from_project(project_root: pathlib.Path) -> dict[str, obje
     manuscript_dir = project_root / "manuscript"
     config_block = _load_strong_rules_config(project_root)
 
+    # `manuscript_sections` must reflect ONLY the real `# `-level headings
+    # detected in this project's own manuscript/*.md files. It must never be
+    # padded with `canonical_sections` from config.yaml: `section-schema.yaml`'s
+    # `required_sections` is drawn from that same canonical list, so injecting
+    # it here would make the "required section missing" check compare the
+    # config's canonical list against itself — vacuously passing regardless of
+    # what the manuscript actually contains. `canonical_sections` in config.yaml
+    # remains available in `config_block` for other consumers but must not
+    # feed back into the detected-sections list the schema check verifies
+    # against.
     sections: list[str] = []
     if manuscript_dir.is_dir():
         for md_file in sorted(manuscript_dir.glob("*.md")):
             first_line = md_file.read_text(encoding="utf-8").splitlines()[:1]
             if first_line and first_line[0].startswith("# "):
                 sections.append(_normalize_heading(first_line[0]))
-
-    canonical = config_block.get("canonical_sections")
-    if isinstance(canonical, list):
-        for item in canonical:
-            name = str(item).strip()
-            if name and name not in sections:
-                sections.append(name)
 
     references: list[dict[str, object]] = []
     bib_path = manuscript_dir / "references.bib"

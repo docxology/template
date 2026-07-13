@@ -1,25 +1,25 @@
 ## DAG Pipeline Declared by `pipeline.yaml`
 
-Single-project pipelines read `infrastructure/core/pipeline/pipeline.yaml`. `scripts/runner/execute_pipeline.py` expands the declarative DAG, applies tag filters (`--core-only` skips `llm` stages), checkpoints between nodes, then dispatches numbered scripts (`scripts/NN_*.py`) or builtin methods (`_run_clean_outputs`).
+Single-project pipelines read `infrastructure/core/pipeline/pipeline.yaml`. `scripts/runner/execute_pipeline.py` expands the declarative DAG, applies tag filters (`--core-only` skips `llm` stages), checkpoints between nodes, then dispatches the declared `scripts/pipeline/stage_NN_*.py` scripts or builtin methods (`_run_clean_outputs`).
 
-The **default YAML graph contains ten named stages** (plus telemetry configuration metadata):
+The **default YAML graph contains ten named core stages** (plus telemetry configuration metadata):
 
 1. **Clean Output Directories** — wipes prior `projects/<name>/output/` + delivered `output/<name>/` paths so stale PDFs cannot satisfy validation.
-2. **Environment Setup** (`00_setup_environment.py`) — Python/uv probing, toolchain discovery, scaffolding directories, `PYTHONPATH` wiring.
-3. **Infrastructure Tests** (`01_run_tests.py --infra-only`) — `tests/` suite with the configured ≥${coverage_floor_infrastructure}% source-coverage floor.
-4. **Project Tests** (`01_run_tests.py --project-only`) — isolated per-project suites with each project's declared floor (≥${coverage_floor_project}% for this exemplar).
-5. **Project Analysis** (`02_run_analysis.py`) — lexicographically ordered `projects/<name>/scripts/*.py`, each a thin orchestrator (`src/` does real work).
-6. **PDF Rendering** (`03_render_pdf.py`) — Pandoc → XeLaTeX loop, bibliography assembly, injected variables from Stage 02 artefacts.
-7. **Output Validation** (`04_validate_output.py`) — PDF structure, manifests, Markdown hygiene.
-8. **LLM Scientific Review** (`06_llm_review.py --reviews-only`; `tags: llm`) — executive + quality critiques via local Ollama; `allow_skip: true`.
-9. **LLM Translations** (`06_llm_review.py --translations-only`; tags `llm`, same dependency edges) — multilingual abstract expansion.
-10. **Copy Outputs** (`05_copy_outputs.py`) — reproducible snapshots into canonical `output/<project>/`.
+2. **Environment Setup** (`scripts/pipeline/stage_00_setup.py`) — Python/uv probing, toolchain discovery, scaffolding directories, `PYTHONPATH` wiring.
+3. **Infrastructure Tests** (`scripts/pipeline/stage_01_test.py --infra-only`) — `tests/` suite with the configured ≥${coverage_floor_infrastructure}% source-coverage floor.
+4. **Project Tests** (`scripts/pipeline/stage_01_test.py --project-only`) — isolated per-project suites with each project's declared floor (≥${coverage_floor_project}% for this exemplar).
+5. **Project Analysis** (`scripts/pipeline/stage_02_analysis.py`) — lexicographically ordered `projects/<name>/scripts/*.py`, each a thin orchestrator (`src/` does real work).
+6. **PDF Rendering** (`scripts/pipeline/stage_03_render.py`) — Pandoc → XeLaTeX loop, bibliography assembly, injected variables from Stage 02 artefacts.
+7. **Output Validation** (`scripts/pipeline/stage_04_validate.py`) — PDF structure, manifests, Markdown hygiene.
+8. **LLM Scientific Review** (`scripts/pipeline/stage_06_llm_review.py --reviews-only`; `tags: llm`) — executive + quality critiques via local Ollama; `allow_skip: true`.
+9. **LLM Translations** (`scripts/pipeline/stage_06_llm_review.py --translations-only`; tags `llm`, same dependency edges) — multilingual abstract expansion.
+10. **Copy Outputs** (`scripts/pipeline/stage_05_copy.py`) — reproducible snapshots into canonical `output/<project>/`.
 
 Two LLM nodes intentionally share one script module with orthogonal CLI switches; both depend only on validation so they can parallelize logically while remaining optional.
 
 **Executive reporting** (`scripts/pipeline/stage_07_executive_report.py`) is **not** a YAML node inside the single-project executor. `--all-projects` / `execute_multi_project.py` invokes it once after iterating projects, consolidating cross-project KPIs dashboards.
 
-Topological order therefore differs slightly from lexical script numbering (e.g., copy executes after validation even though script `05` precedes `06` lexically).
+Topological order therefore differs slightly from declaration order (e.g., copy executes after validation even though stage `stage_05_copy.py` precedes `stage_06_llm_review.py` lexically).
 
 ### Stage Highlights
 

@@ -40,6 +40,16 @@ def _palette(record: Mapping[str, object]) -> tuple[str, str, str, str]:
     return (colors[0], colors[1], colors[2], colors[3])
 
 
+VALID_CAPTION_POSITIONS = frozenset({"top", "bottom"})
+
+
+def _caption_position(record: Mapping[str, object]) -> str:
+    value = record.get("caption_position", "bottom")
+    if not isinstance(value, str) or value not in VALID_CAPTION_POSITIONS:
+        raise ValueError(f"page.caption_position must be one of {sorted(VALID_CAPTION_POSITIONS)}")
+    return value
+
+
 def _page(record: Mapping[str, object]) -> PageSpec:
     overlay_box = record.get("overlay_box")
     if not isinstance(overlay_box, bool):
@@ -52,6 +62,7 @@ def _page(record: Mapping[str, object]) -> PageSpec:
         text=_require_text(record, "text"),
         overlay_box=overlay_box,
         palette=_palette(record),
+        caption_position=_caption_position(record),
     )
 
 
@@ -111,6 +122,7 @@ def storybook_variables(spec: StorybookSpec) -> dict[str, Any]:
                 "title": page.title,
                 "scene": page.scene,
                 "overlay_box": page.overlay_box,
+                "caption_position": page.caption_position,
             }
             for page in spec.pages
         ],

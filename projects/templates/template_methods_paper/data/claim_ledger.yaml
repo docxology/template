@@ -36,7 +36,7 @@ claims:
     artifact_path: output/reports/trust_chain_report.json
   - claim_id: controlled-dimension-count
     kind: number
-    value: 7
+    value: 8
     source: projects/templates/template_methods_paper/src/methods_dsl/units.py Dimension members
     source_tier: project_source
     freshness: active

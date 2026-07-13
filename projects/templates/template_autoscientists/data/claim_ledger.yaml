@@ -30,14 +30,14 @@ claims:
   - claim_id: redundancy-baseline
     kind: number
     value: 36
-    source: projects/templates/template_autoscientists/manuscript/04_results.md redundant probes without dead-end registry
+    source: projects/templates/template_autoscientists/manuscript/03_results.md redundant probes without dead-end registry
     source_tier: generated_metric
     freshness: active
     artifact_path: output/data/ablation_results.json
   - claim_id: redundancy-with-registry
     kind: number
     value: 0
-    source: projects/templates/template_autoscientists/manuscript/04_results.md redundant probes with dead-end registry
+    source: projects/templates/template_autoscientists/manuscript/03_results.md redundant probes with dead-end registry
     source_tier: generated_metric
     freshness: active
     artifact_path: output/data/ablation_results.json

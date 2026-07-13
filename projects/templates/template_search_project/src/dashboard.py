@@ -24,7 +24,14 @@ from .search_invariants import InvariantResult, all_invariants
 
 
 def load_papers(args: argparse.Namespace) -> tuple[list[dict], dict | None]:
-    """Load papers from a file."""
+    """Load the corpus JSON at ``args.corpus`` (accepting either a bare
+    list of paper dicts or a ``{"papers": [...]}`` wrapper), and load the
+    deep-search aggregate JSON at ``args.aggregate`` when it exists and
+    actually contains a ``unique_papers`` key.
+
+    Returns ``(papers, aggregate)`` where ``aggregate`` is ``None`` when
+    no valid aggregate file was found.
+    """
     raw = json.loads(args.corpus.read_text())
     papers = raw["papers"] if isinstance(raw, dict) and "papers" in raw else raw
     aggregate = None
@@ -36,7 +43,12 @@ def load_papers(args: argparse.Namespace) -> tuple[list[dict], dict | None]:
 
 
 def filter_papers(papers: list[dict], args: argparse.Namespace) -> list[dict]:
-    """Process filter papers."""
+    """Drop papers outside the ``[args.year_min, args.year_max]`` range.
+
+    Papers with a missing or non-numeric ``year`` are always kept (the
+    filter only excludes papers it can positively confirm are out of
+    range).
+    """
     out = []
     for p in papers:
         y = p.get("year")
@@ -53,7 +65,12 @@ def compute_payload(
     papers: list[dict],
     aggregate: dict | None,
 ) -> dict:
-    """Process compute payload."""
+    """Compute the dashboard's JSON payload from *papers* (and, when
+    available, the deep-search *aggregate*): per-year/source/venue-type
+    counts, DOI/abstract/year coverage fractions, keyword list, and a
+    20-paper preview slice. This is a pure function — no I/O — so it can
+    be unit tested directly against small fixture corpora.
+    """
     n = len(papers) or 1
     by_year: Counter[int] = Counter()
     by_source: Counter[str] = Counter()
@@ -119,7 +136,12 @@ def build_dashboard(
     *,
     repo_root: Path,
 ) -> InteractiveDashboard:
-    """Build dashboard."""
+    """Assemble the :class:`InteractiveDashboard` for this run: title,
+    hyperparameter panel (echoing the CLI args that produced *payload*),
+    the raw payload, and one panel per coverage dimension (year, source,
+    venue-type, DOI/abstract/year coverage, and the search-invariant
+    results computed from *papers* + *aggregate*).
+    """
     d = InteractiveDashboard(
         title="Literature Search Coverage Dashboard",
         subtitle=(

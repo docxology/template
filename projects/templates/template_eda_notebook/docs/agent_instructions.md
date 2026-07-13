@@ -82,10 +82,10 @@ absolute correlation while preserving sign.
 
 ## Rule 5: Determinism Policy
 
-The shipped CSV is generated once with a fixed seed; the figure-data preparers
-have no RNG. Prefer fixed, hand-chosen inputs in tests so the expected statistic
-is exact. If you ever introduce randomness, seed it and assert bounds, not exact
-values.
+The shipped CSV is a static, committed fixture (no generator script ships in
+this tree); the figure-data preparers have no RNG. Prefer fixed, hand-chosen
+inputs in tests so the expected statistic is exact. If you ever introduce
+randomness, seed it and assert bounds, not exact values.
 
 ---
 

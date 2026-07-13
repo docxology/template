@@ -15,11 +15,20 @@
 
 ## Workflow
 
+Steps 2–3 use this project's own `scripts/` (project-local, not repo-root) —
+run them **from this project directory**
+(`projects/templates/template_template/`). Steps 4–5 are repo-root commands —
+run them **from the repository root** instead.
+
 1. Edit introspection logic in `src/template_template/introspection.py`.
-2. Regenerate metrics: `uv run python scripts/generate_manuscript_metrics.py`.
-3. Regenerate figures: `uv run python scripts/generate_architecture_viz.py`.
-4. Run all stages: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_template`.
-5. Verify: `uv run pytest tests/ --cov=src --cov-fail-under=90`.
+2. Regenerate metrics (cwd: `projects/templates/template_template/`):
+   `uv run python scripts/generate_manuscript_metrics.py`.
+3. Regenerate figures (cwd: `projects/templates/template_template/`):
+   `uv run python scripts/generate_architecture_viz.py`.
+4. Run all stages (cwd: repo root):
+   `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_template`.
+5. Verify (cwd: repo root):
+   `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`.
 
 ## Critical references
 

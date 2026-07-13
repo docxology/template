@@ -21,7 +21,8 @@ class Dimension(Enum):
     VOLUME = "volume"
     TEMPERATURE = "temperature"
     TIME = "time"
-    CONCENTRATION = "concentration"
+    MOLAR_CONCENTRATION = "molar_concentration"
+    MASS_CONCENTRATION = "mass_concentration"
     COUNT = "count"
     DIMENSIONLESS = "dimensionless"
 
@@ -32,7 +33,18 @@ class DimensionError(ValueError):
 
 # unit -> (Dimension, multiplicative factor to the dimension's base unit)
 # Base units: g (mass), L (volume), degC (temperature, handled separately —
-# affine, not multiplicative), s (time), mol/L (concentration), count (count).
+# affine, not multiplicative), s (time), mol/L (molar concentration), g/L
+# (mass concentration), count (count).
+#
+# Molar concentration ("mol/L", "mM") and mass concentration ("g/L") are
+# DELIBERATELY distinct Dimension values, not two units of one shared
+# "concentration" dimension. Converting between them requires a substance's
+# molar mass, which this DSL does not carry (see manuscript §7, "out of
+# scope": BPL's MW-aware concentration conversions are not implemented
+# here). Without that context, `1 mol/L + 1 g/L` is exactly the same class
+# of category error as `1 mL + 1 g` — treating them as compatible would
+# silently produce a physically meaningless number. Splitting the dimension
+# lets the existing `check_compatible` machinery reject the mix for free.
 _UNIT_TABLE: dict[str, tuple[Dimension, float]] = {
     # mass -> base gram
     "g": (Dimension.MASS, 1.0),
@@ -47,10 +59,12 @@ _UNIT_TABLE: dict[str, tuple[Dimension, float]] = {
     "s": (Dimension.TIME, 1.0),
     "min": (Dimension.TIME, 60.0),
     "h": (Dimension.TIME, 3600.0),
-    # concentration -> base mol/L
-    "mol/L": (Dimension.CONCENTRATION, 1.0),
-    "mM": (Dimension.CONCENTRATION, 1e-3),
-    "g/L": (Dimension.CONCENTRATION, 1.0),  # mass-concentration kept separate by unit string
+    # molar concentration -> base mol/L
+    "mol/L": (Dimension.MOLAR_CONCENTRATION, 1.0),
+    "mM": (Dimension.MOLAR_CONCENTRATION, 1e-3),
+    # mass concentration -> base g/L (its own dimension — not interchangeable
+    # with molar concentration without a molar mass; see note above)
+    "g/L": (Dimension.MASS_CONCENTRATION, 1.0),
     # count -> base count
     "count": (Dimension.COUNT, 1.0),
     # dimensionless

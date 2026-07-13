@@ -56,7 +56,7 @@ workflow. Mirror these invariants — they are what the repo's gates enforce:
 | Zero mocks: real CSV / frames / `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` |
 | `manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
-| Deterministic outputs (fixed-seed CSV); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
+| Deterministic outputs (static, committed CSV fixture); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
 
 ### Fork seed
 

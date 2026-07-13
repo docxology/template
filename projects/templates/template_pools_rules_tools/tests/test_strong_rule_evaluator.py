@@ -17,11 +17,9 @@ from src.strong_rule_evaluator import (
 )
 
 _PROJECT_DIR = pathlib.Path(__file__).parents[1]
-_RULE_SETS = ["template_project_rules", "template_manuscript_rules"]
 
 
-@pytest.mark.parametrize("rule_set", _RULE_SETS)
-def test_evaluate_strong_rules_passes_for_pools_project(rule_set: str) -> None:
+def test_evaluate_strong_rules_passes_for_pools_project() -> None:
     """Regression pin against this project's OWN live tree, not a synthetic fixture.
 
     load_rule_context_from_project() parses this project's actual
@@ -30,13 +28,50 @@ def test_evaluate_strong_rules_passes_for_pools_project(rule_set: str) -> None:
     live content. A future manuscript edit (new section, malformed bib entry)
     can legitimately flip this red — that proves the semantic layer still
     runs against real content, it is not a frozen fixture to work around.
+
+    Only `template_project_rules` is pinned green here. See
+    `test_evaluate_strong_rules_detects_real_missing_manuscript_sections` for
+    why `template_manuscript_rules` genuinely (and correctly) fails today.
     """
     context = load_rule_context_from_project(_PROJECT_DIR)
-    result = evaluate_strong_rules(rule_set, context)
-    assert result["rule_set"] == rule_set
+    result = evaluate_strong_rules("template_project_rules", context)
+    assert result["rule_set"] == "template_project_rules"
     assert isinstance(result["evaluations"], list)
     assert result["passed"] is True
     assert result["violation_count"] == 0
+
+
+def test_evaluate_strong_rules_detects_real_missing_manuscript_sections() -> None:
+    """`section_schema` against this project's OWN live manuscript headings.
+
+    Regression guard for a bug where `load_rule_context_from_project()`
+    unconditionally injected every `config.yaml` `canonical_sections` entry
+    into the detected `manuscript_sections` list. Since `section-schema.yaml`'s
+    `required_sections` is drawn from that same canonical list, the injection
+    made the "required section missing" check compare the config's canonical
+    list against itself — it could never fail no matter what the manuscript
+    actually contained.
+
+    This project's manuscript uses domain-specific section names (Pools,
+    Rules, Tools, Integration) rather than the canonical Related Work /
+    Methods / Results / Discussion / References headings `section-schema.yaml`
+    requires, so with the injection removed this rule set genuinely (and
+    correctly) fails today. A future manuscript restructuring that adds these
+    headings (or their declared aliases) can legitimately flip this green —
+    that would prove the semantic layer runs against real content, not a
+    frozen fixture to work around.
+    """
+    context = load_rule_context_from_project(_PROJECT_DIR)
+    result = evaluate_strong_rules("template_manuscript_rules", context)
+    assert result["rule_set"] == "template_manuscript_rules"
+    assert result["passed"] is False
+
+    messages = {v["message"] for ev in result["evaluations"] for v in ev["violations"]}
+    for missing in ("Related Work", "Methods", "Results", "Discussion", "References"):
+        assert f"required section missing: {missing}" in messages
+    # Sections that ARE genuinely present must not be flagged.
+    for present in ("Abstract",):
+        assert f"required section missing: {present}" not in messages
 
 
 def test_coverage_threshold_flags_low_coverage() -> None:
@@ -71,7 +106,11 @@ def test_load_rule_context_includes_manuscript_sections() -> None:
     sections = context.get("manuscript_sections")
     assert isinstance(sections, list)
     assert "Abstract" in sections
-    assert "References" in sections
+    assert "Introduction" in sections
+    # "References" has no literal `# References` heading in manuscript/*.md
+    # (it is generated at render time from references.bib) — it must NOT
+    # appear here just because config.yaml's canonical_sections lists it.
+    assert "References" not in sections
     coverage = context.get("coverage")
     assert isinstance(coverage, dict)
     references = context.get("references")
@@ -128,7 +167,9 @@ def test_reference_schema_flags_non_mapping_entry() -> None:
     assert evaluation["passed"] is False
 
 
-def test_load_rule_context_reads_canonical_sections_from_config(tmp_path: pathlib.Path) -> None:
+def test_load_rule_context_detects_real_heading_matching_a_canonical_section(tmp_path: pathlib.Path) -> None:
+    """A section that is BOTH a real heading AND config's canonical_sections
+    entry is detected via the real heading — config.yaml plays no role."""
     project = tmp_path / "demo"
     manuscript = project / "manuscript"
     manuscript.mkdir(parents=True)
@@ -299,9 +340,17 @@ def test_module_structure_flags_synthetic_glob_forbidden_pattern(tmp_path: pathl
     )
 
 
-def test_load_rule_context_appends_new_canonical_section(tmp_path: pathlib.Path) -> None:
-    """Distinct from the existing duplicate-skip test: this canonical section
-    is genuinely new and must actually be appended, not just tolerated."""
+def test_load_rule_context_does_not_inject_canonical_section_without_real_heading(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Regression guard for the vacuous section-schema gate.
+
+    `config.yaml` naming a canonical section ("Appendix") must NOT cause it
+    to appear in `manuscript_sections` unless a real `# Appendix` heading
+    exists — otherwise `section-schema.yaml`'s `required_sections` (drawn
+    from this same canonical list) would compare the config's list against
+    itself and could never detect a genuinely missing section.
+    """
     project = tmp_path / "demo"
     manuscript = project / "manuscript"
     manuscript.mkdir(parents=True)
@@ -311,7 +360,8 @@ def test_load_rule_context_appends_new_canonical_section(tmp_path: pathlib.Path)
     )
     (manuscript / "01_abstract.md").write_text("# Abstract\n", encoding="utf-8")
     context = load_rule_context_from_project(project)
-    assert context["manuscript_sections"] == ["Abstract", "Appendix"]
+    assert context["manuscript_sections"] == ["Abstract"]
+    assert "Appendix" not in context["manuscript_sections"]
 
 
 def test_load_rule_context_handles_missing_manuscript_dir(tmp_path: pathlib.Path) -> None:

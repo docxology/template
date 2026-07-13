@@ -51,7 +51,7 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_po
 - **Repo root resolution.** `src/*` resolves the monorepo root four levels above each module file.
 - **`manuscript/preamble.md` needs a closed ` ```latex ``` ` fence.** An unfenced file silently drops every multi-line directive (geometry, hypersetup, tcolorbox) via a whitelist fallback — only single-line `\usepackage{}`/`\newcommand{}` survive. Always verify with `extract_preamble()` after editing.
 - **Manuscript tokens must be `{{UPPERCASE_KEY}}`, never lowercase-dotted.** `infrastructure/rendering/manuscript_injection.py`'s regex only matches uppercase; a `{{integration.foo}}`-style token silently never resolves. The pipeline also requires `scripts/z_generate_manuscript_variables.py` to exist by that exact name — `run_manuscript_variable_script()` no-ops if it's absent.
-- **`src/figures.py::FIGURE_SPECS` is the figure-provenance source.** It does not auto-insert images — every figure still needs a real `![caption](figures/x.png){#fig:label}` block in the manuscript body, or its `@fig:` cross-reference renders as a literal `??`.
+- **`src/figures.py::INTEGRATION_FIGURE_SPECS` is the figure-provenance source.** It does not auto-insert images — every figure still needs a real `![caption](figures/x.png){#fig:label}` block in the manuscript body, or its `@fig:` cross-reference renders as a literal `??`.
 - **Generated provenance is separate from config metadata.**
   `05_generate_figures.py` binds the eight real manuscript labels to the PNGs
   produced in that run and writes `output/figures/figure_registry.json`; a

@@ -219,14 +219,21 @@ def draw_lead_headline(
         consumed += 1
     head = Paragraph(
         story.headline,
-        styles["HeadlineLead"].clone("LeadHead", alignment=1, leading=46),
+        # leading=54 (fontSize 44 * ~1.23) — not 46 (~1.05): the display face
+        # is a Didot-style serif with deep, thin descenders (comma tails,
+        # "g"/"y"). At leading=46 a comma or descender on the headline's last
+        # line sits almost on the baseline of the deck's first line, and at
+        # typical render resolutions the two visually merge into what looks
+        # like a stray glyph (see tests/test_furniture.py for the regression
+        # guard on this gap).
+        styles["HeadlineLead"].clone("LeadHead", alignment=1, leading=54),
     )
     consumed += _draw_top(c, head, x, top_y - consumed, width)
-    consumed += 3
+    consumed += 7
     if story.deck:
         deck = Paragraph(
             story.deck,
-            styles["Deck"].clone("LeadDeck", alignment=1, fontSize=13.5, leading=17),
+            styles["Deck"].clone("LeadDeck", alignment=1, fontSize=13.5, leading=19),
         )
         # centre the deck on a narrower measure for an elegant inverted pyramid
         deck_w = width * 0.82

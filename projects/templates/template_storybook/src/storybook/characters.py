@@ -58,3 +58,8 @@ def child_pair(characters: tuple[Character, ...]) -> tuple[Character, Character]
     if tetra is None or cube is None:
         raise ValueError("Storybook cast must include tessa and ciro")
     return tetra, cube
+
+
+def character_by_id(characters: tuple[Character, ...], character_id: str) -> Character | None:
+    """Look up a character record by its id, or None if the cast has no such id."""
+    return next((character for character in characters if character.character_id == character_id), None)

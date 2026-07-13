@@ -332,6 +332,37 @@ def test_project_docs_and_claim_ledger_describe_review_packet_contract() -> None
         assert required_surface in readme or required_surface in manuscript_readme
 
 
+def test_claim_ledger_doi_claim_matches_live_config_publication_fields() -> None:
+    """Bind the DOI boundary claim's text to the live config values it describes.
+
+    Regression guard: `data/claim_ledger.yaml` once asserted DOIs were "blank
+    for this exemplar" long after `manuscript/config.yaml`'s `publication.doi`
+    and `publication.version_doi` were populated with real, deposited Zenodo
+    records. That drift was invisible to CI because the ledger tests only
+    checked claim-id/path-substring presence, never the claim's asserted
+    content against the live config it cites. This test fails if the two
+    diverge again in either direction: a real DOI in config that the ledger
+    still calls blank, or a blank config DOI that the ledger claims is live.
+    """
+    config = yaml.safe_load((PROJECT_ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8"))
+    publication = config["publication"]
+    live_doi = publication.get("doi", "")
+    live_version_doi = publication.get("version_doi", "")
+
+    claim_ledger = yaml.safe_load((PROJECT_ROOT / "data" / "claim_ledger.yaml").read_text(encoding="utf-8"))
+    claims = {claim["claim_id"]: claim for claim in claim_ledger["claims"]}
+    assert "live-standalone-doi-published" in claims
+    doi_claim_value = claims["live-standalone-doi-published"]["value"]
+
+    doi_is_live = bool(live_doi) and bool(live_version_doi)
+    assert doi_is_live, "config.yaml publication DOIs are blank; update the claim ledger if this exemplar is unpublished"
+    # The claim must actually cite the live DOI values, not just assert they exist.
+    assert live_doi in doi_claim_value
+    assert live_version_doi in doi_claim_value
+    # And it must not still describe DOIs as blank/unpublished.
+    assert "blank" not in doi_claim_value.lower()
+
+
 def _png_is_nonblank(path: Path) -> bool:
     import matplotlib.image as mpimg
 

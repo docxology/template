@@ -18,6 +18,7 @@ analysis          -> literature.models
 knowledge_graph   -> literature.models
 visualization     -> serialized analysis/KG JSON inputs
 manuscript        -> output JSON + config only
+deep_research     -> infrastructure.search.deep_research (offline fixture replay)
 scripts           -> src modules + optional infrastructure helpers
 ```
 
@@ -33,6 +34,8 @@ Do not introduce cycles across these layers.
 | `visualization/figure_runner.py` | `04_generate_figures.py` | Figure generation and registry writing |
 | `manuscript/variables/` | `05_inject_variables.py` | Token computation and manuscript hydration |
 | `literature/fulltext_assessment.py` | `06_fulltext_assessment.py` | Full-text availability report |
+| `literature/evaluation.py` | `07_literature_evaluation.py` | Corpus-quality/routing summary and fixture-honesty audit (`literature/fixture_honesty.py`) |
+| `deep_research/deep_research_adapter.py` | `08_deep_research_dispatch.py` | Offline-fixture-replay demo of the provider-neutral deep-research request |
 
 ## Support Modules
 

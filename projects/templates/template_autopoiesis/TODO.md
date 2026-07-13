@@ -50,6 +50,20 @@ falsifiable honesty manifest.
 - Finish the remaining `SPEC.md` Phase 10 items and keep them in step with the
   shipped grammar surface.
 
+## Dependency-mode gaps
+
+- `dep_mode="template"` (the per-dependency "use template infrastructure
+  seam" mode described in `SYNTAX.md` § Deps Syntax) is intentionally
+  unimplemented: `materialize.py::_resolve_deps` now raises
+  `NotImplementedError` for it instead of silently producing zero files,
+  because a real implementation would need a seam contract that imports
+  from the parent repo's `infrastructure/` package at runtime — in direct
+  tension with this module's stated guarantee that a materialized child
+  "can run its own tests, produce figures, and render a manuscript ... all
+  without requiring the parent template infrastructure at runtime." Define
+  that seam contract (or drop the mode from `SYNTAX.md`/`DEP_MODES`) before
+  removing the loud failure.
+
 ## Test and validator gaps
 
 - Close the residual partial-branch gap at `src/figures.py:21->23`.

@@ -6,7 +6,11 @@
 model shared by both renderers:
 
 - `Slide` — one slide's title, bullets, an optional speaker-notes string, an
-  optional local figure path, and a `kind` (`title`, `section`, or `content`).
+  optional local figure path, and a `kind` — one of six layout hints:
+  `title` (deck opener/closer), `section` (section-divider), `content`
+  (default: title + bullets), `stat` (one large highlighted number +
+  label), `quote` (a pull-quote + attribution), or `diagram` (title + a
+  large full-bleed figure, e.g. a rendered Mermaid diagram).
 - `DeckContent` — a deck title/subtitle plus an ordered tuple of `Slide`.
 - `SlideBudget` — the three published maximum lengths (`SHORT` ≤ 11 slides,
   `MEDIUM` ≤ 38, `LONG` ≤ 58) and `filter_deck_for_budget`, a pure function

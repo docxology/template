@@ -446,6 +446,36 @@ def test_missing_redactions_block_above_ceiling_segment() -> None:
     assert "source_control_uncovered" in codes
 
 
+def test_source_control_uncovered_counts_each_distinct_control() -> None:
+    """A single source_identity decision must not vacuously cover every control.
+
+    Regression guard for a bug where `_check_decisions` used
+    `any(decision.reason == "source_identity" ...)`, so one matching decision
+    anywhere in the segment was treated as covering *all* of that segment's
+    source_controls regardless of how many distinct controls existed.
+    """
+    segment = RedactionSegment(
+        "multi-1",
+        "SECRET",
+        "Alpha reported to Bravo about the mission.",
+        ("HUMINT", "SIGINT"),
+    )
+
+    # Only one covering decision for two distinct controls: must be flagged.
+    under_covered = [RedactionDecision("multi-1", 0, 5, "source_identity")]
+    audit = audit_release_packet([segment], under_covered, release_authority="review-board")
+    codes = [finding.code for finding in audit.findings]
+    assert codes.count("source_control_uncovered") == 1
+
+    # One covering decision per control: fully covered, no findings.
+    fully_covered = [
+        RedactionDecision("multi-1", 0, 5, "source_identity"),
+        RedactionDecision("multi-1", 19, 24, "source_identity"),
+    ]
+    audit_ok = audit_release_packet([segment], fully_covered, release_authority="review-board")
+    assert "source_control_uncovered" not in {finding.code for finding in audit_ok.findings}
+
+
 def test_missing_release_authority_is_error() -> None:
     authority, segments, decisions = load_packet()
     assert authority

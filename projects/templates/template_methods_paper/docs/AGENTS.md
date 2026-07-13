@@ -77,7 +77,7 @@ grep -rnE "^(from|import) infrastructure" \
 | `scripts/z_generate_manuscript_variables.py` | REQUIRED | Resolves every `{{TOKEN}}` before rendering |
 | `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads these during the PDF stage |
-| `manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it |
+| `manuscript/references.bib` | REQUIRED | Pandoc reads it via `--natbib` for PDF (`--citeproc` applies only to DOCX/EPUB/MOBI/HTML) |
 | `manuscript/preamble.md` | REQUIRED | Injected at PDF compile |
 | `manuscript/SYNTAX.md`, `config.yaml.example`, `AGENTS.md` | AESTHETIC | Authoring/agent guides; pipeline never reads them |
 | `docs/*.md` | AESTHETIC | Agent + human documentation |
