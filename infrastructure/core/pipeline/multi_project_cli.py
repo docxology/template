@@ -12,8 +12,6 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
     MultiProjectResult,
-    format_multi_project_detailed_report,
-    write_last_run_summary,
 )
 from infrastructure.core.pipeline.multi_project_parallel import (
     ParallelRunResult,
@@ -21,6 +19,10 @@ from infrastructure.core.pipeline.multi_project_parallel import (
 )
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
+from infrastructure.reporting.multi_project_report import (
+    format_multi_project_detailed_report,
+    write_last_run_summary,
+)
 
 logger = get_logger(__name__)
 

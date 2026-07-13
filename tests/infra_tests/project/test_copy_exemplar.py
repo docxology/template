@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
-from infrastructure.project.copy_exemplar import _contained_destination, copy_exemplar, plan_copy
+from infrastructure.project.copy_exemplar import _contained_destination, copy_exemplar, export_exemplar, plan_copy
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -102,6 +104,23 @@ def test_clean_copy_excludes_local_artifacts_and_preserves_binaries(tmp_path: Pa
     assert not (dest / ".venv").exists()
     assert not (dest / "output").exists()
     assert not (dest / ".DS_Store").exists()
+
+
+def test_export_writes_content_addressed_provenance_manifest(tmp_path: Path) -> None:
+    repo_root = _scaffold_git_repo(tmp_path)
+    dest = tmp_path / "fork"
+
+    export_exemplar(repo_root, "templates/template_code_project", dest, new_name="my_project")
+
+    payload = json.loads((dest / ".template-export.json").read_text(encoding="utf-8"))
+    assert payload["schema_version"] == 1
+    assert payload["source_project"] == "templates/template_code_project"
+    assert payload["exported_project"] == "my_project"
+    assert payload["source_commit"] != "unknown"
+    assert payload["infrastructure_version"] == "unknown"
+    readme = dest / "README.md"
+    assert payload["files"]["README.md"] == hashlib.sha256(readme.read_bytes()).hexdigest()
+    assert ".template-export.json" not in payload["files"]
 
 
 def test_new_name_rewrites_qualified_template_paths_to_destination(tmp_path: Path) -> None:

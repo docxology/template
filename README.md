@@ -441,6 +441,13 @@ MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
 `uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
 
+Layer 1 is also a standard Python distribution. Build it with `uv build`, or
+install the wheel attached to a GitHub release. Installation provides the
+`research-template` command (`research-template --help`). Optional pip extras
+mirror the major capability groups, for example
+`research-project-template[rendering,publishing]`; repository contributors
+should continue to use `uv sync --group ...` for development groups.
+
 ## 🐳 Docker Support
 
 `docker-compose up` (or `docker build -t research-template . && docker run -it

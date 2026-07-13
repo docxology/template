@@ -11,7 +11,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering import _web_postprocess as web_postprocess
+import infrastructure.rendering._web_postprocess as web_postprocess
 
 logger = get_logger(__name__)
 

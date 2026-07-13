@@ -111,6 +111,7 @@ graph TD
 - **status_report.py** - Compile registry + `config.yaml` metadata into a regenerable per-platform README status block (`compile_publishing_status()`, `render_status_block()`, `update_readme_block()`)
 - **credential_check.py** - Read-only, non-destructive verification that publishing credentials authenticate (`run_probe()`, `check_all()`)
 - **upload_runner.py** - Reusable multi-platform upload dispatch (`UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs()`, `run_uploads()` returning an `UploadRun`); the per-platform helpers + batch orchestrator extracted from `scripts/publish/upload_gold_refinement.py`, which is now a thin CLI
+- **transmission_models.py** - Shared dependency-light `TransmissionContext` value object used by barcode-strip and bookend generation without creating an import cycle
 - **platforms.py** / **api.py** - Backwards-compatible re-exports
 
 ## Key Classes

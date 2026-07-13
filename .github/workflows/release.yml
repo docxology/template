@@ -29,6 +29,13 @@ jobs:
         with:
           fetch-depth: 0  # Full history for changelog generation
 
+      - uses: ./.github/actions/setup-python-env
+
+      - name: Build and validate Python distributions
+        run: |
+          uv build
+          uvx twine check dist/*
+
       - name: Determine tag name
         id: tag
         env:
@@ -78,3 +85,4 @@ jobs:
           prerelease: ${{ contains(steps.tag.outputs.name, '-rc') || contains(steps.tag.outputs.name, '-beta') || contains(steps.tag.outputs.name, '-alpha') }}
           # Omit generate_release_notes — avoids duplicating narrative vs body_path excerpt.
           generate_release_notes: false
+          files: dist/*

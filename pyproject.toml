@@ -12,6 +12,10 @@
 #
 # Repository: https://github.com/docxology/template
 
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
 [project]
 name = "research-project-template"
 version = "3.5.1"
@@ -59,11 +63,24 @@ dependencies = [
   "defusedxml>=0.7.1",
 ]
 
+[project.scripts]
+research-template = "infrastructure.orchestration.cli:main"
 
-# NOTE: [project.scripts] removed — entries were shell commands, not Python
-# entrypoint references (PEP 517 violation). Use `uv run pytest ...` or
-# the scripts/ directory for dev workflows.  package = false (line 120) means
-# no console_scripts are installed anyway.
+[project.optional-dependencies]
+scientific = ["pandas>=2.0.0", "rdflib>=7.0.0", "wordcloud>=1.9.0", "scikit-learn>=1.3.0"]
+llm = ["requests>=2.31.0"]
+rendering = ["reportlab>=4.0.0", "pypdf>=6.12.0", "pdfplumber>=0.11.0"]
+rendering-pptx = ["python-pptx>=1.0.0"]
+dashboard = ["plotly>=5.0.0"]
+dotenv = ["python-dotenv>=1.0.0"]
+steganography = ["cryptography>=48.0.1", "qrcode[pil]>=8.2", "python-barcode>=0.15"]
+monitoring = ["psutil>=5.9.0"]
+publishing = ["huggingface-hub>=0.35.0", "twine>=5.0.0"]
+deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.0.0"]
+
+# Repository development groups below are intentionally separate from the
+# installable package extras above. ``uv sync`` uses these groups for CI and
+# contributor tooling; pip users select extras such as ``[rendering]``.
 
 [dependency-groups]
 # Optional scientific computing (used by act_inf_metaanalysis project; not needed for core template)
@@ -162,7 +179,7 @@ deep-research = [
 [tool.uv]
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
-package = false  # This is not a distributable package
+package = true  # Install Layer 1 and the research-template console entry point
 default-groups = ["dev", "rendering", "discopy", "steganography"]
 # pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
 override-dependencies = [
@@ -178,6 +195,17 @@ exclude = [
     "projects/*/output",
     "projects/*/*/output",
     "output"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["infrastructure"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/infrastructure",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
 ]
 
 

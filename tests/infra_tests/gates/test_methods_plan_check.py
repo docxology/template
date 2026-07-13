@@ -41,8 +41,8 @@ def test_gate_passes_for_fully_specified_project(tmp_path: Path) -> None:
     project = make_project(tmp_path, "template_test", with_manuscript=True, with_scripts=True)
     write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nWe did X.\n")
     reports = project / "output" / "reports"
-    write_doc(reports / "artifact_manifest.json", "{}\n")
-    write_doc(reports / "evidence_registry.json", "{}\n")
+    write_doc(reports / "artifact_manifest.json", '{"entries": []}\n')
+    write_doc(reports / "evidence_registry.json", '{"claims": []}\n')
 
     exit_code = gate_main(["--repo-root", str(tmp_path), "--project", "template_test"])
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -103,8 +104,22 @@ def validate_methods_orchestration_plan(
                 "Add a methods section or rename the section file to include methods/methodology.",
             )
         )
-    _validate_relative_file(root, plan.artifact_manifest, "METHODS.ARTIFACT_MANIFEST_MISSING", issues)
-    _validate_relative_file(root, plan.evidence_registry, "METHODS.EVIDENCE_REGISTRY_MISSING", issues)
+    _validate_json_object(
+        root,
+        plan.artifact_manifest,
+        missing_code="METHODS.ARTIFACT_MANIFEST_MISSING",
+        invalid_code="METHODS.ARTIFACT_MANIFEST_INVALID",
+        label="artifact manifest",
+        issues=issues,
+    )
+    _validate_json_object(
+        root,
+        plan.evidence_registry,
+        missing_code="METHODS.EVIDENCE_REGISTRY_MISSING",
+        invalid_code="METHODS.EVIDENCE_REGISTRY_INVALID",
+        label="evidence registry",
+        issues=issues,
+    )
     for stage in plan.stages:
         if not stage.definition_of_done.strip():
             issues.append(
@@ -262,16 +277,42 @@ def _relative_to(path: Path, root: Path) -> Path:
         return path
 
 
-def _validate_relative_file(root: Path, path: Path, code: str, issues: list[MethodsIssue]) -> None:
-    if (root / path).exists():
+def _validate_json_object(
+    root: Path,
+    path: Path,
+    *,
+    missing_code: str,
+    invalid_code: str,
+    label: str,
+    issues: list[MethodsIssue],
+) -> None:
+    absolute = root / path
+    if not absolute.exists():
+        issues.append(
+            _issue(
+                "error",
+                missing_code,
+                f"required methods evidence file is missing: {path.as_posix()}",
+                path.as_posix(),
+                "Run the core pipeline or refresh output reports before publication.",
+            )
+        )
         return
+    try:
+        payload = json.loads(absolute.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        detail = f"{label} is not readable JSON: {exc}"
+    else:
+        if isinstance(payload, dict) and payload:
+            return
+        detail = f"{label} must be a non-empty JSON object"
     issues.append(
         _issue(
             "error",
-            code,
-            f"required methods evidence file is missing: {path.as_posix()}",
+            invalid_code,
+            detail,
             path.as_posix(),
-            "Run the core pipeline or refresh output reports before publication.",
+            "Regenerate the report from the core pipeline before publication.",
         )
     )
 

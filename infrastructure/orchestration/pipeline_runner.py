@@ -23,16 +23,14 @@ from infrastructure.core.pipeline import (
     PipelineExecutor,
 )
 from infrastructure.core.pipeline.incremental import IncrementalConfig
-from infrastructure.core.pipeline.multi_project import (
-    format_multi_project_detailed_report,
-    format_multi_project_outcome_lines,
-)
+from infrastructure.core.pipeline.multi_project import format_multi_project_outcome_lines
 from infrastructure.orchestration.menu import STAGE_NAMES
 from infrastructure.orchestration.stage_logger import (
     setup_multiproject_log,
     setup_stage_log,
 )
 from infrastructure.project.discovery import discover_projects
+from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
 
 logger = get_logger(__name__)
 

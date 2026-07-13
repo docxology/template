@@ -24,6 +24,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
 | `transmission_bookends.py` | Generated begin/end transmission manuscript pages |
 | `transmission_barcode_strip.py` | Dual-row 7-QR + Code128 strip PNG; writes `transmission_manifest.json` |
+| `transmission_models.py` | Dependency-light shared transmission context model; keeps bookend/barcode modules acyclic |
 | `transmission_figure.py` | Matplotlib pairing-flow diagram for bookends |
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |

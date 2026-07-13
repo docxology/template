@@ -45,7 +45,9 @@ if TYPE_CHECKING:
     )
     from infrastructure.project.copy_exemplar import (
         CopyResult,
+        ExportManifest,
         copy_exemplar,
+        export_exemplar,
         plan_copy,
     )
 
@@ -64,7 +66,9 @@ _CODEGRAPH_EXPORTS = {
 }
 _COPY_EXEMPLAR_EXPORTS = {
     "CopyResult",
+    "ExportManifest",
     "copy_exemplar",
+    "export_exemplar",
     "plan_copy",
 }
 
@@ -94,10 +98,12 @@ __all__ = [
     "PUBLIC_PROJECT_NAMES",
     "CodeGraphCommand",
     "CopyResult",
+    "ExportManifest",
     "build_codegraph_files_command",
     "build_codegraph_init_command",
     "build_scope_check_command",
     "copy_exemplar",
+    "export_exemplar",
     "discover_projects",
     "find_setup_hook",
     "get_project_metadata",

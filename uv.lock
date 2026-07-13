@@ -3300,7 +3300,7 @@ wheels = [
 [[package]]
 name = "research-project-template"
 version = "3.5.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "defusedxml" },
     { name = "jsonschema" },
@@ -3317,6 +3317,50 @@ dependencies = [
     { name = "textstat" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+]
+
+[package.optional-dependencies]
+dashboard = [
+    { name = "plotly" },
+]
+deep-research = [
+    { name = "google-genai" },
+    { name = "openai" },
+    { name = "python-dotenv" },
+]
+dotenv = [
+    { name = "python-dotenv" },
+]
+llm = [
+    { name = "requests" },
+]
+monitoring = [
+    { name = "psutil" },
+]
+publishing = [
+    { name = "huggingface-hub" },
+    { name = "twine" },
+]
+rendering = [
+    { name = "pdfplumber" },
+    { name = "pypdf" },
+    { name = "reportlab" },
+]
+rendering-pptx = [
+    { name = "python-pptx" },
+]
+scientific = [
+    { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "pandas", version = "3.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "rdflib" },
+    { name = "scikit-learn", version = "1.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scikit-learn", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "wordcloud" },
+]
+steganography = [
+    { name = "cryptography" },
+    { name = "python-barcode" },
+    { name = "qrcode", extra = ["pil"] },
 ]
 
 [package.dev-dependencies]
@@ -3394,19 +3438,40 @@ timeseries-bench = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", marker = "extra == 'steganography'", specifier = ">=48.0.1" },
     { name = "defusedxml", specifier = ">=0.7.1" },
+    { name = "google-genai", marker = "extra == 'deep-research'", specifier = ">=1.0" },
+    { name = "huggingface-hub", marker = "extra == 'publishing'", specifier = ">=0.35.0" },
     { name = "jsonschema", specifier = ">=4.0.0" },
     { name = "matplotlib", specifier = ">=3.7" },
     { name = "networkx", specifier = ">=3.4.2" },
     { name = "numpy", specifier = ">=1.22" },
+    { name = "openai", marker = "extra == 'deep-research'", specifier = ">=1.60" },
+    { name = "pandas", marker = "extra == 'scientific'", specifier = ">=2.0.0" },
+    { name = "pdfplumber", marker = "extra == 'rendering'", specifier = ">=0.11.0" },
     { name = "pillow", specifier = ">=10.0" },
+    { name = "plotly", marker = "extra == 'dashboard'", specifier = ">=5.0.0" },
+    { name = "psutil", marker = "extra == 'monitoring'", specifier = ">=5.9.0" },
+    { name = "pypdf", marker = "extra == 'rendering'", specifier = ">=6.12.0" },
+    { name = "python-barcode", marker = "extra == 'steganography'", specifier = ">=0.15" },
+    { name = "python-dotenv", marker = "extra == 'deep-research'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'dotenv'", specifier = ">=1.0.0" },
+    { name = "python-pptx", marker = "extra == 'rendering-pptx'", specifier = ">=1.0.0" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "qrcode", extras = ["pil"], marker = "extra == 'steganography'", specifier = ">=8.2" },
+    { name = "rdflib", marker = "extra == 'scientific'", specifier = ">=7.0.0" },
+    { name = "reportlab", marker = "extra == 'rendering'", specifier = ">=4.0.0" },
+    { name = "requests", marker = "extra == 'llm'", specifier = ">=2.31.0" },
+    { name = "scikit-learn", marker = "extra == 'scientific'", specifier = ">=1.3.0" },
     { name = "scipy", specifier = ">=1.15.3" },
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "textstat", specifier = ">=0.7.13" },
     { name = "tomli", marker = "python_full_version < '3.11'", specifier = ">=2.0" },
+    { name = "twine", marker = "extra == 'publishing'", specifier = ">=5.0.0" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'", specifier = ">=4.0" },
+    { name = "wordcloud", marker = "extra == 'scientific'", specifier = ">=1.9.0" },
 ]
+provides-extras = ["scientific", "llm", "rendering", "rendering-pptx", "dashboard", "dotenv", "steganography", "monitoring", "publishing", "deep-research"]
 
 [package.metadata.requires-dev]
 dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]

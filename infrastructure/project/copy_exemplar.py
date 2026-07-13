@@ -4,12 +4,20 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import hashlib
+import json
 import re
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:  # pragma: no cover - Python 3.10
+    import tomli as tomllib
 
 
 _IGNORED_NAMES = frozenset(
@@ -45,6 +53,30 @@ class CopyResult:
     destination: Path
     relative_files: tuple[Path, ...]
     dry_run: bool = False
+
+
+@dataclass(frozen=True)
+class ExportManifest:
+    """Content-addressed provenance for one standalone exemplar export."""
+
+    source_project: str
+    exported_project: str
+    source_commit: str
+    infrastructure_version: str
+    files: dict[str, str]
+    schema_version: int = 1
+
+    def to_json(self) -> str:
+        """Return stable, human-readable JSON with a trailing newline."""
+        payload = {
+            "schema_version": self.schema_version,
+            "source_project": self.source_project,
+            "exported_project": self.exported_project,
+            "source_commit": self.source_commit,
+            "infrastructure_version": self.infrastructure_version,
+            "files": dict(sorted(self.files.items())),
+        }
+        return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
 def plan_copy(
@@ -102,6 +134,26 @@ def copy_exemplar(
     return plan_copy(repo_root, source, dest, new_name=new_name, dry_run=False)
 
 
+def export_exemplar(
+    repo_root: Path | str,
+    source: str,
+    dest: Path | str,
+    *,
+    new_name: str | None = None,
+) -> CopyResult:
+    """Clean-copy an exemplar and write a deterministic provenance manifest."""
+    root = Path(repo_root).resolve()
+    result = copy_exemplar(root, source, dest, new_name=new_name)
+    manifest = _build_export_manifest(
+        root,
+        result.destination,
+        source_project=source,
+        exported_project=new_name or result.destination.name,
+    )
+    (result.destination / ".template-export.json").write_text(manifest.to_json(), encoding="utf-8")
+    return result
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """CLI entry point for exemplar fork copies."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -112,12 +164,66 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--repo-root", default=Path.cwd(), type=Path, help="Repository root. Defaults to cwd.")
     args = parser.parse_args(argv)
 
-    result = plan_copy(args.repo_root, args.source, args.dest, new_name=args.new_name, dry_run=args.dry_run)
+    if args.dry_run:
+        result = plan_copy(args.repo_root, args.source, args.dest, new_name=args.new_name, dry_run=True)
+    else:
+        result = export_exemplar(args.repo_root, args.source, args.dest, new_name=args.new_name)
     action = "Would copy" if result.dry_run else "Copied"
     print(f"{action} {len(result.relative_files)} files from {result.source} to {result.destination}")
     for rel in result.relative_files:
         print(rel.as_posix())
     return 0
+
+
+def _build_export_manifest(
+    repo_root: Path,
+    destination: Path,
+    *,
+    source_project: str,
+    exported_project: str,
+) -> ExportManifest:
+    hashes: dict[str, str] = {}
+    for path in sorted(candidate for candidate in destination.rglob("*") if candidate.is_file()):
+        rel = path.relative_to(destination).as_posix()
+        if rel == ".template-export.json":
+            continue
+        hashes[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return ExportManifest(
+        source_project=source_project,
+        exported_project=exported_project,
+        source_commit=_git_head(repo_root),
+        infrastructure_version=_infrastructure_version(repo_root),
+        files=hashes,
+    )
+
+
+def _git_head(repo_root: Path) -> str:
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
+    return proc.stdout.strip() or "unknown"
+
+
+def _infrastructure_version(repo_root: Path) -> str:
+    pyproject = repo_root / "pyproject.toml"
+    if not pyproject.is_file():
+        return "unknown"
+    try:
+        payload = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, tomllib.TOMLDecodeError):
+        return "unknown"
+    project = payload.get("project")
+    if not isinstance(project, dict):
+        return "unknown"
+    version = project.get("version")
+    return str(version) if version else "unknown"
 
 
 def _resolve_source(repo_root: Path, source: str) -> Path:
@@ -298,4 +404,4 @@ def _contained_destination(destination: Path, target_rel: Path) -> Path:
     return target
 
 
-__all__ = ["CopyResult", "copy_exemplar", "main", "plan_copy"]
+__all__ = ["CopyResult", "ExportManifest", "copy_exemplar", "export_exemplar", "main", "plan_copy"]

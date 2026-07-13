@@ -113,7 +113,10 @@ def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> Non
     assert "Project Analysis" in markdown
     assert "artifact_manifest.json" in markdown
     assert "evidence_registry.json" in markdown
-    assert "uv run python scripts/runner/execute_pipeline.py --project template_autoresearch_project --core-only" in markdown
+    assert (
+        "uv run python scripts/runner/execute_pipeline.py --project template_autoresearch_project --core-only"
+        in markdown
+    )
 
 
 def test_validation_reports_missing_method_section(tmp_path: Path) -> None:
@@ -127,6 +130,23 @@ def test_validation_reports_missing_method_section(tmp_path: Path) -> None:
     assert any(issue.code == "METHODS.METHOD_SECTION_MISSING" for issue in issues)
     assert any(issue.code == "METHODS.ARTIFACT_MANIFEST_MISSING" for issue in issues)
     assert any(issue.code == "METHODS.EVIDENCE_REGISTRY_MISSING" for issue in issues)
+
+
+def test_validation_rejects_malformed_or_empty_evidence_json(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    reports = project / "output" / "reports"
+    write_doc(reports / "artifact_manifest.json", "{not-json}\n")
+    write_doc(reports / "evidence_registry.json", "{}\n")
+
+    plan = build_methods_orchestration_plan(tmp_path, "template_test")
+    codes = {issue.code for issue in validate_methods_orchestration_plan(plan, repo_root=tmp_path)}
+
+    assert "METHODS.ARTIFACT_MANIFEST_INVALID" in codes
+    assert "METHODS.EVIDENCE_REGISTRY_INVALID" in codes
 
 
 def test_methods_cli_outputs_json_and_markdown(repo_root: Path) -> None:
