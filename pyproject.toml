@@ -67,11 +67,11 @@ llm = ["requests>=2.31.0"]
 rendering = ["reportlab>=4.0.0", "pypdf>=6.12.0", "pdfplumber>=0.11.0"]
 rendering-pptx = ["python-pptx>=1.0.0"]
 dashboard = ["plotly>=5.0.0"]
-dotenv = ["python-dotenv>=1.0.0"]
+dotenv = ["python-dotenv>=1.2.2"]
 steganography = ["cryptography>=48.0.1", "qrcode[pil]>=8.2", "python-barcode>=0.15"]
 monitoring = ["psutil>=5.9.0"]
 publishing = ["huggingface-hub>=0.35.0", "twine>=5.0.0"]
-deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.0.0"]
+deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.2.2"]
 
 # Repository development groups below are intentionally separate from the
 # installable package extras above. ``uv sync`` uses these groups for CI and
@@ -108,7 +108,7 @@ rendering-pptx = [
 ]
 # Optional .env file loading (used in infrastructure/core/credentials.py, gracefully absent)
 dotenv = [
-  "python-dotenv>=1.0.0",
+  "python-dotenv>=1.2.2",
 ]
 # Optional barcode generation for steganography module (gracefully absent)
 steganography = [
@@ -174,7 +174,7 @@ deep-research = [
     # `submit`, and `run-project` see credentials without a manual `export`.
     # config.ensure_dotenv_loaded() also has a built-in fallback parser, so the
     # package still finds keys if this extra is somehow absent.
-    "python-dotenv>=1.0.0",
+    "python-dotenv>=1.2.2",
 ]
 
 [tool.uv]

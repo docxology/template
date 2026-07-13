@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import sys
 from pathlib import Path
 
@@ -16,6 +17,27 @@ from infrastructure.validation.line_count import (  # noqa: E402
     scan_project_src,
     scan_repository_tests,
 )
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES  # noqa: E402
+
+
+def _python_files(repo_root: Path) -> list[Path]:
+    """Return the exact executable source surface certified by this gate."""
+    roots = [repo_root / "infrastructure", repo_root / "scripts"]
+    for name in PUBLIC_PROJECT_NAMES:
+        project = repo_root / "projects" / name
+        roots.extend((project / "src", project / "scripts"))
+    return sorted(path for root in roots if root.is_dir() for path in root.rglob("*.py"))
+
+
+def _syntax_failures(repo_root: Path) -> list[tuple[str, str]]:
+    """Parse every counted Python file so malformed modules fail closed."""
+    failures: list[tuple[str, str]] = []
+    for path in _python_files(repo_root):
+        try:
+            ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        except (OSError, UnicodeError, SyntaxError) as exc:
+            failures.append((path.relative_to(repo_root).as_posix(), str(exc)))
+    return failures
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -32,6 +54,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    missing_roots = [name for name in ("infrastructure", "scripts") if not (args.repo_root / name).is_dir()]
+    if missing_roots:
+        for name in missing_roots:
+            print(f"FAIL missing required scan root: {name}/")
+        return 1
+
     warnings: list[tuple[str, int]] = []
     failures: list[tuple[str, int]] = []
 
@@ -47,6 +75,8 @@ def main(argv: list[str] | None = None) -> int:
     warnings.extend(src_warn)
     failures.extend(src_fail)
 
+    syntax_failures = _syntax_failures(args.repo_root)
+
     if args.include_tests:
         test_warn, _ = scan_repository_tests(args.repo_root)
         for rel, count in sorted(test_warn):
@@ -56,7 +86,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"WARN {rel}: {count} lines")
     for rel, count in sorted(failures):
         print(f"FAIL {rel}: {count} lines")
-    if failures:
+    for rel, error in syntax_failures:
+        print(f"FAIL {rel}: invalid Python syntax: {error}")
+    if failures or syntax_failures:
         return 1
     return 0
 

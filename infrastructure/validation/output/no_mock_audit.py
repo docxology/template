@@ -2,9 +2,9 @@
 
 The default mode is the existing CI gate: it fails only on prohibited
 mock-framework imports/calls or an incomplete scan. The explicit inventory mode
-classifies ``pytest.monkeypatch`` operations and is advisory unless the caller
-opts into ``--fail-on-dependency-replacement``. CI does not enable that flag
-while the measured migration debt is non-zero.
+classifies ``pytest.monkeypatch`` operations. CI enables
+``--fail-on-dependency-replacement`` and holds the measured replacement count
+at zero; the advisory mode remains available for exploratory local inventories.
 """
 
 from __future__ import annotations

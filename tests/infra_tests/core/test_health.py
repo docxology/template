@@ -23,6 +23,7 @@ from infrastructure.core.health import (
     format_report_table,
     run_health_checks,
 )
+from infrastructure.core.health import _stage_table_passed
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -79,7 +80,9 @@ class TestPublicSurface:
             assert "projects/templates/template_code_project/src" in argv
             assert "projects/private_research_project/src" not in argv
 
-        assert "projects/" in specs["bandit"]
+        assert "projects/" not in specs["bandit"]
+        assert "projects/templates/template_code_project/" in specs["bandit"]
+        assert all("projects/private_research_project" not in arg for arg in specs["bandit"])
         for gate in (
             "confidentiality",
             "generated-artifacts",
@@ -88,6 +91,14 @@ class TestPublicSurface:
             "skills-manifest",
         ):
             assert gate in specs
+
+    def test_ci_security_and_platform_oracles_fail_closed(self) -> None:
+        workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+        assert "continue-on-error: ${{ runner.os == 'macOS' }}" not in workflow
+        assert "uv export --all-groups --all-extras --frozen" in workflow
+        assert 'pip-audit --requirement "$LOCK_REQUIREMENTS"' in workflow
+        assert "--no-deps --disable-pip" in workflow
+        assert 'targets+=("projects/$project")' in workflow
 
 
 class TestSyntheticGate:
@@ -149,11 +160,16 @@ class TestSubsetSelection:
         with pytest.raises(ValueError, match="unknown gate"):
             run_health_checks(REPO_ROOT, gates=["does-not-exist"])
 
-    def test_empty_list_yields_empty_report(self) -> None:
-        report = run_health_checks(REPO_ROOT, gates=[])
-        assert report.results == []
-        assert report.passed is True
-        assert report.total_elapsed_ms == 0.0
+    def test_empty_list_fails_closed(self) -> None:
+        with pytest.raises(ValueError, match="at least one gate"):
+            run_health_checks(REPO_ROOT, gates=[])
+
+    def test_stage_table_requires_complete_zero_drift_summary(self) -> None:
+        assert _stage_table_passed(0, "Would update 0; up-to-date 7") is True
+        assert _stage_table_passed(0, "") is False
+        assert _stage_table_passed(0, "stage table completed") is False
+        assert _stage_table_passed(0, "Would update 0; up-to-date 0") is False
+        assert _stage_table_passed(0, "Would update 1; up-to-date 6") is False
 
 
 class TestRealGate:
@@ -201,6 +217,11 @@ class TestCLI:
         proc = _run_module_cli("--gates=not-a-gate")
         assert proc.returncode != 0
         assert "unknown gate" in proc.stderr.lower()
+
+    def test_empty_gate_expression_exits_non_zero(self) -> None:
+        proc = _run_module_cli("--gates=,")
+        assert proc.returncode != 0
+        assert "at least one gate" in proc.stderr.lower()
 
     def test_help_lists_all_gates(self) -> None:
         # argparse wraps help text to ``COLUMNS``; widen so the choices

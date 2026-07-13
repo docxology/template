@@ -19,6 +19,14 @@
 /pyproject.toml         @docxology
 /bandit.yaml            @docxology
 
+# Top-level instruction-hierarchy docs.
+/CLAUDE.md              @docxology
+/AGENTS.md              @docxology
+/README.md              @docxology
+
+# This generated block must remain the final rule-bearing block: GitHub uses
+# the last matching CODEOWNERS rule, so later rules could otherwise override
+# public/sensitive ownership while generator parity still appeared green.
 # BEGIN GENERATED PUBLIC/SENSITIVE OWNERS
 # Public exemplars (derived from PUBLIC_PROJECT_NAMES).
 /projects/templates/template_active_inference/ @docxology
@@ -51,8 +59,3 @@
 /.github/workflows/ @docxology
 /rules/templates/*/strong/ @docxology
 # END GENERATED PUBLIC/SENSITIVE OWNERS
-
-# Top-level instruction-hierarchy docs.
-/CLAUDE.md              @docxology
-/AGENTS.md              @docxology
-/README.md              @docxology

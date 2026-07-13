@@ -327,13 +327,23 @@ def test_residual_risk_detection_covers_common_public_release_leaks() -> None:
     policy = intelligence_release_policy()
 
     risks = detect_residual_risks(
-        "Contact analyst@example.org from 192.0.2.10 near 38.8977, -77.0365. NOFORN HUMINT.",
+        "Contact analyst@example.org on 2031-04-05 from 192.0.2.10 near 38.8977, -77.0365. NOFORN HUMINT.",
         policy,
     )
     names = {risk["name"] for risk in risks}
 
     assert {"email_address", "ipv4_address", "coordinate_pair", "controlled_dissemination"} <= names
+    assert "iso_calendar_date" in names
     assert "collection_discipline" in names
+
+
+def test_secret_fixture_redacts_both_collection_platform_mentions() -> None:
+    """Repeated operational nouns need distinct decisions, not first-match coverage."""
+    _authority, segments, decisions = load_packet()
+    segment = next(item for item in segments if item.id == "s4")
+    redacted = redact_text(segment.text, [item for item in decisions if item.segment_id == "s4"])
+
+    assert "platform" not in redacted.lower()
 
 
 def test_comprehensive_release_packet_combines_audit_ledger_hashes_and_review_gate() -> None:

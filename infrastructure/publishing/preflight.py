@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 from typing import Mapping, Sequence
 
@@ -27,6 +28,7 @@ def publishing_preflight(
         raise ValueError(f"public project does not exist: {project_name}")
 
     manifest: list[dict[str, object]] = []
+    seen_payloads: set[str] = set()
     for path in payload_paths:
         resolved = path.resolve()
         try:
@@ -35,10 +37,24 @@ def publishing_preflight(
             raise ValueError(f"publishing payload is outside canonical project tree: {resolved}") from exc
         if not resolved.is_file():
             raise ValueError(f"publishing payload does not exist: {resolved}")
-        manifest.append({"path": relative.as_posix(), "bytes": resolved.stat().st_size})
+        relative_path = relative.as_posix()
+        if relative_path in seen_payloads:
+            raise ValueError(f"publishing payload is duplicated: {relative_path}")
+        seen_payloads.add(relative_path)
+        content = resolved.read_bytes()
+        manifest.append(
+            {
+                "path": relative_path,
+                "bytes": len(content),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+        )
 
     allowed_sources = {"cli", "environment", "missing", "not-required"}
+    allowed_credentials = {"github", "zenodo"}
     redacted_sources = dict(sorted(credential_sources.items()))
+    if not set(redacted_sources).issubset(allowed_credentials):
+        raise ValueError("credential source summary contains an unsupported credential name")
     if any(source not in allowed_sources for source in redacted_sources.values()):
         raise ValueError("credential source summary contains an unsupported value")
     return {

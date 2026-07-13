@@ -862,14 +862,14 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | - | --- | --- | --- | --- |
 | 1 | `detect` | — | always | Emits presence flags (`setup_hook`, `fep_lean`) for the optional jobs |
 | 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard (`output/`, `.codegraph/`, package metadata) + **confidentiality guard** (`check_tracked_projects.py` — only public template projects may be tracked) |
-| 3 | `health` | `lint` | always | Unified health report (informational, non-blocking) |
-| 4 | `verify-no-mocks` | `lint` | always | Enforces prohibited mock-framework syntax; semantic stand-ins are advisory (`scripts/audit/verify_no_mocks.py --inventory`) |
+| 3 | `health` | `lint` | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
+| 4 | `verify-no-mocks` | `lint` | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements |
 | 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
-| 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 cells), `--cov-fail-under=60` (macOS leg `continue-on-error`) |
+| 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 blocking cells), `--cov-fail-under=60` |
 | 7 | `test-project` | `verify-no-mocks` | always | Per-project suites — one parallel ubuntu job per public exemplar listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) × {py3.10, py3.12}; each enforces that project's own ≥90 floor via `01_run_tests.py --project <name> --project-only --include-slow` |
 | 8 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
 | 9 | `validate` | `lint` | always | Manuscript/output validation (`infrastructure.validation.cli`) |
-| 10 | `security` | `lint` | always | Bandit MEDIUM+ (`bandit.yaml`) over `infrastructure/ scripts/ projects/` |
+| 10 | `security` | `lint` | always | Frozen all-groups/all-extras dependency audit plus Bandit over `infrastructure/`, `scripts/`, and the generated public-project scope |
 | 11 | `docs-lint` | `lint` | always | Mermaid render + relative-link resolution + doc-pair + consistency |
 | 12 | `performance` | `test-infra`, `test-project` | always | Benchmarks + coverage-history dashboard (informational) |
 

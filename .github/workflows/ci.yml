@@ -164,9 +164,9 @@ jobs:
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the
-      # informational health job below, but that job is wrapped in ``|| true``
-      # and never blocks — so without this step an oversized module could land
-      # on main unnoticed. Advisory warnings (>=800) still only warn.
+      # blocking health job below; keeping the focused step here gives an
+      # earlier, named failure in the lint job. Advisory warnings (>=800) still
+      # only warn.
       - name: Module line-count gate — composability budget
         run: uv run python scripts/gates/module_line_count_check.py
 
@@ -331,8 +331,6 @@ jobs:
       - name: Run infrastructure tests
         env:
           COVERAGE_FILE: .coverage.infra
-        # macOS runners have socket.getfqdn timeout issues with werkzeug/httpserver
-        continue-on-error: ${{ runner.os == 'macOS' }}
         # -n auto parallelizes across runner cores (pytest-xdist); the suite is
         # parallel-safe (no-mocks tests use per-test tmp_path + random-port
         # httpserver). pytest-cov combines per-worker data before the gate.
@@ -661,11 +659,18 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
+      - name: Resolve public project names
+        id: security-scope
+        run: echo "names=$(uv run python -m infrastructure.project.public_scope project-names)" >> "$GITHUB_OUTPUT"
+
       - name: Dependency audit (pip-audit)
         run: |
           set -euo pipefail
           IGNORE_FILE=".github/pip-audit-ignore.txt"
+          LOCK_REQUIREMENTS="${RUNNER_TEMP}/template-all-requirements.txt"
           uv run python scripts/gates/pip_audit_ignore_policy.py "$IGNORE_FILE"
+          uv export --all-groups --all-extras --frozen --no-hashes \
+            --no-emit-project --output-file "$LOCK_REQUIREMENTS"
           PIP_AUDIT_ARGS=()
           while IFS= read -r raw || [ -n "$raw" ]; do
             [[ "$raw" =~ ^[[:space:]]*# ]] && continue
@@ -675,7 +680,8 @@ jobs:
             PIP_AUDIT_ARGS+=(--ignore-vuln "$line")
           done < "$IGNORE_FILE"
           for attempt in 1 2 3; do
-            if uv run pip-audit "${PIP_AUDIT_ARGS[@]}"; then
+            if uv run pip-audit --requirement "$LOCK_REQUIREMENTS" \
+              --no-deps --disable-pip "${PIP_AUDIT_ARGS[@]}"; then
               exit 0
             fi
             echo "pip-audit attempt ${attempt} failed; retrying in 15s..." >&2
@@ -684,11 +690,13 @@ jobs:
           exit 1
 
       - name: Code security scan (Bandit MEDIUM+ severity)
-        run: >-
-          uv run bandit -c bandit.yaml -r -ll
-          infrastructure/
-          scripts/
-          projects/
+        run: |
+          set -euo pipefail
+          targets=(infrastructure scripts)
+          for project in ${{ steps.security-scope.outputs.names }}; do
+            targets+=("projects/$project")
+          done
+          uv run bandit -c bandit.yaml -r -ll "${targets[@]}"
 
       # Targeted shell-injection sweep at LOW severity: the MEDIUM+ gate above
       # rates a constant-string ``shell=True`` (B602/B604/B605/B609) as LOW and
@@ -696,12 +704,15 @@ jobs:
       # trees; keep it green by never introducing ``shell=True`` / partial-path
       # ``os.system`` calls (use list-form argv with ``shell=False``).
       - name: Shell-injection sweep (Bandit B602/B604/B605/B609, LOW+)
-        run: >-
-          uv run bandit -c bandit.yaml -r
-          -t B602,B604,B605,B609 --severity-level low
-          infrastructure/
-          scripts/
-          projects/
+        run: |
+          set -euo pipefail
+          targets=(infrastructure scripts)
+          for project in ${{ steps.security-scope.outputs.names }}; do
+            targets+=("projects/$project")
+          done
+          uv run bandit -c bandit.yaml -r \
+            -t B602,B604,B605,B609 --severity-level low \
+            "${targets[@]}"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 6b — Documentation Lint (mermaid + cross-links + consistency + doc pairs)

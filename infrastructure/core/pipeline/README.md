@@ -10,7 +10,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `multi_project.py`
 - `multi_project_parallel.py`
 - `resume.py`
-- `stages.py`
+- `stages.py` — subprocess execution; it does not duplicate the YAML stage plan
 - `stage_monitor.py`
 - `_stage_tracker.py`
 - `_performance_monitor.py`
@@ -26,6 +26,12 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `pipeline.yaml` — default declared DAG definition consumed by the executor
 - `artifacts.py` — stage-provenance manifests plus an explicit, deterministic
   current-output integrity snapshot for targeted renders
+
+`pipeline.yaml` is the only full-pipeline stage plan. Temporary repositories
+and installed wheels resolve the packaged copy of that same file; there is no
+hard-coded Python fallback plan. Root numbered scripts and
+`scripts/execute_pipeline.py` are compatibility wrappers over the canonical
+`scripts/pipeline/` and `scripts/runner/` implementations.
 
 After intentionally regenerating outputs outside `PipelineExecutor`, refresh
 their integrity baseline without inventing stage provenance:

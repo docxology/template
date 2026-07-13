@@ -116,7 +116,19 @@ PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_FILES = 3500
 PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 200 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES = 100 * 1024 * 1024
-_MACHINE_LOCAL_HOME_RE = re.compile(rb"(?:/Users|/home)/[^/\s\"'<>]+/")
+_MACHINE_LOCAL_HOME_RE = re.compile(
+    rb"(?:"
+    rb"(?:file://)?/(?:Users|home)/[^/\s\"'<>]+/"
+    rb"|"
+    rb"[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s\"'<>]+[\\/]+"
+    rb")"
+)
+_PUBLIC_OUTPUT_SECRET_RES: tuple[re.Pattern[bytes], ...] = (
+    re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
+    re.compile(rb"\bgh[pousr]_[A-Za-z0-9]{30,255}\b"),
+    re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b"),
+    re.compile(rb"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,255}\b"),
+)
 
 
 def is_public_template_output_path(path: str) -> bool:
@@ -278,6 +290,23 @@ def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
     be portable across clones. Restrict scanning to text-like extensions so
     binary payloads are never decoded or rejected for coincidental bytes.
     """
+    local_paths, _secrets = tracked_public_output_leaks(repo_root)
+    return local_paths
+
+
+def tracked_public_output_secrets(repo_root: Path) -> list[str]:
+    """Return tracked text evidence containing high-confidence secret formats.
+
+    The patterns deliberately cover only structured credential formats and
+    private-key headers.  Generic words such as ``token`` or ``password`` are
+    not evidence of a secret and would create an unsafe ignore culture.
+    """
+    _local_paths, secrets = tracked_public_output_leaks(repo_root)
+    return secrets
+
+
+def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
+    """Scan tracked publication text once for local paths and secrets."""
     proc = subprocess.run(
         ["git", "ls-files", "-z"],
         cwd=repo_root,
@@ -285,7 +314,8 @@ def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
         capture_output=True,
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
-    offenders: list[str] = []
+    local_paths: list[str] = []
+    secrets: list[str] = []
     for path in paths:
         normalized = path.replace("\\", "/")
         if not is_public_template_output_path(normalized):
@@ -297,5 +327,7 @@ def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
         except OSError:
             continue
         if _MACHINE_LOCAL_HOME_RE.search(content):
-            offenders.append(normalized)
-    return sorted(offenders)
+            local_paths.append(normalized)
+        if any(pattern.search(content) for pattern in _PUBLIC_OUTPUT_SECRET_RES):
+            secrets.append(normalized)
+    return sorted(local_paths), sorted(secrets)

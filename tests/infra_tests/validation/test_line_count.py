@@ -14,6 +14,7 @@ from infrastructure.validation.line_count import (
     scan_project_scripts,
     scan_project_src,
 )
+from scripts.gates.module_line_count_check import main as line_count_gate_main
 
 
 def test_count_lines(tmp_path: Path) -> None:
@@ -94,3 +95,15 @@ def test_scan_project_src_any_project(tmp_path: Path) -> None:
     (src / "big.py").write_text("\n".join(["# line"] * 960), encoding="utf-8")
     _warnings, failures = scan_project_src(tmp_path)
     assert any("projects/templates/template_code_project/src/big.py" in rel for rel, _ in failures)
+
+
+def test_gate_fails_when_required_scan_roots_are_missing(tmp_path: Path) -> None:
+    assert line_count_gate_main(["--repo-root", str(tmp_path)]) == 1
+
+
+def test_gate_fails_on_syntax_invalid_counted_module(tmp_path: Path) -> None:
+    (tmp_path / "infrastructure").mkdir()
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "infrastructure" / "broken.py").write_text("def broken(:\n", encoding="utf-8")
+
+    assert line_count_gate_main(["--repo-root", str(tmp_path)]) == 1

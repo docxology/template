@@ -46,15 +46,26 @@ def render_generated_rules(repo_root: Path) -> str:
 
 
 def codeowners_is_current(repo_root: Path) -> bool:
-    """Return whether the generated CODEOWNERS block matches policy."""
+    """Return whether generated ownership policy is current and cannot be overridden.
+
+    GitHub applies the last matching CODEOWNERS rule.  Merely finding a current
+    generated block is therefore insufficient: a later hand-written rule could
+    silently replace ownership for a public or sensitive path.  Keep the
+    generated policy as the final rule-bearing block and permit only comments or
+    blank lines after it.
+    """
     path = repo_root / ".github/CODEOWNERS"
     text = path.read_text(encoding="utf-8")
+    if text.count(BEGIN) != 1 or text.count(END) != 1:
+        return False
     start = text.find(BEGIN)
     end = text.find(END)
     if start < 0 or end < start:
         return False
     actual = text[start : end + len(END)]
-    return actual == render_generated_rules(repo_root)
+    trailing = text[end + len(END) :]
+    has_trailing_rule = any(line.strip() and not line.lstrip().startswith("#") for line in trailing.splitlines())
+    return actual == render_generated_rules(repo_root) and not has_trailing_rule
 
 
 __all__ = ["codeowners_is_current", "render_generated_rules"]

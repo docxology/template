@@ -3,12 +3,13 @@
 
 from __future__ import annotations
 
-import runpy
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from scripts.pipeline.stage_06_llm_review import cli_main  # noqa: E402
+
 
 if __name__ == "__main__":
-    runpy.run_module("scripts.pipeline.stage_06_llm_review", run_name="__main__")
+    raise SystemExit(cli_main())

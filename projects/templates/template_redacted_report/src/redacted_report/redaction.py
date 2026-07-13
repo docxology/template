@@ -20,7 +20,7 @@ _ALLOWED_REASONS = {
     "legal_privilege",
     "privacy",
 }
-_SENSITIVE_MARKERS = ("HUMINT", "SIGINT", "source", "selector", "location", "2026-")
+_SENSITIVE_MARKERS = ("HUMINT", "SIGINT", "source", "selector", "location")
 _REVIEW_DECISIONS = {"approve", "reject", "changes_requested"}
 
 
@@ -120,6 +120,7 @@ class ReleaseGateReport:
 DEFAULT_RESIDUAL_PATTERNS = tuple(
     ResidualPattern(f"marker:{marker}", re.escape(marker), "warning") for marker in _SENSITIVE_MARKERS
 ) + (
+    ResidualPattern("iso_calendar_date", r"\b20\d{2}-\d{2}-\d{2}\b", "warning"),
     ResidualPattern("email_address", r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", "warning"),
     ResidualPattern("ipv4_address", r"\b(?:\d{1,3}\.){3}\d{1,3}\b", "warning"),
     ResidualPattern("coordinate_pair", r"\b-?\d{1,2}\.\d{3,},\s*-?\d{1,3}\.\d{3,}\b", "warning"),

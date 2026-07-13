@@ -38,7 +38,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
 
-from infrastructure.project.public_scope import public_ci_lint_paths, public_ci_source_paths
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_ci_lint_paths, public_ci_source_paths
 
 __all__ = [
     "GateResult",
@@ -135,6 +135,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
 
     public_targets = _public_source_targets(repo_root)
     lint_targets = _public_lint_targets(repo_root)
+    public_project_targets = [f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES]
 
     return [
         ("mypy", ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *public_targets]),
@@ -160,9 +161,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "bandit.yaml",
                 "infrastructure/",
                 "scripts/",
-                "projects/",
-                "--exclude",
-                "projects/working,projects/ongoing,projects/published,projects/archive,projects/other",
+                *public_project_targets,
             ],
         ),
         (
@@ -278,12 +277,18 @@ def _stage_table_passed(returncode: int, combined_output: str) -> bool:
 
     if returncode != 0:
         return False
-    # "Would update N" with N > 0 signals real drift. "Would update 0" is the
-    # success-with-summary path.
-    drift_re = re.compile(r"Would update (\d+)", re.IGNORECASE)
-    for match in drift_re.finditer(combined_output):
-        if int(match.group(1)) > 0:
-            return False
+    # Require the generator's complete summary rather than treating arbitrary
+    # exit-zero output (including an empty/crashed-before-work path) as proof.
+    summaries = re.findall(
+        r"Would update\s+(\d+)\s*;\s*up-to-date\s+(\d+)",
+        combined_output,
+        flags=re.IGNORECASE,
+    )
+    if len(summaries) != 1:
+        return False
+    changed, unchanged = (int(value) for value in summaries[0])
+    if changed != 0 or unchanged == 0:
+        return False
     # Active mutation markers always signal drift.
     if "Updating " in combined_output:
         return False
@@ -371,6 +376,8 @@ def run_health_checks(
     specs = build_gate_specs(repo_root)
     if gates is not None:
         wanted = list(gates)
+        if not wanted:
+            raise ValueError("at least one gate must be selected")
         known = {name for name, _ in specs}
         unknown = [name for name in wanted if name not in known]
         if unknown:
@@ -388,7 +395,10 @@ def run_health_checks(
         results.append(_run_single_gate(name, argv, repo_root))
 
     total_ms = sum(r.elapsed_ms for r in results)
-    overall = all(r.passed for r in results) if results else True
+    # ``specs`` is non-empty for the default registry and empty explicit
+    # subsets are rejected above. Keep the aggregate fail-closed if that
+    # invariant is ever broken by a future registry change.
+    overall = bool(results) and all(r.passed for r in results)
     return HealthReport(results=results, passed=overall, total_elapsed_ms=total_ms)
 
 

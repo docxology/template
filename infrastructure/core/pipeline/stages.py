@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
-from infrastructure.core.logging.utils import flush_file_handlers, get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.errors import SCRIPT_EXECUTION_FAILED
 from infrastructure.core.files.cleanup import clean_output_directories
 
@@ -24,16 +24,6 @@ if TYPE_CHECKING:
     from infrastructure.core.pipeline.config import PipelineConfig
 
 logger = get_logger(__name__)
-
-_ROOT_COMPATIBILITY_SCRIPTS = {
-    "scripts/pipeline/stage_00_setup.py": "scripts/00_setup_environment.py",
-    "scripts/pipeline/stage_01_test.py": "scripts/01_run_tests.py",
-    "scripts/pipeline/stage_02_analysis.py": "scripts/02_run_analysis.py",
-    "scripts/pipeline/stage_03_render.py": "scripts/03_render_pdf.py",
-    "scripts/pipeline/stage_04_validate.py": "scripts/04_validate_output.py",
-    "scripts/pipeline/stage_05_copy.py": "scripts/05_copy_outputs.py",
-    "scripts/pipeline/stage_06_llm_review.py": "scripts/06_llm_review.py",
-}
 
 
 class PipelineStageMixin(ABC):
@@ -77,7 +67,7 @@ class PipelineStageMixin(ABC):
             self.config.project_name,
         )
 
-    # -- Internal stage methods ----------------------------------------------
+    # -- Built-in stage methods ----------------------------------------------
 
     def _run_clean_outputs(self) -> bool:
         """Clean output directories for a fresh run.
@@ -99,77 +89,6 @@ class PipelineStageMixin(ABC):
         self._setup_log_file_handler()
         logger.info(f"Recreated pipeline log file: {self.log_file}")
         return True
-
-    def _run_setup_environment(self) -> bool:
-        return self._run_script("scripts/pipeline/stage_00_setup.py", "--project", self.config.project_name)
-
-    def _run_analysis(self) -> bool:
-        return self._run_script("scripts/pipeline/stage_02_analysis.py", "--project", self.config.project_name)
-
-    def _run_pdf_rendering(self) -> bool:
-        return self._run_script("scripts/pipeline/stage_03_render.py", "--project", self.config.project_name)
-
-    def _run_validation(self) -> bool:
-        return self._run_script("scripts/pipeline/stage_04_validate.py", "--project", self.config.project_name)
-
-    def _run_llm_review(self) -> bool:
-        """Run LLM scientific review.
-
-        Uses allow_skip_code=True to treat exit code 2 (Ollama not available) as success.
-        """
-        return self._run_script(
-            "scripts/pipeline/stage_06_llm_review.py",
-            "--reviews-only",
-            "--project",
-            self.config.project_name,
-            allow_skip_code=True,
-        )
-
-    def _run_llm_translations(self) -> bool:
-        """Run LLM translations.
-
-        Uses allow_skip_code=True to treat exit code 2 (no languages configured or Ollama unavailable) as success.
-        """
-        return self._run_script(
-            "scripts/pipeline/stage_06_llm_review.py",
-            "--translations-only",
-            "--project",
-            self.config.project_name,
-            allow_skip_code=True,
-        )
-
-    def _run_copy_outputs(self) -> bool:
-        """Run output copying."""
-        logger.info("Running output copying...")
-
-        # Flush log handlers before copying to ensure log file is written
-        flush_file_handlers()
-        if not self._verify_log_file():
-            logger.warning("Log file not verified before copy - may be missing or empty")
-
-        return self._run_script("scripts/pipeline/stage_05_copy.py", "--project", self.config.project_name)
-
-    def _verify_log_file(self) -> bool:
-        """Check that the log file exists and has content.
-
-        Returns:
-            True if log file exists and has content, False otherwise
-        """
-        if self.log_file.exists():
-            try:
-                size = self.log_file.stat().st_size
-                if size > 0:
-                    logger.debug(f"Log file verified: {self.log_file} ({size:,} bytes)")
-                    return True
-                else:
-                    logger.warning(f"Log file exists but is empty: {self.log_file}")
-                    return False
-            except OSError as e:
-                logger.warning(f"Failed to verify log file: {e}")
-                return False
-        else:
-            logger.warning(f"Log file not found: {self.log_file}")
-            return False
 
     # -- Subprocess execution ------------------------------------------------
 
@@ -220,13 +139,6 @@ class PipelineStageMixin(ABC):
             script_path = self.config.repo_root / relative
         else:
             script_path = self.config.repo_root / "scripts" / relative
-
-        # Minimal downstream forks may retain only the documented numbered
-        # compatibility entrypoints. The canonical repository always uses the
-        # stage_* path; this fallback preserves those forks without creating a
-        # second dispatch definition.
-        if not script_path.exists() and script_name in _ROOT_COMPATIBILITY_SCRIPTS:
-            script_path = self.config.repo_root / _ROOT_COMPATIBILITY_SCRIPTS[script_name]
 
         cmd = get_python_command() + [str(script_path)] + list(args)
         logger.debug(f"Running: {' '.join(cmd)}")

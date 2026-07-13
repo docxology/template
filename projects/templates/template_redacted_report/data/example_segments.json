@@ -155,6 +155,12 @@
     },
     {
       "segment_id": "s4",
+      "start": 94,
+      "end": 102,
+      "reason": "operational_detail"
+    },
+    {
+      "segment_id": "s4",
       "start": 120,
       "end": 130,
       "reason": "time_place_selector"

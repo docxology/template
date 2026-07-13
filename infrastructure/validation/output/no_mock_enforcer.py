@@ -427,12 +427,12 @@ def scan_semantic_standins(
     tests_dir: Path,
     repo_root: Path,
 ) -> SemanticStandInScanResult:
-    """Inventory monkeypatch operations without treating current debt as a gate.
+    """Inventory monkeypatch operations for the zero-debt repository gate.
 
     Classification is intentionally syntactic. In particular, every
     ``setattr``/``setitem`` call is recorded as dependency replacement even
     when a human review may later decide it only redirects a path. This gives
-    migration work a conservative, reproducible starting inventory.
+    the blocking gate a conservative, reproducible inventory.
     """
     uses: list[SemanticStandInUse] = []
     errors: list[str] = []

@@ -78,7 +78,8 @@ def main(mode: str = ReviewMode.ALL, project_name: str = "project") -> int:
     return exit_code
 
 
-if __name__ == "__main__":
+def cli_main() -> int:
+    """Parse command-line arguments and execute the selected review mode."""
     parser = argparse.ArgumentParser(description="LLM Manuscript Review Orchestrator")
     parser.add_argument(
         "--project",
@@ -110,7 +111,11 @@ if __name__ == "__main__":
         else:
             exec_mode = ReviewMode.ALL
 
-        sys.exit(main(mode=exec_mode, project_name=args.project))
+        return main(mode=exec_mode, project_name=args.project)
     except KeyboardInterrupt:
         logger.info("\nLLM Review cancelled by user.")
-        sys.exit(130)
+        return 130
+
+
+if __name__ == "__main__":
+    raise SystemExit(cli_main())

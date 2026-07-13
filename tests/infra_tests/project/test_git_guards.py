@@ -6,6 +6,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from infrastructure.project.git_guards import (
     is_generated_artifact_path,
     is_public_template_output_path,
@@ -13,6 +15,7 @@ from infrastructure.project.git_guards import (
     offending_tracked_projects,
     tracked_generated_artifacts,
     tracked_public_output_local_paths,
+    tracked_public_output_secrets,
 )
 
 
@@ -168,6 +171,49 @@ def test_tracked_public_output_local_paths_allows_portable_and_source_paths(tmp_
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
 
     assert tracked_public_output_local_paths(tmp_path) == []
+
+
+def test_tracked_public_output_local_paths_detects_windows_home(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text(r'{"path": "C:\\Users\\alice\\research\\result.csv"}' + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_local_paths(tmp_path) == [
+        "projects/templates/template_code_project/output/reports/report.json"
+    ]
+
+
+@pytest.mark.parametrize(
+    "secret",
+    [
+        "-----BEGIN PRIVATE KEY-----",
+        "ghp_abcdefghijklmnopqrstuvwxyzABCDEFGHIJ",
+        "AKIAABCDEFGHIJKLMNOP",
+        "sk-proj-abcdefghijklmnopqrstuvwxyz123456",
+    ],
+)
+def test_tracked_public_output_secrets_detects_structured_credentials(tmp_path: Path, secret: str) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text('{"credential": ' + repr(secret) + "}\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_secrets(tmp_path) == [
+        "projects/templates/template_code_project/output/reports/report.json"
+    ]
+
+
+def test_tracked_public_output_secrets_ignores_generic_placeholders(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text('{"credential": "${GITHUB_TOKEN}"}\n', encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_secrets(tmp_path) == []
 
 
 def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> None:
