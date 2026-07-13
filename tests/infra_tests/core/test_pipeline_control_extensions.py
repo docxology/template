@@ -254,6 +254,34 @@ def test_hooks_disabled_in_ci_unless_declared_run_in_ci(tmp_path: Path, monkeypa
     assert not (tmp_path / "ran.txt").exists()
 
 
+def test_timed_out_hook_normalizes_partial_output_to_text(tmp_path: Path) -> None:
+    """TimeoutExpired may expose bytes even when subprocess text mode is enabled."""
+    hook_script = tmp_path / "slow_hook.py"
+    hook_script.write_text(
+        "import time\nprint('partial output', flush=True)\ntime.sleep(2)\n",
+        encoding="utf-8",
+    )
+    hooks = StageHooks(
+        pre_stage=((sys.executable, str(hook_script)),),
+        timeout_seconds=1,
+        run_in_ci=True,
+    )
+    context = StageHookContext(
+        project_name="template_code_project",
+        stage_name="Slow Hook",
+        stage_num=1,
+        run_dir=tmp_path,
+        status="running",
+    )
+
+    results = run_stage_hooks(hooks, HookEvent.PRE_STAGE, context)
+
+    assert len(results) == 1
+    assert results[0].exit_code == 124
+    assert results[0].stdout == "partial output\n"
+    assert isinstance(results[0].stderr, str)
+
+
 def test_hitl_controller_records_gate_pause_and_commands(tmp_path: Path) -> None:
     controller = HitlController(project_output_dir=tmp_path, mode=HitlMode.GATE_ONLY)
 

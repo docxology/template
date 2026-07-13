@@ -186,7 +186,10 @@ class HitlController:
         """Return the current detached-review context, if present."""
         if not self.agent_context_path.exists():
             return {}
-        return json.loads(self.agent_context_path.read_text(encoding="utf-8"))
+        payload = json.loads(self.agent_context_path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError(f"agent context must be a JSON object: {self.agent_context_path}")
+        return dict(payload)
 
     def write_agent_context(self, waiting: WaitingState, *, stage_spec: StageSpec | None = None) -> Path:
         """Write adapter-ready context for detached review tools."""

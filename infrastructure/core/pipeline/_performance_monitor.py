@@ -24,7 +24,7 @@ logger = get_logger(__name__)
 class PerformanceMonitor:
     """Resource-usage monitor tracking timing, memory, and operation counts."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize performance monitor."""
         self.start_time: float | None = None
         self.start_memory: float | None = None

@@ -8,7 +8,7 @@ import hashlib
 import os
 import shutil
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging.utils import get_logger, log_success
@@ -34,7 +34,19 @@ class CopyStats(TypedDict):
 
 
 # Output subdirectory name → stats dict key mapping (module-level constant).
-_SUBDIR_STATS_KEYS: dict[str, str] = {
+CopyStatsCountKey = Literal[
+    "pdf_files",
+    "web_files",
+    "slides_files",
+    "figures_files",
+    "data_files",
+    "reports_files",
+    "simulations_files",
+    "llm_files",
+    "logs_files",
+]
+
+_SUBDIR_STATS_KEYS: dict[str, CopyStatsCountKey] = {
     "pdf": "pdf_files",
     "web": "web_files",
     "slides": "slides_files",

@@ -6,10 +6,12 @@ extracted from the bash run.sh script into testable Python code.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
+from __future__ import annotations
+
 import logging
 import time
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.runtime.checkpoint import CheckpointManager
@@ -26,6 +28,7 @@ from infrastructure.core.pipeline.stages import PipelineStageMixin
 from infrastructure.core.pipeline.control import load_pipeline_control_config, merge_control_configs
 from infrastructure.core.pipeline.types import (
     PipelineConfig,
+    PipelineControlConfig,
     PipelineStageResult,
     StageSpec,
 )
@@ -34,11 +37,15 @@ from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 logger = get_logger(__name__)
 
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.dag import PipelineDAG
+    from infrastructure.core.pipeline.plugins import PluginStageDeclaration
+
 
 class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
     """Execute research project pipeline stages."""
 
-    def __init__(self, config: PipelineConfig):
+    def __init__(self, config: PipelineConfig) -> None:
         """Initialize pipeline executor.
 
         Sets up per-project log file that captures all pipeline execution logs
@@ -96,17 +103,17 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     def _resolve_pipeline_yaml(self) -> Path:
         """Return the pipeline YAML path to use: project-specific if it exists, else default."""
-        project_yaml = self.config.project_dir / "pipeline.yaml"
-        default_yaml = self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+        project_yaml = Path(self.config.project_dir) / "pipeline.yaml"
+        default_yaml = Path(self.config.repo_root) / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
         return project_yaml if project_yaml.exists() else default_yaml
 
     def _default_pipeline_yaml(self) -> Path:
-        return self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+        return Path(self.config.repo_root) / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
 
     def _project_pipeline_yaml(self) -> Path:
-        return self.config.project_dir / "pipeline.yaml"
+        return Path(self.config.project_dir) / "pipeline.yaml"
 
-    def _resolve_control_config(self):
+    def _resolve_control_config(self) -> PipelineControlConfig:
         """Resolve advisory control config from YAML plus explicit config."""
         default_yaml = self._default_pipeline_yaml()
         project_yaml = self._project_pipeline_yaml()
@@ -220,13 +227,13 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
 
-    def _load_plugin_stages(self) -> list:
+    def _load_plugin_stages(self) -> list[PluginStageDeclaration]:
         """Load validated plugin declarations for this project (``[]`` if none)."""
         from infrastructure.core.pipeline.plugins import load_plugin_stages
 
         return load_plugin_stages(self.config.project_dir)
 
-    def _merge_plugin_stages_into_dag(self, dag) -> None:
+    def _merge_plugin_stages_into_dag(self, dag: PipelineDAG) -> None:
         """Merge declared plugin stages into the DAG (no-op when none declared)."""
         from infrastructure.core.pipeline.plugins import merge_plugin_stages
 

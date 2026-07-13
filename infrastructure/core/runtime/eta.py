@@ -4,6 +4,7 @@ Pure functions for calculating time estimates during long-running operations.
 Split from logging_progress.py to keep each module under 300 LOC.
 """
 
+from collections.abc import Sequence
 from typing import NamedTuple
 
 
@@ -69,7 +70,7 @@ def calculate_eta_with_confidence(
     elapsed_time: float,
     completed_items: int,
     total_items: int,
-    item_durations: list[float | None] | None = None,
+    item_durations: Sequence[float | None] | None = None,
 ) -> ETAEstimate:
     """Return ETAEstimate(optimistic, realistic, pessimistic) based on min/avg/max item duration."""
     if completed_items <= 0 or total_items <= 0:

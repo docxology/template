@@ -18,7 +18,9 @@ except ImportError:
 
 np: _module_types.ModuleType | None = None
 try:
-    import numpy as np  # type: ignore[no-redef]
+    import numpy as _numpy
+
+    np = _numpy
 except ImportError:
     np = None  # numpy is optional
 

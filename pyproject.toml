@@ -347,10 +347,6 @@ module = "infrastructure.steganography.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = "infrastructure.core.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "infrastructure.publishing.*"
 ignore_errors = true
 

@@ -210,6 +210,7 @@ class TestGetSummary:
         assert summary["slowest_stage"]["stage_name"] == "slow"
         assert summary["fastest_stage"]["stage_name"] == "fast"
         assert summary["total_memory_mb"] == 150
+        assert summary["peak_memory_mb"] == 100
         assert "warnings" in summary
 
     def test_summary_single_stage(self):

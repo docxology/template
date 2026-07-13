@@ -123,4 +123,4 @@ def run_optional_setup_hook(repo_root: Path, project_name: str) -> bool:
     project_dir = resolve_project_root(repo_root, project_name)
     if not project_dir.is_dir():
         return True
-    return run_project_setup_hook(project_dir)
+    return bool(run_project_setup_hook(project_dir))

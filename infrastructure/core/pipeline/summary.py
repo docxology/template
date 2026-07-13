@@ -39,7 +39,7 @@ logger = get_logger(__name__)
 class PipelineSummaryGenerator:
     """Generate pipeline execution summaries."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize summary generator."""
         self.file_inventory_manager = FileInventoryManager()
 

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import yaml
 
@@ -273,7 +273,7 @@ class PipelineDAG:
                 raise ValueError(
                     f"Stage '{stage.name}' references method '{stage.method}' but executor has no such method"
                 )
-            return method
+            return cast(Callable[[], bool], method)
 
         if stage.script:
             # Build a closure over the script + args
@@ -286,7 +286,7 @@ class PipelineDAG:
                 _args: list[str] = args_list,
                 _allow_skip: bool = allow_skip,
             ) -> bool:
-                return executor._run_script(_script, *_args, allow_skip_code=_allow_skip)
+                return bool(executor._run_script(_script, *_args, allow_skip_code=_allow_skip))
 
             return _run
 

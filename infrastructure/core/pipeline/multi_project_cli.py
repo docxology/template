@@ -11,6 +11,7 @@ from infrastructure.core.project_paths import find_repo_root
 from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
+    MultiProjectResult,
     format_multi_project_detailed_report,
     write_last_run_summary,
 )
@@ -19,6 +20,7 @@ from infrastructure.core.pipeline.multi_project_parallel import (
     run_projects_in_parallel,
 )
 from infrastructure.project.discovery import discover_projects
+from infrastructure.project.project_info import ProjectInfo
 
 logger = get_logger(__name__)
 
@@ -72,25 +74,30 @@ def execute_multi_project_parallel(
         return 1
 
 
-def _log_project_status(result) -> None:
-    if not hasattr(result, "project_results") or not result.project_results:
+def _log_project_status(result: object) -> None:
+    project_results = getattr(result, "project_results", None)
+    if not project_results:
         return
     logger.info("Project Status:")
-    if not isinstance(result.project_results, dict):
+    if not isinstance(project_results, dict):
         logger.warning("  ⚠ project_results format unexpected")
         return
-    for proj_name in sorted(result.project_results.keys()):
-        proj_result = result.project_results[proj_name]
+    for raw_name, proj_result in sorted(project_results.items(), key=lambda item: str(item[0])):
+        proj_name = str(raw_name)
         if isinstance(proj_result, list) and proj_result:
-            all_success = all(stage.success for stage in proj_result if hasattr(stage, "success"))
-            duration = sum(stage.duration for stage in proj_result if hasattr(stage, "duration"))
+            all_success = all(bool(getattr(stage, "success", False)) for stage in proj_result)
+            duration = sum(float(getattr(stage, "duration", 0.0)) for stage in proj_result)
             status = "✅" if all_success else "❌"
             logger.info(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
         else:
             logger.info(f"  ❓ {proj_name}: Unknown status")
 
 
-def _write_summary_reports(result, projects, repo_root: Path) -> None:
+def _write_summary_reports(
+    result: MultiProjectResult,
+    projects: list[ProjectInfo],
+    repo_root: Path,
+) -> None:
     try:
         from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
@@ -120,16 +127,18 @@ def _write_summary_reports(result, projects, repo_root: Path) -> None:
         logger.warning(f"Failed to write last-run-summary.md: {e}")
 
 
-def _failed_project_names(result) -> list[str]:
-    if not hasattr(result, "project_results") or not result.project_results:
+def _failed_project_names(result: object) -> list[str]:
+    project_results = getattr(result, "project_results", None)
+    if not project_results:
         return []
     failed: list[str] = []
-    for name, results_list in result.project_results.items():
+    for name, results_list in project_results.items():
+        project_name = str(name)
         if isinstance(results_list, list) and results_list:
-            if not all(stage.success for stage in results_list if hasattr(stage, "success")):
-                failed.append(name)
+            if not all(bool(getattr(stage, "success", False)) for stage in results_list):
+                failed.append(project_name)
         elif not results_list:
-            failed.append(name)
+            failed.append(project_name)
     return failed
 
 

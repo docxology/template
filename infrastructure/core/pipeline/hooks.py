@@ -20,6 +20,13 @@ from typing import Mapping
 from infrastructure.core.pipeline.types import StageHooks
 
 
+def _timeout_output(value: bytes | str | None) -> str:
+    """Normalize TimeoutExpired output, which may be bytes even in text mode."""
+    if isinstance(value, bytes):
+        return value.decode(errors="replace")
+    return value or ""
+
+
 class HookEvent(str, Enum):
     """Supported hook event names."""
 
@@ -120,8 +127,8 @@ def run_stage_hooks(
                     success=False,
                     duration=time.monotonic() - started,
                     exit_code=124,
-                    stdout=exc.stdout or "",
-                    stderr=exc.stderr or "",
+                    stdout=_timeout_output(exc.stdout),
+                    stderr=_timeout_output(exc.stderr),
                     error_message=f"hook timed out after {hooks.timeout_seconds}s",
                 )
             )

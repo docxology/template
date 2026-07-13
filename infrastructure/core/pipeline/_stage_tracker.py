@@ -31,7 +31,7 @@ class StagePerformanceTracker:
         slow_stage_multiplier: float = SLOW_STAGE_MULTIPLIER,
         high_memory_mb: float = HIGH_MEMORY_MB,
         high_cpu_percent: float = HIGH_CPU_PERCENT,
-    ):
+    ) -> None:
         self.stages: list[StageMetricsDict] = []
         self.start_time: float | None = None
         self.start_memory: float = 0.0
@@ -155,6 +155,6 @@ class StagePerformanceTracker:
             "slowest_stage": max(self.stages, key=lambda s: s["duration"]),
             "fastest_stage": min(self.stages, key=lambda s: s["duration"]),
             "total_memory_mb": sum(s.get("memory_mb", 0) for s in self.stages),
-            "peak_memory_mb": max((s.get("end_memory_mb", 0) for s in self.stages), default=0),
+            "peak_memory_mb": max((s.get("memory_mb", 0.0) for s in self.stages), default=0.0),
             "warnings": self.get_performance_warnings(),
         }

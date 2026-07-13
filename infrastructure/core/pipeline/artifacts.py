@@ -315,7 +315,10 @@ def _validated_manifest_path(project_dir: Path, raw_path: str) -> tuple[Path | N
 
 def _entries_from_payload(payload: dict[str, object]) -> list[ArtifactManifestEntry]:
     entries: list[ArtifactManifestEntry] = []
-    for row in payload.get("entries", []):
+    raw_entries = payload.get("entries")
+    if not isinstance(raw_entries, list):
+        return entries
+    for row in raw_entries:
         if isinstance(row, dict):
             entries.append(
                 ArtifactManifestEntry(
