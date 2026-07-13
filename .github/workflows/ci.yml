@@ -228,15 +228,15 @@ jobs:
         run: uv sync
 
       # Branch-protection check name stays stable. This command is the lexical
-      # prohibited-framework gate only; semantic monkeypatch debt is available
-      # through --inventory and is not enforced until its measured count is 0.
+      # prohibited-framework gate; the following inventory gate separately
+      # enforces that semantic dependency replacements remain at zero.
       - name: Verify prohibited mock-framework syntax
         run: uv run python scripts/audit/verify_no_mocks.py
 
-      - name: Ratchet semantic dependency replacements
+      - name: Enforce zero semantic dependency replacements
         run: >-
           uv run python scripts/audit/verify_no_mocks.py
-          --inventory --max-dependency-replacements 378
+          --inventory --max-dependency-replacements 0
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2b — Setup hook on Windows (conditional smoke)

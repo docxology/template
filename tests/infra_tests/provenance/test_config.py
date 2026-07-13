@@ -111,24 +111,17 @@ class TestLoadProvenanceConfig:
         assert c.enabled is True
         assert c.source_path == str(tmp_path / "provenance.yaml")
 
-    def test_json_fallback(self, tmp_path, monkeypatch):
+    def test_json_fallback(self, tmp_path):
         """When PyYAML is unavailable, falls back to JSON parsing."""
         (tmp_path / "provenance.yaml").write_text(
             '{"enabled": false, "output_dir": "json_out", "filename": "j.json", "auto_hash_artifacts": true}',
             encoding="utf-8",
         )
-        # Simulate yaml being unavailable
-        import builtins
 
-        original_import = builtins.__import__
+        def blocked_import(name: str):
+            raise ImportError(f"{name} not available")
 
-        def mock_import(name, *args, **kwargs):
-            if name == "yaml":
-                raise ImportError("yaml not available")
-            return original_import(name, *args, **kwargs)
-
-        monkeypatch.setattr(builtins, "__import__", mock_import)
-        c = load_provenance_config(tmp_path)
+        c = load_provenance_config(tmp_path, yaml_importer=blocked_import)
         assert c.enabled is False
         assert c.output_dir == "json_out"
         assert c.filename == "j.json"

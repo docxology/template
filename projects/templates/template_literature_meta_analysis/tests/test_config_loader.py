@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import builtins
 from pathlib import Path
 
-import pytest
 
 from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
 from config_loader import default_config_path, load_kg_config, load_search_config
@@ -87,15 +85,10 @@ def test_default_config_path_points_at_manuscript() -> None:
     assert default_config_path() == MANUSCRIPT_DIR / "config.yaml"
 
 
-def test_load_yaml_import_error_returns_empty_dict(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    real_import = builtins.__import__
-
-    def blocked_import(name, globals=None, locals=None, fromlist=(), level=0):
-        if name == "yaml":
-            raise ImportError("yaml unavailable in test")
-        return real_import(name, globals, locals, fromlist, level)
-
-    monkeypatch.setattr(builtins, "__import__", blocked_import)
+def test_load_yaml_import_error_returns_empty_dict(tmp_path: Path) -> None:
     from config_loader import _load_yaml
 
-    assert _load_yaml(tmp_path / "missing.yaml") == {}
+    def blocked_import(name: str):
+        raise ImportError(f"{name} unavailable in test")
+
+    assert _load_yaml(tmp_path / "missing.yaml", yaml_importer=blocked_import) == {}

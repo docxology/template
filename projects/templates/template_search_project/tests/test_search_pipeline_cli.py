@@ -65,21 +65,14 @@ def test_no_llm_flag_skips_llm_stage_even_when_config_enables_it(tmp_path: Path)
     assert summary["llm_used"] is False
 
 
-def test_llm_enabled_runs_real_synthesis_stage_with_offline_stub(tmp_path: Path, monkeypatch):
+def test_llm_enabled_runs_real_synthesis_stage_with_offline_stub(tmp_path: Path):
     """Cover the ``do_llm`` branch (config.llm.enabled and not --no-llm):
     ``build_llm_callable`` returns a real callable, so per-paper +
     corpus synthesis actually run and write their artifacts.
 
-    Uses the same offline LLM-stub pattern as
-    ``tests/test_deep_improvements.py::TestLLMRuntimeCallable`` and
-    ``tests/test_llm_runtime.py``: a real ``types.ModuleType`` swapped
-    into ``sys.modules["infrastructure.llm"]`` via
-    ``monkeypatch.setitem``, with a deterministic fake ``LLMClient``
-    that returns a fixed string — no mock framework, and no live Ollama
-    server required, per the repo's no-mocks policy.
+    Injects a deterministic offline LLM callable, so no live Ollama server is
+    required while the real synthesis and artifact-writing paths still run.
     """
-    import sys
-    import types
 
     class _FakeClient:
         def __init__(self, _config) -> None:
@@ -96,18 +89,17 @@ def test_llm_enabled_runs_real_synthesis_stage_with_offline_stub(tmp_path: Path,
         def from_env(cls) -> "_FakeConfig":
             return cls()
 
-    fake_mod = types.ModuleType("infrastructure.llm")
-    fake_mod.LLMClient = _FakeClient
-    fake_mod.OllamaClientConfig = _FakeConfig
-    monkeypatch.setitem(sys.modules, "infrastructure.llm", fake_mod)
-
     corpus = tmp_path / "corpus.json"
     corpus.write_text(BUNDLED_CORPUS.read_text(encoding="utf-8"), encoding="utf-8")
 
     config = _make_config()
     config.llm.enabled = True
     args = _args(corpus=str(corpus), no_llm=False)
-    exit_code = run_search_pipeline_cli(args, tmp_path, config)
+
+    def llm_builder(**kwargs):
+        return _FakeClient(_FakeConfig()).query_long
+
+    exit_code = run_search_pipeline_cli(args, tmp_path, config, llm_builder=llm_builder)
     assert exit_code == 0
 
     summary = json.loads((tmp_path / "output" / "run_summary.json").read_text(encoding="utf-8"))

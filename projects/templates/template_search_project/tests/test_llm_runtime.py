@@ -17,8 +17,6 @@ We exercise both paths:
 
 from __future__ import annotations
 
-import sys
-
 import pytest
 
 from src.llm_runtime import build_llm_callable
@@ -47,7 +45,7 @@ def test_build_llm_callable_returns_callable_when_infra_importable():
     assert callable(result)
 
 
-def test_build_llm_callable_returns_none_on_import_error(monkeypatch):
+def test_build_llm_callable_returns_none_on_import_error():
     """Force ``infrastructure.llm`` to be un-importable for the duration
     of one call. The function must return ``None`` (not raise) so the
     orchestrator can skip the synthesis stage cleanly.
@@ -55,27 +53,15 @@ def test_build_llm_callable_returns_none_on_import_error(monkeypatch):
     We use the ``meta_path`` finder mechanism Python uses internally;
     no mocking framework is involved.
     """
-    import importlib.abc
-    import importlib.machinery
 
-    class _RejectInfraLLM(importlib.abc.MetaPathFinder):
-        def find_spec(self, name, path, target=None):
-            if name == "infrastructure.llm":
-                # Returning a spec with an unloadable loader forces
-                # ImportError at import time.
-                raise ImportError("test-injected: infrastructure.llm unavailable")
-            return None
+    def unavailable():
+        raise ImportError("test-injected: infrastructure.llm unavailable")
 
-    # Drop any cached module so the import re-runs the finder chain.
-    monkeypatch.delitem(sys.modules, "infrastructure.llm", raising=False)
-    finder = _RejectInfraLLM()
-    monkeypatch.setattr(sys, "meta_path", [finder] + sys.meta_path)
-
-    result = build_llm_callable(**_kwargs())
+    result = build_llm_callable(**_kwargs(), component_loader=unavailable)
     assert result is None
 
 
-def test_build_llm_callable_returns_none_when_client_construction_raises(monkeypatch):
+def test_build_llm_callable_returns_none_when_client_construction_raises():
     """Cover the second ``except Exception`` branch (lines 88-93): the
     import succeeds but ``OllamaClientConfig.from_env()``/``LLMClient(...)``
     construction raises (e.g. the Ollama server is unreachable). The
@@ -87,8 +73,6 @@ def test_build_llm_callable_returns_none_when_client_construction_raises(monkeyp
     ``monkeypatch.setitem``) — no mock framework involved, only a real
     (if deliberately broken) module object.
     """
-    import sys
-    import types
 
     class _BrokenConfig:
         @classmethod
@@ -99,12 +83,10 @@ def test_build_llm_callable_returns_none_when_client_construction_raises(monkeyp
         def __init__(self, _config) -> None:
             raise AssertionError("should not be constructed once from_env() raises")
 
-    fake_mod = types.ModuleType("infrastructure.llm")
-    fake_mod.LLMClient = _UnreachableClient
-    fake_mod.OllamaClientConfig = _BrokenConfig
-    monkeypatch.setitem(sys.modules, "infrastructure.llm", fake_mod)
-
-    result = build_llm_callable(**_kwargs())
+    result = build_llm_callable(
+        **_kwargs(),
+        component_loader=lambda: (_UnreachableClient, _BrokenConfig),
+    )
     assert result is None
 
 

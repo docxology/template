@@ -8,9 +8,16 @@ a cosmetic step.
 from __future__ import annotations
 
 from pathlib import Path
+from collections.abc import Callable
+from importlib import import_module
+from typing import Any
 
 
-def pad_png_to_square(path: Path) -> Path:
+def pad_png_to_square(
+    path: Path,
+    *,
+    image_importer: Callable[[str], Any] = import_module,
+) -> Path:
     """Pad a PNG to a square canvas on a white background, in place.
 
     When ``path`` is already square, or when Pillow is unavailable, or when
@@ -26,7 +33,7 @@ def pad_png_to_square(path: Path) -> Path:
     if not path.exists():
         return path
     try:  # pragma: no cover - exercised only when Pillow is installed
-        from PIL import Image
+        Image = image_importer("PIL.Image")
     except ImportError:
         return path
 

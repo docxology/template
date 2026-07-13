@@ -115,10 +115,9 @@ action — not each job.
 - **Enforced policy:** no configured prohibited mock-framework imports/calls
   (`MagicMock`, `mocker.patch`, `unittest.mock`, and related lexical forms) in
   test files.
-- **Boundary:** `--inventory` separately measures monkeypatch environment
-  isolation and dependency replacement. It remains advisory until the
-  dependency-replacement count reaches zero; CI does not pass the strict
-  inventory flag today.
+- **Boundary:** `--inventory` separately classifies permitted environment
+  isolation and semantic dependency replacement. CI enforces a zero ceiling
+  for dependency replacements; environment isolation remains permitted.
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
 

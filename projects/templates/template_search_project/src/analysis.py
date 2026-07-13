@@ -424,7 +424,7 @@ __all__ = [
 ]
 
 
-def _cli() -> None:
+def _cli(argv: list[str] | None = None) -> None:
     import argparse
     import json
     import sys
@@ -443,7 +443,7 @@ def _cli() -> None:
         ],
     )
     parser.add_argument("--project-root", required=True, help="Project root directory")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     project_root = Path(args.project_root).resolve()
     func = {

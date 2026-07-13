@@ -3,10 +3,9 @@
 ## Overview
 
 All code in this repository requires test coverage and should exercise real
-behavior. Prohibited mock frameworks remain forbidden. The automated gate is
-lexical, however, and the existing suite still contains measured
-`pytest.monkeypatch` dependency-replacement debt; do not describe a green gate
-as proof that every dependency is real. Tests must be fast, deterministic, and
+behavior. Prohibited mock frameworks remain forbidden, and CI separately
+enforces zero semantic dependency replacements. Environment/path isolation is
+permitted and separately inventoried. Tests must be fast, deterministic, and
 self-documenting.
 
 ## Coverage Requirements
@@ -77,8 +76,8 @@ migrated, not as evidence of no-mock compliance.
 # Enforced lexical gate: prohibited framework imports/calls only
 uv run python scripts/audit/verify_no_mocks.py
 
-# Advisory semantic inventory; current baseline lives in TO-DO.md
-uv run python scripts/audit/verify_no_mocks.py --inventory
+# Blocking semantic inventory
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 ```
 
 ```python
