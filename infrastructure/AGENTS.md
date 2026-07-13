@@ -30,8 +30,9 @@ agent-facing documentation. Project-specific science stays in
   contract and the thin-orchestrator drift checks.
 - Do not hard-code rotating private project names. Link
   `docs/_generated/active_projects.md` for public rendered scope.
-- `.codegraph/`, `.leann/`, `.omo/`, coverage files, output trees, and other
-  local indexes are generated state and must not be tracked.
+- `.codegraph/`, `.leann/`, `.omo/`, coverage files, local/private output trees,
+  and other local indexes are generated state and must not be tracked. Canonical
+  public exemplar outputs admitted by the repository allowlist are publication evidence.
 - Optional tools such as CodeGraph and LEANN are navigation aids. Publication
   claims require source files, tests, evidence registries, artifacts, and gates.
 
@@ -47,10 +48,10 @@ agent-facing documentation. Project-specific science stays in
 ## Verification
 
 ```bash
-uv run python -m infrastructure.project.public_scope source-paths | xargs uv run ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 uv run python scripts/audit/check_template_drift.py --strict
-uv run python scripts/audit/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/audit/check_tracked_generated_artifacts.py
 uv run python scripts/gates/module_line_count_check.py
 uv run python -m infrastructure.skills check

@@ -1,4 +1,5 @@
 """Tests for emit_templates module."""
+
 from __future__ import annotations
 
 import py_compile

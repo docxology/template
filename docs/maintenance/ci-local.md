@@ -95,8 +95,8 @@ If `act` is not available (Docker unavailable, etc.), the major CI checks can be
 
 ```bash
 # Lint (CI mirror)
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Security

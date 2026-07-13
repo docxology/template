@@ -6,12 +6,11 @@ including file integrity, cross-reference validation, and data consistency.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
-
 import pytest
 
 # Import the module to test
 import infrastructure.validation.integrity.checks as integrity
+
 
 class TestEdgeCases:
     """Test edge cases and boundary conditions."""
@@ -400,6 +399,8 @@ class TestEdgeCases:
         assert verification["files_removed"] > 0
         assert "file2.txt" in verification["details"]
         assert verification["details"]["file2.txt"] == "removed"
+
+
 class TestIntegrityEdgeCases:
     """Edge case tests for integrity module."""
 
@@ -426,7 +427,7 @@ class TestIntegrityEdgeCases:
         md_file.write_text(
             r"""
         # Test {#sec:test}
-        
+
         See Figure \ref{fig:missing}.
         """
         )
@@ -457,6 +458,7 @@ class TestIntegrityEdgeCases:
 
         assert validation["validation_passed"] is False
         assert len(validation["missing_files"]) > 0
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

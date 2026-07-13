@@ -1,4 +1,5 @@
 """Tests for honesty manifest and verify_honesty."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -68,7 +69,7 @@ def test_verify_honesty_all_passed():
     m = verify_honesty(PROJECT_ROOT)
     # Evidence should all pass; unsupported claims from manuscript are acceptable
     # (they're recorded, not blocking in this check)
-    assert all(m.evidence.values()), f"Failed evidence: {[k for k,v in m.evidence.items() if not v]}"
+    assert all(m.evidence.values()), f"Failed evidence: {[k for k, v in m.evidence.items() if not v]}"
 
 
 # ---------------------------------------------------------------------------

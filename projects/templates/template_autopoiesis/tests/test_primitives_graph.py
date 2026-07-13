@@ -1,4 +1,5 @@
 """Tests for graph primitives: bfs_distances and pagerank."""
+
 from __future__ import annotations
 
 

@@ -8,7 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.rules import discover_rules, validate_rule_structure
-from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES, public_rule_infos, public_rule_names
+from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES, public_rule_infos
 
 
 def test_public_rule_names_is_tuple() -> None:
@@ -46,7 +46,8 @@ def test_validate_rule_structure_both(tmp_path: Path) -> None:
     (rule_dir / "soft").mkdir(parents=True)
     (rule_dir / "strong").mkdir()
     (rule_dir / "rules.yaml").write_text(
-        "type: project\ndescription: Test\n", encoding="utf-8",
+        "type: project\ndescription: Test\n",
+        encoding="utf-8",
     )
     valid, msg = validate_rule_structure(rule_dir)
     assert valid, msg

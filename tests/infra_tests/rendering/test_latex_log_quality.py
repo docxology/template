@@ -101,9 +101,7 @@ def test_long_camelcase_identifier_is_breakable_short_is_not():
     # narrow table columns because Pandoc's \texttt{} is unbreakable. They must
     # now be made breakable; short identifiers must be left intact.
     tex = (
-        "\\documentclass{article}\\begin{document}"
-        "\\texttt{SingletonAccessRule} and \\texttt{NodeKind}."
-        "\\end{document}"
+        "\\documentclass{article}\\begin{document}\\texttt{SingletonAccessRule} and \\texttt{NodeKind}.\\end{document}"
     )
 
     tex, count = make_long_texttt_breakable(tex)

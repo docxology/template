@@ -22,7 +22,9 @@ from literature.search_runner import run_literature_search
 
 def parse_args() -> argparse.Namespace:
     """Parse args."""
-    parser = argparse.ArgumentParser(description="Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv).")
+    parser = argparse.ArgumentParser(
+        description="Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv)."
+    )
     parser.add_argument(
         "--query",
         default=None,

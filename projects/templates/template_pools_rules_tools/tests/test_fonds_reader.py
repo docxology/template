@@ -8,7 +8,6 @@ data directories.
 
 from __future__ import annotations
 
-import csv
 import pathlib
 import sys
 
@@ -19,10 +18,10 @@ sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
 from src.fonds_reader import (
     get_fonds_root,
+    read_all_fonds,
     read_bibliography_fond,
     read_contacts_fond,
     read_datasets_fond,
-    read_all_fonds,
 )
 
 # ---------------------------------------------------------------------------

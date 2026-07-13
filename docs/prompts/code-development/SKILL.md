@@ -53,7 +53,7 @@ metadata:
 ## Verification commands
 
 ```bash
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 uv run pytest projects/<project>/tests/ --cov=projects/<project>/src --cov-fail-under=90 -q
 # or infra:

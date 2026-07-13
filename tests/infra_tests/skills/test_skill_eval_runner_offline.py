@@ -19,7 +19,6 @@ HARNESS = _SCRIPTS / "run_eval_harness.py"
 sys.path.insert(0, str(_SCRIPTS))
 sys.path.insert(0, str(_SKILLS_TESTS))
 
-from skill_eval.config import EVAL_ROOT  # noqa: E402
 from skill_eval_fixtures import write_minimal_workspace
 
 

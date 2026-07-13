@@ -39,7 +39,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
 
-from infrastructure.project.public_scope import public_ci_source_paths
+from infrastructure.project.public_scope import public_ci_lint_paths, public_ci_source_paths
 
 __all__ = [
     "GateResult",
@@ -101,8 +101,13 @@ _GATE_TIMEOUT_SECONDS = 300.0
 
 
 def _public_source_targets(repo_root: Path) -> list[str]:
-    """Return public CI source paths for linting and type checks."""
+    """Return public CI source paths for type checks."""
     return [path.as_posix() for path in public_ci_source_paths(repo_root)]
+
+
+def _public_lint_targets(repo_root: Path) -> list[str]:
+    """Return the full public lint surface without private/generated trees."""
+    return [path.as_posix() for path in public_ci_lint_paths(repo_root)]
 
 
 def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
@@ -136,16 +141,17 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     ]
 
     public_targets = _public_source_targets(repo_root)
+    lint_targets = _public_lint_targets(repo_root)
 
     return [
         ("mypy", ["uv", "run", "python", "-m", "mypy", *public_targets]),
         (
             "ruff",
-            ["uvx", "ruff", "check", *public_targets],
+            ["uvx", "ruff", "check", *lint_targets],
         ),
         (
             "ruff-format",
-            ["uvx", "ruff", "format", "--check", *public_targets],
+            ["uvx", "ruff", "format", "--check", *lint_targets],
         ),
         (
             "bandit",

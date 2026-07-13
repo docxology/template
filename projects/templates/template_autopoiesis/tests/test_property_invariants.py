@@ -1,4 +1,5 @@
 """Hypothesis-backed property invariants for template_autopoiesis."""
+
 from __future__ import annotations
 
 import json
@@ -18,6 +19,7 @@ from src.sealing import qr_matrix
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_block(seed=42):
     return {
@@ -156,6 +158,7 @@ def test_verify_fails_delete_per_domain(domain, tmp_path, template_root):
 
 def test_honesty_all_evidence_pass(template_root):
     from src.honesty import build_manifest
+
     m = build_manifest(template_root)
     assert all(m.evidence.values()), f"Failed: {[k for k, v in m.evidence.items() if not v]}"
 
@@ -165,7 +168,7 @@ def test_honesty_all_evidence_pass(template_root):
 # ---------------------------------------------------------------------------
 
 
-@given(st.text(min_size=1, max_size=100, alphabet=st.characters(whitelist_categories=('Lu', 'Ll', 'Nd'))))
+@given(st.text(min_size=1, max_size=100, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"))))
 @settings(max_examples=20)
 def test_qr_matrix_is_square(data):
     matrix = qr_matrix(data)
@@ -175,7 +178,7 @@ def test_qr_matrix_is_square(data):
         assert len(row) == n
 
 
-@given(st.text(min_size=1, max_size=50, alphabet=st.characters(whitelist_categories=('Lu', 'Ll', 'Nd'))))
+@given(st.text(min_size=1, max_size=50, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"))))
 @settings(max_examples=20)
 def test_qr_deterministic_property(data):
     m1 = qr_matrix(data)

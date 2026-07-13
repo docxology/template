@@ -109,7 +109,7 @@ def main() -> None:
     }
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print(f"\nDeep research mode: fixture-replay (offline, deterministic)")
+    print("\nDeep research mode: fixture-replay (offline, deterministic)")
     print(f"Provider catalogue: {', '.join(profile['catalogue'])}")
     print(f"Replayed report: provider={report.provider} status={report.status} citations={report.citation_count}")
     print(str(output_path))

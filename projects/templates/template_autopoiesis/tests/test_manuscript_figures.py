@@ -1,4 +1,5 @@
 """Tests for manuscript figure writers (src/manuscript_figures.py)."""
+
 from __future__ import annotations
 
 import json

@@ -24,10 +24,7 @@ def test_src_never_imports_script_implementation() -> None:
     for path in sorted((PROJECT_ROOT / "src").rglob("*.py")):
         modules = _imported_modules(path)
         assert "sia_loop_impl" not in modules, path
-        assert all(
-            module != "scripts" and not module.startswith("scripts.")
-            for module in modules
-        ), path
+        assert all(module != "scripts" and not module.startswith("scripts.") for module in modules), path
         assert "sia_loop_impl" not in path.read_text(encoding="utf-8"), path
 
 

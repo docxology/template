@@ -1,7 +1,8 @@
 # Public Template Design System
 
-This shared design system applies to all eighteen public `template_*` exemplars under
-`projects/templates/`. It governs generated manuscript, web, PDF, figure,
+This shared design system applies to every public `template_*` exemplar in the
+generated [`active_projects.md`](../../docs/_generated/active_projects.md) roster.
+It governs generated manuscript, web, PDF, figure,
 dashboard, slide, and evidence-review outputs. It is not an app-shell or
 product UI system; child `AGENTS.md` files may narrow it for a specific
 exemplar without contradicting the shared research-artifact posture.

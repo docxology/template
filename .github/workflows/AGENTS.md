@@ -249,8 +249,8 @@ Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runn
 ```bash
 # Reproduce lint locally
 uv sync
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Reproduce infrastructure tests locally
@@ -293,8 +293,8 @@ uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 ### Linting failures
 ```bash
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
 ```
 
 ### Test failures

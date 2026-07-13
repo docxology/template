@@ -75,10 +75,7 @@ def test_iter_chapters_default_and_disabled():
     # than a literal, so editing units/chapters in config.yaml — the edit the
     # template invites — does not break this test.
     enabled_in_config = sum(
-        1
-        for unit in config.get("units", [])
-        for chap in unit.get("chapters", [])
-        if chap.get("enabled", True)
+        1 for unit in config.get("units", []) for chap in unit.get("chapters", []) if chap.get("enabled", True)
     )
     assert len(chapters) == enabled_in_config
     # Disabled chapters are excluded from the default view.

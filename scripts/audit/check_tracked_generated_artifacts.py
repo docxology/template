@@ -20,7 +20,7 @@ def main(argv: list[str] | None = None) -> int:
 
     offenders = tracked_generated_artifacts(args.repo_root.resolve())
     if not offenders:
-        print("No tracked generated artifacts found.")
+        print("No prohibited tracked generated artifacts found; canonical public exemplar outputs are allowed.")
         return 0
 
     print(

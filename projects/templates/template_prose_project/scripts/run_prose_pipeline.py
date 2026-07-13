@@ -96,9 +96,7 @@ def main(argv: list[str] | None = None) -> int:
         "all_passed": artifacts.all_passed,
         "checks": [c.to_dict() for c in artifacts.checks],
     }
-    summary_path.write_text(
-        json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(str(summary_path))
 
     if args.strict and not artifacts.all_passed:

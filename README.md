@@ -261,7 +261,7 @@ autonomous agents.
 > canonical exemplars above (under `projects/templates/`) are git-tracked/pushed
 > — `.gitignore` ignores `projects/*` and negates only `projects/templates/`. Any
 > other project you add under `projects/` (research, client, or confidential work)
-> stays **local-only and is never committed**; `scripts/audit/check_tracked_projects.py`
+> stays **local-only and is never committed**; `scripts/audit/check_tracked_all.py`
 > blocks any accidental commit in the pre-push hook and CI.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential

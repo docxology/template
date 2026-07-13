@@ -2,43 +2,17 @@
 
 ## Overview
 
-`projects/templates/` contains twenty public canonical exemplar projects (see
-[`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md)
-for the authoritative, generated list — the count and tree below are
-illustrative and may lag it) for the template repository. This directory is
-public and tracked; private,
-rotating, archived, active, or search-only project work belongs outside this
-subtree and is guarded by `.gitignore`, `scripts/audit/check_tracked_projects.py`, and
+`projects/templates/` contains the public canonical exemplars. The authoritative
+generated roster is [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md),
+and the comparison/selection matrix is
+[`docs/_generated/exemplar_roster.md`](../../docs/_generated/exemplar_roster.md).
+This directory is public and tracked; private, rotating, archived, active, or
+search-only project work belongs outside this subtree and is guarded by
+`.gitignore`, `scripts/audit/check_tracked_all.py`, and
 `infrastructure.project.public_scope`.
 
 Nearest child `AGENTS.md` files are authoritative for template-specific rules.
 Use this file for shared exemplar parity, command selection, and escalation.
-
-## Structure
-
-```text
-projects/templates/
-├── template_active_inference/        # analytical + pymdp + sheaf + Lean/GNN
-├── template_autopoiesis/             # combinatoric grammar generating whole runnable projects
-├── template_autoresearch_project/    # deterministic AutoResearch loop
-├── template_autoscientists/          # coordination-mechanism testbed
-├── template_code_project/            # code-first numerical exemplar
-├── template_eda_notebook/            # exploratory data analysis on tabular data
-├── template_formal/                  # strongly-typed multiagent ant-robot colony (ADTs, session types, affine handles)
-├── template_gold_refinement/         # metallurgical gold-refining analogy (ore → nine-nines)
-├── template_literature_meta_analysis/ # reproducible literature meta-analysis (multi-engine retrieval)
-├── template_madlib/                  # conditional token-injection manuscript
-├── template_methods_paper/           # methods-paper exemplar: tested methodology DSL
-├── template_newspaper/               # ReportLab newspaper layout engine
-├── template_pitch_deck/              # reproducible short/medium/long PDF+PPTX pitch decks
-├── template_pools_rules_tools/       # fonds/rules/tools resource-pool integration (autopoietic)
-├── template_prose_project/           # prose/references validation exemplar
-├── template_search_project/          # literature search → BibTeX → LLM synthesis pipeline
-├── template_sia/                     # fixture-backed SIA harness
-├── template_storybook/               # full-page illustrated storybook PDF
-├── template_template/                # meta-template introspection exemplar
-└── template_textbook/                # modular textbook scaffold
-```
 
 Every exemplar also carries these agent-facing surfaces:
 
@@ -108,8 +82,10 @@ Every exemplar also carries these agent-facing surfaces:
 - Registries, manifests, ledgers, configs, and generated variables are stronger
   evidence than prose lists. Update the source-of-truth artifact first, then
   regenerate downstream docs or manuscript outputs.
-- Generated outputs, coverage HTML, local `.venv/`, `.codegraph/`, and render
-  artifacts are not source of truth and must not be tracked.
+- Canonical public exemplar outputs are tracked publication evidence when they
+  are admitted by the generated-artifact allowlist. Local/private/fork outputs,
+  coverage HTML, `.venv/`, `.codegraph/`, and transient render state stay ignored.
+  Never hand-edit generated evidence to pass a gate; regenerate it from source.
 
 ## Anti-Patterns
 
@@ -140,7 +116,7 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>
 uv run python scripts/pipeline/stage_05_copy.py --project templates/<name>
 uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects
 uv run python scripts/audit/check_template_drift.py --strict
-uv run python scripts/audit/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/docgen/exemplar_roster.py --check
 uv run python scripts/docgen/counts.py --check
 uv run python -m infrastructure.skills check

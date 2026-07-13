@@ -110,9 +110,7 @@ def test_public_artifacts_are_deterministic_and_text_free(tmp_path: Path) -> Non
 
     audit = json.loads(first.redaction_audit.read_text(encoding="utf-8"))
     ledger = json.loads(first.release_ledger.read_text(encoding="utf-8"))
-    combined = first.redaction_audit.read_text(encoding="utf-8") + first.release_ledger.read_text(
-        encoding="utf-8"
-    )
+    combined = first.redaction_audit.read_text(encoding="utf-8") + first.release_ledger.read_text(encoding="utf-8")
 
     assert audit["schema_version"] == AUDIT_SCHEMA
     assert ledger["schema_version"] == LEDGER_SCHEMA
@@ -143,9 +141,7 @@ def test_unique_sensitive_span_is_hashed_never_serialized(tmp_path: Path) -> Non
     assert in_memory.redaction_audit["final_release_recommended"] is True
     assert secret not in serialized
     assert fixture.segments[0].text not in serialized
-    assert ledger["redaction_ledger"][0]["source_span_sha256"] == hashlib.sha256(
-        secret.encode("utf-8")
-    ).hexdigest()
+    assert ledger["redaction_ledger"][0]["source_span_sha256"] == hashlib.sha256(secret.encode("utf-8")).hexdigest()
 
 
 def test_loader_rejects_missing_and_malformed_inputs(tmp_path: Path) -> None:

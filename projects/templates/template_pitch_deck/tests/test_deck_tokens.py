@@ -201,9 +201,7 @@ def test_read_pitch_subject_config_null_paper_key_does_not_crash(tmp_path):
 
     subject_dir = tmp_path / "projects" / "templates" / "null_paper_subject" / "manuscript"
     subject_dir.mkdir(parents=True)
-    (subject_dir / "config.yaml").write_text(
-        "paper:\npublication:\nmetadata:\n", encoding="utf-8"
-    )
+    (subject_dir / "config.yaml").write_text("paper:\npublication:\nmetadata:\n", encoding="utf-8")
 
     subject_config = _read_pitch_subject_config(tmp_path, "null_paper_subject")
     # This is the exact pattern build_deck_tokens uses — must not raise.

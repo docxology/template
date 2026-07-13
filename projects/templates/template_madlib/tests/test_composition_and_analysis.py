@@ -49,6 +49,7 @@ from .helpers import base_payload, write_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+
 def test_section_conditions_disable_section_body(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
     config = load_madlib_config(tmp_path)
@@ -58,6 +59,7 @@ def test_section_conditions_disable_section_body(tmp_path: Path) -> None:
 
     assert "disabled by `madlib.section_conditions.discussion`" in sections["DISCUSSION_BODY"]
     assert "complete IMRAD manuscript" in sections["ABSTRACT_BODY"]
+
 
 def test_markdown_tables_include_live_plan(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
@@ -78,6 +80,7 @@ def test_markdown_tables_include_live_plan(tmp_path: Path) -> None:
     assert any(row["path"] == "madlib.visualizations.enabled" for row in field_inventory)
     assert field_counts["explicit"] > 0
     assert field_counts["defaulted"] > 0
+
 
 def test_protocol_title_and_audit_tables_are_generated(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
@@ -101,14 +104,13 @@ def test_protocol_title_and_audit_tables_are_generated(tmp_path: Path) -> None:
     assert "Review generated claims" in build_authoring_obligation_table(config)
     assert "Assemble reviewer packet" in build_authoring_obligation_table(config)
     assert "Every placeholder resolves" in build_audit_rule_table(config)
-    assert "Every method protocol row identifies action, evidence, and output" in build_audit_rule_table(
-        config
-    )
+    assert "Every method protocol row identifies action, evidence, and output" in build_audit_rule_table(config)
     assert "Placeholder resolution" in build_evaluation_criteria_table(config)
     assert "Unresolved placeholder" in build_failure_mode_table(config)
     assert "Fork without validators" in build_failure_mode_table(config)
     assert "Review packet incompleteness" in build_failure_mode_table(config)
     assert section_title_variables(config)["TITLE_METHODS"] == "Methods: Test Protocol"
+
 
 def test_generated_methods_body_explains_method_contract(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
@@ -130,6 +132,7 @@ def test_generated_methods_body_explains_method_contract(tmp_path: Path) -> None
     assert "claim-boundary contract" in methods
     assert "human-review handoff" in methods
     assert "Fork migration" in methods
+
 
 def test_generate_artifacts_writes_data_reports_and_figure(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
@@ -182,6 +185,7 @@ def test_generate_artifacts_writes_data_reports_and_figure(tmp_path: Path) -> No
     assert section_plan["quality_probes"][0]["artifact"] == "output/manuscript"
     assert section_plan["authoring_obligations"][0]["review_surface"] == "output/manuscript"
 
+
 def test_artifact_markdown_tables_match_generation(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
     artifacts = generate_artifacts(tmp_path)
@@ -229,6 +233,7 @@ def test_artifact_markdown_tables_match_generation(tmp_path: Path) -> None:
         figure_path = tmp_path / "output" / "figures" / registry[label]["filename"]
         assert figure_path.is_file(), label
 
+
 def test_write_token_density_figure_handles_minimal_plan(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
     config = load_madlib_config(tmp_path)
@@ -250,6 +255,7 @@ def test_write_token_density_figure_handles_minimal_plan(tmp_path: Path) -> None
         assert path.is_file()
         assert _png_is_nonblank(path)
 
+
 def test_project_cover_config_points_to_generated_file() -> None:
     config = yaml.safe_load((PROJECT_ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8"))
 
@@ -259,6 +265,7 @@ def test_project_cover_config_points_to_generated_file() -> None:
 
     assert artifacts["cover_overview"] == cover_path
     assert _png_is_nonblank(cover_path)
+
 
 def test_project_config_declares_expanded_method_surface() -> None:
     config = yaml.safe_load((PROJECT_ROOT / "manuscript" / "config.yaml").read_text(encoding="utf-8"))
@@ -287,6 +294,7 @@ def test_project_config_declares_expanded_method_surface() -> None:
     assert "Review packet incompleteness" in failure_names
     assert "generated Methods section" in claim_text
     assert "review handoff" in claim_text
+
 
 def test_project_docs_and_claim_ledger_describe_review_packet_contract() -> None:
     readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
@@ -323,23 +331,23 @@ def test_project_docs_and_claim_ledger_describe_review_packet_contract() -> None
         assert required_surface in review_value
         assert required_surface in readme or required_surface in manuscript_readme
 
+
 def _png_is_nonblank(path: Path) -> bool:
     import matplotlib.image as mpimg
 
     pixels = mpimg.imread(path)
     return bool(pixels.size and float(pixels.max()) > float(pixels.min()))
 
+
 def _figure_labels_from_tables(tables: dict[str, str]) -> set[str]:
     keys = ("METHODS_FIGURES", "RESULTS_FIGURES", "CONFIGURATION_FIGURES", "EVALUATION_FIGURES")
-    return {
-        match
-        for key in keys
-        for match in re.findall(r"#(fig:[A-Za-z0-9-]+)", tables[key])
-    }
+    return {match for key in keys for match in re.findall(r"#(fig:[A-Za-z0-9-]+)", tables[key])}
+
 
 # ---------------------------------------------------------------------------
 # build_methods_figure_markdown disabled paths
 # ---------------------------------------------------------------------------
+
 
 def test_methods_figure_markdown_when_visualizations_disabled(tmp_path: Path) -> None:
     """When visualizations.enabled=False the methods figure returns a disabled notice."""
@@ -353,6 +361,7 @@ def test_methods_figure_markdown_when_visualizations_disabled(tmp_path: Path) ->
     assert "disabled" in result.lower()
     assert "token_injection_flow.png" not in result
 
+
 def test_methods_figure_markdown_when_injection_flow_flag_false(tmp_path: Path) -> None:
     """When token_injection_flow=False the methods figure returns a disabled notice."""
     payload = base_payload()
@@ -365,6 +374,7 @@ def test_methods_figure_markdown_when_injection_flow_flag_false(tmp_path: Path) 
     assert "disabled" in result.lower()
     assert "token_injection_flow.png" not in result
 
+
 def test_methods_figure_markdown_when_enabled(tmp_path: Path) -> None:
     """When all visualizations are enabled the methods figure markdown is present."""
     write_config(tmp_path, base_payload())
@@ -375,9 +385,11 @@ def test_methods_figure_markdown_when_enabled(tmp_path: Path) -> None:
     assert "token_injection_flow.png" in result
     assert "fig:token-injection-flow" in result
 
+
 # ---------------------------------------------------------------------------
 # build_results_figure_markdown disabled / partial paths
 # ---------------------------------------------------------------------------
+
 
 def test_results_figure_markdown_density_always_present(tmp_path: Path) -> None:
     """token_density.png is always in the results figure markdown."""
@@ -390,6 +402,7 @@ def test_results_figure_markdown_density_always_present(tmp_path: Path) -> None:
 
     assert "token_density.png" in result
 
+
 def test_results_figure_markdown_optional_figures_disabled(tmp_path: Path) -> None:
     """With visualizations.enabled=False, optional result figures are omitted."""
     payload = base_payload()
@@ -401,6 +414,7 @@ def test_results_figure_markdown_optional_figures_disabled(tmp_path: Path) -> No
 
     assert "section_token_allocation.png" not in result
     assert "provenance_trace_map.png" not in result
+
 
 def test_results_figure_markdown_optional_flags_individually_disabled(tmp_path: Path) -> None:
     """Each optional flag controls its figure independently."""
@@ -419,6 +433,7 @@ def test_results_figure_markdown_optional_flags_individually_disabled(tmp_path: 
     assert "section_token_allocation.png" not in result
     assert "provenance_trace_map.png" not in result
 
+
 def test_results_figure_markdown_all_optional_enabled(tmp_path: Path) -> None:
     """With all flags enabled, all three result figures appear."""
     write_config(tmp_path, base_payload())
@@ -430,9 +445,11 @@ def test_results_figure_markdown_all_optional_enabled(tmp_path: Path) -> None:
     assert "section_token_allocation.png" in result
     assert "provenance_trace_map.png" in result
 
+
 # ---------------------------------------------------------------------------
 # build_configuration_figure_markdown disabled paths
 # ---------------------------------------------------------------------------
+
 
 def test_configuration_figure_markdown_when_visualizations_disabled(tmp_path: Path) -> None:
     """When visualizations.enabled=False the configuration figures return a disabled notice."""
@@ -444,6 +461,7 @@ def test_configuration_figure_markdown_when_visualizations_disabled(tmp_path: Pa
     result = build_configuration_figure_markdown(config)
 
     assert "disabled" in result.lower()
+
 
 def test_configuration_figure_markdown_individual_flags_disabled(tmp_path: Path) -> None:
     """When all configured-field flags are False the fallback string is returned."""
@@ -461,6 +479,7 @@ def test_configuration_figure_markdown_individual_flags_disabled(tmp_path: Path)
 
     assert "disabled" in result.lower()
     assert "configured_field_matrix.png" not in result
+
 
 def test_configuration_figure_markdown_partial_flags(tmp_path: Path) -> None:
     """When some flags are enabled, only those figure references appear."""
@@ -480,6 +499,7 @@ def test_configuration_figure_markdown_partial_flags(tmp_path: Path) -> None:
     assert "section_configuration_heatmap.png" not in result
     assert "field_origin_summary.png" not in result
 
+
 def test_configuration_figure_markdown_all_enabled(tmp_path: Path) -> None:
     """With all configuration visualization flags enabled, all three figures appear."""
     write_config(tmp_path, base_payload())
@@ -491,9 +511,11 @@ def test_configuration_figure_markdown_all_enabled(tmp_path: Path) -> None:
     assert "section_configuration_heatmap.png" in result
     assert "field_origin_summary.png" in result
 
+
 # ---------------------------------------------------------------------------
 # build_evaluation_figure_markdown disabled paths
 # ---------------------------------------------------------------------------
+
 
 def test_evaluation_figure_markdown_when_visualizations_disabled(tmp_path: Path) -> None:
     """When visualizations.enabled=False the evaluation figure returns a disabled notice."""
@@ -507,6 +529,7 @@ def test_evaluation_figure_markdown_when_visualizations_disabled(tmp_path: Path)
     assert "disabled" in result.lower()
     assert "quality_gate_matrix.png" not in result
 
+
 def test_evaluation_figure_markdown_when_gate_matrix_flag_false(tmp_path: Path) -> None:
     """When quality_gate_matrix=False the evaluation figure returns a disabled notice."""
     payload = base_payload()
@@ -519,6 +542,7 @@ def test_evaluation_figure_markdown_when_gate_matrix_flag_false(tmp_path: Path) 
     assert "disabled" in result.lower()
     assert "quality_gate_matrix.png" not in result
 
+
 def test_evaluation_figure_markdown_when_enabled(tmp_path: Path) -> None:
     """When quality_gate_matrix=True the evaluation figure markdown contains the path."""
     write_config(tmp_path, base_payload())
@@ -529,9 +553,11 @@ def test_evaluation_figure_markdown_when_enabled(tmp_path: Path) -> None:
     assert "quality_gate_matrix.png" in result
     assert "fig:quality-gate-matrix" in result
 
+
 # ---------------------------------------------------------------------------
 # build_section_plan_table and build_section_title_table
 # ---------------------------------------------------------------------------
+
 
 def test_section_plan_table_shows_disabled_sections(tmp_path: Path) -> None:
     """The section plan table should show 'False' for disabled sections."""
@@ -546,6 +572,7 @@ def test_section_plan_table_shows_disabled_sections(tmp_path: Path) -> None:
     # abstract should be enabled
     assert "True" in table
 
+
 def test_section_title_table_contains_all_sections(tmp_path: Path) -> None:
     """Section title table must have an entry for every section key."""
     from src.config import SECTION_KEYS
@@ -558,9 +585,11 @@ def test_section_title_table_contains_all_sections(tmp_path: Path) -> None:
     for section in SECTION_KEYS:
         assert section in table
 
+
 # ---------------------------------------------------------------------------
 # build_provenance_matrix_table with no-token sections
 # ---------------------------------------------------------------------------
+
 
 def test_provenance_matrix_table_shows_none_for_token_less_sections(tmp_path: Path) -> None:
     """Sections that receive no token choices should show 'none' in the variable column."""
@@ -578,9 +607,11 @@ def test_provenance_matrix_table_shows_none_for_token_less_sections(tmp_path: Pa
     # 'methods' gets 0 tokens in this config → should show 'none'
     assert "none" in table
 
+
 # ---------------------------------------------------------------------------
 # Disabled section body content
 # ---------------------------------------------------------------------------
+
 
 def test_disabled_section_body_names_config_key(tmp_path: Path) -> None:
     """A disabled section body should name the controlling section_conditions key."""
@@ -597,6 +628,7 @@ def test_disabled_section_body_names_config_key(tmp_path: Path) -> None:
         or "disabled" in sections["DISCUSSION_BODY"].lower()
     )
 
+
 def test_disabled_section_body_does_not_contain_enabled_section_claims(tmp_path: Path) -> None:
     """A disabled section body must not contain claims from an enabled section."""
     write_config(tmp_path, base_payload())
@@ -608,9 +640,11 @@ def test_disabled_section_body_does_not_contain_enabled_section_claims(tmp_path:
     # The disabled DISCUSSION_BODY should not reference abstract-specific tokens
     assert "complete IMRAD manuscript" not in sections["DISCUSSION_BODY"]
 
+
 # ---------------------------------------------------------------------------
 # All IMRAD section bodies are produced
 # ---------------------------------------------------------------------------
+
 
 def test_all_enabled_imrad_sections_are_non_empty(tmp_path: Path) -> None:
     """Every section key should produce a non-empty body."""
@@ -630,9 +664,11 @@ def test_all_enabled_imrad_sections_are_non_empty(tmp_path: Path) -> None:
         assert body_key in sections
         assert len(sections[body_key]) > 0
 
+
 # ---------------------------------------------------------------------------
 # Contribution table
 # ---------------------------------------------------------------------------
+
 
 def test_contribution_table_includes_boundary_note(tmp_path: Path) -> None:
     """Each contribution claim row must carry a local-claim boundary note."""
@@ -644,9 +680,11 @@ def test_contribution_table_includes_boundary_note(tmp_path: Path) -> None:
     assert "Local exemplar claim" in table
     assert "no live DOI" in table
 
+
 # ---------------------------------------------------------------------------
 # configured_field_summary_table
 # ---------------------------------------------------------------------------
+
 
 def test_configured_field_summary_table_all_labels_present(tmp_path: Path) -> None:
     """The configured field summary table must contain all nine label rows."""
@@ -670,9 +708,11 @@ def test_configured_field_summary_table_all_labels_present(tmp_path: Path) -> No
     assert "Visualization-control paths" in table
     assert "Top-level schema paths" in table
 
+
 # ---------------------------------------------------------------------------
 # Section title variables
 # ---------------------------------------------------------------------------
+
 
 def test_section_title_variables_covers_all_sections(tmp_path: Path) -> None:
     """section_title_variables must produce TITLE_ variables for every section."""
@@ -686,9 +726,11 @@ def test_section_title_variables_covers_all_sections(tmp_path: Path) -> None:
     for key in SECTION_KEYS:
         assert f"TITLE_{key.upper()}" in titles
 
+
 # ---------------------------------------------------------------------------
 # build_configured_field_table row format
 # ---------------------------------------------------------------------------
+
 
 def test_configured_field_table_row_format(tmp_path: Path) -> None:
     """Each row in the configured_field_table should have path, origin, scope, summary columns."""
@@ -709,9 +751,11 @@ def test_configured_field_table_row_format(tmp_path: Path) -> None:
     # At least one explicit row for seed
     assert "madlib.seed" in table
 
+
 # ---------------------------------------------------------------------------
 # _sentence_list single-item branch (line 696 in composition.py)
 # ---------------------------------------------------------------------------
+
 
 def test_imrad_section_with_single_narrative_move(tmp_path: Path) -> None:
     """When a section has exactly one narrative move, _sentence_list returns it directly."""
@@ -728,6 +772,7 @@ def test_imrad_section_with_single_narrative_move(tmp_path: Path) -> None:
     # With a single move, the text should contain that move directly
     assert "state the problem" in sections["ABSTRACT_BODY"]
 
+
 def test_imrad_limitations_with_single_move(tmp_path: Path) -> None:
     """limitations section with a single narrative move exercises the single-item path."""
     payload = base_payload()
@@ -739,6 +784,7 @@ def test_imrad_limitations_with_single_move(tmp_path: Path) -> None:
     sections = build_imrad_sections(config, plan)
 
     assert "state non-claims" in sections["LIMITATIONS_BODY"]
+
 
 def test_imrad_scope_with_single_move(tmp_path: Path) -> None:
     """scope section with a single narrative move exercises the single-item path."""
@@ -752,9 +798,11 @@ def test_imrad_scope_with_single_move(tmp_path: Path) -> None:
 
     assert "distinguish generation from truth" in sections["SCOPE_BODY"]
 
+
 # ---------------------------------------------------------------------------
 # __init__.py public API import coverage
 # ---------------------------------------------------------------------------
+
 
 def test_init_exports_all_public_symbols() -> None:
     """Importing from the package __init__ must expose all documented public symbols."""
@@ -780,9 +828,11 @@ def test_init_exports_all_public_symbols() -> None:
     for name in expected:
         assert hasattr(module, name), f"__init__.py missing: {name}"
 
+
 # ---------------------------------------------------------------------------
 # analysis.generate_artifacts with all visualizations disabled
 # ---------------------------------------------------------------------------
+
 
 def test_generate_artifacts_with_visualizations_disabled(tmp_path: Path) -> None:
     """With all visualizations disabled, only token_density and cover figures are written."""
@@ -811,6 +861,7 @@ def test_generate_artifacts_with_visualizations_disabled(tmp_path: Path) -> None
     assert not artifacts["section_configuration_heatmap"].is_file()
     assert not artifacts["field_origin_summary"].is_file()
 
+
 def test_generate_artifacts_figure_registry_omits_disabled_figures(tmp_path: Path) -> None:
     """The figure registry must not include entries for disabled visualizations."""
     from src.analysis import generate_artifacts
@@ -835,6 +886,7 @@ def test_generate_artifacts_figure_registry_omits_disabled_figures(tmp_path: Pat
     # Core figures are always registered
     assert "fig:token-density" in registry
     assert "fig:madlib-cover-overview" in registry
+
 
 def test_generate_artifacts_with_partial_visualizations(tmp_path: Path) -> None:
     """With some visualizations disabled, only enabled ones are in the registry."""
@@ -863,9 +915,11 @@ def test_generate_artifacts_with_partial_visualizations(tmp_path: Path) -> None:
     assert "fig:provenance-trace-map" not in registry
     assert "fig:configured-field-matrix" not in registry
 
+
 # ---------------------------------------------------------------------------
 # analysis_fields: _slot_summary with unknown slot name
 # ---------------------------------------------------------------------------
+
 
 def test_slot_summary_unknown_slot_returns_slot_string(tmp_path: Path) -> None:
     """_slot_summary for an unknown slot path should return 'slot'."""
@@ -881,9 +935,11 @@ def test_slot_summary_unknown_slot_returns_slot_string(tmp_path: Path) -> None:
 
     assert result == "slot"
 
+
 # ---------------------------------------------------------------------------
 # analysis_fields: _field_scope covers all scope categories
 # ---------------------------------------------------------------------------
+
 
 def test_field_scope_section_paths(tmp_path: Path) -> None:
     """Paths containing .section_conditions., .section_titles., .narrative_moves. → 'section'."""
@@ -893,11 +949,13 @@ def test_field_scope_section_paths(tmp_path: Path) -> None:
     assert _field_scope("madlib.section_titles.methods") == "section"
     assert _field_scope("madlib.narrative_moves.results") == "section"
 
+
 def test_field_scope_lexicon_path(tmp_path: Path) -> None:
     """Paths containing .lexicon. → 'lexicon'."""
     from src.analysis_fields import _field_scope
 
     assert _field_scope("madlib.lexicon.adjectives") == "lexicon"
+
 
 def test_field_scope_slot_path(tmp_path: Path) -> None:
     """Paths containing .slots. → 'slot'."""
@@ -906,12 +964,14 @@ def test_field_scope_slot_path(tmp_path: Path) -> None:
     assert _field_scope("madlib.slots.first_adjective") == "slot"
     assert _field_scope("madlib.slots.first_adjective.count") == "slot"
 
+
 def test_field_scope_visualization_path(tmp_path: Path) -> None:
     """Paths containing .visualizations → 'visualization'."""
     from src.analysis_fields import _field_scope
 
     assert _field_scope("madlib.visualizations.enabled") == "visualization"
     assert _field_scope("madlib.visualizations") == "visualization"
+
 
 def test_field_scope_schema_path(tmp_path: Path) -> None:
     """Paths not matching any special prefix → 'schema'."""
@@ -922,9 +982,11 @@ def test_field_scope_schema_path(tmp_path: Path) -> None:
     assert _field_scope("madlib.hypothesis") == "schema"
     assert _field_scope("madlib") == "schema"
 
+
 # ---------------------------------------------------------------------------
 # analysis_fields: _field_summary for all branches
 # ---------------------------------------------------------------------------
+
 
 def test_field_summary_for_various_paths(tmp_path: Path) -> None:
     """_field_summary must return meaningful strings for all known path patterns."""
@@ -980,9 +1042,11 @@ def test_field_summary_for_various_paths(tmp_path: Path) -> None:
     # Unknown path
     assert _field_summary(config, plan, "madlib.unknown_field") == "configured field"
 
+
 # ---------------------------------------------------------------------------
 # analysis_fields: configured_field_inventory contains expected scopes
 # ---------------------------------------------------------------------------
+
 
 def test_configured_field_inventory_scopes(tmp_path: Path) -> None:
     """The inventory must contain rows for schema, section, lexicon, slot, and visualization scopes."""
@@ -1004,6 +1068,7 @@ def test_configured_field_inventory_scopes(tmp_path: Path) -> None:
     assert "slot" in scopes_present
     assert "visualization" in scopes_present
 
+
 def test_configured_field_inventory_origins(tmp_path: Path) -> None:
     """The inventory must contain both explicit and defaulted origins."""
     from src.analysis_fields import configured_field_inventory
@@ -1021,6 +1086,7 @@ def test_configured_field_inventory_origins(tmp_path: Path) -> None:
     assert "explicit" in origins_present
     assert "defaulted" in origins_present
 
+
 def test_configured_field_inventory_no_duplicates(tmp_path: Path) -> None:
     """Each path should appear at most once in the inventory."""
     from src.analysis_fields import configured_field_inventory
@@ -1036,9 +1102,11 @@ def test_configured_field_inventory_no_duplicates(tmp_path: Path) -> None:
     paths = [row["path"] for row in inventory]
     assert len(paths) == len(set(paths))
 
+
 # ---------------------------------------------------------------------------
 # analysis_fields: configured_field_counts aggregation
 # ---------------------------------------------------------------------------
+
 
 def test_configured_field_counts_total_matches_inventory_length(tmp_path: Path) -> None:
     """The 'total' count must equal the length of the inventory."""

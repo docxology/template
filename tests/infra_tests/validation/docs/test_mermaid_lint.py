@@ -181,9 +181,7 @@ def test_validate_blocks_flags_exit_zero_with_no_output(tmp_path: Path) -> None:
     _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
     # Real executable, no mocks: exits 0 but never writes the -o output file.
     fake_mmdc = tmp_path / "fake_mmdc"
-    fake_mmdc.write_text(
-        "#!/usr/bin/env python3\nimport sys\nsys.exit(0)\n", encoding="utf-8"
-    )
+    fake_mmdc.write_text("#!/usr/bin/env python3\nimport sys\nsys.exit(0)\n", encoding="utf-8")
     fake_mmdc.chmod(0o755)
 
     failures = validate_blocks(find_mermaid_blocks([tmp_path]), mmdc_path=str(fake_mmdc))

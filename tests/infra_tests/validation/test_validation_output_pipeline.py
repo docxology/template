@@ -371,6 +371,7 @@ class TestGenerateValidationReport:
         assert "checks" in result
         assert "summary" in result
 
+
 class TestExecuteValidationPipeline:
     """Test execute_validation_pipeline()."""
 

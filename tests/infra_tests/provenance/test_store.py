@@ -23,6 +23,7 @@ from infrastructure.provenance import (
 # model helpers
 # ---------------------------------------------------------------------------
 
+
 class TestNodeKind:
     def test_values(self):
         assert set(NodeKind) == {
@@ -155,6 +156,7 @@ class TestNodeFromDict:
 # ---------------------------------------------------------------------------
 # store.py
 # ---------------------------------------------------------------------------
+
 
 class TestProvenance:
     def test_record_and_get(self, tmp_path):

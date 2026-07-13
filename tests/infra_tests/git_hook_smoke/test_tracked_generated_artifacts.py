@@ -23,7 +23,9 @@ def test_generated_artifact_path_matcher() -> None:
     assert not is_generated_artifact_path("projects/templates/template_code_project/src/optimizer.py")
     assert not is_generated_artifact_path("docs/_generated/COUNTS.md")
 
-    assert not is_generated_artifact_path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
+    assert not is_generated_artifact_path(
+        "output/templates/template_code_project/pdf/template_code_project_combined.pdf"
+    )
     assert not is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
     assert is_generated_artifact_path("output/actinf_policy_entanglement_lean/pdf/x.pdf")
     assert is_generated_artifact_path("projects/working/private_project/output/data/x.csv")

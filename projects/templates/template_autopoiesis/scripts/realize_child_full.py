@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Full realize pipeline for a single child project."""
+
 from __future__ import annotations
 
 import sys

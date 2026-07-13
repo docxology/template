@@ -7,10 +7,8 @@ serialisation, and all 8 built-in connectors (parsing logic, no network).
 from __future__ import annotations
 
 import json
-import tempfile
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pathlib import Path
 
 import pytest
 
@@ -18,7 +16,6 @@ from infrastructure.search.connectors import (
     ArxivConnector,
     BiorxivConnector,
     ConnectorDomain,
-    ConnectorError,
     ConnectorHit,
     ConnectorRegistry,
     CrossrefConnector,
@@ -48,6 +45,7 @@ from infrastructure.search.connectors.types import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_server(handler_cls: type) -> tuple[HTTPServer, str]:
     """Start a throwaway HTTP server on localhost and return (server, base_url)."""
     server = HTTPServer(("127.0.0.1", 0), handler_cls)
@@ -60,6 +58,7 @@ def _make_server(handler_cls: type) -> tuple[HTTPServer, str]:
 # ---------------------------------------------------------------------------
 # types.py
 # ---------------------------------------------------------------------------
+
 
 class TestConnectorDomain:
     def test_values(self):
@@ -128,6 +127,7 @@ class TestFetchOptions:
 # registry.py
 # ---------------------------------------------------------------------------
 
+
 class TestConnectorRegistry:
     def _make_connector(self, name: str = "test", domain: ConnectorDomain = ConnectorDomain.general):
         class C:
@@ -135,8 +135,10 @@ class TestConnectorRegistry:
                 self.name = n
                 self.domain = d
                 self.description = "A test connector"
+
             def search(self, q, opts=None):
                 return []
+
         return C(name, domain)
 
     def test_register_and_get(self):
@@ -212,9 +214,11 @@ class TestConnectorRegistry:
 # http.py
 # ---------------------------------------------------------------------------
 
+
 class _JsonHandler(BaseHTTPRequestHandler):
     def log_message(self, *args):
         pass
+
     def do_GET(self):
         body = json.dumps({"ok": True}).encode()
         self.send_response(200)
@@ -227,6 +231,7 @@ class _JsonHandler(BaseHTTPRequestHandler):
 class _ErrorHandler(BaseHTTPRequestHandler):
     def log_message(self, *args):
         pass
+
     def do_GET(self):
         self.send_response(404)
         self.end_headers()
@@ -241,7 +246,9 @@ class TestConnectorHttpClient:
 
     def test_get_text_success(self):
         class TextHandler(BaseHTTPRequestHandler):
-            def log_message(self, *args): pass
+            def log_message(self, *args):
+                pass
+
             def do_GET(self):
                 body = b"hello world"
                 self.send_response(200)
@@ -264,7 +271,9 @@ class TestConnectorHttpClient:
         calls = []
 
         class CountHandler(BaseHTTPRequestHandler):
-            def log_message(self, *args): pass
+            def log_message(self, *args):
+                pass
+
             def do_GET(self):
                 calls.append(1)
                 body = json.dumps({"n": len(calls)}).encode()
@@ -304,6 +313,7 @@ class TestConnectorHttpClient:
 # config.py
 # ---------------------------------------------------------------------------
 
+
 class TestConnectorSearchConfig:
     def test_defaults(self, tmp_path):
         cfg = load_connector_search_config(tmp_path)
@@ -314,10 +324,7 @@ class TestConnectorSearchConfig:
 
     def test_load_from_yaml(self, tmp_path):
         (tmp_path / "connector_search.yaml").write_text(
-            "enabled_connectors: [openalex, arxiv]\n"
-            "default_max_results: 20\n"
-            "cache_ttl: 600\n"
-            "mailto: test@example.com\n"
+            "enabled_connectors: [openalex, arxiv]\ndefault_max_results: 20\ncache_ttl: 600\nmailto: test@example.com\n"
         )
         cfg = load_connector_search_config(tmp_path)
         assert cfg.enabled_connectors == ["openalex", "arxiv"]
@@ -344,6 +351,7 @@ class TestConnectorSearchConfig:
 # ---------------------------------------------------------------------------
 # Global registry convenience
 # ---------------------------------------------------------------------------
+
 
 class TestGlobalRegistry:
     def setup_method(self):
@@ -398,6 +406,7 @@ class TestGlobalRegistry:
 # Connector parsing (offline, no network)
 # ---------------------------------------------------------------------------
 
+
 class TestOpenAlexConnector:
     def test_parse_work(self):
         item = {
@@ -420,6 +429,7 @@ class TestOpenAlexConnector:
 
     def test_reconstruct_abstract(self):
         from infrastructure.search.connectors.impl.openalex import _reconstruct_abstract
+
         abstract = _reconstruct_abstract({"The": [0], "cat": [1], "sat": [2]})
         assert abstract == "The cat sat"
 
@@ -454,6 +464,7 @@ class TestArxivConnector:
 
     def test_parse_entry_missing_id(self):
         import xml.etree.ElementTree as ET
+
         conn = ArxivConnector()
         xml = '<entry xmlns="http://www.w3.org/2005/Atom"><title>X</title></entry>'
         entry = ET.fromstring(xml)
@@ -550,9 +561,7 @@ class TestUniProtConnector:
     def test_parse_entry_swissprot(self):
         item = {
             "primaryAccession": "P12345",
-            "proteinDescription": {
-                "recommendedName": {"fullName": {"value": "Hemoglobin subunit alpha"}}
-            },
+            "proteinDescription": {"recommendedName": {"fullName": {"value": "Hemoglobin subunit alpha"}}},
             "genes": [{"geneName": {"value": "HBA1"}}],
             "organism": {"scientificName": "Homo sapiens"},
             "reviewed": True,

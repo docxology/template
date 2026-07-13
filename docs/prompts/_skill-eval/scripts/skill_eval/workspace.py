@@ -10,10 +10,7 @@ def load_benchmark(workspace: Path) -> dict:
     """Read benchmark.json from a harness workspace."""
     benchmark_path = workspace / "benchmark.json"
     if not benchmark_path.is_file():
-        msg = (
-            f"Missing benchmark.json in {workspace}. "
-            "Run the harness first or pass --output-dir to an existing run."
-        )
+        msg = f"Missing benchmark.json in {workspace}. Run the harness first or pass --output-dir to an existing run."
         raise FileNotFoundError(msg)
     return json.loads(benchmark_path.read_text(encoding="utf-8"))
 

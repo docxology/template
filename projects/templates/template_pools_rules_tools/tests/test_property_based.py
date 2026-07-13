@@ -17,7 +17,7 @@ import pytest
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
 try:
-    from hypothesis import assume, given, settings
+    from hypothesis import given, settings
     from hypothesis import strategies as st
 
     _HYPOTHESIS_AVAILABLE = True
@@ -31,24 +31,23 @@ pytestmark = pytest.mark.skipif(
 
 if _HYPOTHESIS_AVAILABLE:
     from src.fonds_reader import (
+        read_all_fonds,
         read_bibliography_fond,
         read_contacts_fond,
         read_datasets_fond,
-        read_all_fonds,
     )
+    from src.integration import run_integration_demo
     from src.rules_applier import (
+        load_all_manuscript_rules,
+        load_all_project_rules,
         load_soft_rules,
         load_strong_rules,
         validate_against_rules,
-        load_all_project_rules,
-        load_all_manuscript_rules,
     )
     from src.tools_invoker import (
-        discover_tools,
         get_tool_entrypoints,
         validate_tool_scripts_exist,
     )
-    from src.integration import run_integration_demo
 
 
 # ---------------------------------------------------------------------------

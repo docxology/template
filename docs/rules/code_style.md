@@ -121,8 +121,8 @@ Ruff subsumes the roles historically filled by separate formatters (Black), impo
 ### Commands (CI parity)
 
 ```bash
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 
@@ -368,8 +368,8 @@ Use **`uv run mypy`** from the terminal for CI-parity typing; enable **mypy** or
 Mirror **[`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)** `lint` job locally:
 
 ```bash
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 

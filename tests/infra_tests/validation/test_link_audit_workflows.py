@@ -1,19 +1,13 @@
 """Integration and workflow tests for check_links link audit."""
 
-from pathlib import Path
-
 from infrastructure.validation.integrity import check_links
 from infrastructure.validation.integrity.check_links import (
     check_file_reference,
     discover_markdown_files,
     extract_headings,
     extract_links,
-    generate_comprehensive_report,
-    run_link_audit,
-    validate_directory_structures,
-    validate_file_paths_in_code,
-    validate_python_imports,
 )
+
 
 class TestLinkValidationWorkflows:
     """Test complete link validation workflows with real data."""
@@ -144,7 +138,6 @@ Go to [section](#section-one).
         assert len(broken) == 15
 
 
-
 class TestCompleteValidationPaths:
     """Test all code paths through the validation workflow."""
 
@@ -206,7 +199,6 @@ See [README](../README.md) for overview.
         assert len(file_refs) == 0
 
 
-
 class TestCheckLinksIntegrationRelativePaths:
     """Integration tests for check_links module."""
 
@@ -226,7 +218,6 @@ class TestCheckLinksIntegrationRelativePaths:
             for ref in file_refs:
                 exists, msg = check_file_reference(ref["target"], f, tmp_path)
                 assert exists, f"Link {ref['target']} in {f} should exist"
-
 
 
 class TestBulkLinkChecking:
@@ -255,7 +246,6 @@ class TestBulkLinkChecking:
             assert results is not None
 
 
-
 class TestCheckLinksIntegration:
     """Integration tests for check_links module."""
 
@@ -282,7 +272,6 @@ class TestCheckLinksIntegration:
 
         # Module should work
         assert check_links is not None
-
 
 
 class TestMainFunctionReporting:
@@ -430,5 +419,3 @@ class TestMainFunctionReporting:
         for ref in file_refs:
             exists, msg = check_links.check_file_reference(ref["target"], md_file, tmp_path)
             assert exists is True
-
-

@@ -58,10 +58,15 @@ def test_validation_cli_help_returns_zero() -> None:
     )
     assert proc.returncode == 0, proc.stderr
 
+
 def test_check_tracked_all_returns_zero_on_clean_repo() -> None:
     repo = _repo_root()
     proc = subprocess.run(
         [sys.executable, str(repo / "scripts" / "check_tracked_all.py")],
-        cwd=repo, capture_output=True, text=True, timeout=60, check=False,
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr

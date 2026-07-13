@@ -336,9 +336,7 @@ class TestGraphBuildersSubmodule:
 
         graph = graphs.build_claim_evidence_topology([Entry()])
         # None boundary falls back to the "local" label
-        boundary_labels = [
-            data["label"] for _, data in graph.nodes(data=True) if data["kind"] == "boundary"
-        ]
+        boundary_labels = [data["label"] for _, data in graph.nodes(data=True) if data["kind"] == "boundary"]
         assert boundary_labels == ["local"]
 
 

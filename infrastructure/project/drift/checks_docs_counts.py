@@ -44,6 +44,18 @@ SHARED_TEMPLATE_DESIGN_REQUIRED_SECTIONS: tuple[str, ...] = (
     "## Template-Specific Boundaries",
 )
 
+_PUBLIC_ROSTER_LITERAL_RE = re.compile(
+    r"\b(?:eighteen|nineteen|twenty(?:-three)?|\d+)\s+"
+    r"(?:public\s+)?(?:canonical\s+)?(?:template[_*]*\s+)?(?:projects|exemplars)\b",
+    re.IGNORECASE,
+)
+_OUTPUT_POLICY_CONTRADICTION_RE = re.compile(
+    r"(?:never\s+commit\s+generated\s+outputs|"
+    r"(?:generated\s+)?output\s+trees?.{0,40}must\s+not\s+be\s+tracked|"
+    r"generated\s+outputs?.{0,40}must\s+not\s+be\s+tracked)",
+    re.IGNORECASE,
+)
+
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -168,3 +180,45 @@ def check_shared_template_design_contract(repo_root: Path, report: Report) -> No
             "shared_template_design_signpost_missing",
             "projects/templates/AGENTS.md must signpost DESIGN.md and browser-QA expectations",
         )
+
+
+def check_shared_template_truth_contract(repo_root: Path, report: Report) -> None:
+    """Prevent shared docs from duplicating roster counts or denying tracked public outputs."""
+    for path in (
+        repo_root / "projects" / "templates" / "AGENTS.md",
+        repo_root / "projects" / "templates" / "DESIGN.md",
+    ):
+        if not path.is_file():
+            continue
+        text = _strip_code_fences(_read(path))
+        if _PUBLIC_ROSTER_LITERAL_RE.search(text):
+            report.add(
+                "ERROR",
+                "repo",
+                "shared_template_roster_literal",
+                f"{_rel(path, repo_root)} hard-codes the public exemplar count",
+            )
+        if "docs/_generated/active_projects.md" not in text:
+            report.add(
+                "ERROR",
+                "repo",
+                "shared_template_roster_pointer_missing",
+                f"{_rel(path, repo_root)} must link docs/_generated/active_projects.md",
+            )
+
+    for path in (
+        repo_root / "CLAUDE.md",
+        repo_root / "infrastructure" / "AGENTS.md",
+        repo_root / "projects" / "AGENTS.md",
+        repo_root / "projects" / "templates" / "AGENTS.md",
+    ):
+        if not path.is_file():
+            continue
+        text = _strip_code_fences(_read(path))
+        if _OUTPUT_POLICY_CONTRADICTION_RE.search(text):
+            report.add(
+                "ERROR",
+                "repo",
+                "public_output_policy_contradiction",
+                f"{_rel(path, repo_root)} contradicts the canonical public-output allowlist",
+            )

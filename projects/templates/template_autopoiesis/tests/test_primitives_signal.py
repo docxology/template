@@ -1,4 +1,5 @@
 """Tests for signal primitives: dft and convolve_known."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -31,7 +32,7 @@ def test_dft_parseval():
     result = dft({"signal": _SIGNAL})
     N = len(x)
     lhs = float(np.sum(np.abs(result["spectrum"]) ** 2))
-    rhs = N * float(np.sum(x ** 2))
+    rhs = N * float(np.sum(x**2))
     assert abs(lhs - rhs) / (rhs + 1e-12) < 1e-6
 
 

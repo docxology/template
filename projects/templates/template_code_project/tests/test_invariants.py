@@ -39,12 +39,8 @@ from src.invariants import (
 # "finite_after_run_stable" invariant. Suppress those warnings module-wide so
 # the test signal is not lost in numpy chatter.
 pytestmark = [
-    pytest.mark.filterwarnings(
-        "ignore:overflow encountered in multiply:RuntimeWarning"
-    ),
-    pytest.mark.filterwarnings(
-        "ignore:invalid value encountered in subtract:RuntimeWarning"
-    ),
+    pytest.mark.filterwarnings("ignore:overflow encountered in multiply:RuntimeWarning"),
+    pytest.mark.filterwarnings("ignore:invalid value encountered in subtract:RuntimeWarning"),
 ]
 
 
@@ -183,9 +179,7 @@ class TestOptimizerSweepConfig:
         # convergence invariants rely on.
         assert result.converged is False
         sol = np.asarray(result.solution, dtype=float)
-        diverged = (not np.all(np.isfinite(sol))) or (
-            np.linalg.norm(sol - np.array([1.0])) > 1.0
-        )
+        diverged = (not np.all(np.isfinite(sol))) or (np.linalg.norm(sol - np.array([1.0])) > 1.0)
         assert diverged, f"unstable α=2.5 unexpectedly stayed near x*: {sol}"
 
     def test_config_is_frozen(self, cfg_1d):
@@ -225,20 +219,14 @@ class TestConvergenceInvariants:
         invs = convergence_invariants(cfg_1d)
         for inv in invs:
             if inv.name.startswith("reached_minimum_"):
-                assert inv.actual <= inv.tol, (
-                    f"{inv.name} witness {inv.actual} exceeded tolerance {inv.tol}"
-                )
+                assert inv.actual <= inv.tol, f"{inv.name} witness {inv.actual} exceeded tolerance {inv.tol}"
             elif inv.name.startswith("objective_at_minimum_"):
                 # f_final − f* should be at or below tol for any stable α.
                 assert inv.actual <= inv.tol
 
     def test_objective_history_is_monotone_non_increasing(self, cfg_1d):
         invs = convergence_invariants(cfg_1d)
-        histories = [
-            inv.actual
-            for inv in invs
-            if inv.name.startswith("objective_monotone_")
-        ]
+        histories = [inv.actual for inv in invs if inv.name.startswith("objective_monotone_")]
         assert histories  # at least one stable α exercises this branch
         for hist in histories:
             arr = np.asarray(hist, dtype=float)

@@ -62,6 +62,7 @@ def test_compute_sha256_deterministic(tmp_path: Path) -> None:
     assert compute_sha256(f) == compute_sha256(f)
     # Known SHA-256 for b"hello world"
     import hashlib
+
     expected = hashlib.sha256(b"hello world").hexdigest()
     assert compute_sha256(f) == expected
 

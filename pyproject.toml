@@ -140,6 +140,12 @@ discopy = [
     "discopy>=1.0.0",
     # hypothesis: see [dependency-groups] dev (root pytest loads _hypothesis_pytestplugin)
 ]
+# Required by the public template_active_inference exemplar's real simulation,
+# validation-spine, and reproducibility replay tests. Keep this separate from
+# the reusable Layer-1 package extras: it is a repository development group.
+active-inference = [
+    "inferactively-pymdp==1.0.1",
+]
 # Opt-in timeseries forecasting benchmarks (tests/integration/test_timeseries_benchmarks.py)
 timeseries-bench = [
     "statsmodels>=0.14.0",
@@ -180,7 +186,7 @@ deep-research = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = true  # Install Layer 1 and the research-template console entry point
-default-groups = ["dev", "rendering", "discopy", "steganography"]
+default-groups = ["dev", "rendering", "discopy", "steganography", "active-inference"]
 # pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
 override-dependencies = [
     "pip>=26.1.1",
@@ -310,6 +316,9 @@ ignore = [
 "infrastructure/publishing/publish_cli.py" = ["E402"]  # sys.path manipulation before imports
 "scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
 "projects/*/scripts/**/*.py" = ["E402", "E501"]  # Path bootstrap before imports; long CLI strings
+"projects/*/*/scripts/**/*.py" = ["E402", "E501", "N999"]  # Nested public exemplar stage scripts
+"projects/templates/*/scripts/*.py" = ["E402", "E501", "N999"]  # Direct files in nested script dirs
+"projects/templates/template_eda_notebook/notebooks/*.ipynb" = ["E402"]  # Notebook path bootstrap cell
 "tests/**/*.py" = ["E712", "E402", "E501"]  # Assertions, conditional imports, long fixture payloads
 "projects/*/*/tests/**/*.py" = ["E712", "E402", "E501"]  # templates/<name>/tests: sys.path bootstrap before imports, long fixture payloads
 "__init__.py" = ["F401"]  # Allow re-exports in __init__ files

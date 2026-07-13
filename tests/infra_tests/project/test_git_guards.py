@@ -109,9 +109,7 @@ def test_offending_tracked_projects_flags_unknown_toplevel_md(tmp_path: Path) ->
 
 def test_tracked_generated_artifacts_allows_public_template_output_tree(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
-    project_artifact = (
-        tmp_path / "projects" / "templates" / "template_code_project" / "output" / "data" / "x.csv"
-    )
+    project_artifact = tmp_path / "projects" / "templates" / "template_code_project" / "output" / "data" / "x.csv"
     copied_artifact = tmp_path / "output" / "templates" / "template_code_project" / "pdf" / "x.pdf"
     project_artifact.parent.mkdir(parents=True)
     copied_artifact.parent.mkdir(parents=True)

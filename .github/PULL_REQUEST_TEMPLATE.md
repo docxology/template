@@ -2,8 +2,8 @@
 
 ## 📝 Description
 
-<!-- 
-Provide a clear, concise summary of the changes. 
+<!--
+Provide a clear, concise summary of the changes.
 Link to any relevant issues using 'Closes #123' syntax.
 -->
 
@@ -14,8 +14,8 @@ Link to any relevant issues using 'Closes #123' syntax.
 
 ```bash
 uv sync --group rendering --group monitoring --group discopy
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
@@ -76,7 +76,7 @@ Select stages that changed or need verification (matches `./run.sh` / [`docs/RUN
 
 ## 📸 Testing Evidence
 
-<!-- 
+<!--
 Please provide screenshots, command outputs, or logs confirming local success.
 Example: uv run pytest output summary.
 -->

@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import json
-import os
 
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.project.working_render import (
@@ -88,9 +87,10 @@ def test_classify_filesystem_only_rubric() -> None:
         "PARTIAL — pipeline passed; top PDF missing",
         False,
     )
-    assert _classify_filesystem_only(
-        audit(structure_ok=False, structure_notes=["missing tests/"])
-    ) == ("FAIL — structure", False)
+    assert _classify_filesystem_only(audit(structure_ok=False, structure_notes=["missing tests/"])) == (
+        "FAIL — structure",
+        False,
+    )
     assert _classify_filesystem_only(audit()) == ("FAIL — no PDF", False)
 
 

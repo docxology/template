@@ -9,6 +9,7 @@ literal, and ``output/data/coverage_full.json`` (the raw per-module report) so
 per-module coverage. Runs first in ``manuscript/config.yaml``'s
 ``analysis.scripts`` allowlist so both downstream consumers see fresh data.
 """
+
 from __future__ import annotations
 
 import json

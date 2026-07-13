@@ -28,6 +28,7 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_referenced_files_exist,
     check_required_files_exist,
     check_shared_template_design_contract,
+    check_shared_template_truth_contract,
     check_template_signpost_contract,
     check_test_class_drift,
 )
@@ -61,6 +62,7 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
 REPO_CHECKS: tuple[RepoCheckFn, ...] = (
     check_docs_hardcoded_counts,
     check_shared_template_design_contract,
+    check_shared_template_truth_contract,
     check_repo_scripts,
 )
 

@@ -25,7 +25,7 @@ from newspaper.components import (
     pull_quote,
     story_flowables,
 )
-from newspaper.content import Ad, Block, Box, Figure, Story
+from newspaper.content import Block, Box, Figure, Story
 from newspaper.typography import INK, MUTED, Fonts, build_stylesheet, register_fonts
 
 
@@ -117,18 +117,14 @@ def test_resolve_image_path_relative_missing(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_figure_flowables_missing_image_uses_placeholder(
-    styles: StyleSheet1, tmp_path: Path
-) -> None:
+def test_figure_flowables_missing_image_uses_placeholder(styles: StyleSheet1, tmp_path: Path) -> None:
     """A figure referencing a missing image path renders a placeholder, not an error."""
     fig = Figure(path="missing/photo.png", caption="A photo", credit="Staff", height=100)
     items = figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
     assert len(items) > 0
 
 
-def test_figure_flowables_no_caption_no_credit(
-    styles: StyleSheet1, tmp_path: Path
-) -> None:
+def test_figure_flowables_no_caption_no_credit(styles: StyleSheet1, tmp_path: Path) -> None:
     """A figure with no caption or credit skips the cutline line."""
     fig = Figure(path="missing/photo.png", caption="", credit="", height=100)
     # Should produce only the placeholder table + Spacer (no hairline/paragraph)
@@ -136,9 +132,7 @@ def test_figure_flowables_no_caption_no_credit(
     assert len(items) > 0  # at least placeholder + spacer
 
 
-def test_figure_flowables_caption_only_no_credit(
-    styles: StyleSheet1, tmp_path: Path
-) -> None:
+def test_figure_flowables_caption_only_no_credit(styles: StyleSheet1, tmp_path: Path) -> None:
     """A figure with caption but empty credit skips the credit font tag (176->178 arc)."""
     fig = Figure(path="missing/photo.png", caption="Looking west from the pier.", credit="", height=100)
     items = figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
@@ -146,9 +140,7 @@ def test_figure_flowables_caption_only_no_credit(
     assert len(items) > 0
 
 
-def test_figure_flowables_credit_only_no_caption(
-    styles: StyleSheet1, tmp_path: Path
-) -> None:
+def test_figure_flowables_credit_only_no_caption(styles: StyleSheet1, tmp_path: Path) -> None:
     """A figure with credit but empty caption string still shows the credit."""
     fig = Figure(path="missing/photo.png", caption="", credit="Staff photographer", height=100)
     items = figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
@@ -311,9 +303,7 @@ def test_box_flowables_briefs_not_shaded(styles: StyleSheet1, fonts: Fonts) -> N
 # ---------------------------------------------------------------------------
 
 
-def test_story_flowables_with_all_fields(
-    styles: StyleSheet1, fonts: Fonts, tmp_path: Path
-) -> None:
+def test_story_flowables_with_all_fields(styles: StyleSheet1, fonts: Fonts, tmp_path: Path) -> None:
     """story_flowables with kicker, deck, byline, figure, and jump line."""
     story = Story(
         headline="Harbor News",
@@ -335,9 +325,7 @@ def test_story_flowables_with_all_fields(
     assert len(items) > 0
 
 
-def test_story_flowables_drop_cap_short_text(
-    styles: StyleSheet1, fonts: Fonts, tmp_path: Path
-) -> None:
+def test_story_flowables_drop_cap_short_text(styles: StyleSheet1, fonts: Fonts, tmp_path: Path) -> None:
     """A drop_cap with a single-char first paragraph falls back to BodyFirst."""
     story = Story(
         headline="Short",
@@ -349,9 +337,7 @@ def test_story_flowables_drop_cap_short_text(
     assert len(items) > 0
 
 
-def test_story_flowables_no_headline(
-    styles: StyleSheet1, fonts: Fonts, tmp_path: Path
-) -> None:
+def test_story_flowables_no_headline(styles: StyleSheet1, fonts: Fonts, tmp_path: Path) -> None:
     """include_headline=False omits kicker/headline/deck paragraphs."""
     story = Story(
         headline="Should Not Appear",
@@ -360,7 +346,5 @@ def test_story_flowables_no_headline(
         level="lead",
         body=[Block("p", "Lead body text here.")],
     )
-    items = story_flowables(
-        story, styles, fonts, measure=200.0, project_root=tmp_path, include_headline=False
-    )
+    items = story_flowables(story, styles, fonts, measure=200.0, project_root=tmp_path, include_headline=False)
     assert len(items) > 0

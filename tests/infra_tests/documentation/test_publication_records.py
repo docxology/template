@@ -228,6 +228,17 @@ def test_check_publication_records_doc_accepts_refreshed_external_columns(tmp_pa
     assert check_publication_records_doc(tmp_path) == []
 
 
+def test_external_status_cannot_call_missing_release_verified(tmp_path: Path) -> None:
+    _scaffold_publication_project(tmp_path, PUBLIC_PROJECT_NAMES[0])
+    record = load_publication_records(tmp_path)[0]
+    record.github_repo_status = "200"
+    record.github_release_status = "404"
+    record.zenodo_status = "200"
+
+    assert record.external_status.startswith("incomplete; ")
+    assert "GitHub release 404" in record.external_status
+
+
 def test_check_publication_records_doc_reports_source_owned_drift(tmp_path: Path) -> None:
     for name in PUBLIC_PROJECT_NAMES:
         _scaffold_publication_project(tmp_path, name)

@@ -455,9 +455,7 @@ def test_step_sensitivity_caption_numbers_match_sweep():
     first_iters = sweep.iterations[0]
     last_iters = sweep.iterations[-1]
 
-    caption = (Path(__file__).resolve().parent.parent / "manuscript" / "03_results.md").read_text(
-        encoding="utf-8"
-    )
+    caption = (Path(__file__).resolve().parent.parent / "manuscript" / "03_results.md").read_text(encoding="utf-8")
     assert f"({n_points} points)" in caption
     assert f"{first_iters} iterations at the smallest" in caption
     assert f"to {last_iters} iterations at" in caption

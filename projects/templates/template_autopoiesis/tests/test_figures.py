@@ -1,4 +1,5 @@
 """Tests for figure rendering module."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -111,10 +112,7 @@ def test_scalar_summary_lines_generic_repr_fallback():
 def test_figure_registry_roundtrip(tmp_path):
     prims = collect_primitives()
     domain = "optimization"
-    results = [
-        (spec.name, spec.fn(spec.example_input))
-        for spec in prims[domain]
-    ]
+    results = [(spec.name, spec.fn(spec.example_input)) for spec in prims[domain]]
     registry = build_figure_registry(domain, results, tmp_path)
     for name, path in registry.items():
         assert path.exists()
@@ -124,10 +122,7 @@ def test_figure_registry_roundtrip(tmp_path):
 def test_figure_registry_keys_match_names(tmp_path):
     prims = collect_primitives()
     domain = "signal"
-    results = [
-        (spec.name, spec.fn(spec.example_input))
-        for spec in prims[domain]
-    ]
+    results = [(spec.name, spec.fn(spec.example_input)) for spec in prims[domain]]
     registry = build_figure_registry(domain, results, tmp_path)
     expected_names = {spec.name for spec in prims[domain]}
     assert set(registry.keys()) == expected_names
@@ -142,10 +137,7 @@ def test_figure_count_all_domains(tmp_path):
     prims = collect_primitives()
     total = 0
     for domain in KNOWN_DOMAINS:
-        results = [
-            (spec.name, spec.fn(spec.example_input))
-            for spec in prims[domain]
-        ]
+        results = [(spec.name, spec.fn(spec.example_input)) for spec in prims[domain]]
         registry = build_figure_registry(domain, results, tmp_path / domain)
         total += len(registry)
     # 8 total primitives

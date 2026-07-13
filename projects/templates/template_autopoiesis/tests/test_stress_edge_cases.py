@@ -1,4 +1,5 @@
 """Tests for stress and edge cases."""
+
 from __future__ import annotations
 
 import sys
@@ -6,7 +7,10 @@ import sys
 import pytest
 
 from src.grammar import (
-    KNOWN_DOMAINS, GrammarSlot, parse_grammar, GrammarError,
+    KNOWN_DOMAINS,
+    GrammarSlot,
+    parse_grammar,
+    GrammarError,
 )
 from src.expand import expand, derive_seed, sample
 from src.integrity import sha256_text, merkle_root
@@ -48,12 +52,10 @@ def test_zero_slots_raises():
 
 def test_all_reserved_slots_effective_product_one():
     from src.grammar import RESERVED_SLOTS
+
     block = {
         "seed": 1,
-        "slots": [
-            {"name": s, "options": ["a", "b"]}
-            for s in RESERVED_SLOTS
-        ],
+        "slots": [{"name": s, "options": ["a", "b"]} for s in RESERVED_SLOTS],
         "deps": [],
     }
     g = parse_grammar(block)

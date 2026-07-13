@@ -129,6 +129,18 @@ class PublicationRecord:
     @property
     def external_status(self) -> str:
         """Return a compact external verification status."""
+        raw_statuses = (self.github_repo_status, self.github_release_status, self.zenodo_status)
+        accepted = (
+            {"200", "monorepo path"},
+            {"200", "covered by root release"},
+            {"200", "not published separately"},
+        )
+        if any(status == "not checked" or status.startswith("error:") for status in raw_statuses):
+            verification = "unverified"
+        elif not self.external_findings and all(status in allowed for status, allowed in zip(raw_statuses, accepted)):
+            verification = "verified"
+        else:
+            verification = "incomplete"
         statuses = [
             f"GitHub repo {self.github_repo_status}",
             f"GitHub release {self.github_release_status}",
@@ -136,7 +148,7 @@ class PublicationRecord:
         ]
         if self.external_findings:
             statuses.extend(self.external_findings)
-        return "; ".join(statuses)
+        return f"{verification}; " + "; ".join(statuses)
 
     @property
     def declared_location_count(self) -> int:

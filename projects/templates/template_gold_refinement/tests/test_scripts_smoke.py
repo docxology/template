@@ -125,8 +125,20 @@ class TestManuscriptVariablesScript:
 class TestCoverVisualizationScript:
     def test_script_exits_zero_after_manuscript_variables(self):
         import subprocess
-        for script in ("refinement_analysis.py", "z_generate_manuscript_variables.py", "zz_generate_cover_visualization.py"):
-            proc = subprocess.run([sys.executable, str(_PROJECT_ROOT / "scripts" / script)], capture_output=True, text=True, timeout=60, cwd=str(_PROJECT_ROOT), env=_SCRIPT_ENV)
+
+        for script in (
+            "refinement_analysis.py",
+            "z_generate_manuscript_variables.py",
+            "zz_generate_cover_visualization.py",
+        ):
+            proc = subprocess.run(
+                [sys.executable, str(_PROJECT_ROOT / "scripts" / script)],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                cwd=str(_PROJECT_ROOT),
+                env=_SCRIPT_ENV,
+            )
             assert proc.returncode == 0, proc.stderr or proc.stdout
         cover_path = _PROJECT_ROOT / "output" / "figures" / "cover_visualization.png"
         assert cover_path.exists() and cover_path.stat().st_size > 1000

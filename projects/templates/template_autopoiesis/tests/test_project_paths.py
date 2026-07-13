@@ -1,6 +1,6 @@
 """Tests for project_paths module."""
-from __future__ import annotations
 
+from __future__ import annotations
 
 
 from src.project_paths import project_output_dirs

@@ -17,6 +17,7 @@ from infrastructure.research import (
 # StageStatus
 # ---------------------------------------------------------------------------
 
+
 class TestStageStatus:
     def test_values(self):
         vals = {s.value for s in StageStatus}
@@ -30,6 +31,7 @@ class TestStageStatus:
 # ---------------------------------------------------------------------------
 # ResearchStage
 # ---------------------------------------------------------------------------
+
 
 class TestResearchStage:
     def test_defaults(self):
@@ -66,6 +68,7 @@ class TestResearchStage:
 # ---------------------------------------------------------------------------
 # ResearchWorkflow
 # ---------------------------------------------------------------------------
+
 
 class TestResearchWorkflow:
     def test_default_has_7_stages(self):
@@ -153,6 +156,7 @@ class TestResearchWorkflow:
 # config.py
 # ---------------------------------------------------------------------------
 
+
 class TestResearchWorkflowConfig:
     def test_defaults_when_no_file(self, tmp_path):
         cfg = load_research_workflow_config(tmp_path)
@@ -164,10 +168,7 @@ class TestResearchWorkflowConfig:
 
     def test_load_full_config(self, tmp_path):
         (tmp_path / "research_workflow.yaml").write_text(
-            "enabled: true\n"
-            "active_stage: survey\n"
-            "skip_stages: [review]\n"
-            "strict: true\n"
+            "enabled: true\nactive_stage: survey\nskip_stages: [review]\nstrict: true\n"
         )
         cfg = load_research_workflow_config(tmp_path)
         assert cfg.enabled is True
@@ -213,19 +214,27 @@ class TestResearchWorkflowConfig:
 # Prompts directory
 # ---------------------------------------------------------------------------
 
+
 class TestResearchPrompts:
     def test_research_workflow_prompt_exists(self):
         from pathlib import Path
-        prompt_path = Path(__file__).parent.parent.parent.parent / "infrastructure/research/prompts/research_workflow.md"
+
+        prompt_path = (
+            Path(__file__).parent.parent.parent.parent / "infrastructure/research/prompts/research_workflow.md"
+        )
         assert prompt_path.exists(), f"Expected prompt at {prompt_path}"
 
     def test_literature_review_prompt_exists(self):
         from pathlib import Path
-        prompt_path = Path(__file__).parent.parent.parent.parent / "infrastructure/research/prompts/literature_review.md"
+
+        prompt_path = (
+            Path(__file__).parent.parent.parent.parent / "infrastructure/research/prompts/literature_review.md"
+        )
         assert prompt_path.exists(), f"Expected prompt at {prompt_path}"
 
     def test_prompts_are_non_empty(self):
         from pathlib import Path
+
         base = Path(__file__).parent.parent.parent.parent / "infrastructure/research/prompts"
         for fname in ("research_workflow.md", "literature_review.md"):
             content = (base / fname).read_text(encoding="utf-8")

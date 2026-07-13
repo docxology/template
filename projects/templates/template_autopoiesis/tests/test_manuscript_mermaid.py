@@ -1,4 +1,5 @@
 """Mermaid content invariant: reserved slot values must not leak into emitted content."""
+
 from __future__ import annotations
 
 import re
@@ -55,10 +56,13 @@ def test_mermaid_blocks_present():
     assert len(all_blocks) >= 3, "Expected at least 3 mermaid diagrams across manuscript"
 
 
-@pytest.mark.parametrize("slot,options", [
-    ("qr_profile", RESERVED_SLOT_OPTIONS["qr_profile"]),
-    ("integrity_profile", RESERVED_SLOT_OPTIONS["integrity_profile"]),
-])
+@pytest.mark.parametrize(
+    "slot,options",
+    [
+        ("qr_profile", RESERVED_SLOT_OPTIONS["qr_profile"]),
+        ("integrity_profile", RESERVED_SLOT_OPTIONS["integrity_profile"]),
+    ],
+)
 def test_reserved_slot_options_not_in_mermaid(slot, options):
     """Reserved slot option strings should not appear as node labels in Mermaid blocks."""
     mds = _all_manuscript_mds()
@@ -70,8 +74,7 @@ def test_reserved_slot_options_not_in_mermaid(slot, options):
                 # e.g. [mermaid_only] would be suspicious
                 pattern = rf"\[{re.escape(opt)}\]"
                 assert not re.search(pattern, block), (
-                    f"Reserved slot option '{opt}' for '{slot}' found as node label "
-                    f"in Mermaid block in {md.name}"
+                    f"Reserved slot option '{opt}' for '{slot}' found as node label in Mermaid block in {md.name}"
                 )
 
 

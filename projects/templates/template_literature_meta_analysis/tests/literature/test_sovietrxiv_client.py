@@ -242,11 +242,13 @@ def test_parse_paper_source_url_as_pdf_url() -> None:
 
 
 def test_parse_paper_english_pdf_url_preferred_over_source_url() -> None:
-    paper = _parse_sovietrxiv_paper({
-        "title": "X",
-        "source_url": "https://example.com/orig.pdf",
-        "english_pdf_url": "https://example.com/en.pdf",
-    })
+    paper = _parse_sovietrxiv_paper(
+        {
+            "title": "X",
+            "source_url": "https://example.com/orig.pdf",
+            "english_pdf_url": "https://example.com/en.pdf",
+        }
+    )
     assert paper.pdf_url == "https://example.com/en.pdf"
 
 
@@ -265,11 +267,13 @@ def test_parse_paper_valid_date_sets_pub_date() -> None:
 
 
 def test_parse_paper_publication_title_preferred_over_publication() -> None:
-    paper = _parse_sovietrxiv_paper({
-        "title": "X",
-        "publication": "key_form",
-        "publication_title": "Display Title",
-    })
+    paper = _parse_sovietrxiv_paper(
+        {
+            "title": "X",
+            "publication": "key_form",
+            "publication_title": "Display Title",
+        }
+    )
     assert paper.venue == "Display Title"
 
 

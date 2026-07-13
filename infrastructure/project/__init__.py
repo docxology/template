@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     )
     from infrastructure.project.public_scope import (
         PUBLIC_PROJECT_NAMES,
+        public_ci_lint_paths,
         public_ci_source_paths,
         public_project_infos,
         public_project_names,
@@ -53,6 +54,7 @@ if TYPE_CHECKING:
 
 _PUBLIC_SCOPE_EXPORTS = {
     "PUBLIC_PROJECT_NAMES",
+    "public_ci_lint_paths",
     "public_ci_source_paths",
     "public_project_infos",
     "public_project_names",
@@ -110,6 +112,7 @@ __all__ = [
     "plan_copy",
     "preflight_setup_hook",
     "public_ci_source_paths",
+    "public_ci_lint_paths",
     "public_project_infos",
     "public_project_names",
     "resolve_project_root",

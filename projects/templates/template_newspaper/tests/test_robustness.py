@@ -18,6 +18,7 @@ from newspaper.typography import build_stylesheet, register_fonts
 
 # --- C1: over-tall boxes are detected, not silently shrunk -------------------
 
+
 def test_over_tall_box_is_detected_as_overset(tmp_path) -> None:
     tall = Box(kind="generic", title="Huge", items=[f"line {i}" for i in range(400)])
     page = Page(number=1, template="standard", columns=2, main_items=[tall])
@@ -28,6 +29,7 @@ def test_over_tall_box_is_detected_as_overset(tmp_path) -> None:
 
 
 # --- H1: author markup is escaped, not corrupted ----------------------------
+
 
 def test_esc_escapes_bare_ampersand() -> None:
     assert _esc("AT&T merger") == "AT&amp;T merger"
@@ -60,6 +62,7 @@ def test_render_with_ampersand_content_does_not_crash(tmp_path) -> None:
 
 # --- M1/M2/M3: strict-loader contract ---------------------------------------
 
+
 def test_figure_requires_path() -> None:
     with pytest.raises(ValueError):
         Figure(path="")
@@ -81,6 +84,7 @@ def test_pull_block_as_list_raises_named_error() -> None:
 
 
 # --- A1: ad_flowables branch coverage ---------------------------------------
+
 
 def test_ad_flowables_minimal(tmp_path) -> None:
     """ad_flowables with no graphic, no tagline, no contact covers the skipped

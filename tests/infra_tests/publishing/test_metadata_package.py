@@ -319,15 +319,11 @@ class TestPublicationMetadataModel:
         assert meta.authors == ["Author A"]
 
     def test_default_license_is_cc_by(self) -> None:
-        meta = PublicationMetadata(
-            title="T", authors=["A"], abstract="Ab.", keywords=["k"]
-        )
+        meta = PublicationMetadata(title="T", authors=["A"], abstract="Ab.", keywords=["k"])
         assert meta.license == "CC-BY-4.0"
 
     def test_optional_fields_default_to_none(self) -> None:
-        meta = PublicationMetadata(
-            title="T", authors=["A"], abstract="Ab.", keywords=["k"]
-        )
+        meta = PublicationMetadata(title="T", authors=["A"], abstract="Ab.", keywords=["k"])
         assert meta.doi is None
         assert meta.journal is None
         assert meta.publisher is None
@@ -340,9 +336,7 @@ class TestPublicationMetadataModel:
         assert sample_meta.publisher == "Research Template Press"
 
     def test_dataclass_fields_are_accessible(self) -> None:
-        meta = PublicationMetadata(
-            title="T", authors=["A"], abstract="Ab.", keywords=["k"]
-        )
+        meta = PublicationMetadata(title="T", authors=["A"], abstract="Ab.", keywords=["k"])
         fields = {f.name for f in dataclasses.fields(meta)}
         assert "title" in fields
         assert "authors" in fields
@@ -352,9 +346,7 @@ class TestPublicationMetadataModel:
         assert "license" in fields
 
     def test_author_records_default_empty(self) -> None:
-        meta = PublicationMetadata(
-            title="T", authors=["A"], abstract="Ab.", keywords=["k"]
-        )
+        meta = PublicationMetadata(title="T", authors=["A"], abstract="Ab.", keywords=["k"])
         assert meta.author_records == []
 
     def test_author_record_construction(self) -> None:

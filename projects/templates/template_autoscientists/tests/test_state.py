@@ -57,11 +57,11 @@ def test_with_champion_resets_log() -> None:
 def test_best_so_far_never_decreases_with_mixed_outcomes() -> None:
     """best_so_far only moves up; non-improving outcomes leave it unchanged."""
     state = SharedState(champion=Champion(params=(0.0,), metric=0.5, experiment_index=-1))
-    state.record(_outcome(0.3, -0.2, confirmed=True))   # not improved
+    state.record(_outcome(0.3, -0.2, confirmed=True))  # not improved
     assert state.best_so_far() == 0.5
-    state.record(_outcome(0.8, 0.3, confirmed=True))    # improved
+    state.record(_outcome(0.8, 0.3, confirmed=True))  # improved
     assert state.best_so_far() == 0.8
-    state.record(_outcome(0.7, -0.1, confirmed=True))   # not improved
+    state.record(_outcome(0.7, -0.1, confirmed=True))  # not improved
     assert state.best_so_far() == 0.8
 
 

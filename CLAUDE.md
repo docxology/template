@@ -138,8 +138,8 @@ uv run python scripts/maintenance/manage_workspace.py status
 uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking (mirror CI `lint` job)
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Security scan (mirror CI `security` job Bandit step)
@@ -564,8 +564,8 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 ## Important Notes
 
-- All files in `output/` are disposable and regeneratable
-- Never commit generated outputs to version control
+- Generated outputs are regeneratable and must never be hand-edited to pass a gate.
+- Canonical public exemplar outputs admitted by the repository allowlist are tracked publication evidence; local/private/fork outputs remain ignored.
 - Install **pre-commit** hooks after `uv sync` so Ruff, mypy, Bandit, and push-time checks run locally (see `.pre-commit-config.yaml`)
 - Always run tests before committing changes
 - Follow thin orchestrator pattern strictly

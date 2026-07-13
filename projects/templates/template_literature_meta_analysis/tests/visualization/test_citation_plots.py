@@ -142,5 +142,6 @@ class TestCitationPlots:
         assert output.exists()
         assert output.stat().st_size > 0
         from PIL import Image
+
         img = Image.open(output)
         assert img.width > 0 and img.height > 0

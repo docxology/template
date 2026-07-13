@@ -107,9 +107,7 @@ class TestFiguresOrchestration:
     def test_benchmark_visualization(self, figure_root: Path):
         report = figure_root / "output" / "reports" / "performance_benchmark.json"
         report.parent.mkdir(parents=True)
-        report.write_text(
-            json.dumps({"schema_version": "template_code_project/performance_benchmark/v2"})
-        )
+        report.write_text(json.dumps({"schema_version": "template_code_project/performance_benchmark/v2"}))
         path = generate_benchmark_visualization(report)
         assert path is not None and path.exists()
         first_bytes = path.read_bytes()

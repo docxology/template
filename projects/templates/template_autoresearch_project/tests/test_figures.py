@@ -154,9 +154,7 @@ def _image_stats(path: Path) -> tuple[float, int, int]:
 # --- A. every registered figure is fully working ---------------------------
 
 
-def test_figure_label_parity_across_specs_dispatch_contract_records(
-    autoresearch_loop_result, ml_result
-) -> None:
+def test_figure_label_parity_across_specs_dispatch_contract_records(autoresearch_loop_result, ml_result) -> None:
     """Registry labels must match across specs, dispatch, methods, and records."""
     registry = figure_registry_payload(autoresearch_loop_result, ml_result)
     assert set(ALL_FIGURE_LABELS) == set(FIGURE_DISPATCH)

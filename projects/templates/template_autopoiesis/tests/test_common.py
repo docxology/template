@@ -1,4 +1,5 @@
 """Tests for src/common.py — trunc() and the CheckResult/CheckReport dataclasses."""
+
 from __future__ import annotations
 
 from src.common import CheckReport, CheckResult, trunc

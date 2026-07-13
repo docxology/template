@@ -51,7 +51,7 @@ metadata:
 
 ```bash
 uv run pytest <affected-test-path> -v
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
 uv run python scripts/pipeline/stage_01_test.py --project <project>  # when project scope
 ```
 

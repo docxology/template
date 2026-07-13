@@ -106,5 +106,3 @@ def test_stale_shell_deterministic_strip_flagged(tmp_path: Path) -> None:
     issues = check_stale_shell_contracts(repo)
     assert len(issues) == 1
     assert "deterministic" in issues[0].detail.lower()
-
-

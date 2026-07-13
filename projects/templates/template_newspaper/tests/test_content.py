@@ -217,9 +217,7 @@ def test_parse_page_non_integer_number_raises() -> None:
 
 def test_rail_rejects_figures() -> None:
     with pytest.raises(ValueError):
-        _parse_page(
-            {"number": 1, "rail": [{"figure": {"path": "x.png"}}], "main": []}
-        )
+        _parse_page({"number": 1, "rail": [{"figure": {"path": "x.png"}}], "main": []})
 
 
 def test_parse_page_rail_enabled_key() -> None:

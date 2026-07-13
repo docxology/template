@@ -139,12 +139,13 @@ echo
 
 if [[ -z "$JOB" || "$JOB" == "lint" || "$JOB" == "typecheck" ]]; then
   read -r -a PUBLIC_CI_SOURCE_PATHS <<<"$(uv run python -m infrastructure.project.public_scope source-paths)"
+  read -r -a PUBLIC_CI_LINT_PATHS <<<"$(uv run python -m infrastructure.project.public_scope lint-paths)"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
   echo "[ci_local] === Lint (ruff check + format) ==="
-  uvx ruff check --fix "${PUBLIC_CI_SOURCE_PATHS[@]}"
-  uvx ruff format "${PUBLIC_CI_SOURCE_PATHS[@]}"
+  uvx ruff check --fix "${PUBLIC_CI_LINT_PATHS[@]}"
+  uvx ruff format "${PUBLIC_CI_LINT_PATHS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "typecheck" ]]; then

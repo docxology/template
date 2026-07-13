@@ -87,16 +87,13 @@ class TestScriptMissingArgs:
         result = run_script("--project", "test")
         # argparse exits 2 when a required argument is missing
         assert result.returncode in (1, 2), (
-            f"Expected non-zero for missing --stage, got {result.returncode}. "
-            f"stderr: {result.stderr}"
+            f"Expected non-zero for missing --stage, got {result.returncode}. stderr: {result.stderr}"
         )
 
     def test_script_missing_stage_mentions_stage(self) -> None:
         """Error output mentions '--stage' when it is missing."""
         result = run_script("--project", "test")
-        assert "--stage" in result.stderr, (
-            f"Expected '--stage' in error output: {result.stderr!r}"
-        )
+        assert "--stage" in result.stderr, f"Expected '--stage' in error output: {result.stderr!r}"
 
     def test_script_no_args_fails(self) -> None:
         """Running the script with no arguments is a non-zero exit."""
@@ -113,21 +110,22 @@ class TestScriptGracefulSkip:
     def test_script_missing_project_returns_two(self) -> None:
         """--project nonexistent with a valid --stage returns exit code 2."""
         result = run_script(
-            "--project", "nonexistent_project_xyz_12345",
-            "--stage", "Connector Search",
+            "--project",
+            "nonexistent_project_xyz_12345",
+            "--stage",
+            "Connector Search",
         )
         assert result.returncode == 2, (
-            f"Expected exit 2 for missing project, got {result.returncode}. "
-            f"stderr: {result.stderr}"
+            f"Expected exit 2 for missing project, got {result.returncode}. stderr: {result.stderr}"
         )
 
     def test_script_missing_project_warns(self) -> None:
         """--project nonexistent emits a warning."""
         result = run_script(
-            "--project", "nonexistent_project_xyz_12345",
-            "--stage", "Connector Search",
+            "--project",
+            "nonexistent_project_xyz_12345",
+            "--stage",
+            "Connector Search",
         )
         combined = result.stdout + result.stderr
-        assert "not found" in combined.lower() or "skip" in combined.lower(), (
-            f"Expected skip message in: {combined!r}"
-        )
+        assert "not found" in combined.lower() or "skip" in combined.lower(), f"Expected skip message in: {combined!r}"

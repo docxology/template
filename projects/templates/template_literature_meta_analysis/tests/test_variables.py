@@ -531,6 +531,7 @@ class TestInjectVariables:
         content = "Size: {{CORPUS_SIZE}}, Unknown: {{UNKNOWN_VAR}}"
         variables = {"CORPUS_SIZE": "42"}
         import pytest
+
         with pytest.raises(RuntimeError, match="UNKNOWN_VAR"):
             inject_variables(content, variables, lenient=False)
 
@@ -590,9 +591,7 @@ project_config:
         out = self._project(tmp_path, self._CONFIG)
         (out / "data" / "corpus.jsonl").write_text("")
         # classifier counts keyed by the CONFIG subfield names
-        (out / "data" / "subfield_classification.json").write_text(
-            json.dumps({"first_bucket": 3, "second_bucket": 1})
-        )
+        (out / "data" / "subfield_classification.json").write_text(json.dumps({"first_bucket": 3, "second_bucket": 1}))
         v = compute_variables(out)
         assert v["N_SUBFIELDS"] == "2"
         assert v["SUBFIELD_LIST"] == "First Bucket and Second Bucket"

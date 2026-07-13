@@ -8,7 +8,6 @@ from infrastructure.provenance import (
     ArtifactNode,
     ClaimNode,
     Finding,
-    NodeKind,
     Provenance,
     Review,
     ReviewResult,
@@ -46,30 +45,38 @@ class TestFinding:
 
 class TestReviewResult:
     def test_passed_no_errors(self):
-        r = ReviewResult(findings=[
-            Finding(node_id="a", severity=Severity.info, code="c", message="m"),
-            Finding(node_id="b", severity=Severity.warning, code="c", message="m"),
-        ])
+        r = ReviewResult(
+            findings=[
+                Finding(node_id="a", severity=Severity.info, code="c", message="m"),
+                Finding(node_id="b", severity=Severity.warning, code="c", message="m"),
+            ]
+        )
         assert r.passed is True
 
     def test_failed_on_error(self):
-        r = ReviewResult(findings=[
-            Finding(node_id="a", severity=Severity.error, code="c", message="m"),
-        ])
+        r = ReviewResult(
+            findings=[
+                Finding(node_id="a", severity=Severity.error, code="c", message="m"),
+            ]
+        )
         assert r.passed is False
 
     def test_failed_on_critical(self):
-        r = ReviewResult(findings=[
-            Finding(node_id="a", severity=Severity.critical, code="c", message="m"),
-        ])
+        r = ReviewResult(
+            findings=[
+                Finding(node_id="a", severity=Severity.critical, code="c", message="m"),
+            ]
+        )
         assert r.passed is False
 
     def test_by_severity(self):
-        r = ReviewResult(findings=[
-            Finding(node_id="a", severity=Severity.info, code="c", message="m"),
-            Finding(node_id="b", severity=Severity.warning, code="w", message="m"),
-            Finding(node_id="c", severity=Severity.info, code="i2", message="m"),
-        ])
+        r = ReviewResult(
+            findings=[
+                Finding(node_id="a", severity=Severity.info, code="c", message="m"),
+                Finding(node_id="b", severity=Severity.warning, code="w", message="m"),
+                Finding(node_id="c", severity=Severity.info, code="i2", message="m"),
+            ]
+        )
         info = r.by_severity(Severity.info)
         assert len(info) == 2
 

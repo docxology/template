@@ -59,6 +59,7 @@ def drift_module():
         check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
         check_forkability_contract=checks.check_forkability_contract,
         check_shared_template_design_contract=checks.check_shared_template_design_contract,
+        check_shared_template_truth_contract=checks.check_shared_template_truth_contract,
         check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
 
@@ -341,6 +342,22 @@ def test_shared_template_design_contract_accepts_complete_shared_doc(drift_modul
     drift_module.check_shared_template_design_contract(tmp_path, rep)
 
     assert rep.findings == []
+
+
+def test_shared_template_truth_contract_rejects_roster_and_output_policy_drift(drift_module, tmp_path):
+    templates = tmp_path / "projects" / "templates"
+    templates.mkdir(parents=True)
+    write_doc(templates / "AGENTS.md", "Twenty public canonical exemplar projects.\n")
+    write_doc(templates / "DESIGN.md", "All eighteen public template exemplars.\n")
+    write_doc(tmp_path / "CLAUDE.md", "Never commit generated outputs to version control.\n")
+
+    rep = drift_module.Report()
+    drift_module.check_shared_template_truth_contract(tmp_path, rep)
+
+    rules = {finding.rule for finding in rep.errors()}
+    assert "shared_template_roster_literal" in rules
+    assert "shared_template_roster_pointer_missing" in rules
+    assert "public_output_policy_contradiction" in rules
 
 
 def test_all_export_drift_catches_invented_entry(drift_module, tmp_path):

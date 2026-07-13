@@ -262,9 +262,7 @@ class TestStabilityAnalysis:
 class TestPerformanceBenchmarking:
     """Test performance benchmarking functions."""
 
-    def test_performance_benchmarking_execution(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_performance_benchmarking_execution(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr("src.analysis.project_root", tmp_path)
         result_path = run_performance_benchmarking()
 
@@ -282,9 +280,7 @@ class TestPerformanceBenchmarking:
         else:
             pytest.fail("Performance benchmarking returned None")
 
-    def test_performance_visualization(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_performance_visualization(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr("src.analysis.project_root", tmp_path)
         monkeypatch.setattr("src.figures.project_root", tmp_path)
         report_path = run_performance_benchmarking()
@@ -511,9 +507,7 @@ class TestMultiFactorAnalysis:
         from src.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
-        report = multi_factor_analysis(
-            config=cfg, factor_weights={"convergence": 0.8, "stability": 0.2}
-        )
+        report = multi_factor_analysis(config=cfg, factor_weights={"convergence": 0.8, "stability": 0.2})
         assert sum(report.factor_weights.values()) == pytest.approx(1.0)
 
     def test_custom_factor_weights_with_unknown_key(self):
@@ -523,9 +517,7 @@ class TestMultiFactorAnalysis:
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         # "nonexistent_key" is not in the defaults → silently skipped
-        report = multi_factor_analysis(
-            config=cfg, factor_weights={"convergence": 0.5, "nonexistent_key": 99.0}
-        )
+        report = multi_factor_analysis(config=cfg, factor_weights={"convergence": 0.5, "nonexistent_key": 99.0})
         # Normalisation should still work with valid keys only
         assert sum(report.factor_weights.values()) == pytest.approx(1.0)
         # The unknown key should not appear in the final weights

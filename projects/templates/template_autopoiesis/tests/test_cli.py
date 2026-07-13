@@ -1,4 +1,5 @@
 """Tests for CLI commands."""
+
 from __future__ import annotations
 
 import json
@@ -104,11 +105,15 @@ def test_main_honesty_exits_zero(capsys):
 
 def test_main_materialize_runs(tmp_path, capsys):
     """cmd_materialize should print 'Materialized:' and 'Tree hash:' lines."""
-    main([
-        "--project-root", str(PROJECT_ROOT),
-        "materialize",
-        "--out-root", str(tmp_path),
-    ])
+    main(
+        [
+            "--project-root",
+            str(PROJECT_ROOT),
+            "materialize",
+            "--out-root",
+            str(tmp_path),
+        ]
+    )
     out = capsys.readouterr().out
     assert "Materialized:" in out
     assert "Tree hash:" in out
@@ -116,11 +121,15 @@ def test_main_materialize_runs(tmp_path, capsys):
 
 def test_main_materialize_creates_child_dir(tmp_path, capsys):
     """cmd_materialize should create a non-empty child directory."""
-    main([
-        "--project-root", str(PROJECT_ROOT),
-        "materialize",
-        "--out-root", str(tmp_path),
-    ])
+    main(
+        [
+            "--project-root",
+            str(PROJECT_ROOT),
+            "materialize",
+            "--out-root",
+            str(tmp_path),
+        ]
+    )
     # At least one child subdirectory must have been created
     children = list(tmp_path.iterdir())
     assert len(children) >= 1
@@ -129,19 +138,27 @@ def test_main_materialize_creates_child_dir(tmp_path, capsys):
 def test_main_materialize_with_clean_flag(tmp_path, capsys):
     """cmd_materialize --clean should succeed and produce output."""
     # First run to create a child
-    main([
-        "--project-root", str(PROJECT_ROOT),
-        "materialize",
-        "--out-root", str(tmp_path),
-    ])
+    main(
+        [
+            "--project-root",
+            str(PROJECT_ROOT),
+            "materialize",
+            "--out-root",
+            str(tmp_path),
+        ]
+    )
     capsys.readouterr()  # clear buffer
     # Second run with --clean to overwrite
-    main([
-        "--project-root", str(PROJECT_ROOT),
-        "materialize",
-        "--out-root", str(tmp_path),
-        "--clean",
-    ])
+    main(
+        [
+            "--project-root",
+            str(PROJECT_ROOT),
+            "materialize",
+            "--out-root",
+            str(tmp_path),
+            "--clean",
+        ]
+    )
     out = capsys.readouterr().out
     assert "Materialized:" in out
     assert "Tree hash:" in out
@@ -169,11 +186,15 @@ def test_parser_clean_default_is_false():
 def test_main_verify_runs(tmp_path, capsys):
     """cmd_verify on a valid child should print PASS/FAIL lines."""
     # First materialize a child
-    main([
-        "--project-root", str(PROJECT_ROOT),
-        "materialize",
-        "--out-root", str(tmp_path),
-    ])
+    main(
+        [
+            "--project-root",
+            str(PROJECT_ROOT),
+            "materialize",
+            "--out-root",
+            str(tmp_path),
+        ]
+    )
     out = capsys.readouterr().out
     # Extract the child path from the 'Materialized: <path>' line
     child_path = None
@@ -185,11 +206,14 @@ def test_main_verify_runs(tmp_path, capsys):
 
     # Now verify the materialized child
     try:
-        main([
-            "--project-root", str(PROJECT_ROOT),
-            "verify",
-            child_path,
-        ])
+        main(
+            [
+                "--project-root",
+                str(PROJECT_ROOT),
+                "verify",
+                child_path,
+            ]
+        )
     except SystemExit:
         pass  # verify exits 0 on pass or 1 on fail; either is fine here
 
@@ -200,11 +224,15 @@ def test_main_verify_runs(tmp_path, capsys):
 
 def test_main_verify_passes_on_clean_child(tmp_path, capsys):
     """cmd_verify should exit 0 on a clean freshly materialized child."""
-    main([
-        "--project-root", str(PROJECT_ROOT),
-        "materialize",
-        "--out-root", str(tmp_path),
-    ])
+    main(
+        [
+            "--project-root",
+            str(PROJECT_ROOT),
+            "materialize",
+            "--out-root",
+            str(tmp_path),
+        ]
+    )
     out = capsys.readouterr().out
     child_path = None
     for line in out.splitlines():
@@ -215,11 +243,14 @@ def test_main_verify_passes_on_clean_child(tmp_path, capsys):
 
     exit_code = 0
     try:
-        main([
-            "--project-root", str(PROJECT_ROOT),
-            "verify",
-            child_path,
-        ])
+        main(
+            [
+                "--project-root",
+                str(PROJECT_ROOT),
+                "verify",
+                child_path,
+            ]
+        )
     except SystemExit as exc:
         exit_code = exc.code
 

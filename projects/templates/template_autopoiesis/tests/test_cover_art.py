@@ -1,4 +1,5 @@
 """Tests for cover_art module."""
+
 from __future__ import annotations
 
 import math
@@ -167,8 +168,12 @@ def test_render_cover_wide_figsize(tmp_path):
 def test_render_cover_optional_title(tmp_path):
     out = tmp_path / "titled.png"
     render_cover(
-        domains=KNOWN_DOMAINS, seed=42, out_path=out,
-        title="Test Title", subtitle="Test Subtitle", author="test_author",
+        domains=KNOWN_DOMAINS,
+        seed=42,
+        out_path=out,
+        title="Test Title",
+        subtitle="Test Subtitle",
+        author="test_author",
     )
     assert out.exists()
 
@@ -177,6 +182,7 @@ def test_render_cover_optional_title(tmp_path):
 # Additional: seed_dot_positions, color_gradient, non-trivial size,
 # portrait aspect, byte-stable-with-new-elements, segments-count-richer
 # ---------------------------------------------------------------------------
+
 
 def test_seed_dot_positions_reproducible():
     """seed_dot_positions is just RNG state — verify same seed gives same cover bytes."""

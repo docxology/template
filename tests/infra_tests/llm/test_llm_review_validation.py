@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import pytest
 
-from infrastructure.llm.validation import is_off_topic
 from infrastructure.llm.review.generator import validate_review_quality
 
 
@@ -16,17 +14,17 @@ class TestValidateReviewQuality:
         response = (
             """## Overview
         This manuscript presents research on optimization.
-        
+
         ## Key Contributions
         - New algorithm design
         - Performance improvements
-        
+
         ## Methodology Summary
         The authors use neural networks for their approach.
-        
+
         ## Principal Results
         The results show 95% accuracy.
-        
+
         ## Significance and Impact
         This work advances the field significantly.
         """
@@ -43,16 +41,16 @@ class TestValidateReviewQuality:
         response = (
             """## Summary
         This is the summary section.
-        
+
         ## Contributions
         Main contributions listed here.
-        
+
         ## Methods
         Description of methods used.
-        
+
         ## Findings
         Key findings from the research.
-        
+
         ## Implications
         The implications of this work.
         """
@@ -84,7 +82,7 @@ class TestValidateReviewQuality:
             """## Clarity Assessment
         **Score: 4**
         The writing is clear and well-organized.
-        
+
         ## Structure
         **Score: 5**
         Excellent structure throughout.
@@ -122,10 +120,10 @@ class TestValidateReviewQuality:
         response = (
             """## High Priority
         Critical issues to address.
-        
+
         ## Medium Priority
         Important but not urgent.
-        
+
         ## Low Priority
         Minor improvements.
         """
@@ -140,10 +138,10 @@ class TestValidateReviewQuality:
         response = (
             """## Critical Issues
         These must be fixed immediately.
-        
+
         ## Moderate Concerns
         Should address these.
-        
+
         ## Nice to Have
         Optional improvements.
         """
@@ -181,7 +179,7 @@ class TestValidateReviewQuality:
             """## Strengths
         The methodology is rigorous and well-documented.
         The experimental design is appropriate.
-        
+
         ## Weaknesses
         Sample size could be larger.
         Some assumptions are not validated.
@@ -198,7 +196,7 @@ class TestValidateReviewQuality:
         response = (
             """## Strong Points
         The methodology is innovative.
-        
+
         ## Limitations
         There are some concerns about generalizability.
         """
@@ -213,7 +211,7 @@ class TestValidateReviewQuality:
         response = (
             """## Immediate Actions
         These must be addressed before publication.
-        
+
         ## Consider Later
         These are optional improvements.
         """
@@ -244,7 +242,7 @@ class TestDetectConversationalPhrases:
         from infrastructure.llm.validation.format import detect_conversational_phrases
 
         text = """## Methodology Review
-        
+
         The manuscript employs rigorous experimental design.
         The results demonstrate significant improvements."""
         assert detect_conversational_phrases(text) == []
@@ -295,16 +293,16 @@ class TestCheckFormatCompliance:
         from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview
-        
+
         The manuscript presents research on optimization algorithms.
-        
+
         ## Key Contributions
-        
+
         - Novel algorithm design
         - Performance improvements
-        
+
         ## Methodology Summary
-        
+
         The authors employ neural network techniques."""
 
         is_compliant, issues, details = check_format_compliance(text)
@@ -316,7 +314,7 @@ class TestCheckFormatCompliance:
         from infrastructure.llm.validation.format import check_format_compliance
 
         text = """## Overview 🔑
-        
+
         The manuscript is excellent! 🚀 Great work! ✅"""
 
         is_compliant, issues, details = check_format_compliance(text)
@@ -435,24 +433,24 @@ class TestValidateReviewQualityWithFormatCompliance:
         # Response with emoji - should be valid now
         response = (
             """## Overview
-        
+
         The manuscript presents research on optimization. 🚀
-        
+
         ## Key Contributions
-        
+
         - Novel algorithm
         - Improved performance
-        
+
         ## Methodology Summary
-        
+
         The research uses neural networks for analysis.
-        
+
         ## Principal Results
-        
+
         Results show significant improvements.
-        
+
         ## Significance and Impact
-        
+
         This work advances the field of optimization.
         """
             + " word" * 300
@@ -470,15 +468,15 @@ class TestValidateReviewQualityWithFormatCompliance:
         # Response with conversational phrases
         response = (
             """## Overview
-        
+
         Based on the document you shared, this is a great paper!
-        
+
         ## Key Contributions
-        
+
         I'll help you understand the key points.
-        
+
         ## Methodology
-        
+
         Let me know if you need more details.
         """
             + " word" * 300

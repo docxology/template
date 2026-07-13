@@ -1,4 +1,5 @@
 """Tests for optimization primitives: gradient_descent and analytic_minimizer."""
+
 from __future__ import annotations
 
 import numpy as np

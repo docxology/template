@@ -90,9 +90,10 @@ class TestBody:
         assert "A reproducible test subtitle" in body
 
     def test_body_uses_project_cover_height_fraction(self, tmp_path: Path) -> None:
-        config = PAPER_CONFIG.replace(
-            "authors:", '  cover:\n    image: "cover.png"\nauthors:'
-        ) + "rendering:\n  cover_height_fraction: 0.76\n"
+        config = (
+            PAPER_CONFIG.replace("authors:", '  cover:\n    image: "cover.png"\nauthors:')
+            + "rendering:\n  cover_height_fraction: 0.76\n"
+        )
         d = _manuscript(tmp_path, config)
         (d / "cover.png").write_bytes(b"png")
 

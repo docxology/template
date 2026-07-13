@@ -40,13 +40,10 @@ def skill_response(skill_path: Path, prompt: str, eval_name: str, *, include_hea
     joined = "\n".join(sections).lower()
     if "COUNTS" not in joined and "do not invent coverage" not in joined:
         sections.append(
-            "\nMetrics policy: do not invent coverage percentages; cite pytest output or "
-            "`docs/_generated/COUNTS.md`.\n"
+            "\nMetrics policy: do not invent coverage percentages; cite pytest output or `docs/_generated/COUNTS.md`.\n"
         )
     if "active_projects" not in joined:
-        sections.append(
-            "Project roster: `docs/_generated/active_projects.md` (no hard-coded rotating paths).\n"
-        )
+        sections.append("Project roster: `docs/_generated/active_projects.md` (no hard-coded rotating paths).\n")
     return "\n".join(sections)
 
 

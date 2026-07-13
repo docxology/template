@@ -281,13 +281,13 @@ Drift-checker coverage: `uv run python scripts/audit/check_template_drift.py --s
 | Exemplar drift | `uv run python scripts/audit/check_template_drift.py --strict` | 9+2 detectors |
 | Module line count | `uv run python scripts/gates/module_line_count_check.py` | warn ≥800 / fail ≥950 (`infrastructure/`, `scripts/`); warn ≥150 / fail ≥250 (`projects/{{exemplar}}/scripts/` via `PUBLIC_PROJECT_NAMES`) |
 | Unified health | `uv run python -m infrastructure.core.health` | optional `--gates=module-line-count` |
-| Tracked projects | `uv run python scripts/audit/check_tracked_projects.py` | non-exemplar paths under `projects/` |
-| Generated artifacts | `uv run python scripts/audit/check_tracked_generated_artifacts.py` | disposable `output/` trees |
+| Tracked public scope | `uv run python scripts/audit/check_tracked_all.py` | non-template paths under `projects/`, `fonds/`, `rules/`, and `tools/` |
+| Generated artifacts | `uv run python scripts/audit/check_tracked_generated_artifacts.py` | prohibited generated state outside the canonical public-output allowlist |
 
 Coverage gates (enforced in CI):
 
 - infrastructure/ : >= 60% (measured baseline → [`docs/development/coverage-gaps.md`](../development/coverage-gaps.md))
-- public template project `src/` trees : >= 90% (matrix project tests; public lint/type paths come from `uv run python -m infrastructure.project.public_scope source-paths`)
+- public template project `src/` trees : >= 90% (matrix project tests; Ruff uses `public_scope lint-paths`, while mypy uses the import-safe `source-paths`)
 
 Run full suite with:
 

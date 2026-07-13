@@ -55,10 +55,7 @@ def main() -> int:
     cfg = load_research_workflow_config(PROJECT_DIR)
 
     if not cfg.enabled:
-        logger.info(
-            "[skip] research_workflow disabled in config — "
-            "set research_workflow.enabled: true to run"
-        )
+        logger.info("[skip] research_workflow disabled in config — set research_workflow.enabled: true to run")
         return 0
 
     logger.info(f"Running research workflow ({len(_DEFAULT_STAGES)} stages)")

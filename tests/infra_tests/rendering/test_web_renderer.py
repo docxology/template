@@ -320,7 +320,7 @@ def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: 
 def test_accessibility_main_starts_after_toc_so_skip_link_bypasses_it(tmp_path: Path) -> None:
     html_file = tmp_path / "index.html"
     html_file.write_text(
-        '<html><body><header><h1>Title</h1></header>'
+        "<html><body><header><h1>Title</h1></header>"
         '<nav id="TOC"><a href="#section">Section</a></nav>'
         '<h1 id="section">Section</h1><p>Content</p></body></html>',
         encoding="utf-8",

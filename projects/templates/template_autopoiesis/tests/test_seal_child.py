@@ -1,4 +1,5 @@
 """Tests for sealing a child project (seal_child flow)."""
+
 from __future__ import annotations
 
 import json

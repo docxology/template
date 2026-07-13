@@ -28,6 +28,7 @@ from infrastructure.publishing.release_workflow import (
     validate_release_tag,
 )
 
+
 def _write_minimal_project(
     repo_root: Path,
     project_name: str = "test_release",

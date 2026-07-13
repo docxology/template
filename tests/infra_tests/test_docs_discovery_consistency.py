@@ -64,8 +64,7 @@ def test_publication_records_doc_matches_public_scope() -> None:
     root = _repo_root()
     doc_path = root / "docs" / "_generated" / "publication_records.md"
     assert doc_path.is_file(), (
-        "Missing publication records doc; run "
-        "uv run python scripts/docgen/publication_records.py --refresh-external"
+        "Missing publication records doc; run uv run python scripts/docgen/publication_records.py --refresh-external"
     )
 
     text = doc_path.read_text(encoding="utf-8")

@@ -63,8 +63,8 @@ flowchart TB
 
 ```bash
 # Lint
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Infrastructure tests
@@ -106,8 +106,8 @@ Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runn
 
 ```bash
 # Fix linting
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
 
 # View CI run logs
 gh run list --workflow=CI --limit=5

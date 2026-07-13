@@ -39,7 +39,7 @@ def test_evaluate_strong_rules_passes_for_pools_project(rule_set: str) -> None:
     assert result["violation_count"] == 0
 
 
-def test_coverage_threshold_flags_low_coverage(tmp_path: pathlib.Path) -> None:
+def test_coverage_threshold_flags_low_coverage() -> None:
     strong = load_strong_rules("template_project_rules")
     coverage_rule = next(entry for entry in strong if entry["filename"] == "coverage-gate.yaml")
     evaluation = evaluate_strong_rule(

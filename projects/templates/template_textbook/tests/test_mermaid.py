@@ -187,9 +187,7 @@ def test_build_state_no_label_transition():
 
 def test_build_class_no_relations():
     """A class diagram with no relations is still valid."""
-    src = diagrams.build_class(
-        {"classes": [{"name": "MyClass", "members": []}], "relations": []}
-    )
+    src = diagrams.build_class({"classes": [{"name": "MyClass", "members": []}], "relations": []})
     assert "classDiagram" in src
     assert "class MyClass {" in src
 

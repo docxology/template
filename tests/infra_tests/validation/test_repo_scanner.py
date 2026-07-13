@@ -5,7 +5,6 @@ Comprehensive tests for repository accuracy and completeness scanning.
 
 import logging
 
-import pytest
 
 from infrastructure.validation.repo import scanner as repo_scanner
 from infrastructure.validation.repo._repo_scan_report import build_repo_scan_report
@@ -293,7 +292,6 @@ class TestRepoScannerModule:
     def test_main_function_exists(self):
         """Test main function exists."""
         assert hasattr(repo_scanner, "main")
-
 
 
 class TestCheckDocumentedCommands:
@@ -594,4 +592,3 @@ class TestMainFunction:
         # Verify the report was created
         assert report_path.exists()
         assert "Repository Accuracy" in report_path.read_text()
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Seal a child project: write seal.json with spec hash and payload."""
+
 from __future__ import annotations
 
 import json
@@ -15,6 +16,7 @@ from src.verify import verify_child
 def seal_child(child_root: Path) -> None:
     """Write seal.json to *child_root*."""
     import json as _json
+
     prov_path = child_root / "provenance.json"
     if not prov_path.exists():
         print(f"ERROR: provenance.json not found in {child_root}", file=sys.stderr)

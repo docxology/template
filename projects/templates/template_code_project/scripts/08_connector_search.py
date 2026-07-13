@@ -63,16 +63,18 @@ def main() -> int:
                     max_results=cfg.default_max_results,
                 )
                 for hit in hits:
-                    connector_results.append({
-                        "id": hit.id,
-                        "title": hit.title,
-                        "url": hit.url,
-                        "year": hit.year,
-                        "authors": hit.authors,
-                        "abstract": hit.abstract,
-                        "query": query,
-                        "source": hit.source,
-                    })
+                    connector_results.append(
+                        {
+                            "id": hit.id,
+                            "title": hit.title,
+                            "url": hit.url,
+                            "year": hit.year,
+                            "authors": hit.authors,
+                            "abstract": hit.abstract,
+                            "query": query,
+                            "source": hit.source,
+                        }
+                    )
                 logger.info(f"  '{query}' → {len(hits)} hits")
             except Exception as exc:  # noqa: BLE001
                 logger.warning(f"  '{query}' via '{connector_id}' failed: {exc}")

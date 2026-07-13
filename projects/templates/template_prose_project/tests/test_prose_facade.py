@@ -166,8 +166,7 @@ class TestParseBibKeys:
         """
         bib = tmp_path / "refs.bib"
         bib.write_text(
-            "@comment{This is a preamble comment, not a key}\n"
-            "@article{real_key, title={T}, author={A}, year={2020}}\n",
+            "@comment{This is a preamble comment, not a key}\n@article{real_key, title={T}, author={A}, year={2020}}\n",
             encoding="utf-8",
         )
         keys = parse_bib_keys(bib)
