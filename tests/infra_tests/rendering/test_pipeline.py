@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import RenderingError, TemplateError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
@@ -454,6 +454,16 @@ class _ErrorRenderManager(RenderManager):
         )
 
 
+class _TemplateErrorRenderManager(RenderManager):
+    """RenderManager that raises a non-rendering template-domain error."""
+
+    def render_all(self, source_file: Path) -> list[Path]:
+        raise TemplateError(
+            f"template failed for {source_file.name}",
+            context={"source": str(source_file)},
+        )
+
+
 class _SuccessRenderManager(RenderManager):
     """RenderManager that writes a tiny marker file per source."""
 
@@ -493,6 +503,20 @@ def test_render_individual_files_rendering_error(tmp_path: Path) -> None:
     assert failed_files == ["02_methods.md"]
     assert len(reporter.events) == 1
     assert reporter.events[0].category == "RenderingError"
+
+
+def test_render_individual_files_template_error_is_a_recorded_failure(tmp_path: Path) -> None:
+    reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
+    md = tmp_path / "02b_template.md"
+    md.write_text("# Template", encoding="utf-8")
+    manager = _TemplateErrorRenderManager(RenderingConfig(output_dir=str(tmp_path)))
+
+    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+
+    assert rendered_count == 0
+    assert failed_files == ["02b_template.md"]
+    assert len(reporter.events) == 1
+    assert reporter.events[0].category == "TemplateError"
 
 
 def test_render_individual_files_success(tmp_path: Path) -> None:
