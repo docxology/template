@@ -384,6 +384,7 @@
         "LOCAL_ONLY_TEMPLATE_NAMES",
         "PUBLIC_PROJECT_NAMES",
         "main",
+        "public_ci_lint_paths",
         "public_ci_source_paths",
         "public_project_infos",
         "public_project_names"
