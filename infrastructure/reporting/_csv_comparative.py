@@ -5,13 +5,21 @@ projects in the executive summary.
 """
 
 import csv
+from collections.abc import Iterable, Sequence
 from pathlib import Path
+from typing import Any, Protocol
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
+
+
+class RowWriter(Protocol):
+    """Structural type implemented by ``csv.writer`` instances."""
+
+    def writerow(self, row: Iterable[Any], /) -> Any: ...
 
 
 def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
@@ -43,7 +51,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
             return csv_path
 
         # Calculate comparative statistics for each metric
-        metrics_data = {
+        metrics_data: dict[str, Sequence[float]] = {
             "manuscript_words": [p.manuscript.total_words for p in projects],
             "manuscript_sections": [p.manuscript.sections for p in projects],
             "codebase_lines": [p.codebase.source_lines for p in projects],
@@ -112,13 +120,13 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
 
 
 def _write_comparative_row(
-    writer: csv.writer,  # type: ignore[type-arg]
+    writer: RowWriter,
     project_name: str,
     category: str,
     metric_name: str,
     unit: str,
     value: float,
-    values_list: list[float],
+    values_list: Sequence[float],
     *,
     higher_is_better: bool,
 ) -> None:
@@ -143,7 +151,7 @@ def _write_comparative_row(
 
 
 def _calculate_percentile_and_rank(
-    value: float, values_list: list[float], higher_is_better: bool = True
+    value: float, values_list: Sequence[float], higher_is_better: bool = True
 ) -> tuple[float, int]:
     """Calculate percentile rank for a value in a list."""
     if not values_list:

@@ -4,6 +4,7 @@ Contains aggregate metric generation and comparative table building
 across multiple projects.
 """
 
+from collections.abc import Sequence
 from typing import Any
 
 from ._executive_models import ProjectMetrics
@@ -12,7 +13,7 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def _calc_aggregate_stats(values: list[float]) -> dict[str, float]:
+def _calc_aggregate_stats(values: Sequence[float]) -> dict[str, float]:
     """Calculate min, max, median, and mean for a list of values."""
     if not values:
         return {"min": 0.0, "max": 0.0, "median": 0.0, "mean": 0.0}

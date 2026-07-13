@@ -48,9 +48,10 @@ flowchart TB
 |---|---|
 | Ruff lint | zero violations |
 | Ruff format | zero diffs |
-| mypy ratchet | no unratcheted errors, new error-bearing files, or package-ceiling growth |
+| mypy strict gate | zero errors across the generated public source scope |
 | `check-all-exports` | zero violations |
-| Mock-framework lexical gate | zero prohibited imports/calls; stand-in inventory advisory |
+| Mock-framework lexical gate | zero prohibited imports/calls |
+| Semantic stand-in gate | zero dependency replacements; environment isolation classified separately |
 | Infrastructure coverage | ≥ 60% |
 | Per-project coverage (standalone) | ≥ 90% |
 | Combined-union public-project coverage | ≥ 75% |

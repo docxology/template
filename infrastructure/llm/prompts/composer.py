@@ -60,7 +60,7 @@ class PromptComposer:
             template = self.loader.load_template(template_ref)
 
             # Get base template
-            base_template = template.get("base_template", "")
+            base_template = str(template.get("base_template", ""))
             if not base_template:
                 raise LLMTemplateError(
                     f"Template {template_ref} missing base_template",

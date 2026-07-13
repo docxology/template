@@ -126,7 +126,7 @@ def _extract_with_pypdf(pdf_path: Path) -> str:
 
 def _extract_with_pdfplumber(pdf_path: Path) -> str:
     """Extract text using pdfplumber library."""
-    import pdfplumber  # type: ignore[import-not-found]
+    import pdfplumber
 
     text_parts = []
     with pdfplumber.open(pdf_path) as pdf:

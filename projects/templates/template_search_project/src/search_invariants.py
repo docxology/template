@@ -21,7 +21,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Literal
 
 
 @dataclass
@@ -29,7 +29,17 @@ class InvariantResult:
     """Witness record for one search-coverage invariant."""
 
     name: str
-    kind: str
+    kind: Literal[
+        "equal",
+        "le",
+        "ge",
+        "in_range",
+        "monotone_increasing",
+        "monotone_decreasing",
+        "finite",
+        "nonneg",
+        "array_close",
+    ]
     actual: Any
     expected: Any = None
     tol: float = 0.0
@@ -45,9 +55,11 @@ def schema_invariants(papers: list[dict]) -> list[InvariantResult]:
     """Every paper must have a non-empty ``id`` and ``title``."""
     out: list[InvariantResult] = []
     for k in REQUIRED_PAPER_KEYS:
-        missing = [
-            i for i, p in enumerate(papers) if not p.get(k) or (isinstance(p.get(k), str) and not p.get(k).strip())
-        ]
+        missing = []
+        for i, paper in enumerate(papers):
+            value = paper.get(k)
+            if not value or (isinstance(value, str) and not value.strip()):
+                missing.append(i)
         out.append(
             InvariantResult(
                 name=f"paper_field_present_{k}",

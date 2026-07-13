@@ -28,7 +28,7 @@ def _load_yaml(
 
 def default_config_path() -> Path:
     """Return the canonical manuscript config path."""
-    return MANUSCRIPT_DIR / "config.yaml"
+    return Path(MANUSCRIPT_DIR / "config.yaml")
 
 
 def load_search_config(config_path: Path | None = None) -> dict[str, Any]:

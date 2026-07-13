@@ -101,12 +101,12 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
     }
 
     for phase, pattern in timing_patterns.items():
-        match = re.search(pattern, stdout, re.DOTALL)
-        if match:
-            if phase == "execution" and len(match.groups()) > 1:
-                results["execution_phases"][phase] = float(match.group(2))
+        phase_match = re.search(pattern, stdout, re.DOTALL)
+        if phase_match:
+            if phase == "execution" and len(phase_match.groups()) > 1:
+                results["execution_phases"][phase] = float(phase_match.group(2))
             elif phase != "execution":
-                results["execution_phases"][phase] = float(match.group(1))
+                results["execution_phases"][phase] = float(phase_match.group(1))
 
     # Parse test categories by markers (slow, integration, requires_ollama, etc.)
     # Look for markers in the output

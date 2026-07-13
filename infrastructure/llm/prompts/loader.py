@@ -71,7 +71,10 @@ class PromptFragmentLoader:
 
         # Check cache
         if filepath_str in self._fragment_cache:
-            return self._fragment_cache[filepath_str]
+            cached = self._fragment_cache[filepath_str]
+            if not isinstance(cached, dict):
+                raise LLMTemplateError(f"Prompt file root must be an object: {filepath}")
+            return cached
 
         if not filepath.exists():
             raise LLMTemplateError(
@@ -81,7 +84,11 @@ class PromptFragmentLoader:
 
         try:
             with open(filepath, "r", encoding="utf-8") as f:
-                data = json.load(f)
+                loaded = json.load(f)
+
+            if not isinstance(loaded, dict):
+                raise LLMTemplateError(f"Prompt file root must be an object: {filepath}")
+            data: dict[str, Any] = loaded
 
             # Cache the loaded data
             self._fragment_cache[filepath_str] = data
@@ -165,7 +172,10 @@ class PromptFragmentLoader:
             >>> loader = PromptFragmentLoader()
             >>> template = loader.load_template("manuscript_reviews.json#manuscript_executive_summary")
         """
-        return self._resolve_reference(reference, subdirectory="templates")
+        template = self._resolve_reference(reference, subdirectory="templates")
+        if not isinstance(template, dict):
+            raise LLMTemplateError(f"Template reference must resolve to an object: {reference}")
+        return template
 
     def load_composition(self, reference: str) -> Any:
         """Load a composition rule.
@@ -195,7 +205,7 @@ class PromptFragmentLoader:
 
         # Handle both direct string and dict with "content" key
         if isinstance(fragment, dict):
-            return fragment.get("content", str(fragment))
+            return str(fragment.get("content", fragment))
         return str(fragment)
 
     def clear_cache(self) -> None:

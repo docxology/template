@@ -32,7 +32,7 @@ class DepositPublishContext:
 def load_deposit_publish_context(config_path: Path) -> DepositPublishContext:
     """Load deposit-filename settings and raw author rows from ``config.yaml``."""
     config = load_config(config_path) or {}
-    return deposit_context_from_config(config)
+    return deposit_context_from_config(dict(config))
 
 
 def deposit_context_from_config(config: dict[str, Any]) -> DepositPublishContext:

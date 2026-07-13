@@ -48,7 +48,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping, Sequence
+from typing import Mapping, Self, Sequence
 
 from template_formal.agent.agent import Agent, BeliefState, CandidateAction
 from template_formal.colony.pheromone import InMemoryPheromoneField, PheromoneField
@@ -111,6 +111,51 @@ class ColonyTrialConfig:
     decay: float
     seed: int
     sensed_concentration_cap: float | None = None
+
+    @classmethod
+    def from_mapping(cls, *, seed: int, values: Mapping[str, object]) -> Self:
+        """Build a typed config from a dynamic mapping after validating its shape."""
+
+        def integer(name: str) -> int:
+            value = values.get(name)
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise TypeError(f"{name} must be an int")
+            return value
+
+        def number(name: str) -> float:
+            value = values.get(name)
+            if not isinstance(value, (int, float)) or isinstance(value, bool):
+                raise TypeError(f"{name} must be numeric")
+            return float(value)
+
+        raw_locations = values.get("locations")
+        if not isinstance(raw_locations, (tuple, list)) or not all(
+            isinstance(location, str) for location in raw_locations
+        ):
+            raise TypeError("locations must be a sequence of strings")
+        raw_range = values.get("preference_mean_range")
+        if (
+            not isinstance(raw_range, (tuple, list))
+            or len(raw_range) != 2
+            or not all(isinstance(bound, (int, float)) and not isinstance(bound, bool) for bound in raw_range)
+        ):
+            raise TypeError("preference_mean_range must contain two numeric bounds")
+        raw_cap = values.get("sensed_concentration_cap")
+        if raw_cap is not None and (not isinstance(raw_cap, (int, float)) or isinstance(raw_cap, bool)):
+            raise TypeError("sensed_concentration_cap must be numeric or None")
+
+        return cls(
+            num_agents=integer("num_agents"),
+            locations=tuple(raw_locations),
+            num_ticks=integer("num_ticks"),
+            preference_mean_range=(float(raw_range[0]), float(raw_range[1])),
+            preference_variance=number("preference_variance"),
+            sensing_noise_std=number("sensing_noise_std"),
+            deposit_amount=number("deposit_amount"),
+            decay=number("decay"),
+            seed=seed,
+            sensed_concentration_cap=float(raw_cap) if raw_cap is not None else None,
+        )
 
     def __post_init__(self) -> None:
         """Reject nonsensical numeric fields at construction time.

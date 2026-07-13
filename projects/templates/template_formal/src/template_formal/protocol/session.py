@@ -43,15 +43,16 @@ from __future__ import annotations
 
 import zlib
 from dataclasses import dataclass, field
-from typing import Generic, Literal
+from typing import Generic, Literal, TypeVar
 from uuid import UUID
 
 from template_formal.protocol.errors import MalformedMessage, ProtocolViolation
 from template_formal.types.ids import AgentId, MessageId, new_message_id
-from template_formal.types.phase import Closed, Established, Handshaking, Idle, PhaseT
+from template_formal.types.phase import Closed, Established, Handshaking, Idle
 from template_formal.types.result import Err, Ok, Result
 
 MessageKind = Literal["hello", "hello_ack", "data", "close"]
+PhaseT = TypeVar("PhaseT", Idle, Handshaking, Established, Closed)
 
 _MAGIC = b"TF01"
 _KIND_CODES: dict[MessageKind, int] = {"hello": 1, "hello_ack": 2, "data": 3, "close": 4}
@@ -83,7 +84,7 @@ def encode_wire_message(message: WireMessage) -> bytes:
         + message.payload
     )
     checksum = zlib.crc32(body).to_bytes(_CHECKSUM_LEN, "big")
-    return body + checksum
+    return bytes(body + checksum)
 
 
 def decode_wire_message(data: bytes) -> Result[WireMessage, MalformedMessage]:

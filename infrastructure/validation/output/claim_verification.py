@@ -208,7 +208,7 @@ class FactCheckVerifier:
                 confidence=0.0,
                 evidence_snippet="no evidence found",
             )
-        best_verdict = "insufficient"
+        best_verdict: Verdict = "insufficient"
         best_confidence = 0.0
         best_title = ""
         best_url = ""

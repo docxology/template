@@ -362,64 +362,6 @@ disallow_untyped_defs = true
 module = "infrastructure.rendering.*"
 disallow_untyped_defs = true
 
-# template_active_inference lives under projects/templates/ and uses a src/
-# layout with top-level imports (conftest puts src/ on sys.path). With
-# explicit_package_bases, mypy resolves its modules under the real project
-# namespace and selected flat top-level names. Mirrors the
-# template_literature_meta_analysis and template_search_project pattern (only
-# infrastructure is held type-strict).
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_active_inference.*",
-    "analysis.*",
-    "analytical.*",
-    "contracts.*",
-    "gates.*",
-    "gnn.*",
-    "invariants.*",
-    "manuscript.*",
-    "ontology.*",
-    "orchestration.*",
-    "roadmap_tracks.*",
-    "simulation.*",
-    "visualizations.*",
-]
-ignore_errors = true
-
-# template_literature_meta_analysis uses a src/ layout with top-level imports
-# (conftest puts src/ on sys.path), so with explicit_package_bases mypy resolves
-# its modules as top-level names. Mirror the project-src relaxation the other
-# exemplars get via `ignore_errors` (only infrastructure is held type-strict).
-# These names are specific to this exemplar (others use the `src.*` namespace).
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_literature_meta_analysis.*",
-]
-ignore_errors = true
-
-# template_search_project uses a src/ layout with top-level imports
-# (conftest puts src/ on sys.path), so with explicit_package_bases mypy
-# resolves its modules under both name forms. Same pattern as
-# template_literature_meta_analysis above.
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_search_project.*",
-]
-ignore_errors = true
-
-# template_formal uses a src/ layout with a real package dir
-# (src/template_formal/), so with explicit_package_bases mypy resolves it
-# under the repo-relative dotted path and as the top-level package name.
-# Same relaxation as the siblings above (only infrastructure is held
-# type-strict at CI scope); the exemplar's own tests/test_mypy_oracle.py
-# keeps the project type-checked with its correct project-local resolution.
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_formal.*",
-    "template_formal.*",
-]
-ignore_errors = true
-
 [tool.bandit]
 # Exclusions for paths (mirrors `exclude_dirs` in `bandit.yaml`). CI and
 # pre-commit use `-c bandit.yaml`; this block keeps ad-hoc `bandit -c pyproject.toml`

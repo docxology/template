@@ -70,8 +70,10 @@ class PymdpConfig:
 
 def _coerce_mode(value: Any) -> SimulationMode:
     mode = str(value or "state_inference")
-    if mode == "state_inference" or mode == "policy_inference":
-        return mode
+    if mode == "state_inference":
+        return "state_inference"
+    if mode == "policy_inference":
+        return "policy_inference"
     raise ValueError(f"unsupported pymdp mode: {mode!r}")
 
 

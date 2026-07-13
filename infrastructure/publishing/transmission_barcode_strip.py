@@ -169,7 +169,7 @@ def _generate_code128_image(data: str, target_width: int, target_height: int) ->
     from infrastructure.steganography.barcode_generators import _get_barcode
 
     barcode_mod = _get_barcode()
-    from barcode.writer import ImageWriter  # type: ignore[import-untyped]
+    from barcode.writer import ImageWriter
 
     code128 = barcode_mod.get_barcode_class("code128")
     safe_data = "".join(ch for ch in data if 32 <= ord(ch) <= 126)[:48]
@@ -204,7 +204,7 @@ def _paste_qr_row(
     x_cursor = x_start
     for label, data in items:
         qr_png = generate_qr_code(data, box_size=_QR_BOX_SIZE, border=_QR_BORDER)
-        qr_image = Image.open(io.BytesIO(qr_png))
+        qr_image: Image.Image = Image.open(io.BytesIO(qr_png))
         if qr_image.size != (_QR_SIZE, _QR_SIZE):
             qr_image = qr_image.resize((_QR_SIZE, _QR_SIZE), Image.Resampling.LANCZOS)
         image.paste(qr_image, (x_cursor, y_offset))

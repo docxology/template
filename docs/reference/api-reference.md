@@ -2360,7 +2360,7 @@ Load test results from a project's output directory; returns {} if not found.
 *function — defined in `infrastructure.reporting.output_statistics`*
 
 ```python
-log_output_summary(output_dir: Path, stats: dict[str, Any], structure_validation: dict[str, Any] | None=None) -> None
+log_output_summary(output_dir: Path, stats: dict[str, Any], structure_validation: Mapping[str, Any] | None=None) -> None
 ```
 
 Generate summary of output copying results.
@@ -3538,7 +3538,7 @@ Validate mathematical equation formatting and labeling.
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_output_structure(output_dir: Path) -> dict[str, Any]
+validate_output_structure(output_dir: Path) -> OutputStructureResult
 ```
 
 Validate complete output directory structure.

@@ -133,6 +133,7 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
                 from PIL import ImageDraw, ImageFont
 
                 draw = ImageDraw.Draw(img)
+                font: ImageFont.FreeTypeFont | ImageFont.ImageFont
                 try:
                     font = ImageFont.truetype("Helvetica", 12)
                 except OSError as e:
@@ -177,6 +178,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
         draw = ImageDraw.Draw(img)
 
         # Try to load a font
+        font: ImageFont.FreeTypeFont | ImageFont.ImageFont
         try:
             font = ImageFont.truetype("Helvetica", 12)
         except OSError as e:

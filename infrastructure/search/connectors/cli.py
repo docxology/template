@@ -39,7 +39,7 @@ def _cmd_list_dbs(args: argparse.Namespace) -> int:
 def _cmd_search(args: argparse.Namespace) -> int:
     """Search one or all connectors."""
     opts = SearchOptions(max_results=args.max_results)
-    connectors = list_connectors() if args.all else []
+    connectors = get_registry().all() if args.all else []
     if not args.all:
         reg = get_registry()
         if not reg.has(args.connector):
@@ -98,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
     if not hasattr(args, "func"):
         parser.print_help()
         return 0
-    return args.func(args)
+    return int(args.func(args))
 
 
 __all__ = ["build_parser", "main"]

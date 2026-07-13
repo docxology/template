@@ -119,7 +119,7 @@ class ConnectorHttpClient:
         full_url = self._build_url(url, params)
         cached = self._cache_get(full_url)
         if cached is not None:
-            return cached  # type: ignore[return-value]
+            return str(cached)
 
         resp = self._request_with_retry(full_url, headers or {})
         text = resp.decode("utf-8", errors="replace")
@@ -155,7 +155,7 @@ class ConnectorHttpClient:
         for attempt in range(self.max_retries + 1):
             try:
                 with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # nosec B310 — URLs are hard-coded to known public science APIs (OpenAlex, arXiv, etc.)
-                    return resp.read()  # type: ignore[return-value]
+                    return bytes(resp.read())
             except urllib.error.HTTPError as exc:
                 if exc.code in _RETRYABLE_STATUSES and attempt < self.max_retries:
                     time.sleep(self.backoff_base * (2**attempt))

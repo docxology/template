@@ -104,7 +104,7 @@ def resolve_fulltext_url(
     has a DOI and an Unpaywall email is supplied, query Unpaywall.
     """
     if paper.pdf_url:
-        return paper.pdf_url
+        return str(paper.pdf_url)
     if not paper.doi or not unpaywall_email:
         return None
     base = unpaywall_base_url if unpaywall_base_url.endswith("/") else unpaywall_base_url + "/"

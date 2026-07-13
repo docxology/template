@@ -55,7 +55,7 @@ def create_github_release(
         response.raise_for_status()
         release_data = response.json()
         upload_url = release_data["upload_url"].split("{")[0]
-        html_url = release_data["html_url"]
+        html_url = str(release_data["html_url"])
 
         for asset in assets:
             if not asset.exists():

@@ -64,12 +64,12 @@ class InteractiveDashboard:
 
     def set_payload(self, payload: dict[str, Any]) -> "InteractiveDashboard":
         """Set the raw simulation payload (numpy/list/dict tree)."""
-        self.payload = _to_jsonable(payload)  # type: ignore[assignment]
+        self.payload = _to_jsonable(payload)
         return self
 
     def set_hyperparameters(self, hp: dict[str, Any]) -> "InteractiveDashboard":
         """Process set hyperparameters."""
-        self.hyperparameters = _to_jsonable(hp)  # type: ignore[assignment]
+        self.hyperparameters = _to_jsonable(hp)
         return self
 
     def set_meta(self, **kwargs: Any) -> "InteractiveDashboard":
@@ -79,7 +79,7 @@ class InteractiveDashboard:
 
     def add_table(self, name: str, rows: list[dict[str, Any]]) -> "InteractiveDashboard":
         """Add table to the collection."""
-        self.tables[name] = [_to_jsonable(r) for r in rows]  # type: ignore[misc]
+        self.tables[name] = [_to_jsonable(r) for r in rows]
         return self
 
     def add_panel(self, panel: "Panel") -> "InteractiveDashboard":

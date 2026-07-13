@@ -229,7 +229,7 @@ def load_publication_release_context(
         raise MetadataError(f"Could not load config: {config_path}")
 
     metadata = publication_metadata_from_config_dict(
-        config,
+        dict(config),
         config_path,
         abstract_path=abstract_path,
         variables_path=variables_path,
@@ -237,8 +237,8 @@ def load_publication_release_context(
     )
     return PublicationReleaseContext(
         metadata=metadata,
-        deposit_context=deposit_context_from_config(config),
-        prior_doi=_prior_doi_from_config(config),
+        deposit_context=deposit_context_from_config(dict(config)),
+        prior_doi=_prior_doi_from_config(dict(config)),
     )
 
 

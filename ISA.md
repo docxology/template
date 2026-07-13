@@ -226,7 +226,7 @@ Clean export/install/import smoke passed for all 23 public exemplars, the clean
 wheel loaded no Matplotlib/NumPy/Pillow/reporting modules through
 `pipeline.types`, and the 55-test claim-binding regression tier passed. The
 exact CI-scoped infrastructure command passed 8,649 tests with 83.00% coverage;
-Ruff, format, mypy package ratchets, both Bandit scans, pip-audit, no-mocks,
+Ruff, format, the zero-debt mypy gate, both Bandit scans, pip-audit, no-mocks,
 skills/export, confidentiality, generated-artifact, strict drift, documentation,
 and module-size gates passed. The unified blocking health report passed all 19
 checks. ISC-270 alone remains open pending a CI run of this branch; the branch is

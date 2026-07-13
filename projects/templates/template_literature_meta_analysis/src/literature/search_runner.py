@@ -187,12 +187,14 @@ def _arxiv_search_fn(
     rate_limit = 0.0 if fast else DEFAULT_RATE_LIMIT_SECONDS
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_arxiv(
-            query,
-            max_results=max_results,
-            base_url=url,
-            rate_limit_seconds=rate_limit,
-            delay_override=delay,
+        return list(
+            search_arxiv(
+                query,
+                max_results=max_results,
+                base_url=url,
+                rate_limit_seconds=rate_limit,
+                delay_override=delay,
+            )
         )
 
     return _search
@@ -209,11 +211,13 @@ def _semantic_scholar_search_fn(
     delay = _fast_delay() if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_semantic_scholar(
-            query,
-            max_results=max_results,
-            base_url=url,
-            delay_override=delay,
+        return list(
+            search_semantic_scholar(
+                query,
+                max_results=max_results,
+                base_url=url,
+                delay_override=delay,
+            )
         )
 
     return _search
@@ -230,11 +234,13 @@ def _openalex_search_fn(
     delay = _fast_delay() if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_openalex(
-            query,
-            max_results=max_results,
-            base_url=url,
-            delay_override=delay,
+        return list(
+            search_openalex(
+                query,
+                max_results=max_results,
+                base_url=url,
+                delay_override=delay,
+            )
         )
 
     return _search
@@ -251,7 +257,7 @@ def _crossref_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_crossref(query, max_results=max_results, base_url=url, delay_override=delay)
+        return list(search_crossref(query, max_results=max_results, base_url=url, delay_override=delay))
 
     return _search
 
@@ -269,7 +275,7 @@ def _pubmed_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_pubmed(query, max_results=max_results, esearch_url=es, efetch_url=ef, delay_override=delay)
+        return list(search_pubmed(query, max_results=max_results, esearch_url=es, efetch_url=ef, delay_override=delay))
 
     return _search
 
@@ -287,13 +293,15 @@ def _sovietrxiv_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_sovietrxiv(
-            query,
-            max_results=max_results,
-            base_url=url,
-            api_email=api_email,
-            source=source,
-            delay_override=delay,
+        return list(
+            search_sovietrxiv(
+                query,
+                max_results=max_results,
+                base_url=url,
+                api_email=api_email,
+                source=source,
+                delay_override=delay,
+            )
         )
 
     return _search

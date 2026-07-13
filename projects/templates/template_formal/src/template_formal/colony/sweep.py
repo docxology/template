@@ -132,18 +132,7 @@ def run_parameter_sweep(
         outcomes: list[bool] = []
         for trial_index in range(n_per_value):
             seed = seed_base + trial_index
-            # Justification for the ignore below: kwargs is a
-            # dict[str, object] built from a caller-supplied Mapping (its
-            # keys/shapes come from tests and analysis scripts, not from an
-            # untyped external boundary) spread into the strongly-typed
-            # ColonyTrialConfig constructor -- mypy cannot verify a dict
-            # spread matches a dataclass's field types. The runtime
-            # compensating check is ColonyTrialConfig.__post_init__
-            # (ISC-80), which validates decay/sensing_noise_std/
-            # preference_variance unconditionally on every construction,
-            # typed spread or not; param_name itself is separately
-            # validated against the dataclass's real field names above.
-            config = ColonyTrialConfig(seed=seed, **kwargs)  # type: ignore[arg-type]
+            config = ColonyTrialConfig.from_mapping(seed=seed, values=kwargs)
             result = run_colony_trial(config, value_dir)
             outcomes.append(result.converged)
 

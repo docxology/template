@@ -7,7 +7,9 @@ from .github_pages import GitHubPagesAdapter
 from .models import SiteDeployConfig, SiteHosting
 from .netlify import NetlifyAdapter
 
-STATIC_SITE_ADAPTERS: dict[SiteHosting, type] = {
+StaticSiteAdapter = GitHubPagesAdapter | CloudflarePagesAdapter | NetlifyAdapter
+
+STATIC_SITE_ADAPTERS: dict[SiteHosting, type[StaticSiteAdapter]] = {
     SiteHosting.GITHUB_PAGES: GitHubPagesAdapter,
     SiteHosting.CLOUDFLARE_PAGES: CloudflarePagesAdapter,
     SiteHosting.NETLIFY: NetlifyAdapter,

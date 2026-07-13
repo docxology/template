@@ -27,10 +27,21 @@ class _IssuesBySeverity(TypedDict):
     info: list[str]
 
 
+class OutputStructureResult(TypedDict):
+    """Validation details for one generated output tree."""
+
+    valid: bool
+    issues: list[str]
+    missing_files: list[str]
+    suspicious_sizes: list[str]
+    warnings: list[str]
+    directory_structure: dict[str, dict[str, Any]]
+
+
 class ValidationResultDict(TypedDict):
     """Data container for ValidationResultDict."""
 
-    structure: dict[str, Any]
+    structure: OutputStructureResult
     directories: dict[str, _DirectoryDetail]
     file_counts: dict[str, int]
     total_size_mb: float
@@ -338,7 +349,7 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
     return validation_results
 
 
-def validate_output_structure(output_dir: Path) -> dict[str, Any]:
+def validate_output_structure(output_dir: Path) -> OutputStructureResult:
     """Validate complete output directory structure.
 
     Checks:
@@ -354,7 +365,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
     Returns:
         Dictionary with structure validation results
     """
-    result = {
+    result: OutputStructureResult = {
         "valid": True,
         "issues": [],
         "missing_files": [],

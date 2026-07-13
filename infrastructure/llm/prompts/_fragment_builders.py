@@ -71,7 +71,7 @@ def build_format_requirements(loader: PromptFragmentLoader, headers_list: list[s
     """
     format_data = loader.load_fragment("format_requirements.json")
 
-    base_template = format_data.get("base_template", "")
+    base_template = str(format_data.get("base_template", ""))
     if not base_template:
         raise LLMTemplateError(
             "format_requirements.json missing 'base_template' key",
@@ -83,7 +83,7 @@ def build_format_requirements(loader: PromptFragmentLoader, headers_list: list[s
 
     # Handle section requirements if present
     if "section_requirements_template" in format_data:
-        section_template = format_data["section_requirements_template"]
+        section_template = str(format_data["section_requirements_template"])
         result = result.replace("${section_requirements_block}", section_template)
     else:
         result = result.replace("${section_requirements_block}", "")
@@ -99,15 +99,15 @@ def build_content_requirements(loader: PromptFragmentLoader) -> str:
     """
     content_data = loader.load_fragment("content_requirements.json")
 
-    base_template = content_data.get("base_template", "")
+    base_template = str(content_data.get("base_template", ""))
     if not base_template:
         raise LLMTemplateError(
             "content_requirements.json missing 'base_template' key",
             context={"fragment": "content_requirements.json"},
         )
 
-    no_hallucination = content_data.get("no_hallucination", "")
-    cite_sources = content_data.get("cite_sources", "")
+    no_hallucination = str(content_data.get("no_hallucination", ""))
+    cite_sources = str(content_data.get("cite_sources", ""))
 
     result = base_template.replace("${no_hallucination_block}", no_hallucination)
     result = result.replace("${cite_sources_block}", cite_sources)
@@ -174,15 +174,15 @@ def build_token_budget_awareness(
     """
     budget_data = loader.load_fragment("token_budget_awareness.json")
 
-    base_template = budget_data.get("base_template", "")
+    base_template = str(budget_data.get("base_template", ""))
     if not base_template:
         raise LLMTemplateError(
             "token_budget_awareness.json missing 'base_template' key",
             context={"fragment": "token_budget_awareness.json"},
         )
 
-    total_template = budget_data.get("total_tokens_template", "1. Total: ${total_tokens} tokens")
-    section_template = budget_data.get("section_budgets_template", "2. Per section:\n${budgets_list}")
+    total_template = str(budget_data.get("total_tokens_template", "1. Total: ${total_tokens} tokens"))
+    section_template = str(budget_data.get("section_budgets_template", "2. Per section:\n${budgets_list}"))
 
     total_block = total_template.replace("${total_tokens}", str(total_tokens))
 
@@ -212,15 +212,15 @@ def build_validation_hints(
     """
     validation_data = loader.load_fragment("validation_hints.json")
 
-    base_template = validation_data.get("base_template", "")
+    base_template = str(validation_data.get("base_template", ""))
     if not base_template:
         raise LLMTemplateError(
             "validation_hints.json missing 'base_template' key",
             context={"fragment": "validation_hints.json"},
         )
 
-    word_template = validation_data.get("word_count_template", "1. Word count: ${min_words}-${max_words}")
-    elements_template = validation_data.get("required_elements_template", "2. Required:\n${elements_list}")
+    word_template = str(validation_data.get("word_count_template", "1. Word count: ${min_words}-${max_words}"))
+    elements_template = str(validation_data.get("required_elements_template", "2. Required:\n${elements_list}"))
 
     min_words, max_words = word_count_range
     word_block = word_template.replace("${min_words}", str(min_words)).replace("${max_words}", str(max_words))

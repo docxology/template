@@ -78,6 +78,7 @@ def format_multi_project_detailed_report(
         ok_stages = sum(1 for s in stages if getattr(s, "success", False))
         dur = sum(float(getattr(s, "duration", 0.0)) for s in stages)
         project_durations.append((qn, dur))
+        fail_at: str
         if total_stages == 0:
             icon = "❌"
             fail_at = "no stages ran"
@@ -90,7 +91,7 @@ def format_multi_project_detailed_report(
                 (s for s in stages if not getattr(s, "success", False)),
                 None,
             )
-            fail_at = getattr(first_bad, "stage_name", "unknown") if first_bad else "unknown"
+            fail_at = str(getattr(first_bad, "stage_name", "unknown")) if first_bad else "unknown"
 
         out_dir = (repo_root / "projects" / qn / "output") if repo_root is not None else Path()
         size_mb = _dir_size_mb(out_dir) if repo_root is not None else 0.0
@@ -110,9 +111,11 @@ def format_multi_project_detailed_report(
     out.append(sep)
     name_w = max((len(r[1]) for r in rows), default=12)
     stages_w = max((len(r[2]) for r in rows), default=8)
-    for icon, name, stages_str, dur, size, fail_at in rows:
-        suffix = f"   failed at: {fail_at}" if fail_at else ""
-        out.append(f" {icon}  {name:<{name_w}}  {stages_str:<{stages_w}}  {dur:>7}  out: {size:>9}{suffix}")
+    for icon, name, stages_str, duration_text, size_text, failure_stage in rows:
+        suffix = f"   failed at: {failure_stage}" if failure_stage else ""
+        out.append(
+            f" {icon}  {name:<{name_w}}  {stages_str:<{stages_w}}  {duration_text:>7}  out: {size_text:>9}{suffix}"
+        )
 
     out.append("")
     out.append("STAGE TIMING BREAKDOWN")

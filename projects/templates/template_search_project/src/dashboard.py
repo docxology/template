@@ -88,9 +88,11 @@ def compute_payload(
     n_year = sum(1 for p in papers if isinstance(p.get("year"), (int, float)) and p["year"])
 
     keyword_overlap: list[list[int | str]] = []
-    keywords = []
+    keywords: list[str] = []
     if aggregate is not None:
-        keywords = aggregate.get("keywords") or []
+        raw_keywords = aggregate.get("keywords")
+        if isinstance(raw_keywords, list):
+            keywords = [str(keyword) for keyword in raw_keywords]
 
     return {
         "n_total": len(papers),

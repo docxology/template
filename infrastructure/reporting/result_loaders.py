@@ -75,9 +75,10 @@ def load_test_results(
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
         # Extract project results from the nested structure
-        if "project" in data:
-            return data["project"]
-        return data
+        if not isinstance(data, dict):
+            return {}
+        project_data = data.get("project")
+        return project_data if isinstance(project_data, dict) else data
     else:
         logger.warning(f"Test results file not found: {results_file}")
         return {}

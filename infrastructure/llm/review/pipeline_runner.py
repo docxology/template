@@ -90,7 +90,7 @@ def run_llm_review_pipeline(
         # Step 1: Check Ollama availability
         available, model_name = select_and_start_ollama_model()
 
-        if not available:
+        if not available or model_name is None:
             logger.warning("\n⚠️  Skipping LLM review - Ollama not available")
             return 2
 
@@ -160,12 +160,12 @@ def run_llm_review_pipeline(
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
-                    response, metrics = generate_translation(client, text, lang_code, model_name)
+                    translation_response, metrics = generate_translation(client, text, lang_code, model_name)
                     review_name = f"translation_{lang_code}"
                     session_metrics.reviews[review_name] = metrics
-                    if response is not None:
-                        reviews[review_name] = response
-                        save_single_review(review_name, response, output_dir, model_name, metrics)
+                    if translation_response is not None:
+                        reviews[review_name] = translation_response
+                        save_single_review(review_name, translation_response, output_dir, model_name, metrics)
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 return 2

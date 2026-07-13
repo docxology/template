@@ -233,15 +233,17 @@ def validate_prose_quality_command(args: argparse.Namespace) -> None:
         logger.error(f"Path not found: {target}")
         raise SystemExit(1)
 
+    text: str
     if target.is_dir():
         md_files = sorted(p for p in target.rglob("*.md") if p.is_file())
         chunks = [read_markdown(p) for p in md_files]
         text = "\n\n".join(chunk for chunk in chunks if chunk is not None)
     else:
-        text = read_markdown(target)
-        if text is None:
+        loaded_text = read_markdown(target)
+        if loaded_text is None:
             logger.error(f"Could not read: {target}")
             raise SystemExit(1)
+        text = loaded_text
 
     report = analyze_prose(text)
 

@@ -184,4 +184,4 @@ def get_document_topics(
     row_sums[row_sums == 0] = 1.0
     W_normalized = W / row_sums
 
-    return W_normalized
+    return np.asarray(W_normalized)

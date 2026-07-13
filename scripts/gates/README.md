@@ -6,7 +6,7 @@ Pipeline gate scripts for template.
 
 - `gate_cache` — Validates and populates the cache
 - `security_scan` — Runs security scanning (bandit, safety, pip-audit)
-- `mypy_ratchet.py` — Fails on package typing-debt growth or errors in new files.
+- `mypy_ratchet.py` — Compatibility-named strict gate; fails on any typing error.
 - `exemplar_export_smoke.py` — Exports each public exemplar to a clean temporary tree, installs its locked project environment, and imports every top-level `src` target.
 - `pip_audit_ignore_policy.py` — Requires accountable metadata on every dependency-audit exemption.
 - `plugin_export_check` — Verifies plugin exports

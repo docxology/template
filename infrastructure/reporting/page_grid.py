@@ -82,6 +82,7 @@ def create_page_grid(
     draw = ImageDraw.Draw(grid_img)
 
     # Try to load font for page numbers
+    font: ImageFont.FreeTypeFont | ImageFont.ImageFont
     try:
         font = ImageFont.truetype("Helvetica", 10)
     except OSError as e:
@@ -111,6 +112,7 @@ def create_page_grid(
 
     # Add title
     title = f"Manuscript Overview - {num_images} Pages"
+    title_font: ImageFont.FreeTypeFont | ImageFont.ImageFont
     try:
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
     except OSError as e:

@@ -92,30 +92,42 @@ class Invariant:
     ] = "equal"
     description: str = ""
 
+    @staticmethod
+    def _scalar(value: float | Sequence[float] | None) -> float:
+        if value is None or isinstance(value, Sequence):
+            raise TypeError("expected a scalar value")
+        return float(value)
+
+    @staticmethod
+    def _sequence(value: float | Sequence[float] | None) -> Sequence[float]:
+        if value is None or not isinstance(value, Sequence):
+            raise TypeError("expected a sequence value")
+        return value
+
     def evaluate(self) -> tuple[bool, str]:
         """Return ``(passed, witness)``. ``witness`` is a human string."""
         try:
             if self.kind == "equal":
-                a = float(self.actual)  # type: ignore[arg-type]
-                e = float(self.expected)  # type: ignore[arg-type]
+                a = self._scalar(self.actual)
+                e = self._scalar(self.expected)
                 diff = abs(a - e)
                 return diff <= self.tol, (f"|{a:.6g} - {e:.6g}| = {diff:.3e} (tol={self.tol:.1e})")
             if self.kind == "le":
-                a = float(self.actual)  # type: ignore[arg-type]
-                e = float(self.expected)  # type: ignore[arg-type]
+                a = self._scalar(self.actual)
+                e = self._scalar(self.expected)
                 return a <= e + self.tol, f"{a:.6g} <= {e:.6g} + {self.tol:.1e}"
             if self.kind == "ge":
-                a = float(self.actual)  # type: ignore[arg-type]
-                e = float(self.expected)  # type: ignore[arg-type]
+                a = self._scalar(self.actual)
+                e = self._scalar(self.expected)
                 return a >= e - self.tol, f"{a:.6g} >= {e:.6g} - {self.tol:.1e}"
             if self.kind == "in_range":
-                a = float(self.actual)  # type: ignore[arg-type]
-                lo, hi = self.expected  # type: ignore[misc]
+                a = self._scalar(self.actual)
+                lo, hi = self._sequence(self.expected)
                 lo, hi = float(lo), float(hi)
                 ok = (lo - self.tol) <= a <= (hi + self.tol)
                 return ok, f"{lo:.6g} <= {a:.6g} <= {hi:.6g} (tol={self.tol:.1e})"
             if self.kind in ("monotone_increasing", "monotone_decreasing"):
-                seq = list(self.actual)  # type: ignore[arg-type]
+                seq = list(self._sequence(self.actual))
                 worst = 0.0
                 inc = self.kind == "monotone_increasing"
                 for x, y in zip(seq, seq[1:]):
@@ -130,44 +142,40 @@ class Invariant:
                 )
             if self.kind == "finite":
                 if hasattr(self.actual, "__iter__"):
-                    bad = [
-                        i
-                        for i, v in enumerate(self.actual)  # type: ignore[arg-type]
-                        if not math.isfinite(float(v))
-                    ]
+                    bad = [i for i, v in enumerate(self.actual) if not math.isfinite(float(v))]
                     ok = not bad
                     return (
                         ok,
                         (
-                            f"all finite ({len(list(self.actual))} values)"  # type: ignore[arg-type]
+                            f"all finite ({len(list(self.actual))} values)"
                             if ok
                             else f"non-finite at indices {bad[:8]}{'...' if len(bad) > 8 else ''}"
                         ),
                     )
-                a = float(self.actual)  # type: ignore[arg-type]
+                a = self._scalar(self.actual)
                 ok = math.isfinite(a)
                 return ok, f"value = {a!r}"
             if self.kind == "nonneg":
                 if hasattr(self.actual, "__iter__"):
-                    vals = [float(v) for v in self.actual]  # type: ignore[arg-type]
+                    vals = [float(v) for v in self.actual]
                     worst = min(vals) if vals else 0.0
                     ok = worst >= -self.tol
                     return ok, f"min = {worst:.6g} (tol={self.tol:.1e})"
-                a = float(self.actual)  # type: ignore[arg-type]
+                a = self._scalar(self.actual)
                 return a >= -self.tol, f"value = {a:.6g} (tol={self.tol:.1e})"
             if self.kind == "array_close":
-                a = list(self.actual)  # type: ignore[arg-type]
-                e = list(self.expected)  # type: ignore[arg-type]
-                if len(a) != len(e):
-                    return False, f"length mismatch: actual={len(a)}, expected={len(e)}"
+                actual_values = list(self._sequence(self.actual))
+                expected_values = list(self._sequence(self.expected))
+                if len(actual_values) != len(expected_values):
+                    return False, f"length mismatch: actual={len(actual_values)}, expected={len(expected_values)}"
                 worst = 0.0
                 bad_idx = -1
-                for i, (av, ev) in enumerate(zip(a, e)):
+                for i, (av, ev) in enumerate(zip(actual_values, expected_values)):
                     d = abs(float(av) - float(ev))
                     if d > worst:
                         worst, bad_idx = d, i
                 return worst <= self.tol, (
-                    f"max |Δ| = {worst:.3e} at index {bad_idx} (tol={self.tol:.1e}, length {len(a)})"
+                    f"max |Δ| = {worst:.3e} at index {bad_idx} (tol={self.tol:.1e}, length {len(actual_values)})"
                 )
         except Exception as exc:  # pragma: no cover - defensive
             return False, f"evaluation error: {exc!r}"

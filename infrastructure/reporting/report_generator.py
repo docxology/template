@@ -7,7 +7,7 @@ and saves them in JSON and Markdown formats.
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -17,8 +17,8 @@ logger = get_logger(__name__)
 
 
 def generate_test_report(
-    infra_results: dict[str, Any],
-    project_results: dict[str, Any],
+    infra_results: Mapping[str, Any],
+    project_results: Mapping[str, Any],
     repo_root: Path,
     include_coverage_details: bool = True,
 ) -> dict[str, Any]:

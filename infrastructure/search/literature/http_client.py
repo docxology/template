@@ -110,7 +110,7 @@ class UrllibHttpClient:
         req = urllib.request.Request(url, headers=dict(headers or {}))
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310
-                return resp.read()
+                return bytes(resp.read())
         except urllib.error.HTTPError as exc:
             raise BackendError(f"HTTP {exc.code} fetching {url}") from exc
         except urllib.error.URLError as exc:

@@ -6,6 +6,7 @@ Each QR builder targets <=100 characters for reliable phone scanning.
 Part of the infrastructure steganography layer (Layer 1).
 """
 
+from collections.abc import Sequence
 from datetime import datetime, timezone
 
 from infrastructure.core.logging.utils import get_logger
@@ -120,7 +121,7 @@ def build_citation_qr_text(
 def build_mailto_qr_text(
     title: str = "",
     authors: list[str] | None = None,
-    author_emails: list[str | None] = None,
+    author_emails: Sequence[str | None] | None = None,
     **_kwargs,
 ) -> str:
     """Build a proper mailto: URI that opens an email draft.

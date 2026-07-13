@@ -52,7 +52,7 @@ from infrastructure.validation.output.claim_verification import (
     claim_verification_enabled as _is_claim_verification_enabled,
     verify_project_claims as _verify_project_claims,
 )
-from infrastructure.validation.output.validator import collect_detailed_validation_results
+from infrastructure.validation.output.validator import ValidationResultDict, collect_detailed_validation_results
 
 logger = get_logger(__name__)
 
@@ -160,7 +160,9 @@ def validate_manuscript_output_markdown(project_name: str = "project", *, repo_r
     return _validate_markdown(_project_root(project_name, repo_root=repo_root), repo_root, project_name)
 
 
-def verify_outputs_exist(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> tuple[bool, dict[str, Any]]:
+def verify_outputs_exist(
+    project_name: str = "project", *, repo_root: Path = _REPO_ROOT
+) -> tuple[bool, ValidationResultDict]:
     """Verify all expected output files exist.
 
     Args:
@@ -183,8 +185,10 @@ def verify_outputs_exist(project_name: str = "project", *, repo_root: Path = _RE
                 logger.info(f"  • {dir_name}/: {dir_info['file_count']} files ({dir_info['size_mb']} MB)")
     else:
         logger.warning("Output structure validation has issues:")
-        for severity in ["critical", "warning"]:
-            issues = detailed_validation["issues_by_severity"].get(severity, [])
+        for severity, issues in (
+            ("critical", detailed_validation["issues_by_severity"]["critical"]),
+            ("warning", detailed_validation["issues_by_severity"]["warning"]),
+        ):
             if issues:
                 logger.warning(f"  {severity.upper()} issues:")
                 for issue in issues[:3]:
@@ -224,8 +228,8 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
     issues = [*error_issues, *warning_issues]
 
     if issues:
-        for issue in issues:
-            logger.warning(issue)
+        for issue_text in issues:
+            logger.warning(issue_text)
         return not error_issues, issues
 
     log_success("Evidence registry validation passed", logger)
@@ -265,7 +269,7 @@ def generate_validation_report(
 
     output_dir = _project_output_dir(project_name, repo_root=repo_root) / "reports"
 
-    validation_results = {
+    validation_results: dict[str, Any] = {
         "timestamp": resolve_build_timestamp(repo_root=repo_root),
         "checks": {name: result for name, result in check_results},
         "figure_issues": figure_issues,
@@ -279,7 +283,7 @@ def generate_validation_report(
         },
     }
 
-    recommendations = []
+    recommendations: list[dict[str, str]] = []
     for check_name, result in check_results:
         if not result:
             if check_name == "PDF validation":
@@ -476,6 +480,7 @@ def execute_validation_pipeline(
         results.append(("Figure registry", False))
         figure_issues = []
 
+    output_statistics: dict[str, Any]
     try:
         evidence_result, evidence_issues = validate_evidence_registry(project_root, manuscript_dir)
         results.append(("Evidence registry", evidence_result))
@@ -578,8 +583,8 @@ def execute_validation_pipeline(
             directories = detailed_validation.get("directories", {})
             for dir_name, dir_info in directories.items():
                 if dir_info.get("exists") and dir_info.get("file_count", 0) > 0:
-                    size_mb = dir_info.get("size_mb", "0.00")
-                    logger.info(f"  📁 {dir_name}/: {dir_info['file_count']} files ({size_mb} MB)")
+                    display_size_mb = dir_info.get("size_mb", "0.00")
+                    logger.info(f"  📁 {dir_name}/: {dir_info['file_count']} files ({display_size_mb} MB)")
         else:
             logger.warning("")
             logger.warning("Output Structure Issues:")

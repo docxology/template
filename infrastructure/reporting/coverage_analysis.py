@@ -5,7 +5,8 @@ suggestions, and failure classification with debug recommendations.
 """
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
+
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -25,7 +26,7 @@ def format_coverage_status(coverage_pct: float, threshold: float) -> str:
 
 
 def analyze_coverage_gaps(
-    results: dict[str, Any], threshold: float, test_type: str, report: dict[str, Any]
+    results: Mapping[str, Any], threshold: float, test_type: str, report: dict[str, Any]
 ) -> list[str]:
     """Analyze coverage gaps and return actionable improvement suggestions."""
     suggestions = []

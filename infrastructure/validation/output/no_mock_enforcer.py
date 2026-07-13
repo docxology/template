@@ -384,7 +384,7 @@ def _monkeypatch_aliases(tree: ast.AST) -> set[str]:
         elif isinstance(node, ast.Assign) and _is_monkeypatch_constructor(node.value):
             for target in node.targets:
                 names.update(_assigned_names(target))
-        elif isinstance(node, ast.AnnAssign) and _is_monkeypatch_constructor(node.value):
+        elif isinstance(node, ast.AnnAssign) and node.value is not None and _is_monkeypatch_constructor(node.value):
             names.update(_assigned_names(node.target))
 
     # ``with monkeypatch.context() as scoped:`` introduces another receiver.

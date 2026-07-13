@@ -102,9 +102,11 @@ def write_manuscript_staleness_report(project_root: Path) -> Path:
     variables["manuscript_staleness_all_fresh"] = True
     _write_json(root / "output" / "data" / "manuscript_variables.json", variables)
     write_resolved_manuscript(root, variables)
-    return _write_json(
-        root / "output" / "reports" / "manuscript_staleness_report.json",
-        build_manuscript_staleness_report(root),
+    return Path(
+        _write_json(
+            root / "output" / "reports" / "manuscript_staleness_report.json",
+            build_manuscript_staleness_report(root),
+        )
     )
 
 

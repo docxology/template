@@ -293,9 +293,9 @@ def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> l
                                 module_name = alias.name
                                 issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
                         elif isinstance(node, ast.ImportFrom):
-                            module_name: str | None = node.module
-                            if module_name is not None:
-                                issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
+                            imported_module: str | None = node.module
+                            if imported_module is not None:
+                                issues.extend(_validate_import_path(imported_module, block, file_path, repo_root))
             except SyntaxError as e:
                 # Skip malformed Python code
                 logger.debug(f"Syntax error extracting imports from {file_path.name}: {e}")

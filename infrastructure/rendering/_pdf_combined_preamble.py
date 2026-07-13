@@ -35,6 +35,29 @@ def inject_latex_preamble(
     else:
         logger.debug(f"No preamble file found at {preamble_file}")
 
+    # Surface dropped custom declarations before compiling.  Missing theorem or
+    # listings declarations otherwise become opaque LaTeX errors later.
+    required_declarations = (
+        r"\usepackage{listings}",
+        r"\newtheorem{remark}",
+        r"\newtheorem{example}",
+    )
+    missing_declarations = [declaration for declaration in required_declarations if declaration not in preamble_content]
+    if missing_declarations:
+        logger.warning(
+            "Preamble is missing declarations required by manuscript content: %s",
+            ", ".join(missing_declarations),
+        )
+        listings_declaration = (
+            "\\usepackage{listings}\n\\lstset{basicstyle=\\ttfamily\\small,breaklines=true,columns=fullflexible}"
+        )
+        declarations = {
+            r"\usepackage{listings}": listings_declaration,
+            r"\newtheorem{remark}": r"\newtheorem{remark}[theorem]{Remark}",
+            r"\newtheorem{example}": r"\newtheorem{example}[theorem]{Example}",
+        }
+        preamble_content = "\n".join([preamble_content] + [declarations[item] for item in missing_declarations])
+
     title_page_preamble = generate_title_page_preamble(manuscript_dir)
     title_page_body = generate_title_page_body(manuscript_dir)
 

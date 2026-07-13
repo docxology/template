@@ -46,7 +46,7 @@ def plot_citation_network(
     # If graph is too large, take highest in-degree subgraph
     if graph.number_of_nodes() > max_nodes:
         in_degrees = dict(graph.in_degree())
-        top_nodes = sorted(in_degrees, key=in_degrees.get, reverse=True)[:max_nodes]
+        top_nodes = sorted(in_degrees, key=lambda node: in_degrees[node], reverse=True)[:max_nodes]
         subgraph = graph.subgraph(top_nodes).copy()
     else:
         subgraph = graph
@@ -101,7 +101,7 @@ def plot_citation_network(
     )
 
     # Label top-5 highest in-degree nodes
-    top5 = sorted(in_degrees, key=in_degrees.get, reverse=True)[:5]
+    top5 = sorted(in_degrees, key=lambda node: in_degrees[node], reverse=True)[:5]
     for node in top5:
         if node in pos:
             x, y = pos[node]
@@ -172,7 +172,7 @@ def plot_degree_distribution(
         bins = np.logspace(0, np.log10(max_degree + 1), num=25)
         ax.hist(
             in_arr[in_arr > 0],
-            bins=bins,
+            bins=bins.tolist(),
             color=VIZ_CONFIG["palette"][0],
             edgecolor="white",
             alpha=0.8,

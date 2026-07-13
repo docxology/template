@@ -93,13 +93,13 @@ def reserve_zenodo_doi_pair(
         sandbox=sandbox,
         base_url=zenodo_base_url,
     )
-    version_doi = deposition.reserved_doi
-    concept_doi = deposition.concept_doi or existing_doi
-    if not version_doi:
+    reserved_version_doi = deposition.reserved_doi
+    reserved_concept_doi = deposition.concept_doi or existing_doi
+    if not reserved_version_doi:
         raise PublishingError("Zenodo draft did not return metadata.prereserve_doi.doi")
-    if not concept_doi:
+    if not reserved_concept_doi:
         raise PublishingError("Zenodo draft did not return concept DOI information (conceptdoi or conceptrecid)")
-    return concept_doi, version_doi, deposition
+    return reserved_concept_doi, reserved_version_doi, deposition
 
 
 def write_reserved_dois_to_config(

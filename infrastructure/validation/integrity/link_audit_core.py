@@ -148,11 +148,11 @@ def run_link_audit(repo_root: Path) -> int:
         all_headings[file_key] = extract_headings(content)
 
     for md_file in md_files:
-        content = contents.get(md_file)
-        if content is None:
+        cached_content = contents.get(md_file)
+        if cached_content is None:
             continue
         try:
-            internal_links, _external_links, file_refs = extract_links(content, md_file)
+            internal_links, _external_links, file_refs = extract_links(cached_content, md_file)
             file_key = file_keys[md_file]
 
             for link in internal_links:

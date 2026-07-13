@@ -274,7 +274,7 @@ def write_metadata_for_config_path(
     if config is None:
         raise ValueError(f"Could not load config: {config_path}")
     return write_metadata_files(
-        config,
+        dict(config),
         out_dir,
         repo_url=repo_url,
         released_date=released_date,

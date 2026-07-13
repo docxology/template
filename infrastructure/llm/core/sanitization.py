@@ -31,7 +31,7 @@ class InputSanitizer:
     def dangerous_patterns(self) -> list[str]:
         """Lazy-load dangerous patterns from security validator."""
         if self._dangerous_patterns is None:
-            self._dangerous_patterns = get_security_validator().dangerous_patterns
+            self._dangerous_patterns = list(get_security_validator().dangerous_patterns)
         return self._dangerous_patterns
 
     def sanitize_prompt(self, prompt: str) -> str:

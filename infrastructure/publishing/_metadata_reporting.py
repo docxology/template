@@ -63,7 +63,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> dict[str, Any
     Returns:
         Dictionary with academic profile data
     """
-    profile_data = {
+    profile_data: dict[str, Any] = {
         "title": metadata.title,
         "authors": metadata.authors,
         "abstract": metadata.abstract,

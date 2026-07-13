@@ -81,11 +81,12 @@ def generate_manuscript_overview(
     logger.info(f"Saved PNG overview: {png_path}")
 
     # Save PDF
-    pdf_output_path = output_dir / f"manuscript_overview_{project_name}.pdf"
+    candidate_pdf_path = output_dir / f"manuscript_overview_{project_name}.pdf"
+    pdf_output_path: Path | None = candidate_pdf_path
     try:
         # Convert PIL image to PDF using reportlab
-        _save_image_as_pdf(grid_image, pdf_output_path, project_name)
-        logger.info(f"Saved PDF overview: {pdf_output_path}")
+        _save_image_as_pdf(grid_image, candidate_pdf_path, project_name)
+        logger.info(f"Saved PDF overview: {candidate_pdf_path}")
     except Exception as e:  # noqa: BLE001 — PDF output is optional; PNG is the primary deliverable
         logger.warning(f"Failed to save PDF overview: {e}")
         # Don't fail the whole operation if PDF save fails

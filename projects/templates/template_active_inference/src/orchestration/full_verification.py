@@ -80,7 +80,7 @@ def _run(
     label: str,
     *,
     env: dict[str, str] | None = None,
-    process_runner: Callable[..., object] = subprocess.run,
+    process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
     clock: Callable[[], float] = time.perf_counter,
 ) -> None:
     print(f"\n==> {label}")

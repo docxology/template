@@ -164,6 +164,7 @@ def build_plan(
     output: Path | None = None,
 ) -> ConnectorSearchPlan:
     """Resolve and validate all inputs needed by Stage 08."""
+    requests: tuple[ConnectorSearchRequest, ...]
     project_dir = resolve_project_root(repo_root, project)
     if not project_dir.is_dir():
         raise ConnectorSearchNotConfigured(f"project directory not found: {project_dir}")

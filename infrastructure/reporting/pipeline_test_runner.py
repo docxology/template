@@ -10,6 +10,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
+from typing import cast
 
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
@@ -152,11 +153,11 @@ def run_infrastructure_tests(
         logger.info("Infrastructure test suite completed in %.1fs", duration)
         if exit_code == 0:
             log_success("Infrastructure tests passed", logger)
-        return exit_code, test_results
+        return exit_code, cast(TestSuiteResults, test_results)
     except (OSError, RuntimeError, ValueError) as exc:
         duration = time.time() - start_time
         logger.error("Failed to run infrastructure tests after %.1fs: %s", duration, exc, exc_info=True)
-        return 1, {}
+        return 1, cast(TestSuiteResults, {})
 
 
 def run_project_tests(
@@ -311,11 +312,11 @@ def _run_project_tests_impl(
         logger.info("Project test suite completed in %.1fs", duration)
         if exit_code == 0:
             log_success("Project tests passed", logger)
-        return exit_code, test_results
+        return exit_code, cast(TestSuiteResults, test_results)
     except (OSError, RuntimeError, ValueError) as exc:
         duration = time.time() - start_time
         logger.error("Failed to run project tests after %.1fs: %s", duration, exc, exc_info=True)
-        return 1, {}
+        return 1, cast(TestSuiteResults, {})
 
 
 def execute_test_pipeline(
@@ -337,8 +338,10 @@ def execute_test_pipeline(
     pytest-xdist (``"auto"`` or an integer worker count); ``None`` falls back
     to ``PYTEST_XDIST_WORKERS`` then serial.
     """
-    infra_exit, infra_results = 0, {}
-    project_exit, project_results = 0, {}
+    infra_exit = 0
+    infra_results = cast(TestSuiteResults, {})
+    project_exit = 0
+    project_results = cast(TestSuiteResults, {})
     total_phases = int(run_infra) + int(run_project)
 
     if run_infra:

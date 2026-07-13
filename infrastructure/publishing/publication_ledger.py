@@ -57,7 +57,8 @@ def write_publication_ledger(ledger_path: Path, ledger: dict[str, Any]) -> Path:
 def append_release_entry(ledger_path: Path, receipt: dict[str, Any]) -> dict[str, Any]:
     """Append a release receipt when ``(tag, pdf_sha256)`` is new."""
     if ledger_path.is_file():
-        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+        loaded = json.loads(ledger_path.read_text(encoding="utf-8"))
+        ledger = loaded if isinstance(loaded, dict) else _empty_ledger()
     else:
         ledger = _empty_ledger()
 
@@ -89,7 +90,8 @@ def load_publication_ledger(
     """Load the ledger file, backfilling from ``RELEASE_RECEIPT.json`` when empty."""
     ledger_path = ledger_path_for_project(project_root)
     if ledger_path.is_file():
-        payload = json.loads(ledger_path.read_text(encoding="utf-8"))
+        loaded = json.loads(ledger_path.read_text(encoding="utf-8"))
+        payload: dict[str, Any] = loaded if isinstance(loaded, dict) else _empty_ledger()
         if payload.get("releases"):
             return payload
 

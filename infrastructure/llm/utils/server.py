@@ -19,18 +19,9 @@ import time
 from collections.abc import Callable
 from subprocess import CompletedProcess
 
-try:
-    import requests
-    from requests.exceptions import ConnectionError as RequestsConnectionError
-    from requests.exceptions import RequestException, Timeout
-
-    _requests_available = True
-except ImportError:
-    requests = None  # type: ignore[assignment]
-    RequestsConnectionError = OSError  # type: ignore[assignment,misc]
-    RequestException = OSError  # type: ignore[assignment]
-    Timeout = OSError  # type: ignore[assignment]
-    _requests_available = False
+import requests
+from requests.exceptions import ConnectionError as RequestsConnectionError
+from requests.exceptions import RequestException, Timeout
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.utils.models import get_model_names
@@ -40,9 +31,6 @@ logger = get_logger(__name__)
 
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
     """Check if Ollama server is running and responding."""
-    if not _requests_available:
-        logger.debug("requests not installed; cannot check Ollama server status")
-        return False
     try:
         logger.debug(f"Checking Ollama server at {base_url}...")
         response = requests.get(f"{base_url}/api/tags", timeout=timeout)

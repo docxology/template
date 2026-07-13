@@ -29,6 +29,17 @@ def _root_output_dir(project_root: Path) -> Path:
     return root.parents[2] / "output" / "templates" / root.name
 
 
+def _portable_repo_path(path: Path, project_root: Path) -> str:
+    """Represent repository-local paths without embedding a developer home directory."""
+    for parent in project_root.resolve().parents:
+        if (parent / "run.sh").is_file() and (parent / "projects").is_dir():
+            try:
+                return f"<repo-root>/{path.resolve().relative_to(parent).as_posix()}"
+            except ValueError:
+                break
+    return path.as_posix()
+
+
 def _copied_parity(project_root: Path, rel_paths: list[str]) -> dict[str, Any]:
     root = project_root.resolve()
     copied_root = _root_output_dir(root)
@@ -67,7 +78,7 @@ def _copied_parity(project_root: Path, rel_paths: list[str]) -> dict[str, Any]:
             }
         )
     return {
-        "copied_root": copied_root.as_posix(),
+        "copied_root": _portable_repo_path(copied_root, root),
         "copied_root_exists": copied_root.is_dir(),
         "rows": rows,
         "row_count": len(rows),

@@ -58,10 +58,14 @@ def compute_variables(
     aggregate_payload: Mapping[str, object] | None = None,
 ) -> ManuscriptVariables:
     """Pure computation: no I/O. Tests construct the inputs directly."""
-    papers = list(search_result_payload.get("papers") or [])
-    per_source = dict(search_result_payload.get("per_source_counts") or {})
-    errors = dict(search_result_payload.get("errors") or {})
-    query = search_result_payload.get("query") or {}
+    raw_papers = search_result_payload.get("papers")
+    papers = list(raw_papers) if isinstance(raw_papers, list) else []
+    raw_per_source = search_result_payload.get("per_source_counts")
+    per_source = dict(raw_per_source) if isinstance(raw_per_source, Mapping) else {}
+    raw_errors = search_result_payload.get("errors")
+    errors = dict(raw_errors) if isinstance(raw_errors, Mapping) else {}
+    raw_query = search_result_payload.get("query")
+    query = raw_query if isinstance(raw_query, Mapping) else {}
 
     if deep_search is not None:
         dmax = deep_search.max_results_per_keyword
@@ -104,9 +108,12 @@ def compute_variables(
     )
 
 
-def load_search_result_payload(path: Path | str) -> dict:
+def load_search_result_payload(path: Path | str) -> dict[str, object]:
     """Read the diagnostic ``output/search/results.json`` produced by the script."""
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError(f"search result payload must be an object: {path}")
+    return raw
 
 
 def load_aggregate_payload(path: Path | str) -> dict[str, object] | None:

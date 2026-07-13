@@ -77,12 +77,12 @@ def transmission_bookends_enabled(config_path: Path) -> bool:
     config = load_config(config_path)
     if not config:
         return False
-    return _bookend_settings(config).enabled
+    return _bookend_settings(dict(config)).enabled
 
 
 def _load_raw_config(config_path: Path) -> dict[str, Any]:
     config = load_config(config_path)
-    return config if isinstance(config, dict) else {}
+    return dict(config) if isinstance(config, dict) else {}
 
 
 def _latest_release(ledger: dict[str, Any]) -> dict[str, Any] | None:

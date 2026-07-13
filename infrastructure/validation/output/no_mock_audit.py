@@ -327,12 +327,12 @@ def main(
                 )
         return 1 if ratchet_exceeded else report.exit_code
 
-    report = collect_lexical_audit(root)
+    lexical_report = collect_lexical_audit(root)
     if args.json:
-        print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+        print(json.dumps(lexical_report.to_dict(), indent=2, sort_keys=True))
     else:
-        _print_lexical_report(report)
-    return report.exit_code
+        _print_lexical_report(lexical_report)
+    return lexical_report.exit_code
 
 
 __all__ = [

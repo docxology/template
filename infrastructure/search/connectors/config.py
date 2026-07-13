@@ -67,7 +67,7 @@ def load_connector_search_config(project_dir: Path | str) -> ConnectorSearchConf
         return ConnectorSearchConfig()
 
     try:
-        import yaml  # type: ignore[import]
+        import yaml
 
         payload: dict[str, Any] = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     except ImportError:

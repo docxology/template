@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "93.55 %",
-      "source_hash": "0db7f79940905efd97436dbd1224a218ae03abe586819f6e2b49b9a42c6d06d1"
+      "source_hash": "ef21eaccc5be7e790bad6b41b8fe1d985dce51f23fff2bab85aed4211f0407c4"
     },
     "template_autopoiesis": {
       "coverage_pct": "96.41 %",
@@ -31,7 +31,7 @@
     },
     "template_formal": {
       "coverage_pct": "96.03 %",
-      "source_hash": "542e857bf8a0891f320657979d5a8f8787972d5fc80c0d1f6ede536dcd63b607"
+      "source_hash": "0570007ed8fe4c59938457f9eb7c65ad2c7beaa7a4317d10a39537ec8d6e29a9"
     },
     "template_gold_refinement": {
       "coverage_pct": "97.55 %",
@@ -39,7 +39,7 @@
     },
     "template_literature_meta_analysis": {
       "coverage_pct": "96.77 %",
-      "source_hash": "cb1b1b0e02fc77b8afd81806e52714d41d87b96219bc1b52dd85af0fa15ce7f6"
+      "source_hash": "6fd294ca8857aec7b1d8cc859927fff99ec9b0480ae0a49b3fa489c08782c370"
     },
     "template_madlib": {
       "coverage_pct": "93.96 %",
@@ -59,7 +59,7 @@
     },
     "template_pools_rules_tools": {
       "coverage_pct": "95.52 %",
-      "source_hash": "8d040e2d322d295efa547c1b4d7566b739327862d2a32ffc1fec4734a3ed5813"
+      "source_hash": "642aa52781dbd624efa7febbbaaa9ea62d5beb39e347134b238da6e8f35ba8ac"
     },
     "template_prose_project": {
       "coverage_pct": "100.00 %",
@@ -67,7 +67,7 @@
     },
     "template_redacted_report": {
       "coverage_pct": "98.83 %",
-      "source_hash": "8e1f8c3e81adb5fec1badc97db3ed1da662987b46a20446ba3d82ce4c15a8525"
+      "source_hash": "854a0143d64bf3d82cdaf2610ad4f49bbdf87669e161c952389fb750c86cea2e"
     },
     "template_registered_report": {
       "coverage_pct": "96.37 %",
@@ -75,7 +75,7 @@
     },
     "template_search_project": {
       "coverage_pct": "95.13 %",
-      "source_hash": "4a8d916421ebb00a8ef587c891631c8855a6d2fc13298f6a14b45db1356e1231"
+      "source_hash": "5e6ad42f2f8f7a79022204ea30c933ae7bd7c9199b065df4fe35b5761090d87b"
     },
     "template_sia": {
       "coverage_pct": "97.16 %",
@@ -95,5 +95,5 @@
     }
   },
   "schema_version": 1,
-  "source_commit": "3799f1441b0d81a8417431d50281ce82c4e96051"
+  "source_commit": "74fb209bf7661850d3c3c3cd67ed1bb899e266e2"
 }
