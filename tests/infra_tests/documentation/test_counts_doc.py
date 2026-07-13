@@ -20,6 +20,7 @@ from infrastructure.documentation.counts_doc import (
     DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
+    _exemplar_collected_count,
     exemplar_source_hash,
     infrastructure_packages,
     render_counts_doc,
@@ -171,3 +172,8 @@ def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
         validate_coverage_provenance(tmp_path)
 
     assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 2
+
+
+def test_exemplar_collection_uses_declared_dev_dependencies() -> None:
+    count = _exemplar_collected_count(_repo_root(), "template_literature_meta_analysis")
+    assert count > 0

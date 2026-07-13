@@ -36,6 +36,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from infrastructure.core.project_pyproject import project_declares_dev_extra
 from infrastructure.project.public_scope import public_project_names
 
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
@@ -133,24 +134,23 @@ def _exemplar_collected_count(repo_root: Path, name: str) -> int:
     environment["PYTHONPATH"] = (
         f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
     )
+    command = [uv, "run", "--project", str(project_root)]
+    if project_declares_dev_extra(project_root):
+        command.extend(["--extra", "dev"])
+    command.extend(["pytest", "tests/", "--collect-only", "-q", "--no-cov"])
     proc = subprocess.run(  # noqa: S603 - resolved uv executable, fixed arguments
-        [
-            uv,
-            "run",
-            "--project",
-            str(project_root),
-            "pytest",
-            "tests/",
-            "--collect-only",
-            "-q",
-            "--no-cov",
-        ],
+        command,
         cwd=project_root,
         env=environment,
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
     )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"could not collect exemplar {name} (exit {proc.returncode}):\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
     match = re.search(r"(?P<count>\d+) tests? collected", proc.stdout)
     if not match:
         raise RuntimeError(f"could not parse collected count for {name}:\n{proc.stdout}")
