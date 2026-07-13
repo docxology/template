@@ -7,7 +7,6 @@ Tests CLI functionality using real data (No Mocks Policy):
 
 import argparse
 import logging
-import sys
 
 import pytest
 
@@ -24,12 +23,10 @@ from infrastructure.llm.cli.main import (
 class TestCLIArgumentParsing:
     """Test CLI argument parsing (pure logic)."""
 
-    def test_main_no_args_exits(self, capsys, monkeypatch):
+    def test_main_no_args_exits(self, capsys):
         """Test main with no arguments prints help and exits."""
-        monkeypatch.setattr(sys, "argv", ["cli"])
-
         with pytest.raises(SystemExit) as exc_info:
-            main()
+            main([])
 
         assert exc_info.value.code == 1
 

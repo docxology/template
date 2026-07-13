@@ -5,8 +5,6 @@ This module tests the link validation utilities for documentation.
 All tests use real data and computations - no mocks allowed.
 """
 
-import sys
-
 import pytest
 
 from infrastructure.validation.integrity.link_validator import LinkValidator, main
@@ -615,23 +613,20 @@ class TestMainFunctionFromLinkValidator:
     def test_main_clean_repo(self, tmp_path, monkeypatch):
         (tmp_path / "test.md").write_text("[ext](https://example.com)")
         monkeypatch.chdir(tmp_path)
-        monkeypatch.setattr(sys, "argv", ["link_validator"])
-        result = main()
+        result = main([])
         assert result == 0
 
     def test_main_broken_links(self, tmp_path, monkeypatch):
         (tmp_path / "test.md").write_text("[broken](missing.md)")
         monkeypatch.chdir(tmp_path)
-        monkeypatch.setattr(sys, "argv", ["link_validator"])
-        result = main()
+        result = main([])
         assert result == 1
 
     def test_main_with_output_file(self, tmp_path, monkeypatch):
         (tmp_path / "test.md").write_text("[ext](https://example.com)")
         output_file = tmp_path / "report.md"
         monkeypatch.chdir(tmp_path)
-        monkeypatch.setattr(sys, "argv", ["link_validator", "--output", str(output_file)])
-        result = main()
+        result = main(["--output", str(output_file)])
         assert result == 0
         assert output_file.exists()
         content = output_file.read_text()

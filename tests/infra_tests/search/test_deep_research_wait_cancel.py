@@ -3,8 +3,7 @@
 No Mocks Policy: instead of patching SDK internals we inject a *real* recording
 provider object with a scripted poll/cancel sequence, wired in through a real
 DeepResearchClient subclass that overrides the single `_provider_for` seam.
-Wait loops are kept fast by injecting `sleep`-free intervals via monkeypatch on
-the module `sleep` symbol (monkeypatch is permitted) and by using a
+Wait loops are kept fast by injecting a no-op sleeper and by using a
 `max_wait_seconds=0` budget for the expiry paths.
 """
 
@@ -12,7 +11,6 @@ from __future__ import annotations
 
 import pytest
 
-import infrastructure.search.deep_research.client as client_mod
 from infrastructure.search.deep_research.cli import build_parser
 from infrastructure.search.deep_research.client import (
     DeepResearchClient,
@@ -69,7 +67,7 @@ class InjectedClient(DeepResearchClient):
 
 def _client(providers: dict[str, RecordingProvider]) -> InjectedClient:
     config = DeepResearchConfig(openai_api_key="sk-openai", gemini_api_key="gm-key")
-    return InjectedClient(config).with_providers(providers)
+    return InjectedClient(config, sleeper=lambda _seconds: None).with_providers(providers)
 
 
 def _handle(provider: str, job_id: str = "job_1") -> DeepResearchJobHandle:
@@ -79,13 +77,6 @@ def _handle(provider: str, job_id: str = "job_1") -> DeepResearchJobHandle:
         status="queued",
         request=DeepResearchRequest(query="q", provider=provider),
     )
-
-
-@pytest.fixture(autouse=True)
-def _no_sleep(monkeypatch):
-    # Keep wait loops and retry backoff instantaneous; monkeypatch is permitted.
-    monkeypatch.setattr(client_mod, "sleep", lambda _seconds: None)
-    monkeypatch.setattr("infrastructure.search.deep_research.retry.sleep", lambda _seconds: None)
 
 
 def test_wait_returns_when_terminal():
@@ -158,7 +149,7 @@ def test_cancel_invokes_provider_cancel():
     assert provider.cancel_calls == ["resp_abc"]
 
 
-def test_cancel_retries_transient_then_succeeds(monkeypatch):
+def test_cancel_retries_transient_then_succeeds():
     class FlakyCancel(RecordingProvider):
         def __init__(self):
             super().__init__("openai", ["in_progress"])
@@ -173,8 +164,6 @@ def test_cancel_retries_transient_then_succeeds(monkeypatch):
 
     provider = FlakyCancel()
     client = _client({"openai": provider})
-    # retry helper sleeps via its own module; keep it instant.
-    monkeypatch.setattr("infrastructure.search.deep_research.retry.sleep", lambda _s: None)
     result = client.cancel(_handle("openai", job_id="resp_abc"))
     assert result.status == "cancelled"
     assert provider.cancel_calls == ["resp_abc", "resp_abc"]

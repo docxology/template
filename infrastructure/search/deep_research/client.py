@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from pathlib import Path
 from time import monotonic, sleep
+from collections.abc import Callable
 from typing import Literal
 
 from infrastructure.search.deep_research.artifacts import (
@@ -44,6 +45,7 @@ class DeepResearchClient:
     """Dispatches deep research jobs to the best available provider."""
 
     config: DeepResearchConfig
+    sleeper: Callable[[float], None] = sleep
 
     @classmethod
     def from_env(cls) -> "DeepResearchClient":
@@ -127,6 +129,7 @@ class DeepResearchClient:
         return submit_with_transient_retry(
             lambda: provider.poll(handle.job_id),
             provider=handle.provider,
+            sleeper=self.sleeper,
         )
 
     def cancel(self, handle: DeepResearchJobHandle) -> DeepResearchResult:
@@ -141,6 +144,7 @@ class DeepResearchClient:
         return submit_with_transient_retry(
             lambda: provider.cancel(handle.job_id),
             provider=handle.provider,
+            sleeper=self.sleeper,
         )
 
     def submit_many(
@@ -192,7 +196,7 @@ class DeepResearchClient:
                 return result
             if max_wait_seconds is not None and (monotonic() - start) >= max_wait_seconds:
                 raise DeepResearchWaitTimeout({handle.provider: handle}, monotonic() - start)
-            sleep(poll_interval_seconds)
+            self.sleeper(poll_interval_seconds)
 
     def wait_many(
         self,
@@ -222,7 +226,7 @@ class DeepResearchClient:
             if pending:
                 if max_wait_seconds is not None and (monotonic() - start) >= max_wait_seconds:
                     raise DeepResearchWaitTimeout(pending, monotonic() - start)
-                sleep(poll_interval_seconds)
+                self.sleeper(poll_interval_seconds)
         return results
 
     def submit_and_wait_many(

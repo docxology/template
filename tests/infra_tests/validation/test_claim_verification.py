@@ -77,7 +77,7 @@ def test_fact_check_verifier_scores_supported_and_insufficient() -> None:
     assert insufficient.verdict == "insufficient"
 
 
-def test_verify_project_claims_extracts_candidates_and_summarizes(tmp_path: Path, monkeypatch) -> None:
+def test_verify_project_claims_extracts_candidates_and_summarizes(tmp_path: Path) -> None:
     project_root = tmp_path / "project"
     manuscript_dir = project_root / "manuscript"
     manuscript_dir.mkdir(parents=True)
@@ -89,15 +89,13 @@ def test_verify_project_claims_extracts_candidates_and_summarizes(tmp_path: Path
         "- We observed 12 participants in the cohort.\n\nThe method reduced error by 15%.",
         encoding="utf-8",
     )
-    monkeypatch.setattr(mod.FactCheckVerifier, "from_env", classmethod(lambda cls, **kwargs: _FakeVerifier()))
-
-    report = mod.verify_project_claims(project_root)
+    report = mod.verify_project_claims(project_root, verifier_factory=lambda **kwargs: _FakeVerifier())
 
     assert len(report.claims) == 2
     assert report.summary()["supported"] == 2
 
 
-def test_claim_verification_reads_docs_manuscript(tmp_path: Path, monkeypatch) -> None:
+def test_claim_verification_reads_docs_manuscript(tmp_path: Path) -> None:
     project_root = tmp_path / "project"
     manuscript_dir = project_root / "docs" / "manuscript"
     manuscript_dir.mkdir(parents=True)
@@ -109,8 +107,6 @@ def test_claim_verification_reads_docs_manuscript(tmp_path: Path, monkeypatch) -
         "We observed 12 participants in the cohort.\n",
         encoding="utf-8",
     )
-    monkeypatch.setattr(mod.FactCheckVerifier, "from_env", classmethod(lambda cls, **kwargs: _FakeVerifier()))
-
     assert mod.claim_verification_enabled(project_root) is True
-    report = mod.verify_project_claims(project_root)
+    report = mod.verify_project_claims(project_root, verifier_factory=lambda **kwargs: _FakeVerifier())
     assert report.claims == ["We observed 12 participants in the cohort."]

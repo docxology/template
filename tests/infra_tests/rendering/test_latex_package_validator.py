@@ -182,13 +182,14 @@ class TestValidatePreamblePackages:
             # If exception raised, some packages missing - that's valid
             pass
 
-    def test_validate_preamble_no_kpsewhich(self, monkeypatch):
+    def test_validate_preamble_no_kpsewhich(self):
         """Test preamble validation when kpsewhich not available."""
         from infrastructure.rendering import latex_validation
 
-        monkeypatch.setattr(latex_validation, "find_kpsewhich", lambda: None)
-
-        result = latex_validation.validate_preamble_packages(strict=False)
+        result = latex_validation.validate_preamble_packages(
+            strict=False,
+            kpsewhich_finder=lambda: None,
+        )
 
         assert isinstance(result, ValidationReport)
         assert result.all_required_available is False

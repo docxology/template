@@ -7,6 +7,7 @@ from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
+from collections.abc import Callable
 from typing import Any, Literal
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
@@ -320,7 +321,11 @@ def claim_verification_enabled(project_root: Path | str) -> bool:
     return bool(claim_verification.get("enabled"))
 
 
-def verify_project_claims(project_root: Path | str) -> ClaimVerificationReport:
+def verify_project_claims(
+    project_root: Path | str,
+    *,
+    verifier_factory: Callable[..., FactCheckVerifier | None] = FactCheckVerifier.from_env,
+) -> ClaimVerificationReport:
     """Verify project claims."""
     project_root = Path(project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
@@ -331,7 +336,7 @@ def verify_project_claims(project_root: Path | str) -> ClaimVerificationReport:
     claim_cfg = validation.get("claim_verification") or {}
     max_workers = int(claim_cfg.get("max_workers") or 4)
     max_results = int(claim_cfg.get("max_results") or 5)
-    verifier = FactCheckVerifier.from_env(
+    verifier = verifier_factory(
         max_workers=max_workers,
         max_results=max_results,
     )

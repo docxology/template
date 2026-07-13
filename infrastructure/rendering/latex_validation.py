@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -50,7 +51,13 @@ class ValidationReport:
         return "\n".join(lines)
 
 
-def validate_packages(required: list[str], optional: list[str], kpsewhich_path: Path | None = None) -> ValidationReport:
+def validate_packages(
+    required: list[str],
+    optional: list[str],
+    kpsewhich_path: Path | None = None,
+    *,
+    kpsewhich_finder: Callable[[], Path | None] = find_kpsewhich,
+) -> ValidationReport:
     """Validate all required and optional LaTeX packages.
 
     Args:
@@ -62,7 +69,7 @@ def validate_packages(required: list[str], optional: list[str], kpsewhich_path: 
         ValidationReport with detailed status
     """
     if kpsewhich_path is None:
-        kpsewhich_path = find_kpsewhich()
+        kpsewhich_path = kpsewhich_finder()
 
     logger.info(f"Validating {len(required)} required and {len(optional)} optional LaTeX packages...")
 
@@ -136,7 +143,11 @@ def get_missing_packages_command(missing: list[str]) -> str:
     return f"sudo tlmgr install {' '.join(missing)}"
 
 
-def validate_preamble_packages(strict: bool = False) -> ValidationReport:
+def validate_preamble_packages(
+    strict: bool = False,
+    *,
+    kpsewhich_finder: Callable[[], Path | None] = find_kpsewhich,
+) -> ValidationReport:
     """Validate packages used in the standard preamble.
 
     Args:
@@ -183,7 +194,7 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
         required = required + optional
         optional = []
 
-    report = validate_packages(required, optional)
+    report = validate_packages(required, optional, kpsewhich_finder=kpsewhich_finder)
 
     if strict and not report.all_required_available:
         raise ValidationError(
