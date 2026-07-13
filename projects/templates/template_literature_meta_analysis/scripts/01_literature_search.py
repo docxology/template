@@ -22,7 +22,12 @@ from literature.search_runner import run_literature_search
 
 def parse_args() -> argparse.Namespace:
     """Parse args."""
-    parser = argparse.ArgumentParser(description="Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv).")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Search academic databases for literature (arXiv, Semantic Scholar, OpenAlex, "
+            "Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv)."
+        )
+    )
     parser.add_argument(
         "--query",
         default=None,
@@ -37,6 +42,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-pubmed", action="store_true")
     parser.add_argument("--skip-sovietrxiv", action="store_true")
     parser.add_argument("--skip-chinarxiv", action="store_true")
+    parser.add_argument("--skip-europepmc", action="store_true")
+    parser.add_argument("--skip-biorxiv", action="store_true")
     resume_grp = parser.add_mutually_exclusive_group()
     resume_grp.add_argument("--resume", dest="resume", action="store_true")
     resume_grp.add_argument("--no-resume", dest="resume", action="store_false")

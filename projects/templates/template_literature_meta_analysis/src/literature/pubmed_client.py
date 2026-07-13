@@ -40,6 +40,8 @@ def _normalized_element_text(element: Optional[ET.Element]) -> str:
 
 
 def _parse_pubmed_article(xml_element: ET.Element) -> Paper:
+    pmid = _normalized_element_text(xml_element.find(".//MedlineCitation/PMID")) or None
+
     title = _normalized_element_text(xml_element.find(".//Article/ArticleTitle"))
 
     abstract_segments = []
@@ -82,6 +84,7 @@ def _parse_pubmed_article(xml_element: ET.Element) -> Paper:
         authors=authors,
         year=year,
         doi=doi,
+        pmid=pmid,
         venue=venue,
     )
 

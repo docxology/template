@@ -4,7 +4,8 @@ Test suite validating cross-database data retrieval parsing constraints and abso
 
 ## Focus Areas
 
-- Atom XML and REST JSON localized HTTP mocking targeting OpenAlex, arXiv, and Semantic Scholar via `pytest-httpserver`.
+- Atom XML and REST JSON localized HTTP mocking targeting OpenAlex, arXiv, Semantic Scholar,
+  Europe PMC, and bioRxiv/medRxiv via `pytest-httpserver`.
 - Hard assertions confirming the correct processing of multi-tiered Canonical ID cascading.
 
 ## Running the Tests

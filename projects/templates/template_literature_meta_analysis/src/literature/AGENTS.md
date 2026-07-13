@@ -2,15 +2,19 @@
 
 ## Overview
 
-Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv), query routing, corpus management, and data models.
+Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv,
+Europe PMC, bioRxiv/medRxiv), query routing, corpus management, and data models.
 Orchestration lives in `literature/search_runner.py` (called from `scripts/01_literature_search.py`).
-`run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=..., crossref_base_url=..., pubmed_esearch_url=..., pubmed_efetch_url=..., sovietrxiv_base_url=..., chinarxiv_base_url=...)`
+`run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=..., crossref_base_url=..., pubmed_esearch_url=..., pubmed_efetch_url=..., sovietrxiv_base_url=..., chinarxiv_base_url=..., europepmc_base_url=..., biorxiv_base_url=...)`
 accepts injectable API roots for `pytest-httpserver` integration tests without changing production defaults.
 `query_router.py` routes queries across engines and toggles preprint preference.
 `evaluation.py` reports corpus coverage, source mix, routing choice, and claim-verification summaries for the stage-07 harness.
 SovietRxiv and ChinaRxiv share the same unified API (`sovietrxiv_client.py`) but are hosted at
 `https://russiarxiv.org` and `https://chinaxiv.org` respectively; the `source` query parameter
 distinguishes their sub-corpora.
+Europe PMC (`europepmc_client.py`) is a keyless biomedical aggregator search endpoint.
+bioRxiv/medRxiv (`biorxiv_client.py`) share one unified date-window + cursor `details` API at
+`https://api.biorxiv.org`; the `server` parameter (`"biorxiv"` or `"medrxiv"`) selects the corpus.
 Full-text reporting: `literature/fulltext_assessment.py` (`scripts/06_fulltext_assessment.py`).
 The corpus JSONL is the single input
 to all downstream pipeline stages.
@@ -18,9 +22,9 @@ to all downstream pipeline stages.
 ## Invariants Agents Must Preserve
 
 - **Injectable base URLs**: Every client (`search_arxiv`, `search_semantic_scholar`,
-  `search_openalex`, `search_crossref`, `search_pubmed`, `search_sovietrxiv`) accepts a
-  `base_url` parameter. Tests use `pytest-httpserver` local servers pointed at via this
-  parameter. Never hardcode the URL inside the function body.
+  `search_openalex`, `search_crossref`, `search_pubmed`, `search_sovietrxiv`, `search_europepmc`,
+  `search_biorxiv`) accepts a `base_url` parameter. Tests use `pytest-httpserver` local servers
+  pointed at via this parameter. Never hardcode the URL inside the function body.
 - **No mock policy**: Tests in `tests/literature/` must use `pytest-httpserver` for HTTP calls,
   not `unittest.mock.patch`. The httpserver fixture starts a real local HTTP server.
 - **Deduplication stability**: `Corpus.add()` keeps the version with higher `metadata_completeness`.
@@ -64,6 +68,8 @@ to all downstream pipeline stages.
 | PubMed | NCBI usage policy | retstart/retmax | API key optional |
 | SovietRxiv | 30/min anonymous, 300/min polite | 1–100/page, cursor | Keyless; `X-API-Email` header for polite pool |
 | ChinaRxiv | 30/min anonymous, 300/min polite | 1–100/page, cursor | Keyless; same unified API as SovietRxiv |
+| Europe PMC | No documented hard limit; be polite (~10 req/s) | Up to 1000/page (`pageSize`) | Keyless; one request per search call |
+| bioRxiv/medRxiv | No documented limit; date-window + cursor paginated, keep modest | 100/page fixed, cursor | Keyless; not free-text search — date-window then client-side filter (see `biorxiv_client.py`) |
 
 ## Known Limitations
 
@@ -81,3 +87,8 @@ to all downstream pipeline stages.
 - **SovietRxiv/ChinaRxiv citation counts**: The API does not provide citation counts.
   All records from these engines default to `citation_count=0`, so they do not contribute
   to citation-weighted hypothesis scoring.
+- **bioRxiv/medRxiv is not full-text search**: the public API exposes no query parameter —
+  `search_biorxiv` walks the date window page by page and keeps only items whose title +
+  abstract contain every query term. It is bounded by `BIORXIV_MAX_PAGES` (20 pages / 2000
+  raw items); a query with very common terms may exhaust the page cap before `max_results`
+  matches are found. Not ranked by relevance.

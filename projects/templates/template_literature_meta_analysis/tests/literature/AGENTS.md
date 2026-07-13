@@ -2,7 +2,7 @@
 
 ## Overview
 
-Tests within this directory correspond to the external API clients and the centralized corpus deduplication mechanism built in `src/literature/`. This directory makes extensive use of the `pytest-httpserver` fixture to simulate the arXiv Atom API, Semantic Scholar Graph API, OpenAlex, Crossref, and PubMed-style responses.
+Tests within this directory correspond to the external API clients and the centralized corpus deduplication mechanism built in `src/literature/`. This directory makes extensive use of the `pytest-httpserver` fixture to simulate the arXiv Atom API, Semantic Scholar Graph API, OpenAlex, Crossref, PubMed, Europe PMC, and bioRxiv/medRxiv-style responses.
 
 ## Key Validation Targets
 
@@ -13,5 +13,7 @@ Tests within this directory correspond to the external API clients and the centr
 - **`test_search_runner.py`**: Unit tests for relevance filtering, resume/clear corpus, YAML config merge, and duplicate accounting.
 - **`test_search_runner_httpserver.py`**: End-to-end `run_literature_search` against local HTTP stubs via injectable `*_base_url` kwargs.
 - **`test_fulltext_assessment.py`**: PDF URL coverage and malformed URL handling in full-text assessment reports.
+- **`test_europepmc_client.py`**: Europe PMC `/search` JSON response parsing (authors, pdf_url preference, open-access flag).
+- **`test_biorxiv_client.py`**: bioRxiv/medRxiv date-window + cursor pagination and client-side query-term filtering.
 
 See the directory `README.md` for execution instructions.

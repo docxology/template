@@ -8,6 +8,7 @@ from literature.pubmed_client import _parse_pubmed_article, search_pubmed
 SINGLE_ARTICLE_XML = """\
 <PubmedArticle>
   <MedlineCitation>
+    <PMID Version="1">12345678</PMID>
     <Article>
       <ArticleTitle>Predictive processing in active inference</ArticleTitle>
       <Abstract>
@@ -137,6 +138,7 @@ PUBMED_ARTICLE_SET_XML = """\
 <PubmedArticleSet>
   <PubmedArticle>
     <MedlineCitation>
+      <PMID Version="1">11111111</PMID>
       <Article>
         <ArticleTitle>First PubMed paper</ArticleTitle>
         <Abstract>
@@ -166,6 +168,7 @@ PUBMED_ARTICLE_SET_XML = """\
   </PubmedArticle>
   <PubmedArticle>
     <MedlineCitation>
+      <PMID Version="1">22222222</PMID>
       <Article>
         <ArticleTitle>Second PubMed paper</ArticleTitle>
         <Abstract>
@@ -212,6 +215,8 @@ class TestParsePubMedArticle:
         assert paper.year == 2023
         assert paper.venue == "Journal of Theoretical Biology"
         assert paper.doi == "10.1000/pubmed.001"
+        assert paper.pmid == "12345678"
+        # doi still wins over pmid in canonical_id priority.
         assert paper.canonical_id == "doi:10.1000/pubmed.001"
 
     def test_parse_missing_doi(self):
@@ -220,6 +225,14 @@ class TestParsePubMedArticle:
         paper = _parse_pubmed_article(article)
 
         assert paper.doi is None
+
+    def test_parse_missing_pmid(self):
+        """A record with no <PMID> element leaves pmid unset (None), not raising."""
+        article = safe_fromstring(MISSING_DOI_XML)
+
+        paper = _parse_pubmed_article(article)
+
+        assert paper.pmid is None
 
     def test_parse_missing_abstract(self):
         article = safe_fromstring(MISSING_ABSTRACT_XML)
@@ -284,12 +297,14 @@ class TestSearchPubMed:
         assert papers[0].year == 2020
         assert papers[0].venue == "Systems Neuroscience"
         assert papers[0].doi == "10.1000/pubmed.101"
+        assert papers[0].pmid == "11111111"
         assert papers[1].title == "Second PubMed paper"
         assert papers[1].abstract == "Second abstract."
         assert papers[1].authors[0].name == "Grace Hopper"
         assert papers[1].year == 2021
         assert papers[1].venue == "Computational Biology Letters"
         assert papers[1].doi == "10.1000/pubmed.202"
+        assert papers[1].pmid == "22222222"
 
     def test_search_pubmed_batches_large_idlists(self, httpserver: HTTPServer, monkeypatch):
         """efetch is GET-batched so a large idlist does not overrun the URI limit (HTTP 414).

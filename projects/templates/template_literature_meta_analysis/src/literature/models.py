@@ -95,7 +95,7 @@ class Paper:
     """Represents a single research paper.
 
     The canonical_id property returns the best available identifier
-    with priority: doi > arxiv_id > s2_id > openalex_id > title hash.
+    with priority: doi > pmid > arxiv_id > s2_id > openalex_id > title hash.
 
     Attributes:
         title: Paper title
@@ -103,6 +103,7 @@ class Paper:
         authors: List of Author objects
         year: Publication year
         doi: Digital Object Identifier
+        pmid: PubMed identifier (e.g., "12345678")
         arxiv_id: arXiv identifier (e.g., "2301.12345")
         s2_id: Semantic Scholar paper ID
         openalex_id: OpenAlex work ID
@@ -121,6 +122,7 @@ class Paper:
     authors: list[Author] = field(default_factory=list)
     year: Optional[int] = None
     doi: Optional[str] = None
+    pmid: Optional[str] = None
     arxiv_id: Optional[str] = None
     s2_id: Optional[str] = None
     openalex_id: Optional[str] = None
@@ -134,13 +136,15 @@ class Paper:
 
     @property
     def canonical_id(self) -> str:
-        """Return best available identifier with priority: doi > arxiv_id > s2_id > openalex_id > title hash.
+        """Return best available identifier with priority: doi > pmid > arxiv_id > s2_id > openalex_id > title hash.
 
         The DOI is normalized (case-folded, resolver-prefix/whitespace stripped) so the
         same paper returned by different engines under case/format-variant DOIs merges.
         """
         if self.doi:
             return f"doi:{normalize_doi(self.doi)}"
+        if self.pmid:
+            return f"pmid:{self.pmid}"
         if self.arxiv_id:
             return f"arxiv:{self.arxiv_id}"
         if self.s2_id:
@@ -203,6 +207,8 @@ class Paper:
             count += 1
         if self.doi:
             count += 1
+        if self.pmid:
+            count += 1
         if self.arxiv_id:
             count += 1
         if self.s2_id:
@@ -235,6 +241,7 @@ class Paper:
             "authors": [{"name": a.name, "affiliation": a.affiliation, "orcid": a.orcid} for a in self.authors],
             "year": self.year,
             "doi": self.doi,
+            "pmid": self.pmid,
             "arxiv_id": self.arxiv_id,
             "s2_id": self.s2_id,
             "openalex_id": self.openalex_id,
@@ -267,6 +274,7 @@ class Paper:
             authors=authors,
             year=data.get("year"),
             doi=data.get("doi"),
+            pmid=data.get("pmid"),
             arxiv_id=data.get("arxiv_id"),
             s2_id=data.get("s2_id"),
             openalex_id=data.get("openalex_id"),

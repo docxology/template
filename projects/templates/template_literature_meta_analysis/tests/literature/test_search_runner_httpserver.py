@@ -66,6 +66,8 @@ def _base_args(output_dir: Path) -> argparse.Namespace:
         skip_pubmed=False,
         skip_sovietrxiv=False,
         skip_chinarxiv=False,
+        skip_europepmc=False,
+        skip_biorxiv=False,
         resume=False,
         clear_corpus=False,
         start_year=None,
@@ -281,9 +283,10 @@ def test_run_literature_search_sovietrxiv_skip_flag(
     tmp_path: Path,
 ) -> None:
     """--skip-sovietrxiv prevents the SovietRxiv engine from dispatching."""
-    # All other keyless engines (Crossref, PubMed) would also dispatch to their
-    # real production URLs when no fixture base_url is provided. Skip them all
-    # so the corpus stays empty, proving SovietRxiv did not fire either.
+    # All other keyless engines (Crossref, PubMed, Europe PMC, bioRxiv/medRxiv) would
+    # also dispatch to their real production URLs when no fixture base_url is
+    # provided. Skip them all so the corpus stays empty, proving SovietRxiv did not
+    # fire either.
     output_dir = tmp_path / "output"
     args = _base_args(output_dir)
     args.skip_arxiv = True
@@ -293,6 +296,8 @@ def test_run_literature_search_sovietrxiv_skip_flag(
     args.skip_pubmed = True
     args.skip_sovietrxiv = True
     args.skip_chinarxiv = True
+    args.skip_europepmc = True
+    args.skip_biorxiv = True
 
     path = run_literature_search(
         args,
@@ -323,6 +328,55 @@ _CHINARXIV_RESPONSE = {
         },
     ],
 }
+
+
+_EUROPEPMC_RESPONSE = {
+    "resultList": {
+        "result": [
+            {
+                "doi": "10.1/shared",
+                "title": "Modafinil and wakefulness: a Europe PMC record",
+                "authorList": {"author": [{"fullName": "A. Author"}]},
+                "pubYear": "2018",
+                "abstractText": "Modafinil promotes wakefulness (Europe PMC).",
+            },
+            {
+                "doi": "10.1/europepmc-only",
+                "title": "A Europe PMC-only modafinil record",
+                "pubYear": "2020",
+            },
+        ]
+    }
+}
+
+
+def test_run_literature_search_europepmc_dispatch_and_dedup_with_crossref(
+    httpserver: HTTPServer,
+    tmp_path: Path,
+) -> None:
+    """Europe PMC dispatches; a DOI shared with Crossref collapses to one record."""
+    httpserver.expect_request("/works").respond_with_json(_CROSSREF_RESPONSE)
+    httpserver.expect_request("/search").respond_with_json(_EUROPEPMC_RESPONSE)
+
+    output_dir = tmp_path / "output"
+    args = _base_args(output_dir)
+    args.query = "modafinil"
+    args.skip_arxiv = True
+    args.skip_s2 = True
+    args.skip_openalex = True
+    args.skip_pubmed = True
+
+    path = run_literature_search(
+        args,
+        project_root=tmp_path,
+        crossref_base_url=httpserver.url_for(""),
+        europepmc_base_url=httpserver.url_for(""),
+    )
+    corpus = Corpus.load(path)
+    dois = sorted(p.doi for p in corpus.papers)
+    # Crossref returns 2 (10.1/shared, 10.1/crossref-only); Europe PMC returns 2
+    # (10.1/shared, 10.1/europepmc-only). DOI 10.1/shared appears from BOTH -> deduped.
+    assert dois == ["10.1/crossref-only", "10.1/europepmc-only", "10.1/shared"]
 
 
 def test_run_literature_search_chinarxiv_dispatch(

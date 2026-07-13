@@ -627,8 +627,8 @@ project_config:
         assert v["SEARCH_TERM"] == "the target topic"
         assert v["N_SUBFIELDS"] == "0"
         assert v["N_HYPOTHESES"] == "0"
-        # engine fallback lists all seven
-        assert v["N_ENGINES"] == "7"
+        # engine fallback lists all nine
+        assert v["N_ENGINES"] == "9"
 
     def test_tfidf_default(self, tmp_path):
         """NUM_VOCAB_FEATURES defaults to 500 when tfidf_data.json missing."""

@@ -223,6 +223,38 @@ def _sovietrxiv_search_fn(
     return _search
 
 
+def _europepmc_search_fn(
+    base_url: str | None,
+    *,
+    fast: bool,
+) -> Callable[..., list[Paper]]:
+    from literature.europepmc_client import EUROPEPMC_API_URL, search_europepmc
+
+    url = base_url or EUROPEPMC_API_URL
+    delay = 0.0 if fast else None
+
+    def _search(query: str, max_results: int = 100) -> list[Paper]:
+        return search_europepmc(query, max_results=max_results, base_url=url, delay_override=delay)
+
+    return _search
+
+
+def _biorxiv_search_fn(
+    base_url: str | None,
+    *,
+    fast: bool,
+) -> Callable[..., list[Paper]]:
+    from literature.biorxiv_client import BIORXIV_API_URL, search_biorxiv
+
+    url = base_url or BIORXIV_API_URL
+    delay = 0.0 if fast else None
+
+    def _search(query: str, max_results: int = 100) -> list[Paper]:
+        return search_biorxiv(query, max_results=max_results, base_url=url, delay_override=delay)
+
+    return _search
+
+
 def run_literature_search(
     args: argparse.Namespace,
     *,
@@ -235,6 +267,8 @@ def run_literature_search(
     pubmed_efetch_url: str | None = None,
     sovietrxiv_base_url: str | None = None,
     chinarxiv_base_url: str | None = None,
+    europepmc_base_url: str | None = None,
+    biorxiv_base_url: str | None = None,
 ) -> Path:
     """Execute literature search; return path to saved corpus JSONL.
 
@@ -324,6 +358,8 @@ def run_literature_search(
             pubmed_esearch_url,
             sovietrxiv_base_url,
             chinarxiv_base_url,
+            europepmc_base_url,
+            biorxiv_base_url,
         )
     )
 
@@ -337,6 +373,8 @@ def run_literature_search(
             "pubmed",
             "sovietrxiv",
             "chinarxiv",
+            "europepmc",
+            "biorxiv",
         ],
     )
     logger.info(
@@ -459,6 +497,26 @@ def run_literature_search(
         if result:
             sources_searched.append(result)
 
+    def run_europepmc() -> None:
+        """Run europepmc."""
+        europepmc_on = engines.get("europepmc", True) and not getattr(args, "skip_europepmc", False)
+        if not europepmc_on or (europepmc_base_url is None and fast_api):
+            return
+        europepmc_search = _europepmc_search_fn(europepmc_base_url, fast=fast_api)
+        result = search_source("Europe PMC", europepmc_search, args.query, args.max_results, corpus, logger)
+        if result:
+            sources_searched.append(result)
+
+    def run_biorxiv() -> None:
+        """Run biorxiv."""
+        biorxiv_on = engines.get("biorxiv", True) and not getattr(args, "skip_biorxiv", False)
+        if not biorxiv_on or (biorxiv_base_url is None and fast_api):
+            return
+        biorxiv_search = _biorxiv_search_fn(biorxiv_base_url, fast=fast_api)
+        result = search_source("bioRxiv", biorxiv_search, args.query, args.max_results, corpus, logger)
+        if result:
+            sources_searched.append(result)
+
     source_runners = {
         "arxiv": run_arxiv,
         "semantic_scholar": run_semantic_scholar,
@@ -467,6 +525,8 @@ def run_literature_search(
         "pubmed": run_pubmed,
         "sovietrxiv": run_sovietrxiv,
         "chinarxiv": run_chinarxiv,
+        "europepmc": run_europepmc,
+        "biorxiv": run_biorxiv,
     }
 
     dispatch_ordered(route.source_order, source_runners)

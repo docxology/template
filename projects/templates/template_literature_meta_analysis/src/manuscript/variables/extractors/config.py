@@ -26,6 +26,8 @@ def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:
         "pubmed": "PubMed",
         "sovietrxiv": "SovietRxiv",
         "chinarxiv": "ChinaRxiv",
+        "europepmc": "Europe PMC",
+        "biorxiv": "bioRxiv/medRxiv",
     }
     enabled = [engine_labels.get(name, name) for name, on in engines_cfg.items() if on]
     if not enabled:

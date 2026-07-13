@@ -55,6 +55,20 @@ DOI URL prefixes automatically.
 - `search_openalex(query, max_results, base_url, session) -> list[Paper]`
 - `get_work_by_doi(doi, base_url, session) -> Paper`
 
+### `europepmc_client.py`
+Searches the Europe PMC `/search` endpoint (keyless biomedical aggregator covering PubMed,
+PMC, patents, and preprints). Single-request pagination via `pageSize` (capped at 1000).
+
+- `search_europepmc(query, max_results, base_url, session) -> list[Paper]`
+
+### `biorxiv_client.py`
+Queries the unified bioRxiv/medRxiv `details/{server}/{interval}/{cursor}/json` endpoint.
+Not free-text search: walks a date window page by page (100/page, cursor-based) and keeps
+only items whose title+abstract match every query term (client-side filter). `server`
+selects `"biorxiv"` or `"medrxiv"`.
+
+- `search_biorxiv(query, max_results, base_url, session, server) -> list[Paper]`
+
 ### `query_router.py`
 Heuristic query router for the multi-backend search runner. Detects academic, industry, and mixed
 queries; prefers preprint engines for preprint-heavy queries; and returns the engine dispatch order.

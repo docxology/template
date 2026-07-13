@@ -10,11 +10,18 @@ import pytest
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Add src/ to path so we can import project modules
+# Add src/ AND the repo root to path so the documented per-project pytest command
+# works from a clean environment. The repo root is required because some
+# exemplar modules (e.g. deep_research.deep_research_adapter) import the
+# top-level ``infrastructure`` package, which only resolves when the repo root
+# is on sys.path (see sibling conftest.py files across projects/templates/*
+# for the same pattern).
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SRC = os.path.join(ROOT, "src")
-if SRC not in sys.path:
-    sys.path.insert(0, SRC)
+REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
+for _path in (REPO_ROOT, SRC):
+    if _path not in sys.path:
+        sys.path.insert(0, _path)
 
 
 # --- Required dependency verification ---

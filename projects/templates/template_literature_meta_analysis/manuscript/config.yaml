@@ -115,6 +115,14 @@ project_config:
       pubmed: true
       sovietrxiv: true
       chinarxiv: true
+      # Europe PMC: keyless biomedical aggregator (PubMed/PMC/patents/preprints).
+      # No documented hard rate limit; recommends staying under ~10 req/s (one
+      # request per search call here, so this is naturally respected).
+      europepmc: true
+      # bioRxiv/medRxiv: keyless preprint servers sharing one unified API. No
+      # documented rate limit, but the details endpoint is date-window + cursor
+      # paginated, so keep usage modest.
+      biorxiv: true
     # SovietRxiv / RussiaRxiv (translated Soviet-era preprints from Math-Net.Ru
     # and CyberLeninka). Keyless engine; set api_email for the polite rate-limit
     # pool (300/min vs 30/min anonymous). Set source: "russiarxiv" to restrict.
@@ -205,7 +213,7 @@ project_config:
       inputs: []
       outputs:
         - output/data/corpus.jsonl
-      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv; merge and deduplicate"
+      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv; merge and deduplicate"
 
     - name: meta_analysis
       script: 02_meta_analysis_pipeline.py

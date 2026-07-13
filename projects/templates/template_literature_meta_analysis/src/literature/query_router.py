@@ -55,10 +55,50 @@ PREPRINT_PATTERNS = (
     "draft",
 )
 
-ACADEMIC_SOURCE_ORDER = ("crossref", "semantic_scholar", "openalex", "pubmed", "arxiv", "sovietrxiv", "chinarxiv")
-INDUSTRY_SOURCE_ORDER = ("crossref", "openalex", "semantic_scholar", "pubmed", "arxiv", "sovietrxiv", "chinarxiv")
-MIXED_SOURCE_ORDER = ("semantic_scholar", "openalex", "crossref", "pubmed", "arxiv", "sovietrxiv", "chinarxiv")
-PREPRINT_SOURCE_ORDER = ("arxiv", "sovietrxiv", "chinarxiv", "semantic_scholar", "openalex", "crossref", "pubmed")
+ACADEMIC_SOURCE_ORDER = (
+    "crossref",
+    "semantic_scholar",
+    "openalex",
+    "pubmed",
+    "europepmc",
+    "arxiv",
+    "biorxiv",
+    "sovietrxiv",
+    "chinarxiv",
+)
+INDUSTRY_SOURCE_ORDER = (
+    "crossref",
+    "openalex",
+    "semantic_scholar",
+    "pubmed",
+    "europepmc",
+    "arxiv",
+    "biorxiv",
+    "sovietrxiv",
+    "chinarxiv",
+)
+MIXED_SOURCE_ORDER = (
+    "semantic_scholar",
+    "openalex",
+    "crossref",
+    "pubmed",
+    "europepmc",
+    "arxiv",
+    "biorxiv",
+    "sovietrxiv",
+    "chinarxiv",
+)
+PREPRINT_SOURCE_ORDER = (
+    "arxiv",
+    "biorxiv",
+    "sovietrxiv",
+    "chinarxiv",
+    "semantic_scholar",
+    "openalex",
+    "crossref",
+    "pubmed",
+    "europepmc",
+)
 
 
 @dataclass(frozen=True)

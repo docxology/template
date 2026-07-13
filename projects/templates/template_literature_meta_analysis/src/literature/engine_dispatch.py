@@ -35,6 +35,8 @@ ENGINE_SPECS: tuple[EngineSpec, ...] = (
     EngineSpec("pubmed", "skip_pubmed", "pubmed"),
     EngineSpec("sovietrxiv", "skip_sovietrxiv", "sovietrxiv"),
     EngineSpec("chinarxiv", "skip_chinarxiv", "chinarxiv"),
+    EngineSpec("europepmc", "skip_europepmc", "europepmc"),
+    EngineSpec("biorxiv", "skip_biorxiv", "biorxiv"),
 )
 
 
