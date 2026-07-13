@@ -115,7 +115,7 @@
     "output/web/manuscript__08f_appendix_matrix.html": "c438b910e73459e479ec4d342c0b308b8895390a3c399704c867876737f31967"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_template/output/reports/snapshots/stage-06-pdf-rendering.json",
+  "path": "<repo-root>/projects/templates/template_template/output/reports/snapshots/stage-06-pdf-rendering.json",
   "stage_name": "PDF Rendering",
   "stage_num": 6,
   "timestamp": "2026-06-14T19:26:34+00:00",

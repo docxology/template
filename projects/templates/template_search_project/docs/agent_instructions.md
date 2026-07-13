@@ -75,7 +75,7 @@ Our pipeline uses standard literature-search APIs and produces a citation list.
 ```markdown
 `src/pipeline.py::run_literature_pipeline` calls
 `infrastructure.search.literature.LiteratureClient.search` against the backends
-listed in `config.search.sources`, then writes BibTeX entries via
+listed in `project_config.search.sources`, then writes BibTeX entries via
 `infrastructure.reference.citation.paper_to_bibentry` to
 `projects/templates/template_search_project/manuscript/references.bib`.
 ```
@@ -136,7 +136,7 @@ The entire `projects/templates/template_search_project/output/` tree (and the au
 If you need to change what a generated file contains, change the **generator**:
 
 - To change `manuscript/references.bib` → modify `src/pipeline.py` or the inputs in `data/corpus.json` / `manuscript/config.yaml`.
-- To change `manuscript/references_deep.bib` → modify `src/deep_search.py` or `config.deep_search.keywords`.
+- To change `manuscript/references_deep.bib` → modify `src/deep_search.py` or `project_config.deep_search.keywords`.
 - To change `manuscript/S01_literature_review.md` → modify `scripts/s_compose_literature_review.py`.
 - To change `output/figures/*.png` → modify `src/figures.py` and the matching call in `scripts/y_generate_search_figures.py`.
 - To change resolved tokens in `output/manuscript/*.md` → modify `src/manuscript_variables.py` (token definitions) or `manuscript/*.md` (templates).

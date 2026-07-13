@@ -187,7 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:introduction">Introduction</h1>
 <p>This <code>template_code_project</code> serves as the foundational
 exemplar for the <a
@@ -242,8 +243,9 @@ leverages the <code>infrastructure</code> layer:</p>
 <ul>
 <li><strong>Scientific Utilities</strong>: Utilizing
 <code>infrastructure.scientific.stability</code> and
-<code>infrastructure.scientific.benchmarking</code> to guarantee
-numerical boundaries and performance scaling.</li>
+<code>infrastructure.scientific.benchmarking</code> to check numerical
+boundaries and exercise runtime performance diagnostics without pinning
+host-dependent timings.</li>
 <li><strong>Hermetic Validation</strong>: Deploying
 <code>infrastructure.validation</code> components
 (<code>markdown_validator</code>, <code>output_validator</code>) to

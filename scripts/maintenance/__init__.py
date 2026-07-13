@@ -12,6 +12,7 @@ Modules:
     merge_test_supplements: Merge pytest supplement files into a canonical module.
     organize_executive_outputs: Tidy multi-project executive report outputs.
     render_working_projects: Render private-sidecar working projects on demand.
+    refresh_artifact_manifests: Rebaseline current output integrity manifests.
     rerender_working_pdfs: Re-render working-project PDFs with a status rubric.
     setup_pre_commit: Install/refresh the pre-commit hook set.
     show_project_info: Print metadata for a discovered project.

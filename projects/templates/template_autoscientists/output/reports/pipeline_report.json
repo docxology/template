@@ -346,7 +346,7 @@
     "log_file": {
       "exists": true,
       "size": 163,
-      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoscientists/output/logs/pipeline.log"
+      "path": "<repo-root>/projects/templates/template_autoscientists/output/logs/pipeline.log"
     }
   }
 }

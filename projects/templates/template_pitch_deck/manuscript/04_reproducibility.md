@@ -1,6 +1,6 @@
 # Reproducibility {#sec:reproducibility}
 
-`scripts/render_decks.py` is deterministic: given the same repository state
+`scripts/20_render_decks.py` is deterministic: given the same repository state
 (`manuscript/deck_content_*.yaml`, the live tokens from `src/deck_tokens.py`, and the
 live facts `src/deck_tokens.py` reads from `template_template`'s own files
 and the public exemplar roster), two consecutive runs produce byte-identical
@@ -10,7 +10,7 @@ only place a generation time is recorded is deck metadata, following the
 repository for reproducible builds.
 
 ```bash
-uv run python scripts/render_decks.py
+uv run python scripts/20_render_decks.py
 # → output/pdf/template_template_pitch_{short,medium,long}.pdf
 # → output/pptx/template_template_pitch_{short,medium,long}.pptx
 

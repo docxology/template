@@ -23,61 +23,14 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from src import (  # noqa: E402
-    DeterministicProposer,
-    SearchConfig,
-    SearchResult,
-    SyntheticObjective,
-    run_search,
-)
+from src.comparison import build_comparison_payload, build_objective, run_comparison  # noqa: E402
 from src.figures import write_comparison_figure, write_figure_registry  # noqa: E402
-
-BUDGET = 60
-
-
-def _build_objective() -> SyntheticObjective:
-    return SyntheticObjective(dimensions=4, noise_scale=0.02)
-
-
-def _run_pair(objective: SyntheticObjective) -> tuple[SearchResult, SearchResult]:
-    proposer = DeterministicProposer()
-    coordinated = run_search(objective, proposer, SearchConfig(budget=BUDGET))
-    baseline = run_search(objective, proposer, SearchConfig.single_thread_baseline(budget=BUDGET))
-    return coordinated, baseline
-
-
-def _summary(objective: SyntheticObjective, coordinated: SearchResult, baseline: SearchResult) -> dict[str, object]:
-    return {
-        "budget": BUDGET,
-        "note": (
-            "Coordinated teams partition the same sequential experiment budget as the "
-            "baseline, so this is a robustness/efficiency comparison, not a parallel-compute "
-            "speedup. Clean metric is the noise-free ground truth."
-        ),
-        "coordinated": _run_summary(objective, coordinated),
-        "baseline": _run_summary(objective, baseline),
-        "clean_metric_advantage": (
-            objective.clean(coordinated.champion.params) - objective.clean(baseline.champion.params)
-        ),
-    }
-
-
-def _run_summary(objective: SyntheticObjective, result: SearchResult) -> dict[str, object]:
-    return {
-        "reported_metric": result.champion.metric,
-        "clean_metric": objective.clean(result.champion.params),
-        "confirmed_improvements": result.num_confirmed_improvements,
-        "retired_dead_ends": len(result.retired_dead_ends),
-        "experiments_used": len(result.trajectory),
-        "experiments_to_target": result.experiments_to_target,
-        "redundant_experiments": result.redundant_experiments,
-    }
 
 
 def main() -> int:
     """CLI entry point."""
-    objective = _build_objective()
-    coordinated, baseline = _run_pair(objective)
+    objective = build_objective()
+    coordinated, baseline = run_comparison(objective)
 
     figures_dir = PROJECT_ROOT / "output" / "figures"
     data_dir = PROJECT_ROOT / "output" / "data"
@@ -88,7 +41,10 @@ def main() -> int:
     data_path = data_dir / "search_comparison.json"
     write_comparison_figure(coordinated, baseline, figure_path)
     registry_path = write_figure_registry(figures_dir)
-    data_path.write_text(json.dumps(_summary(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n")
+    data_path.write_text(
+        json.dumps(build_comparison_payload(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
     print(figure_path)
     print(registry_path)

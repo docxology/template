@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:supplemental_s1">Supplemental S1 — Literature Review
 (auto-composed from deep search)</h1>
 <p><em>Composed by <code>scripts/s_compose_literature_review.py</code>
@@ -2476,8 +2477,8 @@ href="https://doi.org/10.2307/j.ctvpb3xkg.7">open</a>)</td>
 </table>
 <p><em>Per-paper synthesis omitted — no LLM Contribution paragraphs are
 present in the deep-search outputs (set
-<code>deep_search.llm_per_paper: true</code> and ensure Ollama is
-reachable to populate this section).</em></p>
+<code>project_config.deep_search.llm_per_paper: true</code> and ensure
+Ollama is reachable to populate this section).</em></p>
 <hr />
 <p><em>Composition summary: 3 keywords · 300 unique papers · 300
 per-paper notes integrated · 300 BibTeX entries · 0 key(s) missing from

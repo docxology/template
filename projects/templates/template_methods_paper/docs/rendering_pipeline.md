@@ -51,6 +51,7 @@ the tested gate/compiler/exporter functions in `src/methods_dsl/`.
 | `gate_report.json` | `output/reports/` | Staged-gate tally |
 | `trust_chain_report.json` | `output/reports/` | Provenance hash-chain demo result |
 | `step_counts.png` | `output/figures/` | Steps per example method |
+| `figure_registry.json` | `output/figures/` | Provenance record binding `fig:step_counts` to the generated PNG |
 
 ### 2. Manuscript variable generation
 

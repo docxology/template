@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Autopoietic Project Generation</title>
   <style>
     /* Default styles provided by pandoc.
@@ -237,7 +238,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -248,6 +268,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -286,34 +308,61 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -345,6 +394,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -352,7 +406,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -368,13 +422,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -389,13 +443,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -413,7 +475,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -421,10 +483,12 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Autopoietic Project Generation</h1>
 <p class="subtitle">A Combinatoric Grammar for Deterministic Runnable
 Project Synthesis</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -613,6 +677,7 @@ seal, but that code path is untested</a></li>
 class="toc-section-number">8</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h2 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h2>
 <p><code>template_autopoiesis</code> is a combinatoric grammar that
@@ -708,8 +773,10 @@ class="header-section-number">2.2</span> The word “autopoietic” is doing
 real work, not decoration</h3>
 <p>The name is borrowed from Maturana and Varela’s account of living
 systems as networks of processes that recursively produce the very
-components that constitute the network producing them
-[maturana_varela_1980]. That is a strong claim about biology, and this
+components that constitute the network producing them <span
+class="citation" data-cites="maturana_varela_1980">(<a
+href="#ref-maturana_varela_1980" role="doc-biblioref">Maturana and
+Varela 1980</a>)</span>. That is a strong claim about biology, and this
 project makes no claim to implement autopoiesis in the biological sense
 — there is no self-repair, no membrane, no metabolism here. What is
 borrowed, deliberately and narrowly, is the structural pattern: a
@@ -754,8 +821,10 @@ asserted in prose. This matters for the same reason reproducible builds
 matter in software supply chains: a claim of “this artifact came from
 this source” is worthless unless a third party can recompute the
 artifact (or its fingerprint) from the source and get a bitwise match
-[reproducible_builds]. The project treats “trust the README” as a
-failure mode to be engineered around, not a baseline to build on.</p>
+<span class="citation" data-cites="reproducible_builds">(<a
+href="#ref-reproducible_builds" role="doc-biblioref">Lamb and Zacchiroli
+2022</a>)</span>. The project treats “trust the README” as a failure
+mode to be engineered around, not a baseline to build on.</p>
 <h3 data-number="2.4"
 id="what-problem-seeded-deterministic-generation-actually-solves"><span
 class="header-section-number">2.4</span> What problem seeded,
@@ -786,11 +855,14 @@ test can actually check (<code>test_materialize_tree_hash_stable</code>,
 plus the Hypothesis-driven property suite in
 <code>test_property_invariants.py</code>, which additionally fuzzes seed
 boundaries and re-derives the invariant across many seeds rather than
-trusting a single example [claessen2000quickcheck;
-maciver2019hypothesis]). A generator whose output depends on wall-clock
-time, dict iteration order, or an unseeded RNG cannot make this promise,
-and would fail the very first time someone tried to hold it to its own
-claim.</p>
+trusting a single example <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span>). A generator whose
+output depends on wall-clock time, dict iteration order, or an unseeded
+RNG cannot make this promise, and would fail the very first time someone
+tried to hold it to its own claim.</p>
 <p>Traceability is handled the same way, structurally rather than
 rhetorically. <code>materialize()</code> writes a
 <code>provenance.json</code> alongside every generated child recording a
@@ -806,8 +878,10 @@ rather than an undifferentiated “verification failed.” The tree-hash and
 Merkle-root constructions used here follow the general content-addressed
 provenance pattern of hashing over a canonical, sorted representation of
 content so that structurally identical inputs verify identically
-regardless of the order files were written or listed
-[merkle_tree_provenance].</p>
+regardless of the order files were written or listed <span
+class="citation" data-cites="merkle_tree_provenance">(<a
+href="#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span>.</p>
 <h3 data-number="2.5" id="contributions-of-this-exemplar"><span
 class="header-section-number">2.5</span> Contributions of this
 exemplar</h3>
@@ -1051,9 +1125,8 @@ for <code>grammar_hash</code>.</p>
 <p>Two auxiliary functions extend <code>expand</code> to families of
 children rather than one: <code>derive_seed(base_seed, index)</code>
 hashes <code>f"{base_seed}\x1f{index}"</code> to produce a new seed
-masked to 63 bits (<code>&amp; 0x7FFFFFFFFFFFFFFF</code>, keeping it a
-non-negative Python <code>int</code>), and
-<code>sample(grammar, count, base_seed=None)</code> calls
+masked to 63 bits (keeping it a non-negative Python <code>int</code>),
+and <code>sample(grammar, count, base_seed=None)</code> calls
 <code>expand</code> once per derived seed to produce <code>count</code>
 independent <code>Spec</code> objects — independent in the sense that
 each is keyed off a distinct derived seed, not off any shared mutable
@@ -1181,12 +1254,15 @@ class="header-section-number">3.8</span> Property-based invariants</h3>
 Contract’s ground-truth table (§4),
 <code>tests/test_property_invariants.py</code> exercises the expansion
 and materialization functions against Hypothesis-generated inputs using
-the property-based testing paradigm [claessen2000quickcheck;
-maciver2019hypothesis]: rather than asserting fixed input/output pairs,
-these tests assert invariants that must hold across a swept range of
-seeds — <code>product_size</code> equals the literal product of every
-slot’s option count regardless of seed;
-<code>effective_product_size</code> does not exceed
+the property-based testing paradigm <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span>: rather than
+asserting fixed input/output pairs, these tests assert invariants that
+must hold across a swept range of seeds — <code>product_size</code>
+equals the literal product of every slot’s option count regardless of
+seed; <code>effective_product_size</code> does not exceed
 <code>product_size</code>; two grammars parsed from the same block
 produce the same <code>grammar_hash</code>; <code>expand()</code> called
 twice with the same seed produces the same <code>spec_hash</code> for
@@ -1209,11 +1285,13 @@ dependency of this test module, not a soft, try/except guarded one.</p>
 class="header-section-number">3.9</span> Reproducibility framing</h3>
 <p>The tree-hash construction used at both Stage C and Stage D
 deliberately mirrors the general goal of reproducible software builds
-[reproducible_builds]: a build (here, a materialize call) is
-reproducible exactly when independent re-derivations from the same
-inputs — grammar, seed, template source — produce byte-identical output,
-and that identity is checked by content hash rather than by trusting the
-process that produced it. The tree hash’s construction — sort every
+<span class="citation" data-cites="reproducible_builds">(<a
+href="#ref-reproducible_builds" role="doc-biblioref">Lamb and Zacchiroli
+2022</a>)</span>: a build (here, a materialize call) is reproducible
+exactly when independent re-derivations from the same inputs — grammar,
+seed, template source — produce byte-identical output, and that identity
+is checked by content hash rather than by trusting the process that
+produced it. The tree hash’s construction — sort every
 <code>(path, content)</code> pair lexicographically, join as
 <code>"path:content"</code>, and take one SHA-256 of the concatenation —
 is a flat, single-level structure, not a binary hash tree.
@@ -1221,19 +1299,21 @@ is a flat, single-level structure, not a binary hash tree.
 <code>merkle_root()</code> (pairwise concatenate-and-hash up the tree,
 duplicating the final odd node when a level has odd cardinality), in the
 spirit of the hash-tree provenance idea introduced for digital
-signatures [merkle_tree_provenance]. As of this writing
-<code>merkle_root()</code> is a standalone, independently-tested
-utility: <code>integrity_profile</code> is declared as a reserved
-grammar slot (options <code>sha256</code>, <code>merkle</code> in this
-project’s own <code>config.yaml</code>; <code>SYNTAX.md</code> documents
-a longer illustrative option list including <code>merkle_kmyth</code>),
-but neither <code>materialize()</code> nor <code>verify_child()</code>
-currently branches on its selected value — the slot is present in the
-grammar and excluded from the effective product size, but is not yet
-wired to switch which hashing function actually runs. Reporting that
-precisely, rather than implying the profile already gates behavior, is
-the same honesty discipline the project asks of its own manuscript
-elsewhere.</p>
+signatures <span class="citation"
+data-cites="merkle_tree_provenance">(<a
+href="#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span>. As of this writing <code>merkle_root()</code> is a
+standalone, independently-tested utility: <code>integrity_profile</code>
+is declared as a reserved grammar slot (options <code>sha256</code>,
+<code>merkle</code> in this project’s own <code>config.yaml</code>;
+<code>SYNTAX.md</code> documents a longer illustrative option list
+including <code>merkle_kmyth</code>), but neither
+<code>materialize()</code> nor <code>verify_child()</code> currently
+branches on its selected value — the slot is present in the grammar and
+excluded from the effective product size, but is not yet wired to switch
+which hashing function actually runs. Reporting that precisely, rather
+than implying the profile already gates behavior, is the same honesty
+discipline the project asks of its own manuscript elsewhere.</p>
 <hr />
 <h2 data-number="4" id="results"><span
 class="header-section-number">4</span> Results</h2>
@@ -1288,8 +1368,8 @@ class="header-section-number">4.1</span> Grammar product space</h3>
 <figure id="fig:stacked_product">
 <img src="../figures/fig_stacked_product.png" style="width:85.0%"
 data-fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."
-alt="Figure 1: Options per grammar slot, stacked. Each band is one slot’s contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below." />
-<figcaption aria-hidden="true">Figure 1: Options per grammar slot,
+alt="Figure 1: Options per grammar slot, stacked." />
+<figcaption>Figure 1: Options per grammar slot,
 stacked. Each band is one slot’s contribution to the total product size;
 three bands are reserved (presentational/sealing) and are excluded from
 the effective product space discussed below.</figcaption>
@@ -1304,8 +1384,8 @@ the effective product space discussed below.</figcaption>
 <figure id="fig:product_space">
 <img src="../figures/fig_product_space.png" style="width:80.0%"
 data-fig-alt="Bar chart comparing total, effective, and reserved-only grammar product space."
-alt="Figure 2: Total, effective, and reserved-only product size for the grammar at seed=42, generated by fig_product_space_annotation (src/manuscript_figures.py) directly from Grammar.product_size / Grammar.effective_product_size — not hand-typed." />
-<figcaption aria-hidden="true">Figure 2: Total, effective, and
+alt="Figure 2: Total, effective, and reserved-only product size for the grammar at seed=42, generated by fig_product_space_annotation ( src/manuscript_figures.py ) directly from Grammar.product_size / Grammar.effective_product_size — not…" />
+<figcaption>Figure 2: Total, effective, and
 reserved-only product size for the grammar at seed=42, generated by
 <code>fig_product_space_annotation</code>
 (<code>src/manuscript_figures.py</code>) directly from
@@ -1397,8 +1477,8 @@ class="header-section-number">4.3</span> The five primitive domains</h3>
 <figure id="fig:domain_coverage">
 <img src="../figures/fig_domain_coverage.png" style="width:85.0%"
 data-fig-alt="Five colored bars, one per primitive domain."
-alt="Figure 3: The five primitive domains, type-colored: optimization, dynamics, statistics, signal, graph." />
-<figcaption aria-hidden="true">Figure 3: The five primitive domains,
+alt="Figure 3: The five primitive domains, type-colored: optimization , dynamics , statistics , signal , graph ." />
+<figcaption>Figure 3: The five primitive domains,
 type-colored: <code>optimization</code>, <code>dynamics</code>,
 <code>statistics</code>, <code>signal</code>,
 <code>graph</code>.</figcaption>
@@ -1532,14 +1612,17 @@ explicit negative control; the remaining three
 an independent computation or through algebraic invariants (Parseval’s
 theorem, PageRank’s stochastic-normalization property) that a broken
 implementation would be unlikely to satisfy by accident. This mirrors
-the property-based testing tradition [claessen2000quickcheck;
-maciver2019hypothesis]: rather than asserting a single hand-picked
-input/output pair, the suite asserts properties that must hold across a
-class of inputs — the same style used at the grammar level in
-<code>tests/test_property_invariants.py</code>, where
-<code>hypothesis</code>-generated seeds are used to check, for every
-seed drawn, that <code>product_size</code> really is the product of
-option counts and that <code>effective_product_size</code> does not
+the property-based testing tradition <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span>: rather than
+asserting a single hand-picked input/output pair, the suite asserts
+properties that must hold across a class of inputs — the same style used
+at the grammar level in <code>tests/test_property_invariants.py</code>,
+where <code>hypothesis</code>-generated seeds are used to check, for
+every seed drawn, that <code>product_size</code> really is the product
+of option counts and that <code>effective_product_size</code> does not
 exceed it.</p>
 <h3 data-number="4.4" id="exemplar-generation"><span
 class="header-section-number">4.4</span> Exemplar generation</h3>
@@ -1579,8 +1662,8 @@ numeric token in this manuscript.</p>
 <figure id="fig:coverage_by_module">
 <img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
 data-fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."
-alt="Figure 4: Real, per-module branch coverage from the same measurement run that produces 493/96.28 above — not an aggregate alone. Any module below the repository’s 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement." />
-<figcaption aria-hidden="true">Figure 4: Real, per-module branch
+alt="Figure 4: Real, per-module branch coverage from the same measurement run that produces 493/96.28 above — not an aggregate alone." />
+<figcaption>Figure 4: Real, per-module branch
 coverage from the same measurement run that produces 493/96.28 above —
 not an aggregate alone. Any module below the repository’s 90% floor
 would be drawn in red rather than smoothed into the headline percentage;
@@ -1589,20 +1672,19 @@ none is, in this measurement.</figcaption>
 <p>The aggregate 96.28% is a mean weighted by statement and branch
 count, not a uniform floor — fig. <a
 href="#fig:coverage_by_module">4</a> shows the real spread. As of this
-measurement every module clears the 90% line; <code>common.py</code> and
-<code>cover_art.py</code> sit at 100% and <code>figures.py</code> at
-98.41% after closing what were, in an earlier draft of this manuscript,
-the three lowest-coverage modules (see <code>CHANGELOG.md</code>’s Wave
-10 entry for the specific branches that were untested and the tests
-added to close them); every module under <code>src/primitives/</code>
-and the honesty/integrity core sit at or near 100%. Both the aggregate
-number and this per-module breakdown are read from the same persisted
-<code>output/data/coverage_full.json</code> — a single generator run,
-not two separately-computed views that could silently drift apart. This
-is a snapshot, not a permanent state: coverage moves as tests are added
-or code changes, and fig. <a href="#fig:coverage_by_module">4</a> should
-be regenerated (<code>stage_02_analysis.py</code>) rather than trusted
-from a prior render whenever that question matters.</p>
+measurement every module clears the configured 90% line. The exact
+module values are deliberately read from fig. <a
+href="#fig:coverage_by_module">4</a>, rather than copied into prose
+where they would become stale; <code>CHANGELOG.md</code>’s Wave 10 entry
+records the specific branches and tests behind an earlier coverage
+improvement. Both the aggregate number and this per-module breakdown are
+read from the same persisted <code>output/data/coverage_full.json</code>
+— a single generator run, not two separately-computed views that could
+silently drift apart. This is a snapshot, not a permanent state:
+coverage moves as tests are added or code changes, and fig. <a
+href="#fig:coverage_by_module">4</a> should be regenerated
+(<code>stage_02_analysis.py</code>) rather than trusted from a prior
+render whenever that question matters.</p>
 <hr />
 <h2 data-number="5" id="honesty-contract"><span
 class="header-section-number">5</span> Honesty Contract</h2>
@@ -1612,11 +1694,10 @@ claim</h3>
 <p>A generator that produces a manuscript describing its own code faces
 an obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
-exactly this failure once — a hand-written “Tests: 371 · Coverage:
-99.94%” line that no generator step had computed — and was corrected by
-replacing the literal numbers with <code>493</code> / <code>96.28</code>
-tokens filled in at render time by
-<code>scripts/02_measure_test_coverage.py</code>.
+exactly this failure once — a hand-written test-count and coverage line
+that no generator step had computed — and was corrected by replacing the
+literal numbers with <code>493</code> / <code>96.28</code> tokens filled
+in at render time by <code>scripts/02_measure_test_coverage.py</code>.
 <code>src/honesty.py</code> exists to make that class of failure
 structurally harder: every load-bearing claim in this manuscript must
 resolve to a named function in a named file, and a dedicated module
@@ -1626,7 +1707,9 @@ the prose that asserts it.</p>
 <code>template_autopoiesis</code>. An autopoietic system, in Maturana
 and Varela’s original sense, is one whose components participate in
 producing and verifying the very network of processes that produced them
-[maturana_varela_1980] — organizational closure, not open-loop
+<span class="citation" data-cites="maturana_varela_1980">(<a
+href="#ref-maturana_varela_1980" role="doc-biblioref">Maturana and
+Varela 1980</a>)</span> — organizational closure, not open-loop
 assertion. The honesty manifest is the narrow, literal, code-level
 analogue of that closure: the manuscript’s claims about the code are
 checked <em>by the code</em>, not by a separate act of faith from the
@@ -1789,7 +1872,7 @@ to be rewritten). Each match is recorded as
 <p>Two honesty points about this scanner, stated plainly rather than
 left implicit. First, it is a fixed lexical denylist, not a semantic
 checker — it will not catch a false quantitative claim phrased without
-one of those seven tokens (the “371 tests” incident described above
+one of those seven tokens (the stale test-count incident described above
 would not have tripped it; that failure mode is closed instead by the
 <code>493</code> token substitution, a separate mechanism). Second,
 <code>unsupported_claims</code> <em>is</em> enforced, but only on one of
@@ -1906,13 +1989,15 @@ Neither function accepts a hardcoded literal as a fallback: if the
 subprocess pytest run cannot be parsed,
 <code>measure_test_summary</code> returns the string
 <code>"pending"</code> for both the test count and the coverage
-percentage rather than a plausible-looking number [reproducible_builds].
-This design choice is a direct consequence of an earlier failure mode in
-this project — a manuscript draft that stated fixed values (“Tests: 371
-· Coverage: 99.94%”) in prose instead of through the token pipeline. A
-number that cannot be traced back to a specific function call in
-<code>src/</code> is, for the purposes of this project, not a number
-this manuscript is permitted to assert.</p>
+percentage rather than a plausible-looking number <span class="citation"
+data-cites="reproducible_builds">(<a href="#ref-reproducible_builds"
+role="doc-biblioref">Lamb and Zacchiroli 2022</a>)</span>. This design
+choice is a direct consequence of an earlier failure mode in this
+project — a manuscript draft that stated fixed test and coverage values
+in prose instead of through the token pipeline. A number that cannot be
+traced back to a specific function call in <code>src/</code> is, for the
+purposes of this project, not a number this manuscript is permitted to
+assert.</p>
 <h3 data-number="6.1" id="determinism-guarantee"><span
 class="header-section-number">6.1</span> Determinism guarantee</h3>
 <p>Given the same <code>manuscript/config.yaml</code> grammar definition
@@ -2025,15 +2110,16 @@ cheap to compute and cheap to verify, but a single changed file forces a
 full recompute over every path to detect <em>which</em> file changed —
 the digest itself carries no positional structure.</li>
 <li><strong><code>merkle_root()</code></strong> builds a binary Merkle
-tree [merkle_tree_provenance] over an <em>ordered</em> list of hex
-digests: each level pairwise-concatenates adjacent nodes and hashes the
-concatenation, promoting an unpaired trailing node unchanged to the next
-level, until one root remains (the empty list is defined as the SHA-256
-of the empty string, not a magic sentinel). Because the tree is
-addressable node-by-node, a Merkle profile supports proving that one
-specific file’s hash is part of the committed set without re-hashing
-every other file — a property the flat tree-hash profile does not
-have.</li>
+tree <span class="citation" data-cites="merkle_tree_provenance">(<a
+href="#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span> over an <em>ordered</em> list of hex digests: each
+level pairwise-concatenates adjacent nodes and hashes the concatenation,
+promoting an unpaired trailing node unchanged to the next level, until
+one root remains (the empty list is defined as the SHA-256 of the empty
+string, not a magic sentinel). Because the tree is addressable
+node-by-node, a Merkle profile supports proving that one specific file’s
+hash is part of the committed set without re-hashing every other file —
+a property the flat tree-hash profile does not have.</li>
 </ul>
 <p>Both are exercised in this codebase, but at present the
 materialize/verify path in <code>src/materialize.py</code> and
@@ -2089,12 +2175,15 @@ class="header-section-number">6.5</span> Toolchain</h3>
 <li><code>numpy</code>, <code>matplotlib</code>, <code>pyyaml</code>
 (runtime)</li>
 <li><code>pytest</code>, <code>pytest-cov</code> (test)</li>
-<li><code>hypothesis</code> [claessen2000quickcheck;
-maciver2019hypothesis] (declared under this project’s <code>dev</code>
-optional-dependency group in <code>pyproject.toml</code>, but imported
-unconditionally at the top of <code>test_property_invariants.py</code> —
-a real dependency of that test module, not a soft, try/except-guarded
-one; see Methods)</li>
+<li><code>hypothesis</code> <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span> (declared under
+this project’s <code>dev</code> optional-dependency group in
+<code>pyproject.toml</code>, but imported unconditionally at the top of
+<code>test_property_invariants.py</code> — a real dependency of that
+test module, not a soft, try/except-guarded one; see Methods)</li>
 <li><code>qrcode</code>, <code>pillow</code> (optional —
 <code>src/sealing.py</code>’s QR/barcode payload encoding degrades to a
 deterministic stub when unavailable; <code>pyzbar</code> is needed only
@@ -2189,8 +2278,10 @@ version running <code>materialize()</code> — is not independently fuzzed
 across platforms in this suite. What is actually tested is determinism
 within one CPython version on one OS, a narrower claim than the
 cross-platform, bit-for-bit reproducibility discussed in the
-reproducible-builds literature [reproducible_builds]. A second CI leg
-that materializes the same seed on a second OS/Python and diffs tree
+reproducible-builds literature <span class="citation"
+data-cites="reproducible_builds">(<a href="#ref-reproducible_builds"
+role="doc-biblioref">Lamb and Zacchiroli 2022</a>)</span>. A second CI
+leg that materializes the same seed on a second OS/Python and diffs tree
 hashes would close this gap; it does not currently exist.</p>
 <h3 data-number="7.4" id="grammar-does-not-self-modify"><span
 class="header-section-number">7.4</span> Grammar does not
@@ -2198,7 +2289,9 @@ self-modify</h3>
 <p>The autopoiesis metaphor is figurative. Maturana and Varela’s
 operational sense of autopoiesis is a system that continuously
 regenerates its own constitutive components through its own operation
-[maturana_varela_1980]. Here the grammar
+<span class="citation" data-cites="maturana_varela_1980">(<a
+href="#ref-maturana_varela_1980" role="doc-biblioref">Maturana and
+Varela 1980</a>)</span>. Here the grammar
 (<code>manuscript/config.yaml</code>) is fixed input;
 <code>parse_grammar</code> and <code>expand</code> are pure functions of
 that input plus a seed; no code path feeds a materialized child back
@@ -2221,11 +2314,13 @@ time; nothing external anchors them. An actor who can rewrite
 recompute a matching hash from whatever content they choose, and
 <code>verify_child</code> would report a match — it only checks internal
 consistency, not consistency against something outside the child’s own
-directory [merkle_tree_provenance]. <code>verify_seal</code> similarly
-checks the shape of an optional <code>seal.json</code> written by the
-same run it would need to audit. This detects accidental post-generation
-drift, the tested use case; it is not a defense against deliberate
-tampering with write access. Also worth naming precisely:
+directory <span class="citation" data-cites="merkle_tree_provenance">(<a
+href="#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span>. <code>verify_seal</code> similarly checks the shape of
+an optional <code>seal.json</code> written by the same run it would need
+to audit. This detects accidental post-generation drift, the tested use
+case; it is not a defense against deliberate tampering with write
+access. Also worth naming precisely:
 <code>tree_hash_from_content_hashes</code> sorts
 <code>path:content_hash</code> pairs and hashes their concatenation once
 — a flat manifest digest, not a hierarchical Merkle tree with per-file
@@ -2274,9 +2369,13 @@ than trusting one headline number. Property-based tests
 (<code>tests/test_property_invariants.py</code>, Hypothesis) and a
 stress/edge suite (<code>tests/test_stress_edge_cases.py</code>) cover
 invariants like boundary seeds and all-reserved-slot configurations
-[claessen2000quickcheck; maciver2019hypothesis], but generated inputs
-are not a substitute for direct tests of the specific branches named
-above.</p>
+<span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span>, but generated
+inputs are not a substitute for direct tests of the specific branches
+named above.</p>
 <p>This whole section is itself evidence for a point made elsewhere in
 this manuscript: a coverage ranking is a measurement, not a fact about
 the code — each of its two prior versions was accurate when written and
@@ -2328,7 +2427,7 @@ bibliography.</p>
 <h2 data-number="8" id="references"><span
 class="header-section-number">8</span> References</h2>
 <p>The formal bibliography (author/year entries resolved from
-<code>manuscript/references.bib</code> via the <code>[citekey]</code>
+<code>manuscript/references.bib</code> via the <code>[@citekey]</code>
 citations used throughout this manuscript) is generated by
 <code>pandoc-crossref</code>/<code>natbib</code> and appears immediately
 below this note. Every entry was verified this session via a live fetch
@@ -2340,36 +2439,84 @@ from training-data memory — before being added to
 context that a bare bibliography entry doesn’t carry:</p>
 <ul>
 <li><strong>Maturana &amp; Varela (1980), <em>Autopoiesis and
-Cognition</em></strong> [maturana_varela_1980] — the source of this
-project’s own name. The book defines autopoiesis as the self-producing
-organization of living systems: a network of processes that continuously
-regenerates the components that in turn realize the network. This
-exemplar borrows the word deliberately, not decoratively —
+Cognition</em></strong> <span class="citation"
+data-cites="maturana_varela_1980">(<a href="#ref-maturana_varela_1980"
+role="doc-biblioref">Maturana and Varela 1980</a>)</span> — the source
+of this project’s own name. The book defines autopoiesis as the
+self-producing organization of living systems: a network of processes
+that continuously regenerates the components that in turn realize the
+network. This exemplar borrows the word deliberately, not decoratively —
 <code>expand()</code> and <code>materialize()</code> are the
 “self-producing” processes, and <code>grammar.py</code>’s seed is the
 invariant that the network regenerates around every run.</li>
-<li><strong>Claessen &amp; Hughes (2000), QuickCheck</strong>
-[claessen2000quickcheck] and <strong>MacIver et al. (2019),
-Hypothesis</strong> [maciver2019hypothesis] — the property-based-testing
-lineage this project’s own test suite descends from.
-<code>tests/test_property_invariants.py</code> uses Hypothesis directly
-(not merely an homage) to check invariants like “expansion is
+<li><strong>Claessen &amp; Hughes (2000), QuickCheck</strong> <span
+class="citation" data-cites="claessen2000quickcheck">(<a
+href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>)</span> and <strong>MacIver et al. (2019),
+Hypothesis</strong> <span class="citation"
+data-cites="maciver2019hypothesis">(<a href="#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span> — the
+property-based-testing lineage this project’s own test suite descends
+from. <code>tests/test_property_invariants.py</code> uses Hypothesis
+directly (not merely an homage) to check invariants like “expansion is
 deterministic for any seed” across generated inputs rather than
 hand-picked examples.</li>
 <li><strong>Lamb &amp; Zacchiroli (2022), Reproducible Builds</strong>
-[reproducible_builds] — the peer-reviewed framing for what
+<span class="citation" data-cites="reproducible_builds">(<a
+href="#ref-reproducible_builds" role="doc-biblioref">Lamb and Zacchiroli
+2022</a>)</span> — the peer-reviewed framing for what
 <code>manuscript/05_reproducibility.md</code> claims operationally: that
 a build is reproducible when independent re-execution from the same
 source and environment produces bit-for-bit-identical (or
 hash-identical) output, and that this is a supply-chain-integrity
 property, not merely a convenience.</li>
 <li><strong>Merkle (1987), digital signatures / hash trees</strong>
-[merkle_tree_provenance] — the theoretical basis for
+<span class="citation" data-cites="merkle_tree_provenance">(<a
+href="#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span> — the theoretical basis for
 <code>src/integrity.py</code>’s content-addressed provenance: a tree of
 hashes lets a verifier recompute and confirm the integrity of a large
 structure from its leaves up, without trusting the producer’s say-so.
 This project’s <code>integrity_profile: merkle</code> grammar slot is a
 direct, if much smaller-scale, application of that idea.</li>
 </ul>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-claessen2000quickcheck" class="csl-entry" role="listitem">
+Claessen, Koen, and John Hughes. 2000. <span>“<span>QuickCheck</span>: A
+Lightweight Tool for Random Testing of <span>Haskell</span>
+Programs.”</span> <em>Proceedings of the Fifth ACM SIGPLAN International
+Conference on Functional Programming (ICFP ’00)</em> (New York, NY,
+USA), 268–79. <a
+href="https://doi.org/10.1145/351240.351266">https://doi.org/10.1145/351240.351266</a>.
+</div>
+<div id="ref-reproducible_builds" class="csl-entry" role="listitem">
+Lamb, Chris, and Stefano Zacchiroli. 2022. <span>“Reproducible Builds:
+Increasing the Integrity of Software Supply Chains.”</span> <em>IEEE
+Software</em> 39 (2): 62–70. <a
+href="https://doi.org/10.1109/MS.2021.3073045">https://doi.org/10.1109/MS.2021.3073045</a>.
+</div>
+<div id="ref-maciver2019hypothesis" class="csl-entry" role="listitem">
+MacIver, David R., Zac Hatfield-Dodds, and Many Other Contributors.
+2019. <span>“Hypothesis: A New Approach to Property-Based
+Testing.”</span> <em>Journal of Open Source Software</em> 4 (43): 1891.
+<a
+href="https://doi.org/10.21105/joss.01891">https://doi.org/10.21105/joss.01891</a>.
+</div>
+<div id="ref-maturana_varela_1980" class="csl-entry" role="listitem">
+Maturana, Humberto R., and Francisco J. Varela. 1980. <em>Autopoiesis
+and Cognition: The Realization of the Living</em>. Vol. 42. Boston
+Studies in the Philosophy of Science. D. Reidel Publishing Company. <a
+href="https://doi.org/10.1007/978-94-009-8947-4">https://doi.org/10.1007/978-94-009-8947-4</a>.
+</div>
+<div id="ref-merkle_tree_provenance" class="csl-entry" role="listitem">
+Merkle, Ralph C. 1988. <span>“A Digital Signature Based on a
+Conventional Encryption Function.”</span> In <em>Advances in Cryptology
+— CRYPTO ’87</em>, edited by Carl Pomerance, vol. 293. Lecture Notes in
+Computer Science. Springer. <a
+href="https://doi.org/10.1007/3-540-48184-2_32">https://doi.org/10.1007/3-540-48184-2_32</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

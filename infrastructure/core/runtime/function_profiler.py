@@ -59,7 +59,7 @@ class ProfilingMetrics:
 class CodeProfiler:
     """Comprehensive performance monitoring and profiling via cProfile/tracemalloc."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize empty metrics history."""
         self.metrics_history: list[ProfilingMetrics] = []
 

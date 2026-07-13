@@ -34,6 +34,7 @@ from infrastructure.rendering.core import RenderManager
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_reporter(tmp_path: Path) -> DiagnosticReporter:
     """Build a DiagnosticReporter backed by tmp_path."""
     return DiagnosticReporter("test_project")
@@ -323,11 +324,15 @@ class _FailingRenderManager(RenderManager):
         super().__init__(config=cfg)
         self._raise_with = raise_with
 
-    def render_combined_pdf(self, source_files: list[Path], manuscript_dir: Path, project_name: str = "project") -> Path:  # type: ignore[override]
+    def render_combined_pdf(
+        self, source_files: list[Path], manuscript_dir: Path, project_name: str = "project"
+    ) -> Path:  # type: ignore[override]
         """Always raises the configured exception."""
         raise self._raise_with
 
-    def render_combined_web(self, source_files: list[Path], manuscript_dir: Path, project_name: str = "project") -> Path:  # type: ignore[override]
+    def render_combined_web(
+        self, source_files: list[Path], manuscript_dir: Path, project_name: str = "project"
+    ) -> Path:  # type: ignore[override]
         """Always raises the configured exception."""
         raise self._raise_with
 

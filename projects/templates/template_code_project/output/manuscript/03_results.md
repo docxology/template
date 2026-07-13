@@ -141,9 +141,9 @@ The algorithm demonstrates efficient performance for small-scale optimization pr
 
 ### Performance Benchmarking
 
-[@fig:benchmark] shows how `gradient_descent()` scales with problem dimension by running the optimizer on identity-Hessian quadratics of dimension $d \in \{1, 2, 5, 10, 20, 50\}$.
+[@fig:benchmark] shows deterministic computational work and convergence iterations for `gradient_descent()` on identity-Hessian quadratics of dimension $d \in \{1, 2, 5, 10, 20, 50\}$.
 
-![Dimensional scaling from `generate_benchmark_visualization()`. Dimensions $d \in \{1, 2, 5, 10, 20, 50\}$ run on identity-Hessian quadratics with $\alpha=0.1$ and gradient tolerance $10^{-10}$ (both hardcoded in the script for benchmark stability). **Left**: mean wall-clock time per `gradient_descent()` call (μs). The flat regime at $d \leq 20$ reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at $d=50$ shows the $O(d)$ matrix-vector cost beginning to dominate. **Right**: iterations-to-convergence rises only modestly across two decades of $d$ ($219 \to 238$). This near-invariance is expected: $\kappa(I_d)=1$ regardless of dimension, so the contraction factor $\rho=|1-\alpha|=0.9$ is identical for every $d$, and only the per-coordinate residual norm grows mildly.](../output/figures/performance_benchmark.png){#fig:benchmark}
+![Deterministic dimensional benchmark from `generate_benchmark_visualization()`. Dimensions $d \in \{1, 2, 5, 10, 20, 50\}$ run on identity-Hessian quadratics with $\alpha=0.1$ and gradient tolerance $10^{-10}$. **Left**: the implementation-independent work proxy $d \times \text{iterations}$, proportional to scalar elements processed by the dense matrix-vector update. **Right**: exact iterations to convergence. Wall-clock microseconds are intentionally excluded because they vary with hardware and host load. The similar iteration counts are expected because $\kappa(I_d)=1$ and the contraction factor $\rho=|1-\alpha|=0.9$ is dimension-independent.](../output/figures/performance_benchmark.png){#fig:benchmark}
 
 ### Numerical Stability Analysis
 

@@ -3,9 +3,10 @@
 ## Purpose
 
 The Search module provides discovery utilities for academic literature
-(`literature/`) and Exa-backed general web search, content extraction, and
-grounded answers (`exa/` — see [`exa/README.md`](exa/README.md) and
-[`exa/AGENTS.md`](exa/AGENTS.md)), plus provider-neutral deep research
+(`literature/`), a normalized scientific-database connector registry with an
+opt-in pipeline stage (`connectors/`), Exa-backed general web search, content
+extraction, and grounded answers (`exa/` — see [`exa/README.md`](exa/README.md)
+and [`exa/AGENTS.md`](exa/AGENTS.md)), plus provider-neutral deep research
 orchestration (`deep_research/`) over OpenAI and Gemini. The literature side sits opposite
 [`infrastructure/reference/`](../reference/) in the literature workflow:
 
@@ -27,6 +28,15 @@ so downstream code (citation export, manuscript synthesis, agent loops) can
 treat results uniformly regardless of source.
 
 ## Architecture
+
+### `connectors/` — Normalized scientific-database registry
+
+`connectors/` provides eight implementations behind one `Connector` protocol.
+`connectors/stage.py` owns Stage 08 configuration, dispatch, failure isolation,
+and deterministic JSON reporting; `scripts/pipeline/stage_08_connector_search.py`
+is only its executable bootstrap. See
+[`connectors/AGENTS.md`](connectors/AGENTS.md) for the exact API and project
+configuration schema.
 
 ### `literature/` — Multi-source literature search
 

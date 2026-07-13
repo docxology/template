@@ -1,0 +1,3 @@
+# Layer-2 adapter: shared state-machine logic remains in infrastructure/sia.
+allow_infrastructure_imports:
+  - src/loop.py

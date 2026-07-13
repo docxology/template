@@ -150,6 +150,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -170,20 +173,19 @@
 \protect\phantomsection\label{quality-assurance}
 \begin{block}{Zero-Mock Testing Policy}
 \protect\phantomsection\label{zero-mock-testing-policy}
-All tests use real methods exclusively \breakseq{[@martin2008clean;
-@meszaros2007xunit]}. No \texttt{unittest.mock}, no \texttt{MagicMock},
-no \texttt{patch} decorators. Tests that require external services
-(Ollama, network) use \texttt{pytest.mark} markers for conditional
-execution. The philosophical motivation---analogizing mock objects to
-Simmons et al.'s \emph{researcher degrees of freedom}
-\breakseq{[@simmons2011falsepositive]} and the pre-registration remedy
+The repository policy prohibits mock frameworks such as
+\texttt{unittest.mock}, \texttt{MagicMock}, and \texttt{patch}
+decorators \breakseq{[@martin2008clean; @meszaros2007xunit]}. A static gate
+rejects those imports, and a separate inventory surfaces semantic
+dependency-replacement patterns for review. Tests that require external
+services (Ollama or public networks) use explicit \texttt{pytest.mark}
+markers for conditional execution; deterministic network tests use real
+local HTTP servers. The philosophical motivation---analogizing excessive
+interaction mocking to Simmons et al.'s \emph{researcher degrees of
+freedom} \breakseq{[@simmons2011falsepositive]} and the preregistration remedy
 \breakseq{[@nosek2018preregistration]}---is developed fully in the
 \href{05a_zeromock_tradeoff.md\#the-zero-mock-tradeoff}{Zero-Mock
-Tradeoff} discussion. To our knowledge, no prior research software
-engineering framework has formalized a zero-mock policy as an
-\emph{architectural invariant enforced by pipeline gates}, where mock
-usage is not merely discouraged but structurally prevented from passing
-the build.
+Tradeoff} discussion.
 
 The following example, drawn from the infrastructure test suite,
 illustrates zero-mock compliance:
@@ -193,7 +195,7 @@ illustrates zero-mock compliance:
 \KeywordTok{def}\NormalTok{ test\_discover\_infrastructure\_modules\_returns\_nonempty(tmp\_path):}
     \CommentTok{\# Real filesystem, real YAML parsing — no MagicMock anywhere}
 \NormalTok{    modules }\OperatorTok{=}\NormalTok{ discover\_infrastructure\_modules(REPO\_ROOT)}
-    \ControlFlowTok{assert} \BuiltInTok{len}\NormalTok{(modules) }\OperatorTok{\textgreater{}=} \DecValTok{8}           \CommentTok{\# actual subpackages on disk}
+    \ControlFlowTok{assert}\NormalTok{ modules                     }\CommentTok{\# actual subpackages on disk}
     \ControlFlowTok{assert} \BuiltInTok{any}\NormalTok{(m.name }\OperatorTok{==} \StringTok{"core"} \ControlFlowTok{for}\NormalTok{ m }\KeywordTok{in}\NormalTok{ modules)}
 \end{Highlighting}
 \end{Shaded}
@@ -230,18 +232,19 @@ Rationale
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-Project & \texttt{projects/*/src/} & 90\% & 90\%+ & Domain code must be
-thoroughly validated \\
-Infrastructure & \texttt{infrastructure/} & 60\% & 83\%+ & Broader
-scope, some code unreachable in test \\
+Project & \texttt{projects/*/src/} & 90\% & Reported by the current test
+artifact & Domain code must be thoroughly validated \\
+Infrastructure & \texttt{infrastructure/} & 60\% & Reported by the
+current test artifact & Broader shared surface \\
 \bottomrule\noalign{}
 \end{longtable}
 }
 
-These thresholds are enforced at Stage 01 of the pipeline. If project
-test coverage falls below 90\%, the pipeline halts and refuses to
-produce a PDF---ensuring that no published artifact is backed by
-undertested source code.
+These thresholds are enforced at Stage 01 of the pipeline. A project
+test run below its declared 90\% floor fails before downstream
+publication stages. This manuscript deliberately does not quote an
+achieved coverage percentage unless a fresh coverage artifact supplies
+it.
 \end{block}
 
 \begin{block}{Test Suite Composition}
@@ -251,14 +254,14 @@ The repository maintains three test suites:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Infrastructure tests} (\texttt{tests/}): \textasciitilde7,968
-  tests validating the 23 infrastructure subdirectories, covering
+  \textbf{Infrastructure tests} (\texttt{tests/}): \textasciitilde8,583
+  tests validating the 28 infrastructure subdirectories, covering
   logging, rendering, validation, steganography, reporting, and LLM
   integration.
 \item
   \textbf{Project tests} (\breaktt{projects/*/tests/}): Per-project
   suites whose sizes scale with each exemplar's surface area --- for
-  example 296 tests in \breaktt{template\_autoresearch\_project} and 236
+  example 300 tests in \breaktt{template\_autoresearch\_project} and 236
   in \breaktt{template\_code\_project}, with several exemplars larger
   still. (A true min/max span would require dedicated
   \breaktt{project\_test\_count\_min}/\breaktt{project\_test\_count\_max}
@@ -278,13 +281,14 @@ All generated figures must meet accessibility requirements:
 \begin{itemize}
 \tightlist
 \item
-  Minimum 16pt font size for all text elements (the accessibility
-  floor).
+  Shared 16pt font constant for primary text elements, with compact
+  annotations derived from that constant.
 \item
   Colorblind-safe palettes (IBM Design / Wong palette) with
   high-contrast fallbacks.
 \item
-  150--300 DPI rendering for publication quality.
+  200 DPI PNG rendering, sourced from the same constant used by every
+  figure writer.
 \item
   Descriptive axis labels and figure titles.
 \item
@@ -292,11 +296,12 @@ All generated figures must meet accessibility requirements:
   via shape, pattern, or annotation is used where applicable.
 \end{itemize}
 
-These standards are validated by the \breaktt{test\_architecture\_viz.py}
-test suite, which verifies that generated figures exist, have non-zero
-file size, and conform to expected output specifications. The 16pt font
-floor ensures readability in both screen and print contexts, while the
-DPI range balances file size against reproduction fidelity.
+The \breaktt{test\_architecture\_viz.py} suite verifies that each real
+figure generator writes a non-empty PNG and that the comparative matrix
+has its declared shape and value domain. The font and render-resolution
+values above are injected from \texttt{viz\_palette.py}, preventing
+prose and implementation from drifting even though visual accessibility
+still requires human inspection of rendered figures.
 \end{block}
 \end{frame}
 

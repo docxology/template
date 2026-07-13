@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.utils import get_logger, log_pipeline_stage_with_eta
@@ -15,7 +16,7 @@ from infrastructure.core.pipeline.hooks import (
     run_stage_hooks,
     summarize_hook_failures,
 )
-from infrastructure.core.pipeline.types import PipelineStageResult, StageSpec
+from infrastructure.core.pipeline.types import PipelineStageResult, StageContract, StageHooks, StageSpec
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -66,8 +67,8 @@ def run_pre_stage_hooks(
     *,
     stage_num: int,
     stage_name: str,
-    run_dir,
-    stage_hooks,
+    run_dir: Path,
+    stage_hooks: StageHooks,
     start_time: float,
 ) -> PipelineStageResult | None:
     """Run pre stage hooks."""
@@ -174,11 +175,11 @@ def handle_post_stage_success(
     stage_num: int,
     stage_name: str,
     duration: float,
-    run_dir,
-    stage_hooks,
+    run_dir: Path,
+    stage_hooks: StageHooks,
     stage_spec: StageSpec | None,
     hitl_controller: HitlController,
-    stage_contract,
+    stage_contract: StageContract,
 ) -> PipelineStageResult:
     """Process handle post stage success."""
     logger.info(f"✓ Stage {stage_num} completed successfully ({duration:.1f}s)")
@@ -285,8 +286,8 @@ def handle_stage_failure(
     stage_num: int,
     stage_name: str,
     duration: float,
-    run_dir,
-    stage_hooks,
+    run_dir: Path,
+    stage_hooks: StageHooks,
     error_detail: str = "stage returned false",
 ) -> PipelineStageResult:
     """Process handle stage failure."""
@@ -327,8 +328,8 @@ def handle_stage_exception(
     stage_num: int,
     stage_name: str,
     duration: float,
-    run_dir,
-    stage_hooks,
+    run_dir: Path,
+    stage_hooks: StageHooks,
     exc: Exception,
 ) -> PipelineStageResult:
     """Process handle stage exception."""

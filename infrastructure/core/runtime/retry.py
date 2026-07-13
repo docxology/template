@@ -11,6 +11,7 @@ from __future__ import annotations
 import random
 import time
 import types
+from collections.abc import Iterator
 from functools import wraps
 from typing import Any, Callable, TypeVar
 
@@ -134,7 +135,7 @@ class RetryableOperation:
         initial_delay: float = 1.0,
         max_delay: float = 60.0,
         exponential_base: float = 2.0,
-    ):
+    ) -> None:
         """Initialize retryable operation.
 
         Args:
@@ -165,7 +166,7 @@ class RetryableOperation:
         """Exit context manager."""
         return None  # Don't suppress exceptions
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[int]:
         """Iterate over attempts."""
         return self
 

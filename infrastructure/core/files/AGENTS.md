@@ -8,6 +8,7 @@ The `infrastructure/core/files/` package contains file cleanup, inventory, and o
 
 - `operations.py` - file operations used by the pipeline
 - `serialization.py` - shared JSON/YAML read + relative-path helpers (`read_json_object`, `load_yaml_mapping`, `relative_or_self`) reused across infrastructure
+- `portability.py` - sanitizes machine-local home prefixes from text publication artifacts before hashing/copying
 - `project_lock.py` - per-project POSIX advisory lock serializing pipeline/test runs on the same `output/` tree
 - `cleanup.py` - output cleanup coordination
 - `cleanup_helpers.py` - cleanup helpers

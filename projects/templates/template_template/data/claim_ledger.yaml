@@ -1,36 +1,57 @@
 claims:
-  - claim_id: infrastructure-module-count
+  - claim_id: infrastructure-coverage-floor
     kind: number
-    value: 25
-    source: projects/templates/template_template/src/template_template/introspection.py discover_infrastructure_modules live count
-    source_tier: generated_metric
-    freshness: regenerated
-    artifact_path: output/data/manifest.json
-  - claim_id: public-exemplar-count
-    kind: number
-    value: 15
-    source: projects/templates/template_template/src/template_template/introspection.py discover_projects count
-    source_tier: generated_metric
-    freshness: regenerated
-    artifact_path: output/data/manuscript_variables.json
-  - claim_id: pipeline-stage-count
-    kind: number
-    value: 14
-    source: infrastructure/core/pipeline/pipeline.yaml declared stage count
-    source_tier: project_source
+    value: 60
+    source: infrastructure/core/config/schema.py ResolvedTestingConfig.infra_coverage_threshold
+    source_tier: claim_ledger
     freshness: active
-    artifact_path: output/data/manifest.json
-  - claim_id: security-layer-modules
+    artifact_path: ../../../infrastructure/core/config/schema.py
+  - claim_id: project-coverage-floor
     kind: number
-    value: 8
-    source: projects/templates/template_template/src/template_template/introspection.py security module scan
-    source_tier: generated_metric
-    freshness: regenerated
-    artifact_path: output/data/manifest.json
+    value: 90
+    source: projects/templates/template_template/pyproject.toml tool.coverage.report.fail_under
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: pyproject.toml
+  - claim_id: figure-font-floor
+    kind: number
+    value: 16
+    source: projects/templates/template_template/src/template_template/viz_palette.py FONT_FLOOR
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: src/template_template/viz_palette.py
+  - claim_id: figure-render-dpi
+    kind: number
+    value: 200
+    source: projects/templates/template_template/src/template_template/viz_palette.py FIGURE_DPI
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: src/template_template/viz_palette.py
   - claim_id: figure-module-count
     kind: number
     value: 4
     source: projects/templates/template_template/src/template_template/architecture_viz.py figure module count
-    source_tier: project_source
+    source_tier: claim_ledger
     freshness: active
-    artifact_path: output/figures/figure_registry.json
+    artifact_path: src/template_template/architecture_viz.py
+  - claim_id: pimentel-notebook-corpus-millions
+    kind: number
+    value: 1.4
+    source: Pimentel et al. (2019), doi:10.1109/ICSME.2019.00080, abstract corpus size
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/references.bib
+  - claim_id: pimentel-execution-success-percent
+    kind: number
+    value: 24.11%
+    source: Pimentel et al. (2019), doi:10.1109/ICSME.2019.00080, valid notebooks executed without errors
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/references.bib
+  - claim_id: pimentel-output-reproduction-percent
+    kind: number
+    value: 4.03%
+    source: Pimentel et al. (2019), doi:10.1109/ICSME.2019.00080, executions producing the same results
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/references.bib

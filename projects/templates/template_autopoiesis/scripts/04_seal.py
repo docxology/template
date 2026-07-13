@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """04_seal.py — seal the most-recently materialized child project."""
+
 from __future__ import annotations
 
 import sys

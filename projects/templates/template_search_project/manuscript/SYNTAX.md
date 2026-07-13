@@ -65,9 +65,9 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 
 | Token | Source |
 |---|---|
-| `{{CONFIG_QUERY}}` | `config.search.query` |
-| `{{CONFIG_MAX_RESULTS}}` | `config.search.max_results` |
-| `{{CONFIG_SOURCES}}` | `config.search.sources` (joined) |
+| `{{CONFIG_QUERY}}` | `project_config.search.query` in `config.yaml` |
+| `{{CONFIG_MAX_RESULTS}}` | `project_config.search.max_results` in `config.yaml` |
+| `{{CONFIG_SOURCES}}` | `project_config.search.sources` (joined) |
 | `{{RESULT_NUM_PAPERS}}` | `len(SearchResult.papers)` after dedup |
 | `{{RESULT_NUM_SOURCES}}` | distinct backends in `per_source_counts` |
 | `{{RESULT_PER_SOURCE}}` | `per_source_counts` rendered as `key=count, …` |
@@ -78,9 +78,9 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 | `{{RESULT_ERRORS}}` | `SearchResult.errors` rendered as text |
 | `{{DEEP_KEYWORD_COUNT}}` | distinct keywords in the deep-search aggregate |
 | `{{DEEP_KEYWORDS_JOINED}}` | keyword list rendered as `; `-joined string |
-| `{{DEEP_SOURCES}}` | `config.deep_search.sources` (joined) |
+| `{{DEEP_SOURCES}}` | `project_config.deep_search.sources` (joined) |
 | `{{DEEP_UNIQUE_PAPERS}}` | unique papers across all keywords (or `<deep-search not run>`) |
-| `{{DEEP_MAX_RESULTS_PER_KEYWORD}}` | `config.deep_search.max_results_per_keyword` |
+| `{{DEEP_MAX_RESULTS_PER_KEYWORD}}` | `project_config.deep_search.max_results_per_keyword` in `config.yaml` |
 
 When a token has no value (e.g. before any deep-search run), the resolver substitutes the placeholder string `<deep-search not run>` so the `grep` check in [@sec:deep_search] can detect missed substitutions.
 

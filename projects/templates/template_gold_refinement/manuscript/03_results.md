@@ -1,6 +1,6 @@
 # {{TITLE_RESULTS}} {#sec:results}
 
-The refinery pipeline produces a monotonically increasing purity sequence across {{REFINERY_NUM_STAGES}} stages, reaching final purity of {{REFINERY_FINAL_PURITY}} ({{REFINERY_FINAL_KARAT}}).
+The canonical run completed {{REFINERY_NUM_STAGES}} ordered, continuous stages and reached the configured terminal state of {{REFINERY_FINAL_PURITY}} ({{REFINERY_FINAL_KARAT}}). These values verify execution of the declared model; they are not empirical estimates of manuscript quality.
 
 ## Purity progression
 
@@ -70,22 +70,9 @@ through the same graph, table, and validation surfaces.
 
 ## Purity vs claim support
 
-The purity-versus-claim-support view in [@fig:purity_claim_scatter] places the
-metallurgical purity sequence beside the contribution ledger. This prevents the
-paper from treating purity as an isolated aesthetic score. A point can advance
-only when two surfaces agree: the refinery computation supplies the stage purity,
-and the claim-support registry supplies the cumulative evidence exposure for
-the claims being made at that level of refinement.
+The purity-versus-claim-support view in [@fig:purity_claim_scatter] places two differently scoped measurements on explicit axes: stage output purity on the horizontal axis and the single project-level contribution-claim assay on the vertical axis. The same observed support rate is therefore repeated across stages. The figure does not fabricate a stagewise claim-support trajectory from a project-level aggregate.
 
-In the current generated assay, {{CLAIM_SUPPORT_SUPPORTED}} of
-{{CLAIM_SUPPORT_TOTAL}} contribution claims are supported
-({{CLAIM_SUPPORT_RATE}}). The figure is useful because it would make a weaker
-state visible immediately: a manuscript could still show late-stage material
-purity while failing to carry its claims along the evidence axis. In that case,
-the visual story would split, and the reader would see that certification prose
-had outrun claim support. Here the two axes are deliberately co-present, so the
-results section cannot celebrate purity while hiding unsupported contribution
-language in a separate paragraph.
+In the current generated assay, {{CLAIM_SUPPORT_SUPPORTED}} of {{CLAIM_SUPPORT_TOTAL}} contribution claims are supported ({{CLAIM_SUPPORT_RATE}}). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
 
 {{FIGURE_PURITY_CLAIM_SCATTER}}
 

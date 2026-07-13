@@ -78,7 +78,7 @@ convex quadratic, its analytic minimiser is known in closed form — `x* = c`,
 computed independently by the sibling kernel `analytic_minimizer` — so the
 iterative and closed-form solutions can be cross-checked against each other
 rather than against a single hardcoded expectation. On the example input (a
-diagonal `A`, `c = (1, -1)`, 200 steps at learning rate 0.1) the two agree to
+diagonal `A`, `c = (1, -1)`, {{OPTIMIZATION_EXAMPLE_STEPS}} steps at learning rate 0.1) the two agree to
 within `1e-4`. The domain's negative control, `_negative_control_wrong_sign`,
 is the same loop with the gradient step's sign flipped (`x = x + lr * grad`
 instead of `x = x - lr * grad`); this turns descent into ascent and diverges
@@ -128,7 +128,7 @@ against the exponential basis matrix `exp(-2j*pi*k*n/N)` — an explicit
 `O(N^2)` construction, not a call into `numpy.fft`. Its correctness is checked
 by Parseval's theorem (`sum(|X[k]|^2) == N * sum(|x[n]|^2)` to within a
 relative tolerance of `1e-6`) and by recovering the correct dominant frequency
-bin (index 5, positive or negative) from a pure 5 Hz sinusoid sampled at 64
+bin (index 5, positive or negative) from a pure 5 Hz sinusoid sampled at {{SIGNAL_SAMPLE_POINTS}}
 points. `convolve_known` wraps `numpy.convolve` with a fixed three-tap
 smoothing kernel, `[0.25, 0.5, 0.25]`; its own test suite checks that
 smoothing cannot increase variance
@@ -147,7 +147,7 @@ negative control, `_disconnected_control`, replaces the adjacency of the
 source node with an empty list, collapsing the reachable set to the source
 alone — a graph-structural way of breaking the primitive rather than
 perturbing a numeric input. `pagerank` runs the standard power-iteration
-update with damping `0.85` over 50 iterations, redistributing dangling nodes'
+update with damping `0.85` over {{PAGERANK_ITERATIONS}} iterations, redistributing dangling nodes'
 rank mass evenly rather than dropping it. It has no single fixed expected
 output — rank values depend on iteration count and are not hand-derivable —
 so it is instead validated by three invariants any correct PageRank
@@ -202,12 +202,11 @@ every other numeric token in this manuscript.
 
 The aggregate {{COVERAGE_PCT}}% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
-As of this measurement every module clears the 90% line; `common.py` and
-`cover_art.py` sit at 100% and `figures.py` at 98.41% after closing what were,
-in an earlier draft of this manuscript, the three lowest-coverage modules
-(see `CHANGELOG.md`'s Wave 10 entry for the specific branches that were
-untested and the tests added to close them); every module under
-`src/primitives/` and the honesty/integrity core sit at or near 100%. Both
+As of this measurement every module clears the configured 90% line. The exact
+module values are deliberately read from [@fig:coverage_by_module], rather
+than copied into prose where they would become stale; `CHANGELOG.md`'s Wave 10
+entry records the specific branches and tests behind an earlier coverage
+improvement. Both
 the aggregate number and this per-module breakdown are read from the same
 persisted `output/data/coverage_full.json` — a single generator run, not two
 separately-computed views that could silently drift apart. This is a

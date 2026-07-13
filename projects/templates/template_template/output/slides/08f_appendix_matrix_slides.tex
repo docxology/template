@@ -112,6 +112,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -165,21 +168,21 @@ Capability
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
 \texttt{template/}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Snakemake 9
+Snakemake
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Nextflow 25
+Nextflow
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-CWL 1.2
+CWL
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Quarto 1
+Quarto
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Jupyter Book 2
+Jupyter Book
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
 R Markdown
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-DVC 3
+DVC
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Overleaf (2025)
+Overleaf
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
 OpenAI Prism
 \end{minipage} \\
@@ -209,13 +212,14 @@ Multi-language (R/Julia) & N & Y & N & Y & Y & Y & Y & Y & N & N \\
 \end{longtable}
 }
 
-¹ Nextflow 25.04.0 introduced data-lineage provenance tracking
-(build-level, not document-level). ² DVC provides content-addressed
+¹ Nextflow lineage records operate at workflow scope rather than as a
+rendered-document citation graph. ² DVC provides content-addressed
 versioning for data artifacts via its object store. ³ DVC integrates
 with remote storage (S3, GCS, Azure) but does not natively orchestrate
-distributed compute. ⁴ Overleaf and OpenAI Prism are collaborative cloud
-LaTeX/AI writing environments; their AI features (GPT-5.2 for Prism,
-Overleaf Labs AI for Overleaf) are partial/early-stage as of 2025--2026.
+distributed compute. This matrix is a versioned manuscript snapshot, not
+a continuously updated product survey. A future refresh should re-check
+every external capability against current primary documentation before
+changing a cell.
 \end{frame}
 
 \end{document}

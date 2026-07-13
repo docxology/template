@@ -105,6 +105,4 @@ def test_derived_guard_dirs_are_concrete_in_tree_template_dirs() -> None:
 def test_committed_doc_in_sync_with_fresh_render() -> None:
     committed = (REPO_ROOT / DOC_RELATIVE_PATH).read_text(encoding="utf-8")
     fresh = render_roster_markdown(collect_entries(REPO_ROOT))
-    assert committed == fresh, (
-        f"{DOC_RELATIVE_PATH} is stale — run `uv run python scripts/docgen/exemplar_roster.py`"
-    )
+    assert committed == fresh, f"{DOC_RELATIVE_PATH} is stale — run `uv run python scripts/docgen/exemplar_roster.py`"

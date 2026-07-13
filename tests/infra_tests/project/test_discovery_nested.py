@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 
 from infrastructure.project.discovery import discover_projects, get_default_project
 from infrastructure.project.metadata import get_project_metadata

@@ -2,7 +2,7 @@
 
 `template_redacted_report` is a public exemplar for redacted release reports, disclosure control, and source-protection review. It is designed for lawful, accountable release workflows in intelligence, security, legal, or public-records contexts without publishing sensitive operational content.
 
-Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and preserve template integrity.
+Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only`, then generate the canonical audit artifacts with `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and preserve template integrity.
 
 ## When to use this template
 
@@ -51,6 +51,22 @@ The canonical renderer is https://github.com/docxology/template with `--project 
 
 Primary configuration lives in `manuscript/config.yaml`; forkable defaults live in `manuscript/config.yaml.example`. Public example segments, redaction decisions, release-policy name, and invented review records live in `data/example_segments.json`; they contain invented fixture text only.
 
+`manuscript/config.yaml` declares a single normal Stage 02 analysis script,
+`scripts/01_generate_release_artifacts.py`. It loads the fixture through the
+typed `src/redacted_report/artifacts.py` contract, applies
+`intelligence_release_review` and `build_comprehensive_release_packet`, then
+writes two deterministic public projections:
+
+| Artifact | Public contents |
+| --- | --- |
+| `output/reports/redaction_audit.json` | Policy outcome, review gate, findings, aggregate metrics, and paragraph metadata; no narrative text |
+| `output/data/release_ledger.json` | Redaction bounds/reasons plus source/public SHA-256 values; no source spans |
+
+The full sanitized packet exists only in memory during analysis. The public
+projections deliberately omit segment text, reviewer rationales, and reviewer
+identities. Development PDF variants remain explicit opt-in proof artifacts and
+are not part of the normal Stage 02 order.
+
 `render.redaction_visual` declares the proofing surface: redaction styles `blackout`, `whiteout`, `grayout`, and `blur`; PDF backgrounds `white`, `gray`, `black`, and `blur`; and near-zero left/right PDF margins for the minimal report style. The blur background is a review mode that blurs non-redacted context while leaving redaction spans visibly treated by the selected style.
 
 Generate the full development proof matrix, including template steganography/provenance post-processing, with:
@@ -71,7 +87,7 @@ uv run pytest projects/templates/template_redacted_report/tests --cov=projects/t
 
 ## Outputs and validation
 
-The validator checks classification ceilings, source-control coverage, redaction bounds, residual sensitive markers, release authority, orphan redaction decisions, reviewer approvals, and mosaic-risk accumulation. It builds sanitized release packets, paragraph-level audit tables, source-safe redaction ledgers, segment hash manifests, residual-risk reports, review-gate reports, and organization-specific classification taxonomy adapters, including an intelligence-style taxonomy for `TOP SECRET//SCI`-style markings in invented fixtures. Stage 04 validation checks the rendered public report once generated.
+The validator checks classification ceilings, source-control coverage, redaction bounds, residual sensitive markers, release authority, orphan redaction decisions, reviewer approvals, and mosaic-risk accumulation. It builds sanitized release packets in memory, paragraph-level audit tables, source-safe redaction ledgers, segment hash manifests, residual-risk reports, review-gate reports, and organization-specific classification taxonomy adapters, including an intelligence-style taxonomy for `TOP SECRET//SCI`-style markings in invented fixtures. The Stage 02 writer projects those results into deterministic, text-free JSON evidence; Stage 04 validation checks the rendered public report once generated.
 
 ## Publication and boundaries
 

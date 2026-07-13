@@ -73,12 +73,12 @@
       "svg_path": "purity_claim_scatter.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 122089,
-      "svg_bytes": 41338,
-      "width_px": 2347,
+      "png_bytes": 129386,
+      "svg_bytes": 47201,
+      "width_px": 2343,
       "height_px": 1745,
-      "nonwhite_fraction": 0.032105,
-      "color_variance": 0.01429053,
+      "nonwhite_fraction": 0.034276,
+      "color_variance": 0.01594966,
       "passes_quality": true
     },
     {
@@ -178,12 +178,12 @@
       "svg_path": "evidence_tier_ladder.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 115180,
-      "svg_bytes": 51426,
-      "width_px": 3339,
-      "height_px": 1332,
-      "nonwhite_fraction": 0.216987,
-      "color_variance": 0.05471249,
+      "png_bytes": 124428,
+      "svg_bytes": 53020,
+      "width_px": 3420,
+      "height_px": 1447,
+      "nonwhite_fraction": 0.111927,
+      "color_variance": 0.04036874,
       "passes_quality": true
     }
   ]

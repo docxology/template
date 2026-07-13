@@ -240,11 +240,38 @@ body {
   overflow-x: visible;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 @media (max-width: 600px) {
   body {
     width: 100%;
     max-width: 100%;
     padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
@@ -284,6 +311,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -291,7 +323,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -368,7 +400,7 @@ mjx-container[display="true"] {
 </style>
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Redacted Report Template: Disclosure Control and
 Release Audit</h1>
@@ -439,6 +471,7 @@ class="toc-section-number">5.1</span> Limitations</a></li>
 </ul></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This exemplar demonstrates a complete disclosure-control pipeline for
@@ -460,9 +493,9 @@ authority—each providing a non-empty rationale. A source-safe redaction
 ledger records SHA-256 hashes of each redacted span without exposing
 source text, and a segment hash manifest compares source and public
 SHA-256 digests for reproducible audit. The comprehensive release packet
-combines sanitized text, audit findings, ledger, hashes, review gate
-status, and paragraph-level audit tables into a single JSON-ready
-export. This exemplar confirms that visual presentation choices remain
+is built in memory; canonical public JSON separates a text-free audit
+from the hashed ledger so neither artifact exposes narrative or source
+spans. This exemplar confirms that visual presentation choices remain
 orthogonal to the release gate: the same source-safe decisions drive
 every output variant.</p>
 <hr />
@@ -513,9 +546,8 @@ manifests.</li>
 <li>Optional Kmyth TPM sealing that wraps each hash manifest and
 steganography PDF in <code>.ski</code> sidecars sealed against the
 TPM2-TSS storage hierarchy.</li>
-<li>A comprehensive release packet that combines sanitized text, audit
-findings, ledger, hashes, review gate status, and paragraph audit
-tables.</li>
+<li>A comprehensive in-memory release packet plus deterministic public
+projections: a text-free audit and a hashed source-safe ledger.</li>
 </ol>
 <h1 data-number="3" id="architecture"><span
 class="header-section-number">3</span> Architecture</h1>
@@ -678,6 +710,13 @@ only for valid spans, absent for invalid or orphan decisions.</li>
 </ul>
 <p>The ledger never exposes source text. It provides reproducible audit
 evidence without disclosure risk.</p>
+<p>The normal analysis stage writes this evidence to
+<code>output/data/release_ledger.json</code>. Its companion
+<code>output/reports/redaction_audit.json</code> contains policy
+outcomes, review-gate status, findings, scores, counts, and paragraph
+metadata. Both canonical files omit narrative text, review rationales,
+and reviewer identities; the comprehensive sanitized packet is evaluated
+in memory rather than serialized to the public output tree.</p>
 <h2 data-number="4.3" id="segment-hash-manifest"><span
 class="header-section-number">4.3</span> Segment Hash Manifest</h2>
 <p>The hash manifest records, for each segment:</p>

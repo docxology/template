@@ -11,6 +11,7 @@ from refinery import (
     run_refinery,
     stage_by_name,
     stage_by_order,
+    stages_to_target,
 )
 
 
@@ -21,6 +22,40 @@ class TestCanonicalStages:
     def test_stage_names(self):
         names = [s.name for s in CANONICAL_STAGES]
         assert names == ["ore", "smelting", "assaying", "cupellation", "certification"]
+
+    def test_adjacent_stages_are_continuous(self):
+        for previous, current in zip(CANONICAL_STAGES[:-1], CANONICAL_STAGES[1:], strict=True):
+            assert current.input_purity == previous.output_purity
+
+
+class TestReverseAssay:
+    def test_target_returns_shortest_ordered_prefix(self):
+        selected = stages_to_target(0.90)
+        assert [stage.name for stage in selected] == ["ore", "smelting", "assaying"]
+
+    def test_target_at_initial_state_requires_no_stage(self):
+        assert stages_to_target(0.10) == ()
+
+    def test_target_above_maximum_is_rejected(self):
+        with pytest.raises(ValueError, match="exceeds refinery maximum"):
+            stages_to_target(1.0)
+
+    def test_invalid_target_is_rejected(self):
+        with pytest.raises(ValueError, match=r"must be in \[0, 1\]"):
+            stages_to_target(-0.1)
+
+    def test_discontinuous_pipeline_is_rejected(self):
+        broken = list(CANONICAL_STAGES)
+        broken[1] = RefinementStage(
+            name=broken[1].name,
+            metallurgical_operation=broken[1].metallurgical_operation,
+            manuscript_operation=broken[1].manuscript_operation,
+            input_purity=0.40,
+            output_purity=broken[1].output_purity,
+            order=broken[1].order,
+        )
+        with pytest.raises(ValueError, match="Stage continuity mismatch"):
+            run_refinery(broken)
 
     def test_stage_orders(self):
         for i, stage in enumerate(CANONICAL_STAGES):

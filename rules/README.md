@@ -52,7 +52,7 @@ your project's requirements.
 
 ## Versioning
 
-Each rule set carries a `version` field in its `rules.yaml`.  
+Each rule set carries a `version` field in its `rules.yaml`.
 Increment the version when constraints change in a breaking way.
 
 ---

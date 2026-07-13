@@ -14,7 +14,7 @@ import pytest
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.project.metadata import get_project_metadata
 from infrastructure.project.validation import validate_project_structure
-from infrastructure.project.discovery import discover_projects, get_default_project, resolve_project_root
+from infrastructure.project.discovery import discover_projects, resolve_project_root
 
 
 def test_project_package_exports_match_docs() -> None:

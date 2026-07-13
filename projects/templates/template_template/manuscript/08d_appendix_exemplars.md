@@ -11,7 +11,7 @@ The full public exemplar roster is: ${public_exemplar_list}. The three rows belo
 
 | Project slug | Purpose | Highlights | Tests | Figures (Stage 02 hint) |
 |--------------|---------|------------|:-----:|:-----------------------|
-| `template_code_project` | Optimization tutorial | Convex demo figures, scripted tables | ${project_template_code_project_test_count} @ 90%+ gate | Controlled matplotlib exports |
+| `template_code_project` | Optimization tutorial | Convex demo figures, scripted tables | ${project_template_code_project_test_count} discovered tests; ${coverage_floor_project}% declared gate | Controlled matplotlib exports |
 | `template_prose_project` | Prose-heavy workflow | Validates narrative-only repos | ${project_template_prose_project_test_count} | Lightweight / optional plots |
 | `template_autoresearch_project` | AutoResearch readiness | Planner + validation CLI | ${project_template_autoresearch_project_test_count} | Readiness reports from Stage 02 |
 

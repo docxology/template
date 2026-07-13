@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -177,6 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:conclusion">Conclusion</h1>
 <p>This study demonstrated a complete computational research pipeline
 from algorithmic implementation through uncompromising testing,
@@ -278,8 +280,7 @@ every quantitative claim to <code>output/data/</code> artifacts and
 enforces a zero-mock test policy on
 <code>projects/templates/template_code_project/src/</code> with coverage
 gates documented in the root <code>pyproject.toml</code>.</p>
-<p>The pipeline produced the figures referenced in <span
-class="citation" data-cites="sec:results">[@sec:results]</span>, wrote
+<p>The pipeline produced the figures referenced in [sec:results], wrote
 <code>optimization_results.csv</code>, and rendered this markdown
 (<code>projects/templates/template_code_project/manuscript/04_conclusion.md</code>)
 together with <code>config.yaml</code> into PDF through
@@ -287,5 +288,6 @@ together with <code>config.yaml</code> into PDF through
 <code>template_code_project</code> tree remains the canonical reference
 for how algorithm code, analysis scripts, variable injection, and
 manuscript stay synchronized across rebuilds.</p>
+</main>
 </body>
 </html>

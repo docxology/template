@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
+**<repo-root>/projects/templates/template_search_projec
 t/output/slides/S01_literature_review_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1210,7 +1210,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.aux)
 \openout1 = `S01_literature_review_slides.aux'.
 
@@ -1573,7 +1573,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.nav) [1
 
 ] [2
@@ -1582,7 +1582,7 @@ Package caption Info: End \AtBeginDocument code.
 \openout4 = `S01_literature_review_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 4.
@@ -2172,7 +2172,7 @@ Overfull \vbox (22.79376pt too high) detected at line 869
 \openout4 = `S01_literature_review_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.vrb
 Overfull \hbox (36.37897pt too wide) in paragraph at lines 42--45
 \TU/lmss/m/n/6 10.1093/hesc/9780192896599.003.0019 
@@ -2337,7 +2337,7 @@ Overfull \vbox (0.40579pt too high) detected at line 1212
 \openout7 = `S01_literature_review_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/S01_literature_review_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -2347,11 +2347,11 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  30997 strings out of 468168
  623063 string characters out of 5432815
- 1357077 words of memory out of 5000000
+ 1357071 words of memory out of 5000000
  59202 multiletter control sequences out of 15000+600000
  628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1118b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_search_project/output/slides/S01_literature_review_slides.pdf (37 pages).

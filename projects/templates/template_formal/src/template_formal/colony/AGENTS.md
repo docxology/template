@@ -1,10 +1,11 @@
 # `src/template_formal/colony/` — Agent Guide
 
-Seven files, one distinct responsibility each — see `README.md`'s module
+Eight files, one distinct responsibility each — see `README.md`'s module
 table before touching any of them; this package has grown across three
 adversarial rounds and it is easy to put new logic in the wrong file.
 
-**Contents.** `pheromone.py` (shared substrate + `Protocol`), `experiment.py`
+**Contents.** `analysis.py` (publication analysis + artifact contract),
+`pheromone.py` (shared substrate + `Protocol`), `experiment.py`
 (real-mechanism trial harness + the shared `find_sustained_consensus_tick`
 consensus definition), `stats.py` (stdlib-only closed-form statistics),
 `demo.py` (real simulation runners), `visualization.py` (optional matplotlib
@@ -38,6 +39,9 @@ figures), `nullmodel.py` (structurally-isolated random-choice baseline),
   precisely *because* the thin-orchestrator rule forbids it in `scripts/` —
   do not migrate logic back into a `scripts/02_run_analysis.py`-style
   orchestrator (ISC-78).
+- `analysis.py` owns the publication-facing combination of the demo, sweep,
+  statistical summary, required figures, and registry. The corresponding
+  script must remain a one-call path/printing adapter (ISC-120).
 - Any new pre-registered experiment quoting a rate must report its Wilson
   interval alongside the point estimate, unrounded, and pin the exact
   `successes` count in a regression test — see `test_colony_experiments_extended.py`

@@ -1,13 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 18:34
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  11 JUL 2026 21:04
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43
-ab/projects/templates/template_literature_meta_analysis/output/slides/02_method
-s_overview_slides.tex
+**<repo-root>/projects/templates/template_literature_me
+ta_analysis/output/slides/02_methods_overview_slides.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.tex
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (/usr/local/texlive/2026/texmf-dist/tex/latex/beamer/beamer.cls
@@ -731,7 +729,7 @@ LaTeX Info: Redefining \addtolength on input line 87.
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math.sty
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2026-01-19 L3 programming layer (loader)
+Package: expl3 2026-01-19 L3 programming layer (loader) 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
@@ -783,7 +781,7 @@ File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding TS1 on input line 47.
 LaTeX Encoding Info:    Redeclaring text command \capitalcedilla (encoding TS1)
  on input line 49.
-LaTeX Encoding Info:    Redeclaring text command \capitalogonek (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text command \capitalogonek (encoding TS1) 
 on input line 52.
 LaTeX Encoding Info:    Redeclaring text command \capitalgrave (encoding TS1) o
 n input line 55.
@@ -803,17 +801,17 @@ LaTeX Encoding Info:    Redeclaring text command \capitalcaron (encoding TS1) o
 n input line 62.
 LaTeX Encoding Info:    Redeclaring text command \capitalbreve (encoding TS1) o
 n input line 63.
-LaTeX Encoding Info:    Redeclaring text command \capitalmacron (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text command \capitalmacron (encoding TS1) 
 on input line 64.
 LaTeX Encoding Info:    Redeclaring text command \capitaldotaccent (encoding TS
 1) on input line 65.
 LaTeX Encoding Info:    Redeclaring text command \t (encoding TS1) on input lin
 e 66.
-LaTeX Encoding Info:    Redeclaring text command \capitaltie (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text command \capitaltie (encoding TS1) on 
 input line 67.
 LaTeX Encoding Info:    Redeclaring text command \newtie (encoding TS1) on inpu
 t line 68.
-LaTeX Encoding Info:    Redeclaring text command \capitalnewtie (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text command \capitalnewtie (encoding TS1) 
 on input line 69.
 LaTeX Encoding Info:    Redeclaring text symbol \textcapitalcompwordmark (encod
 ing TS1) on input line 70.
@@ -829,7 +827,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textthreequartersemdash (encod
 ing TS1) on input line 75.
 LaTeX Encoding Info:    Redeclaring text symbol \textleftarrow (encoding TS1) o
 n input line 76.
-LaTeX Encoding Info:    Redeclaring text symbol \textrightarrow (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textrightarrow (encoding TS1) 
 on input line 77.
 LaTeX Encoding Info:    Redeclaring text symbol \textblank (encoding TS1) on in
 put line 78.
@@ -841,7 +839,7 @@ LaTeX Encoding Info:    Redeclaring text command \textasteriskcentered (encodin
 g TS1) on input line 81.
 LaTeX Encoding Info:    Redeclaring text symbol \textdblhyphen (encoding TS1) o
 n input line 92.
-LaTeX Encoding Info:    Redeclaring text symbol \textfractionsolidus (encoding
+LaTeX Encoding Info:    Redeclaring text symbol \textfractionsolidus (encoding 
 TS1) on input line 93.
 LaTeX Encoding Info:    Redeclaring text symbol \textzerooldstyle (encoding TS1
 ) on input line 94.
@@ -881,11 +879,11 @@ LaTeX Encoding Info:    Redeclaring text symbol \textlbrackdbl (encoding TS1) o
 n input line 116.
 LaTeX Encoding Info:    Redeclaring text symbol \textrbrackdbl (encoding TS1) o
 n input line 117.
-LaTeX Encoding Info:    Redeclaring text symbol \textuparrow (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textuparrow (encoding TS1) on 
 input line 118.
 LaTeX Encoding Info:    Redeclaring text symbol \textdownarrow (encoding TS1) o
 n input line 119.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciigrave (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textasciigrave (encoding TS1) 
 on input line 120.
 LaTeX Encoding Info:    Redeclaring text symbol \textborn (encoding TS1) on inp
 ut line 121.
@@ -895,7 +893,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textdied (encoding TS1) on inp
 ut line 123.
 LaTeX Encoding Info:    Redeclaring text symbol \textleaf (encoding TS1) on inp
 ut line 124.
-LaTeX Encoding Info:    Redeclaring text symbol \textmarried (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textmarried (encoding TS1) on 
 input line 125.
 LaTeX Encoding Info:    Redeclaring text symbol \textmusicalnote (encoding TS1)
  on input line 126.
@@ -903,9 +901,9 @@ LaTeX Encoding Info:    Redeclaring text symbol \texttildelow (encoding TS1) on
  input line 127.
 LaTeX Encoding Info:    Redeclaring text symbol \textdblhyphenchar (encoding TS
 1) on input line 128.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciibreve (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textasciibreve (encoding TS1) 
 on input line 129.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciicaron (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textasciicaron (encoding TS1) 
 on input line 130.
 LaTeX Encoding Info:    Redeclaring text symbol \textacutedbl (encoding TS1) on
  input line 131.
@@ -921,7 +919,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textperthousand (encoding TS1)
  on input line 136.
 LaTeX Encoding Info:    Redeclaring text symbol \textbullet (encoding TS1) on i
 nput line 137.
-LaTeX Encoding Info:    Redeclaring text symbol \textcelsius (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textcelsius (encoding TS1) on 
 input line 138.
 LaTeX Encoding Info:    Redeclaring text symbol \textdollaroldstyle (encoding T
 S1) on input line 139.
@@ -935,7 +933,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textwon (encoding TS1) on inpu
 t line 143.
 LaTeX Encoding Info:    Redeclaring text symbol \textnaira (encoding TS1) on in
 put line 144.
-LaTeX Encoding Info:    Redeclaring text symbol \textguarani (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textguarani (encoding TS1) on 
 input line 145.
 LaTeX Encoding Info:    Redeclaring text symbol \textpeso (encoding TS1) on inp
 ut line 146.
@@ -945,7 +943,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textrecipe (encoding TS1) on i
 nput line 148.
 LaTeX Encoding Info:    Redeclaring text symbol \textinterrobang (encoding TS1)
  on input line 149.
-LaTeX Encoding Info:    Redeclaring text symbol \textinterrobangdown (encoding
+LaTeX Encoding Info:    Redeclaring text symbol \textinterrobangdown (encoding 
 TS1) on input line 150.
 LaTeX Encoding Info:    Redeclaring text symbol \textdong (encoding TS1) on inp
 ut line 151.
@@ -953,7 +951,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \texttrademark (encoding TS1) o
 n input line 152.
 LaTeX Encoding Info:    Redeclaring text symbol \textpertenthousand (encoding T
 S1) on input line 153.
-LaTeX Encoding Info:    Redeclaring text symbol \textpilcrow (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textpilcrow (encoding TS1) on 
 input line 154.
 LaTeX Encoding Info:    Redeclaring text symbol \textbaht (encoding TS1) on inp
 ut line 155.
@@ -963,7 +961,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textdiscount (encoding TS1) on
  input line 157.
 LaTeX Encoding Info:    Redeclaring text symbol \textestimated (encoding TS1) o
 n input line 158.
-LaTeX Encoding Info:    Redeclaring text symbol \textopenbullet (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textopenbullet (encoding TS1) 
 on input line 159.
 LaTeX Encoding Info:    Redeclaring text symbol \textservicemark (encoding TS1)
  on input line 160.
@@ -981,7 +979,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textyen (encoding TS1) on inpu
 t line 166.
 LaTeX Encoding Info:    Redeclaring text symbol \textbrokenbar (encoding TS1) o
 n input line 167.
-LaTeX Encoding Info:    Redeclaring text symbol \textsection (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textsection (encoding TS1) on 
 input line 168.
 LaTeX Encoding Info:    Redeclaring text symbol \textasciidieresis (encoding TS
 1) on input line 169.
@@ -995,7 +993,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \textlnot (encoding TS1) on inp
 ut line 173.
 LaTeX Encoding Info:    Redeclaring text symbol \textcircledP (encoding TS1) on
  input line 174.
-LaTeX Encoding Info:    Redeclaring text symbol \textregistered (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textregistered (encoding TS1) 
 on input line 175.
 LaTeX Encoding Info:    Redeclaring text symbol \textasciimacron (encoding TS1)
  on input line 176.
@@ -1007,7 +1005,7 @@ LaTeX Encoding Info:    Redeclaring text symbol \texttwosuperior (encoding TS1)
  on input line 179.
 LaTeX Encoding Info:    Redeclaring text symbol \textthreesuperior (encoding TS
 1) on input line 180.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciiacute (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textasciiacute (encoding TS1) 
 on input line 181.
 LaTeX Encoding Info:    Redeclaring text symbol \textmu (encoding TS1) on input
  line 182.
@@ -1023,9 +1021,9 @@ LaTeX Encoding Info:    Redeclaring text symbol \textordmasculine (encoding TS1
 ) on input line 187.
 LaTeX Encoding Info:    Redeclaring text symbol \textsurd (encoding TS1) on inp
 ut line 188.
-LaTeX Encoding Info:    Redeclaring text symbol \textonequarter (encoding TS1)
+LaTeX Encoding Info:    Redeclaring text symbol \textonequarter (encoding TS1) 
 on input line 189.
-LaTeX Encoding Info:    Redeclaring text symbol \textonehalf (encoding TS1) on
+LaTeX Encoding Info:    Redeclaring text symbol \textonehalf (encoding TS1) on 
 input line 190.
 LaTeX Encoding Info:    Redeclaring text symbol \textthreequarters (encoding TS
 1) on input line 191.
@@ -1120,7 +1118,7 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/seqsplit/seqsplit.sty
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
- etc.)
+ etc.) 
 )
 \c@proposition=\count385
 \c@hypothesis=\count386
@@ -1132,9 +1130,8 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.aux)
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.aux)
 \openout1 = `02_methods_overview_slides.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 124.
@@ -1165,7 +1162,7 @@ LaTeX Font Info:    ... okay on input line 124.
 * paper: custom
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: includehead includefoot
+* modes: includehead includefoot 
 * h-part:(L,W,R)=(28.45274pt, 307.28987pt, 28.45274pt)
 * v-part:(T,H,B)=(0.0pt, 273.14662pt, 0.0pt)
 * \paperwidth=364.19536pt
@@ -1196,27 +1193,27 @@ Package hyperref Info: Link coloring OFF on input line 124.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
-Dictionary: translator-basic-dictionary, Language: English
+Dictionary: translator-basic-dictionary, Language: English 
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-bibliograph
 y-dictionary-English.dict
-Dictionary: translator-bibliography-dictionary, Language: English
+Dictionary: translator-bibliography-dictionary, Language: English 
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-environment
 -dictionary-English.dict
-Dictionary: translator-environment-dictionary, Language: English
+Dictionary: translator-environment-dictionary, Language: English 
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-months-dict
 ionary-English.dict
-Dictionary: translator-months-dictionary, Language: English
+Dictionary: translator-months-dictionary, Language: English 
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-numbers-dic
 tionary-English.dict
-Dictionary: translator-numbers-dictionary, Language: English
+Dictionary: translator-numbers-dictionary, Language: English 
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-theorem-dic
 tionary-English.dict
-Dictionary: translator-theorem-dictionary, Language: English
+Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 124.
@@ -1233,27 +1230,27 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 124.
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'latinmodern-math.otf(0)' created for font
 (fontspec)             'latinmodern-math.otf' with options
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
 allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->s*[1.03015890977869]"[latinmodern-math.otf]/OT:script
 =math;language=dflt;"
@@ -1264,37 +1261,37 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
 (Font)              scaled to size 11.28015pt on input line 124.
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'latinmodern-math.otf(1)' created for font
 (fontspec)             'latinmodern-math.otf' with options
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
 allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
 latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
 yle=MathScriptScript}},BoldFont={latinmodern-math.otf}].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <9.3075->s*[1.03015890977869]"[latinmodern-math.otf]/OT:
 script=math;language=dflt;"<6.57-9.3075>s*[1.03015890977869]"[latinmodern-math.
@@ -1318,47 +1315,47 @@ LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
 t line 124.
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030261925669668.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030261925669668.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030261925669668.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030261925669668.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030261925669668.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'latinmodern-math.otf(2)' created for font
 (fontspec)             'latinmodern-math.otf' with options
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
@@ -1376,10 +1373,10 @@ justment={\fontdimen
 (fontspec)             =2.82004pt\relax \fontdimen 19\font =2.25603pt\relax
 (fontspec)             \fontdimen 22\font =2.82004pt\relax \fontdimen 20\font
 (fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax }].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <9.3075->s*[1.030261925669668]"[latinmodern-math.otf]/OT
 :script=math;language=dflt;"<6.57-9.3075>s*[1.030261925669668]"[latinmodern-mat
@@ -1400,47 +1397,47 @@ LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
 t line 124.
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030055893887712.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030055893887712.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030055893887712.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030055893887712.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.030055893887712.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'latinmodern-math.otf(3)' created for font
 (fontspec)             'latinmodern-math.otf' with options
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
@@ -1452,10 +1449,10 @@ justment={\fontdimen
 (fontspec)             =2.25603pt\relax \fontdimen 10\font =1.88379pt\relax
 (fontspec)             \fontdimen 11\font =1.25209pt\relax \fontdimen 12\font
 (fontspec)             =6.7681pt\relax \fontdimen 13\font =0pt\relax }].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <9.3075->s*[1.030055893887712]"[latinmodern-math.otf]/OT
 :script=math;language=dflt;"<6.57-9.3075>s*[1.030055893887712]"[latinmodern-mat
@@ -1494,32 +1491,30 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.nav) [1
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.nav) [1
 
 ]
 \openout4 = `02_methods_overview_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.vrb) [2
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.vrb) [2
 
 ]
 \openout4 = `02_methods_overview_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.vrb
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 34.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 5.64008pt on input line 34.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
 4.
- (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
@@ -1536,7 +1531,8 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 5.63957pt on input line 34.
 LaTeX Font Info:    Trying to load font information for U+msa on input line 34.
 
- (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
@@ -1563,17 +1559,15 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `02_methods_overview_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.vrb) [6
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.vrb) [6
 
 ]
 \openout4 = `02_methods_overview_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.vrb) [7
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.vrb) [7
 
 ] [8
 
@@ -1589,23 +1583,22 @@ _overview_slides.vrb) [7
 \openout7 = `02_methods_overview_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
-b/projects/templates/template_literature_meta_analysis/output/slides/02_methods
-_overview_slides.aux)
+(<repo-root>/projects/templates/template_literature_met
+a_analysis/output/slides/02_methods_overview_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
- )
+ ) 
 Here is how much of TeX's memory you used:
  29438 strings out of 468168
- 597011 string characters out of 5432815
+ 596175 string characters out of 5432815
  1150581 words of memory out of 5000000
  57631 multiletter control sequences out of 15000+600000
  631232 words of font info for 69 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1170b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1126b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/optimis
-tic-solomon-6d43ab/projects/templates/template_literature_meta_analysis/output/
-slides/02_methods_overview_slides.pdf (8 pages).
+Output written on <repo-root>/projects/templates/templa
+te_literature_meta_analysis/output/slides/02_methods_overview_slides.pdf (8 pag
+es).

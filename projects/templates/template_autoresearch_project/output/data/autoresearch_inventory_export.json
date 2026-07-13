@@ -5,14 +5,14 @@
     {
       "id": "root_pyproject",
       "kind": "input",
-      "path": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pyproject.toml",
+      "path": "<repo-root>/pyproject.toml",
       "required": false,
       "sha256": "f9d634d372c74894e646c6326ac31895e126578cd72e9dbb7fdc3a8de51e7a72"
     },
     {
       "id": "root_uv_lock",
       "kind": "input",
-      "path": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/uv.lock",
+      "path": "<repo-root>/uv.lock",
       "required": false,
       "sha256": "83a3524b64b22ec8be74d52283595767722525b91c857ef41d3a394f9b1f7d07"
     },
@@ -112,28 +112,28 @@
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "48d7b802099d719ce246ae038224af94d8903dfb883747374e505e790deca616"
+      "sha256": "370b6f7e640106481f7f24a477ddfb9cc01569d5d367b8ab08660e3c2055824f"
     },
     {
       "id": "generated-003",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "c09789a2291b3135c29ae550c0ff749d9f09def93e2402ed5fcdd790e2ad769e"
+      "sha256": "53927b7e7dbca017223f192b65ef0ac8c0cda3f280ea33a84fa5c5d96b43e9e3"
     },
     {
       "id": "generated-004",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_plan.json",
       "required": true,
-      "sha256": "0f8166005d311de66e0880c65bca45fe68522a87bdbd0006bbed42dd3e81493c"
+      "sha256": "06b1a8859111cab2938c6cb57e57f96ccd419c453d8ff1c374c3c3b528e72779"
     },
     {
       "id": "generated-005",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "f87ab916076b09d698022ed8872bfa785cb3c085e4d2cd02cc9366513060f0ec"
+      "sha256": "a1486cba273bdaaf622d57cefb52a13c1abe433b82d0677ec8207be1d98ab8e6"
     },
     {
       "id": "generated-006",
@@ -154,28 +154,28 @@
       "kind": "generated_artifact",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "196a8caa7252f42f883a432da3ee4f6370f086abe72853d14afb22d7ad4d3437"
+      "sha256": "99343bca9dbee61f05550f297aa1789c185cf0cc2c1f6179b546625199451548"
     },
     {
       "id": "generated-009",
       "kind": "generated_artifact",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "3aaa1b54760163f62606acda50f5cf2e24aaf0aa7b2b35422ee775a7458d49ae"
+      "sha256": "f879897f9220654bd0af3643179947420acf3ea734d8f4647d50bf737cff3ad3"
     },
     {
       "id": "generated-010",
       "kind": "generated_artifact",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "aa357ed53403f98fdef9ca7d8f1eb1950840d3e378bc7648df701b570aa90787"
+      "sha256": "43713c3676f3913a9bf117981e858ea2ea0215ddd82430418f2353c50544ee3a"
     },
     {
       "id": "generated-011",
       "kind": "generated_artifact",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "3858b347396399a31bf729d2bb5d7c0193e0b1ba5ad3c14f1fba03bb93c9a6bb"
+      "sha256": "e4949806dee08a01b8a6f52c246158055f7d08e49f7e66b4aacdcf8870066701"
     },
     {
       "id": "generated-012",
@@ -217,7 +217,7 @@
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "a1aa53c3146d7d6e6f6b4d85d2051b983a781dc3a34a78d8070af7bede9d6f71"
+      "sha256": "4d11f76830fecda58e7db99ea058c4358d47700d8c80e73c9fd5d710228778b6"
     },
     {
       "id": "generated-018",
@@ -343,7 +343,7 @@
       "kind": "generated_artifact",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "61349dcdc8f8fc14196574bf8528f7079765218b9bd10b7d81c4c85dbeb634fb"
+      "sha256": "f3724be4549ae583156184f185458007f9d8ddace498536816f91096189ac019"
     },
     {
       "id": "generated-036",
@@ -532,7 +532,7 @@
       "kind": "generated_artifact",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "c09789a2291b3135c29ae550c0ff749d9f09def93e2402ed5fcdd790e2ad769e"
+      "sha256": "53927b7e7dbca017223f192b65ef0ac8c0cda3f280ea33a84fa5c5d96b43e9e3"
     },
     {
       "id": "generated-063",
@@ -567,7 +567,7 @@
       "kind": "generated_artifact",
       "path": "output/reports/evidence_registry.json",
       "required": true,
-      "sha256": "deb37f79aaf17a4859f3dcdbff2088210a9d45fe64fddb7ce4355a178bcfa9e9"
+      "sha256": "6322cf3f03eced61764e44919cfba55745e471312a1e4cd6fa6765ee91aac609"
     },
     {
       "id": "generated-068",
@@ -587,7 +587,7 @@
   "cyclonedx_complete": false,
   "formal_sbom": false,
   "format": "template_autoresearch_local_inventory",
-  "generated_at": "2026-07-10T20:14:47+00:00",
+  "generated_at": "2026-07-12T02:49:17+00:00",
   "not_external_signing": true,
   "not_network_security_assessment": true,
   "not_runtime_monitoring": true,

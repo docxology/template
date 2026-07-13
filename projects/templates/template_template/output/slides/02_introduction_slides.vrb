@@ -21,7 +21,7 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   Project Paradigm that enables N independent research projects to share
   infrastructure without coupling.
 \item
-  A detailed specification of the 14-stage DAG in
+  A detailed specification of the 16-stage DAG in
   \breaktt{infrastructure/core/pipeline/pipeline.yaml}: default full runs
   use 10 stages; \texttt{-\/-core-only} runs 8; opt-in ebook, metadata,
   bundle, and archival stages via \texttt{-\/-tags}.
@@ -35,16 +35,23 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   An empirical evaluation across the canonical exemplar projects under
   \breaktt{projects/templates/}
   (\breaktt{templates/template\_active\_inference},
+  \breaktt{templates/template\_autopoiesis},
   \breaktt{templates/template\_autoresearch\_project},
   \breaktt{templates/template\_autoscientists},
   \breaktt{templates/template\_code\_project},
+  \breaktt{templates/template\_data\_descriptor},
   \breaktt{templates/template\_eda\_notebook},
+  \breaktt{templates/template\_formal},
   \breaktt{templates/template\_gold\_refinement},
   \breaktt{templates/template\_literature\_meta\_analysis},
   \breaktt{templates/template\_madlib},
   \breaktt{templates/template\_methods\_paper},
   \breaktt{templates/template\_newspaper},
+  \breaktt{templates/template\_pitch\_deck},
+  \breaktt{templates/template\_pools\_rules\_tools},
   \breaktt{templates/template\_prose\_project},
+  \breaktt{templates/template\_redacted\_report},
+  \breaktt{templates/template\_registered\_report},
   \breaktt{templates/template\_search\_project},
   \breaktt{templates/template\_sia},
   \breaktt{templates/template\_storybook},

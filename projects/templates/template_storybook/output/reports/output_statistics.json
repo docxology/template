@@ -2,9 +2,9 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "1.54",
-      "total_size_bytes": 1611117,
+      "file_count": 12,
+      "size_mb": "1.55",
+      "total_size_bytes": 1620563,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
@@ -24,7 +24,7 @@
       ],
       "extensions": {
         ".md": 1,
-        ".log": 2,
+        ".log": 3,
         ".aux": 1,
         ".blg": 1,
         ".pdf": 2,
@@ -36,18 +36,18 @@
     },
     "web": {
       "exists": true,
-      "file_count": 8,
-      "size_mb": "0.04",
-      "total_size_bytes": 46272,
+      "file_count": 9,
+      "size_mb": "0.05",
+      "total_size_bytes": 50166,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.01",
+          "size_mb": "0.02",
           "path": "web/index.html"
         },
         {
           "name": "manuscript__00_abstract.html",
-          "size_mb": "0.00",
+          "size_mb": "0.01",
           "path": "web/manuscript__00_abstract.html"
         },
         {
@@ -58,6 +58,7 @@
       ],
       "extensions": {
         ".md": 1,
+        ".ico": 1,
         ".html": 7
       }
     },
@@ -65,7 +66,7 @@
       "exists": true,
       "file_count": 46,
       "size_mb": "0.46",
-      "total_size_bytes": 484306,
+      "total_size_bytes": 486264,
       "largest_files": [
         {
           "name": "02_architecture_slides.log",
@@ -139,23 +140,23 @@
     "reports": {
       "exists": true,
       "file_count": 14,
-      "size_mb": "0.07",
-      "total_size_bytes": 76979,
+      "size_mb": "0.12",
+      "total_size_bytes": 120831,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.06",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "artifact_manifest.json",
+          "size_mb": "0.02",
+          "path": "reports/artifact_manifest.json"
         },
         {
           "name": "output_statistics.json",
           "size_mb": "0.01",
           "path": "reports/output_statistics.json"
-        },
-        {
-          "name": "validation_report.json",
-          "size_mb": "0.00",
-          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
@@ -181,16 +182,14 @@
       "extensions": {}
     },
     "logs": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     }
   },
-  "total_files": 94,
-  "total_size_mb": 3.479785919189453,
+  "total_files": 96,
+  "total_size_mb": 3.536195755004883,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
@@ -217,6 +216,12 @@
       "path": "figures/storybook_pages/10_tensegrity_lantern.png"
     },
     {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
       "name": "02_architecture_slides.log",
       "size_mb": "0.06",
       "category": "slides",
@@ -235,12 +240,6 @@
       "path": "slides/03_story_and_graphics_slides.log"
     },
     {
-      "name": "evidence_registry.json",
-      "size_mb": "0.06",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
-    },
-    {
       "name": "_combined_manuscript.log",
       "size_mb": "0.05",
       "category": "pdf",
@@ -253,21 +252,22 @@
       "path": "pdf/template_storybook_combined.pdf"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "logs/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 1.5364809036254883,
-    "web": 0.04412841796875,
-    "slides": 0.4618701934814453,
+    "pdf": 1.5454893112182617,
+    "web": 0.04784202575683594,
+    "slides": 0.46373748779296875,
     "figures": 1.3586807250976562,
     "data": 0.0052127838134765625,
-    "reports": 0.07341289520263672,
+    "reports": 0.1152334213256836,
     "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.0
+    "llm": 0.0
   },
   "file_counts_by_type": {
     ".md": 5,
-    ".log": 8,
+    ".log": 9,
     ".aux": 7,
     ".blg": 1,
     ".pdf": 8,
@@ -275,6 +275,7 @@
     ".tex": 8,
     ".toc": 7,
     ".bbl": 1,
+    ".ico": 1,
     ".html": 7,
     ".nav": 6,
     ".vrb": 3,

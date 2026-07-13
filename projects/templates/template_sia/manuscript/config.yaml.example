@@ -42,10 +42,11 @@ render:
     docx: false
     epub: false
 
-sia:
-  task_name: mini_classify
-  run_id: 1
-  max_generations: 3
-  live: false
-  target_timeout_sec: 60
-  llm_model: ""
+project_config:
+  sia:
+    task_name: mini_classify
+    run_id: 1
+    max_generations: 3
+    live: false
+    target_timeout_sec: 60
+    llm_model: ""

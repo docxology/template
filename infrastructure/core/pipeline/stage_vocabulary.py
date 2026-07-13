@@ -65,7 +65,8 @@ def core_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
         name = stage.get("name")
         if not name:
             continue
-        tags = set(stage.get("tags") or [])
+        raw_tags = stage.get("tags")
+        tags = {str(tag) for tag in raw_tags} if isinstance(raw_tags, list) else set()
         if tags & _OPT_IN_TAGS:
             continue
         names.append(str(name))

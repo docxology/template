@@ -45,8 +45,6 @@ class TestFallbackLogging:
 
     def test_log_success_fallback_is_noop(self, monkeypatch: pytest.MonkeyPatch):
         """log_success no-op fallback (lines 71-74) is callable and returns None."""
-        import logging
-
         monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
         # The fallback is only redefined at module import time; test via the no-op
         # directly by calling it when infrastructure is unavailable.
@@ -61,9 +59,7 @@ class TestValidateOutputs:
         monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
         assert validate_generated_outputs() is None
 
-    def test_returns_summary_when_infra_available(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_returns_summary_when_infra_available(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
@@ -98,9 +94,7 @@ class TestValidateOutputs:
         monkeypatch.setattr(analysis_mod, "verify_output_integrity", _raise_oserror)
         assert validate_generated_outputs() is None
 
-    def test_logs_integrity_issues_when_present(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_logs_integrity_issues_when_present(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         from infrastructure.validation.integrity.checks import IntegrityReport
@@ -167,9 +161,7 @@ class TestStabilityScoreBranches:
 
 
 class TestScientificInfraPaths:
-    def test_stability_uses_infrastructure_report(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_stability_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
@@ -180,9 +172,7 @@ class TestScientificInfraPaths:
         assert "expected_behavior" in data
         assert "actual_behavior" in data
 
-    def test_benchmark_uses_infrastructure_report(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_benchmark_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
@@ -190,8 +180,10 @@ class TestScientificInfraPaths:
 
         path = run_performance_benchmarking()
         data = json.loads(path.read_text())
-        assert "memory_usage" in data
-        assert "timestamp" in data
+        assert data["schema_version"] == "template_code_project/performance_benchmark/v2"
+        assert data["timing_policy"]
+        assert "memory_usage" not in data
+        assert "timestamp" not in data
 
 
 class TestExtractMetadataExtended:
@@ -300,9 +292,7 @@ class TestMainBranches:
         analysis_mod.main()
         assert (tmp_path / "output" / "reports" / "stability_analysis.json").exists()
 
-    def test_main_handles_publishing_demo_failure(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_main_handles_publishing_demo_failure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
@@ -332,9 +322,7 @@ class TestMainErrors:
     def _copy_manuscript(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")
 
-    def test_main_reraises_script_execution_error(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_main_reraises_script_execution_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         from infrastructure.core.exceptions import ScriptExecutionError
@@ -396,9 +384,7 @@ class TestMainErrors:
         with pytest.raises(ImportError, match="missing module"):
             analysis_mod.main()
 
-    def test_main_reraises_file_not_found_error(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_main_reraises_file_not_found_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         self._copy_manuscript(tmp_path)
         monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         monkeypatch.setattr("src.figures.project_root", tmp_path)
@@ -424,9 +410,7 @@ class TestRegisterFigure:
         data = json.loads(registry.read_text())
         assert isinstance(data, dict)
 
-    def test_register_figure_handles_import_error(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_register_figure_handles_import_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         real_import = builtins.__import__
 
@@ -440,9 +424,7 @@ class TestRegisterFigure:
 
         register_figure()
 
-    def test_register_figure_handles_oserror(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
+    def test_register_figure_handles_oserror(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         (tmp_path / "output" / "figures").mkdir(parents=True)
 

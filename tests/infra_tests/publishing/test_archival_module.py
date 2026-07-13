@@ -26,7 +26,6 @@ from infrastructure.publishing.archival import (
     SoftwareHeritageProvider,
     ZenodoProvider,
     archive_publication,
-    load_credentials,
 )
 from infrastructure.publishing.archival.models import _bundle_sha256
 
@@ -413,9 +412,7 @@ def test_ipfs_pinata_dry_run_endpoint_hint(tmp_path: Path) -> None:
     """The extra dict of a dry-run receipt must include would_post_to."""
     bundle = tmp_path / "f.pdf"
     bundle.write_bytes(b"%PDF")
-    receipt = IPFSPinataProvider(jwt=None, base_url="https://api.pinata.cloud").deposit(
-        bundle, dry_run=True
-    )
+    receipt = IPFSPinataProvider(jwt=None, base_url="https://api.pinata.cloud").deposit(bundle, dry_run=True)
     assert "would_post_to" in receipt.extra
     assert "pinFileToIPFS" in receipt.extra["would_post_to"]
 

@@ -8,6 +8,8 @@ import numpy as np
 
 from .base import PrimitiveSpec
 
+PAGERANK_ITERATIONS = 50
+
 
 def bfs_distances(inputs: dict) -> dict:
     """Compute BFS distances from a source node on an undirected graph.
@@ -37,7 +39,7 @@ def pagerank(inputs: dict) -> dict:
     """
     adj: dict[str, list[str]] = inputs["adjacency"]
     damping = float(inputs.get("damping", 0.85))
-    iterations = int(inputs.get("iterations", 50))
+    iterations = int(inputs.get("iterations", PAGERANK_ITERATIONS))
 
     nodes = list(adj.keys())
     # Collect all nodes (including targets)
@@ -84,7 +86,7 @@ _GRAPH = {
 }
 
 _EXAMPLE_BFS = {"adjacency": _GRAPH, "source": "A"}
-_EXAMPLE_PR = {"adjacency": _GRAPH, "damping": 0.85, "iterations": 50}
+_EXAMPLE_PR = {"adjacency": _GRAPH, "damping": 0.85, "iterations": PAGERANK_ITERATIONS}
 
 PRIMITIVES: tuple[PrimitiveSpec, ...] = (
     PrimitiveSpec(

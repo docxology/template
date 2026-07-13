@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Confidentiality guard — rules tracking check."""
+
 from __future__ import annotations
 
 import argparse

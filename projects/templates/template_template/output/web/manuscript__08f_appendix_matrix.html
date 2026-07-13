@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="appendix-matrix">Appendix: Comparative Tool Matrix</h2>
 <p><strong>Symbol key</strong> (applies to all cells):
 <strong>Y</strong> = full native support · <strong>~</strong> = partial
@@ -199,14 +203,14 @@ colour-coded heatmap rendering of this table.</p>
 <tr>
 <th>Capability</th>
 <th style="text-align: center;"><code>template/</code></th>
-<th style="text-align: center;">Snakemake 9</th>
-<th style="text-align: center;">Nextflow 25</th>
-<th style="text-align: center;">CWL 1.2</th>
-<th style="text-align: center;">Quarto 1</th>
-<th style="text-align: center;">Jupyter Book 2</th>
+<th style="text-align: center;">Snakemake</th>
+<th style="text-align: center;">Nextflow</th>
+<th style="text-align: center;">CWL</th>
+<th style="text-align: center;">Quarto</th>
+<th style="text-align: center;">Jupyter Book</th>
 <th style="text-align: center;">R Markdown</th>
-<th style="text-align: center;">DVC 3</th>
-<th style="text-align: center;">Overleaf (2025)</th>
+<th style="text-align: center;">DVC</th>
+<th style="text-align: center;">Overleaf</th>
 <th style="text-align: center;">OpenAI Prism</th>
 </tr>
 </thead>
@@ -395,13 +399,14 @@ colour-coded heatmap rendering of this table.</p>
 </tr>
 </tbody>
 </table>
-<p>¹ Nextflow 25.04.0 introduced data-lineage provenance tracking
-(build-level, not document-level). ² DVC provides content-addressed
+<p>¹ Nextflow lineage records operate at workflow scope rather than as a
+rendered-document citation graph. ² DVC provides content-addressed
 versioning for data artifacts via its object store. ³ DVC integrates
 with remote storage (S3, GCS, Azure) but does not natively orchestrate
-distributed compute. ⁴ Overleaf and OpenAI Prism are collaborative cloud
-LaTeX/AI writing environments; their AI features (GPT-5.2 for Prism,
-Overleaf Labs AI for Overleaf) are partial/early-stage as of
-2025–2026.</p>
+distributed compute. This matrix is a versioned manuscript snapshot, not
+a continuously updated product survey. A future refresh should re-check
+every external capability against current primary documentation before
+changing a cell.</p>
+</main>
 </body>
 </html>

@@ -28,6 +28,7 @@ class PerformanceWarningDict(TypedDict, total=False):
     duration: float
     average: float
     memory_mb: float
+    cpu_percent: float
     message: str
     suggestion: str
 

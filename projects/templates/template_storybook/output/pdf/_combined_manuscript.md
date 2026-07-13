@@ -57,6 +57,8 @@ templates:
 - `src/storybook/characters.py` validates shape characters.
 - `src/storybook/story.py` loads the content file into typed records.
 - `src/storybook/illustration.py` renders the full-page scenes.
+- `src/storybook/text_layout.py` owns deterministic typography, wrapping, and
+  text overlays.
 - `src/storybook/rendering.py` assembles PNG pages into the PDF and writes the
   manifest.
 - `scripts/` contains the thin Stage-02 entry points.

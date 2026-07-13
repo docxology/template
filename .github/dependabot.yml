@@ -52,7 +52,6 @@ updates:
           - "pytest*"
           - "mypy*"
           - "ruff*"
-          - "black*"
           - "bandit*"
           - "pip-audit*"
           - "types-*"

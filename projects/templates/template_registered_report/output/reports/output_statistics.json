@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.38",
-      "total_size_bytes": 398973,
+      "total_size_bytes": 398972,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 65,
       "size_mb": "0.94",
-      "total_size_bytes": 985467,
+      "total_size_bytes": 984067,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -97,9 +97,9 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 4,
-      "size_mb": "0.19",
-      "total_size_bytes": 203985,
+      "file_count": 5,
+      "size_mb": "0.20",
+      "total_size_bytes": 205060,
       "largest_files": [
         {
           "name": "permutation_result.png",
@@ -118,6 +118,7 @@
         }
       ],
       "extensions": {
+        ".json": 1,
         ".png": 4
       }
     },
@@ -139,46 +140,45 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 18,
-      "size_mb": "0.12",
-      "total_size_bytes": 128752,
+      "file_count": 31,
+      "size_mb": "0.16",
+      "total_size_bytes": 164961,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.07",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.03",
+          "size_mb": "0.02",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "stage-07-output-validation.json",
+          "name": "pipeline_report.json",
           "size_mb": "0.01",
-          "path": "reports/snapshots/stage-07-output-validation.json"
+          "path": "reports/pipeline_report.json"
         }
       ],
       "extensions": {
-        ".json": 16,
-        ".md": 2
+        ".json": 21,
+        ".jsonl": 1,
+        ".txt": 3,
+        ".md": 5,
+        ".html": 1
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
       "exists": true,
@@ -197,8 +197,8 @@
       }
     }
   },
-  "total_files": 110,
-  "total_size_mb": 1.7451143264770508,
+  "total_files": 124,
+  "total_size_mb": 1.7793350219726562,
   "largest_files": [
     {
       "name": "template_registered_report_combined.pdf",
@@ -213,6 +213,12 @@
       "path": "slides/04_results_slides.pdf"
     },
     {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
       "name": "03_methods_slides.pdf",
       "size_mb": "0.07",
       "category": "slides",
@@ -223,12 +229,6 @@
       "size_mb": "0.07",
       "category": "slides",
       "path": "slides/02_hypotheses_slides.pdf"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.07",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     },
     {
       "name": "permutation_result.png",
@@ -261,20 +261,21 @@
       "path": "figures/hypothesis_map.png"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 0.3804903030395508,
+    "pdf": 0.3804893493652344,
     "web": 0.1069021224975586,
-    "slides": 0.939814567565918,
-    "figures": 0.1945352554321289,
+    "slides": 0.9384794235229492,
+    "figures": 0.19556045532226562,
     "data": 0.00038909912109375,
-    "reports": 0.1227874755859375,
-    "simulations": 0.0,
-    "llm": 0.0,
+    "reports": 0.1573190689086914,
     "logs": 0.00019550323486328125
   },
   "file_counts_by_type": {
-    ".md": 4,
+    ".md": 7,
     ".log": 11,
     ".pdf": 9,
     ".aux": 9,
@@ -283,12 +284,14 @@
     ".tex": 10,
     ".toc": 9,
     ".bbl": 1,
-    ".html": 9,
+    ".html": 10,
     ".ico": 1,
     ".nav": 8,
     ".vrb": 8,
     ".snm": 8,
+    ".json": 23,
     ".png": 4,
-    ".json": 17
+    ".jsonl": 1,
+    ".txt": 3
   }
 }

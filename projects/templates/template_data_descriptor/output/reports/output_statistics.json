@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.30",
-      "total_size_bytes": 313894,
+      "total_size_bytes": 313859,
       "largest_files": [
         {
           "name": "template_data_descriptor_combined.pdf",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 64,
       "size_mb": "0.84",
-      "total_size_bytes": 878951,
+      "total_size_bytes": 877527,
       "largest_files": [
         {
           "name": "05_quality_validation_slides.pdf",
@@ -97,9 +97,9 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 5,
+      "file_count": 6,
       "size_mb": "0.11",
-      "total_size_bytes": 117305,
+      "total_size_bytes": 118610,
       "largest_files": [
         {
           "name": "schema_overview.png",
@@ -118,59 +118,57 @@
         }
       ],
       "extensions": {
-        ".png": 5
+        ".png": 5,
+        ".json": 1
       }
     },
     "data": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "reports": {
       "exists": true,
-      "file_count": 17,
-      "size_mb": "0.12",
-      "total_size_bytes": 128153,
+      "file_count": 29,
+      "size_mb": "0.15",
+      "total_size_bytes": 162490,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.07",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.03",
+          "size_mb": "0.02",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "stage-07-output-validation.json",
+          "name": "pipeline_report.json",
           "size_mb": "0.01",
-          "path": "reports/snapshots/stage-07-output-validation.json"
+          "path": "reports/pipeline_report.json"
         }
       ],
       "extensions": {
-        ".json": 15,
-        ".md": 2
+        ".json": 19,
+        ".jsonl": 1,
+        ".txt": 3,
+        ".md": 5,
+        ".html": 1
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
       "exists": true,
@@ -189,8 +187,8 @@
       }
     }
   },
-  "total_files": 108,
-  "total_size_mb": 1.4801101684570312,
+  "total_files": 121,
+  "total_size_mb": 1.512709617614746,
   "largest_files": [
     {
       "name": "template_data_descriptor_combined.pdf",
@@ -199,16 +197,16 @@
       "path": "pdf/template_data_descriptor_combined.pdf"
     },
     {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
       "name": "05_quality_validation_slides.pdf",
       "size_mb": "0.07",
       "category": "slides",
       "path": "slides/05_quality_validation_slides.pdf"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.07",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     },
     {
       "name": "03_schema_slides.log",
@@ -247,26 +245,27 @@
       "path": "figures/schema_overview.png"
     },
     {
-      "name": "artifact_manifest.json",
-      "size_mb": "0.03",
-      "category": "reports",
-      "path": "reports/artifact_manifest.json"
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.02",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "data/ directory",
+    "simulations/ directory",
+    "llm/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 0.29935264587402344,
+    "pdf": 0.2993192672729492,
     "web": 0.10824394226074219,
-    "slides": 0.8382329940795898,
-    "figures": 0.11187076568603516,
-    "data": 0.0,
-    "reports": 0.12221622467041016,
-    "simulations": 0.0,
-    "llm": 0.0,
+    "slides": 0.8368749618530273,
+    "figures": 0.11311531066894531,
+    "reports": 0.15496253967285156,
     "logs": 0.00019359588623046875
   },
   "file_counts_by_type": {
-    ".md": 4,
+    ".md": 7,
     ".log": 11,
     ".aux": 9,
     ".blg": 1,
@@ -276,11 +275,13 @@
     ".toc": 9,
     ".bbl": 1,
     ".ico": 1,
-    ".html": 9,
+    ".html": 10,
     ".nav": 8,
     ".vrb": 7,
     ".snm": 8,
     ".png": 5,
-    ".json": 15
+    ".json": 20,
+    ".jsonl": 1,
+    ".txt": 3
   }
 }

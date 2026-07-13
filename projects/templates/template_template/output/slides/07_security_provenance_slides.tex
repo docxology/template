@@ -112,6 +112,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -187,7 +190,7 @@ Platform) packet:
   \texttt{/Producer}: Module path
   (\breaktt{infrastructure.steganography})
 \item
-  \texttt{/CreationDate}: UTC timestamp in ISO 8601 format
+  \texttt{/CreationDate}: UTC timestamp in \texttt{ISO\ 8601} format
 \item
   \texttt{/Author}: From \texttt{config.yaml}
 \item
@@ -245,11 +248,11 @@ template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | pipeline: v2.0.0 | p
 \end{verbatim}
 
 This single line, tiled across each page at 3--5\% opacity, encodes the
-complete build provenance chain: the system identifier, ISO 8601 build
-timestamp, short Git commit hash, pipeline version, and project name.
-Together these fields allow a verifier to reconstruct---from the
-watermark alone---which version of the code, at which moment in time,
-produced the document.
+complete build provenance chain: the system identifier,
+\texttt{ISO\ 8601} build timestamp, short Git commit hash, pipeline
+version, and project name. Together these fields allow a verifier to
+reconstruct---from the watermark alone---which version of the code, at
+which moment in time, produced the document.
 \end{block}
 
 \begin{block}{Layer 4: QR Code Injection}
@@ -271,7 +274,7 @@ post-processing steganography:
 \begin{enumerate}
 \tightlist
 \item
-  Execute the standard YAML-declared pipeline (14 stages; default full
+  Execute the standard YAML-declared pipeline (16 stages; default full
   10) pipeline for the target project.
 \item
   The \texttt{secure\_run.sh} script invokes

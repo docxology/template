@@ -1,9 +1,9 @@
 {
-  "bundle_pdf": "/Users/4d/Documents/GitHub/template/output/templates/template_template/release_bundle/Friedman_2026_Template_535bd809.pdf",
+  "bundle_pdf": "<home>/Documents/GitHub/template/output/templates/template_template/release_bundle/Friedman_2026_Template_535bd809.pdf",
   "created_at": "2026-06-27T14:00:20.820756",
   "deposit_filename": "Friedman_2026_Template_535bd809.pdf",
   "files_included": [
-    "/Users/4d/Documents/GitHub/template/output/templates/template_template/pdf/template_template_combined.pdf",
+    "<home>/Documents/GitHub/template/output/templates/template_template/pdf/template_template_combined.pdf",
     "README.md",
     "pyproject.toml",
     "LICENSE"

@@ -44,6 +44,15 @@ def test_render_pptx_produces_real_file_with_expected_slide_count(tmp_path: Path
     assert len(prs.slides._sldIdLst) == 4 + 1  # synthesized title + 4 content slides
 
 
+def test_render_pptx_is_byte_identical_for_identical_decks(tmp_path: Path):
+    deck = _make_deck(2)
+
+    first = render_pptx(deck, tmp_path / "first.pptx")
+    second = render_pptx(deck, tmp_path / "second.pptx")
+
+    assert first.read_bytes() == second.read_bytes()
+
+
 def test_render_pptx_slide_count_matches_render_pdf_page_count(tmp_path: Path):
     from pypdf import PdfReader
 
@@ -170,9 +179,7 @@ def test_render_pptx_diagram_slide_embeds_figure(tmp_path: Path):
 
 def test_render_pptx_source_citation_becomes_clickable_link(tmp_path: Path):
     deck = DeckContent(title="Deck", slides=(Slide(title="Fact slide", bullets=("x",), source="CLAUDE.md"),))
-    output = render_pptx(
-        deck, tmp_path / "cited_deck.pptx", source_base_url="https://github.com/org/repo/blob/main/"
-    )
+    output = render_pptx(deck, tmp_path / "cited_deck.pptx", source_base_url="https://github.com/org/repo/blob/main/")
 
     prs = Presentation(str(output))
     content_slide = list(prs.slides)[-1]  # slide 0 is the synthesized title slide

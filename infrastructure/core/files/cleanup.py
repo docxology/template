@@ -21,13 +21,16 @@ logger = get_logger(__name__)
 
 # Re-export so every existing ``from infrastructure.core.files.cleanup import X`` keeps working.
 __all__ = [
+    "clean_final_output_directory",
     "clean_output_directories",
     "clean_output_directory",
     "clean_root_output_directory",
 ]
 
+_PUBLICATION_SIDECAR_NAMES = frozenset({"release_bundle", "swh_repo_url.txt", "upload_receipts.json"})
 
-def clean_output_directory(output_dir: Path) -> None:
+
+def clean_output_directory(output_dir: Path, *, preserve_names: frozenset[str] = frozenset()) -> None:
     """Clean top-level output directory before copying.
 
     Creates *output_dir* if missing; otherwise removes all children so the
@@ -35,7 +38,8 @@ def clean_output_directory(output_dir: Path) -> None:
     treat a return value as unused; failures raise).
 
     Args:
-        output_dir: Path to top-level output directory
+        output_dir: Path to top-level output directory.
+        preserve_names: Existing top-level entries to retain.
 
     Raises:
         FileOperationError: If the directory cannot be created or cleaned.
@@ -56,6 +60,9 @@ def clean_output_directory(output_dir: Path) -> None:
     # Remove existing contents
     try:
         for item in output_dir.iterdir():
+            if item.name in preserve_names:
+                logger.debug(f"  Preserved entry: {item.name}")
+                continue
             if item.is_dir():
                 shutil.rmtree(item)
                 logger.debug(f"  Removed directory: {item.name}")
@@ -66,6 +73,11 @@ def clean_output_directory(output_dir: Path) -> None:
         log_success("Output directory cleaned", logger)
     except OSError as e:
         raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
+
+
+def clean_final_output_directory(output_dir: Path) -> None:
+    """Clean copied outputs while retaining independently published sidecars."""
+    clean_output_directory(output_dir, preserve_names=_PUBLICATION_SIDECAR_NAMES)
 
 
 _OUTPUT_PRESERVE_MANIFEST_NAME = ".pipeline_preserve_output_dirs"

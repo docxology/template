@@ -5,14 +5,14 @@
     {
       "id": "root_pyproject",
       "kind": "input",
-      "path": "/Users/4d/Documents/GitHub/template/pyproject.toml",
+      "path": "<home>/Documents/GitHub/template/pyproject.toml",
       "required": false,
       "sha256": "fe8fe477131a6017a226c63e0e8ed90b6f1caed2ef1680627f50d06f3923224e"
     },
     {
       "id": "root_uv_lock",
       "kind": "input",
-      "path": "/Users/4d/Documents/GitHub/template/uv.lock",
+      "path": "<home>/Documents/GitHub/template/uv.lock",
       "required": false,
       "sha256": "a8be17b03270c8e4f46c537598fdcc643b80e3913d10db0ead8811503d66ca0f"
     },

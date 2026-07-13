@@ -1,4 +1,5 @@
 """Tests for statistics primitives: ols_fit."""
+
 from __future__ import annotations
 
 import numpy as np

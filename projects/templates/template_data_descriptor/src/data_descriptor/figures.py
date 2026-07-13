@@ -10,10 +10,12 @@ trivially testable without a display backend.
 from __future__ import annotations
 
 import copy
+from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any
 
 from data_descriptor.descriptor import summarize_field_constraints, validate_descriptor
+from data_descriptor.verification import FileVerification
 
 
 @dataclass(frozen=True)
@@ -63,6 +65,60 @@ class ProvenanceStep:
     index: int
     step: str
     agent: str
+
+
+@dataclass(frozen=True)
+class DescriptorFigureSpec:
+    """Provenance metadata for one generated manuscript figure."""
+
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_REGISTRY_SCHEMA = "template-data-descriptor-figure-registry-v1"
+DESCRIPTOR_FIGURE_SPECS: tuple[DescriptorFigureSpec, ...] = (
+    DescriptorFigureSpec(
+        label="fig:schema_overview",
+        filename="schema_overview.png",
+        caption="Field schema and data dictionary generated from the descriptor.",
+        generated_by="scripts.generate_figures.generate_figures",
+    ),
+    DescriptorFigureSpec(
+        label="fig:file_inventory",
+        filename="file_inventory.png",
+        caption="Declared row counts for every file in the descriptor inventory.",
+        generated_by="scripts.generate_figures.generate_figures",
+    ),
+    DescriptorFigureSpec(
+        label="fig:provenance_flow",
+        filename="provenance_flow.png",
+        caption="Ordered provenance steps and their responsible agents.",
+        generated_by="scripts.generate_figures.generate_figures",
+    ),
+    DescriptorFigureSpec(
+        label="fig:quality_gate",
+        filename="quality_gate.png",
+        caption="Validation findings for the clean fixture and deliberately broken control.",
+        generated_by="scripts.generate_figures.generate_figures",
+    ),
+    DescriptorFigureSpec(
+        label="fig:checksum_verification",
+        filename="checksum_verification.png",
+        caption="Declared and recomputed row counts and checksum status by file.",
+        generated_by="scripts.generate_figures.generate_figures",
+    ),
+)
+_FIGURE_SPEC_BY_LABEL = {spec.label: spec for spec in DESCRIPTOR_FIGURE_SPECS}
+
+
+def descriptor_figure_spec(label: str) -> DescriptorFigureSpec:
+    """Return the canonical generated-figure specification for ``label``."""
+    try:
+        return _FIGURE_SPEC_BY_LABEL[label]
+    except KeyError as exc:
+        raise KeyError(f"unknown descriptor figure label: {label!r}") from exc
 
 
 def schema_table_rows(descriptor: dict[str, Any]) -> tuple[SchemaRow, ...]:
@@ -162,6 +218,18 @@ def severity_counts(descriptor: dict[str, Any]) -> dict[str, int]:
         "error": sum(1 for finding in findings if finding.severity == "error"),
         "warning": sum(1 for finding in findings if finding.severity == "warning"),
     }
+
+
+def verification_table_rows(
+    checks: Iterable[FileVerification],
+) -> tuple[tuple[str, str, str, str, str], ...]:
+    """Return display rows for descriptor-to-file verification results."""
+    rows: list[tuple[str, str, str, str, str]] = []
+    for check in checks:
+        actual = "—" if check.actual_rows < 0 else str(check.actual_rows)
+        checksum = "match" if check.checksum_ok else ("absent" if check.status == "absent" else "MISMATCH")
+        rows.append((check.path, str(check.declared_rows), actual, checksum, check.status))
+    return tuple(rows)
 
 
 def demo_broken_descriptor(descriptor: dict[str, Any]) -> dict[str, Any]:

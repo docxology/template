@@ -95,11 +95,7 @@ def test_resolve_chrome_prefers_headless_shell_at_same_version(
         "exit 0\n",
     )
     headless = _write_shell_executable(
-        cache_dir
-        / "chrome-headless-shell"
-        / version
-        / "chrome-headless-shell-mac-arm64"
-        / "chrome-headless-shell",
+        cache_dir / "chrome-headless-shell" / version / "chrome-headless-shell-mac-arm64" / "chrome-headless-shell",
         "exit 0\n",
     )
 

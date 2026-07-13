@@ -1,40 +1,17 @@
 {
-  "timestamp": "2026-07-09T16:39:33.633444",
+  "timestamp": "2026-07-12T22:31:49Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": false,
-    "Evidence registry": false,
+    "Figure registry": true,
+    "Evidence registry": true,
     "Project design overlays": true,
     "Artifact manifest": true
   },
-  "figure_issues": [
-    "Figure registry not found but 8 figure reference(s) found in manuscript"
-  ],
+  "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "00_frontmatter.md: unsupported number 10.5281",
-      "00_frontmatter.md: unsupported number 9",
-      "00_frontmatter.md: unsupported number 8",
-      "00_frontmatter.md: unsupported number 90%",
-      "00_frontmatter.md: unsupported number 6",
-      "01_abstract.md: unsupported number 90%",
-      "04_rules.md: unsupported number 80%",
-      "06_integration.md: unsupported number 8",
-      "06_integration.md: unsupported number 9",
-      "02_introduction.md: unsupported number 90%",
-      "03_pools.md: unsupported number 85%",
-      "04_rules.md: unsupported number 90%",
-      "04_rules.md: unsupported number 85%",
-      "05_tools.md: unsupported number 90%",
-      "06_integration.md: unsupported number 75%",
-      "06_integration.md: unsupported number 95%",
-      "06_integration.md: unsupported number 85%",
-      "06_integration.md: unsupported number 112",
-      "06_integration.md: unsupported number 90%"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -45,34 +22,34 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.11,
+            "size_mb": 1.21,
             "readable": true
           },
           "pdf": {
             "exists": true,
-            "files": 10,
-            "size_mb": 1.38,
+            "files": 11,
+            "size_mb": 1.5,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 11,
-            "size_mb": 0.28,
+            "size_mb": 0.29,
             "readable": true,
             "optional": false
           },
           "slides": {
             "exists": true,
             "files": 65,
-            "size_mb": 1.89,
+            "size_mb": 1.97,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
-            "files": 9,
-            "size_mb": 0.96,
+            "files": 10,
+            "size_mb": 1.06,
             "readable": true,
             "optional": false
           },
@@ -85,8 +62,8 @@
           },
           "reports": {
             "exists": true,
-            "files": 10,
-            "size_mb": 0.04,
+            "files": 26,
+            "size_mb": 0.17,
             "readable": true,
             "optional": false
           },
@@ -116,27 +93,27 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "1.38",
+          "file_count": 11,
+          "size_mb": "1.50",
           "largest_file": "template_pools_rules_tools_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "0.28",
+          "size_mb": "0.29",
           "largest_file": "index.html"
         },
         "slides": {
           "exists": true,
           "file_count": 65,
-          "size_mb": "1.89",
+          "size_mb": "1.97",
           "largest_file": "06_integration_slides.pdf"
         },
         "figures": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "0.96",
-          "largest_file": "architecture_overview.png"
+          "file_count": 10,
+          "size_mb": "1.06",
+          "largest_file": "resilience_layers.png"
         },
         "data": {
           "exists": true,
@@ -146,9 +123,9 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "0.04",
-          "largest_file": "artifact_manifest.json"
+          "file_count": 26,
+          "size_mb": "0.17",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
           "exists": true,
@@ -170,17 +147,17 @@
         }
       },
       "file_counts": {
-        "pdf": 10,
+        "pdf": 11,
         "web": 11,
         "slides": 65,
-        "figures": 9,
+        "figures": 10,
         "data": 1,
-        "reports": 10,
+        "reports": 26,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.559706687927246,
+      "total_size_mb": 5.005470275878906,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -189,37 +166,24 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 1.3836603164672852
+      "files": 11,
+      "size_mb": 1.5047121047973633
     },
     "figures": {
-      "files": 9,
-      "size_mb": 0.9636974334716797
+      "files": 10,
+      "size_mb": 1.0645866394042969
     },
     "data": {
       "files": 1,
-      "size_mb": 0.000324249267578125
+      "size_mb": 0.000339508056640625
     }
   },
   "summary": {
     "total_checks": 8,
-    "passed": 6,
-    "failed": 2,
-    "figure_issues_count": 1,
-    "all_passed": false
+    "passed": 8,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_pools_rules_tools/output/reports/evidence_registry.json"
-    },
-    {
-      "priority": "medium",
-      "issue": "1 figure reference issue(s)",
-      "action": "Register missing figures or remove unused references",
-      "file": "projects/templates/template_pools_rules_tools/output/figures/figure_registry.json"
-    }
-  ]
+  "recommendations": []
 }

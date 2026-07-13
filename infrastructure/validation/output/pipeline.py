@@ -14,6 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.determinism import resolve_build_timestamp
 from infrastructure.core.pipeline.artifacts import (
     ArtifactManifest,
     aggregate_artifact_manifests,
@@ -22,6 +23,7 @@ from infrastructure.core.pipeline.artifacts import (
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.evidence_registry import (
@@ -194,9 +196,9 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
         strict_file = any(token in path.name.lower() for token in ("claim", "ledger", "results", "table", "caption"))
         report = validate_text_against_registry(text, registry, strict=strict_file)
         for issue in report.errors:
-            error_issues.append(f"{path.name}: unsupported {issue.kind} {issue.value}")
+            error_issues.append(f"{path.name}:{issue.line_number}: unsupported {issue.kind} {issue.value}")
         for issue in report.warnings:
-            warning_issues.append(f"{path.name}: unsupported {issue.kind} {issue.value}")
+            warning_issues.append(f"{path.name}:{issue.line_number}: unsupported {issue.kind} {issue.value}")
 
     issues = [*error_issues, *warning_issues]
 
@@ -241,7 +243,7 @@ def generate_validation_report(
     output_dir = _project_output_dir(project_name) / "reports"
 
     validation_results = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": resolve_build_timestamp(repo_root=_REPO_ROOT),
         "checks": {name: result for name, result in check_results},
         "figure_issues": figure_issues,
         "output_statistics": output_statistics,
@@ -343,8 +345,6 @@ def generate_validation_report(
         report_file = output_dir / "validation_report.json"
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        validation_results["timestamp"] = datetime.now().isoformat()
-
         with open(report_file, "w") as f:
             json.dump(validation_results, f, indent=2)
         logger.info(f"Validation report saved: {report_file}")
@@ -410,7 +410,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
     detailed_validation = None
 
     project_root = _project_root(project_name)
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
 
     claim_report = None
     if _is_claim_verification_enabled(project_root):

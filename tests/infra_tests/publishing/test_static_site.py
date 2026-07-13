@@ -31,9 +31,7 @@ def site_dir(tmp_path: Path) -> Path:
     """A minimal built-site directory with a single index.html."""
     d = tmp_path / "site"
     d.mkdir()
-    (d / "index.html").write_text(
-        "<!doctype html><html><body>Hello</body></html>", encoding="utf-8"
-    )
+    (d / "index.html").write_text("<!doctype html><html><body>Hello</body></html>", encoding="utf-8")
     return d
 
 
@@ -397,9 +395,7 @@ def test_get_adapter_unknown_hosting_raises(site_dir: Path) -> None:
 def test_static_site_adapters_registry_completeness() -> None:
     """Every SiteHosting member must have an entry in STATIC_SITE_ADAPTERS."""
     for member in SiteHosting:
-        assert member in STATIC_SITE_ADAPTERS, (
-            f"SiteHosting.{member.name} is missing from STATIC_SITE_ADAPTERS"
-        )
+        assert member in STATIC_SITE_ADAPTERS, f"SiteHosting.{member.name} is missing from STATIC_SITE_ADAPTERS"
 
 
 def test_static_site_adapters_values_are_adapter_classes() -> None:
@@ -415,7 +411,6 @@ def test_static_site_adapters_values_are_adapter_classes() -> None:
 
 def test_static_site_adapters_no_extra_keys() -> None:
     """Registry must not contain keys beyond the defined SiteHosting members."""
-    valid_values = {h.value for h in SiteHosting}
     for key in STATIC_SITE_ADAPTERS:
         assert key in SiteHosting, f"Unexpected key in STATIC_SITE_ADAPTERS: {key!r}"
     assert len(STATIC_SITE_ADAPTERS) == len(SiteHosting)

@@ -16,7 +16,7 @@ belongs here.
 | `stage_02_analysis.py` | 02 | Project-script discovery and execution | `core` |
 | `stage_03_render.py` | 03 | Manuscript PDF rendering | `core` |
 | `stage_04_validate.py` | 04 | Output validation | `core` |
-| `stage_05_copy.py` | 05 | Copy outputs to final destination | `core` |
+| `stage_05_copy.py` | 05 | Copy outputs to final destination while preserving publication sidecars | `core` |
 | `stage_06_llm_review.py` | 06 | LLM review and translation | `llm` |
 | `stage_07_executive_report.py` | 07 | Multi-project executive reporting | `core` |
 | `stage_08_connector_search.py` | 08 | Connector-backed search (opt-in) | `connector_search` |

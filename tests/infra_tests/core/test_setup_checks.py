@@ -7,7 +7,6 @@ calls.  No mocks, no MagicMock — strictly No-Mocks Policy.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
@@ -58,6 +57,7 @@ class TestAggregateCheckResults:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_valid_project(base: Path, name: str) -> Path:
     """Create a minimal valid project tree under *base/<name>* and return it."""
@@ -212,7 +212,6 @@ class TestRunOptionalSetupHook:
     def test_non_directory_project_returns_true(self, tmp_path: Path) -> None:
         """Returns True immediately when project_dir path is not a real directory."""
         # resolve_project_root will return a path that does not exist as a dir.
-        nonexistent = tmp_path / "projects" / "templates" / "ghost_project"
         # ghost_project directory is never created.
         repo_root = tmp_path
         result = run_optional_setup_hook(repo_root, "ghost_project")
@@ -240,6 +239,6 @@ class TestRunOptionalSetupHook:
         proj_name = "hook_fail_proj"
         proj = _make_valid_project(tmp_path, proj_name)
         hook = proj / "scripts" / "setup_hook.py"
-        hook.write_text(f"import sys; sys.exit(1)\n")
+        hook.write_text("import sys; sys.exit(1)\n")
         result = run_optional_setup_hook(tmp_path, proj_name)
         assert result is False

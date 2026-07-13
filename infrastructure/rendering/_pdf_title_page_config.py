@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from typing import Any
 
@@ -14,11 +15,43 @@ __all__ = [
     "_front_matter_options",
     "_load_render_config",
     "_metadata_from_config",
+    "_rendering_options",
     "_resolve_config_yaml",
     "build_pandoc_metadata",
 ]
 
 logger = get_logger(__name__)
+
+
+def _rendering_options(config: dict[str, Any] | None) -> dict[str, Any]:
+    """Return validated project-local layout options with safe renderer defaults.
+
+    Projects may tune page flow and figure occupancy without injecting arbitrary LaTeX.  Fractions
+    are restricted to ``(0, 1]`` and serialized as short decimal strings before they reach a
+    LaTeX dimension; malformed values fall back to the established template defaults.
+    """
+    rendering = config.get("rendering", {}) if isinstance(config, dict) else {}
+    if not isinstance(rendering, dict):
+        rendering = {}
+
+    def fraction(name: str, default: float) -> str:
+        raw = rendering.get(name, default)
+        try:
+            value = float(raw)
+        except (TypeError, ValueError):
+            value = default
+        if not math.isfinite(value) or not 0.0 < value <= 1.0:
+            value = default
+        return f"{value:g}"
+
+    return {
+        "section_breaks": rendering.get("section_breaks", True)
+        if isinstance(rendering.get("section_breaks", True), bool)
+        else True,
+        "figure_height_fraction": fraction("figure_height_fraction", 0.50),
+        "cover_height_fraction": fraction("cover_height_fraction", 0.60),
+        "front_matter_figure_height_fraction": fraction("front_matter_figure_height_fraction", 0.50),
+    }
 
 
 def _resolve_config_yaml(manuscript_dir: Path) -> Path | None:

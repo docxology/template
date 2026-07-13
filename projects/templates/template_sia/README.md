@@ -94,6 +94,8 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia
 
 Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
 `--live-sia` for bounded subprocess execution.
+The reusable Layer-2 adapter is `src/loop.py`; `scripts/run_sia_loop.py` is a
+thin CLI that parses flags, calls that adapter, and prints artifact paths.
 
 > **Live mode is a deterministic stub.** `--live-sia` runs the *reference* agent
 > as a bounded subprocess and records its evaluation, but it does **not** mutate

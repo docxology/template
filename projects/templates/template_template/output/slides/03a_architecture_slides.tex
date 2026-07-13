@@ -150,6 +150,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -172,7 +175,7 @@
 The \texttt{template/} architecture is deliberately bifurcated into a
 globally shared \texttt{infrastructure/} layer and project-specific
 \texttt{projects/} silos. This section describes the four core design
-patterns, the YAML-declared pipeline (14 stages; default full 10)
+patterns, the YAML-declared pipeline (16 stages; default full 10)
 pipeline that operationalizes them, and the AI collaboration model that
 distinguishes this system from conventional research templates.
 \end{frame}
@@ -181,9 +184,9 @@ distinguishes this system from conventional research templates.
 \protect\phantomsection\label{the-two-layer-architecture}
 The repository is organized into two strictly separated layers:
 
-\textbf{Infrastructure Layer} (\texttt{infrastructure/}): 23
-infrastructure subdirectories---20 of them independently-importable
-Python packages---comprising \textasciitilde616 modules and providing
+\textbf{Infrastructure Layer} (\texttt{infrastructure/}): 28
+infrastructure subdirectories---25 of them independently-importable
+Python packages---comprising \textasciitilde662 modules and providing
 reusable services. Each importable package has its own
 \texttt{\_\_init\_\_.py}, \texttt{AGENTS.md}, and \texttt{README.md},
 and exports a well-defined public API (the remaining subdirectories,
@@ -241,16 +244,23 @@ manuscript metadata, LLM review preferences, and rendering configuration
 in its \texttt{config.yaml}. The system currently hosts its public
 canonical exemplars under \breaktt{projects/templates/}
 (\breaktt{templates/template\_active\_inference},
+\breaktt{templates/template\_autopoiesis},
 \breaktt{templates/template\_autoresearch\_project},
 \breaktt{templates/template\_autoscientists},
 \breaktt{templates/template\_code\_project},
+\breaktt{templates/template\_data\_descriptor},
 \breaktt{templates/template\_eda\_notebook},
+\breaktt{templates/template\_formal},
 \breaktt{templates/template\_gold\_refinement},
 \breaktt{templates/template\_literature\_meta\_analysis},
 \breaktt{templates/template\_madlib},
 \breaktt{templates/template\_methods\_paper},
 \breaktt{templates/template\_newspaper},
+\breaktt{templates/template\_pitch\_deck},
+\breaktt{templates/template\_pools\_rules\_tools},
 \breaktt{templates/template\_prose\_project},
+\breaktt{templates/template\_redacted\_report},
+\breaktt{templates/template\_registered\_report},
 \breaktt{templates/template\_search\_project},
 \breaktt{templates/template\_sia},
 \breaktt{templates/template\_storybook},

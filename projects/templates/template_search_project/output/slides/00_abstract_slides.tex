@@ -137,7 +137,8 @@ modules. The standard pipeline
 \texttt{SearchQuery} end-to-end. The deep-search pipeline
 (\breaktt{scripts/run\_deep\_search.py}, see \breakseq{[@sec:deep\_search]})
 fans out across a list of keywords (each capped at 100 papers per
-keyword from \breaktt{deep\_search.max\_results\_per\_keyword} in
+keyword from
+\breaktt{project\_config.deep\_search.max\_results\_per\_keyword} in
 \breaktt{manuscript/config.yaml}), fully enriches every paper with its
 abstract and PDF fulltext, and (optionally) uses the local LLM to write
 a multi-section reading note for every paper. When a deep-search

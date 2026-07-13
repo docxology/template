@@ -4,13 +4,13 @@ import hashlib
 import itertools
 import math
 import random
-import textwrap
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 from .characters import child_pair
 from .models import Character, PageSpec, StorybookSpec
+from .text_layout import draw_page_text, load_font, pixel_wrapped_lines, text_height, text_width, wrapped_lines
 
 RGB = tuple[int, int, int]
 
@@ -26,21 +26,6 @@ def _mix(a: RGB, b: RGB, amount: float) -> RGB:
         int(a[1] + (b[1] - a[1]) * amount),
         int(a[2] + (b[2] - a[2]) * amount),
     )
-
-
-def _font(size: int, *, bold: bool = False) -> ImageFont.ImageFont | ImageFont.FreeTypeFont:
-    candidates = [
-        "/System/Library/Fonts/Supplemental/Avenir Next.ttc",
-        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
-        "/Library/Fonts/Arial.ttf",
-        "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf",
-    ]
-    for candidate in candidates:
-        try:
-            return ImageFont.truetype(candidate, size=size)
-        except OSError:
-            continue
-    return ImageFont.load_default()
 
 
 def _gradient(width: int, height: int, top: RGB, bottom: RGB) -> Image.Image:
@@ -77,50 +62,6 @@ def _draw_yinyang(draw: ImageDraw.ImageDraw, cx: int, cy: int, radius: int, ligh
     draw.ellipse((cx - dot, cy - radius // 2 - dot, cx + dot, cy - radius // 2 + dot), fill=dark)
     draw.ellipse((cx - dot, cy + radius // 2 - dot, cx + dot, cy + radius // 2 + dot), fill=light)
     draw.ellipse(box, outline=_mix(light, dark, 0.45), width=max(4, radius // 70))
-
-
-def _text_width(draw: ImageDraw.ImageDraw, line: str, font: ImageFont.ImageFont | ImageFont.FreeTypeFont) -> int:
-    bbox = draw.textbbox((0, 0), line, font=font)
-    return int(bbox[2] - bbox[0])
-
-
-def _text_height(draw: ImageDraw.ImageDraw, line: str, font: ImageFont.ImageFont | ImageFont.FreeTypeFont) -> int:
-    bbox = draw.textbbox((0, 0), line, font=font)
-    return int(bbox[3] - bbox[1])
-
-
-def _wrapped_lines(text: str, width: int) -> list[str]:
-    lines: list[str] = []
-    for paragraph in text.splitlines():
-        if not paragraph.strip():
-            lines.append("")
-            continue
-        lines.extend(textwrap.wrap(paragraph, width=width))
-    return lines
-
-
-def _pixel_wrapped_lines(
-    draw: ImageDraw.ImageDraw,
-    text: str,
-    font: ImageFont.ImageFont | ImageFont.FreeTypeFont,
-    max_width: int,
-) -> list[str]:
-    lines: list[str] = []
-    for paragraph in text.splitlines():
-        words = paragraph.split()
-        if not words:
-            lines.append("")
-            continue
-        current = words[0]
-        for word in words[1:]:
-            candidate = f"{current} {word}"
-            if _text_width(draw, candidate, font) <= max_width:
-                current = candidate
-            else:
-                lines.append(current)
-                current = word
-        lines.append(current)
-    return lines
 
 
 def _regular_points(
@@ -353,15 +294,15 @@ def _draw_family(draw: ImageDraw.ImageDraw, character: Character, centers: list[
 def _draw_cover_text(image: Image.Image, page: PageSpec) -> None:
     draw = ImageDraw.Draw(image, "RGBA")
     width, height = image.size
-    title_font = _font(108, bold=True)
-    subtitle_font = _font(32, bold=True)
-    detail_font = _font(27)
-    small_font = _font(24, bold=True)
-    title_lines = _wrapped_lines(page.title, 18)
+    title_font = load_font(108, bold=True)
+    subtitle_font = load_font(32, bold=True)
+    detail_font = load_font(27)
+    small_font = load_font(24, bold=True)
+    title_lines = wrapped_lines(page.title, 18)
     info_lines = [line for line in page.text.splitlines() if line.strip()]
     y = 86
     for line in title_lines:
-        x = (width - _text_width(draw, line, title_font)) // 2
+        x = (width - text_width(draw, line, title_font)) // 2
         draw.text((x + 6, y + 6), line, font=title_font, fill=(10, 12, 24, 235))
         draw.text((x, y), line, font=title_font, fill=(255, 249, 236, 255))
         y += 122
@@ -392,11 +333,11 @@ def _draw_cover_text(image: Image.Image, page: PageSpec) -> None:
     text_x = 270
     max_text_width = width - text_x - 116
     if info_lines:
-        subtitle_lines = _pixel_wrapped_lines(draw, info_lines[0], subtitle_font, max_text_width)
+        subtitle_lines = pixel_wrapped_lines(draw, info_lines[0], subtitle_font, max_text_width)
         y_line = bar_top + 38
         for subtitle_line in subtitle_lines:
             draw.text((text_x, y_line), subtitle_line, font=subtitle_font, fill=(255, 249, 236, 255))
-            y_line += _text_height(draw, subtitle_line, subtitle_font) + 10
+            y_line += text_height(draw, subtitle_line, subtitle_font) + 10
     else:
         y_line = bar_top + 38
     y_line += 16
@@ -406,26 +347,6 @@ def _draw_cover_text(image: Image.Image, page: PageSpec) -> None:
         label = line if index == 0 else f"|  {line}"
         draw.text((text_x, y_line), label, font=font, fill=fill)
         y_line += 41
-
-
-def _draw_publication_text(image: Image.Image, page: PageSpec) -> None:
-    draw = ImageDraw.Draw(image, "RGBA")
-    width, height = image.size
-    title_font = _font(58, bold=True)
-    body_font = _font(32)
-    small_font = _font(26)
-    margin = 112
-    panel = (margin - 38, 150, width - margin + 38, height - 170)
-    draw.rounded_rectangle(panel, radius=28, fill=(255, 250, 240, 232), outline=(35, 38, 55, 170), width=4)
-    draw.text((margin, 198), page.title, font=title_font, fill=(24, 28, 42, 255))
-    y = 296
-    for line in _wrapped_lines(page.text, 57):
-        if not line:
-            y += 28
-            continue
-        font = body_font if y < 690 else small_font
-        draw.text((margin, y), line, font=font, fill=(24, 28, 42, 255))
-        y += 43 if font is body_font else 36
 
 
 def _wire_cube_points(cx: int, cy: int, size: int) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
@@ -630,58 +551,6 @@ def _draw_vector_garden(draw: ImageDraw.ImageDraw, width: int, height: int, tess
     _draw_character(draw, ciro, (965, 1265), 145)
 
 
-def _overlay_text(image: Image.Image, page: PageSpec) -> None:
-    if page.slug == "cover":
-        _draw_cover_text(image, page)
-        return
-    if page.slug == "publication_information":
-        _draw_publication_text(image, page)
-        return
-    draw = ImageDraw.Draw(image, "RGBA")
-    width, height = image.size
-    title_font = _font(58, bold=True)
-    text_font = _font(37)
-    margin = 86
-    max_chars = 40
-    title_lines = _wrapped_lines(page.title, 24)
-    body_lines = _wrapped_lines(page.text, max_chars)
-    line_gap = 12
-    title_height = 68 * len(title_lines)
-    body_height = 48 * len(body_lines)
-    box_height = title_height + body_height + 72
-    top = height - box_height - 88
-    if page.slug in {"mega_symbol"}:
-        top = 92
-    if page.overlay_box:
-        draw.rounded_rectangle(
-            (margin - 28, top - 30, width - margin + 28, top + box_height),
-            radius=24,
-            fill=(255, 250, 240, 224),
-            outline=(35, 38, 55, 190),
-            width=4,
-        )
-        text_color = (24, 28, 42, 255)
-    else:
-        text_color = (255, 250, 240, 255)
-        shadow_color = (12, 14, 24, 210)
-        y_shadow = top + 4
-        for line in title_lines:
-            draw.text((margin + 4, y_shadow), line, font=title_font, fill=shadow_color)
-            y_shadow += 68
-        y_shadow += line_gap
-        for line in body_lines:
-            draw.text((margin + 4, y_shadow), line, font=text_font, fill=shadow_color)
-            y_shadow += 48
-    y = top
-    for line in title_lines:
-        draw.text((margin, y), line, font=title_font, fill=text_color)
-        y += 68
-    y += line_gap
-    for line in body_lines:
-        draw.text((margin, y), line, font=text_font, fill=text_color)
-        y += 48
-
-
 def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | str) -> Path:
     """Render page image."""
     output = Path(output_path)
@@ -878,6 +747,9 @@ def render_page_image(spec: StorybookSpec, page: PageSpec, output_path: Path | s
     else:
         raise ValueError(f"Unsupported scene: {page.scene}")
 
-    _overlay_text(image, page)
+    if page.slug == "cover":
+        _draw_cover_text(image, page)
+    else:
+        draw_page_text(image, page)
     image.save(output)
     return output

@@ -109,10 +109,10 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 
 | Folder | Contents |
 |--------|----------|
-| `manuscript/` | 21 Markdown chapters + `config.yaml` (+ `config.yaml.example` copy-and-customize starting point) + `references.bib` |
+| `manuscript/` | Numbered Markdown chapters + `config.yaml` (+ `config.yaml.example` copy-and-customize starting point) + `references.bib` |
 | `scripts/` | Two thin orchestrators (figures, metrics) |
 | `src/template_template/` | Introspection, metrics, injection, visualization |
-| `tests/` | full suite, 90%+ coverage on `src/template_template/` |
+| `tests/` | Full suite with the coverage floor declared in `pyproject.toml` |
 | `output/` | PDF, figures, metrics JSON, rendered manuscript |
 
 ## Pipeline Outputs

@@ -10,6 +10,7 @@ backend on import so the module is safe to call from tests and pipelines.
 from __future__ import annotations
 
 import textwrap
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -30,12 +31,55 @@ from registered_report.demo_study import (  # noqa: E402
 from registered_report.protocol import build_deviation_ledger  # noqa: E402
 
 __all__ = [
+    "FIGURE_REGISTRY_SCHEMA",
+    "REGISTERED_REPORT_FIGURE_SPECS",
+    "RegisteredReportFigureSpec",
     "plot_analysis_dag",
     "plot_deviation_timeline",
     "plot_hypothesis_map",
     "plot_permutation_result",
     "render_all_figures",
 ]
+
+
+@dataclass(frozen=True)
+class RegisteredReportFigureSpec:
+    """Provenance metadata for one registered-report figure."""
+
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_REGISTRY_SCHEMA = "template-registered-report-figure-registry-v1"
+REGISTERED_REPORT_FIGURE_SPECS: tuple[RegisteredReportFigureSpec, ...] = (
+    RegisteredReportFigureSpec(
+        label="fig:hypothesis_map",
+        filename="hypothesis_map.png",
+        caption="Registered hypothesis-to-outcome-to-analysis mapping.",
+        generated_by="registered_report.figures.plot_hypothesis_map",
+    ),
+    RegisteredReportFigureSpec(
+        label="fig:analysis_dag",
+        filename="analysis_dag.png",
+        caption="Registered analysis workflow and pre-results lock boundary.",
+        generated_by="registered_report.figures.plot_analysis_dag",
+    ),
+    RegisteredReportFigureSpec(
+        label="fig:deviation_timeline",
+        filename="deviation_timeline.png",
+        caption="Timeline of registered decisions and documented deviations.",
+        generated_by="registered_report.figures.plot_deviation_timeline",
+    ),
+    RegisteredReportFigureSpec(
+        label="fig:permutation_result",
+        filename="permutation_result.png",
+        caption="Seeded permutation null distribution and observed registered statistic.",
+        generated_by="registered_report.figures.plot_permutation_result",
+    ),
+)
+_SPEC_BY_LABEL = {spec.label: spec for spec in REGISTERED_REPORT_FIGURE_SPECS}
 
 _OK = "#2f855a"
 _WARN = "#c05621"
@@ -245,8 +289,17 @@ def render_all_figures(
     """
     figures_dir.mkdir(parents=True, exist_ok=True)
     return {
-        "hypothesis_map": plot_hypothesis_map(registration, figures_dir / "hypothesis_map.png"),
-        "analysis_dag": plot_analysis_dag(figures_dir / "analysis_dag.png"),
-        "deviation_timeline": plot_deviation_timeline(registration, figures_dir / "deviation_timeline.png"),
-        "permutation_result": plot_permutation_result(summary, figures_dir / "permutation_result.png"),
+        "hypothesis_map": plot_hypothesis_map(
+            registration,
+            figures_dir / _SPEC_BY_LABEL["fig:hypothesis_map"].filename,
+        ),
+        "analysis_dag": plot_analysis_dag(figures_dir / _SPEC_BY_LABEL["fig:analysis_dag"].filename),
+        "deviation_timeline": plot_deviation_timeline(
+            registration,
+            figures_dir / _SPEC_BY_LABEL["fig:deviation_timeline"].filename,
+        ),
+        "permutation_result": plot_permutation_result(
+            summary,
+            figures_dir / _SPEC_BY_LABEL["fig:permutation_result"].filename,
+        ),
     }

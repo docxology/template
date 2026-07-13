@@ -1,6 +1,6 @@
 # `tests/` — test suite map
 
-277 tests, mirroring `src/template_formal/`'s subpackage layout one-for-one.
+278 tests, mirroring `src/template_formal/`'s subpackage layout one-for-one.
 No mocks anywhere — every test uses a real SQLite file (or the one documented
 `:memory:` test-only escape hatch), a real `mypy --strict` subprocess, real
 `matplotlib` rendering, or hand-derived arithmetic.
@@ -39,7 +39,7 @@ in this project:
 ## Coverage gate
 
 90% floor (`pyproject.toml`'s `[tool.coverage.report] fail_under = 90`),
-currently **96.03%** measured this session via:
+currently **95.91%** measured this session via:
 
 ```bash
 uv run pytest tests -q --cov=src/template_formal --cov-report=term-missing
@@ -78,14 +78,14 @@ get it parametrized into the suite:
 
 `pytest-xdist>=3.6.0` is a real `[project.optional-dependencies] dev` entry
 in `pyproject.toml`. `uv run pytest tests -n auto` and `-n 4` both run to
-completion and (usually) pass all 277 tests — verified this session. Be
+completion and pass all 278 tests after the source-boundary correction. Be
 skeptical of any claim that `-n auto`/`-n 4` make the *full* suite faster
 here: they don't, and they introduce a real flakiness risk. Measured this
 session, on this machine:
 
 | Invocation | Wall clock | Result |
 | --- | --- | --- |
-| `pytest tests` (serial) | machine-dependent | 277 passed in the current full run |
+| `pytest tests` (serial) | machine-dependent | 278 tests exercised in the current full run |
 | `pytest tests -n auto` (14 workers) | machine-dependent | Re-run serially if a wall-clock assertion trips under CPU contention |
 | `pytest tests -n 4` | machine-dependent | Use only when overlapping the two heavy experiment modules is worth the worker overhead |
 

@@ -58,12 +58,29 @@ def _record_problem(problems: list[str], message: str, *, require_present: bool)
         problems.append(message)
 
 
+def _section_status(
+    *,
+    section: str,
+    structural_issues: bool,
+    stubs: int,
+    require_complete: bool,
+    problems: list[str],
+) -> str:
+    """Return the row status and record incomplete authored content."""
+    if require_complete and stubs:
+        marker_label = "marker" if stubs == 1 else "markers"
+        problems.append(f"{section}: {stubs} stub {marker_label} remaining")
+        return "FAIL" if structural_issues else "INCOMPLETE"
+    return "FAIL" if structural_issues else "OK"
+
+
 def _audit_chapter(
     chapter: ChapterRef,
     manuscript_dir: Path,
     project_dir: Path,
     *,
     require_present: bool,
+    require_complete: bool,
     problems: list[str],
 ) -> tuple[str, int, int]:
     chapter_path = chapter.path(manuscript_dir)
@@ -94,7 +111,13 @@ def _audit_chapter(
                 require_present=require_present,
             )
 
-    status = "OK" if not issues else "FAIL"
+    status = _section_status(
+        section=f"{chapter.part_id}/{chapter.file}",
+        structural_issues=bool(issues),
+        stubs=stubs,
+        require_complete=require_complete,
+        problems=problems,
+    )
     row = f"  {chapter.part_id:>8} {chapter.stem:<26} words={words:>5} stubs={stubs:>3} {status}"
     return row, words, stubs
 
@@ -105,6 +128,7 @@ def _audit_unit_intro(
     project_dir: Path,
     *,
     require_present: bool,
+    require_complete: bool,
     problems: list[str],
 ) -> tuple[str, int, int]:
     intro_path = intro.path(manuscript_dir)
@@ -123,7 +147,13 @@ def _audit_unit_intro(
 
     stubs = content.count_stub_markers(text)
     words = content.count_words(text)
-    status = "OK" if not issues else "FAIL"
+    status = _section_status(
+        section=f"{intro.part_id}/{intro.file}",
+        structural_issues=bool(issues),
+        stubs=stubs,
+        require_complete=require_complete,
+        problems=problems,
+    )
     row = f"  {intro.part_id:>8} {'unit_intro':<26} words={words:>5} stubs={stubs:>3} {status}"
     return row, words, stubs
 
@@ -133,20 +163,30 @@ def run_manuscript_audit(
     config: dict[str, Any],
     *,
     require_present: bool = True,
+    require_complete: bool = False,
 ) -> AuditReport:
-    """Validate declared manuscript files and return a structured audit report."""
+    """Validate declared manuscript files and return a structured audit report.
+
+    The default structural mode allows stub markers because this exemplar is a
+    fillable scaffold. ``require_complete=True`` makes every nonzero
+    per-section stub count a problem and also requires every declared section
+    to exist.
+    """
     manuscript_dir = project_dir / "manuscript"
     problems: list[str] = list(validate_config(config))
     rows: list[str] = []
     total_words = 0
     total_stubs = 0
 
+    effective_require_present = require_present or require_complete
+
     for intro in iter_unit_intros(config):
         row, words, stubs = _audit_unit_intro(
             intro,
             manuscript_dir,
             project_dir,
-            require_present=require_present,
+            require_present=effective_require_present,
+            require_complete=require_complete,
             problems=problems,
         )
         rows.append(row)
@@ -158,7 +198,8 @@ def run_manuscript_audit(
             chapter,
             manuscript_dir,
             project_dir,
-            require_present=require_present,
+            require_present=effective_require_present,
+            require_complete=require_complete,
             problems=problems,
         )
         rows.append(row)

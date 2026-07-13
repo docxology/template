@@ -19,7 +19,7 @@ Live test counts and coverage snapshots belong in
 [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not this
 file.
 
-- The default pipeline (`search.sources: [local]`) is fully offline and
+- The default pipeline (`project_config.search.sources: [local]`) is fully offline and
   CI-safe, backed by the bundled `data/corpus.json`.
 - LLM synthesis (`llm.enabled`) defaults to `false` so tests and CI never
   require an Ollama server.

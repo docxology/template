@@ -7,6 +7,7 @@ from src.config import load_madlib_config
 from src.tokens import generate_token_plan
 from .helpers import base_payload, write_config
 
+
 def test_token_plan_is_stable_for_fixed_config(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
     config = load_madlib_config(tmp_path)
@@ -22,6 +23,7 @@ def test_token_plan_is_stable_for_fixed_config(tmp_path: Path) -> None:
         "METHOD",
     ]
 
+
 def test_token_plan_changes_when_seed_changes(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
     config = load_madlib_config(tmp_path)
@@ -30,6 +32,7 @@ def test_token_plan_changes_when_seed_changes(tmp_path: Path) -> None:
     changed = generate_token_plan(replace(config, seed=config.seed + 1))
 
     assert [choice.value for choice in original.choices] != [choice.value for choice in changed.choices]
+
 
 def test_token_plan_changes_when_category_inputs_change(tmp_path: Path) -> None:
     payload = base_payload()
@@ -43,6 +46,7 @@ def test_token_plan_changes_when_category_inputs_change(tmp_path: Path) -> None:
 
     assert first.values_for_category("nouns") != second.values_for_category("nouns")
 
+
 def test_provenance_records_category_source_and_section(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
     plan = generate_token_plan(load_madlib_config(tmp_path))
@@ -55,9 +59,11 @@ def test_provenance_records_category_source_and_section(tmp_path: Path) -> None:
     assert plan.category_counts["nouns"] == 2
     assert plan.section_counts["introduction"] == 2
 
+
 # ---------------------------------------------------------------------------
 # TokenChoice.as_dict
 # ---------------------------------------------------------------------------
+
 
 def test_token_choice_as_dict_contains_all_fields(tmp_path: Path) -> None:
     """TokenChoice.as_dict() must include variable_name, slot_name, category, value, section, ordinal, source_key."""
@@ -76,9 +82,11 @@ def test_token_choice_as_dict_contains_all_fields(tmp_path: Path) -> None:
     assert "ordinal" in as_dict
     assert "source_key" in as_dict
 
+
 # ---------------------------------------------------------------------------
 # TokenPlan properties
 # ---------------------------------------------------------------------------
+
 
 def test_token_plan_category_counts_sum_to_total_choices(tmp_path: Path) -> None:
     """The sum of all category_counts equals the total number of choices."""
@@ -90,6 +98,7 @@ def test_token_plan_category_counts_sum_to_total_choices(tmp_path: Path) -> None
 
     assert total == len(plan.choices)
 
+
 def test_token_plan_section_counts_sum_to_total_choices(tmp_path: Path) -> None:
     """The sum of all section_counts equals the total number of choices."""
     write_config(tmp_path, base_payload())
@@ -99,6 +108,7 @@ def test_token_plan_section_counts_sum_to_total_choices(tmp_path: Path) -> None:
     total = sum(plan.section_counts.values())
 
     assert total == len(plan.choices)
+
 
 def test_token_plan_values_for_category_returns_correct_values(tmp_path: Path) -> None:
     """values_for_category returns only values for the specified category."""
@@ -110,6 +120,7 @@ def test_token_plan_values_for_category_returns_correct_values(tmp_path: Path) -
 
     for value in adj_values:
         assert value in config.lexicon["adjectives"]
+
 
 def test_token_plan_first_value_returns_first_match(tmp_path: Path) -> None:
     """first_value returns the first choice value for the given category."""
@@ -125,6 +136,7 @@ def test_token_plan_first_value_returns_first_match(tmp_path: Path) -> None:
     else:
         assert first_adj == "fallback"
 
+
 def test_token_plan_first_value_returns_default_when_no_match(tmp_path: Path) -> None:
     """first_value returns the default when the category has no choices."""
     write_config(tmp_path, base_payload())
@@ -136,6 +148,7 @@ def test_token_plan_first_value_returns_default_when_no_match(tmp_path: Path) ->
 
     assert result == "my-default"
 
+
 def test_token_plan_provenance_has_entry_for_every_choice(tmp_path: Path) -> None:
     """Every variable_name in the plan must have a provenance entry."""
     write_config(tmp_path, base_payload())
@@ -145,6 +158,7 @@ def test_token_plan_provenance_has_entry_for_every_choice(tmp_path: Path) -> Non
     for choice in plan.choices:
         assert choice.variable_name in plan.provenance
 
+
 def test_token_plan_seed_matches_config(tmp_path: Path) -> None:
     """The TokenPlan seed must match the config seed."""
     write_config(tmp_path, base_payload())
@@ -153,9 +167,11 @@ def test_token_plan_seed_matches_config(tmp_path: Path) -> None:
 
     assert plan.seed == config.seed
 
+
 # ---------------------------------------------------------------------------
 # Determinism: same inputs → same outputs
 # ---------------------------------------------------------------------------
+
 
 def test_token_selection_is_deterministic_across_runs(tmp_path: Path) -> None:
     """Generating the plan twice with the same config produces identical results."""
@@ -168,9 +184,11 @@ def test_token_selection_is_deterministic_across_runs(tmp_path: Path) -> None:
     assert plan_a == plan_b
     assert plan_a.choices == plan_b.choices
 
+
 # ---------------------------------------------------------------------------
 # Sensitivity: changing each digest input changes output
 # ---------------------------------------------------------------------------
+
 
 def test_plan_changes_when_slot_name_changes(tmp_path: Path) -> None:
     """Renaming a slot (which changes the digest input) changes the token value."""
@@ -191,6 +209,7 @@ def test_plan_changes_when_slot_name_changes(tmp_path: Path) -> None:
     names_b = {c.variable_name for c in plan_b.choices}
     assert names_a != names_b
 
+
 def test_plan_changes_when_ordinal_changes(tmp_path: Path) -> None:
     """Different ordinals within a repeated slot produce different digests."""
     payload = base_payload()
@@ -207,9 +226,11 @@ def test_plan_changes_when_ordinal_changes(tmp_path: Path) -> None:
     # They should have different source_keys (different ordinals in digest)
     assert noun_choices[0].source_key != noun_choices[1].source_key
 
+
 # ---------------------------------------------------------------------------
 # Source key format
 # ---------------------------------------------------------------------------
+
 
 def test_source_key_references_config_path_and_category(tmp_path: Path) -> None:
     """source_key must point to manuscript/config.yaml#madlib.lexicon.<category>[<index>]."""
@@ -222,9 +243,11 @@ def test_source_key_references_config_path_and_category(tmp_path: Path) -> None:
         assert "[" in choice.source_key
         assert "]" in choice.source_key
 
+
 # ---------------------------------------------------------------------------
 # Section-count tracking
 # ---------------------------------------------------------------------------
+
 
 def test_section_counts_only_tracks_assigned_sections(tmp_path: Path) -> None:
     """section_counts only contains sections that have at least one slot assigned."""
@@ -240,17 +263,17 @@ def test_section_counts_only_tracks_assigned_sections(tmp_path: Path) -> None:
     slot_sections = {slot.section for slot in config.slots}
     assert set(plan.section_counts.keys()) == slot_sections
 
+
 # ---------------------------------------------------------------------------
 # Lexicon with a single token — always returns that token
 # ---------------------------------------------------------------------------
+
 
 def test_single_token_lexicon_always_selects_that_token(tmp_path: Path) -> None:
     """When a lexicon category has only one entry, it's always selected."""
     payload = base_payload()
     payload["madlib"]["lexicon"]["adjectives"] = ["unique-value"]
-    payload["madlib"]["slots"] = [
-        {"name": "adj", "category": "adjectives", "section": "abstract"}
-    ]
+    payload["madlib"]["slots"] = [{"name": "adj", "category": "adjectives", "section": "abstract"}]
     write_config(tmp_path, payload)
     config = load_madlib_config(tmp_path)
     plan = generate_token_plan(config)
@@ -259,9 +282,11 @@ def test_single_token_lexicon_always_selects_that_token(tmp_path: Path) -> None:
 
     assert adj_choices == ("unique-value",)
 
+
 # ---------------------------------------------------------------------------
 # Property-like: different seeds produce different distributions (except collision)
 # ---------------------------------------------------------------------------
+
 
 def test_different_seeds_produce_different_plans_for_large_lexicon(tmp_path: Path) -> None:
     """Two configs differing only in seed should produce different token plans."""
@@ -282,9 +307,11 @@ def test_different_seeds_produce_different_plans_for_large_lexicon(tmp_path: Pat
     # The plans use different seeds so at minimum the seed field differs
     assert plan_low != plan_high
 
+
 # ---------------------------------------------------------------------------
 # TokenChoice is frozen (hashable)
 # ---------------------------------------------------------------------------
+
 
 def test_token_choice_is_hashable(tmp_path: Path) -> None:
     """TokenChoice is a frozen dataclass so it must be hashable."""
@@ -297,9 +324,11 @@ def test_token_choice_is_hashable(tmp_path: Path) -> None:
 
     assert len(choice_set) == len(plan.choices)
 
+
 # ---------------------------------------------------------------------------
 # TokenPlan is frozen (hashable/equal)
 # ---------------------------------------------------------------------------
+
 
 def test_token_plan_equality(tmp_path: Path) -> None:
     """Two plans generated from identical configs must compare equal."""
@@ -312,6 +341,7 @@ def test_token_plan_equality(tmp_path: Path) -> None:
     assert plan_a == plan_b
     assert hash(plan_a) == hash(plan_b)
 
+
 # ---------------------------------------------------------------------------
 # Ordered-category-inventory invariant: reordering the SAME lexicon values
 # (a permutation, identical set) must change the token plan, because the
@@ -321,21 +351,18 @@ def test_token_plan_equality(tmp_path: Path) -> None:
 # *values*; here the value set is identical and only the order differs.
 # ---------------------------------------------------------------------------
 
+
 def test_reordering_same_lexicon_values_changes_plan(tmp_path: Path) -> None:
     """A permutation of identical lexicon values changes the selected tokens."""
     original = base_payload()
     # Use a wide lexicon so a reorder shifts the digest-derived index.
     wide = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel"]
     original["madlib"]["lexicon"]["nouns"] = list(wide)
-    original["madlib"]["slots"] = [
-        {"name": "noun_run", "category": "nouns", "section": "introduction", "count": 6}
-    ]
+    original["madlib"]["slots"] = [{"name": "noun_run", "category": "nouns", "section": "introduction", "count": 6}]
 
     reordered = base_payload()
     reordered["madlib"]["lexicon"]["nouns"] = list(reversed(wide))
-    reordered["madlib"]["slots"] = [
-        {"name": "noun_run", "category": "nouns", "section": "introduction", "count": 6}
-    ]
+    reordered["madlib"]["slots"] = [{"name": "noun_run", "category": "nouns", "section": "introduction", "count": 6}]
 
     write_config(tmp_path / "original", original)
     write_config(tmp_path / "reordered", reordered)
@@ -353,19 +380,16 @@ def test_reordering_same_lexicon_values_changes_plan(tmp_path: Path) -> None:
     # Selected token sequences must differ: the ordered inventory feeds the digest.
     assert original_values != reordered_values
 
+
 def test_reordering_single_value_lexicon_does_not_change_plan(tmp_path: Path) -> None:
     """A single-entry lexicon has only one ordering, so the plan is unchanged."""
     payload_a = base_payload()
     payload_a["madlib"]["lexicon"]["adjectives"] = ["only"]
-    payload_a["madlib"]["slots"] = [
-        {"name": "adj", "category": "adjectives", "section": "abstract"}
-    ]
+    payload_a["madlib"]["slots"] = [{"name": "adj", "category": "adjectives", "section": "abstract"}]
     # A second identical config — there is no alternative ordering of one value.
     payload_b = base_payload()
     payload_b["madlib"]["lexicon"]["adjectives"] = ["only"]
-    payload_b["madlib"]["slots"] = [
-        {"name": "adj", "category": "adjectives", "section": "abstract"}
-    ]
+    payload_b["madlib"]["slots"] = [{"name": "adj", "category": "adjectives", "section": "abstract"}]
 
     write_config(tmp_path / "a", payload_a)
     write_config(tmp_path / "b", payload_b)

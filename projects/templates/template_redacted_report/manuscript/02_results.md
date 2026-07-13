@@ -23,6 +23,14 @@ The redaction ledger records each decision with:
 
 The ledger never exposes source text. It provides reproducible audit evidence without disclosure risk.
 
+The normal analysis stage writes this evidence to
+`output/data/release_ledger.json`. Its companion
+`output/reports/redaction_audit.json` contains policy outcomes, review-gate
+status, findings, scores, counts, and paragraph metadata. Both canonical files
+omit narrative text, review rationales, and reviewer identities; the
+comprehensive sanitized packet is evaluated in memory rather than serialized
+to the public output tree.
+
 ## Segment Hash Manifest
 
 The hash manifest records, for each segment:

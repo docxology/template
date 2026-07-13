@@ -15,6 +15,7 @@ logic.
 | `textbook/toc.py` | Chapter numbering and part/chapter label generation. |
 | `textbook/content.py` | The meta-template engine: `scaffold_chapter`, `scaffold_lab`, `scaffold_question_bank`, `validate_chapter`, `count_stub_markers`, `count_words`. |
 | `textbook/models.py` | The worked formalisms: `logistic_growth`, `saturating_response`, `exponential_decay`, `half_life`, `linear_fit`, `descriptive_statistics`, `normalize_unit_interval`. |
+| `textbook/analysis.py` | Canonical worked-example parameters and deterministic summary generation; persisted inputs travel with outputs. |
 | `visualization/` | Deterministic matplotlib figure generators (4 worked + 12 per-chapter placeholders). See [`visualization/README.md`](visualization/README.md). |
 | `mermaid/` | Mermaid diagram sources + PNG/`.mmd`-fallback renderer driven by `diagram_specs.yaml`. See [`mermaid/README.md`](mermaid/README.md). |
 | `textbook_paths.py` | Project-root and output-directory resolution. |
@@ -32,9 +33,10 @@ engine.
 
 ## Coverage
 
-Project source carries a **90% coverage minimum** (the engine currently sits at
-~95% with 75 tests). Add logic here with a matching test under [`../tests/`](../tests/)
-before wiring it into a script.
+Project source carries the coverage minimum declared in `pyproject.toml`. Read
+the live test/coverage report rather than copying a volatile count here. Add
+logic with a matching test under [`../tests/`](../tests/) before wiring it into
+a script.
 
 ```bash
 uv run --extra dev python -m pytest ../tests --cov=src --cov-report=term-missing

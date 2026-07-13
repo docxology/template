@@ -233,8 +233,7 @@ class TestValidateFigureRegistry:
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         (manuscript_dir / "SYNTAX.md").write_text(
-            "Use `[@fig:part-...-module-map]` for examples.\n\n"
-            "```markdown\nSee [@fig:example-only]\n```\n",
+            "Use `[@fig:part-...-module-map]` for examples.\n\n```markdown\nSee [@fig:example-only]\n```\n",
             encoding="utf-8",
         )
         (manuscript_dir / "01_intro.md").write_text("See [@fig:real].\n")

@@ -28,3 +28,5 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_dat
 
 - Keep claims about the data package, not unsupported scientific effects.
 - Do not commit restricted raw data to this public exemplar.
+- Regenerate figure provenance through `scripts/generate_figures.py`; it emits
+  `output/figures/figure_registry.json` only for a complete five-figure run.

@@ -67,7 +67,7 @@
     "output/web/manuscript__99_references.html": "010344311fd981e9ec30f1541b5f7f8f54477c82cf0e1e43e79de7ee33868fbe"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_prose_project/output/reports/snapshots/stage-06-pdf-rendering.json",
+  "path": "<repo-root>/projects/templates/template_prose_project/output/reports/snapshots/stage-06-pdf-rendering.json",
   "stage_name": "PDF Rendering",
   "stage_num": 6,
   "timestamp": "2026-06-14T19:22:48+00:00",

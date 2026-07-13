@@ -15,7 +15,7 @@ gate, and a reproducibility guarantee. Three properties make that possible.
 
 **One content source, six artifacts.** `manuscript/deck_content_{short,medium,long}.yaml`
 define the slide-by-slide narrative at three lengths; the live token builder (`src/deck_tokens.py`)
-supplies the facts. `scripts/render_decks.py` resolves tokens once and calls
+supplies the facts. `scripts/20_render_decks.py` resolves tokens once and calls
 both renderers — `infrastructure.rendering.slide_deck.render_pdf` and
 `infrastructure.rendering.pptx_deck.render_pptx` — against the identical
 resolved content, so PDF and PPTX cannot drift from each other.
@@ -36,6 +36,6 @@ it is — fails the same way an uncovered line of code fails a coverage gate.
 The remainder of this manuscript covers the deck-rendering architecture
 ([@sec:architecture]), the validation model ([@sec:validation]), and the
 reproducibility guarantees ([@sec:reproducibility]) that let
-`uv run python scripts/render_decks.py --project templates/template_pitch_deck`
+`uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py`
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.

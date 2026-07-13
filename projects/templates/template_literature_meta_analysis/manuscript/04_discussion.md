@@ -17,11 +17,12 @@ than either approach alone.
 
 ## Engine Coverage and Bias
 
-For this live run, the corpus is dominated by OpenAlex (1,000 records) and Crossref
-(1,000 records), with PubMed contributing 986 records and arXiv contributing 1.
-Semantic Scholar was rate-limited (HTTP 429) and returned zero records — a known
-limitation of its unauthenticated API tier. SovietRxiv and ChinaRxiv returned zero
-records for the modafinil query, which is expected given their coverage domains.
+The committed analysis corpus is a bounded retrieval snapshot. It predates the
+deterministic per-engine retrieval report introduced by this template, so this paper
+does not attribute record counts or success/failure states to individual engines by
+reverse-engineering the merged corpus. New runs write those facts directly to
+`output/data/retrieval_report.json`; a resumed legacy snapshot is explicitly labelled
+`resume_without_prior_retrieval_report` rather than being given invented provenance.
 
 The max-results cap of 1,000 per engine means the full literature is larger than the
 retrieved corpus; the {{CORPUS_SIZE}} records represent a bounded sample rather than the
@@ -32,11 +33,12 @@ increase runtime and API load.
 
 ## Honest Defaults
 
-The committed seed corpus is synthetic (reserved test DOIs, generated authors) so that
-the whole pipeline runs offline and byte-identically. Its numbers demonstrate the
-machinery; they are not empirical findings about {{SEARCH_TERM}}. Real claims require a
-live retrieval run with regenerated figures, reports, and manuscript variables — as
-produced in this instance.
+The small corpus under `data/fixtures/` is synthetic (reserved test DOIs and generated
+authors) and exists only for offline tests. It is not silently substituted for the
+tracked analysis corpus. A user who regenerates empirical findings must run retrieval,
+analysis, figures, and manuscript injection together and retain the resulting corpus and
+retrieval report; fixture-only runs demonstrate machinery, not findings about
+{{SEARCH_TERM}}.
 
 ## Limitations and Extensions
 

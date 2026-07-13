@@ -138,12 +138,12 @@ resolved `primitive_domain` (read out of the selections if a
 `primitive_domain` slot exists, else defaulted to `KNOWN_DOMAINS[0]`). A
 `Spec` additionally exposes `spec_hash`, computed by serializing
 `to_dict()` to canonical (sorted-key, compact-separator) JSON and taking the
-first 16 hex characters of its SHA-256 — the same truncation convention used
+first {{HASH_PREFIX_HEX_LENGTH}} hex characters of its SHA-256 — the same truncation convention used
 for `grammar_hash`.
 
 Two auxiliary functions extend `expand` to families of children rather than
 one: `derive_seed(base_seed, index)` hashes `f"{base_seed}\x1f{index}"` to
-produce a new seed masked to 63 bits (`& 0x7FFFFFFFFFFFFFFF`, keeping it a
+produce a new seed masked to {{DERIVED_SEED_BITS}} bits (keeping it a
 non-negative Python `int`), and `sample(grammar, count, base_seed=None)`
 calls `expand` once per derived seed to produce `count` independent `Spec`
 objects — independent in the sense that each is keyed off a distinct

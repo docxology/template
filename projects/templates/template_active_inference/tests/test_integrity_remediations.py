@@ -79,7 +79,8 @@ def test_binding_flags_merged_claim_without_simulation(tmp_path: Path) -> None:
     )
     (tmp_path / "output" / "reports").mkdir(parents=True, exist_ok=True)
     (tmp_path / "output" / "reports" / "invariants.json").write_text(
-        json.dumps({"invariants": {"a": True}}), encoding="utf-8"  # analytical only, no 'simulation'
+        json.dumps({"invariants": {"a": True}}),
+        encoding="utf-8",  # analytical only, no 'simulation'
     )
     violations = verify_claim_bindings(tmp_path)
     assert any("merged" in v for v in violations), violations

@@ -22,8 +22,8 @@ subscript, E = mc^2^ with a superscript, and a footnote.[^demo]
 [^demo]: Footnotes collect at the end of the document (or page, in PDF). Use them
 for asides that would interrupt the sentence.
 
-You can hard-break a line  
-with two trailing spaces, or separate paragraphs with a blank line. Escape
+You can hard-break a line with an explicit `<br>` element,<br>
+or separate paragraphs with a blank line. Escape
 literal Markdown with a backslash: \*not italic\*.
 
 ---
@@ -98,6 +98,9 @@ A simple table with column alignment and a cross-referencable caption
 ([@tbl:gallery_alignment]):
 
 : Column alignment — left, centre, right. {#tbl:gallery_alignment}
+
+The values below are mirrored in `manuscript/assets/data/format_gallery.csv` so
+rendering examples remain evidence-addressable fixtures rather than anonymous literals.
 
 | Left      |  Centre  |    Right |
 | :-------- | :------: | -------: |

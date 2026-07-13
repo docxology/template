@@ -282,10 +282,12 @@ The default manifest written by `--write-default-manifest` scores the public
 canonical exemplars only — the full `PUBLIC_PROJECT_NAMES` set in
 [`infrastructure/project/public_scope.py`](../../infrastructure/project/public_scope.py)
 (authoritative roster → [`docs/_generated/active_projects.md`](../_generated/active_projects.md)).
-The shipped fixed smoke manifest
-(`infrastructure/benchmark/template_smoke_manifest.json`) is a smaller subset
-(`template_code_project`, `template_prose_project`).
+The shipped fixed smoke manifest is generated from and contract-tested against
+that same full public roster. Missing projects, validation reports, declared
+reproducibility artifacts, renders, or current artifact manifests fail closed.
 
 Benchmark manifests may attach a weighted rubric for reproducibility, evidence
 grounding, rendering, cross-reference integrity, source quality, and publication
-readiness dimensions. Reports can be emitted as JSON or Markdown.
+readiness dimensions. Rubric dimensions must exactly match the checks and use
+positive finite weights. Reports can be emitted as JSON or Markdown and include
+per-check pass state, score, maximum score, and issues.

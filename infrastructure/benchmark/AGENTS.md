@@ -9,6 +9,8 @@ Maintain small benchmark harnesses that validate canonical template outputs usin
 - Keep benchmark logic generic to the public template; do not reference confidential or rotating local-only projects.
 - Exercise actual generated artifacts, manuscript Markdown, BibTeX, figures, and data files.
 - Keep rubric dimensions explicit in manifests; do not infer hidden benchmark weights from prior runs.
+- Require rubric dimensions to match checks exactly and keep all weights positive and finite.
+- Fail closed on missing public projects, validation reports, and declared reproducibility artifacts.
 - Preserve the No-Mocks Policy: no mock frameworks, no fake clients, and no monkeypatched external behavior.
 - Keep runtime bounded so harnesses can run in local readiness checks.
 
@@ -16,7 +18,7 @@ Maintain small benchmark harnesses that validate canonical template outputs usin
 
 ```bash
 uv run pytest tests/infra_tests/benchmark/test_template_benchmark_harness.py -v
-uv run python -m infrastructure.benchmark.template_harness --repo-root .
+uv run python -m infrastructure.benchmark --repo-root .
 ```
 
 ## See also

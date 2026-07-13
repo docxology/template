@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,11 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:discussion">Discussion: Load-Bearing vs Rhetorical
 Analogy</h1>
 <h2 id="load-bearing-vs-rhetorical">Load-bearing vs rhetorical</h2>
@@ -231,8 +234,10 @@ cannot convert weak domain evidence into strong domain evidence.</p>
 <li><strong>Domain-specific refinement pipelines</strong>: fork the
 exemplar and remap stages to domain operations (e.g., clinical evidence,
 legal citation, engineering specification).</li>
-<li><strong>Purity measurement</strong>: adopt the purity fraction and
-karat grade vocabulary for any staged quality process.</li>
+<li><strong>Staged-state visualization</strong>: reuse the purity and
+karat vocabulary only when the fork declares what each state means,
+enforces ordering and continuity, and avoids presenting designed values
+as validated quality measurements.</li>
 <li><strong>Mega-madlib composition</strong>: reuse the deterministic
 token engine for any config-owned lexical composition task.</li>
 <li><strong>Domain adapters</strong>: use
@@ -409,28 +414,31 @@ source-owned artifacts.</td>
 </table>
 <h2 id="analogy-break-boundary">Analogy-break boundary</h2>
 <p>The analogy breaks when purity becomes a rhetorical grade detached
-from evidence. In this exemplar, <span class="citation"
-data-cites="eq:claim_support">[@eq:claim_support]</span> and <span
-class="citation"
-data-cites="eq:integrity_vector">[@eq:integrity_vector]</span> keep the
-grade tied to claim support and gate coverage. A fork that cannot
-provide comparable source-owned gates should keep the gold-refining
-language as metaphor only and avoid publication-strength claims.</p>
+from evidence. In this exemplar, [eq:claim_support] and
+[eq:integrity_vector] keep the grade tied to claim support and gate
+coverage. A fork that cannot provide comparable source-owned gates
+should keep the gold-refining language as metaphor only and avoid
+publication-strength claims.</p>
+<p>The reverse assay clarifies a second boundary. It can identify the
+shortest prefix that reaches a <strong>declared</strong> target, but it
+cannot identify the cheapest, fairest, or scientifically best workflow
+unless stages have empirically justified costs and outcomes. Likewise,
+the multi-objective purity vector prevents compensatory averaging, but
+its dimensions are still local engineering observables rather than a
+validated psychometric scale.</p>
 <p>The practical rule is simple: do not add an impressive figure unless
-its path through <span class="citation"
-data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
-is visible. A visual can summarize an idea, but it only supports a
-manuscript claim when the claim-evidence assay can point to the owning
-file, symbol, generated artifact, and validation surface.</p>
+its path through [fig:implementation_circuit] is visible. A visual can
+summarize an idea, but it only supports a manuscript claim when the
+claim-evidence assay can point to the owning file, symbol, generated
+artifact, and validation surface.</p>
 <p>The integrity risk matrix adds one more brake. A fork may have all
 figures registered and still be scientifically weak if its
 highest-severity risks are only weakly detectable. In this exemplar,
-<span class="citation"
-data-cites="tbl:integrity_dimensions">[@tbl:integrity_dimensions]</span>
-makes that weakness inspectable by pairing each dimension with an owner
-and validator. The useful question for a fork is therefore not “can the
-manuscript render?” but “which severe failures would the current
-pipeline miss, and what source-owned gate would expose them?”</p>
+[tbl:integrity_dimensions] makes that weakness inspectable by pairing
+each dimension with an owner and validator. The useful question for a
+fork is therefore not “can the manuscript render?” but “which severe
+failures would the current pipeline miss, and what source-owned gate
+would expose them?”</p>
 <p>The evidence-tier ladder also prevents a common drift in generated
 manuscripts: treating generated artifacts as if they were independent
 evidence. A generated metric can support an internal consistency claim,
@@ -453,9 +461,8 @@ who or what should not be trusted by default [nist_sp800_207_zero_trust;
 nist_sp800_218_ssdf; slsa_v1_2; sigstore_docs; mitre_attack;
 cyclonedx_spec; spdx_spec; cisa_secure_by_design]. In this manuscript
 they do not certify security. They make overclaiming harder: a security
-claim must point to <span class="citation"
-data-cites="tbl:security_assay">[@tbl:security_assay]</span>, and a real
-scan claim must point to scan artifacts that this pass does not
-produce.</p>
+claim must point to [tbl:security_assay], and a real scan claim must
+point to scan artifacts that this pass does not produce.</p>
+</main>
 </body>
 </html>

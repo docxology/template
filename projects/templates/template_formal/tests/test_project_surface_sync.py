@@ -26,8 +26,8 @@ def test_live_fixture_and_documentation_surfaces_are_synchronized() -> None:
     results = (PROJECT_ROOT / "manuscript" / "05_results_discussion.md").read_text(encoding="utf-8")
     assert "six known-bad" in abstract
     assert "eight pre-registered analyses" in abstract
-    assert "277 tests" in tests_readme
-    assert "96.03%" in tests_readme
+    assert "278 tests" in tests_readme
+    assert "95.91%" in tests_readme
     assert "three pre-registered" not in results.lower()
 
 
@@ -37,7 +37,7 @@ def test_authoritative_mypy_command_is_synchronized_across_fork_surfaces() -> No
         surface = (PROJECT_ROOT / relative_path).read_text(encoding="utf-8")
         assert expected_prefix in surface, relative_path
     readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    assert "Success: no issues found in 26 source files" in readme
+    assert "Success: no issues found in 27 source files" in readme
 
 
 def test_generated_figure_registry_is_complete_when_outputs_exist() -> None:

@@ -1,4 +1,5 @@
 """Tests for sealing utilities."""
+
 from __future__ import annotations
 
 import json
@@ -135,6 +136,7 @@ def test_embed_semi_transparent_returns_something():
     # Create a mock base image and QR image
     try:
         from PIL import Image
+
         base = Image.new("RGB", (100, 100), color=(0, 0, 0))
         qr = Image.new("RGB", (20, 20), color=(255, 255, 255))
         result = embed_semi_transparent(base, qr, position=(0, 0), opacity=0.5)
@@ -197,6 +199,7 @@ def test_embed_qr_with_pil_images():
     """embed_qr should paste QR into base image when PIL is available."""
     try:
         from PIL import Image
+
         base = Image.new("RGB", (100, 100), color=(255, 255, 255))
         qr = Image.new("RGB", (20, 20), color=(0, 0, 0))
         result = embed_qr(base, qr, position=(0, 0))
@@ -306,4 +309,3 @@ def test_read_qr_matrix_body_with_pyzbar_available():
         else:
             sys.modules["pyzbar.pyzbar"] = saved_inner
         importlib.reload(_sealing_mod)
-

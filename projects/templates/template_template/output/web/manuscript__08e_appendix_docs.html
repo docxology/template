@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="appendix-docs">Appendix: Documentation Inventory</h2>
 <p>The repository maintains documentation at three levels:</p>
 <table>
@@ -200,7 +204,7 @@
 </tr>
 <tr>
 <td><code>docs/</code> directory</td>
-<td style="text-align: center;">380 files across 17 subdirectories</td>
+<td style="text-align: center;">390 files across 18 subdirectories</td>
 <td>User guides, API reference, troubleshooting</td>
 </tr>
 <tr>
@@ -224,29 +228,29 @@ infrastructure module</td>
 </tbody>
 </table>
 <p>The <code>docs/</code> subdirectories cover: <code>core/</code>
-(essential docs), <code>guides/</code> (skill levels 1–12),
+(essential docs), <code>guides/</code> (progressive skill-level guides),
 <code>architecture/</code> (system design), <code>usage/</code> (content
 authoring), <code>operational/</code> (build, config, logging,
 troubleshooting), <code>reference/</code> (API, FAQ, glossary),
-<code>modules/</code> (23 infrastructure modules),
+<code>modules/</code> (28 infrastructure modules),
 <code>development/</code> (contributing, testing),
 <code>best-practices/</code> (version control, migration),
 <code>prompts/</code> (21 AI prompt templates), <code>security/</code>
 (steganography, hashing), and <code>audit/</code> (review reports).</p>
 <p>Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: <code>380</code> counts every
-Markdown file beneath <code>docs/</code> recursively, <code>17</code>
+introspection rather than hand-maintained: <code>390</code> counts every
+Markdown file beneath <code>docs/</code> recursively, <code>18</code>
 counts its first-level subdirectories, and <code>21</code> counts the
 workflow subdirectories that each carry a <code>SKILL.md</code>
 descriptor. This is the same discipline the manuscript argues for
-throughout—a hand-typed “90+ files across 12 subdirectories” silently
-rots as the tree grows, whereas a token re-resolves on every render. A
-reader onboarding to the repository should start at
-<code>docs/core/</code>, follow the graduated <code>docs/guides/</code>
-skill ladder, and consult the per-directory
-<code>AGENTS.md</code>/<code>README.md</code> pair nearest to whatever
-code they are editing; AI agents additionally read each module’s
-<code>SKILL.md</code> to locate capabilities without guessing API
-signatures.</p>
+throughout—a hand-typed documentation total silently rots as the tree
+grows, whereas a token re-resolves on every render. A reader onboarding
+to the repository should start at <code>docs/core/</code>, follow the
+graduated <code>docs/guides/</code> skill ladder, and consult the
+per-directory <code>AGENTS.md</code>/<code>README.md</code> pair nearest
+to whatever code they are editing; AI agents additionally read each
+module’s <code>SKILL.md</code> to locate capabilities without guessing
+API signatures.</p>
+</main>
 </body>
 </html>

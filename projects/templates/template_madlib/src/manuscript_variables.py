@@ -69,8 +69,14 @@ def _config_hash(config_path: Path) -> str:
     return hashlib.sha256(config_path.read_bytes()).hexdigest()[:16]
 
 
-def _build_timestamp() -> str:
-    epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+def _build_timestamp(source_date_epoch: str | None = None) -> str:
+    """Return a reproducible build time, or an explicit absence marker.
+
+    Passing a value makes the conversion independently testable; production
+    callers omit it and read ``SOURCE_DATE_EPOCH`` from the environment.
+    """
+    raw_epoch = os.environ.get("SOURCE_DATE_EPOCH", "") if source_date_epoch is None else source_date_epoch
+    epoch = raw_epoch.strip()
     if epoch.isdigit():
         return datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return "not-recorded (set SOURCE_DATE_EPOCH)"

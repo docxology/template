@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,25 +173,33 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methods_pymdp">pymdp simulation harness</h1>
 <!-- sheaf-track:prose -->
 <p><strong>Sophisticated inference (planning horizon).</strong> The
 pymdp method is a deterministic state-inference harness on a minimal
-T-maze (<span class="citation"
-data-cites="fig:tmaze_schematic">[@fig:tmaze_schematic]</span>) with
-planning horizon <code>policy_len = 2</code>. The discrete-state framing
-follows finite POMDP active-inference treatments and
-sophisticated-inference analyses [dacosta2020discrete;
-smith2022tutorial; friston2021sophisticated; dacosta2023reward], and the
-implementation anchor is the pymdp software paper [pymdp2024]. The
-default <code>state_inference</code> rollout writes the summary/trace
-artifacts used in <span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>; mean
+T-maze ([fig:tmaze_schematic]) with planning horizon
+<code>policy_len = 2</code>. The discrete-state framing follows finite
+POMDP active-inference treatments and sophisticated-inference analyses
+[dacosta2020discrete; smith2022tutorial; friston2021sophisticated;
+dacosta2023reward], and the implementation anchor is the pymdp software
+paper [pymdp2024]. The default <code>state_inference</code> rollout
+writes the summary/trace artifacts used in [sec:results_si_tmaze]; mean
 belief entropy is 0.3251.</p>
 <p>The method keeps runtime, posterior, and extension evidence separate.
 <code>output/data/si_policy_comparison.json</code> compares
@@ -217,17 +225,14 @@ class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
 horizon <span class="math inline">\(H =\)</span> 2, which defines the
 <strong>policy depth</strong> used when constructing candidate policies
 (logged as <code>num_policies</code> in the SI summary artifact; see
-<span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>).</p>
+[sec:results_si_tmaze]).</p>
 <p>The default harness records belief entropy per step; extending to
 full expected-free-energy policy selection (<code>infer_policies</code>)
-is documented as a follow-on track in <span class="citation"
-data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
+is documented as a follow-on track in [sec:discussion_outlook].</p>
 <!-- sheaf-track:pymdp -->
 <p>SI artifacts (summary, trace, optional JSONL log) record step count,
-actions, observations, and belief entropy for <span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>. Steps
-recorded: 2. Branching-time and variational formulations of active
+actions, observations, and belief entropy for [sec:results_si_tmaze].
+Steps recorded: 2. Branching-time and variational formulations of active
 inference planning are treated here as related planning context
 [champion2021branching; nuijten2026efeplanning]; the live evidence
 remains the finite local artifacts <code>si_policy_grid.json</code>,
@@ -253,7 +258,7 @@ validation failure before rendering.</p>
 <img src="../figures/tmaze_schematic.png" style="width:85.0%"
 data-fig-alt="Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2."
 alt="T-maze generative model schematic (2-step policy horizon, state_inference mode)." />
-<figcaption aria-hidden="true">T-maze generative model schematic (2-step
+<figcaption>T-maze generative model schematic (2-step
 policy horizon, state_inference mode).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
@@ -268,5 +273,6 @@ bindings.</p>
 <li><code>obs</code> → <strong>ObservationLikelihood</strong></li>
 <li><code>pi</code> → <strong>PolicyPosterior</strong></li>
 </ul>
+</main>
 </body>
 </html>

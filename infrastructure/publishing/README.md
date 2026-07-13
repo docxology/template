@@ -2,6 +2,10 @@
 
 Tools for academic publishing, citations, and platform integration.
 
+For a release operator's path through standalone GitHub mirrors, real Zenodo DOI
+minting, optional mirrors, and archival handoff, start with
+[`../../docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).
+
 The Python API exposes BibTeX, APA, and MLA citation helpers. The
 `generate-citation` CLI subcommand currently exposes BibTeX only.
 
@@ -48,7 +52,7 @@ print(f"Published with DOI: {result.doi}")
 | HuggingFace Hub | first_class | `infrastructure.publishing.huggingface` | `HUGGINGFACE_TOKEN` / `HF_TOKEN` |
 | OSF | first_class | `infrastructure.publishing.osf` | `OSF_TOKEN` |
 
-`first_class` = implemented, tested, locally verifiable. `documented` = future adapter; registered but no live implementation yet. All 12 registered platforms are currently `first_class`.
+`first_class` = implemented, tested, locally verifiable. `documented` = future adapter; registered but no live implementation yet. The registry currently has 12 first-class platforms plus documented ebook, print, retail, and payment targets.
 
 Use `infrastructure.publishing.registry` to enumerate or look up platforms programmatically:
 
@@ -107,6 +111,7 @@ graph TD
 - **status_report.py** - Compile registry + `config.yaml` metadata into a regenerable per-platform README status block (`compile_publishing_status()`, `render_status_block()`, `update_readme_block()`)
 - **credential_check.py** - Read-only, non-destructive verification that publishing credentials authenticate (`run_probe()`, `check_all()`)
 - **upload_runner.py** - Reusable multi-platform upload dispatch (`UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs()`, `run_uploads()` returning an `UploadRun`); the per-platform helpers + batch orchestrator extracted from `scripts/publish/upload_gold_refinement.py`, which is now a thin CLI
+- **transmission_models.py** - Shared dependency-light `TransmissionContext` value object used by barcode-strip and bookend generation without creating an import cycle
 - **platforms.py** / **api.py** - Backwards-compatible re-exports
 
 ## Key Classes

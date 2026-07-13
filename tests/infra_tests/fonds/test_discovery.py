@@ -21,11 +21,7 @@ from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES
 def _make_fond(path: Path) -> Path:
     """A minimal valid fond (fonds.yaml + data/)."""
     (path / "data").mkdir(parents=True)
-    yaml_content = (
-        "type: bibliography\n"
-        "description: Test bibliography fond\n"
-        "version: '1.0'\n"
-    )
+    yaml_content = "type: bibliography\ndescription: Test bibliography fond\nversion: '1.0'\n"
     (path / "fonds.yaml").write_text(yaml_content, encoding="utf-8")
     (path / "data" / "references.bib").write_text("", encoding="utf-8")
     return path
@@ -101,15 +97,9 @@ def test_public_fond_names_no_path_separators() -> None:
     (``../``).
     """
     for name in PUBLIC_FOND_NAMES:
-        assert not name.startswith("/"), (
-            f"PUBLIC_FOND_NAMES entry {name!r} must not be an absolute path"
-        )
-        assert not name.startswith(".."), (
-            f"PUBLIC_FOND_NAMES entry {name!r} must not start with '..'"
-        )
-        assert "\\" not in name, (
-            f"PUBLIC_FOND_NAMES entry {name!r} must not contain backslashes"
-        )
+        assert not name.startswith("/"), f"PUBLIC_FOND_NAMES entry {name!r} must not be an absolute path"
+        assert not name.startswith(".."), f"PUBLIC_FOND_NAMES entry {name!r} must not start with '..'"
+        assert "\\" not in name, f"PUBLIC_FOND_NAMES entry {name!r} must not contain backslashes"
 
 
 # =============================================================================

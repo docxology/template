@@ -89,7 +89,7 @@ is_valid, message = validate_tool_structure(Path("tools/templates/template_code_
 # (False, "Missing required directory: scripts")
 ```
 
-**Required:** `tools.yaml`, `scripts/`  
+**Required:** `tools.yaml`, `scripts/`
 **Optional:** `tests/`, `docs/`
 
 ### `public_scope.py`

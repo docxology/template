@@ -8,9 +8,9 @@ Run from the repository root:
 
 from __future__ import annotations
 
-import sys
-import pathlib
 import logging
+import pathlib
+import sys
 
 # Ensure src/ is importable when running as a script
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]

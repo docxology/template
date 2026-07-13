@@ -173,6 +173,8 @@ including `networkx>=3.4.2` for deterministic graph layouts.
 - **Refinery pipeline**: ore → smelting → assaying → karat grading with monotone purity increase
 - **Mega-madlib token injection**: deterministic, seeded, config-owned lexicon
 - **Karat grading**: maps purity fractions to standard gold karat grades (9K–24K)
+- **Continuity and reverse assay**: rejects disconnected stages and returns the shortest ordered prefix reaching a declared target
+- **Multi-objective purity**: keeps stage completion, claim support, token provenance, and figure quality separate without compensatory averaging
 - **Nine-nines certification**: extends purity to 99.9999999% for the final stage
 - **Manuscript variable generation**: every prose number is a `{{TOKEN}}` from one Python function
 - **Source-owned formalisms**: auto-numbered equation blocks from `src/formalisms.py`

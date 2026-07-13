@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,16 +173,41 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:part_III_frontiers">Frontiers and Open Problems</h1>
 <figure id="fig:part_III_frontiers">
 <img src="../figures/part_III_frontiers.png" style="width:90.0%"
-alt="Overview schematic for “Frontiers and Open Problems”. Replace this generated placeholder with a real figure produced by src/visualization/plots.py." />
-<figcaption aria-hidden="true">Overview schematic for “Frontiers and
+alt="Overview schematic for “Frontiers and Open Problems”." />
+<figcaption>Overview schematic for “Frontiers and
 Open Problems”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
 </figure>
@@ -210,16 +235,13 @@ TODO: state the third learning objective.</li>
 href="#gl:state"><strong>state</strong></a>, <a
 href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:system"><strong>system</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in <span
-class="citation"
-data-cites="eq:part_III_frontiers_model">[@eq:part_III_frontiers_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> the worked formalism in
+[eq:part_III_frontiers_model].</li>
 <li><strong>Data skill:</strong>
 <!-- STUB: which data move the reader practises here. --></li>
 <li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_III_frontiers">[@sec:lab_part_III_frontiers]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_III_frontiers">[@sec:q_part_III_frontiers]</span>.</li>
+<li><strong>Primary lab:</strong> [sec:lab_part_III_frontiers].</li>
+<li><strong>Question bank:</strong> [sec:q_part_III_frontiers].</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
 </ul>
@@ -239,16 +261,14 @@ href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:system"><strong>system</strong></a> are defined in the
 glossary.</p>
 <h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in <span
-class="citation"
-data-cites="eq:part_III_frontiers_model">[@eq:part_III_frontiers_model]</span>:</p>
+<p>The recurring quantitative model for this chapter is shown in
+[eq:part_III_frontiers_model]:</p>
 <p><span class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \]</span> {#eq:part_III_frontiers_model}</p>
 <p>It is implemented and tested in
 <code>textbook.models.logistic_growth</code>; never retype the maths in
 prose or scripts — call the tested function. The parameters appear in
-<span class="citation"
-data-cites="tbl:part_III_frontiers_parameters">[@tbl:part_III_frontiers_parameters]</span>.</p>
+[tbl:part_III_frontiers_parameters].</p>
 <table id="tbl:part_III_frontiers_parameters">
 <caption>Parameters of the worked model for this chapter.</caption>
 <thead>
@@ -289,10 +309,9 @@ data-cites="tbl:part_III_frontiers_parameters">[@tbl:part_III_frontiers_paramete
 <h2 id="going-deeper">Going Deeper</h2>
 <!-- STUB: the substantive body of the chapter. Expand freely — figures,
 tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in <span class="citation"
-data-cites="fig:part_III_frontiers">[@fig:part_III_frontiers]</span> and
-revisit the objectives above as you read. Further evidence:
-[wilson2021analysis; taylor2019theory].</p>
+<p>See the overview in [fig:part_III_frontiers] and revisit the
+objectives above as you read. Further evidence: [wilson2021analysis;
+taylor2019theory].</p>
 <h2 id="summary">Summary</h2>
 <!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
 <h2 id="key-terms">Key Terms</h2>
@@ -307,10 +326,9 @@ TODO: one-line annotation [smith2020foundations].</li>
 </ul>
 <h2 id="practice">Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_III_frontiers">[@sec:lab_part_III_frontiers]</span></li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_III_frontiers">[@sec:q_part_III_frontiers]</span></li>
+<li><strong>Lab:</strong> [sec:lab_part_III_frontiers]</li>
+<li><strong>Question bank:</strong> [sec:q_part_III_frontiers]</li>
 </ul>
+</main>
 </body>
 </html>

@@ -82,8 +82,15 @@ class TestScientificAnalysis:
         monkeypatch.setattr("src.analysis.project_root", tmp_path)
         path = run_performance_benchmarking()
         assert path.exists()
+        first_bytes = path.read_bytes()
+        second_path = run_performance_benchmarking()
+        assert second_path.read_bytes() == first_bytes
         data = json.loads(path.read_text())
-        assert "execution_time" in data
+        assert data["schema_version"] == "template_code_project/performance_benchmark/v2"
+        assert data["checks"]["all_inputs_evaluated"] is True
+        assert data["checks"]["all_objective_values_finite"] is True
+        assert "execution_time" not in data
+        assert "timestamp" not in data
 
 
 class TestExtractOptimizationMetadata:
@@ -255,7 +262,8 @@ class TestStabilityAnalysis:
 class TestPerformanceBenchmarking:
     """Test performance benchmarking functions."""
 
-    def test_performance_benchmarking_execution(self):
+    def test_performance_benchmarking_execution(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         result_path = run_performance_benchmarking()
 
         if result_path:
@@ -263,16 +271,18 @@ class TestPerformanceBenchmarking:
             assert result_path.is_file()
 
             data = json.loads(result_path.read_text())
-            assert "execution_time" in data
             assert "function_name" in data
             assert "result_summary" in data
-            assert "iterations" in data
-            assert isinstance(data["execution_time"], (int, float))
-            assert data["execution_time"] > 0
+            assert "diagnostic_iterations_per_input" in data
+            assert data["observations"]
+            assert "execution_time" not in data
+            assert "timestamp" not in data
         else:
             pytest.fail("Performance benchmarking returned None")
 
-    def test_performance_visualization(self):
+    def test_performance_visualization(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setattr("src.analysis.project_root", tmp_path)
+        monkeypatch.setattr("src.figures.project_root", tmp_path)
         report_path = run_performance_benchmarking()
 
         if report_path:
@@ -282,6 +292,9 @@ class TestPerformanceBenchmarking:
                 assert viz_path.exists()
                 assert viz_path.is_file()
                 assert viz_path.suffix == ".png"
+                first_bytes = viz_path.read_bytes()
+                second_path = generate_benchmark_visualization(report_path)
+                assert second_path.read_bytes() == first_bytes
             else:
                 pytest.fail("Performance visualization returned None")
         else:
@@ -494,9 +507,7 @@ class TestMultiFactorAnalysis:
         from src.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
-        report = multi_factor_analysis(
-            config=cfg, factor_weights={"convergence": 0.8, "stability": 0.2}
-        )
+        report = multi_factor_analysis(config=cfg, factor_weights={"convergence": 0.8, "stability": 0.2})
         assert sum(report.factor_weights.values()) == pytest.approx(1.0)
 
     def test_custom_factor_weights_with_unknown_key(self):
@@ -506,9 +517,7 @@ class TestMultiFactorAnalysis:
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         # "nonexistent_key" is not in the defaults → silently skipped
-        report = multi_factor_analysis(
-            config=cfg, factor_weights={"convergence": 0.5, "nonexistent_key": 99.0}
-        )
+        report = multi_factor_analysis(config=cfg, factor_weights={"convergence": 0.5, "nonexistent_key": 99.0})
         # Normalisation should still work with valid keys only
         assert sum(report.factor_weights.values()) == pytest.approx(1.0)
         # The unknown key should not appear in the final weights
@@ -588,8 +597,6 @@ class TestMultiFactorAnalysis:
     def test_stability_fallback_recomputes_when_scores_none(self):
         """When no variant has stability_score, multi_factor_analysis recomputes it."""
         from src.analysis import (
-            AlgorithmComparison,
-            AlgorithmVariant,
             compare_algorithms,
             multi_factor_analysis,
         )
@@ -659,7 +666,6 @@ class TestMultiFactorAnalysis:
         from src.analysis import (
             AlgorithmComparison,
             AlgorithmVariant,
-            MultiFactorReport,
             multi_factor_analysis,
         )
         from src.experiment_config import ExperimentConfig

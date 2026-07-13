@@ -295,6 +295,25 @@ class TestPostprocessLatex:
         result = postprocess_latex(tex)
         assert result == tex
 
+    def test_postprocess_uses_configured_figure_bounds(self):
+        tex = (
+            r"\includegraphics[width=\linewidth,height=\textheight]{front.png}"
+            r"\includegraphics[width=\linewidth,height=\textheight]{body.png}"
+        )
+        result = postprocess_latex(
+            tex,
+            figure_height_fraction="0.68",
+            front_matter_figure_height_fraction="0.64",
+        )
+        assert result.count(r"height=0.64\textheight") == 1
+        assert result.count(r"height=0.68\textheight") == 1
+
+    def test_postprocess_tightens_pandoc_longtable_rounding(self):
+        tex = r"\begin{longtable}[]{@{}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}@{}}"
+        result = postprocess_latex(tex)
+        assert r"\real{0.1666}" in result
+        assert r"\real{0.1667}" not in result
+
     def test_replaces_hidelinks_with_comma(self):
         tex = r"\hypersetup{hidelinks,pdfborder={0 0 0}}"
         result = postprocess_latex(tex)

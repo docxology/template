@@ -13,7 +13,7 @@ flowchart TB
     WHERE -- coverage --> COV{Coverage<br/>under 90%?}
 
     NET -- no --> SWITCH[Switch to sources: local<br/>or commit cache files]
-    NET -- yes --> CHECK[Check config.search.local_corpus path]
+    NET -- yes --> CHECK[Check project_config.search.local_corpus path]
     DEP -- no --> INSTALL[uv sync --group rendering]
     COLL -- yes --> INSPECT[Inspect run_summary.json<br/>citation_keys field]
     OL -- no --> START[ollama serve · ollama pull MODEL]
@@ -37,7 +37,7 @@ on stage 4.
    Switch to `sources: [local]` or commit a populated
    `output/search/cache/`.
 2. *Wrong `--corpus` path when `sources: [local]`.* The pipeline
-   resolves `search.local_corpus` against the project root if
+   resolves `project_config.search.local_corpus` against the project root if
    `--corpus` is not provided; check the path exists.
 3. *Default config disabled the LLM but a downstream test expects
    synthesis output.* Re-enable `llm.enabled: true`, ensure `ollama
@@ -54,7 +54,7 @@ on stage 4.
 1. *Citation-key collision.* Check `LiteratureRunArtifacts.citation_keys`
    in `output/run_summary.json`; collisions are auto-suffixed but the
    suffix is reflected in the BibTeX file.
-2. *`config.search.year_min` / `year_max` filtered the paper.* Year
+2. *`project_config.search.year_min` / `year_max` filtered the paper.* Year
    filters apply to the search stage and re-apply defensively in the
    aggregator.
 3. *Hand-edited `references.bib`.* The file is regenerated every run;

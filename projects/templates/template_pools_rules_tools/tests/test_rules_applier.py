@@ -11,6 +11,7 @@ import pathlib
 import sys
 
 import pytest
+import yaml
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
@@ -34,6 +35,7 @@ _PROJECT_STRONG = _PROJECT_RULES_DIR / "strong"
 _MANUSCRIPT_RULES_DIR = get_rules_root() / "template_manuscript_rules"
 _MANUSCRIPT_SOFT = _MANUSCRIPT_RULES_DIR / "soft"
 _MANUSCRIPT_STRONG = _MANUSCRIPT_RULES_DIR / "strong"
+_PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 # ---------------------------------------------------------------------------
@@ -132,6 +134,24 @@ class TestLoadStrongRulesProject:
         result = load_strong_rules("template_project_rules")
         filenames = [r["filename"] for r in result]
         assert "module-structure.yaml" in filenames
+
+    def test_coverage_claim_ledger_matches_real_rule_source(self):
+        result = load_strong_rules("template_project_rules")
+        coverage = next(
+            entry["schema"]["rule"]["constraints"]
+            for entry in result
+            if entry["filename"] == "coverage-gate.yaml"
+        )
+        payload = yaml.safe_load(
+            (_PROJECT_ROOT / "data" / "claim_ledger.yaml").read_text(encoding="utf-8")
+        )
+        claims = {claim["claim_id"]: claim["value"] for claim in payload["claims"]}
+
+        assert claims == {
+            "infrastructure-coverage-threshold": coverage["infrastructure"],
+            "project-source-coverage-threshold": coverage["project_src"],
+            "public-api-coverage-threshold": coverage["public_api"],
+        }
 
 
 @pytest.mark.skipif(

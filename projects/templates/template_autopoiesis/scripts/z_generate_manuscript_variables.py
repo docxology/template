@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Generate manuscript variables JSON and resolve {{TOKEN}} placeholders."""
+
 from __future__ import annotations
 
 import json

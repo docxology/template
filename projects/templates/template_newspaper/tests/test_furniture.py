@@ -7,14 +7,11 @@ font-size scaling triggered by a long paper name.
 
 from __future__ import annotations
 
-import io
-
-from reportlab.pdfgen.canvas import Canvas
 
 from newspaper.config import NewspaperConfig
-from newspaper.content import Block, Box, Edition, Page, Story
+from newspaper.content import Block, Edition, Page, Story
 from newspaper.engine import render_edition
-from newspaper.typography import Fonts, build_stylesheet, register_fonts
+from newspaper.typography import Fonts
 
 
 def _base14() -> Fonts:
@@ -44,8 +41,8 @@ def test_front_page_lead_without_kicker_and_deck(tmp_path) -> None:
     """
     lead = Story(
         headline="Harbor Opens After Storm",
-        kicker="",   # explicitly empty — kicker branch should be skipped
-        deck="",     # explicitly empty — deck branch should be skipped
+        kicker="",  # explicitly empty — kicker branch should be skipped
+        deck="",  # explicitly empty — deck branch should be skipped
         level="lead",
         body=[Block("p", "The harbor reopened Wednesday after three days of closure.")],
     )
@@ -165,9 +162,7 @@ def test_inside_page_no_department(tmp_path) -> None:
         template="opinion",
         department="",  # empty — the label will be a blank paragraph
         columns=3,
-        main_items=[
-            Story(headline="An Editorial View", level="secondary", body=[Block("p", "Opinion piece.")])
-        ],
+        main_items=[Story(headline="An Editorial View", level="secondary", body=[Block("p", "Opinion piece.")])],
     )
     edition = Edition(nameplate="T", city="C", state="S", date="D", pages=[page])
     out = tmp_path / "no_department.pdf"

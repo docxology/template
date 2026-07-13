@@ -43,7 +43,7 @@ mirrored by a sanitized
 same top-level sections. The controlled vocabulary (units, step kinds,
 targets, gate order) is declared in code
 (`src/methods_dsl/units.py`, `vocabulary.py`, `validation.py`), not
-configuration — `config.yaml`'s `dsl` block documents that surface for
+configuration — `config.yaml`'s `project_config.dsl` block documents that surface for
 readers without driving it.
 
 ## Key capabilities
@@ -61,14 +61,16 @@ readers without driving it.
 - **Thin analysis script**: [`scripts/methods_analysis.py`](scripts/methods_analysis.py)
   compiles both worked examples (`PBSPreparation`, `SensorCalibrationSweep`),
   runs every gate, writes export/report artifacts and one figure to
-  `output/`, and prints output paths for manifest collection.
+  `output/`, emits its deterministic figure registry, and prints output paths
+  for manifest collection.
 
 ## Run via the template monorepo
 
 ```bash
 # From the repository root — run the methods analysis pipeline (thin orchestrator)
 uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
-# Writes output/data/*, output/reports/*, and output/figures/step_counts.png
+# Writes output/data/*, output/reports/*, output/figures/step_counts.png,
+# and output/figures/figure_registry.json
 ```
 
 ## Testing

@@ -26,7 +26,7 @@
     "output/run_summary.json": "1ef141e8176ad6d59ad0c51c47eb5990c0344c0949476b30657f03d8ef48d5f2"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_prose_project/output/reports/snapshots/stage-05-project-analysis.json",
+  "path": "<repo-root>/projects/templates/template_prose_project/output/reports/snapshots/stage-05-project-analysis.json",
   "stage_name": "Project Analysis",
   "stage_num": 5,
   "timestamp": "2026-06-14T19:21:36+00:00",

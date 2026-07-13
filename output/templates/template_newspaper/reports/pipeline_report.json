@@ -369,7 +369,7 @@
     "log_file": {
       "exists": true,
       "size": 158,
-      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_newspaper/output/logs/pipeline.log"
+      "path": "<home>/Documents/GitHub/template/projects/templates/template_newspaper/output/logs/pipeline.log"
     }
   }
 }

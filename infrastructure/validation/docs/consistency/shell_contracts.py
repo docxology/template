@@ -22,6 +22,7 @@ _SHELL_FENCE_RE = re.compile(
 _SHELL_LANGS: frozenset[str] = frozenset({"bash", "sh", "shell", "console", "zsh"})
 _BARE_CMD_RE = re.compile(r"^\s*(?:\$\s+)?(?P<cmd>pytest|python3)(?:\s|$)")
 _UV_RUN_PYTHON3_RE = re.compile(r"^\s*(?:\$\s+)?uv\s+run\s+python3(?:\s|$)")
+_UVX_RUFF_RE = re.compile(r"\buvx\s+ruff(?:\s|$)")
 
 _EXPORT_PIPELINE_MODE_RE = re.compile(r"\bexport\s+PIPELINE_MODE\b", re.IGNORECASE)
 _RUNSH_EXPORTS_PIPELINE_MODE_RE = re.compile(
@@ -40,7 +41,7 @@ _DETERMINISTIC_MENTION_RE = re.compile(r"--deterministic|\bdeterministic\b", re.
 
 
 def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
-    """Flag stale command-line Python/pytest forms in shell fences."""
+    """Flag stale or unpinned repository commands in shell fences."""
     issues: list[Inconsistency] = []
     for md in iter_long_lived_docs(repo_root):
         raw = read_markdown(md)
@@ -51,6 +52,19 @@ def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
                 continue
             body_start_line = raw[: fence.start("body")].count("\n") + 1
             for offset, line in enumerate(fence.group("body").splitlines()):
+                if _UVX_RUFF_RE.search(line) and not line_has_noqa(line) and not SHELL_NOQA_RE.search(line):
+                    issues.append(
+                        Inconsistency(
+                            file=md,
+                            line=body_start_line + offset,
+                            category="command-convention",
+                            detail=(
+                                "uses unpinned `uvx ruff`; repository commands must use "
+                                "`uv run ruff` so CI and local hooks share the locked version"
+                            ),
+                        )
+                    )
+                    continue
                 if _UV_RUN_PYTHON3_RE.match(line) and not line_has_noqa(line) and not SHELL_NOQA_RE.search(line):
                     issues.append(
                         Inconsistency(

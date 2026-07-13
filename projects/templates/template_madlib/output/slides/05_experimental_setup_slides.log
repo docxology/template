@@ -1,11 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  26 JUN 2026 07:00
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  11 JUL 2026 21:06
 entering extended mode
- \write18 enabled.
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output
+**<repo-root>/projects/templates/template_madlib/output
 /slides/05_experimental_setup_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1410,37 +1409,40 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
+\c@proposition=\count397
+\c@hypothesis=\count398
+
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count397
+\BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.aux)
 \openout1 = `05_experimental_setup_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1476,7 +1478,7 @@ LaTeX Font Info:    ... okay on input line 150.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 150.
+Package hyperref Info: Link coloring OFF on input line 153.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -1504,26 +1506,26 @@ Dictionary: translator-theorem-dictionary, Language: English
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  TU/latinmodern-math.otf(1)/m/n --> TU/lmr/m/n on input 
-line 150.
+line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 150.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 150.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 150.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 150.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 150.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 153.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 150.
-LaTeX Info: Redefining \microtypecontext on input line 150.
-Package microtype Info: Applying patch `item' on input line 150.
-Package microtype Info: Applying patch `toc' on input line 150.
-Package microtype Info: Applying patch `eqnum' on input line 150.
-Package microtype Info: Applying patch `footnote' on input line 150.
-Package microtype Info: Applying patch `verbatim' on input line 150.
-LaTeX Info: Redefining \microtypesetup on input line 150.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 153.
+LaTeX Info: Redefining \microtypecontext on input line 153.
+Package microtype Info: Applying patch `item' on input line 153.
+Package microtype Info: Applying patch `toc' on input line 153.
+Package microtype Info: Applying patch `eqnum' on input line 153.
+Package microtype Info: Applying patch `footnote' on input line 153.
+Package microtype Info: Applying patch `verbatim' on input line 153.
+LaTeX Info: Redefining \microtypesetup on input line 153.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1536,14 +1538,14 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.nav) [1
 
 ]
 \openout4 = `05_experimental_setup_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.vrb
 File: ../figures/configured_field_matrix.png Graphic file (type bmp)
 <../figures/configured_field_matrix.png>
@@ -1569,14 +1571,14 @@ File: ../figures/field_origin_summary.png Graphic file (type bmp)
 \openout4 = `05_experimental_setup_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.vrb) [7
 
 ]
 \openout4 = `05_experimental_setup_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 6.
@@ -1627,7 +1629,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `05_experimental_setup_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.vrb) [11
 
 ] [12
@@ -1663,7 +1665,7 @@ slides/05_experimental_setup_slides.vrb) [11
 \openout7 = `05_experimental_setup_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_madlib/output/
+(<repo-root>/projects/templates/template_madlib/output/
 slides/05_experimental_setup_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1671,13 +1673,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 31144 strings out of 468168
- 628365 string characters out of 5432815
- 1372916 words of memory out of 5000000
- 59307 multiletter control sequences out of 15000+600000
+ 31160 strings out of 468168
+ 628583 string characters out of 5432815
+ 1373087 words of memory out of 5000000
+ 59323 multiletter control sequences out of 15000+600000
  631248 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1110b,642s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_madlib/output/slides/05_experimental_setup_slides.pdf (18 pages).

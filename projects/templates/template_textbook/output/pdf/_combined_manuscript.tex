@@ -153,10 +153,11 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdfauthor={Daniel Ari Friedman},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -404,8 +405,8 @@ To build the book from the repository root:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ExtensionTok{uv}\NormalTok{ run python scripts/02\_run\_analysis.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_textbook}
-\ExtensionTok{uv}\NormalTok{ run python scripts/03\_render\_pdf.py    }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_textbook}
+\ExtensionTok{uv}\NormalTok{ run python scripts/pipeline/stage\_02\_analysis.py }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_textbook}
+\ExtensionTok{uv}\NormalTok{ run python scripts/pipeline/stage\_03\_render.py    }\AttributeTok{{-}{-}project}\NormalTok{ templates/template\_textbook}
 \end{Highlighting}
 \end{Shaded}
 
@@ -506,7 +507,7 @@ following chapters:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Orientation to the Field''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_0_orientation.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Orientation to the Field''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_0_orientation.png}
 \caption{Overview schematic for ``Orientation to the Field''. Replace
 this generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_0_orientation}
@@ -606,13 +607,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0001_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -658,7 +653,7 @@ objectives above as you read. Further evidence:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Core Methods and Tools''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_0_core_methods.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Core Methods and Tools''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_0_core_methods.png}
 \caption{Overview schematic for ``Core Methods and Tools''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_0_core_methods}
@@ -758,13 +753,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0002_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -811,7 +800,7 @@ Foundations}\label{sec:part_0_quantitative_foundations}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Quantitative Foundations''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_0_quantitative_foundations.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Quantitative Foundations''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_0_quantitative_foundations.png}
 \caption{Overview schematic for ``Quantitative Foundations''. Replace
 this generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_0_quantitative_foundations}
@@ -913,13 +902,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0003_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -987,7 +970,7 @@ chapters:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={A logistic growth curve for three growth rates, approaching the carrying capacity K = 100. Produced deterministically by visualization.plots.plot\_logistic\_growth.}]{../figures/logistic_growth.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={A logistic growth curve for three growth rates, approaching the carrying capacity K = 100. Produced deterministically by visualization.plots.plot\_logistic\_growth.}]{../figures/logistic_growth.png}
 \caption{A logistic growth curve for three growth rates, approaching the
 carrying capacity \(K = 100\). Produced deterministically by
 \protect\breaktt{visualization.plots.plot\_logistic\_growth}.}\label{fig:part_I_first_principles}
@@ -1163,13 +1146,7 @@ code cannot silently disagree.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Choose state variables] --> B[Write a rate rule]
-  B --> C[Solve or simulate]
-  C --> D[Predict long-run behaviour]
-  D -->|compare to data| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0004_29eae841232d.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1228,7 +1205,7 @@ construction.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Building Blocks''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_I_building_blocks.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Building Blocks''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_I_building_blocks.png}
 \caption{Overview schematic for ``Building Blocks''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_I_building_blocks}
@@ -1329,13 +1306,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0005_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1381,7 +1352,7 @@ the objectives above as you read. Further evidence:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Structure and Form''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_I_structure_and_form.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Structure and Form''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_I_structure_and_form.png}
 \caption{Overview schematic for ``Structure and Form''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_I_structure_and_form}
@@ -1481,13 +1452,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0006_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1556,7 +1521,7 @@ chapters:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Systems Overview''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_II_systems_overview.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Systems Overview''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_II_systems_overview.png}
 \caption{Overview schematic for ``Systems Overview''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_II_systems_overview}
@@ -1657,13 +1622,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0007_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1709,7 +1668,7 @@ the objectives above as you read. Further evidence:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Dynamics and Change''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_II_dynamics_and_change.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Dynamics and Change''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_II_dynamics_and_change.png}
 \caption{Overview schematic for ``Dynamics and Change''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_II_dynamics_and_change}
@@ -1810,13 +1769,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0008_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1863,7 +1816,7 @@ Control}\label{sec:part_II_regulation_and_control}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Regulation and Control''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_II_regulation_and_control.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Regulation and Control''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_II_regulation_and_control.png}
 \caption{Overview schematic for ``Regulation and Control''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_II_regulation_and_control}
@@ -1965,13 +1918,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0009_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -2040,7 +1987,7 @@ following chapters:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Applied Models''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_III_applied_models.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Applied Models''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_III_applied_models.png}
 \caption{Overview schematic for ``Applied Models''. Replace this
 generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_III_applied_models}
@@ -2141,13 +2088,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0010_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -2193,7 +2134,7 @@ the objectives above as you read. Further evidence:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\linewidth,height=0.50\textheight,keepaspectratio,alt={Group means with standard-error bars across six synthetic conditions, generated by visualization.gallery.errorbar\_plot. In a real case study you would replace this gallery placeholder with your own measured group means.}]{../figures/gallery/gallery_errorbar.png}
+\includegraphics[width=0.75\linewidth,height=0.5\textheight,keepaspectratio,alt={Group means with standard-error bars across six synthetic conditions, generated by visualization.gallery.errorbar\_plot. In a real case study you would replace this gallery placeholder with your own measured group means.}]{../figures/gallery/gallery_errorbar.png}
 \caption{Group means with standard-error bars across six synthetic
 conditions, generated by
 \protect\breaktt{visualization.gallery.errorbar\_plot}. In a real case
@@ -2355,14 +2296,7 @@ will overpredict once the system approaches its ceiling.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph LR
-  A[Raw measurements] --> B[Group + average]
-  B --> C[Fit a trend]
-  C --> D{Within data range?}
-  D -->|yes| E[Interpolate: defensible]
-  D -->|no| F[Extrapolate: flag the risk]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0011_258c2154784d.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -2424,7 +2358,7 @@ limits.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Overview schematic for ``Frontiers and Open Problems''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_III_frontiers.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Overview schematic for ``Frontiers and Open Problems''. Replace this generated placeholder with a real figure produced by src/visualization/plots.py.}]{../figures/part_III_frontiers.png}
 \caption{Overview schematic for ``Frontiers and Open Problems''. Replace
 this generated placeholder with a real figure produced by
 \protect\breaktt{src/visualization/plots.py}.}\label{fig:part_III_frontiers}
@@ -2524,13 +2458,7 @@ A concept map of how the pieces fit together:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0012_5e8a5ecbb8db.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4205,9 +4133,10 @@ subscript, E = mc\textsuperscript{2} with a superscript, and a
 footnote.\footnote{Footnotes collect at the end of the document (or
   page, in PDF). Use them for asides that would interrupt the sentence.}
 
-You can hard-break a line\\
-with two trailing spaces, or separate paragraphs with a blank line.
-Escape literal Markdown with a backslash: *not italic*.
+You can hard-break a line with an explicit
+\texttt{\textless{}br\textgreater{}} element, or separate paragraphs
+with a blank line. Escape literal Markdown with a backslash: *not
+italic*.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
@@ -4337,13 +4266,15 @@ renders as a normal block.
 A simple table with column alignment and a cross-referencable caption
 (tbl.~\ref{tbl:gallery_alignment}):
 
+: Column alignment --- left, centre, right. \{\#tbl:gallery\_alignment\}
+
+The values below are mirrored in
+\breaktt{manuscript/assets/data/format\_gallery.csv} so rendering
+examples remain evidence-addressable fixtures rather than anonymous
+literals.
+
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}lcr@{}}
-\caption{Column alignment --- left, centre,
-right.}\label{tbl:gallery_alignment}\tabularnewline
-\toprule\noalign{}
-Left & Centre & Right \\
-\midrule\noalign{}
-\endfirsthead
 \toprule\noalign{}
 Left & Centre & Right \\
 \midrule\noalign{}
@@ -4354,6 +4285,7 @@ alpha & 1 & 10.0 \\
 beta & 22 & 2.5 \\
 gamma & 333 & 0.125 \\
 \end{longtable}
+}
 
 A multi-line / grid table (cells may contain longer wrapped text):
 
@@ -4426,7 +4358,7 @@ fig.~\ref{fig:gallery_line}:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\linewidth,height=0.50\textheight,keepaspectratio,alt={A multi-series line plot of three sine waves, produced by visualization.gallery.line\_plot.}]{../figures/gallery/gallery_line.png}
+\includegraphics[width=0.8\linewidth,height=0.5\textheight,keepaspectratio,alt={A multi-series line plot of three sine waves, produced by visualization.gallery.line\_plot.}]{../figures/gallery/gallery_line.png}
 \caption{A multi-series line plot of three sine waves, produced by
 \protect\breaktt{visualization.gallery.line\_plot}.}\label{fig:gallery_line}
 \end{figure}
@@ -4435,13 +4367,13 @@ Two figures side by side (Pandoc fenced div; falls back to stacked):
 
 \begin{figure}
 \centering
-\includegraphics[width=0.48\linewidth,height=0.50\textheight,keepaspectratio,alt={Bar chart.}]{../figures/gallery/gallery_bar.png}
+\includegraphics[width=0.48\linewidth,height=0.5\textheight,keepaspectratio,alt={Bar chart.}]{../figures/gallery/gallery_bar.png}
 \caption{Bar chart.}\label{fig:gallery_bar}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.48\linewidth,height=0.50\textheight,keepaspectratio,alt={Pie chart.}]{../figures/gallery/gallery_pie.png}
+\includegraphics[width=0.48\linewidth,height=0.5\textheight,keepaspectratio,alt={Pie chart.}]{../figures/gallery/gallery_pie.png}
 \caption{Pie chart.}\label{fig:gallery_pie}
 \end{figure}
 
@@ -4449,7 +4381,7 @@ A multi-panel composite (fig.~\ref{fig:gallery_multipanel}):
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={A 2\texorpdfstring{\ensuremath{\times}}{x}2 composite: line, scatter, bar, and histogram panels.}]{../figures/gallery/gallery_multipanel.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={A 2\texorpdfstring{\ensuremath{\times}}{x}2 composite: line, scatter, bar, and histogram panels.}]{../figures/gallery/gallery_multipanel.png}
 \caption{A 2\texorpdfstring{\ensuremath{\times}}{x}2 composite: line, scatter, bar, and histogram
 panels.}\label{fig:gallery_multipanel}
 \end{figure}
@@ -4472,12 +4404,7 @@ Flowchart:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs] --> B[Model]
-  B --> C[Predictions]
-  C -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0013_0c47d0ecfd54.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4485,13 +4412,7 @@ Sequence:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-sequenceDiagram
-  participant Author
-  participant Engine
-  Author ->> Engine: edit config.yaml
-  Engine -->> Author: rendered PDF
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0014_292217dd39b3.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4499,13 +4420,7 @@ State:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-stateDiagram-v2
-  [*] --> Stub
-  Stub --> Drafted: fill
-  Drafted --> Reviewed: review
-  Reviewed --> [*]: publish
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0015_988c820acb70.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4513,15 +4428,7 @@ Class:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-classDiagram
-  class ChapterRef {
-    +str part_id
-    +str file
-    +stem() str
-  }
-  ChapterRef --> TocEntry : numbered as
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0016_cfcd765b5afa.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4529,11 +4436,7 @@ Entity-relationship:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-erDiagram
-  PART ||--o{ CHAPTER : contains
-  CHAPTER ||--|| LAB : has
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0017_7df2b5706613.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4603,7 +4506,7 @@ Embedded raster image (any PNG/JPG works the same way as a figure):
 
 \begin{figure}
 \centering
-\includegraphics[width=0.6\linewidth,height=0.50\textheight,keepaspectratio,alt={A generated heatmap embedded as a raster image.}]{../figures/gallery/gallery_heatmap.png}
+\includegraphics[width=0.6\linewidth,height=0.5\textheight,keepaspectratio,alt={A generated heatmap embedded as a raster image.}]{../figures/gallery/gallery_heatmap.png}
 \caption{A generated heatmap embedded as a raster
 image.}\label{fig:gallery_media}
 \end{figure}
@@ -4646,7 +4549,7 @@ kind of data:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.7\linewidth,height=0.50\textheight,keepaspectratio,alt={Means with standard-error bars.}]{../figures/gallery/gallery_errorbar.png}
+\includegraphics[width=0.7\linewidth,height=0.5\textheight,keepaspectratio,alt={Means with standard-error bars.}]{../figures/gallery/gallery_errorbar.png}
 \caption{Means with standard-error bars.}\label{fig:gallery_errorbar}
 \end{figure}
 

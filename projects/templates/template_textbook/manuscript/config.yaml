@@ -147,6 +147,15 @@ render:
     docx: true
     slides: false
 
+# Manuscript-facing teaching-time defaults. They are declared here so duration
+# badges remain configuration-backed facts rather than unexplained literals.
+project_config:
+  pedagogy:
+    default_lecture_minutes: 45
+    worked_chapter_read_minutes: 40
+    default_lab_minutes: 60
+    extended_case_study_lab_minutes: 75
+
 # ---------------------------------------------------------------------------
 # UNITS (a.k.a. parts) — the structure. Chapters number sequentially across the
 # whole book. The live key is `units:` (the loader also accepts `parts:`).

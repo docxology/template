@@ -2,6 +2,10 @@
 
 Tests for the deterministic bounded AutoResearch public exemplar.
 
+The suite runs against a session sandbox with a copied baseline output tree and
+real source/infrastructure paths, so full loop and subprocess tests cannot dirty
+tracked artifacts.
+
 ## Quick Start
 
 ```bash

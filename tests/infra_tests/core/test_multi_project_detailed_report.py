@@ -9,12 +9,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.core.pipeline.multi_project import (
-    MultiProjectResult,
-    format_multi_project_detailed_report,
-)
+from infrastructure.core.pipeline.multi_project import MultiProjectResult
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.project.project_info import ProjectInfo
+from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
 
 
 def _p(name: str) -> ProjectInfo:

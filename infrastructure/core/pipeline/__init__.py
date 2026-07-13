@@ -4,18 +4,14 @@ Re-exports primary symbols for ``from infrastructure.core.pipeline import …`` 
 """
 
 from infrastructure.core.pipeline.dag import stage_label
-from infrastructure.core.pipeline.executor import (
-    PipelineConfig,
-    PipelineExecutor,
-    PipelineStageResult,
-)
+from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
     MultiProjectResult,
-    format_multi_project_detailed_report,
     format_multi_project_outcome_lines,
 )
+from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
 from infrastructure.core.pipeline.stage_monitor import (
     PerformanceMonitor,
     PerformanceMetrics,
@@ -25,6 +21,8 @@ from infrastructure.core.pipeline.stage_monitor import (
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
 from infrastructure.core.pipeline.types import (
     PipelineControlConfig,
+    PipelineConfig,
+    PipelineStageResult,
     StageContract,
     StageHooks,
     StagePolicy,

@@ -10,6 +10,7 @@ from pathlib import Path
 
 from infrastructure.core.exceptions import FileNotFoundError
 from infrastructure.core.logging import DiagnosticEvent, DiagnosticSeverity
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.symbols import collect_symbols
 from infrastructure.validation.content.validator_citations import validate_citations
@@ -66,7 +67,7 @@ def find_manuscript_directory(repo_root: str | Path, project_name: str = "projec
 
     repo_root = Path(repo_root)
     project_root = resolve_project_root(repo_root, project_name)
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if manuscript_dir.exists() and manuscript_dir.is_dir():
         return manuscript_dir
 

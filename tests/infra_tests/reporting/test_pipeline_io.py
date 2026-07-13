@@ -111,6 +111,7 @@ class TestSaveValidationReport:
         saved = save_validation_report(results, tmp_path)
         data = json.loads(saved["json"].read_text())
         assert data["timestamp"] == "2024-01-15T10:00:00"
+        assert "**Generated:** 2024-01-15T10:00:00" in saved["markdown"].read_text()
 
     def test_overwrites_none_timestamp(self, tmp_path):
         """A pre-allocated ``timestamp: None`` placeholder must be replaced."""

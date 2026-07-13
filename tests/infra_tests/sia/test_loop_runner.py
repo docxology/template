@@ -85,6 +85,16 @@ def test_run_sia_loop_fixture_replay(tmp_path: Path) -> None:
     assert context_text.count("## Generation 1") == 1
     assert context_text.count("## Generation 2") == 1
     assert context_text.count("## Generation 3") == 1
+    payload = json.loads(summary.read_text(encoding="utf-8"))
+    assert payload["task_dir"] == "tasks/mini"
+    assert payload["generations"][0]["gen_dir"] == "output/runs/run_1/gen_1"
+    assert str(tmp_path) not in summary.read_text(encoding="utf-8")
+
+    run_sia_loop(config)
+    rerun_text = context.read_text(encoding="utf-8")
+    assert rerun_text.count("## Generation 1") == 1
+    assert rerun_text.count("## Generation 2") == 1
+    assert rerun_text.count("## Generation 3") == 1
 
 
 def test_run_sia_loop_missing_fixtures(tmp_path: Path) -> None:

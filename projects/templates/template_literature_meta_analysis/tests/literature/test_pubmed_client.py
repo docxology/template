@@ -320,12 +320,8 @@ class TestSearchPubMed:
             "<Article><ArticleTitle>Batched record</ArticleTitle></Article>"
             "</MedlineCitation></PubmedArticle></PubmedArticleSet>"
         )
-        httpserver.expect_request("/esearch").respond_with_json(
-            {"esearchresult": {"idlist": ["1", "2", "3"]}}
-        )
-        httpserver.expect_request("/efetch").respond_with_data(
-            one_article, content_type="application/xml"
-        )
+        httpserver.expect_request("/esearch").respond_with_json({"esearchresult": {"idlist": ["1", "2", "3"]}})
+        httpserver.expect_request("/efetch").respond_with_data(one_article, content_type="application/xml")
         papers = search_pubmed(
             "modafinil",
             esearch_url=httpserver.url_for("/esearch"),

@@ -18,6 +18,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | [`stagnation.py`](src/stagnation.py) | `StagnationDetector` + `reorganize_axes` — fires when the champion stalls for a window and re-deals live axes across teams. |
 | [`agents.py`](src/agents.py) | `Proposer` protocol and `DeterministicProposer` (rule-based, registry-consulting). By design, the live implementation — `HermesProposer` (Ollama, `# pragma: no cover`) — lives in [`scripts/hermes_proposer.py`](scripts/hermes_proposer.py) instead, so `src/` stays infrastructure-free. |
 | [`search.py`](src/search.py) | `SearchConfig` (toggles + budgets), `SearchResult`, and the `_Runner` propose→filter→evaluate→confirm→promote→reorganize loop. `run_search(objective, proposer, config)` is the entry point. |
+| [`ablation.py`](src/ablation.py) | Canonical single-mechanism ablation matrix, measured rows, and derived noise-inflation ratio used by output generation and tests. |
+| [`comparison.py`](src/comparison.py) | Canonical matched-budget coordinated/baseline experiment and honest result summaries. |
 
 ## The coordination loop
 

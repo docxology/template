@@ -50,7 +50,7 @@ flowchart TB
 | Ruff format | zero diffs |
 | mypy | no errors |
 | `check-all-exports` | zero violations |
-| No-mocks policy | zero mock usage |
+| Mock-framework lexical gate | zero prohibited imports/calls; stand-in inventory advisory |
 | Infrastructure coverage | ≥ 60% |
 | Per-project coverage (standalone) | ≥ 90% |
 | Combined-union public-project coverage | ≥ 75% |
@@ -63,8 +63,8 @@ flowchart TB
 
 ```bash
 # Lint
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Infrastructure tests
@@ -106,8 +106,8 @@ Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runn
 
 ```bash
 # Fix linting
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 
 # View CI run logs
 gh run list --workflow=CI --limit=5
@@ -134,14 +134,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: astral-sh/setup-uv@v8.1.0
-        with:
-          enable-cache: true
-          cache-dependency-glob: "**/uv.lock"
-      - uses: actions/setup-python@v6.2.0
-        with:
-          python-version: "3.12"
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup-python-env
       - name: Sync dependencies
         run: uv sync
       - name: Custom check

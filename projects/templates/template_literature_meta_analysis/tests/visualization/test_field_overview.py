@@ -84,7 +84,7 @@ class TestFieldOverview:
         counts = {
             "A2_philosophy": 50,
             "C1_neuroscience": 48,
-            "A1_formal": 1,   # 1% < 2% threshold
+            "A1_formal": 1,  # 1% < 2% threshold
             "C5_biology": 1,  # 1% < 2% threshold — total Other bucket = 2
         }
         output = tmp_path / "other_dist.png"
@@ -93,5 +93,6 @@ class TestFieldOverview:
         assert output.exists()
         assert output.stat().st_size > 0
         from PIL import Image
+
         img = Image.open(output)
         assert img.width > 0 and img.height > 0

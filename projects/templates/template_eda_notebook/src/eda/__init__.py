@@ -16,10 +16,15 @@ from .cleaning import CleaningReport, clean_dataset, normalize_numeric
 from .correlation import correlation_matrix, strongest_pairs
 from .dataset import DatasetSchema, default_dataset_path, load_dataset, numeric_columns
 from .figures import (
+    CORRELATION_COLOR_LIMITS,
+    EDA_FIGURE_SPECS,
+    FIGURE_REGISTRY_SCHEMA,
     CorrelationFigureData,
+    EdaFigureSpec,
     GroupCountFigureData,
     HistogramFigureData,
     correlation_heatmap_data,
+    eda_figure_spec,
     group_count_data,
     histogram_data,
 )
@@ -46,7 +51,12 @@ __all__ = [
     "HistogramFigureData",
     "CorrelationFigureData",
     "GroupCountFigureData",
+    "EdaFigureSpec",
+    "CORRELATION_COLOR_LIMITS",
+    "EDA_FIGURE_SPECS",
+    "FIGURE_REGISTRY_SCHEMA",
     "histogram_data",
     "correlation_heatmap_data",
     "group_count_data",
+    "eda_figure_spec",
 ]

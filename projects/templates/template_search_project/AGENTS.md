@@ -94,7 +94,7 @@ flowchart TB
 | `python scripts/run_search_pipeline.py` | Default config, hits live arXiv + Crossref, runs LLM if Ollama is reachable, writes everything. |
 | `… --no-llm` | Skip the LLM stage; produce reading report without synthesis. |
 | `… --no-cache` | Bypass cache reads (writes still happen). |
-| `… --corpus path.json` | Required when `config.search.sources` includes `local`. |
+| `… --corpus path.json` | Required when `project_config.search.sources` includes `local`. |
 | `… --config other.yaml` | Use an alternative config file. |
 
 ### Deep search (`run_deep_search.py`)
@@ -108,7 +108,7 @@ See [`src/deep_search.py`](src/deep_search.py) and
 
 | Command | Behaviour |
 |---|---|
-| `python scripts/run_deep_search.py` | Honours `deep_search.enabled` in config; exits 2 if disabled. |
+| `python scripts/run_deep_search.py` | Honours `project_config.deep_search.enabled`; exits 2 if disabled. |
 | `… --enable` | Force-enable regardless of config. |
 | `… --keyword "X" --keyword "Y"` | Override the keyword list at the CLI. |
 | `… --no-llm` | Skip per-paper LLM summaries even when config enables them. |
@@ -140,8 +140,8 @@ deterministic LLM callable, real subprocess where needed.
 
 To target a different topic:
 
-1. Edit `manuscript/config.yaml` → `search.query`.
-2. Adjust `search.year_min` / `year_max` / `sources` as needed.
+1. Edit `manuscript/config.yaml` → `project_config.search.query`.
+2. Adjust `project_config.search.year_min` / `year_max` / `sources` as needed.
 3. Re-run `scripts/run_search_pipeline.py`.
 
 To swap LLM models:
@@ -152,7 +152,7 @@ To swap LLM models:
 To use only a curated corpus (offline reproducibility):
 
 1. Generate one once via `infrastructure.search.literature.write_corpus`.
-2. Set `search.sources: [local]` in `config.yaml`.
+2. Set `project_config.search.sources: [local]` in `config.yaml`.
 3. Pass `--corpus path/to/corpus.json` to the script.
 
 ## Review phase

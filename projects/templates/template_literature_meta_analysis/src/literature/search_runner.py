@@ -3,16 +3,68 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import time
 from pathlib import Path
-from typing import Callable
+from typing import Callable, TypedDict
 
 from config_loader import load_search_config
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.engine_dispatch import dispatch_ordered
 from literature.query_router import QueryRouter
+
+
+class RetrievalObservation(TypedDict):
+    """Deterministic per-source provenance for one retrieval attempt."""
+
+    source: str
+    status: str
+    fetched: int
+    new_records: int
+    duplicates: int
+    detail: str
+
+
+def _record_skipped(observations: list[RetrievalObservation], source: str, detail: str) -> None:
+    observations.append(
+        {
+            "source": source,
+            "status": "skipped",
+            "fetched": 0,
+            "new_records": 0,
+            "duplicates": 0,
+            "detail": detail,
+        }
+    )
+
+
+def _write_retrieval_report(
+    path: Path,
+    *,
+    query: str,
+    max_results: int,
+    corpus_records: int,
+    run_mode: str,
+    observations: list[RetrievalObservation],
+    route: dict[str, object] | None = None,
+) -> Path:
+    """Persist a timestamp-free retrieval report suitable for exact replay checks."""
+    payload = {
+        "schema_version": "template-literature-retrieval-report-v1",
+        "query": query,
+        "max_results_per_engine": max_results,
+        "corpus_records": corpus_records,
+        "run_mode": run_mode,
+        "route": route or {},
+        "engines": observations,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.replace(path)
+    return path
 
 
 def search_source(
@@ -22,6 +74,8 @@ def search_source(
     max_results: int,
     corpus: Corpus,
     logger: logging.Logger,
+    *,
+    observations: list[RetrievalObservation] | None = None,
 ) -> str | None:
     """Search one API source and merge papers into *corpus*."""
     t0 = time.monotonic()
@@ -42,10 +96,32 @@ def search_source(
             duplicates,
             elapsed,
         )
+        if observations is not None:
+            observations.append(
+                {
+                    "source": source_name,
+                    "status": "ok",
+                    "fetched": len(papers),
+                    "new_records": new_papers,
+                    "duplicates": duplicates,
+                    "detail": "",
+                }
+            )
         return f"{source_name} ({len(papers)} papers, {new_papers} new)"
     except Exception as exc:  # noqa: BLE001 -- safety net: one engine failing must not abort multi-engine dispatch
         elapsed = time.monotonic() - t0
         logger.error("  %s search failed after %.1fs: %s", source_name, elapsed, exc)
+        if observations is not None:
+            observations.append(
+                {
+                    "source": source_name,
+                    "status": "error",
+                    "fetched": 0,
+                    "new_records": 0,
+                    "duplicates": 0,
+                    "detail": type(exc).__name__,
+                }
+            )
         return None
 
 
@@ -326,6 +402,8 @@ def run_literature_search(
     data_dir = output_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     corpus_path = data_dir / "corpus.jsonl"
+    retrieval_report_path = data_dir / "retrieval_report.json"
+    observations: list[RetrievalObservation] = []
 
     if args.clear_corpus and corpus_path.exists():
         corpus_path.unlink()
@@ -340,6 +418,15 @@ def run_literature_search(
                 len(corpus),
             )
             corpus.save(corpus_path)
+            if not retrieval_report_path.exists():
+                _write_retrieval_report(
+                    retrieval_report_path,
+                    query=str(args.query),
+                    max_results=int(args.max_results),
+                    corpus_records=len(corpus),
+                    run_mode="resume_without_prior_retrieval_report",
+                    observations=observations,
+                )
             print(str(corpus_path))
             return corpus_path
     else:
@@ -386,7 +473,8 @@ def run_literature_search(
 
     def run_arxiv() -> None:
         """Run arxiv."""
-        if args.skip_arxiv:
+        if args.skip_arxiv or not engines.get("arxiv", True):
+            _record_skipped(observations, "arXiv", "disabled")
             return
         arxiv_search = _arxiv_search_fn(arxiv_base_url, fast=fast_api)
         arxiv_total_before = len(corpus)
@@ -399,6 +487,7 @@ def run_literature_search(
                 args.max_results,
                 corpus,
                 logger,
+                observations=observations,
             )
             if result:
                 sources_searched.append(result)
@@ -410,7 +499,8 @@ def run_literature_search(
 
     def run_semantic_scholar() -> None:
         """Run semantic scholar."""
-        if args.skip_s2:
+        if args.skip_s2 or not engines.get("semantic_scholar", True):
+            _record_skipped(observations, "Semantic Scholar", "disabled")
             return
         s2_search = _semantic_scholar_search_fn(semantic_scholar_base_url, fast=fast_api)
         result = search_source(
@@ -420,13 +510,15 @@ def run_literature_search(
             args.max_results,
             corpus,
             logger,
+            observations=observations,
         )
         if result:
             sources_searched.append(result)
 
     def run_openalex() -> None:
         """Run openalex."""
-        if args.skip_openalex:
+        if args.skip_openalex or not engines.get("openalex", True):
+            _record_skipped(observations, "OpenAlex", "disabled")
             return
         openalex_search = _openalex_search_fn(openalex_base_url, fast=fast_api)
         result = search_source(
@@ -436,6 +528,7 @@ def run_literature_search(
             args.max_results,
             corpus,
             logger,
+            observations=observations,
         )
         if result:
             sources_searched.append(result)
@@ -444,9 +537,22 @@ def run_literature_search(
         """Run crossref."""
         crossref_on = engines.get("crossref", True) and not getattr(args, "skip_crossref", False)
         if not crossref_on or (crossref_base_url is None and fast_api):
+            _record_skipped(
+                observations,
+                "Crossref",
+                "disabled" if not crossref_on else "not_injected_in_hermetic_run",
+            )
             return
         crossref_search = _crossref_search_fn(crossref_base_url, fast=fast_api)
-        result = search_source("Crossref", crossref_search, args.query, args.max_results, corpus, logger)
+        result = search_source(
+            "Crossref",
+            crossref_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
         if result:
             sources_searched.append(result)
 
@@ -454,9 +560,22 @@ def run_literature_search(
         """Run pubmed."""
         pubmed_on = engines.get("pubmed", True) and not getattr(args, "skip_pubmed", False)
         if not pubmed_on or (pubmed_esearch_url is None and fast_api):
+            _record_skipped(
+                observations,
+                "PubMed",
+                "disabled" if not pubmed_on else "not_injected_in_hermetic_run",
+            )
             return
         pubmed_search = _pubmed_search_fn(pubmed_esearch_url, pubmed_efetch_url, fast=fast_api)
-        result = search_source("PubMed", pubmed_search, args.query, args.max_results, corpus, logger)
+        result = search_source(
+            "PubMed",
+            pubmed_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
         if result:
             sources_searched.append(result)
 
@@ -464,8 +583,10 @@ def run_literature_search(
         """Run sovietrxiv."""
         sovietrxiv_cfg = cfg.get("sovietrxiv", {}) if isinstance(cfg, dict) else {}
         if not engines.get("sovietrxiv", True) or getattr(args, "skip_sovietrxiv", False):
+            _record_skipped(observations, "SovietRxiv", "disabled")
             return
         if sovietrxiv_base_url is None and fast_api:
+            _record_skipped(observations, "SovietRxiv", "not_injected_in_hermetic_run")
             return
         sovietrxiv_email = sovietrxiv_cfg.get("api_email") if isinstance(sovietrxiv_cfg, dict) else None
         sovietrxiv_source = sovietrxiv_cfg.get("source") if isinstance(sovietrxiv_cfg, dict) else None
@@ -475,7 +596,15 @@ def run_literature_search(
             api_email=sovietrxiv_email,
             source=sovietrxiv_source,
         )
-        result = search_source("SovietRxiv", sovietrxiv_search, args.query, args.max_results, corpus, logger)
+        result = search_source(
+            "SovietRxiv",
+            sovietrxiv_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
         if result:
             sources_searched.append(result)
 
@@ -483,8 +612,10 @@ def run_literature_search(
         """Run chinarxiv."""
         chinarxiv_cfg = cfg.get("chinarxiv", {}) if isinstance(cfg, dict) else {}
         if not engines.get("chinarxiv", True) or getattr(args, "skip_chinarxiv", False):
+            _record_skipped(observations, "ChinaRxiv", "disabled")
             return
         if chinarxiv_base_url is None and fast_api:
+            _record_skipped(observations, "ChinaRxiv", "not_injected_in_hermetic_run")
             return
         chinarxiv_email = chinarxiv_cfg.get("api_email") if isinstance(chinarxiv_cfg, dict) else None
         chinarxiv_search = _sovietrxiv_search_fn(
@@ -493,7 +624,15 @@ def run_literature_search(
             api_email=chinarxiv_email,
             source="chinaxiv",
         )
-        result = search_source("ChinaRxiv", chinarxiv_search, args.query, args.max_results, corpus, logger)
+        result = search_source(
+            "ChinaRxiv",
+            chinarxiv_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
         if result:
             sources_searched.append(result)
 
@@ -501,9 +640,22 @@ def run_literature_search(
         """Run europepmc."""
         europepmc_on = engines.get("europepmc", True) and not getattr(args, "skip_europepmc", False)
         if not europepmc_on or (europepmc_base_url is None and fast_api):
+            _record_skipped(
+                observations,
+                "Europe PMC",
+                "disabled" if not europepmc_on else "not_injected_in_hermetic_run",
+            )
             return
         europepmc_search = _europepmc_search_fn(europepmc_base_url, fast=fast_api)
-        result = search_source("Europe PMC", europepmc_search, args.query, args.max_results, corpus, logger)
+        result = search_source(
+            "Europe PMC",
+            europepmc_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
         if result:
             sources_searched.append(result)
 
@@ -511,9 +663,22 @@ def run_literature_search(
         """Run biorxiv."""
         biorxiv_on = engines.get("biorxiv", True) and not getattr(args, "skip_biorxiv", False)
         if not biorxiv_on or (biorxiv_base_url is None and fast_api):
+            _record_skipped(
+                observations,
+                "bioRxiv",
+                "disabled" if not biorxiv_on else "not_injected_in_hermetic_run",
+            )
             return
         biorxiv_search = _biorxiv_search_fn(biorxiv_base_url, fast=fast_api)
-        result = search_source("bioRxiv", biorxiv_search, args.query, args.max_results, corpus, logger)
+        result = search_source(
+            "bioRxiv",
+            biorxiv_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
         if result:
             sources_searched.append(result)
 
@@ -555,6 +720,20 @@ def run_literature_search(
         )
 
     corpus.save(corpus_path)
+    _write_retrieval_report(
+        retrieval_report_path,
+        query=str(args.query),
+        max_results=int(args.max_results),
+        corpus_records=len(corpus),
+        run_mode="retrieval",
+        observations=observations,
+        route={
+            "query_type": route.query_type,
+            "confidence": route.confidence,
+            "prefer_preprints": route.prefer_preprints,
+            "source_order": route.source_order,
+        },
+    )
     total_elapsed = time.monotonic() - pipeline_start
     logger.info("--- Literature Search Summary ---")
     logger.info("Sources: %s", ", ".join(sources_searched) if sources_searched else "None")

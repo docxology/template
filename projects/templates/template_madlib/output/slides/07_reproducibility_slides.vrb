@@ -28,9 +28,11 @@ the same validation gates passing.
 \begin{itemize}
 \tightlist
 \item
-  Config hash: \breaktt{3c4268ae54c35130}
+  Config hash: \breaktt{377db49c4154479a}
 \item
-  Generated: \breaktt{2026-06-26T14:00:22Z}
+  Generated: \breaktt{not-recorded\ (set\ SOURCE\_DATE\_EPOCH)} (derived
+  from \breaktt{SOURCE\_DATE\_EPOCH}; an explicit \texttt{not-recorded}
+  marker is emitted when the reproducible timestamp is not supplied)
 \item
   Python: \texttt{3.12.13}
 \item

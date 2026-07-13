@@ -31,7 +31,7 @@ explicitly per the note in `manuscript/config.yaml`).
 
 | Script | Inputs | Outputs | Dependencies |
 |--------|--------|---------|--------------|
-| `01` | API responses | `output/data/corpus.jsonl` | Network / cached corpus |
+| `01` | API responses | `output/data/corpus.jsonl`, `output/data/retrieval_report.json` | Network / cached corpus; legacy resumes are labelled instead of assigned inferred engine counts |
 | `02` | `corpus.jsonl` | `subfield_classification.json`, `temporal_analysis.json`, `tfidf_data.json`, `topics.json`, `citation_network.json`, `citation_graph.gml` | `01` |
 | `03` | `corpus.jsonl` | `nanopublications.jsonl`, `nanopublications.trig`, `hypothesis_scores.json`, `hypothesis_trends.json`, `assertion_summary.json` | `01`, Ollama (optional) |
 | `04` | All `output/data/*.json`, `citation_graph.gml` | `output/figures/*.png`, `figure_registry.json` | `02`, `03` |
@@ -180,6 +180,7 @@ Scripts `01`, `02`, and `03` accept `--config PATH` (default `manuscript/config.
 output/
 ├── data/
 │   ├── corpus.jsonl                  # 01
+│   ├── retrieval_report.json         # 01, timestamp-free per-engine outcomes
 │   ├── subfield_classification.json  # 02
 │   ├── subfield_timeline.json        # 02
 │   ├── temporal_analysis.json        # 02

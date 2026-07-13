@@ -1,4 +1,5 @@
 """Tests for dynamics primitives: damped_oscillator."""
+
 from __future__ import annotations
 
 import numpy as np

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Confidentiality guard — fonds tracking check."""
+
 from __future__ import annotations
 
 import argparse

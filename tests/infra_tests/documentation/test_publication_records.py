@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 from infrastructure.documentation.publication_records import (
+    PublicationRecord,
     README_BLOCK_BEGIN,
     README_BLOCK_END,
     check_publication_records_doc,
@@ -15,6 +16,11 @@ from infrastructure.documentation.publication_records import (
     render_github_readme_publication_block,
     render_publication_records_doc,
     replace_github_readme_publication_block,
+)
+from infrastructure.documentation.publication_standalone import (
+    STANDALONE_BLOCK_BEGIN,
+    render_standalone_publication_block,
+    replace_standalone_publication_block,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -43,6 +49,9 @@ def _scaffold_publication_project(root: Path, name: str, version: str = "1.0.0")
                 f"  version_doi: '{version_doi}'",
                 f"  version_record: 'https://zenodo.org/records/{version_id}'",
                 f"  github_repository: 'docxology/{name}'",
+                "  published_artifacts:",
+                f"    github_pages: 'https://docxology.github.io/{name}/'",
+                f"    osf: 'https://osf.io/{concept_id}/'",
                 "",
             ]
         ),
@@ -56,6 +65,26 @@ def _scaffold_publication_project(root: Path, name: str, version: str = "1.0.0")
         json.dumps({"title": name, "version": version}),
         encoding="utf-8",
     )
+    (project_root / "codemeta.json").write_text(
+        json.dumps({"name": name, "version": version, "identifier": concept_doi}),
+        encoding="utf-8",
+    )
+    (project_root / "STANDALONE.md").write_text(
+        f"# {name} standalone contract\n",
+        encoding="utf-8",
+    )
+
+
+def _sync_standalone_blocks(records: list[PublicationRecord]) -> None:
+    for record in records:
+        standalone_path = record.standalone_path
+        standalone_path.write_text(
+            replace_standalone_publication_block(
+                standalone_path.read_text(encoding="utf-8"),
+                render_standalone_publication_block(record),
+            ),
+            encoding="utf-8",
+        )
 
 
 def test_load_publication_records_follows_public_project_scope(tmp_path: Path) -> None:
@@ -69,6 +98,21 @@ def test_load_publication_records_follows_public_project_scope(tmp_path: Path) -
     assert [record.project_name for record in records] == sorted(PUBLIC_PROJECT_NAMES)
     assert {record.github_repository for record in records} == {f"docxology/{name}" for name in PUBLIC_PROJECT_NAMES}
     assert all(record.sidecar_status == "ok" for record in records)
+    assert all(record.declared_location_count == 4 for record in records)
+    assert all(len(record.published_artifacts) == 2 for record in records)
+
+
+def test_local_publication_index_fails_closed_on_missing_guide_and_codemeta(tmp_path: Path) -> None:
+    """The index must surface incomplete standalone/publication metadata."""
+    name = PUBLIC_PROJECT_NAMES[0]
+    _scaffold_publication_project(tmp_path, name)
+    project_root = tmp_path / "projects" / name
+    (project_root / "STANDALONE.md").unlink()
+    (project_root / "codemeta.json").unlink()
+
+    record = load_publication_records(tmp_path)[0]
+
+    assert record.sidecar_findings == ("missing STANDALONE.md", "missing codemeta.json")
 
 
 def test_rendered_publication_docs_include_every_public_record(tmp_path: Path) -> None:
@@ -85,6 +129,12 @@ def test_rendered_publication_docs_include_every_public_record(tmp_path: Path) -
         assert f"../projects/{name}/" in readme_block
     assert "Do not edit by hand" in generated
     assert "scripts/docgen/publication_records.py --refresh-external" in generated
+    assert f"Standalone guides present: **{len(records)}/{len(records)}**" in generated
+    assert f"Additional publication locations declared: **{2 * len(records)}**" in generated
+    assert "github_pages" in generated
+    assert "STANDALONE.md" in generated
+    assert "codemeta.json" in generated
+    assert "Other locations" in readme_block
 
 
 def test_monorepo_only_publication_path_is_not_checked_as_standalone_repo(tmp_path: Path) -> None:
@@ -136,12 +186,30 @@ def test_replace_github_readme_publication_block() -> None:
     assert re.search(r"old table", result) is None
 
 
+def test_standalone_publication_block_inserts_and_updates_idempotently(tmp_path: Path) -> None:
+    name = PUBLIC_PROJECT_NAMES[0]
+    _scaffold_publication_project(tmp_path, name)
+    record = load_publication_records(tmp_path)[0]
+    source = record.standalone_path.read_text(encoding="utf-8")
+    block = render_standalone_publication_block(record)
+
+    inserted = replace_standalone_publication_block(source, block)
+    updated = replace_standalone_publication_block(inserted, block)
+
+    assert inserted == updated
+    assert inserted.count(STANDALONE_BLOCK_BEGIN) == 1
+    assert record.github_display_url in inserted
+    assert record.concept_doi in inserted
+    assert "github_pages" in inserted
+
+
 def test_check_publication_records_doc_accepts_refreshed_external_columns(tmp_path: Path) -> None:
     for name in PUBLIC_PROJECT_NAMES:
         _scaffold_publication_project(tmp_path, name)
     (tmp_path / "docs" / "_generated").mkdir(parents=True)
     (tmp_path / ".github").mkdir()
     records = load_publication_records(tmp_path)
+    _sync_standalone_blocks(records)
     for record in records:
         record.github_latest_release_tag = "v9.9.9"
         record.github_latest_release_url = f"https://github.com/{record.github_repository}/releases/tag/v9.9.9"
@@ -160,12 +228,24 @@ def test_check_publication_records_doc_accepts_refreshed_external_columns(tmp_pa
     assert check_publication_records_doc(tmp_path) == []
 
 
+def test_external_status_cannot_call_missing_release_verified(tmp_path: Path) -> None:
+    _scaffold_publication_project(tmp_path, PUBLIC_PROJECT_NAMES[0])
+    record = load_publication_records(tmp_path)[0]
+    record.github_repo_status = "200"
+    record.github_release_status = "404"
+    record.zenodo_status = "200"
+
+    assert record.external_status.startswith("incomplete; ")
+    assert "GitHub release 404" in record.external_status
+
+
 def test_check_publication_records_doc_reports_source_owned_drift(tmp_path: Path) -> None:
     for name in PUBLIC_PROJECT_NAMES:
         _scaffold_publication_project(tmp_path, name)
     (tmp_path / "docs" / "_generated").mkdir(parents=True)
     (tmp_path / ".github").mkdir()
     records = load_publication_records(tmp_path)
+    _sync_standalone_blocks(records)
     generated = render_publication_records_doc(tmp_path, records)
     generated = generated.replace("docxology/templates/template_active_inference", "docxology/stale", 1)
     (tmp_path / "docs" / "_generated" / "publication_records.md").write_text(generated, encoding="utf-8")

@@ -16,7 +16,8 @@ from typing import TYPE_CHECKING, Callable
 
 from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
-from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor, PipelineStageResult
+from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
 
 if TYPE_CHECKING:
     from infrastructure.project.project_info import ProjectInfo
@@ -127,7 +128,7 @@ class MultiProjectOrchestrator:
         self,
         config: MultiProjectConfig,
         on_project_complete: Callable[[str, list[PipelineStageResult], Path], None] | None = None,
-    ):
+    ) -> None:
         """Initialize multi-project orchestrator.
 
         Args:
@@ -329,13 +330,5 @@ __all__ = [
     "MultiProjectConfig",
     "MultiProjectOrchestrator",
     "MultiProjectResult",
-    "format_multi_project_detailed_report",
     "format_multi_project_outcome_lines",
-    "write_last_run_summary",
 ]
-
-
-from infrastructure.reporting.multi_project_report import (  # noqa: E402, F401
-    format_multi_project_detailed_report,
-    write_last_run_summary,
-)

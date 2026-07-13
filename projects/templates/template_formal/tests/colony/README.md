@@ -1,13 +1,13 @@
 # `tests/colony/` — pheromone substrate, emergent stigmergy, and eight pre-registered analyses
 
 Behavioral and statistical tests for `src/template_formal/colony/{pheromone,
-experiment,nullmodel,sweep,stats,demo,visualization}.py` — the shared
+experiment,nullmodel,sweep,stats,demo,visualization,analysis}.py` — the shared
 `PheromoneField` substrate, the N-agent stigmergic colony mechanism, its
 random-choice null-model control, the generic parameter-sweep runner, and
 the pure statistics helpers (Wilson score interval, Fisher's exact test,
 Pearson r) that back every convergence-rate claim in the manuscript.
 
-**This directory is not uniformly fast.** Eight of the ten files are quick
+**This directory is not uniformly fast.** Nine of the eleven files are quick
 unit/small-integration tests; **two are large, real experiment-sweep files
 that run hundreds of real colony trials each and are the slowest tests in
 the whole `template_formal` suite** — see the dedicated section below.
@@ -18,6 +18,7 @@ the whole `template_formal` suite** — see the dedicated section below.
 
 | File | Lines | Covers | What it actually tests |
 | --- | --- | --- | --- |
+| [`test_analysis.py`](test_analysis.py) | 28 | ISC-120 | Runs the source-owned publication analysis against a temporary project root and verifies every returned path is a real non-empty file, the calibrated sweep reproduces 37/40 successes, and the registry binds exactly the two generated figures. |
 | [`test_pheromone.py`](test_pheromone.py) | 50 | ISC-32 | `InMemoryPheromoneField`: sensing an unvisited location returns `0.0`; deposits accumulate across calls; negative deposit amounts raise `ValueError`; `evaporate` scales every location uniformly by a `(1 - decay)` factor; `evaporate` rejects a decay outside `[0.0, 1.0]`; the field's public surface is exactly `{"deposit", "sense", "evaporate"}` — no way to reach the backing dict. |
 | [`test_colony_experiment_config.py`](test_colony_experiment_config.py) | 118 | ISC-80 | `ColonyTrialConfig.__post_init__`'s runtime guards, mirroring the discipline already proven for `storage/schema.py`'s SQL-identifier validation and `storage/transaction.py`'s isolation-`Literal`: `decay` must be a fraction in `[0.0, 1.0]` (boundary values `0.0`/`1.0` accepted); `sensing_noise_std` must be non-negative; `preference_variance` must be strictly `> 0.0` (a cross-vendor audit caught the original guard accepting `0.0`, which then failed downstream inside `BeliefState`'s stricter bound — the same "fails downstream, not at construction" defect class this config's guards exist to close). A final sweep over the full valid range (5 decay values × 3 noise values × 3 variance values) proves no false-positive rejection. |
 | [`test_colony_integration.py`](test_colony_integration.py) | 140 | ISC-33, ISC-34 | Three real `Agent` instances, three real on-disk SQLite files, one shared `InMemoryPheromoneField`, five ticks — the test coordinator itself never picks a winner; it only reads real per-agent `decide()`/`record_observation()` results and a real shared field. Proves five emergent properties from the resulting real data: unanimous first-tick consensus, sustained consensus every subsequent tick, the winning location's real sensed concentration strictly increasing tick-over-tick, the losing location never accumulating anything, and the winner's dominance share being non-decreasing and reaching exactly `1.0`. A second test asserts `Agent`'s and `PheromoneField`'s public surfaces are *exactly* the members this file's own coordinator loop uses — the ISC-34 anti-claim made concrete: the coordinator could not have reached an agent's internal storage or protocol handle even if it tried, because those members don't exist on the public surface at all. |

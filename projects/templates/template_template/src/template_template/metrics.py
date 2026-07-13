@@ -8,20 +8,31 @@ imports and invokes these functions.
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.config.schema import ResolvedTestingConfig
 from infrastructure.core.logging.utils import get_logger
-
+from infrastructure.core.project_pyproject import project_declared_coverage_floor
 from infrastructure.project.public_scope import public_project_names
 
 from .introspection import ModuleInfo, build_infrastructure_report
+from .viz_palette import FIGURE_DPI, FONT_FLOOR
 
 logger = get_logger(__name__)
 
 _EXCLUDED_DOC_DIRS = frozenset({"__pycache__", ".venv", ".git", ".pytest_cache"})
+
+
+def _generated_timestamp(source_date_epoch: str | None) -> str:
+    """Return deterministic build metadata, or disclose that none was supplied."""
+    raw = (source_date_epoch or "").strip()
+    if not raw.isdigit():
+        return "not-recorded (set SOURCE_DATE_EPOCH)"
+    return datetime.fromtimestamp(int(raw), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def count_test_functions(test_dir: Path) -> int:
@@ -166,6 +177,11 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     docs_file_count = count_docs_markdown_files(repo_root)
     docs_subdir_count = count_docs_subdirs(repo_root)
     prompt_template_count = count_prompt_templates(repo_root)
+    testing_defaults = ResolvedTestingConfig()
+    project_root = repo_root / "projects" / "templates" / "template_template"
+    project_coverage_floor = project_declared_coverage_floor(project_root)
+    if project_coverage_floor is None:
+        project_coverage_floor = testing_defaults.project_coverage_threshold
 
     # ``project_metrics`` only contains projects ``discover_projects`` already
     # found on disk (public-only), so every entry is present by construction —
@@ -196,6 +212,14 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         "docs_file_count": docs_file_count,
         "docs_subdir_count": docs_subdir_count,
         "prompt_template_count": prompt_template_count,
+        # Policy values are source-bound rather than hand-authored in prose.
+        # The infrastructure floor is the Layer-1 default; the project floor is
+        # read from this exemplar's own ``pyproject.toml`` with the Layer-1
+        # default as a fail-closed fallback.
+        "coverage_floor_infrastructure": testing_defaults.infra_coverage_threshold,
+        "coverage_floor_project": project_coverage_floor,
+        "figure_font_floor_pt": FONT_FLOOR,
+        "figure_dpi": FIGURE_DPI,
         "infrastructure_version": report.infrastructure_version,
         # ── Per-project metrics (flat) ────────────────────────────────
         **{f"project_{name}_{k}": str(v) for name, stats in project_metrics.items() for k, v in stats.items()},
@@ -213,7 +237,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
             for module in report.modules
         },
         "module_inventory_table": build_module_inventory_table(report.modules),
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": _generated_timestamp(os.environ.get("SOURCE_DATE_EPOCH")),
     }
 
     logger.info(

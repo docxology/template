@@ -25,9 +25,18 @@ def test_ad_validates_border() -> None:
 
 
 def test_parse_item_dispatches_ad() -> None:
-    item = _parse_item({"ad": {"sponsor": "Foglight Bakery", "border": "double",
-                               "background": "#F8EFD9", "accent": "#6E3C18",
-                               "body": ["Fresh loaves"], "contact": "555-0210"}})
+    item = _parse_item(
+        {
+            "ad": {
+                "sponsor": "Foglight Bakery",
+                "border": "double",
+                "background": "#F8EFD9",
+                "accent": "#6E3C18",
+                "body": ["Fresh loaves"],
+                "contact": "555-0210",
+            }
+        }
+    )
     assert isinstance(item, Ad)
     assert item.sponsor == "Foglight Bakery"
     assert item.border == "double"
@@ -35,9 +44,15 @@ def test_parse_item_dispatches_ad() -> None:
 
 
 def _ad_page(border: str) -> Edition:
-    ad = Ad(sponsor="Test Co", tagline="We sell things", border=border,
-            background="#EAF1F5", accent="#1F3A5F", body=[Block("p", "Open daily.")],
-            contact="555-0000")
+    ad = Ad(
+        sponsor="Test Co",
+        tagline="We sell things",
+        border=border,
+        background="#EAF1F5",
+        accent="#1F3A5F",
+        body=[Block("p", "Open daily.")],
+        contact="555-0000",
+    )
     page = Page(number=1, template="standard", columns=4, main_items=[ad])
     return Edition(nameplate="T", city="C", state="S", date="D", pages=[page])
 
@@ -67,6 +82,7 @@ def test_spot_color_changes_output(project_root, tmp_path) -> None:
     mono = tmp_path / "mono.pdf"
     color = tmp_path / "color.pdf"
     render_edition(edition, replace(base, spot_color=False), project_root=project_root, output_path=mono)
-    render_edition(edition, replace(base, spot_color=True, spot_hex="#1F6F8B"),
-                   project_root=project_root, output_path=color)
+    render_edition(
+        edition, replace(base, spot_color=True, spot_hex="#1F6F8B"), project_root=project_root, output_path=color
+    )
     assert mono.read_bytes() != color.read_bytes()

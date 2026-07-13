@@ -48,12 +48,16 @@ repos:
         name: trailing-whitespace (strip trailing whitespace)
         exclude: |
           (?x)^(
+            output/.*|
+            projects/templates/[^/]+/output/.*|
             projects/templates/.*\.svg
           )
       - id: end-of-file-fixer
         name: end-of-file-fixer (ensure trailing newline)
         exclude: |
           (?x)^(
+            output/.*|
+            projects/templates/[^/]+/output/.*|
             projects/templates/.*\.svg|
             projects/templates/.*\.png
           )
@@ -81,9 +85,9 @@ repos:
           - -c
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
-            CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)" &&
-            uvx ruff check $CI_SOURCE_PATHS --fix &&
-            uvx ruff format $CI_SOURCE_PATHS
+            CI_LINT_PATHS="$(uv run python -m infrastructure.project.public_scope lint-paths)" &&
+            uv run ruff check $CI_LINT_PATHS --fix &&
+            uv run ruff format $CI_LINT_PATHS
         language: system
         pass_filenames: false
         stages: [pre-commit, manual]
@@ -108,7 +112,7 @@ repos:
         verbose: true
 
       - id: pre-push-quick
-        name: generated-artifact guard + no mocks + hook smoke pytest
+        name: generated-artifact guard + lexical mock-framework gate + hook smoke pytest
         entry: bash
         args:
           - -eo

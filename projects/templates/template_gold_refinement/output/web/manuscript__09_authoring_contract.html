@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,11 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:authoring_contract">Authoring Contract</h1>
 <h2 id="obligations">Obligations</h2>
 <table>
@@ -351,11 +354,16 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div>
 <ol start="11" type="1">
 <li>Do not hand-edit generated manuscript, PDFs, or figures</li>
+<li>If using reverse assay, preserve ordered-prefix semantics and
+disclose that the target is configured rather than empirically
+optimized</li>
+<li>If using multi-objective purity, report dimensions separately unless
+external evidence justifies an aggregation rule</li>
 </ol>
 <p>Do not hard-code equation, figure, or table numbers in prose. Use
-<code>[@eq:...]</code>, <code>[@fig:...]</code>,
-<code>[@tbl:...]</code>, and <code>[@sec:...]</code> so the renderer
-owns numbering and the tests can detect dangling references.</p>
+<code>[eq:...]</code>, <code>[fig:...]</code>, <code>[tbl:...]</code>,
+and <code>[sec:...]</code> so the renderer owns numbering and the tests
+can detect dangling references.</p>
 <p>The authoring contract treats the risk matrix as a source checklist,
 not as a retrospective dashboard. If a fork cannot name who owns a
 high-severity integrity dimension, which validator detects it, and which
@@ -365,5 +373,11 @@ until that missing surface exists.</p>
 the threat, standard, local evidence surface, validator, and claim
 boundary for a security claim, the fork should keep the language as
 scoped guidance rather than certification.</p>
+<p>Visualization authorship is equally accountable. A technically valid
+image can still mislead through an unsupported axis, aggregation,
+annotation, or caption. Every figure change must therefore update its
+<code>FigureSpec</code>, source data declaration, tests, manuscript
+interpretation, and regenerated PNG/SVG pair as one reviewable unit.</p>
+</main>
 </body>
 </html>

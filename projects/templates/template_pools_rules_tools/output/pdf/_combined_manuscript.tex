@@ -303,7 +303,7 @@ Architecture}
 {\@date\par}
 \makeatother
 \vfill
-\includegraphics[width=0.98\textwidth,height=0.60\textheight,keepaspectratio]{\detokenize{../figures/cover_art.png}}
+\includegraphics[width=0.98\textwidth,height=0.6\textheight,keepaspectratio]{\detokenize{../figures/cover_art.png}}
 \vfill
 \end{titlepage}
 \thispagestyle{empty}
@@ -341,8 +341,9 @@ Value
 \textbf{Date} & 2026-07-05 \\
 \textbf{License} & CC-BY-4.0 \\
 \textbf{Repository} &
-\href{https://github.com/docxology/template}{docxology/template} \\
-\textbf{DOI} & 10.5281/zenodo.template\_pools\_rules\_tools \\
+\href{https://github.com/docxology/template}{Public template
+repository} \\
+\textbf{DOI} & 10.5281/zenodo.21298888 \\
 \textbf{Keywords} & research software engineering, monorepo
 architecture, reproducibility, fonds, governance rules, tool discovery,
 graceful degradation \\
@@ -373,10 +374,10 @@ documented by \citep{Fowler2002patterns}.
 \subsection{Data Availability}\label{data-availability}
 
 All source code, configuration files, and exemplar resources described
-in this paper are available in the public template repository at
-\url{https://github.com/docxology/template} under the
-\breaktt{projects/templates/template\_pools\_rules\_tools/} path. The
-integration pipeline is fully reproducible from source using
+in this paper are available in the
+\href{https://github.com/docxology/template}{public template repository}
+under the \breaktt{projects/templates/template\_pools\_rules\_tools/}
+path. The integration pipeline is fully reproducible from source using
 \breaktt{uv\ run\ python\ projects/templates/template\_pools\_rules\_tools/scripts/02\_run\_integration.py}
 from the repository root. Generated manuscript variables are stored in
 \breaktt{output/data/manuscript\_variables.json} and injected at render
@@ -487,7 +488,7 @@ flow (fig.~\ref{fig:pipelineflow}) --- so that every structural claim in
 the prose has a corresponding visual.
 
 In a representative pipeline run, the integration demo loaded 3 fonds,
-validated 2 rule sets, discovered 3 tools, and processed 8 bibliography
+validated 2 rule sets, discovered 4 tools, and processed 8 bibliography
 entries --- all reported as structured JSON that populates manuscript
 variable tokens at render time. Tests covering the eight \texttt{src/}
 modules (across nine test files) achieve well above the required \texorpdfstring{\textgreater{}=}{>=}90\%
@@ -591,7 +592,7 @@ Key function
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Three-layer resource architecture of template\_pools\_rules\_tools. Fonds (left) provide read-only data pools; Rules (centre) provide governance constraints; Tools (right) provide executable entry points. The Integration layer (bottom) orchestrates all three.}]{../figures/architecture_overview.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Three-layer resource architecture of template\_pools\_rules\_tools. Fonds (left) provide read-only data pools; Rules (centre) provide governance constraints; Tools (right) provide executable entry points. The Integration layer (bottom) orchestrates all three.}]{../figures/architecture_overview.png}
 \caption{Three-layer resource architecture of
 template\_pools\_rules\_tools. Fonds (left) provide read-only data
 pools; Rules (centre) provide governance constraints; Tools (right)
@@ -714,7 +715,7 @@ structured contact records, YAML for dataset metadata).
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={Schema taxonomy comparison across the three fond types. Each fond declares a manifest and a type field; source-of-truth format, secondary mirror, and dedup key differ by category.}]{../figures/fond_taxonomy.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={Schema taxonomy comparison across the three fond types. Each fond declares a manifest and a type field; source-of-truth format, secondary mirror, and dedup key differ by category.}]{../figures/fond_taxonomy.png}
 \caption{Schema taxonomy comparison across the three fond types. Each
 fond declares a manifest and a \protect\texttt{type} field;
 source-of-truth format, secondary mirror, and dedup key differ by
@@ -962,21 +963,22 @@ named constraint:
 \AttributeTok{  }\FunctionTok{applies\_to}\KeywordTok{:}\AttributeTok{ }\StringTok{"projects/*/src/"}
 \AttributeTok{  }\FunctionTok{enforcement}\KeywordTok{:}\AttributeTok{ fail\_on\_violation}
 \AttributeTok{  }\FunctionTok{constraints}\KeywordTok{:}
-\AttributeTok{    }\FunctionTok{minimum\_line\_coverage}\KeywordTok{:}\AttributeTok{ }\DecValTok{90}
-\AttributeTok{    }\FunctionTok{minimum\_branch\_coverage}\KeywordTok{:}\AttributeTok{ }\DecValTok{80}
+\AttributeTok{    }\FunctionTok{infrastructure}\KeywordTok{:}\AttributeTok{ }\DecValTok{60}
+\AttributeTok{    }\FunctionTok{project\_src}\KeywordTok{:}\AttributeTok{ }\DecValTok{90}
+\AttributeTok{    }\FunctionTok{public\_api}\KeywordTok{:}\AttributeTok{ }\DecValTok{95}
 \end{Highlighting}
 \end{Shaded}
 
 The \breaktt{enforcement:\ fail\_on\_violation} field signals that a
 pipeline must halt and report when this rule is violated. Strong rules
 are suitable for invariants that, if broken, indicate a genuine defect
-rather than a style preference: coverage below 90\% means tests are
-missing; a manuscript section without an abstract means the document is
-incomplete.
+rather than a style preference: coverage below the source-declared
+threshold means tests are missing; a manuscript section without an
+abstract means the document is incomplete.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch and a guidance-only soft/ branch.}]{../figures/rule_hierarchy.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch and a guidance-only soft/ branch.}]{../figures/rule_hierarchy.png}
 \caption{Rule hierarchy: the two template rule sets, each split into a
 machine-enforceable \protect\texttt{strong/} branch and a guidance-only
 \protect\texttt{soft/} branch.}\label{fig:rulehier}
@@ -1004,8 +1006,8 @@ Constraint
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\breaktt{strong/coverage-gate.yaml} & Minimum line coverage 90\%, branch
-coverage 80\% for \texttt{src/} \\
+\breaktt{strong/coverage-gate.yaml} & Minimum coverage: infrastructure
+60\%, project \texttt{src/} 90\%, public API 95\% \\
 \breaktt{strong/module-structure.yaml} & Required directory layout:
 \texttt{src/}, \texttt{tests/}, \texttt{scripts/},
 \texttt{manuscript/} \\
@@ -1225,7 +1227,7 @@ generically without knowing its payload schema.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape.}]{../figures/tool_contract.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape.}]{../figures/tool_contract.png}
 \caption{Invocation contract for the three template tools: stdin
 payload, tool behaviour, and stdout/exit-code
 shape.}\label{fig:toolcontract}
@@ -1343,7 +1345,7 @@ concerns.
 It returns a structured result distinguishing between tools that are
 fully ready (\texttt{"ok"}), partially configured (\texttt{"partial"}
 --- some scripts missing), and entirely absent (\texttt{"missing"}). In
-the current integration run, \textbf{3 tools} were discovered
+the current integration run, \textbf{4 tools} were discovered
 (fig.~\ref{fig:counts}), all with valid manifests.
 
 \subsection{Tool Discovery and
@@ -1504,7 +1506,7 @@ token before the manuscript is passed to the rendering engine.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\linewidth,height=0.50\textheight,keepaspectratio,alt={Runtime integration counts from manuscript\_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run.}]{../figures/resource_counts.png}
+\includegraphics[width=0.75\linewidth,height=0.5\textheight,keepaspectratio,alt={Runtime integration counts from manuscript\_variables.json. Bars show fonds loaded, rule sets validated, and tools discovered during a single pipeline run.}]{../figures/resource_counts.png}
 \caption{Runtime integration counts from manuscript\_variables.json.
 Bars show fonds loaded, rule sets validated, and tools discovered during
 a single pipeline run.}\label{fig:counts}
@@ -1523,7 +1525,7 @@ Token & Value \\
 \endlastfoot
 \texttt{3} & 3 \\
 \texttt{2} & 2 \\
-\texttt{3} & 3 \\
+\texttt{4} & 4 \\
 \texttt{8} & 8 \\
 \end{longtable}
 }
@@ -1574,7 +1576,7 @@ own tree & Console report, non-zero exit on violation \\
 plus the cover illustration & 9 PNG files under
 \breaktt{manuscript/figures/} \\
 \breaktt{scripts/z\_generate\_manuscript\_variables.py} & Hydrate
-\texttt{\{\{TOKEN\}\}} values and inject them into
+declared manuscript-variable placeholders and inject them into
 \breaktt{output/manuscript/} immediately before rendering & JSON file +
 resolved manuscript tree \\
 \end{longtable}
@@ -1582,7 +1584,7 @@ resolved manuscript tree \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth,height=0.50\textheight,keepaspectratio,alt={The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.}]{../figures/pipeline_flow.png}
+\includegraphics[width=0.95\linewidth,height=0.5\textheight,keepaspectratio,alt={The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.}]{../figures/pipeline_flow.png}
 \caption{The six-script pipeline from source validation through token
 hydration, ending at the combined-PDF render
 step.}\label{fig:pipelineflow}
@@ -1590,7 +1592,7 @@ step.}\label{fig:pipelineflow}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.}]{../figures/status_dashboard.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.}]{../figures/status_dashboard.png}
 \caption{Integration status dashboard showing per-resource validation
 results. Green indicates ok, amber indicates partial, red indicates
 missing.}\label{fig:pipeline}
@@ -1602,20 +1604,21 @@ manuscript-variable token file and the strong-rule semantic evaluator;
 the figure-generation stage runs independently; and
 \breaktt{z\_generate\_manuscript\_variables.py} --- invoked automatically
 by the rendering pipeline immediately before the PDF render step --- is
-what actually substitutes every \texttt{\{\{TOKEN\}\}} and writes the
+what actually substitutes every declared placeholder and writes the
 resolved manuscript that pandoc consumes. fig.~\ref{fig:pipeline} shows
 the corresponding per-component pass/partial/missing status from the
 same run.
 
 Each script imports all business logic from \texttt{src/} and stays free
-of computation of its own --- the longest,
-\breaktt{01\_validate\_sources.py} at 112 lines, is entirely CLI plumbing
+of computation of its own --- even \breaktt{01\_validate\_sources.py},
+the largest entry point in this project, is entirely CLI plumbing
 (argument parsing, console formatting) around calls into
 \breaktt{src/fonds\_reader.py}, \breaktt{src/rules\_applier.py}, and
 \breaktt{src/tools\_invoker.py}. This thin-orchestrator pattern
 \citep{Wilson2014best} ensures that all testable logic is in
-\texttt{src/} at \texorpdfstring{\textgreater{}=}{>=} 90\% coverage, while the scripts themselves remain
-readable without a dedicated test suite of their own.
+\texttt{src/} under the configured project coverage gate, while the
+scripts themselves remain readable without a dedicated test suite of
+their own.
 
 \subsection{Resilience Design}\label{resilience-design}
 
@@ -1648,7 +1651,7 @@ to the three failure modes a monorepo integration pipeline encounters:
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={The integration layer's three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response.}]{../figures/resilience_layers.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={The integration layer's three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response.}]{../figures/resilience_layers.png}
 \caption{The integration layer's three-level resilience design: resource
 absence, schema malformation, and script absence, each with its own
 graceful-degradation response.}\label{fig:resilience}
@@ -1742,10 +1745,10 @@ contributions are:
   improvement for reproducibility \citep{Wilson2014best}.
 \item
   \textbf{A token injection pipeline} that links manuscript prose to
-  integration runtime statistics through \texttt{\{\{UPPERCASE\_KEY\}\}}
-  tokens, ensuring that quantitative claims in the manuscript are always
-  generated by the pipeline rather than authored manually. In the
-  current run this covered 3 fonds, 2 rule sets, 3 tools, and 8
+  integration runtime statistics through doubled-brace, uppercase-key
+  placeholders, ensuring that quantitative claims in the manuscript are
+  always generated by the pipeline rather than authored manually. In the
+  current run this covered 3 fonds, 2 rule sets, 4 tools, and 8
   bibliography entries.
 \item
   \textbf{A three-level resilience design} --- resource absence, schema

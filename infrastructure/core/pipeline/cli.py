@@ -69,11 +69,14 @@ __all__ = [
 
 def _resolve_yaml(args: argparse.Namespace) -> Path:
     """Resolve which pipeline.yaml to read: explicit --yaml, then --project override, then default."""
-    if getattr(args, "yaml", None):
-        return Path(args.yaml).expanduser().resolve()
-    if getattr(args, "project", None):
-        repo_root = Path(getattr(args, "repo_root", ".")).resolve()
-        project_yaml = repo_root / "projects" / args.project / "pipeline.yaml"
+    explicit_yaml = getattr(args, "yaml", None)
+    if isinstance(explicit_yaml, (str, Path)):
+        return Path(explicit_yaml).expanduser().resolve()
+    project = getattr(args, "project", None)
+    if isinstance(project, str) and project:
+        raw_repo_root = getattr(args, "repo_root", ".")
+        repo_root = Path(raw_repo_root) if isinstance(raw_repo_root, (str, Path)) else Path(".")
+        project_yaml = repo_root.resolve() / "projects" / project / "pipeline.yaml"
         if project_yaml.is_file():
             return project_yaml
     return DEFAULT_PIPELINE_YAML

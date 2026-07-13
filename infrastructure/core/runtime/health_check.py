@@ -264,7 +264,7 @@ class SystemHealthChecker:
 
         return metrics
 
-    def _generate_summary(self, status: dict[str, Any]) -> dict[str, Any]:
+    def _generate_summary(self, status: HealthStatus) -> dict[str, Any]:
         checks = status["checks"]
 
         summary: dict[str, Any] = {

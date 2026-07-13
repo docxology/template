@@ -73,10 +73,7 @@ def test_gate_claim_audit_flags_claim_without_negative_control(tmp_path: Path) -
 def test_gate_claim_audit_accepts_nearby_negative_control(tmp_path: Path) -> None:
     _write(
         tmp_path / "docs/rules.md",
-        (
-            "The schema validator enforces every record.\n"
-            "Negative control: a known-wrong fixture is expected to fail.\n"
-        ),
+        ("The schema validator enforces every record.\nNegative control: a known-wrong fixture is expected to fail.\n"),
     )
 
     assert find_gate_claims_without_negative_controls(tmp_path) == []
@@ -86,14 +83,7 @@ def test_symbol_documentation_audit_scans_every_def_and_class(tmp_path: Path) ->
     _write(tmp_path / "infrastructure/pkg/__init__.py", "")
     _write(
         tmp_path / "infrastructure/pkg/module.py",
-        (
-            "class PublicThing:\n"
-            "    def method(self):\n"
-            "        return 1\n"
-            "\n"
-            "def public_function():\n"
-            "    return 2\n"
-        ),
+        ("class PublicThing:\n    def method(self):\n        return 1\n\ndef public_function():\n    return 2\n"),
     )
 
     records = collect_symbol_documentation(tmp_path)

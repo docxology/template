@@ -255,9 +255,9 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
   -- PROJECT ---------------------------------------------------------------
 
-   p  | Change Project                
-   i  | Show Project Info             
-   q  | Quit                          
+   p  | Change Project
+   i  | Show Project Info
+   q  | Quit
 
 --------------------------------------------------------------------------
   Infra tests: Layer-1 pytest (tests/infra_tests/), then project tests.

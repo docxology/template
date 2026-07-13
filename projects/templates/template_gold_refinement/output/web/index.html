@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Refinement of Gold: A Metallurgical Analogy for Scientific
 Manuscript Composition</title>
   <style>
@@ -238,7 +239,26 @@ Manuscript Composition</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -249,6 +269,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -287,34 +309,34 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -369,13 +391,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -390,13 +412,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -414,7 +444,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -422,11 +452,13 @@ a:hover {
 </style>
 </head>
 <body>
+<main id="main-content">
 <header id="title-block-header">
 <h1 class="title">Refinement of Gold: A Metallurgical Analogy for
 Scientific Manuscript Composition</h1>
 <p class="subtitle">From Ore to Nine-Nines Purity via Mega-Madlib Token
 Injection</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -453,35 +485,65 @@ class="toc-section-number">2.5</span> Open question pinned</a></li>
 class="toc-section-number">3</span> Methodology: The Refinery
 Pipeline</a>
 <ul>
+<li><a href="#research-design" id="toc-research-design"><span
+class="toc-section-number">3.1</span> Research design</a></li>
+<li><a href="#source-domain-construction-and-analogy-boundary"
+id="toc-source-domain-construction-and-analogy-boundary"><span
+class="toc-section-number">3.2</span> Source-domain construction and
+analogy boundary</a></li>
+<li><a href="#inputs-and-source-ownership"
+id="toc-inputs-and-source-ownership"><span
+class="toc-section-number">3.3</span> Inputs and source
+ownership</a></li>
 <li><a href="#stage-definitions" id="toc-stage-definitions"><span
-class="toc-section-number">3.1</span> Stage definitions</a></li>
-<li><a href="#purity-progression" id="toc-purity-progression"><span
-class="toc-section-number">3.2</span> Purity progression</a></li>
+class="toc-section-number">3.4</span> Stage definitions</a></li>
+<li><a href="#refinery-model-and-purity-measure"
+id="toc-refinery-model-and-purity-measure"><span
+class="toc-section-number">3.5</span> Refinery model and purity
+measure</a></li>
 <li><a href="#formalism-registry" id="toc-formalism-registry"><span
-class="toc-section-number">3.3</span> Formalism registry</a></li>
-<li><a href="#token-selection" id="toc-token-selection"><span
-class="toc-section-number">3.4</span> Token selection</a></li>
+class="toc-section-number">3.6</span> Formalism registry</a></li>
+<li><a href="#deterministic-token-composition"
+id="toc-deterministic-token-composition"><span
+class="toc-section-number">3.7</span> Deterministic token
+composition</a></li>
 <li><a href="#config-owned-lexicon" id="toc-config-owned-lexicon"><span
-class="toc-section-number">3.5</span> Config-owned lexicon</a></li>
-<li><a href="#karat-grading" id="toc-karat-grading"><span
-class="toc-section-number">3.6</span> Karat grading</a></li>
-<li><a href="#pipeline-phases" id="toc-pipeline-phases"><span
-class="toc-section-number">3.7</span> Pipeline phases</a></li>
-<li><a href="#implementation-trace" id="toc-implementation-trace"><span
-class="toc-section-number">3.8</span> Implementation trace</a></li>
-<li><a href="#adversarial-assay-layer"
-id="toc-adversarial-assay-layer"><span
-class="toc-section-number">3.9</span> Adversarial assay layer</a></li>
-<li><a href="#scientific-integrity-model"
-id="toc-scientific-integrity-model"><span
-class="toc-section-number">3.10</span> Scientific integrity
+class="toc-section-number">3.8</span> Config-owned lexicon</a></li>
+<li><a href="#derived-grading-vocabulary"
+id="toc-derived-grading-vocabulary"><span
+class="toc-section-number">3.9</span> Derived grading
+vocabulary</a></li>
+<li><a href="#execution-procedure" id="toc-execution-procedure"><span
+class="toc-section-number">3.10</span> Execution procedure</a></li>
+<li><a href="#traceability-and-artifact-lineage"
+id="toc-traceability-and-artifact-lineage"><span
+class="toc-section-number">3.11</span> Traceability and artifact
+lineage</a></li>
+<li><a href="#evaluation-and-acceptance-criteria"
+id="toc-evaluation-and-acceptance-criteria"><span
+class="toc-section-number">3.12</span> Evaluation and acceptance
+criteria</a>
+<ul>
+<li><a href="#adversarial-assay" id="toc-adversarial-assay"><span
+class="toc-section-number">3.12.1</span> Adversarial assay</a></li>
+<li><a href="#scientific-integrity-risk-model"
+id="toc-scientific-integrity-risk-model"><span
+class="toc-section-number">3.12.2</span> Scientific-integrity risk
 model</a></li>
+<li><a href="#multi-objective-purity"
+id="toc-multi-objective-purity"><span
+class="toc-section-number">3.12.3</span> Multi-objective purity</a></li>
+</ul></li>
+<li><a href="#reproducibility-and-validity-safeguards"
+id="toc-reproducibility-and-validity-safeguards"><span
+class="toc-section-number">3.13</span> Reproducibility and validity
+safeguards</a></li>
 </ul></li>
 <li><a href="#sec:results" id="toc-sec:results"><span
 class="toc-section-number">4</span> Results: Purity Progression and
 Karat Grading</a>
 <ul>
-<li><a href="#purity-progression-1" id="toc-purity-progression-1"><span
+<li><a href="#purity-progression" id="toc-purity-progression"><span
 class="toc-section-number">4.1</span> Purity progression</a></li>
 <li><a href="#karat-grading-scale" id="toc-karat-grading-scale"><span
 class="toc-section-number">4.2</span> Karat grading scale</a></li>
@@ -619,45 +681,54 @@ class="toc-section-number">10.2</span> Fork checklist</a></li>
 </nav>
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
-<p>This paper presents a metallurgical analogy for scientific manuscript
-composition, mapping gold-refining stages onto the template
-infrastructure pipeline. The refinery processes manuscript ore through 5
-stages - from raw draft (9K, ~37.5% purity) through smelting, assaying,
-and cupellation - to an internal nine-nines certification target
-(99.9999999%). The source domain is grounded in pre-1800 accounts of
-metals, assaying, parting, fineness, and marking
-[pliny_natural_history_33; biringuccio_pirotechnia_1540;
-agricola_de_re_metallica_1556; badcock_touchstone_1678;
-cramer_assaying_metals_1741], while the target domain is a reproducible
-computational manuscript rather than a claim about universal writing
-quality.</p>
-<p>The analogy is <strong>load-bearing</strong>, not merely rhetorical:
-each metallurgical stage corresponds to a real template-infrastructure
-operation. This makes the paper an explicit structure-mapping exercise
-rather than a loose metaphor [gentner1983structure; hesse1966models].
-Smelting removes dross (filler, unsupported claims); assaying tests
-claims against evidence; cupellation resolves cross-references;
-certification validates the full pipeline. The mega-madlib token engine
-selects 24 domain tokens deterministically via seeded SHA-256 digest
-over category inventories, ensuring every prose element is traceable and
-reproducible.</p>
+<p>This paper presents a deterministic, artifact-based methods
+demonstration that maps gold-refining stages onto a reproducible
+manuscript pipeline. The executable refinery processes manuscript ore
+through 5 ordered stages—from raw draft (9K, approximately 37.5% purity)
+through smelting, assaying, and cupellation—to a local nine-nines
+certification target (99.9999999%). Pre-1800 accounts ground the
+relations among extraction, assay, parting, fineness, and marking <span
+class="citation"
+data-cites="pliny_natural_history_33 biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 cramer_assaying_metals_1741">(<a
+href="#ref-pliny_natural_history_33" role="doc-biblioref">Pliny the
+Elder c. 77 CE</a>; <a href="#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>. They do not establish a universal historical sequence
+or an empirical scale of writing quality.</p>
+<p>The analogy is load-bearing in a restricted, testable sense: each
+stage has an executable owner, ordered input and output states,
+generated evidence, and a failure condition. A reverse assay identifies
+the shortest ordered stage prefix that reaches a requested target, while
+a multi-objective purity vector keeps stage completion, claim support,
+token provenance, and figure quality distinct. The mega-madlib engine
+selects 24 configured terms by a seeded SHA-256 digest, recording each
+choice with its slot, category, ordinal, section, and source path.</p>
 <p>The contribution is also formalized: 7 equation-backed formalisms
 define purity, monotone refinement, token selection, claim support, gate
 vectors, and certification. This positions the manuscript as a
 research-compendium artifact in the lineage of literate programming,
-dynamic reports, and reproducible computational research
-[knuth1984literate; leisch2002sweave; peng2011reproducible;
-sandve2013ten]. The project-local claim assay reports 9/9 supported
+dynamic reports, and reproducible computational research <span
+class="citation"
+data-cites="knuth1984literate leisch2002sweave peng2011reproducible sandve2013ten">(<a
+href="#ref-knuth1984literate" role="doc-biblioref">Knuth 1984</a>; <a
+href="#ref-leisch2002sweave" role="doc-biblioref">Leisch 2002</a>; <a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>; <a
+href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
+2013</a>)</span>. The project-local claim assay reports 9/9 supported
 contribution claims (100.00%, passing), while the integrity model
 exposes 9 source-owned risk dimensions and the shared template evidence
-registry contributes 0 source-tiered facts when the validation gate has
-run.</p>
-<p><strong>Results:</strong> The refinery achieves final purity of
-99.9999999% (nine-nines) (24K (nine-nines certified)) with a total
-purity gain of 90.00% across all stages. Nine-nines certification: Yes.
-The purity progression is shown in fig. <a
-href="#fig:purity_progression">1</a>, and the karat grading scale in
-fig. <a href="#fig:karat_grading">2</a>.</p>
+registry contributes 283 source-tiered facts when the validation gate
+has run.</p>
+<p><strong>Results:</strong> The canonical run reaches 99.9999999%
+(nine-nines) (24K (nine-nines certified)), with a designed total gain of
+90.00%; local nine-nines predicate: Yes. The project-local claim assay
+reports 9/9 registered claims supported. These are internal workflow
+results, not estimates of reader-perceived quality, scientific truth,
+security compliance, or external validity.</p>
 <p><strong>Keywords:</strong> gold refining, manuscript composition,
 mega-madlib, token injection, scientific purity, assaying, karat
 grading, security assay, supply-chain provenance</p>
@@ -672,20 +743,39 @@ extraction, and touchstone testing as recognizable ancient practices;
 Biringuccio’s <em>De la Pirotechnia</em> and Agricola’s <em>De re
 metallica</em> turn mining, smelting, cupellation, assaying, and parting
 into printed technical sequences; Cramer’s assay manual codifies the
-theory/practice split of metal testing [pliny_natural_history_33;
-biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
-cramer_assaying_metals_1741]. Hallmarking regimes make the verification
-layer socially and legally visible: a seventeenth-century manual for
-goldsmiths frames “true standard allay,” statutes, weights, and
-counterfeit coin detection as public controls, while the Goldsmiths’
-Company Assay Office traces the London leopard’s-head mark, maker’s
-mark, and date-letter system through pre-1800 milestones
-[badcock_touchstone_1678; goldsmiths_hallmarking_history]. This paper
-asks: can that historically plural pipeline serve as a
-<strong>load-bearing</strong> operational model for scientific
-manuscript composition - not merely a decorative analogy, but a real
-mapping from metallurgical stages to template-infrastructure
+theory/practice split of metal testing <span class="citation"
+data-cites="pliny_natural_history_33 biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 cramer_assaying_metals_1741">(<a
+href="#ref-pliny_natural_history_33" role="doc-biblioref">Pliny the
+Elder c. 77 CE</a>; <a href="#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="#ref-cramer_assaying_metals_1741"
+role="doc-biblioref">Cramer 1741</a>)</span>. Hallmarking regimes make
+the verification layer socially and legally visible: a
+seventeenth-century manual for goldsmiths frames “true standard allay,”
+statutes, weights, and counterfeit coin detection as public controls,
+while the Goldsmiths’ Company Assay Office traces the London
+leopard’s-head mark, maker’s mark, and date-letter system through
+pre-1800 milestones <span class="citation"
+data-cites="badcock_touchstone_1678 goldsmiths_hallmarking_history">(<a
+href="#ref-badcock_touchstone_1678" role="doc-biblioref">W. B. (William
+Badcock) 1678</a>; <a href="#ref-goldsmiths_hallmarking_history"
+role="doc-biblioref">The Goldsmiths’ Company Assay Office
+2026</a>)</span>. This paper asks: can that historically plural pipeline
+serve as a <strong>load-bearing</strong> operational model for
+scientific manuscript composition - not merely a decorative analogy, but
+a real mapping from metallurgical stages to template-infrastructure
 operations?</p>
+<p>We operationalize that question through three narrower research
+questions. <strong>RQ1:</strong> Can each analogical stage be bound to
+an ordered executable transformation with a source owner and failure
+condition? <strong>RQ2:</strong> Can prose choices, claims, equations,
+and figures be regenerated with inspectable provenance?
+<strong>RQ3:</strong> Can the workflow state its stopping boundary
+clearly enough that local certification is not mistaken for domain
+truth, historical authority, or security compliance? The paper answers
+these questions by constructing and validating one exemplar; it does not
+compare writing interventions or estimate effects on readers.</p>
 <h2 data-number="2.1" id="the-problem"><span
 class="header-section-number">2.1</span> The problem</h2>
 <p>A scientific manuscript accumulates impurities through its drafting
@@ -694,9 +784,15 @@ and citation gaps. The template repository provides infrastructure to
 detect and remove these impurities - validation gates, cross-reference
 checks, evidence registries, and coverage enforcement. This aligns with
 a broader reproducible-research literature that treats code, data,
-environment, and provenance as first-class scientific materials
-[buckheit_donoho_1995; peng2011reproducible; stodden2011default;
-sandve2013ten]. What this exemplar adds is a unifying model that names
+environment, and provenance as first-class scientific materials <span
+class="citation"
+data-cites="buckheit_donoho_1995 peng2011reproducible stodden2011default sandve2013ten">(<a
+href="#ref-buckheit_donoho_1995" role="doc-biblioref">Buckheit and
+Donoho 1995</a>; <a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>; <a href="#ref-stodden2011default"
+role="doc-biblioref">Stodden et al. 2011</a>; <a
+href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
+2013</a>)</span>. What this exemplar adds is a unifying model that names
 the purification stages and measures local purity progression.</p>
 <p>This exemplar treats source tier and evidence spine as first-class
 manuscript objects. A claim is not considered refined because it sounds
@@ -704,8 +800,11 @@ plausible; it is refined when its source path, generated variable,
 figure label, citation key, and validation gate can all be inspected.
 That is a narrower claim than empirical truth: reproducibility can set a
 minimum computational standard without replacing independent
-replication, domain expertise, or peer review [peng2011reproducible;
-ioannidis2005false].</p>
+replication, domain expertise, or peer review <span class="citation"
+data-cites="peng2011reproducible ioannidis2005false">(<a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>; <a
+href="#ref-ioannidis2005false" role="doc-biblioref">Ioannidis
+2005</a>)</span>.</p>
 <h2 data-number="2.2" id="the-analogy-as-pipeline"><span
 class="header-section-number">2.2</span> The analogy as pipeline</h2>
 <p>We map five gold-refining stages onto manuscript operations:</p>
@@ -727,10 +826,14 @@ class="header-section-number">2.2</span> The analogy as pipeline</h2>
 </ol></li>
 </ul>
 <p>Each stage has a metallurgical operation, a manuscript operation, an
-input purity, and an output purity. Purity increases monotonically — a
-constraint enforced by
-<code>src/purity.py::assert_monotone_increase</code> and tested in
-<code>tests/test_refinery.py</code>.</p>
+input purity, and an output purity. Purity increases monotonically,
+stage order is sequential, and each stage input must equal the preceding
+output. These invariants are enforced by
+<code>src/refinery.py::run_refinery</code> and
+<code>src/purity.py::assert_monotone_increase</code> and exercised by
+positive and negative tests. <code>stages_to_target()</code> supplies
+the inverse query: given a target, return the shortest valid prefix
+rather than selecting later stages out of order.</p>
 <h2 data-number="2.3" id="mega-madlib-token-engine"><span
 class="header-section-number">2.3</span> Mega-madlib token engine</h2>
 <p>The manuscript’s domain vocabulary is not hand-authored prose but
@@ -740,8 +843,12 @@ lexicon categories. Every token choice is reproducible, traceable to its
 config key, and bound to a manuscript section. In this respect the
 exemplar extends literate programming and dynamic statistical reporting:
 code, data, and prose are kept synchronized, but the prose-level choices
-are also made inspectable [knuth1984literate; leisch2002sweave;
-marwick2018packaging].</p>
+are also made inspectable <span class="citation"
+data-cites="knuth1984literate leisch2002sweave marwick2018packaging">(<a
+href="#ref-knuth1984literate" role="doc-biblioref">Knuth 1984</a>; <a
+href="#ref-leisch2002sweave" role="doc-biblioref">Leisch 2002</a>; <a
+href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
+2018</a>)</span>.</p>
 <p>The deeper token inventory is deliberately spread across the paper.
 Introduction tokens name the integrity frame; methods tokens bind
 evidence validation, figure registry check, and citation validation to
@@ -767,60 +874,127 @@ class="header-section-number">2.5</span> Open question pinned</h2>
 operationalizes each stage against real infrastructure (load-bearing).
 Analogy theory gives the discipline for that claim: preserve relational
 structure, declare negative analogies, and do not transfer unsupported
-source-domain properties into the target domain [gentner1983structure;
-hesse1966models; holyoak_thagard_1995]. The open question is not whether
-to use the analogy, but where the mapping breaks - a question the
-discussion addresses.</p>
+source-domain properties into the target domain <span class="citation"
+data-cites="gentner1983structure hesse1966models holyoak_thagard_1995">(<a
+href="#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
+<a href="#ref-hesse1966models" role="doc-biblioref">Hesse 1966</a>; <a
+href="#ref-holyoak_thagard_1995" role="doc-biblioref">Holyoak and
+Thagard 1995</a>)</span>. The open question is not whether to use the
+analogy, but where the mapping breaks - a question the discussion
+addresses.</p>
 <hr />
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology: The Refinery
 Pipeline</h1>
-<p>The refinery pipeline consists of 5 canonical stages, each mapping a
-metallurgical operation to a manuscript-composition operation. The
-pipeline is implemented in <code>src/refinery.py</code> and validated by
-<code>src/purity.py</code>. The methods surface now has four coupled
-layers: the refinery stages, the mega-madlib token plan, the generated
-formalism registry, and the scholarship boundary that determines which
-claims may be generalized beyond this exemplar.</p>
-<p>Methodologically, the paper treats composition as part of a research
-compendium: authored sources, executable scripts, generated reports,
-figures, and rendered manuscript outputs are separated but linked
-[marwick2018packaging]. That design follows the executable-paper and
-notebook traditions in which narrative is coupled to runnable analysis
-rather than copied from it [leisch2002sweave; rule2019jupyter]. The
-novelty claimed here is narrower: the token-level narrative choices are
-deterministic and provenance-bearing, not that a template can validate
-scientific truth.</p>
+<h2 data-number="3.1" id="research-design"><span
+class="header-section-number">3.1</span> Research design</h2>
+<p>We conducted a deterministic, artifact-based methods demonstration.
+The research object is one executable manuscript compendium comprising
+authored configuration and Markdown, project source code, generated data
+and reports, registered figures, and rendered publication files. The
+unit of transformation is a refinery stage; the unit of lexical
+composition is a configured token slot; the unit of evidentiary
+evaluation is a registered claim or gate. No human participants,
+stochastic sampling, trained model, or inferential statistical test is
+involved.</p>
+<p>The method asks whether a metallurgical stage structure can be
+implemented as an inspectable manuscript workflow. It does
+<strong>not</strong> test whether the resulting purity values predict
+reader judgments, scientific validity, or editorial acceptance.
+Accordingly, all reported quantities are properties of this executable
+exemplar: stage outputs, token selections, registry contents, and
+validator outcomes.</p>
+<p>The implementation has four coupled layers: (1) a 5-stage refinery
+model, (2) a deterministic mega-madlib token plan, (3) source-owned
+formalisms and evidence registries, and (4) validation gates that
+constrain certification language. This separation follows
+research-compendium practice, in which narrative, code, data,
+environment, and outputs remain distinct but linked <span
+class="citation" data-cites="marwick2018packaging">(<a
+href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
+2018</a>)</span>. It also follows executable-paper and notebook
+traditions in coupling narrative to runnable analysis rather than
+copying results into prose <span class="citation"
+data-cites="leisch2002sweave rule2019jupyter">(<a
+href="#ref-leisch2002sweave" role="doc-biblioref">Leisch 2002</a>; <a
+href="#ref-rule2019jupyter" role="doc-biblioref"><span
+class="nocase">Rule et al.</span> 2019</a>)</span>. The narrower
+contribution here is provenance at the token and claim levels; the
+workflow does not purport to validate scientific truth.</p>
+<h2 data-number="3.2"
+id="source-domain-construction-and-analogy-boundary"><span
+class="header-section-number">3.2</span> Source-domain construction and
+analogy boundary</h2>
 <p>Structured reporting guidelines provide the closest scholarly
 analogue for the gate layer, but they also set its limit. CONSORT,
 STROBE, PRISMA, ARRIVE, and the EQUATOR Network define field-specific
 reporting items so a manuscript can be inspected, appraised, and in some
-cases replicated more easily [schulz2010consort; vonelm2007strobe;
-page2021prisma; percie_du_sert2020arrive;
-equator_network_reporting_guidelines]. In this exemplar, token coverage,
-evidence registration, and render validation play a similar internal
-role: they make omissions visible and bind declarations to artifacts.
-They do not test whether an external study was designed well, executed
-correctly, or substantively true.</p>
-<p>The metallurgical side of the method is deliberately historical
-rather than modern-industrial. Pre-1800 sources support the relational
-structure - extraction, smelting or refining, assay,
-parting/cupellation, fineness, and public marking - but not a claim that
-all regions used the same sequence or that early practitioners held
-modern chemical theories. Pliny is useful for extraction and touchstone
-context; Biringuccio and Agricola are useful for staged metallurgical
-operations; Badcock’s <em>Touch-stone</em> and the Goldsmiths’ Company
-chronology are useful for standards, weights, statutes, and marks;
-Cramer is useful for eighteenth-century assay discipline
-[pliny_natural_history_33; biringuccio_pirotechnia_1540;
-agricola_de_re_metallica_1556; badcock_touchstone_1678;
-goldsmiths_hallmarking_history; cramer_assaying_metals_1741]. The
-normalized five-stage pipeline below is therefore an analogy-preserving
-abstraction, not a historical claim that “ore -&gt; smelting -&gt;
-assaying -&gt; cupellation -&gt; certification” was a universal pre-1800
-production recipe.</p>
-<h2 data-number="3.1" id="stage-definitions"><span
-class="header-section-number">3.1</span> Stage definitions</h2>
+cases replicated more easily <span class="citation"
+data-cites="schulz2010consort vonelm2007strobe page2021prisma percie_du_sert2020arrive equator_network_reporting_guidelines">(<a
+href="#ref-schulz2010consort" role="doc-biblioref">Schulz et al.
+2010</a>; <a href="#ref-vonelm2007strobe" role="doc-biblioref">Elm et
+al. 2007</a>; <a href="#ref-page2021prisma" role="doc-biblioref">Page et
+al. 2021</a>; <a href="#ref-percie_du_sert2020arrive"
+role="doc-biblioref">Percie du Sert et al. 2020</a>; <a
+href="#ref-equator_network_reporting_guidelines"
+role="doc-biblioref">EQUATOR Network 2026</a>)</span>. In this exemplar,
+token coverage, evidence registration, and render validation play a
+similar internal role: they make omissions visible and bind declarations
+to artifacts. They do not test whether an external study was designed
+well, executed correctly, or substantively true.</p>
+<p>The source domain was constructed from pre-1800 descriptions of
+extraction, smelting or refining, assay, parting/cupellation, fineness,
+and public marking. Pliny supplies extraction and touchstone context;
+Biringuccio and Agricola describe staged metallurgical operations;
+Badcock and the Goldsmiths’ Company chronology document standards,
+weights, statutes, and marks; and Cramer presents assay as a disciplined
+relation between theory and practice <span class="citation"
+data-cites="pliny_natural_history_33 biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 goldsmiths_hallmarking_history cramer_assaying_metals_1741">(<a
+href="#ref-pliny_natural_history_33" role="doc-biblioref">Pliny the
+Elder c. 77 CE</a>; <a href="#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="#ref-goldsmiths_hallmarking_history" role="doc-biblioref">The
+Goldsmiths’ Company Assay Office 2026</a>; <a
+href="#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>.</p>
+<p>We normalized these historically plural practices into a five-stage
+relational model. The inclusion criterion was functional relevance to
+one of five target-domain operations: acquiring draft material, removing
+evident defects, testing claims, resolving document integrity, or
+recording a terminal validation state. The ordering preserves the
+refinement relation needed by the target workflow; it is not evidence
+that every historical workshop used this sequence or modern chemical
+theory. The analogy therefore transfers relations among separation,
+test, refinement, and marking—not regulatory authority, material
+equivalence, or empirical measures of prose quality <span
+class="citation" data-cites="gentner1983structure hesse1966models">(<a
+href="#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
+<a href="#ref-hesse1966models" role="doc-biblioref">Hesse
+1966</a>)</span>.</p>
+<h2 data-number="3.3" id="inputs-and-source-ownership"><span
+class="header-section-number">3.3</span> Inputs and source
+ownership</h2>
+<p>The run begins from three authored inputs:
+<code>manuscript/config.yaml</code>, the Markdown section shells in
+<code>manuscript/</code>, and executable functions in <code>src/</code>.
+Configuration owns the seed, lexicon inventories, slot declarations,
+contribution claims, audit rules, and security-assay rows. Source
+modules own stage calculations, token selection, formalism records,
+evidence aggregation, and figure specifications. Markdown owns
+interpretation and cross-references but consumes computed values only
+through generated variables.</p>
+<p>Generated files are observations, not editing surfaces. The analysis
+writes the refinery result, token plan, claim-support registry,
+integrity summaries, and figure-quality records; manuscript hydration
+then resolves variables into disposable Markdown. This ownership rule
+prevents a reported number or selected phrase from being corrected only
+in the rendered paper while its computational source remains
+unchanged.</p>
+<h2 data-number="3.4" id="stage-definitions"><span
+class="header-section-number">3.4</span> Stage definitions</h2>
 <table>
 <colgroup>
 <col style="width: 5%" />
@@ -876,27 +1050,40 @@ class="header-section-number">3.1</span> Stage definitions</h2>
 </tr>
 </tbody>
 </table>
-<h2 data-number="3.2" id="purity-progression"><span
-class="header-section-number">3.2</span> Purity progression</h2>
+<h2 data-number="3.5" id="refinery-model-and-purity-measure"><span
+class="header-section-number">3.5</span> Refinery model and purity
+measure</h2>
 <p>The purity sequence across all stages is: 0.100000, 0.375000,
 0.750000, 0.916700, 0.999000, 1.000000</p>
-<p>Purity is strictly increasing — enforced by
-<code>assert_monotone_increase()</code> which raises
-<code>ValueError</code> if any stage’s output purity does not exceed its
-input. Formally, for stages <span class="math inline">\(s_1, \ldots,
-s_n\)</span> with input purity <span
-class="math inline">\(p_{\text{in}}^{(i)}\)</span> and output purity
-<span class="math inline">\(p_{\text{out}}^{(i)}\)</span>:</p>
+<p>Each stage record contains an order, a metallurgical operation, its
+manuscript analogue, an input purity, and an output purity. The
+canonical values are design parameters declared in
+<code>src/refinery.py</code>; they are not estimated from a corpus or
+calibrated against external ratings. Their methodological role is to
+create a transparent ordinal progression on the bounded interval <span
+class="math inline">\([0,1]\)</span>.</p>
+<p>The primary invariants are strict monotonicity, sequential stage
+order, and adjacent-state continuity.
+<code>assert_monotone_increase()</code> raises <code>ValueError</code>
+if a state fails to exceed its predecessor; <code>run_refinery()</code>
+also rejects empty pipelines, nonsequential order, and any stage whose
+input differs from the preceding output. For stages <span
+class="math inline">\(s_1, \ldots, s_n\)</span>:</p>
 <p><span class="math display">\[
 p_{\text{out}}^{(i)} &gt; p_{\text{in}}^{(i)} \quad \text{and} \quad
 p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
 \ldots, n-1\}
 \]</span></p>
-<p>The full purity progression is shown in fig. <a
-href="#fig:purity_progression">1</a> (see sec. <a
-href="#sec:results">4</a>).</p>
-<h2 data-number="3.3" id="formalism-registry"><span
-class="header-section-number">3.3</span> Formalism registry</h2>
+<p>The reverse-assay function <code>stages_to_target()</code> returns
+the shortest ordered prefix whose terminal output reaches a requested
+purity. Prefix restriction is essential: later stages depend on earlier
+states and cannot be selected as an unordered set. The full progression
+is reported in fig. <a href="#fig:purity_progression">1</a> (see sec. <a
+href="#sec:results">4</a>). Because the values are constructed, the
+analysis is descriptive and deterministic; no uncertainty interval or
+significance test is appropriate.</p>
+<h2 data-number="3.6" id="formalism-registry"><span
+class="header-section-number">3.6</span> Formalism registry</h2>
 <p>The formal layer is generated from <code>src/formalisms.py</code>,
 not hand-numbered prose. tbl. <a href="#tbl:formalism_registry">1</a>
 lists the source evidence for each equation, and the equation blocks
@@ -1025,8 +1212,9 @@ validator(a) \land boundary(a)
 <p>The adversarial assay defines scope and evidence requirements; it is
 not proof of compliance or live scan findings. Source:
 <code>src/security_assay.py::build_security_assay</code>.</p>
-<h2 data-number="3.4" id="token-selection"><span
-class="header-section-number">3.4</span> Token selection</h2>
+<h2 data-number="3.7" id="deterministic-token-composition"><span
+class="header-section-number">3.7</span> Deterministic token
+composition</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
 <p><span class="math display">\[
@@ -1034,15 +1222,25 @@ categories using a deterministic digest:</p>
 \text{slot} \mid \text{category} \mid \text{ordinal} \mid
 \text{inventory}\right)[:12], 16\right) \mod n
 \]</span></p>
-<p>where <span class="math inline">\(n\)</span> is the size of the
-lexicon category inventory. Selected metallurgical terms: assaying,
-parting, smelting. Selected manuscript terms: evidence, evidence. The
-same digest rule is formalized in eq. <a href="#eq:token_digest">3</a>,
-while the gate vocabulary for this section binds evidence validation,
-figure registry check, and citation validation to concrete validation
-surfaces.</p>
-<h2 data-number="3.5" id="config-owned-lexicon"><span
-class="header-section-number">3.5</span> Config-owned lexicon</h2>
+<p>where <span class="math inline">\(n\)</span> is the inventory size.
+For each declared slot, the procedure concatenates the seed, slot name,
+category, one-based ordinal, and the complete ordered inventory; hashes
+the UTF-8 string; converts the first 12 hexadecimal characters to an
+integer; and reduces it modulo <span class="math inline">\(n\)</span>.
+Including the complete inventory makes selection sensitive to both
+membership and order. Replaying the same configuration reproduces the
+same plan; changing the seed, slot specification, or inventory may
+change it.</p>
+<p>Each selected value is recorded with its variable name, slot,
+category, section, ordinal, and configuration path. This record permits
+exact replay and source tracing but does not imply that the selected
+synonym is semantically superior. Selected metallurgical terms are
+assaying, parting, and smelting; selected manuscript terms are evidence
+and evidence. eq. <a href="#eq:token_digest">3</a> formalizes the rule,
+while evidence validation, figure registry check, and citation
+validation name the corresponding validation surfaces.</p>
+<h2 data-number="3.8" id="config-owned-lexicon"><span
+class="header-section-number">3.8</span> Config-owned lexicon</h2>
 <table>
 <colgroup>
 <col style="width: 40%" />
@@ -1099,14 +1297,21 @@ class="header-section-number">3.5</span> Config-owned lexicon</h2>
 </tr>
 </tbody>
 </table>
-<h2 data-number="3.6" id="karat-grading"><span
-class="header-section-number">3.6</span> Karat grading</h2>
+<h2 data-number="3.9" id="derived-grading-vocabulary"><span
+class="header-section-number">3.9</span> Derived grading vocabulary</h2>
 <p>Karat grades map purity fractions to a gold-fineness vocabulary used
 here as an analogy surface. The pre-1800 evidence supports fineness as a
 regulated testing and marking problem, but not the modern nine-nines
-target used by this local software predicate [badcock_touchstone_1678;
-goldsmiths_hallmarking_history; cramer_assaying_metals_1741;
-marsden_house_2006; lbma_good_delivery_rules]:</p>
+target used by this local software predicate <span class="citation"
+data-cites="badcock_touchstone_1678 goldsmiths_hallmarking_history cramer_assaying_metals_1741 marsden_house_2006 lbma_good_delivery_rules">(<a
+href="#ref-badcock_touchstone_1678" role="doc-biblioref">W. B. (William
+Badcock) 1678</a>; <a href="#ref-goldsmiths_hallmarking_history"
+role="doc-biblioref">The Goldsmiths’ Company Assay Office 2026</a>; <a
+href="#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>; <a href="#ref-marsden_house_2006" role="doc-biblioref">Marsden
+and House 2006</a>; <a href="#ref-lbma_good_delivery_rules"
+role="doc-biblioref">London Bullion Market Association
+2026</a>)</span>:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
 <li>18K = 75.0% (smelting stage)</li>
@@ -1114,15 +1319,15 @@ marsden_house_2006; lbma_good_delivery_rules]:</p>
 <li>24K = 99.9% (cupellation stage)</li>
 <li>Nine-nines = 99.9999999% (certification stage)</li>
 </ul>
-<p>The mapping is implemented in
-<code>src/purity.py::karat_for_purity()</code>. The final nine-nines
-target is a deliberately stringent local certification predicate, not an
-assertion that all gold markets or manuscript-quality regimes use that
-threshold. The karat grading chart is shown in fig. <a
-href="#fig:karat_grading">2</a> (see sec. <a
+<p><code>src/purity.py::karat_for_purity()</code> assigns the highest
+configured grade whose threshold does not exceed the stage purity. The
+nine-nines label is a deliberately stringent local predicate. It is
+neither a continuous measure of manuscript quality nor an assertion
+about a universal gold-market threshold. The grading chart appears in
+fig. <a href="#fig:karat_grading">2</a> (see sec. <a
 href="#sec:results">4</a>).</p>
-<h2 data-number="3.7" id="pipeline-phases"><span
-class="header-section-number">3.7</span> Pipeline phases</h2>
+<h2 data-number="3.10" id="execution-procedure"><span
+class="header-section-number">3.10</span> Execution procedure</h2>
 <table>
 <colgroup>
 <col style="width: 15%" />
@@ -1202,12 +1407,30 @@ claim boundaries</td>
 </tr>
 </tbody>
 </table>
-<p>The pipeline table is intentionally operational rather than
-decorative: a fork that changes the stages must update the source
-function, generated variables, figures, and validation gates
-together.</p>
-<h2 data-number="3.8" id="implementation-trace"><span
-class="header-section-number">3.8</span> Implementation trace</h2>
+<p>For each run, the procedure is:</p>
+<ol type="1">
+<li>Parse and validate the configuration, including lexicon categories,
+slots, claims, audit rules, and policy declarations.</li>
+<li>Execute the canonical stage sequence and reject discontinuous,
+nonmonotone, empty, or misordered refinery definitions.</li>
+<li>Generate the token plan and record every selection with its
+configuration provenance.</li>
+<li>Build claim-support, integrity, formalism, adversarial-assay, and
+figure registries from their source owners.</li>
+<li>Write analysis artifacts and manuscript variables, then hydrate the
+Markdown section shells.</li>
+<li>Render publication formats and run reference, evidence, figure, and
+document validators.</li>
+<li>Permit certification language only when the required local
+predicates and gates pass.</li>
+</ol>
+<p>The phase table identifies the input, transformation, output, and
+guard for each step. A fork that modifies a stage or claim must update
+its source definition, generated variables, visualizations, and
+validators together.</p>
+<h2 data-number="3.11" id="traceability-and-artifact-lineage"><span
+class="header-section-number">3.11</span> Traceability and artifact
+lineage</h2>
 <p>The implementation circuit shown in fig. <a
 href="#fig:implementation_circuit">9</a> is the method’s wiring diagram.
 It distinguishes three ownership layers. First, authored sources own
@@ -1220,14 +1443,39 @@ tokens, unsupported facts, missing citations, broken references, and
 invalid PDFs block certification. This is the manuscript analogue of
 provenance-aware workflow design: entities, activities, agents, and
 generated outputs are kept traceable so readers can assess reliability
-rather than infer it from polished prose [moreau2013prov;
-belhajjame2015ontologies].</p>
+rather than infer it from polished prose <span class="citation"
+data-cites="moreau2013prov belhajjame2015ontologies">(<a
+href="#ref-moreau2013prov" role="doc-biblioref"><span
+class="nocase">Moreau et al.</span> 2013</a>; <a
+href="#ref-belhajjame2015ontologies" role="doc-biblioref"><span
+class="nocase">Belhajjame et al.</span> 2015</a>)</span>.</p>
 <p>This split keeps the gold metaphor honest. A fork is allowed to
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
 consequences.</p>
-<h2 data-number="3.9" id="adversarial-assay-layer"><span
-class="header-section-number">3.9</span> Adversarial assay layer</h2>
+<h2 data-number="3.12" id="evaluation-and-acceptance-criteria"><span
+class="header-section-number">3.12</span> Evaluation and acceptance
+criteria</h2>
+<p>Evaluation is criterion-based rather than comparative. The run is
+assessed against predeclared local invariants: complete token hydration,
+valid stage ordering and monotonicity, registered claim support,
+resolvable citations and cross-references, registry-aligned figures,
+successful rendering, and explicit security-claim boundaries. eq. <a
+href="#eq:integrity_vector">5</a> retains these outcomes as a vector so
+one strong surface cannot compensate for a failed required gate. eq. <a
+href="#eq:claim_support">4</a> reports the proportion of locally
+registered contribution claims with resolvable evidence pointers; it
+does not score the truth or importance of those claims.</p>
+<p>The terminal predicate in eq. <a
+href="#eq:certification_predicate">6</a> requires the configured final
+purity threshold and successful required gates. Consequently,
+“certified” means internally consistent and reproducibly generated under
+this project’s declared rules. It does not mean peer reviewed,
+externally replicated, historically authoritative, secure, or compliant
+with a reporting standard. Detailed probes and audit rules are reported
+in sec. <a href="#sec:evaluation">9</a>.</p>
+<h3 data-number="3.12.1" id="adversarial-assay"><span
+class="header-section-number">3.12.1</span> Adversarial assay</h3>
 <p>The implementation trace handles accidental drift: missing tokens,
 unsupported claims, malformed citations, stale figures, or broken
 renders. A security assay adds a different question: could the
@@ -1235,23 +1483,33 @@ manuscript sound certified while omitting threat scope, supply-chain
 provenance, or scan evidence? The assay therefore treats zero trust,
 secure software development, supply-chain provenance, attack-path
 modeling, SBOM standards, and secure-by-design guidance as
-boundary-setting standards rather than proof of compliance
-[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
-sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
-cisa_secure_by_design].</p>
-<p>This pass implements that layer as source-owned rows in
-<code>gold_refinement.security_assay</code> and generated variables from
-<code>src/security_assay.py</code>. It does not run Codex Security or
-Deep Security Scan, and it does not report vulnerability findings.
-Instead, eq. <a href="#eq:adversarial_assay">7</a> requires every
-adversarial assay row to name a threat, standard or guidance source,
-local evidence surface, validator, and claim boundary before
-certification language is allowed to expand beyond ordinary template
-gates. The generated assay table appears in tbl. <a
-href="#tbl:security_assay">5</a>.</p>
-<h2 data-number="3.10" id="scientific-integrity-model"><span
-class="header-section-number">3.10</span> Scientific integrity
-model</h2>
+boundary-setting standards rather than proof of compliance <span
+class="citation"
+data-cites="nist_sp800_207_zero_trust nist_sp800_218_ssdf slsa_v1_2 sigstore_docs mitre_attack cyclonedx_spec spdx_spec cisa_secure_by_design">(<a
+href="#ref-nist_sp800_207_zero_trust" role="doc-biblioref">National
+Institute of Standards and Technology 2020</a>, <a
+href="#ref-nist_sp800_218_ssdf" role="doc-biblioref">2022</a>; <a
+href="#ref-slsa_v1_2" role="doc-biblioref">Open Source Security
+Foundation 2026</a>; <a href="#ref-sigstore_docs"
+role="doc-biblioref">Sigstore 2026</a>; <a href="#ref-mitre_attack"
+role="doc-biblioref">MITRE 2026</a>; <a href="#ref-cyclonedx_spec"
+role="doc-biblioref">CycloneDX 2026</a>; <a href="#ref-spdx_spec"
+role="doc-biblioref">SPDX 2026</a>; <a href="#ref-cisa_secure_by_design"
+role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
+2026</a>)</span>.</p>
+<p>The assay is implemented as source-owned rows in
+<code>gold_refinement.security_assay</code> and generated records from
+<code>src/security_assay.py</code>. Each row must name a threat,
+standard or guidance source, local evidence surface, validator, and
+claim boundary, as specified by eq. <a
+href="#eq:adversarial_assay">7</a> and reported in tbl. <a
+href="#tbl:security_assay">5</a>. This study did not run Codex Security
+or Deep Security Scan and reports no vulnerability findings.
+Completeness of the assay schema therefore supports scope disclosure,
+not security compliance.</p>
+<h3 data-number="3.12.2" id="scientific-integrity-risk-model"><span
+class="header-section-number">3.12.2</span> Scientific-integrity risk
+model</h3>
 <p>The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
 names the failure class, severity, detectability, evidence surface,
@@ -1344,10 +1602,12 @@ dimensions.</caption>
 </tr>
 </tbody>
 </table>
-<p>The residual-risk score is deliberately simple: high severity and low
-detectability raise priority. The score is not a universal risk model;
-it is a local audit heuristic used to decide where a fork must add
-validators before expanding claims.</p>
+<p>The residual-risk score is an ordinal prioritization heuristic:
+higher severity and lower detectability raise review priority. It was
+not fitted to incident data, validated against external judgments, or
+designed for comparison across projects. Its sole use is to identify
+where this exemplar—or a fork—needs stronger ownership, evidence, or
+validation before expanding a claim.</p>
 <table id="tbl:integrity_owners">
 <caption>Table 3: Integrity dimensions by owning surface.</caption>
 <thead>
@@ -1400,20 +1660,57 @@ support rates, and figure labels belong to regenerated reports and
 registries; the manuscript consumes them through variables. Authored
 prose may interpret those values, but it should not silently restate
 them as hand-maintained facts.</p>
+<h3 data-number="3.12.3" id="multi-objective-purity"><span
+class="header-section-number">3.12.3</span> Multi-objective purity</h3>
+<p>Scalar stage purity is retained only as the state variable of the
+refinery analogy. <code>src/purity.py::PurityVector</code> separately
+records stage completion, claim support, token provenance, and figure
+quality on <span class="math inline">\([0,1]\)</span>. The vector
+exposes its weakest dimension and a conjunctive all-complete predicate
+but intentionally defines no weighted average. This prevents a perfect
+render or terminal stage value from numerically compensating for
+unsupported claims or missing provenance. Weighting these dimensions
+would require an external validation study and is outside the present
+design.</p>
+<h2 data-number="3.13"
+id="reproducibility-and-validity-safeguards"><span
+class="header-section-number">3.13</span> Reproducibility and validity
+safeguards</h2>
+<p>Determinism is assessed by exact replay from the same ordered
+configuration and source revision. Provenance is assessed by the
+existence of a path from each reported token, claim, equation, and
+figure to an owning source and generated record. Negative controls in
+the test suite exercise malformed configuration and invalid refinery
+states; figure checks assess file presence, registry parity, dimensions,
+nonblank content, and color variance. Environment and regeneration
+details are given in sec. <a href="#sec:reproducibility">7</a>.</p>
+<p>Four validity limits govern interpretation. First, <strong>construct
+validity</strong> is limited because purity is a designed workflow
+state, not a validated measure of writing quality. Second,
+<strong>external validity</strong> is limited to this exemplar until
+other domains implement their own mappings and validators. Third,
+<strong>historical validity</strong> is bounded by the normalized
+analogy and should not be read as a universal account of metallurgical
+practice. Fourth, <strong>criterion validity</strong> is local: passing
+gates demonstrates source ownership and internal consistency, not
+correctness of domain claims. These limits are part of the method’s
+acceptance rule, not qualifications added after results are known.</p>
 <hr />
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results: Purity Progression and
 Karat Grading</h1>
-<p>The refinery pipeline produces a monotonically increasing purity
-sequence across 5 stages, reaching final purity of 99.9999999%
-(nine-nines) (24K (nine-nines certified)).</p>
-<h2 data-number="4.1" id="purity-progression-1"><span
+<p>The canonical run completed 5 ordered, continuous stages and reached
+the configured terminal state of 99.9999999% (nine-nines) (24K
+(nine-nines certified)). These values verify execution of the declared
+model; they are not empirical estimates of manuscript quality.</p>
+<h2 data-number="4.1" id="purity-progression"><span
 class="header-section-number">4.1</span> Purity progression</h2>
 <figure id="fig:purity_progression">
 <img src="../figures/purity_progression.png"
-alt="Figure 1: Purity progression across refinery stages" />
-<figcaption aria-hidden="true">Figure 1: Purity progression across
-refinery stages</figcaption>
+alt="Figure 1: Purity progression across the five refinery stages from ore (9K) to nine-nines certification." />
+<figcaption>Figure 1: Purity progression across the
+five refinery stages from ore (9K) to nine-nines
+certification.</figcaption>
 </figure>
 <table style="width:100%;">
 <colgroup>
@@ -1474,9 +1771,9 @@ refinery stages</figcaption>
 class="header-section-number">4.2</span> Karat grading scale</h2>
 <figure id="fig:karat_grading">
 <img src="../figures/karat_grading.png"
-alt="Figure 2: Gold karat grading scale with refinery stage markers" />
-<figcaption aria-hidden="true">Figure 2: Gold karat grading scale with
-refinery stage markers</figcaption>
+alt="Figure 2: Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers." />
+<figcaption>Figure 2: Gold karat grading scale
+(9K–24K + nine-nines) with refinery stage markers.</figcaption>
 </figure>
 <h2 data-number="4.3" id="final-certification"><span
 class="header-section-number">4.3</span> Final certification</h2>
@@ -1493,9 +1790,9 @@ class="header-section-number">4.4</span> Token plan summary</h2>
 lexicon categories.</p>
 <figure id="fig:token_density">
 <img src="../figures/token_density.png"
-alt="Figure 3: Mega-madlib token distribution" />
-<figcaption aria-hidden="true">Figure 3: Mega-madlib token
-distribution</figcaption>
+alt="Figure 3: Mega-madlib token distribution across manuscript sections and lexicon categories." />
+<figcaption>Figure 3: Mega-madlib token distribution
+across manuscript sections and lexicon categories.</figcaption>
 </figure>
 <h3 data-number="4.4.1" id="category-distribution"><span
 class="header-section-number">4.4.1</span> Category distribution</h3>
@@ -1794,33 +2091,30 @@ so a later change to the stage model must move through the same graph,
 table, and validation surfaces.</p>
 <figure id="fig:provenance_sankey">
 <img src="../figures/provenance_sankey.png"
-alt="Figure 4: Provenance flow diagram" />
-<figcaption aria-hidden="true">Figure 4: Provenance flow
-diagram</figcaption>
+alt="Figure 4: Provenance trace: ore → stages → certification purity flow." />
+<figcaption>Figure 4: Provenance trace: ore → stages
+→ certification purity flow.</figcaption>
 </figure>
 <h2 data-number="4.6" id="purity-vs-claim-support"><span
 class="header-section-number">4.6</span> Purity vs claim support</h2>
 <p>The purity-versus-claim-support view in fig. <a
-href="#fig:purity_claim_scatter">5</a> places the metallurgical purity
-sequence beside the contribution ledger. This prevents the paper from
-treating purity as an isolated aesthetic score. A point can advance only
-when two surfaces agree: the refinery computation supplies the stage
-purity, and the claim-support registry supplies the cumulative evidence
-exposure for the claims being made at that level of refinement.</p>
+href="#fig:purity_claim_scatter">5</a> places two differently scoped
+measurements on explicit axes: stage output purity on the horizontal
+axis and the single project-level contribution-claim assay on the
+vertical axis. The same observed support rate is therefore repeated
+across stages. The figure does not fabricate a stagewise claim-support
+trajectory from a project-level aggregate.</p>
 <p>In the current generated assay, 9 of 9 contribution claims are
-supported (100.00%). The figure is useful because it would make a weaker
-state visible immediately: a manuscript could still show late-stage
-material purity while failing to carry its claims along the evidence
-axis. In that case, the visual story would split, and the reader would
-see that certification prose had outrun claim support. Here the two axes
-are deliberately co-present, so the results section cannot celebrate
-purity while hiding unsupported contribution language in a separate
-paragraph.</p>
+supported (100.00%). The plot is diagnostic rather than correlational:
+five stage states and one ledger-level rate do not constitute
+independent observations suitable for association testing. Its purpose
+is to reveal disagreement between a late refinery state and weak overall
+claim support without combining the two into one score.</p>
 <figure id="fig:purity_claim_scatter">
 <img src="../figures/purity_claim_scatter.png"
-alt="Figure 5: Purity vs claim support" />
-<figcaption aria-hidden="true">Figure 5: Purity vs claim
-support</figcaption>
+alt="Figure 5: Stage purity plotted against the single project-level claim-support assay." />
+<figcaption>Figure 5: Stage purity plotted against
+the single project-level claim-support assay.</figcaption>
 </figure>
 <h2 data-number="4.7" id="token-selection-sensitivity"><span
 class="header-section-number">4.7</span> Token selection
@@ -1848,9 +2142,9 @@ machinery, not a claim that any particular synonym is scientifically
 superior.</p>
 <figure id="fig:token_heatmap">
 <img src="../figures/token_heatmap.png"
-alt="Figure 6: Token selection heatmap" />
-<figcaption aria-hidden="true">Figure 6: Token selection
-heatmap</figcaption>
+alt="Figure 6: Token selection heatmap: seed × category → selected index." />
+<figcaption>Figure 6: Token selection heatmap: seed ×
+category → selected index.</figcaption>
 </figure>
 <h2 data-number="4.8" id="integrity-gate-matrix"><span
 class="header-section-number">4.8</span> Integrity gate matrix</h2>
@@ -1879,9 +2173,10 @@ configured here, not against a universal publication-readiness
 standard.</p>
 <figure id="fig:integrity_gate_matrix">
 <img src="../figures/integrity_gate_matrix.png"
-alt="Figure 7: Integrity-gate matrix" />
-<figcaption aria-hidden="true">Figure 7: Integrity-gate
-matrix</figcaption>
+alt="Figure 7: Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts." />
+<figcaption>Figure 7: Integrity-gate matrix linking
+audit rules to tests, manuscript surfaces, and generated
+artifacts.</figcaption>
 </figure>
 <h2 data-number="4.9" id="formalism-traceability"><span
 class="header-section-number">4.9</span> Formalism traceability</h2>
@@ -1909,9 +2204,9 @@ layer is a generated contract, not hand-maintained mathematical
 ornamentation.</p>
 <figure id="fig:formalism_traceability">
 <img src="../figures/formalism_traceability.png"
-alt="Figure 8: Formalism traceability" />
-<figcaption aria-hidden="true">Figure 8: Formalism
-traceability</figcaption>
+alt="Figure 8: Formalism traceability from source-owned equation identifiers to source evidence." />
+<figcaption>Figure 8: Formalism traceability from
+source-owned equation identifiers to source evidence.</figcaption>
 </figure>
 <h2 data-number="4.10" id="implementation-circuit-1"><span
 class="header-section-number">4.10</span> Implementation circuit</h2>
@@ -1943,9 +2238,10 @@ patching of rendered Markdown. That direction of repair is central to
 the manuscript’s definition of refinement.</p>
 <figure id="fig:implementation_circuit">
 <img src="../figures/implementation_circuit.png"
-alt="Figure 9: Gold-refinement implementation circuit" />
-<figcaption aria-hidden="true">Figure 9: Gold-refinement implementation
-circuit</figcaption>
+alt="Figure 9: Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback." />
+<figcaption>Figure 9: Implementation circuit from
+config-owned ore through generated manuscript artifacts and validation
+feedback.</figcaption>
 </figure>
 <h2 data-number="4.11" id="claim-evidence-assay"><span
 class="header-section-number">4.11</span> Claim-evidence assay</h2>
@@ -1975,9 +2271,10 @@ becoming a compliance claim, and a generated assay can confirm local
 evidence without pretending to certify the wider supply chain.</p>
 <figure id="fig:claim_evidence_assay">
 <img src="../figures/claim_evidence_assay.png"
-alt="Figure 10: Claim-evidence assay" />
-<figcaption aria-hidden="true">Figure 10: Claim-evidence
-assay</figcaption>
+alt="Figure 10: Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications." />
+<figcaption>Figure 10: Claim-evidence assay showing
+supported contribution claims, evidence surfaces, and boundary
+classifications.</figcaption>
 </figure>
 <h2 data-number="4.12" id="scientific-integrity-risk-matrix"><span
 class="header-section-number">4.12</span> Scientific-integrity risk
@@ -2013,9 +2310,10 @@ has made inspectable and where future work would need to add stronger
 measurement before using stronger language.</p>
 <figure id="fig:integrity_risk_matrix">
 <img src="../figures/integrity_risk_matrix.png"
-alt="Figure 11: Scientific-integrity risk matrix" />
-<figcaption aria-hidden="true">Figure 11: Scientific-integrity risk
-matrix</figcaption>
+alt="Figure 11: Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface." />
+<figcaption>Figure 11: Scientific-integrity risk
+matrix plotting severity, detectability, residual risk, and owning
+evidence surface.</figcaption>
 </figure>
 <h2 data-number="4.13" id="evidence-tier-ladder"><span
 class="header-section-number">4.13</span> Evidence-tier ladder</h2>
@@ -2028,7 +2326,7 @@ claim-ledger facts, bibliography records, source code, or disposable
 artifacts.</p>
 <p>The ladder complements the risk matrix by counting source tiers
 rather than plotting risks. When the shared evidence registry is
-available, the manuscript can report 0 source-tiered facts to the
+available, the manuscript can report 283 source-tiered facts to the
 validation surface. When that registry is not available, the same figure
 falls back to the integrity model’s configured tiers. Either way, the
 reader sees the evidentiary mix instead of receiving an undifferentiated
@@ -2045,9 +2343,10 @@ by showing not only that the 12 public figures render, but also which
 source tiers make their claims inspectable.</p>
 <figure id="fig:evidence_tier_ladder">
 <img src="../figures/evidence_tier_ladder.png"
-alt="Figure 12: Evidence-tier ladder" />
-<figcaption aria-hidden="true">Figure 12: Evidence-tier
-ladder</figcaption>
+alt="Figure 12: Evidence-tier ladder summarizing source tiers available to the shared template evidence registry." />
+<figcaption>Figure 12: Evidence-tier ladder
+summarizing source tiers available to the shared template evidence
+registry.</figcaption>
 </figure>
 <table id="tbl:evidence_tiers">
 <caption>Table 4: Evidence tiers used by the integrity model and shared
@@ -2062,49 +2361,35 @@ registry when available.</caption>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>2</td>
+<td>125</td>
 <td>Generated artifacts exposed to readers</td>
 </tr>
 <tr>
-<td>source_code</td>
-<td>2</td>
-<td>Executable source files and symbols</td>
+<td>generated_metric</td>
+<td>94</td>
+<td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
 <td>bibliography</td>
-<td>1</td>
+<td>47</td>
 <td>Reference records and citation metadata</td>
 </tr>
 <tr>
 <td>claim_ledger</td>
-<td>1</td>
+<td>17</td>
 <td>Source-owned claim and fact declarations</td>
-</tr>
-<tr>
-<td>config</td>
-<td>1</td>
-<td>Author-controlled project configuration</td>
-</tr>
-<tr>
-<td>generated_metric</td>
-<td>1</td>
-<td>Numbers regenerated from project analysis</td>
-</tr>
-<tr>
-<td>validation</td>
-<td>1</td>
-<td>Template gates and test results</td>
 </tr>
 </tbody>
 </table>
 <h2 data-number="4.14" id="adversarial-security-assay"><span
 class="header-section-number">4.14</span> Adversarial security
 assay</h2>
-<p>The adversarial assay reports 5 adversarial assay rows mapping
-threats and standards to local evidence surfaces, validators, and claim
-boundaries; they are scope controls, not completed scan findings. No
-Codex Security or Deep Security Scan findings are claimed unless a scan
-artifact is generated, validated, and cited. The rows are generated from
+<p>The adversarial assay reports 5 adversarial assay rows, 5
+schema-complete, mapping threats and standards to local evidence
+surfaces, validators, and claim boundaries; completeness is a scope
+control, not completed scan findings. No Codex Security or Deep Security
+Scan findings are claimed unless a scan artifact is generated,
+validated, and cited. The rows are generated from
 <code>gold_refinement.security_assay</code> and are intentionally
 tabular rather than a new public figure, so the visual registry remains
 the stable 12-figure contract.</p>
@@ -2269,7 +2554,7 @@ class="header-section-number">4.16</span> Shared evidence registry
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 0.</p>
+available to this variable pass: 283.</p>
 <table id="tbl:shared_evidence_kinds">
 <caption>Table 6: Shared evidence-registry fact kinds when
 available.</caption>
@@ -2281,8 +2566,32 @@ available.</caption>
 </thead>
 <tbody>
 <tr>
-<td>not generated</td>
-<td>0</td>
+<td>artifact</td>
+<td>80</td>
+</tr>
+<tr>
+<td>citation</td>
+<td>47</td>
+</tr>
+<tr>
+<td>equation</td>
+<td>8</td>
+</tr>
+<tr>
+<td>figure</td>
+<td>29</td>
+</tr>
+<tr>
+<td>number</td>
+<td>102</td>
+</tr>
+<tr>
+<td>section</td>
+<td>10</td>
+</tr>
+<tr>
+<td>table</td>
+<td>7</td>
 </tr>
 </tbody>
 </table>
@@ -2325,18 +2634,18 @@ figure specs.</caption>
 <td>claim_evidence_assay</td>
 <td>yes</td>
 <td>yes</td>
-<td>3947x2038</td>
-<td>0.218</td>
-<td>0.06041014</td>
+<td>3952x2038</td>
+<td>0.217</td>
+<td>0.06027576</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3020x1724</td>
-<td>0.216</td>
-<td>0.05410730</td>
+<td>3349x1332</td>
+<td>0.223</td>
+<td>0.05598645</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2345,43 +2654,43 @@ figure specs.</caption>
 <td>yes</td>
 <td>3315x1797</td>
 <td>0.140</td>
-<td>0.04409869</td>
+<td>0.04434550</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>implementation_circuit</td>
 <td>yes</td>
 <td>yes</td>
-<td>2966x1846</td>
-<td>0.069</td>
-<td>0.02257238</td>
+<td>2966x1843</td>
+<td>0.068</td>
+<td>0.02205485</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_gate_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>1833x2060</td>
-<td>0.406</td>
-<td>0.16147143</td>
+<td>1818x2060</td>
+<td>0.409</td>
+<td>0.16204936</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_risk_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>2499x1909</td>
-<td>0.379</td>
-<td>0.01892053</td>
+<td>2499x1910</td>
+<td>0.380</td>
+<td>0.01852528</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>karat_grading</td>
 <td>yes</td>
 <td>yes</td>
-<td>2956x1699</td>
+<td>2961x1698</td>
 <td>0.279</td>
-<td>0.07296687</td>
+<td>0.07300982</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2390,43 +2699,43 @@ figure specs.</caption>
 <td>yes</td>
 <td>2850x1461</td>
 <td>0.070</td>
-<td>0.02170098</td>
+<td>0.02178809</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_claim_scatter</td>
 <td>yes</td>
 <td>yes</td>
-<td>2347x1745</td>
-<td>0.032</td>
-<td>0.01429053</td>
+<td>2336x1744</td>
+<td>0.034</td>
+<td>0.01607749</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_progression</td>
 <td>yes</td>
 <td>yes</td>
-<td>3029x2125</td>
+<td>3024x2125</td>
 <td>0.182</td>
-<td>0.03971092</td>
+<td>0.03967814</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_density</td>
 <td>yes</td>
 <td>yes</td>
-<td>3288x1858</td>
+<td>3289x1856</td>
 <td>0.234</td>
-<td>0.06696808</td>
+<td>0.06699486</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_heatmap</td>
 <td>yes</td>
 <td>yes</td>
-<td>2406x2412</td>
-<td>0.621</td>
-<td>0.12867696</td>
+<td>2397x2399</td>
+<td>0.627</td>
+<td>0.12908659</td>
 <td>pass</td>
 </tr>
 </tbody>
@@ -2446,20 +2755,29 @@ to claim removal, assaying to evidence validation, cupellation to
 cross-reference resolution, and certification to full pipeline
 validation. The scholarship makes the test sharper: the analogy is
 useful only where the relation among stages is preserved, not where
-surface language makes writing sound like metallurgy
-[gentner1983structure; hesse1966models].</p>
+surface language makes writing sound like metallurgy <span
+class="citation" data-cites="gentner1983structure hesse1966models">(<a
+href="#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
+<a href="#ref-hesse1966models" role="doc-biblioref">Hesse
+1966</a>)</span>.</p>
 <p>The pre-1800 metallurgy sources strengthen the analogy by making that
 relation historically concrete, but they also narrow it. They show
 several traditions of staged work - ancient extraction and testing,
 Renaissance printed metallurgy, seventeenth-century goldsmith standards,
 and eighteenth-century assay manuals - rather than one timeless method
-[pliny_natural_history_33; biringuccio_pirotechnia_1540;
-agricola_de_re_metallica_1556; badcock_touchstone_1678;
-cramer_assaying_metals_1741]. The manuscript therefore imports
-structure, not authority: cupellation does not make citation review
-chemical, a hallmark does not make a rendered PDF legally certified, and
-a karat scale does not make local validation equivalent to external
-truth.</p>
+<span class="citation"
+data-cites="pliny_natural_history_33 biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 cramer_assaying_metals_1741">(<a
+href="#ref-pliny_natural_history_33" role="doc-biblioref">Pliny the
+Elder c. 77 CE</a>; <a href="#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>. The manuscript therefore imports structure, not
+authority: cupellation does not make citation review chemical, a
+hallmark does not make a rendered PDF legally certified, and a karat
+scale does not make local validation equivalent to external truth.</p>
 <p>The analogy is smelting the manuscript: it performs the refinement it
 describes. Its fork obligation is equally important. Gold refining can
 model staged purification, but it cannot certify domain truth unless the
@@ -2474,14 +2792,24 @@ source artifact, the metaphor must stop at analogy and cannot be
 promoted to certification. That boundary follows reproducibility
 scholarship as much as metaphor theory: formal traceability can support
 rerunning and auditing, but it cannot by itself establish external
-validity [peng2011reproducible; wilkinson2016fair;
-ioannidis2005false].</p>
+validity <span class="citation"
+data-cites="peng2011reproducible wilkinson2016fair ioannidis2005false">(<a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>; <a
+href="#ref-wilkinson2016fair" role="doc-biblioref"><span
+class="nocase">Wilkinson et al.</span> 2016</a>; <a
+href="#ref-ioannidis2005false" role="doc-biblioref">Ioannidis
+2005</a>)</span>.</p>
 <p>The same caution applies to checklist-shaped infrastructure.
 Reporting guidelines improve the inspectability of research reports by
 naming information that should be present, but checklist completion is
 not the same as methodological quality, absence of bias, or truth of
-results [equator_network_reporting_guidelines; schulz2010consort;
-page2021prisma]. The gold-refinement gates should therefore be read as
+results <span class="citation"
+data-cites="equator_network_reporting_guidelines schulz2010consort page2021prisma">(<a
+href="#ref-equator_network_reporting_guidelines"
+role="doc-biblioref">EQUATOR Network 2026</a>; <a
+href="#ref-schulz2010consort" role="doc-biblioref">Schulz et al.
+2010</a>; <a href="#ref-page2021prisma" role="doc-biblioref">Page et al.
+2021</a>)</span>. The gold-refinement gates should therefore be read as
 completeness and traceability checks. They can expose a missing
 citation, an unresolved token, or an unsupported local claim; they
 cannot convert weak domain evidence into strong domain evidence.</p>
@@ -2491,8 +2819,10 @@ class="header-section-number">5.2</span> Useful adaptation cases</h2>
 <li><strong>Domain-specific refinement pipelines</strong>: fork the
 exemplar and remap stages to domain operations (e.g., clinical evidence,
 legal citation, engineering specification).</li>
-<li><strong>Purity measurement</strong>: adopt the purity fraction and
-karat grade vocabulary for any staged quality process.</li>
+<li><strong>Staged-state visualization</strong>: reuse the purity and
+karat vocabulary only when the fork declares what each state means,
+enforces ordering and continuity, and avoids presenting designed values
+as validated quality measurements.</li>
 <li><strong>Mega-madlib composition</strong>: reuse the deterministic
 token engine for any config-owned lexical composition task.</li>
 <li><strong>Domain adapters</strong>: use
@@ -2502,7 +2832,9 @@ reusing certification language.</li>
 <li><strong>Research compendia</strong>: package manuscript shells,
 token rules, analysis outputs, figures, and validation reports as a
 single reproducible object rather than a loose bundle of supplementary
-files [marwick2018packaging].</li>
+files <span class="citation" data-cites="marwick2018packaging">(<a
+href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
+2018</a>)</span>.</li>
 </ul>
 <h2 data-number="5.3" id="misuse-modes"><span
 class="header-section-number">5.3</span> Misuse modes</h2>
@@ -2677,6 +3009,13 @@ and eq. <a href="#eq:integrity_vector">5</a> keep the grade tied to
 claim support and gate coverage. A fork that cannot provide comparable
 source-owned gates should keep the gold-refining language as metaphor
 only and avoid publication-strength claims.</p>
+<p>The reverse assay clarifies a second boundary. It can identify the
+shortest prefix that reaches a <strong>declared</strong> target, but it
+cannot identify the cheapest, fairest, or scientifically best workflow
+unless stages have empirically justified costs and outcomes. Likewise,
+the multi-objective purity vector prevents compensatory averaging, but
+its dimensions are still local engineering observables rather than a
+validated psychometric scale.</p>
 <p>The practical rule is simple: do not add an impressive figure unless
 its path through fig. <a href="#fig:implementation_circuit">9</a> is
 visible. A visual can summarize an idea, but it only supports a
@@ -2697,32 +3036,52 @@ but a domain claim needs a domain source tier. The ladder makes that
 distinction visible without pretending that a large fact count is the
 same as stronger external validity. In FAIR and PROV terms, richer
 metadata improves findability, reuse, and traceability, but it does not
-convert weak evidence into strong evidence [wilkinson2016fair;
-moreau2013prov].</p>
+convert weak evidence into strong evidence <span class="citation"
+data-cites="wilkinson2016fair moreau2013prov">(<a
+href="#ref-wilkinson2016fair" role="doc-biblioref"><span
+class="nocase">Wilkinson et al.</span> 2016</a>; <a
+href="#ref-moreau2013prov" role="doc-biblioref"><span
+class="nocase">Moreau et al.</span> 2013</a>)</span>.</p>
 <p>Open-science standards push in the same direction. The TOP Guidelines
 and UNESCO Recommendation on Open Science emphasize transparency,
 scrutiny, reproducibility, accountability, and shared research objects
-[nosek2015top; unesco2021_open_science]. This exemplar implements a
-small local version of those values; it does not claim that openness
-alone resolves study design, fairness, or domain-validity problems.</p>
+<span class="citation"
+data-cites="nosek2015top unesco2021_open_science">(<a
+href="#ref-nosek2015top" role="doc-biblioref">Nosek et al. 2015</a>; <a
+href="#ref-unesco2021_open_science" role="doc-biblioref">UNESCO
+2021</a>)</span>. This exemplar implements a small local version of
+those values; it does not claim that openness alone resolves study
+design, fairness, or domain-validity problems.</p>
 <p>Security guidance adds an adversarial version of the same brake. Zero
 trust, secure development, supply-chain provenance, signing, SBOM,
 attack-path, and secure-by-design frameworks are useful because they ask
-who or what should not be trusted by default [nist_sp800_207_zero_trust;
-nist_sp800_218_ssdf; slsa_v1_2; sigstore_docs; mitre_attack;
-cyclonedx_spec; spdx_spec; cisa_secure_by_design]. In this manuscript
-they do not certify security. They make overclaiming harder: a security
-claim must point to tbl. <a href="#tbl:security_assay">5</a>, and a real
-scan claim must point to scan artifacts that this pass does not
-produce.</p>
+who or what should not be trusted by default <span class="citation"
+data-cites="nist_sp800_207_zero_trust nist_sp800_218_ssdf slsa_v1_2 sigstore_docs mitre_attack cyclonedx_spec spdx_spec cisa_secure_by_design">(<a
+href="#ref-nist_sp800_207_zero_trust" role="doc-biblioref">National
+Institute of Standards and Technology 2020</a>, <a
+href="#ref-nist_sp800_218_ssdf" role="doc-biblioref">2022</a>; <a
+href="#ref-slsa_v1_2" role="doc-biblioref">Open Source Security
+Foundation 2026</a>; <a href="#ref-sigstore_docs"
+role="doc-biblioref">Sigstore 2026</a>; <a href="#ref-mitre_attack"
+role="doc-biblioref">MITRE 2026</a>; <a href="#ref-cyclonedx_spec"
+role="doc-biblioref">CycloneDX 2026</a>; <a href="#ref-spdx_spec"
+role="doc-biblioref">SPDX 2026</a>; <a href="#ref-cisa_secure_by_design"
+role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
+2026</a>)</span>. In this manuscript they do not certify security. They
+make overclaiming harder: a security claim must point to tbl. <a
+href="#tbl:security_assay">5</a>, and a real scan claim must point to
+scan artifacts that this pass does not produce.</p>
 <hr />
 <h1 data-number="6" id="sec:conclusion"><span
 class="header-section-number">6</span> Conclusion: Certification and
 Forking</h1>
 <p>The gold-refinery pipeline demonstrates that a metallurgical analogy
-can be load-bearing: each stage maps to a real template-infrastructure
-operation, purity increases monotonically, and the final stage achieves
-nine-nines certification (99.9999999% (nine-nines)).</p>
+can be made operationally accountable: each stage maps to an executable
+transformation, stage order and continuity are enforced, artifacts
+preserve provenance, and validators constrain the terminal claim. The
+canonical run reaches the local nine-nines state (99.9999999%
+(nine-nines)); this is a software predicate, not a universal
+certification of manuscript quality.</p>
 <h2 data-number="6.1" id="summary"><span
 class="header-section-number">6.1</span> Summary</h2>
 <ul>
@@ -2741,6 +3100,9 @@ owner/validator links.</li>
 <li>Registered visual evidence spans purity progression, token coverage,
 formalism traceability, implementation flow, claim-evidence assay,
 risk-matrix, and evidence-tier surfaces.</li>
+<li>Reverse assay returns the shortest ordered stage prefix for a
+declared target, and multi-objective purity preserves distinct quality
+dimensions without compensatory averaging.</li>
 </ul>
 <h2 data-number="6.2" id="forking-responsibilities"><span
 class="header-section-number">6.2</span> Forking responsibilities</h2>
@@ -2767,12 +3129,21 @@ evidence tier, and a validator. Without those three surfaces, the right
 outcome is not a more polished metaphor; it is a narrower claim. This
 keeps the final certification claim aligned with reproducible-research
 norms: the artifact is stronger when it can be regenerated and audited,
-but still bounded by the evidence its sources actually contain
-[sandve2013ten; marwick2018packaging].</p>
+but still bounded by the evidence its sources actually contain <span
+class="citation" data-cites="sandve2013ten marwick2018packaging">(<a
+href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al. 2013</a>;
+<a href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
+2018</a>)</span>.</p>
 <hr />
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility: Seeded
 Regeneration</h1>
+<p>Reproduction requires identity, execution, and verification—not
+merely access to a PDF. Identity fixes the source revision,
+configuration hash, software release, and environment. Execution
+rebuilds analysis artifacts before manuscript hydration. Verification
+checks that registered claims, figures, references, and rendered formats
+agree with their source owners.</p>
 <h2 data-number="7.1" id="deterministic-regeneration"><span
 class="header-section-number">7.1</span> Deterministic regeneration</h2>
 <p>The refinery pipeline is fully deterministic. Given the same
@@ -2780,19 +3151,26 @@ class="header-section-number">7.1</span> Deterministic regeneration</h2>
 run produces identical output. This is the local version of a
 reproducible computational research norm: the reader should be able to
 inspect the source, rerun the workflow, and recover the same derived
-artifacts [peng2011reproducible; sandve2013ten].</p>
+artifacts <span class="citation"
+data-cites="peng2011reproducible sandve2013ten">(<a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>; <a
+href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
+2013</a>)</span>.</p>
 <p>Executable-publication scholarship sharpens that norm. Executable
 research compendia and executable papers treat an article as a package
 of narrative, code, data, environment, and rendered outputs rather than
-as a static document with detachable supplements [nuest2017erc;
-lasser2020executable]. The present exemplar is smaller and more
+as a static document with detachable supplements <span class="citation"
+data-cites="nuest2017erc lasser2020executable">(<a
+href="#ref-nuest2017erc" role="doc-biblioref">Nüst et al. 2017</a>; <a
+href="#ref-lasser2020executable" role="doc-biblioref">Lasser
+2020</a>)</span>. The present exemplar is smaller and more
 template-specific: it does not provide a universal executable-paper
 format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
 <li><strong>Config hash:</strong> 8d3efef5bcbe8b23</li>
-<li><strong>Generation timestamp:</strong> 2026-07-03T16:58:43Z</li>
+<li><strong>Generation timestamp:</strong> 2026-07-11T04:09:00Z</li>
 <li><strong>Python version:</strong> 3.12.13</li>
 </ul>
 <h2 data-number="7.2" id="artifact-inventory"><span
@@ -2811,15 +3189,15 @@ class="header-section-number">7.2</span> Artifact inventory</h2>
 </tr>
 <tr>
 <td>Data files</td>
-<td>2</td>
+<td>3</td>
 </tr>
 <tr>
 <td>Reports</td>
-<td>16</td>
+<td>12</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td>44</td>
+<td>41</td>
 </tr>
 </tbody>
 </table>
@@ -2834,6 +3212,12 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
+<p>A reproduction report should record command exit status, the source
+revision, <code>8d3efef5bcbe8b23</code>, Python 3.12.13, and whether the
+generated registries pass. Matching prose alone is insufficient if the
+token plan, claim registry, or figure registry differs. Conversely,
+timestamp or renderer metadata differences should be interpreted
+separately from substantive differences in source-owned values.</p>
 <h2 data-number="7.4" id="config-ownership"><span
 class="header-section-number">7.4</span> Config ownership</h2>
 <p>All vocabulary, slots, section conditions, steganography toggles, and
@@ -2860,12 +3244,14 @@ static illustration rather than a reproducible refinement pipeline.</p>
 <p>Metadata is part of that path, not administrative garnish. Work on
 reproducible computational metadata argues that data, tools, workflows,
 environments, and reports need machine-readable descriptors before
-re-execution and reuse can be automated reliably [chen2021metadata].
-Here, the evidence registry, token plan, figure registry, output
-statistics, and config hash are the local metadata stack. They make the
-object inspectable, but they remain descriptive: they identify what was
-generated and from where, not whether a domain conclusion is
-correct.</p>
+re-execution and reuse can be automated reliably <span class="citation"
+data-cites="chen2021metadata">(<a href="#ref-chen2021metadata"
+role="doc-biblioref"><span class="nocase">Chen et al.</span>
+2021</a>)</span>. Here, the evidence registry, token plan, figure
+registry, output statistics, and config hash are the local metadata
+stack. They make the object inspectable, but they remain descriptive:
+they identify what was generated and from where, not whether a domain
+conclusion is correct.</p>
 <p>The same rule applies to visual polish. The figure registry is
 source-owned, every registered PNG now has a companion SVG, and
 <code>output/reports/figure_quality_report.json</code> records 12 PNG
@@ -2886,8 +3272,12 @@ is reserved for the shared template evidence validator, which registers
 numbers, citations, equations, sections, figures, tables, generated
 data, and claim-ledger facts. The split mirrors provenance standards:
 different entities can be generated by different activities and still
-belong to one accountable research object [moreau2013prov;
-belhajjame2015ontologies].</p>
+belong to one accountable research object <span class="citation"
+data-cites="moreau2013prov belhajjame2015ontologies">(<a
+href="#ref-moreau2013prov" role="doc-biblioref"><span
+class="nocase">Moreau et al.</span> 2013</a>; <a
+href="#ref-belhajjame2015ontologies" role="doc-biblioref"><span
+class="nocase">Belhajjame et al.</span> 2015</a>)</span>.</p>
 <p>The evidence-tier ladder in fig. <a
 href="#fig:evidence_tier_ladder">12</a> is the reproducibility
 counterpart to that separation. It does not merely count files. It shows
@@ -2911,83 +3301,147 @@ standards</li>
 domains</li>
 <li>That the analogy replaces domain-specific peer review or expert
 judgement</li>
+<li>That reverse assay optimizes cost or scientific value, or that
+multi-objective purity is a validated composite scale</li>
 </ul>
 <h2 data-number="8.2" id="related-work"><span
 class="header-section-number">8.2</span> Related work</h2>
 <p>The mega-madlib token injection pattern follows
 <code>template_madlib</code>’s deterministic lexical composition
-approach [template_madlib]. The pipeline-staging model draws on
+approach <span class="citation" data-cites="template_madlib">(<a
+href="#ref-template_madlib" role="doc-biblioref">Friedman
+2026b</a>)</span>. The pipeline-staging model draws on
 <code>template_code_project</code>’s thin-orchestrator pattern and the
 wider template repository’s validation and rendering infrastructure
-[template_repo]. The refinement analogy is novel to this exemplar, but
+<span class="citation" data-cites="template_repo">(<a
+href="#ref-template_repo" role="doc-biblioref">Friedman
+2026a</a>)</span>. The refinement analogy is novel to this exemplar, but
 the surrounding scholarship is not.</p>
 <p>Analogy theory supplies the first boundary. Structure-mapping treats
 analogy as a transfer of relational organization rather than surface
-resemblance [gentner1983structure], while philosophy of science
-distinguishes positive, negative, and still-open analogy regions
-[hesse1966models]. The paper therefore claims that the refinery stages
-organize a reproducible manuscript workflow. It does not claim that
-metallurgical purity is an empirical measure of prose quality.</p>
+resemblance <span class="citation" data-cites="gentner1983structure">(<a
+href="#ref-gentner1983structure" role="doc-biblioref">Gentner
+1983</a>)</span>, while philosophy of science distinguishes positive,
+negative, and still-open analogy regions <span class="citation"
+data-cites="hesse1966models">(<a href="#ref-hesse1966models"
+role="doc-biblioref">Hesse 1966</a>)</span>. The paper therefore claims
+that the refinery stages organize a reproducible manuscript workflow. It
+does not claim that metallurgical purity is an empirical measure of
+prose quality.</p>
 <p>Reproducible-research scholarship supplies the second boundary.
 Literate programming, Sweave, and notebook-based analysis show that
 code, results, and narrative can be co-developed in executable documents
-[knuth1984literate; leisch2002sweave; rule2019jupyter]. Research
-compendia and workflow-centric research objects show how code, data,
-text, environment, and provenance can be packaged as durable units
-[marwick2018packaging; belhajjame2015ontologies]. This exemplar extends
-those ideas to deterministic token selection, but it remains an internal
-consistency and provenance demonstration.</p>
+<span class="citation"
+data-cites="knuth1984literate leisch2002sweave rule2019jupyter">(<a
+href="#ref-knuth1984literate" role="doc-biblioref">Knuth 1984</a>; <a
+href="#ref-leisch2002sweave" role="doc-biblioref">Leisch 2002</a>; <a
+href="#ref-rule2019jupyter" role="doc-biblioref"><span
+class="nocase">Rule et al.</span> 2019</a>)</span>. Research compendia
+and workflow-centric research objects show how code, data, text,
+environment, and provenance can be packaged as durable units <span
+class="citation"
+data-cites="marwick2018packaging belhajjame2015ontologies">(<a
+href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
+2018</a>; <a href="#ref-belhajjame2015ontologies"
+role="doc-biblioref"><span class="nocase">Belhajjame et al.</span>
+2015</a>)</span>. This exemplar extends those ideas to deterministic
+token selection, but it remains an internal consistency and provenance
+demonstration.</p>
 <p>FAIR and PROV supply the third boundary. Rich metadata and provenance
-improve findability, interoperability, reuse, and auditability
-[wilkinson2016fair; moreau2013prov]. They do not guarantee that a
-substantive scientific claim is true. The evidence ladder in this paper
-is therefore an honesty device: source-code facts, generated metrics,
-bibliography records, and domain evidence must not be collapsed into one
-undifferentiated support score.</p>
+improve findability, interoperability, reuse, and auditability <span
+class="citation" data-cites="wilkinson2016fair moreau2013prov">(<a
+href="#ref-wilkinson2016fair" role="doc-biblioref"><span
+class="nocase">Wilkinson et al.</span> 2016</a>; <a
+href="#ref-moreau2013prov" role="doc-biblioref"><span
+class="nocase">Moreau et al.</span> 2013</a>)</span>. They do not
+guarantee that a substantive scientific claim is true. The evidence
+ladder in this paper is therefore an honesty device: source-code facts,
+generated metrics, bibliography records, and domain evidence must not be
+collapsed into one undifferentiated support score.</p>
 <p>The metallurgy literature supplies the fourth boundary. This pass
 grounds the source domain primarily in pre-1800 texts: Pliny for metals,
 extraction, and touchstone testing; Biringuccio and Agricola for printed
 descriptions of mining, smelting, parting, and assay; Badcock’s
 <em>Touch-stone</em> and the Goldsmiths’ Company chronology for
 standards, statutes, and marks; and Cramer for eighteenth-century assay
-as a theory/practice discipline [pliny_natural_history_33;
-biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
-badcock_touchstone_1678; goldsmiths_hallmarking_history;
-cramer_assaying_metals_1741]. Modern gold-extraction and hallmarking
-sources remain useful as contrast and current vocabulary
-[marsden_house_2006; hallmarking_convention_1972;
-lbma_good_delivery_rules]. This paper imports relational structure. It
-does not import market rules, assay tolerances, local guild authority,
-mint authority, or regulatory power into manuscript review.</p>
+as a theory/practice discipline <span class="citation"
+data-cites="pliny_natural_history_33 biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 goldsmiths_hallmarking_history cramer_assaying_metals_1741">(<a
+href="#ref-pliny_natural_history_33" role="doc-biblioref">Pliny the
+Elder c. 77 CE</a>; <a href="#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="#ref-goldsmiths_hallmarking_history" role="doc-biblioref">The
+Goldsmiths’ Company Assay Office 2026</a>; <a
+href="#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>. Modern gold-extraction and hallmarking sources remain
+useful as contrast and current vocabulary <span class="citation"
+data-cites="marsden_house_2006 hallmarking_convention_1972 lbma_good_delivery_rules">(<a
+href="#ref-marsden_house_2006" role="doc-biblioref">Marsden and House
+2006</a>; <a href="#ref-hallmarking_convention_1972"
+role="doc-biblioref">Hallmarking Convention 1972</a>; <a
+href="#ref-lbma_good_delivery_rules" role="doc-biblioref">London Bullion
+Market Association 2026</a>)</span>. This paper imports relational
+structure. It does not import market rules, assay tolerances, local
+guild authority, mint authority, or regulatory power into manuscript
+review.</p>
 <p>Structured reporting and open-science standards supply the fifth
 boundary. CONSORT, STROBE, PRISMA, ARRIVE, and EQUATOR show how research
-communities turn recurring omissions into explicit reporting items
-[schulz2010consort; vonelm2007strobe; page2021prisma;
-percie_du_sert2020arrive; equator_network_reporting_guidelines]. The TOP
+communities turn recurring omissions into explicit reporting items <span
+class="citation"
+data-cites="schulz2010consort vonelm2007strobe page2021prisma percie_du_sert2020arrive equator_network_reporting_guidelines">(<a
+href="#ref-schulz2010consort" role="doc-biblioref">Schulz et al.
+2010</a>; <a href="#ref-vonelm2007strobe" role="doc-biblioref">Elm et
+al. 2007</a>; <a href="#ref-page2021prisma" role="doc-biblioref">Page et
+al. 2021</a>; <a href="#ref-percie_du_sert2020arrive"
+role="doc-biblioref">Percie du Sert et al. 2020</a>; <a
+href="#ref-equator_network_reporting_guidelines"
+role="doc-biblioref">EQUATOR Network 2026</a>)</span>. The TOP
 Guidelines and UNESCO Recommendation on Open Science broaden that logic
-toward transparency, sharing, accountability, and reproducibility
-[nosek2015top; unesco2021_open_science]. This exemplar is
-guideline-shaped, but it is not a replacement for discipline-specific
-reporting compliance: forks must choose the appropriate external
-checklist and add domain validators before claiming compliance with any
-field standard.</p>
+toward transparency, sharing, accountability, and reproducibility <span
+class="citation" data-cites="nosek2015top unesco2021_open_science">(<a
+href="#ref-nosek2015top" role="doc-biblioref">Nosek et al. 2015</a>; <a
+href="#ref-unesco2021_open_science" role="doc-biblioref">UNESCO
+2021</a>)</span>. This exemplar is guideline-shaped, but it is not a
+replacement for discipline-specific reporting compliance: forks must
+choose the appropriate external checklist and add domain validators
+before claiming compliance with any field standard.</p>
 <p>Executable-publication and software-citation work supply the sixth
 boundary. Executable research compendia, executable papers, and
 analytic-stack metadata show how publication objects can bind narrative,
-code, data, environments, and outputs into a reusable package
-[nuest2017erc; lasser2020executable; chen2021metadata].
-Software-citation principles add that code and template releases should
-be credited with enough specificity, persistence, and accessibility that
-readers can identify the version used [smith2016softwarecitation]. This
-exemplar aligns with those norms, but it does not claim that a
-regenerated PDF is itself an archival preservation system or that a
-repository URL substitutes for versioned software citation.</p>
+code, data, environments, and outputs into a reusable package <span
+class="citation"
+data-cites="nuest2017erc lasser2020executable chen2021metadata">(<a
+href="#ref-nuest2017erc" role="doc-biblioref">Nüst et al. 2017</a>; <a
+href="#ref-lasser2020executable" role="doc-biblioref">Lasser 2020</a>;
+<a href="#ref-chen2021metadata" role="doc-biblioref"><span
+class="nocase">Chen et al.</span> 2021</a>)</span>. Software-citation
+principles add that code and template releases should be credited with
+enough specificity, persistence, and accessibility that readers can
+identify the version used <span class="citation"
+data-cites="smith2016softwarecitation">(<a
+href="#ref-smith2016softwarecitation" role="doc-biblioref">Smith et al.
+2016</a>)</span>. This exemplar aligns with those norms, but it does not
+claim that a regenerated PDF is itself an archival preservation system
+or that a repository URL substitutes for versioned software
+citation.</p>
 <p>Security and supply-chain guidance supply the seventh boundary.
 Zero-trust architecture, SSDF, SLSA, Sigstore, MITRE ATT&amp;CK,
 CycloneDX, SPDX, and Secure by Design each name useful threat or
-provenance surfaces [nist_sp800_207_zero_trust; nist_sp800_218_ssdf;
-slsa_v1_2; sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
-cisa_secure_by_design]. This exemplar uses those sources to structure an
+provenance surfaces <span class="citation"
+data-cites="nist_sp800_207_zero_trust nist_sp800_218_ssdf slsa_v1_2 sigstore_docs mitre_attack cyclonedx_spec spdx_spec cisa_secure_by_design">(<a
+href="#ref-nist_sp800_207_zero_trust" role="doc-biblioref">National
+Institute of Standards and Technology 2020</a>, <a
+href="#ref-nist_sp800_218_ssdf" role="doc-biblioref">2022</a>; <a
+href="#ref-slsa_v1_2" role="doc-biblioref">Open Source Security
+Foundation 2026</a>; <a href="#ref-sigstore_docs"
+role="doc-biblioref">Sigstore 2026</a>; <a href="#ref-mitre_attack"
+role="doc-biblioref">MITRE 2026</a>; <a href="#ref-cyclonedx_spec"
+role="doc-biblioref">CycloneDX 2026</a>; <a href="#ref-spdx_spec"
+role="doc-biblioref">SPDX 2026</a>; <a href="#ref-cisa_secure_by_design"
+role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
+2026</a>)</span>. This exemplar uses those sources to structure an
 adversarial assay. It does not claim compliance with those standards, it
 does not claim a signed SBOM or provenance bundle, and it does not claim
 a Codex Security or Deep Security Scan has been run.</p>
@@ -3025,6 +3479,12 @@ security scope inspectable, but it is not a security attestation. A fork
 that wants secure-by-design, zero-trust, supply-chain, or
 vulnerability-scan claims must add the missing artifacts, validators,
 receipts, and external review before reusing that language.</p>
+<p>The software improvements in this version do not remove these
+limitations. Enforced continuity proves that the configured stages
+connect; reverse assay proves only that a prefix reaches a declared
+numerical target; and <code>PurityVector</code> prevents accidental
+compensatory averaging. None establishes that the chosen targets,
+dimensions, or stage meanings are externally valid.</p>
 <hr />
 <h1 data-number="9" id="sec:evaluation"><span
 class="header-section-number">9</span> Quality Probes</h1>
@@ -3123,6 +3583,14 @@ validation. They are intentionally narrower than peer review: they check
 source ownership, token coverage, figure registration, claim support,
 and rendering integrity before a human reviewer assesses the substantive
 analogy.</p>
+<p>Evaluation uses three noninterchangeable levels. <strong>Invariant
+tests</strong> reject invalid executable states such as nonmonotone,
+discontinuous, or misordered stages. <strong>Artifact checks</strong>
+establish presence, readability, provenance, and registry parity.
+<strong>Claim-boundary review</strong> asks whether the prose says no
+more than those tests and artifacts support. Certification requires all
+applicable levels; a pass at one level cannot compensate for failure at
+another.</p>
 <h2 data-number="9.2" id="audit-rules"><span
 class="header-section-number">9.2</span> Audit rules</h2>
 <table style="width:100%;">
@@ -3215,39 +3683,68 @@ without supporting every attractive extrapolation from that source. The
 evaluation surface therefore treats analogy theory, reproducibility
 literature, provenance standards, and pre-1800 metallurgy references as
 boundary-setting evidence, not as decorations added after the pipeline
-already decided the claim [gentner1983structure; peng2011reproducible;
-wilkinson2016fair; biringuccio_pirotechnia_1540;
-agricola_de_re_metallica_1556; badcock_touchstone_1678;
-cramer_assaying_metals_1741]. A passing source review must preserve the
-distinction between historically documented assay/marking practices and
-this exemplar’s local software certification predicate.</p>
+already decided the claim <span class="citation"
+data-cites="gentner1983structure peng2011reproducible wilkinson2016fair biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 cramer_assaying_metals_1741">(<a
+href="#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
+<a href="#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>;
+<a href="#ref-wilkinson2016fair" role="doc-biblioref"><span
+class="nocase">Wilkinson et al.</span> 2016</a>; <a
+href="#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>. A passing source review must preserve the distinction
+between historically documented assay/marking practices and this
+exemplar’s local software certification predicate.</p>
 <p>The reporting-guideline literature keeps that gate modest. A passed
 checklist row certifies that a required reporting surface is present and
 traceable; it does not certify that the study behind the report is
-unbiased, sufficiently powered, or externally valid
-[equator_network_reporting_guidelines; vonelm2007strobe;
-percie_du_sert2020arrive]. The same rule governs the quality probes
+unbiased, sufficiently powered, or externally valid <span
+class="citation"
+data-cites="equator_network_reporting_guidelines vonelm2007strobe percie_du_sert2020arrive">(<a
+href="#ref-equator_network_reporting_guidelines"
+role="doc-biblioref">EQUATOR Network 2026</a>; <a
+href="#ref-vonelm2007strobe" role="doc-biblioref">Elm et al. 2007</a>;
+<a href="#ref-percie_du_sert2020arrive" role="doc-biblioref">Percie du
+Sert et al. 2020</a>)</span>. The same rule governs the quality probes
 here. Passing them supports local claims about source ownership,
 artifact completeness, and reproducible rendering, not universal claims
 about manuscript quality.</p>
 <p>Executable-compendium scholarship adds a more operational evaluation
 target: can a reader identify the paper object, its source code, its
 generated artifacts, its metadata, and the software version needed to
-rebuild it [nuest2017erc; chen2021metadata; smith2016softwarecitation]?
-The current gates answer that question locally through variable
-hydration, artifact counts, evidence facts, figure registration, and
-PDF/HTML validation. They do not measure long-term preservation,
-cross-platform portability, reviewer workload, or reader comprehension;
-those would require separate empirical studies.</p>
+rebuild it <span class="citation"
+data-cites="nuest2017erc chen2021metadata smith2016softwarecitation">(<a
+href="#ref-nuest2017erc" role="doc-biblioref">Nüst et al. 2017</a>; <a
+href="#ref-chen2021metadata" role="doc-biblioref"><span
+class="nocase">Chen et al.</span> 2021</a>; <a
+href="#ref-smith2016softwarecitation" role="doc-biblioref">Smith et al.
+2016</a>)</span>? The current gates answer that question locally through
+variable hydration, artifact counts, evidence facts, figure
+registration, and PDF/HTML validation. They do not measure long-term
+preservation, cross-platform portability, reviewer workload, or reader
+comprehension; those would require separate empirical studies.</p>
 <p>The adversarial assay adds a security-specific evaluation target: can
 a reader distinguish declared threat scope from actual scan evidence?
 tbl. <a href="#tbl:security_assay">5</a> maps zero-trust,
 secure-development, supply-chain, SBOM, attack-path, and
 secure-by-design guidance to local evidence surfaces and validators
-[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
-sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
-cisa_secure_by_design]. The passing condition is bounded: the table must
-be complete and the prose must not claim compliance or Codex Security
+<span class="citation"
+data-cites="nist_sp800_207_zero_trust nist_sp800_218_ssdf slsa_v1_2 sigstore_docs mitre_attack cyclonedx_spec spdx_spec cisa_secure_by_design">(<a
+href="#ref-nist_sp800_207_zero_trust" role="doc-biblioref">National
+Institute of Standards and Technology 2020</a>, <a
+href="#ref-nist_sp800_218_ssdf" role="doc-biblioref">2022</a>; <a
+href="#ref-slsa_v1_2" role="doc-biblioref">Open Source Security
+Foundation 2026</a>; <a href="#ref-sigstore_docs"
+role="doc-biblioref">Sigstore 2026</a>; <a href="#ref-mitre_attack"
+role="doc-biblioref">MITRE 2026</a>; <a href="#ref-cyclonedx_spec"
+role="doc-biblioref">CycloneDX 2026</a>; <a href="#ref-spdx_spec"
+role="doc-biblioref">SPDX 2026</a>; <a href="#ref-cisa_secure_by_design"
+role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
+2026</a>)</span>. The passing condition is bounded: the table must be
+complete and the prose must not claim compliance or Codex Security
 findings unless future scan artifacts are generated and integrated.</p>
 <p>The risk model adds prioritization to the gate list. fig. <a
 href="#fig:integrity_risk_matrix">11</a> separates easy-to-detect
@@ -3257,6 +3754,13 @@ of equally weighted boxes: token coverage, citation validity, claim
 support, and render readiness all matter, but a high-severity
 low-detectability failure should shape the next source edit before
 cosmetic manuscript polish.</p>
+<p>Figure review follows the same rule. File existence and nonblank
+pixels are necessary but not sufficient. The figure caption, encoding
+declaration, source data, and prose interpretation must describe the
+same measurement. This criterion specifically prohibits inferring a
+stagewise trend from a project-level aggregate, which is why fig. <a
+href="#fig:purity_claim_scatter">5</a> repeats one observed
+claim-support rate rather than inventing cumulative values.</p>
 <hr />
 <h1 data-number="10" id="sec:authoring_contract"><span
 class="header-section-number">10</span> Authoring Contract</h1>
@@ -3324,18 +3828,24 @@ authority from reproducibility standards.</p>
 ICMJE’s 2026 Recommendations include a dedicated section on artificial
 intelligence in publishing, and COPE’s authorship guidance states that
 AI tools cannot be listed as authors because they cannot accept
-responsibility for a manuscript [icmje2026recommendations; cope2023ai].
-A deterministic template is different from a generative AI system, but
-the obligation is parallel: tooling may assist composition and
-validation, while named human authors remain responsible for disclosure,
-accuracy, evidence boundaries, and final claims.</p>
+responsibility for a manuscript <span class="citation"
+data-cites="icmje2026recommendations cope2023ai">(<a
+href="#ref-icmje2026recommendations" role="doc-biblioref">International
+Committee of Medical Journal Editors 2026</a>; <a href="#ref-cope2023ai"
+role="doc-biblioref">Committee on Publication Ethics 2023</a>)</span>. A
+deterministic template is different from a generative AI system, but the
+obligation is parallel: tooling may assist composition and validation,
+while named human authors remain responsible for disclosure, accuracy,
+evidence boundaries, and final claims.</p>
 <p>Software citation closes the same accountability loop for executable
 materials. The code, template, and release that generated a manuscript
 should be treated as research products with credit, attribution,
-persistent identification, accessibility, and version specificity
-[smith2016softwarecitation]. A fork should therefore cite the release it
-used and record enough metadata for readers to distinguish “same
-template family” from “same executable object.”</p>
+persistent identification, accessibility, and version specificity <span
+class="citation" data-cites="smith2016softwarecitation">(<a
+href="#ref-smith2016softwarecitation" role="doc-biblioref">Smith et al.
+2016</a>)</span>. A fork should therefore cite the release it used and
+record enough metadata for readers to distinguish “same template family”
+from “same executable object.”</p>
 <p>Security authorship has the same rule. Standards and guidance can
 shape the threat model, but they cannot be cited as proof that this
 manuscript is compliant or secure. Future Codex Security or Deep
@@ -3372,6 +3882,11 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div>
 <ol start="11" type="1">
 <li>Do not hand-edit generated manuscript, PDFs, or figures</li>
+<li>If using reverse assay, preserve ordered-prefix semantics and
+disclose that the target is configured rather than empirically
+optimized</li>
+<li>If using multi-objective purity, report dimensions separately unless
+external evidence justifies an aggregation rule</li>
 </ol>
 <p>Do not hard-code equation, figure, or table numbers in prose. Use
 <code>[@eq:...]</code>, <code>[@fig:...]</code>,
@@ -3386,5 +3901,280 @@ until that missing surface exists.</p>
 the threat, standard, local evidence surface, validator, and claim
 boundary for a security claim, the fork should keep the language as
 scoped guidance rather than certification.</p>
+<p>Visualization authorship is equally accountable. A technically valid
+image can still mislead through an unsupported axis, aggregation,
+annotation, or caption. Every figure change must therefore update its
+<code>FigureSpec</code>, source data declaration, tests, manuscript
+interpretation, and regenerated PNG/SVG pair as one reviewable unit.</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-agricola_de_re_metallica_1556" class="csl-entry"
+role="listitem">
+Agricola, Georgius. 1556. <em>De Re Metallica</em>. Hieronymus Froben;
+Nicolaus Episcopius. <a
+href="https://archive.org/details/deremetallica50agri">https://archive.org/details/deremetallica50agri</a>.
+</div>
+<div id="ref-belhajjame2015ontologies" class="csl-entry"
+role="listitem">
+<span class="nocase">Belhajjame, Khalid, Oscar Corcho, Daniel Garijo, et
+al.</span> 2015. <span>“Using a Suite of Ontologies for Preserving
+Workflow-Centric Research Objects.”</span> <em>Journal of Web
+Semantics</em> 32: 16–42. <a
+href="https://doi.org/10.1016/j.websem.2015.01.003">https://doi.org/10.1016/j.websem.2015.01.003</a>.
+</div>
+<div id="ref-biringuccio_pirotechnia_1540" class="csl-entry"
+role="listitem">
+Biringuccio, Vannoccio. 1540. <em>De La Pirotechnia</em>. Venturino
+Roffinello. <a
+href="https://digital.sciencehistory.org/works/n888ils">https://digital.sciencehistory.org/works/n888ils</a>.
+</div>
+<div id="ref-buckheit_donoho_1995" class="csl-entry" role="listitem">
+Buckheit, Jonathan B., and David L. Donoho. 1995. <span>“WaveLab and
+Reproducible Research.”</span> In <em>Wavelets and Statistics</em>,
+edited by Anestis Antoniadis and Georges Oppenheim. Springer. <a
+href="https://doi.org/10.1007/978-1-4612-2544-7_5">https://doi.org/10.1007/978-1-4612-2544-7_5</a>.
+</div>
+<div id="ref-chen2021metadata" class="csl-entry" role="listitem">
+<span class="nocase">Chen, Xiaoli et al.</span> 2021. <span>“The Role of
+Metadata in Reproducible Computational Research.”</span>
+<em>Patterns</em> 2 (9): 100328. <a
+href="https://doi.org/10.1016/j.patter.2021.100328">https://doi.org/10.1016/j.patter.2021.100328</a>.
+</div>
+<div id="ref-cope2023ai" class="csl-entry" role="listitem">
+Committee on Publication Ethics. 2023. <em>Authorship and AI Tools</em>.
+<a
+href="https://publicationethics.org/cope-position-statements/ai-author">https://publicationethics.org/cope-position-statements/ai-author</a>.
+</div>
+<div id="ref-cramer_assaying_metals_1741" class="csl-entry"
+role="listitem">
+Cramer, Johann Andreas. 1741. <em>Elements of the Art of Assaying
+Metals</em>. Edited by Cromwell Mortimer. T. Woodward. <a
+href="https://catalog.hathitrust.org/Record/001114669">https://catalog.hathitrust.org/Record/001114669</a>.
+</div>
+<div id="ref-cisa_secure_by_design" class="csl-entry" role="listitem">
+Cybersecurity and Infrastructure Security Agency. 2026. <em>Secure by
+Design</em>. <a
+href="https://www.cisa.gov/resources-tools/resources/secure-by-design">https://www.cisa.gov/resources-tools/resources/secure-by-design</a>.
+</div>
+<div id="ref-cyclonedx_spec" class="csl-entry" role="listitem">
+CycloneDX. 2026. <em>CycloneDX Specification Overview</em>. <a
+href="https://cyclonedx.org/specification/overview/">https://cyclonedx.org/specification/overview/</a>.
+</div>
+<div id="ref-vonelm2007strobe" class="csl-entry" role="listitem">
+Elm, Erik von, Douglas G. Altman, Matthias Egger, et al. 2007.
+<span>“The Strengthening the Reporting of Observational Studies in
+Epidemiology (STROBE) Statement: Guidelines for Reporting Observational
+Studies.”</span> <em>The Lancet</em> 370 (9596): 1453–57. <a
+href="https://doi.org/10.1016/S0140-6736(07)61602-X">https://doi.org/10.1016/S0140-6736(07)61602-X</a>.
+</div>
+<div id="ref-equator_network_reporting_guidelines" class="csl-entry"
+role="listitem">
+EQUATOR Network. 2026. <em>What Is a Reporting Guideline?</em> <a
+href="https://www.equator-network.org/about-us/what-is-a-reporting-guideline/">https://www.equator-network.org/about-us/what-is-a-reporting-guideline/</a>.
+</div>
+<div id="ref-template_repo" class="csl-entry" role="listitem">
+Friedman, Daniel Ari. 2026a. <em>Research Project Template</em>. <a
+href="https://github.com/docxology/template"
+class="uri">Https://github.com/docxology/template</a>.
+</div>
+<div id="ref-template_madlib" class="csl-entry" role="listitem">
+Friedman, Daniel Ari. 2026b. <em>Template Madlib Exemplar</em>. <a
+href="https://github.com/docxology/template/tree/main/projects/templates/template_madlib"
+class="uri">Https://github.com/docxology/template/tree/main/projects/templates/template_madlib</a>.
+</div>
+<div id="ref-gentner1983structure" class="csl-entry" role="listitem">
+Gentner, Dedre. 1983. <span>“Structure-Mapping: A Theoretical Framework
+for Analogy.”</span> <em>Cognitive Science</em> 7 (2): 155–70. <a
+href="https://doi.org/10.1207/s15516709cog0702_3">https://doi.org/10.1207/s15516709cog0702_3</a>.
+</div>
+<div id="ref-hallmarking_convention_1972" class="csl-entry"
+role="listitem">
+Hallmarking Convention. 1972. <em>Convention on the Control and Marking
+of Articles of Precious Metals</em>. <a
+href="https://hallmarkingconvention.org/">https://hallmarkingconvention.org/</a>.
+</div>
+<div id="ref-hesse1966models" class="csl-entry" role="listitem">
+Hesse, Mary B. 1966. <em>Models and Analogies in Science</em>.
+University of Notre Dame Press.
+</div>
+<div id="ref-holyoak_thagard_1995" class="csl-entry" role="listitem">
+Holyoak, Keith J., and Paul Thagard. 1995. <em>Mental Leaps: Analogy in
+Creative Thought</em>. MIT Press.
+</div>
+<div id="ref-icmje2026recommendations" class="csl-entry"
+role="listitem">
+International Committee of Medical Journal Editors. 2026.
+<em>Recommendations for the Conduct, Reporting, Editing, and Publication
+of Scholarly Work in Medical Journals</em>. <a
+href="https://www.icmje.org/recommendations/">https://www.icmje.org/recommendations/</a>.
+</div>
+<div id="ref-ioannidis2005false" class="csl-entry" role="listitem">
+Ioannidis, John P. A. 2005. <span>“Why Most Published Research Findings
+Are False.”</span> <em>PLOS Medicine</em> 2 (8): e124. <a
+href="https://doi.org/10.1371/journal.pmed.0020124">https://doi.org/10.1371/journal.pmed.0020124</a>.
+</div>
+<div id="ref-knuth1984literate" class="csl-entry" role="listitem">
+Knuth, Donald E. 1984. <span>“Literate Programming.”</span> <em>The
+Computer Journal</em> 27 (2): 97–111. <a
+href="https://doi.org/10.1093/comjnl/27.2.97">https://doi.org/10.1093/comjnl/27.2.97</a>.
+</div>
+<div id="ref-lasser2020executable" class="csl-entry" role="listitem">
+Lasser, Jana. 2020. <span>“Creating an Executable Paper Is a Journey
+Through Open Science.”</span> <em>Communications Physics</em> 3: 224. <a
+href="https://doi.org/10.1038/s42005-020-00403-4">https://doi.org/10.1038/s42005-020-00403-4</a>.
+</div>
+<div id="ref-leisch2002sweave" class="csl-entry" role="listitem">
+Leisch, Friedrich. 2002. <span>“Sweave: Dynamic Generation of
+Statistical Reports Using Literate Data Analysis.”</span>
+<em>Proceedings of the 3rd International Workshop on Distributed
+Statistical Computing</em> (Vienna, Austria). <a
+href="https://www.statistik.tu-dortmund.de/useR-2008/slides/Leisch.pdf">https://www.statistik.tu-dortmund.de/useR-2008/slides/Leisch.pdf</a>.
+</div>
+<div id="ref-lbma_good_delivery_rules" class="csl-entry"
+role="listitem">
+London Bullion Market Association. 2026. <em>Good Delivery Rules for
+Gold and Silver Bars</em>. <a
+href="https://www.lbma.org.uk/good-delivery/good-delivery-rules">https://www.lbma.org.uk/good-delivery/good-delivery-rules</a>.
+</div>
+<div id="ref-marsden_house_2006" class="csl-entry" role="listitem">
+Marsden, John O., and C. Iain House. 2006. <em>The Chemistry of Gold
+Extraction</em>. 2nd ed. Society for Mining, Metallurgy,; Exploration.
+</div>
+<div id="ref-marwick2018packaging" class="csl-entry" role="listitem">
+Marwick, Ben, Carl Boettiger, and Lincoln Mullen. 2018. <span>“Packaging
+Data Analytical Work Reproducibly Using r (and Friends).”</span> <em>The
+American Statistician</em> 72 (1): 80–90. <a
+href="https://doi.org/10.1080/00031305.2017.1375986">https://doi.org/10.1080/00031305.2017.1375986</a>.
+</div>
+<div id="ref-mitre_attack" class="csl-entry" role="listitem">
+MITRE. 2026. <em>MITRE ATT&amp;CK</em>. <a
+href="https://attack.mitre.org/">https://attack.mitre.org/</a>.
+</div>
+<div id="ref-moreau2013prov" class="csl-entry" role="listitem">
+<span class="nocase">Moreau, Luc, Paul Groth, James Cheney, et
+al.</span> 2013. <em>PROV-Overview: An Overview of the PROV Family of
+Documents</em>. W3C Note. <a
+href="https://www.w3.org/TR/prov-overview/">https://www.w3.org/TR/prov-overview/</a>.
+</div>
+<div id="ref-nist_sp800_207_zero_trust" class="csl-entry"
+role="listitem">
+National Institute of Standards and Technology. 2020. <em>Zero Trust
+Architecture</em>. Special Publication 800-207. National Institute of
+Standards; Technology. <a
+href="https://doi.org/10.6028/NIST.SP.800-207">https://doi.org/10.6028/NIST.SP.800-207</a>.
+</div>
+<div id="ref-nist_sp800_218_ssdf" class="csl-entry" role="listitem">
+National Institute of Standards and Technology. 2022. <em>Secure
+Software Development Framework (SSDF) Version 1.1: Recommendations for
+Mitigating the Risk of Software Vulnerabilities</em>. Special
+Publication 800-218. National Institute of Standards; Technology. <a
+href="https://doi.org/10.6028/NIST.SP.800-218">https://doi.org/10.6028/NIST.SP.800-218</a>.
+</div>
+<div id="ref-nosek2015top" class="csl-entry" role="listitem">
+Nosek, Brian A., George Alter, George C. Banks, et al. 2015.
+<span>“Promoting an Open Research Culture.”</span> <em>Science</em> 348
+(6242): 1422–25. <a
+href="https://doi.org/10.1126/science.aab2374">https://doi.org/10.1126/science.aab2374</a>.
+</div>
+<div id="ref-nuest2017erc" class="csl-entry" role="listitem">
+Nüst, Daniel, Markus Konkol, Edzer Pebesma, et al. 2017. <span>“Opening
+the Publication Process with Executable Research Compendia.”</span>
+<em>D-Lib Magazine</em> 23 (1/2). <a
+href="https://doi.org/10.1045/january2017-nuest">https://doi.org/10.1045/january2017-nuest</a>.
+</div>
+<div id="ref-slsa_v1_2" class="csl-entry" role="listitem">
+Open Source Security Foundation. 2026. <em>Supply-Chain Levels for
+Software Artifacts Version 1.2</em>. <a
+href="https://slsa.dev/spec/v1.2/">https://slsa.dev/spec/v1.2/</a>.
+</div>
+<div id="ref-page2021prisma" class="csl-entry" role="listitem">
+Page, Matthew J., Joanne E. McKenzie, Patrick M. Bossuyt, et al. 2021.
+<span>“The PRISMA 2020 Statement: An Updated Guideline for Reporting
+Systematic Reviews.”</span> <em>BMJ</em> 372: n71. <a
+href="https://doi.org/10.1136/bmj.n71">https://doi.org/10.1136/bmj.n71</a>.
+</div>
+<div id="ref-peng2011reproducible" class="csl-entry" role="listitem">
+Peng, Roger D. 2011. <span>“Reproducible Research in Computational
+Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
+href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
+</div>
+<div id="ref-percie_du_sert2020arrive" class="csl-entry"
+role="listitem">
+Percie du Sert, Nathalie, Viki Hurst, Amrita Ahluwalia, et al. 2020.
+<span>“The ARRIVE Guidelines 2.0: Updated Guidelines for Reporting
+Animal Research.”</span> <em>PLOS Biology</em> 18 (7): e3000410. <a
+href="https://doi.org/10.1371/journal.pbio.3000410">https://doi.org/10.1371/journal.pbio.3000410</a>.
+</div>
+<div id="ref-pliny_natural_history_33" class="csl-entry"
+role="listitem">
+Pliny the Elder. c. 77 CE. <em>The Natural History, Book XXXIII: The
+Natural History of Metals</em>. <a
+href="https://www.gutenberg.org/files/62704/62704-h/62704-h.htm">https://www.gutenberg.org/files/62704/62704-h/62704-h.htm</a>.
+</div>
+<div id="ref-rule2019jupyter" class="csl-entry" role="listitem">
+<span class="nocase">Rule, Adam, Amanda Birmingham, Cristal Zuniga, et
+al.</span> 2019. <span>“Ten Simple Rules for Writing and Sharing
+Computational Analyses in Jupyter Notebooks.”</span> <em>PLOS
+Computational Biology</em> 15 (7): e1007007. <a
+href="https://doi.org/10.1371/journal.pcbi.1007007">https://doi.org/10.1371/journal.pcbi.1007007</a>.
+</div>
+<div id="ref-sandve2013ten" class="csl-entry" role="listitem">
+Sandve, Geir Kjetil, Anton Nekrutenko, James Taylor, and Eivind Hovig.
+2013. <span>“Ten Simple Rules for Reproducible Computational
+Research.”</span> <em>PLOS Computational Biology</em> 9 (10): e1003285.
+<a
+href="https://doi.org/10.1371/journal.pcbi.1003285">https://doi.org/10.1371/journal.pcbi.1003285</a>.
+</div>
+<div id="ref-schulz2010consort" class="csl-entry" role="listitem">
+Schulz, Kenneth F., Douglas G. Altman, David Moher, and CONSORT Group.
+2010. <span>“CONSORT 2010 Statement: Updated Guidelines for Reporting
+Parallel Group Randomised Trials.”</span> <em>BMJ</em> 340: c332. <a
+href="https://doi.org/10.1136/bmj.c332">https://doi.org/10.1136/bmj.c332</a>.
+</div>
+<div id="ref-sigstore_docs" class="csl-entry" role="listitem">
+Sigstore. 2026. <em>Sigstore Documentation</em>. <a
+href="https://docs.sigstore.dev/">https://docs.sigstore.dev/</a>.
+</div>
+<div id="ref-smith2016softwarecitation" class="csl-entry"
+role="listitem">
+Smith, Arfon M., Daniel S. Katz, Kyle E. Niemeyer, and FORCE11 Software
+Citation Working Group. 2016. <span>“Software Citation
+Principles.”</span> <em>PeerJ Computer Science</em> 2: e86. <a
+href="https://doi.org/10.7717/peerj-cs.86">https://doi.org/10.7717/peerj-cs.86</a>.
+</div>
+<div id="ref-spdx_spec" class="csl-entry" role="listitem">
+SPDX. 2026. <em>SPDX Specifications</em>. <a
+href="https://spdx.dev/use/specifications/">https://spdx.dev/use/specifications/</a>.
+</div>
+<div id="ref-stodden2011default" class="csl-entry" role="listitem">
+Stodden, Victoria, Jonathan Borwein, and David H. Bailey. 2011.
+<span>“Setting the Default to Reproducible.”</span> <em>Computing in
+Science &amp; Engineering</em> 13 (4): 24–32. <a
+href="https://doi.org/10.1109/MCSE.2011.36">https://doi.org/10.1109/MCSE.2011.36</a>.
+</div>
+<div id="ref-goldsmiths_hallmarking_history" class="csl-entry"
+role="listitem">
+The Goldsmiths’ Company Assay Office. 2026. <em>History of
+Hallmarking</em>. <a
+href="https://www.assayofficelondon.co.uk/about-us/history-of-hallmarking">https://www.assayofficelondon.co.uk/about-us/history-of-hallmarking</a>.
+</div>
+<div id="ref-unesco2021_open_science" class="csl-entry" role="listitem">
+UNESCO. 2021. <em>UNESCO Recommendation on Open Science</em>. <a
+href="https://www.unesco.org/en/open-science/about">https://www.unesco.org/en/open-science/about</a>.
+</div>
+<div id="ref-badcock_touchstone_1678" class="csl-entry" role="listitem">
+W. B. (William Badcock). 1678. <em>A Touch-Stone for Gold and Silver
+Wares, or, a Manual for Goldsmiths</em>. London. <a
+href="https://archive.org/details/0040TOUC">https://archive.org/details/0040TOUC</a>.
+</div>
+<div id="ref-wilkinson2016fair" class="csl-entry" role="listitem">
+<span class="nocase">Wilkinson, Mark D., Michel Dumontier, IJsbrand Jan
+Aalbersberg, et al.</span> 2016. <span>“The FAIR Guiding Principles for
+Scientific Data Management and Stewardship.”</span> <em>Scientific
+Data</em> 3: 160018. <a
+href="https://doi.org/10.1038/sdata.2016.18">https://doi.org/10.1038/sdata.2016.18</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

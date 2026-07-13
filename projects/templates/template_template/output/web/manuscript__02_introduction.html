@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,32 +173,30 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="introduction">Introduction</h1>
 <h2 id="research-tools-as-epistemic-infrastructure">Research Tools as
 Epistemic Infrastructure</h2>
 <p>Scientific research operates through a layered ecology of tools,
 documents, and practices—each shaping what can be known, communicated,
-and verified. When these layers are fragmented, the artifacts of
-research (manuscripts, data, code, figures) drift out of alignment with
-one another, creating gaps that are structural rather than incidental.
-The “reproducibility crisis” is one symptom of this deeper misalignment:
-a 2016 <em>Nature</em> survey of 1,576 researchers found that 70% had
-tried and failed to reproduce another scientist’s experiments, and more
-than half had failed to reproduce their own [baker2016reproducibility].
-Freedman et al. estimate that the biomedical industry alone loses $28
-billion annually to irreproducible preclinical research
-[freedman2015economics]. But reproducibility is only the most visible
-face of a broader problem. Research software engineering, epistemic
-integrity, and the coordination between human researchers and AI
-collaborators all depend on the same underlying question: whether the
-tools that produce research artifacts can themselves be made
-transparent, testable, and self-documenting. Nosek et
-al. [nosek2018preregistration] have argued that the preregistration
-revolution—requiring researchers to commit to analytical plans before
-data collection—is a necessary structural reform; we extend this logic
-to the entire research build pipeline.</p>
+and verified. When these layers are fragmented, manuscripts, data, code,
+and figures can drift out of alignment, creating gaps that are
+structural rather than incidental. Survey and economic evidence
+documents the practical cost of failed reproduction attempts
+[baker2016reproducibility; freedman2015economics], but reproducibility
+is only the most visible face of a broader problem. Research software
+engineering, epistemic integrity, and the coordination between human
+researchers and AI collaborators all depend on whether the tools that
+produce research artifacts can themselves be transparent, testable, and
+self-documenting. Nosek et al. [nosek2018preregistration] argue that
+committing to analytical plans before data collection is a necessary
+structural reform; we extend this logic to the research build
+pipeline.</p>
 <p>One root cause is fragmentation—of attention (in the mind) as well as
 in the cyberphysical niche (documents, versions, and reproducibility
 artefacts). A typical research project scatters its artifacts across
@@ -206,21 +204,19 @@ disconnected tools: LaTeX editors [lamport1994latex] for prose, Jupyter
 notebooks for analysis, ad-hoc shell scripts for figure generation, and
 manual copy-paste for integrating results into manuscripts. Each
 boundary between tools is a potential locus of desynchronization. The
-version of the figure embedded in the PDF may not match the version of
-the code that ostensibly generated it. The test suite, if it exists at
-all, likely tests the code in isolation from the rendering pipeline.
-Pimentel et al. [pimentel2019jupyter] analyzed 1.4 million Jupyter
-notebooks from GitHub and found that only 24% could be successfully
-re-executed, with 36% producing different results—quantifying the
-reproducibility cost of notebook-based workflows. Peng
-[peng2011reproducible] argues that reproducibility in computational
-science requires, at minimum, that the data and code underlying a
-published result be available for independent verification—yet the tools
-for enforcing this standard remain ad hoc. Indeed, even the terminology
-is fractured: Barba [barba2018terminologies] documents how
-“reproducibility,” “replicability,” and “repeatability” carry
-conflicting definitions across disciplines, undermining cross-field
-standards.</p>
+version of a figure embedded in a PDF may not match the code that
+ostensibly generated it, while tests may exercise analysis code without
+exercising the rendering path. Pimentel et al. [pimentel2019jupyter]
+studied a corpus described as 1.4 million Jupyter notebooks; in the
+valid execution subset, 24.11% ran without errors and 4.03% reproduced
+the recorded results. Those distinctions matter: execution success is
+not equivalent to result reproduction. Peng [peng2011reproducible]
+argues that reproducibility in computational science requires, at
+minimum, that the data and code underlying a published result be
+available for independent verification. Barba [barba2018terminologies]
+further documents how “reproducibility,” “replicability,” and
+“repeatability” carry conflicting definitions across disciplines,
+complicating cross-field standards.</p>
 <h2 id="related-work">Related Work</h2>
 <p>Gentleman and Temple Lang [gentleman2007research] introduced the
 concept of a <em>research compendium</em>—a single unit of scholarly
@@ -232,11 +228,10 @@ approaches, and best-practice frameworks.</p>
 <p><strong>Snakemake</strong> [koster2012snakemake] uses a rule-based,
 Python-derived DSL to specify computational workflows as directed
 acyclic graphs of file-producing steps. It supports containerized
-execution via Conda and Singularity environments. Snakemake 9.x
-(2024–2025) introduced a plugin architecture for extended execution
-backends and storage providers, yet its scope remains computational
-pipeline orchestration—it does not integrate manuscript rendering,
-testing enforcement, or provenance watermarking.</p>
+execution and an extension architecture for execution and storage
+backends, while its central scope remains computational pipeline
+orchestration rather than this repository’s combined manuscript, test,
+and document-provenance contract.</p>
 <p><strong>Nextflow</strong> [ditommaso2017nextflow] employs a dataflow
 programming paradigm with native support for container-based execution
 across heterogeneous computing environments (local, SLURM, AWS). Like
@@ -370,13 +365,12 @@ as follows:</p>
 <tbody>
 <tr>
 <td>Pipeline orchestration</td>
-<td>Snakemake 9.x, Nextflow 25.x, CWL 1.2</td>
+<td>Snakemake, Nextflow, CWL</td>
 <td>Quarto, Jupyter Book, R Markdown, Typst, Overleaf, Prism</td>
 </tr>
 <tr>
 <td>Manuscript rendering</td>
-<td>Quarto 1.x, Jupyter Book 2.x, R Markdown, Typst, Overleaf (2025),
-Prism</td>
+<td>Quarto, Jupyter Book, R Markdown, Typst, Overleaf, Prism</td>
 <td>Snakemake, Nextflow, CWL, DVC</td>
 </tr>
 <tr>
@@ -424,16 +418,17 @@ pipeline-enforced system with version-controlled infrastructure
 <li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
-scripts, data). 23 infrastructure subdirectories (20 importable
-packages) comprising ~616 Python modules provide reusable services;
+scripts, data). 28 infrastructure subdirectories (25 importable
+packages) comprising ~662 Python modules provide reusable services;
 projects consume them without modification.</p></li>
-<li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
-where pipeline advancement is contingent on test passage. Infrastructure
-tests must achieve 60% coverage; project tests must achieve 90%. All
-tests use real filesystem operations, real subprocess calls, and real
-network connections—no mock objects, no fake services, no synthetic test
-doubles. ~7,968 infrastructure tests and 3390+ project tests enforce
-this standard.</p></li>
+<li><p><strong>Execution Integrity</strong>: Pipeline advancement is
+contingent on test passage. The configured source-coverage floors are
+60% for infrastructure and 90% for each project. The static gate rejects
+prohibited mock-framework imports, while the suites exercise real
+filesystem and subprocess behavior and use local protocol servers or
+explicitly enabled live services for network boundaries. ~8,583
+infrastructure tests and 4907+ project tests are discovered by the
+introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
 rendering pipeline. Every generated PDF carries a SHA-256 fingerprint,
@@ -487,7 +482,7 @@ are:</p>
 <li>A formal description of the Two-Layer Architecture and Standalone
 Project Paradigm that enables N independent research projects to share
 infrastructure without coupling.</li>
-<li>A detailed specification of the 14-stage DAG in
+<li>A detailed specification of the 16-stage DAG in
 <code>infrastructure/core/pipeline/pipeline.yaml</code>: default full
 runs use 10 stages; <code>--core-only</code> runs 8; opt-in ebook,
 metadata, bundle, and archival stages via <code>--tags</code>.</li>
@@ -499,16 +494,23 @@ the fourteen enforcement capabilities enumerated in §Results.</li>
 <li>An empirical evaluation across the canonical exemplar projects under
 <code>projects/templates/</code>
 (<code>templates/template_active_inference</code>,
+<code>templates/template_autopoiesis</code>,
 <code>templates/template_autoresearch_project</code>,
 <code>templates/template_autoscientists</code>,
 <code>templates/template_code_project</code>,
+<code>templates/template_data_descriptor</code>,
 <code>templates/template_eda_notebook</code>,
+<code>templates/template_formal</code>,
 <code>templates/template_gold_refinement</code>,
 <code>templates/template_literature_meta_analysis</code>,
 <code>templates/template_madlib</code>,
 <code>templates/template_methods_paper</code>,
 <code>templates/template_newspaper</code>,
+<code>templates/template_pitch_deck</code>,
+<code>templates/template_pools_rules_tools</code>,
 <code>templates/template_prose_project</code>,
+<code>templates/template_redacted_report</code>,
+<code>templates/template_registered_report</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
 <code>templates/template_storybook</code>,
@@ -533,12 +535,13 @@ href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The <a
 href="06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
-Module Reference</a> provides detailed documentation for all 23
+Module Reference</a> provides detailed documentation for all 28
 subdirectories. <a
 href="07_security_provenance.md#security-and-provenance">Security and
 Provenance</a> describes the steganographic and cryptographic integrity
 layer. The <a
 href="08a_appendix_pipeline.md#appendix-pipeline">Appendices</a> provide
 pipeline, configuration, and comparative references.</p>
+</main>
 </body>
 </html>

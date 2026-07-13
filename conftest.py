@@ -13,6 +13,7 @@ Pytest and coverage settings are defined in pyproject.toml:
 - [tool.coverage.run] - Coverage collection settings
 - [tool.coverage.report] - Coverage report configuration
 """
+
 import os
 import sys
 

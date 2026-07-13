@@ -64,17 +64,37 @@ def public_project_names(repo_root: Path | str) -> list[str]:
 
 
 def public_ci_source_paths(repo_root: Path | str) -> list[Path]:
-    """Return source paths for public CI lint/type checks.
+    """Return source paths for public CI type checks.
 
-    Paths are repo-relative and intentionally exclude local-only symlinked
-    projects under ``projects/``.
+    Paths are repo-relative and cover reusable infrastructure, root pipeline
+    scripts, and public exemplar ``src/`` trees. Local-only symlinked projects
+    under ``projects/`` remain excluded.
     """
     root = Path(repo_root)
-    paths = [Path("infrastructure")]
+    paths = [Path("infrastructure"), Path("scripts")]
     for name in PUBLIC_PROJECT_NAMES:
         src = root / "projects" / name / "src"
         if src.is_dir():
             paths.append(Path("projects") / name / "src")
+    return paths
+
+
+def public_ci_lint_paths(repo_root: Path | str) -> list[Path]:
+    """Return every public Python/notebook tree that Ruff must check.
+
+    Type checking intentionally stays source-only because each standalone
+    exemplar owns its own import root. Linting has no such package-collision
+    constraint, so it also covers infrastructure tests plus every public
+    exemplar's scripts, tests, and notebooks. Private lifecycle trees and
+    generated ``output/`` content remain outside the public gate.
+    """
+    root = Path(repo_root)
+    paths = [Path("conftest.py"), Path("docs"), Path("infrastructure"), Path("scripts"), Path("tests")]
+    for name in PUBLIC_PROJECT_NAMES:
+        project = root / "projects" / name
+        for subdir_name in ("src", "scripts", "tests", "notebooks"):
+            if (project / subdir_name).exists():
+                paths.append(Path("projects") / name / subdir_name)
     return paths
 
 
@@ -87,7 +107,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("source-paths", "project-names", "project-names-json"),
+        choices=("lint-paths", "source-paths", "project-names", "project-names-json"),
         help="Value to print for shell consumption.",
     )
     parser.add_argument(
@@ -99,7 +119,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
-    if args.command == "source-paths":
+    if args.command == "lint-paths":
+        print(_format_paths(public_ci_lint_paths(repo_root)))
+    elif args.command == "source-paths":
         print(_format_paths(public_ci_source_paths(repo_root)))
     elif args.command == "project-names-json":
         # Compact JSON array consumed by the CI test-project matrix via
@@ -119,6 +141,7 @@ __all__ = [
     "LOCAL_ONLY_TEMPLATE_NAMES",
     "PUBLIC_PROJECT_NAMES",
     "main",
+    "public_ci_lint_paths",
     "public_ci_source_paths",
     "public_project_infos",
     "public_project_names",

@@ -107,19 +107,20 @@ print(f"Description: {metadata['description']}")
 
 ### Public CI Scope (`public_scope.py`)
 
-Single source of truth for the public exemplar roster and the source paths CI
-lints. Imported by `core/health.py`, `documentation/active_projects_doc.py`, and
+Single source of truth for the public exemplar roster and the paths CI checks.
+Imported by `core/health.py`, `documentation/active_projects_doc.py`, and
 `publishing/repro_bundle.py`.
 
 ```python
 from infrastructure.project.public_scope import (
     PUBLIC_PROJECT_NAMES,      # canonical public exemplar names under projects/templates/
-    public_ci_source_paths,    # public src/ paths fed to Ruff/mypy in CI
+    public_ci_lint_paths,      # public source, tests, scripts, and notebooks for Ruff
+    public_ci_source_paths,    # import-safe public src/ paths fed to mypy
 )
 ```
 
-CLI: `python -m infrastructure.project.public_scope source-paths` (the command the
-CI `lint` job uses to compute scope).
+CLI: `python -m infrastructure.project.public_scope lint-paths` supplies Ruff's
+full public surface; `... source-paths` supplies mypy's import-safe source roots.
 
 ### Sidecar Symlink Sync (`linking.py`)
 

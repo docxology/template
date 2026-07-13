@@ -2,7 +2,7 @@
   "arxiv": {
     "filename": "arxiv_submission_20260703.tar.gz",
     "status": "prepared",
-    "tarball": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/arxiv_submission_20260703.tar.gz"
+    "tarball": "<repo-root>/projects/templates/template_storybook/output/arxiv_submission_20260703.tar.gz"
   },
   "ipfs_web3storage": {
     "bundle_sha256": null,

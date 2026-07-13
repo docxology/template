@@ -17,7 +17,7 @@ cliché, and every claim optionally deep-linked to its source file.
 template_pitch_deck/
 ├── manuscript/
 │   ├── deck_content_{short,medium,long}.yaml   # the pitch content itself
-│   ├── config.yaml                              # deck.theme, deck.source_base_url, deck.pitch_subject
+│   ├── config.yaml                              # project_config.deck: theme, source URL, subject
 │   └── 00_abstract.md … 99_references.md        # standard "about this template" manuscript
 ├── src/
 │   ├── content_loader.py       # YAML → DeckContent (token-resolved)
@@ -53,6 +53,8 @@ layout, so it belongs alongside `infrastructure/rendering/docx_renderer.py`
 and `epub_renderer.py`. Both renderers import the same font-size constants
 from `slide_deck.py` (not re-declared in `pptx_deck.py`), so PDF and PPTX
 stay in size parity, not just text/slide-count parity.
+The PPTX renderer also normalizes OOXML ZIP-member timestamps after save;
+two identical renders must have the same SHA-256 digest.
 
 ### Per-slide QR deep-links (`src/standalone_slides.py`)
 

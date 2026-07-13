@@ -159,11 +159,13 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 ### Data Testing
 
-**No Mocks Philosophy:**
-- All tests use data and actual functionality
-- No mock objects or simulated responses
-- Integration testing with actual dependencies
-- Deterministic, reproducible test results
+**Real-first testing philosophy:**
+- Mock frameworks are prohibited.
+- Prefer data, actual functionality, subprocesses, and temporary files.
+- Existing `monkeypatch.setattr`/`setitem` operations appear in the repository
+  semantic-stand-in inventory and are migration debt, not proof that every
+  integration uses its production dependency.
+- Keep tests deterministic and reproducible.
 
 ### Coverage
 
@@ -344,7 +346,7 @@ class TestModuleName:
 ### Test Quality Assurance
 
 **Test Review Checklist:**
-- [ ] Tests use data, no mocks
+- [ ] Tests use real behavior and add no semantic stand-in debt
 - [ ] All code paths covered
 - [ ] Error conditions tested
 - [ ] Test isolation maintained

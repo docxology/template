@@ -3,7 +3,12 @@
 > **From manuscript to DOI: citations, Zenodo, arXiv, and GitHub Releases**
 
 **Skill Level**: 11-12
-**Quick Reference:** [Modules Guide](../modules/modules-guide.md) | [Publishing Module](../modules/guides/publishing-module.md) | [Zenodo DOI strategy](zenodo-doi-strategy.md)
+**Quick Reference:** [Publication runbook](publication-runbook.md) | [Modules Guide](../modules/modules-guide.md) | [Publishing Module](../modules/guides/publishing-module.md) | [Zenodo DOI strategy](zenodo-doi-strategy.md)
+
+Start with the [Publication runbook](publication-runbook.md) when you need an
+end-to-end path from rendered project to standalone public GitHub repository,
+real Zenodo DOI, optional mirrors, and archival handoff. This guide is the
+detailed reference behind that runbook.
 
 ---
 
@@ -767,8 +772,8 @@ The block reports **durable publication state only** — DOIs, repository, and
 release identifiers from `config.yaml`. It never encodes machine-specific
 credential presence (that is the separate
 [credential check](#verify-credentials-first)). Platform rows are generated from
-the 12-platform registry (`registry.PLATFORM_REGISTRY`), so adding a platform to
-the registry automatically surfaces it here.
+the first-class rows in `registry.PLATFORM_REGISTRY`, so adding a platform to
+the registry automatically surfaces it here when it has a status-report mapping.
 
 ```bash
 # Preview the block (no write)

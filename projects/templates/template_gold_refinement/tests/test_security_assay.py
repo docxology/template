@@ -5,6 +5,7 @@ from pathlib import Path
 
 from config import load_gold_refinement_config
 from security_assay import (
+    SecurityAssayRecord,
     build_security_assay,
     security_assay_records,
     security_assay_summary_line,
@@ -22,6 +23,7 @@ def test_security_assay_records_are_complete_and_unique():
     assert all(item.evidence_surface for item in records)
     assert all(item.validator for item in records)
     assert all(item.claim_boundary for item in records)
+    assert all(item.is_complete for item in records)
 
 
 def test_security_assay_table_and_summary_bound_scan_claims():
@@ -42,3 +44,8 @@ def test_security_assay_records_are_json_serializable():
     cfg = load_gold_refinement_config(Path(__file__).resolve().parent.parent)
     payload = json.dumps(security_assay_records(build_security_assay(cfg)))
     assert "secure-by-design overclaim" in payload
+
+
+def test_security_assay_completeness_is_schema_level_only():
+    incomplete = SecurityAssayRecord("S1", "threat", "standard", "", "validator", "boundary")
+    assert not incomplete.is_complete

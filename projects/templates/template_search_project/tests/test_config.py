@@ -50,10 +50,13 @@ def test_year_filters_and_sources(tmp_path: Path):
         paper:
           title: "Demo"
         search:
-          query: "x"
-          year_min: 2010
-          year_max: 2024
-          sources: [local, arxiv]
+          query: "legacy"
+        project_config:
+          search:
+            query: "x"
+            year_min: 2010
+            year_max: 2024
+            sources: [local, arxiv]
         """,
     )
     config = load_project_config(cfg_path)
@@ -124,9 +127,13 @@ def test_llm_and_deep_llm_budget_yaml(tmp_path: Path):
           max_input_length: 100000
           review_timeout: 120.0
         deep_search:
-          enabled: false
-          llm_context_window: 262144
-          keywords: []
+          enabled: true
+          llm_context_window: 1
+        project_config:
+          deep_search:
+            enabled: false
+            llm_context_window: 262144
+            keywords: []
         """,
     )
     config = load_project_config(cfg_path)

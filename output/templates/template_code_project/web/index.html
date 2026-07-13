@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Convergence Analysis of Gradient Descent Optimization</title>
   <style>
     /* Default styles provided by pandoc.
@@ -307,34 +308,61 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -366,6 +394,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -373,7 +406,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -389,13 +422,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -410,13 +443,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -434,7 +475,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -442,11 +483,13 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Convergence Analysis of Gradient Descent
 Optimization</h1>
 <p class="subtitle">Theoretical Bounds and Empirical Performance in
 Quadratic Minimization</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -704,6 +747,7 @@ class="toc-section-number">8.4</span> Explicit limitations</a></li>
 class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <p><strong>State:</strong> unpublished / pending pairing</p>
 <p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
 URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
@@ -765,14 +809,14 @@ confirm they resolve to this release pairing.</li>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
 <img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" />
-<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+<figcaption>Publication pairing flow</figcaption>
 </figure>
 <p><strong>Stego:</strong> on | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
@@ -885,8 +929,9 @@ leverages the <code>infrastructure</code> layer:</p>
 <ul>
 <li><strong>Scientific Utilities</strong>: Utilizing
 <code>infrastructure.scientific.stability</code> and
-<code>infrastructure.scientific.benchmarking</code> to guarantee
-numerical boundaries and performance scaling.</li>
+<code>infrastructure.scientific.benchmarking</code> to check numerical
+boundaries and exercise runtime performance diagnostics without pinning
+host-dependent timings.</li>
 <li><strong>Hermetic Validation</strong>: Deploying
 <code>infrastructure.validation</code> components
 (<code>markdown_validator</code>, <code>output_validator</code>) to
@@ -1037,13 +1082,14 @@ orchestrator</a> execution deliberately aborts, ensuring the methodology
 cannot enter unrecoverable states.</p>
 <h3 data-number="3.2.2" id="performance-benchmarking"><span
 class="header-section-number">3.2.2</span> Performance Benchmarking</h3>
-<p>Computational complexity is evaluated not just theoretically, but
-empirically via <a
-href="https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py"><code>infrastructure.scientific.benchmarking.benchmark_function</code></a>.
-This module captures high-resolution execution timings and memory
-footprints across dimensionality sweeps, guaranteeing that the <span
-class="math inline">\(O(n)\)</span> space-time complexity predictions
-hold true on the host architecture.</p>
+<p>The analysis exercises <a
+href="https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py"><code>infrastructure.scientific.benchmarking.benchmark_function</code></a>
+as a runtime diagnostic. Host-dependent timing and memory observations
+are logged but excluded from tracked evidence. The canonical report
+records fixed inputs and exact objective values, while the dimensional
+figure reports deterministic convergence iterations and the proxy <span
+class="math inline">\(d \times \text{iterations}\)</span>; neither
+surface claims that one host run proves an asymptotic bound.</p>
 <h2 data-number="3.3" id="convergence-analysis"><span
 class="header-section-number">3.3</span> Convergence Analysis</h2>
 <p>For quadratic functions <span class="math inline">\(f(x) =
@@ -1187,8 +1233,8 @@ algorithm iteratively updates the solution using the rule <span
 class="math inline">\(x_{k+1} = x_k - \alpha \nabla f(x_k)\)</span>.</p>
 <figure id="fig:convergence">
 <img src="../figures/convergence_plot.png"
-alt="Figure 1: Objective value f(x_k)=\tfrac{1}{2}x_k^2 - x_k versus iteration k for gradient descent at six step sizes (legend colours follow the agency taxonomy in sec. 3: blue = conservative, green = near-optimal, orange = aggressive, red = divergent). Trajectories are produced by simulate_trajectory() in src/optimizer.py, which calls the same gradient_descent() used in tbl. 1; the upper bound on the y-axis clips the divergent \alpha=2.5 curve so that stable trajectories remain visible. Dashed grey reference line marks the analytic optimum f(x^\ast)=-0.5. Fastest configuration in this experiment: \alpha=1.0 converges in 1 iteration(s)." />
-<figcaption aria-hidden="true">Figure 1: Objective value <span
+alt="Figure 1: Objective value f(x_k)=tfrac12x_k^2 - x_k versus iteration k for gradient descent at six step sizes (legend colours follow the agency taxonomy in sec." />
+<figcaption>Figure 1: Objective value <span
 class="math inline">\(f(x_k)=\tfrac{1}{2}x_k^2 - x_k\)</span> versus
 iteration <span class="math inline">\(k\)</span> for gradient descent at
 six step sizes (legend colours follow the agency taxonomy in sec. <a
@@ -1230,8 +1276,8 @@ analysis reveals the trade-off between convergence speed and numerical
 stability.</p>
 <figure id="fig:step_sensitivity">
 <img src="../figures/step_size_sensitivity.png"
-alt="Figure 2: Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent dense grid \alpha \in [0.005, 0.4] (10 points), distinct from the discrete experiment.step_sizes used elsewhere in this section. Left: iterations to convergence on log–log axes — the curve drops sharply from 500 iterations at the smallest \alpha (the max_iterations cap in this sub-experiment) to 37 iterations at \alpha=0.4, illustrating the geometric speedup as \rho(\alpha)=|1-\alpha| shrinks. Right: final f(x) versus \alpha with horizontal reference lines at f(x_0)=0 (initial) and f(x^\ast)=-0.5 (analytic optimum); every \alpha in this stable window lands on the optimum." />
-<figcaption aria-hidden="true">Figure 2: Sensitivity sweep produced by
+alt="Figure 2: Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent dense grid alpha in [0.005, 0.4] (10 points), distinct from the discrete experiment.step_sizes used elsewhere in this section." />
+<figcaption>Figure 2: Sensitivity sweep produced by
 <code>generate_step_size_sensitivity_plot()</code> over an independent
 dense grid <span class="math inline">\(\alpha \in [0.005, 0.4]\)</span>
 (10 points), distinct from the discrete
@@ -1347,8 +1393,8 @@ analysis of convergence rates across different step sizes, validating
 theoretical predictions against empirical results.</p>
 <figure id="fig:convergence_rate">
 <img src="../figures/convergence_rate_comparison.png"
-alt="Figure 3: Absolute objective error |f(x_k)-f(x^\ast)| versus iteration on a logarithmic y-axis, generated by generate_convergence_rate_plot(). Stable step sizes produce straight lines whose slopes equal 2\log_{10}\rho(\alpha) (per eq. ¿eq:convergence_bound?); \alpha=1.0 (\rho=0) collapses to the optimum in one step (vertical green line at k=1); \alpha=1.5 (orange) descends fastest among the multi-step contractions because \rho=0.5; the divergent \alpha=2.5 curve (red) climbs upward at slope 2\log_{10}(1.5). Horizontal dashed line marks the gradient-norm tolerance \varepsilon = 10^{-8} read from experiment.convergence_tolerance." />
-<figcaption aria-hidden="true">Figure 3: Absolute objective error <span
+alt="Figure 3: Absolute objective error |f(x_k)-f(x^ast)| versus iteration on a logarithmic y-axis, generated by generate_convergence_rate_plot() ." />
+<figcaption>Figure 3: Absolute objective error <span
 class="math inline">\(|f(x_k)-f(x^\ast)|\)</span> versus iteration on a
 logarithmic y-axis, generated by
 <code>generate_convergence_rate_plot()</code>. Stable step sizes produce
@@ -1521,8 +1567,8 @@ algorithm’s computational characteristics, including time and space
 complexity analysis across different problem scales.</p>
 <figure id="fig:complexity">
 <img src="../figures/algorithm_complexity.png"
-alt="Figure 4: Four-panel diagnostic from generate_complexity_visualization(). Top left: bars give the empirical iteration count per configured \alpha, coloured by agency category; \alpha=1.0 achieves the global minimum of 1 step(s), while \alpha=0.01 and \alpha=2.5 both saturate at the iteration cap N_{\max}=1000 (slow convergence and divergence respectively). Top right: \log_{10}|f(x)-f(x^\ast)| at termination; the four converged rows reach \approx 10^{-16} (machine precision) while \alpha=0.01 stops near 10^{-9} at the cap. Dashed reference at \log_{10}\varepsilon for \varepsilon= experiment.convergence_tolerance. Bottom left: empirical iterations (solid) versus the smooth proxy 1/(2\alpha(1-\alpha)) (dashed) on log axes — a shape comparison, not a tight count prediction for every \alpha. Bottom right: per-step error contraction factor \rho=|1-\alpha| from the unit-Hessian linear recurrence (eq. ¿eq:scalar_linear_update?); the dashed reference at \rho=1 separates stable bars (left of it) from divergent ones (right)." />
-<figcaption aria-hidden="true">Figure 4: Four-panel diagnostic from
+alt="Figure 4: Four-panel diagnostic from generate_complexity_visualization() ." />
+<figcaption>Figure 4: Four-panel diagnostic from
 <code>generate_complexity_visualization()</code>. <strong>Top
 left</strong>: bars give the empirical iteration count per configured
 <span class="math inline">\(\alpha\)</span>, coloured by agency
@@ -1568,33 +1614,28 @@ suitable for high-dimensional problems</li>
 </ul>
 <h3 data-number="4.6.2" id="performance-benchmarking-1"><span
 class="header-section-number">4.6.2</span> Performance Benchmarking</h3>
-<p>fig. <a href="#fig:benchmark">5</a> shows how
-<code>gradient_descent()</code> scales with problem dimension by running
-the optimizer on identity-Hessian quadratics of dimension <span
-class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>.</p>
+<p>fig. <a href="#fig:benchmark">5</a> shows deterministic computational
+work and convergence iterations for <code>gradient_descent()</code> on
+identity-Hessian quadratics of dimension <span class="math inline">\(d
+\in \{1, 2, 5, 10, 20, 50\}\)</span>.</p>
 <figure id="fig:benchmark">
 <img src="../figures/performance_benchmark.png"
-alt="Figure 5: Dimensional scaling from generate_benchmark_visualization(). Dimensions d \in \{1, 2, 5, 10, 20, 50\} run on identity-Hessian quadratics with \alpha=0.1 and gradient tolerance 10^{-10} (both hardcoded in the script for benchmark stability). Left: mean wall-clock time per gradient_descent() call (μs). The flat regime at d \leq 20 reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at d=50 shows the O(d) matrix-vector cost beginning to dominate. Right: iterations-to-convergence rises only modestly across two decades of d (219 \to 238). This near-invariance is expected: \kappa(I_d)=1 regardless of dimension, so the contraction factor \rho=|1-\alpha|=0.9 is identical for every d, and only the per-coordinate residual norm grows mildly." />
-<figcaption aria-hidden="true">Figure 5: Dimensional scaling from
-<code>generate_benchmark_visualization()</code>. Dimensions <span
-class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span> run on
-identity-Hessian quadratics with <span
+alt="Figure 5: Deterministic dimensional benchmark from generate_benchmark_visualization() ." />
+<figcaption>Figure 5: Deterministic dimensional
+benchmark from <code>generate_benchmark_visualization()</code>.
+Dimensions <span class="math inline">\(d \in \{1, 2, 5, 10, 20,
+50\}\)</span> run on identity-Hessian quadratics with <span
 class="math inline">\(\alpha=0.1\)</span> and gradient tolerance <span
-class="math inline">\(10^{-10}\)</span> (both hardcoded in the script
-for benchmark stability). <strong>Left</strong>: mean wall-clock time
-per <code>gradient_descent()</code> call (μs). The flat regime at <span
-class="math inline">\(d \leq 20\)</span> reflects per-iteration overhead
-(Python dispatch, NumPy bookkeeping); the upturn at <span
-class="math inline">\(d=50\)</span> shows the <span
-class="math inline">\(O(d)\)</span> matrix-vector cost beginning to
-dominate. <strong>Right</strong>: iterations-to-convergence rises only
-modestly across two decades of <span class="math inline">\(d\)</span>
-(<span class="math inline">\(219 \to 238\)</span>). This near-invariance
-is expected: <span class="math inline">\(\kappa(I_d)=1\)</span>
-regardless of dimension, so the contraction factor <span
-class="math inline">\(\rho=|1-\alpha|=0.9\)</span> is identical for
-every <span class="math inline">\(d\)</span>, and only the
-per-coordinate residual norm grows mildly.</figcaption>
+class="math inline">\(10^{-10}\)</span>. <strong>Left</strong>: the
+implementation-independent work proxy <span class="math inline">\(d
+\times \text{iterations}\)</span>, proportional to scalar elements
+processed by the dense matrix-vector update. <strong>Right</strong>:
+exact iterations to convergence. Wall-clock microseconds are
+intentionally excluded because they vary with hardware and host load.
+The similar iteration counts are expected because <span
+class="math inline">\(\kappa(I_d)=1\)</span> and the contraction factor
+<span class="math inline">\(\rho=|1-\alpha|=0.9\)</span> is
+dimension-independent.</figcaption>
 </figure>
 <h3 data-number="4.6.3" id="numerical-stability-analysis-1"><span
 class="header-section-number">4.6.3</span> Numerical Stability
@@ -1607,8 +1648,8 @@ across a grid of 8 starting points (<span class="math inline">\(x_0 \in
 <code>compute_gradient()</code> across the parameter space.</p>
 <figure id="fig:stability">
 <img src="../figures/stability_analysis.png"
-alt="Figure 6: Numerical stability heatmap from generate_stability_visualization(). Each cell shows \log_{10}|f(x)-f(x^\ast)| at termination for one (starting point x_0, step size \alpha) combination, evaluated by gradient_descent() over the 8-by-6 grid (48 cells). The leftmost column (\alpha=0.01, conservative) reaches only 10^{-6} to 10^{-9} within the iteration cap, while every other column saturates at machine precision (10^{-16}) regardless of how far x_0 starts from the optimum (range [-50, 50]). The right panel summarises this uniformity as the aggregate stability score of 1.00/1.00 returned by infrastructure.scientific.stability.check_numerical_stability(), which exercises the same objective with extreme inputs (NaN, \pm\infty, \pm 10^{10})." />
-<figcaption aria-hidden="true">Figure 6: Numerical stability heatmap
+alt="Figure 6: Numerical stability heatmap from generate_stability_visualization() ." />
+<figcaption>Figure 6: Numerical stability heatmap
 from <code>generate_stability_visualization()</code>. Each cell shows
 <span class="math inline">\(\log_{10}|f(x)-f(x^\ast)|\)</span> at
 termination for one (starting point <span
@@ -1865,16 +1906,18 @@ class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>, from the
 scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
 dimensionality (<span class="math inline">\(d = 50\)</span>), using
 identity-Hessian quadratics to isolate algorithmic scaling from problem
-conditioning effects. Representative single-call execution time from the
-last benchmark run: <strong>1.9 μs</strong> (recorded in
-<code>output/reports/performance_benchmark.json</code>).</p>
+conditioning effects. The tracked
+<code>output/reports/performance_benchmark.json</code> records fixed
+inputs, exact objective values, and validation checks. Wall-clock timing
+is retained only as a runtime diagnostic because host load and hardware
+make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
 <ul>
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-07-08T02:12:25Z</li>
+<li><strong>Generated</strong>: 2026-07-12T04:04:24Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -1969,7 +2012,7 @@ class="header-section-number">7.1</span> Configuration Provenance</h2>
 <tbody>
 <tr>
 <td>Config hash (SHA-256, truncated)</td>
-<td><code>7182b437c586a680</code></td>
+<td><code>292643985e5af3f2</code></td>
 </tr>
 <tr>
 <td>Paper version</td>
@@ -2006,7 +2049,7 @@ validated by
 <tbody>
 <tr>
 <td>Publication-quality figures</td>
-<td>8</td>
+<td>9</td>
 </tr>
 <tr>
 <td>Structured data files (CSV/JSON)</td>
@@ -2014,11 +2057,11 @@ validated by
 </tr>
 <tr>
 <td>Analysis reports</td>
-<td>9</td>
+<td>19</td>
 </tr>
 <tr>
 <td><strong>Total artifacts</strong></td>
-<td><strong>22</strong></td>
+<td><strong>33</strong></td>
 </tr>
 </tbody>
 </table>
@@ -2053,16 +2096,16 @@ class="header-section-number">7.3.3</span> Benchmark Demonstration</h3>
 <p>This exemplar also demonstrates
 <code>infrastructure.benchmark</code>. The thin orchestrator
 <code>scripts/04_benchmark_stage.py</code> calls
-<code>src/benchmark_support.py</code>, which times the pure
-<code>quadratic_function</code> across a fixed set of input sizes
-(deterministic seed, no network) and turns the timing facts into boolean
-rubric checks. Those checks are scored through the shared
+<code>src/benchmark_support.py</code>, which evaluates the pure
+<code>quadratic_function</code> across fixed seeded inputs and turns
+reproducible completion, finiteness, and output-stability facts into
+boolean rubric checks. Those checks are scored through
 <code>infrastructure.benchmark.score_rubric</code> against a weighted
-<code>RubricSet</code>, and the result is rendered with
-<code>scores_to_markdown</code> into
-<code>output/reports/benchmark_report.json</code> (plus an optional
-timing figure). This keeps the benchmark API exercised by a real
-exemplar, not by infrastructure tests alone.</p>
+<code>RubricSet</code>, then rendered with
+<code>scores_to_markdown</code> into the byte-stable
+<code>output/reports/benchmark_report.json</code> with a deterministic
+objective-value figure. Real timing still executes as a runtime
+diagnostic, but it is not serialized into tracked evidence.</p>
 <h2 data-number="7.4" id="madlib-injection-verification"><span
 class="header-section-number">7.4</span> Madlib Injection
 Verification</h2>
@@ -2188,7 +2231,7 @@ pairing pending</p>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p><strong>Prior:</strong> <em>No prior releases.</em></p>
 <!-- END OF TRANSMISSION -->
@@ -2239,5 +2282,6 @@ Mathematics and Mathematical Physics</em> 4 (5): 1–17. <a
 href="https://doi.org/10.1016/0041-5553(64)90137-5">https://doi.org/10.1016/0041-5553(64)90137-5</a>.
 </div>
 </div>
+</main>
 </body>
 </html>

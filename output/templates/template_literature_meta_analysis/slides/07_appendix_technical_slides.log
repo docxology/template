@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 18:35
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43
+**<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43
 ab/projects/templates/template_literature_meta_analysis/output/slides/07_append
 ix_technical_slides.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.tex
 LaTeX2e <2025-11-01>
@@ -1212,7 +1212,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.aux)
 \openout1 = `07_appendix_technical_slides.aux'.
@@ -1576,7 +1576,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.nav) [1
 
@@ -1584,7 +1584,7 @@ x_technical_slides.nav) [1
 \openout4 = `07_appendix_technical_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.vrb) [2
 
@@ -1592,7 +1592,7 @@ x_technical_slides.vrb) [2
 \openout4 = `07_appendix_technical_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -1656,7 +1656,7 @@ ern Roman (RS)
 \openout4 = `07_appendix_technical_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.vrb) [7
 
@@ -1664,7 +1664,7 @@ x_technical_slides.vrb) [7
 \openout4 = `07_appendix_technical_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.vrb) [8
 
@@ -1679,7 +1679,7 @@ x_technical_slides.vrb) [8
 \openout7 = `07_appendix_technical_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/07_appendi
 x_technical_slides.aux)
  ***********
@@ -1696,6 +1696,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1172b,500s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/optimis
+Output written on <home>/Documents/GitHub/template/.claude/worktrees/optimis
 tic-solomon-6d43ab/projects/templates/template_literature_meta_analysis/output/
 slides/07_appendix_technical_slides.pdf (8 pages).

@@ -24,11 +24,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PROJECT_ROOT.parents[2]
 
 
-def test_project_paths_resolve_real_layout():
+def test_project_paths_resolve_real_layout() -> None:
     project_root, template_root, review_dir = project_paths()
     assert project_root.name == "template_search_project"
     assert (project_root / "AGENTS.md").exists()
-    assert template_root.name == "template"
+    assert template_root == project_root.parents[2]
+    assert (template_root / "pyproject.toml").is_file()
     assert review_dir == project_root / "output" / "review"
 
 

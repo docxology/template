@@ -5,7 +5,7 @@
     "output/reports/test_results.md": "6583ab49bd45727f59ede18799b06939c710f825141789efdcdae89cd201a163"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_prose_project/output/reports/snapshots/stage-04-project-tests.json",
+  "path": "<repo-root>/projects/templates/template_prose_project/output/reports/snapshots/stage-04-project-tests.json",
   "stage_name": "Project Tests",
   "stage_num": 4,
   "timestamp": "2026-06-14T19:21:33+00:00",

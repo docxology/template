@@ -16,6 +16,8 @@ from typing import Optional
 
 import yaml
 
+from .common import HASH_PREFIX_HEX_LENGTH
+
 # ---------------------------------------------------------------------------
 # Domain / dependency constants
 # ---------------------------------------------------------------------------
@@ -119,7 +121,7 @@ class Grammar:
     def grammar_hash(self) -> str:
         """Process grammar hash."""
         canonical = self.canonical()
-        return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+        return hashlib.sha256(canonical.encode()).hexdigest()[:HASH_PREFIX_HEX_LENGTH]
 
     def slot(self, name: str) -> GrammarSlot:
         """Process slot."""
@@ -211,5 +213,10 @@ def load_grammar(project_root: str | Path) -> Grammar:
     with config_path.open() as fh:
         cfg = yaml.safe_load(fh)
 
-    block = cfg.get("autopoiesis", {})
+    # Project-owned settings live under the infrastructure schema's
+    # ``project_config`` passthrough.  Retain the former top-level lookup only
+    # for standalone forks created before that schema contract was introduced.
+    project_config = cfg.get("project_config", {})
+    nested = project_config.get("autopoiesis") if isinstance(project_config, dict) else None
+    block = nested if isinstance(nested, dict) else cfg.get("autopoiesis", {})
     return parse_grammar(block, source_path=str(config_path))

@@ -163,7 +163,7 @@ they are **CI-safe / offline by default** so a fresh clone can render the
 manuscript with no network and no Ollama server. Switching to live search
 or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/quickstart.md)).
 
-### `search:` (single-query pipeline)
+### `project_config.search:` (single-query pipeline)
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -177,7 +177,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 | `cache_dir` | `output/search/cache` | Deterministic JSON cache directory. |
 | `cache_ttl_seconds` | `null` | Disable cache TTL (entries never expire). |
 
-### `enrichment:`
+### `project_config.enrichment:`
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -211,7 +211,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 | `include_per_paper` | `true` | Include per-paper LLM notes in the final report. |
 | `include_corpus_synthesis` | `true` | Include the corpus-level synthesis section. |
 
-### `deep_search:` (multi-keyword fan-out; enabled by default)
+### `project_config.deep_search:` (multi-keyword fan-out; enabled by default)
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -233,7 +233,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 | `write_unified_bibtex` | `true` | Emit the deduplicated unified bibliography. |
 | `unified_bibtex_path` | `manuscript/references_deep.bib` | Where that bibliography is written. |
 
-### Top-level
+### `project_config` direct keys
 
 | Key | Default | Meaning |
 |---|---|---|

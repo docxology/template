@@ -7,6 +7,8 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
 - Config hash: `377db49c4154479a`
-- Generated: `2026-07-08T02:01:40Z`
+- Generated: `not-recorded (set SOURCE_DATE_EPOCH)` (derived from `SOURCE_DATE_EPOCH`; an
+  explicit `not-recorded` marker is emitted when the reproducible timestamp is
+  not supplied)
 - Python: `3.12.13`
 - Platform: `Darwin arm64`

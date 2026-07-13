@@ -114,6 +114,34 @@ class TestDiscoverAnalysisScripts:
 
         assert [script.name for script in scripts] == ["generate_figures.py", "biology_analysis.py"]
 
+    def test_discover_analysis_scripts_reads_docs_manuscript_allowlist(self, tmp_path):
+        """A config-only compatibility tree cannot shadow the canonical docs source."""
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "project"
+        scripts_dir = project_dir / "scripts"
+        docs_manuscript = project_dir / "docs" / "manuscript"
+        compatibility_manuscript = project_dir / "manuscript"
+        scripts_dir.mkdir(parents=True)
+        docs_manuscript.mkdir(parents=True)
+        compatibility_manuscript.mkdir()
+
+        (scripts_dir / "generate_variables.py").write_text("# variables")
+        (scripts_dir / "generate_figures.py").write_text("# figures")
+        (scripts_dir / "recursive_runner.py").write_text("# unsafe fallback")
+        (compatibility_manuscript / "config.yaml").write_text(
+            "analysis:\n  scripts:\n    - recursive_runner.py\n",
+            encoding="utf-8",
+        )
+        (docs_manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+        (docs_manuscript / "config.yaml").write_text(
+            "analysis:\n  scripts:\n    - generate_variables.py\n    - generate_figures.py\n",
+            encoding="utf-8",
+        )
+
+        scripts = discover_analysis_scripts(repo_root, project_name="project")
+
+        assert [script.name for script in scripts] == ["generate_variables.py", "generate_figures.py"]
+
     def test_discover_analysis_scripts_resolves_wip_project(self, tmp_path):
         """Stage 02 can run a project before promotion from projects/working/."""
         repo_root = tmp_path / "repo"
@@ -406,6 +434,20 @@ class TestVerifyAnalysisOutputs:
         (scripts_dir / "setup_hook.py").write_text("# setup")
 
         assert verify_analysis_outputs(repo_root, "setup_only") is True
+
+    def test_verify_analysis_outputs_respects_empty_docs_manuscript_allowlist(self, tmp_path):
+        """An explicit empty allowlist means unrelated project utilities need no outputs."""
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "docs_only"
+        scripts_dir = project_dir / "scripts"
+        manuscript_dir = project_dir / "docs" / "manuscript"
+        scripts_dir.mkdir(parents=True)
+        manuscript_dir.mkdir(parents=True)
+        (scripts_dir / "maintenance.py").write_text("# not analysis")
+        (manuscript_dir / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+        (manuscript_dir / "config.yaml").write_text("analysis:\n  scripts: []\n", encoding="utf-8")
+
+        assert verify_analysis_outputs(repo_root, "docs_only") is True
 
 
 class TestDiscoverAnalysisScriptsFromScriptDiscovery:

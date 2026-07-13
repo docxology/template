@@ -17,6 +17,19 @@ from infrastructure.rendering.latex_texttt import (
 logger = get_logger(__name__)
 
 
+def _tighten_pandoc_longtable_rounding(tex_content: str) -> str:
+    r"""Keep Pandoc's repeated equal-width longtable columns inside the text block.
+
+    Pandoc serializes six-column tables with ``0.1667`` for each one-sixth width.  The rounded
+    decimals can exceed ``\linewidth`` by a fraction of a point under compact geometry.  A
+    deliberately tiny downward correction removes that cumulative rounding overflow without
+    changing table semantics or source-owned table text.
+    """
+    if "\\begin{longtable}" not in tex_content:
+        return tex_content
+    return tex_content.replace(r"\real{0.1667}", r"\real{0.1666}")
+
+
 def _escape_latex_def_value(value: str) -> str:
     """Escape a section title for use inside ``\\def\\@currentlabelname{...}``."""
     escaped = value.replace("\\", "\\textbackslash{}")
@@ -124,6 +137,8 @@ def postprocess_latex(
     *,
     tagged_pdf: bool = False,
     language: str = "en",
+    figure_height_fraction: str = "0.50",
+    front_matter_figure_height_fraction: str | None = None,
 ) -> str:
     """Apply lmodern disabling, hidelinks patching, and math delimiter fixes."""
     if tagged_pdf and "\\DocumentMetadata{" not in tex_content:
@@ -256,8 +271,14 @@ def postprocess_latex(
     except (re.error, TypeError, ValueError) as e:
         logger.warning(f"Breakable texttt postprocessing failed: {e}. Continuing with original LaTeX content.")
 
-    tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.50")
+    tex_content, graphics_replacements = constrain_includegraphics_textheight(
+        tex_content,
+        figure_height_fraction,
+        first_fraction=front_matter_figure_height_fraction,
+    )
     if graphics_replacements:
         logger.info("✓ Constrained %d Pandoc figure height bound(s)", graphics_replacements)
+
+    tex_content = _tighten_pandoc_longtable_rounding(tex_content)
 
     return tex_content

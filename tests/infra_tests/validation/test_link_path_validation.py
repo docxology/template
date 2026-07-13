@@ -1,7 +1,5 @@
 """Tests for link path validation in check_links / link_extract."""
 
-from pathlib import Path
-
 from infrastructure.validation.integrity.check_links import (
     _get_actual_project_names,
     _is_real_path_item,
@@ -10,6 +8,7 @@ from infrastructure.validation.integrity.check_links import (
     _validate_import_path,
     validate_file_paths_in_code,
 )
+
 
 class TestShouldValidatePath:
     def test_template_paths_skipped(self):
@@ -38,7 +37,6 @@ class TestShouldValidatePath:
         assert not _should_validate_path("infrastructure/core/\nsome text")
 
 
-
 class TestResolveTemplatePath:
     def test_infrastructure_path(self, tmp_path):
         result = _resolve_template_path("infrastructure/core/security.py", tmp_path)
@@ -59,7 +57,6 @@ class TestResolveTemplatePath:
         assert result == tmp_path / "docs/guide.md"
 
 
-
 class TestIsRealPathItem:
     def test_normal_file(self):
         assert _is_real_path_item("main.py")
@@ -72,7 +69,6 @@ class TestIsRealPathItem:
 
     def test_template_skipped(self):
         assert not _is_real_path_item("{name}")
-
 
 
 class TestGetActualProjectNames:
@@ -97,7 +93,6 @@ class TestGetActualProjectNames:
 
     def test_no_projects_dir(self, tmp_path):
         assert _get_actual_project_names(tmp_path) == []
-
 
 
 class TestValidateImportPath:
@@ -136,7 +131,6 @@ class TestValidateImportPath:
         fp = tmp_path / "test.md"
         issues = _validate_import_path("os.path", block, fp, tmp_path)
         assert issues == []
-
 
 
 class TestValidateFilePathsInCode:
@@ -179,6 +173,51 @@ class TestValidateFilePathsInCode:
         assert len(issues) == 1
         assert issues[0]["target"] == "scripts/missing_project_script.py"
 
+    def test_tool_local_script_path_resolves_from_tool_root(self, tmp_path):
+        tool_root = tmp_path / "tools" / "templates" / "template_demo"
+        (tool_root / "scripts").mkdir(parents=True)
+        (tool_root / "scripts" / "run.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+        md_file = tool_root / "README.md"
+        content = "```bash\nbash scripts/run.sh\n```"
+
+        issues = validate_file_paths_in_code(content, md_file, tmp_path)
+
+        assert issues == []
+
+    def test_illustrative_manifest_entrypoint_is_not_a_filesystem_claim(self, tmp_path):
+        project_root = tmp_path / "projects" / "templates" / "template_demo"
+        project_root.mkdir(parents=True)
+        md_file = project_root / "README.md"
+        content = """```yaml
+name: my_tool
+creator: org/repo
+entrypoints:
+  - scripts/run.py
+```
+"""
+
+        issues = validate_file_paths_in_code(content, md_file, tmp_path)
+
+        assert issues == []
+
+    def test_path_token_trailing_punctuation_is_removed(self, tmp_path):
+        (tmp_path / "scripts").mkdir()
+        content = "```text\nscripts/, notebooks/\n```"
+
+        issues = validate_file_paths_in_code(content, tmp_path / "README.md", tmp_path)
+
+        assert issues == []
+
+    def test_declared_make_bin_output_may_be_absent_before_build(self, tmp_path):
+        package = tmp_path / "infrastructure" / "native_tool"
+        package.mkdir(parents=True)
+        (package / "Makefile").write_text("BIN_DIR ?= bin\n", encoding="utf-8")
+        content = "```bash\n--binary-dir infrastructure/native_tool/bin\n```"
+
+        issues = validate_file_paths_in_code(content, tmp_path / "README.md", tmp_path)
+
+        assert issues == []
+
     def test_project_doc_script_path_falls_back_to_repo_root(self, tmp_path):
         project_root = tmp_path / "projects" / "templates" / "template_demo"
         project_root.mkdir(parents=True)
@@ -210,7 +249,6 @@ class TestValidateFilePathsInCode:
         issues = validate_file_paths_in_code(content, tmp_path / "docs" / "operational" / "README.md", tmp_path)
 
         assert issues == []
-
 
 
 class TestGetActualProjectNamesAdditional:

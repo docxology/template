@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -187,6 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology</h1>
 <p>This section describes the implementation methodology, explicitly
 detailing how the optimization algorithms are constructed, validated,
@@ -246,13 +248,14 @@ href="https://github.com/docxology/template/blob/main/scripts/pipeline/stage_02_
 orchestrator</a> execution deliberately aborts, ensuring the methodology
 cannot enter unrecoverable states.</p>
 <h3 id="performance-benchmarking">Performance Benchmarking</h3>
-<p>Computational complexity is evaluated not just theoretically, but
-empirically via <a
-href="https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py"><code>infrastructure.scientific.benchmarking.benchmark_function</code></a>.
-This module captures high-resolution execution timings and memory
-footprints across dimensionality sweeps, guaranteeing that the <span
-class="math inline">\(O(n)\)</span> space-time complexity predictions
-hold true on the host architecture.</p>
+<p>The analysis exercises <a
+href="https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py"><code>infrastructure.scientific.benchmarking.benchmark_function</code></a>
+as a runtime diagnostic. Host-dependent timing and memory observations
+are logged but excluded from tracked evidence. The canonical report
+records fixed inputs and exact objective values, while the dimensional
+figure reports deterministic convergence iterations and the proxy <span
+class="math inline">\(d \times \text{iterations}\)</span>; neither
+surface claims that one host run proves an asymptotic bound.</p>
 <h2 id="convergence-analysis">Convergence Analysis</h2>
 <p>For quadratic functions <span class="math inline">\(f(x) =
 \frac{1}{2}x^T A x - b^T x\)</span> where <span
@@ -363,5 +366,6 @@ the <code>preamble.md</code> configuration. This is ingested directly by
 and BibTeX citations. This automated approach ensures an unbreakable
 chain of custody from raw algorithmic execution to the final rendered
 manuscript.</p>
+</main>
 </body>
 </html>

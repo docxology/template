@@ -54,9 +54,9 @@ The pipeline contributes an end-to-end, domain-agnostic workflow:
 1. **Multiple-engine retrieval with graceful degradation.** Records are gathered from
    {{N_ENGINES}} independent engines ({{ENGINE_LIST}}). An engine with no API key or no
    network reports a *skipped* status; the run completes from whatever engines remain
-   plus a committed offline corpus. For this live run, OpenAlex contributed the largest
-   share of records, followed by Crossref and PubMed; Semantic Scholar was rate-limited
-   (HTTP 429) and returned zero records without aborting the pipeline.
+   plus a committed offline corpus. Each new retrieval persists per-engine outcome and
+   count provenance in `output/data/retrieval_report.json`; the merged corpus alone is
+   never used to infer which engine supplied a record.
 
 2. **Record de-duplication.** Heterogeneous records are merged by a canonical identifier
    hierarchy, keeping the most complete version of each work. Of {{CORPUS_SIZE}} retrieved

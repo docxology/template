@@ -15,6 +15,7 @@ Exit codes:
     1: An unrecoverable error occurred.
     2: Graceful skip — research workflow not configured.
 """
+
 from __future__ import annotations
 
 import sys
@@ -55,6 +56,7 @@ def main() -> int:
 
     if config_path.exists():
         import yaml
+
         try:
             cfg = yaml.safe_load(config_path.read_text()) or {}
             rw = cfg.get("research_workflow", {})

@@ -1,0 +1,32 @@
+\frametitle{Zero-mock testing methodology}
+\protect\phantomsection\label{zero-mock-testing-methodology}
+The project is governed by a strict zero-mock policy, evaluated by
+running
+\breaktt{uv\ run\ pytest\ projects/templates/template\_methods\_paper/tests}
+during the build.
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Library tests} exercise every gate, the compiler, the
+  exporters, and the trust module against real \texttt{Method} objects
+  --- \texttt{conftest.py} ships one fixture per gate-failure mode
+  (unknown dependency, duplicate step id, unknown unit, cyclic
+  dependency, target mismatch) plus a linear-chain and a diamond-DAG
+  method for scheduling tests. No \texttt{unittest.mock}, no
+  \texttt{MagicMock}, no \texttt{@patch}.
+\item
+  \textbf{Script test} runs \breaktt{run\_methods\_analysis()} against a
+  temporary output root and asserts that real worklist/CSV/Mermaid/JSON
+  files, reports, and a real PNG figure are written.
+\item
+  \textbf{Determinism tests} compile the same \texttt{Method} object
+  twice and assert \texttt{plan\_hash} equality live, rather than
+  asserting against a hardcoded hash literal --- a literal would
+  silently stop testing the moment the compiler's hash input changed.
+\item
+  \textbf{Coverage gate}: CI enforces a ≥90\% statement-coverage gate on
+  \breaktt{projects/templates/template\_methods\_paper/src/}; the live
+  figure is tracked in
+  \href{../../../../docs/_generated/COUNTS.md}{\breaktt{docs/\_generated/COUNTS.md}}.
+\end{enumerate}

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Generate cover art for the autopoiesis paper."""
+
 from __future__ import annotations
 
 import sys

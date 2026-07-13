@@ -13,7 +13,7 @@ from infrastructure.core.logging.utils import get_logger
 from .context_ledger import append_generation, init_context
 from .evaluation_runner import read_results_json, run_evaluation
 from .execution_logs import load_agent_execution
-from .models import EvaluationResult, GenerationArtifacts, GenerationState, RunConfig
+from .models import EvaluationResult, GenerationArtifacts, GenerationState, RunConfig, _portable_path
 from .task_layout import validate_task_dir
 
 logger = get_logger(__name__)
@@ -226,12 +226,13 @@ def _live_feedback(state: GenerationState, prior: GenerationArtifacts) -> tuple[
 
 def _write_run_summary(state: GenerationState, artifacts: list[GenerationArtifacts]) -> Path:
     summary_path = state.config.run_root() / "run_summary.json"
+    project_root = state.config.output_dir.parent
     payload = {
         "run_id": state.config.run_id,
         "live": state.config.live,
         "max_generations": state.config.max_generations,
-        "task_dir": str(state.layout.task_dir),
-        "generations": [item.to_dict() for item in artifacts],
+        "task_dir": _portable_path(state.layout.task_dir, project_root),
+        "generations": [item.to_dict(relative_to=project_root) for item in artifacts],
     }
     summary_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return summary_path

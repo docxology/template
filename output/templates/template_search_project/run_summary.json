@@ -5,8 +5,8 @@
     "local": 6
   },
   "errors": {},
-  "bibtex": "/Users/4d/Documents/GitHub/template/projects/templates/template_search_project/manuscript/references.bib",
-  "corpus": "/Users/4d/Documents/GitHub/template/projects/templates/template_search_project/output/corpus.json",
-  "report": "/Users/4d/Documents/GitHub/template/projects/templates/template_search_project/output/reading_report.md",
+  "bibtex": "<home>/Documents/GitHub/template/projects/templates/template_search_project/manuscript/references.bib",
+  "corpus": "<home>/Documents/GitHub/template/projects/templates/template_search_project/output/corpus.json",
+  "report": "<home>/Documents/GitHub/template/projects/templates/template_search_project/output/reading_report.md",
   "llm_used": false
 }

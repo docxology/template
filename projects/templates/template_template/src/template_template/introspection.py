@@ -20,7 +20,30 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 _EXCLUDED_DIRS = frozenset(
-    {"__pycache__", ".venv", ".git", ".cursor", ".pytest_cache", ".mypy_cache", "node_modules", "dist", "build"}
+    {
+        "__pycache__",
+        ".venv",
+        ".git",
+        ".cursor",
+        ".claude",
+        ".codex",
+        ".agents",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        "node_modules",
+        "htmlcov",
+        "output",
+        "dist",
+        "build",
+        # Confidential/local-only lifecycle mirrors are outside public scope.
+        "working",
+        "ongoing",
+        "active",
+        "archive",
+        "published",
+        "other",
+    }
 )
 
 

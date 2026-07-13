@@ -25,8 +25,10 @@ def test_run_prose_pipeline_offline(tmp_path: Path):
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "run_prose_pipeline.py"),
-            "--config", str(iso / "manuscript" / "config.yaml"),
-            "--project-root", str(iso),
+            "--config",
+            str(iso / "manuscript" / "config.yaml"),
+            "--project-root",
+            str(iso),
         ],
         cwd=REPO_ROOT,
         capture_output=True,
@@ -45,17 +47,17 @@ def test_run_prose_pipeline_strict_mode(tmp_path: Path):
     # Make the grade-level band impossibly tight.
     cfg = iso / "manuscript" / "config.yaml"
     cfg.write_text(
-        cfg.read_text(encoding="utf-8").replace(
-            "target_grade_level_max: 18.0", "target_grade_level_max: 1.0"
-        ),
+        cfg.read_text(encoding="utf-8").replace("target_grade_level_max: 18.0", "target_grade_level_max: 1.0"),
         encoding="utf-8",
     )
     result = subprocess.run(
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "run_prose_pipeline.py"),
-            "--config", str(cfg),
-            "--project-root", str(iso),
+            "--config",
+            str(cfg),
+            "--project-root",
+            str(iso),
             "--strict",
         ],
         cwd=REPO_ROOT,
@@ -78,7 +80,8 @@ def test_y_figures_skips_without_input(tmp_path: Path):
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "y_generate_prose_figures.py"),
-            "--project-root", str(iso),
+            "--project-root",
+            str(iso),
         ],
         cwd=REPO_ROOT,
         capture_output=True,
@@ -102,8 +105,10 @@ def test_z_generate_manuscript_variables(tmp_path: Path):
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "run_prose_pipeline.py"),
-            "--config", str(iso / "manuscript" / "config.yaml"),
-            "--project-root", str(iso),
+            "--config",
+            str(iso / "manuscript" / "config.yaml"),
+            "--project-root",
+            str(iso),
         ],
         cwd=REPO_ROOT,
         capture_output=True,
@@ -117,7 +122,8 @@ def test_z_generate_manuscript_variables(tmp_path: Path):
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "z_generate_manuscript_variables.py"),
-            "--project-root", str(iso),
+            "--project-root",
+            str(iso),
         ],
         cwd=REPO_ROOT,
         capture_output=True,

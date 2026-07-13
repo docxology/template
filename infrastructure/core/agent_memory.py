@@ -140,13 +140,16 @@ def load_memory(repo_root: Path) -> dict[str, Any]:
     """Load memory JSON, or the example schema when the live file is absent."""
     path = memory_path(repo_root)
     if path.is_file():
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        raw_payload = json.loads(path.read_text(encoding="utf-8"))
     else:
         example = example_path(repo_root)
         if example.is_file():
-            payload = json.loads(example.read_text(encoding="utf-8"))
+            raw_payload = json.loads(example.read_text(encoding="utf-8"))
         else:
-            payload = empty_memory_payload()
+            raw_payload = empty_memory_payload()
+    if not isinstance(raw_payload, dict):
+        raise ValueError("memory payload must be a JSON object")
+    payload: dict[str, Any] = dict(raw_payload)
     _validate_payload(payload)
     payload["learned_user_preferences"] = normalize_bullets(payload["learned_user_preferences"])
     payload["learned_workspace_facts"] = normalize_bullets(payload["learned_workspace_facts"])

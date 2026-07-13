@@ -21,7 +21,11 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import TextIO
 
-from infrastructure.project.discovery import discover_projects
+from infrastructure.project.discovery import (
+    NON_RENDERED_SUBDIRS,
+    discover_projects,
+    resolve_project_root,
+)
 from infrastructure.project.project_info import ProjectInfo
 
 
@@ -60,7 +64,8 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
     2. embedded NUL bytes
     3. ``..`` anywhere (path traversal)
     4. leading ``/`` or ``-`` (absolute path or flag-spoofing)
-    5. names not present in the discovered project list
+    5. names not present in the discovered project list or an explicitly
+       qualified, marker-bearing lifecycle tree
 
     Returns the validated slug verbatim on success.
 
@@ -80,6 +85,17 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
 
     projects = discover_projects(repo_root)
     resolved = _canonical_project_slug(slug, projects)
+    if resolved is None:
+        normalized = slug.replace("\\", "/")
+        head = normalized.split("/", 1)[0]
+        if "/" in normalized and head in NON_RENDERED_SUBDIRS:
+            lifecycle_root = resolve_project_root(repo_root, normalized)
+            has_markers = lifecycle_root.is_dir() and any(
+                (lifecycle_root / marker).exists()
+                for marker in ("src", "tests", "scripts", "manuscript", "docs/manuscript")
+            )
+            if has_markers:
+                return normalized
     if resolved is None:
         available = sorted(p.qualified_name for p in projects)
         raise ValueError(f"project {slug!r} not found. Available: {', '.join(available) or '(none)'}")

@@ -142,7 +142,9 @@ def test_default_theme_is_black_white_plus_three_highlights():
 def test_theme_color_properties_return_reportlab_colors():
     from reportlab.lib import colors
 
-    theme = DeckTheme(black="#000000", white="#FFFFFF", highlight_1="#FF0000", highlight_2="#00FF00", highlight_3="#0000FF")
+    theme = DeckTheme(
+        black="#000000", white="#FFFFFF", highlight_1="#FF0000", highlight_2="#00FF00", highlight_3="#0000FF"
+    )
     assert theme.black_c == colors.HexColor("#000000")
     assert theme.highlight_2_c == colors.HexColor("#00FF00")
 
@@ -201,9 +203,7 @@ def test_render_pdf_diagram_slide_embeds_figure(tmp_path: Path):
     fig.savefig(fig_path)
     plt.close(fig)
 
-    deck = DeckContent(
-        title="Deck", slides=(Slide(title="Architecture", kind="diagram", figure_path=fig_path),)
-    )
+    deck = DeckContent(title="Deck", slides=(Slide(title="Architecture", kind="diagram", figure_path=fig_path),))
     output = render_pdf(deck, tmp_path / "diagram_deck.pdf")
     reader = PdfReader(str(output))
     full_text = "\n".join(page.extract_text() or "" for page in reader.pages)
@@ -241,7 +241,9 @@ def test_render_pdf_custom_theme_changes_output(tmp_path: Path):
     """Different themes must actually change the rendered artifact (not a no-op parameter)."""
     deck = DeckContent(title="Deck", slides=(Slide(title="Title", kind="title"),))
     default_output = render_pdf(deck, tmp_path / "default_theme.pdf")
-    custom_theme = DeckTheme(black="#123456", white="#FFFFFF", highlight_1="#ABCDEF", highlight_2="#ABCDEF", highlight_3="#ABCDEF")
+    custom_theme = DeckTheme(
+        black="#123456", white="#FFFFFF", highlight_1="#ABCDEF", highlight_2="#ABCDEF", highlight_3="#ABCDEF"
+    )
     custom_output = render_pdf(deck, tmp_path / "custom_theme.pdf", theme=custom_theme)
     assert default_output.read_bytes() != custom_output.read_bytes()
 
@@ -319,9 +321,7 @@ def test_render_pdf_qr_and_source_annotations_coexist(tmp_path: Path):
             ),
         ),
     )
-    output = render_pdf(
-        deck, tmp_path / "both_deck.pdf", source_base_url="https://github.com/org/repo/blob/main/"
-    )
+    output = render_pdf(deck, tmp_path / "both_deck.pdf", source_base_url="https://github.com/org/repo/blob/main/")
     reader = PdfReader(str(output))
     content_page = reader.pages[1]
     annots = content_page.get("/Annots")

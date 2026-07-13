@@ -20,12 +20,13 @@ The `infrastructure/project/` module provides project discovery, validation, and
 
 ### Public CI Scope (`public_scope.py`)
 
-Single source of truth for which projects are public and which source paths CI lints. Imported by `core/health.py`, `documentation/active_projects_doc.py`, and `publishing/repro_bundle.py`; drives the lint scope via `python -m infrastructure.project.public_scope source-paths`.
+Single source of truth for which projects are public and which paths CI checks. Imported by `core/health.py`, `documentation/active_projects_doc.py`, and `publishing/repro_bundle.py`; drives Ruff via `python -m infrastructure.project.public_scope lint-paths` and mypy via `... source-paths`.
 
 - `PUBLIC_PROJECT_NAMES: tuple[str, ...]` - canonical roster of git-tracked public exemplar names under `projects/templates/`
 - `public_project_names(repo_root)` / `public_project_infos(repo_root)` - resolve roster to names / `ProjectInfo` objects present in the checkout
-- `public_ci_source_paths(repo_root)` - public `src/` paths the CI `lint` job feeds to Ruff/mypy
-- `main(argv=None)` - CLI entry point for `source-paths` (and related) subcommands
+- `public_ci_lint_paths(repo_root)` - public source, tests, scripts, and notebooks fed to Ruff
+- `public_ci_source_paths(repo_root)` - import-safe public `src/` paths fed to mypy
+- `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, and roster subcommands
 
 ### Sidecar Symlink Sync (`linking.py`)
 
@@ -173,12 +174,12 @@ class ProjectInfo:
     name: str              # Project directory name
     path: Path             # Absolute path to project
     has_src: bool          # Has src/ directory
-    has_tests: bool        # Has tests/ directory  
+    has_tests: bool        # Has tests/ directory
     has_scripts: bool      # Has scripts/ directory
     has_manuscript: bool   # Has manuscript/ directory
     metadata: dict         # Extracted metadata
     program: str           # Parent program directory name ("" for standalone projects)
-    
+
     @property
     def is_valid(self) -> bool:
         """Check if project has minimum required structure."""
@@ -356,7 +357,7 @@ authors = [
 ```yaml
 paper:
   title: "Novel Optimization Framework"
-  
+
 authors:
   - name: "Dr. Jane Smith"
     orcid: "0000-0000-0000-0000"

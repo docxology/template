@@ -364,6 +364,24 @@ class TestGenerateAuditReport:
 
         assert "green_flags" in data
 
+    def test_actionable_issue_count_ignores_green_known_exceptions(self):
+        """Green findings must not make the filepath-audit CLI fail."""
+        from infrastructure.validation.docs.models import QualityIssue
+        from infrastructure.validation.repo.audit_orchestrator import actionable_issue_count
+
+        results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=1)
+        results.quality_issues = [
+            QualityIssue(
+                file="example.md",
+                line=1,
+                issue_type="placeholder",
+                issue_message="Illustrative placeholder detected",
+                severity="info",
+            )
+        ]
+
+        assert actionable_issue_count(results) == 0
+
     def test_report_many_red_flags_truncated(self, tmp_path):
         """Test report truncates many red flags."""
         from infrastructure.validation.docs.models import LinkIssue

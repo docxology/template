@@ -10,6 +10,7 @@ from infrastructure.project.drift.checks_boundary import (  # noqa: F401
 from infrastructure.project.drift.checks_docs_counts import (  # noqa: F401
     check_docs_hardcoded_counts,
     check_shared_template_design_contract,
+    check_shared_template_truth_contract,
 )
 from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_all_export_drift,
@@ -21,6 +22,7 @@ from infrastructure.project.drift.checks_exemplar import (  # noqa: F401
     check_mocks_absent_from_tests,
     check_no_blanket_except_in_src,
     check_no_oversize_src_files,
+    check_publication_index_completeness,
     check_publication_metadata_consistency,
     check_publishing_status_block_current,
     check_referenced_files_exist,
@@ -46,12 +48,14 @@ __all__ = [
     "check_no_oversize_src_files",
     "check_project",
     "check_project_src_infrastructure_boundary",
+    "check_publication_index_completeness",
     "check_publication_metadata_consistency",
     "check_publishing_status_block_current",
     "check_referenced_files_exist",
     "check_repo_thin_orchestrator_scripts",
     "check_required_files_exist",
     "check_shared_template_design_contract",
+    "check_shared_template_truth_contract",
     "check_template_signpost_contract",
     "check_test_class_drift",
 ]

@@ -55,6 +55,8 @@ templates:
 - `src/storybook/characters.py` validates shape characters.
 - `src/storybook/story.py` loads the content file into typed records.
 - `src/storybook/illustration.py` renders the full-page scenes.
+- `src/storybook/text_layout.py` owns deterministic typography, wrapping, and
+  text overlays.
 - `src/storybook/rendering.py` assembles PNG pages into the PDF and writes the
   manifest.
 - `scripts/` contains the thin Stage-02 entry points.
@@ -85,7 +87,7 @@ fields, projected shadows, suspended tensegrity struts, and radial vector
 gardens. The stability page borrows from the Synergetics intuition that
 triangulated structure braces square space: a tetrahedron is drawn through four
 alternating cube corners so the cube becomes steadier without ceasing to be a
-cube [fuller1975synergetics]. Later pages extend that grammar through
+cube [@fuller1975synergetics]. Later pages extend that grammar through
 projection, push-pull balance, and directional growth. This gives forks a
 readable baseline. Replacing the story does not require editing Python;
 replacing the visual grammar does.

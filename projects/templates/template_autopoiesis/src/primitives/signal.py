@@ -6,6 +6,8 @@ import numpy as np
 
 from .base import PrimitiveSpec
 
+SIGNAL_SAMPLE_POINTS = 64
+
 
 def dft(inputs: dict) -> dict:
     """Compute the Discrete Fourier Transform of a signal.
@@ -46,7 +48,7 @@ def _identity_kernel_convolve(inputs: dict) -> dict:
     return convolve_known(inp)
 
 
-_SIGNAL = np.sin(2 * np.pi * 5 * np.linspace(0, 1, 64)).tolist()
+_SIGNAL = np.sin(2 * np.pi * 5 * np.linspace(0, 1, SIGNAL_SAMPLE_POINTS)).tolist()
 _KERNEL = [0.25, 0.5, 0.25]  # smoothing kernel
 
 _EXAMPLE_DFT = {"signal": _SIGNAL}

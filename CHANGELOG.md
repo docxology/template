@@ -74,6 +74,14 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+- 📏 **Deterministic benchmark artifacts in the code exemplar (R10).** Tracked
+  benchmark JSON now records reproducible inputs, objective values, checks, and
+  policy metadata while keeping environment-dependent wall-clock measurements
+  as runtime-only diagnostics. The benchmark figure uses deterministic work
+  units and iteration counts, manuscript source no longer presents a pinned
+  microsecond value, and two-run JSON/PNG byte-equality regressions enforce the
+  contract.
+
 - 📦 **Package-level module-doc coverage gate.** A deep review found the
   doc-pair linter only verifies the `AGENTS.md`/`README.md` pair *exists*, not
   that the docs *enumerate* the package's modules — 112 public modules across
@@ -238,7 +246,8 @@ not to the contents of any specific workspace.
   `docs/documentation-index.md` gained 12 previously-omitted substantive docs.
   **R18**: MCP `invoke_cli` now carries an `effect` tier and refuses mutating
   operations unless explicitly opted in. R10 (benchmark determinism) was attempted
-  and reverted — it is downstream-coupled to a manuscript variable; see
+  and reverted in that pass because it was downstream-coupled to a manuscript
+  variable; it subsequently shipped in the 2026-07-11 closure pass documented in
   `docs/maintenance/review-remediation-2026-07.md`.
 
 ### Fixed

@@ -42,7 +42,7 @@ jobs:
       setup_hook: ${{ steps.d.outputs.setup_hook }}
       fep_lean: ${{ steps.d.outputs.fep_lean }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - id: d
         shell: bash
         run: |
@@ -75,7 +75,7 @@ jobs:
     outputs:
       projects: ${{ steps.matrix.outputs.projects }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -106,7 +106,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Run actionlint
         env:
@@ -128,25 +128,27 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
       - name: Sync dependencies
         run: uv sync
 
-      - name: Resolve public CI source paths
+      - name: Resolve public CI paths
         id: public-scope
-        run: echo "paths=$(uv run python -m infrastructure.project.public_scope source-paths)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "lint_paths=$(uv run python -m infrastructure.project.public_scope lint-paths)" >> "$GITHUB_OUTPUT"
+          echo "source_paths=$(uv run python -m infrastructure.project.public_scope source-paths)" >> "$GITHUB_OUTPUT"
 
       - name: Ruff lint
-        run: uvx ruff check ${{ steps.public-scope.outputs.paths }}
+        run: uv run ruff check ${{ steps.public-scope.outputs.lint_paths }}
 
       - name: Ruff format check
-        run: uvx ruff format --check ${{ steps.public-scope.outputs.paths }}
+        run: uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}
 
       - name: Type checking
-        run: uv run mypy ${{ steps.public-scope.outputs.paths }}
+        run: uv run mypy ${{ steps.public-scope.outputs.source_paths }}
 
       # MED5 gate: every re-exporting module under infrastructure/ must
       # declare __all__ — see docs/rules/api_design.md. Prevents regression
@@ -184,7 +186,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -219,14 +221,17 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
       - name: Sync dependencies
         run: uv sync
 
-      - name: Verify no mock usage in tests
+      # Branch-protection check name stays stable. This command is the lexical
+      # prohibited-framework gate only; semantic monkeypatch debt is available
+      # through --inventory and is not enforced until its measured count is 0.
+      - name: Verify prohibited mock-framework syntax
         run: uv run python scripts/audit/verify_no_mocks.py
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -245,7 +250,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -281,7 +286,7 @@ jobs:
           - os: macos-latest
             python-version: "3.12"
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
         with:
@@ -302,7 +307,7 @@ jobs:
       # MacTeX is a multi-GB install and macOS breadth is a 3.12 smoke lane.
       - name: Cache TeX Live packages
         if: runner.os == 'Linux'
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             /var/cache/apt
@@ -330,12 +335,14 @@ jobs:
         run: >-
           uv run pytest tests/infra_tests/
           -n auto
+          --dist worksteal
+          --benchmark-disable
           --cov=infrastructure
           --cov-report=term-missing
           --cov-report=xml:coverage-infra.xml
           --cov-fail-under=60
           --durations=10
-          -m "not requires_ollama and not slow and not bench"
+          -m "not requires_ollama and not requires_docker and not slow and not bench and not benchmark and not performance"
           --timeout=120
 
       - name: Upload infrastructure coverage to Codecov
@@ -360,7 +367,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
         with:
@@ -416,7 +423,7 @@ jobs:
         # this matrix without editing any literal here (CI-MATRIX-DYNAMIC-1).
         project: ${{ fromJSON(needs.detect-projects.outputs.projects) }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
         with:
@@ -425,7 +432,7 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         # `scientific` (scipy/pandas/rdflib/wordcloud/scikit-learn) + `llm` (requests)
         # are required by template_literature_meta_analysis's project test suite.
-        run: uv sync --group rendering --group monitoring --group discopy --group scientific --group llm
+        run: uv sync --group rendering --group monitoring --group discopy --group scientific --group llm --group active-inference
 
       # 01_run_tests.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the
@@ -467,7 +474,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -554,7 +561,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -654,7 +661,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -727,7 +734,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 
@@ -736,7 +743,7 @@ jobs:
           node-version: "20"
 
       - name: Cache puppeteer / chrome-headless-shell
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/puppeteer
           key: puppeteer-chrome-headless-shell-${{ runner.os }}-v1
@@ -783,7 +790,7 @@ jobs:
       actions: read
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - uses: ./.github/actions/setup-python-env
 

@@ -19,6 +19,5 @@ def mentions_output_validation(lower: str, _original: str) -> bool:
 
 def mentions_any_pipeline_stage(lower: str, _original: str) -> bool:
     return any(
-        token in lower
-        for token in ("render", "validate", "analysis", "tests", "project analysis", "pdf rendering")
+        token in lower for token in ("render", "validate", "analysis", "tests", "project analysis", "pdf rendering")
     )

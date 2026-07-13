@@ -23,7 +23,6 @@ from simulation.si_belief import (
     state_inference_next_obs,
 )
 from simulation.tmaze_model import (
-    TMazeSpec,
     build_tmaze_generative_model,
     spec_from_config,
 )

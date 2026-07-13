@@ -1,7 +1,7 @@
 # template_contacts
 
-**Type:** contacts  
-**Version:** 1.0  
+**Type:** contacts
+**Version:** 1.0
 **License:** CC0-1.0
 
 A research contacts registry — exemplar template for managing collaborators, advisors, and institutional contacts.

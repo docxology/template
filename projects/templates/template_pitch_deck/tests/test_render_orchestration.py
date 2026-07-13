@@ -30,6 +30,25 @@ def test_load_deck_config_reads_real_config():
     assert "theme" in config
 
 
+def test_load_deck_config_prefers_nested_schema_and_supports_legacy(tmp_path: Path):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    config_path = manuscript / "config.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "deck": {"pitch_subject": "legacy"},
+                "project_config": {"deck": {"pitch_subject": "canonical"}},
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert load_deck_config(tmp_path)["pitch_subject"] == "canonical"
+
+    config_path.write_text(yaml.safe_dump({"deck": {"pitch_subject": "legacy"}}), encoding="utf-8")
+    assert load_deck_config(tmp_path)["pitch_subject"] == "legacy"
+
+
 def test_render_one_length_writes_real_pdf(tmp_path: Path, repo_root):
     from deck_tokens import build_deck_tokens
     from infrastructure.rendering.slide_deck import DeckTheme

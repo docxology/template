@@ -55,13 +55,13 @@
       "name": "purity_claim_scatter",
       "label": "fig:purity_claim_scatter",
       "path": "purity_claim_scatter.png",
-      "caption": "Purity vs claim support rate scatter plot.",
+      "caption": "Stage purity plotted against the single project-level claim-support assay.",
       "generated_by": "src/figures/diagrams.py::generate_purity_claim_scatter",
       "data_sources": [
         "output/reports/claim_support_registry.json",
         "src/refinery.py::run_refinery"
       ],
-      "visual_encoding": "scatter positions encode output purity and cumulative claim-support exposure",
+      "visual_encoding": "x positions encode stage output purity; the shared y position encodes the project-level claim-support rate",
       "svg_path": "purity_claim_scatter.svg"
     },
     {

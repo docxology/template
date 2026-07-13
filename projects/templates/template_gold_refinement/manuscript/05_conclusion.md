@@ -1,6 +1,6 @@
 # {{TITLE_CONCLUSION}} {#sec:conclusion}
 
-The gold-refinery pipeline demonstrates that a metallurgical analogy can be load-bearing: each stage maps to a real template-infrastructure operation, purity increases monotonically, and the final stage achieves nine-nines certification ({{REFINERY_FINAL_PURITY}}).
+The gold-refinery pipeline demonstrates that a metallurgical analogy can be made operationally accountable: each stage maps to an executable transformation, stage order and continuity are enforced, artifacts preserve provenance, and validators constrain the terminal claim. The canonical run reaches the local nine-nines state ({{REFINERY_FINAL_PURITY}}); this is a software predicate, not a universal certification of manuscript quality.
 
 ## Summary
 
@@ -12,6 +12,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be load
 - Claim-support status: {{CLAIM_SUPPORT_SUPPORTED}}/{{CLAIM_SUPPORT_TOTAL}} supported ({{CLAIM_SUPPORT_STATUS}})
 - {{INTEGRITY_DIMENSION_COUNT}} integrity dimensions with residual-risk scoring and owner/validator links.
 - Registered visual evidence spans purity progression, token coverage, formalism traceability, implementation flow, claim-evidence assay, risk-matrix, and evidence-tier surfaces.
+- Reverse assay returns the shortest ordered stage prefix for a declared target, and multi-objective purity preserves distinct quality dimensions without compensatory averaging.
 
 ## Forking responsibilities
 

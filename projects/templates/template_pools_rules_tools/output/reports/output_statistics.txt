@@ -4,33 +4,33 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 111
-Total Size: 4.65 MB
+Total Files: 125
+Total Size: 5.01 MB
 
 Files by Category:
-  • pdf: 10 files (1.38 MB)
-  • web: 11 files (0.28 MB)
-  • slides: 65 files (1.89 MB)
-  • figures: 9 files (0.96 MB)
+  • pdf: 11 files (1.50 MB)
+  • web: 11 files (0.29 MB)
+  • slides: 65 files (1.97 MB)
+  • figures: 10 files (1.06 MB)
   • data: 1 files (0.00 MB)
-  • reports: 14 files (0.12 MB)
+  • reports: 26 files (0.17 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • template_pools_rules_tools_combined.pdf: 1.11 MB (pdf)
-  • 06_integration_slides.pdf: 0.43 MB (slides)
-  • 02_introduction_slides.pdf: 0.17 MB (slides)
-  • 03_pools_slides.pdf: 0.17 MB (slides)
-  • architecture_overview.png: 0.14 MB (figures)
+  • template_pools_rules_tools_combined.pdf: 1.21 MB (pdf)
+  • 06_integration_slides.pdf: 0.49 MB (slides)
+  • 02_introduction_slides.pdf: 0.18 MB (slides)
+  • 05_tools_slides.pdf: 0.17 MB (slides)
+  • resilience_layers.png: 0.16 MB (figures)
 
 File Types:
-  • .json: 13 file(s)
-  • .log: 11 file(s)
+  • .json: 18 file(s)
+  • .log: 12 file(s)
   • .tex: 10 file(s)
+  • .html: 10 file(s)
   • .aux: 9 file(s)
   • .pdf: 9 file(s)
   • .toc: 9 file(s)
-  • .html: 9 file(s)
   • .png: 9 file(s)
   • .snm: 8 file(s)
   • .vrb: 8 file(s)

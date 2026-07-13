@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import fnmatch
+import re
 import subprocess
 from pathlib import Path
 
+from infrastructure.core.files.portability import PUBLICATION_TEXT_SUFFIXES
 from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES
@@ -113,6 +115,7 @@ PUBLIC_TEMPLATE_OUTPUT_PREFIXES: tuple[str, ...] = tuple(
 )
 
 PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
+_MACHINE_LOCAL_HOME_RE = re.compile(rb"(?:/Users|/home)/[^/\s\"'<>]+/")
 
 
 def is_public_template_output_path(path: str) -> bool:
@@ -221,3 +224,33 @@ def tracked_generated_artifacts(repo_root: Path) -> list[str]:
         for path in paths
         if is_generated_artifact_path(path) or is_oversized_public_template_output(repo_root, path)
     )
+
+
+def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
+    """Return tracked public output files that leak a machine-local home path.
+
+    Canonical exemplar outputs are publication evidence and therefore need to
+    be portable across clones. Restrict scanning to text-like extensions so
+    binary payloads are never decoded or rejected for coincidental bytes.
+    """
+    proc = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
+    offenders: list[str] = []
+    for path in paths:
+        normalized = path.replace("\\", "/")
+        if not is_public_template_output_path(normalized):
+            continue
+        if Path(normalized).suffix.lower() not in PUBLICATION_TEXT_SUFFIXES:
+            continue
+        try:
+            content = (repo_root / normalized).read_bytes()
+        except OSError:
+            continue
+        if _MACHINE_LOCAL_HOME_RE.search(content):
+            offenders.append(normalized)
+    return sorted(offenders)

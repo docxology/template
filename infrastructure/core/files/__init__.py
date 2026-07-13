@@ -3,7 +3,7 @@
 Re-exports primary symbols for ``from infrastructure.core.files import …`` usage.
 """
 
-from infrastructure.core.files.cleanup import clean_output_directories
+from infrastructure.core.files.cleanup import clean_final_output_directory, clean_output_directories
 from infrastructure.core.files.inventory import FileInventoryEntry, FileInventoryManager
 from infrastructure.core.files.operations import (
     CopyStats,
@@ -20,6 +20,7 @@ __all__ = [
     "FileInventoryEntry",
     "FileInventoryManager",
     "calculate_file_hash",
+    "clean_final_output_directory",
     "clean_output_directories",
     "copy_final_deliverables",
     "find_combined_pdf",

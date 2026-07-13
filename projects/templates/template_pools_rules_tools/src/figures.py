@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
+from dataclasses import dataclass
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -69,6 +70,69 @@ STATUS_LABELS: dict[str, str] = {
     "partial": "Partial",
     "missing": "Missing",
 }
+
+
+@dataclass(frozen=True)
+class IntegrationFigureSpec:
+    """Registry metadata for one generated integration figure."""
+
+    label: str
+    filename: str
+    caption: str
+    generated_by: str
+
+
+FIGURE_REGISTRY_SCHEMA = "template-pools-rules-tools-figure-registry-v1"
+INTEGRATION_FIGURE_SPECS: tuple[IntegrationFigureSpec, ...] = (
+    IntegrationFigureSpec(
+        label="fig:architecture",
+        filename="architecture_overview.png",
+        caption="Three-layer resource architecture with the integration layer.",
+        generated_by="src.figures.generate_architecture_overview",
+    ),
+    IntegrationFigureSpec(
+        label="fig:counts",
+        filename="resource_counts.png",
+        caption="Runtime counts for discovered fonds, rules, and tools.",
+        generated_by="src.figures.generate_resource_counts",
+    ),
+    IntegrationFigureSpec(
+        label="fig:pipeline",
+        filename="status_dashboard.png",
+        caption="Per-resource integration status dashboard.",
+        generated_by="src.figures.generate_status_dashboard",
+    ),
+    IntegrationFigureSpec(
+        label="fig:taxonomy",
+        filename="fond_taxonomy.png",
+        caption="Schema taxonomy across bibliography, contacts, and dataset fonds.",
+        generated_by="src.figures.generate_fond_taxonomy",
+    ),
+    IntegrationFigureSpec(
+        label="fig:rulehier",
+        filename="rule_hierarchy.png",
+        caption="Soft and strong branches of the template rule hierarchy.",
+        generated_by="src.figures.generate_rule_hierarchy",
+    ),
+    IntegrationFigureSpec(
+        label="fig:toolcontract",
+        filename="tool_contract.png",
+        caption="Input, behavior, output, and exit-code contracts for template tools.",
+        generated_by="src.figures.generate_tool_contract",
+    ),
+    IntegrationFigureSpec(
+        label="fig:resilience",
+        filename="resilience_layers.png",
+        caption="Three-level graceful-degradation design for shared resources.",
+        generated_by="src.figures.generate_resilience_layers",
+    ),
+    IntegrationFigureSpec(
+        label="fig:pipelineflow",
+        filename="pipeline_flow.png",
+        caption="Thin-script pipeline from source validation through publication rendering.",
+        generated_by="src.figures.generate_pipeline_flow",
+    ),
+)
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from pytest_httpserver import HTTPServer
@@ -95,6 +96,11 @@ def test_run_literature_search_arxiv_httpserver(
     )
     corpus = Corpus.load(path)
     assert len(corpus) >= 1
+    report = json.loads((output_dir / "data" / "retrieval_report.json").read_text())
+    arxiv = next(row for row in report["engines"] if row["source"].startswith("arXiv"))
+    assert arxiv["status"] == "ok"
+    assert arxiv["fetched"] == 1
+    assert report["route"]["source_order"]
 
 
 def test_run_literature_search_all_sources_httpserver(

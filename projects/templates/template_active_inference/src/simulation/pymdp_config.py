@@ -70,9 +70,9 @@ class PymdpConfig:
 
 def _coerce_mode(value: Any) -> SimulationMode:
     mode = str(value or "state_inference")
-    if mode not in {"state_inference", "policy_inference"}:
-        raise ValueError(f"unsupported pymdp mode: {mode!r}")
-    return mode  # type: ignore[return-value]
+    if mode == "state_inference" or mode == "policy_inference":
+        return mode
+    raise ValueError(f"unsupported pymdp mode: {mode!r}")
 
 
 def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:

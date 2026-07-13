@@ -45,16 +45,20 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/04_ge
 uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
 ```
 
-Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`.
+Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`; a legacy resume without that report is labelled explicitly and never assigned reconstructed engine counts.
 
 ## Verification Commands
 
 ```bash
-uv run pytest projects/templates/template_literature_meta_analysis/tests/   --cov=projects/templates/template_literature_meta_analysis/src --cov-fail-under=90
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_literature_meta_analysis --project-only
 uv run python scripts/audit/check_template_drift.py --strict --project templates/template_literature_meta_analysis
 uv run python scripts/docgen/exemplar_roster.py --check
 uv run python scripts/audit/check_tracked_projects.py
 ```
+
+Stage 01 creates/uses the project's isolated environment and installs the
+dependencies declared in its `pyproject.toml`; do not substitute the root
+environment's direct `pytest` command on a fresh clone.
 
 Run the focused stage tests for the part you changed. For broad source/doc changes, run the project coverage gate plus the repo public-scope drift and guard checks.
 

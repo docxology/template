@@ -323,9 +323,10 @@ def test_generated_tables_are_backed_by_ledgers(
         str(row["retained_count"]) in variables["SELECTIVE_ACCURACY_TABLE"] for row in statistical["coverage_curve"]
     )
     assert str(training["accepted"]["best_epoch"]) in variables["TRAINING_DIAGNOSTICS_TABLE"]
-    assert rank_stability["runner_up_id"].replace("exp-", "").replace("-", " ") in variables[
-        "CANDIDATE_RANK_STABILITY_TABLE"
-    ]
+    assert (
+        rank_stability["runner_up_id"].replace("exp-", "").replace("-", " ")
+        in variables["CANDIDATE_RANK_STABILITY_TABLE"]
+    )
     assert all(
         _candidate_display_label(row["candidate_id"]) in variables["CANDIDATE_SELECTION_AUDIT_TABLE"]
         for row in selection["rows"]

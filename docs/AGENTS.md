@@ -52,6 +52,7 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 | New user | `core/how-to-use.md` → `guides/getting-started.md` |
 | Developer | `core/architecture.md` → `architecture/two-layer-architecture.md` |
 | **New project** | **`guides/new-project-setup.md`** → **`guides/new-project-one-shot-prompt.md`** (optional LLM scaffold) → `architecture/thin-orchestrator-summary.md` |
+| Publication | `guides/publication-runbook.md` → `guides/publishing-guide.md` → `modules/guides/publishing-module.md` |
 | Contributor | `development/contributing.md` → `development/testing/` |
 | AI Agent | `prompts/SKILL.md` → `prompts/agentic-use/SKILL.md` → `rules/AGENTS.md` |
 | Troubleshooter | `operational/troubleshooting/` → `reference/faq.md` |
@@ -121,7 +122,7 @@ Project lifecycle state is expressed as **typed subfolders under `projects/`**. 
 
 - Only `projects/templates/*` and optional `projects/active/*` are discovered and rendered (qualified names `templates/<name>` and `active/<name>`).
 - Private lifecycle projects live in the sibling `docxology/projects` repo. Its default folders are `working/` and `archive/`, symlinked into matching typed subfolders on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). Render a working project explicitly with a lifecycle-qualified name such as `working/<name>`.
-- The git-tracked public exemplars under `projects/templates/` never move — they are owned by this repo. Every other path under `projects/` is local-only and never committed (enforced by `scripts/audit/check_tracked_projects.py`).
+- The git-tracked public exemplars under `projects/templates/` never move — they are owned by this repo. Every other path under `projects/` is local-only and never committed (enforced by `scripts/audit/check_tracked_all.py`).
 
 **Configuring the active directory (advanced):**
 

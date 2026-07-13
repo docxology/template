@@ -34,7 +34,7 @@ projects/templates/template_template/
 ├── scripts/                       # Thin Orchestrators (Stage 02)
 │   ├── generate_architecture_viz.py   # Figure generation orchestrator
 │   └── generate_manuscript_metrics.py # Metrics + variable injection orchestrator
-├── tests/                         # Test suite (130 tests, 90%+ coverage)
+├── tests/                         # Project suite; counts are generated, coverage floor is declared in pyproject.toml
 │   ├── conftest.py                # Shared fixtures (repo root path)
 │   ├── test_meta.py               # Introspection + figure + integration tests
 │   ├── test_architecture_viz.py   # Visualization output tests
@@ -44,7 +44,7 @@ projects/templates/template_template/
 ├── manuscript/                    # 21 Markdown chapters + references.bib
 ├── docs/                          # This directory
 ├── output/                        # Generated artifacts (figures, PDFs, data)
-├── data/                          # Input data (currently empty)
+├── data/                          # Versioned claim/evidence inputs
 └── pyproject.toml                 # Project metadata
 ```
 

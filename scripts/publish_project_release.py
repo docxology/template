@@ -41,15 +41,17 @@ logger = get_logger(__name__)
 
 
 def _resolve_zenodo_token(args: argparse.Namespace, sandbox: bool) -> str | None:
-    if args.zenodo_token:
-        return args.zenodo_token
+    zenodo_token = getattr(args, "zenodo_token", None)
+    if zenodo_token:
+        return str(zenodo_token)
     if sandbox:
         return os.getenv("ZENODO_SANDBOX_TOKEN") or os.getenv("ZENODO_TOKEN")
     return os.getenv("ZENODO_PROD_TOKEN") or os.getenv("ZENODO_TOKEN")
 
 
 def _resolve_github_token(args: argparse.Namespace) -> str | None:
-    return args.github_token or os.getenv("GITHUB_TOKEN")
+    github_token = getattr(args, "github_token", None)
+    return str(github_token) if github_token else os.getenv("GITHUB_TOKEN")
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -62,9 +64,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--repo",
         help="GitHub repository owner/name (default: GITHUB_REPO env)",
     )
-    parser.add_argument(
-        "--release-name", help="GitHub release title (default: paper title + tag)"
-    )
+    parser.add_argument("--release-name", help="GitHub release title (default: paper title + tag)")
     parser.add_argument(
         "--production",
         action="store_true",
@@ -75,12 +75,8 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Force a new Zenodo version when publication.doi is already set",
     )
-    parser.add_argument(
-        "--skip-github", action="store_true", help="Skip GitHub release"
-    )
-    parser.add_argument(
-        "--skip-zenodo", action="store_true", help="Skip Zenodo deposit"
-    )
+    parser.add_argument("--skip-github", action="store_true", help="Skip GitHub release")
+    parser.add_argument("--skip-zenodo", action="store_true", help="Skip Zenodo deposit")
     parser.add_argument(
         "--skip-rerender",
         action="store_true",
@@ -141,9 +137,7 @@ def main(argv: list[str] | None = None) -> int:
         logger.error("Set --github-token or GITHUB_TOKEN for GitHub release")
         return 2
     if not args.skip_zenodo and not args.dry_run and not zenodo_token:
-        logger.error(
-            "Set --zenodo-token or ZENODO_SANDBOX_TOKEN / ZENODO_PROD_TOKEN / ZENODO_TOKEN"
-        )
+        logger.error("Set --zenodo-token or ZENODO_SANDBOX_TOKEN / ZENODO_PROD_TOKEN / ZENODO_TOKEN")
         return 2
 
     log_header(f"Project release: {args.project} ({args.tag})")

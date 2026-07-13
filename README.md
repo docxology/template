@@ -214,7 +214,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 The permanent exemplars share the same core layout and verification checklist. The code/prose exemplars also carry the 12-file project `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`). New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars) for the full comparison.
 
-Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/README.md`](.github/README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source.
+Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/README.md`](.github/README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source. To publish a project modularly, start with the [Publication runbook](docs/guides/publication-runbook.md): it covers the standalone public GitHub mirror, first real Zenodo DOI, new-version releases, optional mirrors, status blocks, and archival handoff.
 
 ### Public Exemplar Outputs And Mirrors
 
@@ -229,6 +229,10 @@ project outputs remain blocked.
 Each exemplar also has a standalone `docxology/template_*` GitHub repository
 linked to its Zenodo concept and latest version DOI. The current matrix is
 [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md).
+The standalone repository must exist before
+`scripts/publish/publish_project_release.py` can create a release there; the
+release script publishes the GitHub release asset and Zenodo deposit, but it
+does not create the repository itself.
 To regenerate any exemplar from the monorepo:
 
 ```bash
@@ -257,7 +261,7 @@ autonomous agents.
 > canonical exemplars above (under `projects/templates/`) are git-tracked/pushed
 > — `.gitignore` ignores `projects/*` and negates only `projects/templates/`. Any
 > other project you add under `projects/` (research, client, or confidential work)
-> stays **local-only and is never committed**; `scripts/audit/check_tracked_projects.py`
+> stays **local-only and is never committed**; `scripts/audit/check_tracked_all.py`
 > blocks any accidental commit in the pre-push hook and CI.
 
 **Private lifecycle projects.** In Daniel's working checkout, confidential
@@ -397,7 +401,9 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 
 The repository follows a **thin orchestrator pattern**: business logic lives
 only in `infrastructure/` and `projects/{name}/src/`; scripts coordinate, never
-implement. Tests use real data (no mocks), with strict coverage gates. Full
+implement. Tests prohibit mock frameworks and prefer real execution; remaining
+`pytest.monkeypatch` dependency replacements are explicitly inventoried rather
+than treated as proof of a mock-free suite. Coverage gates remain strict. Full
 narrative + benefits:
 [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md),
 [`docs/core/architecture.md`](docs/core/architecture.md).
@@ -434,6 +440,13 @@ MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
 [`.python-version`](.python-version) pinning 3.12 as the local default). Add per-project deps with
 `uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
+
+Layer 1 is also a standard Python distribution. Build it with `uv build`, or
+install the wheel attached to a GitHub release. Installation provides the
+`research-template` command (`research-template --help`). Optional pip extras
+mirror the major capability groups, for example
+`research-project-template[rendering,publishing]`; repository contributors
+should continue to use `uv sync --group ...` for development groups.
 
 ## 🐳 Docker Support
 

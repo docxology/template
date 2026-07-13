@@ -1,0 +1,35 @@
+{
+  "figures": [
+    {
+      "caption": "Declared and recomputed row counts and checksum status by file.",
+      "filename": "checksum_verification.png",
+      "generated_by": "scripts.generate_figures.generate_figures",
+      "label": "fig:checksum_verification"
+    },
+    {
+      "caption": "Declared row counts for every file in the descriptor inventory.",
+      "filename": "file_inventory.png",
+      "generated_by": "scripts.generate_figures.generate_figures",
+      "label": "fig:file_inventory"
+    },
+    {
+      "caption": "Ordered provenance steps and their responsible agents.",
+      "filename": "provenance_flow.png",
+      "generated_by": "scripts.generate_figures.generate_figures",
+      "label": "fig:provenance_flow"
+    },
+    {
+      "caption": "Validation findings for the clean fixture and deliberately broken control.",
+      "filename": "quality_gate.png",
+      "generated_by": "scripts.generate_figures.generate_figures",
+      "label": "fig:quality_gate"
+    },
+    {
+      "caption": "Field schema and data dictionary generated from the descriptor.",
+      "filename": "schema_overview.png",
+      "generated_by": "scripts.generate_figures.generate_figures",
+      "label": "fig:schema_overview"
+    }
+  ],
+  "schema_version": "template-data-descriptor-figure-registry-v1"
+}

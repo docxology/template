@@ -1,7 +1,7 @@
 # TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT
 **Generated:** 2026-07-10 12:25:29
-**Project root:** /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project
-**Repository root:** /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852
+**Project root:** <repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project
+**Repository root:** <repo-root>/.claude/worktrees/nifty-feistel-305852
 **Review orchestrator:** `scripts/review`
 **Review subprocess notes:** `render_validation
   ○ markdown_links
@@ -13,7 +13,7 @@
   ✓ infrastructure_usage
   ✓ determinism_check
 
-[DEBUG] PYTHONPATH for subprocess: /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects:/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852:/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_`
+[DEBUG] PYTHONPATH for subprocess: <repo-root>/.claude/worktrees/nifty-feistel-305852/projects:<repo-root>/.claude/worktrees/nifty-feistel-305852:<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_`
 **Review subprocess exit code:** 0
 **Overall status:** PASS — all enabled stages passed
 **Stages:** 9 total | 4 passed | 0 failed | 5 skipped

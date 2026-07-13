@@ -39,18 +39,22 @@ if TYPE_CHECKING:
     )
     from infrastructure.project.public_scope import (
         PUBLIC_PROJECT_NAMES,
+        public_ci_lint_paths,
         public_ci_source_paths,
         public_project_infos,
         public_project_names,
     )
     from infrastructure.project.copy_exemplar import (
         CopyResult,
+        ExportManifest,
         copy_exemplar,
+        export_exemplar,
         plan_copy,
     )
 
 _PUBLIC_SCOPE_EXPORTS = {
     "PUBLIC_PROJECT_NAMES",
+    "public_ci_lint_paths",
     "public_ci_source_paths",
     "public_project_infos",
     "public_project_names",
@@ -64,7 +68,9 @@ _CODEGRAPH_EXPORTS = {
 }
 _COPY_EXEMPLAR_EXPORTS = {
     "CopyResult",
+    "ExportManifest",
     "copy_exemplar",
+    "export_exemplar",
     "plan_copy",
 }
 
@@ -94,16 +100,19 @@ __all__ = [
     "PUBLIC_PROJECT_NAMES",
     "CodeGraphCommand",
     "CopyResult",
+    "ExportManifest",
     "build_codegraph_files_command",
     "build_codegraph_init_command",
     "build_scope_check_command",
     "copy_exemplar",
+    "export_exemplar",
     "discover_projects",
     "find_setup_hook",
     "get_project_metadata",
     "plan_copy",
     "preflight_setup_hook",
     "public_ci_source_paths",
+    "public_ci_lint_paths",
     "public_project_infos",
     "public_project_names",
     "resolve_project_root",

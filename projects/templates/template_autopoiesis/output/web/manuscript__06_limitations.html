@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="limitations">Limitations</h2>
 <p>This section states what the exemplar does <em>not</em> do, alongside
 what it does. Coverage and test-count figures are not restated as
@@ -278,15 +282,14 @@ trio — first
 then, after those were hardened,
 <code>common.py</code>/<code>figures.py</code>/<code>cover_art.py</code>.
 As of this measurement no module sits below the 90% branch-coverage line
-(<span class="citation"
-data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>):
-dedicated tests were added for <code>common.py</code>’s
-<code>trunc()</code> clipping branch and <code>CheckReport.failed</code>
-(<code>tests/test_common.py</code>, new this session),
-<code>figures.py</code>’s <code>list</code>/<code>tuple</code> input
-branch of <code>_first_plottable_array</code>, the generic
-<code>repr()</code> fallback in <code>_scalar_summary_lines</code>, and
-the array-plotting branch of <code>render_primitive_figure</code>
+([fig:coverage_by_module]): dedicated tests were added for
+<code>common.py</code>’s <code>trunc()</code> clipping branch and
+<code>CheckReport.failed</code> (<code>tests/test_common.py</code>, new
+this session), <code>figures.py</code>’s
+<code>list</code>/<code>tuple</code> input branch of
+<code>_first_plottable_array</code>, the generic <code>repr()</code>
+fallback in <code>_scalar_summary_lines</code>, and the array-plotting
+branch of <code>render_primitive_figure</code>
 (<code>tests/test_figures.py</code>), and <code>cover_art.py</code>’s
 QR-seal drawing branch (<code>tests/test_cover_art.py</code>,
 <code>test_render_cover_with_grammar_hash_*</code>) — the same branch
@@ -304,14 +307,12 @@ elsewhere in <code>test_materialize.py</code> and
 itself sits closest to the floor at just above 90%. None of these pull
 the aggregate below the 90% floor (<code>--cov-fail-under=90</code>),
 and the aggregate 96.28 alone would obscure exactly where the remaining,
-smaller gaps live — which is the reason this section, and <span
-class="citation"
-data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>,
-exist as a per-module view rather than trusting one headline number.
-Property-based tests (<code>tests/test_property_invariants.py</code>,
-Hypothesis) and a stress/edge suite
-(<code>tests/test_stress_edge_cases.py</code>) cover invariants like
-boundary seeds and all-reserved-slot configurations
+smaller gaps live — which is the reason this section, and
+[fig:coverage_by_module], exist as a per-module view rather than
+trusting one headline number. Property-based tests
+(<code>tests/test_property_invariants.py</code>, Hypothesis) and a
+stress/edge suite (<code>tests/test_stress_edge_cases.py</code>) cover
+invariants like boundary seeds and all-reserved-slot configurations
 [claessen2000quickcheck; maciver2019hypothesis], but generated inputs
 are not a substitute for direct tests of the specific branches named
 above.</p>
@@ -361,5 +362,6 @@ into the entry) is real rather than forthcoming.
 <code>99_references.md</code> annotates each entry against the section
 that relies on it rather than listing citations independent of the
 bibliography.</p>
+</main>
 </body>
 </html>

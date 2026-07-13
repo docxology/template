@@ -10,6 +10,7 @@ pipeline it runs per deck length. PPTX rendering is skipped with a warning
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -21,6 +22,8 @@ logger = get_logger("pitch_deck.render")
 
 
 def main(argv: list[str] | None = None) -> int:
+    argparse.ArgumentParser(description=__doc__).parse_args(argv)
+
     from paths import locate_repo_root
     from render_orchestration import DeckAuditFailure, DiligenceAuditFailure, render_all_decks
 

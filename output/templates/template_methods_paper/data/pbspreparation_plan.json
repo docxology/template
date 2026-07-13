@@ -1,0 +1,42 @@
+{
+  "method_name": "PBSPreparation",
+  "method_version": "1.0",
+  "steps": [
+    {
+      "kind": "add",
+      "name": "Add water to beaker",
+      "order": 0,
+      "step_id": 1,
+      "target": "human"
+    },
+    {
+      "kind": "add",
+      "name": "Add PBS tablet",
+      "order": 1,
+      "step_id": 2,
+      "target": "human"
+    },
+    {
+      "kind": "mix",
+      "name": "Mix until dissolved",
+      "order": 2,
+      "step_id": 3,
+      "target": "human"
+    },
+    {
+      "kind": "add",
+      "name": "Top up to final volume",
+      "order": 3,
+      "step_id": 4,
+      "target": "human"
+    },
+    {
+      "kind": "validate",
+      "name": "Validate solution clarity and pH range",
+      "order": 4,
+      "step_id": 5,
+      "target": "human"
+    }
+  ],
+  "target": "human"
+}

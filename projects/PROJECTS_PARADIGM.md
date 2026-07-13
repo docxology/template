@@ -170,7 +170,7 @@ The standalone project paradigm requires alignment with the repository root **[`
 
 ### ✅ **Code Quality Standards Compliance (Required)**
 
-- **Ruff format/check**: CI-scoped lint/format (`uvx ruff check`, `uvx ruff format`; line length 88 by default)
+- **Ruff format/check**: CI-scoped lint/format (`uv run ruff check`, `uv run ruff format`; line length 88 by default)
 - **Descriptive naming**: Clear variable and function names
 - **Import organization**: Proper organization of imports
 - **Error handling**: Context preservation and informative messages

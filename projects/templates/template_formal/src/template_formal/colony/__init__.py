@@ -1,5 +1,6 @@
 """A typed shared pheromone-field substrate, accessed only through a narrow Protocol."""
 
+from template_formal.colony.analysis import AnalysisArtifacts, run_publication_analysis
 from template_formal.colony.demo import run_demo_colony, run_statistics_sweep
 from template_formal.colony.experiment import (
     ColonyTrialConfig,
@@ -25,6 +26,7 @@ from template_formal.colony.visualization import write_convergence_tick_histogra
 __all__ = [
     "ColonyTrialConfig",
     "ColonyTrialResult",
+    "AnalysisArtifacts",
     "ConsensusTickSummary",
     "EmptySummaryError",
     "InMemoryPheromoneField",
@@ -42,6 +44,7 @@ __all__ = [
     "run_demo_colony",
     "run_null_model_trial",
     "run_parameter_sweep",
+    "run_publication_analysis",
     "run_statistics_sweep",
     "wilson_score_interval",
     "write_convergence_tick_histogram",

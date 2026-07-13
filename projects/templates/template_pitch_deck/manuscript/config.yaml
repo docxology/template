@@ -60,28 +60,28 @@ testing:
   max_infra_test_failures: 0
   max_project_test_failures: 0
 
-# Deck-generation parameters — read by scripts/20_render_decks.py and
-# src/deck_tokens.py. `pitch_subject` names which manuscript/deck_content_*.yaml
-# + live-token pair (src/deck_tokens.py) to render; the schema supports adding future pitches
-# (e.g. a distinct meta-science-group deck) by adding a new subject key here.
-deck:
-  pitch_subject: "template_template"
-  lengths: ["short", "medium", "long"]
-  formats: ["pdf", "pptx"]
-  # Deep-link base for every slide's `source` diligence citation (a
-  # repo-relative path like "CLAUDE.md" or "infrastructure/project/public_scope.py")
-  # — resolved into a clickable GitHub blob URL by scripts/20_render_decks.py.
-  source_base_url: "https://github.com/docxology/template/blob/main/"
-  # Black + white base plus 3 configurable highlight colors
-  # (infrastructure.rendering.slide_deck.DeckTheme). All three highlights are
-  # the same red here (monochrome accent); set distinct hex values for a
-  # multi-accent palette instead.
-  theme:
-    black: "#0A0A0A"
-    white: "#FFFFFF"
-    highlight_1: "#B3131A"
-    highlight_2: "#B3131A"
-    highlight_3: "#B3131A"
+# Project-owned deck settings live under the schema's supported passthrough
+# namespace. `pitch_subject` selects the manuscript/deck_content_*.yaml + live
+# token pair; additional project-specific settings belong beside `deck` here.
+project_config:
+  deck:
+    pitch_subject: "template_template"
+    lengths: ["short", "medium", "long"]
+    formats: ["pdf", "pptx"]
+    # Deep-link base for every slide's `source` diligence citation (a
+    # repo-relative path like "CLAUDE.md" or "infrastructure/project/public_scope.py")
+    # — resolved into a clickable GitHub blob URL by scripts/20_render_decks.py.
+    source_base_url: "https://github.com/docxology/template/blob/main/"
+    # Black + white base plus 3 configurable highlight colors
+    # (infrastructure.rendering.slide_deck.DeckTheme). All three highlights are
+    # the same red here (monochrome accent); set distinct hex values for a
+    # multi-accent palette instead.
+    theme:
+      black: "#0A0A0A"
+      white: "#FFFFFF"
+      highlight_1: "#B3131A"
+      highlight_2: "#B3131A"
+      highlight_3: "#B3131A"
 publication:
   doi: "10.5281/zenodo.21281509"
   version_doi: "10.5281/zenodo.21281510"

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="appendices">Appendices</h1>
 <h2 id="appendix-pipeline">Appendix: Pipeline Stage Reference</h2>
 <table>
@@ -232,6 +236,20 @@
 <td>Blocking</td>
 </tr>
 <tr>
+<td>Connector Search</td>
+<td><code>08_connector_search.py</code></td>
+<td><code>manuscript/config.yaml</code></td>
+<td><code>output/data/connector_search/</code></td>
+<td>opt-in (<code>science</code> tag); skipped if not configured</td>
+</tr>
+<tr>
+<td>Provenance Record</td>
+<td><code>09_provenance_record.py --stage "Connector Search"</code></td>
+<td>prior stage outputs</td>
+<td><code>.provenance/graph.json</code></td>
+<td>opt-in (<code>provenance</code> tag); skipped if not configured</td>
+</tr>
+<tr>
 <td>PDF Rendering</td>
 <td><code>03_render_pdf.py</code></td>
 <td><code>manuscript/</code>, placeholders</td>
@@ -267,6 +285,20 @@
 <td>soft fail logged</td>
 </tr>
 <tr>
+<td>Ebook Generation</td>
+<td><code>11_ebook_generation.py</code></td>
+<td>rendered combined markdown</td>
+<td><code>output/ebook/</code> (EPUB/MOBI/DOCX)</td>
+<td>opt-in (<code>ebook</code> tag); soft fail</td>
+</tr>
+<tr>
+<td>Metadata Package</td>
+<td><code>12_metadata_package.py</code></td>
+<td><code>manuscript/config.yaml</code></td>
+<td><code>output/metadata/</code> (ONIX/JSON/OPF)</td>
+<td>opt-in (<code>metadata</code> tag); soft fail</td>
+</tr>
+<tr>
 <td>Executable Bundle</td>
 <td><code>08_executable_bundle.py</code></td>
 <td>project tree + outputs</td>
@@ -282,9 +314,10 @@
 </tr>
 </tbody>
 </table>
-<p><code>scripts/07_generate_executive_report.py</code> is invoked
+<p><code>scripts/pipeline/stage_07_executive_report.py</code> is invoked
 <strong>outside</strong> this DAG whenever
 <code>execute_multi_project.py</code> aggregates pipelines—supplying
 cross-project KPI dashboards absent from lone-project checkpoints.</p>
+</main>
 </body>
 </html>

@@ -11,7 +11,7 @@ pytest run cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
 plausible-looking number [@reproducible_builds]. This design choice is a direct
 consequence of an earlier failure mode in this project — a manuscript draft
-that stated fixed values ("Tests: 371 · Coverage: 99.94%") in prose instead of
+that stated fixed test and coverage values in prose instead of
 through the token pipeline. A number that cannot be traced back to a specific
 function call in `src/` is, for the purposes of this project, not a number
 this manuscript is permitted to assert.

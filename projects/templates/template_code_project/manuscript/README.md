@@ -40,7 +40,7 @@ graph TD
     subgraph "Template Ecosystem"
         Tests["tests/ (see canonical facts)"]:::docs
         Config["config.yaml & preamble.md"]:::docs
-        
+
         subgraph "`infrastructure/`"
             Validation["infrastructure.validation"]:::infra
             Scientific["infrastructure.scientific"]:::infra

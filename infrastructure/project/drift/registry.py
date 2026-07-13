@@ -22,11 +22,13 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_no_blanket_except_in_src,
     check_no_oversize_src_files,
     check_project_src_infrastructure_boundary,
+    check_publication_index_completeness,
     check_publication_metadata_consistency,
     check_publishing_status_block_current,
     check_referenced_files_exist,
     check_required_files_exist,
     check_shared_template_design_contract,
+    check_shared_template_truth_contract,
     check_template_signpost_contract,
     check_test_class_drift,
 )
@@ -49,6 +51,7 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_no_oversize_src_files,
     check_no_blanket_except_in_src,
     check_mocks_absent_from_tests,
+    check_publication_index_completeness,
     check_publication_metadata_consistency,
     check_config_author_placeholders,
     check_metadata_export_current,
@@ -59,6 +62,7 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
 REPO_CHECKS: tuple[RepoCheckFn, ...] = (
     check_docs_hardcoded_counts,
     check_shared_template_design_contract,
+    check_shared_template_truth_contract,
     check_repo_scripts,
 )
 

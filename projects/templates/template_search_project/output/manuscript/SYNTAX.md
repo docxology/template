@@ -65,9 +65,9 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 
 | Token | Source |
 |---|---|
-| `reproducible research optimization` | `config.search.query` |
-| `100` | `config.search.max_results` |
-| `local` | `config.search.sources` (joined) |
+| `reproducible research optimization` | `project_config.search.query` in `config.yaml` |
+| `100` | `project_config.search.max_results` in `config.yaml` |
+| `local` | `project_config.search.sources` (joined) |
 | `6` | `len(SearchResult.papers)` after dedup |
 | `1` | distinct backends in `per_source_counts` |
 | `local=6` | `per_source_counts` rendered as `key=count, …` |
@@ -78,9 +78,9 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 | `none` | `SearchResult.errors` rendered as text |
 | `3` | distinct keywords in the deep-search aggregate |
 | `convex optimization; stochastic gradient descent; reproducible research` | keyword list rendered as `; `-joined string |
-| `arxiv, crossref` | `config.deep_search.sources` (joined) |
+| `arxiv, crossref` | `project_config.deep_search.sources` (joined) |
 | `<deep-search not run>` | unique papers across all keywords (or `<deep-search not run>`) |
-| `100` | `config.deep_search.max_results_per_keyword` |
+| `100` | `project_config.deep_search.max_results_per_keyword` in `config.yaml` |
 
 When a token has no value (e.g. before any deep-search run), the resolver substitutes the placeholder string `<deep-search not run>` so the `grep` check in [@sec:deep_search] can detect missed substitutions.
 

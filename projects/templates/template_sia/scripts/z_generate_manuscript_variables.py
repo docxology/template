@@ -22,9 +22,7 @@ def main() -> int:
     """CLI entry point."""
     summary = PROJECT_ROOT / "output" / "runs" / "run_1" / "run_summary.json"
     if not summary.is_file():
-        raise FileNotFoundError(
-            f"Missing {summary.relative_to(PROJECT_ROOT)} — run scripts/run_sia_loop.py first."
-        )
+        raise FileNotFoundError(f"Missing {summary.relative_to(PROJECT_ROOT)} — run scripts/run_sia_loop.py first.")
     variables_path = write_manuscript_variables(PROJECT_ROOT)
     variables = compute_variables(PROJECT_ROOT)
     write_resolved_manuscript_tree(PROJECT_ROOT, variables)

@@ -70,7 +70,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.12 | ubuntu |
-| 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — 12 exemplars × 2 Python = 24 cells |
+| 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — one cell per live public exemplar × 2 Python versions; roster from `PUBLIC_PROJECT_NAMES` |
 | 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
 | 12 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
 | 13 | `security` | Security Scan | lint | 3.12 | ubuntu |
@@ -104,7 +104,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 | Ruff lint | zero violations |
 | Ruff format | zero diffs |
 | mypy | no errors |
-| No-mocks policy | zero mock usage |
+| Mock-framework lexical gate | zero prohibited imports/calls (`--inventory` debt remains advisory) |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage (per-project standalone) | ≥ 90% |
 | Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% via local `01_run_tests.py --project-only --all-projects --public-projects` (CI `test-project` enforces per-exemplar 90% only) |
@@ -150,7 +150,7 @@ severity as the CI `security` job, so contributors hear it before CI does.
 Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
 
 - **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 4 cells: `ubuntu-latest × 3.10/3.11/3.12` plus `macos-latest × 3.12`.
-- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — 24 cells: each public exemplar from [`../docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (`templates/template_*`) on `py3.10` and `py3.12`, ubuntu-latest only.
+- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — one cell for each public exemplar from [`../docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (`templates/template_*`) on each of `py3.10` and `py3.12`, ubuntu-latest only.
 
 Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
 
@@ -163,8 +163,8 @@ required_status_checks:
     - "Infra Tests (ubuntu-latest, Python 3.11)"
     - "Infra Tests (ubuntu-latest, Python 3.12)"
     - "Infra Tests (macos-latest, Python 3.12)"
-    # test-project expands to 22 checks: "Project Tests (<project>, py<ver>)"
-    # for each templates/template_* exemplar on py3.10 and py3.12. Examples:
+    # test-project expands dynamically: "Project Tests (<project>, py<ver>)"
+    # for each live templates/template_* exemplar on py3.10 and py3.12. Examples:
     - "Project Tests (templates/template_active_inference, py3.12)"
     - "Project Tests (templates/template_code_project, py3.10)"
     # ... (one check per exemplar × {py3.10, py3.12})
@@ -194,8 +194,8 @@ See [`ISSUE_TEMPLATE/AGENTS.md`](ISSUE_TEMPLATE/AGENTS.md) for local editing rul
 
 ```bash
 # Fix linting locally
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 
 # Run tests locally (mirror CI)
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"

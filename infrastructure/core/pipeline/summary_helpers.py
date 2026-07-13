@@ -8,10 +8,11 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.files.inventory import FileInventoryEntry
 from infrastructure.core.logging.helpers import format_duration
-from infrastructure.core.pipeline.executor import PipelineStageResult
+from infrastructure.core.pipeline.types import PipelineStageResult
 
 
 def format_stage_result(result: PipelineStageResult, total_duration: float, skip_infra: bool) -> str:
@@ -42,7 +43,7 @@ def format_stage_result(result: PipelineStageResult, total_duration: float, skip
         return f"\u2717 Stage {result.stage_num}: {result.stage_name} ({duration_formatted}) FAILED"
 
 
-def stage_result_to_dict(result: PipelineStageResult | None) -> dict | None:
+def stage_result_to_dict(result: PipelineStageResult | None) -> dict[str, Any] | None:
     """Convert stage result to dictionary.
 
     Args:

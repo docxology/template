@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:conclusion">Conclusion</h1>
 <p>This study demonstrated a complete, reproducible
 exploratory-data-analysis pipeline driven from a computational notebook
@@ -215,10 +219,8 @@ assumption.</p>
 <h2 id="key-insights">Key insights</h2>
 <ol type="1">
 <li><strong>Reproducibility follows from testing fidelity</strong>:
-every number in <span class="citation"
-data-cites="sec:results">[@sec:results]</span> is produced by a tested
-function and regenerated on demand, so prose and artifacts cannot
-drift.</li>
+every number in [sec:results] is produced by a tested function and
+regenerated on demand, so prose and artifacts cannot drift.</li>
 <li><strong>Purity enables reuse</strong>: because <code>src/eda/</code>
 returns plot-ready data and never touches a display backend, the same
 functions serve the notebook, the headless script, and the
@@ -242,9 +244,9 @@ while keeping the schema contract.</li>
 <p>The <code>template_eda_notebook</code> tree is the canonical
 reference for how an exploratory notebook, a thin analysis script, a
 tested library, and a manuscript stay synchronized across rebuilds. The
-pipeline produced the figures referenced in <span class="citation"
-data-cites="sec:results">[@sec:results]</span>, wrote
+pipeline produced the figures referenced in [sec:results], wrote
 <code>output/data/summary_statistics.csv</code>, and rendered this
 markdown together with <code>config.yaml</code> into PDF.</p>
+</main>
 </body>
 </html>

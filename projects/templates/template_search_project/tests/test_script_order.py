@@ -236,29 +236,14 @@ def test_full_two_step_chain_keeps_output_in_sync(tmp_path: Path) -> None:
     )
     assert r1.returncode == 0, r1.stderr
 
-    # Step 2: resolver (manuscript variables) — this re-copies manuscript/
-    # into output/manuscript/. We invoke it via Python so we don't need to
-    # patch the script's hard-coded _project_root.
-    resolver_code = (
-        "import sys, pathlib;"
-        f"sys.path.insert(0, r'{PROJECT_ROOT}');"
-        f"sys.path.insert(0, r'{PROJECT_ROOT / 'src'}');"
-        "from src.config import load_project_config;"
-        "from src.manuscript_variables import (compute_variables, load_aggregate_payload, "
-        "load_search_result_payload, write_resolved_manuscript_tree);"
-        f"root = pathlib.Path(r'{iso}');"
-        "cfg = load_project_config(root/'manuscript'/'config.yaml');"
-        "agg = load_aggregate_payload(root/cfg.deep_search.output_dir/'aggregate.json');"
-        "payload = load_search_result_payload(root/'output'/'search'/'results.json');"
-        "v = compute_variables(config_query=cfg.search.query, "
-        "config_max_results=cfg.search.max_results, "
-        "config_sources=list(cfg.search.sources), "
-        "search_result_payload=payload, deep_search=cfg.deep_search, "
-        "aggregate_payload=agg);"
-        "write_resolved_manuscript_tree(root, v);"
-    )
+    # Step 2: invoke the real resolver CLI against the isolated project root.
     r2 = subprocess.run(
-        [sys.executable, "-c", resolver_code],
+        [
+            sys.executable,
+            str(PROJECT_ROOT / "scripts" / "z_generate_manuscript_variables.py"),
+            "--project-root",
+            str(iso),
+        ],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,

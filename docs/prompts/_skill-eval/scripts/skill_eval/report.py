@@ -48,10 +48,7 @@ def format_eval_row(
 ) -> str:
     """Format one positive-eval table row."""
     gaps = _gaps_label(failed)
-    return (
-        f"  {name:<{name_width}} {_pct(ws_rate):>6} {_pct(wo_rate):>8} "
-        f"{_pp_delta(ws_rate, wo_rate):>6}   {gaps}"
-    )
+    return f"  {name:<{name_width}} {_pct(ws_rate):>6} {_pct(wo_rate):>8} {_pp_delta(ws_rate, wo_rate):>6}   {gaps}"
 
 
 def _eval_rates_by_name(benchmark: dict, config: str) -> dict[str, float]:
@@ -84,14 +81,10 @@ def format_compare_section(current: dict, baseline: dict) -> list[str]:
         delta = cur - prev
         if delta < -0.001 or (prev >= 1.0 and cur < 1.0):
             regressions.append(name)
-            lines.append(
-                f"  {name}: REGRESSION {_pct(prev)} → {_pct(cur)} ({_pp_delta(cur, prev)})"
-            )
+            lines.append(f"  {name}: REGRESSION {_pct(prev)} → {_pct(cur)} ({_pp_delta(cur, prev)})")
         elif delta > 0.001:
             lines.append(f"  {name}: improved {_pct(prev)} → {_pct(cur)} ({_pp_delta(cur, prev)})")
-    if not regressions and all(
-        abs(cur_ws[n] - prev_ws.get(n, cur_ws[n])) < 0.001 for n in cur_ws if n in prev_ws
-    ):
+    if not regressions and all(abs(cur_ws[n] - prev_ws.get(n, cur_ws[n])) < 0.001 for n in cur_ws if n in prev_ws):
         lines.append("  No with_skill regressions.")
     return lines
 
@@ -125,36 +118,30 @@ def format_harness_report(
         lines.append(f"Mode: {mode_line}")
     lines.extend(
         [
-        f"Evals: {total_evals} ({pos_count} positive · {neg_count} negative) · {total_runs} grading runs",
-        "",
-        "SUMMARY",
-        f"  with_skill (all):             {summary['with_skill_mean_pass_rate'] * 100:6.1f}%",
-        f"  with_skill (positive only):   {summary['with_skill_positive_only_pass_rate'] * 100:6.1f}%",
-        f"  without_skill (positive):     {summary['without_skill_positive_only_pass_rate'] * 100:6.1f}%",
-        f"  delta (positive only):        {summary['delta_positive_only_pass_rate'] * 100:+6.1f} pp",
-        "",
-        "PER-EVAL (positive)",
-        "  eval_name                      with  without      Δ  with_skill gaps",
-        "  ------------------------------ ------ -------- ------ -----------------",
+            f"Evals: {total_evals} ({pos_count} positive · {neg_count} negative) · {total_runs} grading runs",
+            "",
+            "SUMMARY",
+            f"  with_skill (all):             {summary['with_skill_mean_pass_rate'] * 100:6.1f}%",
+            f"  with_skill (positive only):   {summary['with_skill_positive_only_pass_rate'] * 100:6.1f}%",
+            f"  without_skill (positive):     {summary['without_skill_positive_only_pass_rate'] * 100:6.1f}%",
+            f"  delta (positive only):        {summary['delta_positive_only_pass_rate'] * 100:+6.1f} pp",
+            "",
+            "PER-EVAL (positive)",
+            "  eval_name                      with  without      Δ  with_skill gaps",
+            "  ------------------------------ ------ -------- ------ -----------------",
         ]
     )
 
     ws_rates = _eval_rates_by_name(benchmark, "with_skill")
     wo_rates = _eval_rates_by_name(benchmark, "without_skill")
-    neg_names = {
-        name
-        for name, modes in gradings_by_eval.items()
-        if modes.get("with_skill", {}).get("negative")
-    }
+    neg_names = {name for name, modes in gradings_by_eval.items() if modes.get("with_skill", {}).get("negative")}
 
     for name in sorted(ws_rates):
         if name in neg_names:
             continue
         ws_grading = gradings_by_eval.get(name, {}).get("with_skill", {})
         failed = _failed_expectations(ws_grading)
-        lines.append(
-            format_eval_row(name, ws_rates[name], wo_rates.get(name, 0.0), failed)
-        )
+        lines.append(format_eval_row(name, ws_rates[name], wo_rates.get(name, 0.0), failed))
 
     lines.extend(["", "NEGATIVE (with_skill must route out-of-scope)"])
     for name in sorted(neg_names):

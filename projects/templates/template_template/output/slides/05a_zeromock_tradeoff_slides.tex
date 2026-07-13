@@ -104,6 +104,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -129,7 +132,7 @@ policy} is \texttt{template/}'s most distinctive design decision. By
 prohibiting all mock objects, we gain confidence that tests exercise
 real code paths---a pytest run against the template genuinely invokes
 \texttt{pandoc}, writes to disk, and parses real YAML. The cost is test
-duration: the full infrastructure test suite (\textasciitilde7,968
+duration: the full infrastructure test suite (\textasciitilde8,583
 tests) takes 2--4 minutes, compared to sub-second execution typical of
 heavily-mocked suites.
 

@@ -242,11 +242,12 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:reproducibility">Reproducibility</h1>
-<p><code>scripts/render_decks.py</code> is deterministic: given the same
-repository state (<code>manuscript/deck_content_*.yaml</code>, the live
-tokens from <code>src/deck_tokens.py</code>, and the live facts
+<p><code>scripts/20_render_decks.py</code> is deterministic: given the
+same repository state (<code>manuscript/deck_content_*.yaml</code>, the
+live tokens from <code>src/deck_tokens.py</code>, and the live facts
 <code>src/deck_tokens.py</code> reads from
 <code>template_template</code>’s own files and the public exemplar
 roster), two consecutive runs produce byte-identical PDF and PPTX
@@ -255,7 +256,7 @@ a generation time is recorded is deck metadata, following the
 <code>STEGANOGRAPHY_DETERMINISTIC</code>-style convention already used
 elsewhere in this repository for reproducible builds.</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/render_decks.py</span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/20_render_decks.py</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pdf/template_template_pitch_{short,medium,long}.pdf</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pptx/template_template_pitch_{short,medium,long}.pptx</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>

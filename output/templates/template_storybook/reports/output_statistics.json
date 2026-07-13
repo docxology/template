@@ -140,7 +140,7 @@
       "exists": true,
       "file_count": 14,
       "size_mb": "0.07",
-      "total_size_bytes": 76638,
+      "total_size_bytes": 76979,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -190,7 +190,7 @@
     }
   },
   "total_files": 94,
-  "total_size_mb": 3.4794607162475586,
+  "total_size_mb": 3.479785919189453,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
@@ -260,7 +260,7 @@
     "slides": 0.4618701934814453,
     "figures": 1.3586807250976562,
     "data": 0.0052127838134765625,
-    "reports": 0.07308769226074219,
+    "reports": 0.07341289520263672,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.0

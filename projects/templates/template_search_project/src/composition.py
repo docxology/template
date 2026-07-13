@@ -224,7 +224,7 @@ def compose_literature_review(
         # of rendering 30 identical placeholder rows.
         lines.append(
             "_Per-paper synthesis omitted — no LLM Contribution paragraphs "
-            "are present in the deep-search outputs (set `deep_search.llm_per_paper: "
+            "are present in the deep-search outputs (set `project_config.deep_search.llm_per_paper: "
             "true` and ensure Ollama is reachable to populate this section)._"
         )
         lines.append("")

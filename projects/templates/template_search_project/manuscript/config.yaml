@@ -38,52 +38,6 @@ metadata:
   language: "en"
 
 # ---------------------------------------------------------------------------
-# Search stage
-# ---------------------------------------------------------------------------
-# DEFAULT: offline / CI-safe. The bundled `data/corpus.json` lets the full
-# pipeline run deterministically with no network. To switch to live search,
-# replace `sources: [local]` with the desired backend list (e.g.
-# [arxiv, crossref]) and remove `local_corpus`. See docs/quickstart.md.
-search:
-  # Free-text query passed to every backend.
-  query: "reproducible research optimization"
-
-  # Per-backend cap; the aggregator dedupes and re-applies year filters.
-  max_results: 100
-
-  # Optional inclusive year filters; null disables.
-  year_min: null
-  year_max: null
-
-  # Backends to consult. Default to the bundled local corpus for CI safety.
-  # Add 'arxiv', 'crossref', or 'paperclip' (with PAPERCLIP_API_KEY) to fan out.
-  sources:
-    - "local"
-
-  # Path to the JSON corpus consumed when sources includes 'local'.
-  # Resolved relative to the project root.
-  local_corpus: "data/corpus.json"
-
-  crossref_mailto: "you@example.org"
-  paperclip: false
-
-  # SearchCache: deterministic JSON files, version-control friendly.
-  cache_dir: "output/search/cache"
-  cache_ttl_seconds: null
-
-# ---------------------------------------------------------------------------
-# Enrichment stage — abstracts and (optionally) full text
-# ---------------------------------------------------------------------------
-enrichment:
-  fetch_abstracts: true
-  fetch_fulltext: false
-  abstract_cache_dir: "output/cache/abs"
-  fulltext_cache_dir: "output/cache/pdf"
-  # 400k chars (~100k tokens) fits inside gemma3:4b's 131k-token window with
-  # headroom for prompt scaffolding and the model's response.
-  max_fulltext_chars: 400000
-
-# ---------------------------------------------------------------------------
 # LLM synthesis (Ollama-local). Default OFF so the pipeline runs in CI
 # without an Ollama server. Flip to `true` and start `ollama serve` to use.
 # ---------------------------------------------------------------------------
@@ -112,65 +66,57 @@ report:
   include_per_paper: true
   include_corpus_synthesis: true
 
-# Path (relative to project root) where the BibTeX file is written.
-references_path: "manuscript/references.bib"
+# Search-project settings belong under the shared schema's project-owned
+# passthrough namespace. The loader still accepts legacy root keys for forks.
+project_config:
+  search:
+    query: "reproducible research optimization"
+    max_results: 100
+    year_min: null
+    year_max: null
+    sources:
+      - "local"
+    local_corpus: "data/corpus.json"
+    crossref_mailto: "you@example.org"
+    paperclip: false
+    cache_dir: "output/search/cache"
+    cache_ttl_seconds: null
 
-# ---------------------------------------------------------------------------
-# Deep-search mode — multi-keyword exhaustive search.
-#
-# Run with:
-#   uv run python projects/templates/template_search_project/scripts/run_deep_search.py
-#
-# Each keyword triggers a separate search call (capped at
-# `max_results_per_keyword`); every paper is fully enriched (abstract +
-# PDF fulltext when available); each paper gets a structured LLM deep
-# summary in markdown (skipped when llm_per_paper is false or Ollama is
-# unreachable). Per-keyword reading reports + a unified BibTeX file are
-# written. Outputs:
-#
-#   output/deep_search/<keyword_slug>/papers.json
-#   output/deep_search/<keyword_slug>/reading_report.md
-#   output/deep_search/<keyword_slug>/per_paper/<safe_id>.md
-#   output/deep_search/aggregate.json
-#   output/deep_search/aggregate_report.md
-#   manuscript/references_deep.bib  (when write_unified_bibtex: true)
-# ---------------------------------------------------------------------------
-deep_search:
-  enabled: true                 # Run end-to-end on every pipeline invocation.
-  keywords:
-    - "convex optimization"
-    - "stochastic gradient descent"
-    - "reproducible research"
-  max_results_per_keyword: 100
-  sources:
-    - "arxiv"
-    - "crossref"
-    # 'paperclip' intentionally omitted from the default: PaperclipBackend
-    # construction raises RuntimeError (fail-fast, by design and tested in
-    # tests/test_deep_search.py) when PAPERCLIP_API_KEY is unset, and that
-    # exception aborts backend construction before arxiv/crossref run too.
-    # Add "paperclip" here only alongside a real PAPERCLIP_API_KEY (see
-    # .env.example) — it does not gracefully degrade.
-  year_min: null
-  year_max: null
-  crossref_mailto: "you@example.org"
-  fetch_abstracts: true
-  fetch_fulltext: true
-  # 400k chars (~100k tokens) keeps the per-paper LLM block well inside the
-  # gemma3:4b 131k-token context budget while still admitting full PDFs.
-  max_fulltext_chars: 400000
-  llm_per_paper: true
-  llm_model: "gemma3:4b"
-  llm_seed: 42
-  llm_temperature: 0.0
-  # Optional: override ``llm:`` Ollama budgets for deep-search only (null = use llm block).
-  # llm_context_window: 131072
-  # llm_long_max_tokens: 16384
-  # llm_max_input_length: 600000
-  # llm_review_timeout: 600.0
-  output_dir: "output/deep_search"
-  abstract_cache_dir: "output/cache/abs"
-  fulltext_cache_dir: "output/cache/pdf"
-  search_cache_dir: "output/search/cache"
-  write_unified_bibtex: true
-  unified_bibtex_path: "manuscript/references_deep.bib"
+  enrichment:
+    fetch_abstracts: true
+    fetch_fulltext: false
+    abstract_cache_dir: "output/cache/abs"
+    fulltext_cache_dir: "output/cache/pdf"
+    # 400k chars (~100k tokens) fits inside gemma3:4b's 131k-token window.
+    max_fulltext_chars: 400000
+
+  references_path: "manuscript/references.bib"
+
+  # Multi-keyword deep-search mode. Network and local-LLM work is explicit;
+  # Paperclip stays absent unless PAPERCLIP_API_KEY is configured.
+  deep_search:
+    enabled: true
+    keywords:
+      - "convex optimization"
+      - "stochastic gradient descent"
+      - "reproducible research"
+    max_results_per_keyword: 100
+    sources:
+      - "arxiv"
+      - "crossref"
+    year_min: null
+    year_max: null
+    crossref_mailto: "you@example.org"
+    fetch_abstracts: true
+    fetch_fulltext: true
+    max_fulltext_chars: 400000
+    llm_per_paper: true
+    llm_model: "gemma3:4b"
+    llm_seed: 42
+    llm_temperature: 0.0
+    output_dir: "output/deep_search"
+    abstract_cache_dir: "output/cache/abs"
+    fulltext_cache_dir: "output/cache/pdf"
+    search_cache_dir: "output/search/cache"
+    write_unified_bibtex: true
+    unified_bibtex_path: "manuscript/references_deep.bib"

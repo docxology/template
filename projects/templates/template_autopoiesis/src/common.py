@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+HASH_PREFIX_HEX_LENGTH = 16
+DERIVED_SEED_BITS = 63
+
 
 def trunc(text: str, max_len: int = 80) -> str:
     """Truncate *text* to *max_len* characters, appending '…' if clipped."""

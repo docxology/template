@@ -13,8 +13,8 @@
 | **Version** | 1.0.0 |
 | **Date** | 2026-07-05 |
 | **License** | CC-BY-4.0 |
-| **Repository** | [docxology/template](https://github.com/docxology/template) |
-| **DOI** | 10.5281/zenodo.template_pools_rules_tools |
+| **Repository** | [Public template repository](https://github.com/docxology/template) |
+| **DOI** | 10.5281/zenodo.21298888 |
 | **Keywords** | research software engineering, monorepo architecture, reproducibility, fonds, governance rules, tool discovery, graceful degradation |
 
 ---
@@ -29,7 +29,7 @@ The author thanks the Active Inference Institute for hosting the public template
 
 ## Data Availability
 
-All source code, configuration files, and exemplar resources described in this paper are available in the public template repository at <https://github.com/docxology/template> under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
+All source code, configuration files, and exemplar resources described in this paper are available in the [public template repository](https://github.com/docxology/template) under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
 
 ## Competing Interests
 
@@ -63,7 +63,7 @@ This paper presents `template_pools_rules_tools`, a meta-project exemplar that d
 
 The architecture (@fig:architecture) separates *resource ownership* from *resource consumption*. Resources live in top-level `fonds/`, `rules/`, and `tools/` directories and are never modified by consumers. Each resource exposes a typed manifest (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that the corresponding reader module uses for discovery and validation. All readers implement graceful fallbacks: they return `None` or empty collections when a resource is absent, log a warning via the standard library `logging` module, and allow the integration pipeline to continue. This revision extends the original three-figure presentation to eight content figures plus a cover illustration — a fond taxonomy (@fig:taxonomy), a rule hierarchy (@fig:rulehier), a tool invocation contract (@fig:toolcontract), a three-level resilience diagram (@fig:resilience), and a script pipeline flow (@fig:pipelineflow) — so that every structural claim in the prose has a corresponding visual.
 
-In a representative pipeline run, the integration demo loaded 3 fonds, validated 2 rule sets, discovered 3 tools, and processed 8 bibliography entries — all reported as structured JSON that populates manuscript variable tokens at render time. Tests covering the eight `src/` modules (across nine test files) achieve well above the required ≥90% combined line coverage and use real file paths rather than mocks, ensuring that reported counts are genuine — run `uv run pytest … --cov-report=term` for the current test count and coverage percentage rather than trusting a number printed here.
+In a representative pipeline run, the integration demo loaded 3 fonds, validated 2 rule sets, discovered 4 tools, and processed 8 bibliography entries — all reported as structured JSON that populates manuscript variable tokens at render time. Tests covering the eight `src/` modules (across nine test files) achieve well above the required ≥90% combined line coverage and use real file paths rather than mocks, ensuring that reported counts are genuine — run `uv run pytest … --cov-report=term` for the current test count and coverage percentage rather than trusting a number printed here.
 
 The `template_pools_rules_tools` exemplar provides a reference implementation that any project in the template repository can consult when designing its own resource-consumption layer.
 
@@ -254,11 +254,12 @@ rule:
   applies_to: "projects/*/src/"
   enforcement: fail_on_violation
   constraints:
-    minimum_line_coverage: 90
-    minimum_branch_coverage: 80
+    infrastructure: 60
+    project_src: 90
+    public_api: 95
 ```
 
-The `enforcement: fail_on_violation` field signals that a pipeline must halt and report when this rule is violated. Strong rules are suitable for invariants that, if broken, indicate a genuine defect rather than a style preference: coverage below 90% means tests are missing; a manuscript section without an abstract means the document is incomplete.
+The `enforcement: fail_on_violation` field signals that a pipeline must halt and report when this rule is violated. Strong rules are suitable for invariants that, if broken, indicate a genuine defect rather than a style preference: coverage below the source-declared threshold means tests are missing; a manuscript section without an abstract means the document is incomplete.
 
 ![Rule hierarchy: the two template rule sets, each split into a machine-enforceable `strong/` branch and a guidance-only `soft/` branch.](figures/rule_hierarchy.png){#fig:rulehier width=85%}
 
@@ -270,7 +271,7 @@ This rule set governs software projects throughout the template repository. Its 
 
 | File | Constraint |
 |---|---|
-| `strong/coverage-gate.yaml` | Minimum line coverage 90%, branch coverage 80% for `src/` |
+| `strong/coverage-gate.yaml` | Minimum coverage: infrastructure 60%, project `src/` 90%, public API 95% |
 | `strong/module-structure.yaml` | Required directory layout: `src/`, `tests/`, `scripts/`, `manuscript/` |
 
 Its soft rules provide guidance on code style, commit message conventions, and pull-request labelling.
@@ -414,7 +415,7 @@ result = validate_tool_scripts_exist("template_code_executor")
 
 `discover_tools()` scans `tools/templates/` and returns one `ToolEntry` per subdirectory, regardless of whether a manifest is present: a directory with a parseable `tools.yaml` gets `manifest={...}`; a directory with no manifest, or one that fails to parse, gets `manifest=None` plus a logged warning. Discovery itself never raises and never drops a directory from the result — the *interpretation* of "not a real tool yet" is left to the caller (`get_tool_entrypoints()` and `validate_tool_scripts_exist()` both return an empty/`"missing"` result for a `None` manifest), which keeps discovery and validation as separate, independently testable concerns.
 
-`validate_tool_scripts_exist()` iterates over the manifest's `entrypoints` list and checks each path against the filesystem. It returns a structured result distinguishing between tools that are fully ready (`"ok"`), partially configured (`"partial"` — some scripts missing), and entirely absent (`"missing"`). In the current integration run, **3 tools** were discovered (@fig:counts), all with valid manifests.
+`validate_tool_scripts_exist()` iterates over the manifest's `entrypoints` list and checks each path against the filesystem. It returns a structured result distinguishing between tools that are fully ready (`"ok"`), partially configured (`"partial"` — some scripts missing), and entirely absent (`"missing"`). In the current integration run, **4 tools** were discovered (@fig:counts), all with valid manifests.
 
 ## Tool Discovery and Reproducibility
 
@@ -478,7 +479,7 @@ The current `manuscript_variables.json` contains the following summary values (s
 |---|---|
 | `3` | 3 |
 | `2` | 2 |
-| `3` | 3 |
+| `4` | 4 |
 | `8` | 8 |
 
 This table is itself token-injected: the values shown are those produced by the pipeline, not hard-coded by the manuscript author. If the pipeline results change — for example, because a new fond is added — re-running `scripts/03_generate_manuscript.py` updates the manuscript automatically, without manual editing. This property is central to reproducibility: the manuscript's quantitative claims are always consistent with the code that generated them [@Stodden2016enhancing].
@@ -494,15 +495,15 @@ Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @
 | `scripts/03_generate_manuscript.py` | Write `output/data/manuscript_variables.json` | JSON file |
 | `scripts/04_validate_strong_rules.py` | Semantic evaluation of strong-rule constraints (@sec:rules) against this project's own tree | Console report, non-zero exit on violation |
 | `scripts/05_generate_figures.py` | Render all 8 content figures plus the cover illustration | 9 PNG files under `manuscript/figures/` |
-| `scripts/z_generate_manuscript_variables.py` | Hydrate `{{TOKEN}}` values and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
+| `scripts/z_generate_manuscript_variables.py` | Hydrate declared manuscript-variable placeholders and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
 
 ![The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
 
 ![Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.](figures/status_dashboard.png){#fig:pipeline width=85%}
 
-@fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every `{{TOKEN}}` and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
+@fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every declared placeholder and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
 
-Each script imports all business logic from `src/` and stays free of computation of its own — the longest, `01_validate_sources.py` at 112 lines, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/fonds_reader.py`, `src/rules_applier.py`, and `src/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` at ≥ 90% coverage, while the scripts themselves remain readable without a dedicated test suite of their own.
+Each script imports all business logic from `src/` and stays free of computation of its own — even `01_validate_sources.py`, the largest entry point in this project, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/fonds_reader.py`, `src/rules_applier.py`, and `src/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` under the configured project coverage gate, while the scripts themselves remain readable without a dedicated test suite of their own.
 
 ## Resilience Design
 
@@ -542,7 +543,7 @@ This paper has presented `template_pools_rules_tools`, a meta-project exemplar d
 
 2. **A typed manifest convention** (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that makes resource capabilities explicit and checkable at pipeline initialisation time, shifting failure detection from runtime to startup — a significant improvement for reproducibility [@Wilson2014best].
 
-3. **A token injection pipeline** that links manuscript prose to integration runtime statistics through `{{UPPERCASE_KEY}}` tokens, ensuring that quantitative claims in the manuscript are always generated by the pipeline rather than authored manually. In the current run this covered 3 fonds, 2 rule sets, 3 tools, and 8 bibliography entries.
+3. **A token injection pipeline** that links manuscript prose to integration runtime statistics through doubled-brace, uppercase-key placeholders, ensuring that quantitative claims in the manuscript are always generated by the pipeline rather than authored manually. In the current run this covered 3 fonds, 2 rule sets, 4 tools, and 8 bibliography entries.
 
 4. **A three-level resilience design** — resource absence, schema malformation, and script absence — that allows the pipeline to degrade gracefully and report failures informatively rather than crashing, consistent with best practices for robust research software [@Taschuk2017ten].
 

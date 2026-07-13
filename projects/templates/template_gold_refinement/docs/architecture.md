@@ -46,13 +46,14 @@ per-figure inventory.
 
 1. `manuscript/config.yaml` (gold_refinement block) → `config.py::load_gold_refinement_config()`
 2. `config.py` → `composition.py::generate_token_plan()` → TokenPlan
-3. `refinery.py::run_refinery()` → RefineryResult (5 stages, monotone purity)
-4. `figures/registry.py::generate_all_figures()` → PNG + SVG files, `figure_registry.json`, `figure_quality_report.json`
-5. `assay.py::assay_claims()` and `evidence.py::build_evidence_registry()` → claim-support and evidence registries
-6. `dashboard.py::write_dashboard()` → `output/dashboard.html`
-7. `manuscript_variables.py::generate_variables()` → flat dict of {{TOKEN}} values
-8. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` → output/manuscript/
-9. `infrastructure.rendering.pdf_renderer` → PDF
+3. `refinery.py::run_refinery()` → RefineryResult (5 stages with monotonicity, order, and adjacent-continuity guards)
+4. `refinery.py::stages_to_target()` → shortest ordered prefix reaching a declared target; `purity.py::PurityVector` → noncompensatory quality dimensions
+5. `figures/registry.py::generate_all_figures()` → PNG + SVG files, `figure_registry.json`, `figure_quality_report.json`
+6. `assay.py::assay_claims()` and `evidence.py::build_evidence_registry()` → claim-support and evidence registries
+7. `dashboard.py::write_dashboard()` → `output/dashboard.html`
+8. `manuscript_variables.py::generate_variables()` → flat dict of {{TOKEN}} values
+9. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` → output/manuscript/
+10. `infrastructure.rendering.pdf_renderer` → PDF
 
 ## Layer contract
 

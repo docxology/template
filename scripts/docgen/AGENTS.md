@@ -17,7 +17,7 @@ related modules.
 | `counts.py` | Line/module count stats (`docs/_generated/COUNTS.md`) |
 | `stage_table.py` | Canonical pipeline stage table (marker block) |
 | `exemplar_roster.py` | Public exemplar roster doc |
-| `publication_records.py` | Publication-records doc |
+| `publication_records.py` | Publication-records doc, GitHub README table, and per-exemplar `STANDALONE.md` identity blocks |
 
 ## Bootstrap pattern
 
@@ -36,6 +36,7 @@ uv run python scripts/docgen/stage_table.py
 uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/active_projects.py
 uv run python scripts/docgen/counts.py --write
+uv run python scripts/docgen/publication_records.py --check
 ```
 
 Root-level `scripts/generate_*.py` filenames remain as backward-compatible shims

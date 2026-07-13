@@ -59,7 +59,7 @@ strict reproducibility should:
   Pin a \texttt{LocalBackend} corpus generated from a successful run
   (\breaktt{infrastructure.search.literature.write\_corpus}) and remove
   \texttt{arxiv} / \texttt{crossref} from
-  \breaktt{config.search.sources}.
+  \breaktt{project\_config.search.sources}.
 \item
   Commit the \breaktt{output/search/cache/} directory to version control.
 \item

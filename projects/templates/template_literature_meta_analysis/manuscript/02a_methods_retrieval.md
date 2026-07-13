@@ -24,21 +24,21 @@ graceful error handling. All functions accept an injectable `base_url` parameter
 hermetic testing with `pytest-httpserver` — no engine hardcodes its URL inside the
 function body.
 
-| Engine | Rate limit | Pagination | Auth | Records (this run) |
-| --- | --- | --- | --- | --- |
-| arXiv | 3s between requests | 100/page, offset | Keyless | Sparse |
-| Semantic Scholar | 1 req/s (unauth.) | 100/page, offset | Optional key | Skipped (429) |
-| OpenAlex | Polite pool (mailto) | 200/page, cursor | Keyless | 1,000 |
-| Crossref | Polite pool (mailto) | 1,000/page, offset | Keyless | 1,000 |
-| PubMed | NCBI usage policy | retstart/retmax | Keyless | 986 |
-| SovietRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` | 0 |
-| ChinaRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` | 0 |
+| Engine | Rate limit | Pagination | Auth |
+| --- | --- | --- | --- |
+| arXiv | 3s between requests | 100/page, offset | Keyless |
+| Semantic Scholar | 1 req/s (unauth.) | 100/page, offset | Optional key |
+| OpenAlex | Polite pool (mailto) | 200/page, cursor | Keyless |
+| Crossref | Polite pool (mailto) | 1,000/page, offset | Keyless |
+| PubMed | NCBI usage policy | retstart/retmax | Keyless |
+| SovietRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` |
+| ChinaRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` |
 
-SovietRxiv and ChinaRxiv returned zero records for the modafinil query, which is
-expected: the Soviet-era archive covers mathematics, physics, and engineering
-preprints, while ChinaXiv covers Chinese scientific preprints, and neither domain has
-substantial modafinil literature. The engines dispatched correctly, queried the live
-API, and returned empty result sets without error — confirming graceful degradation.
+Every new search writes `output/data/retrieval_report.json`, a timestamp-free report
+that records each attempted, skipped, or failed source with fetched, new-record, and
+duplicate counts. A zero-result response is therefore distinguishable from a disabled
+adapter or an HTTP failure. The committed corpus predates that report contract, so this
+paper intentionally does not reconstruct source-specific counts from the merged corpus.
 
 ## Canonical Identifier Hierarchy
 

@@ -14,7 +14,7 @@ from typing import Any
 
 from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.core.project_paths import resolve_project_root
+from infrastructure.core.project_paths import resolve_project_root, resolve_source_manuscript_dir
 
 logger = get_logger(__name__)
 
@@ -43,7 +43,7 @@ def _is_analysis_script(path: Path) -> bool:
 
 def _configured_analysis_scripts(project_dir: Path, project_scripts_dir: Path) -> list[Path] | None:
     """Return config-declared analysis scripts, or ``None`` when no allowlist exists."""
-    config_path = project_dir / "manuscript" / "config.yaml"
+    config_path = resolve_source_manuscript_dir(project_dir) / "config.yaml"
     if not config_path.is_file():
         return None
 
@@ -122,9 +122,11 @@ def discover_analysis_scripts(
     configured_scripts = _configured_analysis_scripts(resolved_dir, project_scripts_dir)
     if configured_scripts is not None:
         scripts = configured_scripts
+        config_path = resolve_source_manuscript_dir(resolved_dir) / "config.yaml"
         logger.info(
-            "[STAGE-02] Using %d config-declared analysis script(s) from manuscript/config.yaml",
+            "[STAGE-02] Using %d config-declared analysis script(s) from %s",
             len(scripts),
+            config_path.relative_to(resolved_dir),
         )
     else:
         # Find all Python scripts in the scripts/ directory except private modules and

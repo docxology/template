@@ -12,7 +12,23 @@ from purity import (
     format_purity,
     karat_for_purity,
     purity_to_nines,
+    PurityVector,
 )
+
+
+class TestPurityVector:
+    def test_preserves_independent_dimensions(self):
+        vector = PurityVector(1.0, 0.75, 1.0, 0.9)
+        assert vector.weakest_dimension == ("claim_support", 0.75)
+        assert not vector.all_complete
+        assert vector.as_dict()["figure_quality"] == 0.9
+
+    def test_all_complete(self):
+        assert PurityVector(1.0, 1.0, 1.0, 1.0).all_complete
+
+    def test_rejects_out_of_bounds_dimension(self):
+        with pytest.raises(ValueError, match=r"must be in \[0, 1\]"):
+            PurityVector(1.0, 1.1, 1.0, 1.0)
 
 
 class TestKaratForPurity:

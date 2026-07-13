@@ -9,11 +9,12 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def combine_manuscript_markdown_sections(source_files: list[Path]) -> str:
+def combine_manuscript_markdown_sections(source_files: list[Path], *, section_breaks: bool = True) -> str:
     """Combine multiple markdown files into one document body.
 
     Args:
         source_files: Markdown files in manuscript order.
+        section_breaks: Insert an explicit LaTeX page break between source sections when true.
 
     Returns:
         Combined markdown content.
@@ -43,7 +44,7 @@ def combine_manuscript_markdown_sections(source_files: list[Path]) -> str:
 
             combined_parts.append(content)
 
-            if i < len(source_files) - 1:
+            if section_breaks and i < len(source_files) - 1:
                 combined_parts.append("\n```{=latex}\n\\newpage\n```\n")
 
         except UnicodeDecodeError as e:

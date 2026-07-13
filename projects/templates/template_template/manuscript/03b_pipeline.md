@@ -6,8 +6,8 @@ The **default YAML graph contains ten named stages** (plus telemetry configurati
 
 1. **Clean Output Directories** — wipes prior `projects/<name>/output/` + delivered `output/<name>/` paths so stale PDFs cannot satisfy validation.
 2. **Environment Setup** (`00_setup_environment.py`) — Python/uv probing, toolchain discovery, scaffolding directories, `PYTHONPATH` wiring.
-3. **Infrastructure Tests** (`01_run_tests.py --infra-only`) — `tests/` suite with infra coverage thresholds (≥60 %).
-4. **Project Tests** (`01_run_tests.py --project-only`) — per-project suites with ≥90 % coverage mandate.
+3. **Infrastructure Tests** (`01_run_tests.py --infra-only`) — `tests/` suite with the configured ≥${coverage_floor_infrastructure}% source-coverage floor.
+4. **Project Tests** (`01_run_tests.py --project-only`) — isolated per-project suites with each project's declared floor (≥${coverage_floor_project}% for this exemplar).
 5. **Project Analysis** (`02_run_analysis.py`) — lexicographically ordered `projects/<name>/scripts/*.py`, each a thin orchestrator (`src/` does real work).
 6. **PDF Rendering** (`03_render_pdf.py`) — Pandoc → XeLaTeX loop, bibliography assembly, injected variables from Stage 02 artefacts.
 7. **Output Validation** (`04_validate_output.py`) — PDF structure, manifests, Markdown hygiene.

@@ -118,6 +118,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -158,7 +161,7 @@ Value
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-Config hash (SHA-256, truncated) & \breaktt{7182b437c586a680} \\
+Config hash (SHA-256, truncated) & \breaktt{292643985e5af3f2} \\
 Paper version & 2.5.2 \\
 First author & Daniel Ari Friedman \\
 Keywords & optimization algorithms, gradient descent, convergence
@@ -184,10 +187,10 @@ by \breaktt{infrastructure.validation.output.validator}:
 Category & Count \\
 \midrule\noalign{}
 \endhead
-Publication-quality figures & 8 \\
+Publication-quality figures & 9 \\
 Structured data files (CSV/JSON) & 5 \\
-Analysis reports & 9 \\
-\textbf{Total artifacts} & \textbf{22} \\
+Analysis reports & 19 \\
+\textbf{Total artifacts} & \textbf{33} \\
 \bottomrule\noalign{}
 \end{longtable}
 }
@@ -230,16 +233,15 @@ the entire parameter space.
 \protect\phantomsection\label{benchmark-demonstration}
 This exemplar also demonstrates \breaktt{infrastructure.benchmark}. The
 thin orchestrator \breaktt{scripts/04\_benchmark\_stage.py} calls
-\breaktt{src/benchmark\_support.py}, which times the pure
-\breaktt{quadratic\_function} across a fixed set of input sizes
-(deterministic seed, no network) and turns the timing facts into boolean
-rubric checks. Those checks are scored through the shared
+\breaktt{src/benchmark\_support.py}, which evaluates the pure
+\breaktt{quadratic\_function} across fixed seeded inputs and turns
+reproducible completion, finiteness, and output-stability facts into
+boolean rubric checks. Those checks are scored through
 \breaktt{infrastructure.benchmark.score\_rubric} against a weighted
-\texttt{RubricSet}, and the result is rendered with
-\breaktt{scores\_to\_markdown} into
-\breaktt{output/reports/benchmark\_report.json} (plus an optional timing
-figure). This keeps the benchmark API exercised by a real exemplar, not
-by infrastructure tests alone.
+\texttt{RubricSet}, then rendered with \breaktt{scores\_to\_markdown}
+into the byte-stable \breaktt{output/reports/benchmark\_report.json} with
+a deterministic objective-value figure. Real timing still executes as a
+runtime diagnostic, but it is not serialized into tracked evidence.
 \end{block}
 \end{frame}
 

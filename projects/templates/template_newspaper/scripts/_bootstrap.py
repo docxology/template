@@ -23,7 +23,7 @@ def project_root() -> Path:
 
 def find_repo_root(start: Path | None = None) -> Path | None:
     """Walk up from ``start`` until a directory containing ``infrastructure/``."""
-    p = (start or project_root())
+    p = start or project_root()
     for _ in range(10):
         if (p / "infrastructure").is_dir():
             return p

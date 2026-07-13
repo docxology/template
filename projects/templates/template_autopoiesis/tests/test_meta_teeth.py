@@ -3,6 +3,7 @@
 This is the core anti-test-theater invariant. If a constant-success stub
 passes this gate, the gate has no teeth.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -51,8 +52,7 @@ def test_stub_fails_gate_per_domain(domain):
     stub_result = _stub_run_analysis({"domain": domain})
     gate_passes = _gate_checks_real_computation(stub_result)
     assert not gate_passes, (
-        f"GATE HAS NO TEETH for domain={domain}: "
-        f"the constant-success stub should fail but passed the gate"
+        f"GATE HAS NO TEETH for domain={domain}: the constant-success stub should fail but passed the gate"
     )
 
 
@@ -64,8 +64,7 @@ def test_real_primitive_passes_gate_per_domain(domain):
     real_result = spec.fn(spec.example_input)
     gate_passes = _gate_checks_real_computation(real_result)
     assert gate_passes, (
-        f"Real primitive output for domain={domain} should pass the gate "
-        f"but failed. Keys: {list(real_result.keys())}"
+        f"Real primitive output for domain={domain} should pass the gate but failed. Keys: {list(real_result.keys())}"
     )
 
 

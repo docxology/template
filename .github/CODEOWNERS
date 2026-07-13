@@ -18,18 +18,12 @@
 /pyproject.toml         @docxology
 /bandit.yaml            @docxology
 
-# Canonical template exemplars (the only published projects) and the
-# top-level instruction-hierarchy docs.
-/projects/templates/template_active_inference/  @docxology
-/projects/templates/template_autoresearch_project/ @docxology
-/projects/templates/template_autoscientists/ @docxology
-/projects/templates/template_code_project/  @docxology
-/projects/templates/template_madlib/ @docxology
-/projects/templates/template_newspaper/ @docxology
-/projects/templates/template_prose_project/ @docxology
-/projects/templates/template_sia/ @docxology
-/projects/templates/template_template/ @docxology
-/projects/templates/template_textbook/ @docxology
+# Canonical template exemplars (the only published projects). A directory
+# rule deliberately covers the live PUBLIC_PROJECT_NAMES roster so adding a
+# new exemplar cannot silently omit review ownership.
+/projects/templates/    @docxology
+
+# Top-level instruction-hierarchy docs.
 /CLAUDE.md              @docxology
 /AGENTS.md              @docxology
 /README.md              @docxology

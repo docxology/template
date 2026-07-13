@@ -1,6 +1,6 @@
 # AGENTS.md — template_skill
 
-> Agent-oriented documentation for the `skill` exemplar tool.  
+> Agent-oriented documentation for the `skill` exemplar tool.
 > Human developers: see [README.md](README.md).
 
 ## Identity
@@ -31,7 +31,7 @@ echo "Summarise the following: ..." | bash scripts/invoke.sh
 
 ### Prompt Template
 
-`scripts/prompt.md` is a Markdown prompt template.  
+`scripts/prompt.md` is a Markdown prompt template.
 Agents may read this file to understand the skill's instruction framing before invoking.
 
 Template variables use `{{VARIABLE_NAME}}` syntax and are substituted by `invoke.sh` at runtime.

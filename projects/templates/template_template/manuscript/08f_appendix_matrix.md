@@ -10,7 +10,7 @@ See also [Figure 4](04_results.md#comparative-feature-analysis) for a colour-cod
 \label{tab:comparative-matrix}
 \end{table}
 
-| Capability | `template/` | Snakemake 9 | Nextflow 25 | CWL 1.2 | Quarto 1 | Jupyter Book 2 | R Markdown | DVC 3 | Overleaf (2025) | OpenAI Prism |
+| Capability | `template/` | Snakemake | Nextflow | CWL | Quarto | Jupyter Book | R Markdown | DVC | Overleaf | OpenAI Prism |
 |------------------|:-----------:|:----------:|:----------:|:-------:|:--------:|:------------:|:----------:|:-----:|:-------------:|:------------:|
 | Pipeline orchestration | Y | Y | Y | Y | ~ | N | N | Y | N | N |
 | Manuscript rendering | Y | N | N | N | Y | Y | Y | N | Y | Y |
@@ -27,7 +27,7 @@ See also [Figure 4](04_results.md#comparative-feature-analysis) for a colour-cod
 | Distributed execution | N | Y | Y | Y | N | N | N | ~³ | N | N |
 | Multi-language (R/Julia) | N | Y | N | Y | Y | Y | Y | Y | N | N |
 
-¹ Nextflow 25.04.0 introduced data-lineage provenance tracking (build-level, not document-level).
+¹ Nextflow lineage records operate at workflow scope rather than as a rendered-document citation graph.
 ² DVC provides content-addressed versioning for data artifacts via its object store.
 ³ DVC integrates with remote storage (S3, GCS, Azure) but does not natively orchestrate distributed compute.
-⁴ Overleaf and OpenAI Prism are collaborative cloud LaTeX/AI writing environments; their AI features (GPT-5.2 for Prism, Overleaf Labs AI for Overleaf) are partial/early-stage as of 2025–2026.
+This matrix is a versioned manuscript snapshot, not a continuously updated product survey. A future refresh should re-check every external capability against current primary documentation before changing a cell.

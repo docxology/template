@@ -7,7 +7,12 @@ name = "template_autoresearch_project"
 version = "0.3.2"
 description = "Deterministic bounded AutoResearch ML-loop exemplar for the template repository."
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.26", "matplotlib>=3.7", "pyyaml>=6.0"]
+dependencies = [
+    "numpy>=1.26",
+    "matplotlib>=3.7",
+    "pyyaml>=6.0",
+    "tomli>=2.0; python_version < '3.11'",
+]
 
 [tool.pytest.ini_options]
 # Project lives at projects/templates/<name>/; the repo root (which holds

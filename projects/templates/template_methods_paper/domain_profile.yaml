@@ -27,6 +27,7 @@ artifact_expectations:
   - output/reports/gate_report.json
   - output/reports/trust_chain_report.json
   - output/figures/step_counts.png
+  - output/figures/figure_registry.json
 benchmark_rubric:
   name: methods-paper-readiness
   dimensions:

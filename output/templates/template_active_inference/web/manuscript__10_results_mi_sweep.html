@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,50 +173,53 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:results_mi_sweep">Mutual-information parameter sweep</h1>
 <!-- sheaf-track:prose -->
 <p>We sweep coupling strength <span
 class="math inline">\(\lambda\)</span> on a grid of 21 points up to
 <span class="math inline">\(\lambda_{\max} = 4\)</span>. Closed-form
-mutual information from <span class="citation"
-data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> is
-cross-checked against an independent exact recomputation via total
-correlation from the analytical module (<span class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>);
-both are deterministic (no sampling) and agree to 0 nats.</p>
+mutual information from [eq:entangled_joint] is cross-checked against an
+independent exact recomputation via total correlation from the
+analytical module ([sec:methods_analytical]); both are deterministic (no
+sampling) and agree to 0 nats.</p>
 <p>Measured invariant checks: 12 / 12 passed on the clean tree.</p>
 <!-- sheaf-track:formalism -->
-<p>The sweep reuses the entangled joint defined in <span
-class="citation"
-data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> (<span
-class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>).
-Mutual information <span class="math inline">\(I(\lambda)=\log 2 -
-H_b(\sigma(\lambda))\)</span> is evaluated on the same <span
-class="math inline">\(\lambda\)</span> grid as the analytical oracle and
-its independent exact recomputation.</p>
+<p>The sweep reuses the entangled joint defined in [eq:entangled_joint]
+([sec:methods_analytical]). Mutual information <span
+class="math inline">\(I(\lambda)=\log 2 - H_b(\sigma(\lambda))\)</span>
+is evaluated on the same <span class="math inline">\(\lambda\)</span>
+grid as the analytical oracle and its independent exact
+recomputation.</p>
 <!-- sheaf-track:simulation -->
 <p>Both estimators are deterministic (no sampling, no RNG) and are
 evaluated on the same <span class="math inline">\(\lambda\)</span> grid
-as the closed-form sweep (<span class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>,
-<span class="citation"
-data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
+as the closed-form sweep ([sec:methods_analytical],
+[fig:ising_mi_curve]).</p>
 <!-- sheaf-track:visualization -->
 <p><img src="../figures/ising_mi_curve.png" style="width:90.0%" /></p>
-<p><em>Reproduced from <span class="citation"
-data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>.
-Closed-form <span class="math inline">\(I(\lambda)\)</span> and an
-independent exact recomputation via total correlation for the symmetric
-Bernoulli-Ising toy across 21 grid points up to <span
+<p><em>Reproduced from [fig:ising_mi_curve]. Closed-form <span
+class="math inline">\(I(\lambda)\)</span> and an independent exact
+recomputation via total correlation for the symmetric Bernoulli-Ising
+toy across 21 grid points up to <span
 class="math inline">\(\lambda_{\max}\)</span> = 4; grid maximum 0.6031
 nats. Both estimators are deterministic (no sampling), so the right
 panel is a cross-implementation agreement check (max residual 0 nats),
 not a sampling residual.</em></p>
+</main>
 </body>
 </html>

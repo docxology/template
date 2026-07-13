@@ -114,9 +114,14 @@ __all__ = [
     "HistogramFigureData",
     "CorrelationFigureData",
     "GroupCountFigureData",
+    "EdaFigureSpec",
+    "CORRELATION_COLOR_LIMITS",
+    "EDA_FIGURE_SPECS",
+    "FIGURE_REGISTRY_SCHEMA",
     "histogram_data",
     "correlation_heatmap_data",
     "group_count_data",
+    "eda_figure_spec",
 ]
 ```
 

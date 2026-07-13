@@ -39,6 +39,18 @@ def test_set_value_rewrites_nested_payload() -> None:
     assert target == {"outer": {"inner": {"value": 2}}}
 
 
+def test_set_value_handles_lists_and_rejects_invalid_paths() -> None:
+    target = {"rows": [{"ok": True}]}
+    _set_value(("rows", 0, "ok"), False)(target)
+    assert target == {"rows": [{"ok": False}]}
+
+    with pytest.raises(TypeError, match="cannot index"):
+        _set_value(("rows", "bad", "ok"), True)(target)
+
+    with pytest.raises(TypeError, match="cannot set"):
+        _set_value(("rows", "bad"), True)(target)
+
+
 def test_drop_last_row_updates_count_when_requested() -> None:
     payload = {"rows": [{"ok": True}, {"ok": False}], "row_count": 2}
     _drop_last_row(update_row_count=True)(payload)
@@ -82,7 +94,9 @@ def test_temporary_text_and_yaml_mutation_restore_after_exception(tmp_path: Path
             raise RuntimeError("text restore")
 
     with pytest.raises(RuntimeError, match="yaml restore"):
-        with temporary_yaml_mutation(yaml_path, lambda payload: payload["tracks"]["prose"].update({"renderer": "broken"})):
+        with temporary_yaml_mutation(
+            yaml_path, lambda payload: payload["tracks"]["prose"].update({"renderer": "broken"})
+        ):
             assert yaml.safe_load(yaml_path.read_text(encoding="utf-8"))["tracks"]["prose"]["renderer"] == "broken"
             raise RuntimeError("yaml restore")
 

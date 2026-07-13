@@ -149,7 +149,7 @@
       "output/reports/evidence_registry.json",
       "manuscript/source_ledger.yaml"
     ],
-    "source_path": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_autoresearch_project/autoresearch.yaml",
+    "source_path": "<repo-root>/projects/templates/template_autoresearch_project/autoresearch.yaml",
     "stage_gates": [
       "Project Tests",
       "Project Analysis",
@@ -174,7 +174,7 @@
   ],
   "experiment_protocol": "Load the local balanced small MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass.",
   "project_name": "template_autoresearch_project",
-  "project_root": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_autoresearch_project",
+  "project_root": "<repo-root>/projects/templates/template_autoresearch_project",
   "quality_checks": [
     "domain_profile",
     "experiment_plan",
@@ -188,7 +188,7 @@
     "ai_disclosure",
     "security_profile"
   ],
-  "repo_root": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852",
+  "repo_root": "<repo-root>",
   "required_artifacts": [
     "output/data/autoresearch_plan.json",
     "output/data/autoresearch_loop.json",

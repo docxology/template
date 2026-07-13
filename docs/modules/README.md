@@ -30,7 +30,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 | LLM | [`guides/llm-module.md`](guides/llm-module.md) | Ollama integration, research templates |
 | Methods | [`guides/methods-module.md`](guides/methods-module.md) | Methods orchestration plans |
 | Project | [`guides/project-module.md`](guides/project-module.md) | Multi-project discovery, validation, CodeGraph helpers |
-| Publishing | [`guides/publishing-module.md`](guides/publishing-module.md) | 12-platform registry, DOI/citations, credential verification, README status compilation, multi-platform upload dispatch |
+| Publishing | [`guides/publishing-module.md`](guides/publishing-module.md) | Publishing registry, DOI/citations, credential verification, README status compilation, multi-platform upload dispatch |
 | Rendering | [`guides/rendering-module.md`](guides/rendering-module.md) | PDF, slides, web output |
 | Reporting | [`guides/reporting-module.md`](guides/reporting-module.md) | Pipeline reports, error aggregation |
 | Scientific | [`guides/scientific-module.md`](guides/scientific-module.md) | Numerical stability, benchmarking |

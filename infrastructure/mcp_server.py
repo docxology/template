@@ -9,13 +9,15 @@ discovery registries — :mod:`infrastructure.skills.operation_registry`,
 
 **Zero new dependencies.** It speaks MCP's stdio transport directly: one
 JSON-RPC 2.0 message per line on stdin/stdout, using only the standard library.
-That keeps the default install untouched and lets the server be unit-tested via
-the pure :func:`handle_request` function without any transport or SDK.
+It is dual-era: legacy clients use the ``2024-11-05`` initialize lifecycle,
+while ``2026-07-28`` clients use ``server/discover`` and self-contained request
+metadata. That keeps the default install untouched and lets both eras be tested
+via the pure :func:`handle_request` function without any transport or SDK.
 
 Tools exposed:
 
 * ``list_operations`` — the machine-readable CLI operation catalog.
-* ``describe_pipeline`` — the 14-stage pipeline contract derived from pipeline.yaml.
+* ``describe_pipeline`` — the 16-stage pipeline contract derived from pipeline.yaml.
 * ``list_skills`` — discovered ``SKILL.md`` descriptors.
 * ``invoke_cli`` — run ``python -m infrastructure.<module> <args...>`` and return
   ``{exit_code, stdout, stderr}``. Restricted to ``infrastructure.*`` modules that
@@ -37,7 +39,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 from infrastructure.core.pipeline.cli import CORE_ONLY_EXCLUDED_TAGS, DEFAULT_PIPELINE_YAML, stage_rows
 from infrastructure.skills.discovery import (
@@ -55,8 +57,11 @@ from infrastructure.skills.operation_registry import (
 ALLOW_MUTATING_ENV = "TEMPLATE_MCP_ALLOW_MUTATING"
 
 __all__ = [
+    "LEGACY_PROTOCOL_VERSION",
+    "MODERN_PROTOCOL_VERSION",
     "PROTOCOL_VERSION",
     "SERVER_INFO",
+    "SUPPORTED_PROTOCOL_VERSIONS",
     "handle_request",
     "invoke_cli",
     "list_tools",
@@ -64,8 +69,25 @@ __all__ = [
     "serve",
 ]
 
-PROTOCOL_VERSION = "2024-11-05"
+LEGACY_PROTOCOL_VERSION = "2024-11-05"
+MODERN_PROTOCOL_VERSION = "2026-07-28"
+# Backward-compatible public name: existing callers use this as the version
+# returned by the legacy ``initialize`` handshake.
+PROTOCOL_VERSION = LEGACY_PROTOCOL_VERSION
+SUPPORTED_PROTOCOL_VERSIONS = (MODERN_PROTOCOL_VERSION, LEGACY_PROTOCOL_VERSION)
+ProtocolEra = Literal["legacy", "modern"]
 SERVER_INFO = {"name": "humos-template", "version": "1.0.0"}
+SERVER_CAPABILITIES: dict[str, Any] = {"tools": {}}
+SERVER_INSTRUCTIONS = (
+    "Discover the template's registered operations, pipeline stages, and skills; "
+    "invoke only curated infrastructure.* command-line operations."
+)
+LIST_CACHE_TTL_MS = 300_000
+LIST_CACHE_SCOPE = "public"
+
+_PROTOCOL_VERSION_META = "io.modelcontextprotocol/protocolVersion"
+_CLIENT_INFO_META = "io.modelcontextprotocol/clientInfo"
+_CLIENT_CAPABILITIES_META = "io.modelcontextprotocol/clientCapabilities"
 
 
 def _repo_root() -> Path:
@@ -216,15 +238,72 @@ def _ok(req_id: Any, result: dict[str, Any]) -> dict[str, Any]:
     return {"jsonrpc": "2.0", "id": req_id, "result": result}
 
 
-def _err(req_id: Any, code: int, message: str) -> dict[str, Any]:
-    return {"jsonrpc": "2.0", "id": req_id, "error": {"code": code, "message": message}}
+def _err(req_id: Any, code: int, message: str, *, data: dict[str, Any] | None = None) -> dict[str, Any]:
+    error: dict[str, Any] = {"code": code, "message": message}
+    if data is not None:
+        error["data"] = data
+    return {"jsonrpc": "2.0", "id": req_id, "error": error}
 
 
-def handle_request(request: dict[str, Any]) -> dict[str, Any] | None:
+def _request_meta(request: dict[str, Any]) -> dict[str, Any] | None:
+    params = request.get("params")
+    if not isinstance(params, dict):
+        return None
+    meta = params.get("_meta")
+    return meta if isinstance(meta, dict) else None
+
+
+def _request_era(request: dict[str, Any]) -> ProtocolEra:
+    """Classify a request without consulting transport or prior messages."""
+    method = request.get("method")
+    meta = _request_meta(request)
+    if method == "server/discover" or (
+        meta is not None
+        and any(key in meta for key in (_PROTOCOL_VERSION_META, _CLIENT_INFO_META, _CLIENT_CAPABILITIES_META))
+    ):
+        return "modern"
+    return "legacy"
+
+
+def _modern_request_error(request: dict[str, Any]) -> dict[str, Any] | None:
+    """Validate metadata required by the stateless 2026-07-28 protocol era."""
+    req_id = request.get("id")
+    meta = _request_meta(request)
+    if meta is None:
+        return _err(req_id, -32602, f"missing required params._meta.{_PROTOCOL_VERSION_META}")
+
+    requested = meta.get(_PROTOCOL_VERSION_META)
+    if not isinstance(requested, str) or not requested:
+        return _err(req_id, -32602, f"missing required params._meta.{_PROTOCOL_VERSION_META}")
+    if requested != MODERN_PROTOCOL_VERSION:
+        return _err(
+            req_id,
+            -32022,
+            "Unsupported protocol version",
+            data={"supported": list(SUPPORTED_PROTOCOL_VERSIONS), "requested": requested},
+        )
+
+    client_info = meta.get(_CLIENT_INFO_META)
+    if not isinstance(client_info, dict) or not all(
+        isinstance(client_info.get(key), str) and client_info[key] for key in ("name", "version")
+    ):
+        return _err(req_id, -32602, f"missing or invalid params._meta.{_CLIENT_INFO_META}")
+    if not isinstance(meta.get(_CLIENT_CAPABILITIES_META), dict):
+        return _err(req_id, -32602, f"missing or invalid params._meta.{_CLIENT_CAPABILITIES_META}")
+    return None
+
+
+def handle_request(
+    request: dict[str, Any],
+    *,
+    protocol_era: ProtocolEra | None = None,
+) -> dict[str, Any] | None:
     """Handle one JSON-RPC request object; return a response, or None for notifications.
 
     Pure function over a parsed request — no I/O — so it is directly unit-testable.
-    Implements the MCP methods ``initialize``, ``tools/list`` and ``tools/call``.
+    Without ``protocol_era`` it classifies each request independently, preserving
+    the original handler API. The stdio transport supplies its process-pinned era
+    so one client cannot switch wire semantics after its opening request.
     """
     method = request.get("method")
     req_id = request.get("id")
@@ -233,18 +312,64 @@ def handle_request(request: dict[str, Any]) -> dict[str, Any] | None:
     if method == "notifications/initialized" or (req_id is None and method != "initialize"):
         return None
 
+    inferred_era = _request_era(request)
+    if protocol_era == "legacy" and inferred_era == "modern":
+        modern_error = _modern_request_error(request)
+        if modern_error is not None:
+            return modern_error
+        meta = _request_meta(request)
+        requested = meta.get(_PROTOCOL_VERSION_META) if meta is not None else MODERN_PROTOCOL_VERSION
+        return _err(
+            req_id,
+            -32022,
+            "Protocol era mismatch: stdio process is pinned to legacy",
+            data={"supported": [LEGACY_PROTOCOL_VERSION], "requested": requested},
+        )
+    if protocol_era == "modern" and inferred_era == "legacy" and method == "initialize":
+        return _err(req_id, -32601, "method not found in the modern protocol era: initialize")
+
+    modern = protocol_era == "modern" or inferred_era == "modern"
+    if modern:
+        modern_error = _modern_request_error(request)
+        if modern_error is not None:
+            return modern_error
+
+    if method == "server/discover":
+        return _ok(
+            req_id,
+            {
+                "resultType": "complete",
+                "supportedVersions": list(SUPPORTED_PROTOCOL_VERSIONS),
+                "capabilities": SERVER_CAPABILITIES,
+                "serverInfo": SERVER_INFO,
+                "instructions": SERVER_INSTRUCTIONS,
+                "ttlMs": LIST_CACHE_TTL_MS,
+                "cacheScope": LIST_CACHE_SCOPE,
+            },
+        )
+
     if method == "initialize":
+        if modern:
+            return _err(req_id, -32601, "method not found in the modern protocol era: initialize")
         return _ok(
             req_id,
             {
                 "protocolVersion": PROTOCOL_VERSION,
-                "capabilities": {"tools": {}},
+                "capabilities": SERVER_CAPABILITIES,
                 "serverInfo": SERVER_INFO,
             },
         )
 
     if method == "tools/list":
-        return _ok(req_id, {"tools": list_tools()})
+        list_result: dict[str, Any] = {"tools": list_tools()}
+        if modern:
+            list_result = {
+                "resultType": "complete",
+                **list_result,
+                "ttlMs": LIST_CACHE_TTL_MS,
+                "cacheScope": LIST_CACHE_SCOPE,
+            }
+        return _ok(req_id, list_result)
 
     if method == "tools/call":
         params = request.get("params") or {}
@@ -257,19 +382,29 @@ def handle_request(request: dict[str, Any]) -> dict[str, Any] | None:
         try:
             payload = handler(arguments)
         except Exception as exc:  # noqa: BLE001 - report tool errors as MCP isError content
+            error_result: dict[str, Any] = {
+                "content": [{"type": "text", "text": f"{type(exc).__name__}: {exc}"}],
+                "isError": True,
+            }
+            if modern:
+                error_result["resultType"] = "complete"
             return _ok(
                 req_id,
-                {"content": [{"type": "text", "text": f"{type(exc).__name__}: {exc}"}], "isError": True},
+                error_result,
             )
-        return _ok(req_id, {"content": [{"type": "text", "text": json.dumps(payload, ensure_ascii=False)}]})
+        call_result: dict[str, Any] = {"content": [{"type": "text", "text": json.dumps(payload, ensure_ascii=False)}]}
+        if modern:
+            call_result = {"resultType": "complete", **call_result, "isError": False}
+        return _ok(req_id, call_result)
 
     return _err(req_id, -32601, f"method not found: {method}")
 
 
 def serve(stdin: Any = None, stdout: Any = None) -> int:
-    """Run the stdio MCP loop: read newline-delimited JSON-RPC, write responses."""
+    """Run stdio JSON-RPC with the protocol era pinned by the opening request."""
     src = stdin if stdin is not None else sys.stdin
     dst = stdout if stdout is not None else sys.stdout
+    protocol_era: ProtocolEra | None = None
     for line in src:
         line = line.strip()
         if not line:
@@ -280,7 +415,9 @@ def serve(stdin: Any = None, stdout: Any = None) -> int:
             dst.write(json.dumps(_err(None, -32700, "parse error")) + "\n")
             dst.flush()
             continue
-        response = handle_request(request)
+        if protocol_era is None and request.get("id") is not None:
+            protocol_era = _request_era(request)
+        response = handle_request(request, protocol_era=protocol_era)
         if response is not None:
             dst.write(json.dumps(response, ensure_ascii=False) + "\n")
             dst.flush()

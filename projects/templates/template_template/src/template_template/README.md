@@ -26,7 +26,7 @@ print(f"{report.module_count} modules, {report.project_count} projects")
 
 | Function | Returns | Description |
 |----------|---------|-------------|
-| `build_manuscript_metrics_dict(root)` | `dict` | ~40 live manuscript variables |
+| `build_manuscript_metrics_dict(root)` | `dict` | Live manuscript variables; build time comes only from `SOURCE_DATE_EPOCH`, otherwise it is explicitly unrecorded |
 | `save_metrics_json(metrics, path)` | `Path` | Serialise metrics to JSON |
 | `build_module_inventory_table(modules)` | `str` | Render module inventory as Markdown |
 

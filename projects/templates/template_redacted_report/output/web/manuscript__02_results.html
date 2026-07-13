@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="results">Results</h1>
 <h2 id="fixture-release-packet">Fixture Release Packet</h2>
 <p>The fixture release packet contains fourteen segments spanning four
@@ -215,6 +216,13 @@ only for valid spans, absent for invalid or orphan decisions.</li>
 </ul>
 <p>The ledger never exposes source text. It provides reproducible audit
 evidence without disclosure risk.</p>
+<p>The normal analysis stage writes this evidence to
+<code>output/data/release_ledger.json</code>. Its companion
+<code>output/reports/redaction_audit.json</code> contains policy
+outcomes, review-gate status, findings, scores, counts, and paragraph
+metadata. Both canonical files omit narrative text, review rationales,
+and reviewer identities; the comprehensive sanitized packet is evaluated
+in memory rather than serialized to the public output tree.</p>
 <h2 id="segment-hash-manifest">Segment Hash Manifest</h2>
 <p>The hash manifest records, for each segment:</p>
 <ul>

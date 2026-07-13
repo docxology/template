@@ -58,6 +58,17 @@ editor:
 | `list_skills` | discovered `SKILL.md` descriptors |
 | `invoke_cli` | runs a **registered** `infrastructure.*` CLI; returns `{exit_code, stdout, stderr}` |
 
+The server is **dual-era**. Existing clients retain the `2024-11-05`
+`initialize` / `notifications/initialized` lifecycle and legacy response shapes.
+Clients implementing the [MCP `2026-07-28` release candidate](https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/)
+can instead
+probe `server/discover` and then issue stateless requests carrying
+`io.modelcontextprotocol/protocolVersion`, client identity, and client
+capabilities in `params._meta`. Modern list results are explicitly cacheable;
+no initialize state is retained or required. Unsupported modern versions return
+the structured negotiation error with the server's supported-version list, so a
+dual-era client can choose the modern version or fall back to legacy initialize.
+
 `invoke_cli` is curated: it refuses any module that is not `infrastructure.*` and
 not reported invocable by the operation registry — it is a vetted tool surface,
 not an arbitrary shell. It is also **capability-tiered**: each operation carries an
@@ -75,6 +86,13 @@ Run it:
 
 ```bash
 uv run python -m infrastructure.mcp_server      # or: uv run python scripts/mcp_server_template.py
+```
+
+The conformance matrix is exercised against the pure handler and a real stdio
+subprocess:
+
+```bash
+uv run pytest tests/infra_tests/test_mcp_server.py -q
 ```
 
 **MCP direction.** The package was previously MCP-*client*-only

@@ -113,9 +113,7 @@ def test_inventory_and_attestation_report_pass_missing_and_mismatch_cases(
     assert failed["status"] == "failed"
     # observed.txt (mismatch) + the project's MNIST provenance cross-check (passes).
     assert failed["checked_count"] == 2
-    assert any(
-        check["path"] == "data/mnist_small.npz" and check["status"] == "passed" for check in failed["checks"]
-    )
+    assert any(check["path"] == "data/mnist_small.npz" and check["status"] == "passed" for check in failed["checks"])
     assert failed["missing_count"] == 1
     assert failed["mismatch_count"] == 1
     # "passed" is the project's MNIST provenance cross-check, appended to every attestation.

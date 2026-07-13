@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-03T09:59:24.140988",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -24,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 4.74,
+            "size_mb": 4.87,
             "readable": true
           },
           "pdf": {
             "exists": true,
-            "files": 10,
-            "size_mb": 5.09,
+            "files": 11,
+            "size_mb": 5.28,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 12,
-            "size_mb": 0.36,
+            "files": 13,
+            "size_mb": 0.43,
             "readable": true,
             "optional": false
           },
@@ -51,21 +51,21 @@
           "figures": {
             "exists": true,
             "files": 27,
-            "size_mb": 6.19,
+            "size_mb": 6.28,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 2,
+            "files": 3,
             "size_mb": 0.03,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 19,
-            "size_mb": 0.03,
+            "files": 12,
+            "size_mb": 0.13,
             "readable": true,
             "optional": false
           },
@@ -84,10 +84,9 @@
             "optional": true
           },
           "logs": {
-            "exists": true,
-            "files": 1,
+            "exists": false,
+            "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           }
         }
@@ -95,14 +94,14 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "5.09",
+          "file_count": 11,
+          "size_mb": "5.28",
           "largest_file": "template_gold_refinement_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 12,
-          "size_mb": "0.36",
+          "file_count": 13,
+          "size_mb": "0.43",
           "largest_file": "index.html"
         },
         "slides": {
@@ -114,20 +113,20 @@
         "figures": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "6.19",
+          "size_mb": "6.28",
           "largest_file": "cover_visualization.png"
         },
         "data": {
           "exists": true,
-          "file_count": 2,
+          "file_count": 3,
           "size_mb": "0.03",
           "largest_file": "manuscript_variables.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 19,
-          "size_mb": "0.03",
-          "largest_file": "token_plan.json"
+          "file_count": 12,
+          "size_mb": "0.13",
+          "largest_file": "evidence_registry.json"
         },
         "simulations": {
           "exists": true,
@@ -142,27 +141,27 @@
           "largest_file": null
         },
         "logs": {
-          "exists": true,
-          "file_count": 1,
-          "size_mb": "0.00",
-          "largest_file": "pipeline.log"
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
         }
       },
       "file_counts": {
-        "pdf": 10,
-        "web": 12,
+        "pdf": 11,
+        "web": 13,
         "slides": 0,
         "figures": 27,
-        "data": 2,
-        "reports": 19,
+        "data": 3,
+        "reports": 12,
         "simulations": 0,
-        "llm": 0,
-        "logs": 1
+        "llm": 0
       },
-      "total_size_mb": 11.704459190368652,
+      "total_size_mb": 12.147364616394043,
       "issues_by_severity": {
         "critical": [],
-        "warning": [],
+        "warning": [
+          "Directory 'logs/' missing or empty"
+        ],
         "info": [
           "slides/ directory is empty"
         ]
@@ -170,16 +169,16 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 5.089849472045898
+      "files": 11,
+      "size_mb": 5.276142120361328
     },
     "figures": {
       "files": 27,
-      "size_mb": 6.18927001953125
+      "size_mb": 6.282607078552246
     },
     "data": {
-      "files": 2,
-      "size_mb": 0.03337574005126953
+      "files": 3,
+      "size_mb": 0.034928321838378906
     }
   },
   "summary": {

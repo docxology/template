@@ -22,6 +22,12 @@ from ._logging import get_logger
 from .experiments import _project_root
 
 
+BENCHMARK_TIMING_POLICY = (
+    "Wall-clock timing and memory measurements are environment-dependent runtime "
+    "diagnostics and are intentionally omitted from this tracked artifact."
+)
+
+
 def _root() -> Path:
     return _project_root()
 
@@ -74,6 +80,39 @@ def _benchmark_timings(
     return float(np.mean(timings))
 
 
+def _canonical_benchmark_payload(
+    test_inputs: list[np.ndarray],
+    A: np.ndarray,
+    b: np.ndarray,
+    *,
+    diagnostic_iterations: int,
+) -> dict[str, Any]:
+    """Build byte-stable benchmark facts without host-dependent measurements."""
+    objective_values = [float(quadratic_function(test_input, A, b)) for test_input in test_inputs]
+    observations = [
+        {
+            "input": [float(value) for value in test_input],
+            "objective_value": objective_value,
+        }
+        for test_input, objective_value in zip(test_inputs, objective_values, strict=True)
+    ]
+    return {
+        "schema_version": "template_code_project/performance_benchmark/v2",
+        "function_name": "quadratic_function",
+        "diagnostic_iterations_per_input": diagnostic_iterations,
+        "input_count": len(test_inputs),
+        "observations": observations,
+        "checks": {
+            "all_inputs_evaluated": len(observations) == len(test_inputs),
+            "all_objective_values_finite": all(np.isfinite(objective_value) for objective_value in objective_values),
+        },
+        "timing_policy": BENCHMARK_TIMING_POLICY,
+        "result_summary": (
+            f"{len(observations)} deterministic objective evaluations; runtime timing omitted from tracked artifact"
+        ),
+    }
+
+
 def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
     """Assess numerical stability of optimization algorithms."""
     from . import INFRASTRUCTURE_AVAILABLE, check_numerical_stability
@@ -122,7 +161,7 @@ def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
 
 
 def run_performance_benchmarking(config: ExperimentConfig | None = None) -> Path:
-    """Benchmark gradient descent performance."""
+    """Run timing diagnostics and write a deterministic benchmark contract."""
     from . import INFRASTRUCTURE_AVAILABLE, benchmark_function
 
     logger = get_logger()
@@ -132,40 +171,34 @@ def run_performance_benchmarking(config: ExperimentConfig | None = None) -> Path
     A = cfg.A_array()
     b = cfg.b_array()
     test_inputs = [np.array([0.0]), np.array([5.0]), np.array([20.0])]
+    diagnostic_iterations = 50
 
     if INFRASTRUCTURE_AVAILABLE and benchmark_function is not None:
         benchmark_report = benchmark_function(
             func=functools.partial(quadratic_function, A=A, b=b),
             test_inputs=test_inputs,
-            iterations=50,
+            iterations=diagnostic_iterations,
         )
-        benchmark_data = {
-            "function_name": benchmark_report.function_name,
-            "execution_time": benchmark_report.execution_time,
-            "memory_usage": benchmark_report.memory_usage,
-            "iterations": benchmark_report.iterations,
-            "result_summary": benchmark_report.result_summary,
-            "timestamp": benchmark_report.timestamp,
-        }
         avg_time = benchmark_report.execution_time
     else:
-        avg_time = _benchmark_timings(test_inputs, A, b)
-        benchmark_data = {
-            "function_name": "quadratic_function",
-            "execution_time": avg_time,
-            "memory_usage": 0.0,
-            "iterations": 50,
-            "result_summary": f"Avg {avg_time * 1e6:.1f}μs across {len(test_inputs)} inputs",
-            "timestamp": _time.strftime("%Y-%m-%dT%H:%M:%S"),
-        }
+        avg_time = _benchmark_timings(test_inputs, A, b, iterations=diagnostic_iterations)
+
+    benchmark_data = _canonical_benchmark_payload(
+        test_inputs,
+        A,
+        b,
+        diagnostic_iterations=diagnostic_iterations,
+    )
 
     output_dir = _root() / "output" / "reports"
     output_dir.mkdir(parents=True, exist_ok=True)
     benchmark_path = output_dir / "performance_benchmark.json"
-    with open(benchmark_path, "w") as f:
-        json.dump(benchmark_data, f, indent=2, default=str)
+    benchmark_path.write_text(
+        json.dumps(benchmark_data, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
-    logger.info("Performance benchmarking complete - Avg time: %.6fs", avg_time)
+    logger.info("Runtime-only benchmark diagnostic complete - Avg time: %.6fs", avg_time)
     logger.info("Saved benchmark report to: %s", benchmark_path)
     return benchmark_path
 
@@ -278,7 +311,9 @@ def register_figure() -> None:
 
 
 __all__ = [
+    "BENCHMARK_TIMING_POLICY",
     "_benchmark_timings",
+    "_canonical_benchmark_payload",
     "_stability_score_from_runs",
     "register_figure",
     "run_performance_benchmarking",

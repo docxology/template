@@ -53,11 +53,13 @@ def drift_module():
         check_publication_metadata_consistency=checks.check_publication_metadata_consistency,
         check_config_author_placeholders=checks.check_config_author_placeholders,
         check_metadata_export_current=checks.check_metadata_export_current,
+        check_publication_index_completeness=checks.check_publication_index_completeness,
         check_publishing_status_block_current=checks.check_publishing_status_block_current,
         check_docs_hardcoded_counts=checks.check_docs_hardcoded_counts,
         check_project_src_infrastructure_boundary=checks.check_project_src_infrastructure_boundary,
         check_forkability_contract=checks.check_forkability_contract,
         check_shared_template_design_contract=checks.check_shared_template_design_contract,
+        check_shared_template_truth_contract=checks.check_shared_template_truth_contract,
         check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
 
@@ -340,6 +342,22 @@ def test_shared_template_design_contract_accepts_complete_shared_doc(drift_modul
     drift_module.check_shared_template_design_contract(tmp_path, rep)
 
     assert rep.findings == []
+
+
+def test_shared_template_truth_contract_rejects_roster_and_output_policy_drift(drift_module, tmp_path):
+    templates = tmp_path / "projects" / "templates"
+    templates.mkdir(parents=True)
+    write_doc(templates / "AGENTS.md", "Twenty public canonical exemplar projects.\n")
+    write_doc(templates / "DESIGN.md", "All eighteen public template exemplars.\n")
+    write_doc(tmp_path / "CLAUDE.md", "Never commit generated outputs to version control.\n")
+
+    rep = drift_module.Report()
+    drift_module.check_shared_template_truth_contract(tmp_path, rep)
+
+    rules = {finding.rule for finding in rep.errors()}
+    assert "shared_template_roster_literal" in rules
+    assert "shared_template_roster_pointer_missing" in rules
+    assert "public_output_policy_contradiction" in rules
 
 
 def test_all_export_drift_catches_invented_entry(drift_module, tmp_path):
@@ -821,6 +839,77 @@ def test_publication_metadata_flags_cff_zenodo_version_drift_without_paper_versi
     rep = drift_module.Report()
     drift_module.check_publication_metadata_consistency(root, rep, "fake_project")
     assert any(f.rule == "publication_cff_zenodo_version_drift" for f in rep.findings)
+
+
+def _write_complete_publication_index(root: Path) -> None:
+    """Write the minimum complete source surface for the index contract."""
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper:\n"
+        "  title: Complete exemplar\n"
+        "  version: '1.2.3'\n"
+        "publication:\n"
+        "  doi: '10.5281/zenodo.11111'\n"
+        "  version_doi: '10.5281/zenodo.22222'\n"
+        "  version_record: 'https://zenodo.org/records/22222'\n"
+        "  github_repository: 'docxology/template_complete'\n"
+        "  published_artifacts:\n"
+        "    osf: 'https://osf.io/abc12/'\n",
+        encoding="utf-8",
+    )
+    (root / "STANDALONE.md").write_text(
+        "# Complete\n\n<!-- BEGIN:PUBLICATION_INDEX -->\nidentity\n<!-- END:PUBLICATION_INDEX -->\n",
+        encoding="utf-8",
+    )
+    for name in ("CITATION.cff", ".zenodo.json", "codemeta.json"):
+        (root / name).write_text("{}\n", encoding="utf-8")
+
+
+def test_publication_index_completeness_requires_public_identity_surface(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    rep = drift_module.Report()
+    drift_module.check_publication_index_completeness(root, rep, "templates/template_fake")
+    rules = {finding.rule for finding in rep.errors()}
+    assert "publication_index_file_missing" in rules
+    assert "publication_index_value_missing" in rules
+    assert "publication_index_github_missing" in rules
+
+
+def test_publication_index_completeness_accepts_complete_exemplar(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    _write_complete_publication_index(root)
+    rep = drift_module.Report()
+    drift_module.check_publication_index_completeness(root, rep, "templates/template_complete")
+    assert rep.findings == []
+
+
+def test_publication_index_completeness_rejects_bad_mirror_declarations(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    _write_complete_publication_index(root)
+    config = root / "manuscript" / "config.yaml"
+    config.write_text(
+        config.read_text(encoding="utf-8").replace(
+            "    osf: 'https://osf.io/abc12/'", "    imaginary_archive: 'not-a-url'"
+        ),
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_publication_index_completeness(root, rep, "templates/template_complete")
+    rules = {finding.rule for finding in rep.errors()}
+    assert rules >= {"publication_index_platform_unknown", "publication_index_url_invalid"}
+
+
+def test_publication_index_completeness_is_registered():
+    from infrastructure.project.drift.checks_exemplar import check_publication_index_completeness
+    from infrastructure.project.drift.registry import PROJECT_CHECKS
+
+    assert check_publication_index_completeness in PROJECT_CHECKS
+
+
+def test_publication_index_completeness_does_not_constrain_private_projects(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    rep = drift_module.Report()
+    drift_module.check_publication_index_completeness(root, rep, "working/private_project")
+    assert rep.findings == []
 
 
 _GOOD_METADATA_CONFIG = (

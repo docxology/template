@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Confidentiality guard — tools tracking check."""
+
 from __future__ import annotations
 
 import argparse
@@ -14,7 +15,12 @@ from infrastructure.project.git_guards import offending_tracked_tools  # noqa: E
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT, help="Path to repository root (default: auto-detected from script location)")
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=REPO_ROOT,
+        help="Path to repository root (default: auto-detected from script location)",
+    )
     args = parser.parse_args(argv)
 
     offenders = offending_tracked_tools(args.repo_root.resolve())

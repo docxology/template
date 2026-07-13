@@ -109,10 +109,7 @@ def _run_save_baseline_only(workspace: Path, args: argparse.Namespace) -> int:
     rate = benchmark["summary"]["with_skill_positive_only_pass_rate"]
     src = workspace / "benchmark.json"
     dest = config.BASELINE_DIR / "benchmark.json"
-    print(
-        f"Pinned baseline from {src} → {dest}\n"
-        f"with_skill positive-only: {rate * 100:.1f}%"
-    )
+    print(f"Pinned baseline from {src} → {dest}\nwith_skill positive-only: {rate * 100:.1f}%")
 
     if args.compare_only:
         return _run_compare_only(workspace, args)
@@ -307,8 +304,7 @@ def main() -> int:
 
             summary = grading["summary"]
             print(
-                f"[{run_index}/{total_runs}] {name} · {mode} · "
-                f"{summary['passed']}/{summary['total']}",
+                f"[{run_index}/{total_runs}] {name} · {mode} · {summary['passed']}/{summary['total']}",
                 file=sys.stderr,
             )
             if args.verbose:

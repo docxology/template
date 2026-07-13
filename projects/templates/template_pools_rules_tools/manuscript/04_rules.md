@@ -37,11 +37,12 @@ rule:
   applies_to: "projects/*/src/"
   enforcement: fail_on_violation
   constraints:
-    minimum_line_coverage: 90
-    minimum_branch_coverage: 80
+    infrastructure: 60
+    project_src: 90
+    public_api: 95
 ```
 
-The `enforcement: fail_on_violation` field signals that a pipeline must halt and report when this rule is violated. Strong rules are suitable for invariants that, if broken, indicate a genuine defect rather than a style preference: coverage below 90% means tests are missing; a manuscript section without an abstract means the document is incomplete.
+The `enforcement: fail_on_violation` field signals that a pipeline must halt and report when this rule is violated. Strong rules are suitable for invariants that, if broken, indicate a genuine defect rather than a style preference: coverage below the source-declared threshold means tests are missing; a manuscript section without an abstract means the document is incomplete.
 
 ![Rule hierarchy: the two template rule sets, each split into a machine-enforceable `strong/` branch and a guidance-only `soft/` branch.](figures/rule_hierarchy.png){#fig:rulehier width=85%}
 
@@ -53,7 +54,7 @@ This rule set governs software projects throughout the template repository. Its 
 
 | File | Constraint |
 |---|---|
-| `strong/coverage-gate.yaml` | Minimum line coverage 90%, branch coverage 80% for `src/` |
+| `strong/coverage-gate.yaml` | Minimum coverage: infrastructure 60%, project `src/` 90%, public API 95% |
 | `strong/module-structure.yaml` | Required directory layout: `src/`, `tests/`, `scripts/`, `manuscript/` |
 
 Its soft rules provide guidance on code style, commit message conventions, and pull-request labelling.

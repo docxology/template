@@ -5,738 +5,711 @@
       "path": "output/data/configured_field_inventory.json",
       "sha256": "55a7ff8b9e3932705af8fd66ddeca08c103fd3ed183501d3c0a4ba0a1a918a94",
       "size_bytes": 18828,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "fe82ce9af7e6604cf856d682ce3dbac5b8b715677fe6d2ef641eb1fd03ab9d59",
-      "size_bytes": 75976,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "7824b4f7a21e1bd322edc508f83dbbb4117edba886efe602c8ee0fc52e8e7329",
+      "size_bytes": 76007,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/data/publication_ledger.json",
       "sha256": "46e831239b7e99b3073cacd0f85937f37587fc8979d7cfc323b9fecc7cef5f43",
       "size_bytes": 890,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/data/section_plan.json",
-      "sha256": "f6d1ef8ed57b042150f51c882d7f5ff6600694cf3ac65efe7132ab29386cc045",
-      "size_bytes": 41034,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "9f9bf0d906624a57782848f1b206227c302eb070e7a8865b5c60f3cb3d376168",
+      "size_bytes": 41049,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/data/token_inventory.json",
       "sha256": "f2fbbf94ae220344ec48b7a9de80bff5bc120702ce64fd9a716d9b92cef924e1",
       "size_bytes": 10676,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/configured_field_matrix.png",
-      "sha256": "5f4c9ed40c76561e88b01073f911a622a6efb156d7d73a30fc72198ff27d3851",
-      "size_bytes": 64138,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "6e575fec71b37c83a3dddd5629fd06abe40a48f485ce9548e4f8133e2f1cbba9",
+      "size_bytes": 60000,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/field_origin_summary.png",
-      "sha256": "50560aeab3ecdbf35ecea63ea7b6b38bd9ca321bf3ec7754eb99e32d28bd5d59",
-      "size_bytes": 29441,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "487f72a4eb5af2b433aec5b7397192fc95c4ef697d964332771124e2207bc0d9",
+      "size_bytes": 29867,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/figure_registry.json",
       "sha256": "5059201d105b571c8998f31b687a54797766f5ca13e3a3c0cee4fbbc417b520f",
       "size_bytes": 2545,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/madlib_cover_overview.png",
-      "sha256": "4abd24ef587fff4ea4da695cd3539705dc03a66dc3c0ecec21766f402d0819c9",
-      "size_bytes": 168570,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "0c9f1d0c5140b4a17521fdba957b10c082d9a6b32945b3c8076b932f05bbe2b0",
+      "size_bytes": 162829,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/provenance_trace_map.png",
-      "sha256": "8a8556efd36e8879e1e24273703cafcd509874ac9631976ae55ee6abcaa292b8",
-      "size_bytes": 109301,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "aab594ff1b1d4c3325de51f46ac607f89274d64965b2c257d8b55944dc3634ec",
+      "size_bytes": 98282,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/quality_gate_matrix.png",
-      "sha256": "5bd70e83e3a5fe0b994d727cc44d82e77894d91aec3cca181c1faed4acd01d3b",
-      "size_bytes": 150980,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "92d7cc90e97fc4fe17571c7a1dc468362aa81aad0f14a469051124f613f9e8c0",
+      "size_bytes": 145812,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/section_configuration_heatmap.png",
-      "sha256": "d1200d7fc8946cf143dc296c5334a809f4caa892d59fdb0fa3992bc612942371",
-      "size_bytes": 101726,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "1b7bd363cad173edda14bf16c4d448f25fb165c8d4ab7fc46407d6f6c95fa39e",
+      "size_bytes": 120218,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/section_token_allocation.png",
-      "sha256": "d2d0b03364344117dfc6fc0d7ca2f46ab6003e76753de69210860b7984687ef9",
-      "size_bytes": 77848,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "71dbdbdb3cfc86d6b84daf572c363f5d9c943d5e4956c5dd7c382f9e5496982e",
+      "size_bytes": 72466,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/token_density.png",
-      "sha256": "241f1d0512b05ace8444e5c0d4474b8070ea494327875b6839df8d4a6b17c0a3",
-      "size_bytes": 71464,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "a23ab62afb69de5e0f52429449c14f30d9768240c968c4ac023646b8965968b4",
+      "size_bytes": 67678,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/figures/token_injection_flow.png",
-      "sha256": "8420fe0184fa6cd9fe69f973b9cd33643593c5755a4bc4f4e05320ac06e26242",
-      "size_bytes": 91091,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "dc1349ed84e8beb735c76dbbbfc8cbcb40d50e833b1314c530c3ad41184d06bd",
+      "size_bytes": 94823,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/00_abstract.md",
       "sha256": "fd5d1364b29fad9e62f0eae23f318d1d61bbcb23491fe2a85fee5cbf45764ea0",
       "size_bytes": 1250,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/01_introduction.md",
       "sha256": "e0b73f4939762def38b98984014aadde0075418697406a5b6ca18f7986051492",
       "size_bytes": 3496,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/02_methodology.md",
       "sha256": "2b7114943970d7b0ab9145bae1f3e671afad4a39feb7883b00041edae6e3496a",
       "size_bytes": 26490,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/03_results.md",
       "sha256": "0f60653498061d03d725d4470ecfc9b5990b3399697fe366eeeecd221aae730c",
       "size_bytes": 8805,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/04_discussion.md",
       "sha256": "434ceb7a3edf77c7ce4f5172dece242023b6bb84ecf97b72160aac39de498a05",
       "size_bytes": 1194,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/05_experimental_setup.md",
       "sha256": "a73bdd32bdd321de11d05e240643bd9f90aa9a83260641c17083a0c6676c369f",
       "size_bytes": 13942,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/06_evaluation.md",
-      "sha256": "2becbf99ca296de0995370c0557fe655d5b67281e7062cbf3d88cb9122444678",
-      "size_bytes": 6833,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "f773c2449302d27552a7ae09387f40c87d3d1c91b67bb2c193f1797bd058568e",
+      "size_bytes": 6848,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/07_reproducibility.md",
-      "sha256": "f2c0b45771f4abd46ea3eb512e31bece2471c67e49b65c30e3cd592fb814acf2",
-      "size_bytes": 1551,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "99403988ea15d54d311665895ad34318d7af2589343eb60865c18108b7011a13",
+      "size_bytes": 1700,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/08_limitations.md",
       "sha256": "319cf89af2df580dc0fb97adf985ea868d586a72c57c1d9e6a44ab043ba49ffd",
       "size_bytes": 4874,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/09_scope_and_related_work.md",
       "sha256": "44491849718fee4e73a73e3e74d48b742db92ee5116d1c8e83617501a8616a79",
       "size_bytes": 1124,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/10_authoring_contract.md",
       "sha256": "dd3ef8190a6d40a641ba83160d69b5cb107dec60a56af89465155a3f47738baa",
       "size_bytes": 2776,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/99_references.md",
       "sha256": "bdaf0cb7e6e5178804448b09006f2ae23550d1bf5561025472d7bbf93924f913",
       "size_bytes": 13,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
-      "sha256": "3c4268ae54c351307e575d0677fb8113a38e6fea5e4dbde015f97f735c5ee336",
-      "size_bytes": 37994,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "377db49c4154479a1db5f670ebff8fb5539eff1707496d8faae334fac30e6e96",
+      "size_bytes": 38600,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/preamble.md",
       "sha256": "9823d6a91848b6544625d6ca9c5d8e99623580489103bf00afb5fcfb41c06ebd",
       "size_bytes": 2657,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/manuscript/references.bib",
       "sha256": "dd1ad5efd51b48d134e79dc0a21ca2620bc9dedd6f8f71cece6768bf4c2ffa2b",
       "size_bytes": 303,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/_combined_manuscript.bbl",
       "sha256": "8e5c0a84578475116bd7e34d81ab6a955fa410c276f07902a2ba9c41ed532db6",
       "size_bytes": 275,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/_combined_manuscript.blg",
       "sha256": "8ceea9e02274797efcc2e942143e36ad44672ad87fa0bac9fa732389457481cb",
       "size_bytes": 976,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/_combined_manuscript.md",
-      "sha256": "252afc0bc73b83aa6e92457e5a0f38e0ec68bf069e807a14a8725472b0058753",
-      "size_bytes": 72610,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "ab476be81dee1b83f7635d27e9b01e637557610477b4ae23db6f7032644b277a",
+      "size_bytes": 72774,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/_combined_manuscript.tex",
-      "sha256": "845b9e6dd5995e3c44fb4d14d7f26cb9c259c8712bde083ab7de5f55ae2dcf7c",
-      "size_bytes": 96210,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "9579577e6bb475cc6ab6c473990f01fbabcd25fc48c6d2af442e3d86bc9d4d2c",
+      "size_bytes": 96817,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/references.bib",
       "sha256": "dd1ad5efd51b48d134e79dc0a21ca2620bc9dedd6f8f71cece6768bf4c2ffa2b",
       "size_bytes": 303,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/template_madlib_combined.pdf",
-      "sha256": "0245dc71bfb084f00a1b6b6c24266f454f6278eda3542404d552b6e6cb0f2f14",
-      "size_bytes": 1001778,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "546e9e6d83696aff09e0db59c4b7ed7babd0500ae69db45914ba9aca8cc50e99",
+      "size_bytes": 986274,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/reports/configured_field_summary.md",
       "sha256": "770400a252819018e52c15ea536857c3081d5b6b0f3a09de48a82018a89454ca",
       "size_bytes": 1529,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/reports/injection_trace.json",
       "sha256": "ba05a099be0047bd0734694e69872373f0a87dac7d23dfce864bb9f3ef388632",
       "size_bytes": 8049,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/reports/madlib_summary.md",
       "sha256": "479838b76d8a3a6788bbc0c65e6ea0d1a065cad1a4396b58ff9b4fe9c67488f7",
       "size_bytes": 1565,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/output_statistics.json",
-      "sha256": "f17f780a719f30c00e83a9cfb7b3364950300360129e292c25bbbf2642396401",
-      "size_bytes": 6885,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/output_statistics.txt",
-      "sha256": "765a3ce19e6736207fab3e59251a6e7f1e941d08fb0224c4beca39e2a28d0922",
-      "size_bytes": 974,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/validation_report.json",
-      "sha256": "29814f4dffaa9aeae67fe22df1b1e7e8626e7db7e68b4b1dd7970caa38704c8d",
-      "size_bytes": 4447,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/validation_report.md",
-      "sha256": "0e68c84b68fbca7a02441c06d288a24152c2962ba86349aac0db2b4e8d8df975",
-      "size_bytes": 332,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "4b3739cd874ffa9d8efb601d7becffb6fff5abf7d5f7d9659f6f64bf4608dde4",
+      "sha256": "04ac20b6fd8a503a0db34db9253ff7319d49a3190dd1340b814173f282c448d6",
       "size_bytes": 10926,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.tex",
-      "sha256": "d5869497cf271d094bba848aa122c4535e3c4524c8da558b0e66fe076a1667ec",
-      "size_bytes": 5648,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "6aee90b2dc5c8e23be66c34627ec6227fb5abe92b65c84943320b8d8884492f4",
+      "size_bytes": 5723,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/01_introduction_slides.pdf",
-      "sha256": "4b280e8034bafc452ae39c666bab1056553576b71b86759fd3f96b18bdac9aa7",
+      "sha256": "103650d2a332b3a11f04731f6651be5ad1da9ffe992c71a38ca2fd7891a19c9f",
       "size_bytes": 18408,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/01_introduction_slides.tex",
-      "sha256": "bb166abf5b365ca2cbe7bcfc8b51a4a41599f2943a33852d164d45a4936f63d6",
-      "size_bytes": 8769,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "7318e3525027904e53cbefc7932ee89662e1e051ebc2634efd3eada58f486ae2",
+      "size_bytes": 8844,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/02_methodology_slides.pdf",
-      "sha256": "5e8f1e81cb7a50fc258eef00d877b68bb4b6a710069c495e6cecdb81473821c3",
-      "size_bytes": 145808,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "a16c5ccd34da2331e0b1221112f13c066c72aa694df79872cd5ffd3e2b0e39b0",
+      "size_bytes": 149477,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/02_methodology_slides.tex",
-      "sha256": "67499213f9649c1ed5b5acea33ff42d61bb1c0b1062543a2c215daec8399d246",
-      "size_bytes": 36684,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "a67e426ec55b08249a02f1fc8617d684b5c78aff9d4366ecc057ca0c43e3282e",
+      "size_bytes": 36759,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/03_results_slides.pdf",
-      "sha256": "8ea78f7ef602c5ead01e7d51f872180dab17899a6cd483ebd1b1a3f8990720c4",
-      "size_bytes": 304727,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "5c6ea2613a4922f29f25a4d198cf384a135aea3b5e3ca9e5531379a80ba48906",
+      "size_bytes": 281300,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/03_results_slides.tex",
-      "sha256": "232141924d81c12fa1cc6190ab297a4b6c45c5f144e93a8e2d1e006130614617",
-      "size_bytes": 17218,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "26ac627a30bbafc1fbcea110c402a2b9d09f5f2e1e168e898771f521e8577c7a",
+      "size_bytes": 17293,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/04_discussion_slides.pdf",
-      "sha256": "4d147138e61ff835246b63dfe1101bb2ae50a393cc8330f5bd3211454f2d4082",
-      "size_bytes": 9976,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "ba06bed778373981080d2a754a70238d80ccc11005dbbb9d94505b87e530a068",
+      "size_bytes": 9977,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/04_discussion_slides.tex",
-      "sha256": "6f6c56c9f46ea4f8f515d553c6d8e108c9d6b08761068186f5c048c3ea447de1",
-      "size_bytes": 5674,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "d170de6587ab52c53bfb97f49267d9c1a73ac17daa4ef1f198ec442bd52007ee",
+      "size_bytes": 5749,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/05_experimental_setup_slides.pdf",
-      "sha256": "52ce9263bb9e9231f1f91594d2afd3db56eb06094539e97a23c71a8f65984245",
-      "size_bytes": 235870,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "50ae8e6b4856ae5ba1e5c3325fd79bf07d0cfef7e0fcb6d05f52f1a273062169",
+      "size_bytes": 251416,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/05_experimental_setup_slides.tex",
-      "sha256": "18fdbe4f128a1bf53233c498040c61bfac2ebd4041749c4ecc2db317c8a281b3",
-      "size_bytes": 23168,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "8fb2d6cb2541d9c39eebe13a8e693097a7939648cfda76d5bf56700baee1415b",
+      "size_bytes": 23243,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/06_evaluation_slides.pdf",
-      "sha256": "6e51a38a51f3a7a14baebf5c33e604326fb767508dd321b986fbdd8e5f19be22",
-      "size_bytes": 176946,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "c9ddc464e173e42b68dad5b59159ea115128f53790261b0aabab847261412b27",
+      "size_bytes": 172396,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/06_evaluation_slides.tex",
-      "sha256": "803144b1e9d4e177ea00090aa259cd058d521949c0cf8d5fda65078730139b0f",
-      "size_bytes": 13981,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "ef377cbc8e43350453c6d10b1fce110582901757dbb195c6609af45e0428165c",
+      "size_bytes": 14071,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/07_reproducibility_slides.pdf",
-      "sha256": "a1e88301afee8039740ce823ace5f4a2080e1dbb6aca4ebf4a277d1363e25e0b",
-      "size_bytes": 16887,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "4b9f167563ef66aeed2356ad44322b363974fb661e859a5d5b2354181cce61e4",
+      "size_bytes": 18242,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/07_reproducibility_slides.tex",
-      "sha256": "51feaeee32c26a0c385982b33904327b68c2a0eaeffffef284ded2196b1b391d",
-      "size_bytes": 6183,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "70407bd11de5002e6b8ec59732fddb4dfd7212a2fcf628ba83c191083d25d423",
+      "size_bytes": 6428,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/08_limitations_slides.pdf",
-      "sha256": "51bdb5faf287206d3725890bdf898d895ffcf7b64975a96267f9694fcbb0bc0d",
-      "size_bytes": 19457,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "fcc57dc4788c6206fb554d25dcdc4fb4746c031be30cbb00d02855e83284525e",
+      "size_bytes": 19458,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/08_limitations_slides.tex",
-      "sha256": "98e06e5e2a74176f111bed53e3e2683b2905bb083c640cec3c64992973062b6d",
-      "size_bytes": 10375,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "93829a9e22165e9442b8d01a3ca3d7fcb86b896c3eeb74c3b7e66f364c32cbf6",
+      "size_bytes": 10450,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/09_scope_and_related_work_slides.pdf",
-      "sha256": "a17139b7d443f2ee20b84bffba8792faedc3d95cc012e3731c05364f744ded28",
-      "size_bytes": 13141,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "9bec91365bc6d7adeea197834021b5260ecb300e9627169bcc83512541702fd2",
+      "size_bytes": 13142,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/09_scope_and_related_work_slides.tex",
-      "sha256": "ac8a38ff873a518359720ff53ed95fa4a3625652e289677f6172cc86428b299e",
-      "size_bytes": 5625,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "942ef3c0ee4d4340f528b6534c038bb66b825330adf640a70188aa76fb77c509",
+      "size_bytes": 5700,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/10_authoring_contract_slides.pdf",
-      "sha256": "542248af45bb7d1ffa764dbed0491fe8fcf9cd85079cd3ef09d98e8d04728d6a",
-      "size_bytes": 21051,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "e3e58e412cf21ce57568aa4ce7cebc63c9640353a281f5cbcec705394805b8b2",
+      "size_bytes": 21052,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/10_authoring_contract_slides.tex",
-      "sha256": "8291c038575f50dbcacac9117fb820d75a3d7d9a2d19d89e3f360382ed33c5c6",
-      "size_bytes": 8244,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "06e7edb517150c2064ebb2101339929fd1e922b9369c77efb778599b0760603f",
+      "size_bytes": 8319,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.pdf",
-      "sha256": "923ae5166dd837f8bc421778b9ea48b79ee41e375041491818bbd34372efdc41",
-      "size_bytes": 3091,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "91f56325c9a9774f7ead5f0b13ea7877241cbf4f2739a8228a38f4cfe43898a2",
+      "size_bytes": 3092,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.tex",
-      "sha256": "369c1c23dd6e6949a96e866559e3b0c07671165972ba0885714d6e1e195d7d36",
-      "size_bytes": 4344,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "5433d2197248b2792c62bc56955111826ec9102ddf5e46dbd5f1a14d40a6b950",
+      "size_bytes": 4419,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/_slides_math_header.tex",
-      "sha256": "69b71104c86559c7f32f704197449690a3851abc40c2ce6e0d292d1c76e32233",
-      "size_bytes": 1600,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "9ebd2a72c4b52197dde83fa800ac1e4094f790d4f9ac6317d7829088b2947810",
+      "size_bytes": 1675,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "05f9c4a7f9c883e6d4b901538edaf6ba6e1dce7e0af8c25f94309258e8128d83",
-      "size_bytes": 72390,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "d9c612a745899df05bc53b591b78ce394a33d1440251ed675b0a217d25def417",
+      "size_bytes": 72554,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/web/favicon.ico",
+      "sha256": "6ca6e9ffbb22550f6d94bf216e743cc7469a7fc50d8dcf0737b11bf800de7dad",
+      "size_bytes": 121,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "3ab78a870cf7e9aac6bced976dcc72dff6c5eb77e7b330ddaef88eec2568c165",
-      "size_bytes": 110005,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "7b849b4fee6880ee8e624999e0155c39c4ac2f7583da3b213fb2bf8afded5d64",
+      "size_bytes": 111423,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__00_abstract.html",
-      "sha256": "254d6e7eef49952ebc62dc5a87e32fbb1b031e65a39714a077ee76a7fad51b5b",
-      "size_bytes": 5142,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "e9acea3a1704b297ea9ac97714441959e790914cb2f4ab363d80db604285ef11",
+      "size_bytes": 5326,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__01_introduction.html",
-      "sha256": "a4b9004541e02027f2e643019a27bef080880a212415c7d407e2870c18b5244b",
-      "size_bytes": 7824,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "96c49b884754d6c05c27e037b8bd6bd8ae9b6f3082a0d92d172ab7110827967a",
+      "size_bytes": 8008,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__02_methodology.html",
-      "sha256": "0e455ace954a8c8dd8bf4e1d5934072eb655a6d6cd8114dc0f36c5722ef09343",
-      "size_bytes": 36092,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "ab6ec58a44b6872ad6f4140aad184d072430ad0cccd60ae1002eb0829251fd08",
+      "size_bytes": 36257,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__03_results.html",
-      "sha256": "efdc7d3442eec82921d7b0d8b79e42cc8d6a8730e36f48d2fc6fa34e4c7c0b21",
-      "size_bytes": 17203,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "1ebfa27ce777b177be0b05d730a61c2e95b94c2fe2f7ba7853e4e02e03947471",
+      "size_bytes": 17330,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__04_discussion.html",
-      "sha256": "ecba7196ade7a67c16ec3ede3b6dc1ba27999b47e20b791700282c4ddbb431c3",
-      "size_bytes": 5125,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "847e3d57b0afa7d43be600d3ad9d79625967148c1afc1b19db10c43a812e27ec",
+      "size_bytes": 5309,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__05_experimental_setup.html",
-      "sha256": "3956779f204754db56117434736be993764a587883766b3d3e1257a8f6aa8180",
-      "size_bytes": 26988,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "610fce036b3b037e595c4953acdc73d6b41ffbaa8bb30b2973e91a3df51d1b2b",
+      "size_bytes": 27115,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__06_evaluation.html",
-      "sha256": "c61a899973071fda1fd199e2afbcbd77e1563b8424d56762f1bea5f546357554",
-      "size_bytes": 12303,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "0d07261326661612eec22b13a8a371ed406493eacb56fa1435163972c7e214ab",
+      "size_bytes": 12483,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__07_reproducibility.html",
-      "sha256": "18fa96db8450750eb5f12725c64f6047bdfc0153d83c6c52da17fbf2ac321f5f",
-      "size_bytes": 5633,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "69220f4a2469a85fba76011055b60033b350e2fb8c5a870a4394c2e0243769d0",
+      "size_bytes": 5984,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__08_limitations.html",
-      "sha256": "a58e8bc8d23e78630a9be976c93c00f41773c56e0e4871a9a5cb1f4d94c132ce",
-      "size_bytes": 9501,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "d6cf2f4199ffdf425a65087a8d11bab62d882f1da10f5a05bb2efc06f078b9e1",
+      "size_bytes": 9685,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__09_scope_and_related_work.html",
-      "sha256": "63475d2770b46f181cb1e4b95e59c867395b707c5d0f20ee27cc037796a01dfc",
-      "size_bytes": 5103,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "0991e647d3e77efa0ab65ae35400885175e60cfbc0879f1d603a17826b92b657",
+      "size_bytes": 5287,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__10_authoring_contract.html",
-      "sha256": "d5c2bc57b325f4cdd2e0bd5b794b40a214c24dfeb0b69e7cb9e99f7b226bbef6",
-      "size_bytes": 7238,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "a06737b0303106633ff2983062cb018f382cb6513ae5ee381d4aa742a6b356bf",
+      "size_bytes": 7422,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__99_references.html",
-      "sha256": "39cd7966cfb203a181289f9ed28de0a8a0a5875002f401a4f89775e324123474",
-      "size_bytes": 3880,
-      "stage_name": "Project Analysis",
-      "stage_num": 4,
-      "timestamp": "1970-01-01T00:00:00+00:00"
+      "sha256": "d46e46b58a0345cf47caeec85d5f61094a148879edb0af8d91b7dc929370088f",
+      "size_bytes": 4064,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
     }
   ],
   "issues": []

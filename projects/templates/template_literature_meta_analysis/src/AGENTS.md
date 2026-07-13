@@ -27,7 +27,7 @@ Do not introduce cycles across these layers.
 
 | Module | Script | Role |
 | --- | --- | --- |
-| `literature/search_runner.py` | `01_literature_search.py` | Multi-engine retrieval, relevance filtering, corpus persistence |
+| `literature/search_runner.py` | `01_literature_search.py` | Multi-engine retrieval, relevance filtering, corpus persistence, and deterministic per-engine `retrieval_report.json` provenance |
 | `analysis/pipeline_runner.py` | `02_meta_analysis_pipeline.py` | Bibliometrics, text analytics, topics, citation graph |
 | `knowledge_graph/kg_runner.py` | `03_build_knowledge_graph.py` | Optional LLM assertions, hypothesis scores, nanopublications |
 | `visualization/figure_runner.py` | `04_generate_figures.py` | Figure generation and registry writing |

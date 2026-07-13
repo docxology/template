@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_registered_report/output/slides/03_methods_slides.tex
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1133,7 +1133,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.aux)
 \openout1 = `03_methods_slides.aux'.
 
@@ -1493,7 +1493,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.nav)
 [1
 
@@ -1501,7 +1501,7 @@ jects/templates/template_registered_report/output/slides/03_methods_slides.nav)
 \openout4 = `03_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.vrb
 File: ../figures/analysis_dag.png Graphic file (type bmp)
 <../figures/analysis_dag.png>
@@ -1514,7 +1514,7 @@ File: ../figures/analysis_dag.png Graphic file (type bmp)
 \openout4 = `03_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.vrb)
 [4
 
@@ -1522,7 +1522,7 @@ jects/templates/template_registered_report/output/slides/03_methods_slides.vrb)
 \openout4 = `03_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 8.
@@ -1567,7 +1567,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `03_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.vrb)
 [6
 
@@ -1582,7 +1582,7 @@ jects/templates/template_registered_report/output/slides/03_methods_slides.vrb)
 \openout7 = `03_methods_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/03_methods_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1598,6 +1598,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1149b,468s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <home>/Documents/GitHub/template/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_registered_report/output/slides/03_me
 thods_slides.pdf (6 pages).

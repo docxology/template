@@ -19,7 +19,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
 
 # Add scripts to path (one more parent level since we're in tests/infra_tests/llm/)
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
@@ -29,7 +28,6 @@ from infrastructure.llm.validation import is_off_topic
 from infrastructure.llm.core.config import get_max_input_length
 
 DEFAULT_MAX_INPUT_LENGTH: int = 500000
-from infrastructure.llm.review.generator import validate_review_quality
 from infrastructure.llm.review.io import SessionMetrics, generate_review_summary, save_review_outputs
 from infrastructure.llm.review.metrics import ManuscriptInputMetrics, ReviewMetrics
 
@@ -387,7 +385,7 @@ class TestIsOffTopic:
         """Test that normal review responses are not flagged."""
         normal_response = """## Overview
         This manuscript presents a novel approach to machine learning optimization.
-        
+
         ## Key Contributions
         - New algorithm for faster convergence
         - Improved accuracy on benchmark datasets
@@ -461,4 +459,3 @@ class TestIsOffTopic:
         """Test that 'I'm happy to help you with' is detected as off-topic."""
         polite_response = "I'm happy to help you with this analysis request."
         assert is_off_topic(polite_response) is True
-

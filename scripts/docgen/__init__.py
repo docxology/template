@@ -3,4 +3,5 @@
 Each script reads live repository state and writes a deterministic output file.
 All business logic is in infrastructure/ modules.
 """
+
 from __future__ import annotations

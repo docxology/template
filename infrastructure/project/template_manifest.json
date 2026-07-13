@@ -22,7 +22,7 @@
       "qualified_name": "templates/template_autopoiesis",
       "title": "template_autopoiesis",
       "use_when": "Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
-      "test_file_count": 27,
+      "test_file_count": 28,
       "coverage_floor": 90
     },
     {
@@ -54,7 +54,7 @@
       "qualified_name": "templates/template_formal",
       "title": "Formal — Strongly-Typed Multiagent Ant-Robot Colony Exemplar",
       "use_when": "Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent.",
-      "test_file_count": 24,
+      "test_file_count": 25,
       "coverage_floor": 90
     },
     {
@@ -62,7 +62,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 53,
+      "test_file_count": 54,
       "coverage_floor": 90
     },
     {
@@ -86,7 +86,7 @@
       "qualified_name": "templates/template_pools_rules_tools",
       "title": "template_pools_rules_tools",
       "use_when": "Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science.",
-      "test_file_count": 9,
+      "test_file_count": 10,
       "coverage_floor": 90
     },
     {
@@ -126,7 +126,7 @@
       "qualified_name": "templates/template_redacted_report",
       "title": "template_redacted_report",
       "use_when": "Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published.",
-      "test_file_count": 3,
+      "test_file_count": 4,
       "coverage_floor": 90
     },
     {
@@ -134,7 +134,7 @@
       "qualified_name": "templates/template_registered_report",
       "title": "template_registered_report",
       "use_when": "Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted.",
-      "test_file_count": 3,
+      "test_file_count": 4,
       "coverage_floor": 90
     },
     {
@@ -150,7 +150,7 @@
       "qualified_name": "templates/template_sia",
       "title": "template_sia",
       "use_when": "Use this template when you need a **self-improvement-agent evaluation harness**: Meta → Target → Feedback generation loops, public/private task splits to detect overfitting, deterministic fixture replay for testability, and fail-closed loop validation.",
-      "test_file_count": 12,
+      "test_file_count": 13,
       "coverage_floor": 90
     },
     {
@@ -166,7 +166,7 @@
       "qualified_name": "templates/template_template",
       "title": "Template: Meta-Research Project",
       "use_when": "Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes).",
-      "test_file_count": 5,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {
@@ -174,7 +174,7 @@
       "qualified_name": "templates/template_textbook",
       "title": "The Template Textbook — Modular, Fillable Book Scaffold",
       "use_when": "Use this template for **book-length manuscripts**: parts → chapters → labs → question banks declared in a single `config.yaml`, with auto-numbering, deterministic figure/diagram generation, and structural-contract tests that keep hundreds of pages from drifting.",
-      "test_file_count": 10,
+      "test_file_count": 11,
       "coverage_floor": 90
     },
     {

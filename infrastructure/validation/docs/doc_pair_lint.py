@@ -8,6 +8,7 @@ that permanent surface carries both files while skipping generated/local trees.
 
 from __future__ import annotations
 
+import os
 from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -138,7 +139,13 @@ def iter_doc_pair_candidate_dirs(
         base = (repo / rel_root).resolve()
         if not base.is_dir() or is_doc_pair_excluded_path(base):
             continue
-        for directory in [base, *sorted(p for p in base.rglob("*") if p.is_dir())]:
+        for raw_directory, child_names, _ in os.walk(base, topdown=True, followlinks=False):
+            directory = Path(raw_directory)
+            child_names[:] = sorted(
+                name
+                for name in child_names
+                if not (directory / name).is_symlink() and not is_doc_pair_excluded_path(directory / name)
+            )
             if directory in seen or is_doc_pair_excluded_path(directory):
                 continue
             if not _has_content(directory):

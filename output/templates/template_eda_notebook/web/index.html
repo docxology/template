@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Notebook-to-Tested-Source Extraction for Computational Research" />
   <title>Exploratory Data Analysis: A Reproducible Notebook
 Template</title>
   <style>
@@ -238,17 +240,52 @@ Template</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -267,11 +304,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -287,34 +319,61 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -346,6 +405,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -353,7 +417,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -369,17 +433,24 @@ img {
 }
 
 a {
-  color: red;
-  text-decoration: none;
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -389,14 +460,32 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
-  color: red;
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -414,7 +503,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -422,11 +511,13 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Exploratory Data Analysis: A Reproducible Notebook
 Template</h1>
 <p class="subtitle">Notebook-to-Tested-Source Extraction for
 Computational Research</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -585,6 +676,7 @@ class="toc-section-number">8.4</span> Explicit limitations</a></li>
 class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Exploratory data analysis (EDA) is the most common entry point in
@@ -747,8 +839,10 @@ deterministic output.</p>
 <h2 data-number="3.4" id="correlation-structure"><span
 class="header-section-number">3.4</span> Correlation structure</h2>
 <p><code>src/eda/correlation.py::correlation_matrix()</code> returns the
-Pearson correlation matrix of the numeric columns [tukey1977eda]. The
-companion <code>strongest_pairs(matrix, top_n)</code> ranks the distinct
+Pearson correlation matrix of the numeric columns <span class="citation"
+data-cites="tukey1977eda">(<a href="#ref-tukey1977eda"
+role="doc-biblioref">Tukey 1977</a>)</span>. The companion
+<code>strongest_pairs(matrix, top_n)</code> ranks the distinct
 off-diagonal feature pairs by absolute correlation while preserving sign
 — usually the single most useful artifact of a first pass, because it
 points directly at the relationships worth investigating. Each unordered
@@ -804,10 +898,10 @@ code without inferring hidden defaults.</p>
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section presents the exploratory analysis of the shipped
-dataset. Every figure and the summary table are produced by the thin
-analysis script (<a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py"><code>scripts/eda_analysis.py</code></a>),
-which calls the tested figure-data preparers in
+dataset. Every figure and the summary table are produced by the <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py">EDA
+analysis orchestrator</a> (<code>scripts/eda_analysis.py</code>), which
+calls the tested figure-data preparers in
 <code>src/eda/figures.py</code>. Running the script regenerates the
 figures under <code>../figures/</code> and the summary CSV under
 <code>output/data/</code>; the prose below describes what those
@@ -829,8 +923,8 @@ height across the complete-case dataset, binned by
 <code>histogram_data()</code> and plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
 <img src="../figures/height_histogram.png"
-alt="Figure 1: Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process." />
-<figcaption aria-hidden="true">Figure 1: Height distribution: bin counts
+alt="Figure 1: Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py ." />
+<figcaption>Figure 1: Height distribution: bin counts
 produced by <code>histogram_data(frame, "height_cm", bins=10)</code> in
 <code>src/eda/figures.py</code> and plotted as a bar chart by
 <code>scripts/eda_analysis.py</code>. The bin counts sum to the number
@@ -844,8 +938,8 @@ rows fall in each group, computed by <code>group_count_data()</code>
 (labels sorted for deterministic output).</p>
 <figure id="fig:group_counts">
 <img src="../figures/group_counts.png"
-alt="Figure 2: Rows per group: sorted category labels and aligned counts from group_count_data(). The three groups are of comparable, though not identical, size; the counts sum to the complete-case row total." />
-<figcaption aria-hidden="true">Figure 2: Rows per group: sorted category
+alt="Figure 2: Rows per group: sorted category labels and aligned counts from group_count_data() ." />
+<figcaption>Figure 2: Rows per group: sorted category
 labels and aligned counts from <code>group_count_data()</code>. The
 three groups are of comparable, though not identical, size; the counts
 sum to the complete-case row total.</figcaption>
@@ -859,8 +953,8 @@ correlation matrix of the three numeric features, computed by
 construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
 <img src="../figures/correlation_heatmap.png"
-alt="Figure 3: Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;)) rendered with a diverging colour map on the fixed range [-1, 1]. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two." />
-<figcaption aria-hidden="true">Figure 3: Feature correlation heatmap:
+alt="Figure 3: Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;) ) rendered with a diverging colour map on the fixed range [-1, 1] ." />
+<figcaption>Figure 3: Feature correlation heatmap:
 values from <code>correlation_heatmap_data()</code> (which wraps
 <code>correlation_matrix(method="pearson")</code>) rendered with a
 diverging colour map on the fixed range <span class="math inline">\([-1,
@@ -1171,7 +1265,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_eda_notebook/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Render the manuscript</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
 <h2 data-number="7.2" id="generated-artifact-registry"><span
 class="header-section-number">7.2</span> Generated artifact
 registry</h2>
@@ -1239,21 +1333,32 @@ class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
 <p>This section situates the exemplar and states explicit boundaries.
 The goal is not to compete with comprehensive treatments of exploratory
-data analysis [tukey1977eda] or statistical graphics
-[wilkinson2005grammar], but to show how a minimal, test-backed EDA story
-fits the template’s reproducibility and rendering stack
-[peng2011reproducible].</p>
+data analysis <span class="citation" data-cites="tukey1977eda">(<a
+href="#ref-tukey1977eda" role="doc-biblioref">Tukey 1977</a>)</span> or
+statistical graphics <span class="citation"
+data-cites="wilkinson2005grammar">(<a href="#ref-wilkinson2005grammar"
+role="doc-biblioref">Wilkinson 2005</a>)</span>, but to show how a
+minimal, test-backed EDA story fits the template’s reproducibility and
+rendering stack <span class="citation"
+data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>)</span>.</p>
 <h2 data-number="8.1" id="exploratory-data-analysis"><span
 class="header-section-number">8.1</span> Exploratory data analysis</h2>
 <p>The practice of examining a dataset before formal modelling — looking
 at distributions, missingness, and relationships — traces to Tukey’s
-foundational work [tukey1977eda] and is supported in modern practice by
-the pandas data analysis toolkit [mckinney2010pandas] and the broader
-scientific-Python stack [harris2020numpy]. The present manuscript
-restricts attention to a <strong>first pass</strong> on a <strong>small
-tabular dataset</strong>: load, surface missingness, compute descriptive
-statistics and per-group means, and rank features by Pearson
-correlation.</p>
+foundational work <span class="citation" data-cites="tukey1977eda">(<a
+href="#ref-tukey1977eda" role="doc-biblioref">Tukey 1977</a>)</span> and
+is supported in modern practice by the pandas data analysis toolkit
+<span class="citation" data-cites="mckinney2010pandas">(<a
+href="#ref-mckinney2010pandas" role="doc-biblioref">McKinney
+2010</a>)</span> and the broader scientific-Python stack <span
+class="citation" data-cites="harris2020numpy">(<a
+href="#ref-harris2020numpy" role="doc-biblioref"><span
+class="nocase">Harris et al.</span> 2020</a>)</span>. The present
+manuscript restricts attention to a <strong>first pass</strong> on a
+<strong>small tabular dataset</strong>: load, surface missingness,
+compute descriptive statistics and per-group means, and rank features by
+Pearson correlation.</p>
 <h2 data-number="8.2" id="modelling-and-inference-out-of-scope"><span
 class="header-section-number">8.2</span> Modelling and inference (out of
 scope)</h2>
@@ -1298,7 +1403,7 @@ class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[key]</code> citation in the
+<code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
@@ -1307,5 +1412,35 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_eda_notebook/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-harris2020numpy" class="csl-entry" role="listitem">
+<span class="nocase">Harris, Charles R., K. Jarrod Millman, Stéfan J.
+van der Walt, et al.</span> 2020. <span>“Array Programming with
+<span>NumPy</span>.”</span> <em>Nature</em> 585 (7825): 357–62. <a
+href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
+</div>
+<div id="ref-mckinney2010pandas" class="csl-entry" role="listitem">
+McKinney, Wes. 2010. <span>“Data Structures for Statistical Computing in
+<span>Python</span>.”</span> <em>Proceedings of the 9th Python in
+Science Conference (SciPy)</em>, 56–61. <a
+href="https://doi.org/10.25080/Majora-92bf1922-00a">https://doi.org/10.25080/Majora-92bf1922-00a</a>.
+</div>
+<div id="ref-peng2011reproducible" class="csl-entry" role="listitem">
+Peng, Roger D. 2011. <span>“Reproducible Research in Computational
+Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
+href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
+</div>
+<div id="ref-tukey1977eda" class="csl-entry" role="listitem">
+Tukey, John W. 1977. <em>Exploratory Data Analysis</em>. Addison-Wesley
+Series in Behavioral Science: Quantitative Methods. Addison-Wesley.
+</div>
+<div id="ref-wilkinson2005grammar" class="csl-entry" role="listitem">
+Wilkinson, Leland. 2005. <em>The Grammar of Graphics</em>. 2nd ed.
+Springer. <a
+href="https://doi.org/10.1007/0-387-28695-0">https://doi.org/10.1007/0-387-28695-0</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

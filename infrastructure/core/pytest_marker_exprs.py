@@ -2,8 +2,8 @@
 
 ``pyproject.toml`` ``addopts`` defaults apply only when pytest is started without
 overriding ``-m``. Orchestrators that invoke ``python -m pytest …`` with an
-explicit ``-m`` must pass the full expression (including ``not bench`` when
-benchmarks are opt-in).
+explicit ``-m`` must pass the full expression, including all repository marker
+aliases used for opt-in benchmark and performance suites.
 """
 
 
@@ -12,6 +12,7 @@ def build_pytest_marker_expression(
     skip_requires_ollama: bool,
     skip_slow: bool,
     skip_bench: bool,
+    skip_requires_docker: bool = True,
     skip_long_running: bool = True,
     skip_private_project: bool = True,
     skip_external_fixture: bool = True,
@@ -20,8 +21,10 @@ def build_pytest_marker_expression(
 
     Args:
         skip_requires_ollama: When True, append ``not requires_ollama``.
+        skip_requires_docker: When True, append ``not requires_docker``.
         skip_slow: When True, append ``not slow``.
-        skip_bench: When True, append ``not bench``.
+        skip_bench: When True, exclude ``bench``, ``benchmark``, and
+            ``performance`` marker aliases.
         skip_long_running: When True, append ``not long_running``.
         skip_private_project: When True, append ``not private_project``.
         skip_external_fixture: When True, append ``not external_fixture``.
@@ -29,10 +32,12 @@ def build_pytest_marker_expression(
     parts: list[str] = []
     if skip_requires_ollama:
         parts.append("not requires_ollama")
+    if skip_requires_docker:
+        parts.append("not requires_docker")
     if skip_slow:
         parts.append("not slow")
     if skip_bench:
-        parts.append("not bench")
+        parts.extend(("not bench", "not benchmark", "not performance"))
     if skip_long_running:
         parts.append("not long_running")
     if skip_private_project:

@@ -18,46 +18,21 @@ publication:
   doi: ""  # Fill after Zenodo deposit
   github_repository: "your-org/your-repo"
 
-strong_rules:
-  canonical_sections:
-    - Abstract
-    - Introduction
-    - Related Work
-    - Methods
-    - Results
-    - Discussion
-    - Conclusion
-    - References
-  coverage:
-    infrastructure: 60
-    project_src: 90
-    public_api: 95
-
-sections:
-  abstract: true
-  introduction: true
-  fonds: true
-  rules: true
-  tools: true
-  integration: true
-  conclusion: true
-
-integration:
-  rule_sets:
-    - template_project_rules   # Replace with your rule sets
-  tools:
-    - template_code_executor   # Replace with your tools
-  fonds:
-    - template_bibliography    # Replace with your fonds
-
-manuscript_variables_path: "output/data/manuscript_variables.json"
-
-figures:
-  architecture_overview:
-    path: "figures/architecture_overview.png"
-    caption: "Architecture overview figure path placeholder."
-    label: "fig:architecture"
-    width: "0.9\\linewidth"
+project_config:
+  strong_rules:
+    canonical_sections:
+      - Abstract
+      - Introduction
+      - Related Work
+      - Methods
+      - Results
+      - Discussion
+      - Conclusion
+      - References
+    coverage:
+      infrastructure: 60
+      project_src: 90
+      public_api: 95
 
 render:
   engine: "pandoc"

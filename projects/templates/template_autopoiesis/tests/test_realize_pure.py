@@ -1,4 +1,5 @@
 """Pure unit tests for realize module (no fixture dependencies)."""
+
 from __future__ import annotations
 
 import sys

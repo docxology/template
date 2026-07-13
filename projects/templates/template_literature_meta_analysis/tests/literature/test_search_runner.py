@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from pytest_httpserver import HTTPServer
 
 from literature.corpus import Corpus
 from literature.models import Paper
-from literature.search_runner import apply_relevance_filter, run_literature_search, search_source
+from literature.search_runner import RetrievalObservation, apply_relevance_filter, run_literature_search, search_source
 
 
 def _paper(title: str, abstract: str = "active inference study") -> Paper:
@@ -53,9 +54,20 @@ def test_search_source_adds_papers(tmp_path: Path) -> None:
     def fake_search(_query: str, max_results: int = 100) -> list[Paper]:
         return [_paper("Fetched")]
 
-    result = search_source("Test", fake_search, "query", 10, corpus, logger)
+    observations: list[RetrievalObservation] = []
+    result = search_source("Test", fake_search, "query", 10, corpus, logger, observations=observations)
     assert result is not None
     assert len(corpus) == 1
+    assert observations == [
+        {
+            "source": "Test",
+            "status": "ok",
+            "fetched": 1,
+            "new_records": 1,
+            "duplicates": 0,
+            "detail": "",
+        }
+    ]
 
 
 def test_run_literature_search_skips_sources(tmp_output_dir: str) -> None:
@@ -78,6 +90,10 @@ def test_run_literature_search_skips_sources(tmp_output_dir: str) -> None:
     project_root = Path(__file__).resolve().parents[2]
     path = run_literature_search(args, project_root=project_root)
     assert path.exists()
+    report = json.loads((Path(tmp_output_dir) / "data" / "retrieval_report.json").read_text())
+    assert report["run_mode"] == "retrieval"
+    assert report["corpus_records"] == 0
+    assert {row["status"] for row in report["engines"]} == {"skipped"}
 
 
 def test_search_source_returns_none_on_failure() -> None:
@@ -87,8 +103,11 @@ def test_search_source_returns_none_on_failure() -> None:
     def failing_search(_query: str, max_results: int = 100) -> list[Paper]:
         raise RuntimeError("network unavailable")
 
-    assert search_source("Fail", failing_search, "query", 10, corpus, logger) is None
+    observations: list[RetrievalObservation] = []
+    assert search_source("Fail", failing_search, "query", 10, corpus, logger, observations=observations) is None
     assert len(corpus) == 0
+    assert observations[0]["status"] == "error"
+    assert observations[0]["detail"] == "RuntimeError"
 
 
 def test_run_literature_search_resumes_populated_corpus(
@@ -125,6 +144,10 @@ def test_run_literature_search_resumes_populated_corpus(
     assert path == corpus_path
     reloaded = Corpus.load(corpus_path)
     assert len(reloaded) == len(sample_papers)
+    report = json.loads((data_dir / "retrieval_report.json").read_text())
+    assert report["run_mode"] == "resume_without_prior_retrieval_report"
+    assert report["corpus_records"] == len(sample_papers)
+    assert report["engines"] == []
 
 
 def test_run_literature_search_loads_yaml_config(

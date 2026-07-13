@@ -4,10 +4,6 @@ from pathlib import Path
 
 from infrastructure.validation.integrity import check_links
 from infrastructure.validation.integrity.check_links import (
-    check_file_reference,
-    discover_markdown_files,
-    extract_headings,
-    extract_links,
     validate_python_imports,
 )
 
@@ -25,7 +21,6 @@ class TestCheckLinksCore:
             a for a in dir(check_links) if not a.startswith("_") and callable(getattr(check_links, a, None))
         ]
         assert len(module_funcs) > 0
-
 
 
 class TestLinkValidation:
@@ -53,7 +48,6 @@ class TestLinkValidation:
             test_url = http_test_server.url_for("/")
             result = check_links.check_external_link(test_url)
             assert result is not None
-
 
 
 class TestFileReferenceValidation:
@@ -88,7 +82,6 @@ class TestFileReferenceValidation:
         if hasattr(check_links, "check_file_reference"):
             result = check_links.check_file_reference("img.png", source, tmp_path)
             assert result is not None
-
 
 
 class TestMarkdownLinkExtraction:
@@ -143,7 +136,6 @@ class TestMarkdownLinkExtraction:
             assert file_refs[0]["target"] == "other.md"
 
 
-
 class TestRelativePathResolution:
     """Test relative path resolution."""
 
@@ -162,7 +154,6 @@ class TestRelativePathResolution:
         if hasattr(check_links, "normalize_path"):
             result = check_links.normalize_path("./docs/../README.md")
             assert result is not None
-
 
 
 class TestCheckFileReferenceEdgeCasesAdditional:
@@ -245,7 +236,6 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         assert result is True or "does not exist" in msg.lower()
 
 
-
 class TestExtractHeadingsAdditional:
     """Test heading extraction functionality."""
 
@@ -280,7 +270,6 @@ class TestExtractHeadingsAdditional:
         headings = check_links.extract_headings(content)
         # Should strip special chars
         assert len(headings) > 0
-
 
 
 class TestMainFunctionEdgeCases:
@@ -329,7 +318,6 @@ class TestMainFunctionEdgeCases:
         assert result is False
 
 
-
 class TestExtractLinksEdgeCases:
     """Test link extraction edge cases."""
 
@@ -362,7 +350,6 @@ class TestExtractLinksEdgeCases:
 
         assert len(external) == 1
         assert external[0]["target"] == "http://example.com"
-
 
 
 class TestDiscoverMarkdownFilesLinkAuditAdditional:
@@ -404,7 +391,6 @@ class TestDiscoverMarkdownFilesLinkAuditAdditional:
         assert "coverage.md" not in file_names
 
 
-
 class TestValidatePythonImportsAdditional:
     def test_no_python_blocks(self, tmp_path):
         content = "```bash\nls -la\n```"
@@ -443,5 +429,3 @@ class TestValidatePythonImportsAdditional:
         content = "```python\nimport os\nimport sys\n```"
         issues = validate_python_imports(content, tmp_path / "test.md", tmp_path)
         assert issues == []  # Non-infrastructure imports not checked
-
-

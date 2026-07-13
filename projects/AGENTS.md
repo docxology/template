@@ -39,7 +39,15 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 
 ## Permanent Canonical Exemplars
 
-Twenty-three projects under `projects/templates/` are **permanent canonical exemplars**: `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_data_descriptor`, `template_eda_notebook`, `template_formal`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_redacted_report`, `template_registered_report`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, and `template_textbook`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/audit/check_tracked_projects.py`. Authoritative names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). **CONFIDENTIALITY INVARIANT (public repo):** every other path under `projects/` (the `active/` hot-seat set, the `working/`/`published/`/`archive/`/`other/` lifecycle folders) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover Active Inference multi-track research, computational, dataset descriptor/data-paper packaging, exploratory data analysis on tabular data, a strongly typed multiagent colony with formal side-specs (Lean/TLA+), metallurgical gold-refining analogy for manuscript composition with mega-madlib token injection, literature meta-analysis, conditional token-injection with QA probes and an authoring contract, a controlled-method specification DSL with staged validation and deterministic compilation (informed by BPL), pitch/slide deck publication artifacts, preregistered/registered reports, formal redaction and release-review reports, prose-review, deterministic AutoResearch, AutoScientists coordination-mechanism testbed, newspaper layout/typography, SIA self-improvement harness (fixture replay by default), full-page storybook illustration/PDF assembly, the autopoietic meta-template, the modular fillable textbook scaffold, literature-search + LLM synthesis, and fonds/rules/tools resource-pool integration:
+The public canonical exemplar roster is generated in
+[`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md),
+with the shape/selection matrix in
+[`docs/_generated/exemplar_roster.md`](../docs/_generated/exemplar_roster.md).
+Those are the project trees admitted by `.gitignore`,
+`infrastructure.project.public_scope`, and `scripts/audit/check_tracked_all.py`.
+Every other lifecycle path under `projects/` is local-only and must never be
+committed; the combined guard runs in pre-push and CI. The table below describes
+the current public exemplars but does not replace either generated source of truth:
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|

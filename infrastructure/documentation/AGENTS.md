@@ -11,11 +11,11 @@ tree instead of copying volatile literals into prose.
 
 | Area | Files | Role |
 | --- | --- | --- |
-| Figures and manuscript helpers | `figure_manager.py`, `image_manager.py`, `markdown_integration.py` | Figure registry, insertion, table-of-figures, cross-reference helpers. |
+| Figures and manuscript helpers | `figure_manager.py`, `generated_figure_registry.py`, `image_manager.py`, `markdown_integration.py` | Interactive figure management plus deterministic, fail-closed pipeline registries, insertion, table-of-figures, and cross-reference helpers. |
 | API docs | `api_reference_gen.py`, `glossary_gen.py` | AST-derived public API docs and marker injection. |
 | Pipeline docs | `stage_table.py` | Stage table rendered from `core/pipeline/pipeline.yaml`. |
 | Generated facts | `counts_doc.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, active projects, architecture diagram. |
-| Publication docs | `publication_records.py` | DOI/archive/config/GitHub publication matrix. |
+| Publication docs | `publication_records.py`, `publication_standalone.py` | DOI/archive/config/GitHub publication matrix plus generated publication-identity blocks in every canonical exemplar's `STANDALONE.md`. |
 
 ## Boundaries
 
@@ -26,7 +26,11 @@ tree instead of copying volatile literals into prose.
 - Counts and rosters are source-owned by generators; do not hand-edit generated
   facts.
 - Publication records may refresh external state only when the command or user
-  explicitly requests it.
+  explicitly requests it. Ordinary generation still synchronizes the
+  source-owned central tables and per-exemplar standalone identity blocks.
+- Generated-figure registries must be derived from project-owned specs and the
+  files emitted by the same run; missing or duplicate outputs fail before JSON
+  is written.
 
 ## Public Commands
 

@@ -1,0 +1,195 @@
+{
+  "decision_count": 21,
+  "final_release_recommended": false,
+  "findings": [
+    {
+      "code": "sensitive_residue",
+      "message": "s3 retains marker marker:source",
+      "severity": "warning"
+    },
+    {
+      "code": "sensitive_residue",
+      "message": "s5 retains marker compartment_marker",
+      "severity": "warning"
+    }
+  ],
+  "mosaic_risk_score": 0.012,
+  "narrative_exported": false,
+  "paragraph_audit": [
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 274,
+      "residual_markers": [],
+      "segment_id": "s1",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 404,
+      "residual_markers": [],
+      "segment_id": "s2",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": true,
+      "classification": "SECRET",
+      "decision_count": 7,
+      "redacted_length": 192,
+      "residual_markers": [
+        "marker:source"
+      ],
+      "segment_id": "s3",
+      "source_controls": [
+        "HUMINT"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": true,
+      "classification": "SECRET",
+      "decision_count": 5,
+      "redacted_length": 269,
+      "residual_markers": [],
+      "segment_id": "s4",
+      "source_controls": [
+        "SIGINT"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": true,
+      "classification": "TOP_SECRET",
+      "decision_count": 7,
+      "redacted_length": 381,
+      "residual_markers": [
+        "compartment_marker"
+      ],
+      "segment_id": "s5",
+      "source_controls": [
+        "HUMINT",
+        "SIGINT",
+        "IMINT"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 350,
+      "residual_markers": [],
+      "segment_id": "s6",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 327,
+      "residual_markers": [],
+      "segment_id": "s7",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 388,
+      "residual_markers": [],
+      "segment_id": "s8",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 563,
+      "residual_markers": [],
+      "segment_id": "s9",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 399,
+      "residual_markers": [],
+      "segment_id": "s10",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 391,
+      "residual_markers": [],
+      "segment_id": "s11",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 518,
+      "residual_markers": [],
+      "segment_id": "s12",
+      "source_controls": [],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": true,
+      "classification": "CUI",
+      "decision_count": 2,
+      "redacted_length": 361,
+      "residual_markers": [],
+      "segment_id": "s13",
+      "source_controls": [
+        "HUMINT"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "above_ceiling": false,
+      "classification": "UNCLASSIFIED",
+      "decision_count": 0,
+      "redacted_length": 465,
+      "residual_markers": [],
+      "segment_id": "s14",
+      "source_controls": [],
+      "status": "reviewed"
+    }
+  ],
+  "policy": "intelligence_release_review",
+  "public_ceiling": "UNCLASSIFIED",
+  "redaction_coverage": 1.0,
+  "releasable": true,
+  "release_authority": "public-affairs-review-board",
+  "release_safety_score": 0.798,
+  "review_count": 3,
+  "review_gate": {
+    "approval_count": 3,
+    "approved": true,
+    "findings": [],
+    "required_roles_present": [
+      "classification_reviewer",
+      "originator",
+      "release_authority"
+    ]
+  },
+  "schema_version": "template_redacted_report/redaction_audit/v1",
+  "segment_count": 14,
+  "source_fixture_sha256": "aaa6fe8ce7a83d26c4c1a9edcfe16bf187297e6b4a118f238d9f38cd3b011f1c",
+  "taxonomy": "intelligence_agency"
+}

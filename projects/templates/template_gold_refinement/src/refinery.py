@@ -154,6 +154,12 @@ def run_refinery(stages: Sequence[RefinementStage] | None = None) -> RefineryRes
     for i, stage in enumerate(pipeline):
         if stage.order != i + 1:
             raise ValueError(f"Stage order mismatch: stage {i} has order {stage.order}, expected {i + 1}")
+        if i and stage.input_purity != pipeline[i - 1].output_purity:
+            raise ValueError(
+                "Stage continuity mismatch: "
+                f"'{stage.name}' input {stage.input_purity} does not equal "
+                f"'{pipeline[i - 1].name}' output {pipeline[i - 1].output_purity}"
+            )
 
     final = pipeline[-1]
     total_gain = final.output_purity - pipeline[0].input_purity
@@ -163,6 +169,27 @@ def run_refinery(stages: Sequence[RefinementStage] | None = None) -> RefineryRes
         final_karat=karat_for_purity(final.output_purity),
         total_purity_gain=total_gain,
     )
+
+
+def stages_to_target(
+    target_purity: float,
+    stages: Sequence[RefinementStage] | None = None,
+) -> tuple[RefinementStage, ...]:
+    """Return the shortest canonical prefix whose output reaches a target.
+
+    This reverse assay is intentionally prefix-constrained: refinery stages are
+    ordered dependencies, so a later stage cannot be selected without its
+    predecessors.
+    """
+    if not 0.0 <= target_purity <= 1.0:
+        raise ValueError(f"target_purity must be in [0, 1], got {target_purity}")
+    pipeline = run_refinery(stages).stages
+    if target_purity <= pipeline[0].input_purity:
+        return ()
+    for index, stage in enumerate(pipeline, start=1):
+        if stage.output_purity >= target_purity:
+            return pipeline[:index]
+    raise ValueError(f"target purity {target_purity} exceeds refinery maximum {pipeline[-1].output_purity}")
 
 
 def stage_by_name(name: str, stages: Sequence[RefinementStage] | None = None) -> RefinementStage:
@@ -189,6 +216,7 @@ __all__ = [
     "RefinementStage",
     "RefineryResult",
     "run_refinery",
+    "stages_to_target",
     "stage_by_name",
     "stage_by_order",
 ]

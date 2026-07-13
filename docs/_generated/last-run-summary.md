@@ -5,9 +5,9 @@
 
 ```
 ============================================================
-              MULTI-PROJECT EXECUTION SUMMARY               
-  0 projects  ·  0 succeeded  ·  0 failed  ·  0.0% success  
-            wall time 0.0s  ·  avg/project 0.0s             
+              MULTI-PROJECT EXECUTION SUMMARY
+  0 projects  ·  0 succeeded  ·  0 failed  ·  0.0% success
+            wall time 0.0s  ·  avg/project 0.0s
 ============================================================
 
 PROJECT STATUS
@@ -18,6 +18,6 @@ STAGE TIMING BREAKDOWN
   (no stage data recorded)
 
 ============================================================
-          ⚠️  0/0 succeeded  ·  0 failed  ·  0.0s           
+          ⚠️  0/0 succeeded  ·  0 failed  ·  0.0s
 ============================================================
 ```

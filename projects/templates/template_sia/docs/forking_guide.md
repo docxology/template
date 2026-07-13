@@ -11,7 +11,7 @@ uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_sia \
   --dest "projects/working/$NEW" \
   --new-name "$NEW"
-# Edit manuscript/config.yaml (title, sia.task_name)
+# Edit manuscript/config.yaml (title, project_config.sia.task_name)
 # Replace tasks/mini_classify/ with your task tree
 # Record fixtures under src/fixtures/recorded_generations/ for CI replay
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90

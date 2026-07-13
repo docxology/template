@@ -148,10 +148,13 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Autopoietic Project Generation},
+  pdfauthor={Daniel Ari Friedman},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Autopoietic Project Generation}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -183,7 +186,6 @@
 \definecolor{brand-slate}{HTML}{1e293b}
 
 \begin{document}
-
 \begin{titlepage}
 \centering
 \vspace*{0.55cm}
@@ -202,13 +204,12 @@
 {\@date\par}
 \makeatother
 \vfill
-\includegraphics[width=0.98\textwidth,height=0.60\textheight,keepaspectratio]{\detokenize{../figures/cover_art.png}}
+\includegraphics[width=0.98\textwidth,height=0.6\textheight,keepaspectratio]{\detokenize{../figures/cover_art.png}}
 \vfill
 \end{titlepage}
 \thispagestyle{empty}
 \tableofcontents
 \newpage
-
 
 \subsection{Abstract}\label{abstract}
 
@@ -247,13 +248,7 @@ the real kernel from a deliberately-wrong one.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-    G["Grammar<br/>config.yaml"] --> E["Expand<br/>seed → Spec"]
-    E --> M["Materialize<br/>Spec → Child"]
-    M --> V["Verify<br/>tree-hash check"]
-    V --> S["Seal<br/>QR provenance"]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0001_ff729a67c0bb.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -261,16 +256,7 @@ flowchart LR
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-%% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
-%% (src/manuscript_variables.py) injected at render time, not literal mermaid
-flowchart TB
-    A[primitive_domain: 5] --> EP[Effective product: 45 cells]
-    T[track: 3] --> EP
-    S[section_set: 3] --> EP
-    EP --> TP[Total product: 360 cells]
-    R[3 reserved slots, 2 options each] --> TP
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0002_703011bc0713.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -547,13 +533,7 @@ input and returns an immutable (or file-system-materialized) output.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-    A[Load Grammar] --> B[Expand Spec]
-    B --> C[Materialize Child]
-    C --> D[Verify Integrity]
-    D --> E[Seal + QR]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0003_70d9876b90a5.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -731,12 +711,11 @@ for \texttt{grammar\_hash}.
 Two auxiliary functions extend \texttt{expand} to families of children
 rather than one: \breaktt{derive\_seed(base\_seed,\ index)} hashes
 \texttt{f"\{base\_seed\}\textbackslash{}x1f\{index\}"} to produce a new
-seed masked to 63 bits (\breaktt{\&\ 0x7FFFFFFFFFFFFFFF}, keeping it a
-non-negative Python \texttt{int}), and
-\breaktt{sample(grammar,\ count,\ base\_seed=None)} calls \texttt{expand}
-once per derived seed to produce \texttt{count} independent
-\texttt{Spec} objects --- independent in the sense that each is keyed
-off a distinct derived seed, not off any shared mutable state.
+seed masked to 63 bits (keeping it a non-negative Python \texttt{int}),
+and \breaktt{sample(grammar,\ count,\ base\_seed=None)} calls
+\texttt{expand} once per derived seed to produce \texttt{count}
+independent \texttt{Spec} objects --- independent in the sense that each
+is keyed off a distinct derived seed, not off any shared mutable state.
 \breaktt{enumerate\_all(grammar)} takes the orthogonal path: rather than
 sampling, it walks the full \breaktt{itertools.product} over every slot's
 options (reserved slots included) and returns one plain dict per cell,
@@ -959,7 +938,7 @@ integrity\_profile & 2 & sha256, merkle \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={Options per grammar slot, stacked. Each band is one slot's contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below.}]{../figures/fig_stacked_product.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={Options per grammar slot, stacked. Each band is one slot's contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below.}]{../figures/fig_stacked_product.png}
 \caption{Options per grammar slot, stacked. Each band is one slot's
 contribution to the total product size; three bands are reserved
 (presentational/sealing) and are excluded from the effective product
@@ -979,7 +958,7 @@ space discussed below.}\label{fig:stacked_product}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\linewidth,height=0.50\textheight,keepaspectratio,alt={Total, effective, and reserved-only product size for the grammar at seed=42, generated by fig\_product\_space\_annotation (src/manuscript\_figures.py) directly from Grammar.product\_size / Grammar.effective\_product\_size --- not hand-typed.}]{../figures/fig_product_space.png}
+\includegraphics[width=0.8\linewidth,height=0.5\textheight,keepaspectratio,alt={Total, effective, and reserved-only product size for the grammar at seed=42, generated by fig\_product\_space\_annotation (src/manuscript\_figures.py) directly from Grammar.product\_size / Grammar.effective\_product\_size --- not hand-typed.}]{../figures/fig_product_space.png}
 \caption{Total, effective, and reserved-only product size for the
 grammar at seed=42, generated by
 \protect\breaktt{fig\_product\_space\_annotation}
@@ -1067,7 +1046,7 @@ domains}\label{the-five-primitive-domains}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth,height=0.50\textheight,keepaspectratio,alt={The five primitive domains, type-colored: optimization, dynamics, statistics, signal, graph.}]{../figures/fig_domain_coverage.png}
+\includegraphics[width=0.85\linewidth,height=0.5\textheight,keepaspectratio,alt={The five primitive domains, type-colored: optimization, dynamics, statistics, signal, graph.}]{../figures/fig_domain_coverage.png}
 \caption{The five primitive domains, type-colored:
 \protect\texttt{optimization}, \protect\texttt{dynamics},
 \protect\texttt{statistics}, \protect\texttt{signal},
@@ -1263,7 +1242,7 @@ discipline that governs every other numeric token in this manuscript.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth,height=0.50\textheight,keepaspectratio,alt={Real, per-module branch coverage from the same measurement run that produces 493/96.28 above --- not an aggregate alone. Any module below the repository's 90\% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.}]{../figures/fig_coverage_by_module.png}
+\includegraphics[width=0.9\linewidth,height=0.5\textheight,keepaspectratio,alt={Real, per-module branch coverage from the same measurement run that produces 493/96.28 above --- not an aggregate alone. Any module below the repository's 90\% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.}]{../figures/fig_coverage_by_module.png}
 \caption{Real, per-module branch coverage from the same measurement run
 that produces 493/96.28 above --- not an aggregate alone. Any module
 below the repository's 90\% floor would be drawn in red rather than
@@ -1273,18 +1252,16 @@ measurement.}\label{fig:coverage_by_module}
 
 The aggregate 96.28\% is a mean weighted by statement and branch count,
 not a uniform floor --- fig.~\ref{fig:coverage_by_module} shows the real
-spread. As of this measurement every module clears the 90\% line;
-\texttt{common.py} and \texttt{cover\_art.py} sit at 100\% and
-\texttt{figures.py} at 98.41\% after closing what were, in an earlier
-draft of this manuscript, the three lowest-coverage modules (see
-\texttt{CHANGELOG.md}'s Wave 10 entry for the specific branches that
-were untested and the tests added to close them); every module under
-\texttt{src/primitives/} and the honesty/integrity core sit at or near
-100\%. Both the aggregate number and this per-module breakdown are read
-from the same persisted \breaktt{output/data/coverage\_full.json} --- a
-single generator run, not two separately-computed views that could
-silently drift apart. This is a snapshot, not a permanent state:
-coverage moves as tests are added or code changes, and
+spread. As of this measurement every module clears the configured 90\%
+line. The exact module values are deliberately read from
+fig.~\ref{fig:coverage_by_module}, rather than copied into prose where
+they would become stale; \texttt{CHANGELOG.md}'s Wave 10 entry records
+the specific branches and tests behind an earlier coverage improvement.
+Both the aggregate number and this per-module breakdown are read from
+the same persisted \breaktt{output/data/coverage\_full.json} --- a single
+generator run, not two separately-computed views that could silently
+drift apart. This is a snapshot, not a permanent state: coverage moves
+as tests are added or code changes, and
 fig.~\ref{fig:coverage_by_module} should be regenerated
 (\breaktt{stage\_02\_analysis.py}) rather than trusted from a prior
 render whenever that question matters.
@@ -1299,10 +1276,10 @@ claim}\label{why-a-manifest-not-a-claim}
 A generator that produces a manuscript describing its own code faces an
 obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
-exactly this failure once --- a hand-written ``Tests: 371 \texorpdfstring{\ensuremath{\cdot}}{.} Coverage:
-99.94\%'' line that no generator step had computed --- and was corrected
-by replacing the literal numbers with \texttt{493} / \texttt{96.28}
-tokens filled in at render time by
+exactly this failure once --- a hand-written test-count and coverage
+line that no generator step had computed --- and was corrected by
+replacing the literal numbers with \texttt{493} / \texttt{96.28} tokens
+filled in at render time by
 \breaktt{scripts/02\_measure\_test\_coverage.py}. \texttt{src/honesty.py}
 exists to make that class of failure structurally harder: every
 load-bearing claim in this manuscript must resolve to a named function
@@ -1480,9 +1457,9 @@ in \breaktt{manifest.unsupported\_claims}.
 Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker
 --- it will not catch a false quantitative claim phrased without one of
-those seven tokens (the ``371 tests'' incident described above would not
-have tripped it; that failure mode is closed instead by the \texttt{493}
-token substitution, a separate mechanism). Second,
+those seven tokens (the stale test-count incident described above would
+not have tripped it; that failure mode is closed instead by the
+\texttt{493} token substitution, a separate mechanism). Second,
 \breaktt{unsupported\_claims} \emph{is} enforced, but only on one of the
 two paths through this module: \breaktt{HonestyManifest.all\_passed} is a
 conjunction over \texttt{evidence}, \texttt{missing\_calls}, \emph{and}
@@ -1607,10 +1584,10 @@ returns the string \texttt{"pending"} for both the test count and the
 coverage percentage rather than a plausible-looking number
 \citep{reproducible_builds}. This design choice is a direct consequence
 of an earlier failure mode in this project --- a manuscript draft that
-stated fixed values (``Tests: 371 \texorpdfstring{\ensuremath{\cdot}}{.} Coverage: 99.94\%'') in prose
-instead of through the token pipeline. A number that cannot be traced
-back to a specific function call in \texttt{src/} is, for the purposes
-of this project, not a number this manuscript is permitted to assert.
+stated fixed test and coverage values in prose instead of through the
+token pipeline. A number that cannot be traced back to a specific
+function call in \texttt{src/} is, for the purposes of this project, not
+a number this manuscript is permitted to assert.
 
 \subsubsection{Determinism guarantee}\label{determinism-guarantee}
 

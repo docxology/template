@@ -66,9 +66,7 @@ def main() -> int:
         ],
     }
     refinery_path = data_dir / "refinery_results.json"
-    refinery_path.write_text(
-        json.dumps(refinery_data, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    refinery_path.write_text(json.dumps(refinery_data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {refinery_path}")
 
     # Write token plan
@@ -83,19 +81,19 @@ def main() -> int:
         "choices": [c.as_dict() for c in token_plan.choices],
     }
     plan_path = reports_dir / "token_plan.json"
-    plan_path.write_text(
-        json.dumps(plan_data, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    plan_path.write_text(json.dumps(plan_data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {plan_path}")
 
     # Generate figures
     from figures import generate_all_figures
+
     figure_paths = generate_all_figures(root)
     for fp in figure_paths:
         print(f"Wrote {fp}")
 
     # Build evidence registry
     from evidence import build_evidence_registry, write_evidence_registry
+
     registry = build_evidence_registry(gr_config, root)
     registry_path = reports_dir / CLAIM_SUPPORT_REGISTRY_NAME
     write_evidence_registry(registry, registry_path)
@@ -104,6 +102,7 @@ def main() -> int:
 
     # Build dashboard
     from dashboard import write_dashboard
+
     dashboard_path = write_dashboard(root)
     print(f"Wrote {dashboard_path}")
 

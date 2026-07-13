@@ -128,7 +128,7 @@ The pipeline retrieves papers from major literature sources and stores them.
 **Correct (concrete, from `02_methodology.md`)**:
 ```markdown
 `src/pipeline.py::run_literature_pipeline` queries the backends listed in
-`config.search.sources` (default `{{CONFIG_SOURCES}}`) via
+`project_config.search.sources` (default `{{CONFIG_SOURCES}}`) via
 `infrastructure.search.literature.LiteratureClient`, deduplicates on `paper.id`,
 and writes `{{RESULT_NUM_PAPERS}}` entries to `manuscript/references.bib`
 through `infrastructure.reference.citation.paper_to_bibentry`.

@@ -2,7 +2,12 @@
 
 ## Overview
 
-All code in this repository requires **test coverage** with **data only** (no mocks). Tests must be fast, deterministic, and self-documenting.
+All code in this repository requires test coverage and should exercise real
+behavior. Prohibited mock frameworks remain forbidden. The automated gate is
+lexical, however, and the existing suite still contains measured
+`pytest.monkeypatch` dependency-replacement debt; do not describe a green gate
+as proof that every dependency is real. Tests must be fast, deterministic, and
+self-documenting.
 
 ## Coverage Requirements
 
@@ -59,9 +64,22 @@ flowchart LR
 
 ## Testing Principles
 
-### 1. ABSOLUTE PROHIBITION: Never Use Mocks
+### 1. Mock-framework prohibition and semantic stand-ins
 
-**ABSOLUTE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **data** and **computations only**.
+Do not introduce `MagicMock`, `mocker.patch`, `unittest.mock`, or another
+mocking framework. Environment/path isolation through `monkeypatch.setenv`,
+`delenv`, and `chdir` is permitted when real code still runs.
+`monkeypatch.setattr`/`setitem` and deletion variants are different: the
+repository inventories them as semantic dependency replacements that must be
+migrated, not as evidence of no-mock compliance.
+
+```bash
+# Enforced lexical gate: prohibited framework imports/calls only
+uv run python scripts/audit/verify_no_mocks.py
+
+# Advisory semantic inventory; current baseline lives in TO-DO.md
+uv run python scripts/audit/verify_no_mocks.py --inventory
+```
 
 ```python
 # ✅ GOOD: Test with data
@@ -485,7 +503,8 @@ Before committing tests:
 - [ ] No skipped tests (`-k "not skip"`)
 - [ ] Tests run in < 30 seconds total
 - [ ] Test names are clear and descriptive
-- [ ] No mocks or patches used
+- [ ] No prohibited mock-framework imports/calls used
+- [ ] New tests avoid dependency-replacement stand-ins; inventory impact reviewed
 - [ ] data used in all tests
 - [ ] Edge cases tested
 - [ ] Error conditions tested

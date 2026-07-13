@@ -39,7 +39,7 @@ def test_evaluate_strong_rules_passes_for_pools_project(rule_set: str) -> None:
     assert result["violation_count"] == 0
 
 
-def test_coverage_threshold_flags_low_coverage(tmp_path: pathlib.Path) -> None:
+def test_coverage_threshold_flags_low_coverage() -> None:
     strong = load_strong_rules("template_project_rules")
     coverage_rule = next(entry for entry in strong if entry["filename"] == "coverage-gate.yaml")
     evaluation = evaluate_strong_rule(
@@ -133,7 +133,7 @@ def test_load_rule_context_reads_canonical_sections_from_config(tmp_path: pathli
     manuscript = project / "manuscript"
     manuscript.mkdir(parents=True)
     (manuscript / "config.yaml").write_text(
-        "strong_rules:\n  canonical_sections:\n    - Abstract\n",
+        "project_config:\n  strong_rules:\n    canonical_sections:\n      - Abstract\n",
         encoding="utf-8",
     )
     (manuscript / "01_abstract.md").write_text("# Abstract {#sec:abstract}\n", encoding="utf-8")

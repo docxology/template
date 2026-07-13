@@ -2,6 +2,10 @@
 
 This directory contains scripts for packaging and distributing template/ outputs — both to PyPI (for the template infrastructure itself) and to the docxology/publishing repo (for finished manuscripts and ebooks).
 
+For the full modular release path from rendered project to standalone public
+GitHub mirror, real Zenodo DOI, optional mirrors, and archival handoff, start at
+[`../../docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).
+
 ## Scripts
 
 | Script | Purpose |
@@ -10,6 +14,7 @@ This directory contains scripts for packaging and distributing template/ outputs
 | `verify_install.py` | Verify the published package installs correctly from PyPI |
 | `upload_template_project.py` | Upload a rendered exemplar project to all configured platforms (Zenodo, HuggingFace, OSF, etc.) |
 | `upload_gold_refinement.py` | Original hand-tuned reference uploader for the gold-standard exemplar |
+| `publish_project_release.py` | Core GitHub release + Zenodo DOI orchestrator for an already-created standalone public repository |
 | `export_for_publishing.py` | **Bridge script** — bundle template/ outputs for the docxology/publishing repo |
 
 ---

@@ -205,7 +205,8 @@ for md_path, errors in validation_results.items():
 
 | Module | Purpose | Key Classes/Functions | Integration Point |
 |--------|---------|----------------------|------------------|
-| **figure_manager.py** | Figure registration and LaTeX generation | `FigureManager`, `FigureMetadata` | Build pipeline figure numbering |
+| **figure_manager.py** | Stateful figure registration and LaTeX generation | `FigureManager`, `FigureMetadata` | Interactive figure numbering |
+| **generated_figure_registry.py** | Deterministic fail-closed figure publication and registry persistence | `build_generated_figure_registry`, `publish_generated_figures`, `write_generated_figure_registry` | Project analysis pipelines |
 | **image_manager.py** | Image insertion and validation | `ImageManager` | Markdown manuscript updates |
 | **markdown_integration.py** | Section-aware figure placement | `MarkdownIntegration` | Manuscript structure management |
 | **glossary_gen.py** | API documentation from source | `build_api_index()`, `generate_markdown_table()` | Automatic glossary generation |
@@ -213,6 +214,7 @@ for md_path, errors in validation_results.items():
 | **architecture_overview.py** | One-page architecture diagram from live repo state | `build_architecture_mermaid()`, `render_architecture_svg()` | Driven by `scripts/docgen/architecture_overview.py` |
 | **active_projects_doc.py** | Render the authoritative public active-projects doc | `render_active_projects_doc()`, `write_active_projects_doc()` | Generates `docs/_generated/active_projects.md` |
 | **publication_records.py** | Load/render project publication metadata (DOIs, archives) | `PublicationRecord`, `load_publication_records()`, `render_publication_records_doc()`, `refresh_external_records()` | Publication doc + GitHub README block |
+| **publication_standalone.py** | Render and update source-owned publication identity blocks | `render_standalone_publication_block()`, `replace_standalone_publication_block()`, `extract_standalone_publication_block()` | Every canonical exemplar's `STANDALONE.md` |
 
 ## Figure Management
 
@@ -704,4 +706,3 @@ uv run pytest tests/infra_tests/documentation/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).
-

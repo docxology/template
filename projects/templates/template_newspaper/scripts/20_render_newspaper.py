@@ -48,9 +48,7 @@ def main(argv: list[str] | None = None) -> int:
 
     data_dir = root / "output" / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
-    (data_dir / "render_report.json").write_text(
-        json.dumps(result.to_dict(), indent=2), encoding="utf-8"
-    )
+    (data_dir / "render_report.json").write_text(json.dumps(result.to_dict(), indent=2), encoding="utf-8")
 
     reports_dir = root / "output" / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)

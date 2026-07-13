@@ -99,7 +99,7 @@
     "output/reports/test_results.md": "1091eb0625fcc0a9a7bc6b55ce1edf3c0c1578614fc39393692dd4b5db8ec144"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project/output/reports/snapshots/stage-05-project-analysis.json",
+  "path": "<repo-root>/projects/templates/template_autoresearch_project/output/reports/snapshots/stage-05-project-analysis.json",
   "stage_name": "Project Analysis",
   "stage_num": 5,
   "timestamp": "2026-06-14T19:18:10+00:00",

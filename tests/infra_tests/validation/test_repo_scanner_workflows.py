@@ -1,7 +1,5 @@
 """Integration and workflow tests for infrastructure.validation.repo.scanner."""
 
-import logging
-
 import pytest
 
 from infrastructure.validation.repo import scanner as repo_scanner

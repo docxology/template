@@ -1,6 +1,35 @@
 {
+  "case_study": {
+    "condition_means": {
+      "control": 2.2,
+      "treatment_high": 4.949999999999999,
+      "treatment_low": 3.5
+    },
+    "extrapolation": {
+      "dose": 3.0,
+      "linear_prediction": 6.299999999999999,
+      "saturating_probe_response": 5.3
+    },
+    "linear_fit": {
+      "intercept": 2.1750000000000003,
+      "r_squared": 0.9990092470277411,
+      "slope": 1.3749999999999998
+    },
+    "overall": {
+      "count": 6.0,
+      "max": 5.1,
+      "mean": 3.5499999999999994,
+      "min": 2.1,
+      "std": 1.129527924990495
+    },
+    "source": "<repo-root>/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"
+  },
   "exponential_decay": {
     "half_life": 1.3862943611198906,
+    "parameters": {
+      "initial": 100.0,
+      "rate": 0.5
+    },
     "t": [
       0.0,
       1.0,
@@ -42,6 +71,16 @@
       98.60132731840255,
       99.36665779714015
     ],
+    "parameters": {
+      "carrying_capacity": 100.0,
+      "initial": 5.0,
+      "r": 0.8
+    },
+    "sensitivity_rates": [
+      0.4,
+      0.8,
+      1.2
+    ],
     "stats": {
       "count": 11.0,
       "max": 99.36665779714015,
@@ -61,6 +100,7 @@
       8.0,
       9.0,
       10.0
-    ]
+    ],
+    "unfilled_capacity_percent_at_final_time": 0.6333422028598505
   }
 }

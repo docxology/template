@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:sheaf_coverage">Sheaf Track Coverage</h1>
 <p>This page summarizes which <strong>sheaf fragment tracks</strong> are
 bound for each IMRAD row in <code>manuscript/sheaf/manifest.yaml</code>.
@@ -226,8 +230,8 @@ The matrix is regenerated at compose time.</p>
 <figure id="fig:sheaf_coverage_heatmap">
 <img src="../figures/sheaf_coverage_heatmap.png" style="width:95.0%"
 data-fig-alt="Heatmap matrix of IMRAD manuscript rows versus 34 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids."
-alt="Sheaf track coverage matrix: 17 IMRAD rows × 34 fragment columns. Black = present (P), white = absent (—), gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated from output/data/sheaf_coverage_matrix.json." />
-<figcaption aria-hidden="true">Sheaf track coverage matrix: 17 IMRAD
+alt="Sheaf track coverage matrix: 17 IMRAD rows × 34 fragment columns." />
+<figcaption>Sheaf track coverage matrix: 17 IMRAD
 rows × 34 fragment columns. Black = present (P), white = absent (—),
 gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated
 from <code>output/data/sheaf_coverage_matrix.json</code>.</figcaption>
@@ -235,5 +239,6 @@ from <code>output/data/sheaf_coverage_matrix.json</code>.</figcaption>
 <p>Appendix row <code>16_appendix_full_sheaf.md</code> binds 33 fragment
 track types as a composability proof (registry defines 34 types;
 optional <code>layers</code> is methods-only).</p>
+</main>
 </body>
 </html>

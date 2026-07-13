@@ -65,9 +65,7 @@ class TestDepositionMetadataDict:
             abstract="Abstract.",
             keywords=["test"],
             author_records=[
-                AuthorRecord(
-                    name="Author", orcid="0000-0000-0000-1234", affiliation="Institute"
-                ),
+                AuthorRecord(name="Author", orcid="0000-0000-0000-1234", affiliation="Institute"),
             ],
         )
         payload = deposition_metadata_dict(metadata)
@@ -127,9 +125,7 @@ class TestZenodoClientImportGuard:
 class TestZenodoClientDepositFlow:
     """Full create → bucket upload → publish against a local HTTP server."""
 
-    def test_full_deposit_upload_publish_flow(
-        self, tmp_path: Path, zenodo_test_server
-    ) -> None:
+    def test_full_deposit_upload_publish_flow(self, tmp_path: Path, zenodo_test_server) -> None:
         pdf = tmp_path / "paper.pdf"
         pdf.write_bytes(b"%PDF-1.4 test")
 
@@ -165,12 +161,8 @@ class TestZenodoClientDepositFlow:
                     "metadata": {"prereserve_doi": {"doi": "10.5281/zenodo.22222"}},
                 }
             )
-            client = ZenodoClient(
-                ZenodoConfig(access_token="test", base_url=server.url_for(""))
-            )
-            deposition = client.create_deposition(
-                {"title": "Reserved", "prereserve_doi": True}
-            )
+            client = ZenodoClient(ZenodoConfig(access_token="test", base_url=server.url_for("")))
+            deposition = client.create_deposition({"title": "Reserved", "prereserve_doi": True})
         finally:
             server.stop()
 
@@ -179,9 +171,7 @@ class TestZenodoClientDepositFlow:
         assert deposition.concept_record_id == "11111"
         assert deposition.concept_doi == "10.5281/zenodo.11111"
 
-    def test_upload_uses_bucket_url_not_deposition_id(
-        self, tmp_path: Path, zenodo_test_server
-    ) -> None:
+    def test_upload_uses_bucket_url_not_deposition_id(self, tmp_path: Path, zenodo_test_server) -> None:
         """Regression: uploads must target links.bucket, not /files/{deposition_id}/."""
         pdf = tmp_path / "test.pdf"
         pdf.write_bytes(b"%PDF")
@@ -194,9 +184,7 @@ class TestZenodoClientDepositFlow:
         deposition = client.create_deposition({"title": "Bucket regression"})
         client.upload_file(deposition.bucket_url, pdf)
 
-    def test_publish_to_zenodo_end_to_end(
-        self, tmp_path: Path, zenodo_test_server
-    ) -> None:
+    def test_publish_to_zenodo_end_to_end(self, tmp_path: Path, zenodo_test_server) -> None:
         paper = tmp_path / "paper.pdf"
         paper.write_bytes(b"%PDF")
 
@@ -273,17 +261,13 @@ class TestZenodoClientDepositFlow:
         server = HTTPServer()
         server.start()
         try:
-            server.expect_request(
-                "/deposit/depositions", method="POST"
-            ).respond_with_json(
+            server.expect_request("/deposit/depositions", method="POST").respond_with_json(
                 {
                     "id": 999,
                     "links": {"bucket": f"{server.url_for('')}/files/bucket999"},
                 }
             )
-            server.expect_request(
-                "/files/bucket999/paper.pdf", method="PUT"
-            ).respond_with_json({"key": "paper.pdf"})
+            server.expect_request("/files/bucket999/paper.pdf", method="PUT").respond_with_json({"key": "paper.pdf"})
             server.expect_request(
                 "/deposit/depositions/999/actions/publish",
                 method="POST",
@@ -357,9 +341,7 @@ class TestZenodoVersioning:
                 payload = []
             return Response(json.dumps(payload), mimetype="application/json")
 
-        server.expect_request(
-            "/deposit/depositions", method="GET"
-        ).respond_with_handler(deposition_handler)
+        server.expect_request("/deposit/depositions", method="GET").respond_with_handler(deposition_handler)
         server.expect_request("/records", method="GET").respond_with_json(
             {
                 "hits": {
@@ -376,9 +358,7 @@ class TestZenodoVersioning:
         try:
             config = ZenodoConfig(access_token="test", base_url=server.url_for(""))
             client = ZenodoClient(config)
-            deposition_id = client.resolve_deposition_id_from_doi(
-                "10.5281/zenodo.20415768"
-            )
+            deposition_id = client.resolve_deposition_id_from_doi("10.5281/zenodo.20415768")
             assert deposition_id == "20415779"
         finally:
             server.stop()
@@ -396,9 +376,7 @@ class TestZenodoVersioning:
         assert result.deposition_id == "54321"
         removed = client.clear_deposition_files(result.deposition_id)
         assert removed == ["test_release_combined.pdf"]
-        client.update_deposition_metadata(
-            result.deposition_id, {"title": "Updated title"}
-        )
+        client.update_deposition_metadata(result.deposition_id, {"title": "Updated title"})
 
     def test_clear_deposition_files_empty_draft(self) -> None:
         from pytest_httpserver import HTTPServer
@@ -406,9 +384,7 @@ class TestZenodoVersioning:
         server = HTTPServer()
         server.start()
         try:
-            server.expect_request(
-                "/deposit/depositions/777", method="GET"
-            ).respond_with_json({"id": 777, "files": []})
+            server.expect_request("/deposit/depositions/777", method="GET").respond_with_json({"id": 777, "files": []})
             config = ZenodoConfig(access_token="test", base_url=server.url_for(""))
             client = ZenodoClient(config)
             assert client.clear_deposition_files("777") == []

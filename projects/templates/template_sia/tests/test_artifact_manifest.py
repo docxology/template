@@ -16,11 +16,12 @@ from src.loop import run_sia_loop_project
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
-def test_collect_run_artifact_paths_after_loop():
-    run_sia_loop_project(PROJECT_ROOT, live=False)
-    paths = collect_run_artifact_paths(PROJECT_ROOT, run_id=1)
+def test_collect_run_artifact_paths_after_loop(tmp_path: Path, copy_project_sandbox) -> None:
+    project = copy_project_sandbox(tmp_path / "project")
+    run_sia_loop_project(project, live=False)
+    paths = collect_run_artifact_paths(project, run_id=1)
     assert any(path.name == "run_summary.json" for path in paths)
-    manifest_path = write_artifact_manifest(PROJECT_ROOT, paths)
+    manifest_path = write_artifact_manifest(project, paths)
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert payload["entries"]
     rel_paths = {entry["path"] for entry in payload["entries"]}
@@ -62,6 +63,7 @@ def test_compute_sha256_deterministic(tmp_path: Path) -> None:
     assert compute_sha256(f) == compute_sha256(f)
     # Known SHA-256 for b"hello world"
     import hashlib
+
     expected = hashlib.sha256(b"hello world").hexdigest()
     assert compute_sha256(f) == expected
 

@@ -6,6 +6,7 @@ from pathlib import Path
 
 from infrastructure.core.files import find_combined_pdf
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 
 logger = get_logger(__name__)
@@ -16,7 +17,7 @@ def validate_transmission_bookends(project_root: Path, project_name: str) -> boo
     from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
     from infrastructure.publishing.transmission_page_check import validate_transmission_bookend_pages
 
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = resolve_source_manuscript_dir(project_root) / "config.yaml"
     if not transmission_bookends_enabled(config_path):
         return True
 

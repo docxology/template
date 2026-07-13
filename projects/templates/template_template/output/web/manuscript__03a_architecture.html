@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,21 +238,25 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="methods">Methods</h1>
 <p>The <code>template/</code> architecture is deliberately bifurcated
 into a globally shared <code>infrastructure/</code> layer and
 project-specific <code>projects/</code> silos. This section describes
-the four core design patterns, the YAML-declared pipeline (14 stages;
+the four core design patterns, the YAML-declared pipeline (16 stages;
 default full 10) pipeline that operationalizes them, and the AI
 collaboration model that distinguishes this system from conventional
 research templates.</p>
 <h2 id="the-two-layer-architecture">The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
-23 infrastructure subdirectories—20 of them independently-importable
-Python packages—comprising ~616 modules and providing reusable services.
+28 infrastructure subdirectories—25 of them independently-importable
+Python packages—comprising ~662 modules and providing reusable services.
 Each importable package has its own <code>__init__.py</code>,
 <code>AGENTS.md</code>, and <code>README.md</code>, and exports a
 well-defined public API (the remaining subdirectories,
@@ -323,16 +327,23 @@ configuration in its <code>config.yaml</code>. The system currently
 hosts its public canonical exemplars under
 <code>projects/templates/</code>
 (<code>templates/template_active_inference</code>,
+<code>templates/template_autopoiesis</code>,
 <code>templates/template_autoresearch_project</code>,
 <code>templates/template_autoscientists</code>,
 <code>templates/template_code_project</code>,
+<code>templates/template_data_descriptor</code>,
 <code>templates/template_eda_notebook</code>,
+<code>templates/template_formal</code>,
 <code>templates/template_gold_refinement</code>,
 <code>templates/template_literature_meta_analysis</code>,
 <code>templates/template_madlib</code>,
 <code>templates/template_methods_paper</code>,
 <code>templates/template_newspaper</code>,
+<code>templates/template_pitch_deck</code>,
+<code>templates/template_pools_rules_tools</code>,
 <code>templates/template_prose_project</code>,
+<code>templates/template_redacted_report</code>,
+<code>templates/template_registered_report</code>,
 <code>templates/template_search_project</code>,
 <code>templates/template_sia</code>,
 <code>templates/template_storybook</code>,
@@ -382,5 +393,6 @@ correct pattern lives in a testable <code>src/</code> module, is covered
 by the Zero-Mock test suite, and can be independently imported, tested,
 and reused—whereas the anti-pattern buries logic in a script that is
 invisible to coverage tools.</p>
+</main>
 </body>
 </html>

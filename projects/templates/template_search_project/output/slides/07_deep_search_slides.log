@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
+**<repo-root>/projects/templates/template_search_projec
 t/output/slides/07_deep_search_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1139,7 +1139,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count390
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.aux)
 \openout1 = `07_deep_search_slides.aux'.
 
@@ -1500,7 +1500,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.nav) [1
 
 ] [2
@@ -1509,7 +1509,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 9.
@@ -1558,7 +1558,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb) [5
 
 ] [6
@@ -1571,7 +1571,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb
 Overfull \hbox (83.62505pt too wide) in paragraph at lines 29--29
 []\TU/lmtt/m/n/10.95 One paragraph stating the paper[]s central claim and why i
@@ -1605,7 +1605,7 @@ yword.[]
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb
 Overfull \hbox (7.79628pt too wide) in paragraph at lines 22--25
 \TU/lmtt/m/n/10.95 output/deep_search/<keyword_slug>/reading_report.md 
@@ -1628,14 +1628,14 @@ Overfull \hbox (36.54002pt too wide) in paragraph at lines 25--28
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb) [13
 
 ]
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb) [14
 
 ] [15
@@ -1645,7 +1645,7 @@ Overfull \hbox (36.54002pt too wide) in paragraph at lines 25--28
 \openout4 = `07_deep_search_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.vrb) [16
 
 ] [17
@@ -1662,7 +1662,7 @@ Overfull \hbox (36.54002pt too wide) in paragraph at lines 25--28
 \openout8 = `07_deep_search_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/07_deep_search_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1672,11 +1672,11 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  29904 strings out of 468168
  603590 string characters out of 5432815
- 1159746 words of memory out of 5000000
+ 1160740 words of memory out of 5000000
  58085 multiletter control sequences out of 15000+600000
  631240 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1111b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_search_project/output/slides/07_deep_search_slides.pdf (17 pages).

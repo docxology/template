@@ -6,7 +6,7 @@
       "orcid": "0000-0001-6232-9096"
     }
   ],
-  "description": "A deterministic gold-refinement analogy template for scientific manuscript composition: ore, smelting, assaying, karat grading, and certification are mapped to source-owned regeneration contracts and mega-madlib token provenance.",
+  "description": "Source code for Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition (2026).",
   "keywords": [
     "gold refining",
     "manuscript composition",
@@ -15,7 +15,8 @@
     "scientific purity",
     "assaying",
     "karat grading",
-    "reproducible research"
+    "security assay",
+    "supply-chain provenance"
   ],
   "license": "MIT",
   "related_identifiers": [

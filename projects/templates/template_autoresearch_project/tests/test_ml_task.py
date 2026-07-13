@@ -457,8 +457,7 @@ def test_rank_stability_calibration_intervals_and_bundle_are_bounded(project_roo
     assert bundle["candidate_rank_stability"]["resamples"] == 100
     assert bundle["calibration_bin_intervals"]["schema"] == "template-autoresearch-calibration-bin-intervals-v1"
     assert (
-        bundle["candidate_selection_audit"]["rank_stability_source"]
-        == "output/data/ml_candidate_rank_stability.json"
+        bundle["candidate_selection_audit"]["rank_stability_source"] == "output/data/ml_candidate_rank_stability.json"
     )
 
 

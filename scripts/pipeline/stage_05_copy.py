@@ -2,7 +2,8 @@
 """Output copying orchestrator script.
 
 This thin orchestrator coordinates the output copying stage:
-1. Cleans the top-level output/ directory
+1. Cleans generated content from the top-level project output while preserving
+   independently produced release bundles and publication receipts
 2. Recursively copies entire project/output/ to top-level output/
 3. Copies combined PDF to root for convenient access
 4. Validates all expected files were copied
@@ -39,7 +40,7 @@ ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header
 from infrastructure.core.files.cleanup import (
-    clean_output_directory,
+    clean_final_output_directory,
     clean_root_output_directory,
 )
 from infrastructure.core.files.operations import copy_final_deliverables
@@ -97,7 +98,7 @@ def main() -> int:
             return 1
 
         # Step 2: Clean project-specific output directory
-        clean_output_directory(output_dir)
+        clean_final_output_directory(output_dir)
 
         # Step 2: Copy final deliverables
         stats = copy_final_deliverables(repo_root, output_dir, args.project, project_dir=project_root)

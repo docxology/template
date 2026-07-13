@@ -11,7 +11,9 @@ Forward-only backlog for the modular, fillable book-length manuscript scaffold
   `uv run pytest projects/templates/template_textbook/tests/ --cov=projects/templates/template_textbook/src --cov-fail-under=90`
 - Structural integrity is driven by `manuscript/config.yaml`, chapter stubs,
   figure generation, and the unified audit gate
-  (`textbook.audit.run_manuscript_audit`, strict CLI by default).
+  (`textbook.audit.run_manuscript_audit`): default mode validates the fillable
+  scaffold, while `--require-complete` fails on nonzero per-section stub
+  counts and reports the total.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Live test counts and coverage snapshots belong in
   `../../../docs/_generated/COUNTS.md`, not hardcoded here.
@@ -40,7 +42,8 @@ Forward-only backlog for the modular, fillable book-length manuscript scaffold
 ## Test and validator gaps
 
 - Add negative controls for orphan chapter files, missing labs or questions,
-  stale Mermaid diagrams, and unresolved stub markers in finished chapters.
+  and stale Mermaid diagrams. Zero-stub completeness now has library and real
+  CLI negative controls through `--require-complete`.
 - Add deterministic checks for generated cover art and diagrams when visual
   styles change.
 - Register textbook worked-example numbers, percentages, and appendix-gallery
@@ -57,5 +60,5 @@ Forward-only backlog for the modular, fillable book-length manuscript scaffold
 2. Add structured scaffold audit output and stale-file detection.
 3. Add copy-and-customize examples for short course notes and full textbook
    shapes.
-4. Promote a filled textbook fork only after unresolved stub markers and
-   placeholder chapters are blocked by validation.
+4. Promote a filled textbook fork only after
+   `audit_textbook_quality.py --require-complete` reports zero stubs.

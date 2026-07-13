@@ -8,6 +8,7 @@ keep each module under 300 LOC.
 from __future__ import annotations
 
 import os
+from collections.abc import Mapping
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -110,13 +111,15 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> li
     return valid_types
 
 
-def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
+def _safe_int_from_dict(config_dict: Mapping[str, object], key: str) -> int | None:
     """Safely extract an integer value from a config dict by key."""
     val = config_dict.get(key)
     if val is None:
         return None
     try:
-        return int(val)
+        if isinstance(val, (str, int, float)):
+            return int(val)
+        return None
     except (ValueError, TypeError):  # noqa: BLE001 — return None; caller uses default
         logger.debug(f"Invalid {key} value: {val!r}")
         return None
@@ -124,7 +127,7 @@ def _safe_int_from_dict(config_dict: dict, key: str) -> int | None:
 
 def _resolve_int_setting(
     env_var: str,
-    config_dict: dict,
+    config_dict: Mapping[str, object],
     config_key: str,
     default: int,
 ) -> int:

@@ -1,4 +1,5 @@
 """Tests for the primitives registry (collect_primitives)."""
+
 from __future__ import annotations
 
 

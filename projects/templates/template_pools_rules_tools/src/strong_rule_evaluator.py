@@ -473,7 +473,9 @@ def _load_strong_rules_config(project_root: pathlib.Path) -> dict[str, object]:
         return {}
     if not isinstance(loaded, dict):
         return {}
-    block = loaded.get("strong_rules")
+    project_raw = loaded.get("project_config")
+    project_block = project_raw if isinstance(project_raw, dict) else {}
+    block = project_block.get("strong_rules", loaded.get("strong_rules"))
     return block if isinstance(block, dict) else {}
 
 

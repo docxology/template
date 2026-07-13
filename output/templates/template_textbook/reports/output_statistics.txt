@@ -4,20 +4,20 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 186
-Total Size: 4.12 MB
+Total Files: 188
+Total Size: 4.33 MB
 
 Files by Category:
-  • pdf: 10 files (1.36 MB)
-  • web: 51 files (0.74 MB)
+  • pdf: 11 files (1.55 MB)
+  • web: 52 files (0.76 MB)
   • figures: 96 files (1.70 MB)
   • data: 2 files (0.00 MB)
-  • reports: 26 files (0.32 MB)
+  • reports: 26 files (0.31 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • template_textbook_combined.pdf: 0.90 MB (pdf)
-  • index.html: 0.23 MB (web)
+  • template_textbook_combined.pdf: 1.07 MB (pdf)
+  • index.html: 0.24 MB (web)
   • _combined_manuscript.tex: 0.15 MB (pdf)
   • gallery_contour.png: 0.12 MB (figures)
   • _combined_manuscript.aux: 0.11 MB (pdf)
@@ -28,7 +28,7 @@ File Types:
   • .mmd: 30 file(s)
   • .json: 20 file(s)
   • .md: 7 file(s)
-  • .log: 3 file(s)
+  • .log: 4 file(s)
   • .txt: 3 file(s)
   • .aux: 1 file(s)
   • .pdf: 1 file(s)

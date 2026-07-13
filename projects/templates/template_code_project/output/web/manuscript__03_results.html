@@ -187,7 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <p>This section presents the experimental results from the gradient
 descent optimization study, including convergence analysis and
@@ -514,33 +515,28 @@ iterations</li>
 suitable for high-dimensional problems</li>
 </ul>
 <h3 id="performance-benchmarking">Performance Benchmarking</h3>
-<p>[fig:benchmark] shows how <code>gradient_descent()</code> scales with
-problem dimension by running the optimizer on identity-Hessian
-quadratics of dimension <span class="math inline">\(d \in \{1, 2, 5, 10,
-20, 50\}\)</span>.</p>
+<p>[fig:benchmark] shows deterministic computational work and
+convergence iterations for <code>gradient_descent()</code> on
+identity-Hessian quadratics of dimension <span class="math inline">\(d
+\in \{1, 2, 5, 10, 20, 50\}\)</span>.</p>
 <figure id="fig:benchmark">
 <img src="../figures/performance_benchmark.png"
-alt="Dimensional scaling from generate_benchmark_visualization() ." />
-<figcaption>Dimensional scaling from
+alt="Deterministic dimensional benchmark from generate_benchmark_visualization() ." />
+<figcaption>Deterministic dimensional benchmark from
 <code>generate_benchmark_visualization()</code>. Dimensions <span
 class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span> run on
 identity-Hessian quadratics with <span
 class="math inline">\(\alpha=0.1\)</span> and gradient tolerance <span
-class="math inline">\(10^{-10}\)</span> (both hardcoded in the script
-for benchmark stability). <strong>Left</strong>: mean wall-clock time
-per <code>gradient_descent()</code> call (μs). The flat regime at <span
-class="math inline">\(d \leq 20\)</span> reflects per-iteration overhead
-(Python dispatch, NumPy bookkeeping); the upturn at <span
-class="math inline">\(d=50\)</span> shows the <span
-class="math inline">\(O(d)\)</span> matrix-vector cost beginning to
-dominate. <strong>Right</strong>: iterations-to-convergence rises only
-modestly across two decades of <span class="math inline">\(d\)</span>
-(<span class="math inline">\(219 \to 238\)</span>). This near-invariance
-is expected: <span class="math inline">\(\kappa(I_d)=1\)</span>
-regardless of dimension, so the contraction factor <span
-class="math inline">\(\rho=|1-\alpha|=0.9\)</span> is identical for
-every <span class="math inline">\(d\)</span>, and only the
-per-coordinate residual norm grows mildly.</figcaption>
+class="math inline">\(10^{-10}\)</span>. <strong>Left</strong>: the
+implementation-independent work proxy <span class="math inline">\(d
+\times \text{iterations}\)</span>, proportional to scalar elements
+processed by the dense matrix-vector update. <strong>Right</strong>:
+exact iterations to convergence. Wall-clock microseconds are
+intentionally excluded because they vary with hardware and host load.
+The similar iteration counts are expected because <span
+class="math inline">\(\kappa(I_d)=1\)</span> and the contraction factor
+<span class="math inline">\(\rho=|1-\alpha|=0.9\)</span> is
+dimension-independent.</figcaption>
 </figure>
 <h3 id="numerical-stability-analysis">Numerical Stability Analysis</h3>
 <p>[fig:stability] maps the optimizer’s accuracy across a grid of 8

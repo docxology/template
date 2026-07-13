@@ -92,7 +92,7 @@ def main() -> int:
         "citecolor=red",
         "-M",
         f"title={title}",
-        f"--resource-path={manuscript_dir}",
+        f"--resource-path={resolved_dir}:{manuscript_dir}",
     ]
     crossref = shutil.which("pandoc-crossref")
     if crossref:

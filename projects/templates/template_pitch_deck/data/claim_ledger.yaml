@@ -1,0 +1,50 @@
+claims:
+  - claim_id: short-slide-budget
+    kind: number
+    value: 11
+    source: infrastructure/rendering/slide_deck.py SlideBudget.SHORT
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/rendering/slide_deck.py
+  - claim_id: medium-slide-budget
+    kind: number
+    value: 38
+    source: infrastructure/rendering/slide_deck.py SlideBudget.MEDIUM
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/rendering/slide_deck.py
+  - claim_id: long-slide-budget
+    kind: number
+    value: 58
+    source: infrastructure/rendering/slide_deck.py SlideBudget.LONG
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/rendering/slide_deck.py
+  - claim_id: widescreen-width-ratio
+    kind: number
+    value: 16
+    source: infrastructure/rendering/slide_deck.py PAGE_SIZE
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/rendering/slide_deck.py
+  - claim_id: widescreen-height-ratio
+    kind: number
+    value: 9
+    source: infrastructure/rendering/slide_deck.py PAGE_SIZE
+    source_tier: project_source
+    freshness: active
+    artifact_path: infrastructure/rendering/slide_deck.py
+  - claim_id: infrastructure-coverage-floor
+    kind: number
+    value: 60%
+    source: .github/workflows/ci.yml infrastructure coverage gate
+    source_tier: project_source
+    freshness: active
+    artifact_path: .github/workflows/ci.yml
+  - claim_id: project-source-coverage-floor
+    kind: number
+    value: 90%
+    source: .github/workflows/ci.yml project source coverage gate
+    source_tier: project_source
+    freshness: active
+    artifact_path: .github/workflows/ci.yml

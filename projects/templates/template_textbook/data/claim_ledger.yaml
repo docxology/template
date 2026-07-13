@@ -48,3 +48,10 @@ claims:
     source_tier: project_source
     freshness: active
     artifact_path: src/textbook/models.py
+  - claim_id: inverse-time-unit-exponent
+    kind: number
+    value: -1
+    source: textbook formalism parameter tables use reciprocal seconds for rate constants
+    source_tier: project_source
+    freshness: active
+    artifact_path: manuscript/appendices/appendix_formalisms.md

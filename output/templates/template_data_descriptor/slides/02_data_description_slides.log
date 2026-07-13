@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:10
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_data_descriptor/output/slides/02_data_description_sli
 des.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/02_data_description_slid
 es.tex
 LaTeX2e <2025-11-01>
@@ -1134,7 +1134,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/02_data_description_slid
 es.aux)
 \openout1 = `02_data_description_slides.aux'.
@@ -1496,7 +1496,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/02_data_description_slid
 es.nav) [1
 
@@ -1504,7 +1504,7 @@ es.nav) [1
 \openout4 = `02_data_description_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/02_data_description_slid
 es.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -1549,7 +1549,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `02_data_description_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/02_data_description_slid
 es.vrb
 File: ../figures/file_inventory.png Graphic file (type bmp)
@@ -1578,7 +1578,7 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 \openout7 = `02_data_description_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/02_data_description_slid
 es.aux)
  ***********
@@ -1595,6 +1595,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1156b,471s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <home>/Documents/GitHub/template/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_data_descriptor/output/slides/02_data
 _description_slides.pdf (6 pages).

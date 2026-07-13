@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,12 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:reproducibility">Reproducibility</h1>
 <p>This section explains how to regenerate every artifact in the study
 from a clean checkout. The exemplar’s reproducibility guarantee is
@@ -256,7 +260,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_eda_notebook/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Render the manuscript</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_render_pdf.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
 <h2 id="generated-artifact-registry">Generated artifact registry</h2>
 <p>The analysis script writes the following artifacts under
 <code>projects/templates/template_eda_notebook/output/</code>:</p>
@@ -305,8 +309,7 @@ removed, so the complete-case row count is a checkable invariant.</li>
 </ul>
 <h2 id="verification-no-hand-transcribed-numbers">Verification (no
 hand-transcribed numbers)</h2>
-<p>Every quantitative claim in <span class="citation"
-data-cites="sec:results">[@sec:results]</span> is either reproduced by
+<p>Every quantitative claim in [sec:results] is either reproduced by
 running the analysis script or registered in
 <code>data/claim_ledger.yaml</code> for evidence-registry validation.
 The manuscript intentionally does not embed volatile values, so prose
@@ -314,5 +317,6 @@ and artifacts cannot disagree. The notebook itself is verified
 structurally by <code>tests/test_notebook.py</code>, which confirms it
 is valid nbformat, that its <code>from src</code> imports resolve to the
 library’s public surface, and that no cell defines its own logic.</p>
+</main>
 </body>
 </html>

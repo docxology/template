@@ -6,7 +6,7 @@
   "git_rev": "d87ca592",
   "git_dirty": true,
   "hyperparameters": {
-    "corpus_path": "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project/output/corpus.json",
+    "corpus_path": "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project/output/corpus.json",
     "aggregate_path": null,
     "year_min_filter": null,
     "year_max_filter": null,

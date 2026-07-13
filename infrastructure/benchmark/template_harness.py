@@ -2,23 +2,39 @@
 
 from __future__ import annotations
 
-import json
 import argparse
+import json
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from infrastructure.benchmark.rubrics import RubricSet
+from infrastructure.core.pipeline.artifacts import validate_artifact_manifest
 from infrastructure.project.domain_profile import load_domain_profile
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
-    unsupported_citation_tokens,
-    unsupported_number_tokens,
     validate_text_against_registry,
 )
+from infrastructure.validation.output.artifacts import read_artifact_manifest
 
 _CANONICAL_PROJECTS = PUBLIC_PROJECT_NAMES
+_DEFAULT_CHECKS = (
+    "output_validity",
+    "evidence_grounding",
+    "reproducibility_bundle",
+    "artifact_manifest",
+    "render_success",
+    "publication_readiness",
+)
+_SUPPORTED_CHECKS = frozenset(
+    {
+        *_DEFAULT_CHECKS,
+        "cross_reference_integrity",
+        "source_quality",
+    }
+)
+_ISSUE_DETAIL_LIMIT = 25
 
 
 @dataclass(frozen=True)
@@ -38,8 +54,19 @@ class BenchmarkScore:
 
     project: str
     passed: bool
-    score: int
-    max_score: int
+    score: float
+    max_score: float
+    issues: tuple[str, ...] = field(default_factory=tuple)
+    check_results: tuple[BenchmarkCheckResult, ...] = field(default_factory=tuple)
+
+
+@dataclass(frozen=True)
+class BenchmarkCheckResult:
+    """Result and weight for one named benchmark dimension."""
+
+    name: str
+    passed: bool
+    weight: float
     issues: tuple[str, ...] = field(default_factory=tuple)
 
 
@@ -48,35 +75,30 @@ def load_benchmark_manifest(path: Path) -> BenchmarkManifest:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError(f"Benchmark manifest must be a JSON object: {path}")
-    return BenchmarkManifest(
+    manifest = BenchmarkManifest(
         name=str(payload["name"]),
         projects=_tuple_of_strings(payload.get("projects", ())),
         required_outputs=_tuple_of_strings(payload.get("required_outputs", ())),
         checks=_tuple_of_strings(payload.get("checks", ())),
         rubric=RubricSet.from_dict(payload["rubric"]) if isinstance(payload.get("rubric"), dict) else None,
     )
+    _validate_manifest(manifest)
+    return manifest
 
 
 def write_default_manifest(*, repo_root: Path, output_path: Path) -> BenchmarkManifest:
-    """Write a profile-aware default manifest for canonical public exemplars."""
-    projects = tuple(project for project in _CANONICAL_PROJECTS if (repo_root / "projects" / project).exists())
-    if not projects:
-        projects = _CANONICAL_PROJECTS
-    rubric_payload = _profile_rubric_payload(repo_root, projects) or _default_rubric_payload()
+    """Write a fail-closed default manifest for every canonical public exemplar."""
+    projects = _CANONICAL_PROJECTS
+    checks = _DEFAULT_CHECKS
+    rubric_payload = _profile_rubric_payload(repo_root, projects, checks) or _default_rubric_payload()
     manifest = BenchmarkManifest(
         name="template-smoke",
         projects=projects,
         required_outputs=("output/pdf", "output/reports/validation_report.json"),
-        checks=(
-            "output_validity",
-            "evidence_grounding",
-            "reproducibility_bundle",
-            "artifact_manifest",
-            "render_success",
-            "publication_readiness",
-        ),
+        checks=checks,
         rubric=RubricSet.from_dict(rubric_payload),
     )
+    _validate_manifest(manifest)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(_manifest_to_dict(manifest), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return manifest
@@ -88,8 +110,22 @@ def score_project_against_manifest(
 ) -> BenchmarkScore:
     """Score one project against fixed benchmark checks."""
     issues: list[str] = []
-    score = 0
-    max_score = len(manifest.checks)
+    score = 0.0
+    weights = _check_weights(manifest)
+    max_score = sum(weights.values())
+    if not project_root.is_dir():
+        missing_issue = f"missing project directory: {_display_project_path(project_root)}"
+        return BenchmarkScore(
+            project=project_root.name,
+            passed=False,
+            score=score,
+            max_score=max_score,
+            issues=(missing_issue,),
+            check_results=tuple(
+                BenchmarkCheckResult(name=check, passed=False, weight=weights[check], issues=(missing_issue,))
+                for check in manifest.checks
+            ),
+        )
     checkers = {
         "output_validity": lambda: [
             *_check_required_outputs(project_root, manifest.required_outputs),
@@ -104,23 +140,35 @@ def score_project_against_manifest(
         "publication_readiness": lambda: _check_publication_readiness(project_root),
     }
 
+    check_results: list[BenchmarkCheckResult] = []
     for check in manifest.checks:
         checker = checkers.get(check)
-        if checker is None:
-            issues.append(f"unknown benchmark check: {check}")
-            continue
-        check_issues = checker()
+        if checker is None:  # Defensive: manifest validation rejects this earlier.
+            check_issues = [f"unknown benchmark check: {check}"]
+        else:
+            check_issues = checker()
         if check_issues:
             issues.extend(check_issues)
         else:
-            score += 1
+            score += weights[check]
+        check_results.append(
+            BenchmarkCheckResult(
+                name=check,
+                passed=not check_issues,
+                weight=weights[check],
+                issues=tuple(check_issues),
+            )
+        )
+
+    deduplicated_issues = tuple(dict.fromkeys(issues))
 
     return BenchmarkScore(
         project=project_root.name,
-        passed=not issues,
+        passed=all(result.passed for result in check_results),
         score=score,
         max_score=max_score,
-        issues=tuple(issues),
+        issues=deduplicated_issues,
+        check_results=tuple(check_results),
     )
 
 
@@ -143,6 +191,15 @@ def scores_to_dict(scores: tuple[BenchmarkScore, ...]) -> dict[str, Any]:
                 "score": score.score,
                 "max_score": score.max_score,
                 "issues": list(score.issues),
+                "checks": {
+                    result.name: {
+                        "passed": result.passed,
+                        "score": result.weight if result.passed else 0.0,
+                        "max_score": result.weight,
+                        "issues": list(result.issues),
+                    }
+                    for result in score.check_results
+                },
             }
             for score in scores
         ],
@@ -152,13 +209,15 @@ def scores_to_dict(scores: tuple[BenchmarkScore, ...]) -> dict[str, Any]:
 def scores_to_markdown(scores: list[BenchmarkScore] | tuple[BenchmarkScore, ...]) -> str:
     """Render benchmark scores as a small Markdown table."""
     lines = [
-        "| Project | Passed | Score | Issues |",
-        "| --- | --- | ---: | --- |",
+        "| Project | Passed | Score | Failed checks | Issues |",
+        "| --- | --- | ---: | --- | --- |",
     ]
     for score in scores:
-        issues = "; ".join(score.issues) if score.issues else ""
+        issues = _markdown_cell("; ".join(score.issues)) if score.issues else ""
+        failed_checks = ", ".join(result.name for result in score.check_results if not result.passed)
         lines.append(
-            f"| {score.project} | {'yes' if score.passed else 'no'} | {score.score}/{score.max_score} | {issues} |"
+            f"| {score.project} | {'yes' if score.passed else 'no'} | "
+            f"{_format_score(score.score)}/{_format_score(score.max_score)} | {failed_checks} | {issues} |"
         )
     return "\n".join(lines) + "\n"
 
@@ -216,14 +275,19 @@ def _check_required_outputs(project_root: Path, required_outputs: tuple[str, ...
 def _check_validation_report(project_root: Path) -> list[str]:
     report_path = project_root / "output" / "reports" / "validation_report.json"
     if not report_path.exists():
-        return []
+        return ["missing validation report: output/reports/validation_report.json"]
     try:
         payload: Any = json.loads(report_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return [f"invalid validation report JSON: {_relative(project_root, report_path)}"]
-    status = str(payload.get("overall_status", "")).lower() if isinstance(payload, dict) else ""
+    if not isinstance(payload, dict):
+        return ["validation report must be a JSON object"]
+    status = str(payload.get("overall_status", "")).lower()
     if status and status not in {"pass", "passed", "ok", "success"}:
         return [f"validation report did not pass: {status}"]
+    summary = payload.get("summary", {})
+    if isinstance(summary, dict) and summary.get("all_passed") is False:
+        return ["validation summary did not pass all checks"]
     return []
 
 
@@ -245,8 +309,8 @@ def _check_evidence_grounding(project_root: Path) -> list[str]:
         return ["no manuscript markdown found for evidence grounding"]
     report = validate_text_against_registry(text, registry)
     issues: list[str] = []
-    numbers = unsupported_number_tokens(report)
-    citations = unsupported_citation_tokens(report)
+    numbers = [issue.value for issue in report.errors if issue.kind == "number"]
+    citations = [issue.value for issue in report.errors if issue.kind == "citation"]
     if numbers:
         issues.append(f"unsupported numbers: {', '.join(numbers)}")
     if citations:
@@ -255,10 +319,22 @@ def _check_evidence_grounding(project_root: Path) -> list[str]:
 
 
 def _check_reproducibility_bundle(project_root: Path) -> list[str]:
+    try:
+        profile = load_domain_profile(project_root)
+    except ValueError as exc:
+        return [f"invalid domain profile: {exc}"]
+    declared = [
+        value
+        for value in profile.artifact_expectations
+        if "/" in value and ": " not in value and _is_safe_relative_path(value)
+    ]
+    if declared:
+        missing = [value for value in declared if not (project_root / value).is_file()]
+        return [f"missing declared reproducibility artifact: {value}" for value in missing]
     expected = project_root / "output" / "data" / "manuscript_variables.json"
-    if not expected.exists():
-        return ["missing reproducibility data: output/data/manuscript_variables.json"]
-    return []
+    if expected.is_file():
+        return []
+    return ["missing reproducibility evidence: no declared artifacts or manuscript variables exist"]
 
 
 def _check_artifact_manifest(project_root: Path) -> list[str]:
@@ -266,18 +342,13 @@ def _check_artifact_manifest(project_root: Path) -> list[str]:
     if not manifest_path.exists():
         return ["missing artifact manifest: output/reports/artifact_manifest.json"]
     try:
-        payload: Any = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
+        manifest = read_artifact_manifest(manifest_path)
+    except (OSError, json.JSONDecodeError, ValueError):
         return ["invalid artifact manifest JSON: output/reports/artifact_manifest.json"]
-    if not isinstance(payload, dict):
-        return ["artifact manifest must be a JSON object"]
-    issues = [str(issue) for issue in payload.get("issues", [])]
-    if issues:
-        return [f"artifact manifest issue: {issue}" for issue in issues]
-    entries = payload.get("entries", [])
-    if not isinstance(entries, list) or not entries:
+    if not manifest.entries:
         return ["artifact manifest has no entries"]
-    return []
+    report = validate_artifact_manifest(manifest, project_dir=project_root)
+    return _bounded_prefixed_issues("artifact manifest issue", report.issues)
 
 
 def _check_render_success(project_root: Path) -> list[str]:
@@ -329,15 +400,30 @@ def _check_publication_readiness(project_root: Path) -> list[str]:
     return []
 
 
-def _profile_rubric_payload(repo_root: Path, projects: tuple[str, ...]) -> dict[str, Any] | None:
+def _profile_rubric_payload(
+    repo_root: Path,
+    projects: tuple[str, ...],
+    checks: tuple[str, ...],
+) -> dict[str, Any] | None:
+    compatible: list[dict[str, Any]] = []
     for project in projects:
         try:
             profile = load_domain_profile(repo_root / "projects" / project)
         except ValueError:
-            continue
-        if profile.benchmark_rubric:
-            return profile.benchmark_rubric
-    return None
+            return None
+        if not profile.benchmark_rubric:
+            return None
+        try:
+            rubric = RubricSet.from_dict(profile.benchmark_rubric)
+        except ValueError:
+            return None
+        if {dimension.name for dimension in rubric.dimensions} != set(checks):
+            return None
+        compatible.append(profile.benchmark_rubric)
+    if not compatible:
+        return None
+    canonical = {json.dumps(payload, sort_keys=True) for payload in compatible}
+    return compatible[0] if len(canonical) == 1 else None
 
 
 def _default_rubric_payload() -> dict[str, Any]:
@@ -394,6 +480,81 @@ def _tuple_of_strings(value: Any) -> tuple[str, ...]:
             raise ValueError("Benchmark manifest sequence values must be strings")
         return tuple(value)
     raise ValueError("Benchmark manifest sequence values must be strings or lists of strings")
+
+
+def _validate_manifest(manifest: BenchmarkManifest) -> None:
+    if not manifest.name.strip():
+        raise ValueError("benchmark manifest name must not be empty")
+    if not manifest.projects:
+        raise ValueError("benchmark manifest must list at least one project")
+    if not manifest.checks:
+        raise ValueError("benchmark manifest must list at least one check")
+    if len(set(manifest.projects)) != len(manifest.projects):
+        raise ValueError("benchmark manifest projects must be unique")
+    if len(set(manifest.checks)) != len(manifest.checks):
+        raise ValueError("benchmark manifest checks must be unique")
+    unknown_checks = set(manifest.checks) - _SUPPORTED_CHECKS
+    if unknown_checks:
+        raise ValueError(f"unsupported benchmark checks: {', '.join(sorted(unknown_checks))}")
+    _validate_relative_paths(manifest.projects, label="project")
+    _validate_relative_paths(manifest.required_outputs, label="required output")
+    if manifest.rubric is not None:
+        dimensions = {dimension.name for dimension in manifest.rubric.dimensions}
+        checks = set(manifest.checks)
+        if dimensions != checks:
+            missing = checks - dimensions
+            extra = dimensions - checks
+            details = []
+            if missing:
+                details.append(f"missing dimensions: {', '.join(sorted(missing))}")
+            if extra:
+                details.append(f"unknown dimensions: {', '.join(sorted(extra))}")
+            raise ValueError(f"rubric dimensions must exactly match benchmark checks ({'; '.join(details)})")
+
+
+def _check_weights(manifest: BenchmarkManifest) -> dict[str, float]:
+    configured = (
+        {dimension.name: dimension.weight for dimension in manifest.rubric.dimensions}
+        if manifest.rubric is not None
+        else {}
+    )
+    return {check: configured.get(check, 1.0) for check in manifest.checks}
+
+
+def _display_project_path(project_root: Path) -> str:
+    parts = project_root.parts
+    if "projects" in parts:
+        return Path(*parts[parts.index("projects") :]).as_posix()
+    return project_root.as_posix()
+
+
+def _format_score(value: float | int) -> str:
+    numeric = float(value)
+    return str(int(numeric)) if numeric.is_integer() else f"{numeric:g}"
+
+
+def _markdown_cell(value: str) -> str:
+    return value.replace("|", "\\|").replace("\n", " ")
+
+
+def _is_safe_relative_path(value: str) -> bool:
+    normalized = value.replace("\\", "/")
+    path = PurePosixPath(normalized)
+    return bool(normalized.strip()) and not path.is_absolute() and ".." not in path.parts
+
+
+def _validate_relative_paths(values: tuple[str, ...], *, label: str) -> None:
+    unsafe = [value for value in values if not _is_safe_relative_path(value)]
+    if unsafe:
+        raise ValueError(f"benchmark {label} paths must be non-traversing relative paths: {', '.join(unsafe)}")
+
+
+def _bounded_prefixed_issues(prefix: str, issues: tuple[str, ...], *, limit: int = _ISSUE_DETAIL_LIMIT) -> list[str]:
+    rendered = [f"{prefix}: {issue}" for issue in issues[:limit]]
+    omitted = len(issues) - len(rendered)
+    if omitted:
+        rendered.append(f"{prefix}: {omitted} additional issue(s) omitted")
+    return rendered
 
 
 def _relative(project_root: Path, path: Path) -> Path:

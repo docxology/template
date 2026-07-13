@@ -1,6 +1,7 @@
 """Secure credential management for testing and operations."""
 
 import os
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -11,13 +12,15 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 # Make dotenv optional - only required for credential-based testing
+_load_dotenv: Callable[..., bool] | None
 try:
-    from dotenv import load_dotenv as _load_dotenv
+    from dotenv import load_dotenv as _dotenv_loader
 
     DOTENV_AVAILABLE = True
+    _load_dotenv = _dotenv_loader
 except ImportError:
     DOTENV_AVAILABLE = False
-    _load_dotenv = None  # type: ignore[assignment]
+    _load_dotenv = None
 
 # Platform API base URLs — extracted here so they are easy to override in tests
 # and visible to callers without instantiating CredentialManager.

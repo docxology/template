@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:integration">Integration: Unified Pipeline and Token
 Injection</h1>
 <h2 id="architecture-overview">Architecture Overview</h2>
@@ -241,8 +242,8 @@ representation):</p>
 <td>2</td>
 </tr>
 <tr>
-<td><code>3</code></td>
-<td>3</td>
+<td><code>4</code></td>
+<td>4</td>
 </tr>
 <tr>
 <td><code>8</code></td>
@@ -306,8 +307,8 @@ project’s own tree</td>
 </tr>
 <tr>
 <td><code>scripts/z_generate_manuscript_variables.py</code></td>
-<td>Hydrate <code>{{TOKEN}}</code> values and inject them into
-<code>output/manuscript/</code> immediately before rendering</td>
+<td>Hydrate declared manuscript-variable placeholders and inject them
+into <code>output/manuscript/</code> immediately before rendering</td>
 <td>JSON file + resolved manuscript tree</td>
 </tr>
 </tbody>
@@ -333,20 +334,21 @@ whose summary feeds both the manuscript-variable token file and the
 strong-rule semantic evaluator; the figure-generation stage runs
 independently; and <code>z_generate_manuscript_variables.py</code> —
 invoked automatically by the rendering pipeline immediately before the
-PDF render step — is what actually substitutes every
-<code>{{TOKEN}}</code> and writes the resolved manuscript that pandoc
-consumes. <span class="citation"
-data-cites="fig:pipeline">@fig:pipeline</span> shows the corresponding
-per-component pass/partial/missing status from the same run.</p>
+PDF render step — is what actually substitutes every declared
+placeholder and writes the resolved manuscript that pandoc consumes.
+<span class="citation" data-cites="fig:pipeline">@fig:pipeline</span>
+shows the corresponding per-component pass/partial/missing status from
+the same run.</p>
 <p>Each script imports all business logic from <code>src/</code> and
-stays free of computation of its own — the longest,
-<code>01_validate_sources.py</code> at 112 lines, is entirely CLI
-plumbing (argument parsing, console formatting) around calls into
-<code>src/fonds_reader.py</code>, <code>src/rules_applier.py</code>, and
+stays free of computation of its own — even
+<code>01_validate_sources.py</code>, the largest entry point in this
+project, is entirely CLI plumbing (argument parsing, console formatting)
+around calls into <code>src/fonds_reader.py</code>,
+<code>src/rules_applier.py</code>, and
 <code>src/tools_invoker.py</code>. This thin-orchestrator pattern
 [Wilson2014best] ensures that all testable logic is in <code>src/</code>
-at ≥ 90% coverage, while the scripts themselves remain readable without
-a dedicated test suite of their own.</p>
+under the configured project coverage gate, while the scripts themselves
+remain readable without a dedicated test suite of their own.</p>
 <h2 id="resilience-design">Resilience Design</h2>
 <p>The integration layer enforces resilience at three levels,
 corresponding to the three failure modes a monorepo integration pipeline

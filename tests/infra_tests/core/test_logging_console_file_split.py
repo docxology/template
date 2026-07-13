@@ -20,9 +20,7 @@ def _handlers_by_type(
     """Split a logger's handlers into (console-style StreamHandlers, FileHandlers)."""
     file_handlers = [h for h in logger.handlers if isinstance(h, logging.FileHandler)]
     stream_handlers = [
-        h
-        for h in logger.handlers
-        if isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler)
+        h for h in logger.handlers if isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler)
     ]
     return stream_handlers, file_handlers
 

@@ -44,33 +44,33 @@ context: |
   The template includes 13 advanced infrastructure subpackages for scientific development:
   From AGENTS.md — 🔒 Core Utilities (`infrastructure/core/`):
   Enterprise-grade security and system monitoring.
-  
+
   **Key Features:**
-  
+
   - **Input Sanitization**: LLM prompt validation and threat detection
   - **Security Monitoring**: Security event tracking and alerting
   - **Rate Limiting**: Configurable request rate limiting with monitoring
   - **Health Checks**: System health monitoring with component-level status
   - **Security Headers**: HTTP security header implementation
-  
+
   **Usage:**
-  
+
   ```python
   from infrastructure.llm.core.sanitization import sanitize_llm_input
   f
   From AGENTS.md — 🔬 Scientific Development (`infrastructure/scientific/`):
   Scientific computing best practices and tools.
-  
+
   **Modular Structure:**
-  
+
   - `stability.py` - Numerical stability checking
   - `benchmarking.py` - Performance benchmarking
   - `documentation.py` - API documentation generation
   - `validation.py` - Best practices validation
   - `templates.py` - Research workflow templates
-  
+
   **Key Features:**
-  
+
   - **Numerical Stability**: Algorithm stability testing
   - **Performance Benchmarking**: Execution time and memory analysis
   - **Scientific Documentation**: API documentation generation

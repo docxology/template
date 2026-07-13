@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:abstract">Abstract</h1>
 <p>We study a minimal Active Inference stack on toy models: a
 Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a
@@ -186,18 +190,14 @@ rendering, so no figure or statistic can drift from the artifact that
 produced it — 6 sheaf axioms are verified before composition and 25
 negative controls keep each failure path live. Claims are limited to
 those models and their generated artifacts.</p>
-<p><span class="citation"
-data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span> reports a
-17-row coverage matrix (5 IMRAD group headers) regenerated from the live
-manifest at compose time. <span class="citation"
-data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span> documents the
-T-maze harness aligned with <a
+<p>[sec:sheaf_coverage] reports a 17-row coverage matrix (5 IMRAD group
+headers) regenerated from the live manifest at compose time.
+[sec:methods_pymdp] documents the T-maze harness aligned with <a
 href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
 sophisticated_inference examples</a>.</p>
-<p><span class="citation"
-data-cites="sec:results_invariants">[@sec:results_invariants]</span>
-records 12 / 12 invariant checks passed. SI planning horizon: 2 steps.
-Sweep RMSE 0 nats bounds analytical–empirical agreement on the coupling
-grid.</p>
+<p>[sec:results_invariants] records 12 / 12 invariant checks passed. SI
+planning horizon: 2 steps. Sweep RMSE 0 nats bounds analytical–empirical
+agreement on the coupling grid.</p>
+</main>
 </body>
 </html>

@@ -90,7 +90,7 @@ is_valid, message = validate_fond_structure(Path("fonds/my_bibliography"))
 # (False, "Missing required directory: data")
 ```
 
-**Required:** `fonds.yaml`, `data/`  
+**Required:** `fonds.yaml`, `data/`
 **Optional:** `manuscript/`, `scripts/`, `tests/`
 
 ### `public_scope.py`

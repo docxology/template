@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Template Madlib: Deterministic Token Injection for Conditional
 IMRAD Manuscripts</title>
   <style>
@@ -174,9 +175,18 @@ IMRAD Manuscripts</title>
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -215,34 +225,61 @@ IMRAD Manuscripts</title>
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -274,6 +311,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -281,7 +323,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -297,13 +339,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -318,13 +360,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -342,7 +392,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -350,11 +400,13 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Template Madlib: Deterministic Token Injection for
 Conditional IMRAD Manuscripts</h1>
 <p class="subtitle">A public exemplar for source-owned lexical
 composition</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -459,6 +511,7 @@ class="toc-section-number">11.1</span> Authoring Obligations</a></li>
 class="toc-section-number">12</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This exemplar asks whether a reviewable pipeline can hydrate a
@@ -777,7 +830,7 @@ not the evidential status of the generated manuscript.</p>
 <figure id="fig:token-injection-flow">
 <img src="../figures/token_injection_flow.png"
 alt="Figure 1: Deterministic token-injection flow" />
-<figcaption aria-hidden="true">Figure 1: Deterministic token-injection
+<figcaption>Figure 1: Deterministic token-injection
 flow</figcaption>
 </figure>
 <h2 data-number="3.1" id="design-principles"><span
@@ -1437,19 +1490,19 @@ token plan and QA schema.</p>
 <figure id="fig:token-density">
 <img src="../figures/token_density.png"
 alt="Figure 2: Token category density" />
-<figcaption aria-hidden="true">Figure 2: Token category
+<figcaption>Figure 2: Token category
 density</figcaption>
 </figure>
 <figure id="fig:section-token-allocation">
 <img src="../figures/section_token_allocation.png"
 alt="Figure 3: Section token allocation" />
-<figcaption aria-hidden="true">Figure 3: Section token
+<figcaption>Figure 3: Section token
 allocation</figcaption>
 </figure>
 <figure id="fig:provenance-trace-map">
 <img src="../figures/provenance_trace_map.png"
 alt="Figure 4: Provenance trace map" />
-<figcaption aria-hidden="true">Figure 4: Provenance trace
+<figcaption>Figure 4: Provenance trace
 map</figcaption>
 </figure>
 <h2 data-number="4.1" id="token-inventory"><span
@@ -1900,19 +1953,19 @@ inherited from the template.</p>
 <figure id="fig:configured-field-matrix">
 <img src="../figures/configured_field_matrix.png"
 alt="Figure 5: Configured field origin matrix" />
-<figcaption aria-hidden="true">Figure 5: Configured field origin
+<figcaption>Figure 5: Configured field origin
 matrix</figcaption>
 </figure>
 <figure id="fig:section-configuration-heatmap">
 <img src="../figures/section_configuration_heatmap.png"
 alt="Figure 6: Section configuration heatmap" />
-<figcaption aria-hidden="true">Figure 6: Section configuration
+<figcaption>Figure 6: Section configuration
 heatmap</figcaption>
 </figure>
 <figure id="fig:field-origin-summary">
 <img src="../figures/field_origin_summary.png"
 alt="Figure 7: Field origin summary" />
-<figcaption aria-hidden="true">Figure 7: Field origin
+<figcaption>Figure 7: Field origin
 summary</figcaption>
 </figure>
 <h2 data-number="6.1" id="declared-section-titles"><span
@@ -2938,7 +2991,7 @@ surface that validation inspected?</p>
 <figure id="fig:quality-gate-matrix">
 <img src="../figures/quality_gate_matrix.png"
 alt="Figure 8: Quality gate matrix" />
-<figcaption aria-hidden="true">Figure 8: Quality gate
+<figcaption>Figure 8: Quality gate
 matrix</figcaption>
 </figure>
 <h2 data-number="7.1" id="evaluation-criteria"><span
@@ -2979,7 +3032,7 @@ output/data/token_inventory.json.</td>
 <td>Figure registry integrity</td>
 <td>Every referenced figure label is present in
 ../figures/figure_registry.json.</td>
-<td>scripts/04_validate_output.py figure registry check.</td>
+<td>scripts/pipeline/stage_04_validate.py figure registry check.</td>
 <td><code>validation</code></td>
 </tr>
 <tr>
@@ -2993,7 +3046,7 @@ registry.</td>
 <td>Copied-output readiness</td>
 <td>PDF, HTML, slides, figures, data, and reports copy into
 output/templates/template_madlib.</td>
-<td>scripts/05_copy_outputs.py output statistics.</td>
+<td>scripts/pipeline/stage_05_copy.py output statistics.</td>
 <td><code>copy</code></td>
 </tr>
 <tr>
@@ -3170,8 +3223,11 @@ config. Generated files remain disposable; the durable contract is the
 ability to regenerate them from the tracked project tree and to observe
 the same validation gates passing.</p>
 <ul>
-<li>Config hash: <code>3c4268ae54c35130</code></li>
-<li>Generated: <code>2026-06-26T14:00:22Z</code></li>
+<li>Config hash: <code>377db49c4154479a</code></li>
+<li>Generated: <code>not-recorded (set SOURCE_DATE_EPOCH)</code>
+(derived from <code>SOURCE_DATE_EPOCH</code>; an explicit
+<code>not-recorded</code> marker is emitted when the reproducible
+timestamp is not supplied)</li>
 <li>Python: <code>3.12.13</code></li>
 <li>Platform: <code>Darwin arm64</code></li>
 </ul>
@@ -3445,5 +3501,6 @@ required by a domain fork.</td>
 <hr />
 <h1 data-number="12" id="references"><span
 class="header-section-number">12</span> References</h1>
+</main>
 </body>
 </html>

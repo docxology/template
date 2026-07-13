@@ -32,7 +32,7 @@ This is a research project template with a test-driven development workflow, aut
 | Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`, `steganography`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 | Public CI source paths | `uv run python -m infrastructure.project.public_scope source-paths` |
-| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff format` |
+| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff format` |
 | Mypy (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run mypy` |
 | Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
@@ -41,7 +41,8 @@ This is a research project template with a test-driven development workflow, aut
 | Executable bundle (opt-in Stage 14) | `uv run python scripts/runner/bundle_executable.py --project {name}` |
 | Archive publication dry-run (opt-in Stage 15) | `uv run python scripts/runner/archive_publication.py --project {name}` |
 | Archive publication real deposit | `uv run python scripts/runner/archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
-| Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publishing-guide.md`](docs/guides/publishing-guide.md)) |
+| Publication runbook (standalone GitHub + real Zenodo DOI + optional mirrors) | [`docs/guides/publication-runbook.md`](docs/guides/publication-runbook.md) |
+| Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publication-runbook.md`](docs/guides/publication-runbook.md)) |
 | Reproduction bundle (single / all public exemplars) | `uv run python scripts/runner/repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
 | Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (55 claim-binding tests plus a public-roster pin; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/audit/lint_docs.py` |
@@ -76,7 +77,8 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./secure_run.sh --steganography-only --project {project_name}
 ./secure_run.sh --steganography-only
 
-# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares four additional opt-in ebook/metadata/bundle/archival stages)
+# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares 16 total,
+# including six opt-in ebook/metadata/bundle/archival/science/provenance stages)
 ./run.sh --pipeline
 
 # Core pipeline only (8 stages — LLM and opt-in stages excluded)
@@ -136,8 +138,8 @@ uv run python scripts/maintenance/manage_workspace.py status
 uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking (mirror CI `lint` job)
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Security scan (mirror CI `security` job Bandit step)
@@ -193,32 +195,14 @@ uv run python -c "from infrastructure.project.discovery import discover_projects
 
 **Public active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` may include local private symlinks.
 
-**🔒 CONFIDENTIALITY INVARIANT (public repo).** Only these public canonical
-exemplars — all under the git-tracked `projects/templates/` typed subfolder — are
-ever git-tracked/pushed:
-- [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) — Active Inference multi-track template (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
-- [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) — combinatoric grammar that deterministically generates whole runnable child projects (src/tests/scripts/manuscript), one level past a manuscript generator
-- [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) — deterministic AutoResearch template
-- [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) — deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives)
-- [`projects/templates/template_code_project/`](projects/templates/template_code_project/) — code-centric template
-- [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) — dataset descriptor/data-paper contract (schema, file inventory, provenance, quality checks, license boundary)
-- [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) — exploratory data analysis exemplar (tabular load, missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures)
-- [`projects/templates/template_formal/`](projects/templates/template_formal/) — strongly typed multiagent colony exemplar (illegal-state-unrepresentable types, session-typed protocols, affine resource handles, Lean/TLA+ formal side-specs)
-- [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) — metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection)
-- [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) — generic literature meta-analysis template (multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil`)
-- [`projects/templates/template_madlib/`](projects/templates/template_madlib/) — conditional token-injection manuscript template with QA probes and authoring contract
-- [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) — methods paper template: a tested controlled-method specification DSL (staged validation gates, deterministic compilation), informed by BPL (Biology Programming Language) as an upstream domain language
-- [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) — data-driven large-format newspaper layout engine (ReportLab broadsheet)
-- [`projects/templates/template_pitch_deck/`](projects/templates/template_pitch_deck/) — reproducible short/medium/long PDF+PPTX pitch decks (token-validated, cliché-linted, diligence-cited; new `infrastructure/rendering/{slide_deck,pptx_deck,mermaid_figure}.py` primitives; flagship deck pitches `template_template`)
-- [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) — meta-project exemplar demonstrating integration of the `fonds/`, `rules/`, and `tools/` top-level resource-pool directories
-- [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) — prose-centric template
-- [`projects/templates/template_redacted_report/`](projects/templates/template_redacted_report/) — formal redaction and public release-review report (classification ceiling, authority, ledger, mosaic-risk checks)
-- [`projects/templates/template_registered_report/`](projects/templates/template_registered_report/) — preregistered/registered-report workflow (hypotheses, outcomes, analysis plan, deviations)
-- [`projects/templates/template_search_project/`](projects/templates/template_search_project/) — literature-search → BibTeX → LLM-synthesis template
-- [`projects/templates/template_sia/`](projects/templates/template_sia/) — SIA self-improvement harness template (fixture replay by default)
-- [`projects/templates/template_storybook/`](projects/templates/template_storybook/) — full-page illustrated storybook PDF template
-- [`projects/templates/template_template/`](projects/templates/template_template/) — autopoietic meta-template (introspects infrastructure and public exemplar roster)
-- [`projects/templates/template_textbook/`](projects/templates/template_textbook/) — modular, fillable book-length manuscript scaffold (config-driven parts/chapters/labs)
+**🔒 CONFIDENTIALITY INVARIANT (public repo).** The only project trees ever
+git-tracked or pushed are the public canonical exemplars under
+`projects/templates/` selected by
+`infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`. The generated
+[`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) is the
+authoritative roster; regenerate it after layout changes and never maintain a
+second project-name allowlist in prose. Broader runtime discovery of local
+private symlinks does not broaden the public tracking boundary.
 
 `.gitignore` ignores `projects/*` and negates **only** `projects/templates/`
 (the public exemplars) plus the repo-level `projects/*.md` docs. **Every other
@@ -268,171 +252,59 @@ each independently overridable/skippable: `TEMPLATE_FONDS_ROOT` /
 
 ## Architecture
 
-### Two-Layer System
+The repository has two implementation layers:
 
-#### Layer 1: Infrastructure (Generic, Reusable)
+- Generic, reusable behavior belongs in `infrastructure/`; root and project
+  scripts are thin orchestrators.
+- Domain behavior belongs in `projects/<qualified-name>/src/`, with tests beside
+  the project and disposable working output under its `output/` directory.
 
-- `infrastructure/` - Generic build and validation tools
-- `scripts/` - Subdirectory-organized stage orchestrators (`pipeline/`, `runner/`, `audit/`, `docgen/`, `gates/`, `maintenance/`, `shell/`, `publish/`; root-level `scripts/*.py` are backward-compatible shims — see `scripts/README.md`)
-- `tests/` - Infrastructure test suite
+Do not place business logic in `scripts/`. Scripts may coordinate imports, I/O,
+visualization, and output reporting only. This invariant is expanded in
+[`AGENTS.md`](AGENTS.md#thin-orchestrator-pattern) and
+[`docs/architecture/two-layer-architecture.md`](docs/architecture/two-layer-architecture.md).
 
-#### Layer 2: Projects (Domain-Specific)
-
-- `projects/{name}/src/` - Project-specific algorithms and code
-- `projects/{name}/tests/` - Project test suite
-- `projects/{name}/scripts/` - Analysis scripts (thin orchestrators)
-- `projects/{name}/manuscript/` - Markdown manuscript sections
-- `projects/{name}/output/` - Working outputs (disposable)
-- `output/{name}/` - Final deliverables
-
-### Thin Orchestrator Pattern
-
-**CRITICAL PRINCIPLE**: All business logic resides in either `infrastructure/` (generic) or `projects/{name}/src/` (project-specific). Scripts are lightweight coordinators that:
-
-1. Import methods from infrastructure or project modules
-2. Handle I/O, visualization, and orchestration
-3. Never implement algorithms or business logic
-4. Use tested methods for all computation
-
-**Example**:
-
-```python
-# BAD: Logic in script
-def calculate_average(data):
-    return sum(data) / len(data)
-
-# GOOD: Script imports from src/
-from projects.my_project.src.statistics import calculate_average
-
-data = [1, 2, 3, 4, 5]
-avg = calculate_average(data)  # Use tested method
-```
-
-### Infrastructure Modules
-
-- `infrastructure/autoresearch/` - Deterministic research loops (plan/evidence/readiness reports, stage contracts)
-- `infrastructure/benchmark/` - Benchmarking helpers (timing, resource summaries, report payloads)
-- `infrastructure/config/` - Repository-wide configuration and defaults
-- `infrastructure/core/` - Core utilities (logging, exceptions, file operations, pipeline, telemetry, security)
-- `infrastructure/docker/` - Docker containerization settings and configuration
-- `infrastructure/doctor/` - Repository health diagnostics and self-check tooling
-- `infrastructure/documentation/` - Figure management, API docs, glossary generation
-- `infrastructure/fonds/` - Stable resource pools (bibliographies, contacts, datasets); discovery/validation/public-scope/sidecar-sync analog of `infrastructure/project/` for `fonds/`
-- `infrastructure/llm/` - Local LLM integration (Ollama) for reviews and translations
-- `infrastructure/logrotate.d/` - Log rotation configs for pipeline and agent logs
-- `infrastructure/mcp_server.py` - stdio MCP server exposing repo operations/pipeline/skills as tools
-- `infrastructure/methods/` - Methods orchestration (DAG contracts, methods prose, artifacts, evidence)
-- `infrastructure/orchestration/` - Pipeline/multi-project/secure CLI entrypoints (`python -m infrastructure.orchestration`)
-- `infrastructure/project/` - Multi-project discovery and management
-- `infrastructure/prose/` - Prose-manuscript analysis helpers (prose-centric projects)
-- `infrastructure/publishing/` - Academic publishing tools (DOI, citations, Zenodo, arXiv)
-- `infrastructure/reference/` - Citation and reference-management utilities
-- `infrastructure/rendering/` - Multi-format rendering (PDF, HTML, slides)
-- `infrastructure/reporting/` - Pipeline reporting and error aggregation
-- `infrastructure/rules/` - Soft guidelines and strong formal constraints for research templates; discovery/validation/public-scope/sidecar-sync analog of `infrastructure/project/` for `rules/`
-- `infrastructure/scientific/` - Scientific computing best practices and benchmarking
-- `infrastructure/sia/` - Self-improvement harness (task layout, fixture replay, evaluation runner)
-- `infrastructure/search/` - Literature search and reference discovery
-- `infrastructure/search/connectors/` - Scientific Connector Registry (OpenAlex, arXiv, Semantic Scholar, CrossRef, Europe PMC, bioRxiv, UniProt, PDB); `python -m infrastructure.search.connectors list-dbs` / `search`
-- `infrastructure/provenance/` - Content-addressed provenance DAG; immutable artifact tracking and lineage
-- `infrastructure/research/` - Research workflow prompt templates (question refinement, gap analysis, synthesis)
-- `infrastructure/skills/` - Programmatic AI skill discovery and manifest generation
-- `infrastructure/steganography/` - Cryptographic PDF watermarking and verification
-- `infrastructure/tools/` - Executable entry points (scripts, skills, agents) for research workflows; discovery/validation/public-scope/sidecar-sync analog of `infrastructure/project/` for `tools/`
-- `infrastructure/validation/` - PDF, output, and markdown integrity validation
+Do not hand-maintain an infrastructure-package inventory here. The live package
+map and ownership rules are in [`infrastructure/AGENTS.md`](infrastructure/AGENTS.md),
+while agent-operable catalogs are derived through
+[`docs/architecture/capability-surfaces.md`](docs/architecture/capability-surfaces.md).
 
 ## Project Structure
 
-### Typed Subfolders under `projects/`
+Public tracked exemplars live only under `projects/templates/`. Optional
+`projects/active/` links join default discovery; `working/`, `ongoing/`, and
+`archive/` remain local-only and require qualified names such as
+`working/<name>`. Never hard-code a rotating private project name or commit a
+non-template project path.
 
-All project lifecycle state is expressed as typed subfolders under `projects/`:
-
-- **`projects/templates/`** — public exemplars from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md), git-tracked in this repo (discovered + rendered).
-- **`projects/active/`** — optional hot-seat render set: symlinks to deliberately reintroduced private `active/` projects (discovered + rendered alongside exemplars when present).
-- **`projects/working/`** — non-rendered symlinks to the private sidecar's `working/` projects; render explicitly with qualified names such as `working/<name>`.
-- **`projects/ongoing/`** — non-rendered symlinks to the private sidecar's `ongoing/` projects: long-lived work with no publication target; render explicitly with qualified names such as `ongoing/<name>`.
-- **`projects/archive/`** — non-rendered symlinks to the private sidecar's `archive/` projects (retired / historical).
-- **`projects/published/` and `projects/other/`** — optional legacy non-rendered mirrors when those sidecar folders exist.
-- **Private `docxology/projects` repo** — the primary home for real projects, with simplified default folders `working/` and `archive/`. See [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
-
-Discovery renders only `projects/templates/*` and optional `projects/active/*` (qualified names `templates/<name>` and `active/<name>`); `working/`, `ongoing/`, and `archive/` are linked for explicit targeted work but never default-rendered.
-
-**Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
-**Backburner / archived projects:** in the private repo's `working/` and `archive/` folders.
-
-To render a private working project: sync links, then run an explicit qualified command such as `uv run python scripts/pipeline/stage_03_render.py --project working/<name>`.
-To retire one: move it from sidecar `working/` to sidecar `archive/`.
-
-### Standard Project Layout
-
-```mermaid
-flowchart TB
-    P[projects/&lt;project_name&gt;/]
-    P --> SRC[src<br/>Project-specific code · 100% target]
-    P --> T[tests<br/>Project tests · 90% min]
-    P --> SC[scripts<br/>Analysis · thin orchestrators]
-    P --> M[manuscript<br/>Markdown sections]
-    P --> O[output<br/>Working outputs · disposable]
-    P --> PY[pyproject.toml<br/>Project configuration]
-
-    SRC --> SRC_F[__init__.py · *.py<br/>domain algorithms / logic]
-    T --> T_F[__init__.py · test_*.py]
-    SC --> SC_F[*.py]
-    M --> M_F[config.yaml · preamble.md ·<br/>01_*.md · S01_*.md · 99_references.md]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    classDef cfg fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class P,SRC,T,SC,M,O d
-    class SRC_F,T_F,SC_F,M_F f
-    class PY cfg
-```
-
-### Output Organization
-
-```mermaid
-flowchart TB
-    OUT[output]
-    OUT --> P[&lt;project_name&gt;<br/>Project-specific outputs]
-    OUT --> EX[executive_summary<br/>Cross-project reports · multi-project mode]
-
-    P --> PDF[pdf<br/>Individual + combined PDFs]
-    P --> FIG[figures<br/>Generated figures]
-    P --> DATA[data<br/>Analysis data files]
-    P --> LLM[llm<br/>LLM reviews · translations]
-    P --> REP[reports<br/>Validation reports]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    class OUT,P,EX,PDF,FIG,DATA,LLM,REP d
-```
+Use [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
+for the current public/rendered roster and
+[`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)
+for sidecar lifecycle and link-sync operations. Canonical exemplar structure is
+visible in `projects/templates/template_code_project/`; do not duplicate that
+derived tree diagram here.
 
 ## Pipeline Stages
 
-### Full Pipeline (default 10-stage path; 16 declared stages)
-
-0. **Clean Output Directories** - Remove previous outputs for a fresh run
-1. **Environment Setup** - Validate dependencies, discover projects
-2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract by default; use `--infra-scope full` for the coverage-bearing repo gate
-3. **Project Tests** - Project test suite (90% coverage minimum)
-4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
-5. **Render PDF** - Convert markdown to professional PDFs
-6. **Validate Output** - Quality checks on PDFs and content
-7. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
-8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
-9. **Copy Outputs** - Copy final deliverables to `output/<name>/`
-
-**Stage numbering (canonical phrasing — keep in sync with AGENTS.md and README.md):**
-
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
-
-**Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed (not counted as a numbered stage).
+[`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)
+is authoritative. The generated table at the end of this file is the compact
+human view; refresh it with `uv run python scripts/docgen/stage_table.py` rather
+than editing stage counts or names in prose. Pipeline semantics and opt-in stage
+rules live in [`AGENTS.md`](AGENTS.md#rendering-pipeline).
 
 ## Testing Requirements
 
 ### No Mocks Policy
 
-**ABSOLUTE REQUIREMENT**: Never use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use data and computations.
+Do not introduce `MagicMock`, `mocker.patch`, `unittest.mock`, or another
+mocking framework. The enforced command is a lexical framework gate; it does
+not prove that every dependency is real. Use the advisory inventory to expose
+and migrate existing `monkeypatch.setattr`/`setitem` dependency replacements.
+
+```bash
+uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py --inventory
+```
 
 **Patterns**:
 
@@ -550,7 +422,7 @@ Scripts in `projects/{name}/scripts/` should:
 1. **Single Source of Truth**: Business logic lives only in `infrastructure/` or `projects/{name}/src/`
 2. **Test-Driven Development**: 90%+ coverage enforced before PDF generation
 3. **Thin Orchestrator Pattern**: Scripts coordinate, modules implement
-4. **No Mocks**: All tests use data and computations
+4. **Real-first tests**: mock frameworks are prohibited; semantic stand-ins are inventoried and tracked as migration debt
 5. **Multi-Project Support**: One repository, multiple independent projects
 6. **Reproducibility**: Deterministic outputs with fixed seeds
 7. **Disposable Outputs**: Everything in `output/` is regeneratable
@@ -692,8 +564,8 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 ## Important Notes
 
-- All files in `output/` are disposable and regeneratable
-- Never commit generated outputs to version control
+- Generated outputs are regeneratable and must never be hand-edited to pass a gate.
+- Canonical public exemplar outputs admitted by the repository allowlist are tracked publication evidence; local/private/fork outputs remain ignored.
 - Install **pre-commit** hooks after `uv sync` so Ruff, mypy, Bandit, and push-time checks run locally (see `.pre-commit-config.yaml`)
 - Always run tests before committing changes
 - Follow thin orchestrator pattern strictly

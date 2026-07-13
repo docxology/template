@@ -20,8 +20,11 @@ than a bare traceback.
 from __future__ import annotations
 
 import io
+import os
 from pathlib import Path
+import tempfile
 from typing import Any
+from zipfile import ZipFile, ZipInfo
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
@@ -67,6 +70,7 @@ _MIN_SINGLE_LINE_FONT_SIZE = 14
 #: API the way ReportLab's `stringWidth` does, so this is a heuristic, not an
 #: exact measurement).
 _AVG_BOLD_CHAR_WIDTH_FACTOR = 0.6
+_DETERMINISTIC_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 
 
 def _fit_single_line_font_size_pt(text: str, max_width_inches: float, start_size: int) -> int:
@@ -147,7 +151,42 @@ def render_pptx(
         _add_qr_code(prs, pptx_slide, slide)
 
     prs.save(str(output_path))
+    _normalize_pptx_archive(output_path)
     return output_path
+
+
+def _normalize_pptx_archive(path: Path) -> None:
+    """Rewrite an OOXML archive with stable ZIP metadata and member order.
+
+    ``python-pptx`` emits stable XML and media bytes, but :mod:`zipfile` stamps
+    every package member with the wall clock. That makes identical decks hash
+    differently across runs even though their extracted contents match. PPTX
+    uses ZIP only as a container, so fixed member timestamps preserve document
+    semantics while making the published artifact byte-reproducible.
+    """
+    with ZipFile(path, "r") as source:
+        members = [(info, source.read(info.filename)) for info in source.infolist()]
+
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            prefix=f".{path.name}.", suffix=".tmp", dir=path.parent, delete=False
+        ) as handle:
+            temporary_path = Path(handle.name)
+        with ZipFile(temporary_path, "w") as target:
+            for source_info, payload in members:
+                target_info = ZipInfo(source_info.filename, _DETERMINISTIC_ZIP_TIMESTAMP)
+                target_info.compress_type = source_info.compress_type
+                target_info.comment = source_info.comment
+                target_info.create_system = source_info.create_system
+                target_info.external_attr = source_info.external_attr
+                target_info.internal_attr = source_info.internal_attr
+                target.writestr(target_info, payload)
+        os.replace(temporary_path, path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 def _set_notes(pptx_slide: Any, notes: str) -> None:

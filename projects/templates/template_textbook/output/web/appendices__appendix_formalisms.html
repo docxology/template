@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,11 +173,36 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:appendix_formalisms">Appendix — Formalisms</h1>
 <p>A worked example of every <strong>formal</strong> element a technical
 book uses: definitions, theorems with proofs, lemmas, algorithms in
@@ -212,12 +237,10 @@ which trajectories converge.</p>
 <h2 id="a-theorem-with-proof">2. A theorem with proof</h2>
 <blockquote>
 <p><strong>Theorem 1 (Logistic limit).</strong> For the logistic model
-in <span class="citation"
-data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>
-with <span class="math inline">\(r &gt; 0\)</span> and <span
-class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
-satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
-K\)</span>.</p>
+in [eq:formalisms_logistic] with <span class="math inline">\(r &gt;
+0\)</span> and <span class="math inline">\(0 &lt; N_0 \le K\)</span>,
+the trajectory satisfies <span class="math inline">\(\lim_{t \to \infty}
+N(t) = K\)</span>.</p>
 </blockquote>
 <p><span class="math display">\[ N(t) = \frac{K}{1 + A e^{-rt}}, \qquad
 A = \frac{K - N_0}{N_0} . \]</span> {#eq:formalisms_logistic}</p>
@@ -281,25 +304,20 @@ variables:</p>
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
 \end{aligned}
 \]</span></p>
-<p>which recovers <span class="citation"
-data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>.
-Each line is one algebraic move; show your work at this granularity so
-readers can follow without gaps.</p>
+<p>which recovers [eq:formalisms_logistic]. Each line is one algebraic
+move; show your work at this granularity so readers can follow without
+gaps.</p>
 <hr />
 <h2 id="a-system-of-numbered-equations">6. A system of numbered
 equations</h2>
 <p>A simple predator–prey system, with each equation individually
-referenceable (<span class="citation"
-data-cites="eq:formalisms_prey">[@eq:formalisms_prey]</span>, <span
-class="citation"
-data-cites="eq:formalisms_pred">[@eq:formalisms_pred]</span>):</p>
+referenceable ([eq:formalisms_prey], [eq:formalisms_pred]):</p>
 <p><span class="math display">\[ \frac{dx}{dt} = \alpha x - \beta x y
 \]</span> {#eq:formalisms_prey}</p>
 <p><span class="math display">\[ \frac{dy}{dt} = \delta x y - \gamma y
 \]</span> {#eq:formalisms_pred}</p>
 <p>The vector-field figure style for such systems is demonstrated by the
-quiver plot in the format gallery (<span class="citation"
-data-cites="sec:appendix_format_gallery">[@sec:appendix_format_gallery]</span>).</p>
+quiver plot in the format gallery ([sec:appendix_format_gallery]).</p>
 <hr />
 <h2 id="dimensioned-quantities">7. Dimensioned quantities</h2>
 <p>State parameters with units explicitly, in math mode so they render
@@ -340,12 +358,11 @@ values.</caption>
 <hr />
 <h2 id="notation-summary">8. Notation summary</h2>
 <!-- STUB: maintain a running notation table; cross-reference Appendix B. -->
-<p>Symbols used throughout are collected in the notation appendix (<span
-class="citation"
-data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>);
-glossary definitions for narrative terms such as <a
-href="#gl:gradient"><strong>gradient</strong></a> and <a
+<p>Symbols used throughout are collected in the notation appendix
+([sec:appendix_notation]); glossary definitions for narrative terms such
+as <a href="#gl:gradient"><strong>gradient</strong></a> and <a
 href="#gl:threshold"><strong>threshold</strong></a> are in the master
 glossary.</p>
+</main>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Abstract {#sec:abstract}
 
-This exemplar documents **template_sia**, a deterministic implementation of the Self-Improvement Agent (SIA) harness contract described in [sia2026]. The default pipeline replays fixture-backed generations for the `mini_classify` task; opt-in live mode runs bounded target subprocesses and optional Ollama-backed meta/feedback steps.
+This exemplar documents **template_sia**, a deterministic implementation of the Self-Improvement Agent (SIA) harness contract described in [@sia2026]. The default pipeline replays fixture-backed generations for the `mini_classify` task; opt-in live mode runs bounded target subprocesses and optional Ollama-backed meta/feedback steps.
 
 **Run snapshot.** Task `mini_classify`, run 1, 3 generation(s), live=false. Final accuracy=0.8333 over 6 held-out samples. Values are injected by `scripts/z_generate_manuscript_variables.py` after analysis.
 
@@ -14,7 +14,7 @@ This exemplar documents **template_sia**, a deterministic implementation of the 
 
 # Introduction {#sec:introduction}
 
-This exemplar ships **template_sia**, a deterministic research harness for Self-Improvement Agent (SIA) loops [sia2026]. It documents how the template repository separates generic orchestration (`infrastructure/sia/`) from a reproducible project surface (`projects/templates/template_sia/`) without vendoring the upstream [upstream SIA orchestrator repository](https://github.com/hexo-ai/sia).
+This exemplar ships **template_sia**, a deterministic research harness for Self-Improvement Agent (SIA) loops [@sia2026]. It documents how the template repository separates generic orchestration (`infrastructure/sia/`) from a reproducible project surface (`projects/templates/template_sia/`) without vendoring the upstream [upstream SIA orchestrator repository](https://github.com/hexo-ai/sia).
 
 Compared with the AutoResearch exemplar, SIA focuses on **meta → target → feedback** generations with public/private task splits rather than candidate-model search and readiness gates. Default CI replays fixture-backed generations; live mode remains opt-in.
 
@@ -106,7 +106,7 @@ signal at each step of the loop.
 
 template_sia demonstrates how to embed the SIA harness contract in the Research Project Template without vendoring upstream orchestration code. Layer 1 (`infrastructure/sia/`) owns task validation, evaluation, context logging, and the generation state machine; Layer 2 wires a minimal classification task, fixture replay, and manuscript tokens.
 
-**Non-claims.** This tree is a harness and documentation exemplar. Fixture-replay metrics (final accuracy=0.8333) validate wiring only—they are not evidence of state-of-the-art self-improvement. Live self-modification and external LLM calls remain opt-in; default CI never executes generated agent code or claims benchmark parity with [sia2026].
+**Non-claims.** This tree is a harness and documentation exemplar. Fixture-replay metrics (final accuracy=0.8333) validate wiring only—they are not evidence of state-of-the-art self-improvement. Live self-modification and external LLM calls remain opt-in; default CI never executes generated agent code or claims benchmark parity with [@sia2026].
 
 
 
@@ -116,4 +116,4 @@ template_sia demonstrates how to embed the SIA harness contract in the Research 
 
 # References {#sec:references}
 
-See `references.bib` for BibTeX entries cited in this manuscript, including [sia2026] and the template repository DOI from `manuscript/config.yaml`.
+See `references.bib` for BibTeX entries cited in this manuscript, including [@sia2026] and the template repository DOI from `manuscript/config.yaml`.

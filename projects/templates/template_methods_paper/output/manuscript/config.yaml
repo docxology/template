@@ -23,10 +23,19 @@ authors:
 
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
-  doi: "10.5281/zenodo.21086548" # Concept DOI — fill in when minting a Zenodo deposit
-  version_doi: "10.5281/zenodo.21086549" # Latest Zenodo deposit DOI (split layout)
-  version_record: "https://zenodo.org/records/21086549" # https://zenodo.org/records/{id}
-  github_repository: ""  # e.g. owner/template_methods_paper
+  doi: "10.5281/zenodo.21086548" # Concept DOI — stable citation
+  version_doi: "10.5281/zenodo.21086549" # Latest Zenodo deposit
+  version_record: "https://zenodo.org/records/21086549"
+  github_repository: "docxology/template_methods_paper"
+  repository_url: "https://github.com/docxology/template_methods_paper"
+  published_artifacts:
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/Qmc9puHs6KiEnCraVgWUXVxcyAZyT7nt9EMXXLBhy2bAou"
+    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_methods_paper"
+    osf: "https://osf.io/6d7nh/"
+    pypi: "https://test.pypi.org/project/template-methods-paper/1.0.0/"
+    netlify: "https://6a444b88aa6e4e3c5d216e16--tranquil-kleicha-0c9203.netlify.app"
+    github_pages: "https://docxology.github.io/template_methods_paper/"
+    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_methods_paper"
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
@@ -91,13 +100,14 @@ testing:
 # DSL parameters — the methods library declares its controlled vocabulary in
 # code, not configuration; this block documents that for readers and
 # downstream tooling rather than configuring the DSL itself.
-dsl:
-  example_methods:
-    - "PBSPreparation"
-    - "SensorCalibrationSweep"
-  staged_gates:
-    - "structural"
-    - "semantic"
-    - "plan"
-    - "target"
-  plan_hash_algorithm: "sha256"
+project_config:
+  dsl:
+    example_methods:
+      - "PBSPreparation"
+      - "SensorCalibrationSweep"
+    staged_gates:
+      - "structural"
+      - "semantic"
+      - "plan"
+      - "target"
+    plan_hash_algorithm: "sha256"

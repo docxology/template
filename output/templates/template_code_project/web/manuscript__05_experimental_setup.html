@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -187,6 +187,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:experimental_setup">Experimental Setup</h1>
 <p>This section details the complete experimental configuration used to
 generate the results in this study. Every parameter value below is
@@ -194,8 +196,7 @@ injected programmatically from <code>config.yaml</code> and the analysis
 pipeline — no value is hardcoded in the manuscript source.</p>
 <h2 id="problem-definition">Problem Definition</h2>
 <p>The optimization target is the quadratic objective function defined
-in <span class="citation"
-data-cites="eq:quadratic_objective">[@eq:quadratic_objective]</span>:</p>
+in [eq:quadratic_objective]:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:quadratic_objective}
 f(x) = \frac{1}{2} x^T A x - b^T x
@@ -238,15 +239,17 @@ class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>, from the
 scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
 dimensionality (<span class="math inline">\(d = 50\)</span>), using
 identity-Hessian quadratics to isolate algorithmic scaling from problem
-conditioning effects. Representative single-call execution time from the
-last benchmark run: <strong>1.9 μs</strong> (recorded in
-<code>output/reports/performance_benchmark.json</code>).</p>
+conditioning effects. The tracked
+<code>output/reports/performance_benchmark.json</code> records fixed
+inputs, exact objective values, and validation checks. Wall-clock timing
+is retained only as a runtime diagnostic because host load and hardware
+make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 id="computational-environment">Computational Environment</h2>
 <ul>
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-07-08T02:12:25Z</li>
+<li><strong>Generated</strong>: 2026-07-12T04:04:24Z</li>
 </ul>
 <h2 id="pipeline-ordering">Pipeline ordering</h2>
 <p>Typical <code>template_code_project</code> analysis order (see
@@ -274,8 +277,7 @@ completed.</p>
 </colgroup>
 <thead>
 <tr>
-<th>Figure (<span class="citation"
-data-cites="sec:results">[@sec:results]</span>)</th>
+<th>Figure ([sec:results])</th>
 <th>Primary inputs</th>
 </tr>
 </thead>
@@ -315,5 +317,6 @@ class="math inline">\(10^{-10}\)</span></td>
 </table>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
+</main>
 </body>
 </html>

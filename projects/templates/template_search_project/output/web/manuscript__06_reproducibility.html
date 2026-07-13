@@ -242,7 +242,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:reproducibility">Reproducibility</h1>
 <p>Reproducibility in computational research has well-documented
 prerequisites: open data, open code, and a deterministic build that can
@@ -250,7 +251,7 @@ be re-run from scratch [peng2011reproducible]. The bundled
 <code>manuscript/config.yaml</code> is intentionally configured to
 satisfy all three for <strong>strict reproducibility</strong>:</p>
 <ol type="1">
-<li><code>search.sources: [local]</code> consumes
+<li><code>project_config.search.sources: [local]</code> consumes
 <code>data/corpus.json</code>, which is a curated and committed JSON
 corpus. No network is required to run the pipeline.</li>
 <li><code>search.cache_dir: output/search/cache</code> writes
@@ -374,8 +375,8 @@ reviewers can audit them explicitly rather than inferring from the
 contract table:</p>
 <ul>
 <li><strong>Live search drift.</strong> When
-<code>config.search.sources</code> includes <code>arxiv</code> or
-<code>crossref</code>, the first cache-miss invocation hits the live
+<code>project_config.search.sources</code> includes <code>arxiv</code>
+or <code>crossref</code>, the first cache-miss invocation hits the live
 API; the cached JSON freezes that response, but two cold-start clones
 running on different days will see different paper sets. Pin a
 <code>LocalBackend</code> corpus or commit
@@ -393,8 +394,8 @@ model weights, tokenizer, and template can change between Ollama
 releases. Document the Ollama version alongside
 <code>config.llm.model</code> when archiving a run for replication.</li>
 <li><strong>Paperclip backend status.</strong> The
-<code>paperclip</code> backend is opt-in and currently degrades to HTTP
-405 on the production endpoint; the run records the error in
+<code>paperclip</code> backend is opt-in and the production endpoint may
+reject the adapter’s request method; the run records the response in
 <code>SearchResult.errors[paperclip]</code> and continues. Treat
 <code>paperclip</code> results as advisory until the upstream service
 stabilises.</li>

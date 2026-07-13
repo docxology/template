@@ -1,4 +1,4 @@
-"""Tests for benchmark_support (no mocks; real timing + real infra API)."""
+"""Tests for benchmark_support (real diagnostics + deterministic artifacts)."""
 
 from __future__ import annotations
 
@@ -48,26 +48,19 @@ def test_payload_has_expected_infra_fields() -> None:
     assert payload["rubric"]["score"] == payload["rubric"]["max_score"]
     assert set(payload["checks"]) == set(payload["rubric"]["dimensions"])
     assert len(payload["measurements"]) == len(DEFAULT_INPUT_SIZES)
+    assert all("best_seconds" not in row for row in payload["measurements"])
+    assert payload["timing_policy"]
     # The markdown table comes from infrastructure.benchmark.scores_to_markdown.
     assert payload["markdown"].startswith("| Project |")
     assert "template_code_project" in payload["markdown"]
 
 
 def test_payload_is_deterministic_across_runs() -> None:
-    """Structural payload (minus timing) is identical run to run."""
+    """The full canonical payload is identical run to run."""
     first = benchmark_payload(run_quadratic_benchmark())
     second = benchmark_payload(run_quadratic_benchmark())
 
-    def _strip_timing(payload: dict) -> dict:
-        clone = json.loads(json.dumps(payload))
-        for measurement in clone["measurements"]:
-            measurement.pop("best_seconds", None)
-        clone.pop("markdown", None)
-        return clone
-
-    assert _strip_timing(first) == _strip_timing(second)
-    assert first["checks"] == second["checks"]
-    assert first["rubric"] == second["rubric"]
+    assert first == second
 
 
 def test_write_benchmark_report_emits_json(tmp_path: Path) -> None:
@@ -80,3 +73,6 @@ def test_write_benchmark_report_emits_json(tmp_path: Path) -> None:
     assert loaded["passed"] is True
     assert loaded["project"] == "template_code_project"
     assert len(loaded["measurements"]) == len(DEFAULT_INPUT_SIZES)
+    first_bytes = written.read_bytes()
+    write_benchmark_report(run_quadratic_benchmark(), out_path)
+    assert written.read_bytes() == first_bytes

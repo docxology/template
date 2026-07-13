@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-26T07:10:07.763982",
+  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -22,19 +22,19 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 0.96,
+            "size_mb": 0.94,
             "readable": true
           },
           "pdf": {
             "exists": true,
-            "files": 10,
+            "files": 11,
             "size_mb": 1.22,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 14,
+            "files": 15,
             "size_mb": 0.31,
             "readable": true,
             "optional": false
@@ -42,7 +42,7 @@
           "slides": {
             "exists": true,
             "files": 94,
-            "size_mb": 1.88,
+            "size_mb": 1.87,
             "readable": true,
             "optional": false
           },
@@ -63,20 +63,22 @@
           "reports": {
             "exists": true,
             "files": 9,
-            "size_mb": 0.1,
+            "size_mb": 0.12,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "logs": {
@@ -90,20 +92,20 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 10,
+          "file_count": 11,
           "size_mb": "1.22",
           "largest_file": "template_madlib_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 14,
+          "file_count": 15,
           "size_mb": "0.31",
           "largest_file": "index.html"
         },
         "slides": {
           "exists": true,
           "file_count": 94,
-          "size_mb": "1.88",
+          "size_mb": "1.87",
           "largest_file": "03_results_slides.pdf"
         },
         "figures": {
@@ -121,18 +123,20 @@
         "reports": {
           "exists": true,
           "file_count": 9,
-          "size_mb": "0.10",
+          "size_mb": "0.12",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "llm": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "logs": {
           "exists": false,
@@ -141,19 +145,19 @@
         }
       },
       "file_counts": {
-        "pdf": 10,
-        "web": 14,
+        "pdf": 11,
+        "web": 15,
         "slides": 94,
         "figures": 10,
         "data": 5,
-        "reports": 9
+        "reports": 9,
+        "simulations": 0,
+        "llm": 0
       },
-      "total_size_mb": 4.475080490112305,
+      "total_size_mb": 4.501639366149902,
       "issues_by_severity": {
         "critical": [],
         "warning": [
-          "Directory 'simulations/' missing or empty",
-          "Directory 'llm/' missing or empty",
           "Directory 'logs/' missing or empty"
         ],
         "info": []
@@ -161,8 +165,8 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 1.2193069458007812
+      "files": 11,
+      "size_mb": 1.2228021621704102
     },
     "figures": {
       "files": 10,
@@ -170,7 +174,7 @@
     },
     "data": {
       "files": 5,
-      "size_mb": 0.14057540893554688
+      "size_mb": 0.14061927795410156
     }
   },
   "summary": {

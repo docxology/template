@@ -26,12 +26,12 @@ template/
 │   ├── published/               # Non-rendered published (symlinked, private)
 │   ├── archive/                 # Non-rendered retired (symlinked, private)
 │   └── other/                   # Non-rendered misc (symlinked, private)
-├── docs/ (17 top-level areas, 380+ markdown files per live counter)
-├── tests/                       # Infra suites (470+ files)
+├── docs/ (18 top-level areas, 390+ markdown files per live counter)
+├── tests/                       # Infra suites (504+ files)
 ├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage
 ```
-See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/generate_active_projects_doc.py`).
+See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/docgen/active_projects.py`).
 
 

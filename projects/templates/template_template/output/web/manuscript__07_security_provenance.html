@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="security-and-provenance">Security and Provenance</h1>
 <p>Research integrity requires more than reproducibility; it requires
 verifiable authorship. In an era of generative AI, automated scraping,
@@ -218,7 +222,8 @@ Metadata Platform) packet:</p>
 <li><code>/Creator</code>: Pipeline identifier</li>
 <li><code>/Producer</code>: Module path
 (<code>infrastructure.steganography</code>)</li>
-<li><code>/CreationDate</code>: UTC timestamp in ISO 8601 format</li>
+<li><code>/CreationDate</code>: UTC timestamp in <code>ISO 8601</code>
+format</li>
 <li><code>/Author</code>: From <code>config.yaml</code></li>
 <li><code>/Title</code>: From <code>config.yaml</code></li>
 <li>Custom fields: DOI, ORCID, repository URL</li>
@@ -251,11 +256,11 @@ operations.</p>
 <p>A representative overlay text string takes the following form:</p>
 <pre><code>template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | pipeline: v2.0.0 | project: template</code></pre>
 <p>This single line, tiled across each page at 3–5% opacity, encodes the
-complete build provenance chain: the system identifier, ISO 8601 build
-timestamp, short Git commit hash, pipeline version, and project name.
-Together these fields allow a verifier to reconstruct—from the watermark
-alone—which version of the code, at which moment in time, produced the
-document.</p>
+complete build provenance chain: the system identifier,
+<code>ISO 8601</code> build timestamp, short Git commit hash, pipeline
+version, and project name. Together these fields allow a verifier to
+reconstruct—from the watermark alone—which version of the code, at which
+moment in time, produced the document.</p>
 <h3 id="layer-4-qr-code-injection">Layer 4: QR Code Injection</h3>
 <p>An optional QR code is generated containing a URL pointing to the
 repository (e.g., <code>github.com/docxology/template</code>). The QR
@@ -267,7 +272,7 @@ Orchestrator</h2>
 <code>secure_run.sh</code>, a Bash script that wraps the standard
 <code>run.sh</code> pipeline with post-processing steganography:</p>
 <ol type="1">
-<li>Execute the standard YAML-declared pipeline (14 stages; default full
+<li>Execute the standard YAML-declared pipeline (16 stages; default full
 10) pipeline for the target project.</li>
 <li>The <code>secure_run.sh</code> script invokes
 <code>SteganographyProcessor</code>.</li>
@@ -390,5 +395,6 @@ the code that generated it is versioned via SWHID. This combination
 satisfies the Katz et al. [katz2021software] software citation
 principles’ requirement that software used in research be independently
 citable and permanently accessible.</p>
+</main>
 </body>
 </html>

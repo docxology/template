@@ -63,7 +63,7 @@ def _match_any(substrings: tuple[str, ...], el: str) -> bool:
 RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     _rule(
         ("multiple distinct verification passes",),
-        lambda lower, _el: (("pass 1" in lower and "pass 2" in lower) or "three-pass" in lower or "pass 3" in lower),
+        lambda lower, _el: ("pass 1" in lower and "pass 2" in lower) or "three-pass" in lower or "pass 3" in lower,
     ),
     _rule(
         ("hand-edit output",),
@@ -91,8 +91,9 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("includes manuscript validation approach",),
-        lambda lower, _el: "manuscript" in lower
-        and any(w in lower for w in ("validation", "markdown", "prerender", "validate")),
+        lambda lower, _el: (
+            "manuscript" in lower and any(w in lower for w in ("validation", "markdown", "prerender", "validate"))
+        ),
     ),
     _rule(
         ("does not jump straight to unrelated code development",),
@@ -157,9 +158,9 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     _rule(
         ("does not edit manuscript directly",),
         lambda lower, _el: (
-            ("does not edit" in lower or "do not modify" in lower or "not modify" in lower) and "manuscript" in lower
-        )
-        or ("read-only" in lower and "route edits" in lower),
+            (("does not edit" in lower or "do not modify" in lower or "not modify" in lower) and "manuscript" in lower)
+            or ("read-only" in lower and "route edits" in lower)
+        ),
     ),
     _rule(
         ("stage map research to paper",),
@@ -179,8 +180,9 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("academic workflow choices",),
-        lambda lower, _el: "academic" in lower
-        and any(token in lower for token in ("research", "paper", "review", "pipeline")),
+        lambda lower, _el: (
+            "academic" in lower and any(token in lower for token in ("research", "paper", "review", "pipeline"))
+        ),
     ),
     _rule(
         ("deep-research", "academic-paper", "reviewer"),
@@ -204,8 +206,10 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("generated output as fix",),
-        lambda lower, _el: ("do not edit" in lower or "generated output is evidence" in lower)
-        and ("output/" in lower or "generated output" in lower),
+        lambda lower, _el: (
+            ("do not edit" in lower or "generated output is evidence" in lower)
+            and ("output/" in lower or "generated output" in lower)
+        ),
     ),
     _rule(
         ("does not invent coverage",),
@@ -225,8 +229,13 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("logic in src not scripts",),
-        lambda lower, _el: ("src/" in lower or ("logic in" in lower and "src" in lower))
-        and ("thin orchestrator" in lower or ("script" in lower and ("orchestrat" in lower or "coordinates" in lower))),
+        lambda lower, _el: (
+            ("src/" in lower or ("logic in" in lower and "src" in lower))
+            and (
+                "thin orchestrator" in lower
+                or ("script" in lower and ("orchestrat" in lower or "coordinates" in lower))
+            )
+        ),
     ),
     _rule(
         ("thin orchestrator",),
@@ -246,8 +255,9 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("places code under infrastructure/",),
-        lambda lower, _el: "infrastructure/" in lower
-        and any(w in lower for w in ("package", "layout", "module", "under")),
+        lambda lower, _el: (
+            "infrastructure/" in lower and any(w in lower for w in ("package", "layout", "module", "under"))
+        ),
     ),
     _rule(
         ("type hints and get_logger",),
@@ -267,8 +277,9 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("read live code", "not invent apis"),
-        lambda lower, _el: ("read" in lower or "live" in lower)
-        and ("invent" in lower or "ground" in lower or "signature" in lower),
+        lambda lower, _el: (
+            ("read" in lower or "live" in lower) and ("invent" in lower or "ground" in lower or "signature" in lower)
+        ),
     ),
     _rule(
         ("includes verification commands",),

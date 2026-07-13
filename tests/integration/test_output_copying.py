@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.core.files.cleanup import clean_final_output_directory, clean_output_directory
+
 # Add repo root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
@@ -33,7 +35,6 @@ assert spec.loader is not None
 copy_outputs = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(copy_outputs)
 
-clean_output_directory = copy_outputs.clean_output_directory
 copy_final_deliverables = copy_outputs.copy_final_deliverables
 validate_copied_outputs = copy_outputs.validate_copied_outputs
 validate_output_structure = copy_outputs.validate_output_structure
@@ -137,6 +138,23 @@ class TestCleanOutputDirectory:
 
         assert result is None
         assert output_dir.exists()
+
+    def test_final_output_clean_preserves_publication_sidecars(self, tmp_path):
+        """Rerenders must not erase receipts produced by separate publishing workflows."""
+        output_dir = tmp_path / "output"
+        release_bundle = output_dir / "release_bundle"
+        release_bundle.mkdir(parents=True)
+        (release_bundle / "RELEASE_RECEIPT.json").write_text("{}", encoding="utf-8")
+        (output_dir / "swh_repo_url.txt").write_text("https://archive.softwareheritage.org/", encoding="utf-8")
+        (output_dir / "upload_receipts.json").write_text("{}", encoding="utf-8")
+        (output_dir / "stale.txt").write_text("stale", encoding="utf-8")
+
+        clean_final_output_directory(output_dir)
+
+        assert (release_bundle / "RELEASE_RECEIPT.json").is_file()
+        assert (output_dir / "swh_repo_url.txt").is_file()
+        assert (output_dir / "upload_receipts.json").is_file()
+        assert not (output_dir / "stale.txt").exists()
 
 
 class TestCopyFinalDeliverables:

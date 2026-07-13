@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -183,25 +183,42 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:methodology">Methodology: The Refinery Pipeline</h1>
-<p>The refinery pipeline consists of 5 canonical stages, each mapping a
-metallurgical operation to a manuscript-composition operation. The
-pipeline is implemented in <code>src/refinery.py</code> and validated by
-<code>src/purity.py</code>. The methods surface now has four coupled
-layers: the refinery stages, the mega-madlib token plan, the generated
-formalism registry, and the scholarship boundary that determines which
-claims may be generalized beyond this exemplar.</p>
-<p>Methodologically, the paper treats composition as part of a research
-compendium: authored sources, executable scripts, generated reports,
-figures, and rendered manuscript outputs are separated but linked
-[marwick2018packaging]. That design follows the executable-paper and
-notebook traditions in which narrative is coupled to runnable analysis
-rather than copied from it [leisch2002sweave; rule2019jupyter]. The
-novelty claimed here is narrower: the token-level narrative choices are
-deterministic and provenance-bearing, not that a template can validate
-scientific truth.</p>
+<h2 id="research-design">Research design</h2>
+<p>We conducted a deterministic, artifact-based methods demonstration.
+The research object is one executable manuscript compendium comprising
+authored configuration and Markdown, project source code, generated data
+and reports, registered figures, and rendered publication files. The
+unit of transformation is a refinery stage; the unit of lexical
+composition is a configured token slot; the unit of evidentiary
+evaluation is a registered claim or gate. No human participants,
+stochastic sampling, trained model, or inferential statistical test is
+involved.</p>
+<p>The method asks whether a metallurgical stage structure can be
+implemented as an inspectable manuscript workflow. It does
+<strong>not</strong> test whether the resulting purity values predict
+reader judgments, scientific validity, or editorial acceptance.
+Accordingly, all reported quantities are properties of this executable
+exemplar: stage outputs, token selections, registry contents, and
+validator outcomes.</p>
+<p>The implementation has four coupled layers: (1) a 5-stage refinery
+model, (2) a deterministic mega-madlib token plan, (3) source-owned
+formalisms and evidence registries, and (4) validation gates that
+constrain certification language. This separation follows
+research-compendium practice, in which narrative, code, data,
+environment, and outputs remain distinct but linked
+[marwick2018packaging]. It also follows executable-paper and notebook
+traditions in coupling narrative to runnable analysis rather than
+copying results into prose [leisch2002sweave; rule2019jupyter]. The
+narrower contribution here is provenance at the token and claim levels;
+the workflow does not purport to validate scientific truth.</p>
+<h2 id="source-domain-construction-and-analogy-boundary">Source-domain
+construction and analogy boundary</h2>
 <p>Structured reporting guidelines provide the closest scholarly
 analogue for the gate layer, but they also set its limit. CONSORT,
 STROBE, PRISMA, ARRIVE, and the EQUATOR Network define field-specific
@@ -213,23 +230,44 @@ evidence registration, and render validation play a similar internal
 role: they make omissions visible and bind declarations to artifacts.
 They do not test whether an external study was designed well, executed
 correctly, or substantively true.</p>
-<p>The metallurgical side of the method is deliberately historical
-rather than modern-industrial. Pre-1800 sources support the relational
-structure - extraction, smelting or refining, assay,
-parting/cupellation, fineness, and public marking - but not a claim that
-all regions used the same sequence or that early practitioners held
-modern chemical theories. Pliny is useful for extraction and touchstone
-context; Biringuccio and Agricola are useful for staged metallurgical
-operations; Badcock’s <em>Touch-stone</em> and the Goldsmiths’ Company
-chronology are useful for standards, weights, statutes, and marks;
-Cramer is useful for eighteenth-century assay discipline
-[pliny_natural_history_33; biringuccio_pirotechnia_1540;
-agricola_de_re_metallica_1556; badcock_touchstone_1678;
-goldsmiths_hallmarking_history; cramer_assaying_metals_1741]. The
-normalized five-stage pipeline below is therefore an analogy-preserving
-abstraction, not a historical claim that “ore -&gt; smelting -&gt;
-assaying -&gt; cupellation -&gt; certification” was a universal pre-1800
-production recipe.</p>
+<p>The source domain was constructed from pre-1800 descriptions of
+extraction, smelting or refining, assay, parting/cupellation, fineness,
+and public marking. Pliny supplies extraction and touchstone context;
+Biringuccio and Agricola describe staged metallurgical operations;
+Badcock and the Goldsmiths’ Company chronology document standards,
+weights, statutes, and marks; and Cramer presents assay as a disciplined
+relation between theory and practice [pliny_natural_history_33;
+biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
+badcock_touchstone_1678; goldsmiths_hallmarking_history;
+cramer_assaying_metals_1741].</p>
+<p>We normalized these historically plural practices into a five-stage
+relational model. The inclusion criterion was functional relevance to
+one of five target-domain operations: acquiring draft material, removing
+evident defects, testing claims, resolving document integrity, or
+recording a terminal validation state. The ordering preserves the
+refinement relation needed by the target workflow; it is not evidence
+that every historical workshop used this sequence or modern chemical
+theory. The analogy therefore transfers relations among separation,
+test, refinement, and marking—not regulatory authority, material
+equivalence, or empirical measures of prose quality
+[gentner1983structure; hesse1966models].</p>
+<h2 id="inputs-and-source-ownership">Inputs and source ownership</h2>
+<p>The run begins from three authored inputs:
+<code>manuscript/config.yaml</code>, the Markdown section shells in
+<code>manuscript/</code>, and executable functions in <code>src/</code>.
+Configuration owns the seed, lexicon inventories, slot declarations,
+contribution claims, audit rules, and security-assay rows. Source
+modules own stage calculations, token selection, formalism records,
+evidence aggregation, and figure specifications. Markdown owns
+interpretation and cross-references but consumes computed values only
+through generated variables.</p>
+<p>Generated files are observations, not editing surfaces. The analysis
+writes the refinery result, token plan, claim-support registry,
+integrity summaries, and figure-quality records; manuscript hydration
+then resolves variables into disposable Markdown. This ownership rule
+prevents a reported number or selected phrase from being corrected only
+in the rendered paper while its computational source remains
+unchanged.</p>
 <h2 id="stage-definitions">Stage definitions</h2>
 <table>
 <colgroup>
@@ -286,31 +324,41 @@ production recipe.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="purity-progression">Purity progression</h2>
+<h2 id="refinery-model-and-purity-measure">Refinery model and purity
+measure</h2>
 <p>The purity sequence across all stages is: 0.100000, 0.375000,
 0.750000, 0.916700, 0.999000, 1.000000</p>
-<p>Purity is strictly increasing — enforced by
-<code>assert_monotone_increase()</code> which raises
-<code>ValueError</code> if any stage’s output purity does not exceed its
-input. Formally, for stages <span class="math inline">\(s_1, \ldots,
-s_n\)</span> with input purity <span
-class="math inline">\(p_{\text{in}}^{(i)}\)</span> and output purity
-<span class="math inline">\(p_{\text{out}}^{(i)}\)</span>:</p>
+<p>Each stage record contains an order, a metallurgical operation, its
+manuscript analogue, an input purity, and an output purity. The
+canonical values are design parameters declared in
+<code>src/refinery.py</code>; they are not estimated from a corpus or
+calibrated against external ratings. Their methodological role is to
+create a transparent ordinal progression on the bounded interval <span
+class="math inline">\([0,1]\)</span>.</p>
+<p>The primary invariants are strict monotonicity, sequential stage
+order, and adjacent-state continuity.
+<code>assert_monotone_increase()</code> raises <code>ValueError</code>
+if a state fails to exceed its predecessor; <code>run_refinery()</code>
+also rejects empty pipelines, nonsequential order, and any stage whose
+input differs from the preceding output. For stages <span
+class="math inline">\(s_1, \ldots, s_n\)</span>:</p>
 <p><span class="math display">\[
 p_{\text{out}}^{(i)} &gt; p_{\text{in}}^{(i)} \quad \text{and} \quad
 p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
 \ldots, n-1\}
 \]</span></p>
-<p>The full purity progression is shown in <span class="citation"
-data-cites="fig:purity_progression">[@fig:purity_progression]</span>
-(see <span class="citation"
-data-cites="sec:results">[@sec:results]</span>).</p>
+<p>The reverse-assay function <code>stages_to_target()</code> returns
+the shortest ordered prefix whose terminal output reaches a requested
+purity. Prefix restriction is essential: later stages depend on earlier
+states and cannot be selected as an unordered set. The full progression
+is reported in [fig:purity_progression] (see [sec:results]). Because the
+values are constructed, the analysis is descriptive and deterministic;
+no uncertainty interval or significance test is appropriate.</p>
 <h2 id="formalism-registry">Formalism registry</h2>
 <p>The formal layer is generated from <code>src/formalisms.py</code>,
-not hand-numbered prose. <span class="citation"
-data-cites="tbl:formalism_registry">[@tbl:formalism_registry]</span>
-lists the source evidence for each equation, and the equation blocks
-below are auto-numbered by the renderer.</p>
+not hand-numbered prose. [tbl:formalism_registry] lists the source
+evidence for each equation, and the equation blocks below are
+auto-numbered by the renderer.</p>
 <table id="tbl:formalism_registry">
 <caption>Source-owned formalism registry.</caption>
 <colgroup>
@@ -331,50 +379,43 @@ below are auto-numbered by the renderer.</p>
 <tr>
 <td>F1</td>
 <td>Purity functional</td>
-<td><span class="citation"
-data-cites="eq:purity_functional">[@eq:purity_functional]</span></td>
+<td>[eq:purity_functional]</td>
 <td><code>src/purity.py::format_purity</code></td>
 </tr>
 <tr>
 <td>F2</td>
 <td>Monotone refinement</td>
-<td><span class="citation"
-data-cites="eq:monotone_refinery">[@eq:monotone_refinery]</span></td>
+<td>[eq:monotone_refinery]</td>
 <td><code>src/purity.py::assert_monotone_increase</code></td>
 </tr>
 <tr>
 <td>F3</td>
 <td>Token-selection digest</td>
-<td><span class="citation"
-data-cites="eq:token_digest">[@eq:token_digest]</span></td>
+<td>[eq:token_digest]</td>
 <td><code>src/composition.py::_choose_value</code></td>
 </tr>
 <tr>
 <td>F4</td>
 <td>Claim-support fraction</td>
-<td><span class="citation"
-data-cites="eq:claim_support">[@eq:claim_support]</span></td>
+<td>[eq:claim_support]</td>
 <td><code>src/evidence.py::EvidenceRegistry.support_rate</code></td>
 </tr>
 <tr>
 <td>F5</td>
 <td>Integrity vector</td>
-<td><span class="citation"
-data-cites="eq:integrity_vector">[@eq:integrity_vector]</span></td>
+<td>[eq:integrity_vector]</td>
 <td><code>manuscript/config.yaml#gold_refinement.audit_rules</code></td>
 </tr>
 <tr>
 <td>F6</td>
 <td>Certification predicate</td>
-<td><span class="citation"
-data-cites="eq:certification_predicate">[@eq:certification_predicate]</span></td>
+<td>[eq:certification_predicate]</td>
 <td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
 </tr>
 <tr>
 <td>F7</td>
 <td>Adversarial assay</td>
-<td><span class="citation"
-data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span></td>
+<td>[eq:adversarial_assay]</td>
 <td><code>src/security_assay.py::build_security_assay</code></td>
 </tr>
 </tbody>
@@ -442,7 +483,8 @@ validator(a) \land boundary(a)
 <p>The adversarial assay defines scope and evidence requirements; it is
 not proof of compliance or live scan findings. Source:
 <code>src/security_assay.py::build_security_assay</code>.</p>
-<h2 id="token-selection">Token selection</h2>
+<h2 id="deterministic-token-composition">Deterministic token
+composition</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
 <p><span class="math display">\[
@@ -450,13 +492,23 @@ categories using a deterministic digest:</p>
 \text{slot} \mid \text{category} \mid \text{ordinal} \mid
 \text{inventory}\right)[:12], 16\right) \mod n
 \]</span></p>
-<p>where <span class="math inline">\(n\)</span> is the size of the
-lexicon category inventory. Selected metallurgical terms: assaying,
-parting, smelting. Selected manuscript terms: evidence, evidence. The
-same digest rule is formalized in <span class="citation"
-data-cites="eq:token_digest">[@eq:token_digest]</span>, while the gate
-vocabulary for this section binds evidence validation, figure registry
-check, and citation validation to concrete validation surfaces.</p>
+<p>where <span class="math inline">\(n\)</span> is the inventory size.
+For each declared slot, the procedure concatenates the seed, slot name,
+category, one-based ordinal, and the complete ordered inventory; hashes
+the UTF-8 string; converts the first 12 hexadecimal characters to an
+integer; and reduces it modulo <span class="math inline">\(n\)</span>.
+Including the complete inventory makes selection sensitive to both
+membership and order. Replaying the same configuration reproduces the
+same plan; changing the seed, slot specification, or inventory may
+change it.</p>
+<p>Each selected value is recorded with its variable name, slot,
+category, section, ordinal, and configuration path. This record permits
+exact replay and source tracing but does not imply that the selected
+synonym is semantically superior. Selected metallurgical terms are
+assaying, parting, and smelting; selected manuscript terms are evidence
+and evidence. [eq:token_digest] formalizes the rule, while evidence
+validation, figure registry check, and citation validation name the
+corresponding validation surfaces.</p>
 <h2 id="config-owned-lexicon">Config-owned lexicon</h2>
 <table>
 <colgroup>
@@ -514,7 +566,7 @@ check, and citation validation to concrete validation surfaces.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="karat-grading">Karat grading</h2>
+<h2 id="derived-grading-vocabulary">Derived grading vocabulary</h2>
 <p>Karat grades map purity fractions to a gold-fineness vocabulary used
 here as an analogy surface. The pre-1800 evidence supports fineness as a
 regulated testing and marking problem, but not the modern nine-nines
@@ -528,14 +580,13 @@ marsden_house_2006; lbma_good_delivery_rules]:</p>
 <li>24K = 99.9% (cupellation stage)</li>
 <li>Nine-nines = 99.9999999% (certification stage)</li>
 </ul>
-<p>The mapping is implemented in
-<code>src/purity.py::karat_for_purity()</code>. The final nine-nines
-target is a deliberately stringent local certification predicate, not an
-assertion that all gold markets or manuscript-quality regimes use that
-threshold. The karat grading chart is shown in <span class="citation"
-data-cites="fig:karat_grading">[@fig:karat_grading]</span> (see <span
-class="citation" data-cites="sec:results">[@sec:results]</span>).</p>
-<h2 id="pipeline-phases">Pipeline phases</h2>
+<p><code>src/purity.py::karat_for_purity()</code> assigns the highest
+configured grade whose threshold does not exceed the stage purity. The
+nine-nines label is a deliberately stringent local predicate. It is
+neither a continuous measure of manuscript quality nor an assertion
+about a universal gold-market threshold. The grading chart appears in
+[fig:karat_grading] (see [sec:results]).</p>
+<h2 id="execution-procedure">Execution procedure</h2>
 <table>
 <colgroup>
 <col style="width: 15%" />
@@ -615,14 +666,31 @@ claim boundaries</td>
 </tr>
 </tbody>
 </table>
-<p>The pipeline table is intentionally operational rather than
-decorative: a fork that changes the stages must update the source
-function, generated variables, figures, and validation gates
-together.</p>
-<h2 id="implementation-trace">Implementation trace</h2>
-<p>The implementation circuit shown in <span class="citation"
-data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
-is the method’s wiring diagram. It distinguishes three ownership layers.
+<p>For each run, the procedure is:</p>
+<ol type="1">
+<li>Parse and validate the configuration, including lexicon categories,
+slots, claims, audit rules, and policy declarations.</li>
+<li>Execute the canonical stage sequence and reject discontinuous,
+nonmonotone, empty, or misordered refinery definitions.</li>
+<li>Generate the token plan and record every selection with its
+configuration provenance.</li>
+<li>Build claim-support, integrity, formalism, adversarial-assay, and
+figure registries from their source owners.</li>
+<li>Write analysis artifacts and manuscript variables, then hydrate the
+Markdown section shells.</li>
+<li>Render publication formats and run reference, evidence, figure, and
+document validators.</li>
+<li>Permit certification language only when the required local
+predicates and gates pass.</li>
+</ol>
+<p>The phase table identifies the input, transformation, output, and
+guard for each step. A fork that modifies a stage or claim must update
+its source definition, generated variables, visualizations, and
+validators together.</p>
+<h2 id="traceability-and-artifact-lineage">Traceability and artifact
+lineage</h2>
+<p>The implementation circuit shown in [fig:implementation_circuit] is
+the method’s wiring diagram. It distinguishes three ownership layers.
 First, authored sources own intent: config declares vocabulary and
 claims, <code>src/</code> owns computation, and the claim ledger
 registers evidence facts. Second, generated artifacts own observation:
@@ -638,7 +706,26 @@ prose [moreau2013prov; belhajjame2015ontologies].</p>
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
 consequences.</p>
-<h2 id="adversarial-assay-layer">Adversarial assay layer</h2>
+<h2 id="evaluation-and-acceptance-criteria">Evaluation and acceptance
+criteria</h2>
+<p>Evaluation is criterion-based rather than comparative. The run is
+assessed against predeclared local invariants: complete token hydration,
+valid stage ordering and monotonicity, registered claim support,
+resolvable citations and cross-references, registry-aligned figures,
+successful rendering, and explicit security-claim boundaries.
+[eq:integrity_vector] retains these outcomes as a vector so one strong
+surface cannot compensate for a failed required gate. [eq:claim_support]
+reports the proportion of locally registered contribution claims with
+resolvable evidence pointers; it does not score the truth or importance
+of those claims.</p>
+<p>The terminal predicate in [eq:certification_predicate] requires the
+configured final purity threshold and successful required gates.
+Consequently, “certified” means internally consistent and reproducibly
+generated under this project’s declared rules. It does not mean peer
+reviewed, externally replicated, historically authoritative, secure, or
+compliant with a reporting standard. Detailed probes and audit rules are
+reported in [sec:evaluation].</p>
+<h3 id="adversarial-assay">Adversarial assay</h3>
 <p>The implementation trace handles accidental drift: missing tokens,
 unsupported claims, malformed citations, stale figures, or broken
 renders. A security assay adds a different question: could the
@@ -650,19 +737,17 @@ boundary-setting standards rather than proof of compliance
 [nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
 sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
 cisa_secure_by_design].</p>
-<p>This pass implements that layer as source-owned rows in
-<code>gold_refinement.security_assay</code> and generated variables from
-<code>src/security_assay.py</code>. It does not run Codex Security or
-Deep Security Scan, and it does not report vulnerability findings.
-Instead, <span class="citation"
-data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span>
-requires every adversarial assay row to name a threat, standard or
-guidance source, local evidence surface, validator, and claim boundary
-before certification language is allowed to expand beyond ordinary
-template gates. The generated assay table appears in <span
-class="citation"
-data-cites="tbl:security_assay">[@tbl:security_assay]</span>.</p>
-<h2 id="scientific-integrity-model">Scientific integrity model</h2>
+<p>The assay is implemented as source-owned rows in
+<code>gold_refinement.security_assay</code> and generated records from
+<code>src/security_assay.py</code>. Each row must name a threat,
+standard or guidance source, local evidence surface, validator, and
+claim boundary, as specified by [eq:adversarial_assay] and reported in
+[tbl:security_assay]. This study did not run Codex Security or Deep
+Security Scan and reports no vulnerability findings. Completeness of the
+assay schema therefore supports scope disclosure, not security
+compliance.</p>
+<h3 id="scientific-integrity-risk-model">Scientific-integrity risk
+model</h3>
 <p>The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
 names the failure class, severity, detectability, evidence surface,
@@ -754,10 +839,12 @@ pass reports 9 integrity dimensions; highest residual risk is I4
 </tr>
 </tbody>
 </table>
-<p>The residual-risk score is deliberately simple: high severity and low
-detectability raise priority. The score is not a universal risk model;
-it is a local audit heuristic used to decide where a fork must add
-validators before expanding claims.</p>
+<p>The residual-risk score is an ordinal prioritization heuristic:
+higher severity and lower detectability raise review priority. It was
+not fitted to incident data, validated against external judgments, or
+designed for comparison across projects. Its sole use is to identify
+where this exemplar—or a fork—needs stronger ownership, evidence, or
+validation before expanding a claim.</p>
 <table id="tbl:integrity_owners">
 <caption>Integrity dimensions by owning surface.</caption>
 <thead>
@@ -810,5 +897,38 @@ support rates, and figure labels belong to regenerated reports and
 registries; the manuscript consumes them through variables. Authored
 prose may interpret those values, but it should not silently restate
 them as hand-maintained facts.</p>
+<h3 id="multi-objective-purity">Multi-objective purity</h3>
+<p>Scalar stage purity is retained only as the state variable of the
+refinery analogy. <code>src/purity.py::PurityVector</code> separately
+records stage completion, claim support, token provenance, and figure
+quality on <span class="math inline">\([0,1]\)</span>. The vector
+exposes its weakest dimension and a conjunctive all-complete predicate
+but intentionally defines no weighted average. This prevents a perfect
+render or terminal stage value from numerically compensating for
+unsupported claims or missing provenance. Weighting these dimensions
+would require an external validation study and is outside the present
+design.</p>
+<h2 id="reproducibility-and-validity-safeguards">Reproducibility and
+validity safeguards</h2>
+<p>Determinism is assessed by exact replay from the same ordered
+configuration and source revision. Provenance is assessed by the
+existence of a path from each reported token, claim, equation, and
+figure to an owning source and generated record. Negative controls in
+the test suite exercise malformed configuration and invalid refinery
+states; figure checks assess file presence, registry parity, dimensions,
+nonblank content, and color variance. Environment and regeneration
+details are given in [sec:reproducibility].</p>
+<p>Four validity limits govern interpretation. First, <strong>construct
+validity</strong> is limited because purity is a designed workflow
+state, not a validated measure of writing quality. Second,
+<strong>external validity</strong> is limited to this exemplar until
+other domains implement their own mappings and validators. Third,
+<strong>historical validity</strong> is bounded by the normalized
+analogy and should not be read as a universal account of metallurgical
+practice. Fourth, <strong>criterion validity</strong> is local: passing
+gates demonstrates source ownership and internal consistency, not
+correctness of domain claims. These limits are part of the method’s
+acceptance rule, not qualifications added after results are known.</p>
+</main>
 </body>
 </html>

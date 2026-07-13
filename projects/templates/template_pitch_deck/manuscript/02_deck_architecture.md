@@ -8,8 +8,8 @@ model shared by both renderers:
 - `Slide` — one slide's title, bullets, an optional speaker-notes string, an
   optional local figure path, and a `kind` (`title`, `section`, or `content`).
 - `DeckContent` — a deck title/subtitle plus an ordered tuple of `Slide`.
-- `SlideBudget` — the three published lengths (`SHORT` ≤ 10 slides,
-  `MEDIUM` ≤ 22, `LONG` ≤ 45) and `filter_deck_for_budget`, a pure function
+- `SlideBudget` — the three published maximum lengths (`SHORT` ≤ 11 slides,
+  `MEDIUM` ≤ 38, `LONG` ≤ 58) and `filter_deck_for_budget`, a pure function
   that truncates a deck to a budget without mutating slide order or content.
 
 ## Two renderers, one model
@@ -37,7 +37,7 @@ PPTX slide count.
 `projects/templates/template_pitch_deck/src/` holds only pitch-deck-domain
 code — loading `manuscript/deck_content_*.yaml` into `DeckContent` objects,
 resolving `{{TOKEN}}` values, and linting for cliché — never layout/drawing
-code. `scripts/render_decks.py` is the thin orchestrator that ties content
+code. `scripts/20_render_decks.py` is the thin orchestrator that ties content
 loading, token resolution, cliché linting, and the two infra renderers
 together into the six published artifacts under
 `output/{pdf,pptx}/`.

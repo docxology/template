@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1
 id="evaluation-gate-criteria-qa-probes-and-failure-discovery">Evaluation:
 Gate Criteria, QA Probes, and Failure Discovery</h1>
@@ -209,7 +213,7 @@ surface that validation inspected?</p>
 <figure id="fig:quality-gate-matrix">
 <img src="../figures/quality_gate_matrix.png"
 alt="Quality gate matrix" />
-<figcaption aria-hidden="true">Quality gate matrix</figcaption>
+<figcaption>Quality gate matrix</figcaption>
 </figure>
 <h2 id="evaluation-criteria">Evaluation Criteria</h2>
 <table>
@@ -248,7 +252,7 @@ output/data/token_inventory.json.</td>
 <td>Figure registry integrity</td>
 <td>Every referenced figure label is present in
 ../figures/figure_registry.json.</td>
-<td>scripts/04_validate_output.py figure registry check.</td>
+<td>scripts/pipeline/stage_04_validate.py figure registry check.</td>
 <td><code>validation</code></td>
 </tr>
 <tr>
@@ -262,7 +266,7 @@ registry.</td>
 <td>Copied-output readiness</td>
 <td>PDF, HTML, slides, figures, data, and reports copy into
 output/templates/template_madlib.</td>
-<td>scripts/05_copy_outputs.py output statistics.</td>
+<td>scripts/pipeline/stage_05_copy.py output statistics.</td>
 <td><code>copy</code></td>
 </tr>
 <tr>
@@ -408,5 +412,6 @@ config, source, test, validator, and claim-ledger obligations.</td>
 </tr>
 </tbody>
 </table>
+</main>
 </body>
 </html>

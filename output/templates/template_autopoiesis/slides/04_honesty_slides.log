@@ -2,10 +2,10 @@ This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded forma
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_autopoiesis/o
+**<home>/Documents/GitHub/template/projects/templates/template_autopoiesis/o
 utput/slides/04_honesty_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
+(<home>/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
 tput/slides/04_honesty_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1217,7 +1217,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count400
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
+(<home>/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
 tput/slides/04_honesty_slides.aux)
 \openout1 = `04_honesty_slides.aux'.
 
@@ -1580,12 +1580,12 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
+(<home>/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
 tput/slides/04_honesty_slides.nav)
 \openout4 = `04_honesty_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
+(<home>/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
 tput/slides/04_honesty_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 25.
@@ -1619,7 +1619,7 @@ Overfull \vbox (2696.71817pt too high) detected at line 466
 \openout8 = `04_honesty_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
+(<home>/Documents/GitHub/template/projects/templates/template_autopoiesis/ou
 tput/slides/04_honesty_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1635,5 +1635,5 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1104b,620s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <home>/Documents/GitHub/template/projects/templates/templa
 te_autopoiesis/output/slides/04_honesty_slides.pdf (2 pages).

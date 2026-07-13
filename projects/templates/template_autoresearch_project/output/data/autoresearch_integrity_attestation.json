@@ -69,26 +69,26 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "48d7b802099d719ce246ae038224af94d8903dfb883747374e505e790deca616",
-      "expected_sha256": "48d7b802099d719ce246ae038224af94d8903dfb883747374e505e790deca616",
+      "actual_sha256": "370b6f7e640106481f7f24a477ddfb9cc01569d5d367b8ab08660e3c2055824f",
+      "expected_sha256": "370b6f7e640106481f7f24a477ddfb9cc01569d5d367b8ab08660e3c2055824f",
       "path": "output/data/autoresearch_evidence_overview.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "c09789a2291b3135c29ae550c0ff749d9f09def93e2402ed5fcdd790e2ad769e",
-      "expected_sha256": "c09789a2291b3135c29ae550c0ff749d9f09def93e2402ed5fcdd790e2ad769e",
+      "actual_sha256": "53927b7e7dbca017223f192b65ef0ac8c0cda3f280ea33a84fa5c5d96b43e9e3",
+      "expected_sha256": "53927b7e7dbca017223f192b65ef0ac8c0cda3f280ea33a84fa5c5d96b43e9e3",
       "path": "output/data/autoresearch_loop.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "0f8166005d311de66e0880c65bca45fe68522a87bdbd0006bbed42dd3e81493c",
-      "expected_sha256": "0f8166005d311de66e0880c65bca45fe68522a87bdbd0006bbed42dd3e81493c",
+      "actual_sha256": "06b1a8859111cab2938c6cb57e57f96ccd419c453d8ff1c374c3c3b528e72779",
+      "expected_sha256": "06b1a8859111cab2938c6cb57e57f96ccd419c453d8ff1c374c3c3b528e72779",
       "path": "output/data/autoresearch_plan.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "f87ab916076b09d698022ed8872bfa785cb3c085e4d2cd02cc9366513060f0ec",
-      "expected_sha256": "f87ab916076b09d698022ed8872bfa785cb3c085e4d2cd02cc9366513060f0ec",
+      "actual_sha256": "a1486cba273bdaaf622d57cefb52a13c1abe433b82d0677ec8207be1d98ab8e6",
+      "expected_sha256": "a1486cba273bdaaf622d57cefb52a13c1abe433b82d0677ec8207be1d98ab8e6",
       "path": "output/data/autoresearch_review_packet.json",
       "status": "passed"
     },
@@ -105,26 +105,26 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "196a8caa7252f42f883a432da3ee4f6370f086abe72853d14afb22d7ad4d3437",
-      "expected_sha256": "196a8caa7252f42f883a432da3ee4f6370f086abe72853d14afb22d7ad4d3437",
+      "actual_sha256": "99343bca9dbee61f05550f297aa1789c185cf0cc2c1f6179b546625199451548",
+      "expected_sha256": "99343bca9dbee61f05550f297aa1789c185cf0cc2c1f6179b546625199451548",
       "path": "output/data/benchmark_scores.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "3aaa1b54760163f62606acda50f5cf2e24aaf0aa7b2b35422ee775a7458d49ae",
-      "expected_sha256": "3aaa1b54760163f62606acda50f5cf2e24aaf0aa7b2b35422ee775a7458d49ae",
+      "actual_sha256": "f879897f9220654bd0af3643179947420acf3ea734d8f4647d50bf737cff3ad3",
+      "expected_sha256": "f879897f9220654bd0af3643179947420acf3ea734d8f4647d50bf737cff3ad3",
       "path": "output/data/figure_quality_report.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "aa357ed53403f98fdef9ca7d8f1eb1950840d3e378bc7648df701b570aa90787",
-      "expected_sha256": "aa357ed53403f98fdef9ca7d8f1eb1950840d3e378bc7648df701b570aa90787",
+      "actual_sha256": "43713c3676f3913a9bf117981e858ea2ea0215ddd82430418f2353c50544ee3a",
+      "expected_sha256": "43713c3676f3913a9bf117981e858ea2ea0215ddd82430418f2353c50544ee3a",
       "path": "output/data/figure_style.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "3858b347396399a31bf729d2bb5d7c0193e0b1ba5ad3c14f1fba03bb93c9a6bb",
-      "expected_sha256": "3858b347396399a31bf729d2bb5d7c0193e0b1ba5ad3c14f1fba03bb93c9a6bb",
+      "actual_sha256": "e4949806dee08a01b8a6f52c246158055f7d08e49f7e66b4aacdcf8870066701",
+      "expected_sha256": "e4949806dee08a01b8a6f52c246158055f7d08e49f7e66b4aacdcf8870066701",
       "path": "output/data/idea_ledger.json",
       "status": "passed"
     },
@@ -159,8 +159,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "a1aa53c3146d7d6e6f6b4d85d2051b983a781dc3a34a78d8070af7bede9d6f71",
-      "expected_sha256": "a1aa53c3146d7d6e6f6b4d85d2051b983a781dc3a34a78d8070af7bede9d6f71",
+      "actual_sha256": "4d11f76830fecda58e7db99ea058c4358d47700d8c80e73c9fd5d710228778b6",
+      "expected_sha256": "4d11f76830fecda58e7db99ea058c4358d47700d8c80e73c9fd5d710228778b6",
       "path": "output/data/ml_candidate_ledger.json",
       "status": "passed"
     },
@@ -267,8 +267,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "61349dcdc8f8fc14196574bf8528f7079765218b9bd10b7d81c4c85dbeb634fb",
-      "expected_sha256": "61349dcdc8f8fc14196574bf8528f7079765218b9bd10b7d81c4c85dbeb634fb",
+      "actual_sha256": "f3724be4549ae583156184f185458007f9d8ddace498536816f91096189ac019",
+      "expected_sha256": "f3724be4549ae583156184f185458007f9d8ddace498536816f91096189ac019",
       "path": "output/data/review_decisions.json",
       "status": "passed"
     },
@@ -429,8 +429,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "c09789a2291b3135c29ae550c0ff749d9f09def93e2402ed5fcdd790e2ad769e",
-      "expected_sha256": "c09789a2291b3135c29ae550c0ff749d9f09def93e2402ed5fcdd790e2ad769e",
+      "actual_sha256": "53927b7e7dbca017223f192b65ef0ac8c0cda3f280ea33a84fa5c5d96b43e9e3",
+      "expected_sha256": "53927b7e7dbca017223f192b65ef0ac8c0cda3f280ea33a84fa5c5d96b43e9e3",
       "path": "output/reports/autoresearch_loop.json",
       "status": "passed"
     },
@@ -459,8 +459,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "deb37f79aaf17a4859f3dcdbff2088210a9d45fe64fddb7ce4355a178bcfa9e9",
-      "expected_sha256": "deb37f79aaf17a4859f3dcdbff2088210a9d45fe64fddb7ce4355a178bcfa9e9",
+      "actual_sha256": "6322cf3f03eced61764e44919cfba55745e471312a1e4cd6fa6765ee91aac609",
+      "expected_sha256": "6322cf3f03eced61764e44919cfba55745e471312a1e4cd6fa6765ee91aac609",
       "path": "output/reports/evidence_registry.json",
       "status": "passed"
     },
@@ -486,7 +486,7 @@
   ],
   "claim_boundary": "Checksums attest local files observed by this run; they are not externally signed provenance.",
   "external_signature": false,
-  "generated_at": "2026-07-10T20:14:47+00:00",
+  "generated_at": "2026-07-12T02:49:17+00:00",
   "local_attestation": true,
   "mismatch_count": 0,
   "missing_count": 0,

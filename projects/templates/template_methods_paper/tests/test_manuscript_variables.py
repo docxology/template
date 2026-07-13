@@ -7,11 +7,15 @@ Builds real config.yaml / output/data / output/reports fixtures under
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 import yaml
 
-from src.manuscript_variables import generate_variables, save_variables
+from src.manuscript_variables import CONFIG_HASH_LENGTH, generate_variables, save_variables
+from src.methods_dsl import Dimension
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _write_config(project_root) -> None:
@@ -96,3 +100,11 @@ def test_generate_variables_missing_config_uses_defaults(tmp_path):
     variables = generate_variables(tmp_path, require_analysis_outputs=False)
     assert variables["CONFIG_VERSION"] == "1.0"
     assert variables["CONFIG_FIRST_AUTHOR"] == "Unknown"
+
+
+def test_claim_ledger_constants_match_live_source() -> None:
+    payload = yaml.safe_load((PROJECT_ROOT / "data" / "claim_ledger.yaml").read_text(encoding="utf-8"))
+    claims = {claim["claim_id"]: claim["value"] for claim in payload["claims"]}
+
+    assert claims["controlled-dimension-count"] == len(Dimension)
+    assert claims["config-hash-prefix-length"] == CONFIG_HASH_LENGTH

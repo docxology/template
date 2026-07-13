@@ -39,10 +39,10 @@ token composition.
   (`contribution_claims`, `pipeline_phases`, `audit_rules`, `steganography`,
   `evaluation`, `authoring_contract`, and explicit LLM-review gates) when code
   defaults change.
-- Add a reverse-assay mode: given a target purity, compute the minimum set of
-  refinery stages needed to reach it, exposed as a config-selectable path.
-- Add multi-objective purity as a config option — purity as a vector (claim
-  support, citation density, evidence coverage) rather than a scalar.
+- Extend the implemented prefix-constrained reverse assay with an optional
+  config-selected target and generated report surface.
+- Extend the implemented noncompensatory `PurityVector` with domain-selected
+  dimensions only after a fork supplies evidence for those dimensions.
 
 ## Documentation and signposting gaps
 
@@ -70,8 +70,8 @@ token composition.
    registry green under the 90% project coverage gate.
 2. Add transmission bookend manuscript sections.
 3. Publish or record references for the planned documented platforms.
-4. Add the reverse-assay mode (target purity → minimal stage set).
-5. Add multi-objective (vector) purity behind a config switch.
+4. Expose the implemented reverse assay (target purity → shortest ordered prefix) through config and a generated report.
+5. Add config selection for the implemented multi-objective purity vector without introducing an unvalidated aggregate score.
 6. Formalize the analogy-break boundary as a theorem with a matching validator.
 7. Wire the refinery to `infrastructure.validation` and measure purity on a
    real manuscript.

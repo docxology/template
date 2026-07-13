@@ -99,8 +99,8 @@ action — not each job.
 #### 1. Lint & Type Check (`lint`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **Tools:** `uvx ruff check`, `uvx ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
-- **Scope:** public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`
+- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
+- **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
 #### 2. Unified Health Report (`health`)
 
@@ -112,7 +112,13 @@ action — not each job.
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Script:** [`scripts/audit/verify_no_mocks.py`](../../scripts/audit/verify_no_mocks.py) (repository root)
-- **Policy:** Absolutely no `MagicMock`, `mocker.patch`, `unittest.mock` in test files
+- **Enforced policy:** no configured prohibited mock-framework imports/calls
+  (`MagicMock`, `mocker.patch`, `unittest.mock`, and related lexical forms) in
+  test files.
+- **Boundary:** `--inventory` separately measures monkeypatch environment
+  isolation and dependency replacement. It remains advisory until the
+  dependency-replacement count reaches zero; CI does not pass the strict
+  inventory flag today.
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
 
@@ -201,7 +207,7 @@ action — not each job.
 | Ruff linting | zero violations | `lint` job |
 | Ruff formatting | zero diffs | `lint` job |
 | mypy type check | no errors | `lint` job |
-| No-mocks policy | zero mock usage | `verify-no-mocks` job |
+| Mock-framework lexical gate | zero prohibited imports/calls | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |
 | Combined-union public-project coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |
@@ -243,8 +249,8 @@ Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runn
 ```bash
 # Reproduce lint locally
 uv sync
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Reproduce infrastructure tests locally
@@ -287,8 +293,8 @@ uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 ### Linting failures
 ```bash
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 ```
 
 ### Test failures

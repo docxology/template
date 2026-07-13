@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
   <title>Active Inference Multi-Track Exemplar</title>
   <style>
     /* Default styles provided by pandoc.
@@ -237,10 +238,38 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -279,34 +308,61 @@
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -338,6 +394,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -345,7 +406,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -361,13 +422,13 @@ img {
 }
 
 a {
-  color: red;
+  color: #b91c1c;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
@@ -382,13 +443,21 @@ a:hover {
 }
 
 .toc a {
-  color: red;
+  color: #b91c1c;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -406,7 +475,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -414,10 +483,12 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Active Inference Multi-Track Exemplar</h1>
 <p class="subtitle">Sheaf-Composed Manuscript with pymdp Sophisticated
 Inference</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -606,6 +677,7 @@ class="toc-section-number">15</span> Conclusion</a></li>
 class="toc-section-number">16</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <p><strong>State:</strong> published</p>
 <p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
 URL)</p>
@@ -668,14 +740,14 @@ confirm they resolve to this release pairing.</li>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
 <img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" />
-<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+<figcaption>Publication pairing flow</figcaption>
 </figure>
 <p><strong>Stego:</strong> off | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
@@ -734,8 +806,8 @@ class="header-section-number">1.1</span> Introduction</h2>
 <figure id="fig:sheaf_coverage_heatmap">
 <img src="../figures/sheaf_coverage_heatmap.png" style="width:95.0%"
 data-fig-alt="Heatmap matrix of IMRAD manuscript rows versus 34 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids."
-alt="Figure 1: Sheaf track coverage matrix: 17 IMRAD rows × 34 fragment columns. Black = present (P), white = absent (—), gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated from output/data/sheaf_coverage_matrix.json." />
-<figcaption aria-hidden="true">Figure 1: Sheaf track coverage matrix: 17
+alt="Figure 1: Sheaf track coverage matrix: 17 IMRAD rows × 34 fragment columns." />
+<figcaption>Figure 1: Sheaf track coverage matrix: 17
 IMRAD rows × 34 fragment columns. Black = present (P), white = absent
 (—), gray = missing (M). Counts: 95 present / 95 bound / 0 missing.
 Generated from
@@ -757,14 +829,15 @@ rendering, so no figure or statistic can drift from the artifact that
 produced it — 6 sheaf axioms are verified before composition and 25
 negative controls keep each failure path live. Claims are limited to
 those models and their generated artifacts.</p>
-<p>sec. 1 reports a 17-row coverage matrix (5 IMRAD group headers)
-regenerated from the live manifest at compose time. sec. 6 documents the
+<p>sec. <a href="#sec:sheaf_coverage">1</a> reports a 17-row coverage
+matrix (5 IMRAD group headers) regenerated from the live manifest at
+compose time. sec. <a href="#sec:methods_pymdp">6</a> documents the
 T-maze harness aligned with <a
 href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
 sophisticated_inference examples</a>.</p>
-<p>sec. 12 records 12 / 12 invariant checks passed. SI planning horizon:
-2 steps. Sweep RMSE 0 nats bounds analytical–empirical agreement on the
-coupling grid.</p>
+<p>sec. <a href="#sec:results_invariants">12</a> records 12 / 12
+invariant checks passed. SI planning horizon: 2 steps. Sweep RMSE 0 nats
+bounds analytical–empirical agreement on the coupling grid.</p>
 <hr />
 <h1 data-number="3" id="sec:intro_motivation"><span
 class="header-section-number">3</span> Motivation and scope</h1>
@@ -775,24 +848,36 @@ class="header-section-number">3.1</span> Scientific scope</h2>
 a Bernoulli–Ising analytical oracle, a pymdp T-maze rollout, and a
 sheaf-indexed assembly contract that binds 34 optional fragment tracks
 under an IMRAD outline. The conceptual lineage is the free-energy and
-active-inference literature [friston2010fep; buckley2017mathreview;
-parr2022active], with critical scope pressure from accounts that
+active-inference literature <span class="citation"
+data-cites="friston2010fep buckley2017mathreview parr2022active">(<a
+href="#ref-friston2010fep" role="doc-biblioref">Friston 2010</a>; <a
+href="#ref-buckley2017mathreview" role="doc-biblioref">Buckley et al.
+2017</a>; <a href="#ref-parr2022active" role="doc-biblioref">Parr et al.
+2022</a>)</span>, with critical scope pressure from accounts that
 separate FEP’s broad organizing role from direct empirical brain claims
-[gershman2019fepbrain]. Here that distinction is operational: the
-scientific claims stay within these models and their generated
-artifacts, not biological agents.</p>
+<span class="citation" data-cites="gershman2019fepbrain">(<a
+href="#ref-gershman2019fepbrain" role="doc-biblioref">Gershman
+2019</a>)</span>. Here that distinction is operational: the scientific
+claims stay within these models and their generated artifacts, not
+biological agents.</p>
 <h2 data-number="3.2" id="manuscript-structure"><span
 class="header-section-number">3.2</span> Manuscript structure</h2>
 <p>Three <strong>scientific tracks</strong> (analytical, pymdp, sheaf
 composition) map onto 34 <strong>composable fragment types</strong> and
-31 pipeline gates (fig. 2). sec. 1 summarizes which fragment tracks bind
-to each manifest row. sec. 8 documents the compose pipeline, coverage
-semantics (eq. 3), and strict validation gates.</p>
+31 pipeline gates (fig. <a href="#fig:multi_track_architecture">2</a>).
+sec. <a href="#sec:sheaf_coverage">1</a> summarizes which fragment
+tracks bind to each manifest row. sec. <a
+href="#sec:methods_sheaf">8</a> documents the compose pipeline, coverage
+semantics (eq. <a href="#eq:coverage_cell">3</a>), and strict validation
+gates.</p>
 <p>The pymdp track follows the <a
 href="https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference">pymdp
-sophisticated_inference examples</a> [pymdp2024] with a minimal T-maze
+sophisticated_inference examples</a> <span class="citation"
+data-cites="pymdp2024">(<a href="#ref-pymdp2024"
+role="doc-biblioref">Heins et al. 2022</a>)</span> with a minimal T-maze
 and planning horizon <code>policy_len = 2</code>. Other sections cite
-sec. 6 instead of repeating that reference.</p>
+sec. <a href="#sec:methods_pymdp">6</a> instead of repeating that
+reference.</p>
 <hr />
 <h1 data-number="4" id="sec:intro_contributions"><span
 class="header-section-number">4</span> Contributions</h1>
@@ -800,22 +885,28 @@ class="header-section-number">4</span> Contributions</h1>
 <h2 data-number="4.1" id="scientific-contributions"><span
 class="header-section-number">4.1</span> Scientific contributions</h2>
 <ol type="1">
-<li><strong>Analytical oracle</strong> (sec. 5): closed-form mutual
-information and free-energy decomposition on a symmetric Bernoulli–Ising
-toy with an independent exact-recomputation cross-check (sec. 9,
-sec. 10).</li>
-<li><strong>Active-inference harness</strong> (sec. 6): deterministic
-pymdp T-maze rollout — default <code>state_inference</code> belief
-filtering, with sophisticated expected-free-energy policy inference
-selectable via <code>mode: policy_inference</code> — with logged
-beliefs, actions, and merged invariant gates (sec. 11, sec. 12).</li>
-<li><strong>Sheaf-indexed composition</strong> (sec. 8): 34 optional
-fragment types bind to 17 manifest rows under eq. 3, with a 33-track
-appendix composability proof (sec. 14).</li>
+<li><strong>Analytical oracle</strong> (sec. <a
+href="#sec:methods_analytical">5</a>): closed-form mutual information
+and free-energy decomposition on a symmetric Bernoulli–Ising toy with an
+independent exact-recomputation cross-check (sec. <a
+href="#sec:results_mi_sweep">9</a>, sec. <a
+href="#sec:results_free_energy">10</a>).</li>
+<li><strong>Active-inference harness</strong> (sec. <a
+href="#sec:methods_pymdp">6</a>): deterministic pymdp T-maze rollout —
+default <code>state_inference</code> belief filtering, with
+sophisticated expected-free-energy policy inference selectable via
+<code>mode: policy_inference</code> — with logged beliefs, actions, and
+merged invariant gates (sec. <a href="#sec:results_si_tmaze">11</a>,
+sec. <a href="#sec:results_invariants">12</a>).</li>
+<li><strong>Sheaf-indexed composition</strong> (sec. <a
+href="#sec:methods_sheaf">8</a>): 34 optional fragment types bind to 17
+manifest rows under eq. <a href="#eq:coverage_cell">3</a>, with a
+33-track appendix composability proof (sec. <a
+href="#sec:appendix_full_sheaf">14</a>).</li>
 </ol>
-<p>fig. 2 maps the three scientific tracks to 31 pipeline gates and 34
-composable fragment renderers. Measured invariant checks: 12 / 12
-passed.</p>
+<p>fig. <a href="#fig:multi_track_architecture">2</a> maps the three
+scientific tracks to 31 pipeline gates and 34 composable fragment
+renderers. Measured invariant checks: 12 / 12 passed.</p>
 <p>Ontology-facing symbols are checked per model: the Bernoulli toy
 binds <code>pi1</code>, <code>pi2</code>, <code>J</code>,
 <code>gamma</code>, and <code>q_joint</code>, while the SI T-maze binds
@@ -823,13 +914,14 @@ binds <code>pi1</code>, <code>pi2</code>, <code>J</code>,
 and <code>belief_entropy</code> to <strong>HiddenState</strong>,
 <strong>ObservationLikelihood</strong>,
 <strong>PolicyPosterior</strong>, and <strong>BeliefEntropy</strong>
-(fig. 4, sec. 6).</p>
+(fig. <a href="#fig:gnn_ontology_concordance">4</a>, sec. <a
+href="#sec:methods_pymdp">6</a>).</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:multi_track_architecture">
 <img src="../figures/multi_track_architecture.png" style="width:95.0%"
 data-fig-alt="Process diagram linking three scientific tracks to 31 pipeline gates and 34 sheaf fragment types across 17 manifest rows."
 alt="Figure 2: Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to 31 pipeline gates and 34 composable fragment types." />
-<figcaption aria-hidden="true">Figure 2: Multi-track architecture:
+<figcaption>Figure 2: Multi-track architecture:
 analytical, pymdp, and sheaf composition lanes mapped to 31 pipeline
 gates and 34 composable fragment types.</figcaption>
 </figure>
@@ -850,20 +942,27 @@ class="header-section-number">5</span> Bernoulli–Ising analytical
 model</h1>
 <!-- sheaf-track:prose -->
 <p>The analytical method is a finite <strong>K=2 Bernoulli /
-Ising</strong> oracle. The entangled joint eq. 1 gives closed-form
-mutual information <span class="math inline">\(I(\lambda)\)</span>;
+Ising</strong> oracle. The entangled joint eq. <a
+href="#eq:entangled_joint">1</a> gives closed-form mutual information
+<span class="math inline">\(I(\lambda)\)</span>;
 <code>output/data/parameter_sweep.csv</code> then checks the same curve
 by an independent exact total-correlation recomputation before the value
-is used in sec. 9. GNN and ontology rows share the same symbol surface
-(fig. 4), so the derivation, sweep, and model notation are one audited
-toy contract rather than parallel descriptions.</p>
+is used in sec. <a href="#sec:results_mi_sweep">9</a>. GNN and ontology
+rows share the same symbol surface (fig. <a
+href="#fig:gnn_ontology_concordance">4</a>), so the derivation, sweep,
+and model notation are one audited toy contract rather than parallel
+descriptions.</p>
 <p>The scope is intentionally small: finite variational quantities only,
 no sampling, and no empirical generalization. “Free energy” here means
 exactly computed variational functionals on this tiny discrete
-state-space, aligned with mathematical FEP reviews
-[buckley2017mathreview], not continuous-time or biological FEP dynamics
-[gershman2019fepbrain]. The generated sweep contains 21 grid points, and
-the merged invariant report records 12 / 12 passing checks.</p>
+state-space, aligned with mathematical FEP reviews <span
+class="citation" data-cites="buckley2017mathreview">(<a
+href="#ref-buckley2017mathreview" role="doc-biblioref">Buckley et al.
+2017</a>)</span>, not continuous-time or biological FEP dynamics <span
+class="citation" data-cites="gershman2019fepbrain">(<a
+href="#ref-gershman2019fepbrain" role="doc-biblioref">Gershman
+2019</a>)</span>. The generated sweep contains 21 grid points, and the
+merged invariant report records 12 / 12 passing checks.</p>
 <!-- sheaf-track:formalism -->
 <p>The entangled joint over binary policies satisfies</p>
 <p><span id="eq:entangled_joint"><span class="math display">\[
@@ -894,7 +993,9 @@ so the derivation is auditable rather than asserted.</p>
 <p>The analytical track writes a parameter sweep comparing closed-form
 mutual information with an independent exact recomputation of it (via
 total correlation) across <span class="math inline">\(\lambda \in [0,
-4]\)</span> on 21 grid points (sec. 9, fig. 3).</p>
+4]\)</span> on 21 grid points (sec. <a
+href="#sec:results_mi_sweep">9</a>, fig. <a
+href="#fig:ising_mi_curve">3</a>).</p>
 <!-- sheaf-track:assumption_index -->
 <p>The <code>assumption_index</code> fragment makes the analytical
 equations inspectable as a generated artifact instead of relying on
@@ -909,8 +1010,8 @@ empty assumption list fails the toy-sweep validation gate.</p>
 <figure id="fig:ising_mi_curve">
 <img src="../figures/ising_mi_curve.png" style="width:90.0%"
 data-fig-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision."
-alt="Figure 3: Closed-form I(\lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to \lambda_{\max} = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual." />
-<figcaption aria-hidden="true">Figure 3: Closed-form <span
+alt="Figure 3: Closed-form I(lambda) and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to lambda_max = 4; grid maximum 0.6031 nats." />
+<figcaption>Figure 3: Closed-form <span
 class="math inline">\(I(\lambda)\)</span> and an independent exact
 recomputation via total correlation for the symmetric Bernoulli-Ising
 toy across 21 grid points up to <span
@@ -922,19 +1023,23 @@ not a sampling residual.</figcaption>
 <figure id="fig:gnn_ontology_concordance">
 <img src="../figures/gnn_ontology_concordance.png" style="width:90.0%"
 data-fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."
-alt="Figure 4: GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
-<figcaption aria-hidden="true">Figure 4: GNN <span
+alt="Figure 4: GNN leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)." />
+<figcaption>Figure 4: GNN <span
 class="math inline">\(\leftrightarrow\)</span> ontology concordance for
 the Bernoulli–Ising toy (GNN v1.1).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
 <p>The Bernoulli toy is declared in
 <code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1), following the GNN
-notation role described by Smekal and Friedman [gnn2023]. fig. 4 links
-GNN variables to Active Inference Ontology terms bound in the analytical
-ontology fragment; round-trip parity is checked before render.</p>
-<p>Measured MI and sweep artifacts in sec. 9 ground the same symbol map
-used in the concordance diagram.</p>
+notation role described by Smekal and Friedman <span class="citation"
+data-cites="gnn2023">(<a href="#ref-gnn2023" role="doc-biblioref">Smékal
+and Friedman 2023</a>)</span>. fig. <a
+href="#fig:gnn_ontology_concordance">4</a> links GNN variables to Active
+Inference Ontology terms bound in the analytical ontology fragment;
+round-trip parity is checked before render.</p>
+<p>Measured MI and sweep artifacts in sec. <a
+href="#sec:results_mi_sweep">9</a> ground the same symbol map used in
+the concordance diagram.</p>
 <!-- sheaf-track:ontology -->
 <h3 data-number="5.0.1" id="ontology-bindings-1"><span
 class="header-section-number">5.0.1</span> Ontology bindings</h3>
@@ -955,13 +1060,22 @@ class="header-section-number">6</span> pymdp simulation harness</h1>
 <!-- sheaf-track:prose -->
 <p><strong>Sophisticated inference (planning horizon).</strong> The
 pymdp method is a deterministic state-inference harness on a minimal
-T-maze (fig. 5) with planning horizon <code>policy_len = 2</code>. The
-discrete-state framing follows finite POMDP active-inference treatments
-and sophisticated-inference analyses [dacosta2020discrete;
-smith2022tutorial; friston2021sophisticated; dacosta2023reward], and the
-implementation anchor is the pymdp software paper [pymdp2024]. The
-default <code>state_inference</code> rollout writes the summary/trace
-artifacts used in sec. 11; mean belief entropy is 0.3251.</p>
+T-maze (fig. <a href="#fig:tmaze_schematic">5</a>) with planning horizon
+<code>policy_len = 2</code>. The discrete-state framing follows finite
+POMDP active-inference treatments and sophisticated-inference analyses
+<span class="citation"
+data-cites="dacosta2020discrete smith2022tutorial friston2021sophisticated dacosta2023reward">(<a
+href="#ref-dacosta2020discrete" role="doc-biblioref">Da Costa et al.
+2020</a>, <a href="#ref-dacosta2023reward"
+role="doc-biblioref">2023</a>; <a href="#ref-smith2022tutorial"
+role="doc-biblioref">Smith et al. 2022</a>; <a
+href="#ref-friston2021sophisticated" role="doc-biblioref">Friston et al.
+2021</a>)</span>, and the implementation anchor is the pymdp software
+paper <span class="citation" data-cites="pymdp2024">(<a
+href="#ref-pymdp2024" role="doc-biblioref">Heins et al.
+2022</a>)</span>. The default <code>state_inference</code> rollout
+writes the summary/trace artifacts used in sec. <a
+href="#sec:results_si_tmaze">11</a>; mean belief entropy is 0.3251.</p>
 <p>The method keeps runtime, posterior, and extension evidence separate.
 <code>output/data/si_policy_comparison.json</code> compares
 <code>state_inference</code> and <code>policy_inference</code> over
@@ -986,16 +1100,21 @@ class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
 horizon <span class="math inline">\(H =\)</span> 2, which defines the
 <strong>policy depth</strong> used when constructing candidate policies
 (logged as <code>num_policies</code> in the SI summary artifact; see
-sec. 11).</p>
+sec. <a href="#sec:results_si_tmaze">11</a>).</p>
 <p>The default harness records belief entropy per step; extending to
 full expected-free-energy policy selection (<code>infer_policies</code>)
-is documented as a follow-on track in sec. 13.</p>
+is documented as a follow-on track in sec. <a
+href="#sec:discussion_outlook">13</a>.</p>
 <!-- sheaf-track:pymdp -->
 <p>SI artifacts (summary, trace, optional JSONL log) record step count,
-actions, observations, and belief entropy for sec. 11. Steps recorded:
-2. Branching-time and variational formulations of active inference
-planning are treated here as related planning context
-[champion2021branching; nuijten2026efeplanning]; the live evidence
+actions, observations, and belief entropy for sec. <a
+href="#sec:results_si_tmaze">11</a>. Steps recorded: 2. Branching-time
+and variational formulations of active inference planning are treated
+here as related planning context <span class="citation"
+data-cites="champion2021branching nuijten2026efeplanning">(<a
+href="#ref-champion2021branching" role="doc-biblioref">Champion et al.
+2021</a>; <a href="#ref-nuijten2026efeplanning"
+role="doc-biblioref">Nuijten et al. 2026</a>)</span>; the live evidence
 remains the finite local artifacts <code>si_policy_grid.json</code>,
 <code>si_efe_terms.json</code>, and
 <code>model_checking_witnesses.json</code>, not a claim about scalable
@@ -1019,7 +1138,7 @@ validation failure before rendering.</p>
 <img src="../figures/tmaze_schematic.png" style="width:85.0%"
 data-fig-alt="Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2."
 alt="Figure 5: T-maze generative model schematic (2-step policy horizon, state_inference mode)." />
-<figcaption aria-hidden="true">Figure 5: T-maze generative model
+<figcaption>Figure 5: T-maze generative model
 schematic (2-step policy horizon, state_inference mode).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
@@ -1041,9 +1160,10 @@ class="header-section-number">7</span> Lean formalization boundary</h1>
 <!-- sheaf-track:prose -->
 <p>The Lean method is a boundary witness track, not a broad
 formalization of active inference. <code>lake build</code> checks
-declarations under <code>lean/TemplateActiveInference/</code>; fig. 6
-renders the proved/deferred surface, while generated inventories carry
-theorem names, constructive-token status, and axiom checks.</p>
+declarations under <code>lean/TemplateActiveInference/</code>; fig. <a
+href="#fig:lean_boundary_status">6</a> renders the proved/deferred
+surface, while generated inventories carry theorem names,
+constructive-token status, and axiom checks.</p>
 <p>The theorem set links back to the finite analytical and pymdp toys.
 Horizon witnesses constrain the planning-depth examples, and
 <code>efe_additive_identity_from_relations</code> proves
@@ -1058,7 +1178,7 @@ agree.</p>
 <img src="../figures/lean_boundary_status.png" style="width:90.0%"
 data-fig-alt="Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/."
 alt="Figure 6: Lean formalization boundary: module witnesses checked by lake build." />
-<figcaption aria-hidden="true">Figure 6: Lean formalization boundary:
+<figcaption>Figure 6: Lean formalization boundary:
 module witnesses checked by lake build.</figcaption>
 </figure>
 <!-- sheaf-track:lean -->
@@ -1119,17 +1239,22 @@ paper role, and paper-specific use statement; the composer then flattens
 the binding set into one Markdown section for PDF and web output.</p>
 <p>The operational claim is auditable binding. Analytical, simulation,
 pymdp, visualization, Lean, GNN, ontology, scholarship, and optional
-media fragments attach to IMRAD rows under eq. 3 (<strong>P</strong>
-present, <strong>—</strong> unbound, <strong>M</strong> missing). This
-is an applied local-to-global consistency contract in the spirit of
-cellular sheaf and sheaf-signal-processing work [curry2014sheaves;
-robinson2014topological], instantiated here as a finite artifact gate
-rather than a cohomology claim.</p>
+media fragments attach to IMRAD rows under eq. <a
+href="#eq:coverage_cell">3</a> (<strong>P</strong> present,
+<strong>—</strong> unbound, <strong>M</strong> missing). This is an
+applied local-to-global consistency contract in the spirit of cellular
+sheaf and sheaf-signal-processing work <span class="citation"
+data-cites="curry2014sheaves robinson2014topological">(<a
+href="#ref-curry2014sheaves" role="doc-biblioref">Curry 2014</a>; <a
+href="#ref-robinson2014topological" role="doc-biblioref">Robinson
+2014</a>)</span>, instantiated here as a finite artifact gate rather
+than a cohomology claim.</p>
 <h2 data-number="8.2" id="coverage-and-figures"><span
 class="header-section-number">8.2</span> Coverage and figures</h2>
-<p>fig. 7 summarizes 34 fragment types and their IMRAD bindings.
-Generated tables below list every track definition and section×track
-binding at compose time. The visualization track is gated by
+<p>fig. <a href="#fig:sheaf_layers_overview">7</a> summarizes 34
+fragment types and their IMRAD bindings. Generated tables below list
+every track definition and section×track binding at compose time. The
+visualization track is gated by
 <code>output/reports/visualization_quality_audit.json</code>: 23 / 23
 registered figures render, 23 are source-mapped, and 23 have sufficient
 alt/caption metadata; the all-quality flag is <code>true</code>.</p>
@@ -1154,8 +1279,9 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>Each run emits <code>output/data/sheaf_coverage_matrix.json</code>
 and regenerates coverage artifacts. Partial compose
 (<code>--section</code>) is draft-only; the matrix always reflects the
-full manifest. Coverage totals appear on sec. 1; discussion scope is in
-sec. 13.</p>
+full manifest. Coverage totals appear on sec. <a
+href="#sec:sheaf_coverage">1</a>; discussion scope is in sec. <a
+href="#sec:discussion_outlook">13</a>.</p>
 <h2 data-number="8.4" id="law-verification"><span
 class="header-section-number">8.4</span> Law verification</h2>
 <p><code>--validate-only --strict</code> runs the structural gate before
@@ -1179,9 +1305,10 @@ about a shared symbol or measured claim. The visualization-quality audit
 is one of those restrictions, so a missing source map, missing
 statistical bridge source, missing hash, blank render, non-RGB render,
 undersized figure, or unbound section breaks the same semantic contract
-that checks statistics and theorem witnesses. fig. 8 renders the
-configured producers, generated evidence artifacts, and validation
-consumers that read each shared symbol.</p>
+that checks statistics and theorem witnesses. fig. <a
+href="#fig:semantic_gluing_graph">8</a> renders the configured
+producers, generated evidence artifacts, and validation consumers that
+read each shared symbol.</p>
 <!-- sheaf-track:formalism -->
 <h3 data-number="8.4.1" id="base-poset-and-presheaf"><span
 class="header-section-number">8.4.1</span> Base poset and presheaf</h3>
@@ -1239,9 +1366,9 @@ machine-checked. The oracle <code>verify_sheaf_laws</code>
 (<code>src/manuscript/sheaf/laws.py</code>) verifies 6 laws, and the
 regenerated build reports 6/6 satisfied:</p>
 <ol type="1">
-<li><strong>Poset.</strong> The IMRAD blocks form the chain of eq. 2;
-compose order is monotone in block rank and every composing section’s
-block carries a group row.</li>
+<li><strong>Poset.</strong> The IMRAD blocks form the chain of eq. <a
+href="#eq:imrad_chain">2</a>; compose order is monotone in block rank
+and every composing section’s block carries a group row.</li>
 <li><strong>Presheaf (functoriality).</strong> Every bound track lies in
 <span class="math inline">\(\mathcal{T}\)</span>; <span
 class="math inline">\(\pi\)</span> is a strict total order; and each
@@ -1295,8 +1422,8 @@ law.</p>
 <figure id="fig:sheaf_layers_overview">
 <img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
 data-fig-alt="Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks."
-alt="Figure 7: Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 34 fragment types across 17 manifest rows (95 present / 95 bound / 0 missing), generated from output/data/sheaf_coverage_matrix.json." />
-<figcaption aria-hidden="true">Figure 7: Sheaf layers overview: registry
+alt="Figure 7: Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 34 fragment types across 17 manifest rows (95 present / 95 bound / 0 missing), generated from…" />
+<figcaption>Figure 7: Sheaf layers overview: registry
 stack (compose order, renderer ids) and IMRAD binding heatmap for 34
 fragment types across 17 manifest rows (95 present / 95 bound / 0
 missing), generated from
@@ -1306,23 +1433,23 @@ missing), generated from
 <img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
 data-fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."
 alt="Figure 8: Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate." />
-<figcaption aria-hidden="true">Figure 8: Semantic gluing graph:
+<figcaption>Figure 8: Semantic gluing graph:
 configured producers, generated evidence artifacts, and validation
 consumers for the multi-track sheaf certificate.</figcaption>
 </figure>
 <figure id="fig:track_lane_promotion_map">
 <img src="../figures/track_lane_promotion_map.png" style="width:98.0%"
 data-fig-alt="Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track."
-alt="Figure 9: Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true. Left: seven promotion-rule obligations; right: sheaf fragment bindings." />
-<figcaption aria-hidden="true">Figure 9: Track-lane promotion map: 32
+alt="Figure 9: Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true." />
+<figcaption>Figure 9: Track-lane promotion map: 32
 pipeline-to-sheaf rows with complete promotion status true. Left: seven
 promotion-rule obligations; right: sheaf fragment bindings.</figcaption>
 </figure>
 <figure id="fig:artifact_contract_map">
 <img src="../figures/artifact_contract_map.png" style="width:98.0%"
 data-fig-alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status."
-alt="Figure 10: Artifact contract map: 85 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in output/data/artifact_contract_index.json." />
-<figcaption aria-hidden="true">Figure 10: Artifact contract map: 85
+alt="Figure 10: Artifact contract map: 85 generated artifact rows with complete contract status true and copied-output parity complete true." />
+<figcaption>Figure 10: Artifact contract map: 85
 generated artifact rows with complete contract status true and
 copied-output parity complete true. Cycle rows are explicit in
 <code>output/data/artifact_contract_index.json</code>.</figcaption>
@@ -1330,8 +1457,8 @@ copied-output parity complete true. Cycle rows are explicit in
 <figure id="fig:scholarship_source_map">
 <img src="../figures/scholarship_source_map.png" style="width:95.0%"
 data-fig-alt="Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts."
-alt="Figure 11: Scholarship source map: 21 source rows across 21 method roles and 10 source families. Connected status: true; row evidence rederived: true." />
-<figcaption aria-hidden="true">Figure 11: Scholarship source map: 21
+alt="Figure 11: Scholarship source map: 21 source rows across 21 method roles and 10 source families." />
+<figcaption>Figure 11: Scholarship source map: 21
 source rows across 21 method roles and 10 source families. Connected
 status: true; row evidence rederived: true.</figcaption>
 </figure>
@@ -1339,7 +1466,7 @@ status: true; row evidence rederived: true.</figcaption>
 <img src="../figures/security_posture_map.png" style="width:96.0%"
 data-fig-alt="Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status."
 alt="Figure 12: Security posture map: 9 controls, 7 enforced and 2 scoped as deferred; secret findings: 0; high-risk gaps: 0." />
-<figcaption aria-hidden="true">Figure 12: Security posture map: 9
+<figcaption>Figure 12: Security posture map: 9
 controls, 7 enforced and 2 scoped as deferred; secret findings: 0;
 high-risk gaps: 0.</figcaption>
 </figure>
@@ -1431,15 +1558,33 @@ records 85 rows, with license-safe status <code>true</code>.</p>
 method surface rather than decorative bibliography.
 <code>output/data/scholarship_source_matrix.json</code> records 21
 source rows across 21 method roles and 10 source families, including 3
-quantitative/statistical or visualization-quality method roles; fig. 11
-renders the resulting source-to-artifact map with 1 locator kinds. The
-row set connects foundational free-energy and active-inference
-references [friston2010fep; buckley2017mathreview; dacosta2020discrete;
-parr2022active; smith2022tutorial], planning context
-[champion2021branching; nuijten2026efeplanning], implementation and
-notation anchors [pymdp2024; gnn2023], and applied sheaf/local-to-global
-sources [curry2014sheaves; robinson2014topological;
-bosca2026localglobal] to the exact artifact or method role they
+quantitative/statistical or visualization-quality method roles; fig. <a
+href="#fig:scholarship_source_map">11</a> renders the resulting
+source-to-artifact map with 1 locator kinds. The row set connects
+foundational free-energy and active-inference references <span
+class="citation"
+data-cites="friston2010fep buckley2017mathreview dacosta2020discrete parr2022active smith2022tutorial">(<a
+href="#ref-friston2010fep" role="doc-biblioref">Friston 2010</a>; <a
+href="#ref-buckley2017mathreview" role="doc-biblioref">Buckley et al.
+2017</a>; <a href="#ref-dacosta2020discrete" role="doc-biblioref">Da
+Costa et al. 2020</a>; <a href="#ref-parr2022active"
+role="doc-biblioref">Parr et al. 2022</a>; <a
+href="#ref-smith2022tutorial" role="doc-biblioref">Smith et al.
+2022</a>)</span>, planning context <span class="citation"
+data-cites="champion2021branching nuijten2026efeplanning">(<a
+href="#ref-champion2021branching" role="doc-biblioref">Champion et al.
+2021</a>; <a href="#ref-nuijten2026efeplanning"
+role="doc-biblioref">Nuijten et al. 2026</a>)</span>, implementation and
+notation anchors <span class="citation"
+data-cites="pymdp2024 gnn2023">(<a href="#ref-pymdp2024"
+role="doc-biblioref">Heins et al. 2022</a>; <a href="#ref-gnn2023"
+role="doc-biblioref">Smékal and Friedman 2023</a>)</span>, and applied
+sheaf/local-to-global sources <span class="citation"
+data-cites="curry2014sheaves robinson2014topological bosca2026localglobal">(<a
+href="#ref-curry2014sheaves" role="doc-biblioref">Curry 2014</a>; <a
+href="#ref-robinson2014topological" role="doc-biblioref">Robinson
+2014</a>; <a href="#ref-bosca2026localglobal" role="doc-biblioref">Bosca
+and Ghrist 2026</a>)</span> to the exact artifact or method role they
 support.</p>
 <p>The validation claim is deliberately narrow: every row must have a
 bibliography entry with a DOI or URL, a manuscript citation, registered
@@ -4460,26 +4605,31 @@ sweep</h1>
 <p>We sweep coupling strength <span
 class="math inline">\(\lambda\)</span> on a grid of 21 points up to
 <span class="math inline">\(\lambda_{\max} = 4\)</span>. Closed-form
-mutual information from eq. 1 is cross-checked against an independent
-exact recomputation via total correlation from the analytical module
-(sec. 5); both are deterministic (no sampling) and agree to 0 nats.</p>
+mutual information from eq. <a href="#eq:entangled_joint">1</a> is
+cross-checked against an independent exact recomputation via total
+correlation from the analytical module (sec. <a
+href="#sec:methods_analytical">5</a>); both are deterministic (no
+sampling) and agree to 0 nats.</p>
 <p>Measured invariant checks: 12 / 12 passed on the clean tree.</p>
 <!-- sheaf-track:formalism -->
-<p>The sweep reuses the entangled joint defined in eq. 1 (sec. 5).
-Mutual information <span class="math inline">\(I(\lambda)=\log 2 -
-H_b(\sigma(\lambda))\)</span> is evaluated on the same <span
-class="math inline">\(\lambda\)</span> grid as the analytical oracle and
-its independent exact recomputation.</p>
+<p>The sweep reuses the entangled joint defined in eq. <a
+href="#eq:entangled_joint">1</a> (sec. <a
+href="#sec:methods_analytical">5</a>). Mutual information <span
+class="math inline">\(I(\lambda)=\log 2 - H_b(\sigma(\lambda))\)</span>
+is evaluated on the same <span class="math inline">\(\lambda\)</span>
+grid as the analytical oracle and its independent exact
+recomputation.</p>
 <!-- sheaf-track:simulation -->
 <p>Both estimators are deterministic (no sampling, no RNG) and are
 evaluated on the same <span class="math inline">\(\lambda\)</span> grid
-as the closed-form sweep (sec. 5, fig. 3).</p>
+as the closed-form sweep (sec. <a href="#sec:methods_analytical">5</a>,
+fig. <a href="#fig:ising_mi_curve">3</a>).</p>
 <!-- sheaf-track:visualization -->
 <p><img src="../figures/ising_mi_curve.png" style="width:90.0%" /></p>
-<p><em>Reproduced from fig. 3. Closed-form <span
-class="math inline">\(I(\lambda)\)</span> and an independent exact
-recomputation via total correlation for the symmetric Bernoulli-Ising
-toy across 21 grid points up to <span
+<p><em>Reproduced from fig. <a href="#fig:ising_mi_curve">3</a>.
+Closed-form <span class="math inline">\(I(\lambda)\)</span> and an
+independent exact recomputation via total correlation for the symmetric
+Bernoulli-Ising toy across 21 grid points up to <span
 class="math inline">\(\lambda_{\max}\)</span> = 4; grid maximum 0.6031
 nats. Both estimators are deterministic (no sampling), so the right
 panel is a cross-implementation agreement check (max residual 0 nats),
@@ -4490,18 +4640,19 @@ class="header-section-number">10</span> Free-energy decomposition</h1>
 <!-- sheaf-track:prose -->
 <p>Free energy against the entangled prior is evaluated along the same
 <span class="math inline">\(\lambda\)</span> grid used for the MI sweep
-(fig. 13). Against the <em>entangled</em> prior the entangled posterior
-is the exact variational minimizer, so its free energy is identically
-zero; the Theorem-5.1 decomposition then splits that zero into
-per-stream marginal free energies, a coupling-cost term, a
-coupling-prior term, and a total-correlation gain. For the symmetric toy
-with uniform marginals the coupling-prior term equals <span
+(fig. <a href="#fig:free_energy_curve">13</a>). Against the
+<em>entangled</em> prior the entangled posterior is the exact
+variational minimizer, so its free energy is identically zero; the
+Theorem-5.1 decomposition then splits that zero into per-stream marginal
+free energies, a coupling-cost term, a coupling-prior term, and a
+total-correlation gain. For the symmetric toy with uniform marginals the
+coupling-prior term equals <span
 class="math inline">\(-I(\lambda)\)</span> and exactly cancels the
 total-correlation gain <span class="math inline">\(+I(\lambda)\)</span>
 — an exact cancellation the merged invariant suite checks (12/12 pass).
-The curve in fig. 13 instead reports free energy against the
-<em>mean-field</em> prior: its minimum at <span
-class="math inline">\(\lambda=0\)</span> is where the entangled
+The curve in fig. <a href="#fig:free_energy_curve">13</a> instead
+reports free energy against the <em>mean-field</em> prior: its minimum
+at <span class="math inline">\(\lambda=0\)</span> is where the entangled
 posterior coincides with the factorized mean-field product, and any
 <span class="math inline">\(\lambda&gt;0\)</span> raises the free energy
 as coupling pulls the posterior away from that independent prior.</p>
@@ -4512,7 +4663,7 @@ class="math inline">\(\lambda\)</span> sweep): 0.6031 nats.</p>
 <img src="../figures/free_energy_curve.png" style="width:90.0%"
 data-fig-alt="Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. The entangled-prior free energy is identically zero, so this plotted comparison isolates mean-field prior mismatch. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value."
 alt="Figure 13: Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points 21); relative to the entangled prior, the same posterior has identically zero free energy." />
-<figcaption aria-hidden="true">Figure 13: Free energy of the entangled
+<figcaption>Figure 13: Free energy of the entangled
 posterior relative to the mean-field prior across the hyperparameter
 sweep (grid points 21); relative to the entangled prior, the same
 posterior has identically zero free energy.</figcaption>
@@ -4527,11 +4678,13 @@ rollout</h1>
 <code>state_inference</code> mode is belief filtering with a
 goal-seeking action rule; sophisticated policy inference (an
 expected-free-energy policy posterior) is selectable via
-<code>mode: policy_inference</code> (sec. 6). Summary metrics land in
+<code>mode: policy_inference</code> (sec. <a
+href="#sec:methods_pymdp">6</a>). Summary metrics land in
 <code>output/data/si_tmaze_summary.json</code>.</p>
 <p>Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over
-the rollout is traced in fig. 18; the paired observation and action
-indices are in fig. 19.
+the rollout is traced in fig. <a
+href="#fig:si_belief_entropy_curve">18</a>; the paired observation and
+action indices are in fig. <a href="#fig:si_obs_action_trace">19</a>.
 <code>output/data/analysis_statistics.json</code> now records the trace
 as a small statistical object rather than a caption-only trace: action
 switches 1 times (rate 1.000 over adjacent steps), observation diversity
@@ -4549,31 +4702,36 @@ on this two-state, horizon-2 maze, which is the measured content of the
 deliberately-too-small claim.</p>
 <p>Policy-comparison rows: 4 across state-inference and policy-inference
 modes; goal-reaching rows: 3. These rows are internal toy consistency
-checks under finite-horizon discrete active-inference assumptions
-[friston2021sophisticated; dacosta2023reward], not comparisons against
-external behavioral datasets. Graph-world extension rows: 4 over 4
-nodes, with goal-reached flag 1.</p>
+checks under finite-horizon discrete active-inference assumptions <span
+class="citation"
+data-cites="friston2021sophisticated dacosta2023reward">(<a
+href="#ref-friston2021sophisticated" role="doc-biblioref">Friston et al.
+2021</a>; <a href="#ref-dacosta2023reward" role="doc-biblioref">Da Costa
+et al. 2023</a>)</span>, not comparisons against external behavioral
+datasets. Graph-world extension rows: 4 over 4 nodes, with goal-reached
+flag 1.</p>
 <p>The expected free energy that scores those policies decomposes in
-closed form (fig. 15). Across the 4 length-2 policies on the T-maze
-generative model, the expected-free-energy-minimising policy is
-<code>00</code> with <span class="math inline">\(G\)</span> = 2.2539
-nats, splitting into risk 1.6037 (the pragmatic deviation of predicted
-outcomes from preferences) and ambiguity 0.6502 (the expected likelihood
-entropy) nats. The same <span class="math inline">\(G\)</span> splits
-equivalently into pragmatic value -2.2539 (expected log-preference) and
-epistemic value 0.0000 (state-outcome mutual information) nats — the
-term that drives information-seeking. The two forms are exactly equal:
-risk + ambiguity + pragmatic + epistemic vanishes to within 0.0e+00
-across every policy, the action-selection twin of the analytical
-free-energy decomposition identity (sec. 10).</p>
+closed form (fig. <a href="#fig:efe_decomposition">15</a>). Across the 4
+length-2 policies on the T-maze generative model, the
+expected-free-energy-minimising policy is <code>00</code> with <span
+class="math inline">\(G\)</span> = 2.2539 nats, splitting into risk
+1.6037 (the pragmatic deviation of predicted outcomes from preferences)
+and ambiguity 0.6502 (the expected likelihood entropy) nats. The same
+<span class="math inline">\(G\)</span> splits equivalently into
+pragmatic value -2.2539 (expected log-preference) and epistemic value
+0.0000 (state-outcome mutual information) nats — the term that drives
+information-seeking. The two forms are exactly equal: risk + ambiguity +
+pragmatic + epistemic vanishes to within 0.0e+00 across every policy,
+the action-selection twin of the analytical free-energy decomposition
+identity (sec. <a href="#sec:results_free_energy">10</a>).</p>
 <p>Precision controls how sharply that expected free energy is acted on:
 the policy posterior is the softmax-weighted <span
 class="math inline">\(q(\pi) \propto \exp(-\gamma\,G(\pi))\)</span>, and
 sweeping the inverse temperature <span
 class="math inline">\(\gamma\)</span> across 33 grid points up to 16
-sharpens it monotonically (fig. 16). Posterior entropy falls from <span
-class="math inline">\(\ln 4\)</span> at <span
-class="math inline">\(\gamma\)</span>=0 to 1.1458 nats at <span
+sharpens it monotonically (fig. <a href="#fig:precision_sweep">16</a>).
+Posterior entropy falls from <span class="math inline">\(\ln 4\)</span>
+at <span class="math inline">\(\gamma\)</span>=0 to 1.1458 nats at <span
 class="math inline">\(\gamma\)</span>=1, then saturates at the floor
 0.6931 nats rather than reaching zero: the absorbing goal makes the
 second action irrelevant once reached, so 2 policies tie at the
@@ -4584,32 +4742,34 @@ selection becomes effectively deterministic — optimal-set mass exceeding
 <p>The minimal two-state maze above is, by construction, too small for
 information-seeking to matter: the reward location is observable from
 the start, so a greedy pragmatic rule and an expected-free-energy rule
-reach the goal equally often. The cue-then-reward variant (fig. 14)
-removes that degeneracy. Across 8 joint position-by-context states the
-reward location is an uninformative latent (50/50 at the start) that is
-hidden until the agent visits a CUE location, at which point a single
-sample resolves it: the cue carries 0.6931 nats of information (<span
-class="math inline">\(= \ln 2\)</span>, the entropy of the unknown
-context). An agent that samples the cue and then takes the contingent
-arm reaches reward with expected log-preference -0.0538 nats, against
--4.0538 nats for a greedy agent that commits to an arm before sampling —
-a measured behavioural advantage of 4.0000 nats that vanishes only if
-epistemic value is removed from the objective. The advantage is
-sophisticated, not flat: the closed-form flat decomposition of sec. 11
-scores the cue-first and greedy policies as identical because it
-propagates beliefs through the transition model without conditioning
-them on the cue observation. Resolving the latent therefore requires an
-observation-conditioned (sophisticated-inference) evaluation, and under
-that evaluation cue-sampling is strictly necessary rather than merely
-available.</p>
+reach the goal equally often. The cue-then-reward variant (fig. <a
+href="#fig:cue_tmaze_advantage">14</a>) removes that degeneracy. Across
+8 joint position-by-context states the reward location is an
+uninformative latent (50/50 at the start) that is hidden until the agent
+visits a CUE location, at which point a single sample resolves it: the
+cue carries 0.6931 nats of information (<span class="math inline">\(=
+\ln 2\)</span>, the entropy of the unknown context). An agent that
+samples the cue and then takes the contingent arm reaches reward with
+expected log-preference -0.0538 nats, against -4.0538 nats for a greedy
+agent that commits to an arm before sampling — a measured behavioural
+advantage of 4.0000 nats that vanishes only if epistemic value is
+removed from the objective. The advantage is sophisticated, not flat:
+the closed-form flat decomposition of sec. <a
+href="#sec:results_si_tmaze">11</a> scores the cue-first and greedy
+policies as identical because it propagates beliefs through the
+transition model without conditioning them on the cue observation.
+Resolving the latent therefore requires an observation-conditioned
+(sophisticated-inference) evaluation, and under that evaluation
+cue-sampling is strictly necessary rather than merely available.</p>
 <p>Planning is only half of the generative loop: the agent must also
 <em>learn</em> its likelihood. Placing a Dirichlet prior over each
 column of <span class="math inline">\(A\)</span> and accumulating
 observation-state counts <span class="math inline">\(c\)</span> gives
 the conjugate update <span class="math inline">\(pA \leftarrow pA +
 c\)</span> with expected likelihood <span class="math inline">\(E[A] =
-pA / \sum_o pA\)</span> (fig. 17). Driven by a fixed, sampling-free
-expected-count stream, <span
+pA / \sum_o pA\)</span> (fig. <a
+href="#fig:dirichlet_convergence">17</a>). Driven by a fixed,
+sampling-free expected-count stream, <span
 class="math inline">\(\mathrm{KL}(A_{\text{true}} \,\|\,
 A_{\text{learned}})\)</span> falls monotonically from 0.7361 nats at the
 uniform prior to 1.29e-03 nats, reaching the convergence tolerance at
@@ -4623,8 +4783,8 @@ run log: <code>output/logs/pymdp_runs.jsonl</code>.</p>
 <figure id="fig:cue_tmaze_advantage">
 <img src="../figures/cue_tmaze_advantage.png" style="width:95.0%"
 data-fig-alt="Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the cue information gain I(context; observation) in nats and the expected reward log-preference for an epistemic agent that samples the cue versus a greedy agent that commits to an arm, demonstrating a positive behavioural advantage for cue-sampling. The right panel shows the flat Expected Free Energy of the cue-first and greedy policies, which are identical, illustrating that flat EFE propagation cannot reward cue-sampling and the sophisticated observation- conditioned evaluator is required."
-alt="Figure 14: Cue-then-reward T-maze where epistemic value is strictly necessary. Left: the cue carries 0.6931 nats of information and the cue-sampling agent reaches reward with a measured advantage of 4.0000 nats over a greedy agent. Right: flat Expected Free Energy scores the cue-first and greedy policies identically (identical), so the sophisticated observation- conditioned evaluator is what makes information-seeking required. Closed form (no sampling)." />
-<figcaption aria-hidden="true">Figure 14: Cue-then-reward T-maze where
+alt="Figure 14: Cue-then-reward T-maze where epistemic value is strictly necessary." />
+<figcaption>Figure 14: Cue-then-reward T-maze where
 epistemic value is strictly necessary. Left: the cue carries 0.6931 nats
 of information and the cue-sampling agent reaches reward with a measured
 advantage of 4.0000 nats over a greedy agent. Right: flat Expected Free
@@ -4635,8 +4795,8 @@ information-seeking required. Closed form (no sampling).</figcaption>
 <figure id="fig:efe_decomposition">
 <img src="../figures/efe_decomposition.png" style="width:95.0%"
 data-fig-alt="Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar&#39;s height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic)."
-alt="Figure 15: Closed-form Expected Free Energy decomposition over the finite T-maze policies. Left: G(\pi) = risk + ambiguity (stacked), with the goal-seeking minimiser marked. Right: the pragmatic and epistemic values, which sum to -G(\pi). Both forms are computed in closed form (no sampling) and satisfy risk + ambiguity + pragmatic + epistemic = 0 to machine precision." />
-<figcaption aria-hidden="true">Figure 15: Closed-form Expected Free
+alt="Figure 15: Closed-form Expected Free Energy decomposition over the finite T-maze policies." />
+<figcaption>Figure 15: Closed-form Expected Free
 Energy decomposition over the finite T-maze policies. Left: <span
 class="math inline">\(G(\pi)\)</span> = risk + ambiguity (stacked), with
 the goal-seeking minimiser marked. Right: the pragmatic and epistemic
@@ -4647,8 +4807,8 @@ ambiguity + pragmatic + epistemic = 0 to machine precision.</figcaption>
 <figure id="fig:precision_sweep">
 <img src="../figures/precision_sweep.png" style="width:90.0%"
 data-fig-alt="Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G) sharpens as the precision gamma increases from 0 to 16. The left axis plots the Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and saturating at the ln(|optimal set|) floor (a dashed reference line) because two policies tie at the expected-free-energy minimum. The right axis plots the probability mass placed on the expected-free-energy optimal policy set, rising from 0.5 toward 1 and crossing the selection threshold; the precision at which it crosses is marked."
-alt="Figure 16: Precision sweep over the closed-form T-maze policy posterior q(\pi)\propto\exp(-\gamma G) across 33 grid points up to \gamma=16. Entropy falls from \ln 4 to the \ln|\Pi^\star| floor (2 tied optima, second action irrelevant under the absorbing goal); the optimal-set mass crosses 0.99 at \gamma=3. Entropy at \gamma=1 is 1.1458 nats. Computed in closed form (no sampling)." />
-<figcaption aria-hidden="true">Figure 16: Precision sweep over the
+alt="Figure 16: Precision sweep over the closed-form T-maze policy posterior q(pi)proptoexp(-gamma G) across 33 grid points up to gamma =16." />
+<figcaption>Figure 16: Precision sweep over the
 closed-form T-maze policy posterior <span
 class="math inline">\(q(\pi)\propto\exp(-\gamma G)\)</span> across 33
 grid points up to <span class="math inline">\(\gamma\)</span>=16.
@@ -4663,8 +4823,8 @@ closed form (no sampling).</figcaption>
 <figure id="fig:dirichlet_convergence">
 <img src="../figures/dirichlet_convergence.png" style="width:85.0%"
 data-fig-alt="Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling)."
-alt="Figure 17: Dirichlet model learning: KL(A_{\text{true}} \,\|\, A_{\text{learned}}) versus concentration-update step. The expected likelihood E[A] = pA / \sum_o pA converges monotonically to the true generative likelihood; the run reaches the convergence tolerance at step 3 with final KL 1.29e-03 nats. Deterministic (no sampling), so the curve is byte-reproducible." />
-<figcaption aria-hidden="true">Figure 17: Dirichlet model learning:
+alt="Figure 17: Dirichlet model learning: KL (A_texttrue \,\|\, A_textlearned) versus concentration-update step." />
+<figcaption>Figure 17: Dirichlet model learning:
 KL<span class="math inline">\((A_{\text{true}} \,\|\,
 A_{\text{learned}})\)</span> versus concentration-update step. The
 expected likelihood <span class="math inline">\(E[A] = pA / \sum_o
@@ -4677,38 +4837,41 @@ byte-reproducible.</figcaption>
 <img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
 data-fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode."
 alt="Figure 18: Belief entropy over time for the T-maze rollout (mean 0.3251 nats)." />
-<figcaption aria-hidden="true">Figure 18: Belief entropy over time for
+<figcaption>Figure 18: Belief entropy over time for
 the T-maze rollout (mean 0.3251 nats).</figcaption>
 </figure>
 <figure id="fig:si_obs_action_trace">
 <img src="../figures/si_obs_action_trace.png" style="width:90.0%"
 data-fig-alt="Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1."
 alt="Figure 19: Observation and action traces for the T-maze rollout (action diversity 2)." />
-<figcaption aria-hidden="true">Figure 19: Observation and action traces
+<figcaption>Figure 19: Observation and action traces
 for the T-maze rollout (action diversity 2).</figcaption>
 </figure>
 <figure id="fig:si_tmaze_actions">
 <img src="../figures/si_tmaze_actions.png" style="width:90.0%"
 data-fig-alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps."
 alt="Figure 20: Discrete action index over time for the pymdp T-maze rollout (policy length 2)." />
-<figcaption aria-hidden="true">Figure 20: Discrete action index over
+<figcaption>Figure 20: Discrete action index over
 time for the pymdp T-maze rollout (policy length 2).</figcaption>
 </figure>
 <hr />
 <h1 data-number="12" id="sec:results_invariants"><span
 class="header-section-number">12</span> Validation invariants</h1>
 <!-- sheaf-track:prose -->
-<p>The analytical invariant registry runs before PDF rendering (sec. 5).
-On a clean checkout <strong>12 / 12</strong> checks pass in the merged
-validation report, which records simulation invariants when the pymdp
-harness ran (sec. 11).</p>
-<p>fig. 21 lists each analytical and simulation gate; failures block
-publication artifacts. See sec. 8 for how invariant counts hydrate
+<p>The analytical invariant registry runs before PDF rendering (sec. <a
+href="#sec:methods_analytical">5</a>). On a clean checkout <strong>12 /
+12</strong> checks pass in the merged validation report, which records
+simulation invariants when the pymdp harness ran (sec. <a
+href="#sec:results_si_tmaze">11</a>).</p>
+<p>fig. <a href="#fig:invariant_dashboard">21</a> lists each analytical
+and simulation gate; failures block publication artifacts. See sec. <a
+href="#sec:methods_sheaf">8</a> for how invariant counts hydrate
 manuscript tokens.</p>
 <!-- sheaf-track:simulation -->
 <p>Simulation invariants merge into the analytical report after the
-pymdp harness runs (sec. 11). fig. 21 summarizes pass/fail status for
-both domains on the clean tree.</p>
+pymdp harness runs (sec. <a href="#sec:results_si_tmaze">11</a>).
+fig. <a href="#fig:invariant_dashboard">21</a> summarizes pass/fail
+status for both domains on the clean tree.</p>
 <!-- sheaf-track:replay_matrix -->
 <p>The replay matrix exposes deterministic rerun comparison as table
 data rather than prose. It contains 13 producer rows, uses explicit
@@ -4751,7 +4914,7 @@ biological or deployed systems.</p>
 <img src="../figures/invariant_dashboard.png" style="width:90.0%"
 data-fig-alt="Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. 12 of 12 checks pass on the merged report."
 alt="Figure 21: Invariant dashboard: 12 / 12 merged analytical and simulation checks from the validation registry." />
-<figcaption aria-hidden="true">Figure 21: Invariant dashboard: 12 / 12
+<figcaption>Figure 21: Invariant dashboard: 12 / 12
 merged analytical and simulation checks from the validation
 registry.</figcaption>
 </figure>
@@ -4784,9 +4947,11 @@ generated artifact, 6 sheaf axioms are machine-checked before
 composition, and 25 negative controls keep each failure path live. That
 posture follows the caution that FEP and active-inference formalisms
 need explicit methodological scope before they become empirical brain
-claims [gershman2019fepbrain]. No statistic, figure, or cross-track
-claim here can drift from its artifact without failing a gate before the
-PDF is built.</p>
+claims <span class="citation" data-cites="gershman2019fepbrain">(<a
+href="#ref-gershman2019fepbrain" role="doc-biblioref">Gershman
+2019</a>)</span>. No statistic, figure, or cross-track claim here can
+drift from its artifact without failing a gate before the PDF is
+built.</p>
 <h2 data-number="13.2" id="limitations"><span
 class="header-section-number">13.2</span> Limitations</h2>
 <p>The Bernoulli–Ising toy, T-maze harness, and sheaf composition model
@@ -4794,25 +4959,29 @@ are pedagogical. They validate analytical consistency, artifact wiring,
 renderer dispatch, and manuscript hydration, not empirical claims about
 biological agents. Default pymdp mode is <code>state_inference</code>
 with planning horizon 2; the policy-comparison artifact exposes
-policy-inference rows without changing the default rollout (sec. 6).</p>
+policy-inference rows without changing the default rollout (sec. <a
+href="#sec:methods_pymdp">6</a>).</p>
 <h2 data-number="13.3" id="sheaf-audit-and-outlook"><span
 class="header-section-number">13.3</span> Sheaf audit and outlook</h2>
-<p>sec. 1 and sec. 14 make binding state auditable under strict compose
-validation (sec. 8). Pipeline extensions in <code>tracks.yaml</code>
-<code>extension_tracks</code> now write deterministic artifacts: a
-belief GIF via <code>render_animation.py</code> and graph-world SI
-summary/trace via <code>simulate_si_graph_world.py</code>. The appendix
-row already binds an <code>animation</code> sheaf fragment without new
-manifest rows.</p>
+<p>sec. <a href="#sec:sheaf_coverage">1</a> and sec. <a
+href="#sec:appendix_full_sheaf">14</a> make binding state auditable
+under strict compose validation (sec. <a
+href="#sec:methods_sheaf">8</a>). Pipeline extensions in
+<code>tracks.yaml</code> <code>extension_tracks</code> now write
+deterministic artifacts: a belief GIF via
+<code>render_animation.py</code> and graph-world SI summary/trace via
+<code>simulate_si_graph_world.py</code>. The appendix row already binds
+an <code>animation</code> sheaf fragment without new manifest rows.</p>
 <p>Sweep RMSE 0 nats and SI goal reached 1 summarize measured agreement
 on the declared grids and rollout. Future work includes full
 expected-free-energy policy selection, richer graph-world rollouts, and
-expanded Lean proofs beyond the boundary witnesses in sec. 7.</p>
+expanded Lean proofs beyond the boundary witnesses in sec. <a
+href="#sec:methods_lean">7</a>.</p>
 <p>The discussion ontology binds <code>coverage_semantics</code> to the
-audit matrix in sec. 1, <code>pedagogical_scope</code> to the
-non-empirical scope of the toy models, and
-<code>state_inference_mode</code> to the pymdp harness contract in
-sec. 6.</p>
+audit matrix in sec. <a href="#sec:sheaf_coverage">1</a>,
+<code>pedagogical_scope</code> to the non-empirical scope of the toy
+models, and <code>state_inference_mode</code> to the pymdp harness
+contract in sec. <a href="#sec:methods_pymdp">6</a>.</p>
 <!-- sheaf-track:simulation -->
 <p>Measured pymdp rollout (<code>state_inference</code>, config hash
 <code>81eb061f43b7bfd7</code>): mean belief entropy 0.3251 nats over 2
@@ -4827,10 +4996,13 @@ numerical, figure, and gate claim. That split keeps the paper from
 converting background authority into an unsupported empirical
 result.</p>
 <p>Sophisticated Learning is therefore cited as a future-only
-parameter-learning direction [hodson2023sophisticatedlearning]. It does
-not change the current T-maze state-inference default, does not promote
-an active-learning adapter, and does not alter the blocked major-scope
-ladder for empirical or non-toy claims.</p>
+parameter-learning direction <span class="citation"
+data-cites="hodson2023sophisticatedlearning">(<a
+href="#ref-hodson2023sophisticatedlearning" role="doc-biblioref">Hodson
+et al. 2023</a>)</span>. It does not change the current T-maze
+state-inference default, does not promote an active-learning adapter,
+and does not alter the blocked major-scope ladder for empirical or
+non-toy claims.</p>
 <!-- sheaf-track:ontology -->
 <h3 data-number="13.3.1" id="ontology-bindings-3"><span
 class="header-section-number">13.3.1</span> Ontology bindings</h3>
@@ -4866,10 +5038,11 @@ type alongside the live proof, simulation, formal, notation,
 validation-spine, integration, audit, finite-catalog, ablation, license,
 release-evidence, scholarship, assumption-index, delta, and staleness
 tracks.</p>
-<p>The proof is a publication-systems check (eq. 4). It demonstrates
-that heterogeneous fragments share one registry, manifest, renderer
-dispatch path, coverage matrix, and hydration boundary; it does not
-assert that every track carries equal scientific weight.</p>
+<p>The proof is a publication-systems check (eq. <a
+href="#eq:appendix_track_count">4</a>). It demonstrates that
+heterogeneous fragments share one registry, manifest, renderer dispatch
+path, coverage matrix, and hydration boundary; it does not assert that
+every track carries equal scientific weight.</p>
 <!-- sheaf-track:formalism -->
 <p>For each track <span class="math inline">\(t \in
 \mathcal{T}_{\mathrm{Full}}\)</span>, the appendix row binds a fragment
@@ -4892,17 +5065,20 @@ remains separate from this fragment slot.</p>
 optional <code>animation</code>, it is the maximal publication stalk of
 the coverage presheaf and exercises every publication renderer through
 the common <code>resolve_track_body()</code> dispatch. The same compose
-path is gated by the 6 sheaf laws verified in sec. 8 (6/6 satisfied):
-the appendix section glues to a unique output (separation), occupies the
-terminal position of the linear extension under its own
-<code>appendix</code> group row (poset and gluing), binds only
-well-typed fragments (typing), and owns every fragment path it
-references (compositionality). No count in this appendix is
-hand-written; all are injected from the registry-backed oracle.</p>
+path is gated by the 6 sheaf laws verified in sec. <a
+href="#sec:methods_sheaf">8</a> (6/6 satisfied): the appendix section
+glues to a unique output (separation), occupies the terminal position of
+the linear extension under its own <code>appendix</code> group row
+(poset and gluing), binds only well-typed fragments (typing), and owns
+every fragment path it references (compositionality). No count in this
+appendix is hand-written; all are injected from the registry-backed
+oracle.</p>
 <!-- sheaf-track:simulation -->
-<p>Analytical sweep artifacts feed sec. 9 and sec. 12; simulation
-invariants merge after sec. 11. No additional path listing is required
-beyond those Results sections.</p>
+<p>Analytical sweep artifacts feed sec. <a
+href="#sec:results_mi_sweep">9</a> and sec. <a
+href="#sec:results_invariants">12</a>; simulation invariants merge after
+sec. <a href="#sec:results_si_tmaze">11</a>. No additional path listing
+is required beyond those Results sections.</p>
 <!-- sheaf-track:assumption_index -->
 <p>The appendix <code>assumption_index</code> row points to
 <code>output/data/analytical_assumption_index.json</code>. It binds 7
@@ -5079,22 +5255,23 @@ against the resolved markdown so stale counts are caught after
 composition, not only during source-file linting.</p>
 <!-- sheaf-track:visualization -->
 <p><img src="../figures/ising_mi_curve.png" style="width:90.0%" /></p>
-<p><em>Reproduced from fig. 3. Closed-form <span
-class="math inline">\(I(\lambda)\)</span> and an independent exact
-recomputation via total correlation for the symmetric Bernoulli-Ising
-toy across 21 grid points up to <span
+<p><em>Reproduced from fig. <a href="#fig:ising_mi_curve">3</a>.
+Closed-form <span class="math inline">\(I(\lambda)\)</span> and an
+independent exact recomputation via total correlation for the symmetric
+Bernoulli-Ising toy across 21 grid points up to <span
 class="math inline">\(\lambda_{\max}\)</span> = 4; grid maximum 0.6031
 nats. Both estimators are deterministic (no sampling), so the right
 panel is a cross-implementation agreement check (max residual 0 nats),
 not a sampling residual.</em></p>
 <p><img src="../figures/si_tmaze_actions.png" style="width:90.0%" /></p>
-<p><em>Reproduced from fig. 20. Discrete action index over time for the
-pymdp T-maze rollout (policy length 2).</em></p>
+<p><em>Reproduced from fig. <a href="#fig:si_tmaze_actions">20</a>.
+Discrete action index over time for the pymdp T-maze rollout (policy
+length 2).</em></p>
 <figure id="fig:theorem_traceability_graph">
 <img src="../figures/theorem_traceability_graph.png" style="width:95.0%"
 data-fig-alt="Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: true."
 alt="Figure 22: Theorem traceability graph generated from 17 linked theorem rows and 207 proof-dependency edges." />
-<figcaption aria-hidden="true">Figure 22: Theorem traceability graph
+<figcaption>Figure 22: Theorem traceability graph
 generated from 17 linked theorem rows and 207 proof-dependency
 edges.</figcaption>
 </figure>
@@ -5102,42 +5279,47 @@ edges.</figcaption>
 <img src="../figures/causal_ablation_heatmap.png" style="width:92.0%"
 data-fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."
 alt="Figure 23: Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true." />
-<figcaption aria-hidden="true">Figure 23: Causal-ablation heatmap: 36
+<figcaption>Figure 23: Causal-ablation heatmap: 36
 source-backed rows joined to sensitivity and uncertainty artifacts; all
 effects source-backed: true.</figcaption>
 </figure>
 <p><img src="../figures/scholarship_source_map.png"
 style="width:95.0%" /></p>
-<p><em>Reproduced from fig. 11. Scholarship source map: 21 source rows
-across 21 method roles and 10 source families. Connected status: true;
-row evidence rederived: true.</em></p>
+<p><em>Reproduced from fig. <a
+href="#fig:scholarship_source_map">11</a>. Scholarship source map: 21
+source rows across 21 method roles and 10 source families. Connected
+status: true; row evidence rederived: true.</em></p>
 <p><img src="../figures/track_lane_promotion_map.png"
 style="width:98.0%" /></p>
-<p><em>Reproduced from fig. 9. Track-lane promotion map: 32
+<p><em>Reproduced from fig. <a
+href="#fig:track_lane_promotion_map">9</a>. Track-lane promotion map: 32
 pipeline-to-sheaf rows with complete promotion status true. Left: seven
 promotion-rule obligations; right: sheaf fragment bindings.</em></p>
 <p><img src="../figures/artifact_contract_map.png"
 style="width:98.0%" /></p>
-<p><em>Reproduced from fig. 10. Artifact contract map: 85 generated
-artifact rows with complete contract status true and copied-output
-parity complete true. Cycle rows are explicit in
+<p><em>Reproduced from fig. <a href="#fig:artifact_contract_map">10</a>.
+Artifact contract map: 85 generated artifact rows with complete contract
+status true and copied-output parity complete true. Cycle rows are
+explicit in
 <code>output/data/artifact_contract_index.json</code>.</em></p>
 <p><img src="../figures/security_posture_map.png"
 style="width:96.0%" /></p>
-<p><em>Reproduced from fig. 12. Security posture map: 9 controls, 7
-enforced and 2 scoped as deferred; secret findings: 0; high-risk gaps:
-0.</em></p>
+<p><em>Reproduced from fig. <a href="#fig:security_posture_map">12</a>.
+Security posture map: 9 controls, 7 enforced and 2 scoped as deferred;
+secret findings: 0; high-risk gaps: 0.</em></p>
 <p><img src="../figures/sheaf_coverage_heatmap.png"
 style="width:95.0%" /></p>
-<p><em>Reproduced from fig. 1. Sheaf track coverage matrix: 17 IMRAD
-rows × 34 fragment columns. Black = present (P), white = absent (—),
-gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated
-from <code>output/data/sheaf_coverage_matrix.json</code>.</em></p>
+<p><em>Reproduced from fig. <a href="#fig:sheaf_coverage_heatmap">1</a>.
+Sheaf track coverage matrix: 17 IMRAD rows × 34 fragment columns. Black
+= present (P), white = absent (—), gray = missing (M). Counts: 95
+present / 95 bound / 0 missing. Generated from
+<code>output/data/sheaf_coverage_matrix.json</code>.</em></p>
 <!-- sheaf-track:lean -->
 <p>Lean modules under <code>lean/TemplateActiveInference/</code> declare
 horizon and coupling witnesses. Build with <code>lake build</code> in
-<code>lean/</code>; fig. 6 summarizes proved versus deferred statements
-for this boundary fragment.</p>
+<code>lean/</code>; fig. <a href="#fig:lean_boundary_status">6</a>
+summarizes proved versus deferred statements for this boundary
+fragment.</p>
 <!-- sheaf-track:model_checking -->
 <p><code>sheaf-track:model_checking</code> binds
 <code>output/reports/model_checking_witnesses.json</code> and the Lean
@@ -5210,9 +5392,13 @@ rendered view of validated JSON rather than a decorative
 restatement.</p>
 <!-- sheaf-track:gnn -->
 <p>GNN declarations: <code>gnn/bernoulli_toy.gnn.md</code> and
-<code>gnn/si_tmaze.gnn.md</code> [gnn2023]. fig. 4 and sec. 5 document
-ontology concordance for the Bernoulli toy; SI notation extends the same
-pattern under sec. 6.</p>
+<code>gnn/si_tmaze.gnn.md</code> <span class="citation"
+data-cites="gnn2023">(<a href="#ref-gnn2023" role="doc-biblioref">Smékal
+and Friedman 2023</a>)</span>. fig. <a
+href="#fig:gnn_ontology_concordance">4</a> and sec. <a
+href="#sec:methods_analytical">5</a> document ontology concordance for
+the Bernoulli toy; SI notation extends the same pattern under sec. <a
+href="#sec:methods_pymdp">6</a>.</p>
 <!-- sheaf-track:ontology -->
 <h3 data-number="14.0.6" id="ontology-bindings-4"><span
 class="header-section-number">14.0.6</span> Ontology bindings</h3>
@@ -5230,7 +5416,8 @@ class="header-section-number">14.0.6</span> Ontology bindings</h3>
 <p>Animation is an <strong>extension</strong> sheaf track backed by a
 deterministic GIF from <code>scripts/render_animation.py</code>. This
 appendix row documents the track binding only; default publication still
-uses static SI figures (sec. 11, fig. 20) while the GIF remains an
+uses static SI figures (sec. <a href="#sec:results_si_tmaze">11</a>,
+fig. <a href="#fig:si_tmaze_actions">20</a>) while the GIF remains an
 auditable generated artifact.</p>
 <!-- sheaf-track:animation_delta -->
 <p>The appendix <code>animation_delta</code> row points to
@@ -5258,23 +5445,36 @@ and blocked-scope status, with all-attested flag <code>true</code>.</p>
 <hr />
 <h1 data-number="15" id="sec:conclusion"><span
 class="header-section-number">15</span> Conclusion</h1>
-<p>Analytical oracles (sec. 5), pymdp rollouts (sec. 11), and sheaf
-composition (sec. 8) share one auditable manuscript contract: measured
-artifacts hydrate 12 composed sections, sec. 1 reports binding state,
-and strict compose validation blocks gray matrix cells before PDF
+<p>Analytical oracles (sec. <a href="#sec:methods_analytical">5</a>),
+pymdp rollouts (sec. <a href="#sec:results_si_tmaze">11</a>), and sheaf
+composition (sec. <a href="#sec:methods_sheaf">8</a>) share one
+auditable manuscript contract: measured artifacts hydrate 12 composed
+sections, sec. <a href="#sec:sheaf_coverage">1</a> reports binding
+state, and strict compose validation blocks gray matrix cells before PDF
 rendering.</p>
 <p>The T-maze harness runs in <code>state_inference</code> mode with
 config hash <code>81eb061f43b7bfd7</code>; sweep RMSE 0 nats summarizes
-analytical-empirical agreement on the toy coupling grid. sec. 12 merges
-analytical and simulation gates; sec. 13 states scope and extensions.
-Scientific claims remain confined to declared models, not empirical
-statements about biological agents [gershman2019fepbrain].</p>
+analytical-empirical agreement on the toy coupling grid. sec. <a
+href="#sec:results_invariants">12</a> merges analytical and simulation
+gates; sec. <a href="#sec:discussion_outlook">13</a> states scope and
+extensions. Scientific claims remain confined to declared models, not
+empirical statements about biological agents <span class="citation"
+data-cites="gershman2019fepbrain">(<a href="#ref-gershman2019fepbrain"
+role="doc-biblioref">Gershman 2019</a>)</span>.</p>
 <p>The exemplar therefore sits at a narrow intersection: finite discrete
-active inference on POMDP-like toy models [dacosta2020discrete;
-friston2021sophisticated; dacosta2023reward], sheaf-style
-local-to-global checks for publication artifacts [curry2014sheaves;
-robinson2014topological], and GNN notation as an interop layer
-[gnn2023].</p>
+active inference on POMDP-like toy models <span class="citation"
+data-cites="dacosta2020discrete friston2021sophisticated dacosta2023reward">(<a
+href="#ref-dacosta2020discrete" role="doc-biblioref">Da Costa et al.
+2020</a>, <a href="#ref-dacosta2023reward"
+role="doc-biblioref">2023</a>; <a href="#ref-friston2021sophisticated"
+role="doc-biblioref">Friston et al. 2021</a>)</span>, sheaf-style
+local-to-global checks for publication artifacts <span class="citation"
+data-cites="curry2014sheaves robinson2014topological">(<a
+href="#ref-curry2014sheaves" role="doc-biblioref">Curry 2014</a>; <a
+href="#ref-robinson2014topological" role="doc-biblioref">Robinson
+2014</a>)</span>, and GNN notation as an interop layer <span
+class="citation" data-cites="gnn2023">(<a href="#ref-gnn2023"
+role="doc-biblioref">Smékal and Friedman 2023</a>)</span>.</p>
 <hr />
 <h1 data-number="16" id="references"><span
 class="header-section-number">16</span> References</h1>
@@ -5287,9 +5487,109 @@ cited in the composed sections.</p>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p><strong>Prior:</strong> <em>No prior releases.</em></p>
 <!-- END OF TRANSMISSION -->
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-bosca2026localglobal" class="csl-entry" role="listitem">
+Bosca, Vicente, and Robert Ghrist. 2026. <em>Neural Networks as
+Local-to-Global Computations</em>. <a
+href="https://doi.org/10.48550/arXiv.2603.14831">https://doi.org/10.48550/arXiv.2603.14831</a>.
+</div>
+<div id="ref-buckley2017mathreview" class="csl-entry" role="listitem">
+Buckley, Christopher L., Chang Sub Kim, Simon McGregor, and Anil K.
+Seth. 2017. <span>“The Free Energy Principle for Action and Perception:
+A Mathematical Review.”</span> <em>Journal of Mathematical
+Psychology</em> 81: 55–79. <a
+href="https://doi.org/10.1016/j.jmp.2017.09.004">https://doi.org/10.1016/j.jmp.2017.09.004</a>.
+</div>
+<div id="ref-champion2021branching" class="csl-entry" role="listitem">
+Champion, Théophile, Lancelot Da Costa, Howard Bowman, and Marek Grześ.
+2021. <em>Branching Time Active Inference: The Theory and Its
+Generality</em>. <a
+href="https://doi.org/10.48550/arXiv.2111.11107">https://doi.org/10.48550/arXiv.2111.11107</a>.
+</div>
+<div id="ref-curry2014sheaves" class="csl-entry" role="listitem">
+Curry, Justin Michael. 2014. <span>“Sheaves, Cosheaves and
+Applications.”</span> PhD thesis, University of Pennsylvania. <a
+href="https://doi.org/10.48550/arXiv.1303.3255">https://doi.org/10.48550/arXiv.1303.3255</a>.
+</div>
+<div id="ref-dacosta2020discrete" class="csl-entry" role="listitem">
+Da Costa, Lancelot, Thomas Parr, Noor Sajid, Sebastijan Veselic,
+Victorita Neacsu, and Karl Friston. 2020. <span>“Active Inference on
+Discrete State-Spaces: A Synthesis.”</span> <em>Journal of Mathematical
+Psychology</em> 99: 102447. <a
+href="https://doi.org/10.1016/j.jmp.2020.102447">https://doi.org/10.1016/j.jmp.2020.102447</a>.
+</div>
+<div id="ref-dacosta2023reward" class="csl-entry" role="listitem">
+Da Costa, Lancelot, Noor Sajid, Thomas Parr, Karl Friston, and Ryan
+Smith. 2023. <span>“Reward Maximization Through Discrete Active
+Inference.”</span> <em>Neural Computation</em> 35 (5): 807–52. <a
+href="https://doi.org/10.1162/neco_a_01574">https://doi.org/10.1162/neco_a_01574</a>.
+</div>
+<div id="ref-friston2010fep" class="csl-entry" role="listitem">
+Friston, Karl. 2010. <span>“The Free-Energy Principle: A Unified Brain
+Theory?”</span> <em>Nature Reviews Neuroscience</em> 11 (2): 127–38. <a
+href="https://doi.org/10.1038/nrn2787">https://doi.org/10.1038/nrn2787</a>.
+</div>
+<div id="ref-friston2021sophisticated" class="csl-entry"
+role="listitem">
+Friston, Karl, Lancelot Da Costa, Danijar Hafner, Casper Hesp, and
+Thomas Parr. 2021. <span>“Sophisticated Inference.”</span> <em>Neural
+Computation</em> 33 (3): 713–63. <a
+href="https://doi.org/10.1162/neco_a_01351">https://doi.org/10.1162/neco_a_01351</a>.
+</div>
+<div id="ref-gershman2019fepbrain" class="csl-entry" role="listitem">
+Gershman, Samuel J. 2019. <span>“What Does the Free Energy Principle
+Tell Us about the Brain?”</span> <em>Neurons, Behavior, Data Analysis,
+and Theory</em> 2 (3): 1–10. <a
+href="https://doi.org/10.51628/001c.10839">https://doi.org/10.51628/001c.10839</a>.
+</div>
+<div id="ref-pymdp2024" class="csl-entry" role="listitem">
+Heins, Conor, Beren Millidge, Daphne Demekas, et al. 2022. <span>“Pymdp:
+A Python Library for Active Inference in Discrete State Spaces.”</span>
+<em>Journal of Open Source Software</em> 7 (73): 4098. <a
+href="https://doi.org/10.21105/joss.04098">https://doi.org/10.21105/joss.04098</a>.
+</div>
+<div id="ref-hodson2023sophisticatedlearning" class="csl-entry"
+role="listitem">
+Hodson, Rowan, Bruce Bassett, Charel van Hoof, et al. 2023.
+<em>Sophisticated Learning: A Novel Algorithm for Active Learning During
+Model-Based Planning</em>. <a
+href="https://doi.org/10.48550/arXiv.2308.08029">https://doi.org/10.48550/arXiv.2308.08029</a>.
+</div>
+<div id="ref-nuijten2026efeplanning" class="csl-entry" role="listitem">
+Nuijten, Wouter W. L., Thijs van de Laar, and Bert de Vries. 2026.
+<em>Expected Free Energy-Based Planning as Variational Inference</em>.
+<a
+href="https://doi.org/10.48550/arXiv.2606.20658">https://doi.org/10.48550/arXiv.2606.20658</a>.
+</div>
+<div id="ref-parr2022active" class="csl-entry" role="listitem">
+Parr, Thomas, Giovanni Pezzulo, and Karl J. Friston. 2022. <em>Active
+Inference: The Free Energy Principle in Mind, Brain, and Behavior</em>.
+MIT Press. <a
+href="https://doi.org/10.7551/mitpress/12441.001.0001">https://doi.org/10.7551/mitpress/12441.001.0001</a>.
+</div>
+<div id="ref-robinson2014topological" class="csl-entry" role="listitem">
+Robinson, Michael. 2014. <em>Topological Signal Processing</em>.
+Springer. <a
+href="https://doi.org/10.1007/978-3-642-36104-3">https://doi.org/10.1007/978-3-642-36104-3</a>.
+</div>
+<div id="ref-gnn2023" class="csl-entry" role="listitem">
+Smékal, Jakub, and Daniel Ari Friedman. 2023. <em>Generalized Notation
+Notation for Active Inference Models</em>. Zenodo. <a
+href="https://doi.org/10.5281/zenodo.7803328">https://doi.org/10.5281/zenodo.7803328</a>.
+</div>
+<div id="ref-smith2022tutorial" class="csl-entry" role="listitem">
+Smith, Ryan, Karl J. Friston, and Christopher J. Whyte. 2022. <span>“A
+Step-by-Step Tutorial on Active Inference and Its Application to
+Empirical Data.”</span> <em>Journal of Mathematical Psychology</em> 107:
+102632. <a
+href="https://doi.org/10.1016/j.jmp.2021.102632">https://doi.org/10.1016/j.jmp.2021.102632</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

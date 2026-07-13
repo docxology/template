@@ -202,8 +202,9 @@ inferring hidden defaults.
 # Results {#sec:results}
 
 This section presents the exploratory analysis of the shipped dataset. Every
-figure and the summary table are produced by the thin analysis script
-([`scripts/eda_analysis.py`](https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py)),
+figure and the summary table are produced by the
+[EDA analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py)
+(`scripts/eda_analysis.py`),
 which calls the tested figure-data preparers in `src/eda/figures.py`. Running
 the script regenerates the figures under `../figures/` and the summary CSV
 under `output/data/`; the prose below describes what those artifacts show.
@@ -472,7 +473,7 @@ uv run pytest projects/templates/template_eda_notebook/tests \
     --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
 
 # 3. Render the manuscript
-uv run python scripts/03_render_pdf.py --project templates/template_eda_notebook
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
 ## Generated artifact registry

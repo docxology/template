@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,12 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="reproducibility">Reproducibility</h2>
 <p>Reproducibility is not a claim this manuscript makes about itself; it
 is a property the code enforces on every run. Every number that appears
@@ -254,11 +258,11 @@ subprocess pytest run cannot be parsed,
 <code>"pending"</code> for both the test count and the coverage
 percentage rather than a plausible-looking number [reproducible_builds].
 This design choice is a direct consequence of an earlier failure mode in
-this project — a manuscript draft that stated fixed values (“Tests: 371
-· Coverage: 99.94%”) in prose instead of through the token pipeline. A
-number that cannot be traced back to a specific function call in
-<code>src/</code> is, for the purposes of this project, not a number
-this manuscript is permitted to assert.</p>
+this project — a manuscript draft that stated fixed test and coverage
+values in prose instead of through the token pipeline. A number that
+cannot be traced back to a specific function call in <code>src/</code>
+is, for the purposes of this project, not a number this manuscript is
+permitted to assert.</p>
 <h3 id="determinism-guarantee">Determinism guarantee</h3>
 <p>Given the same <code>manuscript/config.yaml</code> grammar definition
 (grammar hash <code>f84a8f9dbcb18e37</code>), the same seed
@@ -470,5 +474,6 @@ the reported 96.28 agrees with the authoritative CI gate methodology
 rather than silently using a different one) to produce the 493 and 96.28
 tokens substituted above — the same build, not a paraphrase of it, is
 the source of both this document’s prose and its own regeneration.</p>
+</main>
 </body>
 </html>

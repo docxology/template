@@ -131,7 +131,7 @@
     "output/web/manuscript__99_references.html": "889c2cfb6b33e0851f84c85a322d1c368853bd791371aa1577c4b9d56b235a43"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project/output/reports/snapshots/stage-07-output-validation.json",
+  "path": "<repo-root>/projects/templates/template_autoresearch_project/output/reports/snapshots/stage-07-output-validation.json",
   "stage_name": "Output Validation",
   "stage_num": 7,
   "timestamp": "2026-06-14T19:18:53+00:00",

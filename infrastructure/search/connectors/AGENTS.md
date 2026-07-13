@@ -8,17 +8,18 @@ Provides a uniform Python connector interface to ~8 major science databases,
 ported from the OpenScience TypeScript project
 (https://github.com/synthetic-sciences/openscience).
 
-Each connector satisfies the `Connector` protocol and is registered in a
-`ConnectorRegistry` that supports domain filtering and serialisable catalog
-output.
+Each connector satisfies the `Connector` protocol and is registered in an
+ordered `ConnectorRegistry` that supports domain filtering and serialisable
+catalog output.
 
 ## Module map
 
 | File | Role |
 |---|---|
 | `types.py` | `ConnectorDomain` (StrEnum), `ConnectorHit`, `CatalogEntry`, `SearchOptions`, `FetchOptions`, `Connector` (Protocol), `ConnectorError` |
-| `registry.py` | `ConnectorRegistry` — thread-safe, ordered dict of connectors |
+| `registry.py` | `ConnectorRegistry` — ordered registration, lookup, domain filtering, and catalog output |
 | `http.py` | `ConnectorHttpClient` — stdlib urllib with retry, TTL cache, User-Agent |
+| `stage.py` | Stage 08 config validation, dispatch, failure isolation, and report serialization |
 | `cli.py` | `list-dbs` and `search` subcommands |
 | `impl/openalex.py` | OpenAlex works (literature) |
 | `impl/arxiv.py` | arXiv Atom API (literature) |
@@ -34,31 +35,30 @@ output.
 
 ```python
 from infrastructure.search.connectors import (
-    ConnectorRegistry, _ALL_CONNECTORS, SearchOptions
+    ConnectorDomain, ConnectorRegistry, _ALL_CONNECTORS, SearchOptions
 )
 
 registry = ConnectorRegistry()
-for c in _ALL_CONNECTORS:
-    registry.register(c)
+for connector_class in _ALL_CONNECTORS:
+    registry.register(connector_class())
 
 # List all biology connectors
-bio = registry.by_domain("biology")
+bio = registry.by_domain(ConnectorDomain.biology)
 
 # Search
-hits = registry.get("arxiv").search("attention mechanism", SearchOptions(limit=5))
+hits = registry.get("arxiv").search("attention mechanism", SearchOptions(max_results=5))
 
 # Convenience helpers (default registry)
 from infrastructure.search.connectors import list_connectors, search_connector
-catalog = list_connectors(domain="literature")
-hits = search_connector("openalex", "CRISPR", limit=3)
+catalog = list_connectors()
+hits = search_connector("openalex", "CRISPR", max_results=3)
 ```
 
 ## CLI
 
 ```bash
 uv run python -m infrastructure.search.connectors list-dbs
-uv run python -m infrastructure.search.connectors list-dbs --domain biology
-uv run python -m infrastructure.search.connectors search arxiv "active inference" --limit 5
+uv run python -m infrastructure.search.connectors search arxiv "active inference" --max-results 5
 ```
 
 ## Testing
@@ -74,8 +74,9 @@ No mocks allowed. HTTP connectors tested via `pytest-httpserver`.
 - Each connector id is unique (registry raises `ValueError` on duplicate).
 - `ConnectorRegistry.catalog()` returns only serialisable `CatalogEntry` objects — no callables.
 - `ConnectorHttpClient` uses stdlib `urllib` only — zero extra dependencies.
-- `SearchOptions.limit=None` means connector uses its own default (typically 10).
+- `SearchOptions.max_results` defaults to 10; Stage 08 rejects non-positive caps.
 - Per-connector errors raise `ConnectorError` — callers decide whether to surface or absorb.
+- Stage 08 persists one status record per connector/query pair and exits 1 when any configured search fails.
 
 ## Adding a connector
 

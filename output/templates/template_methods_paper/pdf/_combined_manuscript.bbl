@@ -1,0 +1,41 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Bota Biosciences}(2026)]{bpl2026}
+{Bota Biosciences}.
+\newblock {BPL}: A domain-specific language for describing, validating, and
+  executing biology laboratory protocols.
+\newblock \url{https://gitlab.com/bota-biosciences-public/bpl-code}, 2026.
+\newblock Upstream reference for controlled-system protocol domain language
+  design (accessed 2026).
+
+\bibitem[Fowler(2010)]{fowler2010dsl}
+Martin Fowler.
+\newblock \emph{Domain-Specific Languages}.
+\newblock Addison-Wesley Professional, Boston, MA, USA, 2010.
+\newblock ISBN 978-0-321-71294-3.
+
+\bibitem[Kahn(1962)]{kahn1962topological}
+Arthur~B. Kahn.
+\newblock Topological sorting of large networks.
+\newblock \emph{Communications of the ACM}, 5\penalty0 (11):\penalty0 558--562,
+  1962.
+\newblock \doi{10.1145/368996.369025}.
+
+\bibitem[Merkle(1987)]{merkle1987digital}
+Ralph~C. Merkle.
+\newblock A digital signature based on a conventional encryption function.
+\newblock 293:\penalty0 369--378, 1987.
+\newblock \doi{10.1007/3-540-48184-2_32}.
+
+\bibitem[Peng(2011)]{peng2011reproducible}
+Roger~D Peng.
+\newblock Reproducible research in computational science.
+\newblock \emph{Science}, 334\penalty0 (6060):\penalty0 1226--1227, 2011.
+\newblock \doi{10.1126/science.1213847}.
+
+\end{thebibliography}

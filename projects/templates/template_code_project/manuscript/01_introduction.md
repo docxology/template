@@ -23,7 +23,7 @@ where $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is a continuously differentiable 
 
 Rather than existing as isolated scripts, this project extensively leverages the `infrastructure` layer:
 
-- **Scientific Utilities**: Utilizing `infrastructure.scientific.stability` and `infrastructure.scientific.benchmarking` to guarantee numerical boundaries and performance scaling.
+- **Scientific Utilities**: Utilizing `infrastructure.scientific.stability` and `infrastructure.scientific.benchmarking` to check numerical boundaries and exercise runtime performance diagnostics without pinning host-dependent timings.
 - **Hermetic Validation**: Deploying `infrastructure.validation` components (`markdown_validator`, `output_validator`) to ensure generated artifacts are structurally valid and traceable.
 - **Reporting & Rendering**: Employing `infrastructure.rendering.pdf_renderer` and `infrastructure.reporting.executive_reporter` to automatically transform code outputs into this finalized manuscript.
 

@@ -2,9 +2,9 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "4.44",
-      "total_size_bytes": 4657433,
+      "file_count": 11,
+      "size_mb": "4.52",
+      "total_size_bytes": 4741207,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
@@ -25,7 +25,7 @@
       "extensions": {
         ".pdf": 1,
         ".md": 1,
-        ".log": 2,
+        ".log": 3,
         ".aux": 1,
         ".blg": 1,
         ".bib": 1,
@@ -36,13 +36,13 @@
     },
     "web": {
       "exists": true,
-      "file_count": 18,
-      "size_mb": "0.56",
-      "total_size_bytes": 584886,
+      "file_count": 19,
+      "size_mb": "0.57",
+      "total_size_bytes": 593497,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.19",
+          "size_mb": "0.21",
           "path": "web/index.html"
         },
         {
@@ -58,14 +58,17 @@
       ],
       "extensions": {
         ".html": 17,
-        ".md": 1
+        ".md": 1,
+        ".ico": 1
       }
     },
     "slides": {
-      "exists": false,
+      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
     },
     "figures": {
       "exists": true,
@@ -99,7 +102,7 @@
       "exists": true,
       "file_count": 48,
       "size_mb": "2.79",
-      "total_size_bytes": 2925076,
+      "total_size_bytes": 2925078,
       "largest_files": [
         {
           "name": "sheaf_section_status_matrix.json",
@@ -126,7 +129,7 @@
       "exists": true,
       "file_count": 35,
       "size_mb": "0.50",
-      "total_size_bytes": 526876,
+      "total_size_bytes": 528925,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -139,9 +142,9 @@
           "path": "reports/manuscript_staleness_report.json"
         },
         {
-          "name": "claim_evidence_audit.json",
+          "name": "artifact_manifest.json",
           "size_mb": "0.05",
-          "path": "reports/claim_evidence_audit.json"
+          "path": "reports/artifact_manifest.json"
         }
       ],
       "extensions": {
@@ -151,16 +154,20 @@
       }
     },
     "simulations": {
-      "exists": false,
+      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
     },
     "llm": {
-      "exists": false,
+      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
     },
     "logs": {
       "exists": true,
@@ -179,8 +186,8 @@
       }
     }
   },
-  "total_files": 139,
-  "total_size_mb": 12.077818870544434,
+  "total_files": 141,
+  "total_size_mb": 12.167880058288574,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
@@ -226,7 +233,7 @@
     },
     {
       "name": "index.html",
-      "size_mb": "0.19",
+      "size_mb": "0.21",
       "category": "web",
       "path": "web/index.html"
     },
@@ -243,23 +250,22 @@
       "path": "pdf/_combined_manuscript.log"
     }
   ],
-  "missing_expected_files": [
-    "slides/ directory",
-    "simulations/ directory",
-    "llm/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.44167423248291,
-    "web": 0.5577907562255859,
+    "pdf": 4.521567344665527,
+    "web": 0.5660028457641602,
+    "slides": 0.0,
     "figures": 3.785637855529785,
-    "data": 2.789569854736328,
-    "reports": 0.5024681091308594,
+    "data": 2.789571762084961,
+    "reports": 0.5044221878051758,
+    "simulations": 0.0,
+    "llm": 0.0,
     "logs": 0.0006780624389648438
   },
   "file_counts_by_type": {
     ".pdf": 1,
     ".md": 3,
-    ".log": 2,
+    ".log": 3,
     ".aux": 1,
     ".blg": 1,
     ".bib": 1,
@@ -267,6 +273,7 @@
     ".toc": 1,
     ".bbl": 1,
     ".html": 17,
+    ".ico": 1,
     ".png": 25,
     ".gif": 1,
     ".json": 81,

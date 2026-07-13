@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Materialize + validate one child per domain (archetypes)."""
+
 from __future__ import annotations
 
 import sys

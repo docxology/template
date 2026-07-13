@@ -6,12 +6,10 @@ No mocks — uses real .gnn.md files and injected minimal GNN strings.
 from __future__ import annotations
 
 from pathlib import Path
-
-import numpy as np
 import pytest
 
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS, BERNOULLI_SYMBOL_MAP, concordance_holds, parity_gaps
-from gnn.model import GnnConnection, GnnModel, GnnVariable
+from gnn.model import GnnModel, GnnVariable
 from gnn.parser import GNNParseError, parse_gnn, parse_gnn_file
 
 ROOT = Path(__file__).resolve().parents[1]

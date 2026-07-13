@@ -1,0 +1,53 @@
+{
+  "figures": [
+    {
+      "caption": "Three-layer resource architecture with the integration layer.",
+      "filename": "architecture_overview.png",
+      "generated_by": "src.figures.generate_architecture_overview",
+      "label": "fig:architecture"
+    },
+    {
+      "caption": "Runtime counts for discovered fonds, rules, and tools.",
+      "filename": "resource_counts.png",
+      "generated_by": "src.figures.generate_resource_counts",
+      "label": "fig:counts"
+    },
+    {
+      "caption": "Per-resource integration status dashboard.",
+      "filename": "status_dashboard.png",
+      "generated_by": "src.figures.generate_status_dashboard",
+      "label": "fig:pipeline"
+    },
+    {
+      "caption": "Thin-script pipeline from source validation through publication rendering.",
+      "filename": "pipeline_flow.png",
+      "generated_by": "src.figures.generate_pipeline_flow",
+      "label": "fig:pipelineflow"
+    },
+    {
+      "caption": "Three-level graceful-degradation design for shared resources.",
+      "filename": "resilience_layers.png",
+      "generated_by": "src.figures.generate_resilience_layers",
+      "label": "fig:resilience"
+    },
+    {
+      "caption": "Soft and strong branches of the template rule hierarchy.",
+      "filename": "rule_hierarchy.png",
+      "generated_by": "src.figures.generate_rule_hierarchy",
+      "label": "fig:rulehier"
+    },
+    {
+      "caption": "Schema taxonomy across bibliography, contacts, and dataset fonds.",
+      "filename": "fond_taxonomy.png",
+      "generated_by": "src.figures.generate_fond_taxonomy",
+      "label": "fig:taxonomy"
+    },
+    {
+      "caption": "Input, behavior, output, and exit-code contracts for template tools.",
+      "filename": "tool_contract.png",
+      "generated_by": "src.figures.generate_tool_contract",
+      "label": "fig:toolcontract"
+    }
+  ],
+  "schema_version": "template-pools-rules-tools-figure-registry-v1"
+}

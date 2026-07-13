@@ -210,8 +210,8 @@ a bare root-venv `uv run pytest` is not equivalent, see `ISA.md` Changelog):
 
 ```text
 Required test coverage of 90% reached. Total coverage: 95.93%
-277 passed (timing is machine-dependent)
-Project: ✓ PASSED (277/277 tests, 96.03% coverage)
+278 passed (timing is machine-dependent)
+Project: ✓ PASSED (278/278 tests, 95.91% coverage)
 ```
 
 **mypy --strict, the authoritative form.** The bare `uv run mypy --strict
@@ -227,7 +227,7 @@ MYPYPATH=projects/templates/template_formal/src \
   projects/templates/template_formal/src
 ```
 
-Real expected output: `Success: no issues found in 26 source files`.
+Real expected output: `Success: no issues found in 27 source files`.
 
 **Zero mocks.** `grep -rn "MagicMock\|mocker.patch\|unittest.mock" projects/templates/template_formal/tests/`
 must return nothing — every test uses a real on-disk SQLite file (`tmp_path`),

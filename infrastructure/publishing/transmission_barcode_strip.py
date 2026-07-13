@@ -5,7 +5,7 @@ from __future__ import annotations
 import io
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.steganography.barcode_generators import generate_qr_code
@@ -16,9 +16,7 @@ from infrastructure.steganography.barcode_payload import (
     build_mailto_qr_text,
     build_metadata_qr_text,
 )
-
-if TYPE_CHECKING:
-    from infrastructure.publishing.transmission_bookends import TransmissionContext
+from infrastructure.publishing.transmission_models import TransmissionContext
 
 logger = get_logger(__name__)
 

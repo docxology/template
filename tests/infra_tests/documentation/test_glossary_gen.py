@@ -31,11 +31,11 @@ def test_build_api_index_discovers_public_functions_and_classes(tmp_path):
             def _hidden():
                 """hidden"""
                 return 1
-            
+
             def public_func(a: int, b: int) -> int:
                 """Add two ints."""
                 return a + b
-            
+
             class PublicClass:
                 """A sample class with a summary sentence. The rest is ignored."""
                 def method(self):

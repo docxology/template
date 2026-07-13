@@ -10,7 +10,7 @@
 \contentsline {subsection}{\numberline {4.2}Schema fingerprint}{5}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Constraint validation}{6}{subsection.4.3}%
 \contentsline {section}{\numberline {5}Provenance}{7}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Methods: the provenance chain}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.1}The provenance chain}{7}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Why depth matters}{7}{subsection.5.2}%
 \contentsline {section}{\numberline {6}Quality validation}{8}{section.6}%
 \contentsline {subsection}{\numberline {6.1}The validation gate reacts to defects}{8}{subsection.6.1}%

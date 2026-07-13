@@ -336,7 +336,7 @@
     "log_file": {
       "exists": true,
       "size": 152,
-      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/logs/pipeline.log"
+      "path": "<home>/Documents/GitHub/template/projects/templates/template_sia/output/logs/pipeline.log"
     }
   }
 }

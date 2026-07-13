@@ -44,6 +44,7 @@ class EvidenceIssue:
     value: str
     severity: str
     zone: str
+    line_number: int = 0
 
 
 @dataclass(frozen=True)
@@ -212,7 +213,7 @@ def validate_text_against_registry(
 
     current_zone = "lenient"
     in_code_fence = False
-    for raw_line in text.splitlines():
+    for line_number, raw_line in enumerate(text.splitlines(), start=1):
         line = raw_line.strip()
         if line.startswith(("```", "~~~")):
             in_code_fence = not in_code_fence
@@ -224,8 +225,12 @@ def validate_text_against_registry(
         line_zone = "strict" if current_zone == "strict" or _looks_strict_line(line) else current_zone
         severity = "error" if strict or line_zone == "strict" else "warning"
         bucket = errors if severity == "error" else warnings
-        claim_line = _strip_inline_code_spans(raw_line)
-        for raw_number in _NUMBER_RE.findall(claim_line):
+        claim_line = _strip_nonclaim_markdown(raw_line)
+        line_citations = _CITATION_RE.findall(claim_line)
+        bibliographic_table = line.startswith("|") and any(
+            registry.has("citation", citation) for citation in line_citations
+        )
+        for raw_number in () if bibliographic_table else _NUMBER_RE.findall(claim_line):
             number = _canonical_number_token(raw_number)
             if number in seen_numbers or _is_always_allowed_number(number):
                 continue
@@ -235,12 +240,28 @@ def validate_text_against_registry(
             # entry fails closed (AI-SPINE-V2). Lenient zones stay tolerant.
             require_fresh = strict or line_zone == "strict"
             if not registry.has("number", number, fresh_only=require_fresh):
-                bucket.append(EvidenceIssue(kind="number", value=number, severity=severity, zone=line_zone))
+                bucket.append(
+                    EvidenceIssue(
+                        kind="number",
+                        value=number,
+                        severity=severity,
+                        zone=line_zone,
+                        line_number=line_number,
+                    )
+                )
             elif trusted_number_tiers is not None and line_zone == "strict":
                 facts = registry.lookup("number", number, fresh_only=True)
                 if facts and not any(fact.source_tier in trusted_number_tiers for fact in facts):
-                    bucket.append(EvidenceIssue(kind="number", value=number, severity=severity, zone=line_zone))
-        for citation in _CITATION_RE.findall(claim_line):
+                    bucket.append(
+                        EvidenceIssue(
+                            kind="number",
+                            value=number,
+                            severity=severity,
+                            zone=line_zone,
+                            line_number=line_number,
+                        )
+                    )
+        for citation in line_citations:
             if citation in seen_citations:
                 continue
             seen_citations.add(citation)
@@ -252,10 +273,20 @@ def validate_text_against_registry(
                 supported = registry.has("section", citation)
             elif citation.startswith("eq:"):
                 supported = registry.has("equation", citation)
+            elif citation.startswith("lst:"):
+                supported = registry.has("listing", citation)
             else:
                 supported = registry.has("citation", citation)
             if not supported:
-                bucket.append(EvidenceIssue(kind="citation", value=citation, severity=severity, zone=line_zone))
+                bucket.append(
+                    EvidenceIssue(
+                        kind="citation",
+                        value=citation,
+                        severity=severity,
+                        zone=line_zone,
+                        line_number=line_number,
+                    )
+                )
     return EvidenceValidationReport(
         errors=errors,
         warnings=warnings,
@@ -331,8 +362,18 @@ def _fact_identity(row: dict[str, Any]) -> tuple[str, str, str, str, str]:
     )
 
 
-_NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_@.-])-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?%?(?![A-Za-z0-9_.-])")
+_NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_@.-])-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?%?(?!(?:[A-Za-z0-9_-]|\.\d))")
 _CITATION_RE = re.compile(r"(?<![A-Za-z0-9_])@([A-Za-z0-9_:-]+)")
+_MARKDOWN_LINK_DESTINATION_RE = re.compile(r"(!?\[[^\]]*\])\([^\n)]*\)")
+_PANDOC_ATTRIBUTE_RE = re.compile(r"(?<=\))\{[^{}\n]*\}")
+_AUTOLINK_RE = re.compile(r"<(?:(?:https?|ftp)://|www\.)[^>]+>", re.IGNORECASE)
+_BARE_URL_RE = re.compile(r"(?:(?:https?|ftp)://|www\.)[^\s<>)]+", re.IGNORECASE)
+_DOI_RE = re.compile(r"\b10\.\d{4,9}/[-._;()/:A-Z0-9]+\b", re.IGNORECASE)
+_CRYPTO_IDENTIFIER_RE = re.compile(r"\b(?:SHA3?|MD|BLAKE2?)-?\d+\b", re.IGNORECASE)
+_LATEX_NUMERIC_SUBSCRIPT_RE = re.compile(r"(?<![A-Za-z0-9_:])([A-Za-z])_(?:\{\d+\}|\d+)")
+_PANDOC_CITATION_BLOCK_RE = re.compile(r"\[(@[^\]]+)\]")
+_CITATION_LOCATOR_RE = re.compile(r",\s*(?:pp?\.|chap\.|sec\.)\s*\d+(?:\s*[–-]\s*\d+)?", re.IGNORECASE)
+_ORDERED_LIST_PREFIX_RE = re.compile(r"^\s*\d{1,4}[.)]\s+")
 _STRICT_HEADINGS = frozenset({"abstract", "results", "evaluation", "findings", "experiments", "analysis"})
 _LENIENT_HEADINGS = frozenset({"introduction", "background", "related work", "discussion", "conclusion"})
 _ALWAYS_ALLOWED_NUMBERS = frozenset({"0", "1", "2", "3", "4", "5", "10", "100"})
@@ -348,6 +389,28 @@ def _normalize_number_value(value: str) -> str:
 
 def _strip_inline_code_spans(text: str) -> str:
     return re.sub(r"`[^`]*`", "", text)
+
+
+def _strip_nonclaim_markdown(text: str) -> str:
+    """Remove identifier-bearing Markdown syntax before claim tokenization.
+
+    Link destinations, URLs, DOIs, and ordered-list counters contain digits but
+    are identifiers or structure rather than quantitative claims. Visible link
+    labels remain so actual prose claims are still checked.
+    """
+    stripped = _strip_inline_code_spans(text)
+    stripped = _PANDOC_ATTRIBUTE_RE.sub("", stripped)
+    stripped = _MARKDOWN_LINK_DESTINATION_RE.sub(r"\1", stripped)
+    stripped = _AUTOLINK_RE.sub("", stripped)
+    stripped = _BARE_URL_RE.sub("", stripped)
+    stripped = _DOI_RE.sub("", stripped)
+    stripped = _CRYPTO_IDENTIFIER_RE.sub("", stripped)
+    stripped = _LATEX_NUMERIC_SUBSCRIPT_RE.sub(r"\1", stripped)
+    stripped = _PANDOC_CITATION_BLOCK_RE.sub(
+        lambda match: f"[{_CITATION_LOCATOR_RE.sub('', match.group(1))}]",
+        stripped,
+    )
+    return _ORDERED_LIST_PREFIX_RE.sub("", stripped)
 
 
 def _canonical_number_token(value: str) -> str:
@@ -376,7 +439,13 @@ def _number_variants(value: str) -> set[str]:
         number = float(_canonical_number_token(str(value)).rstrip("%"))
     except ValueError:
         return variants
-    for digits in (1, 2, 3, 4):
+    # Manuscripts commonly report small generated measurements to five or
+    # more decimal places.  Preserve the evidence link for those ordinary
+    # rounded presentations without requiring authors to duplicate the
+    # rounded value in a claim ledger.  Eight places is deliberately bounded:
+    # it covers normal scientific presentation while avoiding an unbounded
+    # family of near-equal tokens.
+    for digits in range(1, 9):
         variants.add(f"{number:.{digits}f}".rstrip("0").rstrip("."))
     if 0 < abs(number) <= 1:
         percent = number * 100

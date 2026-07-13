@@ -1,6 +1,6 @@
 # AGENTS.md — template_validator
 
-> Agent-oriented documentation for the `validator` exemplar tool.  
+> Agent-oriented documentation for the `validator` exemplar tool.
 > Human developers: see [README.md](README.md).
 
 ## Identity
@@ -31,7 +31,7 @@ echo '{"name": "example", "version": "1.0"}' | bash scripts/validate.sh
 
 ### Schema
 
-`scripts/schema.json` is a standard JSON Schema (Draft-07).  
+`scripts/schema.json` is a standard JSON Schema (Draft-07).
 Agents may read this file directly to understand the expected data shape.
 
 ## Agent Decision Guidance

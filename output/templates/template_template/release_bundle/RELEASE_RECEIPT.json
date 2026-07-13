@@ -1,5 +1,5 @@
 {
-  "bundle_dir": "/Users/4d/Documents/GitHub/template/output/templates/template_template/release_bundle",
+  "bundle_dir": "<home>/Documents/GitHub/template/output/templates/template_template/release_bundle",
   "concept_doi": "10.5281/zenodo.20419007",
   "config_updated": true,
   "deposit_filename": "Friedman_2026_Template_535bd809.pdf",
@@ -8,7 +8,7 @@
   "errors": [],
   "github_release_url": null,
   "github_repo": "docxology/template_template",
-  "pdf_path": "/Users/4d/Documents/GitHub/template/output/templates/template_template/release_bundle/Friedman_2026_Template_535bd809.pdf",
+  "pdf_path": "<home>/Documents/GitHub/template/output/templates/template_template/release_bundle/Friedman_2026_Template_535bd809.pdf",
   "pdf_sha256": "535bd80943d0ae9fd504a926efb41c6b39c3a812a94ea4d51bc974029bca563c",
   "project": "templates/template_template",
   "render_exit_code": 0,

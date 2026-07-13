@@ -19,6 +19,20 @@ class SecurityAssayRecord:
         """Process as dict."""
         return asdict(self)
 
+    @property
+    def is_complete(self) -> bool:
+        """Whether every disclosure field needed for a bounded claim is present."""
+        return all(
+            value.strip()
+            for value in (
+                self.threat,
+                self.standard,
+                self.evidence_surface,
+                self.validator,
+                self.claim_boundary,
+            )
+        )
+
 
 def build_security_assay(config: Any) -> tuple[SecurityAssayRecord, ...]:
     """Build security assay."""
@@ -57,9 +71,11 @@ def security_assay_summary_line(records: tuple[SecurityAssayRecord, ...]) -> str
     """Process security assay summary line."""
     if not records:
         return "0 adversarial assay rows are configured; no security-scope claim should be made."
+    complete = sum(record.is_complete for record in records)
     return (
-        f"{len(records)} adversarial assay rows mapping threats and standards to local evidence surfaces, "
-        "validators, and claim boundaries; they are scope controls, not completed scan findings."
+        f"{len(records)} adversarial assay rows, {complete} schema-complete, mapping threats and standards "
+        "to local evidence surfaces, validators, and claim boundaries; completeness is a scope control, "
+        "not completed scan findings."
     )
 
 

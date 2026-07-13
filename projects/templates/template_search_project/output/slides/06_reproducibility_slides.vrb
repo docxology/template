@@ -9,12 +9,13 @@ contract table:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Live search drift.} When \breaktt{config.search.sources}
-  includes \texttt{arxiv} or \texttt{crossref}, the first cache-miss
-  invocation hits the live API; the cached JSON freezes that response,
-  but two cold-start clones running on different days will see different
-  paper sets. Pin a \texttt{LocalBackend} corpus or commit
-  \breaktt{output/search/cache/} to break this dependency.
+  \textbf{Live search drift.} When
+  \breaktt{project\_config.search.sources} includes \texttt{arxiv} or
+  \texttt{crossref}, the first cache-miss invocation hits the live API;
+  the cached JSON freezes that response, but two cold-start clones
+  running on different days will see different paper sets. Pin a
+  \texttt{LocalBackend} corpus or commit \breaktt{output/search/cache/}
+  to break this dependency.
 \item
   \textbf{\texttt{pypdf} version drift.} The fulltext fetcher uses
   \texttt{pypdf} to extract text from a downloaded PDF. \texttt{pypdf}'s
@@ -31,8 +32,8 @@ contract table:
   archiving a run for replication.
 \item
   \textbf{Paperclip backend status.} The \texttt{paperclip} backend is
-  opt-in and currently degrades to HTTP 405 on the production endpoint;
-  the run records the error in
+  opt-in and the production endpoint may reject the adapter's request
+  method; the run records the response in
   \texttt{SearchResult.errors{[}paperclip{]}} and continues. Treat
   \texttt{paperclip} results as advisory until the upstream service
   stabilises.

@@ -28,3 +28,6 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_reg
 
 - Do not backfill hypotheses from observed results.
 - Label exploratory analyses explicitly.
+- Regenerate figures through `scripts/generate_figures.py`; it writes
+  `output/figures/figure_registry.json` only after all four registered-report
+  figures exist, and supports explicit temp destinations for isolated checks.

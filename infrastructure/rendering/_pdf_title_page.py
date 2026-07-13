@@ -21,6 +21,7 @@ import yaml
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_title_page_config import (
     _metadata_from_config,
+    _rendering_options,
     build_pandoc_metadata,
 )
 
@@ -141,9 +142,15 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
             return body
 
         metadata = _metadata_from_config(config)
+        rendering = _rendering_options(config)
         title = _latex_text(metadata["title"])
         subtitle = _latex_text(metadata["subtitle"])
-        image_block = _cover_image_block(config, config_file, height=r"0.60\textheight", section_name="paper")
+        image_block = _cover_image_block(
+            config,
+            config_file,
+            height=rf"{rendering['cover_height_fraction']}\textheight",
+            section_name="paper",
+        )
 
         if image_block:
             author_lines = _paper_cover_author_lines(config)

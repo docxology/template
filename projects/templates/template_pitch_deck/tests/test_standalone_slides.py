@@ -48,27 +48,21 @@ def test_standalone_slide_markdown_content_slide_includes_bullets_and_source():
 
 def test_standalone_slide_markdown_stat_slide_shows_value_and_label():
     slide = Slide(title="Proof", kind="stat", stat_value="89 tests", stat_label="91% coverage")
-    md = standalone_slide_markdown(
-        slide, index=1, total=1, length="short", pitch_subject="x", source_base_url=""
-    )
+    md = standalone_slide_markdown(slide, index=1, total=1, length="short", pitch_subject="x", source_base_url="")
     assert "89 tests" in md
     assert "91% coverage" in md
 
 
 def test_standalone_slide_markdown_quote_slide_shows_quote_and_attribution():
     slide = Slide(title="", kind="quote", quote_text="A real quote.", quote_attribution="Someone")
-    md = standalone_slide_markdown(
-        slide, index=1, total=1, length="short", pitch_subject="x", source_base_url=""
-    )
+    md = standalone_slide_markdown(slide, index=1, total=1, length="short", pitch_subject="x", source_base_url="")
     assert "A real quote." in md
     assert "Someone" in md
 
 
 def test_standalone_slide_markdown_without_source_omits_source_line():
     slide = Slide(title="No source", bullets=("x",))
-    md = standalone_slide_markdown(
-        slide, index=1, total=1, length="short", pitch_subject="x", source_base_url=""
-    )
+    md = standalone_slide_markdown(slide, index=1, total=1, length="short", pitch_subject="x", source_base_url="")
     assert "**Source:**" not in md
 
 
@@ -90,18 +84,17 @@ def test_write_standalone_slides_writes_one_real_file_per_slide(tmp_path: Path):
     assert len(written) == 2
     for path in written:
         assert path.is_file()
-    assert (
-        tmp_path / "output" / "slides_standalone" / "template_template_short" / "slide_01.md"
-    ).is_file()
-    assert (
-        tmp_path / "output" / "slides_standalone" / "template_template_short" / "slide_02.md"
-    ).is_file()
+    assert (tmp_path / "output" / "slides_standalone" / "template_template_short" / "slide_01.md").is_file()
+    assert (tmp_path / "output" / "slides_standalone" / "template_template_short" / "slide_02.md").is_file()
 
 
 def test_attach_qr_urls_sets_deterministic_url_per_slide():
     deck = DeckContent(title="Deck", slides=(Slide(title="One"), Slide(title="Two")))
     updated = attach_qr_urls(
-        deck, length="short", pitch_subject="template_template", source_base_url="https://github.com/org/repo/blob/main/"
+        deck,
+        length="short",
+        pitch_subject="template_template",
+        source_base_url="https://github.com/org/repo/blob/main/",
     )
     assert updated.slides[0].qr_url == (
         "https://github.com/org/repo/blob/main/"
@@ -163,7 +156,11 @@ def test_write_standalone_slides_clears_stale_files_on_shrinking_rerender(tmp_pa
     files from the previous, larger run."""
     big_deck = DeckContent(
         title="Deck",
-        slides=(Slide(title="One", bullets=("a",)), Slide(title="Two", bullets=("b",)), Slide(title="Three", bullets=("c",))),
+        slides=(
+            Slide(title="One", bullets=("a",)),
+            Slide(title="Two", bullets=("b",)),
+            Slide(title="Three", bullets=("c",)),
+        ),
     )
     write_standalone_slides(
         big_deck, length="short", pitch_subject="template_template", project_root=tmp_path, source_base_url=""

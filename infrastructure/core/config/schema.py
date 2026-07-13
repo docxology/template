@@ -265,7 +265,7 @@ def generate_manuscript_config_schema(
         "sheaf": {"type": "object", "additionalProperties": True},
     }
     if include_registered_extensions:
-        extensions = {}
+        extensions: dict[str, Any] = {}
         extensions.update(get_project_schema_extensions(""))
         if project_name:
             extensions.update(get_project_schema_extensions(project_name))

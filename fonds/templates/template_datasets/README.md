@@ -1,7 +1,7 @@
 # template_datasets
 
-**Type:** datasets  
-**Version:** 1.0  
+**Type:** datasets
+**Version:** 1.0
 **License:** CC0-1.0
 
 A dataset registry and metadata store — exemplar template for cataloguing ML/AI datasets with provenance, licensing, and access information.

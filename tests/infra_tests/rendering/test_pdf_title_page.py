@@ -28,6 +28,7 @@ from infrastructure.rendering._pdf_title_page import (  # noqa: E402
     generate_title_page_body,
     generate_title_page_preamble,
 )
+from infrastructure.rendering._pdf_title_page_config import _rendering_options
 
 
 def _manuscript(tmp_path: Path, config_text: str) -> Path:
@@ -88,9 +89,39 @@ class TestBody:
         assert "Deterministic Exemplar" in body
         assert "A reproducible test subtitle" in body
 
+    def test_body_uses_project_cover_height_fraction(self, tmp_path: Path) -> None:
+        config = (
+            PAPER_CONFIG.replace("authors:", '  cover:\n    image: "cover.png"\nauthors:')
+            + "rendering:\n  cover_height_fraction: 0.76\n"
+        )
+        d = _manuscript(tmp_path, config)
+        (d / "cover.png").write_bytes(b"png")
+
+        body = generate_title_page_body(d)
+
+        assert r"height=0.76\textheight" in body
+
     def test_missing_config_returns_empty(self, tmp_path: Path) -> None:
         (tmp_path / "manuscript").mkdir()
         assert generate_title_page_body(tmp_path / "manuscript") == ""
+
+    def test_rendering_options_reject_nonfinite_or_invalid_fractions(self) -> None:
+        options = _rendering_options(
+            {
+                "rendering": {
+                    "section_breaks": False,
+                    "figure_height_fraction": float("nan"),
+                    "cover_height_fraction": 2.0,
+                    "front_matter_figure_height_fraction": "0.64",
+                }
+            }
+        )
+        assert options == {
+            "section_breaks": False,
+            "figure_height_fraction": "0.5",
+            "cover_height_fraction": "0.6",
+            "front_matter_figure_height_fraction": "0.64",
+        }
 
     def test_book_config_uses_book_cover_body(self, tmp_path: Path) -> None:
         book_cfg = PAPER_CONFIG + 'book:\n  title: "A Complete Book"\n'

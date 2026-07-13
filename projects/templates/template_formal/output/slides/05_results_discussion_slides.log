@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:15
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<repo-root>/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_formal/output/slides/05_results_discussion_slides.tex
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1420,7 +1420,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.aux)
 \openout1 = `05_results_discussion_slides.aux'.
 
@@ -1538,7 +1538,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.nav)
 [1
 
@@ -1546,7 +1546,7 @@ jects/templates/template_formal/output/slides/05_results_discussion_slides.nav)
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb)
 
 Underfull \vbox (badness 1112) detected at line 214
@@ -1569,7 +1569,7 @@ Overfull \vbox (408.79561pt too high) detected at line 214
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb)
 
 Underfull \vbox (badness 1112) detected at line 240
@@ -1592,7 +1592,7 @@ Overfull \vbox (21.18448pt too high) detected at line 240
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 19.
@@ -1675,7 +1675,7 @@ Overfull \vbox (341.92728pt too high) detected at line 311
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <7.665> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 79.
@@ -1700,7 +1700,7 @@ Overfull \vbox (1656.91882pt too high) detected at line 497
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 6.18091pt on input line 174.
@@ -1726,7 +1726,7 @@ Overfull \vbox (7585.96599pt too high) detected at line 1228
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb)
 [15
 
@@ -1734,7 +1734,7 @@ jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb)
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb
 Missing character: There is no ∨ (U+2228) in font [lmmono10-regular]:!
 Missing character: There is no ∨ (U+2228) in font [lmmono10-regular]:!
@@ -1759,7 +1759,7 @@ Overfull \vbox (1819.03366pt too high) detected at line 1416
 \openout4 = `05_results_discussion_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.vrb)
 
 Underfull \vbox (badness 1112) detected at line 1463
@@ -1789,7 +1789,7 @@ Overfull \vbox (348.07738pt too high) detected at line 1463
 \openout7 = `05_results_discussion_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/05_results_discussion_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1805,6 +1805,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,13n,123p,1149b,704s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <repo-root>/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_formal/output/slides/05_results_discu
 ssion_slides.pdf (19 pages).

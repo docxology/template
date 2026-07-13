@@ -104,6 +104,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -138,23 +141,22 @@ refined through iterative AI-assisted generation, serving as both input
 prompt and output validator.
 
 The \texttt{SKILL.md} layer, with its MCP-aligned YAML frontmatter
-\breakseq{[@anthropic2024mcp]}, provides a critical bridge to the agentic
-software paradigm. Lu et al.'s AI Scientist \breakseq{[@lu2024aiscientist]}
-demonstrates end-to-end autonomous research; Wang et al.'s OpenHands
-\breakseq{[@wang2024opendevin]} achieved 53\% on SWE-Bench Verified
-\breakseq{[@jimenez2024swebench]}---the first open-source system to exceed
-50\%. These systems require structured, protocol-aligned tool
-inventories to navigate unfamiliar codebases. An OpenHands-class agent
-navigating \texttt{template/} reads \texttt{CLAUDE.md} for global
-constraints, scans \texttt{AGENTS.md} for module surfaces, and invokes
-capabilities via \texttt{SKILL.md} without hallucinating function
-signatures. All 23 infrastructure modules carry \texttt{AGENTS.md} and
-\texttt{README.md}; all additionally carry \texttt{SKILL.md}, ensuring
-no documentation blind spots.
+\breakseq{[@anthropic2024mcp]}, provides a bridge to the agentic software
+paradigm. Lu et al.'s AI Scientist \breakseq{[@lu2024aiscientist]} demonstrates
+end-to-end autonomous research, while OpenHands is evaluated on
+SWE-Bench Verified \breakseq{[@wang2024opendevin; @jimenez2024swebench]}. These
+systems motivate structured, protocol-aligned tool inventories for
+unfamiliar codebases. An agent navigating \texttt{template/} reads
+\texttt{CLAUDE.md} for global constraints, scans \texttt{AGENTS.md} for
+local contracts, and can invoke skill-enabled capabilities through
+\texttt{SKILL.md} descriptors. The live module inventory verifies
+\texttt{AGENTS.md} and \texttt{README.md} coverage; \texttt{SKILL.md}
+remains a capability-specific layer rather than a universal claim about
+every infrastructure directory.
 
 This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
-substantial: \texttt{380} Markdown files under \texttt{docs/} alone,
+substantial: \texttt{390} Markdown files under \texttt{docs/} alone,
 plus an \texttt{AGENTS.md}/\texttt{README.md} pair in every directory
 and a \texttt{SKILL.md} descriptor on every infrastructure module. That
 count is itself injected from live introspection---the manuscript
@@ -187,9 +189,9 @@ mitigate this through:
   that abstracts pipeline complexity.
 \item
   \textbf{Skill-level documentation}: The \texttt{docs/guides/}
-  directory provides four progressive guides (Levels 1--3 Beginner, 4--6
-  Intermediate, 7--9 Advanced, 10--12 Expert) alongside a comprehensive
-  new-project setup checklist.
+  directory provides a progressive sequence of beginner, intermediate,
+  advanced, and expert guides alongside a comprehensive new-project
+  setup checklist.
 \end{enumerate}
 \end{frame}
 

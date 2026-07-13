@@ -16,6 +16,7 @@ Two independent kinds of run:
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TypedDict
 
 from template_formal.agent.agent import Agent, BeliefState, CandidateAction
 from template_formal.colony.experiment import ColonyTrialConfig, ColonyTrialResult, run_colony_trial
@@ -31,6 +32,17 @@ DEMO_DEPOSIT_AMOUNT = 1.0
 DEMO_DECAY = 0.02
 
 
+class DemoSummary(TypedDict):
+    """JSON-serializable result of the deterministic demonstration run."""
+
+    num_agents: int
+    num_ticks: int
+    choice_history: list[list[str]]
+    concentration_history: list[dict[str, float]]
+    observation_counts: dict[str, int]
+    agent_db_paths: list[str]
+
+
 def _candidates_from_field(field: PheromoneField) -> list[CandidateAction[BeliefState]]:
     """Build one tick's candidates purely from the shared field's public Protocol surface."""
     return [
@@ -39,7 +51,7 @@ def _candidates_from_field(field: PheromoneField) -> list[CandidateAction[Belief
     ]
 
 
-def run_demo_colony(output_dir: Path) -> dict[str, object]:
+def run_demo_colony(output_dir: Path) -> DemoSummary:
     """Run a small, real, on-disk colony simulation and return a summary payload.
 
     Each :class:`Agent` opens its own real SQLite file under ``output_dir``

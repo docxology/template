@@ -1,0 +1,29 @@
+{
+  "figures": [
+    {
+      "caption": "Registered analysis workflow and pre-results lock boundary.",
+      "filename": "analysis_dag.png",
+      "generated_by": "registered_report.figures.plot_analysis_dag",
+      "label": "fig:analysis_dag"
+    },
+    {
+      "caption": "Timeline of registered decisions and documented deviations.",
+      "filename": "deviation_timeline.png",
+      "generated_by": "registered_report.figures.plot_deviation_timeline",
+      "label": "fig:deviation_timeline"
+    },
+    {
+      "caption": "Registered hypothesis-to-outcome-to-analysis mapping.",
+      "filename": "hypothesis_map.png",
+      "generated_by": "registered_report.figures.plot_hypothesis_map",
+      "label": "fig:hypothesis_map"
+    },
+    {
+      "caption": "Seeded permutation null distribution and observed registered statistic.",
+      "filename": "permutation_result.png",
+      "generated_by": "registered_report.figures.plot_permutation_result",
+      "label": "fig:permutation_result"
+    }
+  ],
+  "schema_version": "template-registered-report-figure-registry-v1"
+}

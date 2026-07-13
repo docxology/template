@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,17 +173,19 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<main id="main-content">
 <h1 id="sec:methods_lean">Lean formalization boundary</h1>
 <!-- sheaf-track:prose -->
 <p>The Lean method is a boundary witness track, not a broad
 formalization of active inference. <code>lake build</code> checks
-declarations under <code>lean/TemplateActiveInference/</code>; <span
-class="citation"
-data-cites="fig:lean_boundary_status">[@fig:lean_boundary_status]</span>
-renders the proved/deferred surface, while generated inventories carry
-theorem names, constructive-token status, and axiom checks.</p>
+declarations under <code>lean/TemplateActiveInference/</code>;
+[fig:lean_boundary_status] renders the proved/deferred surface, while
+generated inventories carry theorem names, constructive-token status,
+and axiom checks.</p>
 <p>The theorem set links back to the finite analytical and pymdp toys.
 Horizon witnesses constrain the planning-depth examples, and
 <code>efe_additive_identity_from_relations</code> proves
@@ -198,7 +200,7 @@ agree.</p>
 <img src="../figures/lean_boundary_status.png" style="width:90.0%"
 data-fig-alt="Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/."
 alt="Lean formalization boundary: module witnesses checked by lake build." />
-<figcaption aria-hidden="true">Lean formalization boundary: module
+<figcaption>Lean formalization boundary: module
 witnesses checked by lake build.</figcaption>
 </figure>
 <!-- sheaf-track:lean -->
@@ -245,5 +247,6 @@ statements and proof-source metadata into
 <code>output/data/proof_extraction_index.json</code>. The index
 currently contains 12 extracted theorem rows, with constructive-token
 status <code>true</code>.</p>
+</main>
 </body>
 </html>

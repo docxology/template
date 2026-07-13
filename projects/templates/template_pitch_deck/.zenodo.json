@@ -1,0 +1,31 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for template_pitch_deck: Reproducible, Validated Pitch-Deck Generation.",
+  "keywords": [
+    "pitch deck",
+    "slide generation",
+    "reproducible research communication",
+    "meta-science infrastructure",
+    "science integrity",
+    "token validation",
+    "PPTX",
+    "PDF rendering"
+  ],
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21281509",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
+  ],
+  "title": "template_pitch_deck: Reproducible, Validated Pitch-Deck Generation",
+  "upload_type": "software",
+  "version": "1.0.0"
+}

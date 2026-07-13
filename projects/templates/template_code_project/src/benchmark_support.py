@@ -1,10 +1,10 @@
-"""Benchmark support: time a pure project function, score with infra rubric.
+"""Benchmark support: evaluate a pure project function with an infra rubric.
 
 Thin domain helper that demonstrates ``infrastructure.benchmark`` from inside
-the code exemplar. It times the pure :func:`quadratic_function` across a fixed
-set of input sizes (deterministic — fixed seed, fixed sizes, no network), turns
-the timing facts into boolean rubric checks, and scores them through the real
-``infrastructure.benchmark`` rubric API. Orchestration (writing reports /
+the code exemplar. It evaluates :func:`quadratic_function` across fixed inputs
+and scores deterministic facts through the real ``infrastructure.benchmark``
+rubric API. Wall-clock measurements are retained only in memory as runtime
+diagnostics; tracked reports omit them. Orchestration (writing reports and
 figures) lives in ``scripts/``; this module only computes.
 """
 
@@ -32,14 +32,18 @@ PROJECT_NAME = "template_code_project"
 DEFAULT_INPUT_SIZES: tuple[int, ...] = (2, 4, 8, 16)
 DEFAULT_REPEATS = 50
 _SEED = 7
+TIMING_POLICY = (
+    "Wall-clock measurements are environment-dependent runtime diagnostics "
+    "and are intentionally omitted from tracked benchmark artifacts."
+)
 
 _RUBRIC = RubricSet.from_dict(
     {
         "name": "code-project-benchmark",
         "dimensions": [
-            {"name": "all_sizes_timed", "weight": 1.0},
+            {"name": "all_sizes_evaluated", "weight": 1.0},
             {"name": "finite_objective_values", "weight": 1.0},
-            {"name": "non_negative_timings", "weight": 1.0},
+            {"name": "repeat_budget_completed", "weight": 1.0},
             {"name": "deterministic_objective", "weight": 1.0},
         ],
     }
@@ -48,7 +52,7 @@ _RUBRIC = RubricSet.from_dict(
 
 @dataclass(frozen=True)
 class TimingMeasurement:
-    """One deterministic timing of ``quadratic_function`` at a fixed size."""
+    """One benchmark measurement; timing is a runtime-only diagnostic."""
 
     input_size: int
     repeats: int
@@ -97,16 +101,16 @@ def run_quadratic_benchmark(
     input_sizes: tuple[int, ...] = DEFAULT_INPUT_SIZES,
     repeats: int = DEFAULT_REPEATS,
 ) -> BenchmarkRun:
-    """Time the pure quadratic objective and score it with the infra rubric."""
+    """Evaluate the pure quadratic objective and score deterministic facts."""
     measurements = tuple(_time_one(size, repeats) for size in input_sizes)
 
     # Deterministic re-computation to assert the objective is reproducible.
     repeated = {m.input_size: float(quadratic_function(_fixed_input(m.input_size))) for m in measurements}
 
     checks: dict[str, bool] = {
-        "all_sizes_timed": len(measurements) == len(input_sizes) and all(m.calls > 0 for m in measurements),
+        "all_sizes_evaluated": len(measurements) == len(input_sizes),
         "finite_objective_values": all(np.isfinite(m.objective_value) for m in measurements),
-        "non_negative_timings": all(m.best_seconds >= 0.0 for m in measurements),
+        "repeat_budget_completed": all(m.calls == repeats and m.repeats == repeats for m in measurements),
         "deterministic_objective": all(repeated[m.input_size] == m.objective_value for m in measurements),
     }
 
@@ -128,10 +132,12 @@ def run_quadratic_benchmark(
 
 
 def benchmark_payload(run: BenchmarkRun) -> dict[str, Any]:
-    """Convert a benchmark run into a JSON-safe payload (infra-shaped)."""
+    """Convert a run into a byte-stable, JSON-safe canonical payload."""
     return {
+        "schema_version": "template_code_project/benchmark_rubric/v2",
         "project": PROJECT_NAME,
         "passed": run.benchmark_score.passed,
+        "timing_policy": TIMING_POLICY,
         "checks": dict(run.checks),
         "rubric": {
             "name": run.rubric.name,
@@ -146,7 +152,6 @@ def benchmark_payload(run: BenchmarkRun) -> dict[str, Any]:
                 "input_size": m.input_size,
                 "repeats": m.repeats,
                 "calls": m.calls,
-                "best_seconds": m.best_seconds,
                 "objective_value": m.objective_value,
             }
             for m in run.measurements

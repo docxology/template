@@ -15,6 +15,7 @@ from infrastructure.project.public_scope import (
     LOCAL_ONLY_TEMPLATE_NAMES,
     PUBLIC_PROJECT_NAMES,
     main,
+    public_ci_lint_paths,
     public_ci_source_paths,
     public_project_names,
 )
@@ -47,7 +48,23 @@ def test_public_scope_filters_to_template_projects(tmp_path: Path) -> None:
     assert public_project_names(tmp_path) == sorted(PUBLIC_PROJECT_NAMES)
     assert public_ci_source_paths(tmp_path) == [
         Path("infrastructure"),
+        Path("scripts"),
         *[Path("projects") / name / "src" for name in PUBLIC_PROJECT_NAMES],
+    ]
+    assert public_ci_lint_paths(tmp_path) == [
+        Path("conftest.py"),
+        Path("docs"),
+        Path("infrastructure"),
+        Path("scripts"),
+        Path("tests"),
+        *[
+            path
+            for name in PUBLIC_PROJECT_NAMES
+            for path in (
+                Path("projects") / name / "src",
+                Path("projects") / name / "tests",
+            )
+        ],
     ]
 
 
@@ -100,6 +117,22 @@ def test_public_template_roster_has_explicit_local_only_escape_hatch() -> None:
 
     assert declared <= on_disk
     assert on_disk <= declared | local_only
+
+
+def test_codeowners_explicitly_covers_every_public_template() -> None:
+    """The public roster must stay under an explicit template owner rule."""
+    repo = Path(__file__).resolve().parents[3]
+    codeowners = (repo / ".github" / "CODEOWNERS").read_text(encoding="utf-8")
+    owner_rules = {
+        fields[0]
+        for raw_line in codeowners.splitlines()
+        if (fields := raw_line.split()) and not fields[0].startswith("#") and "@docxology" in fields[1:]
+    }
+
+    template_prefix = "/projects/templates/"
+    assert template_prefix in owner_rules
+    for project_name in PUBLIC_PROJECT_NAMES:
+        assert f"/projects/{project_name}/".startswith(template_prefix)
 
 
 def test_public_scope_cli_is_quiet_on_stderr() -> None:

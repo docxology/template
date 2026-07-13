@@ -63,11 +63,11 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 - `runner/repro_bundle.py` - builds/verifies reproduction bundles (`infrastructure.publishing.repro_bundle`)
 - `audit/lint_docs.py` - runs Mermaid, link, consistency, and doc-pair documentation checks
 - `audit/audit_documentation.py` - emits the advisory public documentation RedTeam audit
-- `audit/verify_no_mocks.py` - checks tests for mock usage
+- `audit/verify_no_mocks.py` - lexical mock-framework gate; `--inventory` classifies semantic stand-ins
 - `audit/audit_filepaths.py` - repository filepath and reference audit
 - `audit/check_tracked_generated_artifacts.py` - rejects tracked generated outputs and package metadata
 - `shell/ci_local.sh` - local CI reproduction (`act` when available, otherwise a pure-Python CI fallback; see [`../docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md))
-- Maintenance helpers now live under [`maintenance/`](maintenance/) - `manage_workspace.py`, `show_project_info.py`, `render_working_projects.py`, `rerender_working_pdfs.py`, `organize_executive_outputs.py`, `merge_test_supplements.py`, `batch_cogsec_improve.py`, `setup_pre_commit.py`, `codegraph_local.py` (see [`maintenance/README.md`](maintenance/README.md) and [`maintenance/AGENTS.md`](maintenance/AGENTS.md)). `show_project_info.py` is a standalone project metadata CLI; it is **not** invoked by `run.sh` (the menu's `i` key prints only the current project name).
+- Maintenance helpers now live under [`maintenance/`](maintenance/) - `manage_workspace.py`, `show_project_info.py`, `render_working_projects.py`, `rerender_working_pdfs.py`, `organize_executive_outputs.py`, `merge_test_supplements.py`, `batch_cogsec_improve.py`, `setup_pre_commit.py`, `codegraph_local.py`, `refresh_artifact_manifests.py` (see [`maintenance/README.md`](maintenance/README.md) and [`maintenance/AGENTS.md`](maintenance/AGENTS.md)). `show_project_info.py` is a standalone project metadata CLI; it is **not** invoked by `run.sh` (the menu's `i` key prints only the current project name).
 - `shell/bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by `run.sh` / `secure_run.sh`)
 - `shell/shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` and `secure_run.sh`
 - `shell/backup-daily.sh` / `shell/backup-weekly.sh` / `shell/backup-full.sh` - rsync backup tiers

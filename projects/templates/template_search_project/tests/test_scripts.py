@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
-
-import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 # Project lives at projects/templates/<name>/; repo root is three levels up.
@@ -27,19 +26,17 @@ def _make_run(tmp_path: Path) -> Path:
     """Run run_search_pipeline.py against an isolated project root using the bundled corpus."""
     project_root = tmp_path / "proj"
     project_root.mkdir()
-    # Copy the corpus and config into the isolated project.
-    (project_root / "manuscript").mkdir()
+    # Copy authored manuscript inputs and the bundled corpus into the isolated project.
+    shutil.copytree(PROJECT_ROOT / "manuscript", project_root / "manuscript")
     (project_root / "data").mkdir()
     corpus_src = PROJECT_ROOT / "data" / "corpus.json"
     (project_root / "data" / "corpus.json").write_text(corpus_src.read_text(encoding="utf-8"), encoding="utf-8")
-    config_src = PROJECT_ROOT / "manuscript" / "config.yaml"
-    (project_root / "manuscript" / "config.yaml").write_text(config_src.read_text(encoding="utf-8"), encoding="utf-8")
     return project_root
 
 
-def test_run_search_pipeline_offline_smoke(tmp_path: Path):
-    project_root = _make_run(tmp_path)
-    result = _run(
+def _run_offline_pipeline(project_root: Path) -> subprocess.CompletedProcess[str]:
+    """Run the real offline search CLI against an isolated project root."""
+    return _run(
         "run_search_pipeline.py",
         [
             "--config",
@@ -49,6 +46,11 @@ def test_run_search_pipeline_offline_smoke(tmp_path: Path):
             "--no-llm",
         ],
     )
+
+
+def test_run_search_pipeline_offline_smoke(tmp_path: Path):
+    project_root = _make_run(tmp_path)
+    result = _run_offline_pipeline(project_root)
     assert result.returncode == 0, result.stderr
     # Required outputs exist.
     assert (project_root / "manuscript" / "references.bib").exists()
@@ -62,47 +64,66 @@ def test_run_search_pipeline_offline_smoke(tmp_path: Path):
 
 def test_generate_search_figures(tmp_path: Path):
     project_root = _make_run(tmp_path)
-    # First run the search so figures have input.
-    pipeline_result = _run(
-        "run_search_pipeline.py",
-        [
-            "--config",
-            str(project_root / "manuscript" / "config.yaml"),
-            "--project-root",
-            str(project_root),
-            "--no-llm",
-        ],
-    )
+    pipeline_result = _run_offline_pipeline(project_root)
     assert pipeline_result.returncode == 0, pipeline_result.stderr
 
-    # Now run figures.
-    result = subprocess.run(
-        [sys.executable, str(PROJECT_ROOT / "scripts" / "y_generate_search_figures.py")],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        env={
-            **dict(__import__("os").environ),
-            # The script resolves relative to its own path, but we need to
-            # point it at the isolated project.
-        },
+    result = _run(
+        "y_generate_search_figures.py",
+        ["--project-root", str(project_root)],
     )
-    # The y_ script reads from PROJECT_ROOT/output, not the isolated copy,
-    # so we instead invoke it via the in-process module to verify behaviour:
-    # exercised in test_figures.py. Here we just assert the script imports
-    # cleanly when there are no results.
-    if not (PROJECT_ROOT / "output" / "search" / "results.json").exists():
-        assert result.returncode == 2  # graceful skip
+
+    assert result.returncode == 0, result.stderr
+    figures_dir = project_root / "output" / "figures"
+    expected = {
+        figures_dir / "papers_per_source.png",
+        figures_dir / "year_histogram.png",
+        figures_dir / "score_distribution.png",
+    }
+    assert set(figures_dir.glob("*.png")) == expected
+    assert all(path.stat().st_size > 0 for path in expected)
+    registry = json.loads((figures_dir / "figure_registry.json").read_text(encoding="utf-8"))
+    assert len(registry["figures"]) == 3
+
+
+def test_generate_search_figures_skips_without_input(tmp_path: Path):
+    project_root = _make_run(tmp_path)
+    result = _run("y_generate_search_figures.py", ["--project-root", str(project_root)])
+
+    assert result.returncode == 2
+    assert not (project_root / "output" / "figures").exists()
+
+
+def test_generate_manuscript_variables(tmp_path: Path):
+    project_root = _make_run(tmp_path)
+    pipeline_result = _run_offline_pipeline(project_root)
+    assert pipeline_result.returncode == 0, pipeline_result.stderr
+
+    result = _run(
+        "z_generate_manuscript_variables.py",
+        ["--project-root", str(project_root)],
+    )
+
+    assert result.returncode == 0, result.stderr
+    variables_path = project_root / "output" / "data" / "manuscript_variables.json"
+    resolved_abstract = project_root / "output" / "manuscript" / "00_abstract.md"
+    assert variables_path.is_file()
+    assert json.loads(variables_path.read_text(encoding="utf-8"))["result_num_papers"] >= 1
+    assert resolved_abstract.is_file()
+    assert "{{RESULT_NUM_PAPERS}}" not in resolved_abstract.read_text(encoding="utf-8")
+    assert str(variables_path) in result.stdout
 
 
 def test_generate_manuscript_variables_skips_without_input(tmp_path: Path):
-    """If results.json is missing, the manuscript-vars script exits 2."""
-    # Only check skip-path behaviour at the script level; full happy-path is
-    # covered by unit tests on src.manuscript_variables.
-    if (PROJECT_ROOT / "output" / "search" / "results.json").exists():
-        pytest.skip("results.json present — happy path covered by unit tests")
-    result = _run("z_generate_manuscript_variables.py", [])
+    """If the isolated project has no results JSON, the CLI exits 2 without artifacts."""
+    project_root = _make_run(tmp_path)
+    result = _run(
+        "z_generate_manuscript_variables.py",
+        ["--project-root", str(project_root)],
+    )
+
     assert result.returncode == 2
+    assert not (project_root / "output" / "data" / "manuscript_variables.json").exists()
+    assert not (project_root / "output" / "manuscript").exists()
 
 
 def test_run_deep_search_disabled_exits_zero(tmp_path: Path):

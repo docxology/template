@@ -59,7 +59,9 @@ uv run python projects/templates/template_methods_paper/scripts/z_generate_manus
    across DECLARED → CALIBRATED → VERIFIED tiers and writes a trust-chain
    report.
 6. Plots a step-count-per-method bar figure.
-7. Prints every output path for manifest collection.
+7. Verifies that figure against `src/figure_specs.py` and writes
+   `output/figures/figure_registry.json`.
+8. Prints every output path for manifest collection.
 
 ## API Reference
 
@@ -67,7 +69,7 @@ uv run python projects/templates/template_methods_paper/scripts/z_generate_manus
 
 | Function | Role |
 | --- | --- |
-| `run_methods_analysis(project_root=None)` | Runs the full pipeline; returns the list of written paths. Accepts an output-root override for tests. |
+| `run_methods_analysis(project_root=None)` | Runs the full pipeline; returns exports, reports, the step-count PNG, and its figure registry. Accepts an output-root override for tests. |
 | `main()` | Calls `run_methods_analysis()` against the real project root and prints each path. |
 
 ### z_generate_manuscript_variables.py

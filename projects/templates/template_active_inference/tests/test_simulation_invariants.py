@@ -10,7 +10,6 @@ import pytest
 
 from simulation.invariants import run_simulation_invariants, write_simulation_invariants
 from simulation.logging_utils import (
-    HEADER_EVENT,
     STEP_EVENT,
     RunLogger,
     _json_default,

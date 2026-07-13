@@ -51,11 +51,11 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 | `step_size_sensitivity.png` | `output/figures/` | Dense sensitivity sweep across step sizes |
 | `convergence_rate_comparison.png` | `output/figures/` | Error decay curves (log scale) |
 | `algorithm_complexity.png` | `output/figures/` | Dimensional scaling behavior |
-| `performance_benchmark.png` | `output/figures/` | Wall time and iteration counts across dimensions |
+| `performance_benchmark.png` | `output/figures/` | Deterministic work proxy and iteration counts across dimensions |
 | `stability_analysis.png` | `output/figures/` | Heatmap of stability across (x₀, α) grid |
 | `optimization_results.csv` | `output/data/` | Per-step-size convergence results table |
 | `stability_analysis.json` | `output/reports/` | Aggregate stability score and per-cell results |
-| `performance_benchmark.json` | `output/reports/` | Timing results per dimension |
+| `performance_benchmark.json` | `output/reports/` | Byte-stable fixed inputs, objective outputs, checks, and timing-boundary policy |
 | `dashboard.html` | `output/web/` | Plotly interactive dashboard (`build_dashboard.py`) |
 | `optimization_metadata.json` | `output/citations/` | DOI, author, keyword metadata for citation tools |
 

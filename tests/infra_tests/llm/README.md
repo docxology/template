@@ -59,19 +59,3 @@ uv run pytest tests/infra_tests/llm/ -v
 
 - [`AGENTS.md`](AGENTS.md) - LLM test documentation
 - [`../../../infrastructure/llm/README.md`](../../../infrastructure/llm/README.md) - LLM module overview
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

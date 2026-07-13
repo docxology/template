@@ -6,6 +6,8 @@ import numpy as np
 
 from .base import PrimitiveSpec
 
+OPTIMIZATION_EXAMPLE_STEPS = 200
+
 
 def gradient_descent(inputs: dict) -> dict:
     """Run gradient descent on f(x) = 0.5*(x-c)^T A (x-c).
@@ -55,7 +57,7 @@ _EXAMPLE = {
     "c": [1.0, -1.0],
     "x0": [0.0, 0.0],
     "lr": 0.1,
-    "steps": 200,
+    "steps": OPTIMIZATION_EXAMPLE_STEPS,
 }
 
 PRIMITIVES: tuple[PrimitiveSpec, ...] = (

@@ -1,6 +1,6 @@
 # Skill Prompt Template
 
-> This file is read by `invoke.sh` and injected as the system prompt.  
+> This file is read by `invoke.sh` and injected as the system prompt.
 > Use `{{VARIABLE_NAME}}` placeholders — `invoke.sh` substitutes them before the API call.
 
 ---

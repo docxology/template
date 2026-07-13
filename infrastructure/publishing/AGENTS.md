@@ -24,6 +24,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
 | `transmission_bookends.py` | Generated begin/end transmission manuscript pages |
 | `transmission_barcode_strip.py` | Dual-row 7-QR + Code128 strip PNG; writes `transmission_manifest.json` |
+| `transmission_models.py` | Dependency-light shared transmission context model; keeps bookend/barcode modules acyclic |
 | `transmission_figure.py` | Matplotlib pairing-flow diagram for bookends |
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |
@@ -33,7 +34,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results` — read-only, non-destructive verification that publishing credentials authenticate |
 | `upload_runner.py` | `UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` — reusable multi-platform upload dispatch (dry-run by default; per-platform failure never aborts the batch) |
-| `metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml` (optional `released_date` for byte-stable output) |
+| `metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml`, with `paper` fields taking precedence and a complete `book`-schema fallback (optional `released_date` for byte-stable output) |
 | `metadata_export_cli.py` | `main` — `metadata-export` CLI writing the citation/archival metadata files for a project (`python -m infrastructure.publishing.metadata_export_cli metadata-export --project <name>`) |
 | `metadata_package.py` | `EbookPublicationMetadata`, `generate_onix_xml`, `generate_metadata_json`, `generate_epub_opf`, `generate_metadata_package`, `ebook_metadata_from_config` — ONIX 3.0, `metadata.json`, and EPUB 3.0 OPF metadata artefacts for ebook / retail-platform ingestion |
 | `metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |

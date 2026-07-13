@@ -47,7 +47,9 @@ This script:
    `correlation_heatmap_data`, `group_count_data`).
 3. Plots three figures with matplotlib and writes them to `output/figures/`.
 4. Writes a per-column summary CSV to `output/data/summary_statistics.csv`.
-5. Prints every output path for manifest collection.
+5. Writes `output/figures/figure_registry.json` from the immutable specs in
+   `src/eda/figures.py`, after verifying all three PNGs exist.
+6. Prints every output path for manifest collection.
 
 ## API Reference
 
@@ -55,7 +57,7 @@ This script:
 
 | Function | Role |
 | --- | --- |
-| `run_eda(project_root=None)` | Runs the full pipeline; returns the list of written paths. Accepts an output-root override for tests. |
+| `run_eda(project_root=None)` | Runs the full pipeline; returns three PNGs, the summary CSV, and the figure registry. Accepts an output-root override for tests. |
 | `main()` | Calls `run_eda()` against the real project root and prints each path. |
 
 All analysis logic is in `src/eda/`; this script only orchestrates. Tested by

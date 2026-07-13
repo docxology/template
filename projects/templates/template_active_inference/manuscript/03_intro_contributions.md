@@ -24,4 +24,3 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 - `location` → **HiddenState**
 - `observation` → **ObservationLikelihood**
 - `policy` → **PolicyPosterior**
-

@@ -1,6 +1,6 @@
 # Validation Report
 
-**Generated:** 2026-07-03T08:57:57.947160
+**Generated:** 2026-07-12T02:08:51Z
 
 ## Validation Checks
 
@@ -9,6 +9,6 @@
 - ✅ PASS: Markdown validation
 - ✅ PASS: Output structure
 - ✅ PASS: Figure registry
-- ❌ FAIL: Evidence registry
+- ✅ PASS: Evidence registry
 - ✅ PASS: Project design overlays
-- ❌ FAIL: Artifact manifest
+- ✅ PASS: Artifact manifest

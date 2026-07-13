@@ -1,0 +1,23 @@
+{
+  "figures": [
+    {
+      "caption": "Per-source paper counts before cross-backend deduplication.",
+      "filename": "papers_per_source.png",
+      "generated_by": "src.figures.plot_papers_per_source",
+      "label": "fig:papers_per_source"
+    },
+    {
+      "caption": "Backend-reported relevance scores ranked by paper.",
+      "filename": "score_distribution.png",
+      "generated_by": "src.figures.plot_score_distribution",
+      "label": "fig:score_distribution"
+    },
+    {
+      "caption": "Publication-year distribution for the deduplicated paper roster.",
+      "filename": "year_histogram.png",
+      "generated_by": "src.figures.plot_year_histogram",
+      "label": "fig:year_histogram"
+    }
+  ],
+  "schema_version": "1.0"
+}

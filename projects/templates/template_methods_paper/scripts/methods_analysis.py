@@ -28,6 +28,10 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", PROJECT_ROOT.parents[2]):
 
 import matplotlib.pyplot as plt  # noqa: E402
 
+from infrastructure.documentation.generated_figure_registry import (  # noqa: E402
+    write_generated_figure_registry,
+)
+from src.figure_specs import FIGURE_REGISTRY_SCHEMA, METHODS_FIGURE_SPECS  # noqa: E402
 from src.methods_dsl import (  # noqa: E402
     all_example_methods,
     compile_method,
@@ -84,10 +88,18 @@ def run_methods_analysis(project_root: Path | None = None) -> list[Path]:
     ax.bar([name for name, _ in step_counts], [count for _, count in step_counts])
     ax.set_title("Steps per example method")
     ax.set_ylabel("step count")
-    fig_path = figures_dir / "step_counts.png"
+    fig_path = figures_dir / METHODS_FIGURE_SPECS[0].filename
     fig.savefig(fig_path, dpi=120, bbox_inches="tight")
     plt.close(fig)
     written.append(fig_path)
+
+    registry_path = write_generated_figure_registry(
+        figures_dir / "figure_registry.json",
+        METHODS_FIGURE_SPECS,
+        [fig_path],
+        schema_version=FIGURE_REGISTRY_SCHEMA,
+    )
+    written.append(registry_path)
 
     return written
 

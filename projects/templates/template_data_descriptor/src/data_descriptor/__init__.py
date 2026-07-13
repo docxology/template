@@ -11,14 +11,19 @@ from data_descriptor.descriptor import (
     validate_descriptor,
 )
 from data_descriptor.figures import (
+    DESCRIPTOR_FIGURE_SPECS,
+    FIGURE_REGISTRY_SCHEMA,
+    DescriptorFigureSpec,
     FileInventoryRow,
     ProvenanceStep,
     SchemaRow,
     demo_broken_descriptor,
+    descriptor_figure_spec,
     file_inventory_rows,
     provenance_steps,
     schema_table_rows,
     severity_counts,
+    verification_table_rows,
 )
 from data_descriptor.verification import (
     FileVerification,
@@ -31,6 +36,9 @@ from data_descriptor.verification import (
 __all__ = [
     "DescriptorFinding",
     "DescriptorReport",
+    "DescriptorFigureSpec",
+    "DESCRIPTOR_FIGURE_SPECS",
+    "FIGURE_REGISTRY_SCHEMA",
     "FieldConstraintSummary",
     "FileInventoryRow",
     "FileVerification",
@@ -41,6 +49,7 @@ __all__ = [
     "compute_file_digest",
     "count_csv_rows",
     "demo_broken_descriptor",
+    "descriptor_figure_spec",
     "descriptor_fingerprint",
     "file_inventory_rows",
     "provenance_steps",
@@ -49,5 +58,6 @@ __all__ = [
     "summarize_field_constraints",
     "validate_descriptor",
     "verification_summary",
+    "verification_table_rows",
     "verify_descriptor_files",
 ]

@@ -2,7 +2,7 @@
 
 Small sample datasets used by labs and figures.
 
-**Contents.** `sample_dataset.csv` — a tiny, deterministic dataset the visualization/labs load.
+**Contents.** `sample_dataset.csv` is loaded by the visualization/labs; `format_gallery.csv` is the source fixture for the numeric formatting-gallery table.
 
 **Contract.** Keep datasets small and committed so the book renders without external downloads.
 

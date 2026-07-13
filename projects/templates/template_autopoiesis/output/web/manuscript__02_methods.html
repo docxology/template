@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -238,8 +238,12 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h2 id="methods">Methods</h2>
 <h3 id="the-ae-generation-spine">The A→E generation spine</h3>
 <p>Generation proceeds through five stages, each implemented as a pure
@@ -399,9 +403,8 @@ for <code>grammar_hash</code>.</p>
 <p>Two auxiliary functions extend <code>expand</code> to families of
 children rather than one: <code>derive_seed(base_seed, index)</code>
 hashes <code>f"{base_seed}\x1f{index}"</code> to produce a new seed
-masked to 63 bits (<code>&amp; 0x7FFFFFFFFFFFFFFF</code>, keeping it a
-non-negative Python <code>int</code>), and
-<code>sample(grammar, count, base_seed=None)</code> calls
+masked to 63 bits (keeping it a non-negative Python <code>int</code>),
+and <code>sample(grammar, count, base_seed=None)</code> calls
 <code>expand</code> once per derived seed to produce <code>count</code>
 independent <code>Spec</code> objects — independent in the sense that
 each is keyed off a distinct derived seed, not off any shared mutable
@@ -576,5 +579,6 @@ wired to switch which hashing function actually runs. Reporting that
 precisely, rather than implying the profile already gates behavior, is
 the same honesty discipline the project asks of its own manuscript
 elsewhere.</p>
+</main>
 </body>
 </html>

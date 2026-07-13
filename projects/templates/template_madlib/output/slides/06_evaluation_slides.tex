@@ -133,6 +133,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -221,14 +224,16 @@ selected value, section, and config pointer. &
 output/reports/injection\_trace.json and
 output/data/token\_inventory.json. & \texttt{analysis} \\
 Figure registry integrity & Every referenced figure label is present in
-output/figures/figure\_registry.json. & scripts/04\_validate\_output.py
-figure registry check. & \texttt{validation} \\
+output/figures/figure\_registry.json. &
+scripts/pipeline/stage\_04\_validate.py figure registry check. &
+\texttt{validation} \\
 Evidence registry cleanliness & Generated manuscript numbers and claims
 pass the project evidence registry. &
 output/reports/evidence\_registry.json. & \texttt{validation} \\
 Copied-output readiness & PDF, HTML, slides, figures, data, and reports
 copy into output/templates/template\_madlib. &
-scripts/05\_copy\_outputs.py output statistics. & \texttt{copy} \\
+scripts/pipeline/stage\_05\_copy.py output statistics. &
+\texttt{copy} \\
 Reviewer packet completeness & Hydrated Markdown, rendered PDF, web
 output, slides, figures, data, reports, validation results, and copy
 statistics are all present for review. & Stage 04 validation report and

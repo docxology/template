@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 09:27
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
+**<repo-root>/projects/templates/template_search_projec
 t/output/slides/05_pipeline_internals_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1139,7 +1139,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count390
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.aux)
 \openout1 = `05_pipeline_internals_slides.aux'.
 
@@ -1500,7 +1500,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.nav) [1
 
 ] [2
@@ -1509,7 +1509,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 \openout4 = `05_pipeline_internals_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.vrb) [3
 
 ] [4
@@ -1535,7 +1535,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 \openout4 = `05_pipeline_internals_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 12.
@@ -1600,14 +1600,14 @@ ibution}.png
 \openout4 = `05_pipeline_internals_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.vrb) [15
 
 ]
 \openout4 = `05_pipeline_internals_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 14.
@@ -1631,7 +1631,7 @@ Underfull \vbox (badness 1112) detected at line 439
 \openout8 = `05_pipeline_internals_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/05_pipeline_internals_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1641,11 +1641,11 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  29883 strings out of 468168
  602707 string characters out of 5432815
- 1161713 words of memory out of 5000000
+ 1161707 words of memory out of 5000000
  58070 multiletter control sequences out of 15000+600000
  631240 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1118b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_search_project/output/slides/05_pipeline_internals_slides.pdf (17 pages).

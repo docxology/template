@@ -39,8 +39,12 @@ class DiligenceAuditFailure(RuntimeError):
 
 
 def load_deck_config(project_root: Path) -> dict:
+    """Load canonical nested deck settings, with legacy root-key compatibility."""
     config_path = project_root / "manuscript" / "config.yaml"
     config = cast(dict, yaml.safe_load(config_path.read_text(encoding="utf-8")))
+    project_config = config.get("project_config", {})
+    if isinstance(project_config, dict) and isinstance(project_config.get("deck"), dict):
+        return cast(dict, project_config["deck"])
     return cast(dict, config.get("deck", {}))
 
 

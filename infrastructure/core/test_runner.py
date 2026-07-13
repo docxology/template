@@ -113,29 +113,31 @@ def _discover_project_test_dirs(
     if projects is None:
         for info in discover_projects(repo_root):
             tests_dir = info.path / "tests"
-            if not tests_dir.is_dir():
-                continue
             if info.name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", info.name)
+                continue
+            if not _contains_tests(tests_dir):
+                logger.warning("Discovered project '%s' has no runnable test files at %s", info.name, tests_dir)
                 continue
             pairs.append((info.name, info.path, tests_dir))
     else:
         for name in projects:
             project_root = resolve_project_root(repo_root, name)
             tests_dir = project_root / "tests"
-            if not tests_dir.is_dir():
-                logger.warning(
-                    "Project '%s' has no tests directory at %s; skipping",
-                    name,
-                    tests_dir,
-                )
-                continue
             if name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", name)
+                continue
+            if not _contains_tests(tests_dir):
+                logger.error("Requested project '%s' has no runnable test files at %s", name, tests_dir)
                 continue
             pairs.append((name, project_root, tests_dir))
 
     return pairs
+
+
+def _contains_tests(tests_dir: Path) -> bool:
+    """Return true only for a real tests directory containing test modules."""
+    return tests_dir.is_dir() and any(tests_dir.rglob("test_*.py"))
 
 
 def _run_pytest_for_project(
@@ -191,6 +193,7 @@ def run_per_project_pytest(
     marker_expr: str | None = None,
     timeout: int = DEFAULT_TIMEOUT,
     parallel: str | int | None = None,
+    allow_empty: bool = False,
 ) -> int:
     """Run pytest once per project and gate combined coverage.
 
@@ -208,13 +211,16 @@ def run_per_project_pytest(
         fail_under: Minimum combined coverage percentage required by the
             final ``coverage report`` gate.
         marker_expr: ``pytest -m`` expression. ``None`` uses
-            :data:`DEFAULT_MARKER_EXPR` (``not requires_ollama and not slow and
-            not bench``). Pass ``""`` to omit ``-m`` (collect all markers).
+            :data:`DEFAULT_MARKER_EXPR` (the deterministic lane excluding live
+            services, timing tests, and benchmark aliases). Pass ``""`` to
+            omit ``-m`` (collect all markers).
         timeout: Per-test ``--timeout`` value forwarded to pytest.
         parallel: Opt-in pytest-xdist worker count (``"auto"`` or a positive
             integer). ``None`` falls back to the ``PYTEST_XDIST_WORKERS`` env
             var, and finally to serial. Coverage is unaffected — pytest-cov
             combines per-worker data before each project's ``--cov-append``.
+        allow_empty: Explicitly permit a zero-project run. Defaults to false so
+            discovery drift and misspelled explicit project names fail closed.
 
     Returns:
         ``0`` only when **every** per-project pytest exited cleanly **and**
@@ -228,8 +234,12 @@ def run_per_project_pytest(
 
     pairs = _discover_project_test_dirs(repo_root, projects, effective_skip)
     if not pairs:
-        logger.warning("No runnable projects with a tests/ directory were found.")
-        return 0
+        message = "No runnable projects with test modules were found."
+        if allow_empty:
+            logger.warning("%s Empty runs were explicitly allowed.", message)
+            return 0
+        logger.error("%s", message)
+        return 1
 
     resolved_markers = DEFAULT_MARKER_EXPR if marker_expr is None else marker_expr or None
 

@@ -39,9 +39,7 @@ class TestExperimentConfig:
     def test_coerce_list_initial_point(self, tmp_path: Path):
         config_path = tmp_path / "manuscript" / "config.yaml"
         config_path.parent.mkdir(parents=True)
-        config_path.write_text(
-            "experiment:\n  initial_point: [0.25]\n  step_sizes: [0.1]\n"
-        )
+        config_path.write_text("experiment:\n  initial_point: [0.25]\n  step_sizes: [0.1]\n")
         cfg = load_experiment_config(tmp_path)
         assert cfg.initial_point == pytest.approx(0.25)
 
@@ -55,12 +53,7 @@ class TestExperimentConfig:
     def test_scalar_matrix_and_int_lists(self, tmp_path: Path):
         config_path = tmp_path / "manuscript" / "config.yaml"
         config_path.parent.mkdir(parents=True)
-        config_path.write_text(
-            "experiment:\n"
-            "  step_sizes: 0.5\n"
-            "  quadratic_b: 2.0\n"
-            "  benchmark_dimensions: 3\n"
-        )
+        config_path.write_text("experiment:\n  step_sizes: 0.5\n  quadratic_b: 2.0\n  benchmark_dimensions: 3\n")
         cfg = load_experiment_config(tmp_path)
         assert cfg.step_sizes == (0.5,)
         assert cfg.quadratic_b == (2.0,)

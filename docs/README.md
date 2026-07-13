@@ -4,7 +4,7 @@
 
 **Forking the template?** Start here: the code and prose exemplars each ship a 5-minute walkthrough at [`projects/templates/template_code_project/docs/forking_guide.md`](../projects/templates/template_code_project/docs/forking_guide.md) (numerical research) and [`projects/templates/template_prose_project/docs/forking_guide.md`](../projects/templates/template_prose_project/docs/forking_guide.md) (editorial review). The Active Inference exemplar is documented at [`projects/templates/template_active_inference/README.md`](../projects/templates/template_active_inference/README.md). The AutoResearch exemplar is documented at [`projects/templates/template_autoresearch_project/README.md`](../projects/templates/template_autoresearch_project/README.md). The meta-template exemplar is documented at [`projects/templates/template_template/README.md`](../projects/templates/template_template/README.md). The drift checker that gates your fork against the template's contract is [`scripts/audit/check_template_drift.py`](../scripts/audit/check_template_drift.py) (run `uv run python scripts/audit/check_template_drift.py` from the repo root).
 
-**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md) | [Canonical Facts](_generated/COUNTS.md)
+**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [Publication Runbook](guides/publication-runbook.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md) | [Canonical Facts](_generated/COUNTS.md)
 
 ## Purpose
 
@@ -132,6 +132,7 @@ graph TD
 | Contribute | [`development/contributing.md`](development/contributing.md) |
 | Report security issue | [`development/security.md`](development/security.md) |
 | Understand modules | [`modules/modules-guide.md`](modules/modules-guide.md) |
+| Publish a project | [`guides/publication-runbook.md`](guides/publication-runbook.md) |
 | Best practices | [`best-practices/best-practices.md`](best-practices/best-practices.md) |
 | Security policies | [`security/README.md`](security/README.md) |
 | Validate docs | [`../scripts/audit/lint_docs.py`](../scripts/audit/lint_docs.py) |
@@ -146,6 +147,7 @@ graph TD
 | Logging | [`operational/logging/output-design.md`](operational/logging/output-design.md) | [`operational/logging/python-logging.md`](operational/logging/python-logging.md), [`operational/logging/bash-logging.md`](operational/logging/bash-logging.md) (operational scripts only) |
 | Secure / steganography | [`guides/secure-research-guide.md`](guides/secure-research-guide.md) → [`security/README.md`](security/README.md) | [`security/secure_execution.md`](security/secure_execution.md), [`modules/guides/steganography-module.md`](modules/guides/steganography-module.md) |
 | Literature search | [`guides/literature-workflow-guide.md`](guides/literature-workflow-guide.md) | [`core/literature-data-flow.md`](core/literature-data-flow.md), [`modules/literature-search-and-references.md`](modules/literature-search-and-references.md), [`streams/inferant-stream-019-literature-search.md`](streams/inferant-stream-019-literature-search.md) (historical) |
+| Publication | [`guides/publication-runbook.md`](guides/publication-runbook.md) | [`guides/publishing-guide.md`](guides/publishing-guide.md), [`guides/zenodo-doi-strategy.md`](guides/zenodo-doi-strategy.md), [`modules/guides/publishing-module.md`](modules/guides/publishing-module.md) |
 | Development rules | [`rules/README.md`](rules/README.md) |
 | Session notes (streams) | [`streams/README.md`](streams/README.md) |
 

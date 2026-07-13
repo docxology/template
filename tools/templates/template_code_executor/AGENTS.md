@@ -1,6 +1,6 @@
 # AGENTS.md — template_code_executor
 
-> Agent-oriented documentation for the `code_executor` exemplar tool.  
+> Agent-oriented documentation for the `code_executor` exemplar tool.
 > Human developers: see [README.md](README.md).
 
 ## Identity

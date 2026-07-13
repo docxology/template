@@ -24,6 +24,7 @@ def test_run_methods_analysis_writes_expected_artifacts(tmp_path):
     assert "gate_report.json" in names
     assert "trust_chain_report.json" in names
     assert "step_counts.png" in names
+    assert "figure_registry.json" in names
     assert "pbspreparation_worklist.md" in names
     assert "pbspreparation_plan.csv" in names
     assert "pbspreparation_graph.mmd" in names
@@ -50,3 +51,57 @@ def test_run_methods_analysis_trust_chain_verified(tmp_path):
     methods_analysis_script.run_methods_analysis(tmp_path)
     trust_report = json.loads((tmp_path / "output" / "reports" / "trust_chain_report.json").read_text(encoding="utf-8"))
     assert trust_report == {"chain_length": 3, "verified": True}
+
+
+def test_run_methods_analysis_registry_binds_real_figure(tmp_path):
+    written = methods_analysis_script.run_methods_analysis(tmp_path)
+    registry = tmp_path / "output" / "figures" / "figure_registry.json"
+    payload = json.loads(registry.read_text(encoding="utf-8"))
+
+    assert registry in written
+    assert payload["schema_version"] == "template-methods-paper-figure-registry-v1"
+    assert payload["figures"] == [
+        {
+            "caption": "Step counts for each deterministically compiled example method.",
+            "filename": "step_counts.png",
+            "generated_by": "scripts.methods_analysis.run_methods_analysis",
+            "label": "fig:step_counts",
+        }
+    ]
+    assert (registry.parent / "step_counts.png").is_file()
+
+
+def test_missing_step_count_figure_cannot_write_registry(tmp_path):
+    registry = tmp_path / "output" / "figures" / "figure_registry.json"
+
+    try:
+        methods_analysis_script.write_generated_figure_registry(
+            registry,
+            methods_analysis_script.METHODS_FIGURE_SPECS,
+            [],
+            schema_version=methods_analysis_script.FIGURE_REGISTRY_SCHEMA,
+        )
+    except ValueError as exc:
+        assert "missing generated figure file(s): step_counts.png" in str(exc)
+    else:
+        raise AssertionError("incomplete generated figure set was accepted")
+
+    assert not registry.exists()
+
+
+def test_deleted_step_count_figure_is_rejected(tmp_path):
+    methods_analysis_script.run_methods_analysis(tmp_path)
+    figure = tmp_path / "output" / "figures" / "step_counts.png"
+    figure.unlink()
+
+    try:
+        methods_analysis_script.write_generated_figure_registry(
+            tmp_path / "negative" / "figure_registry.json",
+            methods_analysis_script.METHODS_FIGURE_SPECS,
+            [figure],
+            schema_version=methods_analysis_script.FIGURE_REGISTRY_SCHEMA,
+        )
+    except ValueError as exc:
+        assert "generated figure path(s) do not exist: step_counts.png" in str(exc)
+    else:
+        raise AssertionError("deleted generated figure was accepted")

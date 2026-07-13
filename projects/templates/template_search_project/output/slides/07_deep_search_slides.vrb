@@ -2,7 +2,7 @@
 \protect\phantomsection\label{cli}
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Run with everything from config.yaml (assumes deep\_search.enabled: true)}
+\CommentTok{\# Run with everything from config.yaml (assumes project\_config.deep\_search.enabled: true)}
 \ExtensionTok{uv}\NormalTok{ run python projects/templates/template\_search\_project/scripts/run\_deep\_search.py}
 
 \CommentTok{\# Force{-}enable without touching config.yaml}

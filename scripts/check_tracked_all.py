@@ -3,6 +3,7 @@
 
 Runs all confidentiality checks (projects, fonds, tools, rules) in one pass.
 """
+
 from __future__ import annotations
 
 import sys

@@ -24,7 +24,7 @@ output/
 │   ├── karat_grading.png/.svg           # Karat grading scale
 │   ├── token_density.png/.svg           # Token distribution
 │   ├── provenance_sankey.png/.svg       # Provenance trace flow
-│   ├── purity_claim_scatter.png/.svg    # Purity vs claim-support scatter
+│   ├── purity_claim_scatter.png/.svg    # Stage purity vs one project-level claim-support assay
 │   ├── token_heatmap.png/.svg           # Token selection heatmap
 │   ├── integrity_gate_matrix.png/.svg   # Integrity gate matrix
 │   ├── formalism_traceability.png/.svg  # Formalism traceability graph
@@ -55,6 +55,7 @@ companion; `output/dashboard.html` is a separate artifact owned by
 - **Figures**: 300 DPI PNG, tight bounding box
 - **Manuscript**: Markdown with `{{TOKEN}}` placeholders resolved
 - **Registry**: `figure_registry.json` with label, path, caption per figure
+- **Measurement integrity**: captions and encodings must preserve the unit and scope of each source value; do not manufacture stagewise series from project-level aggregates
 
 ## Regeneration
 

@@ -33,6 +33,24 @@ def test_registry_validates_supported_numbers_and_citations() -> None:
     assert unsupported_citation_tokens(report) == []
 
 
+def test_registry_accepts_bounded_rounding_of_small_generated_measurements() -> None:
+    registry = VerifiedEvidenceRegistry()
+    registry.add(
+        EvidenceFact(
+            kind="number",
+            value="0.0012065640438283457",
+            source="output/data/ablation.json:$.rows[0].noise_inflation",
+        )
+    )
+
+    report = validate_text_against_registry(
+        "# Results\nThe measured inflation was 0.00121.",
+        registry,
+    )
+
+    assert unsupported_number_tokens(report) == []
+
+
 def test_registry_flags_unsupported_numbers_and_citations() -> None:
     registry = VerifiedEvidenceRegistry()
     registry.add(EvidenceFact(kind="number", value="42", source="metrics.json:answer"))
@@ -45,6 +63,66 @@ def test_registry_flags_unsupported_numbers_and_citations() -> None:
 
     assert unsupported_number_tokens(report) == ["43"]
     assert unsupported_citation_tokens(report) == ["doe2026"]
+
+
+def test_registry_detects_sentence_final_number_before_period() -> None:
+    report = validate_text_against_registry("# Results\nThe measured count was 999.", VerifiedEvidenceRegistry())
+
+    assert [issue.value for issue in report.errors] == ["999"]
+    assert report.errors[0].line_number == 2
+
+
+def test_registry_ignores_url_doi_and_ordered_list_identifiers() -> None:
+    text = """
+# Results
+12. Read the [record](https://doi.org/10.5281/zenodo.19139090), DOI 10.1000/182.
+The measured count was 999.
+"""
+
+    report = validate_text_against_registry(text, VerifiedEvidenceRegistry())
+
+    assert [issue.value for issue in report.errors] == ["999"]
+
+
+def test_registry_ignores_cryptographic_algorithm_identifiers() -> None:
+    report = validate_text_against_registry(
+        "# Results\nArtifacts use SHA-1, SHA-256, SHA3-512, and BLAKE2-256; the measured count was 999.",
+        VerifiedEvidenceRegistry(),
+    )
+
+    assert [issue.value for issue in report.errors] == ["999"]
+
+
+def test_registry_ignores_matrix_indices_and_bibliographic_page_locators() -> None:
+    registry = VerifiedEvidenceRegistry(
+        [
+            EvidenceFact(kind="citation", value="paper2026", source="references.bib"),
+            EvidenceFact(kind="section", value="sec:part_0_intro", source="manuscript/part_0/intro.md"),
+        ]
+    )
+    text = (
+        "# Results\n"
+        r"The matrix entry is $a_{21}$; see [@paper2026, pp. 12–14]. "
+        "Continue at [@sec:part_0_intro]. The measured count was 999."
+    )
+
+    report = validate_text_against_registry(text, registry)
+
+    assert [issue.value for issue in report.errors] == ["999"]
+    assert unsupported_citation_tokens(report) == []
+
+
+def test_registry_ignores_pandoc_widths_and_numbers_in_cited_bibliography_rows() -> None:
+    registry = VerifiedEvidenceRegistry([EvidenceFact(kind="citation", value="paper2026", source="references.bib")])
+    text = """
+# Results
+![Measured curve](plot.png){#fig:curve width=85%}
+| [@paper2026] | Case study 29 | DOI 10.1000/182 |
+"""
+
+    report = validate_text_against_registry(text, registry)
+
+    assert report.errors == []
 
 
 def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_path: Path) -> None:
@@ -117,6 +195,68 @@ tracks:
     assert unsupported_number_tokens(report) == []
 
 
+def test_build_project_registry_collects_config_reports_and_nested_run_artifacts(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    (project / "manuscript").mkdir(parents=True)
+    (project / "output" / "reports").mkdir(parents=True)
+    (project / "output" / "runs" / "run_1").mkdir(parents=True)
+    (project / "manuscript" / "config.yaml").write_text("sample_size: 64\n", encoding="utf-8")
+    (project / "pyproject.toml").write_text(
+        '[project]\nrequires-python = ">=3.10"\n\n[tool.coverage.report]\nfail_under = 91\n',
+        encoding="utf-8",
+    )
+    (project / "output" / "reports" / "analysis.json").write_text('{"accuracy": 0.85}', encoding="utf-8")
+    (project / "output" / "runs" / "run_1" / "summary.json").write_text('{"iterations": 80}', encoding="utf-8")
+    # Control reports must never become self-supporting evidence sources.
+    (project / "output" / "reports" / "validation_report.json").write_text(
+        '{"unsupported_claim": 999}', encoding="utf-8"
+    )
+
+    registry = build_project_evidence_registry(project)
+
+    assert registry.has("number", "64")
+    assert registry.has("number", "3.10")
+    assert registry.has("number", "91")
+    assert registry.has("number", "85%")
+    assert registry.has("number", "80")
+    assert not registry.has("number", "999")
+    assert {fact.source_tier for fact in registry.lookup("number", "0.85")} == {"generated_metric"}
+    assert {fact.source_path for fact in registry.lookup("number", "3.10")} == {"pyproject.toml"}
+
+
+def test_build_project_registry_collects_manuscript_asset_tables(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    assets = project / "manuscript" / "assets" / "data"
+    assets.mkdir(parents=True)
+    (assets / "fixture.csv").write_text("group,value\ncontrol,2.10\n", encoding="utf-8")
+
+    registry = build_project_evidence_registry(project)
+
+    assert registry.has("number", "2.10")
+    assert {fact.source_path for fact in registry.lookup("number", "2.10")} == {"manuscript/assets/data/fixture.csv"}
+
+
+def test_build_project_registry_collects_docs_manuscript_bibliography_and_labels(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    manuscript = project / "docs" / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "references.bib").write_text(
+        "@article{docs2026,title={Docs layout}}\n",
+        encoding="utf-8",
+    )
+    (manuscript / "01_methods.md").write_text(
+        "# Methods {#sec:docs}\n\n![Result](result.png){#fig:docs}\n",
+        encoding="utf-8",
+    )
+
+    registry = build_project_evidence_registry(project)
+
+    assert registry.has("citation", "docs2026")
+    assert registry.has("section", "sec:docs")
+    assert registry.has("figure", "fig:docs")
+    assert {fact.source_path for fact in registry.lookup("citation", "docs2026")} == {"docs/manuscript/references.bib"}
+
+
 def test_registry_validates_internal_section_and_equation_references(tmp_path: Path) -> None:
     project = tmp_path / "project"
     manuscript = project / "manuscript"
@@ -136,6 +276,22 @@ def test_registry_validates_internal_section_and_equation_references(tmp_path: P
 
     assert registry.has("section", "sec:methods")
     assert registry.has("equation", "eq:update")
+    assert unsupported_citation_tokens(report) == []
+
+
+def test_registry_validates_internal_listing_references(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    manuscript.joinpath("01_methods.md").write_text(
+        "# Methods\n\nListing: Example {#lst:example}\n\nSee [@lst:example].\n",
+        encoding="utf-8",
+    )
+
+    registry = build_project_evidence_registry(project)
+    report = validate_text_against_registry("# Results\nSee [@lst:example].", registry)
+
+    assert registry.has("listing", "lst:example")
     assert unsupported_citation_tokens(report) == []
 
 
@@ -344,9 +500,7 @@ def test_trusted_number_tiers_accepts_external_source() -> None:
 def test_lookup_fresh_only_filters_stale_facts() -> None:
     """fresh_only drops stale/inactive facts (AI-SPINE-V2 fail-closed primitive)."""
     registry = VerifiedEvidenceRegistry()
-    registry.add(
-        EvidenceFact(kind="number", value="0.5", source="ledger", source_tier="claim_ledger", stale=True)
-    )
+    registry.add(EvidenceFact(kind="number", value="0.5", source="ledger", source_tier="claim_ledger", stale=True))
     # Default: the stale fact is still returned (report builder relies on this).
     assert registry.lookup("number", "0.5")
     assert registry.has("number", "0.5")
@@ -358,9 +512,7 @@ def test_lookup_fresh_only_filters_stale_facts() -> None:
 def test_stale_fact_fails_closed_in_strict_zone() -> None:
     """Negative control: a strict-zone number backed only by a stale fact errors."""
     registry = VerifiedEvidenceRegistry()
-    registry.add(
-        EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger", stale=True)
-    )
+    registry.add(EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger", stale=True))
     text = "## Results\n\nThe held-out accuracy was 0.873 on the test set.\n"
     report = validate_text_against_registry(text, registry)
     assert any(issue.kind == "number" and issue.value == "0.873" for issue in report.errors)
@@ -378,9 +530,7 @@ def test_fresh_fact_supports_number_in_strict_zone() -> None:
 def test_stale_fact_tolerated_in_lenient_zone() -> None:
     """Lenient zones stay tolerant of stale facts (no new error)."""
     registry = VerifiedEvidenceRegistry()
-    registry.add(
-        EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger", stale=True)
-    )
+    registry.add(EvidenceFact(kind="number", value="0.873", source="ledger", source_tier="claim_ledger", stale=True))
     text = "Some background prose mentioning 0.873 in passing.\n"
     report = validate_text_against_registry(text, registry)
     assert not any(issue.severity == "error" and issue.value == "0.873" for issue in report.errors)

@@ -29,7 +29,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--corpus", type=str, default=str(DEFAULT_CORPUS_PATH))
     parser.add_argument("--query", type=str, default=None)
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_DATA_DIR))
-    parser.add_argument("--fixture-honesty", action="store_true", help="Audit manuscript for undisclosed empirical claims on synthetic fixture corpora")
+    parser.add_argument(
+        "--fixture-honesty",
+        action="store_true",
+        help="Audit manuscript for undisclosed empirical claims on synthetic fixture corpora",
+    )
     parser.add_argument(
         "--log-level",
         default="INFO",

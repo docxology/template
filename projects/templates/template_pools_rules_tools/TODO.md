@@ -21,7 +21,7 @@ project's perspective).
 
 ## Configurable-surface gaps
 
-- Extend the `integration:` block in `manuscript/config.yaml` when new public fonds/rules/tools ship.
+- Extend the discovery adapters in `src/integration.py` when new public fonds/rules/tools ship; do not duplicate the discovered roster in manuscript configuration.
 - Add typed loaders for any new resource-pool category before wiring it into `integration.py`.
 
 ## Documentation and signposting gaps

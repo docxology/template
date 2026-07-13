@@ -13,13 +13,12 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 | Path | Role |
 | --- | --- |
-| `src/loop.py` | Compatibility re-export shim → `scripts/sia_loop_impl.py` (the real orchestration; not a `src/`-only implementation) |
-| `src/loop_config.py` | Reads `sia:` block from `manuscript/config.yaml` |
+| `src/loop.py` | Layer-2 adapter: builds `RunConfig`, selects fixtures, invokes `infrastructure.sia.run_sia_loop`, and writes project artifacts |
+| `src/loop_config.py` | Reads `project_config.sia` from `manuscript/config.yaml` |
 | `src/reports.py` | Loop markdown report + `{{SIA_*}}` manuscript variables |
 | `src/fixtures/recorded_generations/` | Fixture replay for gens 1–3 (default CI) |
 | `tasks/mini_classify/` | Public/private task split + `evaluate.py` |
 | `scripts/run_sia_loop.py` | Thin orchestrator (`--project-root`, `--live-sia`) |
-| `scripts/sia_loop_impl.py` | `run_sia_loop_project()` / `build_run_config()` → `infrastructure.sia.run_sia_loop`; re-exported by `src/loop.py` for backward compatibility |
 | `scripts/z_generate_manuscript_variables.py` | Post-analysis token hydration |
 
 ## Run modes
@@ -28,11 +27,13 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | --- | --- |
 | `uv run python scripts/run_sia_loop.py` | Fixture replay (deterministic) |
 | `… --live-sia` | Bounded subprocess target + evaluation; target code unchanged each generation (deterministic stub, no code mutation, no sandbox) |
-| `… --live-sia` (model set in `manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from the `sia.llm_model` key in `manuscript/config.yaml` (see `src/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
+| `… --live-sia` (model set in `manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from `project_config.sia.llm_model` (see `src/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
 
 Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
 code modification. Cross-generation self-improvement is shown only via fixture
 replay. See [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
+The project adapter lives in `src/loop.py`; scripts only parse arguments, call
+that API, and present output paths.
 
 ## Validation profile
 

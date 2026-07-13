@@ -24,7 +24,7 @@ Load this skill when you need to:
 - Run documentation or filepath audits
 - Check for template drift in exemplar projects
 - Enforce confidentiality (no private project commits)
-- Verify mock usage is absent from tests
+- Verify prohibited mock-framework syntax is absent and inventory semantic stand-ins
 
 ## Key scripts
 
@@ -33,7 +33,7 @@ Load this skill when you need to:
 | `lint_docs.py` | All doc lints pass |
 | `check_tracked_projects.py` | No private projects staged/committed |
 | `check_template_drift.py` | Exemplars are up-to-date |
-| `verify_no_mocks.py` | No mock usage detected |
+| `verify_no_mocks.py` | No prohibited mock-framework imports/calls detected |
 
 ## Bootstrap note
 
@@ -44,3 +44,6 @@ All scripts use `parents[2]` from `scripts/audit/` — three levels to repo root
 - `check_tracked_projects.py` runs in pre-push hook — keep it fast.
 - `audit_documentation.py` is advisory; non-zero exit is a warning, not a gate.
 - `copy_exemplar.py` modifies tracked files — review diff before committing.
+- `verify_no_mocks.py --inventory` is advisory while dependency-replacement
+  debt is non-zero. Do not interpret the default lexical pass as proof that all
+  integration points are real.

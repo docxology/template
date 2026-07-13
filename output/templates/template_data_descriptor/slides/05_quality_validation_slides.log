@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:11
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_data_descriptor/output/slides/05_quality_validation_s
 lides.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.tex
 LaTeX2e <2025-11-01>
@@ -1134,7 +1134,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.aux)
 \openout1 = `05_quality_validation_slides.aux'.
@@ -1496,7 +1496,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.nav) [1
 
@@ -1509,7 +1509,7 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 \openout4 = `05_quality_validation_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.vrb
 File: ../figures/quality_gate.png Graphic file (type bmp)
@@ -1526,7 +1526,7 @@ File: ../figures/quality_gate.png Graphic file (type bmp)
 \openout4 = `05_quality_validation_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.vrb
 File: ../figures/checksum_verification.png Graphic file (type bmp)
@@ -1551,7 +1551,7 @@ x-text;!
 \openout4 = `05_quality_validation_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.vrb) [8
 
@@ -1559,7 +1559,7 @@ ides.vrb) [8
 \openout4 = `05_quality_validation_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.vrb) [9
 
@@ -1574,7 +1574,7 @@ ides.vrb) [9
 \openout7 = `05_quality_validation_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_data_descriptor/output/slides/05_quality_validation_sl
 ides.aux)
  ***********
@@ -1591,6 +1591,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1158b,474s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <home>/Documents/GitHub/template/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_data_descriptor/output/slides/05_qual
 ity_validation_slides.pdf (9 pages).

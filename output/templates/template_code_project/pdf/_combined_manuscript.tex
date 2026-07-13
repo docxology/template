@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,14 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Convergence Analysis of Gradient Descent Optimization},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Convergence Analysis of Gradient Descent Optimization}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -227,6 +240,7 @@
 \setmathfont{latinmodern-math.otf}
 
 \begin{document}
+\maketitle
 
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -286,7 +300,7 @@ SHA-512 & pending \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
 \caption{Integrity QR strip}
 \end{figure}
 
@@ -294,7 +308,7 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.35\linewidth,height=0.50\textheight,keepaspectratio,alt={Publication pairing flow}]{../figures/transmission_pairing.png}
+\includegraphics[width=0.35\linewidth,height=0.5\textheight,keepaspectratio,alt={Publication pairing flow}]{../figures/transmission_pairing.png}
 \caption{Publication pairing flow}
 \end{figure}
 
@@ -303,24 +317,6 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \end{samepage}
 \newpage
-
-\begin{titlepage}
-\centering
-\vspace*{2cm}
-{\LARGE\bfseries Convergence Analysis of Gradient Descent Optimization\par}
-\vspace{0.75em}
-{\large Theoretical Bounds and Empirical Performance in Quadratic Minimization\par}
-\vfill
-\makeatletter
-{\@author\par}
-\vspace{1em}
-{\@date\par}
-\makeatother
-\vfill
-\end{titlepage}
-\thispagestyle{empty}
-\newpage
-
 \tableofcontents
 \newpage
 
@@ -444,8 +440,9 @@ leverages the \texttt{infrastructure} layer:
 \item
   \textbf{Scientific Utilities}: Utilizing
   \breaktt{infrastructure.scientific.stability} and
-  \breaktt{infrastructure.scientific.benchmarking} to guarantee numerical
-  boundaries and performance scaling.
+  \breaktt{infrastructure.scientific.benchmarking} to check numerical
+  boundaries and exercise runtime performance diagnostics without
+  pinning host-dependent timings.
 \item
   \textbf{Hermetic Validation}: Deploying
   \breaktt{infrastructure.validation} components
@@ -617,12 +614,14 @@ cannot enter unrecoverable states.
 
 \subsubsection{Performance Benchmarking}\label{performance-benchmarking}
 
-Computational complexity is evaluated not just theoretically, but
-empirically via
-\href{https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py}{\breaktt{infrastructure.scientific.benchmarking.benchmark\_function}}.
-This module captures high-resolution execution timings and memory
-footprints across dimensionality sweeps, guaranteeing that the \(O(n)\)
-space-time complexity predictions hold true on the host architecture.
+The analysis exercises
+\href{https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py}{\breaktt{infrastructure.scientific.benchmarking.benchmark\_function}}
+as a runtime diagnostic. Host-dependent timing and memory observations
+are logged but excluded from tracked evidence. The canonical report
+records fixed inputs and exact objective values, while the dimensional
+figure reports deterministic convergence iterations and the proxy
+\(d \times \text{iterations}\); neither surface claims that one host run
+proves an asymptotic bound.
 
 \subsection{Convergence Analysis}\label{convergence-analysis}
 
@@ -1128,27 +1127,26 @@ optimization problems:
 \subsubsection{Performance
 Benchmarking}\label{performance-benchmarking-1}
 
-fig.~\ref{fig:benchmark} shows how \breaktt{gradient\_descent()} scales
-with problem dimension by running the optimizer on identity-Hessian
-quadratics of dimension \(d \in \{1, 2, 5, 10, 20, 50\}\).
+fig.~\ref{fig:benchmark} shows deterministic computational work and
+convergence iterations for \breaktt{gradient\_descent()} on
+identity-Hessian quadratics of dimension
+\(d \in \{1, 2, 5, 10, 20, 50\}\).
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Dimensional scaling from generate\_benchmark\_visualization(). Dimensions d \textbackslash in \textbackslash\{1, 2, 5, 10, 20, 50\textbackslash\} run on identity-Hessian quadratics with \textbackslash alpha=0.1 and gradient tolerance 10\^{}\{-10\} (both hardcoded in the script for benchmark stability). Left: mean wall-clock time per gradient\_descent() call (\texorpdfstring{\ensuremath{\mu}}{mu}s). The flat regime at d \textbackslash leq 20 reflects per-iteration overhead (Python dispatch, NumPy bookkeeping); the upturn at d=50 shows the O(d) matrix-vector cost beginning to dominate. Right: iterations-to-convergence rises only modestly across two decades of d (219 \textbackslash to 238). This near-invariance is expected: \textbackslash kappa(I\_d)=1 regardless of dimension, so the contraction factor \textbackslash rho=|1-\textbackslash alpha|=0.9 is identical for every d, and only the per-coordinate residual norm grows mildly.}]{../figures/performance_benchmark.png}}
-\caption{Dimensional scaling from
+\pandocbounded{\includegraphics[keepaspectratio,alt={Deterministic dimensional benchmark from generate\_benchmark\_visualization(). Dimensions d \textbackslash in \textbackslash\{1, 2, 5, 10, 20, 50\textbackslash\} run on identity-Hessian quadratics with \textbackslash alpha=0.1 and gradient tolerance 10\^{}\{-10\}. Left: the implementation-independent work proxy d \textbackslash times \textbackslash text\{iterations\}, proportional to scalar elements processed by the dense matrix-vector update. Right: exact iterations to convergence. Wall-clock microseconds are intentionally excluded because they vary with hardware and host load. The similar iteration counts are expected because \textbackslash kappa(I\_d)=1 and the contraction factor \textbackslash rho=|1-\textbackslash alpha|=0.9 is dimension-independent.}]{../figures/performance_benchmark.png}}
+\caption{Deterministic dimensional benchmark from
 \protect\breaktt{generate\_benchmark\_visualization()}. Dimensions
 \(d \in \{1, 2, 5, 10, 20, 50\}\) run on identity-Hessian quadratics
-with \(\alpha=0.1\) and gradient tolerance \(10^{-10}\) (both hardcoded
-in the script for benchmark stability). \textbf{Left}: mean wall-clock
-time per \protect\breaktt{gradient\_descent()} call (\texorpdfstring{\ensuremath{\mu}}{mu}s). The flat regime
-at \(d \leq 20\) reflects per-iteration overhead (Python dispatch, NumPy
-bookkeeping); the upturn at \(d=50\) shows the \(O(d)\) matrix-vector
-cost beginning to dominate. \textbf{Right}: iterations-to-convergence
-rises only modestly across two decades of \(d\) (\(219 \to 238\)). This
-near-invariance is expected: \(\kappa(I_d)=1\) regardless of dimension,
-so the contraction factor \(\rho=|1-\alpha|=0.9\) is identical for every
-\(d\), and only the per-coordinate residual norm grows
-mildly.}\label{fig:benchmark}
+with \(\alpha=0.1\) and gradient tolerance \(10^{-10}\). \textbf{Left}:
+the implementation-independent work proxy
+\(d \times \text{iterations}\), proportional to scalar elements
+processed by the dense matrix-vector update. \textbf{Right}: exact
+iterations to convergence. Wall-clock microseconds are intentionally
+excluded because they vary with hardware and host load. The similar
+iteration counts are expected because \(\kappa(I_d)=1\) and the
+contraction factor \(\rho=|1-\alpha|=0.9\) is
+dimension-independent.}\label{fig:benchmark}
 \end{figure}
 
 \subsubsection{Numerical Stability
@@ -1471,10 +1469,12 @@ narrow parameter choice. The stability metric is computed for the
 Performance benchmarking spans problem dimensions
 \(d \in \{1, 2, 5, 10, 20, 50\}\), from the scalar case (\(d = 1\)) to
 moderate dimensionality (\(d = 50\)), using identity-Hessian quadratics
-to isolate algorithmic scaling from problem conditioning effects.
-Representative single-call execution time from the last benchmark run:
-\textbf{1.9 \texorpdfstring{\ensuremath{\mu}}{mu}s} (recorded in
-\breaktt{output/reports/performance\_benchmark.json}).
+to isolate algorithmic scaling from problem conditioning effects. The
+tracked \breaktt{output/reports/performance\_benchmark.json} records
+fixed inputs, exact objective values, and validation checks. Wall-clock
+timing is retained only as a runtime diagnostic because host load and
+hardware make microsecond values unsuitable as pinned reproducibility
+claims.
 
 \subsection{Computational Environment}\label{computational-environment}
 
@@ -1487,7 +1487,7 @@ Representative single-call execution time from the last benchmark run:
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-07-08T02:12:25Z
+  \textbf{Generated}: 2026-07-12T04:04:24Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
@@ -1576,7 +1576,7 @@ Value
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Config hash (SHA-256, truncated) & \breaktt{7182b437c586a680} \\
+Config hash (SHA-256, truncated) & \breaktt{292643985e5af3f2} \\
 Paper version & 2.5.2 \\
 First author & Daniel Ari Friedman \\
 Keywords & optimization algorithms, gradient descent, convergence
@@ -1603,10 +1603,10 @@ Category & Count \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Publication-quality figures & 8 \\
+Publication-quality figures & 9 \\
 Structured data files (CSV/JSON) & 5 \\
-Analysis reports & 9 \\
-\textbf{Total artifacts} & \textbf{22} \\
+Analysis reports & 19 \\
+\textbf{Total artifacts} & \textbf{33} \\
 \end{longtable}
 }
 
@@ -1646,16 +1646,15 @@ the entire parameter space.
 
 This exemplar also demonstrates \breaktt{infrastructure.benchmark}. The
 thin orchestrator \breaktt{scripts/04\_benchmark\_stage.py} calls
-\breaktt{src/benchmark\_support.py}, which times the pure
-\breaktt{quadratic\_function} across a fixed set of input sizes
-(deterministic seed, no network) and turns the timing facts into boolean
-rubric checks. Those checks are scored through the shared
+\breaktt{src/benchmark\_support.py}, which evaluates the pure
+\breaktt{quadratic\_function} across fixed seeded inputs and turns
+reproducible completion, finiteness, and output-stability facts into
+boolean rubric checks. Those checks are scored through
 \breaktt{infrastructure.benchmark.score\_rubric} against a weighted
-\texttt{RubricSet}, and the result is rendered with
-\breaktt{scores\_to\_markdown} into
-\breaktt{output/reports/benchmark\_report.json} (plus an optional timing
-figure). This keeps the benchmark API exercised by a real exemplar, not
-by infrastructure tests alone.
+\texttt{RubricSet}, then rendered with \breaktt{scores\_to\_markdown}
+into the byte-stable \breaktt{output/reports/benchmark\_report.json} with
+a deterministic objective-value figure. Real timing still executes as a
+runtime diagnostic, but it is not serialized into tracked evidence.
 
 \subsection{Madlib Injection
 Verification}\label{madlib-injection-verification}
@@ -1805,7 +1804,7 @@ SHA-256 \texttt{pending…} \texorpdfstring{\ensuremath{\cdot}}{.} pairing pendi
 
 \begin{figure}
 \centering
-\includegraphics[width=0.88\linewidth,height=0.50\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
+\includegraphics[width=0.88\linewidth,height=0.5\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
 \caption{Integrity QR strip}
 \end{figure}
 

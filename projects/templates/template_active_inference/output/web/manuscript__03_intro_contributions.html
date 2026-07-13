@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,41 +173,35 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:intro_contributions">Contributions</h1>
 <!-- sheaf-track:prose -->
 <h2 id="scientific-contributions">Scientific contributions</h2>
 <ol type="1">
-<li><strong>Analytical oracle</strong> (<span class="citation"
-data-cites="sec:methods_analytical">[@sec:methods_analytical]</span>):
+<li><strong>Analytical oracle</strong> ([sec:methods_analytical]):
 closed-form mutual information and free-energy decomposition on a
 symmetric Bernoulli–Ising toy with an independent exact-recomputation
-cross-check (<span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
-class="citation"
-data-cites="sec:results_free_energy">[@sec:results_free_energy]</span>).</li>
-<li><strong>Active-inference harness</strong> (<span class="citation"
-data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>):
+cross-check ([sec:results_mi_sweep], [sec:results_free_energy]).</li>
+<li><strong>Active-inference harness</strong> ([sec:methods_pymdp]):
 deterministic pymdp T-maze rollout — default
 <code>state_inference</code> belief filtering, with sophisticated
 expected-free-energy policy inference selectable via
 <code>mode: policy_inference</code> — with logged beliefs, actions, and
-merged invariant gates (<span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>, <span
-class="citation"
-data-cites="sec:results_invariants">[@sec:results_invariants]</span>).</li>
-<li><strong>Sheaf-indexed composition</strong> (<span class="citation"
-data-cites="sec:methods_sheaf">[@sec:methods_sheaf]</span>): 34 optional
-fragment types bind to 17 manifest rows under <span class="citation"
-data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>, with a
-33-track appendix composability proof (<span class="citation"
-data-cites="sec:appendix_full_sheaf">[@sec:appendix_full_sheaf]</span>).</li>
+merged invariant gates ([sec:results_si_tmaze],
+[sec:results_invariants]).</li>
+<li><strong>Sheaf-indexed composition</strong> ([sec:methods_sheaf]): 34
+optional fragment types bind to 17 manifest rows under
+[eq:coverage_cell], with a 33-track appendix composability proof
+([sec:appendix_full_sheaf]).</li>
 </ol>
-<p><span class="citation"
-data-cites="fig:multi_track_architecture">[@fig:multi_track_architecture]</span>
-maps the three scientific tracks to 31 pipeline gates and 34 composable
-fragment renderers. Measured invariant checks: 12 / 12 passed.</p>
+<p>[fig:multi_track_architecture] maps the three scientific tracks to 31
+pipeline gates and 34 composable fragment renderers. Measured invariant
+checks: 12 / 12 passed.</p>
 <p>Ontology-facing symbols are checked per model: the Bernoulli toy
 binds <code>pi1</code>, <code>pi2</code>, <code>J</code>,
 <code>gamma</code>, and <code>q_joint</code>, while the SI T-maze binds
@@ -215,16 +209,13 @@ binds <code>pi1</code>, <code>pi2</code>, <code>J</code>,
 and <code>belief_entropy</code> to <strong>HiddenState</strong>,
 <strong>ObservationLikelihood</strong>,
 <strong>PolicyPosterior</strong>, and <strong>BeliefEntropy</strong>
-(<span class="citation"
-data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>,
-<span class="citation"
-data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>).</p>
+([fig:gnn_ontology_concordance], [sec:methods_pymdp]).</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:multi_track_architecture">
 <img src="../figures/multi_track_architecture.png" style="width:95.0%"
 data-fig-alt="Process diagram linking three scientific tracks to 31 pipeline gates and 34 sheaf fragment types across 17 manifest rows."
 alt="Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to 31 pipeline gates and 34 composable fragment types." />
-<figcaption aria-hidden="true">Multi-track architecture: analytical,
+<figcaption>Multi-track architecture: analytical,
 pymdp, and sheaf composition lanes mapped to 31 pipeline gates and 34
 composable fragment types.</figcaption>
 </figure>
@@ -238,5 +229,6 @@ composable fragment types.</figcaption>
 <strong>ObservationLikelihood</strong></li>
 <li><code>policy</code> → <strong>PolicyPosterior</strong></li>
 </ul>
+</main>
 </body>
 </html>

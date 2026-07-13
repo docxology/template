@@ -13,7 +13,7 @@ pipeline (Pandoc). Sections, in render order:
 - `99_references.md` — references
 
 Figures live under [`figures/`](figures/README.md) and are embedded in prose with
-`![...](figures/<name>.png){#fig:<name>}` blocks. Configuration lives in
+blocks such as `![Schema overview](figures/schema_overview.png){#fig:schema_overview}`. Configuration lives in
 `config.yaml` (forkable defaults in `config.yaml.example`). Every quantitative
 claim is derived from `data/example_descriptor.json` and the tested
 `src/data_descriptor/` package — the prose transcribes no volatile numbers.

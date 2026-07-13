@@ -1,4 +1,5 @@
 """Tests for integrity hashing and verify module."""
+
 from __future__ import annotations
 
 import json
