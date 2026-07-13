@@ -114,12 +114,9 @@ class TestDepositionResult:
 
 
 class TestZenodoClientImportGuard:
-    def test_requires_requests_package(self, monkeypatch) -> None:
-        import infrastructure.publishing.zenodo.client as zenodo_client
-
-        monkeypatch.setattr(zenodo_client, "_requests_available", False)
+    def test_requires_requests_package(self) -> None:
         with pytest.raises(ImportError, match="requests package is required"):
-            ZenodoClient(ZenodoConfig(access_token="test"))
+            ZenodoClient(ZenodoConfig(access_token="test"), requests_available=False)
 
 
 class TestZenodoClientDepositFlow:

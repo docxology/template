@@ -29,8 +29,8 @@ from .models import DepositionResult
 class ZenodoClient:
     """Client for the Zenodo Deposit REST API."""
 
-    def __init__(self, config: ZenodoConfig) -> None:
-        if not _requests_available:
+    def __init__(self, config: ZenodoConfig, *, requests_available: bool = _requests_available) -> None:
+        if not requests_available:
             raise ImportError("requests package is required for ZenodoClient")
         self.config = config
         self.headers = make_bearer_auth_headers(config.access_token)

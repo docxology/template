@@ -2,6 +2,7 @@
 """Wrapper script for publishing releases."""
 
 import argparse
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from infrastructure import publishing
@@ -10,7 +11,11 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def main() -> None:
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    release_creator: Callable[..., str] = publishing.create_github_release,
+) -> None:
     """Create a GitHub release with PDF assets.
 
     Parses command-line arguments for GitHub authentication and release
@@ -37,13 +42,13 @@ def main() -> None:
     parser.add_argument("--tag", required=True, help="Tag name")
     parser.add_argument("--name", required=True, help="Release name")
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     # Find assets
     assets = list(Path("output/pdf").glob("*.pdf"))
 
     logger.info(f"Creating release {args.name} ({args.tag}) in {args.repo}...")
-    url = publishing.create_github_release(
+    url = release_creator(
         args.tag,
         args.name,
         "Release created by infrastructure tools.",

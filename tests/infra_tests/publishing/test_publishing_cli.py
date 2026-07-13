@@ -135,7 +135,6 @@ class TestPublishZenodoCommand:
         tmp_path,
         zenodo_test_server,
         capsys,
-        monkeypatch,
     ):
         """Publish PDFs through the CLI command against a local Zenodo server."""
         pdf_file = tmp_path / "paper.pdf"
@@ -147,8 +146,6 @@ class TestPublishZenodoCommand:
             kwargs["base_url"] = zenodo_test_server.url_for("")
             return original_config(*args, **kwargs)
 
-        monkeypatch.setattr(cli, "ZenodoConfig", config_with_test_url)
-
         args = argparse.Namespace(
             output_dir=str(tmp_path),
             token="test_token",
@@ -158,7 +155,7 @@ class TestPublishZenodoCommand:
             production=True,
         )
 
-        cli.publish_zenodo_command(args)
+        cli.publish_zenodo_command(args, config_factory=config_with_test_url)
 
         captured = capsys.readouterr()
         assert "10.5281/zenodo.12345" in captured.out
@@ -263,8 +260,6 @@ class TestPublishZenodoCommand:
                 kwargs["base_url"] = server.url_for("")
                 return original_config(*args, **kwargs)
 
-            monkeypatch.setattr(cli, "ZenodoConfig", config_with_test_url)
-
             args = argparse.Namespace(
                 output_dir=str(tmp_path),
                 token="test_token",
@@ -276,7 +271,7 @@ class TestPublishZenodoCommand:
 
             with caplog.at_level(logging.ERROR):
                 with pytest.raises(SystemExit) as exc_info:
-                    cli.publish_zenodo_command(args)
+                    cli.publish_zenodo_command(args, config_factory=config_with_test_url)
             assert exc_info.value.code == 1
         finally:
             server.stop()
@@ -292,34 +287,25 @@ class TestPublishZenodoCommand:
 class TestMainCli:
     """Test suite for main CLI entry point."""
 
-    def test_main_unhandled_command_exception(self, monkeypatch, caplog):
+    def test_main_unhandled_command_exception(self, caplog):
         """Unexpected exceptions from subcommands should exit with code 1."""
 
         def failing_command(_args):
             raise RuntimeError("simulated failure")
 
-        monkeypatch.setattr(
-            cli,
-            "publish_zenodo_command",
-            failing_command,
-        )
-
-        original_argv = sys.argv
-        try:
-            sys.argv = [
-                "cli.py",
-                "publish-zenodo",
-                str(Path("output")),
-                "--token",
-                "test",
-            ]
-            with caplog.at_level(logging.ERROR):
-                with pytest.raises(SystemExit) as exc_info:
-                    cli.main()
-            assert exc_info.value.code == 1
-            assert "simulated failure" in caplog.text
-        finally:
-            sys.argv = original_argv
+        with caplog.at_level(logging.ERROR):
+            with pytest.raises(SystemExit) as exc_info:
+                cli.main(
+                    [
+                        "publish-zenodo",
+                        str(Path("output")),
+                        "--token",
+                        "test",
+                    ],
+                    command_overrides={"publish-zenodo": failing_command},
+                )
+        assert exc_info.value.code == 1
+        assert "simulated failure" in caplog.text
 
     def test_main_without_command(self):
         """Test main without any subcommand."""
