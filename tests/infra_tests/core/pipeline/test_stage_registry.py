@@ -10,6 +10,9 @@ from infrastructure.core.pipeline.stage_registry import (
     STAGE_DISPATCH,
     script_argv_for_stage,
 )
+from infrastructure.core.pipeline.dag import PipelineDAG
+
+from pathlib import Path
 
 
 def test_stage_dispatch_covers_menu_keys() -> None:
@@ -43,3 +46,16 @@ def test_clean_is_not_a_dispatchable_stage() -> None:
     assert "clean" not in STAGE_DISPATCH
     with pytest.raises(SystemExit, match="Unknown stage"):
         script_argv_for_stage("clean")
+
+
+def test_single_stage_routes_match_pipeline_yaml() -> None:
+    """Full-DAG and single-stage execution resolve the same implementation."""
+    yaml_path = Path(__file__).resolve().parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
+    dag = PipelineDAG.from_yaml(yaml_path)
+    for stage in dag.stages:
+        if stage.script is None:
+            continue
+        assert stage.key is not None
+        dispatch = STAGE_DISPATCH[stage.key]
+        assert dispatch.script == stage.script
+        assert dispatch.args == tuple(stage.args)

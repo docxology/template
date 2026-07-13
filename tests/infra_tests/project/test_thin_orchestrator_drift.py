@@ -61,6 +61,41 @@ def test_fat_script_raises_error(tmp_path: Path) -> None:
     assert any(f.rule == "thin_orchestrator" for f in report.errors())
 
 
+def test_fat_async_functions_are_counted(tmp_path: Path) -> None:
+    root = _scaffold_project(tmp_path)
+    helpers = "".join(_fat_function(f"worker_{i}").replace("def ", "async def ", 1) for i in range(4))
+    (root / "scripts" / "fat_async.py").write_text(
+        helpers + "pass\n" * 210,
+        encoding="utf-8",
+    )
+    report = Report()
+    check_project_scripts(root, tmp_path, report, "demo")
+    assert any("fat_async.py" in finding.message for finding in report.errors())
+
+
+def test_fat_class_methods_are_counted(tmp_path: Path) -> None:
+    root = _scaffold_project(tmp_path)
+    methods = "".join("    " + _fat_function(f"worker_{i}").replace("\n", "\n    ").rstrip() + "\n\n" for i in range(4))
+    (root / "scripts" / "fat_class.py").write_text(
+        "class HiddenLogic:\n" + methods + "pass\n" * 210,
+        encoding="utf-8",
+    )
+    report = Report()
+    check_project_scripts(root, tmp_path, report, "demo")
+    assert any("fat_class.py" in finding.message for finding in report.errors())
+
+
+def test_syntax_error_fails_closed(tmp_path: Path) -> None:
+    root = _scaffold_project(tmp_path)
+    (root / "scripts" / "broken.py").write_text(
+        "def broken(:\n" + "pass\n" * 250,
+        encoding="utf-8",
+    )
+    report = Report()
+    check_project_scripts(root, tmp_path, report, "demo")
+    assert any("syntax error" in finding.message for finding in report.errors())
+
+
 def test_fat_main_in_repo_script_counts_as_non_trivial(tmp_path: Path) -> None:
     scripts = tmp_path / "scripts"
     scripts.mkdir()

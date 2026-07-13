@@ -48,7 +48,7 @@ class PipelineStageMixin(ABC):
     def run_infrastructure_tests(self) -> bool:
         """Public API used by multi-project orchestrator."""
         return self._run_script(
-            "01_run_tests.py",
+            "scripts/pipeline/stage_01_test.py",
             "--infra-only",
             "--verbose",
             "--infra-scope",
@@ -59,7 +59,13 @@ class PipelineStageMixin(ABC):
 
     def run_project_tests(self) -> bool:
         """Run project test suite."""
-        return self._run_script("01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name)
+        return self._run_script(
+            "scripts/pipeline/stage_01_test.py",
+            "--project-only",
+            "--verbose",
+            "--project",
+            self.config.project_name,
+        )
 
     # -- Internal stage methods ----------------------------------------------
 
@@ -85,16 +91,16 @@ class PipelineStageMixin(ABC):
         return True
 
     def _run_setup_environment(self) -> bool:
-        return self._run_script("00_setup_environment.py", "--project", self.config.project_name)
+        return self._run_script("scripts/pipeline/stage_00_setup.py", "--project", self.config.project_name)
 
     def _run_analysis(self) -> bool:
-        return self._run_script("02_run_analysis.py", "--project", self.config.project_name)
+        return self._run_script("scripts/pipeline/stage_02_analysis.py", "--project", self.config.project_name)
 
     def _run_pdf_rendering(self) -> bool:
-        return self._run_script("03_render_pdf.py", "--project", self.config.project_name)
+        return self._run_script("scripts/pipeline/stage_03_render.py", "--project", self.config.project_name)
 
     def _run_validation(self) -> bool:
-        return self._run_script("04_validate_output.py", "--project", self.config.project_name)
+        return self._run_script("scripts/pipeline/stage_04_validate.py", "--project", self.config.project_name)
 
     def _run_llm_review(self) -> bool:
         """Run LLM scientific review.
@@ -102,7 +108,7 @@ class PipelineStageMixin(ABC):
         Uses allow_skip_code=True to treat exit code 2 (Ollama not available) as success.
         """
         return self._run_script(
-            "06_llm_review.py",
+            "scripts/pipeline/stage_06_llm_review.py",
             "--reviews-only",
             "--project",
             self.config.project_name,
@@ -115,7 +121,7 @@ class PipelineStageMixin(ABC):
         Uses allow_skip_code=True to treat exit code 2 (no languages configured or Ollama unavailable) as success.
         """
         return self._run_script(
-            "06_llm_review.py",
+            "scripts/pipeline/stage_06_llm_review.py",
             "--translations-only",
             "--project",
             self.config.project_name,
@@ -131,7 +137,7 @@ class PipelineStageMixin(ABC):
         if not self._verify_log_file():
             logger.warning("Log file not verified before copy - may be missing or empty")
 
-        return self._run_script("05_copy_outputs.py", "--project", self.config.project_name)
+        return self._run_script("scripts/pipeline/stage_05_copy.py", "--project", self.config.project_name)
 
     def _verify_log_file(self) -> bool:
         """Check that the log file exists and has content.
@@ -189,14 +195,21 @@ class PipelineStageMixin(ABC):
         """Run a script with given arguments.
 
         Args:
-            script_name: Name of script in scripts/ directory
+            script_name: Repository-relative script path. Bare filenames remain
+                supported for project-specific legacy pipeline overrides.
             *args: Arguments to pass to script
             allow_skip_code: If True, treat exit code 2 as success (graceful skip)
 
         Returns:
             True if script succeeded (or skipped gracefully if allow_skip_code=True), False otherwise
         """
-        script_path = self.config.repo_root / "scripts" / script_name
+        relative = Path(script_name)
+        if relative.is_absolute():
+            script_path = relative
+        elif relative.parts and relative.parts[0] == "scripts":
+            script_path = self.config.repo_root / relative
+        else:
+            script_path = self.config.repo_root / "scripts" / relative
 
         cmd = get_python_command() + [str(script_path)] + list(args)
         logger.debug(f"Running: {' '.join(cmd)}")

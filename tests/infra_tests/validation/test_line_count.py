@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
 
 from infrastructure.validation.line_count import (
     LineCountThresholds,
+    LineCountRatchet,
     count_lines,
     scan_line_counts,
     scan_project_scripts,
@@ -34,6 +36,48 @@ def test_scan_line_counts_warn_and_fail(tmp_path: Path) -> None:
     )
     assert any("warn.py" in rel for rel, _ in warnings)
     assert any("fail.py" in rel for rel, _ in failures)
+
+
+def test_line_count_ratchet_fails_growth_beyond_ceiling(tmp_path: Path) -> None:
+    infra = tmp_path / "infrastructure"
+    infra.mkdir()
+    path = infra / "grandfathered.py"
+    path.write_text("\n".join(["# x"] * 101), encoding="utf-8")
+    ratchets = {
+        "infrastructure/grandfathered.py": LineCountRatchet(
+            max_lines=100,
+            expires_on=date(2999, 1, 1),
+        )
+    }
+
+    _warnings, failures = scan_line_counts(
+        tmp_path,
+        ("infrastructure",),
+        thresholds=LineCountThresholds(warn_at=80, fail_at=95),
+        allowlist=ratchets,
+    )
+    assert failures == [("infrastructure/grandfathered.py", 101)]
+
+
+def test_expired_line_count_ratchet_fails_closed(tmp_path: Path) -> None:
+    infra = tmp_path / "infrastructure"
+    infra.mkdir()
+    path = infra / "expired.py"
+    path.write_text("# x\n", encoding="utf-8")
+    ratchets = {
+        "infrastructure/expired.py": LineCountRatchet(
+            max_lines=100,
+            expires_on=date(2000, 1, 1),
+        )
+    }
+
+    _warnings, failures = scan_line_counts(
+        tmp_path,
+        ("infrastructure",),
+        thresholds=LineCountThresholds(warn_at=80, fail_at=95),
+        allowlist=ratchets,
+    )
+    assert failures == [("infrastructure/expired.py", 1)]
 
 
 def test_scan_project_scripts_any_project(tmp_path: Path) -> None:

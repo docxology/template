@@ -1,48 +1,52 @@
-"""Core logging subpackage — formatters, helpers, constants, and utilities.
+"""Lazy compatibility exports for core logging utilities."""
 
-Re-exports primary symbols for ``from infrastructure.core.logging import …`` usage.
-"""
+from __future__ import annotations
 
-from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled, get_structured_logging_enabled
-from infrastructure.core.logging.diagnostic import DiagnosticEvent, DiagnosticReporter, DiagnosticSeverity
-from infrastructure.core.logging.formatters import JSONFormatter, TemplateFormatter
-from infrastructure.core.logging.helpers import format_duration, format_error_with_suggestions
-from infrastructure.core.logging.progress import (
-    Spinner,
-    StreamingProgress,
-    log_progress_bar,
-    log_progress_streaming,
-    log_stage_with_eta,
-    log_with_spinner,
-)
-from infrastructure.core.logging.utils import (
-    get_logger,
-    log_operation,
-    log_stage,
-    log_success,
-    setup_logger,
-)
+from importlib import import_module
+from typing import Any
 
-__all__ = [
-    "DiagnosticEvent",
-    "DiagnosticReporter",
-    "DiagnosticSeverity",
-    "EMOJIS",
-    "JSONFormatter",
-    "Spinner",
-    "StreamingProgress",
-    "TemplateFormatter",
-    "format_duration",
-    "format_error_with_suggestions",
-    "get_emoji_enabled",
-    "get_logger",
-    "get_structured_logging_enabled",
-    "log_operation",
-    "log_progress_bar",
-    "log_progress_streaming",
-    "log_stage",
-    "log_stage_with_eta",
-    "log_success",
-    "log_with_spinner",
-    "setup_logger",
-]
+_EXPORTS = {
+    "DiagnosticEvent": ("infrastructure.core.logging.diagnostic", "DiagnosticEvent"),
+    "DiagnosticReporter": ("infrastructure.core.logging.diagnostic", "DiagnosticReporter"),
+    "DiagnosticSeverity": ("infrastructure.core.logging.diagnostic", "DiagnosticSeverity"),
+    "EMOJIS": ("infrastructure.core.logging.constants", "EMOJIS"),
+    "get_emoji_enabled": ("infrastructure.core.logging.constants", "get_emoji_enabled"),
+    "get_structured_logging_enabled": (
+        "infrastructure.core.logging.constants",
+        "get_structured_logging_enabled",
+    ),
+    "JSONFormatter": ("infrastructure.core.logging.formatters", "JSONFormatter"),
+    "TemplateFormatter": ("infrastructure.core.logging.formatters", "TemplateFormatter"),
+    "format_duration": ("infrastructure.core.logging.helpers", "format_duration"),
+    "format_error_with_suggestions": (
+        "infrastructure.core.logging.helpers",
+        "format_error_with_suggestions",
+    ),
+    "Spinner": ("infrastructure.core.logging.progress", "Spinner"),
+    "StreamingProgress": ("infrastructure.core.logging.progress", "StreamingProgress"),
+    "log_progress_bar": ("infrastructure.core.logging.progress", "log_progress_bar"),
+    "log_progress_streaming": ("infrastructure.core.logging.progress", "log_progress_streaming"),
+    "log_stage_with_eta": ("infrastructure.core.logging.progress", "log_stage_with_eta"),
+    "log_with_spinner": ("infrastructure.core.logging.progress", "log_with_spinner"),
+    "get_logger": ("infrastructure.core.logging.utils", "get_logger"),
+    "log_operation": ("infrastructure.core.logging.utils", "log_operation"),
+    "log_stage": ("infrastructure.core.logging.utils", "log_stage"),
+    "log_success": ("infrastructure.core.logging.utils", "log_success"),
+    "setup_logger": ("infrastructure.core.logging.utils", "setup_logger"),
+}
+
+__all__ = sorted(_EXPORTS)
+
+
+def __getattr__(name: str) -> Any:
+    try:
+        module_name, attribute = _EXPORTS[name]
+    except KeyError as exc:
+        raise AttributeError(name) from exc
+    value = getattr(import_module(module_name), attribute)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    return sorted((*globals(), *__all__))

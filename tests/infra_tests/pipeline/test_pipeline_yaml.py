@@ -86,7 +86,7 @@ class TestConnectorSearchStage:
         data = _load_pipeline()
         stage = _find_stage(_get_stages(data), "Connector Search")
         assert stage is not None
-        assert stage.get("script") == "08_connector_search.py"
+        assert stage.get("script") == "scripts/pipeline/stage_08_connector_search.py"
 
     def test_connector_search_depends_on_project_analysis(self) -> None:
         """Connector Search depends_on 'Project Analysis'."""
@@ -153,7 +153,20 @@ class TestProvenanceRecordStage:
         data = _load_pipeline()
         stage = _find_stage(_get_stages(data), "Provenance Record")
         assert stage is not None
-        assert stage.get("script") == "09_provenance_record.py"
+        assert stage.get("script") == "scripts/pipeline/stage_09_provenance_record.py"
+
+
+def test_stage_keys_are_unique_and_scripts_are_canonical() -> None:
+    """Machine keys are stable and scripts resolve from the repository root."""
+    stages = _get_stages(_load_pipeline())
+    keys = [stage.get("key") for stage in stages]
+    assert all(isinstance(key, str) and key for key in keys)
+    assert len(keys) == len(set(keys))
+    for stage in stages:
+        script = stage.get("script")
+        if script is not None:
+            assert script.startswith("scripts/")
+            assert (REPO_ROOT / script).is_file()
 
     def test_provenance_record_depends_on_connector_search(self) -> None:
         """Provenance Record depends_on 'Connector Search'."""

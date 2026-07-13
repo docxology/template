@@ -48,7 +48,10 @@ def _is_skipped_script(path: Path) -> bool:
     return False
 
 
-def _function_body_line_count(node: ast.FunctionDef) -> int:
+FunctionNode = ast.FunctionDef | ast.AsyncFunctionDef
+
+
+def _function_body_line_count(node: FunctionNode) -> int:
     """Approximate physical lines spanned by a function definition."""
     if not node.body:
         return 0
@@ -60,21 +63,24 @@ def _function_body_line_count(node: ast.FunctionDef) -> int:
     return max(end_lines) - node.lineno + 1
 
 
-def _function_complexity_score(node: ast.FunctionDef) -> tuple[int, int]:
+def _function_complexity_score(node: FunctionNode) -> tuple[int, int]:
     """Return (ast_node_count, physical_line_span) for non-trivial heuristics."""
     node_count = sum(1 for child in ast.walk(node) if hasattr(child, "lineno") and child.lineno >= node.lineno)
     return node_count, _function_body_line_count(node)
 
 
 def _count_non_trivial_functions(source: str, *, script_line_count: int = 0) -> int:
-    try:
-        tree = ast.parse(source)
-    except SyntaxError:
-        return 0
-    count = 0
+    tree = ast.parse(source)
+    candidates: list[FunctionNode] = []
     for node in tree.body:
-        if not isinstance(node, ast.FunctionDef):
-            continue
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            candidates.append(node)
+        elif isinstance(node, ast.ClassDef):
+            candidates.extend(
+                child for child in node.body if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+            )
+    count = 0
+    for node in candidates:
         if node.name.startswith("_parse_"):
             continue
         if node.name in _TRIVIAL_FUNC_NAMES:
@@ -120,6 +126,11 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
     if _is_skipped_script(path):
         return None, None
     source = path.read_text(encoding="utf-8")
+    try:
+        ast.parse(source, filename=str(path))
+    except SyntaxError as exc:
+        rel = _rel(path, repo_root)
+        return "ERROR", f"{rel}:{exc.lineno or 0}: syntax error: {exc.msg}"
     line_count = source.count("\n") + (1 if source and not source.endswith("\n") else 0)
     if _is_subprocess_scheduler(path, source, line_count=line_count):
         return None, None

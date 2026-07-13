@@ -1,13 +1,17 @@
-"""Canonical stage-key dispatch for single-stage pipeline runs.
+"""YAML-backed stage-key dispatch for single-stage pipeline runs.
 
-Single source of truth for ``execute_pipeline.py --stage``, ``single_stage.py``,
-and the interactive orchestration menu (via :data:`MENU_KEY_TO_STAGE`).
+The canonical script paths and fixed arguments come from ``pipeline.yaml``.
+Only compatibility aliases that do not correspond one-to-one with a DAG stage
+remain declared here.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Final
+
+import yaml
 
 __all__ = [
     "MENU_KEY_TO_STAGE",
@@ -21,34 +25,51 @@ __all__ = [
 
 @dataclass(frozen=True, slots=True)
 class StageDispatch:
-    """Relative script path under the repo root plus fixed CLI args."""
+    """Repository-relative script path plus fixed CLI arguments."""
 
     script: str
     args: tuple[str, ...] = ()
 
 
-# Note: there is no ``"clean"`` key. "Clean Output Directories" (stage 0 in the
-# vocabulary) is an executor built-in (``_run_clean_outputs``), not a standalone
-# script — a ``"clean"`` dispatch here previously pointed at 00_setup_environment.py
-# and so ``--stage clean`` silently ran *setup* and cleaned nothing. Single-stage
-# dispatch only covers stages backed by a runnable script.
+_PIPELINE_YAML = Path(__file__).with_name("pipeline.yaml")
+
+
+def _dispatch_from_yaml(path: Path = _PIPELINE_YAML) -> dict[str, StageDispatch]:
+    """Load dispatchable stages from the canonical pipeline definition."""
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    stages = raw.get("stages") if isinstance(raw, dict) else None
+    if not isinstance(stages, list):
+        raise ValueError(f"pipeline.yaml must contain a stages list: {path}")
+
+    result: dict[str, StageDispatch] = {}
+    for entry in stages:
+        if not isinstance(entry, dict):
+            raise ValueError(f"pipeline.yaml contains a non-mapping stage: {path}")
+        key = entry.get("key")
+        script = entry.get("script")
+        if key is None or script is None:
+            continue
+        if not isinstance(key, str) or not isinstance(script, str):
+            raise ValueError("Pipeline stage key and script must be strings")
+        if key in result:
+            raise ValueError(f"Duplicate pipeline stage key: {key}")
+        args = entry.get("args", [])
+        if not isinstance(args, list) or not all(isinstance(arg, str) for arg in args):
+            raise ValueError(f"Pipeline stage '{key}' args must be a list of strings")
+        result[key] = StageDispatch(script, tuple(args))
+    return result
+
+
+_YAML_DISPATCH = _dispatch_from_yaml()
 STAGE_DISPATCH: Final[dict[str, StageDispatch]] = {
-    "setup": StageDispatch("scripts/pipeline/stage_00_setup.py"),
-    "infra_tests": StageDispatch(
-        "scripts/pipeline/stage_01_test.py",
-        ("--infra-only", "--verbose", "--infra-scope", "pipeline-smoke"),
+    **_YAML_DISPATCH,
+    # Compatibility aggregate: run both test lanes through their shared script.
+    "tests": StageDispatch(
+        _YAML_DISPATCH["infra_tests"].script,
+        ("--verbose", "--infra-scope", "pipeline-smoke"),
     ),
-    "project_tests": StageDispatch("scripts/pipeline/stage_01_test.py", ("--project-only", "--verbose")),
-    "tests": StageDispatch("scripts/pipeline/stage_01_test.py", ("--verbose", "--infra-scope", "pipeline-smoke")),
-    "analysis": StageDispatch("scripts/pipeline/stage_02_analysis.py"),
-    "render_pdf": StageDispatch("scripts/pipeline/stage_03_render.py"),
-    "validate": StageDispatch("scripts/pipeline/stage_04_validate.py"),
-    "copy": StageDispatch("scripts/pipeline/stage_05_copy.py"),
-    "llm_reviews": StageDispatch("scripts/pipeline/stage_06_llm_review.py", ("--reviews-only",)),
-    "llm_translations": StageDispatch("scripts/pipeline/stage_06_llm_review.py", ("--translations-only",)),
+    # Standalone report generation is intentionally outside the default DAG.
     "executive_report": StageDispatch("scripts/pipeline/stage_07_executive_report.py"),
-    "ebook_generation": StageDispatch("scripts/pipeline/stage_11_ebook.py"),
-    "metadata_package": StageDispatch("scripts/pipeline/stage_12_metadata.py"),
 }
 
 MENU_KEY_TO_STAGE: Final[dict[str, str]] = {
@@ -64,12 +85,12 @@ MENU_KEY_TO_STAGE: Final[dict[str, str]] = {
 
 
 def known_stage_keys() -> frozenset[str]:
-    """Return valid ``--stage`` / ``execute_single_stage`` keys."""
+    """Return valid single-stage execution keys."""
     return frozenset(STAGE_DISPATCH)
 
 
 def normalize_stage_key(stage: str) -> str:
-    """Process normalize stage key."""
+    """Normalize a user-provided stage key."""
     return stage.strip().lower()
 
 

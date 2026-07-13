@@ -34,18 +34,17 @@ Runtime note: Python may create __pycache__/ directories under each subpackage; 
 __version__ = "2.0.0"
 __layer__ = "infrastructure"
 
-# Core utilities — always available, used throughout the codebase
-try:
-    from .core.exceptions import (
-        BuildError,
-        ConfigurationError,
-        TemplateError,
-        ValidationError,
-    )
-    from .core.config.loader import load_config
-    from .core.logging.utils import get_logger
-except ImportError as _core_e:
-    raise RuntimeError(f"infrastructure core import failed: {_core_e}") from _core_e
+from importlib import import_module
+from typing import Any
+
+_EXPORTS = {
+    "BuildError": ("infrastructure.core.exceptions", "BuildError"),
+    "ConfigurationError": ("infrastructure.core.exceptions", "ConfigurationError"),
+    "TemplateError": ("infrastructure.core.exceptions", "TemplateError"),
+    "ValidationError": ("infrastructure.core.exceptions", "ValidationError"),
+    "load_config": ("infrastructure.core.config.loader", "load_config"),
+    "get_logger": ("infrastructure.core.logging.utils", "get_logger"),
+}
 
 # All other symbols should be imported from their subpackages directly:
 #   from infrastructure.reporting import generate_pipeline_report
@@ -60,3 +59,19 @@ __all__ = [
     "load_config",
     "get_logger",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    """Resolve legacy root exports without eagerly loading unrelated packages."""
+    try:
+        module_name, attribute = _EXPORTS[name]
+    except KeyError as exc:
+        raise AttributeError(name) from exc
+    value = getattr(import_module(module_name), attribute)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    """Expose lazy root exports to introspection."""
+    return sorted((*globals(), *__all__))

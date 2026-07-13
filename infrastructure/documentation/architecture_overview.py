@@ -21,6 +21,7 @@ in the past for this repo's other generated diagrams).
 """
 
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -32,6 +33,35 @@ from infrastructure.project.public_scope import public_project_names
 from infrastructure.rendering.chrome import resolve_chrome_executable
 
 logger = get_logger(__name__)
+
+
+def _normalized_mermaid(source: str) -> str:
+    """Remove the volatile generation timestamp before parity comparison."""
+    lines = source.splitlines()
+    return "\n".join(lines[1:]) + "\n" if lines else ""
+
+
+def architecture_overview_is_current(repo_root: Path) -> bool:
+    """Return whether committed Mermaid and SVG surfaces match live topology."""
+    repo_root = Path(repo_root).resolve()
+    generated_dir = repo_root / "docs" / "_generated"
+    mmd_path = generated_dir / "architecture_overview.mmd"
+    svg_path = generated_dir / "architecture_overview.svg"
+    if not mmd_path.is_file() or not svg_path.is_file():
+        return False
+    expected_mermaid = build_architecture_mermaid(repo_root)
+    committed_mermaid = mmd_path.read_text(encoding="utf-8")
+    if _normalized_mermaid(committed_mermaid) != _normalized_mermaid(expected_mermaid):
+        return False
+
+    expected_labels = {
+        *(f"infrastructure/{name}/" for name in _discover_infrastructure_packages(repo_root)),
+        *(f"infrastructure/{name}/" for name in _discover_infrastructure_config_dirs(repo_root)),
+        *(f"projects/{name}/" for name in _project_qualified_names(repo_root)),
+    }
+    svg_text = svg_path.read_text(encoding="utf-8")
+    actual_labels = set(re.findall(r"(?:infrastructure|projects)/[A-Za-z0-9_.\-/]+/", svg_text))
+    return actual_labels == expected_labels
 
 
 def _resolve_chrome_executable() -> str | None:

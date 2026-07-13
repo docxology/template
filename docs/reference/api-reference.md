@@ -971,6 +971,14 @@ discover_projects(repo_root: Path | str, projects_dir: str='projects') -> list[P
 
 Discover all valid projects in the active projects directory.
 
+### `export_exemplar`
+
+*symbol — defined in `infrastructure.project`*
+
+### `ExportManifest`
+
+*symbol — defined in `infrastructure.project`*
+
 ### `find_setup_hook`
 
 *function — defined in `infrastructure.project.setup_hook`*
@@ -1014,6 +1022,10 @@ class ProjectInfo
 ```
 
 Information about a discovered project.
+
+### `public_ci_lint_paths`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `public_ci_source_paths`
 

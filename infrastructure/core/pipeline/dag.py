@@ -55,6 +55,7 @@ class StageDefinition:
     """
 
     name: str
+    key: str | None = None
     script: str | None = None
     method: str | None = None
     args: list[str] = field(default_factory=list)
@@ -100,6 +101,7 @@ class PipelineDAG:
             definitions.append(
                 StageDefinition(
                     name=entry["name"],
+                    key=entry.get("key"),
                     script=entry.get("script"),
                     method=entry.get("method"),
                     args=entry.get("args", []),
@@ -122,6 +124,7 @@ class PipelineDAG:
             definitions.append(
                 StageDefinition(
                     name=entry["name"],
+                    key=entry.get("key"),
                     script=entry.get("script"),
                     method=entry.get("method"),
                     args=entry.get("args", []),
@@ -298,6 +301,11 @@ class PipelineDAG:
         if len(names) != len(set(names)):
             dupes = [n for n in names if names.count(n) > 1]
             raise ValueError(f"Duplicate stage names: {set(dupes)}")
+
+        keys = [stage.key for stage in self.stages if stage.key is not None]
+        if len(keys) != len(set(keys)):
+            duplicate_keys = {key for key in keys if keys.count(key) > 1}
+            raise ValueError(f"Duplicate stage keys: {duplicate_keys}")
 
         name_set = set(names)
         for stage in self.stages:

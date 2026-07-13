@@ -79,6 +79,16 @@ class TestPublicSurface:
             assert "projects/templates/template_code_project/src" in argv
             assert "projects/private_research_project/src" not in argv
 
+        assert "projects/" in specs["bandit"]
+        for gate in (
+            "confidentiality",
+            "generated-artifacts",
+            "template-drift",
+            "counts",
+            "skills-manifest",
+        ):
+            assert gate in specs
+
 
 class TestSyntheticGate:
     """A trivial echo gate must parse correctly into a ``GateResult``."""
@@ -210,7 +220,7 @@ class TestCLI:
             text=True,
             check=False,
             timeout=120,
-            env={**__import__("os").environ, "COLUMNS": "240"},
+            env={**__import__("os").environ, "COLUMNS": "1000"},
         )
         assert proc.returncode == 0
         for name in GATE_NAMES:

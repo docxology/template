@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Unified repository health check command.
+"""Blocking static repository health check command.
 
-This module wires together every quality gate that lives behind its own
-CLI today (mypy, ruff, ruff format, bandit, the no-mocks verifier, the
-``__all__`` audit, the docs linter, and the doc-generator idempotence
-checks) into a single entry point.  It is a *thin orchestrator* — each
+This module wires together the repository's deterministic static quality
+gates. Platform matrices, behavioral test suites, and coverage remain separate
+CI jobs. It is a *thin orchestrator* — each
 gate is invoked as a subprocess against the live tree, and the gate's
 **exit code** is the only source of truth for pass/fail.  Stdout and
 stderr are captured for diagnostic purposes only.
@@ -113,10 +112,8 @@ def _public_lint_targets(repo_root: Path) -> list[str]:
 def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     """Return the canonical ``(name, argv)`` list for every gate.
 
-    The list is parameterised on ``repo_root`` so callers can run health
-    checks against any checkout (the live tree, a temp clone, a CI
-    workspace, etc.). The architecture-overview gate falls back to a
-    presence check on the generated SVG when no CLI is available.
+    The list is parameterised on ``repo_root`` so callers can run static health
+    checks against any checkout (the live tree, a temp clone, or CI workspace).
 
     Args:
         repo_root: Repository root used to resolve relative paths in the
@@ -126,17 +123,13 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         Ordered list of ``(gate_name, argv)`` tuples.
     """
 
-    arch_svg = repo_root / "docs" / "_generated" / "architecture_overview.svg"
-    # The architecture overview module currently has no CLI ``__main__``;
-    # fall back to a portable presence check via the standard library so
-    # the gate is still meaningful on a clean tree.
     arch_overview_argv = [
         sys.executable,
         "-c",
         (
-            "import sys, pathlib;"
-            f" p = pathlib.Path({str(arch_svg)!r});"
-            " sys.exit(0 if p.is_file() and p.stat().st_size > 0 else 1)"
+            "import sys; from pathlib import Path;"
+            " from infrastructure.documentation.architecture_overview import architecture_overview_is_current;"
+            f" sys.exit(0 if architecture_overview_is_current(Path({str(repo_root)!r})) else 1)"
         ),
     ]
 
@@ -167,6 +160,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "bandit.yaml",
                 "infrastructure/",
                 "scripts/",
+                "projects/",
                 "--exclude",
                 "projects/working,projects/ongoing,projects/published,projects/archive,projects/other",
             ],
@@ -185,6 +179,22 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "infrastructure.skills",
                 "check-all-exports",
             ],
+        ),
+        (
+            "skills-manifest",
+            ["uv", "run", "python", "-m", "infrastructure.skills", "check"],
+        ),
+        (
+            "confidentiality",
+            ["uv", "run", "python", "scripts/audit/check_tracked_all.py"],
+        ),
+        (
+            "generated-artifacts",
+            ["uv", "run", "python", "scripts/audit/check_tracked_generated_artifacts.py"],
+        ),
+        (
+            "template-drift",
+            ["uv", "run", "python", "scripts/audit/check_template_drift.py", "--strict"],
         ),
         (
             "docs-lint",
@@ -208,6 +218,18 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "scripts/docgen/api_reference.py",
                 "--check",
             ],
+        ),
+        (
+            "counts",
+            ["uv", "run", "python", "scripts/docgen/counts.py", "--check"],
+        ),
+        (
+            "exemplar-roster",
+            ["uv", "run", "python", "scripts/docgen/exemplar_roster.py", "--check"],
+        ),
+        (
+            "publication-records",
+            ["uv", "run", "python", "scripts/docgen/publication_records.py", "--check"],
         ),
         ("architecture-overview", arch_overview_argv),
         (

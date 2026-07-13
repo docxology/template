@@ -19,9 +19,22 @@ from pathlib import Path
 import pytest
 
 from infrastructure.documentation.architecture_overview import (
+    architecture_overview_is_current,
     build_architecture_mermaid,
     render_architecture_svg,
 )
+
+
+def test_current_check_rejects_nonempty_stale_svg(tmp_path: Path) -> None:
+    (tmp_path / "infrastructure" / "core").mkdir(parents=True)
+    (tmp_path / "infrastructure" / "core" / "__init__.py").write_text("", encoding="utf-8")
+    generated = tmp_path / "docs" / "_generated"
+    generated.mkdir(parents=True)
+    source = build_architecture_mermaid(tmp_path)
+    (generated / "architecture_overview.mmd").write_text(source, encoding="utf-8")
+    (generated / "architecture_overview.svg").write_text("<svg>stale but nonempty</svg>", encoding="utf-8")
+
+    assert architecture_overview_is_current(tmp_path) is False
 
 
 def _make_fake_repo(root: Path) -> None:

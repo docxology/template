@@ -1,55 +1,88 @@
-"""Core pipeline subpackage — execution, monitoring, multi-project orchestration.
+"""Core pipeline APIs with lazy compatibility re-exports.
 
-Re-exports primary symbols for ``from infrastructure.core.pipeline import …`` usage.
+Import leaf modules for new code (for example
+``infrastructure.core.pipeline.types``).  Package-level names remain available
+during the compatibility window, but loading this package no longer imports
+reporting or scientific/visualization dependencies eagerly.
 """
 
-from infrastructure.core.pipeline.dag import stage_label
-from infrastructure.core.pipeline.executor import PipelineExecutor
-from infrastructure.core.pipeline.multi_project import (
-    MultiProjectConfig,
-    MultiProjectOrchestrator,
-    MultiProjectResult,
-    format_multi_project_outcome_lines,
-)
-from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
-from infrastructure.core.pipeline.stage_monitor import (
-    PerformanceMonitor,
-    PerformanceMetrics,
-    StagePerformanceTracker,
-    get_system_resources,
-)
-from infrastructure.core.pipeline.summary import generate_pipeline_summary
-from infrastructure.core.pipeline.types import (
-    PipelineControlConfig,
-    PipelineConfig,
-    PipelineStageResult,
-    StageContract,
-    StageHooks,
-    StagePolicy,
-    StageSpec,
-)
-from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
+from __future__ import annotations
 
-__all__ = [
-    "MultiProjectConfig",
-    "MultiProjectOrchestrator",
-    "MultiProjectResult",
-    "format_multi_project_detailed_report",
-    "format_multi_project_outcome_lines",
-    "PerformanceMetrics",
-    "PerformanceMonitor",
-    "PipelineConfig",
-    "PipelineExecutor",
-    "PipelineStageResult",
-    "PipelineControlConfig",
-    "StagePerformanceTracker",
-    "StageContract",
-    "StageHooks",
-    "StagePolicy",
-    "StageSpec",
-    "TelemetryCollector",
-    "TelemetryConfig",
-    "generate_pipeline_summary",
-    "get_system_resources",
-    "stage_label",
-]
+from importlib import import_module
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.dag import stage_label
+    from infrastructure.core.pipeline.executor import PipelineExecutor
+    from infrastructure.core.pipeline.multi_project import (
+        MultiProjectConfig,
+        MultiProjectOrchestrator,
+        MultiProjectResult,
+        format_multi_project_outcome_lines,
+    )
+    from infrastructure.core.pipeline.stage_monitor import (
+        PerformanceMetrics,
+        PerformanceMonitor,
+        StagePerformanceTracker,
+        get_system_resources,
+    )
+    from infrastructure.core.pipeline.summary import generate_pipeline_summary
+    from infrastructure.core.pipeline.types import (
+        PipelineControlConfig,
+        PipelineConfig,
+        PipelineStageResult,
+        StageContract,
+        StageHooks,
+        StagePolicy,
+        StageSpec,
+    )
+    from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
+    from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
+
+_EXPORTS: dict[str, tuple[str, str]] = {
+    "PipelineConfig": ("infrastructure.core.pipeline.types", "PipelineConfig"),
+    "PipelineExecutor": ("infrastructure.core.pipeline.executor", "PipelineExecutor"),
+    "stage_label": ("infrastructure.core.pipeline.dag", "stage_label"),
+    "MultiProjectConfig": ("infrastructure.core.pipeline.multi_project", "MultiProjectConfig"),
+    "MultiProjectOrchestrator": ("infrastructure.core.pipeline.multi_project", "MultiProjectOrchestrator"),
+    "MultiProjectResult": ("infrastructure.core.pipeline.multi_project", "MultiProjectResult"),
+    "format_multi_project_outcome_lines": (
+        "infrastructure.core.pipeline.multi_project",
+        "format_multi_project_outcome_lines",
+    ),
+    "format_multi_project_detailed_report": (
+        "infrastructure.reporting.multi_project_report",
+        "format_multi_project_detailed_report",
+    ),
+    "PerformanceMetrics": ("infrastructure.core.pipeline.stage_monitor", "PerformanceMetrics"),
+    "PerformanceMonitor": ("infrastructure.core.pipeline.stage_monitor", "PerformanceMonitor"),
+    "StagePerformanceTracker": ("infrastructure.core.pipeline.stage_monitor", "StagePerformanceTracker"),
+    "get_system_resources": ("infrastructure.core.pipeline.stage_monitor", "get_system_resources"),
+    "generate_pipeline_summary": ("infrastructure.core.pipeline.summary", "generate_pipeline_summary"),
+    "PipelineControlConfig": ("infrastructure.core.pipeline.types", "PipelineControlConfig"),
+    "PipelineStageResult": ("infrastructure.core.pipeline.types", "PipelineStageResult"),
+    "StageContract": ("infrastructure.core.pipeline.types", "StageContract"),
+    "StageHooks": ("infrastructure.core.pipeline.types", "StageHooks"),
+    "StagePolicy": ("infrastructure.core.pipeline.types", "StagePolicy"),
+    "StageSpec": ("infrastructure.core.pipeline.types", "StageSpec"),
+    "TelemetryCollector": ("infrastructure.core.telemetry", "TelemetryCollector"),
+    "TelemetryConfig": ("infrastructure.core.telemetry", "TelemetryConfig"),
+}
+
+__all__ = sorted(_EXPORTS)
+
+
+def __getattr__(name: str) -> Any:
+    """Load a compatibility export only when it is requested."""
+    try:
+        module_name, attribute = _EXPORTS[name]
+    except KeyError as exc:
+        raise AttributeError(name) from exc
+    value = getattr(import_module(module_name), attribute)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    """Expose lazy names to interactive help and introspection."""
+    return sorted((*globals(), *__all__))

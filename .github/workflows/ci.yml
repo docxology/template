@@ -171,15 +171,14 @@ jobs:
         run: uv run python scripts/gates/module_line_count_check.py
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 1b — Unified health report (informational, no fail)
+# Job 1b — Blocking static health report
 #
 # MED2: ``infrastructure.core.health`` aggregates every quality gate into a
-# single typed ``HealthReport``. The job runs after ``lint`` and uploads the
-# JSON for triage; ``|| true`` keeps the workflow green even if individual
-# gates regress here (their dedicated jobs above are the blocking ones).
+# single typed ``HealthReport``. Behavioral tests and platform matrices remain
+# separate jobs; every gate represented in this static report is blocking.
 # ─────────────────────────────────────────────────────────────────────────────
   health:
-    name: Unified Health Report (informational)
+    name: Static Health Report
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: [lint]
@@ -193,10 +192,10 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
-      - name: Run unified health checks (informational)
+      - name: Run blocking static health checks
         run: |
           uv run python -m infrastructure.core.health --json --quiet \
-            > health-report.json || true
+            > health-report.json
 
       - name: Upload health report
         if: always()
@@ -381,19 +380,8 @@ jobs:
       # exemplars ship colliding top-level ``src`` packages resolved via
       # per-project aliases + temporary sys.meta_path finders whose isolation is
       # collection-order-sensitive (see docs/maintenance/regression-testing.md).
-      # exit 5 (no tests collected on a clean scaffold) is tolerated so a future
-      # empty tier does not hard-fail the build; any real failure (exit 1) does.
       - name: Run claim-binding regression tier
-        run: |
-          set +e
-          uv run pytest tests/regression/ -q --no-cov --timeout=120
-          code=$?
-          set -e
-          if [ "$code" -eq 5 ]; then
-            echo "::notice::regression tier collected 0 tests (clean scaffold) — tolerated"
-            exit 0
-          fi
-          exit "$code"
+        run: uv run pytest tests/regression/ -q --no-cov --timeout=120
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (one parallel job per public exemplar)

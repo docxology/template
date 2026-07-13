@@ -30,7 +30,9 @@ def _setup_fallback_logging() -> logging.Logger:
 def get_logger() -> logging.Logger:
     """Get logger."""
     if _infra_available() and _infra_get_logger is not None:
-        return _infra_get_logger(__name__)
+        logger = _infra_get_logger(__name__)
+        if isinstance(logger, logging.Logger):
+            return logger
     return _setup_fallback_logging()
 
 

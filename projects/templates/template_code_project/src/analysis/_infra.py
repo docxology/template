@@ -49,9 +49,9 @@ except ImportError as e:  # pragma: no cover — fallback when infrastructure is
     ScriptExecutionError = _FallbackScriptExecutionError
     TemplateError = _FallbackTemplateError
     ValidationError = _FallbackValidationError
-    ProgressBar = None  # type: ignore[misc, assignment]
-    SystemHealthChecker = None  # type: ignore[misc, assignment]
-    get_logger = None  # type: ignore[assignment]
+    ProgressBar = None
+    SystemHealthChecker = None
+    get_logger = None
     benchmark_function = None  # type: ignore[assignment]
     check_numerical_stability = None  # type: ignore[assignment]
     verify_output_integrity = None  # type: ignore[assignment]
@@ -65,7 +65,7 @@ except ImportError as e:  # pragma: no cover — fallback when infrastructure is
     InteractiveDashboard = None  # type: ignore[misc, assignment]
     Invariant = None  # type: ignore[misc, assignment]
     Panel = None  # type: ignore[misc, assignment]
-    log_success = None  # type: ignore[assignment]
+    log_success = None
 
 __all__ = [
     "INFRASTRUCTURE_AVAILABLE",

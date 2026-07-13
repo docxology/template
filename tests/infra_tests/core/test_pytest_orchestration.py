@@ -363,9 +363,7 @@ def test_resolve_xdist_args_zero_and_invalid_are_serial(monkeypatch: pytest.Monk
     assert resolve_xdist_args("") == []
 
 
-def test_build_union_pytest_command_omits_xdist_by_default(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_build_union_pytest_command_omits_xdist_by_default(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Default union command stays serial — no ``-n`` regression."""
     monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
     repo = tmp_path / "repo"

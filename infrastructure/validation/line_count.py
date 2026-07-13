@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from datetime import date
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Mapping
 
 
 @dataclass(frozen=True)
@@ -12,6 +14,18 @@ class LineCountThresholds:
 
     warn_at: int
     fail_at: int
+
+
+@dataclass(frozen=True)
+class LineCountRatchet:
+    """Temporary per-file ceiling that expires and may only move downward."""
+
+    max_lines: int
+    expires_on: date
+
+    def permits(self, line_count: int, *, today: date | None = None) -> bool:
+        effective_today = today or date.today()
+        return effective_today <= self.expires_on and line_count <= self.max_lines
 
 
 DEFAULT_INFRA_THRESHOLDS = LineCountThresholds(warn_at=800, fail_at=950)
@@ -30,7 +44,7 @@ def scan_line_counts(
     roots: tuple[str, ...],
     *,
     thresholds: LineCountThresholds,
-    allowlist: frozenset[str] = frozenset(),
+    allowlist: Mapping[str, LineCountRatchet] | None = None,
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
     """Return (warnings, failures) as lists of (relative_path, line_count)."""
     warnings: list[tuple[str, int]] = []
@@ -41,9 +55,13 @@ def scan_line_counts(
             continue
         for py_file in root.rglob("*.py"):
             rel = py_file.relative_to(repo_root).as_posix()
-            if rel in allowlist:
-                continue
             count = count_lines(py_file)
+            ratchet = (allowlist or {}).get(rel)
+            if ratchet is not None:
+                if ratchet.permits(count):
+                    continue
+                failures.append((rel, count))
+                continue
             if count >= thresholds.fail_at:
                 failures.append((rel, count))
             elif count >= thresholds.warn_at:
@@ -54,7 +72,7 @@ def scan_line_counts(
 def scan_infrastructure_and_scripts(
     repo_root: Path,
     *,
-    allowlist: frozenset[str] = frozenset(),
+    allowlist: Mapping[str, LineCountRatchet] | None = None,
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
     """Scan infrastructure and scripts."""
     return scan_line_counts(
@@ -68,7 +86,7 @@ def scan_infrastructure_and_scripts(
 def scan_project_scripts(
     repo_root: Path,
     *,
-    allowlist: frozenset[str] = frozenset(),
+    allowlist: Mapping[str, LineCountRatchet] | None = None,
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
     """Scan project scripts."""
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -94,7 +112,7 @@ def scan_project_scripts(
 def scan_project_src(
     repo_root: Path,
     *,
-    allowlist: frozenset[str] = frozenset(),
+    allowlist: Mapping[str, LineCountRatchet] | None = None,
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
     """Scan ``projects/*/src/`` with the same thresholds as Layer 1."""
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -120,7 +138,7 @@ def scan_project_src(
 def scan_repository_tests(
     repo_root: Path,
     *,
-    allowlist: frozenset[str] = frozenset(),
+    allowlist: Mapping[str, LineCountRatchet] | None = None,
 ) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
     """Advisory scan of infra and public project test modules (warn-only by default)."""
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
