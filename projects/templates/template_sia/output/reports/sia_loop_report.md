@@ -8,6 +8,6 @@
 
 | Gen | Metric | Value | N |
 | --- | --- | ---: | ---: |
-| 1 | accuracy | 0.5000 | 6 |
-| 2 | accuracy | 0.6667 | 6 |
-| 3 | accuracy | 0.8333 | 6 |
+| 1 | accuracy | 1.0000 | 6 |
+| 2 | accuracy | 1.0000 | 6 |
+| 3 | accuracy | 1.0000 | 6 |

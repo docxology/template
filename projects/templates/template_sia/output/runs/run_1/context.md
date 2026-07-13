@@ -3,13 +3,13 @@
 ## Generation 1
 - Target agent: `target_agent.py`
 - Execution log: `agent_execution.json`
-- Metric: `accuracy` = 0.5
+- Metric: `accuracy` = 1
 - Samples: 6
 
 ## Generation 2
 - Target agent: `target_agent.py`
 - Execution log: `agent_execution.json`
-- Metric: `accuracy` = 0.6667
+- Metric: `accuracy` = 1
 - Samples: 6
 
 ### Improvement rationale
@@ -20,7 +20,7 @@ Tune threshold toward 0.3.
 ## Generation 3
 - Target agent: `target_agent.py`
 - Execution log: `agent_execution.json`
-- Metric: `accuracy` = 0.8333
+- Metric: `accuracy` = 1
 - Samples: 6
 
 ### Improvement rationale

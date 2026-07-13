@@ -103,7 +103,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 | --- | --- |
 | Ruff lint | zero violations |
 | Ruff format | zero diffs |
-| mypy | no errors |
+| mypy ratchet | no errors outside declared package debt; no new files or growth above per-package ceilings |
 | Mock-framework lexical gate | zero prohibited imports/calls (`--inventory` debt remains advisory) |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage (per-project standalone) | ≥ 90% |

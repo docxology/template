@@ -205,7 +205,7 @@ action — not each job.
 |---|---|---|
 | Ruff linting | zero violations | `lint` job |
 | Ruff formatting | zero diffs | `lint` job |
-| mypy type check | no errors | `lint` job |
+| mypy type ratchet | no unratcheted errors, new error-bearing files, or package-ceiling growth | `lint` job |
 | Mock-framework lexical gate | zero prohibited imports/calls | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |

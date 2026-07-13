@@ -174,8 +174,8 @@ Total documented definitions: 797
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 23 | `function` | `_figures_nonblank` | inventory fallback | Inventory fallback for function `_figures_nonblank` defined at `src/gates/output_checks.py:23`. |
-| 37 | `function` | `_required_output_checks` | inventory fallback | Inventory fallback for function `_required_output_checks` defined at `src/gates/output_checks.py:37`. |
-| 41 | `function` | `validate_outputs` | docstring | Validate every registered output artifact and return gate booleans by name. |
+| 42 | `function` | `_required_output_checks` | inventory fallback | Inventory fallback for function `_required_output_checks` defined at `src/gates/output_checks.py:42`. |
+| 46 | `function` | `validate_outputs` | docstring | Validate every registered output artifact and return gate booleans by name. |
 
 ## `src/gates/output_checks_promoted.py`
 
@@ -571,13 +571,13 @@ Total documented definitions: 797
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 12 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:12`. |
-| 16 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:16`. |
-| 20 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:20`. |
-| 58 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:58`. |
-| 65 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:65`. |
-| 76 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:76`. |
-| 99 | `function` | `run_verification` | docstring | Run verification. |
+| 13 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:13`. |
+| 17 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:17`. |
+| 21 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:21`. |
+| 59 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:59`. |
+| 66 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:66`. |
+| 77 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:77`. |
+| 108 | `function` | `run_verification` | docstring | Run verification. |
 
 ## `src/orchestration/pipeline_manifest.py`
 
@@ -1140,15 +1140,15 @@ Total documented definitions: 797
 | 141 | `function` | `_artifact_record` | inventory fallback | Inventory fallback for function `_artifact_record` defined at `src/validation_spine/artifacts.py:141`. |
 | 165 | `function` | `_config_record` | inventory fallback | Inventory fallback for function `_config_record` defined at `src/validation_spine/artifacts.py:165`. |
 | 175 | `function` | `build_artifact_provenance` | docstring | Build deterministic artifact lineage and hash records. |
-| 209 | `function` | `_same_json` | inventory fallback | Inventory fallback for function `_same_json` defined at `src/validation_spine/artifacts.py:209`. |
-| 215 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:215`. |
-| 224 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
-| 301 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
-| 400 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
-| 427 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
-| 474 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
-| 526 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
-| 555 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
+| 213 | `function` | `_same_json` | inventory fallback | Inventory fallback for function `_same_json` defined at `src/validation_spine/artifacts.py:213`. |
+| 219 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:219`. |
+| 228 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
+| 305 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
+| 404 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
+| 431 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
+| 478 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
+| 530 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
+| 559 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
 
 ## `src/visualizations/animation.py`
 

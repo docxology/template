@@ -69,8 +69,8 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         figure_id="fig:sia-improvement-delta",
         filename="sia_improvement_delta.png",
         caption=(
-            "Generation-over-generation metric delta (Δaccuracy) for the SIA loop, "
-            "illustrating the incremental improvement at each self-refinement step."
+            "Generation-over-generation metric delta (Δaccuracy) for the SIA fixture replay; "
+            "the flat trace confirms threshold robustness and prevents a fabricated improvement claim."
         ),
     ),
 )

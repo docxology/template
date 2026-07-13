@@ -33,7 +33,7 @@ Examples:
 
 Pure-Python fallback (when act unavailable) runs:
   - ruff check + format
-  - mypy (strict on public CI source scope)
+  - mypy (strict outside declared per-package debt; ratcheted within it)
   - bandit security scan
   - infra + project pytest with coverage gates
   - pre-commit hooks (all stages, including pre-push)
@@ -120,7 +120,7 @@ if [[ "$LIST_ONLY" -eq 1 ]]; then
   cat <<'EOF'
 Pure-Python fallback available steps (act not available):
   - lint        (ruff check + format)
-  - typecheck   (mypy strict)
+  - typecheck   (mypy package-debt ratchet)
   - security    (bandit)
   - tests       (infra + project pytest with coverage)
   - precommit   (all pre-commit stages including pre-push)

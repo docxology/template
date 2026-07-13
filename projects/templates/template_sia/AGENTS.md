@@ -30,8 +30,10 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `… --live-sia` (model set in `manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from `project_config.sia.llm_model` (see `src/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
 
 Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
-code modification. Cross-generation self-improvement is shown only via fixture
-replay. See [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
+code modification. Fixture replay records real threshold variants but all score
+1.0 on the toy dataset, so it demonstrates deterministic replay and threshold
+robustness—not measured self-improvement. See
+[`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
 The project adapter lives in `src/loop.py`; scripts only parse arguments, call
 that API, and present output paths.
 

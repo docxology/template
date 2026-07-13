@@ -42,6 +42,12 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `collect_entries(repo_root)` - build `ExemplarEntry` records from each public exemplar's README (H1 title + "When to use this template" section)
 - `ExemplarEntry` - structured roster entry; backs `docs/_generated/exemplar_roster.md`
 
+### Clean Export Smoke (`export_smoke.py`)
+
+- `smoke_exported_exemplar(...)` - export one exemplar into a clean tree, install it with its own `pyproject.toml`/lock, and import every top-level `src` target.
+- `smoke_public_exemplars(...)` - apply the same isolated contract to the canonical public roster.
+- Thin gate: `uv run python scripts/gates/exemplar_export_smoke.py` (use repeated `--project` for a focused run).
+
 ### Domain Profile (`domain_profile.py`)
 
 - `load_domain_profile(project_root, *, default_profile="generic")` - load a project's optional domain profile (validators, render tracks, defaults)

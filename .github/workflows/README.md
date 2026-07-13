@@ -48,7 +48,7 @@ flowchart TB
 |---|---|
 | Ruff lint | zero violations |
 | Ruff format | zero diffs |
-| mypy | no errors |
+| mypy ratchet | no unratcheted errors, new error-bearing files, or package-ceiling growth |
 | `check-all-exports` | zero violations |
 | Mock-framework lexical gate | zero prohibited imports/calls; stand-in inventory advisory |
 | Infrastructure coverage | ≥ 60% |

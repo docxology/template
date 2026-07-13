@@ -163,6 +163,30 @@ def test_export_bundles_declared_cross_root_resources(tmp_path: Path) -> None:
     assert payload["files"][rel] == hashlib.sha256(resource.read_bytes()).hexdigest()
 
 
+def test_export_bundles_declared_infrastructure_dependency(tmp_path: Path) -> None:
+    repo_root = _scaffold_git_repo(tmp_path)
+    project = repo_root / "projects/templates/template_code_project"
+    (project / "export.toml").write_text(
+        '[template_export]\ncross_root_dependencies = ["infrastructure"]\n',
+        encoding="utf-8",
+    )
+    module = repo_root / "infrastructure" / "feature.py"
+    module.parent.mkdir()
+    module.write_text("VALUE = 1\n", encoding="utf-8")
+    output_module = repo_root / "infrastructure" / "validation" / "output" / "gate.py"
+    output_module.parent.mkdir(parents=True)
+    output_module.write_text("VALUE = 2\n", encoding="utf-8")
+    dest = tmp_path / "fork"
+
+    export_exemplar(repo_root, "templates/template_code_project", dest)
+
+    bundled = dest / "_template_resources/infrastructure/feature.py"
+    assert bundled.read_text(encoding="utf-8") == "VALUE = 1\n"
+    assert (dest / "_template_resources/infrastructure/validation/output/gate.py").is_file()
+    payload = json.loads((dest / ".template-export.json").read_text(encoding="utf-8"))
+    assert payload["resource_dependencies"] == ["infrastructure"]
+
+
 def test_project_only_export_omits_declared_resources(tmp_path: Path) -> None:
     repo_root = _scaffold_git_repo(tmp_path)
     project = repo_root / "projects/templates/template_code_project"

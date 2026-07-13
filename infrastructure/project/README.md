@@ -139,6 +139,9 @@ or `.private_projects_root`.
 
 - `exemplar_roster.py` — `collect_entries(repo_root)` builds `ExemplarEntry`
   records from each public exemplar README; backs `docs/_generated/exemplar_roster.md`.
+- `export_smoke.py` — clean-exports an exemplar, installs its own locked
+  environment, and imports its top-level `src` package; `smoke_public_exemplars`
+  applies the contract to the canonical public roster.
 - `domain_profile.py` — `load_domain_profile(project_root)` returns a `DomainProfile`
   describing a project's validators, render tracks, and defaults.
 - `experiment_plan.py` — `load_experiment_plan(project_root)` /

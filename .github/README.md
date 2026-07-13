@@ -914,7 +914,7 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 | --- | --- | :---: |
 | Code style | Ruff | zero violations |
 | Formatting | Ruff | zero diffs |
-| Type safety | mypy | no errors |
+| Type safety | mypy ratchet | no unratcheted errors, new error-bearing files, or per-package debt growth |
 | Mock-framework syntax | `verify_no_mocks.py` | zero prohibited imports/calls |
 | Exports audit | `infrastructure.skills check-all-exports` | zero violations |
 | Infra coverage | pytest-cov | **≥ 60%** |

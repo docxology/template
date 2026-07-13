@@ -1,1 +1,7 @@
-{"returncode": 0, "stdout": "ok", "generation": 1}
+{
+  "returncode": 0,
+  "stdout": "output/runs/run_1/gen_1/working/predictions.csv\n",
+  "stderr": "",
+  "dataset_dir": "tasks/mini_classify/data/public",
+  "working_dir": "output/runs/run_1/gen_1/working"
+}

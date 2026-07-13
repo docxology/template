@@ -230,7 +230,7 @@ def _declared_resource_dependencies(source_root: Path) -> tuple[str, ...]:
     if not isinstance(raw, list) or not all(isinstance(item, str) for item in raw):
         raise ValueError("template_export.cross_root_dependencies must be a list of strings")
     dependencies = tuple(raw)
-    allowed = {"fonds/templates", "rules/templates", "tools/templates"}
+    allowed = {"fonds/templates", "rules/templates", "tools/templates", "infrastructure"}
     invalid = sorted(set(dependencies) - allowed)
     if invalid:
         raise ValueError(f"unsupported cross-root resource dependencies: {', '.join(invalid)}")
@@ -245,7 +245,8 @@ def _copy_resource_dependency(repo_root: Path, dependency: str, destination: Pat
     if not source_root.is_dir():
         raise FileNotFoundError(f"declared resource dependency does not exist: {dependency}")
     target_root = destination / "_template_resources" / dependency
-    for rel in _source_files(repo_root, source_root):
+    files = _git_source_files(repo_root, source_root) or _walk_source_files(source_root)
+    for rel in sorted(path for path in files if _is_clean_resource_path(path, dependency)):
         _copy_one(
             source_root / rel,
             _contained_destination(target_root, rel),
@@ -254,6 +255,16 @@ def _copy_resource_dependency(repo_root: Path, dependency: str, destination: Pat
             old_project_path=dependency,
             new_project_path=dependency,
         )
+
+
+def _is_clean_resource_path(path: Path, dependency: str) -> bool:
+    """Apply artifact exclusions without hiding Layer-1 ``output`` source."""
+    for part in path.parts:
+        if part in _IGNORED_NAMES and not (dependency == "infrastructure" and part == "output"):
+            return False
+        if any(fnmatch.fnmatch(part, pattern) for pattern in _IGNORED_PATTERNS):
+            return False
+    return True
 
 
 def _git_head(repo_root: Path) -> str:

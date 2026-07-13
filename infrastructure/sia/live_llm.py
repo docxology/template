@@ -4,9 +4,6 @@ from __future__ import annotations
 
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import OllamaClientConfig
-from infrastructure.core.exceptions import LLMConnectionError
 
 logger = get_logger(__name__)
 
@@ -21,6 +18,14 @@ def generate_improvement_markdown(
     """Ask an LLM for improvement text; return None when unavailable."""
     if not llm_model:
         return None
+    # Keep the deterministic/offline SIA lane independent of the optional LLM
+    # transport dependency. Import the client only after a model was explicitly
+    # requested; otherwise an empty-model run would require ``requests`` merely
+    # to return the documented ``None`` fallback.
+    from infrastructure.core.exceptions import LLMConnectionError
+    from infrastructure.llm.core.client import LLMClient
+    from infrastructure.llm.core.config import OllamaClientConfig
+
     prompt = (
         f"Generation {generation - 1} achieved {metric_name}={metric_value:.4f} "
         "on mini_classify. Write a short markdown improvement note (3-5 lines) "

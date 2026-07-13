@@ -188,8 +188,8 @@ confidentiality, existing ISC identifiers, and externally published state.
 - [x] ISC-272: semantic dependency replacements are reduced from 380 to zero and CI enforces a zero ceiling while separately permitting environment isolation.
 - [x] ISC-273: coverage snapshots carry source-commit and per-exemplar source-hash provenance; generated-doc checks fail closed when source or tests change without a refreshed coverage run.
 - [x] ISC-274: root README skill and exemplar differentiation tables are generated from `PUBLIC_PROJECT_NAMES` and exemplar-owned use-when sections.
-- [ ] ISC-275: active-inference/formal slow paths are profiled and split or documented with measured evidence after correctness gates stabilize.
-- [ ] ISC-276: clean-wheel installation proves the reduced core dependency set, and every public exemplar export installs/imports/smokes in isolation.
+- [x] ISC-275: active-inference/formal slow paths are profiled and split or documented with measured evidence after correctness gates stabilize.
+- [x] ISC-276: clean-wheel installation proves the reduced core dependency set, and every public exemplar export installs/imports/smokes in isolation.
 
 ### Test Strategy
 
@@ -209,12 +209,24 @@ tier, separate public-exemplar test invocations, and clean standalone exports.
   authorize deposits or release creation.
 - Private AskOS promotion and GitHub repository administration remain explicit
   external follow-ups.
+- Type safety is fail-closed through a checked per-package mypy baseline: errors
+  in new files, unlisted packages, or above a package ceiling block CI while the
+  six declared debt packages are reduced incrementally.
 
 ### Verification
 
-Verification is in progress. Completed focused controls and commit-hook checks
-are recorded in the branch history; ISC-269 and ISC-270 remain open until the
-full acceptance matrix and remote CI rerun finish.
+Verification is in progress. The 23 isolated project gates meet their 90%
+coverage floors; formal passed 278 tests, and active-inference exercised 704
+tests at 93.6% coverage. Its measured integrity hotspots were the deliberately
+failing fixed-point control (177.93s), stale-artifact settlement (93.08s), and
+semantic-certificate validation (345.05s while a concurrent infrastructure
+suite wrote shared artifacts, 2.74s when rerun in isolation). These writers
+must remain serial rather than being split across a shared project output tree.
+Clean export/install/import smoke passed for all 23 public exemplars, the clean
+wheel loaded no Matplotlib/NumPy/Pillow/reporting modules through
+`pipeline.types`, and the 55-test claim-binding regression tier passed. ISC-269
+and ISC-270 remain open until final static/infrastructure acceptance and the
+remote CI rerun finish.
 
 ## Historical iterations 1–3 — Goal
 

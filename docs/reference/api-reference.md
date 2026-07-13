@@ -760,7 +760,7 @@ Build the top-level argparse parser.
 *function — defined in `infrastructure.orchestration.cli`*
 
 ```python
-main(argv: Sequence[str] | None=None) -> int
+main(argv: Sequence[str] | None=None, *, runner_factory=PipelineRunner, secure_runner=run_secure_pipeline, interactive_runner=_interactive) -> int
 ```
 
 Entry point. Returns process exit code.
@@ -859,6 +859,10 @@ Validate a user-supplied project slug against discovered projects.
 
 *symbol — defined in `infrastructure.project`*
 
+### `discover_import_targets`
+
+*symbol — defined in `infrastructure.project`*
+
 ### `discover_projects`
 
 *function — defined in `infrastructure.project.discovery`*
@@ -874,6 +878,10 @@ Discover all valid projects in the active projects directory.
 *symbol — defined in `infrastructure.project`*
 
 ### `ExportManifest`
+
+*symbol — defined in `infrastructure.project`*
+
+### `ExportSmokeResult`
 
 *symbol — defined in `infrastructure.project`*
 
@@ -960,6 +968,14 @@ run_project_setup_hook(project_dir: Path) -> bool
 ```
 
 Run the project's setup hook, if present.
+
+### `smoke_exported_exemplar`
+
+*symbol — defined in `infrastructure.project`*
+
+### `smoke_public_exemplars`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `validate_project_structure`
 
@@ -1354,7 +1370,7 @@ A single review finding attached to a provenance node.
 *function — defined in `infrastructure.provenance.config`*
 
 ```python
-load_provenance_config(project_dir: Path | str) -> ProvenanceConfig
+load_provenance_config(project_dir: Path | str, *, yaml_importer: Callable[[str], Any]=import_module) -> ProvenanceConfig
 ```
 
 Load optional ``provenance.yaml`` from *project_dir*.
@@ -1574,7 +1590,7 @@ Create academic profile data for ORCID, ResearchGate, etc.
 *function — defined in `infrastructure.publishing.github.release`*
 
 ```python
-create_github_release(tag_name: str, release_name: str, description: str, assets: list[Path], token: str, repo: str, *, base_url: str='https://api.github.com', target_commitish: str='main') -> str
+create_github_release(tag_name: str, release_name: str, description: str, assets: list[Path], token: str, repo: str, *, base_url: str='https://api.github.com', target_commitish: str='main', requests_available: bool=_requests_available) -> str
 ```
 
 Create a GitHub release with attached assets.
@@ -1922,7 +1938,7 @@ Validate that the project is ready for publication.
 *class — defined in `infrastructure.publishing.zenodo.client`*
 
 ```python
-class ZenodoClient(config: ZenodoConfig)
+class ZenodoClient(config: ZenodoConfig, *, requests_available: bool=_requests_available)
 ```
 
 Client for the Zenodo Deposit REST API.
@@ -2114,7 +2130,7 @@ Configuration for rendering output.
 *class — defined in `infrastructure.rendering.core`*
 
 ```python
-class RenderManager(config: RenderingConfig | None=None, manuscript_dir: Path | None=None, figures_dir: Path | None=None)
+class RenderManager(config: RenderingConfig | None=None, manuscript_dir: Path | None=None, figures_dir: Path | None=None, *, slides_renderer: Any=None, web_renderer: Any=None)
 ```
 
 Orchestrates rendering of all output formats.

@@ -34,3 +34,24 @@ claims:
     source_tier: project_source
     freshness: active
     artifact_path: output/data/sia_loop_result.json
+  - claim_id: fixture-generation-1-threshold
+    kind: number
+    value: 0.5
+    source: src/fixtures/recorded_generations/gen_1/target_agent.py THRESHOLD
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: src/fixtures/recorded_generations/gen_1/target_agent.py
+  - claim_id: fixture-generation-2-threshold
+    kind: number
+    value: 0.3
+    source: src/fixtures/recorded_generations/gen_2/target_agent.py THRESHOLD
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: src/fixtures/recorded_generations/gen_2/target_agent.py
+  - claim_id: fixture-generation-3-threshold
+    kind: number
+    value: 0.25
+    source: src/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: src/fixtures/recorded_generations/gen_3/target_agent.py

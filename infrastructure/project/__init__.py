@@ -51,6 +51,12 @@ if TYPE_CHECKING:
         export_exemplar,
         plan_copy,
     )
+    from infrastructure.project.export_smoke import (
+        ExportSmokeResult,
+        discover_import_targets,
+        smoke_exported_exemplar,
+        smoke_public_exemplars,
+    )
 
 _PUBLIC_SCOPE_EXPORTS = {
     "PUBLIC_PROJECT_NAMES",
@@ -73,6 +79,12 @@ _COPY_EXEMPLAR_EXPORTS = {
     "export_exemplar",
     "plan_copy",
 }
+_EXPORT_SMOKE_EXPORTS = {
+    "ExportSmokeResult",
+    "discover_import_targets",
+    "smoke_exported_exemplar",
+    "smoke_public_exemplars",
+}
 
 
 def __getattr__(name: str) -> Any:
@@ -92,6 +104,11 @@ def __getattr__(name: str) -> Any:
 
         copy_exemplar_mod = import_module("infrastructure.project.copy_exemplar")
         return getattr(copy_exemplar_mod, name)
+    if name in _EXPORT_SMOKE_EXPORTS:
+        from importlib import import_module
+
+        export_smoke = import_module("infrastructure.project.export_smoke")
+        return getattr(export_smoke, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
@@ -101,12 +118,14 @@ __all__ = [
     "CodeGraphCommand",
     "CopyResult",
     "ExportManifest",
+    "ExportSmokeResult",
     "build_codegraph_files_command",
     "build_codegraph_init_command",
     "build_scope_check_command",
     "copy_exemplar",
     "export_exemplar",
     "discover_projects",
+    "discover_import_targets",
     "find_setup_hook",
     "get_project_metadata",
     "plan_copy",
@@ -117,6 +136,8 @@ __all__ = [
     "public_project_names",
     "resolve_project_root",
     "run_project_setup_hook",
+    "smoke_exported_exemplar",
+    "smoke_public_exemplars",
     "validate_project_structure",
     "verify_codegraph_scope_payload",
 ]

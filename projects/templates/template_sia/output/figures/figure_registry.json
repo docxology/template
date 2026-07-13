@@ -19,7 +19,7 @@
       "label": "fig:sia-generation-heatmap"
     },
     {
-      "caption": "Generation-over-generation metric delta (\u0394accuracy) for the SIA loop, illustrating the incremental improvement at each self-refinement step.",
+      "caption": "Generation-over-generation metric delta (\u0394accuracy) for the SIA loop, showing the fixture replay's flat threshold-robustness control.",
       "filename": "sia_improvement_delta.png",
       "generated_by": "src.figures",
       "label": "fig:sia-improvement-delta"

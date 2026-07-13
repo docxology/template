@@ -13,6 +13,7 @@ Optional gate scripts for Hermes-plugin workflows and advisory checks. **None of
 | `module_line_count_check.py` | `infrastructure.validation.line_count.scan_infrastructure_and_scripts`, `scan_project_scripts` | Line-count gate: infra/scripts warn ≥800 fail ≥950; project scripts warn ≥150 fail ≥250 |
 | `security_scan.py` | `infrastructure.validation.security_gate.run_security_scan` | Security scanning (bandit, safety, pip-audit) |
 | `plugin_export_check.py` | `infrastructure.validation.plugin_export.run_plugin_export_check` | Hermes plugin export verification (opt-in) |
+| `exemplar_export_smoke.py` | `infrastructure.project.export_smoke.smoke_public_exemplars` | Clean-install and import-smoke every public exemplar export (acceptance/release gate) |
 
 ## Usage
 
