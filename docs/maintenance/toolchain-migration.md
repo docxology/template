@@ -32,7 +32,7 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 | | |
 | --- | --- |
 | **Contract** | Style enforcement (formatting), error detection (linting), zero-config defaults that match community norms. Fast enough to run in pre-commit. |
-| **Current implementation** | `ruff` (Astral). Replaces `black` + `flake8` + `isort` + `pycodestyle`. Used via `uvx ruff check`, `uvx ruff format`. |
+| **Current implementation** | `ruff` (Astral). Replaces `black` + `flake8` + `isort` + `pycodestyle`. Used via `uv run ruff check`, `uv run ruff format`. |
 | **Configuration location** | `pyproject.toml` under `[tool.ruff]` |
 | **Migration path** | If `ruff` is succeeded: (a) the rule taxonomy (E, F, W, B, etc.) is mostly stable across linters; (b) the formatter behavior is the harder migration — pin a target style (e.g., "black 2024 compatible") in the migration PR; (c) update `.pre-commit-config.yaml`, `.github/workflows/ci.yml`, `CLAUDE.md` quick-reference. |
 

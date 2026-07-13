@@ -50,6 +50,23 @@ def test_command_convention_uv_run_python3_is_flagged(tmp_path: Path) -> None:
     assert "uv run python3" in issues[0].detail
 
 
+def test_command_convention_unpinned_uvx_ruff_is_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "docs" / "g.md",
+        "```bash\nuvx ruff check .\nfind src -print0 | xargs -0 uvx ruff format\n```\n",
+    )
+    issues = check_command_conventions(repo)
+    assert len(issues) == 2
+    assert all("unpinned `uvx ruff`" in issue.detail for issue in issues)
+
+
+def test_command_convention_locked_uv_run_ruff_is_not_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(repo / "docs" / "g.md", "```bash\nuv run ruff check .\n```\n")
+    assert check_command_conventions(repo) == []
+
+
 def test_command_convention_python_block_is_ignored(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
     write_doc(repo / "docs" / "g.md", "```python\npytest_plugins = []\npython3 = 1\n```\n")

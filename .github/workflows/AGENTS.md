@@ -99,8 +99,8 @@ action — not each job.
 #### 1. Lint & Type Check (`lint`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **Tools:** `uvx ruff check`, `uvx ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
-- **Scope:** public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`
+- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
+- **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
 #### 2. Unified Health Report (`health`)
 
@@ -249,8 +249,8 @@ Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runn
 ```bash
 # Reproduce lint locally
 uv sync
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Reproduce infrastructure tests locally
@@ -293,8 +293,8 @@ uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 ### Linting failures
 ```bash
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 ```
 
 ### Test failures

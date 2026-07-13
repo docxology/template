@@ -142,10 +142,10 @@ jobs:
           echo "source_paths=$(uv run python -m infrastructure.project.public_scope source-paths)" >> "$GITHUB_OUTPUT"
 
       - name: Ruff lint
-        run: uvx ruff check ${{ steps.public-scope.outputs.lint_paths }}
+        run: uv run ruff check ${{ steps.public-scope.outputs.lint_paths }}
 
       - name: Ruff format check
-        run: uvx ruff format --check ${{ steps.public-scope.outputs.lint_paths }}
+        run: uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}
 
       - name: Type checking
         run: uv run mypy ${{ steps.public-scope.outputs.source_paths }}

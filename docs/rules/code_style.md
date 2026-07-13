@@ -121,8 +121,8 @@ Ruff subsumes the roles historically filled by separate formatters (Black), impo
 ### Commands (CI parity)
 
 ```bash
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 
@@ -144,7 +144,7 @@ Illustrative hook IDs (authoritative YAML lives at repo root):
 
 ```yaml
 # See /.pre-commit-config.yaml — commit-stage hooks include:
-#   ruff-ci  → uvx ruff check … && uvx ruff format …
+#   ruff-ci  → uv run ruff check … && uv run ruff format …
 #   mypy-ci  → uv run mypy …
 ```
 
@@ -310,7 +310,7 @@ def test_error_conditions():
 
 ### Do's ✅
 
-- ✅ **Use Ruff** (`uvx ruff check`, `uvx ruff format`) for lint/format/import sorting — CI parity
+- ✅ **Use Ruff** (`uv run ruff check`, `uv run ruff format`) for lint/format/import sorting — CI parity
 - ✅ **Use mypy** (`uv run mypy`) on the public CI source paths
 - ✅ **Use pre-commit hooks** (`ruff-ci`, `mypy-ci`) to automate checks
 - ✅ **Follow PEP 8** guidelines
@@ -358,7 +358,7 @@ Use **`uv run mypy`** from the terminal for CI-parity typing; enable **mypy** or
 ### PyCharm / IntelliJ
 
 - **Editor → Code Style → Python**: Line length **88** to match Ruff.
-- Enable **Ruff** plugin (or configure external tool `uvx ruff`) for format/on-save.
+- Enable **Ruff** plugin (or configure external tool `uv run ruff`) for format/on-save.
 - Run **`uv run mypy`** as an external tool or use bundled typing support.
 
 ## Enforcement
@@ -368,8 +368,8 @@ Use **`uv run mypy`** from the terminal for CI-parity typing; enable **mypy** or
 Mirror **[`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)** `lint` job locally:
 
 ```bash
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 

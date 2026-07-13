@@ -85,9 +85,9 @@ repos:
           - -c
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
-            CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)" &&
-            uvx ruff check $CI_SOURCE_PATHS --fix &&
-            uvx ruff format $CI_SOURCE_PATHS
+            CI_LINT_PATHS="$(uv run python -m infrastructure.project.public_scope lint-paths)" &&
+            uv run ruff check $CI_LINT_PATHS --fix &&
+            uv run ruff format $CI_LINT_PATHS
         language: system
         pass_filenames: false
         stages: [pre-commit, manual]

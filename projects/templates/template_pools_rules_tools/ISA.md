@@ -340,7 +340,7 @@ ISC-53, 61 (coverage gate): final run `TOTAL 869 48 262 43 91.42%` / `Required t
 
 ISC-54 (mypy): `uv run mypy src --config-file pyproject.toml` → 4 remaining `explicit-any` errors, diff-confirmed pre-existing (same 4 call-sites present in `git show HEAD:.../figures.py` before this session's edits — `_save`, `generate_resource_counts`, `generate_status_dashboard`, `all_figures`). 2 new errors this session introduced (`manuscript_variables.py` dict.get overloads, `figures.py` fond_taxonomy var-annotated) were found and fixed — 0 net-new mypy errors.
 
-ISC-55 (ruff): `uvx ruff check` on new/changed files → "All checks passed!" after `ruff format` + fixing 1 B007 (pre-existing unused loop var, fixed while touching the file).
+ISC-55 (ruff): `uv run ruff check` on new/changed files → "All checks passed!" after `ruff format` + fixing 1 B007 (pre-existing unused loop var, fixed while touching the file).
 
 ISC-56 (render): `uv run python scripts/runner/execute_pipeline.py --project templates/template_pools_rules_tools --core-only` → "Stage 6: PDF Rendering ✓ completed successfully" on 3 consecutive runs (last one at the final tree state, per Rule 4).
 

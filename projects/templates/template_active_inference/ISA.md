@@ -162,7 +162,7 @@ claim fully earned.
 | ISC-22 | grep | no mock imports | 0 matches | `grep -rn mock tests/test_sheaf_laws.py` |
 | ISC-24..30 | read | prose contains required statements | present | `Read`/`grep` composed output |
 | ISC-36 | suite | full baseline | live collected-test count passes | `uv run pytest tests/ --cov=src --cov-fail-under=90` |
-| ISC-41 | lint | ruff+mypy clean | 0 errors | `uvx ruff check`, `uv run mypy` |
+| ISC-41 | lint | ruff+mypy clean | 0 errors | `uv run ruff check`, `uv run mypy` |
 | ISC-38..40 | audit | advisor + Forge + Cato | no unaddressed critical | Inference.ts / Agent |
 
 ## Features

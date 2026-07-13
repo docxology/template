@@ -144,8 +144,8 @@ fi
 
 if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
   echo "[ci_local] === Lint (ruff check + format) ==="
-  uvx ruff check --fix "${PUBLIC_CI_LINT_PATHS[@]}"
-  uvx ruff format "${PUBLIC_CI_LINT_PATHS[@]}"
+  uv run ruff check --fix "${PUBLIC_CI_LINT_PATHS[@]}"
+  uv run ruff format "${PUBLIC_CI_LINT_PATHS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "typecheck" ]]; then

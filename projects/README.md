@@ -411,7 +411,7 @@ Every project aligns with the root **[`.cursorrules`](../.cursorrules)** file (C
 
 ### Code Style Standards ([`docs/rules/code_style.md`](../docs/rules/code_style.md))
 
-- [ ] **Ruff format/check** on CI-scoped paths (`uvx ruff format`, `uvx ruff check`; line length 88 by default)
+- [ ] **Ruff format/check** on CI-scoped paths (`uv run ruff format`, `uv run ruff check`; line length 88 by default)
 - [ ] **Descriptive variable names** and clear function signatures
 - [ ] **Consistent import organization** (stdlib, third-party, local)
 - [ ] **PEP 8 compliance** with template-specific extensions
@@ -669,7 +669,7 @@ own project-level contracts.
 uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects
 
 # Check public template source paths
-uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run ruff check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 

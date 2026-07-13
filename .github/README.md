@@ -132,7 +132,7 @@ Natural-language tasks map to one child skill under [`docs/prompts/`](../docs/pr
 uv sync                                                          # install deps
 ./run.sh --pipeline --project templates/template_code_project --core-only  # 8-stage core DAG
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
 uv run python -m infrastructure.skills check                     # manifest freshness
 pre-commit run --hook-stage pre-push --all-files                 # local CI subset
@@ -930,8 +930,8 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 
 ```bash
 # Lint + format check (mirror CI)
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Tests (skip Ollama-requiring tests)
@@ -1022,8 +1022,8 @@ gh run view <run-id> --log-failed
 gh run rerun <run-id> --failed
 
 # Fix lint locally
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 ```
 
 Common issues: [docs/operational/troubleshooting/](../docs/operational/troubleshooting/) · [docs/reference/faq.md](../docs/reference/faq.md).

@@ -46,7 +46,7 @@ This project's correctness is **visual**. After any layout or content change:
 1. `uv run python scripts/10_generate_figures.py && uv run python scripts/20_render_newspaper.py`
 2. Raster pages with `pdftoppm -png -r 100 output/pdf/the-triplicate.pdf /tmp/p`
    and **look at them**. Do not claim a layout works from code alone.
-3. `uv run pytest`, `uv run mypy src/newspaper`, `uvx ruff check src scripts tests`.
+3. `uv run pytest`, `uv run mypy src/newspaper`, `uv run ruff check src scripts tests`.
 
 `RenderResult.all_pages_fit == False` means content was dropped off a page —
 treat it as a failure, not a warning.

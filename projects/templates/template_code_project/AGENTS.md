@@ -365,7 +365,7 @@ This project complies with the template development standards in **[`docs/rules/
 
 ### ✅ **Code Style Standards Compliance**
 
-- **Ruff formatting** (`uvx ruff format`): 88-character line length (default alignment), consistent formatting — mirrors CI
+- **Ruff formatting** (`uv run ruff format`): 88-character line length (default alignment), consistent formatting — mirrors CI
 - **Descriptive names**: Clear variable and function names
 - **Import organization**: Standard library, third-party, local imports properly organized
 

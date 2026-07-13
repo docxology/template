@@ -32,7 +32,7 @@ This is a research project template with a test-driven development workflow, aut
 | Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`, `steganography`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 | Public CI source paths | `uv run python -m infrastructure.project.public_scope source-paths` |
-| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff format` |
+| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff format` |
 | Mypy (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run mypy` |
 | Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
@@ -138,8 +138,8 @@ uv run python scripts/maintenance/manage_workspace.py status
 uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking (mirror CI `lint` job)
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff check --fix
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
+uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Security scan (mirror CI `security` job Bandit step)

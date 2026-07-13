@@ -46,8 +46,8 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 uv run mypy infrastructure/
 
 # Linting
-uvx ruff check infrastructure/ --fix
-uvx ruff format infrastructure/
+uv run ruff check infrastructure/ --fix
+uv run ruff format infrastructure/
 
 # Security scan
 uv run bandit -c bandit.yaml -r -ll infrastructure/
