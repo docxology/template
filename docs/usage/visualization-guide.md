@@ -111,4 +111,3 @@ instead.
 3. **Generate captions** - Provide descriptive captions
 4. **Use appropriate formats** - PNG for manuscripts, PDF for presentations
 5. **Validate figures** - Check file existence and paths
-

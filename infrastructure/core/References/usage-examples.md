@@ -1566,13 +1566,13 @@ def get_security_headers() -> dict[str, str]:
 ```python
 class RateLimiter:
     """Rate limiting for API requests."""
-    
+
     def check_rate_limit(self, identifier: str) -> bool:
         """Check if request is within rate limit.
-        
+
         Args:
             identifier: Request identifier
-            
+
         Returns:
             True if within limit, False otherwise
         """
@@ -1582,10 +1582,10 @@ class RateLimiter:
 ```python
 class SecurityMonitor:
     """Monitors security events and violations."""
-    
+
     def log_event(self, event_type: str, details: Dict[str, Any]) -> None:
         """Log a security event.
-        
+
         Args:
             event_type: Type of security event
             details: Event details
@@ -1637,20 +1637,20 @@ def api_function():
 ```python
 class SystemHealthChecker:
     """Checks system health and component status."""
-    
+
     def check_health(self) -> Dict[str, Any]:
         """Perform health check.
-        
+
         Returns:
             Health status dictionary
         """
-    
+
     def check_component(self, component: str) -> Dict[str, Any]:
         """Check health of specific component.
-        
+
         Args:
             component: Component name to check
-            
+
         Returns:
             Component health status
         """
@@ -1668,7 +1668,7 @@ def get_health_status() -> Dict[str, Any]:
 ```python
 def create_parser() -> argparse.ArgumentParser:
     """Create command-line argument parser.
-    
+
     Returns:
         Configured argument parser
     """
@@ -1678,7 +1678,7 @@ def create_parser() -> argparse.ArgumentParser:
 ```python
 def main() -> int:
     """Main CLI entry point.
-    
+
     Returns:
         Exit code (0 for success, non-zero for error)
     """
@@ -1688,10 +1688,10 @@ def main() -> int:
 ```python
 def handle_pipeline_command(args: argparse.Namespace) -> int:
     """Handle pipeline command.
-    
+
     Args:
         args: Parsed command arguments
-        
+
     Returns:
         Exit code
     """
@@ -1701,10 +1701,10 @@ def handle_pipeline_command(args: argparse.Namespace) -> int:
 ```python
 def handle_multi_project_command(args: argparse.Namespace) -> int:
     """Handle multi-project command.
-    
+
     Args:
         args: Parsed command arguments
-        
+
     Returns:
         Exit code
     """
@@ -1714,10 +1714,10 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
 ```python
 def handle_inventory_command(args: argparse.Namespace) -> int:
     """Handle inventory command.
-    
+
     Args:
         args: Parsed command arguments
-        
+
     Returns:
         Exit code
     """
@@ -1727,10 +1727,10 @@ def handle_inventory_command(args: argparse.Namespace) -> int:
 ```python
 def handle_discover_command(args: argparse.Namespace) -> int:
     """Handle discover command.
-    
+
     Args:
         args: Parsed command arguments
-        
+
     Returns:
         Exit code
     """

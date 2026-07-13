@@ -320,7 +320,7 @@ class TestIntegratedWorkflow:
 
 ## Convergence Analysis {#subsec:convergence}
 
-We evaluate the convergence properties using the metric defined in 
+We evaluate the convergence properties using the metric defined in
 equation \eqref{eq:metric}:
 
 \begin{equation}\label{eq:metric}

@@ -8,4 +8,3 @@ This part covers **orientation and methods**. It contains the following chapters
 - *Quantitative Foundations* — [@sec:part_0_quantitative_foundations]
 
 > **How to use this part.** <!-- STUB: orient the reader; note prerequisites and how the chapters build on each other. -->
-

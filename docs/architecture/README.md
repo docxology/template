@@ -42,4 +42,3 @@ The `architecture/` directory contains detailed documentation about the system a
 
 - [`../documentation-index.md`](../documentation-index.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
-

@@ -33,5 +33,3 @@ template/
 └── output/ …                    # Mirrors after copy stage
 ```
 See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/docgen/active_projects.py`).
-
-

@@ -557,4 +557,3 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `gate_ergonomics` | live | `output/data/validation_gate_index.json` | `output/data/validation_gate_index.json` | `validate_outputs, validate_manuscript` | gate_ergonomics_unindexed |
 
 **Improvement rows:** 39.
-

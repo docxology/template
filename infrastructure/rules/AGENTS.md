@@ -90,7 +90,7 @@ is_valid, message = validate_rule_structure(Path("rules/my_rule"))
 # (False, "Missing required directory: at least one of soft/ or strong/ must exist")
 ```
 
-**Required:** `rules.yaml`, and at least one of `soft/` or `strong/`  
+**Required:** `rules.yaml`, and at least one of `soft/` or `strong/`
 **Optional:** `scripts/`, `tests/`, `examples/`
 
 ### `public_scope.py`

@@ -154,4 +154,3 @@ relative to `manuscript/`, so use `../output/figures/` not `output/figures/`
 - [`docs/operational/troubleshooting/common-errors.md`](../operational/troubleshooting/common-errors.md) - General troubleshooting
 - [`docs/guides/figures-and-analysis.md`](../guides/figures-and-analysis.md) - Figure generation guide
 - [`infrastructure/documentation/figure_manager.py`](../../infrastructure/documentation/figure_manager.py) - Figure manager source
-

@@ -253,5 +253,3 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 - [`infrastructure/core/runtime/checkpoint.py`](../../../infrastructure/core/runtime/checkpoint.py) - Implementation
 - [`scripts/runner/execute_pipeline.py`](../../../scripts/runner/execute_pipeline.py) - Resume integration
 - [Troubleshooting](../troubleshooting/) - Troubleshooting guide
-
-

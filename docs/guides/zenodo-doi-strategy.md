@@ -1,6 +1,6 @@
 # Zenodo concept vs version DOI strategy
 
-**Skill level:** 11–12 (publication)  
+**Skill level:** 11–12 (publication)
 **See also:** [Publishing guide](publishing-guide.md) · [`infrastructure/publishing/config_doi.py`](../../infrastructure/publishing/config_doi.py)
 
 Zenodo mints two DOI roles for every deposit series:

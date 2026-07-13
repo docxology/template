@@ -230,7 +230,7 @@ class TestNewIntegration:
     @pytest.fixture(autouse=True)
     def check_ollama(self, ensure_ollama_for_tests):
         assert ensure_ollama_for_tests
-    
+
     def test_with_ollama(self, client):
         """Test with real Ollama server."""
         try:
@@ -289,4 +289,3 @@ This is a model quality issue, not a code bug:
 - [`../../../infrastructure/llm/AGENTS.md`](../../../infrastructure/llm/AGENTS.md) - Module documentation
 - [`../../../infrastructure/llm/README.md`](../../../infrastructure/llm/README.md) - Quick reference
 - [`conftest.py`](conftest.py) - Fixture definitions
-

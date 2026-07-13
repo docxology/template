@@ -211,6 +211,3 @@ open htmlcov/index.html
 
 - [Logging Guide](../../operational/logging/)
 - [Error Handling Guide](../../operational/error-handling-guide.md)
-
-
-

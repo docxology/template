@@ -4,19 +4,3 @@
   "required_elements_template": "2. Required elements:\n${elements_list}",
   "format_checks_template": "3. Format compliance checks:\n${checks_list}"
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

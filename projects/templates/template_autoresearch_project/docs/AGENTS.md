@@ -16,4 +16,3 @@ When adding a configurable loop feature, update:
 Do not add network calls, LLM calls, autonomous approval loops, or generated
 code execution to this exemplar. Human review remains an explicit report
 packet, not an automated decision.
-

@@ -205,7 +205,7 @@ def setup_llm():
     if not is_ollama_running():
         logger.error("Ollama not available")
         return None
-    
+
     model = select_best_model()
     from infrastructure.llm.core.client import LLMClient
     from infrastructure.llm.core.config import OllamaClientConfig

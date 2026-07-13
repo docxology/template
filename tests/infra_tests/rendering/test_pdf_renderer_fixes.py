@@ -178,9 +178,9 @@ class TestFigurePathResolution:
 
         tex_content = r"""
         \includegraphics{../output/figures/fig1.png}
-        
+
         Some text here.
-        
+
         \includegraphics[width=0.5\textwidth]{../output/figures/fig2.pdf}
         """
 
@@ -244,18 +244,18 @@ class TestIntegration:
         \documentclass{article}
         \usepackage{graphicx}
         \bibliographystyle{plain}
-        
+
         \begin{document}
-        
+
         According to recent work \cite{smith2020}, we can see in Figure \ref{fig:results}:
-        
+
         \begin{figure}[h]
         \centering
         \includegraphics[width=0.8\textwidth]{../output/figures/results.png}
         \caption{Our results}
         \label{fig:results}
         \end{figure}
-        
+
         \bibliography{references}
         \end{document}
         """

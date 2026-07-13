@@ -220,4 +220,3 @@ Reference it: \ref{fig:my_figure}
 **Need more details?** See **[Documentation Index](../documentation-index.md)**
 
 **System Status**: ✅ All operational | [Pipeline Orchestration](../RUN_GUIDE.md)
-

@@ -574,4 +574,3 @@ tail -f logs/validation_*.log
 ```
 
 For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.md).
-

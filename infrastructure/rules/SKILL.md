@@ -13,7 +13,7 @@ constraints (yaml/json), distinct from `projects/` (executable code) and
 ## Modules
 
 | File | Exports |
-|------|---------| 
+|------|---------|
 | `__init__.py` | `RuleInfo`, `build_rule_info`, `discover_rules`, `resolve_rule_root`, `validate_rule_structure` |
 | `discovery.py` | `discover_rules`, `resolve_rule_root`, `NON_RENDERED_RULE_SUBDIRS`, `RENDERED_RULE_SUBDIRS` |
 | `rules_info.py` | `RuleInfo`, `build_rule_info` |

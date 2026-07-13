@@ -1,7 +1,7 @@
 # template_bibliography
 
-**Type:** bibliography  
-**Version:** 1.0  
+**Type:** bibliography
+**Version:** 1.0
 **License:** CC0-1.0
 
 A curated research bibliography — exemplar template for managing BibTeX references alongside a flat CSV export.

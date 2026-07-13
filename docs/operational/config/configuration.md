@@ -399,8 +399,3 @@ The registry is process-local. Tests should call
 - [Troubleshooting Guide](../troubleshooting/) - Common issues and solutions
 - [Build System](../../RUN_GUIDE.md) - Build configuration
 - [Performance Optimization](performance-optimization.md) - Performance tuning
-
-
-
-
-

@@ -81,11 +81,11 @@ log_stage() {
     local stage_name="$2"
     local total_stages="$3"
     local pipeline_start="${4:-}"
-    
+
     echo
     local percentage=$((stage_num * 100 / total_stages))
     echo -e "${YELLOW}[${stage_num}/${total_stages}] ${stage_name} (${percentage}% complete)${NC}"
-    
+
     # Calculate ETA if pipeline start time provided
     if [[ -n "$pipeline_start" ]]; then
         local current_time=$(date +%s)
@@ -97,7 +97,7 @@ log_stage() {
             echo -e "${CYAN}  Elapsed: $(format_duration "$elapsed") | ETA: $(format_duration "$eta")${NC}"
         fi
     fi
-    
+
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
 
@@ -145,10 +145,10 @@ log_warning() {
 log_to_file() {
     local message="$1"
     local log_file="${PIPELINE_LOG_FILE:-}"
-    
+
     # Always log to terminal
     echo "$message"
-    
+
     # Also log to file if log file is set (strip ANSI codes)
     if [[ -n "$log_file" ]]; then
         echo "$message" | sed 's/\x1b\[[0-9;]*m//g' >> "$log_file" 2>/dev/null || true
@@ -731,10 +731,3 @@ log_uv_status() {
         log_info "Or run in pipeline mode (./run.sh --pipeline) for automatic uv installation."
     fi
 }
-
-
-
-
-
-
-

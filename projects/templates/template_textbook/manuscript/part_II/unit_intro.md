@@ -8,4 +8,3 @@ This part covers **core systems**. It contains the following chapters:
 - *Regulation and Control* — [@sec:part_II_regulation_and_control]
 
 > **How to use this part.** <!-- STUB: orient the reader; note prerequisites and how the chapters build on each other. -->
-

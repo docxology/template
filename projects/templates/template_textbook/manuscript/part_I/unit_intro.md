@@ -8,4 +8,3 @@ This part covers **fundamentals**. It contains the following chapters:
 - *Structure and Form* — [@sec:part_I_structure_and_form]
 
 > **How to use this part.** <!-- STUB: orient the reader; note prerequisites and how the chapters build on each other. -->
-
