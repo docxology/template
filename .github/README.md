@@ -881,7 +881,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 flowchart TB
     D[detect — presence flags]
     L[lint + type check]
-    H[health — informational]
+    H[health — blocking static report]
     VNM[verify-no-mocks]
     SH[setup-hook windows — conditional]
     TI[test-infra matrix]
@@ -966,8 +966,8 @@ Required status checks:
   # one check per public exemplar × {py3.10, py3.12}. Examples:
   Project Tests (templates/template_active_inference, py3.12)
   Project Tests (templates/template_code_project, py3.10)
+  Static Health Report
   Validate Manuscripts · Security Scan · Documentation Lint · Performance Check
-  # Optional informational artefact: Unified Health Report (informational)
 
 Require PR review before merging: 1 approver
 ```

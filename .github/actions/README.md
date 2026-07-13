@@ -11,6 +11,7 @@ runner workspace after `actions/checkout` runs.
 | Action | Purpose |
 | --- | --- |
 | [`setup-python-env/`](setup-python-env/action.yml) | Provision `uv` (with cache) + Python — the setup block shared by every Python CI job. |
+| [`setup-docs-lint/`](setup-docs-lint/action.yml) | Provision Node, Mermaid CLI, and Chrome for every blocking docs-lint caller. |
 
 ## Conventions
 

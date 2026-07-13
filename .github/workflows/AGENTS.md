@@ -72,7 +72,7 @@ flowchart TB
     class HEALTH info
 ```
 
-### Shared setup — `setup-python-env` composite action
+### Shared setup — local composite actions
 
 The 12 jobs that need Python all share one local composite action,
 [`.github/actions/setup-python-env`](../actions/setup-python-env/action.yml),
@@ -94,6 +94,12 @@ its own `uv sync …` line so optional groups (`rendering`/`monitoring`/`discopy
 remain visible per job. When bumping a setup action's SHA, edit the composite
 action — not each job.
 
+The `health` and `docs-lint` jobs additionally share
+[`.github/actions/setup-docs-lint`](../actions/setup-docs-lint/action.yml),
+which provisions the pinned Node runtime/cache plus real `mmdc` and
+`chrome-headless-shell`. This keeps unified health's `docs-lint` constituent
+behaviorally equivalent to the dedicated documentation job.
+
 ### Job Details
 
 #### 1. Lint & Type Check (`lint`)
@@ -102,7 +108,7 @@ action — not each job.
 - **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
 - **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
-#### 2. Unified Health Report (`health`)
+#### 2. Static Health Report (`health`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Depends on:** `lint`

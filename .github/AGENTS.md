@@ -65,7 +65,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 2 | `detect-projects` | Detect public exemplars | — | — | ubuntu (always) |
 | 3 | `actionlint` | Actionlint | — | — | ubuntu (always) |
 | 4 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
-| 5 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
+| 5 | `health` | Static Health Report | lint | 3.12 | ubuntu |
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu (×3.10/3.11/3.12) + macOS (3.12 only) — 4 cells |
@@ -170,7 +170,7 @@ required_status_checks:
     # ... (one check per exemplar × {py3.10, py3.12})
     # Optional: only when fep_lean job runs (skipped if no lean-toolchain file)
     # - "fep_lean (gauss + lake)"
-    # Optional (informational artefact only): "Unified Health Report (informational)"
+    - "Static Health Report"
     - "Validate Manuscripts"
     - "Security Scan"
     - "Documentation Lint"

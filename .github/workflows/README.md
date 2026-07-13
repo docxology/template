@@ -20,7 +20,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 ```mermaid
 flowchart TB
-    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>informational JSON artefact]
+    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>blocking static JSON report]
     LINT --> VNM[verify-no-mocks]
     LINT --> VAL[validate<br/>markdown + api-ref check + imports]
     LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]

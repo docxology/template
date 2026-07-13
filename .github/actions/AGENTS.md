@@ -18,6 +18,7 @@ Repository-local composite actions for the CI pipeline. See
 | Path | Role |
 | --- | --- |
 | [`setup-python-env/action.yml`](setup-python-env/action.yml) | uv + Python provisioning (see its [`AGENTS.md`](setup-python-env/AGENTS.md)). |
+| [`setup-docs-lint/action.yml`](setup-docs-lint/action.yml) | Shared Node + Mermaid + Chrome provisioning for both blocking documentation-lint callers. |
 
 ## Editing
 
