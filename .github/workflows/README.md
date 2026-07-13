@@ -134,14 +134,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: astral-sh/setup-uv@v8.1.0
-        with:
-          enable-cache: true
-          cache-dependency-glob: "**/uv.lock"
-      - uses: actions/setup-python@v6.2.0
-        with:
-          python-version: "3.12"
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup-python-env
       - name: Sync dependencies
         run: uv sync
       - name: Custom check
