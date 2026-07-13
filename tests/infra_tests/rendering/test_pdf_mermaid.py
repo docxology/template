@@ -42,9 +42,7 @@ def test_resolve_chrome_prefers_env_path_over_cache_and_system(tmp_path: Path, m
     monkeypatch.setenv("CHROME_EXECUTABLE_PATH", str(tmp_path / "env" / "chrome-secondary"))
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(cache_chrome.parents[3]))
     monkeypatch.setenv("PATH", str(system_chrome.parent))
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
-
-    assert _resolve_chrome_executable() == env_chrome
+    assert _resolve_chrome_executable(home=tmp_path) == env_chrome
 
 
 def test_resolve_chrome_uses_newest_cache_executable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -69,9 +67,7 @@ def test_resolve_chrome_uses_newest_cache_executable(tmp_path: Path, monkeypatch
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(cache_dir))
     monkeypatch.setenv("PATH", "")
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
-
-    resolved = _resolve_chrome_executable()
+    resolved = _resolve_chrome_executable(home=tmp_path)
 
     assert older.exists()
     assert resolved == newest
@@ -103,9 +99,7 @@ def test_resolve_chrome_prefers_headless_shell_at_same_version(
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(cache_dir))
     monkeypatch.setenv("PATH", "")
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
-
-    assert _resolve_chrome_executable() == headless
+    assert _resolve_chrome_executable(home=tmp_path) == headless
 
 
 def test_resolve_chrome_uses_system_candidates_then_none(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -115,12 +109,11 @@ def test_resolve_chrome_uses_system_candidates_then_none(tmp_path: Path, monkeyp
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.delenv("PUPPETEER_CACHE_DIR", raising=False)
     monkeypatch.setenv("PATH", str(system_chrome.parent))
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "missing-home"))
-
-    assert _resolve_chrome_executable() == system_chrome
+    missing_home = tmp_path / "missing-home"
+    assert _resolve_chrome_executable(home=missing_home) == system_chrome
 
     monkeypatch.setenv("PATH", "")
-    assert _resolve_chrome_executable() is None
+    assert _resolve_chrome_executable(home=missing_home) is None
 
 
 def test_replace_inline_mermaid_preserves_repo_puppeteer_config(
@@ -173,10 +166,11 @@ def test_replace_inline_mermaid_falls_back_when_no_chrome_resolves(
     monkeypatch.setenv("PUPPETEER_EXECUTABLE_PATH", str(tmp_path / "missing" / "chrome"))
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "missing-home"))
     caplog.set_level("WARNING")
 
-    result = replace_inline_mermaid(_sample_mermaid_block("graph TD\nA-->B"), manuscript_dir)
+    result = replace_inline_mermaid(
+        _sample_mermaid_block("graph TD\nA-->B"), manuscript_dir, home=tmp_path / "missing-home"
+    )
 
     assert result.diagrams_rendered == 0
     assert "\\begin{figure}[htbp]" in result.content
@@ -198,10 +192,9 @@ def test_replace_inline_mermaid_falls_back_on_empty_source(
     monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "missing-home"))
     caplog.set_level("WARNING")
 
-    result = replace_inline_mermaid(_sample_mermaid_block(""), manuscript_dir)
+    result = replace_inline_mermaid(_sample_mermaid_block(""), manuscript_dir, home=tmp_path / "missing-home")
 
     assert result.diagrams_rendered == 0
     assert "\\begin{verbatim}" in result.content
@@ -239,11 +232,10 @@ exit 9
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
     monkeypatch.setenv("PATH", str(mmdc.parent))
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     _write_shell_executable(tmp_path / "google-chrome", "exit 0\n")
     caplog.set_level("WARNING")
 
-    result = replace_inline_mermaid(_sample_mermaid_block("graph TD\nA-->B"), manuscript_dir)
+    result = replace_inline_mermaid(_sample_mermaid_block("graph TD\nA-->B"), manuscript_dir, home=tmp_path)
 
     assert result.diagrams_rendered == 0
     assert "\\begin{verbatim}" in result.content
