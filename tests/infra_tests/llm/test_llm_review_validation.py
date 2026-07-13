@@ -6,13 +6,27 @@ from __future__ import annotations
 from infrastructure.llm.review.generator import validate_review_quality
 
 
+def _unique_filler(word_count: int) -> str:
+    """Return deterministic non-repetitive filler for minimum-length fixtures."""
+
+    def letters(value: int) -> str:
+        result = ""
+        while True:
+            value, remainder = divmod(value, 26)
+            result = chr(ord("a") + remainder) + result
+            if value == 0:
+                return result
+            value -= 1
+
+    return " " + " ".join(f"detail{letters(index)}" for index in range(word_count))
+
+
 class TestValidateReviewQuality:
     """Tests for validate_review_quality() function."""
 
     def test_valid_executive_summary(self):
         """Test that well-structured executive summary passes validation."""
-        response = (
-            """## Overview
+        response = """## Overview
         This manuscript presents research on optimization.
 
         ## Key Contributions
@@ -27,9 +41,7 @@ class TestValidateReviewQuality:
 
         ## Significance and Impact
         This work advances the field significantly.
-        """
-            + " word" * 300
-        )  # Add words to meet minimum
+        """ + _unique_filler(300)  # Add words to meet minimum
 
         is_valid, issues, details = validate_review_quality(response, "executive_summary")
         assert is_valid is True
@@ -38,8 +50,7 @@ class TestValidateReviewQuality:
 
     def test_executive_summary_accepts_alternatives(self):
         """Test that alternative section names are accepted."""
-        response = (
-            """## Summary
+        response = """## Summary
         This is the summary section.
 
         ## Contributions
@@ -53,9 +64,7 @@ class TestValidateReviewQuality:
 
         ## Implications
         The implications of this work.
-        """
-            + " word" * 300
-        )
+        """ + _unique_filler(300)
 
         is_valid, issues, _ = validate_review_quality(response, "executive_summary")
         assert is_valid is True
@@ -78,17 +87,14 @@ class TestValidateReviewQuality:
 
     def test_quality_review_with_score(self):
         """Test that quality review with scores passes."""
-        response = (
-            """## Clarity Assessment
+        response = """## Clarity Assessment
         **Score: 4**
         The writing is clear and well-organized.
 
         ## Structure
         **Score: 5**
         Excellent structure throughout.
-        """
-            + " word" * 400
-        )
+        """ + _unique_filler(400)
 
         is_valid, issues, _ = validate_review_quality(response, "quality_review")
         assert is_valid is True
@@ -96,12 +102,12 @@ class TestValidateReviewQuality:
     def test_quality_review_alternative_score_formats(self):
         """Test that alternative score formats are accepted."""
         # Test format: [4/5]
-        response1 = "Clarity: [4/5] - Good clarity overall. " + " word" * 400
+        response1 = "Clarity: [4/5] - Good clarity overall. " + _unique_filler(400)
         is_valid1, _, _ = validate_review_quality(response1, "quality_review")
         assert is_valid1 is True
 
         # Test format: rating: 4
-        response2 = "The overall rating: 4 out of 5. " + " word" * 400
+        response2 = "The overall rating: 4 out of 5. " + _unique_filler(400)
         is_valid2, _, _ = validate_review_quality(response2, "quality_review")
         assert is_valid2 is True
 
@@ -117,8 +123,7 @@ class TestValidateReviewQuality:
 
     def test_improvement_suggestions_valid(self):
         """Test that improvement suggestions with priorities passes."""
-        response = (
-            """## High Priority
+        response = """## High Priority
         Critical issues to address.
 
         ## Medium Priority
@@ -126,17 +131,14 @@ class TestValidateReviewQuality:
 
         ## Low Priority
         Minor improvements.
-        """
-            + " word" * 300
-        )
+        """ + _unique_filler(300)
 
         is_valid, issues, _ = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
 
     def test_improvement_suggestions_alternative_terms(self):
         """Test that alternative priority terms are accepted."""
-        response = (
-            """## Critical Issues
+        response = """## Critical Issues
         These must be fixed immediately.
 
         ## Moderate Concerns
@@ -144,9 +146,7 @@ class TestValidateReviewQuality:
 
         ## Nice to Have
         Optional improvements.
-        """
-            + " word" * 300
-        )
+        """ + _unique_filler(300)
 
         is_valid, issues, _ = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
@@ -162,30 +162,24 @@ class TestValidateReviewQuality:
     def test_methodology_review_default_validation(self):
         """Test methodology review uses default validation."""
         # methodology_review requires 400 words minimum and at least one section
-        response = (
-            """## Strengths
+        response = """## Strengths
         The methodology is sound and well-designed with comprehensive analysis.
         The approach is novel and well-justified.
-        """
-            + " word" * 400
-        )
+        """ + _unique_filler(400)
 
         is_valid, issues, _ = validate_review_quality(response, "methodology_review")
         assert is_valid is True
 
     def test_methodology_review_with_strengths_and_weaknesses(self):
         """Test that methodology review with both sections passes."""
-        response = (
-            """## Strengths
+        response = """## Strengths
         The methodology is rigorous and well-documented.
         The experimental design is appropriate.
 
         ## Weaknesses
         Sample size could be larger.
         Some assumptions are not validated.
-        """
-            + " word" * 400
-        )
+        """ + _unique_filler(400)
 
         is_valid, issues, _ = validate_review_quality(response, "methodology_review")
         assert is_valid is True
@@ -193,30 +187,24 @@ class TestValidateReviewQuality:
     def test_methodology_review_alternative_terms(self):
         """Test that alternative section names are accepted."""
         # Using "limitations" instead of "weaknesses"
-        response = (
-            """## Strong Points
+        response = """## Strong Points
         The methodology is innovative.
 
         ## Limitations
         There are some concerns about generalizability.
-        """
-            + " word" * 400
-        )
+        """ + _unique_filler(400)
 
         is_valid, issues, _ = validate_review_quality(response, "methodology_review")
         assert is_valid is True
 
     def test_improvement_suggestions_with_immediate(self):
         """Test that 'immediate' priority term is accepted."""
-        response = (
-            """## Immediate Actions
+        response = """## Immediate Actions
         These must be addressed before publication.
 
         ## Consider Later
         These are optional improvements.
-        """
-            + " word" * 300
-        )
+        """ + _unique_filler(300)
 
         is_valid, issues, _ = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is True
@@ -431,8 +419,7 @@ class TestValidateReviewQualityWithFormatCompliance:
         from infrastructure.llm.review.generator import validate_review_quality
 
         # Response with emoji - should be valid now
-        response = (
-            """## Overview
+        response = """## Overview
 
         The manuscript presents research on optimization. 🚀
 
@@ -452,9 +439,7 @@ class TestValidateReviewQualityWithFormatCompliance:
         ## Significance and Impact
 
         This work advances the field of optimization.
-        """
-            + " word" * 300
-        )
+        """ + _unique_filler(300)
 
         is_valid, issues, details = validate_review_quality(response, "executive_summary", model_name="qwen3:4b")
 
@@ -466,8 +451,7 @@ class TestValidateReviewQualityWithFormatCompliance:
         from infrastructure.llm.review.generator import validate_review_quality
 
         # Response with conversational phrases
-        response = (
-            """## Overview
+        response = """## Overview
 
         Based on the document you shared, this is a great paper!
 
@@ -478,9 +462,7 @@ class TestValidateReviewQualityWithFormatCompliance:
         ## Methodology
 
         Let me know if you need more details.
-        """
-            + " word" * 300
-        )
+        """ + _unique_filler(300)
 
         is_valid, issues, details = validate_review_quality(response, "executive_summary", model_name="llama3:70b")
 
@@ -518,8 +500,7 @@ class TestValidateReviewQualityRepetition:
 
     def test_validate_unique_content_passes(self):
         """Test that unique content passes validation."""
-        response = (
-            """
+        response = """
 ## Overview
 This manuscript presents a novel approach to machine learning optimization.
 
@@ -534,9 +515,7 @@ The experimental results demonstrate significant improvements.
 
 ## Significance
 This research has important implications for the field.
-"""
-            + " word" * 200
-        )  # Ensure word count is met
+""" + _unique_filler(200)  # Ensure word count is met
 
         is_valid, issues, details = validate_review_quality(response, "executive_summary")
 
@@ -546,8 +525,7 @@ This research has important implications for the field.
     def test_validate_moderate_repetition_warning(self):
         """Test that moderate repetition creates warning but doesn't fail."""
         # Some repeated phrases but mostly unique
-        response = (
-            """
+        response = """
 ## Overview
 This is an excellent manuscript with clear presentation.
 
@@ -562,9 +540,7 @@ The results demonstrate clear improvements.
 
 ## Significance
 The work has significant implications for the field.
-"""
-            + " word" * 200
-        )
+""" + _unique_filler(200)
 
         is_valid, issues, details = validate_review_quality(response, "executive_summary")
 
