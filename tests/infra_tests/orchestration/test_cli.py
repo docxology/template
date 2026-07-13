@@ -200,7 +200,7 @@ class _SpyRunner(PipelineRunner):
 
 
 @pytest.fixture
-def patch_runner(monkeypatch: pytest.MonkeyPatch):
+def patch_runner():
     holder: dict[str, _SpyRunner] = {}
 
     def _factory(repo_root, stream=None):
@@ -208,7 +208,7 @@ def patch_runner(monkeypatch: pytest.MonkeyPatch):
         holder["last"] = spy
         return spy
 
-    monkeypatch.setattr("infrastructure.orchestration.cli.PipelineRunner", _factory)
+    holder["factory"] = _factory
     return holder
 
 
@@ -220,7 +220,8 @@ def test_cmd_pipeline_with_explicit_project(fake_repo: Path, patch_runner) -> No
             "pipeline",
             "--project",
             "template_code_project",
-        ]
+        ],
+        runner_factory=patch_runner["factory"],
     )
     assert rc == 0
     spy = patch_runner["last"]
@@ -230,20 +231,26 @@ def test_cmd_pipeline_with_explicit_project(fake_repo: Path, patch_runner) -> No
 
 
 def test_cmd_pipeline_default_project(fake_repo: Path, patch_runner) -> None:
-    rc = main(["--repo-root", str(fake_repo), "pipeline"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "pipeline"],
+        runner_factory=patch_runner["factory"],
+    )
     assert rc == 0
     spy = patch_runner["last"]
     assert spy.runs[0].project == "template_code_project"
 
 
-def test_cmd_pipeline_default_no_canonical(monkeypatch, tmp_path: Path, patch_runner) -> None:
+def test_cmd_pipeline_default_no_canonical(tmp_path: Path, patch_runner) -> None:
     """When template_code_project absent, default to first discovered."""
     proj = tmp_path / "projects" / "rotating_alpha"
     (proj / "src").mkdir(parents=True)
     (proj / "tests").mkdir()
     (proj / "src" / "__init__.py").write_text("", encoding="utf-8")
     (proj / "tests" / "__init__.py").write_text("", encoding="utf-8")
-    rc = main(["--repo-root", str(tmp_path), "pipeline"])
+    rc = main(
+        ["--repo-root", str(tmp_path), "pipeline"],
+        runner_factory=patch_runner["factory"],
+    )
     assert rc == 0
     spy = patch_runner["last"]
     assert spy.runs[0].project == "rotating_alpha"
@@ -251,12 +258,18 @@ def test_cmd_pipeline_default_no_canonical(monkeypatch, tmp_path: Path, patch_ru
 
 def test_cmd_pipeline_no_projects(tmp_path: Path, patch_runner) -> None:
     (tmp_path / "projects").mkdir()
-    rc = main(["--repo-root", str(tmp_path), "pipeline"])
+    rc = main(
+        ["--repo-root", str(tmp_path), "pipeline"],
+        runner_factory=patch_runner["factory"],
+    )
     assert rc == 1
 
 
 def test_cmd_pipeline_all_projects_routes_to_multi(fake_repo: Path, patch_runner) -> None:
-    rc = main(["--repo-root", str(fake_repo), "pipeline", "--all-projects", "--core-only"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "pipeline", "--all-projects", "--core-only"],
+        runner_factory=patch_runner["factory"],
+    )
     assert rc == 0
     spy = patch_runner["last"]
     assert len(spy.multi_runs) == 1
@@ -274,7 +287,8 @@ def test_cmd_pipeline_core_only(fake_repo: Path, patch_runner) -> None:
             "--core-only",
             "--skip-infra",
             "--resume",
-        ]
+        ],
+        runner_factory=patch_runner["factory"],
     )
     assert rc == 0
     inv = patch_runner["last"].runs[0]
@@ -284,7 +298,10 @@ def test_cmd_pipeline_core_only(fake_repo: Path, patch_runner) -> None:
 
 
 def test_cmd_multi(fake_repo: Path, patch_runner) -> None:
-    rc = main(["--repo-root", str(fake_repo), "multi", "--core-only", "--skip-infra"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "multi", "--core-only", "--skip-infra"],
+        runner_factory=patch_runner["factory"],
+    )
     assert rc == 0
     inv = patch_runner["last"].multi_runs[0]
     assert inv.skip_infra is True
@@ -292,12 +309,15 @@ def test_cmd_multi(fake_repo: Path, patch_runner) -> None:
 
 
 def test_cmd_multi_no_executive_report(fake_repo: Path, patch_runner) -> None:
-    rc = main(["--repo-root", str(fake_repo), "multi", "--no-executive-report"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "multi", "--no-executive-report"],
+        runner_factory=patch_runner["factory"],
+    )
     assert rc == 0
     assert patch_runner["last"].multi_runs[0].run_executive_report is False
 
 
-def test_cmd_secure_steg_only(fake_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cmd_secure_steg_only(fake_repo: Path) -> None:
     captured: dict = {}
 
     def _fake_run_secure(repo_root, options):
@@ -305,13 +325,15 @@ def test_cmd_secure_steg_only(fake_repo: Path, monkeypatch: pytest.MonkeyPatch) 
         captured["options"] = options
         return 0
 
-    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
-    rc = main(["--repo-root", str(fake_repo), "secure", "--steganography-only"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "secure", "--steganography-only"],
+        secure_runner=_fake_run_secure,
+    )
     assert rc == 0
     assert captured["options"].steganography_only is True
 
 
-def test_cmd_secure_validate_kmyth(fake_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cmd_secure_validate_kmyth(fake_repo: Path) -> None:
     captured: dict = {}
 
     def _fake_run_secure(repo_root, options):
@@ -319,8 +341,10 @@ def test_cmd_secure_validate_kmyth(fake_repo: Path, monkeypatch: pytest.MonkeyPa
         captured["options"] = options
         return 0
 
-    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
-    rc = main(["--repo-root", str(fake_repo), "secure", "--validate-kmyth"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "secure", "--validate-kmyth"],
+        secure_runner=_fake_run_secure,
+    )
     assert rc == 0
     assert captured["options"].validate_kmyth is True
 
@@ -339,7 +363,6 @@ def test_cmd_secure_deterministic_flag_sets_env_var(
         observed["env"] = _os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
         return 0
 
-    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
     rc = main(
         [
             "--repo-root",
@@ -347,7 +370,8 @@ def test_cmd_secure_deterministic_flag_sets_env_var(
             "secure",
             "--steganography-only",
             "--deterministic",
-        ]
+        ],
+        secure_runner=_fake_run_secure,
     )
     assert rc == 0
     assert observed["env"] == "1"
@@ -367,8 +391,10 @@ def test_cmd_secure_without_deterministic_does_not_set_env_var(
         observed["env"] = _os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
         return 0
 
-    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
-    rc = main(["--repo-root", str(fake_repo), "secure", "--steganography-only"])
+    rc = main(
+        ["--repo-root", str(fake_repo), "secure", "--steganography-only"],
+        secure_runner=_fake_run_secure,
+    )
     assert rc == 0
     assert observed["env"] is None
 
@@ -586,7 +612,7 @@ def test_interactive_empty_input_loops(fake_repo: Path) -> None:
     assert rc == 0
 
 
-def test_main_no_subcommand_runs_interactive(fake_repo: Path, monkeypatch) -> None:
+def test_main_no_subcommand_runs_interactive(fake_repo: Path) -> None:
     """Bare invocation (no subcommand) routes to _interactive."""
     captured = {}
 
@@ -594,8 +620,7 @@ def test_main_no_subcommand_runs_interactive(fake_repo: Path, monkeypatch) -> No
         captured["repo_root"] = repo_root
         return 0
 
-    monkeypatch.setattr("infrastructure.orchestration.cli._interactive", _fake_interactive)
-    rc = main(["--repo-root", str(fake_repo)])
+    rc = main(["--repo-root", str(fake_repo)], interactive_runner=_fake_interactive)
     assert rc == 0
     assert captured["repo_root"] == fake_repo
 
