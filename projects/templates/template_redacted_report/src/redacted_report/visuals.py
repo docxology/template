@@ -8,7 +8,7 @@ import os
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, cast
 
@@ -186,10 +186,12 @@ def verify_dev_variant_outputs(
     *,
     render_smoke: bool = False,
     require_kmyth_sidecars: bool = False,
+    page_counter: Callable[[Path], int] | None = None,
 ) -> dict[str, object]:
     """Validate generated visual proof PDFs, filenames, hashes, and matrix records."""
     errors: list[str] = []
     warnings: list[str] = []
+    count_pages = page_counter or _pdf_page_count
     output_dir = output_dir.resolve()
     matrix_path = output_dir / "variant_matrix.json"
     if not matrix_path.exists():
@@ -281,12 +283,19 @@ def verify_dev_variant_outputs(
             base_path = output_dir / base_name
             secure_path = output_dir / secure_name
             manifest_path = output_dir / manifest_name
-            _verify_pdf_file(base_path, variant.get("base_pdf_sha256"), variant.get("base_pdf_bytes"), errors)
+            _verify_pdf_file(
+                base_path,
+                variant.get("base_pdf_sha256"),
+                variant.get("base_pdf_bytes"),
+                errors,
+                page_counter=count_pages,
+            )
             _verify_pdf_file(
                 secure_path,
                 variant.get("steganography_pdf_sha256"),
                 variant.get("steganography_pdf_bytes"),
                 errors,
+                page_counter=count_pages,
             )
             _verify_hash_manifest(manifest_path, base_name, variant.get("hash_manifest_sha256"), base_path, errors)
 
@@ -1170,6 +1179,9 @@ def _resolve_kmyth_status(
     include_kmyth: bool,
     binary_dir: str | Path | None,
     seal_probe_timeout_seconds: int,
+    installation_validator: Callable[..., object] | None = None,
+    help_checker: Callable[[Path], str] | None = None,
+    seal_probe: Callable[..., str] | None = None,
 ) -> dict[str, object]:
     if not include_kmyth:
         return {
@@ -1182,9 +1194,13 @@ def _resolve_kmyth_status(
             "summary": "Kmyth not requested.",
         }
 
-    from infrastructure.steganography import validate_kmyth_installation
+    if installation_validator is None:
+        from infrastructure.steganography import validate_kmyth_installation
 
-    availability = validate_kmyth_installation(binary_dir=binary_dir)
+        installation_validator = validate_kmyth_installation
+    check_help = help_checker or _kmyth_help_error
+    probe_seal = seal_probe or _kmyth_seal_probe_error
+    availability = installation_validator(binary_dir=binary_dir)
     if not availability.available or availability.seal_path is None or availability.unseal_path is None:
         return {
             "requested": True,
@@ -1199,8 +1215,8 @@ def _resolve_kmyth_status(
     help_errors = tuple(
         error
         for error in (
-            _kmyth_help_error(availability.seal_path),
-            _kmyth_help_error(availability.unseal_path),
+            check_help(availability.seal_path),
+            check_help(availability.unseal_path),
         )
         if error
     )
@@ -1215,7 +1231,7 @@ def _resolve_kmyth_status(
             "summary": "Kmyth tools found but not runnable: " + "; ".join(help_errors),
         }
 
-    probe_error = _kmyth_seal_probe_error(availability.seal_path, timeout_seconds=seal_probe_timeout_seconds)
+    probe_error = probe_seal(availability.seal_path, timeout_seconds=seal_probe_timeout_seconds)
     if probe_error:
         return {
             "requested": True,
@@ -1238,9 +1254,9 @@ def _resolve_kmyth_status(
     }
 
 
-def _kmyth_help_error(tool_path: Path) -> str:
+def _kmyth_help_error(tool_path: Path, *, runner: Callable[..., object] = subprocess.run) -> str:
     try:
-        result = subprocess.run(  # noqa: S603 - fixed executable path, shell=False
+        result = runner(  # noqa: S603 - fixed executable path, shell=False
             [str(tool_path), "--help"],
             check=False,
             capture_output=True,
@@ -1255,13 +1271,18 @@ def _kmyth_help_error(tool_path: Path) -> str:
     return ""
 
 
-def _kmyth_seal_probe_error(tool_path: Path, *, timeout_seconds: int) -> str:
+def _kmyth_seal_probe_error(
+    tool_path: Path,
+    *,
+    timeout_seconds: int,
+    runner: Callable[..., object] = subprocess.run,
+) -> str:
     with tempfile.TemporaryDirectory(prefix="redaction-kmyth-probe-") as tmp_dir:
         input_path = Path(tmp_dir) / "probe.txt"
         output_path = Path(tmp_dir) / "probe.txt.ski"
         input_path.write_text("template_redacted_report kmyth probe\n", encoding="utf-8")
         try:
-            result = subprocess.run(  # noqa: S603 - fixed executable path, shell=False
+            result = runner(  # noqa: S603 - fixed executable path, shell=False
                 [str(tool_path), "--input", str(input_path), "--output", str(output_path)],
                 check=False,
                 capture_output=True,
@@ -1347,7 +1368,14 @@ def _expect(condition: bool, errors: list[str], message: str) -> None:
         errors.append(message)
 
 
-def _verify_pdf_file(path: Path, expected_sha256: object, expected_bytes: object, errors: list[str]) -> None:
+def _verify_pdf_file(
+    path: Path,
+    expected_sha256: object,
+    expected_bytes: object,
+    errors: list[str],
+    *,
+    page_counter: Callable[[Path], int] | None = None,
+) -> None:
     if not path.exists():
         errors.append(f"missing PDF: {path.name}")
         return
@@ -1359,7 +1387,7 @@ def _verify_pdf_file(path: Path, expected_sha256: object, expected_bytes: object
     if isinstance(expected_sha256, str) and _file_sha256(path) != expected_sha256:
         errors.append(f"{path.name}: sha256 differs from matrix")
     try:
-        page_count = _pdf_page_count(path)
+        page_count = (page_counter or _pdf_page_count)(path)
     except Exception as exc:  # noqa: BLE001 - verifier safety net: pypdf raises several parse-specific exceptions; every failure is recorded as a finding, never swallowed
         errors.append(f"{path.name}: PDF readability check failed: {exc}")
         return
