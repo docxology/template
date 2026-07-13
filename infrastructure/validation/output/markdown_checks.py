@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.validation.content.discovery import discover_markdown_files
@@ -12,7 +14,20 @@ from infrastructure.core.project_paths import resolve_source_manuscript_dir
 logger = get_logger(__name__)
 
 
-def validate_manuscript_output_markdown(project_root: Path, repo_root: Path, project_name: str) -> bool:
+def _load_markdown_validator() -> Callable[..., tuple[list[Any], int]]:
+    from infrastructure.validation.content.markdown_validator import validate_markdown
+
+    return validate_markdown
+
+
+def validate_manuscript_output_markdown(
+    project_root: Path,
+    repo_root: Path,
+    project_name: str,
+    *,
+    validator: Callable[..., tuple[list[Any], int]] | None = None,
+    validator_loader: Callable[[], Callable[..., tuple[list[Any], int]]] = _load_markdown_validator,
+) -> bool:
     """Validate manuscript markdown for Stage 04 without failing on advisory notes."""
     log_substep("Validating markdown files...", logger)
 
@@ -29,9 +44,8 @@ def validate_manuscript_output_markdown(project_root: Path, repo_root: Path, pro
     log_success(f"Found {len(markdown_files)} markdown file(s)", logger)
 
     try:
-        from infrastructure.validation.content.markdown_validator import validate_markdown as validate_md
-
         logger.info("Running markdown validation...")
+        validate_md = validator or validator_loader()
         problems, _exit_code = validate_md(manuscript_dir, repo_root, strict=False)
 
         if not problems:
