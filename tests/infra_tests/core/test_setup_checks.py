@@ -121,6 +121,7 @@ class TestSyncWorkspaceDependencies:
 
     def test_file_not_found_fallback(self, tmp_path: Path) -> None:
         """FileNotFoundError (uv not in PATH) triggers fallback to check_dependencies."""
+
         def _raise_fnf(*args, **kwargs):
             raise FileNotFoundError("uv not found")
 

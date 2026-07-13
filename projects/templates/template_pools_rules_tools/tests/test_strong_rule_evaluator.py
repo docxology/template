@@ -167,7 +167,9 @@ def test_reference_schema_flags_non_mapping_entry() -> None:
     assert evaluation["passed"] is False
 
 
-def test_load_rule_context_detects_real_heading_matching_a_canonical_section(tmp_path: pathlib.Path) -> None:
+def test_load_rule_context_detects_real_heading_matching_a_canonical_section(
+    tmp_path: pathlib.Path,
+) -> None:
     """A section that is BOTH a real heading AND config's canonical_sections
     entry is detected via the real heading — config.yaml plays no role."""
     project = tmp_path / "demo"

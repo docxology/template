@@ -355,7 +355,9 @@ def test_claim_ledger_doi_claim_matches_live_config_publication_fields() -> None
     doi_claim_value = claims["live-standalone-doi-published"]["value"]
 
     doi_is_live = bool(live_doi) and bool(live_version_doi)
-    assert doi_is_live, "config.yaml publication DOIs are blank; update the claim ledger if this exemplar is unpublished"
+    assert doi_is_live, (
+        "config.yaml publication DOIs are blank; update the claim ledger if this exemplar is unpublished"
+    )
     # The claim must actually cite the live DOI values, not just assert they exist.
     assert live_doi in doi_claim_value
     assert live_version_doi in doi_claim_value

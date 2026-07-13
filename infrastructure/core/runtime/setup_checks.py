@@ -34,7 +34,11 @@ def aggregate_check_results(
     return all_passed, lines
 
 
-def sync_workspace_dependencies(repo_root: Path, *, process_runner: Callable[..., object] = subprocess.run) -> bool:
+def sync_workspace_dependencies(
+    repo_root: Path,
+    *,
+    process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> bool:
     """Run ``uv sync`` with fallback to per-package install."""
     logger.info("Checking for uv package manager...")
     try:

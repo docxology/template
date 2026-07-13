@@ -38,9 +38,7 @@ def test_live_single_generation(tmp_path: Path, copy_project_sandbox: Copy):
     assert artifacts[0].evaluation.n_samples == 6
 
 
-def test_live_two_generations_writes_feedback_but_does_not_mutate_target(
-    tmp_path: Path, copy_project_sandbox: Copy
-):
+def test_live_two_generations_writes_feedback_but_does_not_mutate_target(tmp_path: Path, copy_project_sandbox: Copy):
     """Honest-stub invariant, pinned at the project layer too (offline, no Ollama).
 
     `improvement.md` is written for generation 2 with real prior-metric content,

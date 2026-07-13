@@ -204,9 +204,7 @@ def test_gaps_section_reflects_live_citation_count_not_hardcoded_zero(tmp_path: 
         bib_path.read_text(encoding="utf-8") + "@article{c2022,\n  title={V},\n}\n",
         encoding="utf-8",
     )
-    (project_root / "manuscript" / "02_extra.md").write_text(
-        "Further discussion citing [@c2022].\n", encoding="utf-8"
-    )
+    (project_root / "manuscript" / "02_extra.md").write_text("Further discussion citing [@c2022].\n", encoding="utf-8")
 
     exit_code = generate_review_report(project_root, REPO_ROOT, project_root / "output" / "review")
     assert exit_code == 0

@@ -64,7 +64,7 @@ def _stage_table_caption(yaml_link: str) -> str:
         "by `scripts/docgen/stage_table.py`. Do not hand-edit. "
         "Stage indices are **0-based positions in the YAML** and intentionally do "
         "**not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes "
-        "(for example, stage 11, \"Copy Outputs\", runs `scripts/pipeline/stage_05_copy.py`). -->"
+        '(for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->'
     )
 
 

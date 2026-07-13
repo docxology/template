@@ -307,9 +307,7 @@ class TestLiteratureEvaluationScript:
 
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "bad.md").write_text(
-            "We found strong evidence in the synthetic run.\n", encoding="utf-8"
-        )
+        (manuscript_dir / "bad.md").write_text("We found strong evidence in the synthetic run.\n", encoding="utf-8")
 
         corpus = Corpus()
         for paper in sample_papers:

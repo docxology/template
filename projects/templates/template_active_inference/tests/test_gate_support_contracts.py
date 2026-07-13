@@ -340,6 +340,7 @@ def test_ensure_gate_artifacts_rejects_invalid_post_rebuild_signature(
 ) -> None:
     root = tmp_path.resolve()
     monkeypatch.setenv(gate_support._ALLOW_GATE_REBUILD_ENV, "1")
+
     def noop(*args, **kwargs) -> None:
         return None
 
