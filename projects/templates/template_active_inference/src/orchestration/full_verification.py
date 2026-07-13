@@ -6,6 +6,7 @@ import os
 import shlex
 import subprocess
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 
@@ -73,30 +74,44 @@ def _coverage_command(modules: list[str], *, append: bool, final: bool) -> list[
     return cmd
 
 
-def _run(project_root: Path, cmd: list[str], label: str, *, env: dict[str, str] | None = None) -> None:
+def _run(
+    project_root: Path,
+    cmd: list[str],
+    label: str,
+    *,
+    env: dict[str, str] | None = None,
+    process_runner: Callable[..., object] = subprocess.run,
+    clock: Callable[[], float] = time.perf_counter,
+) -> None:
     print(f"\n==> {label}")
     print(f"    $ {' '.join(shlex.quote(part) for part in cmd)}")
-    start = time.perf_counter()
+    start = clock()
     process_env = os.environ.copy()
     process_env.setdefault("MPLBACKEND", "Agg")
     process_env.setdefault("PYTHONUNBUFFERED", "1")
     process_env.setdefault("TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES", "2")
     if env:
         process_env.update(env)
-    result = subprocess.run(
+    result = process_runner(
         cmd,
         cwd=project_root,
         env=process_env,
         text=True,
         check=False,
     )
-    elapsed = time.perf_counter() - start
+    elapsed = clock() - start
     print(f"    status: {result.returncode}  elapsed: {elapsed:.1f}s")
     if result.returncode != 0:
         raise RuntimeError(f"{label} failed with return code {result.returncode}")
 
 
-def run_verification(project_root: Path, *, skip_chunks: bool = False, monolithic_coverage: bool = False) -> None:
+def run_verification(
+    project_root: Path,
+    *,
+    skip_chunks: bool = False,
+    monolithic_coverage: bool = False,
+    command_runner: Callable[..., None] = _run,
+) -> None:
     """Run verification."""
     preflight = [
         ("Run analytical sweep", ["uv", "run", "python", "scripts/run_analytical_sweep.py"]),
@@ -117,11 +132,11 @@ def run_verification(project_root: Path, *, skip_chunks: bool = False, monolithi
         ("Check method inventory", ["uv", "run", "python", "scripts/generate_method_inventory.py", "--check"]),
     ]
     for label, cmd in preflight:
-        _run(project_root, cmd, label)
+        command_runner(project_root, cmd, label)
 
     if not skip_chunks:
         for label, modules in _chunked_test_groups(project_root):
-            _run(project_root, ["uv", "run", "pytest", *modules, "-q"], label)
+            command_runner(project_root, ["uv", "run", "pytest", *modules, "-q"], label)
 
     postflight = [
         ("Pre-coverage compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
@@ -148,10 +163,10 @@ def run_verification(project_root: Path, *, skip_chunks: bool = False, monolithi
         ),
     ]
     for label, cmd in postflight:
-        _run(project_root, cmd, label)
+        command_runner(project_root, cmd, label)
 
     if monolithic_coverage:
-        _run(
+        command_runner(
             project_root,
             [
                 "uv",
@@ -169,7 +184,7 @@ def run_verification(project_root: Path, *, skip_chunks: bool = False, monolithi
     else:
         coverage_groups = [(label, modules) for label, modules in _coverage_test_groups(project_root) if modules]
         for index, (label, modules) in enumerate(coverage_groups):
-            _run(
+            command_runner(
                 project_root,
                 _coverage_command(
                     modules,
@@ -204,4 +219,4 @@ def run_verification(project_root: Path, *, skip_chunks: bool = False, monolithi
         ),
     ]
     for label, cmd in final_refresh:
-        _run(project_root, cmd, label)
+        command_runner(project_root, cmd, label)
