@@ -32,6 +32,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `executable_bundle.py` | Stage 12 executable bundle |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` — central adapter registry |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
+| `reachability.py` | Opt-in live repository/DOI reachability probes used by publishing-status diagnostics; ordinary CI remains offline |
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results` — read-only, non-destructive verification that publishing credentials authenticate |
 | `upload_runner.py` | `UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` — reusable multi-platform upload dispatch (dry-run by default; per-platform failure never aborts the batch) |
 | `metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml`, with `paper` fields taking precedence and a complete `book`-schema fallback (optional `released_date` for byte-stable output) |

@@ -29,19 +29,20 @@ def _create_test_repo_structure(tmp_dir: Path, make_project2_fail: bool = False)
 
     # Create minimal script stubs that succeed
     script_files = [
-        "00_setup_environment.py",
-        "01_run_tests.py",
-        "02_run_analysis.py",
-        "03_render_pdf.py",
-        "04_validate_output.py",
-        "05_copy_outputs.py",
-        "06_llm_review.py",
-        "07_generate_executive_report.py",
+        "pipeline/stage_00_setup.py",
+        "pipeline/stage_01_test.py",
+        "pipeline/stage_02_analysis.py",
+        "pipeline/stage_03_render.py",
+        "pipeline/stage_04_validate.py",
+        "pipeline/stage_05_copy.py",
+        "pipeline/stage_06_llm_review.py",
+        "pipeline/stage_07_executive_report.py",
     ]
 
     for script_file in script_files:
         script_path = scripts_dir / script_file
-        if script_file == "02_run_analysis.py" and make_project2_fail:
+        script_path.parent.mkdir(parents=True, exist_ok=True)
+        if script_file == "pipeline/stage_02_analysis.py" and make_project2_fail:
             # Make analysis script fail for project2
             script_path.write_text(
                 """
@@ -298,7 +299,7 @@ class TestMultiProjectOrchestrator:
             _create_test_project(repo_root, qualified_name)
 
             args_log = repo_root / "stage_args.txt"
-            for script_path in (repo_root / "scripts").glob("*.py"):
+            for script_path in (repo_root / "scripts" / "pipeline").glob("*.py"):
                 script_path.write_text(
                     """
 import sys
@@ -456,7 +457,7 @@ sys.exit(1)  # Fail the script
             repo_root = _create_test_repo_structure(Path(tmp_dir))
 
             # Make the infrastructure tests script fail
-            infra_test_script = repo_root / "scripts" / "01_run_tests.py"
+            infra_test_script = repo_root / "scripts" / "pipeline" / "stage_01_test.py"
             infra_test_script.write_text(
                 """
 import sys
