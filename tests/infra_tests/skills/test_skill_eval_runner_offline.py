@@ -35,23 +35,14 @@ def _run_harness(*args: str, cwd: Path | None = None) -> subprocess.CompletedPro
 
 def test_save_baseline_only_no_progress_lines(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     workspace = tmp_path / "latest"
     baseline_dir = tmp_path / "baseline"
     write_minimal_workspace(workspace)
 
-    import skill_eval.config as config_mod
     import skill_eval.runner as runner_mod
 
-    monkeypatch.setattr(config_mod, "BASELINE_DIR", baseline_dir)
-
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["run_eval_harness.py", "--save-baseline-only", "--output-dir", str(workspace)],
-    )
-    assert runner_mod.main() == 0
+    assert runner_mod.main(["--save-baseline-only", "--output-dir", str(workspace)], baseline_dir=baseline_dir) == 0
 
     dest = baseline_dir / "benchmark.json"
     assert dest.is_file()
@@ -61,7 +52,6 @@ def test_save_baseline_only_no_progress_lines(
 
 def test_compare_only_shows_compare_section(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     workspace = tmp_path / "latest"
     baseline_dir = tmp_path / "baseline"
@@ -71,19 +61,11 @@ def test_compare_only_shows_compare_section(
     benchmark["run_dir"] = "baseline"
     (baseline_dir / "benchmark.json").write_text(json.dumps(benchmark), encoding="utf-8")
 
-    import skill_eval.config as config_mod
     import skill_eval.runner as runner_mod
 
-    monkeypatch.setattr(config_mod, "BASELINE_DIR", baseline_dir)
-
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["run_eval_harness.py", "--compare-only", "--output-dir", str(workspace)],
-    )
     buffer = io.StringIO()
     with contextlib.redirect_stdout(buffer):
-        assert runner_mod.main() == 0
+        assert runner_mod.main(["--compare-only", "--output-dir", str(workspace)], baseline_dir=baseline_dir) == 0
     report = buffer.getvalue()
     assert "COMPARE (vs baseline with_skill)" in report
     assert "No with_skill regressions." in report
@@ -92,57 +74,32 @@ def test_compare_only_shows_compare_section(
 
 def test_compare_only_missing_baseline_exits_nonzero(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     workspace = tmp_path / "latest"
     baseline_dir = tmp_path / "baseline"
     write_minimal_workspace(workspace)
 
-    import skill_eval.config as config_mod
     import skill_eval.runner as runner_mod
 
-    monkeypatch.setattr(config_mod, "BASELINE_DIR", baseline_dir)
-
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["run_eval_harness.py", "--compare-only", "--output-dir", str(workspace)],
-    )
-    assert runner_mod.main() == 1
+    assert runner_mod.main(["--compare-only", "--output-dir", str(workspace)], baseline_dir=baseline_dir) == 1
 
 
 def test_save_baseline_only_missing_benchmark_exits_nonzero(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     workspace = tmp_path / "latest"
     baseline_dir = tmp_path / "baseline"
     workspace.mkdir()
 
-    import skill_eval.config as config_mod
     import skill_eval.runner as runner_mod
 
-    monkeypatch.setattr(config_mod, "BASELINE_DIR", baseline_dir)
-
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["run_eval_harness.py", "--save-baseline-only", "--output-dir", str(workspace)],
-    )
-    assert runner_mod.main() == 1
+    assert runner_mod.main(["--save-baseline-only", "--output-dir", str(workspace)], baseline_dir=baseline_dir) == 1
 
 
-def test_validate_rejects_save_baseline_with_offline_mode(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_validate_rejects_save_baseline_with_offline_mode() -> None:
     import skill_eval.runner as runner_mod
 
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["run_eval_harness.py", "--save-baseline-only", "--save-baseline"],
-    )
-    assert runner_mod.main() == 2
+    assert runner_mod.main(["--save-baseline-only", "--save-baseline"]) == 2
 
 
 @pytest.mark.timeout(30)
