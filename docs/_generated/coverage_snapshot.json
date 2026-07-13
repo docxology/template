@@ -67,7 +67,7 @@
     },
     "template_redacted_report": {
       "coverage_pct": "98.83 %",
-      "source_hash": "854a0143d64bf3d82cdaf2610ad4f49bbdf87669e161c952389fb750c86cea2e"
+      "source_hash": "ae19f4811178b241d2a599619e5eff2e22b5b47a72eeab8f358606015153a0c8"
     },
     "template_registered_report": {
       "coverage_pct": "96.37 %",
@@ -95,5 +95,5 @@
     }
   },
   "schema_version": 1,
-  "source_commit": "74fb209bf7661850d3c3c3cd67ed1bb899e266e2"
+  "source_commit": "0fc240c550088328f7b8d2a969dba9e63703ae0a"
 }
