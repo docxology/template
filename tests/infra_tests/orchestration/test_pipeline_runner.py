@@ -50,10 +50,9 @@ class _StubExecutor:
 
 
 @pytest.fixture
-def patched_runner(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> PipelineRunner:
+def patched_runner(fake_repo: Path) -> PipelineRunner:
     """A PipelineRunner with a stubbed executor (heavy IO not needed for these tests)."""
-    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.PipelineExecutor", _StubExecutor)
-    return PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
+    return PipelineRunner(repo_root=fake_repo, stream=io.StringIO(), executor_factory=_StubExecutor)
 
 
 def test_run_full_pipeline_emits_banners(patched_runner: PipelineRunner) -> None:
@@ -92,7 +91,7 @@ def test_run_writes_log_file(patched_runner: PipelineRunner, fake_repo: Path) ->
     assert log.exists()
 
 
-def test_run_returns_failure_on_exception(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> None:
+def test_run_returns_failure_on_exception(fake_repo: Path) -> None:
     class _BoomExecutor:
         def __init__(self, config):
             pass
@@ -100,14 +99,13 @@ def test_run_returns_failure_on_exception(monkeypatch: pytest.MonkeyPatch, fake_
         def execute_full_pipeline(self):
             raise RuntimeError("boom")
 
-    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.PipelineExecutor", _BoomExecutor)
-    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
+    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO(), executor_factory=_BoomExecutor)
     rc = runner.run(PipelineInvocation(project="template_code_project"))
     assert rc == 1
     assert "FAILED" in runner.stream.getvalue()
 
 
-def test_run_returns_failure_when_stage_unsuccessful(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> None:
+def test_run_returns_failure_when_stage_unsuccessful(fake_repo: Path) -> None:
     class _FailingExecutor:
         def __init__(self, config):
             pass
@@ -118,8 +116,7 @@ def test_run_returns_failure_when_stage_unsuccessful(monkeypatch: pytest.MonkeyP
         def execute_core_pipeline(self):
             return [_FakeStageResult(False)]
 
-    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.PipelineExecutor", _FailingExecutor)
-    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
+    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO(), executor_factory=_FailingExecutor)
     rc = runner.run(PipelineInvocation(project="template_code_project"))
     assert rc == 1
 
@@ -193,9 +190,12 @@ class _StubMulti:
 
 
 @pytest.fixture
-def patched_multi_runner(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> PipelineRunner:
-    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.MultiProjectOrchestrator", _StubMulti)
-    return PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
+def patched_multi_runner(fake_repo: Path) -> PipelineRunner:
+    return PipelineRunner(
+        repo_root=fake_repo,
+        stream=io.StringIO(),
+        orchestrator_factory=_StubMulti,
+    )
 
 
 def test_run_multi_full(patched_multi_runner: PipelineRunner) -> None:
@@ -233,12 +233,12 @@ class _StubMultiOneFail(_StubMulti):
         return self._one_failure()
 
 
-def test_run_multi_emits_failure_detail(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> None:
-    monkeypatch.setattr(
-        "infrastructure.orchestration.pipeline_runner.MultiProjectOrchestrator",
-        _StubMultiOneFail,
+def test_run_multi_emits_failure_detail(fake_repo: Path) -> None:
+    runner = PipelineRunner(
+        repo_root=fake_repo,
+        stream=io.StringIO(),
+        orchestrator_factory=_StubMultiOneFail,
     )
-    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
     rc = runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
     assert rc == 1
     txt = runner.stream.getvalue()

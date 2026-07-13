@@ -13,7 +13,7 @@ for ``--all-projects`` runs.
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TextIO
+from typing import Any, Callable, TextIO
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline import (
@@ -67,6 +67,8 @@ class PipelineRunner:
 
     repo_root: Path
     stream: TextIO = field(default_factory=lambda: sys.stdout)
+    executor_factory: Callable[[PipelineConfig], Any] = PipelineExecutor
+    orchestrator_factory: Callable[[MultiProjectConfig], Any] = MultiProjectOrchestrator
 
     def _emit(self, line: str) -> None:
         self.stream.write(line + "\n")
@@ -110,7 +112,7 @@ class PipelineRunner:
             resume=invocation.resume,
             incremental=IncrementalConfig(enabled=invocation.incremental),
         )
-        executor = PipelineExecutor(config)
+        executor = self.executor_factory(config)
 
         try:
             if invocation.core_only:
@@ -142,7 +144,7 @@ class PipelineRunner:
             run_llm=not invocation.skip_llm,
             run_executive_report=invocation.run_executive_report,
         )
-        orchestrator = MultiProjectOrchestrator(config)
+        orchestrator = self.orchestrator_factory(config)
 
         if invocation.skip_infra and invocation.skip_llm:
             result = orchestrator.execute_all_projects_core_no_infra()

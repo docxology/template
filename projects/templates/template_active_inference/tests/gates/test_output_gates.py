@@ -315,7 +315,7 @@ def test_figures_nonblank_negative_blank_png(
         target.write_bytes(backup.read_bytes())
 
 
-def test_figures_nonblank_validates_small_fixtures(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_figures_nonblank_validates_small_fixtures(tmp_path: Path) -> None:
     """Known tiny fixtures must pass/fail nonblank detection independently of full outputs."""
     from gates import output_checks
 
@@ -326,15 +326,22 @@ def test_figures_nonblank_validates_small_fixtures(tmp_path: Path, monkeypatch: 
     _write_png(nonblank, blank=False)
     _write_png(blank, blank=True)
 
-    with monkeypatch.context() as m:
-        m.setattr(output_checks, "REQUIRED_OUTPUTS", ("output/figures/tiny_ok.png",))
-        m.setattr(output_checks, "_MIN_FIGURE_BYTES", 1)
-        assert output_checks._figures_nonblank(fixture_root) is True
-
-    with monkeypatch.context() as m:
-        m.setattr(output_checks, "REQUIRED_OUTPUTS", ("output/figures/tiny_blank.png",))
-        m.setattr(output_checks, "_MIN_FIGURE_BYTES", 1)
-        assert output_checks._figures_nonblank(fixture_root) is False
+    assert (
+        output_checks._figures_nonblank(
+            fixture_root,
+            required_outputs=("output/figures/tiny_ok.png",),
+            min_figure_bytes=1,
+        )
+        is True
+    )
+    assert (
+        output_checks._figures_nonblank(
+            fixture_root,
+            required_outputs=("output/figures/tiny_blank.png",),
+            min_figure_bytes=1,
+        )
+        is False
+    )
 
 
 def test_reproducibility_replay_rebuild_passes_on_real_tree(

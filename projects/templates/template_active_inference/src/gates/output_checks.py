@@ -20,13 +20,18 @@ from visualizations.figure_io import image_render_metrics
 _MIN_FIGURE_BYTES = 5_000
 
 
-def _figures_nonblank(root: Path) -> bool:
-    png_rels = [rel for rel in REQUIRED_OUTPUTS if rel.startswith("output/figures/") and rel.endswith(".png")]
+def _figures_nonblank(
+    root: Path,
+    *,
+    required_outputs: tuple[str, ...] = REQUIRED_OUTPUTS,
+    min_figure_bytes: int = _MIN_FIGURE_BYTES,
+) -> bool:
+    png_rels = [rel for rel in required_outputs if rel.startswith("output/figures/") and rel.endswith(".png")]
     if not png_rels:
         return False
     for rel in png_rels:
         path = root / rel
-        if not path.is_file() or path.stat().st_size < _MIN_FIGURE_BYTES:
+        if not path.is_file() or path.stat().st_size < min_figure_bytes:
             return False
         metrics = image_render_metrics(path)
         if not metrics["width_px"] or not metrics["height_px"] or not metrics["nonblank"]:
