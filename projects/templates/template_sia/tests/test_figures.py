@@ -7,6 +7,7 @@ import json
 import shutil
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from src.figures import write_all_figures
@@ -31,7 +32,7 @@ def _make_minimal_project(
     tmp_path: Path,
     copy_project_sandbox: Copy,
     *,
-    generations: list[dict],  # type: ignore[type-arg]
+    generations: list[dict[str, Any]],
 ) -> Path:
     """Create a sandbox project with a hand-crafted run_summary.json."""
     project = tmp_path / "proj"

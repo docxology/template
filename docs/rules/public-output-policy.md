@@ -13,6 +13,10 @@ The boundary is:
   editor indexes, and transient render state remain ignored and prohibited.
 - Generated files are never edited by hand to satisfy a gate. Fix the producer,
   regenerate, and verify deterministic drift instead.
+- Text publication artifacts must not retain `/Users/<name>/` or
+  `/home/<name>/` prefixes. Manifest snapshots and the copy stage normalize
+  those prefixes to `<home>` before hashing or publication; the generated-state
+  audit rejects any machine-local path that escapes that boundary.
 - `scripts/audit/check_tracked_generated_artifacts.py` enforces generated-state
   policy; `scripts/audit/check_tracked_all.py` enforces confidentiality across
   projects, fonds, rules, and tools.

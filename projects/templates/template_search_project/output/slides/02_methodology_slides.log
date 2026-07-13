@@ -1,10 +1,10 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 09:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_search_projec
+**<repo-root>/projects/templates/template_search_projec
 t/output/slides/02_methodology_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1141,7 +1141,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count390
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.aux)
 \openout1 = `02_methodology_slides.aux'.
 
@@ -1502,14 +1502,14 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.nav) [1
 
 ]
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 9.
@@ -1558,7 +1558,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb) [4
 
 ] [5
@@ -1568,28 +1568,28 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb) [6
 
 ]
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb) [7
 
 ]
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb) [8
 
 ]
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb
 Missing character: There is no ≥ (U+2265) in font [lmsans10-regular]:mapping=te
 x-text;!
@@ -1602,14 +1602,14 @@ x-text;!
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb) [11
 
 ]
 \openout4 = `02_methodology_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 8.
@@ -1647,7 +1647,7 @@ File: ../figures/score_distribution.png Graphic file (type bmp)
 \openout8 = `02_methodology_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_search_project
+(<repo-root>/projects/templates/template_search_project
 /output/slides/02_methodology_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1663,5 +1663,5 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1111b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_search_project/output/slides/02_methodology_slides.pdf (17 pages).

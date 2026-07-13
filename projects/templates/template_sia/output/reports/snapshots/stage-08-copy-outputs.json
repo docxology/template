@@ -50,7 +50,7 @@
     "output/web/manuscript__99_references.html": "015fcfab65600aafdee6481a8aa623dfbbfdc6795ce70f347e856dc0843bc891"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/reports/snapshots/stage-08-copy-outputs.json",
+  "path": "<repo-root>/projects/templates/template_sia/output/reports/snapshots/stage-08-copy-outputs.json",
   "stage_name": "Copy Outputs",
   "stage_num": 8,
   "timestamp": "2026-06-14T19:49:51+00:00",

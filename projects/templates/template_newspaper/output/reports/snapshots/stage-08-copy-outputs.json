@@ -52,7 +52,7 @@
     "output/web/manuscript__99_references.html": "7b1056397917a20bb82655590c16cfeee41fa2baaed65260f3462459c095c2a8"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_newspaper/output/reports/snapshots/stage-08-copy-outputs.json",
+  "path": "<repo-root>/projects/templates/template_newspaper/output/reports/snapshots/stage-08-copy-outputs.json",
   "stage_name": "Copy Outputs",
   "stage_num": 8,
   "timestamp": "2026-06-14T19:20:58+00:00",

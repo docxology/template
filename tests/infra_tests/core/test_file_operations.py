@@ -282,6 +282,21 @@ class TestCopyFinalDeliverables:
         assert stats["total_files"] > 0
         assert len(stats["errors"]) == 0
 
+    def test_copy_sanitizes_machine_local_paths_before_publication(self, tmp_path):
+        project_root = tmp_path / "repo"
+        project_output = project_root / "projects" / "project" / "output"
+        report = project_output / "reports" / "report.json"
+        report.parent.mkdir(parents=True)
+        report.write_text('{"path": "/Users/alice/work/result.csv"}\n', encoding="utf-8")
+        output_dir = tmp_path / "final_output" / "project"
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+
+        expected = '{"path": "<home>/work/result.csv"}\n'
+        assert report.read_text(encoding="utf-8") == expected
+        assert (output_dir / "reports" / "report.json").read_text(encoding="utf-8") == expected
+        assert stats["errors"] == []
+
     def test_copy_rejects_file_symlink_targets_inside_output(self, tmp_path):
         project_root = tmp_path / "repo"
         project_output = project_root / "projects" / "project" / "output"

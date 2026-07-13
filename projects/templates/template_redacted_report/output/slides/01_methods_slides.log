@@ -1,10 +1,10 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  11 JUL 2026 21:06
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repo
+**<repo-root>/projects/templates/template_redacted_repo
 rt/output/slides/01_methods_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1210,7 +1210,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.aux)
 \openout1 = `01_methods_slides.aux'.
 
@@ -1573,7 +1573,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.nav) [1
 
 ] [2
@@ -1587,7 +1587,7 @@ t/output/slides/01_methods_slides.nav) [1
 \openout4 = `01_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.vrb) [5
 
 ] [6
@@ -1601,7 +1601,7 @@ t/output/slides/01_methods_slides.vrb) [5
 \openout4 = `01_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 14.
@@ -1654,7 +1654,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `01_methods_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.vrb) [12
 
 ] [13
@@ -1671,7 +1671,7 @@ t/output/slides/01_methods_slides.vrb) [12
 \openout7 = `01_methods_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_redacted_repor
+(<repo-root>/projects/templates/template_redacted_repor
 t/output/slides/01_methods_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1687,5 +1687,5 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1108b,439s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_redacted_report/output/slides/01_methods_slides.pdf (13 pages).

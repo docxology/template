@@ -14,6 +14,7 @@ from infrastructure.project.git_guards import (
     is_public_template_output_path,
     offending_tracked_projects,
     tracked_generated_artifacts,
+    tracked_public_output_local_paths,
 )
 
 
@@ -144,6 +145,31 @@ def test_tracked_generated_artifacts_detects_oversized_public_template_output(
     monkeypatch.setattr(git_guards, "PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES", 4)
 
     assert "output/templates/template_code_project/data/too-large.bin" in tracked_generated_artifacts(tmp_path)
+
+
+def test_tracked_public_output_local_paths_detects_machine_home(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text('{"path": "/Users/alice/research/result.csv"}\n', encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_local_paths(tmp_path) == [
+        "projects/templates/template_code_project/output/reports/report.json"
+    ]
+
+
+def test_tracked_public_output_local_paths_allows_portable_and_source_paths(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    source = tmp_path / "projects/templates/template_code_project/src/example.py"
+    output.parent.mkdir(parents=True)
+    source.parent.mkdir(parents=True)
+    output.write_text('{"path": "output/data/result.csv"}\n', encoding="utf-8")
+    source.write_text('EXAMPLE = "/Users/alice/research/result.csv"\n', encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_local_paths(tmp_path) == []
 
 
 def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> None:

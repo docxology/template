@@ -31,7 +31,7 @@
     "output/runs/run_1/run_summary.json": "3d08b3b99f7c4d4b27116b6006454407de207ab921073cf592dca148273291cc"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_sia/output/reports/snapshots/stage-05-project-analysis.json",
+  "path": "<home>/Documents/GitHub/template/projects/templates/template_sia/output/reports/snapshots/stage-05-project-analysis.json",
   "stage_name": "Project Analysis",
   "stage_num": 5,
   "timestamp": "2026-06-14T19:49:42+00:00",

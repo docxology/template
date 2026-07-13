@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/data/storybook_manifest.json",
-      "sha256": "bde2444092f3d375db1017c0b19b8c1153aceabf22b727cd94d4effee54f097e",
-      "size_bytes": 5466,
+      "sha256": "8a4a45169f018f91f9723b636117fa97138b7325e0374a24acff92a040f8f2d6",
+      "size_bytes": 5058,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -291,8 +291,8 @@
     {
       "contract_match": true,
       "path": "output/reports/long_horizon_platform_receipts.json",
-      "sha256": "f7188058d649b6698dc9c3a9bf6f008ca66e85364cec6df2aa33f0d991d7f2b3",
-      "size_bytes": 1158,
+      "sha256": "c3bc5e258ddbae6e7de48630caba5cfbe99e86e8a4c3d9bee6024230244d3943",
+      "size_bytes": 1134,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -336,8 +336,8 @@
     {
       "contract_match": true,
       "path": "output/reports/upload_receipts.json",
-      "sha256": "60fd1eababbecec1f005c510e65a0604fa22600b4637b5f01207855e46e35489",
-      "size_bytes": 3058,
+      "sha256": "efc30d245bb0cd0eddf33e9f33f7c158be3f235583653d3b0bc142ec91eb29f4",
+      "size_bytes": 3031,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

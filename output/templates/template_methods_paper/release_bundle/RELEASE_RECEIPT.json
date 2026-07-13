@@ -1,5 +1,5 @@
 {
-  "bundle_dir": "/Users/4d/Documents/GitHub/template/output/templates/template_methods_paper/release_bundle",
+  "bundle_dir": "<home>/Documents/GitHub/template/output/templates/template_methods_paper/release_bundle",
   "concept_doi": "10.5281/zenodo.21086548",
   "config_updated": true,
   "deposit_filename": "Friedman_2026_Domain_ecd8519f.pdf",
@@ -8,7 +8,7 @@
   "errors": [],
   "github_release_url": "https://github.com/docxology/template_methods_paper/releases/tag/v1.0.0",
   "github_repo": "docxology/template_methods_paper",
-  "pdf_path": "/Users/4d/Documents/GitHub/template/output/templates/template_methods_paper/release_bundle/Friedman_2026_Domain_ecd8519f.pdf",
+  "pdf_path": "<home>/Documents/GitHub/template/output/templates/template_methods_paper/release_bundle/Friedman_2026_Domain_ecd8519f.pdf",
   "pdf_sha256": "ecd8519fc2a9a674bd8a4cf89f96122af76529c913e32bf880a7c842da08771a",
   "project": "templates/template_methods_paper",
   "render_exit_code": 0,

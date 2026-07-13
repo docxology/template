@@ -91,17 +91,26 @@ class GenerationArtifacts:
     results: Path | None
     evaluation: EvaluationResult | None
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self, *, relative_to: Path | None = None) -> dict[str, Any]:
         """Serialize artifact metadata."""
         return {
             "generation": self.generation,
-            "gen_dir": str(self.gen_dir),
-            "target_agent": str(self.target_agent),
-            "agent_execution": str(self.agent_execution),
-            "improvement": str(self.improvement) if self.improvement else "",
-            "results": str(self.results) if self.results else "",
+            "gen_dir": _portable_path(self.gen_dir, relative_to),
+            "target_agent": _portable_path(self.target_agent, relative_to),
+            "agent_execution": _portable_path(self.agent_execution, relative_to),
+            "improvement": _portable_path(self.improvement, relative_to) if self.improvement else "",
+            "results": _portable_path(self.results, relative_to) if self.results else "",
             "evaluation": self.evaluation.to_dict() if self.evaluation else None,
         }
+
+
+def _portable_path(path: Path, relative_to: Path | None) -> str:
+    if relative_to is not None:
+        try:
+            return path.resolve().relative_to(relative_to.resolve()).as_posix()
+        except ValueError:
+            pass
+    return path.as_posix()
 
 
 @dataclass

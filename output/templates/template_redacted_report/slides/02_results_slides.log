@@ -1,10 +1,10 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_redacted_report/output/slides/02_results_slides.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1210,7 +1210,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.aux)
 \openout1 = `02_results_slides.aux'.
 
@@ -1573,7 +1573,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.nav)
 [1
 
@@ -1581,7 +1581,7 @@ jects/templates/template_redacted_report/output/slides/02_results_slides.nav)
 \openout4 = `02_results_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 18.
@@ -1632,7 +1632,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `02_results_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 [4
 
@@ -1640,7 +1640,7 @@ jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 \openout4 = `02_results_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 [5
 
@@ -1648,7 +1648,7 @@ jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 \openout4 = `02_results_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 [6
 
@@ -1658,7 +1658,7 @@ jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 \openout4 = `02_results_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 [8
 
@@ -1666,7 +1666,7 @@ jects/templates/template_redacted_report/output/slides/02_results_slides.vrb)
 \openout4 = `02_results_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.vrb
 Overfull \hbox (25.73569pt too wide) in paragraph at lines 19--20
 []|\TU/lmtt/m/n/6 \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b|
@@ -1702,7 +1702,7 @@ Overfull \hbox (6.61969pt too wide) in paragraph at lines 27--28
 \openout7 = `02_results_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<home>/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_redacted_report/output/slides/02_results_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1718,6 +1718,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1147b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <home>/Documents/GitHub/template/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_redacted_report/output/slides/02_resu
 lts_slides.pdf (14 pages).

@@ -164,7 +164,7 @@
     "output/web/part_I__unit_intro.html": "17a355240b5cb560c6e17dc1b108ad9279db0b411c76b801dfa6fe37181ee6bd"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_textbook/output/reports/snapshots/stage-07-output-validation.json",
+  "path": "<repo-root>/projects/templates/template_textbook/output/reports/snapshots/stage-07-output-validation.json",
   "stage_name": "Output Validation",
   "stage_num": 7,
   "timestamp": "2026-06-14T19:29:04+00:00",

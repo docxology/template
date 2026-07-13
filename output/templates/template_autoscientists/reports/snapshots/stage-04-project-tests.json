@@ -5,7 +5,7 @@
     "output/reports/test_results.md": "46769d5dfe5c0cd2e3b74897a19a014167489ab5c0017212a9e7334272e39ac1"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoscientists/output/reports/snapshots/stage-04-project-tests.json",
+  "path": "<home>/Documents/GitHub/template/projects/templates/template_autoscientists/output/reports/snapshots/stage-04-project-tests.json",
   "stage_name": "Project Tests",
   "stage_num": 4,
   "timestamp": "2026-06-14T19:49:09+00:00",

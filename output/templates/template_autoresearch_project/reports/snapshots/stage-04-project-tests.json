@@ -99,7 +99,7 @@
     "output/reports/test_results.md": "1091eb0625fcc0a9a7bc6b55ce1edf3c0c1578614fc39393692dd4b5db8ec144"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoresearch_project/output/reports/snapshots/stage-04-project-tests.json",
+  "path": "<home>/Documents/GitHub/template/projects/templates/template_autoresearch_project/output/reports/snapshots/stage-04-project-tests.json",
   "stage_name": "Project Tests",
   "stage_num": 4,
   "timestamp": "2026-06-14T19:17:58+00:00",

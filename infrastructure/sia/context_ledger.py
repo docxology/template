@@ -8,13 +8,12 @@ from .models import EvaluationResult, GenerationArtifacts
 
 
 def init_context(path: Path, *, task_name: str) -> Path:
-    """Create an empty context ledger with a header."""
+    """Start a fresh deterministic context ledger with a header."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    if not path.exists():
-        path.write_text(
-            f"# SIA context ledger — {task_name}\n\n",
-            encoding="utf-8",
-        )
+    path.write_text(
+        f"# SIA context ledger — {task_name}\n\n",
+        encoding="utf-8",
+    )
     return path
 
 

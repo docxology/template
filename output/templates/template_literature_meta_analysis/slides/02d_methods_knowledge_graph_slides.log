@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 18:34
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43
+**<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43
 ab/projects/templates/template_literature_meta_analysis/output/slides/02d_metho
 ds_knowledge_graph_slides.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/02d_method
 s_knowledge_graph_slides.tex
 LaTeX2e <2025-11-01>
@@ -1132,7 +1132,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/02d_method
 s_knowledge_graph_slides.aux)
 \openout1 = `02d_methods_knowledge_graph_slides.aux'.
@@ -1494,7 +1494,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/02d_method
 s_knowledge_graph_slides.nav) [1
 
@@ -1502,7 +1502,7 @@ s_knowledge_graph_slides.nav) [1
 \openout4 = `02d_methods_knowledge_graph_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/02d_method
 s_knowledge_graph_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
@@ -1564,7 +1564,7 @@ Overfull \hbox (61.70085pt too wide) detected at line 168
 \openout4 = `02d_methods_knowledge_graph_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/02d_method
 s_knowledge_graph_slides.vrb) [4
 
@@ -1581,7 +1581,7 @@ s_knowledge_graph_slides.vrb) [4
 \openout7 = `02d_methods_knowledge_graph_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
+(<home>/Documents/GitHub/template/.claude/worktrees/optimistic-solomon-6d43a
 b/projects/templates/template_literature_meta_analysis/output/slides/02d_method
 s_knowledge_graph_slides.aux)
  ***********
@@ -1598,6 +1598,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1178b,583s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/optimis
+Output written on <home>/Documents/GitHub/template/.claude/worktrees/optimis
 tic-solomon-6d43ab/projects/templates/template_literature_meta_analysis/output/
 slides/02d_methods_knowledge_graph_slides.pdf (5 pages).

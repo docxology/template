@@ -1,11 +1,11 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:16
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<repo-root>/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_registered_report/output/slides/05_deviations_slides.
 tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.t
 ex
 LaTeX2e <2025-11-01>
@@ -1214,7 +1214,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.a
 ux)
 \openout1 = `05_deviations_slides.aux'.
@@ -1578,7 +1578,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.n
 av) [1
 
@@ -1586,7 +1586,7 @@ av) [1
 \openout4 = `05_deviations_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.v
 rb) [2
 
@@ -1594,7 +1594,7 @@ rb) [2
 \openout4 = `05_deviations_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.v
 rb
 File: ../figures/deviation_timeline.png Graphic file (type bmp)
@@ -1614,7 +1614,7 @@ File: ../figures/deviation_timeline.png Graphic file (type bmp)
 \openout4 = `05_deviations_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.v
 rb) [7
 
@@ -1629,7 +1629,7 @@ rb) [7
 \openout7 = `05_deviations_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_registered_report/output/slides/05_deviations_slides.a
 ux)
  ***********
@@ -1646,6 +1646,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1152b,659s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <repo-root>/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_registered_report/output/slides/05_de
 viations_slides.pdf (7 pages).

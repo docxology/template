@@ -66,7 +66,7 @@
     "output/reports/test_results.md": "dc720f8cd5109e30819bde619e98a00d1c4bb22b84b57cab1ec72faf3c48fead"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_textbook/output/reports/snapshots/stage-05-project-analysis.json",
+  "path": "<repo-root>/projects/templates/template_textbook/output/reports/snapshots/stage-05-project-analysis.json",
   "stage_name": "Project Analysis",
   "stage_num": 5,
   "timestamp": "2026-06-14T19:27:45+00:00",

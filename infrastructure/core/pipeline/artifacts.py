@@ -9,6 +9,7 @@ from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 
+from infrastructure.core.files.portability import sanitize_machine_local_paths
 from infrastructure.core.pipeline.types import StageContract
 
 _IGNORED_OUTPUT_PARTS = frozenset(
@@ -101,6 +102,7 @@ def write_stage_artifact_manifest(
 
     if output_dir.is_symlink():
         raise ValueError(f"refusing to write a manifest through symlink output directory: {output_dir}")
+    sanitize_machine_local_paths(output_dir)
 
     for declared in declared_paths:
         if not declared.exists():
@@ -206,6 +208,7 @@ def snapshot_current_artifact_manifest(output_dir: Path) -> ArtifactManifest:
     """
     if output_dir.is_symlink():
         raise ValueError(f"refusing to snapshot through symlink output directory: {output_dir}")
+    sanitize_machine_local_paths(output_dir)
     project_dir = output_dir.parent
     entries: list[ArtifactManifestEntry] = []
     issues: list[str] = []

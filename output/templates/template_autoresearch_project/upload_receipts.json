@@ -36,7 +36,7 @@
     "cloudflare": {
       "status": "error",
       "url": null,
-      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"/Users/4d/Library/Preferences/.wrangler/logs/wrangler-2026-06-30_22-13-29_779.log\"\n"
+      "error": "wrangler failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mFailed to automatically retrieve account IDs for the logged in user.\u001b[0m\n\n  You may have incorrect permissions on your API token, or your authentication may have expired. Try running `wrangler login` to re-authenticate. You can also skip this account check by adding an `account_id` in your Wrangler configuration file, or by setting the value of CLOUDFLARE_ACCOUNT_ID\n\n\n\ud83e\udeb5  Logs were written to \"<home>/Library/Preferences/.wrangler/logs/wrangler-2026-06-30_22-13-29_779.log\"\n"
     },
     "github_pages": {
       "status": "ok",

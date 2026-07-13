@@ -1,10 +1,10 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 13:14
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pr
+**<repo-root>/.claude/worktrees/nifty-feistel-305852/pr
 ojects/templates/template_formal/output/slides/01_introduction_slides.tex
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1337,7 +1337,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.aux)
 \openout1 = `01_introduction_slides.aux'.
 
@@ -1454,7 +1454,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.nav)
 [1
 
@@ -1482,7 +1482,7 @@ Overfull \vbox (7.46402pt too high) detected at line 154
 \openout4 = `01_introduction_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.vrb)
 [4
 
@@ -1493,7 +1493,7 @@ jects/templates/template_formal/output/slides/01_introduction_slides.vrb)
 \openout4 = `01_introduction_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.8961pt on input line 6.
@@ -1545,7 +1545,7 @@ ern Roman (RS)
 \openout4 = `01_introduction_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.vrb)
 [8
 
@@ -1563,7 +1563,7 @@ jects/templates/template_formal/output/slides/01_introduction_slides.vrb)
 \openout7 = `01_introduction_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/pro
+(<repo-root>/.claude/worktrees/nifty-feistel-305852/pro
 jects/templates/template_formal/output/slides/01_introduction_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1579,6 +1579,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1143b,485s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-f
+Output written on <repo-root>/.claude/worktrees/nifty-f
 eistel-305852/projects/templates/template_formal/output/slides/01_introduction_
 slides.pdf (9 pages).

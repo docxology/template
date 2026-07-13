@@ -1,8 +1,8 @@
 {
   "agent_db_paths": [
-    "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_0.sqlite3",
-    "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_1.sqlite3",
-    "/Users/4d/Documents/GitHub/template/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_2.sqlite3"
+    "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_0.sqlite3",
+    "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_1.sqlite3",
+    "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_2.sqlite3"
   ],
   "choice_history": [
     [

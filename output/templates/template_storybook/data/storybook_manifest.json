@@ -133,25 +133,25 @@
     }
   ],
   "render": {
-    "output_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
+    "output_path": "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
     "page_count": 14,
     "image_paths": [
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/02_square_house.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/03_pointed_house.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/04_valley_symbol.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/05_first_connection.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/09_shadow_school.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/10_tensegrity_lantern.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/11_vector_garden.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/12_mega_symbol.png",
-      "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/13_shared_home.png"
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/02_square_house.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/03_pointed_house.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/04_valley_symbol.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/05_first_connection.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/09_shadow_school.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/10_tensegrity_lantern.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/11_vector_garden.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/12_mega_symbol.png",
+      "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/figures/storybook_pages/13_shared_home.png"
     ],
-    "manifest_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/data/storybook_manifest.json",
-    "summary_path": "/Users/4d/Documents/GitHub/template/projects/templates/template_storybook/output/reports/storybook_summary.md"
+    "manifest_path": "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/data/storybook_manifest.json",
+    "summary_path": "<home>/Documents/GitHub/template/projects/templates/template_storybook/output/reports/storybook_summary.md"
   }
 }

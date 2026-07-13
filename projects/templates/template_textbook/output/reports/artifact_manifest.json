@@ -12,8 +12,8 @@
     {
       "contract_match": true,
       "path": "output/data/worked_model_summary.json",
-      "sha256": "54eb7e5849465cd704d9fb1cc64c2606cfe6e3957bcc66a8d37cc3ea74826824",
-      "size_bytes": 2090,
+      "sha256": "753594ae191824b71006e71d23dbce923da6aedb6beb66bb0d5bb4cc43dda1bf",
+      "size_bytes": 2066,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -480,8 +480,8 @@
     {
       "contract_match": true,
       "path": "output/figures/mermaid_inline/inline_mermaid.puppeteer.json",
-      "sha256": "79d213266d84ae173c1a127f4ae230ba2820718a702edd55ab7a4368384dd35d",
-      "size_bytes": 173,
+      "sha256": "4129d405418ca30af4171830e4b1f89834befdda10e4af3e2953ef9a45cb2110",
+      "size_bytes": 170,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -966,8 +966,8 @@
     {
       "contract_match": true,
       "path": "output/reports/lessons.jsonl",
-      "sha256": "e74f3f58c36e21eee58ab8e986299f02fdf20f9fa464480bb80151fed9de0fa1",
-      "size_bytes": 42654,
+      "sha256": "933b2883d77589278a96e8075ca4f3e959ded2a0ef43911b5efecd7fbcc828fc",
+      "size_bytes": 39510,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1020,8 +1020,8 @@
     {
       "contract_match": true,
       "path": "output/reports/pipeline_report.json",
-      "sha256": "ef07e80f5029c7278f65bedd298d600afa497ac7600ef8ba4ae17cc56eefdeac",
-      "size_bytes": 8651,
+      "sha256": "3825ea10e61d60e1f7b48e7c5e3cbfa1d13396ba2d4da9fcf2ad033cc33c7138",
+      "size_bytes": 8627,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

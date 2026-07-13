@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Literal, TypedDict
 
 from infrastructure.core.exceptions import FileOperationError
+from infrastructure.core.files.portability import sanitize_machine_local_paths
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -250,6 +251,8 @@ def copy_final_deliverables(
         logger.error(msg)
         stats["errors"].append(msg)
         return stats
+
+    sanitize_machine_local_paths(project_output)
 
     # Recursively copy entire project/output/ directory
     try:

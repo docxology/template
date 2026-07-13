@@ -1,10 +1,10 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 JUL 2026 15:31
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_t
+**<home>/Documents/GitHub/template/projects/templates/template_pools_rules_t
 ools/output/slides/00_frontmatter_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1210,7 +1210,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.aux)
 \openout1 = `00_frontmatter_slides.aux'.
 
@@ -1573,7 +1573,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.nav) [1
 
 ] [2
@@ -1584,7 +1584,7 @@ ols/output/slides/00_frontmatter_slides.nav) [1
 \openout4 = `00_frontmatter_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.vrb) [4
 
 ] [5
@@ -1593,7 +1593,7 @@ ols/output/slides/00_frontmatter_slides.vrb) [4
 \openout4 = `00_frontmatter_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.vrb) [6
 
 ] [7
@@ -1602,7 +1602,7 @@ ols/output/slides/00_frontmatter_slides.vrb) [6
 \openout4 = `00_frontmatter_slides.vrb'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.vrb
 Missing character: There is no ≥ (U+2265) in font [lmsans8-regular]:mapping=tex
 -text;!
@@ -1622,7 +1622,7 @@ Missing character: There is no ≥ (U+2265) in font [lmsans8-regular]:mapping=te
 \openout7 = `00_frontmatter_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_pools_rules_to
+(<home>/Documents/GitHub/template/projects/templates/template_pools_rules_to
 ols/output/slides/00_frontmatter_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1638,5 +1638,5 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1114b,557s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <home>/Documents/GitHub/template/projects/templates/templa
 te_pools_rules_tools/output/slides/00_frontmatter_slides.pdf (9 pages).

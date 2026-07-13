@@ -1,10 +1,10 @@
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  11 JUL 2026 21:05
 entering extended mode
  %&-line parsing enabled.
-**/Users/4d/Documents/GitHub/template/projects/templates/template_literature_me
+**<repo-root>/projects/templates/template_literature_me
 ta_analysis/output/slides/98_symbols_glossary_slides.tex
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_literature_met
+(<repo-root>/projects/templates/template_literature_met
 a_analysis/output/slides/98_symbols_glossary_slides.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1210,7 +1210,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/4d/Documents/GitHub/template/projects/templates/template_literature_met
+(<repo-root>/projects/templates/template_literature_met
 a_analysis/output/slides/98_symbols_glossary_slides.aux)
 \openout1 = `98_symbols_glossary_slides.aux'.
 
@@ -1573,7 +1573,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_literature_met
+(<repo-root>/projects/templates/template_literature_met
 a_analysis/output/slides/98_symbols_glossary_slides.nav) [1
 
 ]
@@ -1625,7 +1625,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout7 = `98_symbols_glossary_slides.snm'.
 
 
-(/Users/4d/Documents/GitHub/template/projects/templates/template_literature_met
+(<repo-root>/projects/templates/template_literature_met
 a_analysis/output/slides/98_symbols_glossary_slides.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1641,6 +1641,6 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1126b,697s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/4d/Documents/GitHub/template/projects/templates/templa
+Output written on <repo-root>/projects/templates/templa
 te_literature_meta_analysis/output/slides/98_symbols_glossary_slides.pdf (2 pag
 es).

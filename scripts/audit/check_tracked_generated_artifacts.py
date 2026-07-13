@@ -10,7 +10,10 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from infrastructure.project.git_guards import tracked_generated_artifacts  # noqa: E402
+from infrastructure.project.git_guards import (  # noqa: E402
+    tracked_generated_artifacts,
+    tracked_public_output_local_paths,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -18,17 +21,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     args = parser.parse_args(argv)
 
-    offenders = tracked_generated_artifacts(args.repo_root.resolve())
-    if not offenders:
+    repo_root = args.repo_root.resolve()
+    offenders = tracked_generated_artifacts(repo_root)
+    local_paths = tracked_public_output_local_paths(repo_root)
+    if not offenders and not local_paths:
         print("No prohibited tracked generated artifacts found; canonical public exemplar outputs are allowed.")
         return 0
 
-    print(
-        "Tracked generated/local artifacts or oversized public template outputs found; "
-        "untrack them with `git rm --cached`:"
-    )
-    for path in offenders:
-        print(f"  {path}")
+    if offenders:
+        print(
+            "Tracked generated/local artifacts or oversized public template outputs found; "
+            "untrack them with `git rm --cached`:"
+        )
+        for path in offenders:
+            print(f"  {path}")
+    if local_paths:
+        print("Tracked public exemplar outputs contain machine-local home paths; regenerate or sanitize them:")
+        for path in local_paths:
+            print(f"  {path}")
     return 1
 
 

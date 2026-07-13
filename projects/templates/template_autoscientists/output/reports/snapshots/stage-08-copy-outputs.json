@@ -31,7 +31,7 @@
     "output/web/manuscript__99_references.html": "9184bd2e988bae588ca0cf2beeb267e4fc9877fcf91c93d2406c5b6620df4e9f"
   },
   "evidence_fact_count": 0,
-  "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_autoscientists/output/reports/snapshots/stage-08-copy-outputs.json",
+  "path": "<repo-root>/projects/templates/template_autoscientists/output/reports/snapshots/stage-08-copy-outputs.json",
   "stage_name": "Copy Outputs",
   "stage_num": 8,
   "timestamp": "2026-06-14T19:49:20+00:00",

@@ -22,7 +22,7 @@
       "min": 2.1,
       "std": 1.129527924990495
     },
-    "source": "/Users/4d/Documents/GitHub/template/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"
+    "source": "<repo-root>/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"
   },
   "exponential_decay": {
     "half_life": 1.3862943611198906,

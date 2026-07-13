@@ -7,7 +7,7 @@
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
     "all_required_sources_present": false,
-    "copied_root": "/Users/4d/Documents/GitHub/template/output/templates/template_active_inference",
+    "copied_root": "<repo-root>/output/templates/template_active_inference",
     "copied_root_exists": true,
     "pre_copy_stage": true,
     "row_count": 38,

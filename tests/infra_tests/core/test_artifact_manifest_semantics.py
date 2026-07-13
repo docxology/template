@@ -98,6 +98,18 @@ def test_current_output_snapshot_rebaselines_without_inventing_stage_provenance(
     assert "changed artifact" in "\n".join(validate_artifact_manifest(first, project_dir=project).issues)
 
 
+def test_current_output_snapshot_sanitizes_before_hashing(tmp_path: Path) -> None:
+    project = tmp_path / "repo" / "projects" / "p"
+    artifact = project / "output" / "data" / "result.json"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text('{"path": "/home/alice/work/result.csv"}\n', encoding="utf-8")
+
+    manifest = snapshot_current_artifact_manifest(project / "output")
+
+    assert artifact.read_text(encoding="utf-8") == '{"path": "<home>/work/result.csv"}\n'
+    assert validate_artifact_manifest(manifest, project_dir=project).issues == ()
+
+
 def test_refresh_manifest_maintenance_cli_uses_qualified_project(tmp_path: Path) -> None:
     root = tmp_path / "repo"
     artifact = root / "projects" / "templates" / "demo" / "output" / "data" / "result.json"

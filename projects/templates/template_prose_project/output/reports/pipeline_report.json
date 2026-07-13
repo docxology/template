@@ -377,7 +377,7 @@
     "log_file": {
       "exists": true,
       "size": 162,
-      "path": "/Users/4d/Documents/GitHub/template/projects/templates/template_prose_project/output/logs/pipeline.log"
+      "path": "<repo-root>/projects/templates/template_prose_project/output/logs/pipeline.log"
     }
   }
 }
