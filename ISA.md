@@ -182,7 +182,7 @@ confidentiality, existing ISC identifiers, and externally published state.
 - [x] ISC-266: canonical output file-count, aggregate-byte, and duplicate-blob budgets fail closed.
 - [x] ISC-267: CODEOWNERS public-project rules are generated from `PUBLIC_PROJECT_NAMES`, with explicit sensitive-area ownership policy and parity tests.
 - [x] ISC-268: non-dry-run publishing preflight rejects local-only projects and out-of-project payloads while emitting exact payload sizes and credential-source names without secret values.
-- [ ] ISC-269: all focused, infrastructure, regression, public-exemplar, export, lint, typing, security, documentation, and unified-health acceptance commands pass on the integrated branch.
+- [x] ISC-269: all focused, infrastructure, regression, public-exemplar, export, lint, typing, security, documentation, and unified-health acceptance commands pass on the integrated branch.
 - [ ] ISC-270: GitHub required CI jobs are rerun and green; an action-download service outage is reported as external rather than bypassed.
 - [x] ISC-271: no private project source, external deposit, GitHub release, branch-protection setting, or public push is performed by this program.
 - [x] ISC-272: semantic dependency replacements are reduced from 380 to zero and CI enforces a zero ceiling while separately permitting environment isolation.
@@ -215,7 +215,7 @@ tier, separate public-exemplar test invocations, and clean standalone exports.
 
 ### Verification
 
-Verification is in progress. The 23 isolated project gates meet their 90%
+Local verification is complete. The 23 isolated project gates meet their 90%
 coverage floors; formal passed 278 tests, and active-inference exercised 704
 tests at 93.6% coverage. Its measured integrity hotspots were the deliberately
 failing fixed-point control (177.93s), stale-artifact settlement (93.08s), and
@@ -224,9 +224,15 @@ suite wrote shared artifacts, 2.74s when rerun in isolation). These writers
 must remain serial rather than being split across a shared project output tree.
 Clean export/install/import smoke passed for all 23 public exemplars, the clean
 wheel loaded no Matplotlib/NumPy/Pillow/reporting modules through
-`pipeline.types`, and the 55-test claim-binding regression tier passed. ISC-269
-and ISC-270 remain open until final static/infrastructure acceptance and the
-remote CI rerun finish.
+`pipeline.types`, and the 55-test claim-binding regression tier passed. The
+exact CI-scoped infrastructure command passed 8,649 tests with 83.00% coverage;
+Ruff, format, mypy package ratchets, both Bandit scans, pip-audit, no-mocks,
+skills/export, confidentiality, generated-artifact, strict drift, documentation,
+and module-size gates passed. The unified blocking health report passed all 19
+checks. ISC-270 alone remains open pending a CI run of this branch; the branch is
+not pushed under ISC-271. The previously service-failed Performance job was
+rerun by job ID and passed; Security and Validate Manuscripts remain red only
+on the old `fbddb253` main run because the fixes are intentionally unpushed.
 
 ## Historical iterations 1–3 — Goal
 
