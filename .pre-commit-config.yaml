@@ -104,7 +104,7 @@ repos:
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)" &&
-            uv run mypy $CI_SOURCE_PATHS
+            uv run python scripts/gates/mypy_ratchet.py $CI_SOURCE_PATHS
         language: system
         pass_filenames: false
         stages: [pre-commit, manual]

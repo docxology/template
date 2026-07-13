@@ -1,0 +1,15 @@
+claims:
+  - claim_id: preregistered-alpha
+    kind: number
+    value: 0.05
+    source: data/example_registration.json analysis_plan.alpha
+    source_tier: data_source
+    freshness: active
+    artifact_path: data/example_registration.json
+  - claim_id: preregistered-seed
+    kind: number
+    value: 20260709
+    source: data/example_registration.json analysis_plan.seed
+    source_tier: data_source
+    freshness: active
+    artifact_path: data/example_registration.json

@@ -14,6 +14,7 @@ from infrastructure.publishing.deposit_filename import (
     deposit_context_from_config,
 )
 from infrastructure.publishing.models import AuthorRecord, PublicationMetadata
+from infrastructure.publishing.repository_metadata import normalized_repository_url
 
 logger = get_logger(__name__)
 
@@ -208,7 +209,7 @@ def publication_metadata_from_config_dict(
         journal=str(publication["journal"]) if publication.get("journal") else None,
         publication_date=publication_date,
         license=_license_from_config(config),
-        repository_url=str(publication["repository_url"]) if publication.get("repository_url") else None,
+        repository_url=normalized_repository_url(publication),
         author_records=author_records,
         paper_version=paper_version,
         zenodo_description_override=zenodo_description_override,

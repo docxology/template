@@ -2,6 +2,12 @@
 
 Tools for academic publishing, citations, and platform integration.
 
+Repository metadata is normalized by `repository_metadata.py`; non-dry-run
+payloads are validated and summarized without credential values by
+`preflight.py` before any publishing transport is invoked.
+`release_cli.py` owns the stable argument and credential-source resolution
+surface so the executable release script remains a thin orchestrator.
+
 For a release operator's path through standalone GitHub mirrors, real Zenodo DOI
 minting, optional mirrors, and archival handoff, start with
 [`../../docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).

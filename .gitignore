@@ -80,9 +80,8 @@ ehthumbs.db
 Thumbs.db
 
 # Generated outputs and caches are disposable by default. Public canonical
-# template render outputs are the exception: they are tracked as release
-# artifacts in both their project-local `output/` trees and the copied
-# `output/templates/<name>/` trees.
+# evidence is tracked only in each exemplar's project-local ``output/`` tree;
+# root ``output/templates/`` copies are generated CI/release artifacts.
 **/output/
 # EXCEPTION: `infrastructure/validation/output/` is a SOURCE package
 # (validator.py, pipeline.py, no_mock_enforcer.py) whose name collides with
@@ -96,50 +95,6 @@ Thumbs.db
 **/projects/*/output/
 !output/
 output/*
-!output/templates/
-output/templates/*
-!output/templates/template_active_inference/
-!output/templates/template_active_inference/**
-!output/templates/template_autoresearch_project/
-!output/templates/template_autoresearch_project/**
-!output/templates/template_autopoiesis/
-!output/templates/template_autopoiesis/**
-!output/templates/template_autoscientists/
-!output/templates/template_autoscientists/**
-!output/templates/template_code_project/
-!output/templates/template_code_project/**
-!output/templates/template_data_descriptor/
-!output/templates/template_data_descriptor/**
-!output/templates/template_eda_notebook/
-!output/templates/template_eda_notebook/**
-!output/templates/template_gold_refinement/
-!output/templates/template_gold_refinement/**
-!output/templates/template_literature_meta_analysis/
-!output/templates/template_literature_meta_analysis/**
-!output/templates/template_madlib/
-!output/templates/template_madlib/**
-!output/templates/template_methods_paper/
-!output/templates/template_methods_paper/**
-!output/templates/template_newspaper/
-!output/templates/template_newspaper/**
-!output/templates/template_pools_rules_tools/
-!output/templates/template_pools_rules_tools/**
-!output/templates/template_prose_project/
-!output/templates/template_prose_project/**
-!output/templates/template_redacted_report/
-!output/templates/template_redacted_report/**
-!output/templates/template_registered_report/
-!output/templates/template_registered_report/**
-!output/templates/template_search_project/
-!output/templates/template_search_project/**
-!output/templates/template_sia/
-!output/templates/template_sia/**
-!output/templates/template_storybook/
-!output/templates/template_storybook/**
-!output/templates/template_template/
-!output/templates/template_template/**
-!output/templates/template_textbook/
-!output/templates/template_textbook/**
 **/.benchmarks/
 **/.pytest_cache/
 **/.venv/

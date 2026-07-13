@@ -12,6 +12,7 @@ from infrastructure.project import git_guards
 from infrastructure.project.git_guards import (
     is_generated_artifact_path,
     is_public_template_output_path,
+    public_template_output_budget_findings,
     offending_tracked_projects,
     tracked_generated_artifacts,
     tracked_public_output_local_paths,
@@ -108,7 +109,7 @@ def test_offending_tracked_projects_flags_unknown_toplevel_md(tmp_path: Path) ->
     assert "projects/secret_roster.md" in offending_tracked_projects(tmp_path)
 
 
-def test_tracked_generated_artifacts_allows_public_template_output_tree(tmp_path: Path) -> None:
+def test_tracked_generated_artifacts_allows_only_project_local_public_output(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     project_artifact = tmp_path / "projects" / "templates" / "template_code_project" / "output" / "data" / "x.csv"
     copied_artifact = tmp_path / "output" / "templates" / "template_code_project" / "pdf" / "x.pdf"
@@ -119,7 +120,7 @@ def test_tracked_generated_artifacts_allows_public_template_output_tree(tmp_path
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
     subprocess.run(["git", "commit", "-m", "artifact"], cwd=tmp_path, check=True)
 
-    assert tracked_generated_artifacts(tmp_path) == []
+    assert tracked_generated_artifacts(tmp_path) == ["output/templates/template_code_project/pdf/x.pdf"]
 
 
 def test_tracked_generated_artifacts_detects_private_output_tree(tmp_path: Path) -> None:
@@ -207,6 +208,24 @@ def test_generated_artifact_matcher_detects_agent_state_roots() -> None:
 
 def test_public_template_output_path_matcher_is_closed_to_private_outputs() -> None:
     assert is_public_template_output_path("projects/templates/template_code_project/output/data/results.json")
-    assert is_public_template_output_path("output/templates/template_code_project/pdf/paper.pdf")
+    assert not is_public_template_output_path("output/templates/template_code_project/pdf/paper.pdf")
     assert not is_public_template_output_path("projects/working/private/output/data/results.json")
     assert not is_public_template_output_path("output/private_project/pdf/paper.pdf")
+
+
+def test_public_output_budgets_fail_when_ratchet_is_exceeded(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/data"
+    output.mkdir(parents=True)
+    (output / "a.txt").write_text("duplicate\n", encoding="utf-8")
+    (output / "b.txt").write_text("duplicate\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-f", "projects/templates"], cwd=tmp_path, check=True)
+    monkeypatch.setattr(git_guards, "PUBLIC_TEMPLATE_OUTPUT_MAX_FILES", 1)
+    monkeypatch.setattr(git_guards, "PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES", 1)
+    monkeypatch.setattr(git_guards, "PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES", 1)
+
+    findings = public_template_output_budget_findings(tmp_path)
+
+    assert any("file count" in finding for finding in findings)
+    assert any("aggregate bytes" in finding for finding in findings)
+    assert any("duplicate bytes" in finding for finding in findings)

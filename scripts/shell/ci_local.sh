@@ -150,7 +150,7 @@ fi
 
 if [[ -z "$JOB" || "$JOB" == "typecheck" ]]; then
   echo "[ci_local] === Type check (mypy) ==="
-  uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"
+  uv run python scripts/gates/mypy_ratchet.py "${PUBLIC_CI_SOURCE_PATHS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "security" ]]; then

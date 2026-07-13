@@ -148,7 +148,7 @@ jobs:
         run: uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}
 
       - name: Type checking
-        run: uv run mypy ${{ steps.public-scope.outputs.source_paths }}
+        run: uv run python scripts/gates/mypy_ratchet.py ${{ steps.public-scope.outputs.source_paths }}
 
       # MED5 gate: every re-exporting module under infrastructure/ must
       # declare __all__ — see docs/rules/api_design.md. Prevents regression
@@ -232,6 +232,11 @@ jobs:
       # through --inventory and is not enforced until its measured count is 0.
       - name: Verify prohibited mock-framework syntax
         run: uv run python scripts/audit/verify_no_mocks.py
+
+      - name: Ratchet semantic dependency replacements
+        run: >-
+          uv run python scripts/audit/verify_no_mocks.py
+          --inventory --max-dependency-replacements 378
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2b — Setup hook on Windows (conditional smoke)
@@ -660,6 +665,7 @@ jobs:
         run: |
           set -euo pipefail
           IGNORE_FILE=".github/pip-audit-ignore.txt"
+          uv run python scripts/gates/pip_audit_ignore_policy.py "$IGNORE_FILE"
           PIP_AUDIT_ARGS=()
           while IFS= read -r raw || [ -n "$raw" ]; do
             [[ "$raw" =~ ^[[:space:]]*# ]] && continue

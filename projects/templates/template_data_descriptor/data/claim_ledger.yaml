@@ -1,0 +1,15 @@
+claims:
+  - claim_id: measurement-fixture-row-count
+    kind: number
+    value: 12
+    source: data/example_descriptor.json files[fixtures/measurements.csv].rows
+    source_tier: data_source
+    freshness: active
+    artifact_path: data/example_descriptor.json
+  - claim_id: subject-fixture-row-count
+    kind: number
+    value: 6
+    source: data/example_descriptor.json files[fixtures/subjects.csv].rows
+    source_tier: data_source
+    freshness: active
+    artifact_path: data/example_descriptor.json

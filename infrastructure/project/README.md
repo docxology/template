@@ -2,6 +2,9 @@
 
 Project discovery, validation, and metadata extraction for multi-project support.
 
+`codeowners.py` generates and validates the public-exemplar and sensitive-area
+ownership block in `.github/CODEOWNERS` from the canonical public scope.
+
 ## Overview
 
 The project module enables the template to manage multiple independent research projects within a single repository. It provides utilities for discovering, validating, and extracting metadata from projects.

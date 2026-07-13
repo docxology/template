@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import fnmatch
+import hashlib
 import re
 import subprocess
 from pathlib import Path
@@ -108,13 +109,13 @@ GENERATED_OUTPUT_PATTERNS: tuple[str, ...] = (
 )
 
 PUBLIC_TEMPLATE_OUTPUT_PREFIXES: tuple[str, ...] = tuple(
-    prefix
-    for name in PUBLIC_PROJECT_NAMES
-    for prefix in (f"projects/{name}/output/", f"output/{name}/")
-    if name.startswith("templates/")
+    f"projects/{name}/output/" for name in PUBLIC_PROJECT_NAMES if name.startswith("templates/")
 )
 
 PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
+PUBLIC_TEMPLATE_OUTPUT_MAX_FILES = 3500
+PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 200 * 1024 * 1024
+PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES = 100 * 1024 * 1024
 _MACHINE_LOCAL_HOME_RE = re.compile(rb"(?:/Users|/home)/[^/\s\"'<>]+/")
 
 
@@ -224,6 +225,41 @@ def tracked_generated_artifacts(repo_root: Path) -> list[str]:
         for path in paths
         if is_generated_artifact_path(path) or is_oversized_public_template_output(repo_root, path)
     )
+
+
+def public_template_output_budget_findings(repo_root: Path) -> list[str]:
+    """Return ratchet violations for canonical tracked exemplar evidence."""
+    proc = subprocess.run(
+        ["git", "ls-files", "-z", "projects/templates/*/output/**"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
+    total_bytes = 0
+    blobs: dict[str, tuple[int, int]] = {}
+    for path in paths:
+        try:
+            data = (repo_root / path).read_bytes()
+        except OSError:
+            continue
+        size = len(data)
+        total_bytes += size
+        digest = hashlib.sha256(data).hexdigest()
+        prior_size, prior_count = blobs.get(digest, (size, 0))
+        blobs[digest] = (prior_size, prior_count + 1)
+    duplicate_bytes = sum(size * (count - 1) for size, count in blobs.values() if count > 1)
+
+    findings: list[str] = []
+    if len(paths) > PUBLIC_TEMPLATE_OUTPUT_MAX_FILES:
+        findings.append(f"public output file count {len(paths)} exceeds {PUBLIC_TEMPLATE_OUTPUT_MAX_FILES}")
+    if total_bytes > PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES:
+        findings.append(f"public output aggregate bytes {total_bytes} exceeds {PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES}")
+    if duplicate_bytes > PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES:
+        findings.append(
+            f"public output duplicate bytes {duplicate_bytes} exceeds {PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES}"
+        )
+    return findings
 
 
 def tracked_public_output_local_paths(repo_root: Path) -> list[str]:

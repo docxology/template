@@ -4,6 +4,7 @@
 
 # Default owner for everything in the repo.
 *                       @docxology
+/projects/templates/    @docxology
 
 # Layer-1 infrastructure, orchestration, and the test suite — the
 # security/correctness-critical surface.
@@ -18,10 +19,38 @@
 /pyproject.toml         @docxology
 /bandit.yaml            @docxology
 
-# Canonical template exemplars (the only published projects). A directory
-# rule deliberately covers the live PUBLIC_PROJECT_NAMES roster so adding a
-# new exemplar cannot silently omit review ownership.
-/projects/templates/    @docxology
+# BEGIN GENERATED PUBLIC/SENSITIVE OWNERS
+# Public exemplars (derived from PUBLIC_PROJECT_NAMES).
+/projects/templates/template_active_inference/ @docxology
+/projects/templates/template_autoresearch_project/ @docxology
+/projects/templates/template_autopoiesis/ @docxology
+/projects/templates/template_code_project/ @docxology
+/projects/templates/template_data_descriptor/ @docxology
+/projects/templates/template_eda_notebook/ @docxology
+/projects/templates/template_formal/ @docxology
+/projects/templates/template_literature_meta_analysis/ @docxology
+/projects/templates/template_madlib/ @docxology
+/projects/templates/template_newspaper/ @docxology
+/projects/templates/template_pools_rules_tools/ @docxology
+/projects/templates/template_prose_project/ @docxology
+/projects/templates/template_autoscientists/ @docxology
+/projects/templates/template_gold_refinement/ @docxology
+/projects/templates/template_methods_paper/ @docxology
+/projects/templates/template_redacted_report/ @docxology
+/projects/templates/template_registered_report/ @docxology
+/projects/templates/template_search_project/ @docxology
+/projects/templates/template_sia/ @docxology
+/projects/templates/template_storybook/ @docxology
+/projects/templates/template_template/ @docxology
+/projects/templates/template_textbook/ @docxology
+/projects/templates/template_pitch_deck/ @docxology
+# Sensitive areas (derived from sensitive-ownership.yaml).
+/infrastructure/steganography/ @docxology
+/infrastructure/publishing/ @docxology
+/scripts/publish/ @docxology
+/.github/workflows/ @docxology
+/rules/templates/*/strong/ @docxology
+# END GENERATED PUBLIC/SENSITIVE OWNERS
 
 # Top-level instruction-hierarchy docs.
 /CLAUDE.md              @docxology

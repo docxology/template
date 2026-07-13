@@ -6,6 +6,8 @@ Pipeline gate scripts for template.
 
 - `gate_cache` — Validates and populates the cache
 - `security_scan` — Runs security scanning (bandit, safety, pip-audit)
+- `mypy_ratchet.py` — Fails on package typing-debt growth or errors in new files.
+- `pip_audit_ignore_policy.py` — Requires accountable metadata on every dependency-audit exemption.
 - `plugin_export_check` — Verifies plugin exports
 - `methods_plan_check` — Validates the methods-orchestration contract (stage definition-of-done, manuscript methods section, artifact-manifest / evidence-registry surfaces) per project. **Opt-in: NOT wired into the default pipeline or CI.**
 

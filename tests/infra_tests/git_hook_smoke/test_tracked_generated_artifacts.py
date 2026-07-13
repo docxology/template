@@ -23,10 +23,8 @@ def test_generated_artifact_path_matcher() -> None:
     assert not is_generated_artifact_path("projects/templates/template_code_project/src/optimizer.py")
     assert not is_generated_artifact_path("docs/_generated/COUNTS.md")
 
-    assert not is_generated_artifact_path(
-        "output/templates/template_code_project/pdf/template_code_project_combined.pdf"
-    )
-    assert not is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
+    assert is_generated_artifact_path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
+    assert is_generated_artifact_path("output/templates/template_prose_project/figures/wordcount.png")
     assert is_generated_artifact_path("output/actinf_policy_entanglement_lean/pdf/x.pdf")
     assert is_generated_artifact_path("projects/working/private_project/output/data/x.csv")
 
@@ -84,7 +82,10 @@ def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() ->
 
     assert docs_proc.stdout == ""
     assert private_proc.returncode == 0
-    assert public_output_proc.stdout == ""
+    assert (
+        public_output_proc.stdout.strip()
+        == "output/templates/template_code_project/pdf/template_code_project_combined.pdf"
+    )
 
 
 def test_generated_fixture_payloads_are_ignored_but_committed_fixture_docs_are_visible() -> None:

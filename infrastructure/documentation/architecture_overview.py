@@ -225,7 +225,6 @@ def build_architecture_mermaid(repo_root: Path) -> str:
     lines.append("    InfraPy --> Pipeline")
     lines.append("    InfraCfg --> Pipeline")
     lines.append("    Pipeline --> Projects")
-    lines.append("")
 
     return "\n".join(lines) + "\n"
 

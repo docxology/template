@@ -239,8 +239,8 @@ class TestLogDiscoveredTests:
         log_discovered_tests(cmd, tmp_path, os.environ.copy(), "parallel probe")
 
         argv = argv_path.read_text(encoding="utf-8").splitlines()
-        assert argv[-5:] == ["--collect-only", "-n", "0", "--no-cov"][-5:]
-        assert argv[-3:] == ["0", "--no-cov"][-3:]
+        assert argv[-4:] == ["--collect-only", "-n", "0", "--no-cov"]
+        assert "--cov=src" in argv
 
 
 class TestReportSuiteFailure:

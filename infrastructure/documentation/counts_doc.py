@@ -19,20 +19,18 @@ when reality drifts from the committed doc. The matching gates live in
 back out via the markers ``Last refreshed count: **N**`` and
 ``Result: **N** project-scope ... **N** publishing tests``.
 
-The per-exemplar test/coverage snapshot table is a *measured snapshot* rather
-than a live derivation: running every project's coverage gate on every ``--check``
-would be prohibitively slow and environment-fragile (each exemplar pins its own
-``.venv`` and toolchain). The measured values live in :data:`EXEMPLAR_SNAPSHOT`
-with an explicit measurement date; refresh them with ``--write`` after re-running
-the per-project gates. The table's *membership* (one row per public exemplar) is
-still gated against ``public_project_names`` by the consistency tests.
+Per-exemplar collection totals are derived live with ``pytest --collect-only``.
+Coverage remains a separately labelled measured snapshot because recomputing all
+23 coverage gates during every documentation check would be prohibitively slow.
 """
 
 from __future__ import annotations
 
 import re
+import shutil
 import subprocess
 import sys
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -41,7 +39,7 @@ from infrastructure.project.public_scope import public_project_names
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-06-30"
+GENERATED_DATE = "2026-07-13"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
 EXEMPLAR_SNAPSHOT_DATE = "2026-07-11"
@@ -49,18 +47,14 @@ EXEMPLAR_SNAPSHOT_DATE = "2026-07-11"
 
 @dataclass(frozen=True)
 class ExemplarSnapshot:
-    """One measured row of the exemplar test/coverage snapshot table."""
+    """One measured coverage row; collection count is always derived live."""
 
     name: str
-    tests_collected: int
     coverage_pct: str  # rendered as-is, e.g. "96.96 %"
 
 
-# Measured per-exemplar snapshot. ``tests_collected`` is the live
-# ``pytest --collect-only`` total; ``coverage_pct`` is the latest per-project
-# coverage gate (``--cov=projects/templates/<name>/src``). Refresh with --write
-# after re-running the per-project gates; the rows are keyed by public-scope name
-# so the consistency test gates membership, not the numbers.
+# Measured per-exemplar coverage snapshot. Collection totals are intentionally
+# absent here and are derived in isolated project environments on every run.
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # template_active_inference coverage is re-derived in its OWN environment
     # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
@@ -68,32 +62,32 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # `stage_01_test.py --project templates/template_active_inference
     # --project-only --include-slow` (699 passed). Collected count from
     # --collect-only in the project env.
-    ExemplarSnapshot("template_active_inference", 705, "93.55 %"),
-    ExemplarSnapshot("template_autopoiesis", 493, "96.41 %"),
-    ExemplarSnapshot("template_autoresearch_project", 220, "92.81 %"),
-    ExemplarSnapshot("template_autoscientists", 87, "99.60 %"),
-    ExemplarSnapshot("template_code_project", 236, "98.78 %"),
-    ExemplarSnapshot("template_data_descriptor", 36, "99.13 %"),
-    ExemplarSnapshot("template_eda_notebook", 62, "100.00 %"),
-    ExemplarSnapshot("template_formal", 277, "96.03 %"),
-    ExemplarSnapshot("template_gold_refinement", 248, "97.55 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", 772, "96.74 %"),
-    ExemplarSnapshot("template_madlib", 37, "93.96 %"),
-    ExemplarSnapshot("template_methods_paper", 79, "98.97 %"),
-    ExemplarSnapshot("template_newspaper", 53, "94.37 %"),
-    ExemplarSnapshot("template_pitch_deck", 110, "97.70 %"),
-    ExemplarSnapshot("template_pools_rules_tools", 204, "90.95 %"),
-    ExemplarSnapshot("template_prose_project", 78, "100.00 %"),
+    ExemplarSnapshot("template_active_inference", "93.55 %"),
+    ExemplarSnapshot("template_autopoiesis", "96.41 %"),
+    ExemplarSnapshot("template_autoresearch_project", "92.81 %"),
+    ExemplarSnapshot("template_autoscientists", "99.60 %"),
+    ExemplarSnapshot("template_code_project", "98.78 %"),
+    ExemplarSnapshot("template_data_descriptor", "99.13 %"),
+    ExemplarSnapshot("template_eda_notebook", "100.00 %"),
+    ExemplarSnapshot("template_formal", "96.03 %"),
+    ExemplarSnapshot("template_gold_refinement", "97.55 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "96.74 %"),
+    ExemplarSnapshot("template_madlib", "93.96 %"),
+    ExemplarSnapshot("template_methods_paper", "98.97 %"),
+    ExemplarSnapshot("template_newspaper", "94.37 %"),
+    ExemplarSnapshot("template_pitch_deck", "97.70 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "95.52 %"),
+    ExemplarSnapshot("template_prose_project", "100.00 %"),
     # Union of two independent 2026-07-10 coverage-debt closures (both real
     # no-mock suites over visuals.py, written in parallel sessions): 95 tests,
     # 99.05 % — was 55.91 % when the 1500-line kmyth/TPM module landed with 7.
-    ExemplarSnapshot("template_redacted_report", 98, "98.83 %"),
-    ExemplarSnapshot("template_registered_report", 30, "96.37 %"),
-    ExemplarSnapshot("template_search_project", 296, "95.13 %"),
-    ExemplarSnapshot("template_sia", 40, "97.16 %"),
-    ExemplarSnapshot("template_storybook", 10, "93.92 %"),
-    ExemplarSnapshot("template_template", 130, "99.37 %"),
-    ExemplarSnapshot("template_textbook", 112, "96.73 %"),
+    ExemplarSnapshot("template_redacted_report", "98.83 %"),
+    ExemplarSnapshot("template_registered_report", "96.37 %"),
+    ExemplarSnapshot("template_search_project", "95.13 %"),
+    ExemplarSnapshot("template_sia", "97.16 %"),
+    ExemplarSnapshot("template_storybook", "93.92 %"),
+    ExemplarSnapshot("template_template", "99.37 %"),
+    ExemplarSnapshot("template_textbook", "96.73 %"),
 )
 
 
@@ -124,6 +118,41 @@ def _collected_count(repo_root: Path, rel_path: str) -> int:
     return int(match.group("count"))
 
 
+def _exemplar_collected_count(repo_root: Path, name: str) -> int:
+    """Collect an exemplar in its own declared environment."""
+    project_root = repo_root / "projects" / "templates" / name
+    uv = shutil.which("uv")
+    if uv is None:
+        raise RuntimeError("uv is required to derive isolated exemplar collection totals")
+    environment = dict(os.environ)
+    existing_pythonpath = environment.get("PYTHONPATH")
+    environment["PYTHONPATH"] = (
+        f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
+    )
+    proc = subprocess.run(  # noqa: S603 - resolved uv executable, fixed arguments
+        [
+            uv,
+            "run",
+            "--project",
+            str(project_root),
+            "pytest",
+            "tests/",
+            "--collect-only",
+            "-q",
+            "--no-cov",
+        ],
+        cwd=project_root,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    match = re.search(r"(?P<count>\d+) tests? collected", proc.stdout)
+    if not match:
+        raise RuntimeError(f"could not parse collected count for {name}:\n{proc.stdout}")
+    return int(match.group("count"))
+
+
 def project_test_count(repo_root: Path) -> int:
     """Project-scope infrastructure test collection total."""
     return _collected_count(repo_root, "tests/infra_tests/project/")
@@ -149,16 +178,19 @@ class CountsFacts:
     infra_py_count: int
     project_tests: int
     publishing_tests: int
+    exemplar_tests: dict[str, int]
 
 
 def collect_facts(repo_root: Path) -> CountsFacts:
     """Derive every volatile literal COUNTS.md pins from the live tree."""
+    public_projects = [name.split("/")[-1] for name in public_project_names(repo_root)]
     return CountsFacts(
-        public_projects=[name.split("/")[-1] for name in public_project_names(repo_root)],
+        public_projects=public_projects,
         packages=infrastructure_packages(repo_root),
         infra_py_count=tracked_infra_python_count(repo_root),
         project_tests=project_test_count(repo_root),
         publishing_tests=publishing_test_count(repo_root),
+        exemplar_tests={name: _exemplar_collected_count(repo_root, name) for name in public_projects},
     )
 
 
@@ -170,13 +202,14 @@ def _packages_block(packages: list[str]) -> str:
     return "\n".join(f"- {pkg}" for pkg in packages)
 
 
-def _exemplar_table() -> str:
+def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
     rows = [
         "| Project | Tests collected | `src/` line+branch coverage |",
         "|---------|-----------------|----------------------------|",
     ]
     for row in EXEMPLAR_SNAPSHOT:
-        rows.append(f"| `{row.name}` | {row.tests_collected} | {row.coverage_pct} |")
+        if row.name in exemplar_tests:
+            rows.append(f"| `{row.name}` | {exemplar_tests[row.name]} | {row.coverage_pct} |")
     return "\n".join(rows)
 
 
@@ -266,9 +299,9 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (latest recorded measurements; table membership last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
 
-{_exemplar_table()}
+{_exemplar_table(facts.exemplar_tests)}
 
 Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). Re-run the per-project coverage command after changing project `src/` or tests, then refresh this snapshot with `uv run python scripts/docgen/counts.py --write`. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 

@@ -49,6 +49,7 @@ def test_render_contains_parseable_markers() -> None:
         infra_py_count=553,
         project_tests=228,
         publishing_tests=395,
+        exemplar_tests={"template_alpha": 7, "template_beta": 11},
     )
     doc = render_counts_doc(facts)
 
@@ -80,10 +81,11 @@ def test_render_exemplar_table_one_row_per_snapshot() -> None:
         infra_py_count=1,
         project_tests=1,
         publishing_tests=1,
+        exemplar_tests={s.name: index for index, s in enumerate(EXEMPLAR_SNAPSHOT, 1)},
     )
     doc = render_counts_doc(facts)
-    for snap in EXEMPLAR_SNAPSHOT:
-        assert f"| `{snap.name}` | {snap.tests_collected} | {snap.coverage_pct} |" in doc
+    for index, snap in enumerate(EXEMPLAR_SNAPSHOT, 1):
+        assert f"| `{snap.name}` | {index} | {snap.coverage_pct} |" in doc
 
 
 def test_exemplar_snapshot_covers_public_scope() -> None:

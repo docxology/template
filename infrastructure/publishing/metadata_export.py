@@ -13,6 +13,7 @@ import yaml
 
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.publishing.repository_metadata import normalized_repository_url
 
 logger = get_logger(__name__)
 
@@ -379,13 +380,7 @@ def _split_name(name: str) -> tuple[str, str]:
 
 def _resolve_repo_url(config: dict) -> str | None:
     publication = _mapping(config.get("publication"))
-    repository_url = _string_or_none(publication.get("repository_url"))
-    if repository_url:
-        return repository_url
-    github_repository = _string_or_none(publication.get("github_repository"))
-    if github_repository:
-        return f"https://github.com/{github_repository}"
-    return None
+    return normalized_repository_url(publication)
 
 
 def _normalize_doi(value: object) -> str | None:

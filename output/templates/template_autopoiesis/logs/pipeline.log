@@ -1,2 +1,0 @@
-[2026-07-06 17:29:41,254] [DEBUG] Set up log file handler: <home>/Documents/GitHub/template/projects/templates/template_autopoiesis/output/logs/pipeline.log
-[2026-07-06 17:31:13,242] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 8: Provenance Record — Check stage logs for details

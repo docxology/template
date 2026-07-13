@@ -76,7 +76,7 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
 - **Problem:** the enforced no-mocks check is a lexical mock-framework gate,
   not proof that every test exercises a real dependency. The live
   `uv run python scripts/audit/verify_no_mocks.py --inventory` scan on
-  2026-07-11 measured **375 dependency replacements** (`setattr`/`setitem` and
+  2026-07-13 measured **378 dependency replacements** (`setattr`/`setitem` and
   deletion variants), alongside 254 environment-isolation operations, 0
   import-path operations, and 2 other scope operations in the live public test
   scope.
@@ -86,6 +86,8 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
 - **Smallest next step:** migrate the highest-risk dependency replacements to
   constructor/transport injection, localhost services, real subprocesses, or
   deterministic clocks, and re-run the inventory after each bounded batch.
+  CI now fails if the inventory grows beyond 378; every migration lowers that
+  ceiling until the strict zero-debt mode can replace the ratchet.
 - **Acceptance:**
   `uv run python scripts/audit/verify_no_mocks.py --inventory --fail-on-dependency-replacement`
   exits 0 with `dependency_replacement: 0`; only then may CI enable that strict

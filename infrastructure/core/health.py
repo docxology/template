@@ -137,7 +137,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     lint_targets = _public_lint_targets(repo_root)
 
     return [
-        ("mypy", ["uv", "run", "python", "-m", "mypy", *public_targets]),
+        ("mypy", ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *public_targets]),
         (
             "ruff",
             ["uvx", "ruff", "check", *lint_targets],
@@ -187,6 +187,18 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         (
             "confidentiality",
             ["uv", "run", "python", "scripts/audit/check_tracked_all.py"],
+        ),
+        (
+            "codeowners",
+            [
+                sys.executable,
+                "-c",
+                (
+                    "import sys; from pathlib import Path;"
+                    " from infrastructure.project.codeowners import codeowners_is_current;"
+                    f" sys.exit(0 if codeowners_is_current(Path({str(repo_root)!r})) else 1)"
+                ),
+            ],
         ),
         (
             "generated-artifacts",

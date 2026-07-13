@@ -8,7 +8,7 @@
   "file_count": 57,
   "hash_algorithm": "sha256(path + NUL + content + NUL), sorted by path",
   "upstream_tree_sha256": "641576794ab0985275f25a1237e41a57eb8d87382fc2c6c9024e189c8a40112c",
-  "vendored_tree_sha256": "e68247bca3be4da907c198e2ff0155b480b3c16c4763b10cf3f85a3160b0f0c2",
+  "vendored_tree_sha256": "55181dd0250a4bfc0200eec23186d009b45969f425ce4254bbe371fa1f267e5a",
   "local_overlays": [
     ".agents/skills/latent-briefing/SKILL.md: retain runtime-neutral read-only guidance",
     ".agents/skills/project-development/SKILL.md: use runtime-neutral wording",

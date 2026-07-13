@@ -1,0 +1,6 @@
+[template_export]
+cross_root_dependencies = [
+  "fonds/templates",
+  "rules/templates",
+  "tools/templates",
+]

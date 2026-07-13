@@ -111,6 +111,18 @@ def test_uses(monkeypatch, tmp_path):
     assert collect_standin_inventory(repo_root).exit_code == 0
 
 
+def test_inventory_ratchet_fails_only_when_debt_grows(tmp_path: Path, capsys) -> None:
+    repo_root = _make_repo(
+        tmp_path,
+        "def test_uses(monkeypatch):\n    monkeypatch.setattr('package.value', 1)\n",
+    )
+
+    assert main(["--inventory", "--max-dependency-replacements", "1"], repo_root=repo_root) == 0
+    capsys.readouterr()
+    assert main(["--inventory", "--max-dependency-replacements", "0"], repo_root=repo_root) == 1
+    assert "exceeds ceiling 0" in capsys.readouterr().out
+
+
 def test_missing_required_tests_directory_fails_closed(tmp_path: Path) -> None:
     lexical = collect_lexical_audit(tmp_path)
     inventory = collect_standin_inventory(tmp_path)

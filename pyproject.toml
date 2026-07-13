@@ -51,11 +51,6 @@ dependencies = [
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
   # uv sync --group scientific
   # requests is in the [llm] dep group — install with: uv sync --group llm
-  "networkx>=3.4.2",
-  "seaborn>=0.13.2",
-  "scipy>=1.15.3",
-  "textstat>=0.7.13",
-  "jsonschema>=4.0.0",
   # defusedxml: infrastructure/search/connectors parses XML/Atom feeds from
   # external APIs (arXiv, etc.) — the repo's XML parser policy
   # (tests/infra_tests/validation/test_xml_parser_policy.py) requires
@@ -187,9 +182,10 @@ deep-research = [
 managed = true  # Use uv's virtual environment management
 package = true  # Install Layer 1 and the research-template console entry point
 default-groups = ["dev", "rendering", "discopy", "steganography", "active-inference"]
-# pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
+# pip-api (via pip-audit) pins an older pip; keep the installer above its
+# published security floor as well as the runtime dependency set.
 override-dependencies = [
-    "pip>=26.1.1",
+    "pip>=26.1.2",
     "msgpack>=1.2.1",
 ]
 
@@ -365,31 +361,6 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "infrastructure.rendering.*"
 disallow_untyped_defs = true
-
-# Type stubs are uneven across these packages; defer until modules are tightened.
-[[tool.mypy.overrides]]
-module = "infrastructure.reporting.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.llm.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.validation.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.steganography.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.publishing.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.search.*"
-ignore_errors = true
 
 # template_active_inference lives under projects/templates/ and uses a src/
 # layout with top-level imports (conftest puts src/ on sys.path). With

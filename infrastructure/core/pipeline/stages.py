@@ -25,6 +25,16 @@ if TYPE_CHECKING:
 
 logger = get_logger(__name__)
 
+_ROOT_COMPATIBILITY_SCRIPTS = {
+    "scripts/pipeline/stage_00_setup.py": "scripts/00_setup_environment.py",
+    "scripts/pipeline/stage_01_test.py": "scripts/01_run_tests.py",
+    "scripts/pipeline/stage_02_analysis.py": "scripts/02_run_analysis.py",
+    "scripts/pipeline/stage_03_render.py": "scripts/03_render_pdf.py",
+    "scripts/pipeline/stage_04_validate.py": "scripts/04_validate_output.py",
+    "scripts/pipeline/stage_05_copy.py": "scripts/05_copy_outputs.py",
+    "scripts/pipeline/stage_06_llm_review.py": "scripts/06_llm_review.py",
+}
+
 
 class PipelineStageMixin(ABC):
     """Mixin providing individual pipeline stage runner methods.
@@ -210,6 +220,13 @@ class PipelineStageMixin(ABC):
             script_path = self.config.repo_root / relative
         else:
             script_path = self.config.repo_root / "scripts" / relative
+
+        # Minimal downstream forks may retain only the documented numbered
+        # compatibility entrypoints. The canonical repository always uses the
+        # stage_* path; this fallback preserves those forks without creating a
+        # second dispatch definition.
+        if not script_path.exists() and script_name in _ROOT_COMPATIBILITY_SCRIPTS:
+            script_path = self.config.repo_root / _ROOT_COMPATIBILITY_SCRIPTS[script_name]
 
         cmd = get_python_command() + [str(script_path)] + list(args)
         logger.debug(f"Running: {' '.join(cmd)}")

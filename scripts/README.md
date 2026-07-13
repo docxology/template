@@ -2,6 +2,13 @@
 
 Generic orchestrators for the research pipeline, organized by subpackage:
 
+Canonical advanced stages include `pipeline/stage_08_connector_search.py`,
+`pipeline/stage_09_provenance_record.py`, and
+`pipeline/stage_09_archive_publication.py`; root numbered files are compatibility
+wrappers for the canonical stage implementations.
+Those wrappers are `08_connector_search.py`, `09_provenance_record.py`, and
+`09_archive_publication.py`.
+
 | Subpackage | Role |
 | --- | --- |
 | [`pipeline/`](pipeline/) | Numbered stage scripts (`stage_00_setup.py` … `stage_12_metadata.py`) |

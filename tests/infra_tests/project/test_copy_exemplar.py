@@ -11,8 +11,24 @@ from pathlib import Path
 import pytest
 
 from infrastructure.project.copy_exemplar import _contained_destination, copy_exemplar, export_exemplar, plan_copy
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+@pytest.mark.parametrize("project_name", PUBLIC_PROJECT_NAMES)
+def test_every_public_exemplar_exports_as_a_standalone_tree(tmp_path: Path, project_name: str) -> None:
+    """Every declared exemplar must survive the same clean export contract."""
+    destination = tmp_path / project_name.split("/")[-1]
+
+    export_exemplar(REPO_ROOT, project_name, destination)
+
+    manifest = json.loads((destination / ".template-export.json").read_text(encoding="utf-8"))
+    assert manifest["source_project"] == project_name
+    assert (destination / "README.md").is_file()
+    assert (destination / "pyproject.toml").is_file()
+    assert not (destination / ".venv").exists()
+    assert not (destination / "output").exists()
 
 
 def _git(*args: str, cwd: Path) -> None:
@@ -113,14 +129,54 @@ def test_export_writes_content_addressed_provenance_manifest(tmp_path: Path) -> 
     export_exemplar(repo_root, "templates/template_code_project", dest, new_name="my_project")
 
     payload = json.loads((dest / ".template-export.json").read_text(encoding="utf-8"))
-    assert payload["schema_version"] == 1
+    assert payload["schema_version"] == 2
     assert payload["source_project"] == "templates/template_code_project"
     assert payload["exported_project"] == "my_project"
     assert payload["source_commit"] != "unknown"
     assert payload["infrastructure_version"] == "unknown"
+    assert payload["resource_dependencies"] == []
     readme = dest / "README.md"
     assert payload["files"]["README.md"] == hashlib.sha256(readme.read_bytes()).hexdigest()
     assert ".template-export.json" not in payload["files"]
+
+
+def test_export_bundles_declared_cross_root_resources(tmp_path: Path) -> None:
+    """Declared public pools are copied and included in the manifest hashes."""
+    repo_root = _scaffold_git_repo(tmp_path)
+    project = repo_root / "projects/templates/template_code_project"
+    (project / "export.toml").write_text(
+        '[template_export]\ncross_root_dependencies = ["fonds/templates"]\n',
+        encoding="utf-8",
+    )
+    fond = repo_root / "fonds/templates/template_bibliography"
+    fond.mkdir(parents=True)
+    (fond / "fonds.yaml").write_text("name: bibliography\n", encoding="utf-8")
+    dest = tmp_path / "fork"
+
+    export_exemplar(repo_root, "templates/template_code_project", dest)
+
+    resource = dest / "_template_resources/fonds/templates/template_bibliography/fonds.yaml"
+    assert resource.read_text(encoding="utf-8") == "name: bibliography\n"
+    payload = json.loads((dest / ".template-export.json").read_text(encoding="utf-8"))
+    rel = resource.relative_to(dest).as_posix()
+    assert payload["resource_dependencies"] == ["fonds/templates"]
+    assert payload["files"][rel] == hashlib.sha256(resource.read_bytes()).hexdigest()
+
+
+def test_project_only_export_omits_declared_resources(tmp_path: Path) -> None:
+    repo_root = _scaffold_git_repo(tmp_path)
+    project = repo_root / "projects/templates/template_code_project"
+    (project / "export.toml").write_text(
+        '[template_export]\ncross_root_dependencies = ["fonds/templates"]\n',
+        encoding="utf-8",
+    )
+    dest = tmp_path / "fork"
+
+    export_exemplar(repo_root, "templates/template_code_project", dest, project_only=True)
+
+    assert not (dest / "_template_resources").exists()
+    payload = json.loads((dest / ".template-export.json").read_text(encoding="utf-8"))
+    assert payload["resource_dependencies"] == []
 
 
 def test_new_name_rewrites_qualified_template_paths_to_destination(tmp_path: Path) -> None:
