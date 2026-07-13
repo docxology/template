@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -565,6 +566,32 @@ def test_duplicate_segment_ids_are_reported_as_errors() -> None:
 
     assert audit.releasable is False
     assert "duplicate_segment_id" in {finding.code for finding in audit.findings}
+
+
+def test_segment_s5_redaction_spans_leave_no_stray_letter_beside_a_box() -> None:
+    """Regression pin for a fixed off-by-a-few-characters offset bug.
+
+    Segment s5's redaction decisions previously started/ended a few characters
+    short of the real word boundaries. The leak was NOT the whole word
+    surviving intact (the trailing/leading characters were still consumed by
+    the neighbouring box) — it was single stray letters glued directly onto a
+    "[REDACTED]" marker, e.g. "S[REDACTED]p[REDACTED]" instead of a clean
+    "[REDACTED] [REDACTED]" for "SIGINT platform". A substring check for the
+    full words ("SIGINT" not in sanitized) would NOT have caught this, since
+    the full word was never intact even in the buggy version. This test binds
+    directly to the shipped fixture so a future offset regression in
+    data/example_segments.json — of any size, including a single character —
+    is caught even though the coarser 6+ character token scan in
+    test_visuals_proofs.py would miss it.
+    """
+    release_authority, segments, decisions = load_packet()
+    segment = next(item for item in segments if item.id == "s5")
+    segment_decisions = [decision for decision in decisions if decision.segment_id == "s5"]
+
+    sanitized = redact_text(segment.text, segment_decisions)
+
+    assert not re.search(r"[A-Za-z]\[REDACTED\]", sanitized), sanitized
+    assert not re.search(r"\[REDACTED\][A-Za-z]", sanitized), sanitized
 
 
 def _test_file_digest(path: Path, algorithm: str) -> str:
