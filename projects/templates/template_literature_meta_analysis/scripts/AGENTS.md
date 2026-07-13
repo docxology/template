@@ -16,6 +16,9 @@ scripts/
 ├── 04_generate_figures.py        # → visualization/figure_runner.py
 ├── 05_inject_variables.py        # → manuscript/variables/
 ├── 06_fulltext_assessment.py     # → literature/fulltext_assessment.py
+├── 07_literature_evaluation.py   # → literature/evaluation.py
+├── 08_deep_research_dispatch.py  # → deep_research/deep_research_adapter.py
+├── 09_export_bibliography.py     # → literature/bibliography.py
 └── __pycache__/                  # Python bytecode cache (gitignored)
 ```
 
@@ -38,6 +41,7 @@ explicitly per the note in `manuscript/config.yaml`).
 | `06` | `corpus.jsonl` | `fulltext_assessment.json` | `01` |
 | `07` | `corpus.jsonl` | `output/data/literature_evaluation.json` | `01` |
 | `08` | provider config | `deep_research_replay.json` | none |
+| `09` | `corpus.jsonl` | `output/data/bibliography.bib` | `01` |
 | `05` | `output/data/*.json` (incl. `06`'s `fulltext_assessment.json`), `manuscript/*.md` | `output/manuscript/*.md` (rendered) | `02`, `03`, `06` |
 
 ## Script Details
@@ -46,19 +50,23 @@ explicitly per the note in `manuscript/config.yaml`).
 
 Multi-source literature search orchestrator.
 
-**APIs queried:** arXiv (default query list in `src/config.py` → `DEFAULT_ARXIV_QUERIES`), Semantic Scholar, OpenAlex. Override via `project_config.search.arxiv_queries` in `manuscript/config.yaml`.
+**APIs queried:** arXiv (default query list in `src/config.py` → `DEFAULT_ARXIV_QUERIES`), Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv (9 engines total). Override via `project_config.search.arxiv_queries` in `manuscript/config.yaml`.
 
 **Key flags:**
 - `--resume` / `--no-resume` — load existing `corpus.jsonl` before fetching (default: resume on)
 - `--clear-corpus` — delete existing corpus and start fresh
-- `--skip-arxiv` / `--skip-s2` / `--skip-openalex` / `--skip-crossref` / `--skip-pubmed` / `--skip-sovietrxiv` / `--skip-chinarxiv` — skip individual sources
+- `--skip-arxiv` / `--skip-s2` / `--skip-openalex` / `--skip-crossref` / `--skip-pubmed` / `--skip-sovietrxiv` / `--skip-chinarxiv` / `--skip-europepmc` / `--skip-biorxiv` — skip individual sources
 - `--max-results N` — cap per-source results (default: 1000)
 - `--start-year YYYY` — exclude papers before this year
 - `--config PATH` — load search settings from YAML
 
 **Relevance filter:** Requires at least one core keyword in title/abstract. Configurable via `search.relevance_keywords` in YAML config.
 
-**Imports from `src/`:** `literature.corpus.Corpus`, `literature.models.Paper`, `literature.arxiv_client`, `literature.semantic_scholar`, `literature.openalex_client`.
+**Imports from `src/`:** `literature.search_runner.run_literature_search`, which in turn wires
+`literature.corpus.Corpus`, `literature.models.Paper`, `literature.query_router.QueryRouter`,
+`literature.engine_dispatch.dispatch_ordered`, and all nine per-engine clients
+(`arxiv_client`, `semantic_scholar`, `openalex_client`, `crossref_client`, `pubmed_client`,
+`sovietrxiv_client`, `europepmc_client`, `biorxiv_client`).
 
 ### `02_meta_analysis_pipeline.py`
 
@@ -158,6 +166,19 @@ Corpus-quality and routing coverage summary for the literature workflow.
 
 **Imports from `src/`:** `literature.corpus.Corpus`, `literature.evaluation.evaluate_corpus`.
 
+### `09_export_bibliography.py`
+
+Thin wrapper around `literature/bibliography.py`. Exports the literature corpus to a single
+unified BibTeX file, deduplicating entries and normalizing citation keys across all nine
+engine sources.
+
+**Key flags:**
+- `--corpus PATH` — corpus JSONL path (default: `output/data/corpus.jsonl`)
+- `--output-dir PATH` — directory for the exported `.bib` file
+- `--log-level {DEBUG,INFO,WARNING,ERROR}`
+
+**Imports from `src/`:** `literature.corpus.Corpus`, `literature.bibliography.corpus_to_bibtex`.
+
 ## Thin Orchestrator Pattern
 
 **CRITICAL:** These scripts must NOT contain computational logic. They:
@@ -194,7 +215,8 @@ output/
 │   ├── hypothesis_trends.json        # 03
 │   ├── assertion_summary.json        # 03
 │   ├── fulltext_assessment.json      # 06
-│   └── literature_evaluation.json   # 07
+│   ├── literature_evaluation.json   # 07
+│   └── bibliography.bib              # 09
 ├── figures/                          # 04
 │   ├── *.png (16 figures)
 │   └── figure_registry.json

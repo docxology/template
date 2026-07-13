@@ -22,7 +22,7 @@ uv run python scripts/05_inject_variables.py
 This manuscript was generated from a live retrieval run. To reproduce:
 
 ```bash
-# Live search (all 7 engines, max 1000 per engine)
+# Live search (all 9 engines, max 1000 per engine)
 uv run python scripts/01_literature_search.py --query modafinil --max-results 1000 --no-resume
 
 # Analysis pipeline
@@ -31,6 +31,8 @@ uv run python scripts/03_build_knowledge_graph.py --max-papers 0
 uv run python scripts/04_generate_figures.py --dpi 300
 uv run python scripts/05_inject_variables.py
 uv run python scripts/06_fulltext_assessment.py
+uv run python scripts/07_literature_evaluation.py
+uv run python scripts/09_export_bibliography.py
 ```
 
 ## Re-target to Another Topic
@@ -46,7 +48,7 @@ Enable engines under `project_config.search.engines`, supply any optional creden
 (Unpaywall email, Semantic Scholar key), and run `scripts/01_literature_search.py`; absent
 engines degrade to skipped sources. The CLI supports per-engine skip flags:
 `--skip-arxiv`, `--skip-s2`, `--skip-openalex`, `--skip-crossref`, `--skip-pubmed`,
-`--skip-sovietrxiv`, `--skip-chinarxiv`.
+`--skip-sovietrxiv`, `--skip-chinarxiv`, `--skip-europepmc`, `--skip-biorxiv`.
 
 ## Deep Research (Offline Fixture Replay)
 
@@ -77,8 +79,8 @@ Every stage is covered by a no-mocks test suite (real computation and
 `src/`. The suite covers:
 
 - Record models and serialization (deduplication, canonical ID hierarchy)
-- All 7 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv) with pytest-httpserver integration tests
+- All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
+  ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with pytest-httpserver integration tests
 - Search runner (multi-engine dispatch, relevance filtering, resume/clear, YAML config)
 - Bibliometric analysis (subfield classification, temporal metrics, TF-IDF, NMF, citation
   network)

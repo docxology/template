@@ -267,6 +267,14 @@ project_config:
         - manuscript/00_abstract.md
       description: "Compute dynamic variables from pipeline outputs and inject them into manuscript Markdown templates"
 
+    - name: export_bibliography
+      script: 09_export_bibliography.py
+      inputs:
+        - output/data/corpus.jsonl
+      outputs:
+        - output/data/bibliography.bib
+      description: "Export the de-duplicated corpus to a single unified BibTeX file"
+
   # Subfield taxonomy: keyword sets that classify each record into one bucket.
   # These are domain-specific (modafinil); swap them when re-targeting.
   subfield_keywords:

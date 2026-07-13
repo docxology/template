@@ -4,13 +4,18 @@ Retrieval dispatches the configured query across {{N_ENGINES}} independent liter
 engines ({{ENGINE_LIST}}). Each engine is an isolated adapter exposing a uniform
 `search(query) -> list[Record]` interface; engines that are keyless — arXiv, OpenAlex
 [@priem2022openalex], Crossref [@hendricks2020crossref], PubMed/Entrez
-[@sayers2022entrez], SovietRxiv / RussiaRxiv, and ChinaRxiv — need no credentials,
-while Semantic Scholar [@kinney2023semantic] uses a key when present. SovietRxiv is a
-translated archive of Soviet-era scientific preprints sourced from Math-Net.Ru and
-CyberLeninka [@sovietrxiv]; ChinaRxiv serves translated Chinese preprints from ChinaXiv
-via the same unified API. Both retain original-language PDFs alongside each translation,
-and their polite rate-limit pool (300/min vs 30/min anonymous) is activated by an
-optional `X-API-Email` header. Optional full-text resolution queries Unpaywall
+[@sayers2022entrez], SovietRxiv / RussiaRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv —
+need no credentials, while Semantic Scholar [@kinney2023semantic] uses a key when present.
+SovietRxiv is a translated archive of Soviet-era scientific preprints sourced from
+Math-Net.Ru and CyberLeninka [@sovietrxiv]; ChinaRxiv serves translated Chinese preprints
+from ChinaXiv via the same unified API. Both retain original-language PDFs alongside each
+translation, and their polite rate-limit pool (300/min vs 30/min anonymous) is activated
+by an optional `X-API-Email` header. Europe PMC is a keyless biomedical aggregator
+covering PubMed, PMC, patents, and preprints in a single search call. bioRxiv/medRxiv
+share one unified date-window + cursor API; unlike the other engines it is not a
+free-text search endpoint, so the adapter walks the date window page by page and
+keeps only records whose title and abstract match every query term client-side.
+Optional full-text resolution queries Unpaywall
 [@piwowar2018state] for open-access locations. **Multiple dispatch degrades gracefully**:
 an engine that is disabled in the configuration, lacks a required key, or cannot reach
 the network returns a *skipped* status, and the run completes from the remaining engines
@@ -33,6 +38,8 @@ function body.
 | PubMed | NCBI usage policy | retstart/retmax | Keyless |
 | SovietRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` |
 | ChinaRxiv | 30/min (300/min polite) | 1–100/page, cursor | `X-API-Email` |
+| Europe PMC | ~10 req/s (undocumented hard limit) | Up to 1,000/page | Keyless |
+| bioRxiv/medRxiv | No documented limit | 100/page fixed, cursor | Keyless |
 
 Every new search writes `output/data/retrieval_report.json`, a timestamp-free report
 that records each attempted, skipped, or failed source with fetched, new-record, and

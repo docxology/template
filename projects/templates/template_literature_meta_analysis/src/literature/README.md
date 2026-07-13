@@ -1,7 +1,9 @@
 # Literature Retrieval Module
 
 Multi-source corpus generation for the literature meta-analysis. Retrieves papers from
-three academic APIs, deduplicates by canonical identifier, and persists to JSONL.
+nine literature engines (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
+ChinaRxiv, Europe PMC, bioRxiv/medRxiv), deduplicates by canonical identifier, and
+persists to JSONL.
 
 ## Components
 
@@ -55,6 +57,27 @@ DOI URL prefixes automatically.
 - `search_openalex(query, max_results, base_url, session) -> list[Paper]`
 - `get_work_by_doi(doi, base_url, session) -> Paper`
 
+### `crossref_client.py`
+Searches the Crossref `/works` REST endpoint (keyless, polite pool via `mailto` param).
+Cursor/offset pagination depending on endpoint. Broad multidisciplinary DOI registry
+covering journal articles, books, and conference proceedings.
+
+- `search_crossref(query, max_results, base_url, session) -> list[Paper]`
+
+### `pubmed_client.py`
+Searches NCBI Entrez `esearch`/`efetch` (biomedical literature). Keyless; an optional API
+key raises the NCBI usage-policy rate limit. `retstart`/`retmax` pagination.
+
+- `search_pubmed(query, max_results, esearch_base_url, efetch_base_url, session) -> list[Paper]`
+
+### `sovietrxiv_client.py`
+Unified client for SovietRxiv/RussiaRxiv (translated Soviet-era preprints from Math-Net.Ru
+and CyberLeninka) and ChinaRxiv (translated Chinese preprints from ChinaXiv) — same API,
+different `source` parameter (`"russiarxiv"` or `"chinaxiv"`) and hostname. Keyless;
+`api_email` activates the polite rate-limit pool (300/min vs 30/min anonymous).
+
+- `search_sovietrxiv(query, max_results, base_url, session, api_email, source) -> list[Paper]`
+
 ### `europepmc_client.py`
 Searches the Europe PMC `/search` endpoint (keyless biomedical aggregator covering PubMed,
 PMC, patents, and preprints). Single-request pagination via `pageSize` (capped at 1000).
@@ -71,9 +94,46 @@ selects `"biorxiv"` or `"medrxiv"`.
 
 ### `query_router.py`
 Heuristic query router for the multi-backend search runner. Detects academic, industry, and mixed
-queries; prefers preprint engines for preprint-heavy queries; and returns the engine dispatch order.
+queries; prefers preprint engines for preprint-heavy queries; and returns the engine dispatch order
+across all nine engines.
 
 - `QueryRouter.route(query, available_sources) -> QueryRoute`
+
+### `engine_dispatch.py`
+Declarative engine-enablement registry: `ENGINE_SPECS` enumerates all nine engines (name, CLI
+skip-flag, config-toggle key) as a single source of truth, and `engine_enabled()` evaluates the
+skip-flag / config-toggle / hermetic-injection gating for a given spec. `dispatch_ordered()` is
+the piece actually wired into `search_runner.py` today — it invokes each engine's runner closure
+in the query router's chosen order, skipping any key with no registered runner.
+
+- `EngineSpec(name, skip_flag, config_key).enabled(args, engines, *, fast_api, injected) -> bool`
+- `engine_enabled(spec, args, engines, *, fast_api, url_injected) -> bool`
+- `dispatch_ordered(route_order, runners) -> None`
+
+### `bibliography.py`
+Unified BibTeX export: normalizes every `Paper` (regardless of source engine) into a `BibEntry`,
+generates collision-free citation keys (`author+year+title-word`, disambiguated on collision),
+escapes LaTeX-special characters, and renders the whole corpus to a single `.bib` file. Backs
+`scripts/09_export_bibliography.py`.
+
+- `paper_to_bibentry(paper, *, used_keys=None) -> BibEntry`
+- `generate_citation_key(paper, used_keys) -> str`
+- `render_entries(entries) -> str`
+- `corpus_to_bibtex(corpus) -> str`
+
+### `fulltext_download.py`
+Full-text resolution, download, and extraction. Resolves open-access PDF URLs via Unpaywall
+(opt-in, `unpaywall_email` config), downloads with retry, extracts plaintext and figures from
+PDFs, and reports coverage/extraction statistics across the corpus. Backs
+`scripts/06_fulltext_assessment.py`.
+
+- `resolve_fulltext_url(paper, unpaywall_email, base_url, session) -> str | None`
+- `download_fulltext(paper, dest_dir, session) -> Path | None`
+- `extract_fulltext_text(pdf_path) -> str | None`
+- `extract_figures(pdf_path, dest_dir, *, stem) -> list[Path]`
+- `download_and_extract_fulltext(corpus, dest_dir, *, unpaywall_email, session) -> dict`
+- `assess_fulltext_availability(papers) -> dict`
+- `assess_fulltext_extraction(corpus, fulltext_dir) -> dict`
 
 ### `evaluation.py`
 Corpus-level metrics and routing summary helper used by the stage-07 evaluation harness.
@@ -82,21 +142,29 @@ Corpus-level metrics and routing summary helper used by the stage-07 evaluation 
 
 ## Deduplication Strategy
 
-Papers are deduplicated by canonical ID across all three sources. When the same paper appears
-from multiple sources (common for arXiv preprints that also appear in S2 and OpenAlex),
-`Corpus.add()` retains the version with the highest `metadata_completeness` score. The cascade:
+Papers are deduplicated by canonical ID across all nine sources. When the same paper appears
+from multiple sources (common for preprints that also appear in Semantic Scholar, OpenAlex,
+Crossref, or a biomedical aggregator), `Corpus.add()` retains the version with the highest
+`metadata_completeness` score. The cascade:
 
 ```
 DOI (most stable) > arXiv ID > S2 ID > OpenAlex ID > title hash (last resort)
 ```
 
-Title-hash collisions are rare but possible for very short titles. The corpus JSONL includes
-the source-of-record ID so deduplication decisions can be audited.
+SovietRxiv/ChinaRxiv expose no DOI in their unified API, so those records fall back to the
+title-hash tier; they still merge correctly against a DOI-bearing duplicate from another engine
+because the title hash is computed identically on both sides. Title-hash collisions are rare but
+possible for very short titles. The corpus JSONL includes the source-of-record ID so
+deduplication decisions can be audited.
 
 ## Output
 
 `output/data/corpus.jsonl` — one JSON object per line, each representing a `Paper`.
 `output/data/literature_evaluation.json` — corpus summary from the stage-07 evaluation harness.
-Current corpus: 849 papers from arXiv, Semantic Scholar, and OpenAlex (2005–2026).
+`output/data/bibliography.bib` — unified BibTeX export from `scripts/09_export_bibliography.py`.
+Corpus size, engine mix, and year range vary per run/topic — see the generated
+`retrieval_report.json` and the manuscript's injected `{{N_ENGINES}}`/`{{CORPUS_SIZE}}`
+variables for the authoritative figures of the most recent run, rather than a hand-maintained
+count here.
 
 See [AGENTS.md](AGENTS.md) for agent constraints and extension guidance.

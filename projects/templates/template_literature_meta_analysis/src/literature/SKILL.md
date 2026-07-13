@@ -1,11 +1,11 @@
 ---
 name: Systematic Literature Retrieval
-description: Operations for federated API querying across OpenAlex, Semantic Scholar, and arXiv.
+description: Operations for federated API querying across nine literature engines (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv).
 ---
 
 # Instructions
 
-You are interacting with the `src/literature/` module. This coordinates multi-source API harvesting, caching, and implements keyword classification logic.
+You are interacting with the `src/literature/` module. This coordinates multi-source API harvesting across nine engines, canonical-identifier deduplication, full-text resolution/extraction, unified bibliography export, and keyword-based subfield classification logic.
 
 ## Agentic Interface (MCP Strategy)
 
