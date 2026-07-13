@@ -12,9 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
-import sys
 from pathlib import Path
-from types import ModuleType
 
 import pytest
 from pypdf import PdfReader
@@ -150,13 +148,12 @@ def test_verify_pdf_file_accepts_real_pdf_and_flags_each_defect(tmp_path: Path) 
     assert any("PDF readability check failed" in message for message in unreadable_errors)
 
 
-def test_verify_pdf_file_reports_zero_readable_pages(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_verify_pdf_file_reports_zero_readable_pages(tmp_path: Path) -> None:
     pdf = tmp_path / "pages.pdf"
     pdf.write_bytes(b"%PDF-1.4 real bytes present\n")
-    monkeypatch.setattr(visuals, "_pdf_page_count", lambda _path: 0)
     errors: list[str] = []
 
-    visuals._verify_pdf_file(pdf, None, None, errors)
+    visuals._verify_pdf_file(pdf, None, None, errors, page_counter=lambda _path: 0)
 
     assert any("no readable PDF pages" in message for message in errors)
 
@@ -309,7 +306,7 @@ def test_expect_appends_only_on_failure() -> None:
 # --------------------------------------------------------------------------- #
 
 
-def _build_valid_variant_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+def _build_valid_variant_dir(tmp_path: Path) -> Path:
     """Materialize a passing 16-variant proof directory using real files/digests."""
     segments, decisions = _load_fixture()
     matrix = visuals.build_visual_variant_matrix(
@@ -346,14 +343,13 @@ def _build_valid_variant_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
         variants.append(variant)
     matrix = {**matrix, "variants": variants}
     (tmp_path / "variant_matrix.json").write_text(json.dumps(matrix, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    monkeypatch.setattr(visuals, "_pdf_page_count", lambda _path: 1)
     return tmp_path
 
 
-def test_verify_dev_variant_outputs_valid_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _build_valid_variant_dir(tmp_path, monkeypatch)
+def test_verify_dev_variant_outputs_valid_directory(tmp_path: Path) -> None:
+    _build_valid_variant_dir(tmp_path)
 
-    summary = visuals.verify_dev_variant_outputs(tmp_path)
+    summary = visuals.verify_dev_variant_outputs(tmp_path, page_counter=lambda _path: 1)
 
     assert summary["valid"] is True
     assert summary["pdf_count"] == 32
@@ -386,63 +382,65 @@ def test_verify_dev_variant_outputs_matrix_root_not_object(tmp_path: Path) -> No
     assert any("matrix root is not an object" in message for message in summary["errors"])
 
 
-def test_verify_dev_variant_outputs_bad_schema_and_counts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _build_valid_variant_dir(tmp_path, monkeypatch)
+def test_verify_dev_variant_outputs_bad_schema_and_counts(tmp_path: Path) -> None:
+    _build_valid_variant_dir(tmp_path)
     matrix_path = tmp_path / "variant_matrix.json"
     matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
     matrix["schema"] = "wrong-schema"
     matrix["variant_count"] = 4
     matrix_path.write_text(json.dumps(matrix, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    summary = visuals.verify_dev_variant_outputs(tmp_path)
+    summary = visuals.verify_dev_variant_outputs(tmp_path, page_counter=lambda _path: 1)
 
     assert summary["valid"] is False
     assert any("bad matrix schema" in message for message in summary["errors"])
     assert any("variant_count is not 16" in message for message in summary["errors"])
 
 
-def test_verify_dev_variant_outputs_reports_unexpected_and_missing_files(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    _build_valid_variant_dir(tmp_path, monkeypatch)
+def test_verify_dev_variant_outputs_reports_unexpected_and_missing_files(tmp_path: Path) -> None:
+    _build_valid_variant_dir(tmp_path)
     (tmp_path / "stray.pdf").write_bytes(b"unexpected\n")
     next(tmp_path.glob("*_steganography.pdf")).unlink()
 
-    summary = visuals.verify_dev_variant_outputs(tmp_path)
+    summary = visuals.verify_dev_variant_outputs(tmp_path, page_counter=lambda _path: 1)
 
     assert summary["valid"] is False
     assert any("unexpected files" in message for message in summary["errors"])
     assert any("missing expected files" in message for message in summary["errors"])
 
 
-def test_verify_dev_variant_outputs_emits_kmyth_warning(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _build_valid_variant_dir(tmp_path, monkeypatch)
+def test_verify_dev_variant_outputs_emits_kmyth_warning(tmp_path: Path) -> None:
+    _build_valid_variant_dir(tmp_path)
     matrix_path = tmp_path / "variant_matrix.json"
     matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
     matrix["kmyth"] = {"requested": True, "available": False, "summary": "Kmyth requested but unavailable in CI."}
     matrix_path.write_text(json.dumps(matrix, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    summary = visuals.verify_dev_variant_outputs(tmp_path)
+    summary = visuals.verify_dev_variant_outputs(tmp_path, page_counter=lambda _path: 1)
 
     assert summary["valid"] is True
     assert any("unavailable" in message for message in summary["warnings"])
 
 
-def test_verify_dev_variant_outputs_requires_kmyth_sidecars(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _build_valid_variant_dir(tmp_path, monkeypatch)
+def test_verify_dev_variant_outputs_requires_kmyth_sidecars(tmp_path: Path) -> None:
+    _build_valid_variant_dir(tmp_path)
 
-    summary = visuals.verify_dev_variant_outputs(tmp_path, require_kmyth_sidecars=True)
+    summary = visuals.verify_dev_variant_outputs(tmp_path, require_kmyth_sidecars=True, page_counter=lambda _path: 1)
 
     assert summary["valid"] is False
     assert any("missing Kmyth sidecar" in message for message in summary["errors"])
     assert any("missing expected files" in message for message in summary["errors"])
 
 
-def test_verify_dev_variant_outputs_render_smoke_without_tool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _build_valid_variant_dir(tmp_path, monkeypatch)
-    monkeypatch.setattr(visuals.shutil, "which", lambda _name: None)
+def test_verify_dev_variant_outputs_render_smoke_without_tool(tmp_path: Path) -> None:
+    _build_valid_variant_dir(tmp_path)
 
-    summary = visuals.verify_dev_variant_outputs(tmp_path, render_smoke=True)
+    summary = visuals.verify_dev_variant_outputs(
+        tmp_path,
+        render_smoke=True,
+        page_counter=lambda _path: 1,
+        executable_resolver=lambda _name: None,
+    )
 
     assert summary["valid"] is False
     assert any("pdftoppm is not on PATH" in message for message in summary["errors"])
@@ -535,7 +533,7 @@ def test_kmyth_seal_probe_error_when_tool_writes_no_sidecar() -> None:
     assert "did not write a sidecar" in result
 
 
-def test_resolve_kmyth_status_reports_tools_found_but_not_runnable(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_resolve_kmyth_status_reports_tools_found_but_not_runnable() -> None:
     class Availability:
         available = True
         seal_path = Path("/usr/bin/true")
@@ -544,15 +542,13 @@ def test_resolve_kmyth_status_reports_tools_found_but_not_runnable(monkeypatch: 
         def summary(self) -> str:
             return "kmyth present"
 
-    infrastructure_module = ModuleType("infrastructure")
-    steganography_module = ModuleType("infrastructure.steganography")
-    setattr(infrastructure_module, "steganography", steganography_module)
-    setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: Availability())
-    monkeypatch.setitem(sys.modules, "infrastructure", infrastructure_module)
-    monkeypatch.setitem(sys.modules, "infrastructure.steganography", steganography_module)
-    monkeypatch.setattr(visuals, "_kmyth_help_error", lambda tool_path: f"{tool_path.name}: broken")
-
-    status = visuals._resolve_kmyth_status(include_kmyth=True, binary_dir="bin", seal_probe_timeout_seconds=1)
+    status = visuals._resolve_kmyth_status(
+        include_kmyth=True,
+        binary_dir="bin",
+        seal_probe_timeout_seconds=1,
+        installation_validator=lambda binary_dir=None: Availability(),
+        help_checker=lambda tool_path: f"{tool_path.name}: broken",
+    )
 
     assert status["available"] is False
     assert status["tools_runnable"] is False

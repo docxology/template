@@ -187,6 +187,7 @@ def verify_dev_variant_outputs(
     render_smoke: bool = False,
     require_kmyth_sidecars: bool = False,
     page_counter: Callable[[Path], int] | None = None,
+    executable_resolver: Callable[[str], str | None] = shutil.which,
 ) -> dict[str, object]:
     """Validate generated visual proof PDFs, filenames, hashes, and matrix records."""
     errors: list[str] = []
@@ -250,7 +251,7 @@ def verify_dev_variant_outputs(
     if missing_expected:
         errors.append(f"missing expected files: {', '.join(missing_expected)}")
 
-    render_tool = shutil.which("pdftoppm") if render_smoke else None
+    render_tool = executable_resolver("pdftoppm") if render_smoke else None
     if render_smoke and not render_tool:
         errors.append("render smoke requested but pdftoppm is not on PATH")
 
