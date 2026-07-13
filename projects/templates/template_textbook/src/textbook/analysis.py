@@ -15,7 +15,7 @@ DECAY_PARAMETERS = {"initial": 100.0, "rate": 0.5}
 LOGISTIC_SENSITIVITY_RATES = (0.4, 0.8, 1.2)
 
 
-def _build_case_study_summary(dataset_path: Path) -> dict[str, Any]:
+def _build_case_study_summary(dataset_path: Path, *, source_label: str | None = None) -> dict[str, Any]:
     with dataset_path.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
     groups: dict[str, list[float]] = {}
@@ -30,7 +30,7 @@ def _build_case_study_summary(dataset_path: Path) -> dict[str, Any]:
     all_measurements = np.array([float(row["measurement"]) for row in rows])
     extrapolation_dose = 3.0
     return {
-        "source": str(dataset_path),
+        "source": source_label or dataset_path.as_posix(),
         "condition_means": means,
         "overall": models.descriptive_statistics(all_measurements),
         "linear_fit": {
@@ -45,8 +45,8 @@ def _build_case_study_summary(dataset_path: Path) -> dict[str, Any]:
     }
 
 
-def build_worked_model_summary(dataset_path: Path) -> dict[str, Any]:
-    """Compute the canonical worked examples and retain their input provenance."""
+def build_worked_model_summary(dataset_path: Path, *, source_label: str | None = None) -> dict[str, Any]:
+    """Compute canonical examples with clone-independent input provenance."""
     time = np.linspace(0, 10, 11)
     growth = models.logistic_growth(time, **LOGISTIC_PARAMETERS)
     decay = models.exponential_decay(time, **DECAY_PARAMETERS)
@@ -69,5 +69,5 @@ def build_worked_model_summary(dataset_path: Path) -> dict[str, Any]:
             "y": decay.tolist(),
             "half_life": models.half_life(DECAY_PARAMETERS["rate"]),
         },
-        "case_study": _build_case_study_summary(dataset_path),
+        "case_study": _build_case_study_summary(dataset_path, source_label=source_label),
     }

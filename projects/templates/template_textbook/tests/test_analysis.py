@@ -34,3 +34,9 @@ def test_worked_model_summary_retains_inputs_and_outputs() -> None:
 
 def test_worked_model_summary_is_deterministic() -> None:
     assert build_worked_model_summary(DATASET) == build_worked_model_summary(DATASET)
+
+
+def test_worked_model_summary_accepts_portable_source_provenance() -> None:
+    summary = build_worked_model_summary(DATASET, source_label="manuscript/assets/data/sample_dataset.csv")
+
+    assert summary["case_study"]["source"] == "manuscript/assets/data/sample_dataset.csv"

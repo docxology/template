@@ -48,7 +48,8 @@ def main(argv: list[str] | None = None) -> int:
 
     data_dir = root / "output" / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
-    (data_dir / "render_report.json").write_text(json.dumps(result.to_dict(), indent=2), encoding="utf-8")
+    portable_result = result.to_dict(relative_to=root)
+    (data_dir / "render_report.json").write_text(json.dumps(portable_result, indent=2), encoding="utf-8")
 
     reports_dir = root / "output" / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
@@ -57,7 +58,7 @@ def main(argv: list[str] | None = None) -> int:
         "=" * 40,
         f"pages:        {result.page_count}",
         f"all_pages_fit: {result.all_pages_fit}",
-        f"output:       {result.output_path}",
+        f"output:       {portable_result['output_path']}",
     ]
     if result.oversets:
         summary.append("OVERSET PAGES (content did not fit):")
