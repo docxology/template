@@ -23,6 +23,14 @@ from src.analysis import (
 )
 from src.experiment_config import ExperimentConfig, load_experiment_config
 from src.optimizer import OptimizationResult
+from src.project_paths import project_root_context
+
+
+@pytest.fixture(autouse=True)
+def _isolated_project_root(tmp_path: Path):
+    with project_root_context(tmp_path):
+        yield
+
 
 try:
     from src.figures import (
@@ -55,7 +63,6 @@ class TestRunConvergenceExperiment:
 
 class TestSaveOptimizationResults:
     def test_csv_serializes_full_solution_vector(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         results = {
             0.1: OptimizationResult(
                 solution=np.array([1.0, 2.0]),
@@ -72,14 +79,12 @@ class TestSaveOptimizationResults:
 
 class TestScientificAnalysis:
     def test_stability_analysis_writes_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         path = run_stability_analysis()
         assert path.exists()
         data = json.loads(path.read_text())
         assert "stability_score" in data
 
     def test_benchmark_writes_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         path = run_performance_benchmarking()
         assert path.exists()
         first_bytes = path.read_bytes()
@@ -124,13 +129,11 @@ class TestExtractOptimizationMetadata:
 class TestAnalysisStandalonePaths:
     def test_stability_analysis_without_infra(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr("src.analysis.INFRASTRUCTURE_AVAILABLE", False)
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         path = run_stability_analysis()
         assert path.exists()
 
     def test_benchmark_without_infra(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr("src.analysis.INFRASTRUCTURE_AVAILABLE", False)
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         path = run_performance_benchmarking()
         assert path.exists()
 
@@ -158,7 +161,6 @@ class TestAnalysisStandalonePaths:
 
 class TestPublishingHelpers:
     def test_citations_and_save_materials(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         from src.analysis import generate_citations_from_metadata, save_publishing_materials
 
         meta = {
@@ -174,7 +176,6 @@ class TestPublishingHelpers:
         assert (tmp_path / "output" / "citations" / "optimization_metadata.json").exists()
 
     def test_save_publishing_materials_handles_missing_keys(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         from src.analysis import save_publishing_materials
 
         save_publishing_materials({"title": "only title"}, None)
@@ -185,7 +186,6 @@ class TestValidationAndRegistration:
     def test_validate_and_save_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not __import__("src.analysis", fromlist=["INFRASTRUCTURE_AVAILABLE"]).INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "convergence_plot.png").write_bytes(b"png")
 
@@ -197,7 +197,6 @@ class TestValidationAndRegistration:
             assert path is not None and path.exists()
 
     def test_register_figure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         (tmp_path / "output" / "figures").mkdir(parents=True)
         from src.analysis import register_figure
 
@@ -211,8 +210,6 @@ class TestMainPipelineSmoke:
         import shutil
 
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         from src.analysis import main
 
@@ -263,7 +260,6 @@ class TestPerformanceBenchmarking:
     """Test performance benchmarking functions."""
 
     def test_performance_benchmarking_execution(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
         result_path = run_performance_benchmarking()
 
         if result_path:
@@ -281,8 +277,6 @@ class TestPerformanceBenchmarking:
             pytest.fail("Performance benchmarking returned None")
 
     def test_performance_visualization(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
         report_path = run_performance_benchmarking()
 
         if report_path:

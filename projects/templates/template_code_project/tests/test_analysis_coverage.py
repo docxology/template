@@ -29,6 +29,13 @@ from src.analysis import (  # noqa: E402
 )
 from src.experiment_config import ExperimentConfig  # noqa: E402
 from src.optimizer import OptimizationResult  # noqa: E402
+from src.project_paths import project_root_context  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _isolated_project_root(tmp_path: Path):
+    with project_root_context(tmp_path):
+        yield
 
 
 class TestFallbackLogging:
@@ -62,7 +69,6 @@ class TestValidateOutputs:
     def test_returns_summary_when_infra_available(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         figures = tmp_path / "output" / "figures"
         figures.mkdir(parents=True)
         (figures / "convergence_plot.png").write_bytes(b"png-bytes")
@@ -79,7 +85,6 @@ class TestValidateOutputs:
         def _raise_validation(_path: Path) -> None:
             raise ValidationError("integrity check failed")
 
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         monkeypatch.setattr(analysis_mod, "verify_output_integrity", _raise_validation)
         assert validate_generated_outputs() is None
 
@@ -90,7 +95,6 @@ class TestValidateOutputs:
         def _raise_oserror(_path: Path) -> None:
             raise OSError("disk full")
 
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         monkeypatch.setattr(analysis_mod, "verify_output_integrity", _raise_oserror)
         assert validate_generated_outputs() is None
 
@@ -107,7 +111,6 @@ class TestValidateOutputs:
                 recommendations=[],
             )
 
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         monkeypatch.setattr(analysis_mod, "verify_output_integrity", _report_with_issues)
         report = validate_generated_outputs()
         assert report is not None
@@ -119,14 +122,12 @@ class TestSaveValidationReport:
         assert save_validation_report(None) is None
 
     def test_saves_json(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         path = save_validation_report({"integrity_check": {"total_files": 1}})
         assert path is not None and path.exists()
         data = json.loads(path.read_text())
         assert data["integrity_check"]["total_files"] == 1
 
     def test_returns_none_on_write_oserror(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         real_open = builtins.open
 
         def _fail_json_write(*args: object, **kwargs: object):
@@ -139,7 +140,6 @@ class TestSaveValidationReport:
         assert save_validation_report({"integrity_check": {"total_files": 1}}) is None
 
     def test_returns_none_when_reports_path_is_file(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         reports = tmp_path / "output" / "reports"
         reports.parent.mkdir(parents=True)
         reports.write_text("not-a-directory")
@@ -164,7 +164,6 @@ class TestScientificInfraPaths:
     def test_stability_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         from src.analysis import run_stability_analysis
 
         path = run_stability_analysis(ExperimentConfig(stability_starting_points=(0.0, 1.0)))
@@ -175,7 +174,6 @@ class TestScientificInfraPaths:
     def test_benchmark_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         from src.analysis import run_performance_benchmarking
 
         path = run_performance_benchmarking()
@@ -234,7 +232,6 @@ class TestCitationsExtended:
 
 class TestPublishingExtended:
     def test_writes_citation_files(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         meta = {
             "title": "Optimization Study",
             "description": "Gradient descent sweep",
@@ -253,7 +250,6 @@ class TestPublishingExtended:
         assert "bibtex" in summary.lower() or "BIBTEX" in summary
 
     def test_handles_missing_metadata_keys(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         save_publishing_materials({"description": "no title key"})
         cite_dir = tmp_path / "output" / "citations"
         assert (cite_dir / "optimization_metadata.json").exists()
@@ -267,8 +263,6 @@ class TestMainBranches:
 
     def test_main_without_infra(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
         monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
         analysis_mod.main()
         assert (tmp_path / "output" / "data" / "optimization_results.csv").exists()
@@ -278,8 +272,6 @@ class TestMainBranches:
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         class UnhealthyChecker:
             def get_health_status(self) -> dict:
@@ -296,8 +288,6 @@ class TestMainBranches:
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         base_logger = analysis_mod._get_logger()
 
@@ -328,8 +318,6 @@ class TestMainErrors:
         from infrastructure.core.exceptions import ScriptExecutionError
 
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         err = ScriptExecutionError("pipeline failed", recovery_commands=["uv sync"])
 
@@ -346,8 +334,6 @@ class TestMainErrors:
         from infrastructure.core.exceptions import TemplateError
 
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         err = TemplateError("template failed", suggestions=["check config"])
 
@@ -362,8 +348,6 @@ class TestMainErrors:
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         def _boom(**_kwargs: object) -> dict:
             raise RuntimeError("unexpected")
@@ -374,8 +358,6 @@ class TestMainErrors:
 
     def test_main_reraises_import_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         def _boom(**_kwargs: object) -> dict:
             raise ImportError("missing module")
@@ -386,8 +368,6 @@ class TestMainErrors:
 
     def test_main_reraises_file_not_found_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
-        monkeypatch.setattr("src.figures.project_root", tmp_path)
 
         def _boom(**_kwargs: object) -> dict:
             raise FileNotFoundError("config missing")
@@ -399,7 +379,6 @@ class TestMainErrors:
 
 class TestRegisterFigure:
     def test_register_figure_writes_registry(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         figures = tmp_path / "output" / "figures"
         figures.mkdir(parents=True)
         from src.analysis import register_figure
@@ -411,7 +390,6 @@ class TestRegisterFigure:
         assert isinstance(data, dict)
 
     def test_register_figure_handles_import_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         real_import = builtins.__import__
 
         def _block_figure_manager(name: str, *args: object, **kwargs: object) -> object:
@@ -425,7 +403,6 @@ class TestRegisterFigure:
         register_figure()
 
     def test_register_figure_handles_oserror(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "project_root", tmp_path)
         (tmp_path / "output" / "figures").mkdir(parents=True)
 
         class _BrokenFigureManager:
