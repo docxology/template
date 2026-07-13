@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 
 INFRASTRUCTURE_AVAILABLE = False
+_INFRASTRUCTURE_OVERRIDE: ContextVar[bool | None] = ContextVar("template_code_infrastructure_available", default=None)
 ScriptExecutionError: type[Exception]
 TemplateError: type[Exception]
 ValidationError: type[Exception]
@@ -67,6 +71,21 @@ except ImportError as e:  # pragma: no cover — fallback when infrastructure is
     Panel = None  # type: ignore[misc, assignment]
     log_success = None
 
+
+def infrastructure_available() -> bool:
+    override = _INFRASTRUCTURE_OVERRIDE.get()
+    return INFRASTRUCTURE_AVAILABLE if override is None else override
+
+
+@contextmanager
+def infrastructure_context(available: bool) -> Iterator[None]:
+    token = _INFRASTRUCTURE_OVERRIDE.set(available)
+    try:
+        yield
+    finally:
+        _INFRASTRUCTURE_OVERRIDE.reset(token)
+
+
 __all__ = [
     "INFRASTRUCTURE_AVAILABLE",
     "FigureManager",
@@ -89,4 +108,6 @@ __all__ = [
     "get_logger",
     "log_success",
     "verify_output_integrity",
+    "infrastructure_available",
+    "infrastructure_context",
 ]

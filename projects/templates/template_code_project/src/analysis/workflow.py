@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 
-def run_analysis_pipeline() -> None:
+def run_analysis_pipeline(
+    *,
+    health_checker_factory=None,
+    logger_factory=None,
+    convergence_runner=None,
+) -> None:
     """Execute the full optimization analysis workflow."""
     from . import (
-        INFRASTRUCTURE_AVAILABLE,
         ProgressBar,
         ScriptExecutionError,
         SystemHealthChecker,
@@ -23,6 +27,7 @@ def run_analysis_pipeline() -> None:
         save_publishing_materials,
         save_validation_report,
         validate_generated_outputs,
+        infrastructure_available,
     )
     from .experiments import _project_root
     from ..experiment_config import load_experiment_config
@@ -37,7 +42,9 @@ def run_analysis_pipeline() -> None:
     )
 
     apply_visualization_style()
-    logger = _get_logger()
+    logger = (logger_factory or _get_logger)()
+    infra_available = infrastructure_available()
+    run_convergence = convergence_runner or run_convergence_experiment
     exp_config = load_experiment_config(_project_root())
 
     def log_info(msg: str) -> None:
@@ -48,13 +55,14 @@ def run_analysis_pipeline() -> None:
         """Process log warning."""
         logger.warning(msg)
 
-    if INFRASTRUCTURE_AVAILABLE:
+    if infra_available:
         log_success("Starting optimization analysis pipeline", logger=logger)
     log_info(f"Project root: {_project_root()}")
 
     try:
-        if INFRASTRUCTURE_AVAILABLE and SystemHealthChecker is not None:
-            health_checker = SystemHealthChecker()
+        checker_factory = health_checker_factory or SystemHealthChecker
+        if infra_available and checker_factory is not None:
+            health_checker = checker_factory()
             log_info("Running system health check...")
             health_status = health_checker.get_health_status()
             if health_status.get("overall_status") != "healthy":
@@ -66,15 +74,15 @@ def run_analysis_pipeline() -> None:
                 log_info("System health check passed")
 
         log_info("Running convergence experiments...")
-        if INFRASTRUCTURE_AVAILABLE and ProgressBar is not None:
+        if infra_available and ProgressBar is not None:
             progress = ProgressBar(total=len(exp_config.step_sizes), task="Step sizes")
-            results = run_convergence_experiment(
+            results = run_convergence(
                 on_step=lambda _alpha, _result: progress.update(1),
                 config=exp_config,
             )
             progress.finish()
         else:
-            results = run_convergence_experiment(config=exp_config)
+            results = run_convergence(config=exp_config)
 
         log_info("Generating traditional analysis outputs...")
         convergence_plot = generate_convergence_plot(results, config=exp_config)
@@ -95,20 +103,20 @@ def run_analysis_pipeline() -> None:
 
         validation_report_path = None
         log_info("Validating generated outputs...")
-        if INFRASTRUCTURE_AVAILABLE:
+        if infra_available:
             validation_report = validate_generated_outputs()
             if validation_report:
                 validation_report_path = save_validation_report(validation_report)
 
         log_info("Generating publishing materials...")
         publishing_metadata = extract_optimization_metadata(results)
-        if publishing_metadata and INFRASTRUCTURE_AVAILABLE:
+        if publishing_metadata and infra_available:
             citations = generate_citations_from_metadata(publishing_metadata)
             save_publishing_materials(publishing_metadata, citations)
         elif publishing_metadata:
             log_info("Skipping citation generation (infrastructure not available)")
 
-        if INFRASTRUCTURE_AVAILABLE:
+        if infra_available:
             log_info("Publishing integration demonstration...")
             try:
                 if publishing_metadata:
@@ -123,7 +131,7 @@ def run_analysis_pipeline() -> None:
         log_info(f"Generated complexity visualization: {complexity_plot}")
         log_info(f"Generated data: {data_path}")
 
-        if INFRASTRUCTURE_AVAILABLE:
+        if infra_available:
             log_info(f"Generated stability report: {stability_path}")
             log_info(f"Generated benchmark report: {benchmark_path}")
             log_info(f"Generated stability visualization: {stability_plot}")
@@ -157,9 +165,9 @@ def run_analysis_pipeline() -> None:
         raise
 
 
-def main() -> None:
+def main(**kwargs: object) -> None:
     """Run the full optimization analysis pipeline."""
-    run_analysis_pipeline()
+    run_analysis_pipeline(**kwargs)
 
 
 __all__ = ["main", "run_analysis_pipeline"]

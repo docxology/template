@@ -26,6 +26,7 @@ from src.analysis import (  # noqa: E402
     save_publishing_materials,
     save_validation_report,
     validate_generated_outputs,
+    infrastructure_context,
 )
 from src.experiment_config import ExperimentConfig  # noqa: E402
 from src.optimizer import OptimizationResult  # noqa: E402
@@ -45,26 +46,26 @@ class TestFallbackLogging:
         assert logger.name == again.name
         assert logger.handlers
 
-    def test_get_logger_without_infra(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
-        logger = _get_logger()
+    def test_get_logger_without_infra(self):
+        with infrastructure_context(False):
+            logger = _get_logger()
         assert logger.name == "template_code_project.optimization_analysis"
 
-    def test_log_success_fallback_is_noop(self, monkeypatch: pytest.MonkeyPatch):
+    def test_log_success_fallback_is_noop(self):
         """log_success no-op fallback (lines 71-74) is callable and returns None."""
-        monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
         # The fallback is only redefined at module import time; test via the no-op
         # directly by calling it when infrastructure is unavailable.
         # We can call the global log_success — if infrastructure is available,
         # it is the real one; if not, it is the no-op. Either way it should not raise.
-        result = analysis_mod.log_success("test message", None)
+        with infrastructure_context(False):
+            result = analysis_mod.log_success("test message", None)
         assert result is None
 
 
 class TestValidateOutputs:
-    def test_skips_when_infra_unavailable(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
-        assert validate_generated_outputs() is None
+    def test_skips_when_infra_unavailable(self):
+        with infrastructure_context(False):
+            assert validate_generated_outputs() is None
 
     def test_returns_summary_when_infra_available(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
@@ -85,8 +86,7 @@ class TestValidateOutputs:
         def _raise_validation(_path: Path) -> None:
             raise ValidationError("integrity check failed")
 
-        monkeypatch.setattr(analysis_mod, "verify_output_integrity", _raise_validation)
-        assert validate_generated_outputs() is None
+        assert validate_generated_outputs(integrity_validator=_raise_validation) is None
 
     def test_handles_unexpected_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
@@ -95,8 +95,7 @@ class TestValidateOutputs:
         def _raise_oserror(_path: Path) -> None:
             raise OSError("disk full")
 
-        monkeypatch.setattr(analysis_mod, "verify_output_integrity", _raise_oserror)
-        assert validate_generated_outputs() is None
+        assert validate_generated_outputs(integrity_validator=_raise_oserror) is None
 
     def test_logs_integrity_issues_when_present(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
@@ -111,8 +110,7 @@ class TestValidateOutputs:
                 recommendations=[],
             )
 
-        monkeypatch.setattr(analysis_mod, "verify_output_integrity", _report_with_issues)
-        report = validate_generated_outputs()
+        report = validate_generated_outputs(integrity_validator=_report_with_issues)
         assert report is not None
         assert report["integrity_check"]["issues_found"] == 2
 
@@ -136,8 +134,7 @@ class TestSaveValidationReport:
                 raise OSError("write failed")
             return real_open(*args, **kwargs)
 
-        monkeypatch.setattr("builtins.open", _fail_json_write)
-        assert save_validation_report({"integrity_check": {"total_files": 1}}) is None
+        assert save_validation_report({"integrity_check": {"total_files": 1}}, file_opener=_fail_json_write) is None
 
     def test_returns_none_when_reports_path_is_file(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         reports = tmp_path / "output" / "reports"
@@ -261,10 +258,10 @@ class TestMainBranches:
     def _copy_manuscript(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")
 
-    def test_main_without_infra(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    def test_main_without_infra(self, tmp_path: Path):
         self._copy_manuscript(tmp_path)
-        monkeypatch.setattr(analysis_mod, "INFRASTRUCTURE_AVAILABLE", False)
-        analysis_mod.main()
+        with infrastructure_context(False):
+            analysis_mod.main()
         assert (tmp_path / "output" / "data" / "optimization_results.csv").exists()
         assert (tmp_path / "output" / "figures" / "convergence_plot.png").exists()
 
@@ -280,8 +277,7 @@ class TestMainBranches:
                     "checks": {"disk": {"status": "unhealthy", "error": "full"}},
                 }
 
-        monkeypatch.setattr(analysis_mod, "SystemHealthChecker", UnhealthyChecker)
-        analysis_mod.main()
+        analysis_mod.main(health_checker_factory=UnhealthyChecker)
         assert (tmp_path / "output" / "reports" / "stability_analysis.json").exists()
 
     def test_main_handles_publishing_demo_failure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -303,8 +299,7 @@ class TestMainBranches:
             def __getattr__(self, name: str) -> object:
                 return getattr(base_logger, name)
 
-        monkeypatch.setattr(analysis_mod, "_get_logger", lambda: _DemoFailLogger())
-        analysis_mod.main()
+        analysis_mod.main(logger_factory=lambda: _DemoFailLogger())
         assert (tmp_path / "output" / "data" / "optimization_results.csv").exists()
 
 
@@ -324,9 +319,8 @@ class TestMainErrors:
         def _boom(**_kwargs: object) -> dict:
             raise err
 
-        monkeypatch.setattr(analysis_mod, "run_convergence_experiment", _boom)
         with pytest.raises(ScriptExecutionError):
-            analysis_mod.main()
+            analysis_mod.main(convergence_runner=_boom)
 
     def test_main_reraises_template_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
@@ -340,9 +334,8 @@ class TestMainErrors:
         def _boom(**_kwargs: object) -> dict:
             raise err
 
-        monkeypatch.setattr(analysis_mod, "run_convergence_experiment", _boom)
         with pytest.raises(TemplateError):
-            analysis_mod.main()
+            analysis_mod.main(convergence_runner=_boom)
 
     def test_main_reraises_unexpected_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
@@ -352,9 +345,8 @@ class TestMainErrors:
         def _boom(**_kwargs: object) -> dict:
             raise RuntimeError("unexpected")
 
-        monkeypatch.setattr(analysis_mod, "run_convergence_experiment", _boom)
         with pytest.raises(RuntimeError):
-            analysis_mod.main()
+            analysis_mod.main(convergence_runner=_boom)
 
     def test_main_reraises_import_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         self._copy_manuscript(tmp_path)
@@ -362,9 +354,8 @@ class TestMainErrors:
         def _boom(**_kwargs: object) -> dict:
             raise ImportError("missing module")
 
-        monkeypatch.setattr(analysis_mod, "run_convergence_experiment", _boom)
         with pytest.raises(ImportError, match="missing module"):
-            analysis_mod.main()
+            analysis_mod.main(convergence_runner=_boom)
 
     def test_main_reraises_file_not_found_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         self._copy_manuscript(tmp_path)
@@ -372,9 +363,8 @@ class TestMainErrors:
         def _boom(**_kwargs: object) -> dict:
             raise FileNotFoundError("config missing")
 
-        monkeypatch.setattr(analysis_mod, "run_convergence_experiment", _boom)
         with pytest.raises(FileNotFoundError, match="config missing"):
-            analysis_mod.main()
+            analysis_mod.main(convergence_runner=_boom)
 
 
 class TestRegisterFigure:
@@ -389,20 +379,15 @@ class TestRegisterFigure:
         data = json.loads(registry.read_text())
         assert isinstance(data, dict)
 
-    def test_register_figure_handles_import_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        real_import = builtins.__import__
-
-        def _block_figure_manager(name: str, *args: object, **kwargs: object) -> object:
-            if name == "infrastructure.documentation.figure_manager":
-                raise ImportError("figure manager unavailable")
-            return real_import(name, *args, **kwargs)
-
-        monkeypatch.setattr("builtins.__import__", _block_figure_manager)
+    def test_register_figure_handles_import_error(self, tmp_path: Path):
         from src.analysis import register_figure
 
-        register_figure()
+        def unavailable_manager(**kwargs: object):
+            raise ImportError("figure manager unavailable")
 
-    def test_register_figure_handles_oserror(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+        register_figure(figure_manager_factory=unavailable_manager)
+
+    def test_register_figure_handles_oserror(self, tmp_path: Path):
         (tmp_path / "output" / "figures").mkdir(parents=True)
 
         class _BrokenFigureManager:
@@ -412,18 +397,9 @@ class TestRegisterFigure:
             def register_figure(self, **kwargs: object) -> None:
                 raise OSError("registry write failed")
 
-        import types
-
-        fake_mod = types.ModuleType("infrastructure.documentation.figure_manager")
-        fake_mod.FigureManager = _BrokenFigureManager  # type: ignore[attr-defined]
-        monkeypatch.setitem(
-            sys.modules,
-            "infrastructure.documentation.figure_manager",
-            fake_mod,
-        )
         from src.analysis import register_figure
 
-        register_figure()
+        register_figure(figure_manager_factory=_BrokenFigureManager)
 
 
 class TestImportFallback:

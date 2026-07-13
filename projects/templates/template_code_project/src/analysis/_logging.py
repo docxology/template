@@ -4,13 +4,11 @@ from __future__ import annotations
 
 import logging
 
-from ._infra import get_logger as _infra_get_logger
+from ._infra import get_logger as _infra_get_logger, infrastructure_available
 
 
 def _infra_available() -> bool:
-    from . import INFRASTRUCTURE_AVAILABLE
-
-    return bool(INFRASTRUCTURE_AVAILABLE)
+    return infrastructure_available()
 
 
 _FALLBACK_LOGGER_NAME = "template_code_project.optimization_analysis"

@@ -20,6 +20,7 @@ from src.analysis import (
     run_performance_benchmarking,
     run_stability_analysis,
     save_optimization_results,
+    infrastructure_context,
 )
 from src.experiment_config import ExperimentConfig, load_experiment_config
 from src.optimizer import OptimizationResult
@@ -127,18 +128,17 @@ class TestExtractOptimizationMetadata:
 
 
 class TestAnalysisStandalonePaths:
-    def test_stability_analysis_without_infra(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.INFRASTRUCTURE_AVAILABLE", False)
-        path = run_stability_analysis()
+    def test_stability_analysis_without_infra(self, tmp_path: Path):
+        with infrastructure_context(False):
+            path = run_stability_analysis()
         assert path.exists()
 
-    def test_benchmark_without_infra(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.INFRASTRUCTURE_AVAILABLE", False)
-        path = run_performance_benchmarking()
+    def test_benchmark_without_infra(self, tmp_path: Path):
+        with infrastructure_context(False):
+            path = run_performance_benchmarking()
         assert path.exists()
 
-    def test_stability_score_standalone(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr("src.analysis.INFRASTRUCTURE_AVAILABLE", False)
+    def test_stability_score_standalone(self):
         cfg = ExperimentConfig(stability_starting_points=(0.0, 10.0))
         from src.analysis import _stability_score_from_runs
 

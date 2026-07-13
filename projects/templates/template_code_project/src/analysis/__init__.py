@@ -48,6 +48,8 @@ from ._infra import (
     check_numerical_stability,
     log_success,
     verify_output_integrity,
+    infrastructure_available,
+    infrastructure_context,
 )
 from ._logging import _setup_fallback_logging, get_logger as _get_logger
 from ..project_paths import _DEFAULT_ROOT as project_root
@@ -594,6 +596,8 @@ def multi_factor_analysis(
 __all__ = [
     # Infrastructure probes
     "INFRASTRUCTURE_AVAILABLE",
+    "infrastructure_available",
+    "infrastructure_context",
     "ProgressBar",
     "ScriptExecutionError",
     "SystemHealthChecker",
