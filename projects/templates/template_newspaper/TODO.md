@@ -17,7 +17,7 @@ configurable, and honestly bounded as a template.
 
 - Keep edition content fictional unless a fork adds real source provenance and fact-checking validators.
 - Keep ReportLab layout logic in `src/`, with scripts as thin orchestration only.
-- Add a machine-readable layout audit artifact for page geometry, overflow checks, and missing image fallbacks.
+- Add a machine-readable layout audit artifact for page-geometry glyph-collision auditing — e.g. detecting when a wrapped headline's descender-heavy last line sits too close to the next flowable (the class of bug fixed in `furniture.draw_lead_headline`'s `LEAD_HEAD_LEADING`/`LEAD_HEAD_GAP`/`LEAD_DECK_LEADING` constants, caught only by rasterizing rendered pages, not by `all_pages_fit`/overset checks). Overflow checks (`all_pages_fit`, oversets) and missing-image fallbacks are already implemented and tested (`tests/test_robustness.py`); this item is scoped to glyph-collision detection specifically.
 
 ## Configurable-surface gaps
 

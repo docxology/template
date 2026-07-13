@@ -11,6 +11,9 @@ print-ready, large-format newspaper PDF. The engine separates four concerns:
 - :mod:`newspaper.components` — flowables (stories, boxes, drop caps, figures).
 - :mod:`newspaper.furniture`  — canvas-drawn nameplate/bands/folios/rules.
 - :mod:`newspaper.layout`     — frame construction + content flow.
+- :mod:`newspaper.figures`    — halftone-engraving and chart PNG generation
+  (Pillow/Matplotlib) consumed by ``scripts/10_generate_figures.py``, upstream
+  of the ``output/figures/*.png`` paths ``content/`` stories reference.
 - :mod:`newspaper.engine`     — the top-level render entry point.
 
 Swapping editions is a pure data edit under ``content/``; the engine is content

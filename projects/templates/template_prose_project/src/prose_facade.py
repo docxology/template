@@ -80,9 +80,9 @@ class ManuscriptReportLike(Protocol):
     avg_gunning_fog: float
     citation_keys: list[str]
 
-    """Serialize this object to a plain dict for JSON output."""
-
-    def to_dict(self) -> dict[str, object]: ...
+    def to_dict(self) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output."""
+        ...
 
 
 @dataclass(frozen=True)

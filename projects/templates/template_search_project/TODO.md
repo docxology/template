@@ -55,6 +55,11 @@ file.
 
 ## Test and validator gaps
 
+- `src/review_report.py` sits exactly at the 90% coverage floor (20
+  uncovered lines: 58-65, 87-109, 129-130, 172, 281, 326, 330) — any further
+  change to that module without added tests will drop the project below the
+  gate. Add coverage for its remaining untested branches before extending
+  the report generator further.
 - Add a negative control before widening retrieval-coverage claims beyond
   the bundled offline corpus.
 - Add a fixture-honesty check that fails if `data/corpus.json`-derived

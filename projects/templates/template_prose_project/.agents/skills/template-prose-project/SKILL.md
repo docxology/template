@@ -41,6 +41,14 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_pro
   source and config.
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
+- **Mermaid/PDF rendering needs a pinned Chrome.** Diagrams built with `mmdc`
+  require `chrome-headless-shell`; install it once via
+  `npx --yes puppeteer browsers install chrome-headless-shell` (see
+  [`README.md`](../../../README.md)).
+- **Config validation is strict, not permissive.** `src/config.py::ProjectConfig.from_dict`
+  rejects unknown keys and out-of-range values by raising `ValueError` with the
+  offending value and the allowed set quoted — see
+  [`docs/faq.md`](../../../docs/faq.md).
 
 ## Cross-refs
 

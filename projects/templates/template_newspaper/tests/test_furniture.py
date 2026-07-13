@@ -8,6 +8,7 @@ font-size scaling triggered by a long paper name.
 from __future__ import annotations
 
 
+from newspaper import furniture
 from newspaper.config import NewspaperConfig
 from newspaper.content import Block, Edition, Page, Story
 from newspaper.engine import render_edition
@@ -166,6 +167,53 @@ def test_inside_page_no_department(tmp_path) -> None:
     )
     edition = Edition(nameplate="T", city="C", state="S", date="D", pages=[page])
     out = tmp_path / "no_department.pdf"
+    result = render_edition(edition, NewspaperConfig(), project_root=tmp_path, output_path=out, fonts=_base14())
+    assert result.page_count == 1
+    assert out.exists()
+
+
+# ---------------------------------------------------------------------------
+# draw_lead_headline — headline/deck glyph-collision regression guard
+# ---------------------------------------------------------------------------
+
+
+def test_lead_headline_spacing_constants_clear_descenders() -> None:
+    """Regression guard for a real rendering bug: a wrapped lead headline
+    ending in a deep descender (a comma tail, or "g"/"y") visually collided
+    with the deck's first line below it, because ``draw_lead_headline`` draws
+    both via manual ``wrapOn``/``drawOn`` canvas calls — a path that does NOT
+    respect a ParagraphStyle's ``spaceBefore``/``spaceAfter`` the way a
+    Frame-managed flowable would. Confirmed by rendering The Triplicate and
+    rasterizing pages A3 ("Council adopts budget that spares the library,
+    trims overtime"), A5 ("Build the docks, and tell the whole story"), and
+    A7 ("Battery Point light keeps its 170-year vigil") at 150 DPI: the
+    headline's last-line descender sat almost on the deck's ascenders,
+    reading as a stray glyph. Fixed by increasing ``LEAD_HEAD_LEADING``
+    (46->54), ``LEAD_HEAD_GAP`` (3->7), and ``LEAD_DECK_LEADING`` (17->19) in
+    ``furniture.py``. This test locks in safety-margin floors on those
+    constants so a future edit cannot silently shrink them back to the
+    collision-prone values.
+    """
+    assert furniture.LEAD_HEAD_LEADING / 44 >= 1.15, "lead headline leading/fontSize ratio too tight for descenders"
+    assert furniture.LEAD_HEAD_GAP >= 6, "gap after the lead headline too small to clear descenders into the deck"
+    assert furniture.LEAD_DECK_LEADING / 13.5 >= 1.3, "lead deck leading/fontSize ratio too tight"
+
+
+def test_lead_headline_with_descender_and_deck_renders_and_fits(tmp_path) -> None:
+    """End-to-end: a lead headline ending in a comma-descender, immediately
+    followed by a deck, must still render to a single page with real
+    ``draw_lead_headline`` spacing (not just the isolated constants above).
+    """
+    lead = Story(
+        headline="Council adopts budget that spares the library, trims overtime",
+        kicker="City Council",
+        deck="A spending plan closes a projected shortfall without layoffs, but leaves positions unfilled.",
+        level="lead",
+        body=[Block("p", "The council adopted the budget Monday night after three hours of testimony.")],
+    )
+    page = Page(number=1, template="front", columns=3, lead=lead, main_items=[])
+    edition = Edition(nameplate="T", city="C", state="S", date="D", pages=[page])
+    out = tmp_path / "descender_headline.pdf"
     result = render_edition(edition, NewspaperConfig(), project_root=tmp_path, output_path=out, fonts=_base14())
     assert result.page_count == 1
     assert out.exists()

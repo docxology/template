@@ -227,7 +227,7 @@ def build_stylesheet(fonts: Fonts) -> StyleSheet1:
             "HeadlineLead",
             fontName=fonts.display_bold,
             fontSize=44,
-            leading=50,
+            leading=52,
             alignment=TA_LEFT,
             textColor=INK,
             spaceAfter=8,
