@@ -48,7 +48,9 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping, Self, Sequence
+from typing import Mapping, Sequence
+
+from typing_extensions import Self
 
 from template_formal.agent.agent import Agent, BeliefState, CandidateAction
 from template_formal.colony.pheromone import InMemoryPheromoneField, PheromoneField

@@ -7,11 +7,16 @@ run against the live repo tree; the renderer is exercised with a real
 
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 from pathlib import Path
+
+import pytest
 
 from infrastructure.documentation.counts_doc import (
     COVERAGE_PROVENANCE_RELATIVE_PATH,
+    COVERAGE_PROVENANCE_SCHEMA_VERSION,
     DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
@@ -19,6 +24,7 @@ from infrastructure.documentation.counts_doc import (
     infrastructure_packages,
     render_counts_doc,
     tracked_infra_python_count,
+    validate_coverage_provenance,
     write_counts_doc,
 )
 from infrastructure.project.public_scope import public_project_names
@@ -126,3 +132,42 @@ def test_exemplar_source_hash_changes_with_source(tmp_path: Path) -> None:
     before = exemplar_source_hash(tmp_path, "demo")
     source.write_text("VALUE = 2\n", encoding="utf-8")
     assert exemplar_source_hash(tmp_path, "demo") != before
+
+
+def test_exemplar_source_hash_ignores_untracked_build_metadata(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "templates" / "demo"
+    source = project / "src" / "demo.py"
+    test_file = project / "tests" / "test_demo.py"
+    source.parent.mkdir(parents=True)
+    test_file.parent.mkdir()
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    test_file.write_text("def test_value():\n    assert True\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "--", source, test_file], cwd=tmp_path, check=True)
+
+    before = exemplar_source_hash(tmp_path, "demo")
+    metadata = project / "src" / "demo.egg-info" / "PKG-INFO"
+    metadata.parent.mkdir()
+    metadata.write_text("platform-specific generated metadata\n", encoding="utf-8")
+
+    assert exemplar_source_hash(tmp_path, "demo") == before
+
+
+def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
+    projects: dict[str, dict[str, str]] = {}
+    for snapshot in EXEMPLAR_SNAPSHOT:
+        project = tmp_path / "projects" / "templates" / snapshot.name
+        (project / "src").mkdir(parents=True)
+        (project / "tests").mkdir()
+        projects[snapshot.name] = {
+            "coverage_pct": snapshot.coverage_pct,
+            "source_hash": exemplar_source_hash(tmp_path, snapshot.name),
+        }
+    path = tmp_path / COVERAGE_PROVENANCE_RELATIVE_PATH
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({"schema_version": 1, "projects": projects}), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="schema mismatch"):
+        validate_coverage_provenance(tmp_path)
+
+    assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 2

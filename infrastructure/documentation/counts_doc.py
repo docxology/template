@@ -40,6 +40,7 @@ from infrastructure.project.public_scope import public_project_names
 
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
+COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
 GENERATED_DATE = "2026-07-13"
@@ -217,15 +218,29 @@ def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
 
 
 def exemplar_source_hash(repo_root: Path, name: str) -> str:
-    """Hash the source and tests that determine one exemplar's coverage."""
+    """Hash tracked source and tests that determine one exemplar's coverage."""
     project_root = repo_root / "projects" / "templates" / name
     digest = hashlib.sha256()
-    files = sorted(
-        path
-        for root_name in ("src", "tests")
-        for path in (project_root / root_name).rglob("*")
-        if path.is_file() and "__pycache__" not in path.parts
+    relative_roots = [(project_root / root_name).relative_to(repo_root).as_posix() for root_name in ("src", "tests")]
+    tracked = subprocess.run(  # noqa: S603 - fixed git command and paths
+        ["git", "ls-files", "--", *relative_roots],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
     )
+    if tracked.returncode == 0:
+        files = sorted(repo_root / relative for relative in tracked.stdout.splitlines())
+    else:
+        # Unit callers may supply a temporary non-Git tree. Production
+        # repositories always take the tracked-file branch above so ignored
+        # build metadata cannot contaminate cross-platform provenance.
+        files = sorted(
+            path
+            for root_name in ("src", "tests")
+            for path in (project_root / root_name).rglob("*")
+            if path.is_file() and "__pycache__" not in path.parts
+        )
     for path in files:
         digest.update(path.relative_to(project_root).as_posix().encode("utf-8"))
         digest.update(b"\0")
@@ -244,7 +259,7 @@ def build_coverage_provenance(repo_root: Path) -> dict[str, object]:
         check=True,
     ).stdout.strip()
     return {
-        "schema_version": 1,
+        "schema_version": COVERAGE_PROVENANCE_SCHEMA_VERSION,
         "measured_at": EXEMPLAR_SNAPSHOT_DATE,
         "source_commit": source_commit,
         "projects": {
@@ -274,7 +289,11 @@ def validate_coverage_provenance(repo_root: Path) -> None:
     if not path.is_file():
         raise RuntimeError(f"missing coverage provenance: {COVERAGE_PROVENANCE_RELATIVE_PATH}")
     payload = json.loads(path.read_text(encoding="utf-8"))
-    projects = payload.get("projects") if isinstance(payload, dict) else None
+    if not isinstance(payload, dict):
+        raise RuntimeError("coverage provenance root must be a mapping")
+    if payload.get("schema_version") != COVERAGE_PROVENANCE_SCHEMA_VERSION:
+        raise RuntimeError(f"coverage provenance schema mismatch: expected {COVERAGE_PROVENANCE_SCHEMA_VERSION}")
+    projects = payload.get("projects")
     if not isinstance(projects, dict):
         raise RuntimeError("coverage provenance has no projects mapping")
     expected_names = {row.name for row in EXEMPLAR_SNAPSHOT}
