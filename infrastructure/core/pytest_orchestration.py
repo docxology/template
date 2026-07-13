@@ -205,9 +205,16 @@ def log_discovered_tests(
     *,
     timeout_seconds: float = 30.0,
 ) -> None:
-    """Run pytest --collect-only and log the discovered test count."""
-    discovery_cmd = cmd.copy()
-    discovery_cmd.append("--collect-only")
+    """Run pytest serially with ``--collect-only`` and log its test count.
+
+    Pytest-xdist may schedule collected items even in collection-only mode.
+    Discovery is only a pre-flight count, so carrying the execution command's
+    ``-n``/``--dist`` options into it can duplicate or even start a large suite
+    before the real test run.  A final ``-n 0`` overrides command-line and
+    project-level ``addopts`` parallelism; ``--no-cov`` avoids instrumenting a
+    throwaway collection pass.
+    """
+    discovery_cmd = [*cmd, "--collect-only", "-n", "0", "--no-cov"]
     log_substep(f"Discovering {label} tests...", logger)
     try:
         result = subprocess.run(  # nosec B603

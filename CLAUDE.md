@@ -170,6 +170,11 @@ uv run python -m infrastructure.skills write-index
 uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills operations-check
 
+# Pinned repository skills + Codex/Claude/Hermes user-runtime parity
+uv run python -m infrastructure.skills runtime-status
+# Intentional reversible install; existing same-name skills are backed up
+uv run python -m infrastructure.skills runtime-install
+
 # Discoverable per-template skills (Hermes / agentskills.io)
 # Every exemplar under projects/templates/ ships .agents/skills/<name>/SKILL.md
 # These descriptors are included in .cursor/skill_manifest.json and MCP list_skills.

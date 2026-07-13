@@ -1023,6 +1023,14 @@
         {
           "name": "operations-check",
           "help": "Verify the operations manifest matches live discovery"
+        },
+        {
+          "name": "runtime-status",
+          "help": "Audit pinned Agent Skills across Codex, Claude Code, and Hermes"
+        },
+        {
+          "name": "runtime-install",
+          "help": "Reversibly install pinned Agent Skills across all three runtimes"
         }
       ],
       "exports": [
@@ -1052,7 +1060,7 @@
         "write_operations_manifest",
         "write_skill_manifest"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.steganography.start_tpm_backend",

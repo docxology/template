@@ -75,6 +75,7 @@ MUTATING_OPERATIONS: frozenset[str] = frozenset(
     {
         "infrastructure.publishing",  # DOI / Zenodo / arXiv publish + archival CLIs
         "infrastructure.search.deep_research",  # PAID deep-research dispatch
+        "infrastructure.skills",  # manifests plus user-level runtime links + backups
     }
 )
 

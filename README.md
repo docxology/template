@@ -151,6 +151,12 @@ inside that exemplar.
 In addition to the project-local skills, the repo generates infrastructure-level
 SKILL.md files from live discovery:
 
+- **Shared context-engineering skills:** [`.agents/skills/`](.agents/skills/)
+  carries a pinned, provenance-checked Agent Skills collection discoverable by
+  Codex/OpenAI and Hermes-compatible runtimes. Use
+  `uv run python -m infrastructure.skills runtime-status` to audit Codex,
+  Claude Code, and Hermes parity, or `... runtime-install` to create reversible
+  user-level links from the pinned shared store.
 - **Workflow router:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md)
   (`template-workflows`) routes broad requests such as full audits, pipeline
   debugging, code changes, tests, validation, manuscript work, and release

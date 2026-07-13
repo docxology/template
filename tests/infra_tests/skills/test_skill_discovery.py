@@ -140,6 +140,7 @@ class TestTemplateRepository:
             "rules/templates",
             "tools/templates",
             "docs/prompts",
+            ".agents/skills",
             ".cursor/skills",
         )
         assert "projects" not in DEFAULT_SKILL_SEARCH_ROOTS
@@ -170,6 +171,13 @@ class TestTemplateRepository:
         assert (
             "projects/templates/template_pools_rules_tools/.agents/skills/template-pools-rules-tools/SKILL.md" in paths
         )
+
+    def test_repository_agent_skills_present(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        paths = {s.path_posix for s in skills}
+        assert ".agents/skills/context-fundamentals/SKILL.md" in paths
+        assert ".agents/skills/self-improvement-loops/SKILL.md" in paths
 
     def test_script_skills_present(self) -> None:
         root = _template_repo_root()

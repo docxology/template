@@ -212,6 +212,36 @@ class TestLogDiscoveredTests:
         env = os.environ.copy()
         log_discovered_tests(cmd, tmp_path, env, "integration")
 
+    def test_discovery_forces_serial_collection(self, tmp_path):
+        """The pre-flight count must not schedule tests through xdist."""
+        import os
+        import sys
+
+        probe = tmp_path / "probe.py"
+        argv_path = tmp_path / "argv.txt"
+        probe.write_text(
+            "import pathlib, sys\n"
+            "pathlib.Path(sys.argv[1]).write_text('\\n'.join(sys.argv[2:]), encoding='utf-8')\n"
+            "print('1 test collected')\n",
+            encoding="utf-8",
+        )
+        cmd = [
+            sys.executable,
+            str(probe),
+            str(argv_path),
+            "-n",
+            "4",
+            "--dist",
+            "worksteal",
+            "--cov=src",
+        ]
+
+        log_discovered_tests(cmd, tmp_path, os.environ.copy(), "parallel probe")
+
+        argv = argv_path.read_text(encoding="utf-8").splitlines()
+        assert argv[-5:] == ["--collect-only", "-n", "0", "--no-cov"][-5:]
+        assert argv[-3:] == ["0", "--no-cov"][-3:]
+
 
 class TestReportSuiteFailure:
     """Test _report_suite_failure reporting."""

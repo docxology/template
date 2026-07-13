@@ -5,10 +5,11 @@ description: |
   discovering relevant skills, making template easier for agents to navigate, auditing
   docs/prompts skill coverage, checking .cursor/skill_manifest.json, evaluating external
   skills, reviewing external agentic operating models such as Steward OS, AutoResearch CLI,
-  or LEANN, or improving agent onboarding/routing without changing project behavior.
+  LEANN, or Agent Skills for Context Engineering, or improving agent onboarding/routing
+  without changing project behavior.
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-06-22"
+  version: "1.2.0"
+  last_updated: "2026-07-12"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -35,6 +36,7 @@ metadata:
 - "Review Steward OS and learn useful skills or ideas for template/"
 - "Review autoresearch-cli and learn measurement-loop patterns for template/"
 - "Can LEANN semantic memory help template agents navigate this repo?"
+- "Install Agent Skills for Context Engineering across Codex, Claude, and Hermes"
 
 ## Inputs to confirm
 
@@ -44,7 +46,7 @@ metadata:
 
 ## Workflow
 
-1. **Inventory** - run `uv run python -m infrastructure.skills list-json`, `check`, `check-contracts`, and `operations-check`. Use [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) as the human index, `.cursor/skill_manifest.json` as the editor manifest, and `.cursor/operations_manifest.json` as the Codex/MCP operation catalog.
+1. **Inventory** - run `uv run python -m infrastructure.skills list-json`, `check`, `check-contracts`, `operations-check`, and `runtime-status` when user-level parity is in scope. Use [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) as the human index, `.cursor/skill_manifest.json` as the editor manifest, and `.cursor/operations_manifest.json` as the Codex/MCP operation catalog.
 
 2. **Route locally first** - choose `docs/prompts/SKILL.md` ([template-workflows](../SKILL.md)) for broad template work, then exactly one child skill for implementation. Use this skill only for agent onboarding, routing, skill-surface maintenance, and external-skill review.
 
@@ -55,6 +57,27 @@ metadata:
 5. **Adopt external references template-first** - when a reference such as [Steward OS](https://nesquena.github.io/steward-os/), [AutoResearch CLI](https://github.com/trotsky1997/autoresearch-cli), or [LEANN](https://github.com/StarTrail-org/LEANN) is useful, translate the idea into template-native routing, eval, local guide, or deterministic infrastructure language. Do not copy external SKILL.md bodies, add scheduled jobs, create public-write automation, install MCP servers, or vendor external directories unless the user explicitly requests that separate implementation.
 
 6. **Verify** - rerun skill checks, operations checks, MCP smoke tests, skill tests, eval harness, and docs lint before claiming the routing surface is ready.
+
+## Context Engineering Agent Skills companion
+
+The explicitly adopted companion from
+[Agent Skills for Context Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering)
+lives under [`.agents/skills/`](../../../.agents/skills/). Its tracked
+[`context-engineering.lock.json`](../../../.agents/context-engineering.lock.json)
+pins source revision, plugin version, license, counts, and exact content hashes.
+
+| Surface | Contract |
+| --- | --- |
+| Repository discovery | `.agents/skills` is a narrow public discovery root included in the Cursor manifest, generated index, and MCP `list_skills`. |
+| Codex | Managed links live in `~/.agents/skills`; this is the shared Agent Skills root Codex already discovers. |
+| Claude Code | Managed links live in `~/.claude/skills`, preserving complete skill directories and relative references. |
+| Hermes | Managed links live in `~/.hermes/skills` for lazy-loader compatibility; the revisioned shared root is also trusted through `skills.external_dirs`. |
+| Drift gate | `uv run python -m infrastructure.skills runtime-status` verifies the pinned tree, shared revision, all 51 runtime links, and Hermes trust configuration. |
+| Install | `uv run python -m infrastructure.skills runtime-install` backs up same-name paths, links only the pinned inventory, and writes a receipt under `~/.local/state/template-agent-skills/`. |
+
+Do not bulk-mirror unrelated runtime skills. Do not auto-execute upstream
+examples. Runtime-neutral and safety changes are explicit overlays recorded by
+the lock so upgrades cannot silently erase them.
 
 ## Steward OS reference map
 
