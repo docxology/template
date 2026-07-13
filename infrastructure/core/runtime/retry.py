@@ -135,6 +135,7 @@ class RetryableOperation:
         initial_delay: float = 1.0,
         max_delay: float = 60.0,
         exponential_base: float = 2.0,
+        sleeper: Callable[[float], None] = time.sleep,
     ) -> None:
         """Initialize retryable operation.
 
@@ -143,11 +144,14 @@ class RetryableOperation:
             initial_delay: Initial delay in seconds
             max_delay: Maximum delay in seconds
             exponential_base: Base for exponential backoff
+            sleeper: Delay transport. Defaults to the real system sleep; callers may
+                inject a scheduler or deterministic recorder.
         """
         self.max_attempts = max_attempts
         self.initial_delay = initial_delay
         self.max_delay = max_delay
         self.exponential_base = exponential_base
+        self._sleep = sleeper
         self.attempt = 0
         self.result: Any = None
         self.succeeded = False
@@ -209,4 +213,4 @@ class RetryableOperation:
 
         logger.warning(f"Attempt {self.attempt}/{self.max_attempts} failed: {exception}. Retrying in {delay:.1f}s...")
 
-        time.sleep(delay)
+        self._sleep(delay)

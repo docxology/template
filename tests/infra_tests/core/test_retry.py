@@ -295,13 +295,14 @@ class TestRetryableOperation:
 
     def test_retryable_operation_max_delay(self):
         """Test max delay cap in RetryableOperation."""
-        start = time.time()
+        requested_delays: list[float] = []
 
         with RetryableOperation(
             max_attempts=5,
-            initial_delay=0.1,  # Reduced for faster test
+            initial_delay=0.1,
             max_delay=0.05,  # Cap at 0.05s
             exponential_base=2.0,
+            sleeper=requested_delays.append,
         ) as op:
             try:
                 for attempt in op:
@@ -313,10 +314,10 @@ class TestRetryableOperation:
                 # succeed() raises StopIteration to exit loop - this is expected
                 pass
 
-        elapsed = time.time() - start
-
-        # All delays should be capped at 0.05s
-        assert elapsed < 0.5  # Would be much more without cap
+        # Four retries request the capped delay plus at most 10% jitter. Verify
+        # the actual scheduler contract without depending on runner load.
+        assert len(requested_delays) == 4
+        assert all(0.05 <= delay <= 0.055 for delay in requested_delays)
         assert op.succeeded is True
 
     def test_retryable_operation_context_exit(self):
