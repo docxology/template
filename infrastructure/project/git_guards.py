@@ -200,18 +200,22 @@ def is_generated_artifact_path(path: str) -> bool:
     return any(fnmatch.fnmatch(normalized, pattern) for pattern in GENERATED_OUTPUT_PATTERNS)
 
 
-def is_oversized_public_template_output(repo_root: Path, path: str) -> bool:
+def is_oversized_public_template_output(
+    repo_root: Path, path: str, *, max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+) -> bool:
     """Check whether oversized public template output."""
     normalized = path.replace("\\", "/")
     if not is_public_template_output_path(normalized):
         return False
     try:
-        return (repo_root / normalized).stat().st_size > PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+        return (repo_root / normalized).stat().st_size > max_bytes
     except OSError:
         return False
 
 
-def tracked_generated_artifacts(repo_root: Path) -> list[str]:
+def tracked_generated_artifacts(
+    repo_root: Path, *, public_output_max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+) -> list[str]:
     """Return the set of tracked generated artifacts."""
     proc = subprocess.run(
         ["git", "ls-files", "-z"],
@@ -223,11 +227,18 @@ def tracked_generated_artifacts(repo_root: Path) -> list[str]:
     return sorted(
         path
         for path in paths
-        if is_generated_artifact_path(path) or is_oversized_public_template_output(repo_root, path)
+        if is_generated_artifact_path(path)
+        or is_oversized_public_template_output(repo_root, path, max_bytes=public_output_max_bytes)
     )
 
 
-def public_template_output_budget_findings(repo_root: Path) -> list[str]:
+def public_template_output_budget_findings(
+    repo_root: Path,
+    *,
+    max_files: int = PUBLIC_TEMPLATE_OUTPUT_MAX_FILES,
+    max_total_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES,
+    max_duplicate_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES,
+) -> list[str]:
     """Return ratchet violations for canonical tracked exemplar evidence."""
     proc = subprocess.run(
         ["git", "ls-files", "-z", "projects/templates/*/output/**"],
@@ -251,14 +262,12 @@ def public_template_output_budget_findings(repo_root: Path) -> list[str]:
     duplicate_bytes = sum(size * (count - 1) for size, count in blobs.values() if count > 1)
 
     findings: list[str] = []
-    if len(paths) > PUBLIC_TEMPLATE_OUTPUT_MAX_FILES:
-        findings.append(f"public output file count {len(paths)} exceeds {PUBLIC_TEMPLATE_OUTPUT_MAX_FILES}")
-    if total_bytes > PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES:
-        findings.append(f"public output aggregate bytes {total_bytes} exceeds {PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES}")
-    if duplicate_bytes > PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES:
-        findings.append(
-            f"public output duplicate bytes {duplicate_bytes} exceeds {PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES}"
-        )
+    if len(paths) > max_files:
+        findings.append(f"public output file count {len(paths)} exceeds {max_files}")
+    if total_bytes > max_total_bytes:
+        findings.append(f"public output aggregate bytes {total_bytes} exceeds {max_total_bytes}")
+    if duplicate_bytes > max_duplicate_bytes:
+        findings.append(f"public output duplicate bytes {duplicate_bytes} exceeds {max_duplicate_bytes}")
     return findings
 
 

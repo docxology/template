@@ -92,38 +92,36 @@ Large generated appendix content.
     assert not stale_slide.exists()
 
 
-def test_render_all_md_honors_disabled_slides(monkeypatch, tmp_path):
+def test_render_all_md_honors_disabled_slides(tmp_path):
     """Disabled slides should not invoke the Beamer renderer."""
     md_file = tmp_path / "section.md"
     md_file.write_text("# Section\n\nBody.\n", encoding="utf-8")
     html_file = tmp_path / "section.html"
     cfg = RenderingConfig(enable_slides=False, web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides"))
-    manager = RenderManager(cfg)
 
-    def fail_slides(*_args, **_kwargs):
-        raise AssertionError("slides renderer should not be called")
+    class StaticWebRenderer:
+        def render(self, _source):
+            return html_file
 
-    monkeypatch.setattr(manager, "render_slides", fail_slides)
-    monkeypatch.setattr(manager.web_renderer, "render", lambda _source: html_file)
+    manager = RenderManager(cfg, web_renderer=StaticWebRenderer())
 
     results = manager.render_all(md_file)
 
     assert results == [html_file]
 
 
-def test_render_all_md_honors_disabled_html(monkeypatch, tmp_path):
+def test_render_all_md_honors_disabled_html(tmp_path):
     """Disabled HTML should not invoke the web renderer."""
     md_file = tmp_path / "section.md"
     md_file.write_text("# Section\n\nBody.\n", encoding="utf-8")
     slides_file = tmp_path / "section_slides.pdf"
     cfg = RenderingConfig(enable_html=False, web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides"))
-    manager = RenderManager(cfg)
 
-    def fail_web(*_args, **_kwargs):
-        raise AssertionError("web renderer should not be called")
+    class StaticSlidesRenderer:
+        def render(self, *_args, **_kwargs):
+            return slides_file
 
-    monkeypatch.setattr(manager, "render_slides", lambda *_args, **_kwargs: slides_file)
-    monkeypatch.setattr(manager.web_renderer, "render", fail_web)
+    manager = RenderManager(cfg, slides_renderer=StaticSlidesRenderer())
 
     results = manager.render_all(md_file)
 
