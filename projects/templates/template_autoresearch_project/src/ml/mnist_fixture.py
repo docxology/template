@@ -11,8 +11,9 @@ import gzip
 import hashlib
 import json
 import struct
+from collections.abc import Callable, Mapping
 from pathlib import Path
-from typing import Final, TypedDict
+from typing import Any, Final, TypedDict
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
@@ -59,16 +60,22 @@ def regenerate_mnist_fixture(
     train_per_class: int = 200,
     test_per_class: int = 50,
     seed: int = 20_260_525,
+    source_resolver: Callable[[Path, str], Path] | None = None,
+    image_reader: Callable[[Path], np.ndarray] | None = None,
+    label_reader: Callable[[Path], np.ndarray] | None = None,
 ) -> tuple[Path, Path]:
     """Download verified MNIST source files and write the deterministic fixture."""
     data_dir = project_root / "data"
     cache_dir = data_dir / "_mnist_source_cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
+    resolve_source = source_resolver or _verified_source
+    read_images = image_reader or _read_idx_images
+    read_labels = label_reader or _read_idx_labels
 
-    train_images = _read_idx_images(_verified_source(cache_dir, "train_images"))
-    train_labels = _read_idx_labels(_verified_source(cache_dir, "train_labels"))
-    test_images = _read_idx_images(_verified_source(cache_dir, "test_images"))
-    test_labels = _read_idx_labels(_verified_source(cache_dir, "test_labels"))
+    train_images = read_images(resolve_source(cache_dir, "train_images"))
+    train_labels = read_labels(resolve_source(cache_dir, "train_labels"))
+    test_images = read_images(resolve_source(cache_dir, "test_images"))
+    test_labels = read_labels(resolve_source(cache_dir, "test_labels"))
 
     train_indices = _stratified_indices(train_labels, per_class=train_per_class, seed=seed)
     test_indices = _stratified_indices(test_labels, per_class=test_per_class, seed=seed + 1)
@@ -101,12 +108,19 @@ def regenerate_mnist_fixture(
     return output_path, provenance_path
 
 
-def _verified_source(cache_dir: Path, key: str) -> Path:
-    meta = SOURCE_FILES[key]
+def _verified_source(
+    cache_dir: Path,
+    key: str,
+    *,
+    source_files: Mapping[str, SourceFile] = SOURCE_FILES,
+    opener: Callable[..., Any] = urlopen,
+    source_base_url: str = SOURCE_BASE_URL,
+) -> Path:
+    meta = source_files[key]
     filename = str(meta["filename"])
     path = cache_dir / filename
     if not path.exists():
-        with urlopen(_source_url(filename), timeout=60) as response:  # noqa: S310  # nosec B310
+        with opener(_source_url(filename, source_base_url=source_base_url), timeout=60) as response:  # noqa: S310  # nosec B310
             path.write_bytes(response.read())
     expected_size = int(meta["size_bytes"])
     if path.stat().st_size != expected_size:
@@ -117,9 +131,9 @@ def _verified_source(cache_dir: Path, key: str) -> Path:
     return path
 
 
-def _source_url(filename: str) -> str:
+def _source_url(filename: str, *, source_base_url: str = SOURCE_BASE_URL) -> str:
     """Return the fixed public MNIST URL after enforcing an HTTPS source."""
-    url = f"{SOURCE_BASE_URL}/{filename}"
+    url = f"{source_base_url}/{filename}"
     parsed = urlparse(url)
     if parsed.scheme != "https" or parsed.netloc != "storage.googleapis.com":
         raise ValueError(f"unexpected MNIST source URL: {url}")

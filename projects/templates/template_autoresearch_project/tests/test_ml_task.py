@@ -133,20 +133,18 @@ def test_mnist_fixture_helpers_are_offline_and_deterministic(tmp_path: Path) -> 
 
 def test_mnist_fixture_regeneration_uses_verified_local_maintenance_path(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     labels = np.arange(10, dtype=np.int64)
     images = np.arange(10 * 28 * 28, dtype=np.uint8).reshape(10, 28, 28)
-
-    monkeypatch.setattr(mnist_fixture, "_verified_source", lambda _cache_dir, key: Path(f"{key}.gz"))
-    monkeypatch.setattr(mnist_fixture, "_read_idx_images", lambda _path: images)
-    monkeypatch.setattr(mnist_fixture, "_read_idx_labels", lambda _path: labels)
 
     fixture_path, provenance_path = mnist_fixture.regenerate_mnist_fixture(
         tmp_path,
         train_per_class=1,
         test_per_class=1,
         seed=17,
+        source_resolver=lambda _cache_dir, key: Path(f"{key}.gz"),
+        image_reader=lambda _path: images,
+        label_reader=lambda _path: labels,
     )
 
     provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
@@ -162,18 +160,15 @@ def test_mnist_fixture_regeneration_uses_verified_local_maintenance_path(
 
 def test_mnist_fixture_download_guard_requires_fixed_https_source(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     payload = b"tiny verified payload"
-    monkeypatch.setitem(
-        mnist_fixture.SOURCE_FILES,
-        "tiny",
-        {
+    source_files = {
+        "tiny": {
             "filename": "tiny.gz",
             "sha256": hashlib.sha256(payload).hexdigest(),
             "size_bytes": len(payload),
-        },
-    )
+        }
+    }
 
     class _Response:
         def __enter__(self) -> "_Response":
@@ -192,15 +187,13 @@ def test_mnist_fixture_download_guard_requires_fixed_https_source(
         captured["timeout"] = timeout
         return _Response()
 
-    monkeypatch.setattr(mnist_fixture, "urlopen", fake_urlopen)
-    path = mnist_fixture._verified_source(tmp_path, "tiny")
+    path = mnist_fixture._verified_source(tmp_path, "tiny", source_files=source_files, opener=fake_urlopen)
 
     assert path.read_bytes() == payload
     assert captured == {"url": "https://storage.googleapis.com/cvdf-datasets/mnist/tiny.gz", "timeout": 60}
 
-    monkeypatch.setattr(mnist_fixture, "SOURCE_BASE_URL", "http://example.com/mnist")
     with pytest.raises(ValueError, match="unexpected MNIST source URL"):
-        mnist_fixture._source_url("tiny.gz")
+        mnist_fixture._source_url("tiny.gz", source_base_url="http://example.com/mnist")
 
 
 def test_mnist_fixture_regeneration_is_manual_maintenance_only(project_root: Path) -> None:
