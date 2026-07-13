@@ -82,7 +82,7 @@ def _verify_latex_warning_policy(project_root: Path, manuscript_dir: Path) -> bo
     return True
 
 
-def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
+def generate_rendering_summary(project_name: str = "project", *, repo_root: Path | None = None) -> dict[str, Any]:
     """Generate comprehensive summary of rendering results.
 
     STABILITY: this is the canonical per-project rendering reporting surface.
@@ -95,8 +95,8 @@ def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
     Returns:
         Dictionary with rendering statistics and file information
     """
-    repo_root = Path(__file__).parent.parent.parent
-    project_root = resolve_project_root(repo_root, project_name)
+    root = repo_root or Path(__file__).parent.parent.parent
+    project_root = resolve_project_root(root, project_name)
     output_dir = project_root / "output"
 
     summary: dict[str, Any] = {
@@ -230,12 +230,12 @@ def _check_citations_used(manuscript_dir: Path) -> bool:
     return False
 
 
-def verify_pdf_outputs(project_name: str = "project") -> bool:
+def verify_pdf_outputs(project_name: str = "project", *, repo_root: Path | None = None) -> bool:
     """Verify that PDFs were generated with quality checks."""
     logger.info("Verifying PDF outputs...")
 
-    repo_root = Path(__file__).parent.parent.parent
-    project_root = resolve_project_root(repo_root, project_name)
+    root = repo_root or Path(__file__).parent.parent.parent
+    project_root = resolve_project_root(root, project_name)
     pdf_dir = project_root / "output" / "pdf"
     manuscript_dir = _manuscript_dir_for_verify(project_root)
 
