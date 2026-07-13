@@ -36,6 +36,11 @@ MONOREPO_CANONICAL_URL = "https://github.com/docxology/template"
 KNOWN_MISSING_USE_WHEN: tuple[str, ...] = ()
 
 DOC_RELATIVE_PATH = Path("docs/_generated/exemplar_roster.md")
+README_RELATIVE_PATH = Path("README.md")
+README_SKILLS_BEGIN = "<!-- BEGIN:PUBLIC_EXEMPLAR_SKILLS -->"
+README_SKILLS_END = "<!-- END:PUBLIC_EXEMPLAR_SKILLS -->"
+README_ROSTER_BEGIN = "<!-- BEGIN:PUBLIC_EXEMPLAR_ROSTER -->"
+README_ROSTER_END = "<!-- END:PUBLIC_EXEMPLAR_ROSTER -->"
 
 _GENERATED_HEADER = (
     "# Public Exemplar Roster — Differentiation Map\n"
@@ -179,6 +184,58 @@ def render_roster_markdown(entries: list[ExemplarEntry]) -> str:
         "static (test *files*); authoritative measured coverage lives in\n"
         "[`COUNTS.md`](COUNTS.md).\n"
     )
+
+
+def render_readme_skills(entries: list[ExemplarEntry]) -> str:
+    """Render the README skill-routing table from the public roster."""
+    rows = ["| Skill | Template | When to load |", "| --- | --- | --- |"]
+    for entry in entries:
+        name = entry.name.split("/")[-1]
+        when = _first_sentence(entry.use_when) if entry.use_when else entry.title
+        rows.append(f"| `{name.replace('_', '-')}` | `{name}` | {when} |")
+    return "\n".join(rows)
+
+
+def render_readme_roster(entries: list[ExemplarEntry]) -> str:
+    """Render the README differentiation table from the public roster."""
+    rows = ["| Exemplar | When to use |", "| --- | --- |"]
+    for entry in entries:
+        name = entry.name.split("/")[-1]
+        when = _first_sentence(entry.use_when) if entry.use_when else entry.title
+        rows.append(f"| [`{name}`](projects/{entry.name}/) | {when} |")
+    return "\n".join(rows)
+
+
+def _replace_marked_block(text: str, begin: str, end: str, content: str) -> str:
+    pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end), re.DOTALL)
+    replacement = f"{begin}\n{content}\n{end}"
+    if not pattern.search(text):
+        raise ValueError(f"missing generated README markers: {begin} / {end}")
+    return pattern.sub(replacement, text, count=1)
+
+
+def render_readme_with_rosters(readme_text: str, entries: list[ExemplarEntry]) -> str:
+    """Inject both generated public-roster blocks into README text."""
+    rendered = _replace_marked_block(
+        readme_text,
+        README_SKILLS_BEGIN,
+        README_SKILLS_END,
+        render_readme_skills(entries),
+    )
+    return _replace_marked_block(
+        rendered,
+        README_ROSTER_BEGIN,
+        README_ROSTER_END,
+        render_readme_roster(entries),
+    )
+
+
+def write_readme_rosters(repo_root: Path) -> Path:
+    """Write generated public-roster blocks into the root README."""
+    target = repo_root / README_RELATIVE_PATH
+    text = target.read_text(encoding="utf-8")
+    target.write_text(render_readme_with_rosters(text, collect_entries(repo_root)), encoding="utf-8")
+    return target
 
 
 def write_roster_doc(repo_root: Path, out_path: Path | None = None) -> Path:

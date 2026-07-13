@@ -17,6 +17,7 @@ from infrastructure.project.exemplar_roster import (
     collect_entries,
     missing_run_via_monorepo,
     missing_use_when,
+    render_readme_with_rosters,
     render_roster_markdown,
     unexpected_missing_use_when,
     write_roster_doc,
@@ -106,3 +107,8 @@ def test_committed_doc_in_sync_with_fresh_render() -> None:
     committed = (REPO_ROOT / DOC_RELATIVE_PATH).read_text(encoding="utf-8")
     fresh = render_roster_markdown(collect_entries(REPO_ROOT))
     assert committed == fresh, f"{DOC_RELATIVE_PATH} is stale — run `uv run python scripts/docgen/exemplar_roster.py`"
+
+
+def test_readme_generated_rosters_in_sync() -> None:
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    assert render_readme_with_rosters(readme, collect_entries(REPO_ROOT)) == readme

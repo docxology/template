@@ -26,6 +26,8 @@ Coverage remains a separately labelled measured snapshot because recomputing all
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import shutil
 import subprocess
@@ -37,6 +39,7 @@ from pathlib import Path
 from infrastructure.project.public_scope import public_project_names
 
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
+COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
 GENERATED_DATE = "2026-07-13"
@@ -71,10 +74,10 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_eda_notebook", "100.00 %"),
     ExemplarSnapshot("template_formal", "96.03 %"),
     ExemplarSnapshot("template_gold_refinement", "97.55 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "96.74 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "96.77 %"),
     ExemplarSnapshot("template_madlib", "93.96 %"),
-    ExemplarSnapshot("template_methods_paper", "98.97 %"),
-    ExemplarSnapshot("template_newspaper", "94.37 %"),
+    ExemplarSnapshot("template_methods_paper", "99.01 %"),
+    ExemplarSnapshot("template_newspaper", "99.81 %"),
     ExemplarSnapshot("template_pitch_deck", "97.70 %"),
     ExemplarSnapshot("template_pools_rules_tools", "95.52 %"),
     ExemplarSnapshot("template_prose_project", "100.00 %"),
@@ -213,6 +216,81 @@ def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
     return "\n".join(rows)
 
 
+def exemplar_source_hash(repo_root: Path, name: str) -> str:
+    """Hash the source and tests that determine one exemplar's coverage."""
+    project_root = repo_root / "projects" / "templates" / name
+    digest = hashlib.sha256()
+    files = sorted(
+        path
+        for root_name in ("src", "tests")
+        for path in (project_root / root_name).rglob("*")
+        if path.is_file() and "__pycache__" not in path.parts
+    )
+    for path in files:
+        digest.update(path.relative_to(project_root).as_posix().encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def build_coverage_provenance(repo_root: Path) -> dict[str, object]:
+    """Build provenance for the checked-in coverage percentages."""
+    source_commit = subprocess.run(  # noqa: S603 - fixed git command
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    return {
+        "schema_version": 1,
+        "measured_at": EXEMPLAR_SNAPSHOT_DATE,
+        "source_commit": source_commit,
+        "projects": {
+            row.name: {
+                "coverage_pct": row.coverage_pct,
+                "source_hash": exemplar_source_hash(repo_root, row.name),
+            }
+            for row in EXEMPLAR_SNAPSHOT
+        },
+    }
+
+
+def write_coverage_provenance(repo_root: Path) -> Path:
+    """Write coverage source provenance after coverage gates have run."""
+    target = repo_root / COVERAGE_PROVENANCE_RELATIVE_PATH
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(build_coverage_provenance(repo_root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return target
+
+
+def validate_coverage_provenance(repo_root: Path) -> None:
+    """Fail closed when a coverage percentage is stale for its source tree."""
+    path = repo_root / COVERAGE_PROVENANCE_RELATIVE_PATH
+    if not path.is_file():
+        raise RuntimeError(f"missing coverage provenance: {COVERAGE_PROVENANCE_RELATIVE_PATH}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    projects = payload.get("projects") if isinstance(payload, dict) else None
+    if not isinstance(projects, dict):
+        raise RuntimeError("coverage provenance has no projects mapping")
+    expected_names = {row.name for row in EXEMPLAR_SNAPSHOT}
+    if set(projects) != expected_names:
+        raise RuntimeError("coverage provenance project roster does not match the public snapshot")
+    for row in EXEMPLAR_SNAPSHOT:
+        record = projects.get(row.name)
+        if not isinstance(record, dict) or record.get("coverage_pct") != row.coverage_pct:
+            raise RuntimeError(f"coverage provenance percentage mismatch: {row.name}")
+        if record.get("source_hash") != exemplar_source_hash(repo_root, row.name):
+            raise RuntimeError(
+                f"stale coverage snapshot for {row.name}: source hash changed; "
+                "rerun its coverage gate, then refresh coverage provenance"
+            )
+
+
 def render_counts_doc(facts: CountsFacts) -> str:
     """Render the full COUNTS.md content from derived facts + measured snapshot."""
     roster = _roster_block(facts.public_projects)
@@ -229,15 +307,12 @@ re-derived on every run: tracked `infrastructure/` Python-file count via \
 project-scope + publishing test collection via `pytest --collect-only` \
 (**{facts.project_tests}** / **{facts.publishing_tests}**), the public exemplar \
 roster, and the importable module list. The per-exemplar test/coverage snapshot \
-table is a measured snapshot (see Test Status).
+table is a measured snapshot with source-commit and source-hash provenance in
+[`coverage_snapshot.json`](coverage_snapshot.json) (see Test Status).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
 ## Project Roster
-
-**Always-present canonical exemplars** (the public exemplar projects guaranteed to live under `projects/`):
-
-{roster}
 
 Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`). The simplified sidecar defaults to `working/` and `archive/`; optional `ongoing/` (long-lived projects with no publication target) plus legacy `active/`, `published/`, and `other/` folders are still recognized when present. `run.sh`/`infrastructure.orchestration` symlinks existing private lifecycle folders into same-named typed subfolders under `template/projects/` (`working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, optional `active/*` → `projects/active/*`, …) before discovery/rendering; only `projects/templates/` and optional `projects/active/` are default-rendered, while `working/`, `ongoing/`, and `archive/` are non-rendered mirrors for explicit targeted work. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
@@ -303,7 +378,7 @@ Result: **{facts.project_tests}** project-scope infrastructure tests collected a
 
 {_exemplar_table(facts.exemplar_tests)}
 
-Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). Re-run the per-project coverage command after changing project `src/` or tests, then refresh this snapshot with `uv run python scripts/docgen/counts.py --write`. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
+Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). After changing project `src/` or tests, rerun that project's coverage gate and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when source hashes no longer match. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
 Drift-checker coverage: `uv run python scripts/audit/check_template_drift.py --strict`. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
 
@@ -397,16 +472,26 @@ Link to this file from other documentation instead of repeating facts.
 """
 
 
-def write_counts_doc(repo_root: Path, out_path: Path | None = None) -> Path:
+def write_counts_doc(
+    repo_root: Path,
+    out_path: Path | None = None,
+    *,
+    facts: CountsFacts | None = None,
+) -> Path:
     """Render and write COUNTS.md; returns the written path."""
+    validate_coverage_provenance(repo_root)
     target = out_path if out_path is not None else repo_root / DOC_RELATIVE_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(render_counts_doc(collect_facts(repo_root)), encoding="utf-8")
+    target.write_text(render_counts_doc(facts or collect_facts(repo_root)), encoding="utf-8")
     return target
 
 
 def check_counts_doc(repo_root: Path) -> tuple[bool, str]:
     """Return (in_sync, message) comparing on-disk COUNTS.md with a fresh render."""
+    try:
+        validate_coverage_provenance(repo_root)
+    except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:
+        return False, f"STALE coverage provenance: {exc}"
     doc_path = repo_root / DOC_RELATIVE_PATH
     rendered = render_counts_doc(collect_facts(repo_root))
     on_disk = doc_path.read_text(encoding="utf-8") if doc_path.is_file() else ""

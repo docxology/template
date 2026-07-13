@@ -60,6 +60,7 @@ coverage.xml
 coverage*.xml
 coverage.json
 coverage_*.json
+!docs/_generated/coverage_snapshot.json
 *.cover
 .hypothesis/
 

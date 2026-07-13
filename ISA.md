@@ -185,6 +185,11 @@ confidentiality, existing ISC identifiers, and externally published state.
 - [ ] ISC-269: all focused, infrastructure, regression, public-exemplar, export, lint, typing, security, documentation, and unified-health acceptance commands pass on the integrated branch.
 - [ ] ISC-270: GitHub required CI jobs are rerun and green; an action-download service outage is reported as external rather than bypassed.
 - [x] ISC-271: no private project source, external deposit, GitHub release, branch-protection setting, or public push is performed by this program.
+- [x] ISC-272: semantic dependency replacements are reduced from 380 to zero and CI enforces a zero ceiling while separately permitting environment isolation.
+- [x] ISC-273: coverage snapshots carry source-commit and per-exemplar source-hash provenance; generated-doc checks fail closed when source or tests change without a refreshed coverage run.
+- [x] ISC-274: root README skill and exemplar differentiation tables are generated from `PUBLIC_PROJECT_NAMES` and exemplar-owned use-when sections.
+- [ ] ISC-275: active-inference/formal slow paths are profiled and split or documented with measured evidence after correctness gates stabilize.
+- [ ] ISC-276: clean-wheel installation proves the reduced core dependency set, and every public exemplar export installs/imports/smokes in isolation.
 
 ### Test Strategy
 

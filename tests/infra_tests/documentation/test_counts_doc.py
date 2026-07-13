@@ -11,10 +11,11 @@ import re
 from pathlib import Path
 
 from infrastructure.documentation.counts_doc import (
+    COVERAGE_PROVENANCE_RELATIVE_PATH,
     DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
-    check_counts_doc,
+    exemplar_source_hash,
     infrastructure_packages,
     render_counts_doc,
     tracked_infra_python_count,
@@ -95,17 +96,33 @@ def test_exemplar_snapshot_covers_public_scope() -> None:
     assert documented == expected
 
 
-def test_write_then_check_round_trips(tmp_path: Path) -> None:
-    """Writing to a scratch tree then checking it reports in-sync."""
-    # Build a minimal scratch repo mirroring the real tree's derivation inputs by
-    # copying the live-derived facts into a rendered doc, then verifying the
-    # round-trip against the real repo's COUNTS.md is in sync after a fresh write.
-    repo = _repo_root()
-    write_counts_doc(repo)  # refresh on-disk from the live tree
-    in_sync, message = check_counts_doc(repo)
-    assert in_sync, message
+def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:
+    """Writing supplied facts exercises real I/O without 23 subprocesses."""
+    facts = CountsFacts(
+        public_projects=[s.name for s in EXEMPLAR_SNAPSHOT],
+        packages=["core"],
+        infra_py_count=1,
+        project_tests=2,
+        publishing_tests=3,
+        exemplar_tests={s.name: 1 for s in EXEMPLAR_SNAPSHOT},
+    )
+    target = tmp_path / "COUNTS.md"
+    write_counts_doc(_repo_root(), out_path=target, facts=facts)
+    assert target.read_text(encoding="utf-8") == render_counts_doc(facts)
 
 
 def test_doc_relative_path_points_at_counts_md() -> None:
     """The generator targets COUNTS.md, not the retired COUNTS.md."""
     assert DOC_RELATIVE_PATH == Path("docs/_generated/COUNTS.md")
+    assert COVERAGE_PROVENANCE_RELATIVE_PATH == Path("docs/_generated/coverage_snapshot.json")
+
+
+def test_exemplar_source_hash_changes_with_source(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "templates" / "demo"
+    (project / "src").mkdir(parents=True)
+    (project / "tests").mkdir()
+    source = project / "src" / "demo.py"
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    before = exemplar_source_hash(tmp_path, "demo")
+    source.write_text("VALUE = 2\n", encoding="utf-8")
+    assert exemplar_source_hash(tmp_path, "demo") != before
