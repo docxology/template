@@ -136,11 +136,10 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
     if load_error:
         return False, [load_error]
 
-    if not referenced_figures:
-        return True, []
-
     if registered_figures is None:
         # Registry absent but figures are referenced
+        if not referenced_figures:
+            return True, []
         issue = f"Figure registry not found but {len(referenced_figures)} figure reference(s) found in manuscript"
         logger.warning(f"Figure registry not found at {registry_path}")
         logger.warning(f"  Found {len(referenced_figures)} figure reference(s) in manuscript")
@@ -148,7 +147,7 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
 
     registered_labels = set(registered_figures)
     issues = [f"Unregistered figure reference: {ref}" for ref in sorted(referenced_figures - registered_labels)]
-    issues.extend(_missing_generated_figure_issues(registry_path, registered_figures, referenced_figures))
+    issues.extend(_missing_generated_figure_issues(registry_path, registered_figures))
 
     if issues:
         logger.warning(f"  Found {len(issues)} figure issue(s)")
@@ -163,18 +162,27 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
 def _missing_generated_figure_issues(
     registry_path: Path,
     registered_figures: dict[str, dict[str, object]],
-    referenced_figures: set[str],
 ) -> list[str]:
-    """Return missing-file issues for referenced generated registry entries."""
+    """Return missing-file issues for generated registry entries."""
     issues: list[str] = []
-    for label in sorted(referenced_figures & set(registered_figures)):
+    # Validate every generated registry entry, not only figures currently
+    # referenced by prose. An orphaned or newly-added generated figure can be
+    # stale even when the manuscript happens not to cite it yet.
+    for label in sorted(registered_figures):
         record = registered_figures[label]
-        filename = record.get("filename")
+        filename = record.get("filename") or record.get("path")
         if not isinstance(filename, str) or not filename:
+            if "generated_by" in record:
+                issues.append(f"Registered generated figure path is missing for {label}")
             continue
         if "generated_by" not in record:
             continue
         figure_path = registry_path.parent / filename
         if not figure_path.exists():
             issues.append(f"Registered generated figure file is missing for {label}: {filename}")
+        svg_filename = record.get("svg_path")
+        if isinstance(svg_filename, str) and svg_filename:
+            svg_path = registry_path.parent / svg_filename
+            if not svg_path.exists():
+                issues.append(f"Registered generated figure vector file is missing for {label}: {svg_filename}")
     return issues

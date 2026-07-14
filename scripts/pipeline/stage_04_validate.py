@@ -10,8 +10,8 @@ This thin orchestrator coordinates the validation stage:
 Stage 04 of the pipeline orchestration.
 
 Exit codes:
-    0: All critical validations passed (PDFs present, markdown well-formed)
-    1: At least one critical validation failed
+    0: All blocking validations passed; report-only prose checks may warn
+    1: At least one blocking validation failed
 """
 
 from __future__ import annotations

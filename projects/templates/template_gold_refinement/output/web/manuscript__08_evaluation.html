@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:evaluation">Quality Probes</h1>
 <h2 id="qa-probes">QA probes</h2>
 <table>
@@ -264,6 +265,16 @@ scan evidence and external compliance?</td>
 validators, and claim boundaries without claiming Codex Security
 findings.</td>
 <td>src/security_assay.py, manuscript/config.yaml, and
+manuscript/03_results.md</td>
+</tr>
+<tr>
+<td>Seed sensitivity</td>
+<td>Does the expanded seed study quantify token-plan variability without
+presenting seeds as empirical manuscript observations?</td>
+<td>The generated report records n, agreement distribution, interval
+methods, conditional assumptions, bootstrap sensitivity, precision
+radius, and the sample-size ladder.</td>
+<td>src/seed_sensitivity.py, output/data/seed_sensitivity.json, and
 manuscript/03_results.md</td>
 </tr>
 </tbody>
@@ -360,6 +371,21 @@ evidence-registry validation</td>
 guidance unless generated scan artifacts exist</td>
 <td>tests/test_security_assay.py and manuscript source review</td>
 </tr>
+<tr>
+<td>Seed-sensitivity precision</td>
+<td>Seed replicates must report sample size, interval methods,
+conditional assumptions, bounded uncertainty metadata, deterministic
+bootstrap metadata, and non-empirical claim boundaries</td>
+<td>tests/test_seed_sensitivity.py, z_generate_manuscript_variables.py,
+and manuscript source review</td>
+</tr>
+<tr>
+<td>Seed-report integrity</td>
+<td>The generated seed report must match a deterministic recomputation
+from the current configuration before manuscript hydration</td>
+<td>src/seed_sensitivity.py::validate_seed_sensitivity_payload and
+tests/test_seed_sensitivity.py</td>
+</tr>
 </tbody>
 </table>
 <p>The audit rules are summarized visually in
@@ -413,6 +439,19 @@ weighted boxes: token coverage, citation validity, claim support, and
 render readiness all matter, but a high-severity low-detectability
 failure should shape the next source edit before cosmetic manuscript
 polish.</p>
+<p>The seed-sensitivity gate adds a quantitative robustness surface
+without changing the claim boundary. It requires a declared replicate
+count, an agreement estimand, a score interval for the thresholded rate,
+a bounded precision radius, and a sample-size ladder. The current run
+reports 1024 technical replicates, 1024 unique plans, and 100.00%
+inventory coverage. These quantities describe the behavior of the
+deterministic composition engine; they do not measure reader agreement,
+factual correctness, or scientific validity. The intervals and Hoeffding
+radius are conditional on the declared exchangeability assumption for
+the seed draws; the contiguous integer range is not a random sample of
+manuscripts or deployments. A validator must therefore check both the
+report schema and its deterministic recomputation from
+configuration.</p>
 <p>Figure review follows the same rule. File existence and nonblank
 pixels are necessary but not sufficient. The figure caption, encoding
 declaration, source data, and prose interpretation must describe the

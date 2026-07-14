@@ -407,10 +407,11 @@ class TestExecuteValidationPipeline:
             captured["figure_issues"] = list(figure_issues)
             return real_generate_report(results, figure_issues, output_statistics, project, *args, **kwargs)
 
-        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=record_report)
+        return_code = mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=record_report)
 
         assert ("Figure registry", False) in captured["results"]
         assert captured["figure_issues"] == ["Figure registry not found but 1 figure reference(s) found in manuscript"]
+        assert return_code == 1
 
     def test_with_output_subdirs(self, tmp_path, monkeypatch):
         project_dir = tmp_path / "projects" / "active" / "test"
@@ -481,6 +482,11 @@ class TestProseQualityGate:
     def _scaffold(self, tmp_path, *, enabled: bool | None, prose: str):
         project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output").mkdir(parents=True)
+        for subdir in ("web", "slides", "figures", "data", "reports"):
+            subdir_path = project_dir / "output" / subdir
+            subdir_path.mkdir()
+            (subdir_path / ".fixture").write_text("fixture\n", encoding="utf-8")
+        (project_dir / "output" / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
         ms_dir = project_dir / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text(prose, encoding="utf-8")
@@ -583,7 +589,7 @@ class TestProseQualityGate:
         assert ("Prose quality", True) in results
 
     def test_enabled_run_survives_undecodable_manuscript(self, tmp_path, monkeypatch):
-        """A manuscript file that can't be decoded must not crash the report-only gate."""
+        """An undecodable manuscript must be reported as a blocking integrity failure."""
         project_dir = self._scaffold(tmp_path, enabled=True, prose="# ok\n\nfine.")
         # Add a second .md with invalid UTF-8 bytes -> UnicodeDecodeError path.
         (project_dir / "manuscript" / "bad.md").write_bytes(b"\xff\xfe not utf-8 \x80\x81")
@@ -593,7 +599,7 @@ class TestProseQualityGate:
 
         assert mod.validate_prose_quality("test", repo_root=tmp_path) is True
         rc, _ = self._run_capturing_check_results(tmp_path)
-        assert rc == 0
+        assert rc == 1
 
     def test_pipeline_invokes_prose_check_only_when_enabled(self, tmp_path, monkeypatch):
         calls: list[str] = []
@@ -620,7 +626,12 @@ class TestClaimVerificationGate:
     def _scaffold(self, tmp_path):
         project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output" / "pdf").mkdir(parents=True)
+        for subdir in ("web", "slides", "figures", "data", "reports"):
+            subdir_path = project_dir / "output" / subdir
+            subdir_path.mkdir()
+            (subdir_path / ".fixture").write_text("fixture\n", encoding="utf-8")
         (project_dir / "output" / "pdf" / "test.pdf").write_bytes(_minimal_structural_pdf())
+        (project_dir / "output" / "pdf" / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
         ms_dir = project_dir / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("We observed 12 participants in the cohort.", encoding="utf-8")
@@ -663,3 +674,36 @@ class TestClaimVerificationGate:
         assert rc == 0
         assert ("Claim verification", True) in captured["results"]
         assert "claim_verification" in captured["output_statistics"]
+
+    def test_claim_verification_failure_blocks_validation(self, tmp_path):
+        self._scaffold(tmp_path)
+
+        class _ContradictedReport:
+            skipped = False
+
+            def summary(self):
+                return {
+                    "claim_count": 1,
+                    "verdict_count": 1,
+                    "supported": 0,
+                    "contradicted": 1,
+                    "insufficient": 0,
+                    "skipped": False,
+                    "reason": "",
+                }
+
+        captured: dict[str, object] = {}
+
+        def _rec(results, figure_issues, output_statistics, project, *args, **kwargs):
+            captured["results"] = list(results)
+            return mod.generate_validation_report(results, figure_issues, output_statistics, project, *args, **kwargs)
+
+        rc = mod.execute_validation_pipeline(
+            "test",
+            repo_root=tmp_path,
+            claim_verifier=lambda project_root: _ContradictedReport(),
+            report_writer=_rec,
+        )
+
+        assert rc == 1
+        assert ("Claim verification", False) in captured["results"]

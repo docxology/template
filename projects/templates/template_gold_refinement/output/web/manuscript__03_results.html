@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results: Purity Progression and Karat Grading</h1>
 <p>The canonical run completed 5 ordered, continuous stages and reached
 the configured terminal state of 99.9999999% (nine-nines) (24K
@@ -260,6 +261,37 @@ nine-nines) with refinery stage markers.</figcaption>
 <li><strong>Nine-nines certified:</strong> Yes</li>
 <li><strong>Nines count:</strong> 9</li>
 </ul>
+<h2 id="seed-sensitivity-results">Seed-sensitivity results</h2>
+<p>The expanded sensitivity study evaluated 1024 technical replicates of
+the deterministic token pipeline over seeds 0–1023. It found 1024 unique
+token plans among 1024 runs, with 1 exact matches to the canonical plan.
+Mean slot agreement was 20.62% (SD 8.56%; descriptive 95% interval
+20.09%–21.14%), with observed range 0.00%–100.00%. The configured
+threshold rate was 36.43% (score interval 33.53%–39.42%) at the 25%
+agreement threshold. All configured inventory values were observed
+(100.00% coverage), which is a coverage result for the token vocabulary
+rather than a quality result for the manuscript.</p>
+<p>The declared precision target requires at least 738 replicates under
+the chosen bounded-metric formula; the realized radius is 4.24%. The
+deterministic bootstrap sensitivity interval for the mean is
+20.10%–21.11% from 2000 resamples. Both intervals are conditional
+technical summaries, not population estimates.</p>
+<figure id="fig:seed_sensitivity">
+<img src="../figures/seed_sensitivity.png"
+alt="Seed-sensitivity distribution and the declared sample-size precision ladder for token-plan agreement." />
+<figcaption>Seed-sensitivity distribution and the
+declared sample-size precision ladder for token-plan
+agreement.</figcaption>
+</figure>
+<p>The report is stored at
+<code>output/data/seed_sensitivity.json</code>. These are technical
+replicates of one executable token pipeline, not human participants,
+independent manuscripts, or evidence of external manuscript quality. The
+sensitivity result therefore refines the reproducibility claim: a fixed
+seed exactly regenerates a selected plan, while neighboring seeds
+explore a wide deterministic outcome surface. It does not justify
+treating token agreement as a reader-quality metric or as evidence that
+one lexical choice is scientifically superior.</p>
 <h2 id="token-plan-summary">Token plan summary</h2>
 <p>The mega-madlib engine generated 24 tokens from seed 431 across 8
 lexicon categories.</p>
@@ -573,7 +605,7 @@ output purity on the horizontal axis and the single project-level
 contribution-claim assay on the vertical axis. The same observed support
 rate is therefore repeated across stages. The figure does not fabricate
 a stagewise claim-support trajectory from a project-level aggregate.</p>
-<p>In the current generated assay, 9 of 9 contribution claims are
+<p>In the current generated assay, 10 of 10 contribution claims are
 supported (100.00%). The plot is diagnostic rather than correlational:
 five stage states and one ledger-level rate do not constitute
 independent observations suitable for association testing. Its purpose
@@ -710,7 +742,7 @@ annotation names the source file or symbol used to support it. This
 makes the contribution ledger inspectable at the same level as the
 purity plots: unsupported claims would appear as failed assays rather
 than remaining hidden in prose.</p>
-<p>The generated assay currently reports 9 supported claims out of 9.
+<p>The generated assay currently reports 10 supported claims out of 10.
 The value of the figure is not the perfect score by itself; it is the
 way the score is forced to name its evidence surface and boundary. A
 contribution claim is not merely present in prose. It must be
@@ -778,7 +810,7 @@ generated metrics, claim-ledger facts, bibliography records, source
 code, or disposable artifacts.</p>
 <p>The ladder complements the risk matrix by counting source tiers
 rather than plotting risks. When the shared evidence registry is
-available, the manuscript can report 283 source-tiered facts to the
+available, the manuscript can report 15577 source-tiered facts to the
 validation surface. When that registry is not available, the same figure
 falls back to the integrity model’s configured tiers. Either way, the
 reader sees the evidentiary mix instead of receiving an undifferentiated
@@ -791,7 +823,7 @@ that leans only on tests may catch regressions while still failing to
 explain claim boundaries to readers. The ladder gives a compact audit of
 that mix, while [tbl:evidence_tiers] keeps the counts visible in tabular
 form. Together they close the figure sequence by showing not only that
-the 12 public figures render, but also which source tiers make their
+the 13 public figures render, but also which source tiers make their
 claims inspectable.</p>
 <figure id="fig:evidence_tier_ladder">
 <img src="../figures/evidence_tier_ladder.png"
@@ -811,24 +843,34 @@ when available.</caption>
 </thead>
 <tbody>
 <tr>
-<td>artifact</td>
-<td>125</td>
-<td>Generated artifacts exposed to readers</td>
-</tr>
-<tr>
 <td>generated_metric</td>
-<td>94</td>
+<td>15282</td>
 <td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
+<td>artifact</td>
+<td>132</td>
+<td>Generated artifacts exposed to readers</td>
+</tr>
+<tr>
+<td>configuration</td>
+<td>92</td>
+<td>Evidence source tier</td>
+</tr>
+<tr>
 <td>bibliography</td>
-<td>47</td>
+<td>52</td>
 <td>Reference records and citation metadata</td>
 </tr>
 <tr>
 <td>claim_ledger</td>
 <td>17</td>
 <td>Source-owned claim and fact declarations</td>
+</tr>
+<tr>
+<td>design</td>
+<td>2</td>
+<td>Evidence source tier</td>
 </tr>
 </tbody>
 </table>
@@ -841,7 +883,7 @@ Scan findings are claimed unless a scan artifact is generated,
 validated, and cited. The rows are generated from
 <code>gold_refinement.security_assay</code> and are intentionally
 tabular rather than a new public figure, so the visual registry remains
-the stable 12-figure contract.</p>
+the stable 13-figure contract.</p>
 <table id="tbl:security_assay">
 <caption>Source-owned adversarial security assay.</caption>
 <colgroup>
@@ -989,10 +1031,17 @@ validators, and claim boundaries.</td>
 <td>src/security_assay.py::build_security_assay</td>
 <td>local</td>
 </tr>
+<tr>
+<td>Seed-sensitivity study</td>
+<td>The project reports a declared seed-replicate sensitivity study with
+precision metadata and explicit non-empirical boundaries.</td>
+<td>src/seed_sensitivity.py::run_seed_sensitivity</td>
+<td>local</td>
+</tr>
 </tbody>
 </table>
-<p>The project-local claim-support assay reports 9 supported claims out
-of 9 total claims, for 100.00% support. Unsupported claims: 0. The
+<p>The project-local claim-support assay reports 10 supported claims out
+of 10 total claims, for 100.00% support. Unsupported claims: 0. The
 generated project report path is
 <code>output/reports/claim_support_registry.json</code>; the shared
 template evidence report remains
@@ -1001,7 +1050,7 @@ template evidence report remains
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 283.</p>
+available to this variable pass: 15577.</p>
 <table id="tbl:shared_evidence_kinds">
 <caption>Shared evidence-registry fact kinds when available.</caption>
 <thead>
@@ -1013,11 +1062,11 @@ available to this variable pass: 283.</p>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>80</td>
+<td>84</td>
 </tr>
 <tr>
 <td>citation</td>
-<td>47</td>
+<td>52</td>
 </tr>
 <tr>
 <td>equation</td>
@@ -1025,11 +1074,11 @@ available to this variable pass: 283.</p>
 </tr>
 <tr>
 <td>figure</td>
-<td>29</td>
+<td>31</td>
 </tr>
 <tr>
 <td>number</td>
-<td>102</td>
+<td>15384</td>
 </tr>
 <tr>
 <td>section</td>
@@ -1037,7 +1086,7 @@ available to this variable pass: 283.</p>
 </tr>
 <tr>
 <td>table</td>
-<td>7</td>
+<td>8</td>
 </tr>
 </tbody>
 </table>
@@ -1046,7 +1095,7 @@ available to this variable pass: 283.</p>
 <code>output/reports/figure_quality_report.json</code>, a generated QA
 report that checks PNG and SVG existence, file dimensions, nonblank
 pixel mass, color variance, and registry parity. Current status: passing
-with 12/12 registered figures passing and registry parity reported as
+with 13/13 registered figures passing and registry parity reported as
 Yes. PNG remains the manuscript render path; SVG is the companion
 technical artifact for inspection, reuse, and source-level debugging.
 [tbl:figure_quality] summarizes the generated surface.</p>
@@ -1078,18 +1127,18 @@ specs.</caption>
 <td>claim_evidence_assay</td>
 <td>yes</td>
 <td>yes</td>
-<td>3952x2038</td>
-<td>0.217</td>
-<td>0.06027576</td>
+<td>3947x2172</td>
+<td>0.222</td>
+<td>0.06124546</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3349x1332</td>
-<td>0.223</td>
-<td>0.05598645</td>
+<td>3463x1586</td>
+<td>0.083</td>
+<td>0.03388905</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -1098,43 +1147,43 @@ specs.</caption>
 <td>yes</td>
 <td>3315x1797</td>
 <td>0.140</td>
-<td>0.04434550</td>
+<td>0.04409869</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>implementation_circuit</td>
 <td>yes</td>
 <td>yes</td>
-<td>2966x1843</td>
+<td>2966x1842</td>
 <td>0.068</td>
-<td>0.02205485</td>
+<td>0.02214905</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_gate_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>1818x2060</td>
-<td>0.409</td>
-<td>0.16204936</td>
+<td>1820x2314</td>
+<td>0.407</td>
+<td>0.15927030</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_risk_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>2499x1910</td>
-<td>0.380</td>
-<td>0.01852528</td>
+<td>2499x1909</td>
+<td>0.379</td>
+<td>0.01892053</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>karat_grading</td>
 <td>yes</td>
 <td>yes</td>
-<td>2961x1698</td>
+<td>2956x1699</td>
 <td>0.279</td>
-<td>0.07300982</td>
+<td>0.07296687</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -1143,43 +1192,52 @@ specs.</caption>
 <td>yes</td>
 <td>2850x1461</td>
 <td>0.070</td>
-<td>0.02178809</td>
+<td>0.02170098</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_claim_scatter</td>
 <td>yes</td>
 <td>yes</td>
-<td>2336x1744</td>
+<td>2343x1745</td>
 <td>0.034</td>
-<td>0.01607749</td>
+<td>0.01594966</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_progression</td>
 <td>yes</td>
 <td>yes</td>
-<td>3024x2125</td>
+<td>3029x2125</td>
 <td>0.182</td>
-<td>0.03967814</td>
+<td>0.03971092</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>seed_sensitivity</td>
+<td>yes</td>
+<td>yes</td>
+<td>3290x1773</td>
+<td>0.091</td>
+<td>0.03345077</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_density</td>
 <td>yes</td>
 <td>yes</td>
-<td>3289x1856</td>
+<td>3288x1858</td>
 <td>0.234</td>
-<td>0.06699486</td>
+<td>0.06696808</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_heatmap</td>
 <td>yes</td>
 <td>yes</td>
-<td>2397x2399</td>
-<td>0.627</td>
-<td>0.12908659</td>
+<td>2406x2412</td>
+<td>0.621</td>
+<td>0.12867696</td>
 <td>pass</td>
 </tr>
 </tbody>

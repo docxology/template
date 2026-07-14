@@ -1,4 +1,4 @@
-\begin{thebibliography}{47}
+\begin{thebibliography}{52}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -31,6 +31,20 @@ Vannoccio Biringuccio.
 \newblock URL \url{https://digital.sciencehistory.org/works/n888ils}.
 \newblock Public-domain first edition digitized by the Science History
   Institute.
+
+\bibitem[Bouthillier et~al.(2021)Bouthillier, Delaunay, Bronzi, Trofimov,
+  Nichyporuk, Szeto, Sepahvand, Raff, Madan, Voleti, Ebrahimi~Kahou, Michalski,
+  Arbel, Pal, Varoquaux, and Vincent]{bouthillier2021accounting}
+Xavier Bouthillier, Pierre Delaunay, Mirko Bronzi, Assya Trofimov, Brennan
+  Nichyporuk, Justin Szeto, Nazanin~Mohammadi Sepahvand, Edward Raff, Kanika
+  Madan, Vikram Voleti, Samira Ebrahimi~Kahou, Vincent Michalski, Tal Arbel,
+  Chris Pal, Gael Varoquaux, and Pascal Vincent.
+\newblock Accounting for variance in machine learning benchmarks.
+\newblock \emph{Proceedings of Machine Learning and Systems}, 3, 2021.
+\newblock URL
+  \url{https://proceedings.mlsys.org/paper_files/paper/2021/hash/0184b0cd3cfb185989f858a1d9f5c1eb-Abstract.html}.
+\newblock Reports how data sampling, initialization, and hyperparameter
+  variation affect benchmark distributions.
 
 \bibitem[Buckheit and Donoho(1995)]{buckheit_donoho_1995}
 Jonathan~B. Buckheit and David~L. Donoho.
@@ -71,6 +85,13 @@ Johann~Andreas Cramer.
 \newblock Cyclonedx specification overview, 2026.
 \newblock URL \url{https://cyclonedx.org/specification/overview/}.
 \newblock Accessed 2026-06-30.
+
+\bibitem[Efron(1979)]{efron1979bootstrap}
+Bradley Efron.
+\newblock Bootstrap methods: Another look at the jackknife.
+\newblock \emph{The Annals of Statistics}, 7\penalty0 (1):\penalty0 1--26,
+  1979.
+\newblock \doi{10.1214/aos/1176344552}.
 
 \bibitem[{EQUATOR Network}(2026)]{equator_network_reporting_guidelines}
 {EQUATOR Network}.
@@ -135,6 +156,12 @@ Donald~E. Knuth.
 \newblock \emph{The Computer Journal}, 27\penalty0 (2):\penalty0 97--111, 1984.
 \newblock \doi{10.1093/comjnl/27.2.97}.
 
+\bibitem[Lakens(2022)]{lakens2022samplesize}
+Dani{"e}l Lakens.
+\newblock Sample size justification.
+\newblock \emph{Collabra: Psychology}, 8\penalty0 (1):\penalty0 33267, 2022.
+\newblock \doi{10.1525/collabra.33267}.
+
 \bibitem[Lasser(2020)]{lasser2020executable}
 Jana Lasser.
 \newblock Creating an executable paper is a journey through open science.
@@ -183,6 +210,13 @@ Luc Moreau, Paul Groth, James Cheney, et~al.
 \newblock W3C Note, 2013.
 \newblock URL \url{https://www.w3.org/TR/prov-overview/}.
 
+\bibitem[{National Academies of Sciences, Engineering, and
+  Medicine}(2019)]{national_academies_2019_reproducibility}
+{National Academies of Sciences, Engineering, and Medicine}.
+\newblock Reproducibility and replicability in science.
+\newblock Technical report, The National Academies Press, 2019.
+\newblock URL \url{https://doi.org/10.17226/25303}.
+
 \bibitem[{National Institute of Standards and
   Technology}(2020)]{nist_sp800_207_zero_trust}
 {National Institute of Standards and Technology}.
@@ -199,6 +233,15 @@ Luc Moreau, Paul Groth, James Cheney, et~al.
 \newblock Technical Report Special Publication 800-218, National Institute of
   Standards and Technology, 2022.
 \newblock URL \url{https://csrc.nist.gov/pubs/sp/800/218/final}.
+
+\bibitem[Newcombe(1998)]{newcombe1998proportion}
+Robert~G. Newcombe.
+\newblock Two-sided confidence intervals for the single proportion: Comparison
+  of seven methods.
+\newblock \emph{Statistics in Medicine}, 17\penalty0 (8):\penalty0 857--872,
+  1998.
+\newblock
+  \doi{10.1002/(SICI)1097-0258(19980430)17:8<857::AID-SIM777>3.0.CO;2-E}.
 
 \bibitem[Nosek et~al.(2015)Nosek, Alter, Banks, Borsboom, Bowman, Breckler,
   Buck, Chambers, Chin, Christensen, Contestabile, Dafoe, Eich, Freese,

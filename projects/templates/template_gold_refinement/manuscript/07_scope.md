@@ -8,6 +8,7 @@ This exemplar demonstrates the gold-refining analogy as a **methods paper**. It 
 - Generalizability of specific purity fractions to all scientific domains
 - That the analogy replaces domain-specific peer review or expert judgement
 - That reverse assay optimizes cost or scientific value, or that multi-objective purity is a validated composite scale
+- That {{SEED_STUDY_N}} technical seed replicates establish external manuscript-quality validity, statistical power for human outcomes, or semantic superiority of any selected token
 
 ## Related work
 
@@ -16,6 +17,19 @@ The mega-madlib token injection pattern follows `template_madlib`'s deterministi
 Analogy theory supplies the first boundary. Structure-mapping treats analogy as a transfer of relational organization rather than surface resemblance [@gentner1983structure], while philosophy of science distinguishes positive, negative, and still-open analogy regions [@hesse1966models]. The paper therefore claims that the refinery stages organize a reproducible manuscript workflow. It does not claim that metallurgical purity is an empirical measure of prose quality.
 
 Reproducible-research scholarship supplies the second boundary. Literate programming, Sweave, and notebook-based analysis show that code, results, and narrative can be co-developed in executable documents [@knuth1984literate; @leisch2002sweave; @rule2019jupyter]. Research compendia and workflow-centric research objects show how code, data, text, environment, and provenance can be packaged as durable units [@marwick2018packaging; @belhajjame2015ontologies]. This exemplar extends those ideas to deterministic token selection, but it remains an internal consistency and provenance demonstration.
+
+Computational benchmarking scholarship supplies an additional boundary for the seed
+study: pipeline outcomes can vary across initialization and other technical
+factors, so distributions and variance should be made visible rather than
+hidden behind one run [@bouthillier2021accounting]. Sample-size justification
+should follow from the estimand and desired accuracy rather than an unexplained
+heuristic [@lakens2022samplesize]. The present study responds with a declared
+contiguous seed range, a bounded precision radius, a deterministic bootstrap
+sensitivity interval, and a score interval for a thresholded agreement rate.
+The intervals are conditional summaries of that finite technical replicate set;
+they are not confidence statements about a population of manuscripts or
+readers. Score-based intervals are used because naive Wald intervals can have
+poor coverage for bounded proportions [@newcombe1998proportion].
 
 FAIR and PROV supply the third boundary. Rich metadata and provenance improve findability, interoperability, reuse, and auditability [@wilkinson2016fair; @moreau2013prov]. They do not guarantee that a substantive scientific claim is true. The evidence ladder in this paper is therefore an honesty device: source-code facts, generated metrics, bibliography records, and domain evidence must not be collapsed into one undifferentiated support score.
 

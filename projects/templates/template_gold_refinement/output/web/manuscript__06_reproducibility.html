@@ -242,7 +242,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:reproducibility">Reproducibility: Seeded Regeneration</h1>
 <p>Reproduction requires identity, execution, and verification—not
 merely access to a PDF. Identity fixes the source revision,
@@ -267,10 +268,27 @@ format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> 8d3efef5bcbe8b23</li>
-<li><strong>Generation timestamp:</strong> 2026-07-11T04:09:00Z</li>
+<li><strong>Config hash:</strong> c7d37fc9538b9677</li>
+<li><strong>Generation timestamp:</strong> 2026-07-14T00:38:04Z</li>
 <li><strong>Python version:</strong> 3.12.13</li>
 </ul>
+<h2 id="replication-across-technical-seeds">Replication across technical
+seeds</h2>
+<p>Exact replay uses the canonical seed above. Replicability of the
+token-plan mechanism is described separately by 1024 technical seed
+replicates: the report records 1024 unique plans, mean agreement of
+20.62%, and a 95% descriptive interval of 20.09%–21.14%. This follows
+the computational benchmarking principle that performance should be
+represented over relevant sources of variation, not only by a single run
+[bouthillier2021accounting]. The seed study is not a sample of
+manuscripts, readers, or scientific claims; it is a sensitivity analysis
+of one executable lexical pipeline. The National Academies distinguish
+computational reproducibility—recovering results from the same inputs
+and procedures—from replicability across changed conditions
+[national_academies_2019_reproducibility]. This project demonstrates the
+former directly and explores only one controlled technical variation for
+the latter. It does not establish that the seed distribution represents
+future software environments or independent research teams.</p>
 <h2 id="artifact-inventory">Artifact inventory</h2>
 <table>
 <thead>
@@ -282,11 +300,11 @@ rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <tbody>
 <tr>
 <td>Figures</td>
-<td>26</td>
+<td>28</td>
 </tr>
 <tr>
 <td>Data files</td>
-<td>3</td>
+<td>4</td>
 </tr>
 <tr>
 <td>Reports</td>
@@ -294,7 +312,7 @@ rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td>41</td>
+<td>44</td>
 </tr>
 </tbody>
 </table>
@@ -309,7 +327,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
 <p>A reproduction report should record command exit status, the source
-revision, <code>8d3efef5bcbe8b23</code>, Python 3.12.13, and whether the
+revision, <code>c7d37fc9538b9677</code>, Python 3.12.13, and whether the
 generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted
@@ -326,7 +344,7 @@ visible before execution instead of burying it in shell glue or
 prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>8d3efef5bcbe8b23</code>; analysis writes
+generation records <code>c7d37fc9538b9677</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>
@@ -347,8 +365,8 @@ generated and from where, not whether a domain conclusion is
 correct.</p>
 <p>The same rule applies to visual polish. The figure registry is
 source-owned, every registered PNG now has a companion SVG, and
-<code>output/reports/figure_quality_report.json</code> records 12 PNG
-files, 12 SVG files, and 12 passing visual-quality checks for the
+<code>output/reports/figure_quality_report.json</code> records 13 PNG
+files, 13 SVG files, and 13 passing visual-quality checks for the
 current variable pass. A fork should treat [tbl:figure_quality] as the
 figure-layer analogue of the claim-support registry: it proves that the
 visuals are regenerated, present in both raster and vector forms,

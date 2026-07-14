@@ -75,14 +75,17 @@ To regenerate this exemplar from the public monorepo:
 git clone https://github.com/docxology/template
 cd template
 uv sync
-export SOURCE_DATE_EPOCH=1782345600  # 2026-06-25T00:00:00Z, matching manuscript/config.yaml
+# Leave SOURCE_DATE_EPOCH unset for a PDF dated with today's local calendar day.
+# Set it explicitly when a byte-reproducible historical build is required.
+unset SOURCE_DATE_EPOCH
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_gold_refinement
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_gold_refinement
 ```
 
-Keep `SOURCE_DATE_EPOCH` set when refreshing tracked public outputs so dashboard
-and manuscript timestamps are reproducible instead of wall-clock dependent.
+The manuscript config uses `date: "today"`. The shared renderer resolves that
+sentinel at build time; an explicit `SOURCE_DATE_EPOCH` pins the PDF date and
+other generated timestamps for reproducible releases.
 
 Standalone repositories are publication mirrors for source, DOI metadata, and
 tracked rendered artifacts. Use the monorepo above when you need the full shared
@@ -110,18 +113,19 @@ All rendered artifacts are source-owned and disposable. Do not hand-edit
 | Artifact | Source owner | Purpose |
 | --- | --- | --- |
 | `output/data/refinery_results.json` | `src/refinery.py`, `src/purity.py` | Canonical purity sequence and certification result |
+| `output/data/seed_sensitivity.json` | `src/seed_sensitivity.py`, `manuscript/config.yaml` | Technical-replicate agreement distribution, conditional intervals, bootstrap interval, and sample-size precision ladder |
 | `output/reports/token_plan.json` | `src/composition.py`, `manuscript/config.yaml` | Deterministic mega-madlib token choices and provenance |
 | `output/reports/claim_support_registry.json` | `src/evidence.py` | Project-local contribution-claim assay |
 | `output/reports/evidence_registry.json` | template evidence validator | Shared evidence facts consumed by validation gates |
 | `output/figures/figure_registry.json` | `src/figures/_common.py::FIGURE_SPECS` | Figure label/path/caption/source registry |
 | `output/reports/figure_quality_report.json` | `src/figures/registry.py::write_figure_quality_report` | PNG/SVG existence, dimensions, nonblank pixels, color variance, and registry parity |
-| `output/figures/cover_visualization.png` | `src/cover_visualization.py::generate_cover_visualization` | Standalone publication cover visual; not part of the stable 12-figure manuscript registry |
+| `output/figures/cover_visualization.png` | `src/cover_visualization.py::generate_cover_visualization` | Standalone publication cover visual; not part of the stable 13-figure manuscript registry |
 | `output/reports/cover_visualization.json` | `src/cover_visualization.py::write_cover_visualization` | Cover dimensions, byte sizes, nonwhite fraction, and color variance |
 
 ## Visualization and scientific-integrity surface
 
 The visualization layer is a technical contract, not a decorative export.
-The `src/figures/` package defines a single `FIGURE_SPECS` registry for all 12 stable
+The `src/figures/` package defines a single `FIGURE_SPECS` registry for all 13 stable
 figure labels and writes both PNG and SVG files for every figure. Manuscript
 Markdown variables continue to reference PNGs for PDF compatibility; SVG files
 are companion artifacts for inspection and reuse.
@@ -140,7 +144,11 @@ Quantitative figures expose late-stage or integrity-relevant structure:
 colors points by source tier and sizes them by residual risk, and
 `fig:evidence_tier_ladder` reports source-tier counts and percentages. The
 quality report must pass before the visuals should be treated as publication
-artifacts.
+artifacts. `fig:seed_sensitivity` is explicitly a technical-replicate
+sensitivity surface: its intervals and Hoeffding radius are conditional on the
+declared exchangeable-seed assumption, while its bootstrap interval is a
+deterministic descriptive resampling summary. It does not estimate human
+participants, field prevalence, or an external scientific population.
 
 ## The analogy
 
@@ -179,6 +187,7 @@ including `networkx>=3.4.2` for deterministic graph layouts.
 - **Manuscript variable generation**: every prose number is a `{{TOKEN}}` from one Python function
 - **Source-owned formalisms**: auto-numbered equation blocks from `src/formalisms.py`
 - **Scientific-integrity gates**: claim support, evidence tiers, source owners, and risk dimensions from source registries
+- **Statistical auditability**: declared seed sampling scheme, interval methods, deterministic bootstrap, minimum-`n` derivation, and generated-report integrity validation
 - **Technical visualization QA**: PNG+SVG generation, registry parity, nonblank pixel checks, and color-variance checks
 - **Zero-mock test suite**: real data, real computation, real files
 

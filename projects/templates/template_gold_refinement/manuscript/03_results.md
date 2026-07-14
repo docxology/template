@@ -22,6 +22,38 @@ The canonical run completed {{REFINERY_NUM_STAGES}} ordered, continuous stages a
 - **Nine-nines certified:** {{REFINERY_IS_CERTIFIED}}
 - **Nines count:** {{REFINERY_FINAL_NINES}}
 
+## Seed-sensitivity results
+
+The expanded sensitivity study evaluated {{SEED_STUDY_N}} technical replicates
+of the deterministic token pipeline over seeds {{SEED_STUDY_SEED_RANGE}}. It
+found {{SEED_STUDY_UNIQUE_PLANS}} unique token plans among {{SEED_STUDY_N}}
+runs, with {{SEED_STUDY_CANONICAL_MATCHES}} exact matches to the canonical
+plan. Mean slot agreement was {{SEED_STUDY_MEAN_AGREEMENT}} (SD
+{{SEED_STUDY_SD_AGREEMENT}}; descriptive {{SEED_STUDY_CONFIDENCE_LEVEL}} interval
+{{SEED_STUDY_AGREEMENT_INTERVAL}}), with observed range
+{{SEED_STUDY_AGREEMENT_MIN}}–{{SEED_STUDY_AGREEMENT_MAX}}. The configured
+threshold rate was {{SEED_STUDY_HIGH_AGREEMENT_RATE}} (score interval
+{{SEED_STUDY_HIGH_AGREEMENT_INTERVAL}}) at the {{SEED_STUDY_THRESHOLD}}
+agreement threshold. All configured inventory values were observed
+({{SEED_STUDY_INVENTORY_COVERAGE}} coverage), which is a coverage result for
+the token vocabulary rather than a quality result for the manuscript.
+
+The declared precision target requires at least {{SEED_STUDY_MINIMUM_N}}
+replicates under the chosen bounded-metric formula; the realized radius is
+{{SEED_STUDY_PRECISION_RADIUS}}. The deterministic bootstrap sensitivity
+interval for the mean is {{SEED_STUDY_BOOTSTRAP_INTERVAL}} from
+{{SEED_STUDY_BOOTSTRAP_REPLICATES}} resamples. Both intervals are conditional
+technical summaries, not population estimates.
+
+{{FIGURE_SEED_SENSITIVITY}}
+
+The report is stored at `{{SEED_STUDY_REPORT_PATH}}`. {{SEED_STUDY_CLAIM_BOUNDARY}}
+The sensitivity result therefore refines the reproducibility claim: a fixed
+seed exactly regenerates a selected plan, while neighboring seeds explore a
+wide deterministic outcome surface. It does not justify treating token
+agreement as a reader-quality metric or as evidence that one lexical choice is
+scientifically superior.
+
 ## Token plan summary
 
 The mega-madlib engine generated {{TOKEN_COUNT}} tokens from seed {{TOKEN_SEED}} across {{CONFIG_NUM_LEXICON_CATEGORIES}} lexicon categories.

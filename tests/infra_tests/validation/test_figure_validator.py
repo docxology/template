@@ -210,6 +210,30 @@ class TestValidateFigureRegistry:
         assert success is False
         assert any("missing.png" in issue for issue in issues)
 
+    def test_validate_missing_unreferenced_generated_figure_files(self, tmp_path):
+        """Generated registry entries must exist even before prose references them."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(
+            json.dumps(
+                {
+                    "fig:orphan": {
+                        "filename": "orphan.png",
+                        "caption": "Generated but not referenced yet",
+                        "generated_by": "src.figures.write_orphan",
+                    }
+                }
+            )
+        )
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "03_results.md").write_text("No figure reference here.\n")
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is False
+        assert any("orphan.png" in issue for issue in issues)
+
     def test_validate_ignores_latex_comment_reference_examples(self, tmp_path):
         """Preamble comments may document label syntax without referencing a figure."""
         registry_path = tmp_path / "registry.json"

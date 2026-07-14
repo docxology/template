@@ -13,7 +13,8 @@ standard (which xelatex/LuaTeX honor natively for ``/CreationDate``):
 - :func:`resolve_source_date_epoch` — the canonical epoch (int seconds) or
   ``None`` for wall-clock mode.
 - :func:`resolve_build_timestamp` — an ISO-8601 string derived from that epoch
-  (for ``GENERATION_TIMESTAMP``, title-page dates, ``generated_at`` fields).
+  (for ``GENERATION_TIMESTAMP`` and ``generated_at`` fields).
+- :func:`resolve_build_date` — a date-only value for dynamic title-page dates.
 - :func:`deterministic_subprocess_env` — a subprocess ``env`` mapping with
   ``SOURCE_DATE_EPOCH`` injected, to pass to xelatex/biber.
 
@@ -41,9 +42,12 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 __all__ = [
+    "DYNAMIC_DATE_SENTINELS",
     "TEMPLATE_DETERMINISTIC_ENV",
     "deterministic_subprocess_env",
+    "is_dynamic_date",
     "is_deterministic_requested",
+    "resolve_build_date",
     "resolve_build_timestamp",
     "resolve_source_date_epoch",
 ]
@@ -52,6 +56,12 @@ TEMPLATE_DETERMINISTIC_ENV = "TEMPLATE_DETERMINISTIC"
 _SOURCE_DATE_EPOCH_ENV = "SOURCE_DATE_EPOCH"
 _TRUTHY = {"1", "true", "yes", "on"}
 _ISO_Z = "%Y-%m-%dT%H:%M:%SZ"
+DYNAMIC_DATE_SENTINELS = frozenset({"auto", "current", "today"})
+
+
+def is_dynamic_date(value: object) -> bool:
+    """Return whether a config value requests the build's current date."""
+    return str(value).strip().lower() in DYNAMIC_DATE_SENTINELS if value is not None else False
 
 
 def is_deterministic_requested(deterministic: bool | None = None) -> bool:
@@ -128,6 +138,19 @@ def resolve_build_timestamp(
     epoch = resolve_source_date_epoch(deterministic=deterministic, repo_root=repo_root)
     moment = datetime.fromtimestamp(epoch, tz=timezone.utc) if epoch is not None else datetime.now(timezone.utc)
     return moment.strftime(fmt)
+
+
+def resolve_build_date(*, deterministic: bool | None = None, repo_root: Path | None = None) -> str:
+    """Return the build date, honoring reproducibility pins when present.
+
+    Wall-clock builds use the host's local calendar day so ``date: today`` means
+    the day the author is actually working. Deterministic builds use the UTC
+    calendar day represented by the pinned source epoch.
+    """
+    epoch = resolve_source_date_epoch(deterministic=deterministic, repo_root=repo_root)
+    if epoch is not None:
+        return datetime.fromtimestamp(epoch, tz=timezone.utc).date().isoformat()
+    return datetime.now().astimezone().date().isoformat()
 
 
 def deterministic_subprocess_env(

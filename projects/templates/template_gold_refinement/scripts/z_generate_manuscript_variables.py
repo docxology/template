@@ -17,6 +17,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -37,7 +38,22 @@ def main() -> int:
     args = parser.parse_args()
 
     from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
+    from config import load_gold_refinement_config
     from manuscript_variables import generate_variables, save_variables
+    from seed_sensitivity import validate_seed_sensitivity_payload
+
+    seed_report_path = _PROJECT_ROOT / "output" / "data" / "seed_sensitivity.json"
+    if seed_report_path.exists():
+        try:
+            seed_payload = json.loads(seed_report_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid seed sensitivity report: {seed_report_path}: {exc}") from exc
+        seed_issues = validate_seed_sensitivity_payload(
+            load_gold_refinement_config(_PROJECT_ROOT),
+            seed_payload,
+        )
+        if seed_issues:
+            raise ValueError("; ".join(seed_issues))
 
     variables = generate_variables(
         _PROJECT_ROOT,

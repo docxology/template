@@ -129,6 +129,15 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "heatmap cells encode deterministic selected inventory index across seeds",
     ),
     FigureSpec(
+        "seed_sensitivity",
+        "fig:seed_sensitivity",
+        "seed_sensitivity.png",
+        "Seed-sensitivity distribution and the declared sample-size precision ladder for token-plan agreement.",
+        "src/figures/charts.py::generate_seed_sensitivity",
+        ("output/data/seed_sensitivity.json", "src/seed_sensitivity.py::run_seed_sensitivity"),
+        "histogram encodes seed-level token agreement; line encodes the distribution-free precision radius by sample size",
+    ),
+    FigureSpec(
         "integrity_gate_matrix",
         "fig:integrity_gate_matrix",
         "integrity_gate_matrix.png",

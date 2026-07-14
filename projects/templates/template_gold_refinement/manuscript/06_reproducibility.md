@@ -13,6 +13,24 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 - **Generation timestamp:** {{GENERATION_TIMESTAMP}}
 - **Python version:** {{PYTHON_VERSION}}
 
+## Replication across technical seeds
+
+Exact replay uses the canonical seed above. Replicability of the token-plan
+mechanism is described separately by {{SEED_STUDY_N}} technical seed replicates:
+the report records {{SEED_STUDY_UNIQUE_PLANS}} unique plans, mean agreement of
+{{SEED_STUDY_MEAN_AGREEMENT}}, and a {{SEED_STUDY_CONFIDENCE_LEVEL}} descriptive
+interval of {{SEED_STUDY_AGREEMENT_INTERVAL}}. This follows the computational
+benchmarking principle that performance should be represented over relevant
+sources of variation, not only by a single run [@bouthillier2021accounting].
+The seed study is not a sample of manuscripts, readers, or scientific claims;
+it is a sensitivity analysis of one executable lexical pipeline. The National
+Academies distinguish computational reproducibility—recovering results from
+the same inputs and procedures—from replicability across changed conditions
+[@national_academies_2019_reproducibility]. This project demonstrates the
+former directly and explores only one controlled technical variation for the
+latter. It does not establish that the seed distribution represents future
+software environments or independent research teams.
+
 ## Artifact inventory
 
 | Category | Count |

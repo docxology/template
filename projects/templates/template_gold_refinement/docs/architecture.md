@@ -49,11 +49,12 @@ per-figure inventory.
 3. `refinery.py::run_refinery()` → RefineryResult (5 stages with monotonicity, order, and adjacent-continuity guards)
 4. `refinery.py::stages_to_target()` → shortest ordered prefix reaching a declared target; `purity.py::PurityVector` → noncompensatory quality dimensions
 5. `figures/registry.py::generate_all_figures()` → PNG + SVG files, `figure_registry.json`, `figure_quality_report.json`
-6. `assay.py::assay_claims()` and `evidence.py::build_evidence_registry()` → claim-support and evidence registries
-7. `dashboard.py::write_dashboard()` → `output/dashboard.html`
-8. `manuscript_variables.py::generate_variables()` → flat dict of {{TOKEN}} values
-9. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` → output/manuscript/
-10. `infrastructure.rendering.pdf_renderer` → PDF
+6. `seed_sensitivity.py::run_seed_sensitivity()` → `output/data/seed_sensitivity.json` and `fig:seed_sensitivity`
+7. `assay.py::assay_claims()` and `evidence.py::build_evidence_registry()` → claim-support and evidence registries
+8. `dashboard.py::write_dashboard()` → `output/dashboard.html`
+9. `manuscript_variables.py::generate_variables()` → flat dict of {{TOKEN}} values; the seed report is recomputed before hydration
+10. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` → output/manuscript/
+11. `infrastructure.rendering.pdf_renderer` → PDF
 
 ## Layer contract
 

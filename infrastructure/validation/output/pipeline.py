@@ -56,6 +56,11 @@ from infrastructure.validation.output.validator import ValidationResultDict, col
 
 logger = get_logger(__name__)
 
+# Only explicitly report-only checks may remain non-blocking. Structural,
+# provenance, evidence, design, and claim checks must fail closed: a green PDF
+# cannot certify a manuscript whose source registries or declared design fail.
+_ADVISORY_CHECKS = frozenset({"Prose quality"})
+
 # Resolve repository root once at module load.
 # This file lives at infrastructure/validation/output/pipeline.py → 4 parents up = repo root.
 _REPO_ROOT = Path(__file__).parent.parent.parent.parent
@@ -459,7 +464,11 @@ def execute_validation_pipeline(
         try:
             verify_claims = claim_verifier or _verify_project_claims
             claim_report = verify_claims(project_root)
-            results.append(("Claim verification", True))
+            summary = claim_report.summary()
+            claim_passed = bool(getattr(claim_report, "skipped", False)) or (
+                int(summary.get("contradicted", 0)) == 0 and int(summary.get("insufficient", 0)) == 0
+            )
+            results.append(("Claim verification", claim_passed))
         except Exception as e:
             logger.error(f"Error during claim verification: {e}", exc_info=True)
             results.append(("Claim verification", False))
@@ -544,9 +553,14 @@ def execute_validation_pipeline(
     logger.info(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("")
 
-    all_passed = True
-    warning_count = 0
-    critical_count = 0
+    failed_checks = [(name, result) for name, result in results if not result]
+    blocking_failures = [(name, result) for name, result in failed_checks if name not in _ADVISORY_CHECKS]
+    advisory_failures = [(name, result) for name, result in failed_checks if name in _ADVISORY_CHECKS]
+    all_passed = not blocking_failures and not figure_issues
+    warning_count = len(advisory_failures)
+    critical_count = len(blocking_failures)
+    if figure_issues and not any(name == "Figure registry" for name, _ in blocking_failures):
+        critical_count += 1
 
     logger.info("Individual Check Results:")
     for check_name, result in results:
@@ -554,17 +568,10 @@ def execute_validation_pipeline(
             status = "✅ PASS"
             logger.info(f"  {status}: {check_name}")
         else:
-            if check_name == "PDF validation":
-                status = "❌ FAIL"
-                critical_count += 1
-                all_passed = False
-            elif check_name == "Transmission bookends":
-                status = "❌ FAIL"
-                critical_count += 1
-                all_passed = False
-            else:
+            if check_name in _ADVISORY_CHECKS:
                 status = "⚠️  WARN"
-                warning_count += 1
+            else:
+                status = "❌ FAIL"
             logger.info(f"  {status}: {check_name}")
 
     if figure_issues:

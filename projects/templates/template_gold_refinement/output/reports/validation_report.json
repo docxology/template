@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T02:08:51Z",
+  "timestamp": "2026-07-14T00:39:17Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -24,20 +24,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 4.87,
+            "size_mb": 5.07,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 11,
-            "size_mb": 5.28,
+            "size_mb": 5.51,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 13,
-            "size_mb": 0.43,
+            "size_mb": 0.46,
             "readable": true,
             "optional": false
           },
@@ -50,15 +50,15 @@
           },
           "figures": {
             "exists": true,
-            "files": 27,
-            "size_mb": 6.28,
+            "files": 29,
+            "size_mb": 6.6,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
-            "files": 3,
-            "size_mb": 0.03,
+            "files": 4,
+            "size_mb": 0.23,
             "readable": true,
             "optional": false
           },
@@ -95,13 +95,13 @@
         "pdf": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "5.28",
+          "size_mb": "5.51",
           "largest_file": "template_gold_refinement_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 13,
-          "size_mb": "0.43",
+          "size_mb": "0.46",
           "largest_file": "index.html"
         },
         "slides": {
@@ -112,15 +112,15 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 27,
-          "size_mb": "6.28",
+          "file_count": 29,
+          "size_mb": "6.60",
           "largest_file": "cover_visualization.png"
         },
         "data": {
           "exists": true,
-          "file_count": 3,
-          "size_mb": "0.03",
-          "largest_file": "manuscript_variables.json"
+          "file_count": 4,
+          "size_mb": "0.23",
+          "largest_file": "seed_sensitivity.json"
         },
         "reports": {
           "exists": true,
@@ -150,13 +150,13 @@
         "pdf": 11,
         "web": 13,
         "slides": 0,
-        "figures": 27,
-        "data": 3,
+        "figures": 29,
+        "data": 4,
         "reports": 12,
         "simulations": 0,
         "llm": 0
       },
-      "total_size_mb": 12.147364616394043,
+      "total_size_mb": 12.933011054992676,
       "issues_by_severity": {
         "critical": [],
         "warning": [
@@ -170,15 +170,15 @@
     },
     "pdf": {
       "files": 11,
-      "size_mb": 5.276142120361328
+      "size_mb": 5.5092058181762695
     },
     "figures": {
-      "files": 27,
-      "size_mb": 6.282607078552246
+      "files": 29,
+      "size_mb": 6.596378326416016
     },
     "data": {
-      "files": 3,
-      "size_mb": 0.034928321838378906
+      "files": 4,
+      "size_mb": 0.23260116577148438
     }
   },
   "summary": {

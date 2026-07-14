@@ -69,6 +69,7 @@ GOLD_REFINEMENT_SCHEMA_FIELDS: tuple[str, ...] = (
     "pipeline_phases",
     "audit_rules",
     "security_assay",
+    "seed_sensitivity",
 )
 
 REQUIRED_ROW_FIELDS: dict[str, tuple[str, ...]] = {
@@ -177,6 +178,7 @@ class GoldRefinementConfig:
     pipeline_phases: list[dict[str, str]] = field(default_factory=list)
     audit_rules: list[dict[str, str]] = field(default_factory=list)
     security_assay: list[dict[str, str]] = field(default_factory=list)
+    seed_sensitivity: dict[str, Any] = field(default_factory=dict)
 
     @property
     def enabled_sections(self) -> tuple[str, ...]:
@@ -391,6 +393,9 @@ def _parse_config(gr: dict[str, Any]) -> GoldRefinementConfig:
         pipeline_phases=_load_required_rows(gr, "pipeline_phases", REQUIRED_ROW_FIELDS["pipeline_phases"]),
         audit_rules=_load_required_rows(gr, "audit_rules", REQUIRED_ROW_FIELDS["audit_rules"]),
         security_assay=_load_required_rows(gr, "security_assay", REQUIRED_ROW_FIELDS["security_assay"]),
+        seed_sensitivity=dict(gr.get("seed_sensitivity", {}))
+        if isinstance(gr.get("seed_sensitivity", {}), dict)
+        else {},
     )
 
 

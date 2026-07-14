@@ -28,4 +28,17 @@ The adversarial assay adds a security-specific evaluation target: can a reader d
 
 The risk model adds prioritization to the gate list. [@fig:integrity_risk_matrix] separates easy-to-detect implementation failures from severe boundary failures that need clearer ownership. This keeps the evaluation surface from becoming a checklist of equally weighted boxes: token coverage, citation validity, claim support, and render readiness all matter, but a high-severity low-detectability failure should shape the next source edit before cosmetic manuscript polish.
 
+The seed-sensitivity gate adds a quantitative robustness surface without
+changing the claim boundary. It requires a declared replicate count, an
+agreement estimand, a score interval for the thresholded rate, a bounded
+precision radius, and a sample-size ladder. The current run reports
+{{SEED_STUDY_N}} technical replicates, {{SEED_STUDY_UNIQUE_PLANS}} unique plans,
+and {{SEED_STUDY_INVENTORY_COVERAGE}} inventory coverage. These quantities
+describe the behavior of the deterministic composition engine; they do not
+measure reader agreement, factual correctness, or scientific validity. The
+intervals and Hoeffding radius are conditional on the declared exchangeability
+assumption for the seed draws; the contiguous integer range is not a random
+sample of manuscripts or deployments. A validator must therefore check both
+the report schema and its deterministic recomputation from configuration.
+
 Figure review follows the same rule. File existence and nonblank pixels are necessary but not sufficient. The figure caption, encoding declaration, source data, and prose interpretation must describe the same measurement. This criterion specifically prohibits inferring a stagewise trend from a project-level aggregate, which is why [@fig:purity_claim_scatter] repeats one observed claim-support rate rather than inventing cumulative values.

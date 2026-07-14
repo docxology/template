@@ -12,11 +12,25 @@ metrics:
   primary:
     name: purity_fraction
     direction: maximize
-protocol: "Run the deterministic refinery pipeline with seed 431 across all five canonical stages, verifying monotone purity increase from ore (0.10) to nine-nines (0.999999999)."
-expected_figures: []
+protocol: "Run the deterministic refinery pipeline with canonical seed 431 across all five stages, then evaluate token-plan agreement over n=1024 technical seed replicates (seeds 0–1023). Report the bounded 95% precision radius, score interval for the predeclared 25% agreement threshold, and the sample-size ladder."
+sample_size:
+  unit: "technical seed replicate"
+  n: 1024
+  seed_range: "0..1023"
+  confidence_level: 0.95
+  precision_target: 0.05
+  minimum_n_for_precision_target: 738
+  bootstrap_replicates: 2000
+  sampling_scheme: "contiguous_integer_seeds"
+  precision_assumption: "Hoeffding and interval summaries are conditional on exchangeable random-seed draws; the declared contiguous range is not an empirical population."
+  agreement_threshold: 0.25
+  rationale: "The study is computational sensitivity analysis, not a human or empirical manuscript-quality sample. n=1024 makes the distribution-free bounded-metric radius <= 0.05 under the declared 95% bound."
+expected_figures:
+  - fig:seed_sensitivity
 expected_tables:
   - tbl:stage_purity
   - tbl:token_provenance
+  - tbl:seed_sensitivity_ladder
 baselines:
   - ore_stage
 ablations:

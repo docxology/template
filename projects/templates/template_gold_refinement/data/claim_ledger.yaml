@@ -63,6 +63,39 @@ claims:
     evidence_type: "code"
     boundary: "local"
 
+  - id: "claim:seed_sensitivity_study"
+    statement: "The project reports a declared seed-replicate sensitivity study with precision metadata and explicit non-empirical boundaries."
+    source: "src/seed_sensitivity.py::run_seed_sensitivity"
+    evidence_type: "code"
+    boundary: "local"
+
+  - id: "fact:seed_sensitivity_sample_size"
+    kind: "number"
+    value: 1024
+    statement: "The configured seed-sensitivity study evaluates 1024 technical seed replicates."
+    source: "manuscript/config.yaml::gold_refinement.seed_sensitivity.sample_size"
+    artifact_path: "manuscript/config.yaml"
+    source_tier: "configuration"
+    freshness: "active"
+
+  - id: "fact:seed_sensitivity_precision_target"
+    kind: "number"
+    value: 0.05
+    statement: "The configured seed-sensitivity study targets a distribution-free precision radius of 0.05."
+    source: "manuscript/config.yaml::gold_refinement.seed_sensitivity.precision_target"
+    artifact_path: "manuscript/config.yaml"
+    source_tier: "configuration"
+    freshness: "active"
+
+  - id: "fact:seed_sensitivity_minimum_n"
+    kind: "number"
+    value: 738
+    statement: "The declared 95% Hoeffding precision target of 0.05 requires a minimum computed sample size of 738 bounded technical replicates."
+    source: "experiment_plan.yaml::sample_size.minimum_n_for_precision_target"
+    artifact_path: "experiment_plan.yaml"
+    source_tier: "design"
+    freshness: "active"
+
   - id: "fact:eq_purity_functional"
     kind: "equation"
     value: "eq:purity_functional"
@@ -181,6 +214,9 @@ claims:
     freshness: "active"
 
 non_claims:
+  - id: "nonclaim:seed_replicates_are_not_empirical_subjects"
+    statement: "The 1024 seed runs are technical replicates of one executable token pipeline, not human participants, independent manuscripts, or evidence of external manuscript quality."
+    boundary: "local"
   - id: "nonclaim:empirical_validation"
     statement: "The analogy is not empirically validated against external manuscript quality metrics."
     boundary: "local"

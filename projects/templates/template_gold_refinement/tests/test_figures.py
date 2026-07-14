@@ -22,6 +22,7 @@ from figures import (
     generate_integrity_risk_matrix,
     generate_karat_grading_chart,
     generate_purity_progression,
+    generate_seed_sensitivity,
     generate_token_density_chart,
     purity_nines_values,
     write_figure_quality_report,
@@ -60,7 +61,7 @@ def _write_representative_config(tmp_path):
 
 class TestFigureSpecContract:
     def test_figure_specs_are_unique(self):
-        assert len(FIGURE_SPECS) == 12
+        assert len(FIGURE_SPECS) == 13
         for field in ("name", "label", "path", "svg_path"):
             values = [getattr(spec, field) for spec in FIGURE_SPECS]
             assert len(values) == len(set(values)), f"duplicate figure spec {field}"
@@ -203,7 +204,7 @@ class TestGenerateAllFigures:
     def test_generates_all_figures(self, tmp_path):
         _write_representative_config(tmp_path)
         paths = generate_all_figures(tmp_path)
-        assert len(paths) == 12
+        assert len(paths) == len(FIGURE_SPECS)
         for p in paths:
             assert p.exists()
             assert p.suffix == ".png"
@@ -236,7 +237,7 @@ class TestGenerateAllFigures:
         assert registry_path.exists()
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         assert "figures" in registry
-        assert len(registry["figures"]) == 12
+        assert len(registry["figures"]) == len(FIGURE_SPECS)
         for fig in registry["figures"]:
             assert fig["svg_path"].endswith(".svg")
             assert fig["data_sources"]
@@ -259,11 +260,11 @@ class TestGenerateAllFigures:
         assert quality_path.exists()
         report = json.loads(quality_path.read_text(encoding="utf-8"))
         assert report["schema"] == "template-gold-refinement-figure-quality-v1"
-        assert report["figure_count"] == 12
-        assert report["png_count"] == 12
-        assert report["svg_count"] == 12
+        assert report["figure_count"] == len(FIGURE_SPECS)
+        assert report["png_count"] == len(FIGURE_SPECS)
+        assert report["svg_count"] == len(FIGURE_SPECS)
         assert report["registry_parity"] is True
-        assert report["passing_count"] == 12
+        assert report["passing_count"] == len(FIGURE_SPECS)
         for record in report["records"]:
             assert record["width_px"] >= 900
             assert record["height_px"] >= 600
@@ -277,8 +278,8 @@ class TestGenerateAllFigures:
         first_svg.unlink()
         quality_path = write_figure_quality_report(tmp_path)
         report = json.loads(quality_path.read_text(encoding="utf-8"))
-        assert report["svg_count"] == 11
-        assert report["passing_count"] == 11
+        assert report["svg_count"] == len(FIGURE_SPECS) - 1
+        assert report["passing_count"] == len(FIGURE_SPECS) - 1
 
 
 class TestStageConstants:
@@ -294,7 +295,7 @@ class TestStageConstants:
 
 
 class TestAdditionalFigures:
-    """Tests for provenance_sankey, purity_claim_scatter, token_heatmap."""
+    """Tests for additional graph, diagram, and sensitivity figures."""
 
     def test_provenance_sankey_generates_png(self, tmp_path):
         from figures import generate_provenance_sankey
@@ -353,6 +354,12 @@ class TestAdditionalFigures:
 
         out = generate_token_heatmap(tmp_path, project_root=tmp_path)
         assert out.exists()
+        assert out.stat().st_size > 100
+
+    def test_seed_sensitivity_generates_png(self, tmp_path):
+        out = generate_seed_sensitivity(tmp_path)
+        assert out.exists()
+        assert out.suffix == ".png"
         assert out.stat().st_size > 100
 
     def test_integrity_gate_matrix_generates_png(self, tmp_path):

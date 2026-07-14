@@ -389,4 +389,4 @@ def validate_claim_verification(project_root: Path | str) -> bool:
             )
     if summary["supported"] == 0 and summary["insufficient"] == 0 and summary["contradicted"] == 0:
         log_success("Claim verification: no claims were extracted", logger)
-    return True
+    return int(summary["contradicted"]) == 0 and int(summary["insufficient"]) == 0

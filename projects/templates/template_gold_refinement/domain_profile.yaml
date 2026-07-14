@@ -12,16 +12,21 @@ validation_gates:
   - refinery_monotone_purity
   - karat_grading
   - deterministic_token_plan
+  - seed_sensitivity_precision
+  - seed_sensitivity_report_integrity
   - manuscript_token_coverage
   - claim_ledger_alignment
   - render_validation
 figure_types:
   - purity_progression
   - karat_grading_chart
+  - seed_sensitivity
 citation_policy: local_source_or_scholarly
 review_gates:
   - purity_monotone_check
   - token_attribution_completeness
+  - seed_variability_boundary
+  - seed_report_integrity
   - claim_ledger_alignment
 stage_mappings:
   - refinery_stage: ore
@@ -48,6 +53,7 @@ source_policy: "Claims about manuscript purity must cite project config, source 
 artifact_expectations:
   - output/data/refinery_results.json
   - output/reports/token_plan.json
+  - output/data/seed_sensitivity.json
   - output/data/manuscript_variables.json
   - output/pdf/template_gold_refinement_combined.pdf
 benchmark_rubric:
@@ -65,6 +71,10 @@ benchmark_rubric:
       weight: 1.5
     - name: render_success
       weight: 1.0
+    - name: seed_sensitivity_precision
+      weight: 1.5
+    - name: seed_report_integrity
+      weight: 1.5
 llm_prompt_guidance: "Use only the configured lexicon, narrative moves, refinery stages, design principles, quality probes, failure modes, authoring obligations, and generated artifacts; do not invent unconfigured token categories or publication claims."
 analogy_boundary:
   thesis: "The analogy is load-bearing for staged purification and source-owned validation."

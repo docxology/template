@@ -152,6 +152,9 @@ expected_figures: [fig:accuracy]
 expected_tables: [tbl:results]
 baselines: [baseline]
 ablations: [ablation]
+sample_size:
+  unit: technical replicate
+  n: 16
 """,
         encoding="utf-8",
     )
@@ -165,6 +168,16 @@ ablations: [ablation]
     assert plan.primary_metric.name == "accuracy"
     assert plan.baselines == ("baseline",)
     assert plan.ablations == ("ablation",)
+    assert plan.sample_size == {"unit": "technical replicate", "n": 16}
+
+
+def test_invalid_experiment_plan_sample_size_reports_mapping_error(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "experiment_plan.yaml").write_text("sample_size: 16\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="sample_size must be a mapping"):
+        load_experiment_plan(project)
 
 
 def test_invalid_experiment_plan_reports_missing_primary_metric_and_bad_role(tmp_path: Path) -> None:

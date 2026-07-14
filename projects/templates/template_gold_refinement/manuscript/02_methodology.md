@@ -2,7 +2,7 @@
 
 ## Research design
 
-We conducted a deterministic, artifact-based methods demonstration. The research object is one executable manuscript compendium comprising authored configuration and Markdown, project source code, generated data and reports, registered figures, and rendered publication files. The unit of transformation is a refinery stage; the unit of lexical composition is a configured token slot; the unit of evidentiary evaluation is a registered claim or gate. No human participants, stochastic sampling, trained model, or inferential statistical test is involved.
+We conducted a deterministic, artifact-based methods demonstration. The research object is one executable manuscript compendium comprising authored configuration and Markdown, project source code, generated data and reports, registered figures, and rendered publication files. The unit of transformation is a refinery stage; the unit of lexical composition is a configured token slot; the unit of evidentiary evaluation is a registered claim or gate. No human participants, trained model, or empirical manuscript-quality outcome is involved. A separate seed-sensitivity pass uses deterministic technical replicates to describe token-plan variability and is not an inferential test of writing quality.
 
 The method asks whether a metallurgical stage structure can be implemented as an inspectable manuscript workflow. It does **not** test whether the resulting purity values predict reader judgments, scientific validity, or editorial acceptance. Accordingly, all reported quantities are properties of this executable exemplar: stage outputs, token selections, registry contents, and validator outcomes.
 
@@ -64,6 +64,19 @@ $$
 where $n$ is the inventory size. For each declared slot, the procedure concatenates the seed, slot name, category, one-based ordinal, and the complete ordered inventory; hashes the UTF-8 string; converts the first 12 hexadecimal characters to an integer; and reduces it modulo $n$. Including the complete inventory makes selection sensitive to both membership and order. Replaying the same configuration reproduces the same plan; changing the seed, slot specification, or inventory may change it.
 
 Each selected value is recorded with its variable name, slot, category, section, ordinal, and configuration path. This record permits exact replay and source tracing but does not imply that the selected synonym is semantically superior. Selected metallurgical terms are {{METHOD_METAL_TERM_1}}, {{METHOD_METAL_TERM_2}}, and {{METHOD_METAL_TERM_3}}; selected manuscript terms are {{METHOD_MANUSCRIPT_TERM_1}} and {{METHOD_MANUSCRIPT_TERM_2}}. [@eq:token_digest] formalizes the rule, while {{METHOD_GATE_TERM_1}}, {{METHOD_GATE_TERM_2}}, and {{METHOD_GATE_TERM_3}} name the corresponding validation surfaces.
+
+## Seed-sensitivity design
+
+The canonical publication plan uses seed {{TOKEN_SEED}}. To measure sensitivity to that declared input, the analysis additionally evaluates {{SEED_STUDY_N}} technical seed replicates over the range {{SEED_STUDY_SEED_RANGE}}. Agreement is the fraction of token slots whose selected value matches the canonical plan; unique-plan count and lexicon inventory coverage are reported separately. The thresholded rate counts replicates with at least {{SEED_STUDY_THRESHOLD}} slot agreement and uses a score interval rather than a naive Wald interval [@newcombe1998proportion]. This follows computational benchmarking work that recommends representing pipeline performance as a distribution over sources of variation rather than as a single run [@bouthillier2021accounting].
+
+The sample size is a precision choice for a bounded computational summary, not a power calculation for people or a claim that {{SEED_STUDY_N}} runs constitute {{SEED_STUDY_N}} manuscripts. Accuracy-based sample-size justification is appropriate only after the estimand and inferential goal are declared [@lakens2022samplesize]. For the declared bounded-metric target, the algebraic minimum is {{SEED_STUDY_MINIMUM_N}} replicates; the project uses {{SEED_STUDY_N}} as a documented power-of-two ceiling. At the nominal {{SEED_STUDY_CONFIDENCE_LEVEL}} level, the distribution-free radius is {{SEED_STUDY_PRECISION_RADIUS}} against a target of {{SEED_STUDY_PRECISION_TARGET}}.
+
+The interval language is conditional. Seeds are enumerated as {{SEED_STUDY_SAMPLING_SCHEME}}, not sampled from manuscripts, readers, or a natural population. The normal interval is a {{SEED_STUDY_AGREEMENT_INTERVAL_METHOD}}; the threshold interval is a {{SEED_STUDY_THRESHOLD_INTERVAL_METHOD}}; and the bounded radius is a {{SEED_STUDY_PRECISION_METHOD}}. These summaries are interpretable under the declared exchangeability assumption—{{SEED_STUDY_PRECISION_ASSUMPTION}}—but they are not unconditional confidence statements about future software versions or external writing outcomes. A deterministic bootstrap percentile interval over {{SEED_STUDY_BOOTSTRAP_REPLICATES}} resamples, using bootstrap seed {{SEED_STUDY_BOOTSTRAP_SEED}}, provides a sensitivity check for the empirical seed-range mean: {{SEED_STUDY_BOOTSTRAP_INTERVAL}} [@efron1979bootstrap]. The full report records the cumulative sample-size ladder in [@tbl:seed_sensitivity_ladder] and the generated distribution in [@fig:seed_sensitivity].
+
+| Seed sample size | Mean agreement | SD | 95% bound radius | Inventory coverage |
+|------------------|----------------|----|------------------|--------------------|
+{{SEED_STUDY_LADDER_TABLE}}
+: Seed-sensitivity precision ladder. {#tbl:seed_sensitivity_ladder}
 
 ## Config-owned lexicon
 

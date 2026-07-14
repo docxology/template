@@ -1,6 +1,6 @@
 {
-  "total_claims": 9,
-  "supported_claims": 9,
+  "total_claims": 10,
+  "supported_claims": 10,
   "unsupported_claims": 0,
   "support_rate": 1.0,
   "is_passing": true,
@@ -73,6 +73,14 @@
       "claim_name": "Adversarial security assay",
       "claim_statement": "The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries.",
       "evidence_source": "src/security_assay.py::build_security_assay",
+      "boundary": "local",
+      "supported": true,
+      "notes": ""
+    },
+    {
+      "claim_name": "Seed-sensitivity study",
+      "claim_statement": "The project reports a declared seed-replicate sensitivity study with precision metadata and explicit non-empirical boundaries.",
+      "evidence_source": "src/seed_sensitivity.py::run_seed_sensitivity",
       "boundary": "local",
       "supported": true,
       "notes": ""

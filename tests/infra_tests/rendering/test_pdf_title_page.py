@@ -73,6 +73,14 @@ class TestPreamble:
         assert r"\date{March 2026}" in out
         assert out.count("March 2026") == 1
 
+    def test_preamble_resolves_today_date_at_build_time(self, tmp_path: Path, monkeypatch) -> None:
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+        cfg = 'paper:\n  title: "T"\n  date: "today"\nauthors:\n  - name: "A"\n'
+        d = _manuscript(tmp_path, cfg)
+        out = generate_title_page_preamble(d)
+        assert r"\date{2023-11-14}" in out
+        assert r"\today" not in out
+
     def test_author_without_name_is_skipped(self, tmp_path: Path) -> None:
         cfg = 'paper:\n  title: "T"\nauthors:\n  - affiliation: "Nameless Org"\n  - name: "Grace Hopper"\n'
         d = _manuscript(tmp_path, cfg)

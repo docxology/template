@@ -78,6 +78,19 @@
       "svg_path": "token_heatmap.svg"
     },
     {
+      "name": "seed_sensitivity",
+      "label": "fig:seed_sensitivity",
+      "path": "seed_sensitivity.png",
+      "caption": "Seed-sensitivity distribution and the declared sample-size precision ladder for token-plan agreement.",
+      "generated_by": "src/figures/charts.py::generate_seed_sensitivity",
+      "data_sources": [
+        "output/data/seed_sensitivity.json",
+        "src/seed_sensitivity.py::run_seed_sensitivity"
+      ],
+      "visual_encoding": "histogram encodes seed-level token agreement; line encodes the distribution-free precision radius by sample size",
+      "svg_path": "seed_sensitivity.svg"
+    },
+    {
       "name": "integrity_gate_matrix",
       "label": "fig:integrity_gate_matrix",
       "path": "integrity_gate_matrix.png",

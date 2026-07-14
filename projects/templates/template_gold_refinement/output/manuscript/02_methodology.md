@@ -2,7 +2,7 @@
 
 ## Research design
 
-We conducted a deterministic, artifact-based methods demonstration. The research object is one executable manuscript compendium comprising authored configuration and Markdown, project source code, generated data and reports, registered figures, and rendered publication files. The unit of transformation is a refinery stage; the unit of lexical composition is a configured token slot; the unit of evidentiary evaluation is a registered claim or gate. No human participants, stochastic sampling, trained model, or inferential statistical test is involved.
+We conducted a deterministic, artifact-based methods demonstration. The research object is one executable manuscript compendium comprising authored configuration and Markdown, project source code, generated data and reports, registered figures, and rendered publication files. The unit of transformation is a refinery stage; the unit of lexical composition is a configured token slot; the unit of evidentiary evaluation is a registered claim or gate. No human participants, trained model, or empirical manuscript-quality outcome is involved. A separate seed-sensitivity pass uses deterministic technical replicates to describe token-plan variability and is not an inferential test of writing quality.
 
 The method asks whether a metallurgical stage structure can be implemented as an inspectable manuscript workflow. It does **not** test whether the resulting purity values predict reader judgments, scientific validity, or editorial acceptance. Accordingly, all reported quantities are properties of this executable exemplar: stage outputs, token selections, registry contents, and validator outcomes.
 
@@ -129,6 +129,25 @@ where $n$ is the inventory size. For each declared slot, the procedure concatena
 
 Each selected value is recorded with its variable name, slot, category, section, ordinal, and configuration path. This record permits exact replay and source tracing but does not imply that the selected synonym is semantically superior. Selected metallurgical terms are assaying, parting, and smelting; selected manuscript terms are evidence and evidence. [@eq:token_digest] formalizes the rule, while evidence validation, figure registry check, and citation validation name the corresponding validation surfaces.
 
+## Seed-sensitivity design
+
+The canonical publication plan uses seed 431. To measure sensitivity to that declared input, the analysis additionally evaluates 1024 technical seed replicates over the range 0–1023. Agreement is the fraction of token slots whose selected value matches the canonical plan; unique-plan count and lexicon inventory coverage are reported separately. The thresholded rate counts replicates with at least 25% slot agreement and uses a score interval rather than a naive Wald interval [@newcombe1998proportion]. This follows computational benchmarking work that recommends representing pipeline performance as a distribution over sources of variation rather than as a single run [@bouthillier2021accounting].
+
+The sample size is a precision choice for a bounded computational summary, not a power calculation for people or a claim that 1024 runs constitute 1024 manuscripts. Accuracy-based sample-size justification is appropriate only after the estimand and inferential goal are declared [@lakens2022samplesize]. For the declared bounded-metric target, the algebraic minimum is 738 replicates; the project uses 1024 as a documented power-of-two ceiling. At the nominal 95% level, the distribution-free radius is 4.24% against a target of 5.00%.
+
+The interval language is conditional. Seeds are enumerated as contiguous_integer_seeds, not sampled from manuscripts, readers, or a natural population. The normal interval is a Normal approximation; descriptive conditional summary; the threshold interval is a Wilson score interval; conditional binomial summary; and the bounded radius is a Hoeffding bound; conditional bounded-metric guarantee. These summaries are interpretable under the declared exchangeability assumption—Conditional on exchangeable random-seed draws; the declared contiguous seed range is a sensitivity surface, not an empirical population.—but they are not unconditional confidence statements about future software versions or external writing outcomes. A deterministic bootstrap percentile interval over 2000 resamples, using bootstrap seed 431, provides a sensitivity check for the empirical seed-range mean: 20.10%–21.11% [@efron1979bootstrap]. The full report records the cumulative sample-size ladder in [@tbl:seed_sensitivity_ladder] and the generated distribution in [@fig:seed_sensitivity].
+
+| Seed sample size | Mean agreement | SD | 95% bound radius | Inventory coverage |
+|------------------|----------------|----|------------------|--------------------|
+| 16 | 19.53% | 7.72% | 33.95% | 100.00% |
+| 32 | 20.70% | 8.69% | 24.01% | 100.00% |
+| 64 | 19.40% | 7.36% | 16.98% | 100.00% |
+| 128 | 20.31% | 7.86% | 12.00% | 100.00% |
+| 256 | 20.00% | 7.88% | 8.49% | 100.00% |
+| 512 | 20.41% | 8.94% | 6.00% | 100.00% |
+| 1024 | 20.62% | 8.56% | 4.24% | 100.00% |
+: Seed-sensitivity precision ladder. {#tbl:seed_sensitivity_ladder}
+
 ## Config-owned lexicon
 
 | Category | Count | Sample |
@@ -164,6 +183,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 | Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | output/figures/*.png | nonblank figure tests |
 | Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | tests/test_integrity.py |
 | Security assay | gold_refinement.security_assay | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | tests/test_security_assay.py |
+| Seed sensitivity | GoldRefinementConfig and token plan | Evaluate token-plan agreement across the declared seed sample and compute bounded precision summaries | output/data/seed_sensitivity.json and seed-sensitivity figure | tests/test_seed_sensitivity.py |
 | Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve {{TOKEN}} placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
 | Render and validate | output/manuscript | Render PDF, HTML through shared template pipeline | output/pdf and output/web | render command |
 

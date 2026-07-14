@@ -8,6 +8,7 @@ from typing import Any
 
 import yaml
 
+from infrastructure.core.determinism import is_dynamic_date, resolve_build_date
 from infrastructure.core.logging.utils import get_logger
 
 __all__ = [
@@ -107,6 +108,8 @@ def build_pandoc_metadata(config: dict[str, Any]) -> dict[str, Any]:
     if authors:
         meta["author"] = authors
     date = paper.get("date") or (config.get("publication") or {}).get("year")
+    if is_dynamic_date(date):
+        date = resolve_build_date()
     if date:
         meta["date"] = str(date)
     return meta
@@ -131,6 +134,8 @@ def _metadata_from_config(config: dict[str, Any]) -> dict[str, Any]:
     year = book.get("year") or paper.get("year") or ""
     edition = book.get("edition") or ""
     date = paper.get("date") or (str(year) if year else "")
+    if is_dynamic_date(date):
+        date = resolve_build_date()
     return {
         "book": book,
         "paper": paper,

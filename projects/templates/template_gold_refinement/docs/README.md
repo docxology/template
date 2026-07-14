@@ -14,6 +14,7 @@ See [AGENTS.md](AGENTS.md) for the documentation contract.
 | `faq.md` | Common questions |
 | `quickstart.md` | Getting started |
 | `output_conventions.md` | Output file layout |
+| `validation_gates.md` | Blocking versus advisory checks, statistical report integrity, and negative controls |
 | `troubleshooting.md` | Common errors |
 | `agent_instructions.md` | AI agent guidance |
 | `domain_fork_guide.md` | Stage remapping and analogy-break boundaries for forking to other domains |

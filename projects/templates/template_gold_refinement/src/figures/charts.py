@@ -32,11 +32,13 @@ try:
     from ..config import load_gold_refinement_config
     from ..purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity
     from ..refinery import run_refinery
+    from ..seed_sensitivity import run_seed_sensitivity
 except ImportError:  # pragma: no cover - flat-layout fallback
     from composition import generate_token_plan  # type: ignore[no-redef]
     from config import load_gold_refinement_config  # type: ignore[no-redef]
     from purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity  # type: ignore[no-redef]
     from refinery import run_refinery  # type: ignore[no-redef]
+    from seed_sensitivity import run_seed_sensitivity  # type: ignore[no-redef]
 
 
 def generate_purity_progression(
@@ -263,4 +265,81 @@ def generate_token_density_chart(
 
     fig.suptitle("Mega-Madlib Token Distribution", fontsize=14, y=1.02)
     out_path = output_dir / "token_density.png"
+    return _save_figure(fig, out_path)
+
+
+def generate_seed_sensitivity(
+    output_dir: Path | None = None,
+    *,
+    project_root: Path | None = None,
+) -> Path:
+    """Plot seed-level token agreement and the declared precision ladder."""
+    if output_dir is None:
+        output_dir = (project_root or Path(".")) / "output" / "figures"
+    _ensure_output_dir(output_dir)
+
+    report_path = output_dir.parent / "data" / "seed_sensitivity.json"
+    if report_path.exists():
+        with report_path.open("r", encoding="utf-8") as handle:
+            report = json.load(handle)
+    else:
+        config = load_gold_refinement_config(project_root) if project_root else load_gold_refinement_config()
+        report = run_seed_sensitivity(config).to_dict()
+
+    records = report.get("records", [])
+    agreements = [float(record.get("token_agreement", 0.0)) for record in records if isinstance(record, dict)]
+    if not agreements:
+        agreements = [float(report.get("mean_agreement", 0.0))]
+    ladder = [row for row in report.get("sample_size_ladder", []) if isinstance(row, dict)]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12.5, 5.8))
+    bins = np.linspace(0.0, 1.0, 21)
+    ax1.hist(agreements, bins=bins, color="#0f766e", alpha=0.82, edgecolor="white")
+    mean_agreement = float(report.get("mean_agreement", np.mean(agreements)))
+    ax1.axvline(mean_agreement, color="#8b4513", linewidth=2.0, label=f"Mean {mean_agreement:.1%}")
+    ax1.axvline(1.0, color="#991b1b", linestyle="--", linewidth=1.4, label="Canonical plan (100%)")
+    ax1.set_xlabel("Token agreement with canonical seed")
+    ax1.set_ylabel("Number of seed replicates")
+    ax1.set_title("Seed Sensitivity: Token-Plan Agreement")
+    ax1.text(
+        0.98,
+        0.95,
+        f"n = {int(report.get('sample_size', len(agreements)))}\n"
+        f"unique plans = {int(report.get('unique_plan_count', 0))}",
+        transform=ax1.transAxes,
+        ha="right",
+        va="top",
+        fontsize=9,
+        bbox={"facecolor": "white", "alpha": 0.8, "edgecolor": "#cbd5e1"},
+    )
+    ax1.legend(fontsize=8, loc="upper left")
+    _style_axes(ax1)
+
+    if ladder:
+        sizes = [int(row.get("sample_size", 0)) for row in ladder]
+        radii = [float(row.get("precision_radius", 0.0)) for row in ladder]
+        ax2.plot(sizes, radii, marker="o", color="#1e3a8a", linewidth=2.0)
+        target = float(report.get("precision_target", 0.05))
+        ax2.axhline(target, color="#991b1b", linestyle="--", label=f"Target ±{target:.0%}")
+        chosen = int(report.get("sample_size", sizes[-1]))
+        chosen_radius = float(report.get("hoeffding_radius", radii[-1]))
+        ax2.scatter([chosen], [chosen_radius], color="#f4a261", edgecolors="#111827", zorder=4, s=80)
+        ax2.annotate(
+            f"n={chosen}: ±{chosen_radius:.1%}",
+            xy=(chosen, chosen_radius),
+            xytext=(-12, 14),
+            textcoords="offset points",
+            fontsize=8,
+        )
+        ax2.set_xscale("log", base=2)
+        ax2.set_xticks(sizes)
+        ax2.set_xticklabels([str(size) for size in sizes])
+        ax2.set_xlabel("Declared seed sample size")
+        ax2.set_ylabel("Distribution-free precision radius")
+        ax2.set_title("Sample-Size Sensitivity (95% bound)")
+        ax2.legend(fontsize=8)
+        _style_axes(ax2)
+
+    fig.suptitle("Technical Replicates, Not Empirical Manuscript Subjects", fontsize=14, y=1.02)
+    out_path = output_dir / "seed_sensitivity.png"
     return _save_figure(fig, out_path)

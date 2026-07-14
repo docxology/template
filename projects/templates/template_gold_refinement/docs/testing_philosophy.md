@@ -15,6 +15,7 @@ All tests use real data, real computation, and real files. No `MagicMock`,
 | Token composition | `test_composition.py` | 97% |
 | Assay validation | `test_assay.py` | 100% |
 | Manuscript variables | `test_manuscript_variables.py` | 96% |
+| Seed sensitivity and report integrity | `test_seed_sensitivity.py`, `test_scripts_smoke.py` | Determinism, technical replicates, interval metadata, minimum-`n`, bootstrap, tamper rejection |
 
 ## Key invariants tested
 
@@ -23,6 +24,8 @@ All tests use real data, real computation, and real files. No `MagicMock`,
 3. **Token coverage**: every `{{TOKEN}}` in manuscript source is generated
 4. **Config validation**: invalid config raises `GoldRefinementConfigError`
 5. **Karat grading**: purity maps to correct standard karat grade
+6. **Seed-report provenance**: generated sensitivity JSON must equal a fresh deterministic recomputation from the current configuration
+7. **Fail-closed validation**: contradicted claims, missing generated figures, malformed manuscript bytes, and structural output failures cannot produce a green Stage 04 result
 
 ## Commands
 

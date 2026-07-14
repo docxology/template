@@ -61,6 +61,15 @@ def test_paper_version_takes_precedence_over_book_version(tmp_path: Path) -> Non
     assert md.publication_date == "2026-01-01"
 
 
+def test_dynamic_paper_date_resolves_to_build_date(tmp_path: Path, monkeypatch) -> None:
+    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    config = {"paper": {"title": "Dynamic Date", "date": "today"}}
+    md = publication_metadata_from_config_dict(config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True)
+    assert md.publication_date == "2023-11-14"
+
+
 def test_sidecar_builders_support_book_schema_and_paper_precedence() -> None:
     """Every exported sidecar must use the same paper→book field fallback."""
     book_config = {

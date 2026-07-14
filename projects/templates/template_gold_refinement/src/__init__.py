@@ -40,6 +40,7 @@ from .figures import (
     generate_provenance_sankey,
     generate_purity_claim_scatter,
     generate_purity_progression,
+    generate_seed_sensitivity,
     generate_token_density_chart,
     generate_token_heatmap,
     purity_nines_values,
@@ -92,6 +93,13 @@ from .security_assay import (
     security_assay_records,
     security_assay_summary_line,
     security_assay_table_rows,
+)
+from .seed_sensitivity import (
+    SeedReplicate,
+    SeedSensitivityReport,
+    run_seed_sensitivity,
+    validate_seed_sensitivity_payload,
+    write_seed_sensitivity_report,
 )
 from .assay import (
     AssayReport,
@@ -155,6 +163,7 @@ __all__ = [
     "generate_provenance_sankey",
     "generate_purity_claim_scatter",
     "generate_purity_progression",
+    "generate_seed_sensitivity",
     "generate_token_density_chart",
     "generate_token_heatmap",
     "purity_nines_values",
@@ -184,6 +193,12 @@ __all__ = [
     "build_evidence_registry",
     "check_claim_ledger_alignment",
     "write_evidence_registry",
+    # Seed sensitivity
+    "SeedReplicate",
+    "SeedSensitivityReport",
+    "run_seed_sensitivity",
+    "validate_seed_sensitivity_payload",
+    "write_seed_sensitivity_report",
     # Dashboard
     "build_dashboard_html",
     "write_dashboard",

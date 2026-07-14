@@ -23,6 +23,7 @@ from ._common import (
 from .charts import (
     generate_karat_grading_chart,
     generate_purity_progression,
+    generate_seed_sensitivity,
     generate_token_density_chart,
 )
 from .diagrams import (
@@ -92,6 +93,7 @@ def generate_all_figures(project_root: Path) -> list[Path]:
         generate_provenance_sankey(output_dir, project_root=project_root),
         generate_purity_claim_scatter(output_dir, project_root=project_root),
         generate_token_heatmap(output_dir, project_root=project_root),
+        generate_seed_sensitivity(output_dir, project_root=project_root),
         generate_integrity_gate_matrix(output_dir, project_root=project_root),
         generate_formalism_traceability(output_dir, project_root=project_root),
         generate_implementation_circuit(output_dir, project_root=project_root),

@@ -6,45 +6,45 @@ Database file #1: references.bib
 Warning--can't use both author and editor fields in cramer_assaying_metals_1741
 Warning--empty publisher in pliny_natural_history_33
 Warning--empty publisher in badcock_touchstone_1678
-You've used 47 entries,
+You've used 52 entries,
             2773 wiz_defined-function locations,
-            893 strings with 15719 characters,
-and the built_in function-call counts, 23989 in all, are:
-= -- 2000
-> -- 1877
-< -- 36
-+ -- 647
-- -- 599
-* -- 2019
-:= -- 3922
-add.period$ -- 188
-call.type$ -- 47
-change.case$ -- 328
-chr.to.int$ -- 46
-cite$ -- 97
-duplicate$ -- 879
-empty$ -- 1645
-format.name$ -- 653
-if$ -- 4861
+            926 strings with 17058 characters,
+and the built_in function-call counts, 26526 in all, are:
+= -- 2223
+> -- 2064
+< -- 40
++ -- 712
+- -- 659
+* -- 2237
+:= -- 4345
+add.period$ -- 209
+call.type$ -- 52
+change.case$ -- 364
+chr.to.int$ -- 51
+cite$ -- 107
+duplicate$ -- 974
+empty$ -- 1814
+format.name$ -- 718
+if$ -- 5369
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 37
-newline$ -- 289
-num.names$ -- 190
-pop$ -- 692
+missing$ -- 41
+newline$ -- 320
+num.names$ -- 210
+pop$ -- 749
 preamble$ -- 1
-purify$ -- 288
+purify$ -- 318
 quote$ -- 0
-skip$ -- 766
+skip$ -- 845
 stack$ -- 0
-substring$ -- 474
-swap$ -- 57
+substring$ -- 540
+swap$ -- 61
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 477
+type$ -- 532
 warning$ -- 3
-while$ -- 171
+while$ -- 191
 width$ -- 0
-write$ -- 694
+write$ -- 771
 (There were 3 warnings)

@@ -266,6 +266,71 @@ def _add_figure_variables(variables: dict[str, str], project_root: Path) -> None
     variables["FIGURE_QUALITY_TABLE"] = _figure_quality_table_rows(figure_quality)
 
 
+def _add_seed_sensitivity_variables(variables: dict[str, str], gr_config: Any, project_root: Path) -> None:
+    """Expose the generated seed-sensitivity report without hand-maintained numbers."""
+    report = load_json_object(project_root / "output" / "data" / "seed_sensitivity.json")
+    settings = gr_config.seed_sensitivity
+    sample_size = int(report.get("sample_size", settings.get("sample_size", 0)) or 0)
+    interval = report.get("agreement_interval", [0.0, 0.0])
+    high_interval = report.get("high_agreement_interval", [0.0, 0.0])
+    interval = interval if isinstance(interval, list) and len(interval) == 2 else [0.0, 0.0]
+    high_interval = high_interval if isinstance(high_interval, list) and len(high_interval) == 2 else [0.0, 0.0]
+
+    variables["SEED_STUDY_N"] = str(sample_size)
+    variables["SEED_STUDY_SEED_RANGE"] = (
+        f"{report.get('seed_start', settings.get('seed_start', 0))}–{report.get('seed_end', max(sample_size - 1, 0))}"
+    )
+    variables["SEED_STUDY_TOKEN_COUNT"] = str(int(report.get("token_count", 0) or 0))
+    variables["SEED_STUDY_UNIQUE_PLANS"] = str(int(report.get("unique_plan_count", 0) or 0))
+    variables["SEED_STUDY_CANONICAL_MATCHES"] = str(int(report.get("canonical_matches", 0) or 0))
+    variables["SEED_STUDY_MEAN_AGREEMENT"] = f"{float(report.get('mean_agreement', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_SD_AGREEMENT"] = f"{float(report.get('sd_agreement', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_AGREEMENT_INTERVAL"] = f"{float(interval[0]):.2%}–{float(interval[1]):.2%}"
+    variables["SEED_STUDY_AGREEMENT_MIN"] = f"{float(report.get('agreement_min', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_AGREEMENT_MAX"] = f"{float(report.get('agreement_max', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_THRESHOLD"] = f"{float(report.get('agreement_threshold', 0.0) or 0.0):.0%}"
+    variables["SEED_STUDY_CONFIDENCE_LEVEL"] = f"{float(report.get('confidence_level', 0.0) or 0.0):.0%}"
+    variables["SEED_STUDY_HIGH_AGREEMENT_RATE"] = f"{float(report.get('high_agreement_rate', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_HIGH_AGREEMENT_INTERVAL"] = f"{float(high_interval[0]):.2%}–{float(high_interval[1]):.2%}"
+    variables["SEED_STUDY_INVENTORY_COVERAGE"] = f"{float(report.get('inventory_coverage', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_MEAN_UNIQUE_VALUES"] = f"{float(report.get('mean_unique_token_values', 0.0) or 0.0):.2f}"
+    variables["SEED_STUDY_PRECISION_TARGET"] = f"{float(report.get('precision_target', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_PRECISION_RADIUS"] = f"{float(report.get('hoeffding_radius', 0.0) or 0.0):.2%}"
+    variables["SEED_STUDY_MINIMUM_N"] = str(int(report.get("minimum_sample_size_for_precision_target", 0) or 0))
+    variables["SEED_STUDY_SAMPLING_SCHEME"] = str(report.get("seed_sampling_scheme", "not declared"))
+    variables["SEED_STUDY_PRECISION_ASSUMPTION"] = str(report.get("precision_assumption", "not declared"))
+    bootstrap_interval = report.get("bootstrap_mean_interval", [0.0, 0.0])
+    bootstrap_interval = (
+        bootstrap_interval if isinstance(bootstrap_interval, list) and len(bootstrap_interval) == 2 else [0.0, 0.0]
+    )
+    variables["SEED_STUDY_BOOTSTRAP_INTERVAL"] = (
+        f"{float(bootstrap_interval[0]):.2%}–{float(bootstrap_interval[1]):.2%}"
+    )
+    variables["SEED_STUDY_BOOTSTRAP_REPLICATES"] = str(int(report.get("bootstrap_replicates", 0) or 0))
+    variables["SEED_STUDY_BOOTSTRAP_SEED"] = str(int(report.get("bootstrap_seed", 0) or 0))
+    variables["SEED_STUDY_AGREEMENT_INTERVAL_METHOD"] = str(report.get("agreement_interval_method", "not declared"))
+    variables["SEED_STUDY_THRESHOLD_INTERVAL_METHOD"] = str(report.get("threshold_interval_method", "not declared"))
+    variables["SEED_STUDY_PRECISION_METHOD"] = str(report.get("precision_method", "not declared"))
+    variables["SEED_STUDY_MEETS_PRECISION"] = "Yes" if report.get("meets_precision_target") else "No"
+    variables["SEED_STUDY_REPORT_PATH"] = "output/data/seed_sensitivity.json"
+    variables["SEED_STUDY_CLAIM_BOUNDARY"] = (
+        "These are technical replicates of one executable token pipeline, not human participants, "
+        "independent manuscripts, or evidence of external manuscript quality."
+    )
+
+    rows = []
+    for row in report.get("sample_size_ladder", []):
+        if isinstance(row, dict):
+            rows.append(
+                f"| {int(row.get('sample_size', 0))} "
+                f"| {float(row.get('mean_agreement', 0.0) or 0.0):.2%} "
+                f"| {float(row.get('sd_agreement', 0.0) or 0.0):.2%} "
+                f"| {float(row.get('precision_radius', 0.0) or 0.0):.2%} "
+                f"| {float(row.get('inventory_coverage', 0.0) or 0.0):.2%} |"
+            )
+    variables["SEED_STUDY_LADDER_TABLE"] = "\n".join(rows) or "| not generated | 0% | 0% | 0% | 0% |"
+
+
 def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any, project_root: Path) -> dict[str, Any]:
     claim_rows = []
     for claim in gr_config.contribution_claims:
@@ -404,6 +469,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     _add_token_variables(variables, token_plan)
     _add_config_variables(variables, config, gr_config, artifact_counts, project_root)
     _add_figure_variables(variables, project_root)
+    _add_seed_sensitivity_variables(variables, gr_config, project_root)
     shared_evidence = _add_claim_and_evidence_variables(variables, gr_config, project_root)
     _add_integrity_variables(variables, gr_config, shared_evidence)
     variables["MANUSCRIPT_STALENESS"] = _detect_staleness(project_root)

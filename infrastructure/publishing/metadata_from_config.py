@@ -7,6 +7,7 @@ from pathlib import Path
 
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.exceptions import MetadataError
+from infrastructure.core.determinism import is_dynamic_date, resolve_build_date
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.abstract_plaintext import render_abstract_plaintext
 from infrastructure.publishing.deposit_filename import (
@@ -181,6 +182,8 @@ def publication_metadata_from_config_dict(
     doi_str = _prior_doi_from_config(config)
 
     paper_date = str(paper["date"]).strip() if paper.get("date") else None
+    if is_dynamic_date(paper_date):
+        paper_date = resolve_build_date()
     pub_year = str(publication["year"]).strip() if publication.get("year") else None
     if pub_year is None and book.get("year"):
         pub_year = str(book["year"]).strip()

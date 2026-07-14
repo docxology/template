@@ -49,9 +49,23 @@ class TestBuildDashboardHtml:
             json.dumps({"total_claims": 4, "supported_claims": 4, "entries": []}),
             encoding="utf-8",
         )
+        (data_dir / "seed_sensitivity.json").write_text(
+            json.dumps(
+                {
+                    "sample_size": 1024,
+                    "mean_agreement": 0.2,
+                    "sample_size_ladder": [
+                        {"sample_size": 16, "mean_agreement": 0.2, "precision_radius": 0.3, "inventory_coverage": 0.5}
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
 
         html = build_dashboard_html(tmp_path)
         assert "Refinery Stages" in html
+        assert "Technical Seed Replicates" in html
+        assert "1024" in html
 
 
 class TestWriteDashboard:

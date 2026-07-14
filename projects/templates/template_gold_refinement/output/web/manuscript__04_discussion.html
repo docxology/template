@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:discussion">Discussion: Load-Bearing vs Rhetorical
 Analogy</h1>
 <h2 id="load-bearing-vs-rhetorical">Load-bearing vs rhetorical</h2>
@@ -345,6 +346,24 @@ before real Codex Security or Deep Security Scan findings are
 claimed.</td>
 <td>Integrate only generated scan reports with evidence-registry
 alignment and explicit claim boundaries.</td>
+</tr>
+<tr>
+<td>Seed-count overclaim</td>
+<td>A large number of deterministic seed runs is presented as evidence
+of external manuscript quality or domain validity.</td>
+<td>The seed-sensitivity report and manuscript label seeds as technical
+replicates and retain local non-claims.</td>
+<td>Report seed variability as computational sensitivity and add
+independent domain evidence before expanding the claim.</td>
+</tr>
+<tr>
+<td>Seed-report drift</td>
+<td>A stale or edited JSON report hydrates manuscript statistics that no
+longer match the current configuration.</td>
+<td>Manuscript hydration validates the report against deterministic
+recomputation.</td>
+<td>Regenerate analysis outputs and fail hydration when any report field
+differs from the recomputed payload.</td>
 </tr>
 </tbody>
 </table>

@@ -19,6 +19,7 @@ _SUPPORTED_KEYS = frozenset(
         "expected_tables",
         "baselines",
         "ablations",
+        "sample_size",
     }
 )
 
@@ -51,6 +52,7 @@ class ExperimentPlan:
     expected_tables: tuple[str, ...] = ()
     baselines: tuple[str, ...] = ()
     ablations: tuple[str, ...] = ()
+    sample_size: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -81,6 +83,7 @@ def load_experiment_plan(project_root: Path) -> ExperimentPlan | None:
         expected_tables=_tuple_of_strings(payload.get("expected_tables")),
         baselines=_tuple_of_strings(payload.get("baselines")),
         ablations=_tuple_of_strings(payload.get("ablations")),
+        sample_size=_mapping(payload.get("sample_size")),
     )
 
 
@@ -156,3 +159,12 @@ def _tuple_of_strings(value: Any) -> tuple[str, ...]:
             raise ValueError("experiment_plan values must be strings")
         return tuple(value)
     raise ValueError("experiment_plan values must be strings or lists of strings")
+
+
+def _mapping(value: Any) -> dict[str, Any]:
+    """Return an optional design metadata mapping without interpreting its fields."""
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise ValueError("experiment_plan sample_size must be a mapping")
+    return dict(value)

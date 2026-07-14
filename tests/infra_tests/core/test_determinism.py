@@ -13,9 +13,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from infrastructure.core.determinism import (
+    DYNAMIC_DATE_SENTINELS,
     TEMPLATE_DETERMINISTIC_ENV,
     deterministic_subprocess_env,
+    is_dynamic_date,
     is_deterministic_requested,
+    resolve_build_date,
     resolve_build_timestamp,
     resolve_source_date_epoch,
 )
@@ -108,3 +111,23 @@ def test_subprocess_env_is_noop_in_wallclock_mode(monkeypatch) -> None:
 def test_date_only_format(monkeypatch) -> None:
     monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
     assert resolve_build_timestamp(fmt="%Y-%m-%d") == "2023-11-14"
+
+
+def test_dynamic_date_sentinels_are_case_insensitive() -> None:
+    assert DYNAMIC_DATE_SENTINELS == {"auto", "current", "today"}
+    assert is_dynamic_date("TODAY")
+    assert is_dynamic_date(" auto ")
+    assert not is_dynamic_date("2026-07-13")
+
+
+def test_build_date_uses_pinned_epoch(monkeypatch) -> None:
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    assert resolve_build_date() == "2023-11-14"
+
+
+def test_build_date_uses_local_calendar_day_without_pin(monkeypatch) -> None:
+    from datetime import datetime
+
+    monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
+    monkeypatch.delenv(TEMPLATE_DETERMINISTIC_ENV, raising=False)
+    assert resolve_build_date() == datetime.now().astimezone().date().isoformat()

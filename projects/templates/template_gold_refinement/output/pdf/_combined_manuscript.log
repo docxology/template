@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  10 JUL 2026 21:09
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  13 JUL 2026 17:38
 entering extended mode
  %&-line parsing enabled.
 **_combined_manuscript.tex
@@ -860,43 +860,103 @@ Package cleveref Info: always capitalise cross-reference names on input line 78
 Package cleveref Info: no abbreviation of names on input line 7852.
 )
 ==> First Aid for cleveref.sty applied!
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count354
+\lst@gtempboxa=\box69
+\lst@token=\toks38
+\lst@length=\count355
+\lst@currlwidth=\dimen260
+\lst@column=\count356
+\lst@pos=\count357
+\lst@lostspace=\dimen261
+\lst@width=\dimen262
+\lst@newlines=\count358
+\lst@lineno=\count359
+\lst@maxwidth=\dimen263
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
+File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
+\c@lstnumber=\count360
+\lst@skipnumbers=\count361
+\lst@framebox=\box70
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2025/11/14 1.11b listings configuration
+))
+Package: listings 2025/11/14 1.11b (Carsten Heinz)
+
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+
+! LaTeX Error: No counter 'theorem' defined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.208 \newtheorem{remark}[theorem]{Remark}
+                                          
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: No counter 'theorem' defined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.209 \newtheorem{example}[theorem]{Example}
+                                            
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
 (./_combined_manuscript.aux)
 \openout1 = `_combined_manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 207.
-LaTeX Font Info:    ... okay on input line 207.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 211.
+LaTeX Font Info:    ... okay on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 207.
+(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 207.
+(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 207.
+(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 207.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 207.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 207.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 211.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 207.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 211.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -927,7 +987,7 @@ pt=math;language=dflt;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 207.
+(Font)              scaled to size 10.0pt on input line 211.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -970,18 +1030,18 @@ ath.otf]/OT:script=math;language=dflt;+ssty=1;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 207.
+(Font)              scaled to size 10.0pt on input line 211.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 207.
+(Font)              `operators' in the math version `normal' on input line 211.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 207.
+ line 211.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 207.
+(Font)              `operators' in the math version `bold' on input line 211.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 207.
+t line 211.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1055,15 +1115,15 @@ ript=math;language=dflt;"<6-8.5>s*[1.000096459334209]"[latinmodern-math.otf]/OT
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 207.
+(Font)              `symbols' in the math version `normal' on input line 211.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/cmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 207.
+t line 211.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 207.
+(Font)              `symbols' in the math version `bold' on input line 211.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/cmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 207.
+t line 211.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1132,23 +1192,23 @@ pt=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 2
-07.
+11.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 207.
+t line 211.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 207
+(Font)              `largesymbols' in the math version `bold' on input line 211
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 207.
-LaTeX Info: Redefining \microtypecontext on input line 207.
-Package microtype Info: Applying patch `item' on input line 207.
-Package microtype Info: Applying patch `toc' on input line 207.
-Package microtype Info: Applying patch `eqnum' on input line 207.
-Package microtype Info: Applying patch `footnote' on input line 207.
-Package microtype Info: Applying patch `verbatim' on input line 207.
-LaTeX Info: Redefining \microtypesetup on input line 207.
+t line 211.
+LaTeX Info: Redefining \microtypecontext on input line 211.
+Package microtype Info: Applying patch `item' on input line 211.
+Package microtype Info: Applying patch `toc' on input line 211.
+Package microtype Info: Applying patch `eqnum' on input line 211.
+Package microtype Info: Applying patch `footnote' on input line 211.
+Package microtype Info: Applying patch `verbatim' on input line 211.
+LaTeX Info: Redefining \microtypesetup on input line 211.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1167,8 +1227,9 @@ Package footnotehyper Info: Using the \@makefntext{} approach (see doc).
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 207.
+Package hyperref Info: Link coloring ON on input line 211.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1204,6 +1265,7 @@ Package hyperref Info: Link coloring ON on input line 207.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+\c@lstlisting=\count362
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmss' (encoding: TU).
 (microtype)             For optimal results, create family-specific settings.
@@ -1250,557 +1312,592 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `_combined_manuscript.toc'.
 
 
-[2] [3] [4] [5] [6] [7] [8]
-Overfull \hbox (20.66037pt too wide) in paragraph at lines 844--844
+[2] [3] [4] [5]
+ignored: Infinite glue shrinkage found in box being split [6] [7] [8]
+Overfull \hbox (20.66037pt too wide) in paragraph at lines 937--937
 []|\TU/lmr/m/n/10 manuscript/config.yaml|  
  []
 
 
-Overfull \hbox (4.56999pt too wide) in paragraph at lines 845--845
+Overfull \hbox (4.56999pt too wide) in paragraph at lines 938--938
 []|\TU/lmr/m/n/10 GoldRefinementConfig|  
  []
 
 
-Overfull \hbox (16.34036pt too wide) in paragraph at lines 846--846
+Overfull \hbox (16.34036pt too wide) in paragraph at lines 939--939
 []|\TU/lmr/m/n/10 GoldRefinementConfig|  
  []
 
 
-Overfull \hbox (16.34036pt too wide) in paragraph at lines 848--848
+Overfull \hbox (16.34036pt too wide) in paragraph at lines 941--941
 []|\TU/lmr/m/n/10 GoldRefinementConfig|  
  []
 
 
-Overfull \hbox (15.76036pt too wide) in paragraph at lines 856--857
+Overfull \hbox (15.76036pt too wide) in paragraph at lines 949--950
 []|\TU/lmr/m/n/10 tests/test_integrity.py|  
  []
 
 
-Overfull \hbox (56.34036pt too wide) in paragraph at lines 857--857
+Overfull \hbox (56.34036pt too wide) in paragraph at lines 950--950
 []|\TU/lmr/m/n/10 gold_refinement.security_assay|  
  []
 
 
-Overfull \hbox (43.13037pt too wide) in paragraph at lines 859--860
+Overfull \hbox (43.13037pt too wide) in paragraph at lines 952--953
 []|\TU/lmr/m/n/10 tests/test_security_assay.py|  
  []
 
 
-Overfull \hbox (32.19037pt too wide) in paragraph at lines 860--861
+Overfull \hbox (16.34036pt too wide) in paragraph at lines 953--953
+[]|\TU/lmr/m/n/10 GoldRefinementConfig 
+ []
+
+
+Overfull \hbox (54.31999pt too wide) in paragraph at lines 955--956
+[]|\TU/lmr/m/n/10 output/data/seed_sensitivity.json 
+ []
+
+
+Overfull \hbox (48.94035pt too wide) in paragraph at lines 956--957
+[]|\TU/lmr/m/n/10 tests/test_seed_sensitivity.py|  
+ []
+
+
+Overfull \hbox (32.19037pt too wide) in paragraph at lines 957--958
 \TU/lmr/m/n/10 manuscript_variables.json|  
  []
 
 
-Overfull \hbox (0.67036pt too wide) in paragraph at lines 863--863
+Overfull \hbox (0.67036pt too wide) in paragraph at lines 960--960
 []|\TU/lmr/m/n/10 output/manuscript|  
  []
 
-[9]
-Overfull \hbox (34.92613pt too wide) in paragraph at lines 1020--1021
+
+ignored: Infinite glue shrinkage found in box being split [9] [10]
+Overfull \hbox (34.92613pt too wide) in paragraph at lines 1117--1118
 []|\TU/lmr/m/n/10 tests/test_manuscript_variables.py|  
  []
 
 
-Overfull \hbox (73.61613pt too wide) in paragraph at lines 1024--1025
+Overfull \hbox (73.61613pt too wide) in paragraph at lines 1121--1122
 []|\TU/lmr/m/n/10 output/reports/claim_support_registry.json|  
  []
 
 
-Overfull \hbox (17.40613pt too wide) in paragraph at lines 1026--1027
+Overfull \hbox (17.40613pt too wide) in paragraph at lines 1123--1124
 []|\TU/lmr/m/n/10 tests/test_registry_integrity.py|  
  []
 
 
-Overfull \hbox (15.92613pt too wide) in paragraph at lines 1028--1029
+Overfull \hbox (15.92613pt too wide) in paragraph at lines 1125--1126
 []|\TU/lmr/m/n/10 infrastructure.reference.citation 
  []
 
 
-Overfull \hbox (3.73615pt too wide) in paragraph at lines 1032--1033
+Overfull \hbox (3.73615pt too wide) in paragraph at lines 1129--1130
 []|\TU/lmr/m/n/10 tests/test_security_assay.py 
  []
 
-[10] [11]
+[11] [12]
 File: ../figures/purity_progression.png Graphic file (type bmp)
 <../figures/purity_progression.png>
 
-ignored: Infinite glue shrinkage found in box being split [12]
+ignored: Infinite glue shrinkage found in box being split [13]
 File: ../figures/karat_grading.png Graphic file (type bmp)
 <../figures/karat_grading.png>
+File: ../figures/seed_sensitivity.png Graphic file (type bmp)
+<../figures/seed_sensitivity.png>
 File: ../figures/token_density.png Graphic file (type bmp)
 <../figures/token_density.png>
 
-Overfull \hbox (59.84734pt too wide) in paragraph at lines 1264--1264
+Overfull \hbox (59.84734pt too wide) in paragraph at lines 1396--1396
 []|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_1|  
  []
 
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1266--1267
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1398--1399
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
 [1]|  
  []
 
 
-Overfull \hbox (59.84734pt too wide) in paragraph at lines 1267--1267
+Overfull \hbox (59.84734pt too wide) in paragraph at lines 1399--1399
 []|\TU/lmr/m/n/10 AUTHORING_BOUNDARY_TERM_2|  
  []
 
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1269--1270
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1401--1402
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
 [4]|  
  []
 
 
-Overfull \hbox (57.84734pt too wide) in paragraph at lines 1270--1270
+Overfull \hbox (57.84734pt too wide) in paragraph at lines 1402--1402
 []|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_1|  
  []
 
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1272--1273
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1404--1405
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
 [2]|  
  []
 
 
-Overfull \hbox (57.84734pt too wide) in paragraph at lines 1273--1273
+Overfull \hbox (57.84734pt too wide) in paragraph at lines 1405--1405
 []|\TU/lmr/m/n/10 DISCUSSION_BOUNDARY_TERM_2|  
  []
 
 
-Overfull \hbox (206.94052pt too wide) in paragraph at lines 1275--1276
+Overfull \hbox (206.94052pt too wide) in paragraph at lines 1407--1408
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.boundary_terms
 [3]|  
  []
 
 
-Overfull \hbox (54.10733pt too wide) in paragraph at lines 1276--1276
+Overfull \hbox (54.10733pt too wide) in paragraph at lines 1408--1408
 []|\TU/lmr/m/n/10 DISCUSSION_REFINEMENT_VERB|  
  []
 
 
-Overfull \hbox (209.4205pt too wide) in paragraph at lines 1278--1279
+Overfull \hbox (209.4205pt too wide) in paragraph at lines 1410--1411
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.refinement_ver
 bs[3]|  
  []
 
 
-Overfull \hbox (33.33733pt too wide) in paragraph at lines 1279--1279
+Overfull \hbox (33.33733pt too wide) in paragraph at lines 1411--1411
 []|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_1|  
  []
 
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1280--1281
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1412--1413
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0]|
   
  []
 
 
-Overfull \hbox (33.33733pt too wide) in paragraph at lines 1281--1281
+Overfull \hbox (33.33733pt too wide) in paragraph at lines 1413--1413
 []|\TU/lmr/m/n/10 EVALUATION_GATE_TERM_2|  
  []
 
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1283--1284
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1415--1416
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]|
   
  []
 
 
-Overfull \hbox (29.42732pt too wide) in paragraph at lines 1284--1284
+Overfull \hbox (29.42732pt too wide) in paragraph at lines 1416--1416
 []|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_1|  
  []
 
 
-Overfull \hbox (202.2005pt too wide) in paragraph at lines 1286--1287
+Overfull \hbox (202.2005pt too wide) in paragraph at lines 1418--1419
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.integrity_term
 s[1]|  
  []
 
 
-Overfull \hbox (29.42732pt too wide) in paragraph at lines 1287--1287
+Overfull \hbox (29.42732pt too wide) in paragraph at lines 1419--1419
 []|\TU/lmr/m/n/10 INTRO_INTEGRITY_TERM_2|  
  []
 
 
-Overfull \hbox (202.2005pt too wide) in paragraph at lines 1289--1290
+Overfull \hbox (202.2005pt too wide) in paragraph at lines 1421--1422
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.integrity_term
 s[0]|  
  []
 
 
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 1290--1290
+Overfull \hbox (12.22733pt too wide) in paragraph at lines 1422--1422
 []|\TU/lmr/m/n/10 METHOD_GATE_TERM_1|  
  []
 
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1291--1292
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1423--1424
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1]|
   
  []
 
 
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 1292--1292
+Overfull \hbox (12.22733pt too wide) in paragraph at lines 1424--1424
 []|\TU/lmr/m/n/10 METHOD_GATE_TERM_2|  
  []
 
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1294--1295
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1426--1427
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2]|
   
  []
 
 
-Overfull \hbox (12.22733pt too wide) in paragraph at lines 1295--1295
+Overfull \hbox (12.22733pt too wide) in paragraph at lines 1427--1427
 []|\TU/lmr/m/n/10 METHOD_GATE_TERM_3|  
  []
 
 
-Overfull \hbox (183.5505pt too wide) in paragraph at lines 1296--1297
+Overfull \hbox (183.5505pt too wide) in paragraph at lines 1428--1429
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]|
   
  []
 
 
-Overfull \hbox (53.12733pt too wide) in paragraph at lines 1297--1297
+Overfull \hbox (53.12733pt too wide) in paragraph at lines 1429--1429
 []|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_1|  
  []
 
 
-Overfull \hbox (213.9205pt too wide) in paragraph at lines 1299--1300
+Overfull \hbox (213.9205pt too wide) in paragraph at lines 1431--1432
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.manuscript_ter
 ms[4]|  
  []
 
 
-Overfull \hbox (53.12733pt too wide) in paragraph at lines 1300--1300
+Overfull \hbox (53.12733pt too wide) in paragraph at lines 1432--1432
 []|\TU/lmr/m/n/10 METHOD_MANUSCRIPT_TERM_2|  
  []
 
 
-Overfull \hbox (213.9205pt too wide) in paragraph at lines 1302--1303
+Overfull \hbox (213.9205pt too wide) in paragraph at lines 1434--1435
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.manuscript_ter
 ms[4]|  
  []
 
 
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 1303--1303
+Overfull \hbox (19.79733pt too wide) in paragraph at lines 1435--1435
 []|\TU/lmr/m/n/10 METHOD_METAL_TERM_1|  
  []
 
 
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 1304--1305
+Overfull \hbox (221.9205pt too wide) in paragraph at lines 1436--1437
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
 terms[1]|  
  []
 
 
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 1305--1305
+Overfull \hbox (19.79733pt too wide) in paragraph at lines 1437--1437
 []|\TU/lmr/m/n/10 METHOD_METAL_TERM_2|  
  []
 
 
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 1306--1307
+Overfull \hbox (221.9205pt too wide) in paragraph at lines 1438--1439
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
 terms[3]|  
  []
 
 
-Overfull \hbox (19.79733pt too wide) in paragraph at lines 1307--1307
+Overfull \hbox (19.79733pt too wide) in paragraph at lines 1439--1439
 []|\TU/lmr/m/n/10 METHOD_METAL_TERM_3|  
  []
 
 
-Overfull \hbox (221.9205pt too wide) in paragraph at lines 1308--1309
+Overfull \hbox (221.9205pt too wide) in paragraph at lines 1440--1441
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.metallurgical_
 terms[2]|  
  []
 
 
-Overfull \hbox (27.29733pt too wide) in paragraph at lines 1309--1309
+Overfull \hbox (27.29733pt too wide) in paragraph at lines 1441--1441
 []|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_1|  
  []
 
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1311--1312
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1443--1444
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
 [0]|  
  []
 
 
-Overfull \hbox (27.29733pt too wide) in paragraph at lines 1312--1312
+Overfull \hbox (27.29733pt too wide) in paragraph at lines 1444--1444
 []|\TU/lmr/m/n/10 REPRO_EVIDENCE_TERM_2|  
  []
 
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1314--1315
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1446--1447
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
 [3]|  
  []
 
 
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1315--1315
+Overfull \hbox (36.88733pt too wide) in paragraph at lines 1447--1447
 []|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_1|  
  []
 
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1317--1318
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1449--1450
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
 [1]|  
  []
 
 
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1318--1318
+Overfull \hbox (36.88733pt too wide) in paragraph at lines 1450--1450
 []|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_2|  
  []
 
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1320--1321
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1452--1453
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
 [3]|  
  []
 
 
-Overfull \hbox (36.88733pt too wide) in paragraph at lines 1321--1321
+Overfull \hbox (36.88733pt too wide) in paragraph at lines 1453--1453
 []|\TU/lmr/m/n/10 RESULTS_EVIDENCE_TERM_3|  
  []
 
 
-Overfull \hbox (202.16052pt too wide) in paragraph at lines 1323--1324
+Overfull \hbox (202.16052pt too wide) in paragraph at lines 1455--1456
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.evidence_terms
 [4]|  
  []
 
 
-Overfull \hbox (12.70734pt too wide) in paragraph at lines 1324--1324
+Overfull \hbox (12.70734pt too wide) in paragraph at lines 1456--1456
 []|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_1|  
  []
 
 
-Overfull \hbox (209.96051pt too wide) in paragraph at lines 1325--1326
+Overfull \hbox (209.96051pt too wide) in paragraph at lines 1457--1458
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
 ves[0]|  
  []
 
 
-Overfull \hbox (12.70734pt too wide) in paragraph at lines 1326--1326
+Overfull \hbox (12.70734pt too wide) in paragraph at lines 1458--1458
 []|\TU/lmr/m/n/10 RESULTS_PURITY_ADJ_2|  
  []
 
 
-Overfull \hbox (209.96051pt too wide) in paragraph at lines 1327--1328
+Overfull \hbox (209.96051pt too wide) in paragraph at lines 1459--1460
 []|\TU/lmr/m/n/10 manuscript/config.yaml#gold_refinement.lexicon.purity_adjecti
 ves[1]|  
  []
 
-
-ignored: Infinite glue shrinkage found in box being split [13]
+[14] [15] [16]
 File: ../figures/provenance_sankey.png Graphic file (type bmp)
 <../figures/provenance_sankey.png>
 File: ../figures/purity_claim_scatter.png Graphic file (type bmp)
 <../figures/purity_claim_scatter.png>
 File: ../figures/token_heatmap.png Graphic file (type bmp)
 <../figures/token_heatmap.png>
- [14] [15]
+ [17] [18] [19]
 File: ../figures/integrity_gate_matrix.png Graphic file (type bmp)
 <../figures/integrity_gate_matrix.png>
+ [20]
 File: ../figures/formalism_traceability.png Graphic file (type bmp)
 <../figures/formalism_traceability.png>
- [16] [17] [18] [19]
 File: ../figures/implementation_circuit.png Graphic file (type bmp)
 <../figures/implementation_circuit.png>
+ [21] [22]
 File: ../figures/claim_evidence_assay.png Graphic file (type bmp)
 <../figures/claim_evidence_assay.png>
- [20] [21]
 File: ../figures/integrity_risk_matrix.png Graphic file (type bmp)
 <../figures/integrity_risk_matrix.png>
+ [23]
 File: ../figures/evidence_tier_ladder.png Graphic file (type bmp)
 <../figures/evidence_tier_ladder.png>
- [22]
-Overfull \hbox (60.32585pt too wide) in paragraph at lines 1707--1707
+
+ignored: Infinite glue shrinkage found in box being split [24]
+Overfull \hbox (60.32585pt too wide) in paragraph at lines 1841--1841
 []|\TU/lmr/m/n/10 output/reports/evidence_registry.json 
  []
 
 
-Overfull \hbox (5.34436pt too wide) in paragraph at lines 1708--1708
+Overfull \hbox (5.34436pt too wide) in paragraph at lines 1842--1842
 []|\TU/lmr/m/n/10 infrastructure.validation.cli 
  []
 
 
-Overfull \hbox (6.78175pt too wide) in paragraph at lines 1710--1710
+Overfull \hbox (6.78175pt too wide) in paragraph at lines 1844--1844
 \TU/lmr/m/n/10 development 
  []
 
 
-Overfull \hbox (2.90176pt too wide) in paragraph at lines 1719--1719
+Overfull \hbox (2.90176pt too wide) in paragraph at lines 1853--1853
 []|\TU/lmr/m/n/10 unvalidated 
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [23]
-Overfull \hbox (34.76411pt too wide) in paragraph at lines 1753--1753
+Overfull \hbox (34.76411pt too wide) in paragraph at lines 1887--1887
 []|\TU/lmr/m/n/10 src/refinery.py::CANONICAL_STAGES|  
  []
 
 
-Overfull \hbox (36.8141pt too wide) in paragraph at lines 1755--1755
+Overfull \hbox (36.8141pt too wide) in paragraph at lines 1889--1889
 []|\TU/lmr/m/n/10 src/purity.py::assert_monotone_increase|  
  []
 
 
-Overfull \hbox (30.7841pt too wide) in paragraph at lines 1757--1757
+Overfull \hbox (30.7841pt too wide) in paragraph at lines 1891--1891
 []|\TU/lmr/m/n/10 src/purity.py::NINE_NINES_PURITY|  
  []
 
 
-Overfull \hbox (11.9441pt too wide) in paragraph at lines 1759--1759
+Overfull \hbox (11.9441pt too wide) in paragraph at lines 1893--1893
 []|\TU/lmr/m/n/10 src/composition.py::_choose_value|  
  []
 
 
-Overfull \hbox (8.79411pt too wide) in paragraph at lines 1761--1761
+Overfull \hbox (8.79411pt too wide) in paragraph at lines 1895--1895
 []|\TU/lmr/m/n/10 src/formalisms.py::FORMALISMS|  
  []
 
 
-Overfull \hbox (185.19412pt too wide) in paragraph at lines 1764--1764
+Overfull \hbox (185.19412pt too wide) in paragraph at lines 1898--1898
 []|\TU/lmr/m/n/10 scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME| 
  
  []
 
 
-Overfull \hbox (114.0141pt too wide) in paragraph at lines 1769--1769
+Overfull \hbox (114.0141pt too wide) in paragraph at lines 1903--1903
 []|\TU/lmr/m/n/10 src/figures/diagrams.py::generate_implementation_circuit|  
  []
 
 
-Overfull \hbox (51.76411pt too wide) in paragraph at lines 1773--1773
+Overfull \hbox (51.76411pt too wide) in paragraph at lines 1907--1907
 []|\TU/lmr/m/n/10 src/integrity.py::build_integrity_dimensions|  
  []
 
 
-Overfull \hbox (51.1141pt too wide) in paragraph at lines 1777--1777
+Overfull \hbox (51.1141pt too wide) in paragraph at lines 1911--1911
 []|\TU/lmr/m/n/10 src/security_assay.py::build_security_assay|  
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [24]
-Overfull \hbox (28.35374pt too wide) in paragraph at lines 1876--1876
+Overfull \hbox (55.5341pt too wide) in paragraph at lines 1914--1914
+[]|\TU/lmr/m/n/10 src/seed_sensitivity.py::run_seed_sensitivity|  
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [25]
+Overfull \hbox (28.35374pt too wide) in paragraph at lines 2014--2014
 []|\TU/lmr/m/n/10 claim_evidence_assay|  
  []
 
 
-Overfull \hbox (24.43375pt too wide) in paragraph at lines 1878--1878
+Overfull \hbox (24.43375pt too wide) in paragraph at lines 2016--2016
 []|\TU/lmr/m/n/10 evidence_tier_ladder|  
  []
 
 
-Overfull \hbox (30.32375pt too wide) in paragraph at lines 1880--1880
+Overfull \hbox (30.32375pt too wide) in paragraph at lines 2018--2018
 []|\TU/lmr/m/n/10 formalism_traceability|  
  []
 
 
-Overfull \hbox (33.57375pt too wide) in paragraph at lines 1882--1882
+Overfull \hbox (33.57375pt too wide) in paragraph at lines 2020--2020
 []|\TU/lmr/m/n/10 implementation_circuit|  
  []
 
 
-Overfull \hbox (29.71375pt too wide) in paragraph at lines 1884--1884
+Overfull \hbox (29.71375pt too wide) in paragraph at lines 2022--2022
 []|\TU/lmr/m/n/10 integrity_gate_matrix|  
  []
 
 
-Overfull \hbox (27.30374pt too wide) in paragraph at lines 1886--1886
+Overfull \hbox (27.30374pt too wide) in paragraph at lines 2024--2024
 []|\TU/lmr/m/n/10 integrity_risk_matrix|  
  []
 
 
-Overfull \hbox (15.56374pt too wide) in paragraph at lines 1889--1889
+Overfull \hbox (15.56374pt too wide) in paragraph at lines 2027--2027
 []|\TU/lmr/m/n/10 provenance_sankey|  
  []
 
 
-Overfull \hbox (24.76373pt too wide) in paragraph at lines 1891--1891
+Overfull \hbox (24.76373pt too wide) in paragraph at lines 2029--2029
 []|\TU/lmr/m/n/10 purity_claim_scatter|  
  []
 
 
-Overfull \hbox (13.47374pt too wide) in paragraph at lines 1893--1893
+Overfull \hbox (13.47374pt too wide) in paragraph at lines 2031--2031
 []|\TU/lmr/m/n/10 purity_progression|  
- []
-
-[25]
-Overfull \hbox (25.95882pt too wide) in paragraph at lines 2012--2012
-[]|\TU/lmr/m/n/10 test_all_manuscript_tokens_are_generated 
  []
 
 
 ignored: Infinite glue shrinkage found in box being split [26] [27] [28]
-Overfull \hbox (5.31102pt too wide) in paragraph at lines 2179--2184
+Overfull \hbox (25.95882pt too wide) in paragraph at lines 2151--2151
+[]|\TU/lmr/m/n/10 test_all_manuscript_tokens_are_generated 
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [29] [30] [31]
+Overfull \hbox (5.31102pt too wide) in paragraph at lines 2329--2334
 []\TU/lmr/m/n/10 7 source-owned formalisms with equation labels: eq:purity_func
 tional, eq:monotone_refinery, eq:token_digest, eq:claim_support,
  []
 
-[29] [30] [31] [32] [33]
-Overfull \hbox (4.80272pt too wide) in paragraph at lines 2581--2582
+[32] [33] [34] [35] [36]
+Overfull \hbox (4.80272pt too wide) in paragraph at lines 2770--2771
 \TU/lmr/m/n/10 put/data/refinery_results.json|  
  []
 
 
-Overfull \hbox (11.95271pt too wide) in paragraph at lines 2584--2585
+Overfull \hbox (11.95271pt too wide) in paragraph at lines 2773--2774
 []|\TU/lmr/m/n/10 output/reports/token_plan.json|  
  []
 
 
-Overfull \hbox (9.77272pt too wide) in paragraph at lines 2591--2593
+Overfull \hbox (9.77272pt too wide) in paragraph at lines 2780--2782
 \TU/lmr/m/n/10 ures/integrity_risk_matrix.png|  
  []
 
 
-Overfull \hbox (15.46272pt too wide) in paragraph at lines 2603--2606
+Overfull \hbox (15.46272pt too wide) in paragraph at lines 2792--2795
 []|\TU/lmr/m/n/10 manuscript/02_methodology.md, 
  []
 
 
-Overfull \hbox (3.67271pt too wide) in paragraph at lines 2603--2606
+Overfull \hbox (3.67271pt too wide) in paragraph at lines 2792--2795
 \TU/lmr/m/n/10 manuscript/04_discussion.md, 
  []
 
 
-Overfull \hbox (3.51273pt too wide) in paragraph at lines 2603--2606
+Overfull \hbox (3.51273pt too wide) in paragraph at lines 2792--2795
 \TU/lmr/m/n/10 manuscript/08_evaluation.md|  
  []
 
 
-Overfull \hbox (23.59273pt too wide) in paragraph at lines 2611--2616
+Overfull \hbox (23.59273pt too wide) in paragraph at lines 2800--2805
 []|\TU/lmr/m/n/10 manuscript/06_reproducibility.md, 
  []
 
 
-Overfull \hbox (4.90273pt too wide) in paragraph at lines 2611--2616
+Overfull \hbox (4.90273pt too wide) in paragraph at lines 2800--2805
 \TU/lmr/m/n/10 manuscript/08_evaluation.md, 
  []
 
 
-Overfull \hbox (45.80272pt too wide) in paragraph at lines 2611--2616
+Overfull \hbox (45.80272pt too wide) in paragraph at lines 2800--2805
 \TU/lmr/m/n/10 manuscript/09_authoring_contract.md, 
  []
 
 
-Overfull \hbox (25.38272pt too wide) in paragraph at lines 2611--2616
+Overfull \hbox (25.38272pt too wide) in paragraph at lines 2800--2805
 \TU/lmr/m/n/10 put/reports/evidence_registry.json, 
  []
 
 
-Overfull \hbox (22.66272pt too wide) in paragraph at lines 2611--2616
+Overfull \hbox (22.66272pt too wide) in paragraph at lines 2800--2805
 \TU/lmr/m/n/10 put/reports/output_statistics.json|  
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [34] [35] [36] [37] (./_combin
-ed_manuscript.bbl [38
+Overfull \hbox (6.43272pt too wide) in paragraph at lines 2816--2818
+\TU/lmr/m/n/10 put/data/seed_sensitivity.json, 
+ []
 
-] [39]) [40]
+
+Overfull \hbox (83.75856pt too wide) in paragraph at lines 2890--2892
+[]|\TU/lmr/m/n/10 src/seed_sensitivity.py::validate_seed_sensitivity_payload 
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [37] [38] [39] [40] [41] (./_c
+ombined_manuscript.bbl [42
+
+] [43]) [44]
 (./_combined_manuscript.aux
 Package cleveref Info: loaded `english' language definitions on input line 8.
 )
@@ -1810,12 +1907,12 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 24533 strings out of 468168
- 460780 string characters out of 5432815
- 1096580 words of memory out of 5000000
- 52942 multiletter control sequences out of 15000+600000
+ 25744 strings out of 468168
+ 479643 string characters out of 5432815
+ 1117563 words of memory out of 5000000
+ 54140 multiletter control sequences out of 15000+600000
  630282 words of font info for 81 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,9n,114p,1017b,805s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (41 pages).
+Output written on _combined_manuscript.pdf (45 pages).

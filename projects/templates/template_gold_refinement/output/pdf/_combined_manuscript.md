@@ -4,9 +4,9 @@ This paper presents a deterministic, artifact-based methods demonstration that m
 
 The analogy is load-bearing in a restricted, testable sense: each stage has an executable owner, ordered input and output states, generated evidence, and a failure condition. A reverse assay identifies the shortest ordered stage prefix that reaches a requested target, while a multi-objective purity vector keeps stage completion, claim support, token provenance, and figure quality distinct. The mega-madlib engine selects 24 configured terms by a seeded SHA-256 digest, recording each choice with its slot, category, ordinal, section, and source path.
 
-The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 283 source-tiered facts when the validation gate has run.
+The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 10/10 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 15577 source-tiered facts when the validation gate has run.
 
-**Results:** The canonical run reaches 99.9999999% (nine-nines) (24K (nine-nines certified)), with a designed total gain of 90.00%; local nine-nines predicate: Yes. The project-local claim assay reports 9/9 registered claims supported. These are internal workflow results, not estimates of reader-perceived quality, scientific truth, security compliance, or external validity.
+**Results:** The canonical run reaches 99.9999999% (nine-nines) (24K (nine-nines certified)), with a designed total gain of 90.00%; local nine-nines predicate: Yes. The project-local claim assay reports 10/10 registered claims supported. These are internal workflow results, not estimates of reader-perceived quality, scientific truth, security compliance, or external validity.
 
 **Keywords:** gold refining, manuscript composition, mega-madlib, token injection, scientific purity, assaying, karat grading, security assay, supply-chain provenance
 
@@ -66,7 +66,7 @@ Is the analogy load-bearing or rhetorical? We assert it is **both**: it frames t
 
 ## Research design
 
-We conducted a deterministic, artifact-based methods demonstration. The research object is one executable manuscript compendium comprising authored configuration and Markdown, project source code, generated data and reports, registered figures, and rendered publication files. The unit of transformation is a refinery stage; the unit of lexical composition is a configured token slot; the unit of evidentiary evaluation is a registered claim or gate. No human participants, stochastic sampling, trained model, or inferential statistical test is involved.
+We conducted a deterministic, artifact-based methods demonstration. The research object is one executable manuscript compendium comprising authored configuration and Markdown, project source code, generated data and reports, registered figures, and rendered publication files. The unit of transformation is a refinery stage; the unit of lexical composition is a configured token slot; the unit of evidentiary evaluation is a registered claim or gate. No human participants, trained model, or empirical manuscript-quality outcome is involved. A separate seed-sensitivity pass uses deterministic technical replicates to describe token-plan variability and is not an inferential test of writing quality.
 
 The method asks whether a metallurgical stage structure can be implemented as an inspectable manuscript workflow. It does **not** test whether the resulting purity values predict reader judgments, scientific validity, or editorial acceptance. Accordingly, all reported quantities are properties of this executable exemplar: stage outputs, token selections, registry contents, and validator outcomes.
 
@@ -193,6 +193,25 @@ where $n$ is the inventory size. For each declared slot, the procedure concatena
 
 Each selected value is recorded with its variable name, slot, category, section, ordinal, and configuration path. This record permits exact replay and source tracing but does not imply that the selected synonym is semantically superior. Selected metallurgical terms are assaying, parting, and smelting; selected manuscript terms are evidence and evidence. [@eq:token_digest] formalizes the rule, while evidence validation, figure registry check, and citation validation name the corresponding validation surfaces.
 
+## Seed-sensitivity design
+
+The canonical publication plan uses seed 431. To measure sensitivity to that declared input, the analysis additionally evaluates 1024 technical seed replicates over the range 0–1023. Agreement is the fraction of token slots whose selected value matches the canonical plan; unique-plan count and lexicon inventory coverage are reported separately. The thresholded rate counts replicates with at least 25% slot agreement and uses a score interval rather than a naive Wald interval [@newcombe1998proportion]. This follows computational benchmarking work that recommends representing pipeline performance as a distribution over sources of variation rather than as a single run [@bouthillier2021accounting].
+
+The sample size is a precision choice for a bounded computational summary, not a power calculation for people or a claim that 1024 runs constitute 1024 manuscripts. Accuracy-based sample-size justification is appropriate only after the estimand and inferential goal are declared [@lakens2022samplesize]. For the declared bounded-metric target, the algebraic minimum is 738 replicates; the project uses 1024 as a documented power-of-two ceiling. At the nominal 95% level, the distribution-free radius is 4.24% against a target of 5.00%.
+
+The interval language is conditional. Seeds are enumerated as contiguous_integer_seeds, not sampled from manuscripts, readers, or a natural population. The normal interval is a Normal approximation; descriptive conditional summary; the threshold interval is a Wilson score interval; conditional binomial summary; and the bounded radius is a Hoeffding bound; conditional bounded-metric guarantee. These summaries are interpretable under the declared exchangeability assumption—Conditional on exchangeable random-seed draws; the declared contiguous seed range is a sensitivity surface, not an empirical population.—but they are not unconditional confidence statements about future software versions or external writing outcomes. A deterministic bootstrap percentile interval over 2000 resamples, using bootstrap seed 431, provides a sensitivity check for the empirical seed-range mean: 20.10%–21.11% [@efron1979bootstrap]. The full report records the cumulative sample-size ladder in [@tbl:seed_sensitivity_ladder] and the generated distribution in [@fig:seed_sensitivity].
+
+| Seed sample size | Mean agreement | SD | 95% bound radius | Inventory coverage |
+|------------------|----------------|----|------------------|--------------------|
+| 16 | 19.53% | 7.72% | 33.95% | 100.00% |
+| 32 | 20.70% | 8.69% | 24.01% | 100.00% |
+| 64 | 19.40% | 7.36% | 16.98% | 100.00% |
+| 128 | 20.31% | 7.86% | 12.00% | 100.00% |
+| 256 | 20.00% | 7.88% | 8.49% | 100.00% |
+| 512 | 20.41% | 8.94% | 6.00% | 100.00% |
+| 1024 | 20.62% | 8.56% | 4.24% | 100.00% |
+: Seed-sensitivity precision ladder. {#tbl:seed_sensitivity_ladder}
+
 ## Config-owned lexicon
 
 | Category | Count | Sample |
@@ -228,6 +247,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 | Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | ../figures/*.png | nonblank figure tests |
 | Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | tests/test_integrity.py |
 | Security assay | gold_refinement.security_assay | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | tests/test_security_assay.py |
+| Seed sensitivity | GoldRefinementConfig and token plan | Evaluate token-plan agreement across the declared seed sample and compute bounded precision summaries | output/data/seed_sensitivity.json and seed-sensitivity figure | tests/test_seed_sensitivity.py |
 | Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve {{TOKEN}} placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
 | Render and validate | output/manuscript | Render PDF, HTML through shared template pipeline | output/pdf and output/web | render command |
 
@@ -340,6 +360,38 @@ The canonical run completed 5 ordered, continuous stages and reached the configu
 - **Nine-nines certified:** Yes
 - **Nines count:** 9
 
+## Seed-sensitivity results
+
+The expanded sensitivity study evaluated 1024 technical replicates
+of the deterministic token pipeline over seeds 0–1023. It
+found 1024 unique token plans among 1024
+runs, with 1 exact matches to the canonical
+plan. Mean slot agreement was 20.62% (SD
+8.56%; descriptive 95% interval
+20.09%–21.14%), with observed range
+0.00%–100.00%. The configured
+threshold rate was 36.43% (score interval
+33.53%–39.42%) at the 25%
+agreement threshold. All configured inventory values were observed
+(100.00% coverage), which is a coverage result for
+the token vocabulary rather than a quality result for the manuscript.
+
+The declared precision target requires at least 738
+replicates under the chosen bounded-metric formula; the realized radius is
+4.24%. The deterministic bootstrap sensitivity
+interval for the mean is 20.10%–21.11% from
+2000 resamples. Both intervals are conditional
+technical summaries, not population estimates.
+
+![Seed-sensitivity distribution and the declared sample-size precision ladder for token-plan agreement.](../figures/seed_sensitivity.png){#fig:seed_sensitivity}
+
+The report is stored at `output/data/seed_sensitivity.json`. These are technical replicates of one executable token pipeline, not human participants, independent manuscripts, or evidence of external manuscript quality.
+The sensitivity result therefore refines the reproducibility claim: a fixed
+seed exactly regenerates a selected plan, while neighboring seeds explore a
+wide deterministic outcome surface. It does not justify treating token
+agreement as a reader-quality metric or as evidence that one lexical choice is
+scientifically superior.
+
 ## Token plan summary
 
 The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon categories.
@@ -426,7 +478,7 @@ through the same graph, table, and validation surfaces.
 
 The purity-versus-claim-support view in [@fig:purity_claim_scatter] places two differently scoped measurements on explicit axes: stage output purity on the horizontal axis and the single project-level contribution-claim assay on the vertical axis. The same observed support rate is therefore repeated across stages. The figure does not fabricate a stagewise claim-support trajectory from a project-level aggregate.
 
-In the current generated assay, 9 of 9 contribution claims are supported (100.00%). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
+In the current generated assay, 10 of 10 contribution claims are supported (100.00%). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
 
 ![Stage purity plotted against the single project-level claim-support assay.](../figures/purity_claim_scatter.png){#fig:purity_claim_scatter}
 
@@ -527,8 +579,8 @@ repair is central to the manuscript's definition of refinement.
 
 The claim-evidence assay in [@fig:claim_evidence_assay] turns the assaying stage into a reader-facing diagnostic. Each bar is a contribution claim from `manuscript/config.yaml`, and each annotation names the source file or symbol used to support it. This makes the contribution ledger inspectable at the same level as the purity plots: unsupported claims would appear as failed assays rather than remaining hidden in prose.
 
-The generated assay currently reports 9 supported
-claims out of 9. The value of the figure is not the perfect
+The generated assay currently reports 10 supported
+claims out of 10. The value of the figure is not the perfect
 score by itself; it is the way the score is forced to name its evidence surface
 and boundary. A contribution claim is not merely present in prose. It must be
 registered, matched to supporting evidence, and assigned a boundary that tells
@@ -574,7 +626,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 283 source-tiered facts to the validation
+can report 15577 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -586,22 +638,24 @@ well-cited but not locally executable. A manuscript that leans only on tests may
 catch regressions while still failing to explain claim boundaries to readers.
 The ladder gives a compact audit of that mix, while [@tbl:evidence_tiers] keeps
 the counts visible in tabular form. Together they close the figure sequence by
-showing not only that the 12 public figures render, but
+showing not only that the 13 public figures render, but
 also which source tiers make their claims inspectable.
 
 ![Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.](../figures/evidence_tier_ladder.png){#fig:evidence_tier_ladder}
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| artifact | 125 | Generated artifacts exposed to readers |
-| generated_metric | 94 | Numbers regenerated from project analysis |
-| bibliography | 47 | Reference records and citation metadata |
+| generated_metric | 15282 | Numbers regenerated from project analysis |
+| artifact | 132 | Generated artifacts exposed to readers |
+| configuration | 92 | Evidence source tier |
+| bibliography | 52 | Reference records and citation metadata |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
+| design | 2 | Evidence source tier |
 : Evidence tiers used by the integrity model and shared registry when available. {#tbl:evidence_tiers}
 
 ## Adversarial security assay
 
-The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mapping threats and standards to local evidence surfaces, validators, and claim boundaries; completeness is a scope control, not completed scan findings. No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, validated, and cited. The rows are generated from `gold_refinement.security_assay` and are intentionally tabular rather than a new public figure, so the visual registry remains the stable 12-figure contract.
+The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mapping threats and standards to local evidence surfaces, validators, and claim boundaries; completeness is a scope control, not completed scan findings. No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, validated, and cited. The rows are generated from `gold_refinement.security_assay` and are intentionally tabular rather than a new public figure, so the visual registry remains the stable 13-figure contract.
 
 | ID | Threat | Standard or guidance | Evidence surface | Validator or gate | Claim boundary |
 |----|--------|----------------------|------------------|-------------------|----------------|
@@ -625,42 +679,44 @@ The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mappi
 | Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 | Adversarial security assay | The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries. | src/security_assay.py::build_security_assay | local |
+| Seed-sensitivity study | The project reports a declared seed-replicate sensitivity study with precision metadata and explicit non-empirical boundaries. | src/seed_sensitivity.py::run_seed_sensitivity | local |
 
-The project-local claim-support assay reports 9 supported claims out of 9 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
+The project-local claim-support assay reports 10 supported claims out of 10 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 283.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 15577.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 80 |
-| citation | 47 |
+| artifact | 84 |
+| citation | 52 |
 | equation | 8 |
-| figure | 29 |
-| number | 102 |
+| figure | 31 |
+| number | 15384 |
 | section | 10 |
-| table | 7 |
+| table | 8 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
 
 ## Figure quality report
 
-The visualization registry is paired with `output/reports/figure_quality_report.json`, a generated QA report that checks PNG and SVG existence, file dimensions, nonblank pixel mass, color variance, and registry parity. Current status: passing with 12/12 registered figures passing and registry parity reported as Yes. PNG remains the manuscript render path; SVG is the companion technical artifact for inspection, reuse, and source-level debugging. [@tbl:figure_quality] summarizes the generated surface.
+The visualization registry is paired with `output/reports/figure_quality_report.json`, a generated QA report that checks PNG and SVG existence, file dimensions, nonblank pixel mass, color variance, and registry parity. Current status: passing with 13/13 registered figures passing and registry parity reported as Yes. PNG remains the manuscript render path; SVG is the companion technical artifact for inspection, reuse, and source-level debugging. [@tbl:figure_quality] summarizes the generated surface.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06027576 | pass |
-| evidence_tier_ladder | yes | yes | 3349x1332 | 0.223 | 0.05598645 | pass |
-| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
-| implementation_circuit | yes | yes | 2966x1843 | 0.068 | 0.02205485 | pass |
-| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
-| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
-| purity_claim_scatter | yes | yes | 2336x1744 | 0.034 | 0.01607749 | pass |
-| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
-| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
-| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
+| claim_evidence_assay | yes | yes | 3947x2172 | 0.222 | 0.06124546 | pass |
+| evidence_tier_ladder | yes | yes | 3463x1586 | 0.083 | 0.03388905 | pass |
+| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
+| implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
+| integrity_gate_matrix | yes | yes | 1820x2314 | 0.407 | 0.15927030 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1909 | 0.379 | 0.01892053 | pass |
+| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
+| purity_claim_scatter | yes | yes | 2343x1745 | 0.034 | 0.01594966 | pass |
+| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
+| seed_sensitivity | yes | yes | 3290x1773 | 0.091 | 0.03345077 | pass |
+| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
+| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}
 
 
@@ -706,6 +762,8 @@ The same caution applies to checklist-shaped infrastructure. Reporting guideline
 | Executable-package ambiguity | A fork publishes a rendered manuscript without enough software, metadata, or version identity to rebuild the object. | Reproducibility, scope, evaluation, and authoring-contract prose require source-owned metadata, exact release citation, and regenerated output reports. | Record software/template release identity, preserve source-owned metadata, and rerun the full pipeline before publishing. |
 | Security theater | Security language is presented as compliance, secure-by-design proof, or scan evidence without generated artifacts. | Security assay rows require a threat, standard, evidence surface, validator, and claim boundary. | Keep security claims bounded to the configured assay unless validated scan receipts exist. |
 | Scan result laundering | A future scan summary is imported as prose without the artifact, receipt, and validator that produced it. | Authoring-contract and evaluation prose require scan artifacts before real Codex Security or Deep Security Scan findings are claimed. | Integrate only generated scan reports with evidence-registry alignment and explicit claim boundaries. |
+| Seed-count overclaim | A large number of deterministic seed runs is presented as evidence of external manuscript quality or domain validity. | The seed-sensitivity report and manuscript label seeds as technical replicates and retain local non-claims. | Report seed variability as computational sensitivity and add independent domain evidence before expanding the claim. |
+| Seed-report drift | A stale or edited JSON report hydrates manuscript statistics that no longer match the current configuration. | Manuscript hydration validates the report against deterministic recomputation. | Regenerate analysis outputs and fail hydration when any report field differs from the recomputed payload. |
 
 ## Design principles
 
@@ -753,9 +811,9 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: 8d3efef5bcbe8b23
+- Config hash: c7d37fc9538b9677
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
-- Claim-support status: 9/9 supported (passing)
+- Claim-support status: 10/10 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
 - Registered visual evidence spans purity progression, token coverage, formalism traceability, implementation flow, claim-evidence assay, risk-matrix, and evidence-tier surfaces.
 - Reverse assay returns the shortest ordered stage prefix for a declared target, and multi-objective purity preserves distinct quality dimensions without compensatory averaging.
@@ -792,18 +850,36 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** 8d3efef5bcbe8b23
-- **Generation timestamp:** 2026-07-11T04:09:00Z
+- **Config hash:** c7d37fc9538b9677
+- **Generation timestamp:** 2026-07-14T00:38:04Z
 - **Python version:** 3.12.13
+
+## Replication across technical seeds
+
+Exact replay uses the canonical seed above. Replicability of the token-plan
+mechanism is described separately by 1024 technical seed replicates:
+the report records 1024 unique plans, mean agreement of
+20.62%, and a 95% descriptive
+interval of 20.09%–21.14%. This follows the computational
+benchmarking principle that performance should be represented over relevant
+sources of variation, not only by a single run [@bouthillier2021accounting].
+The seed study is not a sample of manuscripts, readers, or scientific claims;
+it is a sensitivity analysis of one executable lexical pipeline. The National
+Academies distinguish computational reproducibility—recovering results from
+the same inputs and procedures—from replicability across changed conditions
+[@national_academies_2019_reproducibility]. This project demonstrates the
+former directly and explores only one controlled technical variation for the
+latter. It does not establish that the seed distribution represents future
+software environments or independent research teams.
 
 ## Artifact inventory
 
 | Category | Count |
 |----------|-------|
-| Figures | 26 |
-| Data files | 3 |
+| Figures | 28 |
+| Data files | 4 |
 | Reports | 12 |
-| **Total** | 41 |
+| **Total** | 44 |
 
 ## Regeneration commands
 
@@ -818,7 +894,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 ```
 
-A reproduction report should record command exit status, the source revision, `8d3efef5bcbe8b23`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `c7d37fc9538b9677`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -826,13 +902,13 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `8d3efef5bcbe8b23`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `c7d37fc9538b9677`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
 Metadata is part of that path, not administrative garnish. Work on reproducible computational metadata argues that data, tools, workflows, environments, and reports need machine-readable descriptors before re-execution and reuse can be automated reliably [@chen2021metadata]. Here, the evidence registry, token plan, figure registry, output statistics, and config hash are the local metadata stack. They make the object inspectable, but they remain descriptive: they identify what was generated and from where, not whether a domain conclusion is correct.
 
-The same rule applies to visual polish. The figure registry is source-owned, every registered PNG now has a companion SVG, and `output/reports/figure_quality_report.json` records 12 PNG files, 12 SVG files, and 12 passing visual-quality checks for the current variable pass. A fork should treat [@tbl:figure_quality] as the figure-layer analogue of the claim-support registry: it proves that the visuals are regenerated, present in both raster and vector forms, nonblank, and aligned with the registry before prose promotes them.
+The same rule applies to visual polish. The figure registry is source-owned, every registered PNG now has a companion SVG, and `output/reports/figure_quality_report.json` records 13 PNG files, 13 SVG files, and 13 passing visual-quality checks for the current variable pass. A fork should treat [@tbl:figure_quality] as the figure-layer analogue of the claim-support registry: it proves that the visuals are regenerated, present in both raster and vector forms, nonblank, and aligned with the registry before prose promotes them.
 
 ## Evidence-registry separation
 
@@ -857,6 +933,7 @@ This exemplar demonstrates the gold-refining analogy as a **methods paper**. It 
 - Generalizability of specific purity fractions to all scientific domains
 - That the analogy replaces domain-specific peer review or expert judgement
 - That reverse assay optimizes cost or scientific value, or that multi-objective purity is a validated composite scale
+- That 1024 technical seed replicates establish external manuscript-quality validity, statistical power for human outcomes, or semantic superiority of any selected token
 
 ## Related work
 
@@ -865,6 +942,19 @@ The mega-madlib token injection pattern follows `template_madlib`'s deterministi
 Analogy theory supplies the first boundary. Structure-mapping treats analogy as a transfer of relational organization rather than surface resemblance [@gentner1983structure], while philosophy of science distinguishes positive, negative, and still-open analogy regions [@hesse1966models]. The paper therefore claims that the refinery stages organize a reproducible manuscript workflow. It does not claim that metallurgical purity is an empirical measure of prose quality.
 
 Reproducible-research scholarship supplies the second boundary. Literate programming, Sweave, and notebook-based analysis show that code, results, and narrative can be co-developed in executable documents [@knuth1984literate; @leisch2002sweave; @rule2019jupyter]. Research compendia and workflow-centric research objects show how code, data, text, environment, and provenance can be packaged as durable units [@marwick2018packaging; @belhajjame2015ontologies]. This exemplar extends those ideas to deterministic token selection, but it remains an internal consistency and provenance demonstration.
+
+Computational benchmarking scholarship supplies an additional boundary for the seed
+study: pipeline outcomes can vary across initialization and other technical
+factors, so distributions and variance should be made visible rather than
+hidden behind one run [@bouthillier2021accounting]. Sample-size justification
+should follow from the estimand and desired accuracy rather than an unexplained
+heuristic [@lakens2022samplesize]. The present study responds with a declared
+contiguous seed range, a bounded precision radius, a deterministic bootstrap
+sensitivity interval, and a score interval for a thresholded agreement rate.
+The intervals are conditional summaries of that finite technical replicate set;
+they are not confidence statements about a population of manuscripts or
+readers. Score-based intervals are used because naive Wald intervals can have
+poor coverage for bounded proportions [@newcombe1998proportion].
 
 FAIR and PROV supply the third boundary. Rich metadata and provenance improve findability, interoperability, reuse, and auditability [@wilkinson2016fair; @moreau2013prov]. They do not guarantee that a substantive scientific claim is true. The evidence ladder in this paper is therefore an honesty device: source-code facts, generated metrics, bibliography records, and domain evidence must not be collapsed into one undifferentiated support score.
 
@@ -918,6 +1008,7 @@ The software improvements in this version do not remove these limitations. Enfor
 | Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | manuscript/02_methodology.md, manuscript/04_discussion.md, manuscript/07_scope.md, and manuscript/08_evaluation.md |
 | Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | manuscript/06_reproducibility.md, manuscript/07_scope.md, manuscript/08_evaluation.md, manuscript/09_authoring_contract.md, output/reports/evidence_registry.json, and output/reports/output_statistics.json |
 | Adversarial assay boundary | Does security language distinguish declared threat scope from real scan evidence and external compliance? | The security assay emits threats, standards, evidence surfaces, validators, and claim boundaries without claiming Codex Security findings. | src/security_assay.py, manuscript/config.yaml, and manuscript/03_results.md |
+| Seed sensitivity | Does the expanded seed study quantify token-plan variability without presenting seeds as empirical manuscript observations? | The generated report records n, agreement distribution, interval methods, conditional assumptions, bootstrap sensitivity, precision radius, and the sample-size ladder. | src/seed_sensitivity.py, output/data/seed_sensitivity.json, and manuscript/03_results.md |
 
 The selected evaluation gate terms are prerender and citation validation. They are intentionally narrower than peer review: they check source ownership, token coverage, figure registration, claim support, and rendering integrity before a human reviewer assesses the substantive analogy.
 
@@ -938,6 +1029,8 @@ Evaluation uses three noninterchangeable levels. **Invariant tests** reject inva
 | AI/template accountability | Tool assistance must not be represented as authorship or independent responsibility | authoring-contract source review plus publication-ethics citation check |
 | Executable-package identity | The manuscript must distinguish a regenerated local package from long-term archival preservation or universal executable-paper compliance | reproducibility source review plus output statistics and evidence-registry validation |
 | Security assay boundary | Security standards and scan phases must be represented as scoped guidance unless generated scan artifacts exist | tests/test_security_assay.py and manuscript source review |
+| Seed-sensitivity precision | Seed replicates must report sample size, interval methods, conditional assumptions, bounded uncertainty metadata, deterministic bootstrap metadata, and non-empirical claim boundaries | tests/test_seed_sensitivity.py, z_generate_manuscript_variables.py, and manuscript source review |
+| Seed-report integrity | The generated seed report must match a deterministic recomputation from the current configuration before manuscript hydration | src/seed_sensitivity.py::validate_seed_sensitivity_payload and tests/test_seed_sensitivity.py |
 
 The audit rules are summarized visually in [@fig:integrity_gate_matrix] and algebraically in [@eq:integrity_vector]. A failed audit rule should block certification language even if the PDF renders.
 
@@ -950,6 +1043,19 @@ Executable-compendium scholarship adds a more operational evaluation target: can
 The adversarial assay adds a security-specific evaluation target: can a reader distinguish declared threat scope from actual scan evidence? [@tbl:security_assay] maps zero-trust, secure-development, supply-chain, SBOM, attack-path, and secure-by-design guidance to local evidence surfaces and validators [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design]. The passing condition is bounded: the table must be complete and the prose must not claim compliance or Codex Security findings unless future scan artifacts are generated and integrated.
 
 The risk model adds prioritization to the gate list. [@fig:integrity_risk_matrix] separates easy-to-detect implementation failures from severe boundary failures that need clearer ownership. This keeps the evaluation surface from becoming a checklist of equally weighted boxes: token coverage, citation validity, claim support, and render readiness all matter, but a high-severity low-detectability failure should shape the next source edit before cosmetic manuscript polish.
+
+The seed-sensitivity gate adds a quantitative robustness surface without
+changing the claim boundary. It requires a declared replicate count, an
+agreement estimand, a score interval for the thresholded rate, a bounded
+precision radius, and a sample-size ladder. The current run reports
+1024 technical replicates, 1024 unique plans,
+and 100.00% inventory coverage. These quantities
+describe the behavior of the deterministic composition engine; they do not
+measure reader agreement, factual correctness, or scientific validity. The
+intervals and Hoeffding radius are conditional on the declared exchangeability
+assumption for the seed draws; the contiguous integer range is not a random
+sample of manuscripts or deployments. A validator must therefore check both
+the report schema and its deterministic recomputation from configuration.
 
 Figure review follows the same rule. File existence and nonblank pixels are necessary but not sufficient. The figure caption, encoding declaration, source data, and prose interpretation must describe the same measurement. This criterion specifically prohibits inferring a stagewise trend from a project-level aggregate, which is why [@fig:purity_claim_scatter] repeats one observed claim-support rate rather than inventing cumulative values.
 
@@ -970,8 +1076,8 @@ Figure review follows the same rule. File existence and nonblank pixels are nece
 | Config ownership | Keep lexicon and slots in config.yaml, not in generated prose. |
 | Regeneration contract | Regenerate outputs through the pipeline, not by hand-editing. |
 | Risk review | Treat high-residual-risk integrity dimensions as fork obligations before publication claims are expanded. |
-| Tool disclosure | Disclose AI, template, and automation assistance when it materially affects writing, analysis, or review. |
-| Software citation | Cite the exact software, template release, and executable package used to generate the manuscript. |
+| AI and template disclosure | Disclose material AI, template, and automation assistance, and keep responsibility for accuracy and claim boundaries with named human authors. |
+| Software and package citation | Cite the exact software/template release and preserve enough metadata for readers to identify and rebuild the executable manuscript object. |
 | Security evidence boundary | Treat security standards and Codex Security scan phases as scoped guidance unless generated scan artifacts and receipts are present. |
 
 The authoring boundary tokens for this section are analogy boundary and non-claim. They mark the point where an author must either add new evidence and validators or lower the claim from certification to analogy.

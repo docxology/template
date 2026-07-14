@@ -35,7 +35,7 @@
     },
     "template_gold_refinement": {
       "coverage_pct": "97.55 %",
-      "source_hash": "abf3a0c0b5f3d5114b53c5eaeb181d5c2fb491e498ad6d9a02239591b1c71392"
+      "source_hash": "83454874a0056bbab0372ad35e630e1578efb766433b2a71c6585ed33f9c8c5d"
     },
     "template_literature_meta_analysis": {
       "coverage_pct": "96.77 %",
@@ -95,5 +95,5 @@
     }
   },
   "schema_version": 2,
-  "source_commit": "2d9a595565d79f2a134f2f8664eab7a0601aaa15"
+  "source_commit": "63042c1a23bb787c2f3c755ba4dda4ce8493fe0c"
 }

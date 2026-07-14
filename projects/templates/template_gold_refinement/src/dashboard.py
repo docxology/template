@@ -70,6 +70,7 @@ def build_dashboard_html(
     refinery_data: dict[str, Any] | None = None,
     token_data: dict[str, Any] | None = None,
     evidence_data: dict[str, Any] | None = None,
+    seed_data: dict[str, Any] | None = None,
 ) -> str:
     """Build a self-contained HTML dashboard string."""
     fallback_snapshot = _refinery_snapshot(run_refinery())
@@ -98,6 +99,14 @@ def build_dashboard_html(
                 evidence_data = json.load(f)
         else:
             evidence_data = {}
+
+    if seed_data is None:
+        sp = project_root / "output" / "data" / "seed_sensitivity.json"
+        if sp.exists():
+            with sp.open("r", encoding="utf-8") as f:
+                seed_data = json.load(f)
+        else:
+            seed_data = {}
 
     refinery_snapshot = _merge_refinery_snapshot(fallback_snapshot, refinery_data)
 
@@ -133,6 +142,22 @@ def build_dashboard_html(
             f"<td>{_esc(entry.get('boundary', ''))}</td>"
             f"</tr>"
         )
+
+    seed_rows = ""
+    for row in (seed_data or {}).get("sample_size_ladder", []):
+        seed_rows += (
+            f"<tr><td>{int(row.get('sample_size', 0))}</td>"
+            f"<td>{float(row.get('mean_agreement', 0.0)):.2%}</td>"
+            f"<td>{float(row.get('precision_radius', 0.0)):.2%}</td>"
+            f"<td>{float(row.get('inventory_coverage', 0.0)):.2%}</td></tr>"
+        )
+
+    bootstrap_interval = (seed_data or {}).get("bootstrap_mean_interval", [0.0, 0.0])
+    if not isinstance(bootstrap_interval, list) or len(bootstrap_interval) != 2:
+        bootstrap_interval = [0.0, 0.0]
+    bootstrap_label = f"{float(bootstrap_interval[0]):.2%}–{float(bootstrap_interval[1]):.2%}"
+    precision_assumption = _esc(str((seed_data or {}).get("precision_assumption", "not declared")))
+    sampling_scheme = _esc(str((seed_data or {}).get("seed_sampling_scheme", "not declared")))
 
     timestamp = _build_timestamp()
 
@@ -175,6 +200,22 @@ def build_dashboard_html(
     <div class="metric-value">{supported}/{total}</div>
     <div class="metric-label">Evidence Claims Supported</div>
   </div>
+  <div class="metric">
+    <div class="metric-value">{int((seed_data or {}).get("sample_size", 0))}</div>
+    <div class="metric-label">Technical Seed Replicates</div>
+  </div>
+  <div class="metric">
+    <div class="metric-value">{float((seed_data or {}).get("mean_agreement", 0.0)):.2%}</div>
+    <div class="metric-label">Mean Token Agreement</div>
+  </div>
+  <div class="metric">
+    <div class="metric-value">{int((seed_data or {}).get("minimum_sample_size_for_precision_target", 0))}</div>
+    <div class="metric-label">Minimum n for Target Radius</div>
+  </div>
+  <div class="metric">
+    <div class="metric-value">{bootstrap_label}</div>
+    <div class="metric-label">Bootstrap Mean Interval</div>
+  </div>
 </div>
 
 <h2>Refinery Stages</h2>
@@ -193,6 +234,13 @@ def build_dashboard_html(
 <table>
 <tr><th>Status</th><th>Claim</th><th>Evidence Source</th><th>Boundary</th></tr>
 {evidence_rows}
+</table>
+
+<h2>Seed Sensitivity</h2>
+<p>Technical replicates of one token pipeline; not empirical manuscript-quality observations. Sampling scheme: {sampling_scheme}. Precision assumption: {precision_assumption}</p>
+<table>
+<tr><th>Sample size</th><th>Mean agreement</th><th>95% bound radius</th><th>Inventory coverage</th></tr>
+{seed_rows}
 </table>
 
 <div class="footer">Generated: {timestamp}</div>

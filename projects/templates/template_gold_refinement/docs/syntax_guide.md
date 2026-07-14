@@ -17,7 +17,7 @@
 
 ## Figure labels
 
-All 12 entries below are owned by `src/figures/__init__.py::FIGURE_SPECS`
+All 13 entries below are owned by `src/figures/__init__.py::FIGURE_SPECS`
 (the `src/figures/_common.py` module docstring lists the same registry).
 
 | Label | File | Generator |
@@ -28,6 +28,7 @@ All 12 entries below are owned by `src/figures/__init__.py::FIGURE_SPECS`
 | `{#fig:provenance_sankey}` | `provenance_sankey.png` | `figures.generate_provenance_sankey()` |
 | `{#fig:purity_claim_scatter}` | `purity_claim_scatter.png` | `figures.generate_purity_claim_scatter()` |
 | `{#fig:token_heatmap}` | `token_heatmap.png` | `figures.generate_token_heatmap()` |
+| `{#fig:seed_sensitivity}` | `seed_sensitivity.png` | `figures.generate_seed_sensitivity()` |
 | `{#fig:integrity_gate_matrix}` | `integrity_gate_matrix.png` | `figures.generate_integrity_gate_matrix()` |
 | `{#fig:formalism_traceability}` | `formalism_traceability.png` | `figures.generate_formalism_traceability()` |
 | `{#fig:implementation_circuit}` | `implementation_circuit.png` | `figures.generate_implementation_circuit()` |

@@ -208,6 +208,21 @@ results, tables, captions, and claim-ledger-style files are strict zones;
 background and introduction prose produce warnings unless strict mode is
 requested.
 
+## Output Validation Failure Semantics
+
+Stage 04 writes a structured report, but a report is not a pass signal by
+itself. PDF, transmission, Markdown, output-structure, figure-registry,
+evidence-registry, project-design, artifact-manifest, and enabled
+claim-verification failures are blocking and return exit status 1. The optional
+prose-quality scan is intentionally advisory/report-only. This distinction
+prevents a well-formed PDF or a report writer from masking missing provenance,
+stale generated artifacts, contradicted claims, or malformed source files.
+
+Project-specific generated reports may add their own recomputation gates. For
+example, the gold-refinement exemplar validates its seed-sensitivity JSON
+against a fresh deterministic run before manuscript hydration; see
+`projects/templates/template_gold_refinement/docs/validation_gates.md`.
+
 ## Domain Profiles
 
 Projects may add `domain_profile.yaml` with:
@@ -253,10 +268,15 @@ expected_figures: [fig:accuracy]
 expected_tables: [tbl:results]
 baselines: [baseline]
 ablations: [ablation]
+sample_size:
+  unit: technical replicate
+  n: 16
 ```
 
 The allowed condition roles are `reference`, `proposed`, and `variant`. The
-validator checks declarations only; it does not generate experiments.
+validator checks declarations only; it does not generate experiments. Optional
+`sample_size` metadata is preserved for project-specific design checks and must
+be a mapping; the generic validator does not interpret its fields.
 
 ## Run Lessons
 

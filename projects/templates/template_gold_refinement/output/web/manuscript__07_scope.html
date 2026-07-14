@@ -177,7 +177,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:scope">Scope: Related Work and Limitations</h1>
 <h2 id="scope-limitations">Scope limitations</h2>
 <p>This exemplar demonstrates the gold-refining analogy as a
@@ -191,6 +192,9 @@ domains</li>
 judgement</li>
 <li>That reverse assay optimizes cost or scientific value, or that
 multi-objective purity is a validated composite scale</li>
+<li>That 1024 technical seed replicates establish external
+manuscript-quality validity, statistical power for human outcomes, or
+semantic superiority of any selected token</li>
 </ul>
 <h2 id="related-work">Related work</h2>
 <p>The mega-madlib token injection pattern follows
@@ -216,6 +220,20 @@ text, environment, and provenance can be packaged as durable units
 [marwick2018packaging; belhajjame2015ontologies]. This exemplar extends
 those ideas to deterministic token selection, but it remains an internal
 consistency and provenance demonstration.</p>
+<p>Computational benchmarking scholarship supplies an additional
+boundary for the seed study: pipeline outcomes can vary across
+initialization and other technical factors, so distributions and
+variance should be made visible rather than hidden behind one run
+[bouthillier2021accounting]. Sample-size justification should follow
+from the estimand and desired accuracy rather than an unexplained
+heuristic [lakens2022samplesize]. The present study responds with a
+declared contiguous seed range, a bounded precision radius, a
+deterministic bootstrap sensitivity interval, and a score interval for a
+thresholded agreement rate. The intervals are conditional summaries of
+that finite technical replicate set; they are not confidence statements
+about a population of manuscripts or readers. Score-based intervals are
+used because naive Wald intervals can have poor coverage for bounded
+proportions [newcombe1998proportion].</p>
 <p>FAIR and PROV supply the third boundary. Rich metadata and provenance
 improve findability, interoperability, reuse, and auditability
 [wilkinson2016fair; moreau2013prov]. They do not guarantee that a

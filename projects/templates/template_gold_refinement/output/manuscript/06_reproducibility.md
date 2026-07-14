@@ -9,18 +9,36 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** 8d3efef5bcbe8b23
+- **Config hash:** c7d37fc9538b9677
 - **Generation timestamp:** 2026-06-25T00:00:00Z
 - **Python version:** 3.12.13
+
+## Replication across technical seeds
+
+Exact replay uses the canonical seed above. Replicability of the token-plan
+mechanism is described separately by 1024 technical seed replicates:
+the report records 1024 unique plans, mean agreement of
+20.62%, and a 95% descriptive
+interval of 20.09%–21.14%. This follows the computational
+benchmarking principle that performance should be represented over relevant
+sources of variation, not only by a single run [@bouthillier2021accounting].
+The seed study is not a sample of manuscripts, readers, or scientific claims;
+it is a sensitivity analysis of one executable lexical pipeline. The National
+Academies distinguish computational reproducibility—recovering results from
+the same inputs and procedures—from replicability across changed conditions
+[@national_academies_2019_reproducibility]. This project demonstrates the
+former directly and explores only one controlled technical variation for the
+latter. It does not establish that the seed distribution represents future
+software environments or independent research teams.
 
 ## Artifact inventory
 
 | Category | Count |
 |----------|-------|
-| Figures | 26 |
-| Data files | 3 |
+| Figures | 28 |
+| Data files | 4 |
 | Reports | 12 |
-| **Total** | 41 |
+| **Total** | 44 |
 
 ## Regeneration commands
 
@@ -35,7 +53,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 ```
 
-A reproduction report should record command exit status, the source revision, `8d3efef5bcbe8b23`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `c7d37fc9538b9677`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -43,13 +61,13 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `8d3efef5bcbe8b23`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `c7d37fc9538b9677`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
 Metadata is part of that path, not administrative garnish. Work on reproducible computational metadata argues that data, tools, workflows, environments, and reports need machine-readable descriptors before re-execution and reuse can be automated reliably [@chen2021metadata]. Here, the evidence registry, token plan, figure registry, output statistics, and config hash are the local metadata stack. They make the object inspectable, but they remain descriptive: they identify what was generated and from where, not whether a domain conclusion is correct.
 
-The same rule applies to visual polish. The figure registry is source-owned, every registered PNG now has a companion SVG, and `output/reports/figure_quality_report.json` records 12 PNG files, 12 SVG files, and 12 passing visual-quality checks for the current variable pass. A fork should treat [@tbl:figure_quality] as the figure-layer analogue of the claim-support registry: it proves that the visuals are regenerated, present in both raster and vector forms, nonblank, and aligned with the registry before prose promotes them.
+The same rule applies to visual polish. The figure registry is source-owned, every registered PNG now has a companion SVG, and `output/reports/figure_quality_report.json` records 13 PNG files, 13 SVG files, and 13 passing visual-quality checks for the current variable pass. A fork should treat [@tbl:figure_quality] as the figure-layer analogue of the claim-support registry: it proves that the visuals are regenerated, present in both raster and vector forms, nonblank, and aligned with the registry before prose promotes them.
 
 ## Evidence-registry separation
 

@@ -5,7 +5,8 @@ paper:
   title: "Your Refinement Title"
   subtitle: "Optional Subtitle"
   version: "1.0"
-  date: ""
+  # The shared PDF renderer resolves this sentinel to today's date.
+  date: "today"
   cover:
     image: "figures/cover_visualization.png"
 
@@ -80,6 +81,16 @@ gold_refinement:
   seed: 431
   composition_depth: "deep"
   hypothesis: "Your hypothesis here"
+  seed_sensitivity:
+    sample_size: 1024
+    seed_start: 0
+    agreement_threshold: 0.25
+    confidence_level: 0.95
+    precision_target: 0.05
+    bootstrap_replicates: 2000
+    seed_sampling_scheme: "contiguous_integer_seeds"
+    precision_assumption: "Conditional on exchangeable random-seed draws; the declared contiguous seed range is a sensitivity surface, not an empirical population."
+    sample_size_ladder: [16, 32, 64, 128, 256, 512, 1024]
   section_conditions:
     abstract: true
     introduction: true

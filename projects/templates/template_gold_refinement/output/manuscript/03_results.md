@@ -26,6 +26,38 @@ The canonical run completed 5 ordered, continuous stages and reached the configu
 - **Nine-nines certified:** Yes
 - **Nines count:** 9
 
+## Seed-sensitivity results
+
+The expanded sensitivity study evaluated 1024 technical replicates
+of the deterministic token pipeline over seeds 0–1023. It
+found 1024 unique token plans among 1024
+runs, with 1 exact matches to the canonical
+plan. Mean slot agreement was 20.62% (SD
+8.56%; descriptive 95% interval
+20.09%–21.14%), with observed range
+0.00%–100.00%. The configured
+threshold rate was 36.43% (score interval
+33.53%–39.42%) at the 25%
+agreement threshold. All configured inventory values were observed
+(100.00% coverage), which is a coverage result for
+the token vocabulary rather than a quality result for the manuscript.
+
+The declared precision target requires at least 738
+replicates under the chosen bounded-metric formula; the realized radius is
+4.24%. The deterministic bootstrap sensitivity
+interval for the mean is 20.10%–21.11% from
+2000 resamples. Both intervals are conditional
+technical summaries, not population estimates.
+
+![Seed-sensitivity distribution and the declared sample-size precision ladder for token-plan agreement.](../output/figures/seed_sensitivity.png){#fig:seed_sensitivity}
+
+The report is stored at `output/data/seed_sensitivity.json`. These are technical replicates of one executable token pipeline, not human participants, independent manuscripts, or evidence of external manuscript quality.
+The sensitivity result therefore refines the reproducibility claim: a fixed
+seed exactly regenerates a selected plan, while neighboring seeds explore a
+wide deterministic outcome surface. It does not justify treating token
+agreement as a reader-quality metric or as evidence that one lexical choice is
+scientifically superior.
+
 ## Token plan summary
 
 The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon categories.
@@ -112,7 +144,7 @@ through the same graph, table, and validation surfaces.
 
 The purity-versus-claim-support view in [@fig:purity_claim_scatter] places two differently scoped measurements on explicit axes: stage output purity on the horizontal axis and the single project-level contribution-claim assay on the vertical axis. The same observed support rate is therefore repeated across stages. The figure does not fabricate a stagewise claim-support trajectory from a project-level aggregate.
 
-In the current generated assay, 9 of 9 contribution claims are supported (100.00%). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
+In the current generated assay, 10 of 10 contribution claims are supported (100.00%). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
 
 ![Stage purity plotted against the single project-level claim-support assay.](../output/figures/purity_claim_scatter.png){#fig:purity_claim_scatter}
 
@@ -213,8 +245,8 @@ repair is central to the manuscript's definition of refinement.
 
 The claim-evidence assay in [@fig:claim_evidence_assay] turns the assaying stage into a reader-facing diagnostic. Each bar is a contribution claim from `manuscript/config.yaml`, and each annotation names the source file or symbol used to support it. This makes the contribution ledger inspectable at the same level as the purity plots: unsupported claims would appear as failed assays rather than remaining hidden in prose.
 
-The generated assay currently reports 9 supported
-claims out of 9. The value of the figure is not the perfect
+The generated assay currently reports 10 supported
+claims out of 10. The value of the figure is not the perfect
 score by itself; it is the way the score is forced to name its evidence surface
 and boundary. A contribution claim is not merely present in prose. It must be
 registered, matched to supporting evidence, and assigned a boundary that tells
@@ -260,7 +292,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 1058 source-tiered facts to the validation
+can report 15576 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -272,23 +304,24 @@ well-cited but not locally executable. A manuscript that leans only on tests may
 catch regressions while still failing to explain claim boundaries to readers.
 The ladder gives a compact audit of that mix, while [@tbl:evidence_tiers] keeps
 the counts visible in tabular form. Together they close the figure sequence by
-showing not only that the 12 public figures render, but
+showing not only that the 13 public figures render, but
 also which source tiers make their claims inspectable.
 
 ![Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.](../output/figures/evidence_tier_ladder.png){#fig:evidence_tier_ladder}
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| generated_metric | 822 | Numbers regenerated from project analysis |
-| artifact | 125 | Generated artifacts exposed to readers |
-| bibliography | 47 | Reference records and citation metadata |
-| configuration | 47 | Evidence source tier |
+| generated_metric | 15281 | Numbers regenerated from project analysis |
+| artifact | 132 | Generated artifacts exposed to readers |
+| configuration | 92 | Evidence source tier |
+| bibliography | 52 | Reference records and citation metadata |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
+| design | 2 | Evidence source tier |
 : Evidence tiers used by the integrity model and shared registry when available. {#tbl:evidence_tiers}
 
 ## Adversarial security assay
 
-The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mapping threats and standards to local evidence surfaces, validators, and claim boundaries; completeness is a scope control, not completed scan findings. No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, validated, and cited. The rows are generated from `gold_refinement.security_assay` and are intentionally tabular rather than a new public figure, so the visual registry remains the stable 12-figure contract.
+The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mapping threats and standards to local evidence surfaces, validators, and claim boundaries; completeness is a scope control, not completed scan findings. No Codex Security or Deep Security Scan findings are claimed unless a scan artifact is generated, validated, and cited. The rows are generated from `gold_refinement.security_assay` and are intentionally tabular rather than a new public figure, so the visual registry remains the stable 13-figure contract.
 
 | ID | Threat | Standard or guidance | Evidence surface | Validator or gate | Claim boundary |
 |----|--------|----------------------|------------------|-------------------|----------------|
@@ -312,40 +345,42 @@ The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mappi
 | Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
 | Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
 | Adversarial security assay | The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries. | src/security_assay.py::build_security_assay | local |
+| Seed-sensitivity study | The project reports a declared seed-replicate sensitivity study with precision metadata and explicit non-empirical boundaries. | src/seed_sensitivity.py::run_seed_sensitivity | local |
 
-The project-local claim-support assay reports 9 supported claims out of 9 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
+The project-local claim-support assay reports 10 supported claims out of 10 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 1058.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 15576.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 80 |
-| citation | 47 |
+| artifact | 84 |
+| citation | 52 |
 | equation | 8 |
-| figure | 29 |
-| number | 877 |
+| figure | 31 |
+| number | 15383 |
 | section | 10 |
-| table | 7 |
+| table | 8 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
 
 ## Figure quality report
 
-The visualization registry is paired with `output/reports/figure_quality_report.json`, a generated QA report that checks PNG and SVG existence, file dimensions, nonblank pixel mass, color variance, and registry parity. Current status: passing with 12/12 registered figures passing and registry parity reported as Yes. PNG remains the manuscript render path; SVG is the companion technical artifact for inspection, reuse, and source-level debugging. [@tbl:figure_quality] summarizes the generated surface.
+The visualization registry is paired with `output/reports/figure_quality_report.json`, a generated QA report that checks PNG and SVG existence, file dimensions, nonblank pixel mass, color variance, and registry parity. Current status: passing with 13/13 registered figures passing and registry parity reported as Yes. PNG remains the manuscript render path; SVG is the companion technical artifact for inspection, reuse, and source-level debugging. [@tbl:figure_quality] summarizes the generated surface.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06027576 | pass |
-| evidence_tier_ladder | yes | yes | 3430x1448 | 0.111 | 0.04041257 | pass |
+| claim_evidence_assay | yes | yes | 3952x2172 | 0.221 | 0.06112986 | pass |
+| evidence_tier_ladder | yes | yes | 3474x1586 | 0.082 | 0.03397330 | pass |
 | formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
 | implementation_circuit | yes | yes | 2966x1843 | 0.068 | 0.02205485 | pass |
-| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
+| integrity_gate_matrix | yes | yes | 1805x2314 | 0.410 | 0.15989394 | pass |
 | integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
 | karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
 | provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
 | purity_claim_scatter | yes | yes | 2336x1744 | 0.034 | 0.01607749 | pass |
 | purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| seed_sensitivity | yes | yes | 3292x1773 | 0.091 | 0.03365293 | pass |
 | token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
 | token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}

@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -187,7 +201,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology: The Refinery Pipeline</h1>
 <h2 id="research-design">Research design</h2>
 <p>We conducted a deterministic, artifact-based methods demonstration.
@@ -196,9 +211,11 @@ authored configuration and Markdown, project source code, generated data
 and reports, registered figures, and rendered publication files. The
 unit of transformation is a refinery stage; the unit of lexical
 composition is a configured token slot; the unit of evidentiary
-evaluation is a registered claim or gate. No human participants,
-stochastic sampling, trained model, or inferential statistical test is
-involved.</p>
+evaluation is a registered claim or gate. No human participants, trained
+model, or empirical manuscript-quality outcome is involved. A separate
+seed-sensitivity pass uses deterministic technical replicates to
+describe token-plan variability and is not an inferential test of
+writing quality.</p>
 <p>The method asks whether a metallurgical stage structure can be
 implemented as an inspectable manuscript workflow. It does
 <strong>not</strong> test whether the resulting purity values predict
@@ -509,6 +526,112 @@ assaying, parting, and smelting; selected manuscript terms are evidence
 and evidence. [eq:token_digest] formalizes the rule, while evidence
 validation, figure registry check, and citation validation name the
 corresponding validation surfaces.</p>
+<h2 id="seed-sensitivity-design">Seed-sensitivity design</h2>
+<p>The canonical publication plan uses seed 431. To measure sensitivity
+to that declared input, the analysis additionally evaluates 1024
+technical seed replicates over the range 0–1023. Agreement is the
+fraction of token slots whose selected value matches the canonical plan;
+unique-plan count and lexicon inventory coverage are reported
+separately. The thresholded rate counts replicates with at least 25%
+slot agreement and uses a score interval rather than a naive Wald
+interval [newcombe1998proportion]. This follows computational
+benchmarking work that recommends representing pipeline performance as a
+distribution over sources of variation rather than as a single run
+[bouthillier2021accounting].</p>
+<p>The sample size is a precision choice for a bounded computational
+summary, not a power calculation for people or a claim that 1024 runs
+constitute 1024 manuscripts. Accuracy-based sample-size justification is
+appropriate only after the estimand and inferential goal are declared
+[lakens2022samplesize]. For the declared bounded-metric target, the
+algebraic minimum is 738 replicates; the project uses 1024 as a
+documented power-of-two ceiling. At the nominal 95% level, the
+distribution-free radius is 4.24% against a target of 5.00%.</p>
+<p>The interval language is conditional. Seeds are enumerated as
+contiguous_integer_seeds, not sampled from manuscripts, readers, or a
+natural population. The normal interval is a Normal approximation;
+descriptive conditional summary; the threshold interval is a Wilson
+score interval; conditional binomial summary; and the bounded radius is
+a Hoeffding bound; conditional bounded-metric guarantee. These summaries
+are interpretable under the declared exchangeability
+assumption—Conditional on exchangeable random-seed draws; the declared
+contiguous seed range is a sensitivity surface, not an empirical
+population.—but they are not unconditional confidence statements about
+future software versions or external writing outcomes. A deterministic
+bootstrap percentile interval over 2000 resamples, using bootstrap seed
+431, provides a sensitivity check for the empirical seed-range mean:
+20.10%–21.11% [efron1979bootstrap]. The full report records the
+cumulative sample-size ladder in [tbl:seed_sensitivity_ladder] and the
+generated distribution in [fig:seed_sensitivity].</p>
+<table id="tbl:seed_sensitivity_ladder">
+<caption>Seed-sensitivity precision ladder.</caption>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 21%" />
+<col style="width: 5%" />
+<col style="width: 23%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th>Seed sample size</th>
+<th>Mean agreement</th>
+<th>SD</th>
+<th>95% bound radius</th>
+<th>Inventory coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16</td>
+<td>19.53%</td>
+<td>7.72%</td>
+<td>33.95%</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>32</td>
+<td>20.70%</td>
+<td>8.69%</td>
+<td>24.01%</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>64</td>
+<td>19.40%</td>
+<td>7.36%</td>
+<td>16.98%</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>128</td>
+<td>20.31%</td>
+<td>7.86%</td>
+<td>12.00%</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>256</td>
+<td>20.00%</td>
+<td>7.88%</td>
+<td>8.49%</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>512</td>
+<td>20.41%</td>
+<td>8.94%</td>
+<td>6.00%</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>20.62%</td>
+<td>8.56%</td>
+<td>4.24%</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
 <h2 id="config-owned-lexicon">Config-owned lexicon</h2>
 <table>
 <colgroup>
@@ -649,6 +772,14 @@ registry</td>
 claim boundaries</td>
 <td>security assay table and variables</td>
 <td>tests/test_security_assay.py</td>
+</tr>
+<tr>
+<td>Seed sensitivity</td>
+<td>GoldRefinementConfig and token plan</td>
+<td>Evaluate token-plan agreement across the declared seed sample and
+compute bounded precision summaries</td>
+<td>output/data/seed_sensitivity.json and seed-sensitivity figure</td>
+<td>tests/test_seed_sensitivity.py</td>
 </tr>
 <tr>
 <td>Manuscript hydration</td>

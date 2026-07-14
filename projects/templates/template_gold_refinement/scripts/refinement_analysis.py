@@ -31,6 +31,7 @@ def main() -> int:
     from composition import generate_token_plan
     from config import load_gold_refinement_config
     from refinery import run_refinery
+    from seed_sensitivity import run_seed_sensitivity, write_seed_sensitivity_report
 
     root = _PROJECT_ROOT
 
@@ -83,6 +84,11 @@ def main() -> int:
     plan_path = reports_dir / "token_plan.json"
     plan_path.write_text(json.dumps(plan_data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {plan_path}")
+
+    seed_report = run_seed_sensitivity(gr_config)
+    seed_report_path = data_dir / "seed_sensitivity.json"
+    write_seed_sensitivity_report(seed_report, seed_report_path)
+    print(f"Wrote {seed_report_path}")
 
     # Generate figures
     from figures import generate_all_figures

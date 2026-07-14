@@ -1,9 +1,9 @@
 {
   "schema": "template-gold-refinement-figure-quality-v1",
-  "figure_count": 12,
-  "png_count": 12,
-  "svg_count": 12,
-  "passing_count": 12,
+  "figure_count": 13,
+  "png_count": 13,
+  "svg_count": 13,
+  "passing_count": 13,
   "registry_parity": true,
   "records": [
     {
@@ -97,18 +97,33 @@
       "passes_quality": true
     },
     {
+      "name": "seed_sensitivity",
+      "label": "fig:seed_sensitivity",
+      "png_path": "seed_sensitivity.png",
+      "svg_path": "seed_sensitivity.svg",
+      "png_exists": true,
+      "svg_exists": true,
+      "png_bytes": 247869,
+      "svg_bytes": 75487,
+      "width_px": 3292,
+      "height_px": 1773,
+      "nonwhite_fraction": 0.090865,
+      "color_variance": 0.03365293,
+      "passes_quality": true
+    },
+    {
       "name": "integrity_gate_matrix",
       "label": "fig:integrity_gate_matrix",
       "png_path": "integrity_gate_matrix.png",
       "svg_path": "integrity_gate_matrix.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 162077,
-      "svg_bytes": 69093,
-      "width_px": 1818,
-      "height_px": 2060,
-      "nonwhite_fraction": 0.409412,
-      "color_variance": 0.16204936,
+      "png_bytes": 185778,
+      "svg_bytes": 77486,
+      "width_px": 1805,
+      "height_px": 2314,
+      "nonwhite_fraction": 0.410454,
+      "color_variance": 0.15989394,
       "passes_quality": true
     },
     {
@@ -148,12 +163,12 @@
       "svg_path": "claim_evidence_assay.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 697334,
-      "svg_bytes": 138236,
+      "png_bytes": 769496,
+      "svg_bytes": 151319,
       "width_px": 3952,
-      "height_px": 2038,
-      "nonwhite_fraction": 0.216812,
-      "color_variance": 0.06027576,
+      "height_px": 2172,
+      "nonwhite_fraction": 0.221259,
+      "color_variance": 0.06112986,
       "passes_quality": true
     },
     {
@@ -178,12 +193,12 @@
       "svg_path": "evidence_tier_ladder.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 133711,
-      "svg_bytes": 53015,
-      "width_px": 3430,
-      "height_px": 1448,
-      "nonwhite_fraction": 0.111234,
-      "color_variance": 0.04041257,
+      "png_bytes": 150176,
+      "svg_bytes": 59003,
+      "width_px": 3474,
+      "height_px": 1586,
+      "nonwhite_fraction": 0.082341,
+      "color_variance": 0.0339733,
       "passes_quality": true
     }
   ]

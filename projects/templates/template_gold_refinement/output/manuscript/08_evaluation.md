@@ -12,6 +12,7 @@
 | Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | manuscript/02_methodology.md, manuscript/04_discussion.md, manuscript/07_scope.md, and manuscript/08_evaluation.md |
 | Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | manuscript/06_reproducibility.md, manuscript/07_scope.md, manuscript/08_evaluation.md, manuscript/09_authoring_contract.md, output/reports/evidence_registry.json, and output/reports/output_statistics.json |
 | Adversarial assay boundary | Does security language distinguish declared threat scope from real scan evidence and external compliance? | The security assay emits threats, standards, evidence surfaces, validators, and claim boundaries without claiming Codex Security findings. | src/security_assay.py, manuscript/config.yaml, and manuscript/03_results.md |
+| Seed sensitivity | Does the expanded seed study quantify token-plan variability without presenting seeds as empirical manuscript observations? | The generated report records n, agreement distribution, interval methods, conditional assumptions, bootstrap sensitivity, precision radius, and the sample-size ladder. | src/seed_sensitivity.py, output/data/seed_sensitivity.json, and manuscript/03_results.md |
 
 The selected evaluation gate terms are prerender and citation validation. They are intentionally narrower than peer review: they check source ownership, token coverage, figure registration, claim support, and rendering integrity before a human reviewer assesses the substantive analogy.
 
@@ -32,6 +33,8 @@ Evaluation uses three noninterchangeable levels. **Invariant tests** reject inva
 | AI/template accountability | Tool assistance must not be represented as authorship or independent responsibility | authoring-contract source review plus publication-ethics citation check |
 | Executable-package identity | The manuscript must distinguish a regenerated local package from long-term archival preservation or universal executable-paper compliance | reproducibility source review plus output statistics and evidence-registry validation |
 | Security assay boundary | Security standards and scan phases must be represented as scoped guidance unless generated scan artifacts exist | tests/test_security_assay.py and manuscript source review |
+| Seed-sensitivity precision | Seed replicates must report sample size, interval methods, conditional assumptions, bounded uncertainty metadata, deterministic bootstrap metadata, and non-empirical claim boundaries | tests/test_seed_sensitivity.py, z_generate_manuscript_variables.py, and manuscript source review |
+| Seed-report integrity | The generated seed report must match a deterministic recomputation from the current configuration before manuscript hydration | src/seed_sensitivity.py::validate_seed_sensitivity_payload and tests/test_seed_sensitivity.py |
 
 The audit rules are summarized visually in [@fig:integrity_gate_matrix] and algebraically in [@eq:integrity_vector]. A failed audit rule should block certification language even if the PDF renders.
 
@@ -44,5 +47,18 @@ Executable-compendium scholarship adds a more operational evaluation target: can
 The adversarial assay adds a security-specific evaluation target: can a reader distinguish declared threat scope from actual scan evidence? [@tbl:security_assay] maps zero-trust, secure-development, supply-chain, SBOM, attack-path, and secure-by-design guidance to local evidence surfaces and validators [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design]. The passing condition is bounded: the table must be complete and the prose must not claim compliance or Codex Security findings unless future scan artifacts are generated and integrated.
 
 The risk model adds prioritization to the gate list. [@fig:integrity_risk_matrix] separates easy-to-detect implementation failures from severe boundary failures that need clearer ownership. This keeps the evaluation surface from becoming a checklist of equally weighted boxes: token coverage, citation validity, claim support, and render readiness all matter, but a high-severity low-detectability failure should shape the next source edit before cosmetic manuscript polish.
+
+The seed-sensitivity gate adds a quantitative robustness surface without
+changing the claim boundary. It requires a declared replicate count, an
+agreement estimand, a score interval for the thresholded rate, a bounded
+precision radius, and a sample-size ladder. The current run reports
+1024 technical replicates, 1024 unique plans,
+and 100.00% inventory coverage. These quantities
+describe the behavior of the deterministic composition engine; they do not
+measure reader agreement, factual correctness, or scientific validity. The
+intervals and Hoeffding radius are conditional on the declared exchangeability
+assumption for the seed draws; the contiguous integer range is not a random
+sample of manuscripts or deployments. A validator must therefore check both
+the report schema and its deterministic recomputation from configuration.
 
 Figure review follows the same rule. File existence and nonblank pixels are necessary but not sufficient. The figure caption, encoding declaration, source data, and prose interpretation must describe the same measurement. This criterion specifically prohibits inferring a stagewise trend from a project-level aggregate, which is why [@fig:purity_claim_scatter] repeats one observed claim-support rate rather than inventing cumulative values.
