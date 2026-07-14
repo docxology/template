@@ -139,6 +139,11 @@ def _safe_filename(canonical_id: str) -> str:
     return stem or "record"
 
 
+# Public alias so other modules (e.g. reproducibility.extraction) can derive the
+# same deterministic on-disk filename stem without importing a private name.
+safe_filename = _safe_filename
+
+
 def download_fulltext(
     paper: Paper,
     dest_dir: Path,

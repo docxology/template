@@ -180,6 +180,47 @@ project_config:
     max_retries: 3
     min_confidence: 0.6
 
+  # Reproducibility-assessment pipeline: workflow-graph LLM extraction plus the
+  # Rc (content) / Rs (structural) / R = sqrt(Rc*Rs) scoring in
+  # src/reproducibility/{runner,scoring}.py. Read by
+  # config_loader.load_reproducibility_config(); shape mirrors knowledge_graph/
+  # llm_extraction above.
+  reproducibility_assessment:
+    # Papers processed between incremental checkpoint flushes to
+    # output/data/workflow_graphs.jsonl (mirrors knowledge_graph.checkpoint_interval).
+    checkpoint_interval: 50
+    # Wipe output/data/workflow_graphs.jsonl before this run instead of resuming
+    # from the existing incremental checkpoint.
+    clear_workflow_graphs: false
+    # Cap the number of corpus papers scored this run; null means no limit.
+    max_papers: null
+    # Ollama model for workflow-graph extraction (same default as llm_extraction.model).
+    llm_model: "gemma3:4b"
+    llm_url: "http://localhost:11434"
+    llm_temperature: 0.1
+    llm_max_tokens: 2048
+    llm_timeout: 120
+    llm_max_retries: 3
+    # Rc (content score) per-stage weights; renormalized over only the stages
+    # actually present in a given paper's workflow graph.
+    content_weights:
+      sources: 0.30
+      methods: 0.20
+      experiments: 0.20
+      sinks: 0.30
+    # Rs (structural score) weights for the five rc1..rc5 graph-coverage components.
+    structural_weights:
+      source_consumption: 0.25
+      sink_production: 0.25
+      reference_resolution: 0.20
+      path_coverage: 0.15
+      cohesion: 0.15
+    # Composite score R = sqrt(Rc * Rs) below this value flags a paper as low-reproducibility.
+    low_score_threshold: 0.4
+    # Minimum difflib.SequenceMatcher ratio for a source quote to count as a
+    # near-verbatim (non-exact) match against a paper's fulltext.
+    fuzzy_quote_threshold: 0.85
+
   # Domain hypotheses scored against the corpus. Replace these to re-target.
   hypothesis_definitions:
     H1:

@@ -63,6 +63,14 @@ DEFAULT_LLM_MODEL = "gemma3:4b"
 DEFAULT_LLM_URL = "http://localhost:11434"
 DEFAULT_CHECKPOINT_INTERVAL = 50
 
+# ---------------------------------------------------------------------------
+# Reproducibility assessment defaults (10_reproducibility_assessment.py)
+# ---------------------------------------------------------------------------
+DEFAULT_REPRO_CHECKPOINT_INTERVAL = 50
+# Matches manuscript/config.yaml's `project_config.fulltext.download_dir`
+# ("output/fulltext") when no config file / no override is present.
+FULLTEXT_DIR = OUTPUT_DIR / "fulltext"
+
 # Literature search defaults (01_literature_search.py).
 #
 # This template is DOMAIN-AGNOSTIC: the live search term, per-engine queries, and
@@ -112,6 +120,8 @@ __all__ = [
     "DEFAULT_LLM_MODEL",
     "DEFAULT_LLM_URL",
     "DEFAULT_CHECKPOINT_INTERVAL",
+    "DEFAULT_REPRO_CHECKPOINT_INTERVAL",
+    "FULLTEXT_DIR",
     "DEFAULT_ARXIV_QUERIES",
     "DEFAULT_RELEVANCE_KEYWORDS",
     # Figure defaults
