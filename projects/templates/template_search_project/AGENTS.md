@@ -192,6 +192,25 @@ Disable a stage with `enabled: false` in `review_config.yaml`.
 
 Add `stage_type: custom` and wire the subprocess in `scripts/review` to `src.analysis` (see that file’s `run_custom_stage`).
 
+## Related Capabilities
+
+This project's full-text acquisition is the narrow `FulltextFetcher` in
+`infrastructure/search/literature/fulltext.py` — arXiv-derived or
+`paper.pdf_url` PDF download only, with no Unpaywall/OA resolution across
+arbitrary DOIs — and `src/` has no workflow-graph decomposition or composite
+reproducibility score over that text.
+[`template_literature_meta_analysis`](../template_literature_meta_analysis/)
+is a candidate pattern to adopt here if this project's acquisition step
+grows to match: its `src/literature/fulltext_download.py` resolves full text
+via Unpaywall/OA/direct-PDF with graceful degradation, feeding
+`src/reproducibility/` — an LLM-populated workflow-graph model (`models.py`)
+scored by a no-compensation composite (`scoring.py`: `R = sqrt(Rc * Rs)` over
+content and structural sub-scores). Porting the workflow-graph/scoring
+approach here would first require a comparable multi-source full-text
+resolver, since the sibling project's reproducibility runner assumes richer
+full-text coverage than a single-source arXiv fetch provides. Not planned
+work — noted for future reference only.
+
 ## See also
 
 * [`README.md`](README.md) — quick reference.
