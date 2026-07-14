@@ -14,7 +14,7 @@ as verified success.
 | Pipeline reports | `pipeline_report_model.py`, `pipeline_io.py`, `pipeline_markdown.py`, `pipeline_html.py` | Structured per-run stage reports; validation JSON and Markdown share one `SOURCE_DATE_EPOCH`-aware timestamp. |
 | Multi-project summaries | `multi_project_reporter.py`, `multi_project_report.py` | Terminal and last-run multi-project summaries. |
 | Executive reports | `executive_reporter.py`, `_executive_*`, `_dashboard_*`, `_csv_*` | Dashboard, CSV, HTML, image, and markdown report generation. |
-| Evidence/release | `evidence_graph.py`, `release_readiness.py` | Local evidence graph and no-network release-readiness dashboard. |
+| Evidence/release | `evidence_graph.py`, `release_readiness.py` | Local evidence graph and no-network release-readiness dashboard. `evidence_graph.py` graphs this repo's own `pipeline.yaml` stage DAG (producer/consumer/validator/artifact/claim) — a structurally-similar-but-different-domain analog to `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper-content workflow graphs; cross-reference only, the two are not merged. |
 | Error/test helpers | `error_aggregator.py`, `suite_runner.py`, `pipeline_test_runner.py`, `pytest_output_parser.py` | Test orchestration and failure aggregation. |
 | Coverage parsing | `coverage_json_parser.py` | `parse_coverage_json` reads pytest-cov `coverage.json` into per-file and overall coverage stats. |
 | Coverage analysis | `coverage_analysis.py` | `format_coverage_status`, `analyze_coverage_gaps`, and `format_failure_suggestions` render coverage against thresholds and derive gap and failure hints. |

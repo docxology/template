@@ -28,7 +28,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `transmission_figure.py` | Matplotlib pairing-flow diagram for bookends |
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |
-| `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers |
+| `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers. `readiness.py`'s `completeness_score` is manuscript PUBLICATION readiness (heading/PDF/citation/figure presence), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper CONTENT reproducibility score — cross-reference only. |
 | `executable_bundle.py` | Stage 12 executable bundle |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` — central adapter registry |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
@@ -39,7 +39,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `metadata_package.py` | `EbookPublicationMetadata`, `generate_onix_xml`, `generate_metadata_json`, `generate_epub_opf`, `generate_metadata_package`, `ebook_metadata_from_config` — ONIX 3.0, `metadata.json`, and EPUB 3.0 OPF metadata artefacts for ebook / retail-platform ingestion |
 | `metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |
 | `export_bundle.py` | `export_for_publishing`, `main` — bundle a project's `output/` PDFs / ebooks / metadata into a timestamped import package with `manifest.json` and a `latest` symlink for the `docxology/publishing` repo |
-| `repro_bundle.py` | `build_repro_bundle`, `build_public_repro_bundles`, `verify_repro_bundle`, `collect_entries`, `build_manifest_dict`, `BundleEntry`, `VerifyReport` — hermetic reproduction-bundle builder/verifier emitting a deterministic `repro_manifest.json`; verification fails closed on any missing or changed file |
+| `repro_bundle.py` | `build_repro_bundle`, `build_public_repro_bundles`, `verify_repro_bundle`, `collect_entries`, `build_manifest_dict`, `BundleEntry`, `VerifyReport` — hermetic reproduction-bundle builder/verifier emitting a deterministic `repro_manifest.json`; verification fails closed on any missing or changed file. This is artifact-hash byte-reproducibility (a build/CI concept), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s methodological/workflow completeness scoring (a paper-content concept) — cross-reference only. |
 | `http_constants.py` | `REQUEST_TIMEOUT` — shared default outbound HTTP timeout (30s) for publishing platform clients |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |
 
