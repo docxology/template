@@ -1,12 +1,13 @@
 ---
 project: template_literature_meta_analysis
-task: Finish feat/literature-search-engines-upgrade — 9-engine literature search fully functional, composable, documented, configurable
-effort: E4
+task: "Increment 2: ARA-inspired reproducibility-assessment module (arXiv:2605.02651 adoption) + repo-wide literature-research propagation notes"
+effort: E5
 phase: complete
-progress: 34/34
+progress: 34/34 (increment 1) + increment 2 below
 mode: algorithm
 started: 2026-07-13
 updated: 2026-07-13
+iteration: 2
 ---
 
 ## Problem
@@ -202,6 +203,51 @@ all new work are committed on the feature branch with the working tree clean.
   no-callers module governs behavior that already exists correctly elsewhere,
   either wire it in for real or say plainly in its own docstring that it is not
   yet adopted (as done here) — never leave the ambiguity for the next reader.
+
+## Increment 2 — ARA-inspired reproducibility assessment (2026-07-13)
+
+**Trigger:** user asked to review arXiv:2605.02651 (ARA: Agentic Reproducibility
+Assessment) and bring adoptable ideas/mechanics into this project comprehensively,
+plus propagate any other repo-wide literature-research improvements.
+
+**What shipped:** a new `src/reproducibility/` subpackage (models/scoring/prompts/
+extraction/runner, mirroring `knowledge_graph/`'s exact conventions), wired into
+`scripts/10_reproducibility_assessment.py`, `manuscript/config.yaml`, and the
+manuscript-variable pipeline (`03e_results_reproducibility.md`). 129 new tests,
+zero mocks, full project suite 1099/1099 passing, 96.29% coverage (up from
+93.69%), ruff/mypy/doc-lint all clean — independently re-verified via fresh
+cache-clear runs, not taken on the build agents' word alone.
+
+**Adopted from the paper (clean-room, not copied):** the four-node workflow-graph
+taxonomy (Sources/Methods/Experiments/Sinks), mandatory `source_quote` grounding,
+1-4 ordinal per-node reconstructability rating, and the content/structural/
+composite (`R = sqrt(Rc*Rs)`, no-compensation geometric mean) scoring shape.
+
+**Explicitly fixed rather than copied:** the paper itself left two formulas
+ambiguous/inconsistent (rc3's prose-vs-formula mismatch on which nodes'
+references count; rc4's dimensionally-inconsistent normalization). This
+implementation picked and documented one decisive interpretation for each
+rather than propagating someone else's unreconciled bug into a 90%-covered
+gate — verified directly against the actual `scoring.py` source, not just the
+build agents' description of it.
+
+**Repo-wide propagation (document-only, per design decision):** `template_search_project`
+(the only other live literature-retrieval exemplar; lacks the full-text
+acquisition depth to adopt this pattern yet — a real gap named honestly, not
+promised), plus one-sentence cross-references in three infra modules
+(`evidence_graph.py`, `repro_bundle.py`, `readiness.py`) that use adjacent-but-
+distinct "reproducibility/completeness" concepts, to prevent future
+concept-conflation. No code touched in any of these four locations.
+
+**Real-time contention observed:** the parallel wiring/doc stage's own agents
+discovered and fixed a pre-existing pytest same-basename collision
+(`tests/reproducibility/test_models.py` vs `tests/literature/test_models.py`,
+and similarly for `test_extraction.py`) by renaming the new files — confirmed
+via a fresh, independent `--cache-clear` full-suite run (1099 passed) that this
+is resolved, not just self-reported. This is a real, narrow instance of a
+broader "no `__init__.py` anywhere under `tests/`" repo pattern; not fixed
+globally (out of scope, high blast radius for the whole monorepo's test
+config) — flagged here for whoever next touches pytest's import-mode config.
 
 ## Verification
 
