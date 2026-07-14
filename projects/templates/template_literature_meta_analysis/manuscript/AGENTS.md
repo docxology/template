@@ -22,6 +22,7 @@ Source directory for the paper: all `.md` sections, `config.yaml`, `preamble.md`
 | `03b_results_subfields.md` | Detailed characterization of A1/A2/B/C1–C5 domains |
 | `03c_results_text_analytics.md` | NMF topic modeling, vocabulary analysis, document embeddings |
 | `03d_results_citation_network.md` | Citation network topology, degree distribution, hub analysis |
+| `03e_results_reproducibility.md` | Workflow-graph reproducibility scoring, low-scoring-paper table |
 | `04_discussion.md` | Prior work comparison, tactical/strategic priorities, living review maintenance |
 | `05_conclusion.md` | Summary, methodological constraints, research agenda, open questions |
 | `06_appendix_tooling.md` | Software ecosystem survey, deep AIF, predictive coding, QA thresholds |
@@ -43,6 +44,7 @@ Manuscript source files use double-brace placeholders of the form `{{<NAME>}}` w
 - `assertion_summary.json` → `{{TOTAL_ASSERTIONS}}`, `{{ASSERTION_SUPPORT_PCT}}`, `{{ASSERTION_CONTRADICT_PCT}}`
 - `hypothesis_scores.json` → `{{H1_SCORE}}`, `{{H1_SUPPORT}}`, `{{H1_NEUTRAL}}`, `{{H1_CONTRADICT}}` … (per hypothesis)
 - `topics.json` → `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}`
+- `reproducibility_summary.json` + `reproducibility_scores.json` → `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}`, `{{REPRODUCIBILITY_TABLE}}`
 - Hardcoded → `{{NUM_FIGURES}}` (= 16)
 
 All computation lives in `src/manuscript/variables/` (see `compute.py` and `extractors/`). Do not add variables to scripts directly.

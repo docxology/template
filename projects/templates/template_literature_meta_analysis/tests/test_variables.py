@@ -897,3 +897,101 @@ class TestAdvancedCitationVariables:
         v = compute_variables(tmp_path)
         assert v["DEGREE_ASSORTATIVITY"] == "0.0000"
         assert v["AVG_CLUSTERING"] == "0.0000"
+
+
+# ── Reproducibility-assessment variables ──────────────────────────────────
+
+
+class TestReproducibilityVariables:
+    """compute_variables populates reproducibility-assessment tokens."""
+
+    def test_reproducibility_variables_computed(self, tmp_path):
+        (tmp_path / "corpus.jsonl").write_text("")
+        summary = {
+            "mean_composite_score": 0.6234,
+            "n_papers_scored": 4,
+            "n_low_score": 2,
+            "low_score_threshold": 0.5,
+            "n_skipped_no_fulltext": 1,
+            "n_skipped_unparseable_pdf": 0,
+            "fulltext_available": True,
+        }
+        (tmp_path / "reproducibility_summary.json").write_text(json.dumps(summary))
+        scores = {
+            "paper_a": {
+                "content_score": 0.2,
+                "structural_score": 0.1,
+                "composite_score": 0.1414,
+                "n_nodes": 3,
+                "n_edges": 1,
+                "n_dangling_references": 2,
+                "quote_verification_rate": 0.5,
+            },
+            "paper_b": {
+                "content_score": 0.3,
+                "structural_score": 0.25,
+                "composite_score": 0.2739,
+                "n_nodes": 5,
+                "n_edges": 3,
+                "n_dangling_references": 1,
+                "quote_verification_rate": 0.8,
+            },
+            "paper_c": {
+                "content_score": 0.9,
+                "structural_score": 0.95,
+                "composite_score": 0.9247,
+                "n_nodes": 8,
+                "n_edges": 7,
+                "n_dangling_references": 0,
+                "quote_verification_rate": 1.0,
+            },
+        }
+        (tmp_path / "reproducibility_scores.json").write_text(json.dumps(scores))
+        v = compute_variables(tmp_path)
+        assert v["REPRODUCIBILITY_MEAN_SCORE"] == "0.623"
+        assert v["REPRODUCIBILITY_N_PAPERS_SCORED"] == "4"
+        assert v["REPRODUCIBILITY_LOW_SCORE_COUNT"] == "2"
+        # Only paper_a and paper_b fall below the 0.5 threshold; sorted ascending.
+        table = v["REPRODUCIBILITY_TABLE"]
+        assert "| Paper | Composite | Content | Structural |" in table
+        assert "paper_c" not in table
+        a_idx = table.index("paper_a")
+        b_idx = table.index("paper_b")
+        assert a_idx < b_idx
+        assert "| paper_a | 0.141 | 0.200 | 0.100 |" in table
+
+    def test_reproducibility_variables_pending_when_missing(self, tmp_path):
+        """Reproducibility variables degrade gracefully when neither artifact exists."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        v = compute_variables(tmp_path)
+        assert v["REPRODUCIBILITY_MEAN_SCORE"] == "pending"
+        assert v["REPRODUCIBILITY_N_PAPERS_SCORED"] == "0"
+        assert v["REPRODUCIBILITY_LOW_SCORE_COUNT"] == "0"
+        assert v["REPRODUCIBILITY_TABLE"] == "| Paper | Composite | Content | Structural |\n| --- | --- | --- | --- |"
+
+    def test_reproducibility_table_empty_when_no_low_scoring_papers(self, tmp_path):
+        """REPRODUCIBILITY_TABLE is header-only when every paper scores above threshold."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        summary = {
+            "mean_composite_score": 0.9,
+            "n_papers_scored": 1,
+            "n_low_score": 0,
+            "low_score_threshold": 0.5,
+            "n_skipped_no_fulltext": 0,
+            "n_skipped_unparseable_pdf": 0,
+            "fulltext_available": True,
+        }
+        (tmp_path / "reproducibility_summary.json").write_text(json.dumps(summary))
+        scores = {"paper_a": {"content_score": 0.9, "structural_score": 0.9, "composite_score": 0.9}}
+        (tmp_path / "reproducibility_scores.json").write_text(json.dumps(scores))
+        v = compute_variables(tmp_path)
+        assert v["REPRODUCIBILITY_TABLE"] == "| Paper | Composite | Content | Structural |\n| --- | --- | --- | --- |"
+
+    def test_reproducibility_scores_present_without_summary(self, tmp_path):
+        """Scores file present but summary missing still falls back to the default threshold."""
+        (tmp_path / "corpus.jsonl").write_text("")
+        scores = {"paper_a": {"content_score": 0.1, "structural_score": 0.1, "composite_score": 0.1}}
+        (tmp_path / "reproducibility_scores.json").write_text(json.dumps(scores))
+        v = compute_variables(tmp_path)
+        assert v["REPRODUCIBILITY_MEAN_SCORE"] == "pending"
+        assert "| paper_a | 0.100 | 0.100 | 0.100 |" in v["REPRODUCIBILITY_TABLE"]

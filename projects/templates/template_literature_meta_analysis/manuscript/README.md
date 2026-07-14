@@ -24,6 +24,7 @@ License: CC-BY-4.0
 | `03b_results_subfields.md` | Subfield analysis | Domain counts per A1/A2/B/C1–C5 | Stage 2 + 5 |
 | `03c_results_text_analytics.md` | Text analytics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `03d_results_citation_network.md` | Citation network | `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}` | Stage 2 + 5 |
+| `03e_results_reproducibility.md` | Reproducibility assessment | `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}` | Stage 5 |
 | `04_discussion.md` | Discussion | — | — |
 | `05_conclusion.md` | Conclusion | `{{CORPUS_SIZE}}`, `{{TOTAL_ASSERTIONS}}` | Stage 5 |
 | `06_appendix_tooling.md` | Tooling appendix | — | — |
