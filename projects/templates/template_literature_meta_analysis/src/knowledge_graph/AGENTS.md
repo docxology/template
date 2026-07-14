@@ -62,6 +62,12 @@ Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled.
 
 - **Abstract-only extraction**: LLM sees only title + abstract, not full text. Claims in
   methods/results sections are missed. See manuscript Step 2 (full-text extraction) roadmap.
+  The `reproducibility/` module (`src/reproducibility/`) is the concrete fix for this specific
+  gap: it operates on downloaded full-text (via `literature.fulltext_download`), not the
+  abstract, and decomposes methods/results claims into a scored source/method/experiment/sink
+  workflow graph rather than a single hypothesis-support assertion. It is a separate module
+  with its own extraction/scoring pipeline (`scripts/10_reproducibility_assessment.py`), not a
+  patch to `llm_extraction.py` — this module's own abstract-only limitation is unchanged.
 - **JSON parsing fragility**: LLM responses with nested JSON or escaped quotes may fail parsing.
   `_parse_llm_response()` strips markdown fences but has no fallback tokenizer.
 - **Assertion ID collision**: IDs use `f"llm_{paper_id}_{hypothesis_id}"`. Reprocessing the
