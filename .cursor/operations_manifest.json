@@ -124,7 +124,7 @@
       "module": "infrastructure.core.health",
       "invocation": "python -m infrastructure.core.health",
       "source_path": "infrastructure/core/health.py",
-      "purpose": "Unified repository health check command.",
+      "purpose": "Blocking static repository health check command.",
       "subcommands": [],
       "exports": [
         "GateResult",
@@ -152,29 +152,7 @@
           "help": "Alias for describe-pipeline"
         }
       ],
-      "exports": [
-        "MultiProjectConfig",
-        "MultiProjectOrchestrator",
-        "MultiProjectResult",
-        "format_multi_project_detailed_report",
-        "format_multi_project_outcome_lines",
-        "PerformanceMetrics",
-        "PerformanceMonitor",
-        "PipelineConfig",
-        "PipelineExecutor",
-        "PipelineStageResult",
-        "PipelineControlConfig",
-        "StagePerformanceTracker",
-        "StageContract",
-        "StageHooks",
-        "StagePolicy",
-        "StageSpec",
-        "TelemetryCollector",
-        "TelemetryConfig",
-        "generate_pipeline_summary",
-        "get_system_resources",
-        "stage_label"
-      ],
+      "exports": [],
       "effect": "read_only"
     },
     {
@@ -1023,6 +1001,14 @@
         {
           "name": "operations-check",
           "help": "Verify the operations manifest matches live discovery"
+        },
+        {
+          "name": "runtime-status",
+          "help": "Audit pinned Agent Skills across Codex, Claude Code, and Hermes"
+        },
+        {
+          "name": "runtime-install",
+          "help": "Reversibly install pinned Agent Skills across all three runtimes"
         }
       ],
       "exports": [
@@ -1052,7 +1038,7 @@
         "write_operations_manifest",
         "write_skill_manifest"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.steganography.start_tpm_backend",

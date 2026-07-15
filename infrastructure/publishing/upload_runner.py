@@ -85,12 +85,15 @@ def upload_github(targets: UploadTargets, commit: bool, env: Mapping[str, str]) 
     tag = "v0.1.0-upload-test"
     if not commit:
         return {"status": "dry-run", "would_release": tag, "repo": repo}
+    token = env.get("GITHUB_TOKEN")
+    if not token:
+        raise ValueError("GITHUB_TOKEN is required when commit=True")
     url = create_github_release(
         tag_name=tag,
         release_name=f"Upload test {tag}",
         description="Automated upload-pipeline verification release.",
         assets=[targets.pdf],
-        token=env.get("GITHUB_TOKEN"),
+        token=token,
         repo=repo,
     )
     return {"status": "ok", "url": url, "repo": repo, "tag": tag}

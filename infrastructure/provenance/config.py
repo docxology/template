@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections.abc import Callable
+from importlib import import_module
 from pathlib import Path
 from typing import Any
 
@@ -51,7 +53,11 @@ _CONFIG_KEYS = frozenset(
 )
 
 
-def load_provenance_config(project_dir: Path | str) -> ProvenanceConfig:
+def load_provenance_config(
+    project_dir: Path | str,
+    *,
+    yaml_importer: Callable[[str], Any] = import_module,
+) -> ProvenanceConfig:
     """Load optional ``provenance.yaml`` from *project_dir*.
 
     Falls back to defaults when the file is absent.
@@ -71,7 +77,7 @@ def load_provenance_config(project_dir: Path | str) -> ProvenanceConfig:
         return ProvenanceConfig()
 
     try:
-        import yaml
+        yaml = yaml_importer("yaml")
 
         payload: dict[str, Any] = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     except ImportError:

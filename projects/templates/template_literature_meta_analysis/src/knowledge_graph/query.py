@@ -28,7 +28,7 @@ def query_papers_by_hypothesis(kg: KnowledgeGraph, hypothesis_id: str) -> list[s
     Returns:
         Sorted list of canonical paper ID strings.
     """
-    return kg.get_papers_for_hypothesis(hypothesis_id)
+    return list(kg.get_papers_for_hypothesis(hypothesis_id))
 
 
 def query_assertions_for_paper(kg: KnowledgeGraph, paper_id: str) -> list[str]:
@@ -41,7 +41,7 @@ def query_assertions_for_paper(kg: KnowledgeGraph, paper_id: str) -> list[str]:
     Returns:
         Sorted list of assertion ID strings.
     """
-    return kg.get_assertions_for_paper(paper_id)
+    return list(kg.get_assertions_for_paper(paper_id))
 
 
 def query_supporting_papers(kg: KnowledgeGraph, hypothesis_id: str) -> list[str]:

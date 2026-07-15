@@ -5,6 +5,7 @@ statistics and generating summary reports of output copying results.
 """
 
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -17,7 +18,7 @@ logger = get_logger(__name__)
 def log_output_summary(
     output_dir: Path,
     stats: dict[str, Any],
-    structure_validation: dict[str, Any] | None = None,
+    structure_validation: Mapping[str, Any] | None = None,
 ) -> None:
     """Generate summary of output copying results.
 
@@ -135,7 +136,7 @@ def collect_output_statistics(
             ]
 
             # Count files by extension
-            extensions = {}
+            extensions: dict[str, int] = {}
             for f in files:
                 ext = f.suffix.lower() or "no_extension"
                 extensions[ext] = extensions.get(ext, 0) + 1
@@ -187,7 +188,7 @@ def collect_output_statistics(
         stats["missing_expected_files"].append(f"{project_basename}_combined.pdf")
 
     # Add file type counts
-    all_extensions = {}
+    all_extensions: dict[str, int] = {}
     for dir_info in stats["directories"].values():
         if dir_info["exists"]:
             for ext, count in dir_info.get("extensions", {}).items():

@@ -93,7 +93,7 @@ def test_loader_constructs_typed_records_and_declared_policy() -> None:
     assert fixture.policy.name == "intelligence_release_review"
     assert fixture.public_ceiling == fixture.policy.public_ceiling == "UNCLASSIFIED"
     assert len(fixture.segments) == 14
-    assert len(fixture.decisions) == 21
+    assert len(fixture.decisions) == 22
     assert len(fixture.reviews) == 3
     assert isinstance(fixture.segments[0], RedactionSegment)
     assert isinstance(fixture.decisions[0], RedactionDecision)

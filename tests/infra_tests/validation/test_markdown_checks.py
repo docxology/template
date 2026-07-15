@@ -13,7 +13,6 @@ real recording callable / raising stub in place of the underlying validator.
 
 from __future__ import annotations
 
-import builtins
 from pathlib import Path
 
 import pytest
@@ -43,7 +42,7 @@ def test_empty_manuscript_dir_returns_true(tmp_path):
     assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is True
 
 
-def test_docs_manuscript_is_passed_to_markdown_validator(tmp_path, monkeypatch):
+def test_docs_manuscript_is_passed_to_markdown_validator(tmp_path):
     project_root = tmp_path / "project"
     compatibility = project_root / "manuscript"
     manuscript = project_root / "docs" / "manuscript"
@@ -58,30 +57,21 @@ def test_docs_manuscript_is_passed_to_markdown_validator(tmp_path, monkeypatch):
         visited.append(Path(directory))
         return [], 0
 
-    monkeypatch.setattr(
-        "infrastructure.validation.content.markdown_validator.validate_markdown",
-        record_validate_md,
-    )
-
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is True
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator=record_validate_md) is True
     assert visited == [manuscript]
 
 
-def test_clean_markdown_returns_true(tmp_path, monkeypatch):
+def test_clean_markdown_returns_true(tmp_path):
     project_root = _make_project(tmp_path)
     (project_root / "manuscript" / "01_intro.md").write_text("# Intro\n\nHi.")
 
     def fake_validate_md(directory, repo_root, strict=False):
         return [], 0
 
-    monkeypatch.setattr(
-        "infrastructure.validation.content.markdown_validator.validate_markdown",
-        fake_validate_md,
-    )
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is True
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator=fake_validate_md) is True
 
 
-def test_advisory_notes_return_true(tmp_path, monkeypatch):
+def test_advisory_notes_return_true(tmp_path):
     """Validation notes are advisory: the check still passes (True)."""
     from infrastructure.core.logging.diagnostic import (
         DiagnosticEvent,
@@ -101,30 +91,21 @@ def test_advisory_notes_return_true(tmp_path, monkeypatch):
     def fake_validate_md(directory, repo_root, strict=False):
         return [note], 1
 
-    monkeypatch.setattr(
-        "infrastructure.validation.content.markdown_validator.validate_markdown",
-        fake_validate_md,
-    )
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is True
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator=fake_validate_md) is True
 
 
-def test_import_error_returns_false(tmp_path, monkeypatch):
+def test_import_error_returns_false(tmp_path):
     """A broken validator import is genuine breakage -> False (VAL-5)."""
     project_root = _make_project(tmp_path)
     (project_root / "manuscript" / "01_intro.md").write_text("# Intro\n\nHi.")
 
-    real_import = builtins.__import__
+    def raising_loader():
+        raise ImportError("validator unavailable")
 
-    def raising_import(name, *args, **kwargs):
-        if name == "infrastructure.validation.content.markdown_validator":
-            raise ImportError("validator unavailable")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", raising_import)
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is False
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator_loader=raising_loader) is False
 
 
-def test_runtime_error_returns_false(tmp_path, monkeypatch):
+def test_runtime_error_returns_false(tmp_path):
     """A validator that raises mid-run is broken -> False (VAL-5)."""
     project_root = _make_project(tmp_path)
     (project_root / "manuscript" / "01_intro.md").write_text("# Intro\n\nHi.")
@@ -132,40 +113,28 @@ def test_runtime_error_returns_false(tmp_path, monkeypatch):
     def boom(directory, repo_root, strict=False):
         raise RuntimeError("validator exploded")
 
-    monkeypatch.setattr(
-        "infrastructure.validation.content.markdown_validator.validate_markdown",
-        boom,
-    )
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is False
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator=boom) is False
 
 
-def test_os_error_returns_false(tmp_path, monkeypatch):
+def test_os_error_returns_false(tmp_path):
     project_root = _make_project(tmp_path)
     (project_root / "manuscript" / "01_intro.md").write_text("# Intro\n\nHi.")
 
     def boom(directory, repo_root, strict=False):
         raise OSError("disk gone")
 
-    monkeypatch.setattr(
-        "infrastructure.validation.content.markdown_validator.validate_markdown",
-        boom,
-    )
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is False
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator=boom) is False
 
 
 @pytest.mark.parametrize("exc", [ValueError, AttributeError])
-def test_value_and_attribute_errors_return_false(tmp_path, monkeypatch, exc):
+def test_value_and_attribute_errors_return_false(tmp_path, exc):
     project_root = _make_project(tmp_path)
     (project_root / "manuscript" / "01_intro.md").write_text("# Intro\n\nHi.")
 
     def boom(directory, repo_root, strict=False):
         raise exc("bad")
 
-    monkeypatch.setattr(
-        "infrastructure.validation.content.markdown_validator.validate_markdown",
-        boom,
-    )
-    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo") is False
+    assert validate_manuscript_output_markdown(project_root, tmp_path, "demo", validator=boom) is False
 
 
 def test_module_logger_is_used():

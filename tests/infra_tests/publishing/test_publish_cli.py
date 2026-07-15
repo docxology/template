@@ -35,16 +35,8 @@ class TestPublishCliMain:
             kwargs["base_url"] = github_test_server.url_for("")
             return real_release(*args, **kwargs)
 
-        monkeypatch.setattr(
-            publish_cli.publishing,
-            "create_github_release",
-            release_with_local_api,
-        )
-        monkeypatch.setattr(
-            sys,
-            "argv",
+        publish_cli.main(
             [
-                "publish_cli.py",
                 "--token",
                 "test-token",
                 "--repo",
@@ -54,9 +46,8 @@ class TestPublishCliMain:
                 "--name",
                 "Test Release",
             ],
+            release_creator=release_with_local_api,
         )
-
-        publish_cli.main()
 
         captured = capsys.readouterr()
         assert "github.com" in captured.out

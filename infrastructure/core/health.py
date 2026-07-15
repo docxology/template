@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Unified repository health check command.
+"""Blocking static repository health check command.
 
-This module wires together every quality gate that lives behind its own
-CLI today (mypy, ruff, ruff format, bandit, the no-mocks verifier, the
-``__all__`` audit, the docs linter, and the doc-generator idempotence
-checks) into a single entry point.  It is a *thin orchestrator* — each
+This module wires together the repository's deterministic static quality
+gates. Platform matrices, behavioral test suites, and coverage remain separate
+CI jobs. It is a *thin orchestrator* — each
 gate is invoked as a subprocess against the live tree, and the gate's
 **exit code** is the only source of truth for pass/fail.  Stdout and
 stderr are captured for diagnostic purposes only.
@@ -39,7 +38,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
 
-from infrastructure.project.public_scope import public_ci_lint_paths, public_ci_source_paths
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_ci_lint_paths, public_ci_source_paths
 
 __all__ = [
     "GateResult",
@@ -113,10 +112,8 @@ def _public_lint_targets(repo_root: Path) -> list[str]:
 def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     """Return the canonical ``(name, argv)`` list for every gate.
 
-    The list is parameterised on ``repo_root`` so callers can run health
-    checks against any checkout (the live tree, a temp clone, a CI
-    workspace, etc.). The architecture-overview gate falls back to a
-    presence check on the generated SVG when no CLI is available.
+    The list is parameterised on ``repo_root`` so callers can run static health
+    checks against any checkout (the live tree, a temp clone, or CI workspace).
 
     Args:
         repo_root: Repository root used to resolve relative paths in the
@@ -126,25 +123,22 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         Ordered list of ``(gate_name, argv)`` tuples.
     """
 
-    arch_svg = repo_root / "docs" / "_generated" / "architecture_overview.svg"
-    # The architecture overview module currently has no CLI ``__main__``;
-    # fall back to a portable presence check via the standard library so
-    # the gate is still meaningful on a clean tree.
     arch_overview_argv = [
         sys.executable,
         "-c",
         (
-            "import sys, pathlib;"
-            f" p = pathlib.Path({str(arch_svg)!r});"
-            " sys.exit(0 if p.is_file() and p.stat().st_size > 0 else 1)"
+            "import sys; from pathlib import Path;"
+            " from infrastructure.documentation.architecture_overview import architecture_overview_is_current;"
+            f" sys.exit(0 if architecture_overview_is_current(Path({str(repo_root)!r})) else 1)"
         ),
     ]
 
     public_targets = _public_source_targets(repo_root)
     lint_targets = _public_lint_targets(repo_root)
+    public_project_targets = [f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES]
 
     return [
-        ("mypy", ["uv", "run", "python", "-m", "mypy", *public_targets]),
+        ("mypy", ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *public_targets]),
         (
             "ruff",
             ["uvx", "ruff", "check", *lint_targets],
@@ -167,8 +161,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "bandit.yaml",
                 "infrastructure/",
                 "scripts/",
-                "--exclude",
-                "projects/working,projects/ongoing,projects/published,projects/archive,projects/other",
+                *public_project_targets,
             ],
         ),
         (
@@ -185,6 +178,34 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "infrastructure.skills",
                 "check-all-exports",
             ],
+        ),
+        (
+            "skills-manifest",
+            ["uv", "run", "python", "-m", "infrastructure.skills", "check"],
+        ),
+        (
+            "confidentiality",
+            ["uv", "run", "python", "scripts/audit/check_tracked_all.py"],
+        ),
+        (
+            "codeowners",
+            [
+                sys.executable,
+                "-c",
+                (
+                    "import sys; from pathlib import Path;"
+                    " from infrastructure.project.codeowners import codeowners_is_current;"
+                    f" sys.exit(0 if codeowners_is_current(Path({str(repo_root)!r})) else 1)"
+                ),
+            ],
+        ),
+        (
+            "generated-artifacts",
+            ["uv", "run", "python", "scripts/audit/check_tracked_generated_artifacts.py"],
+        ),
+        (
+            "template-drift",
+            ["uv", "run", "python", "scripts/audit/check_template_drift.py", "--strict"],
         ),
         (
             "docs-lint",
@@ -208,6 +229,18 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "scripts/docgen/api_reference.py",
                 "--check",
             ],
+        ),
+        (
+            "counts",
+            ["uv", "run", "python", "scripts/docgen/counts.py", "--check"],
+        ),
+        (
+            "exemplar-roster",
+            ["uv", "run", "python", "scripts/docgen/exemplar_roster.py", "--check"],
+        ),
+        (
+            "publication-records",
+            ["uv", "run", "python", "scripts/docgen/publication_records.py", "--check"],
         ),
         ("architecture-overview", arch_overview_argv),
         (
@@ -244,12 +277,18 @@ def _stage_table_passed(returncode: int, combined_output: str) -> bool:
 
     if returncode != 0:
         return False
-    # "Would update N" with N > 0 signals real drift. "Would update 0" is the
-    # success-with-summary path.
-    drift_re = re.compile(r"Would update (\d+)", re.IGNORECASE)
-    for match in drift_re.finditer(combined_output):
-        if int(match.group(1)) > 0:
-            return False
+    # Require the generator's complete summary rather than treating arbitrary
+    # exit-zero output (including an empty/crashed-before-work path) as proof.
+    summaries = re.findall(
+        r"Would update\s+(\d+)\s*;\s*up-to-date\s+(\d+)",
+        combined_output,
+        flags=re.IGNORECASE,
+    )
+    if len(summaries) != 1:
+        return False
+    changed, unchanged = (int(value) for value in summaries[0])
+    if changed != 0 or unchanged == 0:
+        return False
     # Active mutation markers always signal drift.
     if "Updating " in combined_output:
         return False
@@ -337,6 +376,8 @@ def run_health_checks(
     specs = build_gate_specs(repo_root)
     if gates is not None:
         wanted = list(gates)
+        if not wanted:
+            raise ValueError("at least one gate must be selected")
         known = {name for name, _ in specs}
         unknown = [name for name in wanted if name not in known]
         if unknown:
@@ -354,7 +395,10 @@ def run_health_checks(
         results.append(_run_single_gate(name, argv, repo_root))
 
     total_ms = sum(r.elapsed_ms for r in results)
-    overall = all(r.passed for r in results) if results else True
+    # ``specs`` is non-empty for the default registry and empty explicit
+    # subsets are rejected above. Keep the aggregate fail-closed if that
+    # invariant is ever broken by a future registry change.
+    overall = bool(results) and all(r.passed for r in results)
     return HealthReport(results=results, passed=overall, total_elapsed_ms=total_ms)
 
 

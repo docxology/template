@@ -95,6 +95,35 @@ class TestValidateNoMocks:
         )
         assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
 
+    def test_dynamic_importlib_mock_import_is_flagged(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        module_name = "unittest." + "mock"
+        constructor = "Magic" + "Mock"
+        (tests_dir / "test_bad.py").write_text(
+            "import importlib\n"
+            f"module = importlib.import_module({module_name!r})\n"
+            f"double = getattr(module, {constructor!r})()\n",
+            encoding="utf-8",
+        )
+
+        violations = validate_no_mocks(tests_dir, tmp_path)
+        assert any("import_module" in violation for violation in violations)
+        assert any("getattr" in violation for violation in violations)
+
+    def test_aliased_import_module_and_dunder_import_are_flagged(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        module_name = "unittest." + "mock"
+        (tests_dir / "test_bad.py").write_text(
+            "from importlib import import_module as load_module\n"
+            f"first = load_module({module_name!r})\n"
+            f"second = __import__({module_name!r})\n",
+            encoding="utf-8",
+        )
+
+        assert len(validate_no_mocks(tests_dir, tmp_path)) == 2
+
     def test_monkeypatch_is_allowed(self, tmp_path):
         """pytest's monkeypatch fixture is policy-permitted, not a mock."""
         tests_dir = tmp_path / "tests"
@@ -211,7 +240,7 @@ def test_inventory(monkeypatch, tmp_path):
             "tests/test_z.py",
         ]
 
-    def test_fixture_payloads_are_excluded_from_both_scans(self, tmp_path):
+    def test_non_test_fixture_payloads_are_excluded_from_both_scans(self, tmp_path):
         tests_dir = tmp_path / "tests"
         fixture_dir = tests_dir / "fixtures"
         fixture_dir.mkdir(parents=True)
@@ -222,6 +251,20 @@ def test_inventory(monkeypatch, tmp_path):
 
         assert scan_semantic_standins(tests_dir, tmp_path).uses == ()
         assert scan_lexical_mock_policy(tests_dir, tmp_path).files_scanned == 0
+
+    def test_executable_test_file_under_fixtures_is_scanned(self, tmp_path):
+        tests_dir = tmp_path / "tests"
+        fixture_dir = tests_dir / "fixtures"
+        fixture_dir.mkdir(parents=True)
+        constructor = "Magic" + "Mock"
+        (fixture_dir / "test_executable.py").write_text(
+            f"def test_bad():\n    value = {constructor}()\n",
+            encoding="utf-8",
+        )
+
+        result = scan_lexical_mock_policy(tests_dir, tmp_path)
+        assert result.files_scanned == 1
+        assert result.violations
 
     def test_scan_error_is_explicit_for_invalid_python(self, tmp_path):
         tests_dir = tmp_path / "tests"

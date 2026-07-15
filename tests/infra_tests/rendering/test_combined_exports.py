@@ -280,9 +280,13 @@ def test_render_combined_epub_with_bibliography(tmp_path: Path, monkeypatch) -> 
         captured.update(kwargs)
         return SimpleNamespace(output_path=Path("test.epub"), size_bytes=1024)
 
-    monkeypatch.setattr("infrastructure.rendering.epub_renderer.render_epub", fake_render_epub)
-
-    render_combined_epub(manager, manuscript_dir, "myproject", reporter)
+    render_combined_epub(
+        manager,
+        manuscript_dir,
+        "myproject",
+        reporter,
+        epub_renderer=fake_render_epub,
+    )
 
     assert captured["bibliography"] is None
     assert captured["title"] == "Test EPUB"

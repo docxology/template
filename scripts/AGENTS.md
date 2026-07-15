@@ -90,26 +90,26 @@ The canonical pipeline-stage table (rendered from
 by `scripts/docgen/stage_table.py`):
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
-| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
-| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
-| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
-| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
+| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
+| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 `runner/execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, `executive_report`, `ebook_generation`, and `metadata_package`.

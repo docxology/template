@@ -27,7 +27,8 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, default=PROJECT_DIR / "output" / "data")
     args = parser.parse_args()
 
-    summary = build_worked_model_summary(PROJECT_DIR / "manuscript" / "assets" / "data" / "sample_dataset.csv")
+    source_label = "manuscript/assets/data/sample_dataset.csv"
+    summary = build_worked_model_summary(PROJECT_DIR / source_label, source_label=source_label)
     out_path = args.output_dir / "worked_model_summary.json"
     write_text_atomic(out_path, json.dumps(summary, indent=2, sort_keys=True))
     logger.info("wrote %s", out_path)

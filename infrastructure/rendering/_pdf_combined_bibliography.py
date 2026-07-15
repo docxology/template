@@ -37,6 +37,11 @@ def inject_bibliography(
     instead of before ``\\end{document}``.
     """
     bib_marker = "\\bibliography{"
+    # ``\\printbibliography`` belongs to biblatex, while this renderer uses
+    # natbib/BibTeX.  Remove manuscript-level biblatex commands before the
+    # canonical ``\\bibliography{...}`` insertion so stale generated sections
+    # cannot trigger an undefined-control-sequence failure.
+    tex_content = re.sub(r"^\s*\\printbibliography\s*$", "", tex_content, flags=re.MULTILINE)
     if not bib_exists:
         return tex_content
 

@@ -20,6 +20,7 @@ from infrastructure.rendering._pdf_title_page_latex import (
     _latex_paragraphs,
     _latex_text,
 )
+from infrastructure.publishing.repository_metadata import normalized_repository_url
 
 __all__ = [
     "_book_cover_body",
@@ -292,7 +293,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     )
     if publishing_doi_line:
         publishing_lines.append(publishing_doi_line)
-    repo_url = str(publication.get("repository_url", "")).strip()
+    repo_url = normalized_repository_url(publication) or ""
     if repo_url:
         repo_label = str(publication.get("repository_label", "")).strip() or "Source repository"
         repo_target = _latex_href_url(repo_url)

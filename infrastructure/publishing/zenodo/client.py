@@ -29,8 +29,8 @@ from .models import DepositionResult
 class ZenodoClient:
     """Client for the Zenodo Deposit REST API."""
 
-    def __init__(self, config: ZenodoConfig) -> None:
-        if not _requests_available:
+    def __init__(self, config: ZenodoConfig, *, requests_available: bool = _requests_available) -> None:
+        if not requests_available:
             raise ImportError("requests package is required for ZenodoClient")
         self.config = config
         self.headers = make_bearer_auth_headers(config.access_token)
@@ -104,16 +104,19 @@ class ZenodoClient:
 
     def _parse_deposition_hits(self, body: Any) -> list[Any]:
         if isinstance(body, list):
-            return body
+            return list(body)
         if isinstance(body, dict):
-            return body.get("hits", {}).get("hits", [])
+            hits_block = body.get("hits")
+            if isinstance(hits_block, dict):
+                hits = hits_block.get("hits")
+                return list(hits) if isinstance(hits, list) else []
         return []
 
     def _search_depositions(self, query: str, *, size: int = 1) -> list[Any]:
         url = f"{self.config.api_base_url}/deposit/depositions"
         response = requests.get(
             url,
-            params={"q": query, "size": size, "sort": "mostrecent"},
+            params={"q": query, "size": str(size), "sort": "mostrecent"},
             headers=self.headers,
             timeout=REQUEST_TIMEOUT,
         )
@@ -133,7 +136,7 @@ class ZenodoClient:
         try:
             response = requests.get(
                 url,
-                params={"q": f"doi:{normalized}", "size": 1},
+                params={"q": f"doi:{normalized}", "size": "1"},
                 headers=self.headers,
                 timeout=REQUEST_TIMEOUT,
             )

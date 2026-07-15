@@ -64,7 +64,8 @@ class ExportManifest:
     source_commit: str
     infrastructure_version: str
     files: dict[str, str]
-    schema_version: int = 1
+    resource_dependencies: tuple[str, ...] = ()
+    schema_version: int = 2
 
     def to_json(self) -> str:
         """Return stable, human-readable JSON with a trailing newline."""
@@ -74,6 +75,7 @@ class ExportManifest:
             "exported_project": self.exported_project,
             "source_commit": self.source_commit,
             "infrastructure_version": self.infrastructure_version,
+            "resource_dependencies": list(self.resource_dependencies),
             "files": dict(sorted(self.files.items())),
         }
         return json.dumps(payload, indent=2, sort_keys=True) + "\n"
@@ -140,15 +142,20 @@ def export_exemplar(
     dest: Path | str,
     *,
     new_name: str | None = None,
+    project_only: bool = False,
 ) -> CopyResult:
     """Clean-copy an exemplar and write a deterministic provenance manifest."""
     root = Path(repo_root).resolve()
     result = copy_exemplar(root, source, dest, new_name=new_name)
+    dependencies = () if project_only else _declared_resource_dependencies(result.source)
+    for dependency in dependencies:
+        _copy_resource_dependency(root, dependency, result.destination)
     manifest = _build_export_manifest(
         root,
         result.destination,
         source_project=source,
         exported_project=new_name or result.destination.name,
+        resource_dependencies=dependencies,
     )
     (result.destination / ".template-export.json").write_text(manifest.to_json(), encoding="utf-8")
     return result
@@ -161,13 +168,24 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--dest", required=True, type=Path, help="Destination directory for the clean fork copy")
     parser.add_argument("--new-name", help="Optional project slug to substitute for the exemplar directory name")
     parser.add_argument("--dry-run", action="store_true", help="Print the planned files without writing")
+    parser.add_argument(
+        "--project-only",
+        action="store_true",
+        help="Exclude declared cross-root resources from a standalone export.",
+    )
     parser.add_argument("--repo-root", default=Path.cwd(), type=Path, help="Repository root. Defaults to cwd.")
     args = parser.parse_args(argv)
 
     if args.dry_run:
         result = plan_copy(args.repo_root, args.source, args.dest, new_name=args.new_name, dry_run=True)
     else:
-        result = export_exemplar(args.repo_root, args.source, args.dest, new_name=args.new_name)
+        result = export_exemplar(
+            args.repo_root,
+            args.source,
+            args.dest,
+            new_name=args.new_name,
+            project_only=args.project_only,
+        )
     action = "Would copy" if result.dry_run else "Copied"
     print(f"{action} {len(result.relative_files)} files from {result.source} to {result.destination}")
     for rel in result.relative_files:
@@ -181,6 +199,7 @@ def _build_export_manifest(
     *,
     source_project: str,
     exported_project: str,
+    resource_dependencies: tuple[str, ...] = (),
 ) -> ExportManifest:
     hashes: dict[str, str] = {}
     for path in sorted(candidate for candidate in destination.rglob("*") if candidate.is_file()):
@@ -194,7 +213,58 @@ def _build_export_manifest(
         source_commit=_git_head(repo_root),
         infrastructure_version=_infrastructure_version(repo_root),
         files=hashes,
+        resource_dependencies=resource_dependencies,
     )
+
+
+def _declared_resource_dependencies(source_root: Path) -> tuple[str, ...]:
+    """Read validated cross-root resource declarations from ``export.toml``."""
+    config_path = source_root / "export.toml"
+    if not config_path.is_file():
+        return ()
+    payload = tomllib.loads(config_path.read_text(encoding="utf-8"))
+    config = payload.get("template_export", {})
+    if not isinstance(config, dict):
+        raise ValueError(f"[template_export] must be a table: {config_path}")
+    raw = config.get("cross_root_dependencies", [])
+    if not isinstance(raw, list) or not all(isinstance(item, str) for item in raw):
+        raise ValueError("template_export.cross_root_dependencies must be a list of strings")
+    dependencies = tuple(raw)
+    allowed = {"fonds/templates", "rules/templates", "tools/templates", "infrastructure"}
+    invalid = sorted(set(dependencies) - allowed)
+    if invalid:
+        raise ValueError(f"unsupported cross-root resource dependencies: {', '.join(invalid)}")
+    if len(dependencies) != len(set(dependencies)):
+        raise ValueError("cross-root resource dependencies must be unique")
+    return dependencies
+
+
+def _copy_resource_dependency(repo_root: Path, dependency: str, destination: Path) -> None:
+    """Bundle one declared public resource tree under ``_template_resources``."""
+    source_root = (repo_root / dependency).resolve()
+    if not source_root.is_dir():
+        raise FileNotFoundError(f"declared resource dependency does not exist: {dependency}")
+    target_root = destination / "_template_resources" / dependency
+    files = _git_source_files(repo_root, source_root) or _walk_source_files(source_root)
+    for rel in sorted(path for path in files if _is_clean_resource_path(path, dependency)):
+        _copy_one(
+            source_root / rel,
+            _contained_destination(target_root, rel),
+            old_name=source_root.name,
+            new_name=None,
+            old_project_path=dependency,
+            new_project_path=dependency,
+        )
+
+
+def _is_clean_resource_path(path: Path, dependency: str) -> bool:
+    """Apply artifact exclusions without hiding Layer-1 ``output`` source."""
+    for part in path.parts:
+        if part in _IGNORED_NAMES and not (dependency == "infrastructure" and part == "output"):
+            return False
+        if any(fnmatch.fnmatch(part, pattern) for pattern in _IGNORED_PATTERNS):
+            return False
+    return True
 
 
 def _git_head(repo_root: Path) -> str:

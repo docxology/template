@@ -56,6 +56,17 @@ def actionable_issue_count(scan_results: ScanResults) -> int:
     return sum(get_severity_flag(issue) != "green" for issue in _all_issues(scan_results))
 
 
+def _issue_message(issue: ValidationIssue) -> str:
+    """Return the human-readable message shared by heterogeneous issue models."""
+    return str(
+        getattr(
+            issue,
+            "issue_message",
+            getattr(issue, "message", getattr(issue, "description", "")),
+        )
+    )
+
+
 def run_comprehensive_audit(
     repo_root: Path,
     verbose: bool = False,
@@ -109,14 +120,14 @@ def run_comprehensive_audit(
         if verbose and (i + 1) % 10 == 0:
             logger.info(f"Processed {i + 1}/{len(md_files)} files...")
 
-        content = file_contents.get(md_file)
-        if content is None:
+        cached_content = file_contents.get(md_file)
+        if cached_content is None:
             continue  # read error already logged in Phase 2
 
         try:
             file_results = _validate_single_file(
                 md_file,
-                content,
+                cached_content,
                 repo_root,
                 all_headings,
                 include_code_validation,
@@ -136,11 +147,18 @@ def run_comprehensive_audit(
                 relative_path=str(md_file.relative_to(repo_root)),
                 directory=str(md_file.parent.relative_to(repo_root)),
                 name=md_file.name,
-                category=doc_categories.get(str(md_file.relative_to(repo_root)), ""),
-                word_count=len(content.split()),
-                line_count=len(content.splitlines()),
-                has_links="[" in content and "]" in content,
-                has_code_blocks="```" in content,
+                category=next(
+                    (
+                        category
+                        for category, paths in doc_categories.items()
+                        if str(md_file.relative_to(repo_root)) in paths
+                    ),
+                    "",
+                ),
+                word_count=len(cached_content.split()),
+                line_count=len(cached_content.splitlines()),
+                has_links="[" in cached_content and "]" in cached_content,
+                has_code_blocks="```" in cached_content,
             )
             scan_results.documentation_files.append(doc_file)
 
@@ -234,13 +252,13 @@ def _validate_single_file(
     for flag, validator_fn, issue_type, severity, default_msg in quality_validators:
         if flag:
             try:
-                for issue in validator_fn(content, md_file, repo_root):
+                for raw_issue in validator_fn(content, md_file, repo_root):
                     results["quality_issues"].append(
                         QualityIssue(
                             file=file_key,
-                            line=issue.get("line", 0),
+                            line=raw_issue.get("line", 0),
                             issue_type=issue_type,
-                            issue_message=issue.get("issue", default_msg),
+                            issue_message=raw_issue.get("issue", default_msg),
                             severity=severity,
                         )
                     )
@@ -406,10 +424,10 @@ def generate_audit_report(
             target = getattr(issue, "target", "N/A")
             report_lines.extend(
                 [
-                    f"**{issue.file}:{issue.line}**",
+                    f"**{getattr(issue, 'file', 'repository')}:{getattr(issue, 'line', 0)}**",
                     f"- **Type:** {issue_type}",
                     f"- **Target:** `{target}`" if target != "N/A" else "",
-                    f"- **Issue:** {issue.issue_message}",
+                    f"- **Issue:** {_issue_message(issue)}",
                     "",
                 ]
             )
@@ -432,10 +450,10 @@ def generate_audit_report(
             target = getattr(issue, "target", "N/A")
             report_lines.extend(
                 [
-                    f"**{issue.file}:{issue.line}**",
+                    f"**{getattr(issue, 'file', 'repository')}:{getattr(issue, 'line', 0)}**",
                     f"- **Type:** {issue_type}",
                     f"- **Target:** `{target}`" if target != "N/A" else "",
-                    f"- **Issue:** {issue.issue_message}",
+                    f"- **Issue:** {_issue_message(issue)}",
                     "",
                 ]
             )

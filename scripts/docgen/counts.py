@@ -31,6 +31,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.documentation.counts_doc import (  # noqa: E402
     check_counts_doc,
+    write_coverage_provenance,
     write_counts_doc,
 )
 
@@ -44,6 +45,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="verify the doc is in sync with the live tree without writing",
     )
+    parser.add_argument(
+        "--refresh-coverage-provenance",
+        action="store_true",
+        help="record source hashes after rerunning every changed coverage gate",
+    )
     args = parser.parse_args(argv)
 
     if args.check:
@@ -51,6 +57,9 @@ def main(argv: list[str] | None = None) -> int:
         print(message)
         return 0 if in_sync else 1
 
+    if args.refresh_coverage_provenance:
+        provenance = write_coverage_provenance(REPO_ROOT)
+        print(str(provenance.relative_to(REPO_ROOT)))
     written = write_counts_doc(REPO_ROOT)
     print(str(written.relative_to(REPO_ROOT)) if written.is_relative_to(REPO_ROOT) else str(written))
     return 0

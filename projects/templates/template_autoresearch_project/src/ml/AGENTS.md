@@ -9,4 +9,6 @@
 | `task.py` | `run_bounded_ml_task` orchestration |
 | `mnist_fixture.py` | Offline fixture download/verify |
 
-Root stubs: `ml_task.py`, `ml_data.py`, `ml_models.py`, `ml_selection.py`, `ml_training.py` (`mnist_fixture.py` uses `sys.modules` alias for monkeypatch tests).
+The flat→package migration is complete: no root-level `ml_task.py`, `ml_data.py`,
+`ml_models.py`, `ml_selection.py`, or `ml_training.py` stub files exist (see
+`../AGENTS.md`). Import directly from this package, e.g. `from src.ml import task`.

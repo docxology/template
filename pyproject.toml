@@ -46,16 +46,11 @@ dependencies = [
   "tomli>=2.0; python_version < '3.11'",
   # typing.NotRequired / datetime.UTC added in Python 3.11; backport for 3.10.
   "typing-extensions>=4.0; python_version < '3.11'",
-  "pillow>=10.0",
+  "pillow>=12.3.0",
   "matplotlib>=3.7",
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
   # uv sync --group scientific
   # requests is in the [llm] dep group — install with: uv sync --group llm
-  "networkx>=3.4.2",
-  "seaborn>=0.13.2",
-  "scipy>=1.15.3",
-  "textstat>=0.7.13",
-  "jsonschema>=4.0.0",
   # defusedxml: infrastructure/search/connectors parses XML/Atom feeds from
   # external APIs (arXiv, etc.) — the repo's XML parser policy
   # (tests/infra_tests/validation/test_xml_parser_policy.py) requires
@@ -72,11 +67,11 @@ llm = ["requests>=2.31.0"]
 rendering = ["reportlab>=4.0.0", "pypdf>=6.12.0", "pdfplumber>=0.11.0"]
 rendering-pptx = ["python-pptx>=1.0.0"]
 dashboard = ["plotly>=5.0.0"]
-dotenv = ["python-dotenv>=1.0.0"]
+dotenv = ["python-dotenv>=1.2.2"]
 steganography = ["cryptography>=48.0.1", "qrcode[pil]>=8.2", "python-barcode>=0.15"]
 monitoring = ["psutil>=5.9.0"]
 publishing = ["huggingface-hub>=0.35.0", "twine>=5.0.0"]
-deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.0.0"]
+deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.2.2"]
 
 # Repository development groups below are intentionally separate from the
 # installable package extras above. ``uv sync`` uses these groups for CI and
@@ -113,7 +108,7 @@ rendering-pptx = [
 ]
 # Optional .env file loading (used in infrastructure/core/credentials.py, gracefully absent)
 dotenv = [
-  "python-dotenv>=1.0.0",
+  "python-dotenv>=1.2.2",
 ]
 # Optional barcode generation for steganography module (gracefully absent)
 steganography = [
@@ -179,7 +174,7 @@ deep-research = [
     # `submit`, and `run-project` see credentials without a manual `export`.
     # config.ensure_dotenv_loaded() also has a built-in fallback parser, so the
     # package still finds keys if this extra is somehow absent.
-    "python-dotenv>=1.0.0",
+    "python-dotenv>=1.2.2",
 ]
 
 [tool.uv]
@@ -187,9 +182,10 @@ deep-research = [
 managed = true  # Use uv's virtual environment management
 package = true  # Install Layer 1 and the research-template console entry point
 default-groups = ["dev", "rendering", "discopy", "steganography", "active-inference"]
-# pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
+# pip-api (via pip-audit) pins an older pip; keep the installer above its
+# published security floor as well as the runtime dependency set.
 override-dependencies = [
-    "pip>=26.1.1",
+    "pip>=26.1.2",
     "msgpack>=1.2.1",
 ]
 
@@ -365,89 +361,6 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "infrastructure.rendering.*"
 disallow_untyped_defs = true
-
-# Type stubs are uneven across these packages; defer until modules are tightened.
-[[tool.mypy.overrides]]
-module = "infrastructure.reporting.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.llm.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.validation.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.steganography.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.publishing.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "infrastructure.search.*"
-ignore_errors = true
-
-# template_active_inference lives under projects/templates/ and uses a src/
-# layout with top-level imports (conftest puts src/ on sys.path). With
-# explicit_package_bases, mypy resolves its modules under the real project
-# namespace and selected flat top-level names. Mirrors the
-# template_literature_meta_analysis and template_search_project pattern (only
-# infrastructure is held type-strict).
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_active_inference.*",
-    "analysis.*",
-    "analytical.*",
-    "contracts.*",
-    "gates.*",
-    "gnn.*",
-    "invariants.*",
-    "manuscript.*",
-    "ontology.*",
-    "orchestration.*",
-    "roadmap_tracks.*",
-    "simulation.*",
-    "visualizations.*",
-]
-ignore_errors = true
-
-# template_literature_meta_analysis uses a src/ layout with top-level imports
-# (conftest puts src/ on sys.path), so with explicit_package_bases mypy resolves
-# its modules as top-level names. Mirror the project-src relaxation the other
-# exemplars get via `ignore_errors` (only infrastructure is held type-strict).
-# These names are specific to this exemplar (others use the `src.*` namespace).
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_literature_meta_analysis.*",
-]
-ignore_errors = true
-
-# template_search_project uses a src/ layout with top-level imports
-# (conftest puts src/ on sys.path), so with explicit_package_bases mypy
-# resolves its modules under both name forms. Same pattern as
-# template_literature_meta_analysis above.
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_search_project.*",
-]
-ignore_errors = true
-
-# template_formal uses a src/ layout with a real package dir
-# (src/template_formal/), so with explicit_package_bases mypy resolves it
-# under the repo-relative dotted path and as the top-level package name.
-# Same relaxation as the siblings above (only infrastructure is held
-# type-strict at CI scope); the exemplar's own tests/test_mypy_oracle.py
-# keeps the project type-checked with its correct project-local resolution.
-[[tool.mypy.overrides]]
-module = [
-    "projects.templates.template_formal.*",
-    "template_formal.*",
-]
-ignore_errors = true
 
 [tool.bandit]
 # Exclusions for paths (mirrors `exclude_dirs` in `bandit.yaml`). CI and

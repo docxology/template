@@ -92,7 +92,7 @@ class TestBuildStageTable:
     def test_caption_warns_about_index_vs_filename(self, synthetic_yaml: Path) -> None:
         table = build_stage_table(synthetic_yaml)
         assert "0-based" in table
-        assert "scripts/NN_*.py" in table
+        assert "scripts/pipeline/stage_NN_*.py" in table
 
     def test_missing_yaml_raises(self, tmp_path: Path) -> None:
         with pytest.raises(FileNotFoundError):

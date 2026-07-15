@@ -42,6 +42,11 @@ def _repo_root() -> pathlib.Path:
 
 
 def _rules_root() -> pathlib.Path:
+    bundled = (
+        pathlib.Path(__file__).resolve().parents[1] / "_template_resources" / "rules" / "templates"
+    )
+    if bundled.is_dir():
+        return bundled
     return _repo_root() / "rules" / "templates"
 
 

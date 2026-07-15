@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
 
     out_dir = args.out or project_root
     written = write_metadata_files(
-        config,
+        dict(config),
         out_dir,
         released_date=date.today().isoformat(),
     )

@@ -60,10 +60,10 @@ def main() -> None:
     corpus = Corpus.load(corpus_path)
     if args.fixture_honesty:
         manuscript_dir = PROJECT_ROOT / "manuscript"
-        violations = validate_fixture_honesty(manuscript_dir, corpus_path)
+        violations = validate_fixture_honesty(manuscript_dir, search_term=args.query)
         if violations:
             for v in violations:
-                logger.error("Fixture honesty: %s:%s %s — %s", v.path, v.line, v.reason, v.excerpt)
+                logger.error("Fixture honesty: %s:%s %s — %s", v.path, v.line_number, v.message, v.excerpt)
             sys.exit(1)
         logger.info("Fixture honesty audit passed (%s)", manuscript_dir)
     results = evaluate_corpus(corpus, query=args.query)

@@ -480,26 +480,26 @@ flowchart TD
 Stage indices **0–9** are pipeline positions; they **do not** match `scripts/NN_*.py` numeric prefixes (e.g. stage 2 uses `01_run_tests.py`). The table below is authoritative.
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
-| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
-| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
-| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
-| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
+| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
+| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full stage details: [docs/core/workflow.md](../docs/core/workflow.md) · [docs/core/how-to-use.md](../docs/core/how-to-use.md).
@@ -862,14 +862,14 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | - | --- | --- | --- | --- |
 | 1 | `detect` | — | always | Emits presence flags (`setup_hook`, `fep_lean`) for the optional jobs |
 | 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard (`output/`, `.codegraph/`, package metadata) + **confidentiality guard** (`check_tracked_projects.py` — only public template projects may be tracked) |
-| 3 | `health` | `lint` | always | Unified health report (informational, non-blocking) |
-| 4 | `verify-no-mocks` | `lint` | always | Enforces prohibited mock-framework syntax; semantic stand-ins are advisory (`scripts/audit/verify_no_mocks.py --inventory`) |
+| 3 | `health` | `lint` | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
+| 4 | `verify-no-mocks` | `lint` | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements |
 | 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
-| 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 cells), `--cov-fail-under=60` (macOS leg `continue-on-error`) |
+| 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 blocking cells), `--cov-fail-under=60` |
 | 7 | `test-project` | `verify-no-mocks` | always | Per-project suites — one parallel ubuntu job per public exemplar listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) × {py3.10, py3.12}; each enforces that project's own ≥90 floor via `01_run_tests.py --project <name> --project-only --include-slow` |
 | 8 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
 | 9 | `validate` | `lint` | always | Manuscript/output validation (`infrastructure.validation.cli`) |
-| 10 | `security` | `lint` | always | Bandit MEDIUM+ (`bandit.yaml`) over `infrastructure/ scripts/ projects/` |
+| 10 | `security` | `lint` | always | Frozen all-groups/all-extras dependency audit plus Bandit over `infrastructure/`, `scripts/`, and the generated public-project scope |
 | 11 | `docs-lint` | `lint` | always | Mermaid render + relative-link resolution + doc-pair + consistency |
 | 12 | `performance` | `test-infra`, `test-project` | always | Benchmarks + coverage-history dashboard (informational) |
 
@@ -881,7 +881,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 flowchart TB
     D[detect — presence flags]
     L[lint + type check]
-    H[health — informational]
+    H[health — blocking static report]
     VNM[verify-no-mocks]
     SH[setup-hook windows — conditional]
     TI[test-infra matrix]
@@ -914,7 +914,7 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 | --- | --- | :---: |
 | Code style | Ruff | zero violations |
 | Formatting | Ruff | zero diffs |
-| Type safety | mypy | no errors |
+| Type safety | mypy strict gate | zero errors across the generated public source scope |
 | Mock-framework syntax | `verify_no_mocks.py` | zero prohibited imports/calls |
 | Exports audit | `infrastructure.skills check-all-exports` | zero violations |
 | Infra coverage | pytest-cov | **≥ 60%** |
@@ -966,8 +966,8 @@ Required status checks:
   # one check per public exemplar × {py3.10, py3.12}. Examples:
   Project Tests (templates/template_active_inference, py3.12)
   Project Tests (templates/template_code_project, py3.10)
+  Static Health Report
   Validate Manuscripts · Security Scan · Documentation Lint · Performance Check
-  # Optional informational artefact: Unified Health Report (informational)
 
 Require PR review before merging: 1 approver
 ```

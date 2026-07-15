@@ -135,7 +135,7 @@ def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> Liter
 
 def _check_type(value: Any, expected_type: str) -> bool:
     """Check if value matches expected type."""
-    type_map = {
+    type_map: dict[str, type[Any] | tuple[type[Any], ...]] = {
         "string": str,
         "number": (int, float),
         "integer": int,

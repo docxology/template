@@ -124,9 +124,9 @@ def _deterministic_seed(root: Path) -> int:
     return int(seed)
 
 
-def _source_commit(root: Path) -> str:
+def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
     try:
-        result = subprocess.run(
+        result = process_runner(
             ["git", "-C", str(root), "rev-parse", "HEAD"],
             check=True,
             capture_output=True,
@@ -172,12 +172,16 @@ def _config_record(root: Path, rel: str) -> dict[str, Any]:
     }
 
 
-def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
+def build_artifact_provenance(
+    project_root: Path,
+    *,
+    source_commit_resolver=_source_commit,
+) -> dict[str, Any]:
     """Build deterministic artifact lineage and hash records."""
     root = project_root.resolve()
     config_digest = _config_digest(root)
     seed = _deterministic_seed(root)
-    source_commit = _source_commit(root)
+    source_commit = source_commit_resolver(root)
     artifacts = {
         rel: _artifact_record(
             root,

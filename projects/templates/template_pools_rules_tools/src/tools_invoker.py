@@ -34,6 +34,11 @@ def _repo_root() -> pathlib.Path:
 
 
 def _tools_root() -> pathlib.Path:
+    bundled = (
+        pathlib.Path(__file__).resolve().parents[1] / "_template_resources" / "tools" / "templates"
+    )
+    if bundled.is_dir():
+        return bundled
     return _repo_root() / "tools" / "templates"
 
 

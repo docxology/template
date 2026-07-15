@@ -2,6 +2,108 @@
   "version": 1,
   "skills": [
     {
+      "name": "advanced-evaluation",
+      "description": "This skill should be used for advanced LLM evaluation: LLM-as-judge systems, direct scoring, pairwise comparison, rubric calibration, evaluator bias mitigation, confidence scoring, and automated quality assessment.",
+      "path": ".agents/skills/advanced-evaluation/SKILL.md",
+      "cursor_at": ".agents/skills/advanced-evaluation/SKILL.md"
+    },
+    {
+      "name": "bdi-mental-states",
+      "description": "This skill should be used when modeling agent mental states with BDI concepts: beliefs, desires, intentions, RDF-to-belief transformations, rational agency traces, cognitive agents, BDI ontologies, and neuro-symbolic AI integration.",
+      "path": ".agents/skills/bdi-mental-states/SKILL.md",
+      "cursor_at": ".agents/skills/bdi-mental-states/SKILL.md"
+    },
+    {
+      "name": "context-compression",
+      "description": "This skill should be used when long-running agent sessions need context compression, structured summarization, compaction, token-per-task optimization, or durable handoff summaries that preserve decisions, files, risks, and next actions.",
+      "path": ".agents/skills/context-compression/SKILL.md",
+      "cursor_at": ".agents/skills/context-compression/SKILL.md"
+    },
+    {
+      "name": "context-degradation",
+      "description": "This skill should be used for diagnosing and mitigating context degradation: lost-in-middle failures, context poisoning, context clash, context confusion, attention-pattern issues, and agent performance degradation caused by accumulated or conflicting context.",
+      "path": ".agents/skills/context-degradation/SKILL.md",
+      "cursor_at": ".agents/skills/context-degradation/SKILL.md"
+    },
+    {
+      "name": "context-fundamentals",
+      "description": "This skill should be used to explain or reason about the foundational concepts of context engineering: what context is, the anatomy of a context window, how attention mechanics work, the U-shaped attention curve, why context quality matters more than quantity, and the mental models needed to interpret every other context-engineering decision. Use this for conceptual explanation, onboarding, and background reading. Route operational work to the specialized skills: debugging attention failures goes to context-degradation, token-efficiency work goes to context-optimization, conversation summarization goes to context-compression, and project-shape decisions go to project-development.",
+      "path": ".agents/skills/context-fundamentals/SKILL.md",
+      "cursor_at": ".agents/skills/context-fundamentals/SKILL.md"
+    },
+    {
+      "name": "context-optimization",
+      "description": "This skill should be used for improving context efficiency: context budgeting, observation masking, prefix or KV-cache strategy, partitioning, token-cost reduction, retrieval scoping, and extending effective context capacity without lowering answer quality.",
+      "path": ".agents/skills/context-optimization/SKILL.md",
+      "cursor_at": ".agents/skills/context-optimization/SKILL.md"
+    },
+    {
+      "name": "evaluation",
+      "description": "This skill should be used when building agent evaluation systems: deterministic checks, regression suites, multi-dimensional rubrics, quality gates, production monitoring, baseline comparison, and outcome measurement for agent pipelines.",
+      "path": ".agents/skills/evaluation/SKILL.md",
+      "cursor_at": ".agents/skills/evaluation/SKILL.md"
+    },
+    {
+      "name": "filesystem-context",
+      "description": "This skill should be used when agent work needs file-backed context: durable scratchpads, tool-output offloading, just-in-time discovery, cross-agent handoff files, filesystem memory, or cleanup policies for context stored outside the prompt.",
+      "path": ".agents/skills/filesystem-context/SKILL.md",
+      "cursor_at": ".agents/skills/filesystem-context/SKILL.md"
+    },
+    {
+      "name": "harness-engineering",
+      "description": "This skill should be used when designing autonomous agent harnesses: research loops, evaluation scaffolds, locked and editable surfaces, durable logs, novelty gates, pruning, rollback, PR preparation, and human approval boundaries.",
+      "path": ".agents/skills/harness-engineering/SKILL.md",
+      "cursor_at": ".agents/skills/harness-engineering/SKILL.md"
+    },
+    {
+      "name": "hosted-agents",
+      "description": "This skill should be used when designing hosted or background agent infrastructure: sandboxed execution, remote coding environments, warm pools, session persistence, multiplayer collaboration, self-spawning agents, or Modal-style sandboxes.",
+      "path": ".agents/skills/hosted-agents/SKILL.md",
+      "cursor_at": ".agents/skills/hosted-agents/SKILL.md"
+    },
+    {
+      "name": "latent-briefing",
+      "description": "This skill should be used when the user asks to \"share memory between agents\", \"KV cache compaction for multi-agent\", \"orchestrator worker context\", \"latent briefing\", \"reduce worker tokens\", \"cross-agent memory without summarization\", or discusses Attention Matching compaction, recursive language models with workers, or token explosion in hierarchical agents.",
+      "path": ".agents/skills/latent-briefing/SKILL.md",
+      "cursor_at": ".agents/skills/latent-briefing/SKILL.md"
+    },
+    {
+      "name": "long-horizon-prompting",
+      "description": "This skill should be used when writing, enhancing, or evaluating the launch prompt for a long-running autonomous agent or a parallel multi-agent orchestration attacking a hard problem: pseudo-formal task briefs that define terms and an exact success predicate linguistically, enumerate non-counting outcomes, set persistence rules with explicit stop and return conditions and effort floors, manage a diverse portfolio of parallel approaches with an approach registry and blocked-route bookkeeping, and gate the return on adversarial audit. Route agent topology and coordination protocols to multi-agent-patterns, runtime control surfaces and loop governance to harness-engineering, evaluator and quality-gate construction to evaluation, judge design to advanced-evaluation, and compaction or memory mechanics to context-compression and memory-systems.",
+      "path": ".agents/skills/long-horizon-prompting/SKILL.md",
+      "cursor_at": ".agents/skills/long-horizon-prompting/SKILL.md"
+    },
+    {
+      "name": "memory-systems",
+      "description": "This skill should be used for persistent semantic memory in agent systems: cross-session knowledge retention, entity tracking, temporal validity, graph or vector retrieval, memory consolidation, and memory benchmark selection. Route file-backed scratchpads to filesystem-context, handoff summaries to context-compression, and token-efficiency tactics to context-optimization.",
+      "path": ".agents/skills/memory-systems/SKILL.md",
+      "cursor_at": ".agents/skills/memory-systems/SKILL.md"
+    },
+    {
+      "name": "multi-agent-patterns",
+      "description": "This skill should be used when designing multi-agent systems that need context isolation, supervisor or swarm coordination, explicit handoffs, parallel execution, or a decision on whether multiple agents are justified.",
+      "path": ".agents/skills/multi-agent-patterns/SKILL.md",
+      "cursor_at": ".agents/skills/multi-agent-patterns/SKILL.md"
+    },
+    {
+      "name": "project-development",
+      "description": "This skill should be used for project-level decisions about LLM-powered systems: whether an LLM is the right primitive for the task at hand, the shape of a multi-stage batch or agent pipeline, token and cost estimation, choosing between single-agent and multi-agent at the project level, structured output design for downstream parsing, and structuring agent-assisted iteration. Use this when the unit of work is a whole project or a multi-stage pipeline. Route individual tool design to tool-design and individual skill-loading or context-budget tactics to context-optimization.",
+      "path": ".agents/skills/project-development/SKILL.md",
+      "cursor_at": ".agents/skills/project-development/SKILL.md"
+    },
+    {
+      "name": "self-improvement-loops",
+      "description": "This skill should be used when the harness, scaffold, workflow, or optimizer itself is the optimization target: recursive self-improvement (RSI) loops, meta-harnesses, self-improving harnesses that mine their own failures and propose bounded edits, evolutionary or population-based search over agent scaffolds, acceptance gates for self-modifying systems, and agentic context evolution where the mechanism that produces context is versioned and evolved. Route governance of a single autonomous loop (locked surfaces, durable logs, rollback, novelty gates, approval boundaries) to harness-engineering, measurement and quality-gate design to evaluation, judge design to advanced-evaluation, and remote sandbox infrastructure to hosted-agents.",
+      "path": ".agents/skills/self-improvement-loops/SKILL.md",
+      "cursor_at": ".agents/skills/self-improvement-loops/SKILL.md"
+    },
+    {
+      "name": "tool-design",
+      "description": "This skill should be used for the tool-interface layer of an agent system specifically: writing tool descriptions agents can route on, designing tool schemas and response formats, naming conventions, actionable error recovery messages, MCP server design, tool-set consolidation, and deciding when to add or remove an individual tool. Use this when the unit of work is a single tool or a set of tools. Route project-shape, pipeline architecture, and task-model-fit decisions to project-development; route deciding whether to introduce sub-agents to multi-agent-patterns.",
+      "path": ".agents/skills/tool-design/SKILL.md",
+      "cursor_at": ".agents/skills/tool-design/SKILL.md"
+    },
+    {
       "name": "continual-learning",
       "description": "Orchestrate continual learning by delegating transcript mining to agents-memory-updater and writing durable memory to local JSON (never root AGENTS.md Learned sections). USE WHEN continual learning, mine prior chats, maintain agent memory, or the stop hook triggers this skill.",
       "path": ".cursor/skills/continual-learning/SKILL.md",
@@ -121,12 +223,12 @@
     },
     {
       "name": "template-agentic-use",
-      "description": "Agentic-use and skill-routing workflow for the Research Project Template. USE WHEN\ndiscovering relevant skills, making template easier for agents to navigate, auditing\ndocs/prompts skill coverage, checking .cursor/skill_manifest.json, evaluating external\nskills, reviewing external agentic operating models such as Steward OS, AutoResearch CLI,\nor LEANN, or improving agent onboarding/routing without changing project behavior.\n",
+      "description": "Agentic-use and skill-routing workflow for the Research Project Template. USE WHEN\ndiscovering relevant skills, making template easier for agents to navigate, auditing\ndocs/prompts skill coverage, checking .cursor/skill_manifest.json, evaluating external\nskills, reviewing external agentic operating models such as Steward OS, AutoResearch CLI,\nLEANN, or Agent Skills for Context Engineering, or improving agent onboarding/routing\nwithout changing project behavior.\n",
       "path": "docs/prompts/agentic-use/SKILL.md",
       "cursor_at": "docs/prompts/agentic-use/SKILL.md",
       "metadata": {
-        "version": "1.1.0",
-        "last_updated": "2026-06-22",
+        "version": "1.2.0",
+        "last_updated": "2026-07-12",
         "status": "active",
         "data_access_level": "raw",
         "task_type": "open-ended",
@@ -683,7 +785,7 @@
     },
     {
       "name": "infrastructure-skills",
-      "description": "Programmatic discovery of first-party agent SKILL.md files under configured public repo roots (infrastructure, scripts, projects/templates, resource-pool templates, docs/prompts, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor/Codex/MCP automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.",
+      "description": "Programmatic discovery of agent SKILL.md files under configured public repo roots (infrastructure, scripts, projects/templates, resource-pool templates, docs/prompts, .agents/skills, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor/Codex/Hermes/MCP automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.",
       "path": "infrastructure/skills/SKILL.md",
       "cursor_at": "infrastructure/skills/SKILL.md"
     },

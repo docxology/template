@@ -2,11 +2,11 @@
 """Validation gate for the per-exemplar ``.agents/skills`` lane.
 
 Every public exemplar ships a Hermes/agentskills.io skill at
-``projects/templates/<name>/.agents/skills/<name>/SKILL.md``. That lane is
-intentionally excluded from ``infrastructure.skills`` discovery (the Cursor/editor
-manifest is a separate lane — see CLAUDE.md), so nothing else parses these files.
-A YAML-quoting typo in one of them shipped once and no gate caught it; this test
-is that gate. No mocks — it reads the real committed files.
+``projects/templates/<name>/.agents/skills/<name>/SKILL.md``. The main skill
+inventory now discovers that public lane, while this focused gate still checks
+its one-skill-per-exemplar contract independently. A YAML-quoting typo in one
+of them shipped once and no gate caught it; this test is that gate. No mocks —
+it reads the real committed files.
 """
 
 from __future__ import annotations

@@ -62,6 +62,7 @@
 | `optimizer` | `quadratic_optimum` | function | Return (x*, f*) for f(x) = ½ xᵀ A x − bᵀ x. |
 | `optimizer` | `simulate_trajectory` | function | Run gradient descent and return iteration/objective history. |
 | `project_paths` | `project_output_dirs` | function | Return common output directories for the code exemplar. |
+| `project_paths` | `project_root_context` | function | Temporarily route all exemplar output helpers to ``project_root``. |
 | `project_paths` | `resolve_project_root` | function | Process resolve project root. |
 | `sweeps` | `AlphaSweepConfig` | class | Knobs for :func:`run_alpha_sweep`. |
 | `sweeps` | `AlphaSweepResult` | class | Numerical payload for an α sweep. |

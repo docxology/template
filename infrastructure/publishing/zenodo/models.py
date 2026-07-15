@@ -39,7 +39,8 @@ class DepositionResult:
     @classmethod
     def from_zenodo_body(cls, body: dict[str, Any]) -> DepositionResult:
         """Parse a Zenodo deposition JSON body into a :class:`DepositionResult`."""
-        metadata = body.get("metadata") if isinstance(body.get("metadata"), dict) else {}
+        raw_metadata = body.get("metadata")
+        metadata: dict[str, Any] = raw_metadata if isinstance(raw_metadata, dict) else {}
         prereserve = (
             metadata.get("prereserve_doi")
             if isinstance(metadata.get("prereserve_doi"), dict)

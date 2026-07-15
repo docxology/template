@@ -12,14 +12,14 @@ from .integration import run_integration_demo
 __all__ = ["generate_variables"]
 
 
-def generate_variables() -> dict[str, str]:
+def generate_variables(*, integration_runner=run_integration_demo) -> dict[str, str]:
     """Derive stringified manuscript token values from the integration demo results.
 
     Returns a flat ``{{UPPERCASE_KEY}}``-compatible mapping (all values
     stringified) suitable for
     :func:`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`.
     """
-    results = run_integration_demo()
+    results = integration_runner()
     summary = results["summary"]
     rules = results["rules"]
 

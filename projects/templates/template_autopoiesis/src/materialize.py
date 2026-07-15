@@ -179,6 +179,33 @@ def _resolve_deps(spec: Spec, template_root: Path) -> tuple[dict[str, str], dict
     selections = dict(spec.selections)
     dep_mode = selections.get("dep_mode", "vendor")
 
+    if dep_mode not in ("vendor", "template"):
+        raise ValueError(f"Unknown dep_mode '{dep_mode}'. Known: ('vendor', 'template')")
+
+    if dep_mode == "template":
+        # SYNTAX.md documents a per-dependency "template" mode ("use template
+        # infrastructure seam") as an alternative to "vendor" ("vendor as
+        # single-file stub"), but that mode has never been implemented: only
+        # a single scalar `dep_mode` selection exists (there is no per-dep
+        # override), and this module's own contract — a materialized child
+        # "can run its own tests, produce figures, and render a manuscript —
+        # all without requiring the parent template infrastructure at
+        # runtime" (see module docstring) — is fundamentally incompatible
+        # with a "seam" mode whose entire point is to import from the parent
+        # repo's infrastructure/ package at runtime instead of vendoring a
+        # standalone copy. Implementing it for real would require either
+        # relaxing that self-containment guarantee or defining a new,
+        # currently-unspecified seam contract. Fail loudly instead of
+        # silently producing zero files/seam so a fork cannot mistake this
+        # for a working feature. See TODO.md for the tracked follow-up.
+        raise NotImplementedError(
+            "dep_mode='template' is a documented-but-unimplemented gap in "
+            "materialize.py::_resolve_deps — see SYNTAX.md 'Deps Syntax' and "
+            "the code comment at this raise site. Use dep_mode='vendor' "
+            "instead, or implement the template seam contract before relying "
+            "on this mode."
+        )
+
     for dep in spec.deps:
         if dep_mode == "vendor":
             dest, content = _vendor_infra_module(dep, template_root)

@@ -14,7 +14,7 @@ These map to ``scripts.exit_codes.ExitCode`` (SUCCESS=0 / FAILURE=1 / SKIP=2).
 
 from __future__ import annotations
 
-import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -36,76 +36,18 @@ from infrastructure.publishing.release_workflow import (  # noqa: E402
     resolve_combined_pdf,
     run_release_workflow,
 )
+from infrastructure.publishing.preflight import publishing_preflight  # noqa: E402
+from infrastructure.publishing.release_cli import (  # noqa: E402
+    build_release_parser,
+    resolve_github_token,
+    resolve_zenodo_token,
+)
 
 logger = get_logger(__name__)
 
 
-def _resolve_zenodo_token(args: argparse.Namespace, sandbox: bool) -> str | None:
-    if args.zenodo_token:
-        return str(args.zenodo_token)
-    if sandbox:
-        return os.getenv("ZENODO_SANDBOX_TOKEN") or os.getenv("ZENODO_TOKEN")
-    return os.getenv("ZENODO_PROD_TOKEN") or os.getenv("ZENODO_TOKEN")
-
-
-def _resolve_github_token(args: argparse.Namespace) -> str | None:
-    return args.github_token or os.getenv("GITHUB_TOKEN")
-
-
-def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Publish a project release to GitHub and Zenodo, update DOI, and re-render.",
-    )
-    parser.add_argument("--project", required=True, help="Project name under projects/")
-    parser.add_argument("--tag", required=True, help="Git tag for the GitHub release")
-    parser.add_argument(
-        "--repo",
-        help="GitHub repository owner/name (default: GITHUB_REPO env)",
-    )
-    parser.add_argument("--release-name", help="GitHub release title (default: paper title + tag)")
-    parser.add_argument(
-        "--production",
-        action="store_true",
-        help="Use production Zenodo (default: sandbox)",
-    )
-    parser.add_argument(
-        "--new-version",
-        action="store_true",
-        help="Force a new Zenodo version when publication.doi is already set",
-    )
-    parser.add_argument("--skip-github", action="store_true", help="Skip GitHub release")
-    parser.add_argument("--skip-zenodo", action="store_true", help="Skip Zenodo deposit")
-    parser.add_argument(
-        "--skip-rerender",
-        action="store_true",
-        help="Skip PDF re-render after DOI update",
-    )
-    parser.add_argument(
-        "--reserve-doi-first",
-        action="store_true",
-        help=(
-            "Reserve a Zenodo DOI before building the final bundle, write "
-            "concept/version DOI fields, re-render, then upload the "
-            "DOI-bearing PDF to the same draft"
-        ),
-    )
-    parser.add_argument(
-        "--allow-draft-abstract",
-        action="store_true",
-        help="Allow empty abstract (Zenodo may reject in production)",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Prepare bundle and receipt without API calls",
-    )
-    parser.add_argument("--github-token", help="GitHub token (default: GITHUB_TOKEN)")
-    parser.add_argument("--zenodo-token", help="Zenodo token (default: env-based)")
-    return parser
-
-
 def main(argv: list[str] | None = None) -> int:
-    parser = _build_parser()
+    parser = build_release_parser()
     args = parser.parse_args(argv)
 
     # Pick up GITHUB_TOKEN / ZENODO_PROD_TOKEN / ZENODO_SANDBOX_TOKEN from .env
@@ -116,7 +58,8 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = _REPO_ROOT
     sandbox = not args.production
 
-    if resolve_combined_pdf(repo_root, args.project) is None:
+    combined_pdf = resolve_combined_pdf(repo_root, args.project)
+    if combined_pdf is None:
         logger.error(
             "Combined PDF not found for %s. Run scripts/pipeline/stage_03_render.py first.",
             args.project,
@@ -128,8 +71,8 @@ def main(argv: list[str] | None = None) -> int:
         logger.error("Set --repo or GITHUB_REPO for GitHub release")
         return 2
 
-    github_token = _resolve_github_token(args)
-    zenodo_token = _resolve_zenodo_token(args, sandbox)
+    github_token = resolve_github_token(args)
+    zenodo_token = resolve_zenodo_token(args, sandbox)
 
     if not args.skip_github and not args.dry_run and not github_token:
         logger.error("Set --github-token or GITHUB_TOKEN for GitHub release")
@@ -137,6 +80,39 @@ def main(argv: list[str] | None = None) -> int:
     if not args.skip_zenodo and not args.dry_run and not zenodo_token:
         logger.error("Set --zenodo-token or ZENODO_SANDBOX_TOKEN / ZENODO_PROD_TOKEN / ZENODO_TOKEN")
         return 2
+
+    if not args.dry_run:
+        credential_sources = {
+            "github": (
+                "not-required"
+                if args.skip_github
+                else "cli"
+                if args.github_token
+                else "environment"
+                if github_token
+                else "missing"
+            ),
+            "zenodo": (
+                "not-required"
+                if args.skip_zenodo
+                else "cli"
+                if args.zenodo_token
+                else "environment"
+                if zenodo_token
+                else "missing"
+            ),
+        }
+        try:
+            manifest = publishing_preflight(
+                repo_root,
+                args.project,
+                [combined_pdf, repo_root / "projects" / args.project / "manuscript/config.yaml"],
+                credential_sources,
+            )
+        except ValueError as exc:
+            logger.error("Publishing preflight failed: %s", exc)
+            return 2
+        logger.info("Publishing preflight: %s", json.dumps(manifest, sort_keys=True))
 
     log_header(f"Project release: {args.project} ({args.tag})")
 

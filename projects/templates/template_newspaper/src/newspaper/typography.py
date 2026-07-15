@@ -207,15 +207,30 @@ def build_stylesheet(fonts: Fonts) -> StyleSheet1:
             spaceAfter=2,
         )
     )
+    # Headline leading/spaceAfter: the display face is a Didot-style serif
+    # with deep, thin descenders (comma tails, "g"/"y") that a tight
+    # leading-to-fontSize ratio does not clear. A near-1:1 leading (the old
+    # values below, kept in comments for context) leaves the last line's
+    # descenders sitting almost on the next flowable's ascenders/dots —
+    # visually indistinguishable from a stray glyph where a wrapped headline
+    # is immediately followed by a Deck or Byline:
+    #   HeadlineLead      fontSize=44 leading=44 spaceAfter=4
+    #   HeadlinePrimary   fontSize=23 leading=24 spaceAfter=3
+    #   HeadlineSecondary fontSize=17 leading=18 spaceAfter=2
+    #   HeadlineMinor     fontSize=12.5 leading=14 spaceAfter=1
+    # The values below use leading >= ~1.15x fontSize (headroom for
+    # descenders within the headline's own last line) plus a larger
+    # spaceAfter (clearance before the next flowable). See
+    # tests/test_typography.py for the regression guard on this ratio.
     ss.add(
         ParagraphStyle(
             "HeadlineLead",
             fontName=fonts.display_bold,
             fontSize=44,
-            leading=44,
+            leading=52,
             alignment=TA_LEFT,
             textColor=INK,
-            spaceAfter=4,
+            spaceAfter=8,
             splitLongWords=0,
         )
     )
@@ -224,11 +239,11 @@ def build_stylesheet(fonts: Fonts) -> StyleSheet1:
             "HeadlinePrimary",
             fontName=fonts.display_bold,
             fontSize=23,
-            leading=24,
+            leading=27,
             alignment=TA_LEFT,
             textColor=INK,
             spaceBefore=4,
-            spaceAfter=3,
+            spaceAfter=6,
             splitLongWords=0,
         )
     )
@@ -237,11 +252,11 @@ def build_stylesheet(fonts: Fonts) -> StyleSheet1:
             "HeadlineSecondary",
             fontName=fonts.display_bold,
             fontSize=17,
-            leading=18,
+            leading=20,
             alignment=TA_LEFT,
             textColor=INK,
             spaceBefore=4,
-            spaceAfter=2,
+            spaceAfter=5,
             splitLongWords=0,
         )
     )
@@ -250,11 +265,11 @@ def build_stylesheet(fonts: Fonts) -> StyleSheet1:
             "HeadlineMinor",
             fontName=fonts.body_bold,
             fontSize=12.5,
-            leading=14,
+            leading=15,
             alignment=TA_LEFT,
             textColor=INK,
             spaceBefore=3,
-            spaceAfter=1,
+            spaceAfter=4,
             splitLongWords=0,
         )
     )
@@ -266,6 +281,7 @@ def build_stylesheet(fonts: Fonts) -> StyleSheet1:
             leading=15.5,
             alignment=TA_LEFT,
             textColor=MUTED,
+            spaceBefore=2,
             spaceAfter=4,
         )
     )

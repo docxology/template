@@ -1,5 +1,5 @@
 {
-  "decision_count": 21,
+  "decision_count": 22,
   "final_release_recommended": false,
   "findings": [
     {
@@ -53,8 +53,8 @@
     {
       "above_ceiling": true,
       "classification": "SECRET",
-      "decision_count": 5,
-      "redacted_length": 269,
+      "decision_count": 6,
+      "redacted_length": 271,
       "residual_markers": [],
       "segment_id": "s4",
       "source_controls": [
@@ -66,7 +66,7 @@
       "above_ceiling": true,
       "classification": "TOP_SECRET",
       "decision_count": 7,
-      "redacted_length": 381,
+      "redacted_length": 377,
       "residual_markers": [
         "compartment_marker"
       ],
@@ -190,6 +190,6 @@
   },
   "schema_version": "template_redacted_report/redaction_audit/v1",
   "segment_count": 14,
-  "source_fixture_sha256": "aaa6fe8ce7a83d26c4c1a9edcfe16bf187297e6b4a118f238d9f38cd3b011f1c",
+  "source_fixture_sha256": "694071180231b1d6a2af57916af6723e1d77edc16674492aa3611ac4bcd92a63",
   "taxonomy": "intelligence_agency"
 }

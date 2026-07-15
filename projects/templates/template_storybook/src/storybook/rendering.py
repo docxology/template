@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen.canvas import Canvas
 
 from .illustration import render_page_image
@@ -59,8 +58,8 @@ def build_storybook_pdf(project_root: Path | str) -> RenderResult:
     output_path = root / spec.output_pdf
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    page_width, page_height = letter
-    canvas = Canvas(str(output_path), pagesize=letter, invariant=True)
+    page_width, page_height = spec.page_width, spec.page_height
+    canvas = Canvas(str(output_path), pagesize=(page_width, page_height), invariant=True)
     canvas.setTitle(spec.title)
     canvas.setAuthor("Daniel Ari Friedman")
     canvas.setSubject(spec.subtitle)

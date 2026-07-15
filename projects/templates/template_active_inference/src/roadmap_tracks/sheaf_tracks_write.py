@@ -257,7 +257,12 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
     )
 
 
-def write_sheaf_track_artifacts(project_root: Path, *, finalize: bool = True) -> dict[str, Path]:
+def write_sheaf_track_artifacts(
+    project_root: Path,
+    *,
+    finalize: bool = True,
+    source_commit_resolver=_source_commit,
+) -> dict[str, Path]:
     """Write the canonical promoted sheaf artifacts in deterministic phases."""
     root = project_root.resolve()
     if finalize:
@@ -269,7 +274,7 @@ def write_sheaf_track_artifacts(project_root: Path, *, finalize: bool = True) ->
     context = _ProvenanceContext(
         config_digest=_config_digest(root),
         deterministic_seed=_deterministic_seed(root),
-        source_commit=_source_commit(root),
+        source_commit=source_commit_resolver(root),
     )
     paths: dict[str, Path] = {}
 

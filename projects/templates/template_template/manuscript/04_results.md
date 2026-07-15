@@ -51,15 +51,15 @@ Stages below mirror `pipeline.yaml` (executor-topological order—not strict num
 | Name | Typical script / method | Responsibility | Failure semantics |
 |------|------------------------|----------------|------------------|
 | Clean Output Directories | `_run_clean_outputs` | Deletes stale `output/` trees | Blocking |
-| Environment Setup | `00_setup_environment.py` | Validates tooling, PYTHONPATH scaffolding | Blocking |
-| Infrastructure Tests | `01_run_tests.py --infra-only` | Infra pytest + coverage gates | Tunable thresholds |
-| Project Tests | `01_run_tests.py --project-only` | Project pytest + coverage gates | Zero failures default |
-| Project Analysis | `02_run_analysis.py` | Executes `projects/<name>/scripts/*.py` | Blocking |
-| PDF Rendering | `03_render_pdf.py` | Pandoc → XeLaTeX manuscripts | Blocking |
-| Output Validation | `04_validate_output.py` | Structural PDF/markdown probes | Blocking / warnings |
-| LLM Scientific Review | `06_llm_review.py --reviews-only` | Local Ollama reviews | Skippable / exit 2 tolerated |
-| LLM Translations | `06_llm_review.py --translations-only` | Optional translations | Skippable |
-| Copy Outputs | `05_copy_outputs.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
+| Environment Setup | `scripts/pipeline/stage_00_setup.py` | Validates tooling, PYTHONPATH scaffolding | Blocking |
+| Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only` | Infra pytest + coverage gates | Tunable thresholds |
+| Project Tests | `scripts/pipeline/stage_01_test.py --project-only` | Project pytest + coverage gates | Zero failures default |
+| Project Analysis | `scripts/pipeline/stage_02_analysis.py` | Executes `projects/<name>/scripts/*.py` | Blocking |
+| PDF Rendering | `scripts/pipeline/stage_03_render.py` | Pandoc → XeLaTeX manuscripts | Blocking |
+| Output Validation | `scripts/pipeline/stage_04_validate.py` | Structural PDF/markdown probes | Blocking / warnings |
+| LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | Local Ollama reviews | Skippable / exit 2 tolerated |
+| LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | Optional translations | Skippable |
+| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
 
 `scripts/pipeline/stage_07_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
 

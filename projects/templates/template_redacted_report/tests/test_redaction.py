@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sys
+import re
 from pathlib import Path
-from types import ModuleType, SimpleNamespace
+from types import SimpleNamespace
 
 import pytest
 
@@ -137,7 +137,6 @@ def test_visual_variant_matrix_enumerates_all_background_and_redaction_combinati
 
 def test_dev_variant_output_verifier_enforces_filenames_and_hashes(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _authority, segments, decisions = load_packet()
     matrix = build_visual_variant_matrix(segments, decisions, include_steganography=True, include_kmyth=False)
@@ -181,9 +180,7 @@ def test_dev_variant_output_verifier_enforces_filenames_and_hashes(
 
     matrix = {**matrix, "variants": variants}
     (tmp_path / "variant_matrix.json").write_text(json.dumps(matrix, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    monkeypatch.setattr(visuals, "_pdf_page_count", lambda _path: 1)
-
-    summary = visuals.verify_dev_variant_outputs(tmp_path)
+    summary = visuals.verify_dev_variant_outputs(tmp_path, page_counter=lambda _path: 1)
 
     assert summary["valid"] is True
     assert summary["pdf_count"] == 32
@@ -193,13 +190,13 @@ def test_dev_variant_output_verifier_enforces_filenames_and_hashes(
 
     tampered = tmp_path / "blackout_on_white_steganography.pdf"
     tampered.write_bytes(b"tampered\n")
-    failed = visuals.verify_dev_variant_outputs(tmp_path)
+    failed = visuals.verify_dev_variant_outputs(tmp_path, page_counter=lambda _path: 1)
 
     assert failed["valid"] is False
     assert any("sha256 differs from matrix" in error for error in failed["errors"])
 
 
-def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None:
     class FakeAvailability:
         seal_path = Path("/tmp/kmyth-seal")  # nosec B108 - fake path constant on a test double, never touched
         unseal_path = Path("/tmp/kmyth-unseal")  # nosec B108 - fake path constant on a test double, never touched
@@ -210,12 +207,6 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypat
         def summary(self) -> str:
             return "fake kmyth summary"
 
-    infrastructure_module = ModuleType("infrastructure")
-    steganography_module = ModuleType("infrastructure.steganography")
-    setattr(infrastructure_module, "steganography", steganography_module)
-    monkeypatch.setitem(sys.modules, "infrastructure", infrastructure_module)
-    monkeypatch.setitem(sys.modules, "infrastructure.steganography", steganography_module)
-
     skipped = visuals._resolve_kmyth_status(
         include_kmyth=False,
         binary_dir=None,
@@ -225,55 +216,54 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness(monkeypat
     assert skipped["summary"] == "Kmyth not requested."
 
     unavailable = FakeAvailability(False)
-    setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: unavailable)
     missing = visuals._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
+        installation_validator=lambda binary_dir=None: unavailable,
     )
     assert missing["available"] is False
     assert missing["tools_runnable"] is False
 
     available = FakeAvailability(True)
-    setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: available)
-    monkeypatch.setattr(visuals, "_kmyth_help_error", lambda tool_path: "")
-    monkeypatch.setattr(visuals, "_kmyth_seal_probe_error", lambda tool_path, *, timeout_seconds: "no tpm")
     no_tpm = visuals._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
+        installation_validator=lambda binary_dir=None: available,
+        help_checker=lambda tool_path: "",
+        seal_probe=lambda tool_path, *, timeout_seconds: "no tpm",
     )
     assert no_tpm["available"] is False
     assert no_tpm["tools_runnable"] is True
     assert "TPM seal probe failed" in str(no_tpm["summary"])
 
-    monkeypatch.setattr(visuals, "_kmyth_seal_probe_error", lambda tool_path, *, timeout_seconds: "")
     ready = visuals._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
+        installation_validator=lambda binary_dir=None: available,
+        help_checker=lambda tool_path: "",
+        seal_probe=lambda tool_path, *, timeout_seconds: "",
     )
     assert ready["available"] is True
     assert ready["tools_runnable"] is True
 
 
-def test_kmyth_subprocess_helpers_and_sidecar_names(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_kmyth_subprocess_helpers_and_sidecar_names() -> None:
     def successful_run(argv: list[str], **_kwargs: object) -> SimpleNamespace:
         if "--output" in argv:
             Path(argv[argv.index("--output") + 1]).write_text("sealed", encoding="utf-8")
         return SimpleNamespace(returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr(visuals.subprocess, "run", successful_run)
-    assert visuals._kmyth_help_error(Path("kmyth-seal")) == ""
-    assert visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1) == ""
+    assert visuals._kmyth_help_error(Path("kmyth-seal"), runner=successful_run) == ""
+    assert visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1, runner=successful_run) == ""
 
-    monkeypatch.setattr(
-        visuals.subprocess,
-        "run",
-        lambda _argv, **_kwargs: SimpleNamespace(returncode=1, stdout="", stderr="no tpm"),
-    )
-    assert "no tpm" in visuals._kmyth_help_error(Path("kmyth-seal"))
-    assert "no tpm" in visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1)
+    def failed_run(_argv, **_kwargs):
+        return SimpleNamespace(returncode=1, stdout="", stderr="no tpm")
+
+    assert "no tpm" in visuals._kmyth_help_error(Path("kmyth-seal"), runner=failed_run)
+    assert "no tpm" in visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1, runner=failed_run)
 
     sidecars = visuals._kmyth_sidecars_for(Path("base.pdf"), Path("base_steganography.pdf"))
     assert sidecars["hash_manifest"].name == "base.hashes.json.ski"
@@ -337,13 +327,23 @@ def test_residual_risk_detection_covers_common_public_release_leaks() -> None:
     policy = intelligence_release_policy()
 
     risks = detect_residual_risks(
-        "Contact analyst@example.org from 192.0.2.10 near 38.8977, -77.0365. NOFORN HUMINT.",
+        "Contact analyst@example.org on 2031-04-05 from 192.0.2.10 near 38.8977, -77.0365. NOFORN HUMINT.",
         policy,
     )
     names = {risk["name"] for risk in risks}
 
     assert {"email_address", "ipv4_address", "coordinate_pair", "controlled_dissemination"} <= names
+    assert "iso_calendar_date" in names
     assert "collection_discipline" in names
+
+
+def test_secret_fixture_redacts_both_collection_platform_mentions() -> None:
+    """Repeated operational nouns need distinct decisions, not first-match coverage."""
+    _authority, segments, decisions = load_packet()
+    segment = next(item for item in segments if item.id == "s4")
+    redacted = redact_text(segment.text, [item for item in decisions if item.segment_id == "s4"])
+
+    assert "platform" not in redacted.lower()
 
 
 def test_comprehensive_release_packet_combines_audit_ledger_hashes_and_review_gate() -> None:
@@ -446,6 +446,36 @@ def test_missing_redactions_block_above_ceiling_segment() -> None:
     assert "source_control_uncovered" in codes
 
 
+def test_source_control_uncovered_counts_each_distinct_control() -> None:
+    """A single source_identity decision must not vacuously cover every control.
+
+    Regression guard for a bug where `_check_decisions` used
+    `any(decision.reason == "source_identity" ...)`, so one matching decision
+    anywhere in the segment was treated as covering *all* of that segment's
+    source_controls regardless of how many distinct controls existed.
+    """
+    segment = RedactionSegment(
+        "multi-1",
+        "SECRET",
+        "Alpha reported to Bravo about the mission.",
+        ("HUMINT", "SIGINT"),
+    )
+
+    # Only one covering decision for two distinct controls: must be flagged.
+    under_covered = [RedactionDecision("multi-1", 0, 5, "source_identity")]
+    audit = audit_release_packet([segment], under_covered, release_authority="review-board")
+    codes = [finding.code for finding in audit.findings]
+    assert codes.count("source_control_uncovered") == 1
+
+    # One covering decision per control: fully covered, no findings.
+    fully_covered = [
+        RedactionDecision("multi-1", 0, 5, "source_identity"),
+        RedactionDecision("multi-1", 19, 24, "source_identity"),
+    ]
+    audit_ok = audit_release_packet([segment], fully_covered, release_authority="review-board")
+    assert "source_control_uncovered" not in {finding.code for finding in audit_ok.findings}
+
+
 def test_missing_release_authority_is_error() -> None:
     authority, segments, decisions = load_packet()
     assert authority
@@ -546,6 +576,32 @@ def test_duplicate_segment_ids_are_reported_as_errors() -> None:
 
     assert audit.releasable is False
     assert "duplicate_segment_id" in {finding.code for finding in audit.findings}
+
+
+def test_segment_s5_redaction_spans_leave_no_stray_letter_beside_a_box() -> None:
+    """Regression pin for a fixed off-by-a-few-characters offset bug.
+
+    Segment s5's redaction decisions previously started/ended a few characters
+    short of the real word boundaries. The leak was NOT the whole word
+    surviving intact (the trailing/leading characters were still consumed by
+    the neighbouring box) — it was single stray letters glued directly onto a
+    "[REDACTED]" marker, e.g. "S[REDACTED]p[REDACTED]" instead of a clean
+    "[REDACTED] [REDACTED]" for "SIGINT platform". A substring check for the
+    full words ("SIGINT" not in sanitized) would NOT have caught this, since
+    the full word was never intact even in the buggy version. This test binds
+    directly to the shipped fixture so a future offset regression in
+    data/example_segments.json — of any size, including a single character —
+    is caught even though the coarser 6+ character token scan in
+    test_visuals_proofs.py would miss it.
+    """
+    release_authority, segments, decisions = load_packet()
+    segment = next(item for item in segments if item.id == "s5")
+    segment_decisions = [decision for decision in decisions if decision.segment_id == "s5"]
+
+    sanitized = redact_text(segment.text, segment_decisions)
+
+    assert not re.search(r"[A-Za-z]\[REDACTED\]", sanitized), sanitized
+    assert not re.search(r"\[REDACTED\][A-Za-z]", sanitized), sanitized
 
 
 def _test_file_digest(path: Path, algorithm: str) -> str:

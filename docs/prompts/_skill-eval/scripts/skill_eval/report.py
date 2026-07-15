@@ -10,9 +10,9 @@ from skill_eval import config
 BANNER_WIDTH = 80
 
 
-def load_baseline_benchmark() -> dict | None:
+def load_baseline_benchmark(baseline_dir: Path | None = None) -> dict | None:
     """Load benchmark.json from the pinned baseline run directory."""
-    path = config.BASELINE_DIR / "benchmark.json"
+    path = (baseline_dir or config.BASELINE_DIR) / "benchmark.json"
     if not path.is_file():
         return None
     return json.loads(path.read_text(encoding="utf-8"))

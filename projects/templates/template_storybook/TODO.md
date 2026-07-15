@@ -33,7 +33,6 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 
 ## Test and validator gaps
 
-- Add a negative-control test for malformed page palettes.
 - Add a small raster contrast audit for direct text overlays.
 
 ## Ordered improvement ladder

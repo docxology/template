@@ -21,11 +21,17 @@ this project's code).
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Any, Callable
 
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+
+def _load_llm_components() -> tuple[Any, Any]:
+    from infrastructure.llm import LLMClient, OllamaClientConfig
+
+    return LLMClient, OllamaClientConfig
 
 
 def build_llm_callable(
@@ -37,6 +43,7 @@ def build_llm_callable(
     long_max_tokens: int,
     max_input_length: int,
     review_timeout: float,
+    component_loader: Callable[[], tuple[Any, Any]] = _load_llm_components,
 ) -> Callable[[str], str] | None:
     """Return a real ``(prompt: str) -> str`` callable, or ``None``.
 
@@ -62,7 +69,7 @@ def build_llm_callable(
         the synthesis stage was skipped).
     """
     try:
-        from infrastructure.llm import LLMClient, OllamaClientConfig
+        LLMClient, OllamaClientConfig = component_loader()
     except ImportError as exc:
         logger.warning(
             "infrastructure.llm not importable (%s); skipping LLM synthesis. "

@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md): `template_active_inference`, `template_autopoiesis`, `template_autoresearch_project`, `template_autoscientists`, `template_code_project`, `template_data_descriptor`, `template_eda_notebook`, `template_formal`, `template_gold_refinement`, `template_literature_meta_analysis`, `template_madlib`, `template_methods_paper`, `template_newspaper`, `template_pitch_deck`, `template_pools_rules_tools`, `template_prose_project`, `template_redacted_report`, `template_registered_report`, `template_search_project`, `template_sia`, `template_storybook`, `template_template`, `template_textbook`.
+5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -120,37 +120,45 @@ and **cross-refs** for that template. Load the skill by its name
 (e.g. `template-code-project`, `template-active-inference`) when working
 inside that exemplar.
 
+<!-- BEGIN:PUBLIC_EXEMPLAR_SKILLS -->
 | Skill | Template | When to load |
 | --- | --- | --- |
-| `template-code-project` | `template_code_project` | Code-driven computational research |
-| `template-active-inference` | `template_active_inference` | Multi-track Active Inference |
-| `template-autopoiesis` | `template_autopoiesis` | Combinatoric grammar generating whole child projects |
-| `template-autoresearch-project` | `template_autoresearch_project` | Bounded AutoResearch loop |
-| `template-autoscientists` | `template_autoscientists` | Agent-team coordination testbed |
-| `template-data-descriptor` | `template_data_descriptor` | Dataset descriptor and data-paper contract |
-| `template-formal` | `template_formal` | Strongly typed multiagent colony |
-| `template-template` | `template_template` | Self-referential meta-template |
-| `template-newspaper` | `template_newspaper` | Data-driven print layout |
-| `template-textbook` | `template_textbook` | Book-length manuscript scaffold |
-| `template-prose-project` | `template_prose_project` | Editorial prose review |
-| `template-madlib` | `template_madlib` | Token-injection manuscript generation |
-| `template-storybook` | `template_storybook` | Full-page illustrated storybook PDF |
-| `template-gold-refinement` | `template_gold_refinement` | Metallurgical composition analogy |
-| `template-literature-meta-analysis` | `template_literature_meta_analysis` | Literature meta-analysis |
-| `template-methods-paper` | `template_methods_paper` | Methods DSL specification |
-| `template-eda-notebook` | `template_eda_notebook` | EDA notebook extraction |
-| `template-redacted-report` | `template_redacted_report` | Formal redaction and release-review audit |
-| `template-registered-report` | `template_registered_report` | Preregistered/registered-report workflow |
-| `template-search-project` | `template_search_project` | Literature search pipeline |
-| `template-sia` | `template_sia` | SIA harness evaluation |
-| `template-pools-rules-tools` | `template_pools_rules_tools` | Fonds/rules/tools resource-pool integration |
-| `template-pitch-deck` | `template_pitch_deck` | Reproducible short/medium/long PDF+PPTX pitch decks |
+| `template-active-inference` | `template_active_inference` | Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation. |
+| `template-autoresearch-project` | `template_autoresearch_project` | Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates. |
+| `template-autopoiesis` | `template_autopoiesis` | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
+| `template-code-project` | `template_code_project` | Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results. |
+| `template-data-descriptor` | `template_data_descriptor` | Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication. |
+| `template-eda-notebook` | `template_eda_notebook` | Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures. |
+| `template-formal` | `template_formal` | Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent. |
+| `template-literature-meta-analysis` | `template_literature_meta_analysis` | Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts. |
+| `template-madlib` | `template_madlib` | Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts. |
+| `template-newspaper` | `template_newspaper` | Use this template when you need **data-driven, large-format print layout**: multi-page broadsheets/tabloids with precise column geometry, typography-first constraints, and strict content/engine separation (YAML editions in `content/`, pure-Python ReportLab engine in `src/`). |
+| `template-pools-rules-tools` | `template_pools_rules_tools` | Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science. |
+| `template-prose-project` | `template_prose_project` | Use this template for **manuscript-focused editorial pipelines**: readability gates (Flesch-Kincaid bands), structural checking, citation/BibTeX validation, and prose-quality review workflows where the document itself is the artifact under test. |
+| `template-autoscientists` | `template_autoscientists` | Use this template when you need to **isolate and measure agent-coordination mechanisms**: coordinated teams vs single-thread baselines under matched budgets, deterministic ablation studies, and honest per-mechanism effect reporting (including nulls). |
+| `template-gold-refinement` | `template_gold_refinement` | Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection. |
+| `template-methods-paper` | `template_methods_paper` | Use this template when the paper you are writing **describes a methodology** rather than reports results: a procedure, protocol, or specification language, where the contribution is the controlled vocabulary and its guarantees (dimensional safety, staged validation, deterministic compilation) rather than a numeric outcome. |
+| `template-redacted-report` | `template_redacted_report` | Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published. |
+| `template-registered-report` | `template_registered_report` | Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted. |
+| `template-search-project` | `template_search_project` | Use this template for **literature-review and evidence-synthesis pipelines**: multi-backend search (arXiv, Crossref, local corpora, optional Paperclip), deduplication, BibTeX generation, and LLM-assisted per-paper and corpus-level synthesis. |
+| `template-sia` | `template_sia` | Use this template when you need a **self-improvement-agent evaluation harness**: Meta → Target → Feedback generation loops, public/private task splits to detect overfitting, deterministic fixture replay for testability, and fail-closed loop validation. |
+| `template-storybook` | `template_storybook` | Use this template when you need **full-page illustrated PDF storytelling**: picture-book pages, symbolic scenes, character-generation methods, page-level orchestrators, and deterministic raster art assembled into a print-ready PDF. |
+| `template-template` | `template_template` | Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes). |
+| `template-textbook` | `template_textbook` | Use this template for **book-length manuscripts**: parts → chapters → labs → question banks declared in a single `config.yaml`, with auto-numbering, deterministic figure/diagram generation, and structural-contract tests that keep hundreds of pages from drifting. |
+| `template-pitch-deck` | `template_pitch_deck` | Use this template when you need a pitch, grant report, or recurring stakeholder update treated as a build artifact — bound to live repository facts, validated for unresolved tokens and pitch-deck cliché, and regenerable byte-for-byte from source rather than hand-maintained in a proprietary slide tool. |
+<!-- END:PUBLIC_EXEMPLAR_SKILLS -->
 
 ### Generated infrastructure skills
 
 In addition to the project-local skills, the repo generates infrastructure-level
 SKILL.md files from live discovery:
 
+- **Shared context-engineering skills:** [`.agents/skills/`](.agents/skills/)
+  carries a pinned, provenance-checked Agent Skills collection discoverable by
+  Codex/OpenAI and Hermes-compatible runtimes. Use
+  `uv run python -m infrastructure.skills runtime-status` to audit Codex,
+  Claude Code, and Hermes parity, or `... runtime-install` to create reversible
+  user-level links from the pinned shared store.
 - **Workflow router:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md)
   (`template-workflows`) routes broad requests such as full audits, pipeline
   debugging, code changes, tests, validation, manuscript work, and release
@@ -182,31 +190,33 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 **Permanent canonical exemplars — always present and tracked in git:**
 
-| Exemplar | Shape | Tests | Coverage |
-|---|---|---|---|
-| [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | see canonical facts | see canonical facts |
-| [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects (src/tests/scripts/manuscript) from a seed | see canonical facts | see canonical facts |
-| [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
-| [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | Coordination-mechanism testbed (deterministic ablatable agent-team primitives, honest no-speedup framing) | see canonical facts | see canonical facts |
-| [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
-| [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) | Dataset descriptor/data-paper scaffold (schema, file inventory, provenance chain, data dictionary, quality checks, license boundary) | see canonical facts | see canonical facts |
-| [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) | Exploratory data analysis on tabular data (missingness, descriptive stats, per-group means, correlation ranking, diagnostic figures) | see canonical facts | see canonical facts |
-| [`projects/templates/template_formal/`](projects/templates/template_formal/) | Strongly typed multiagent colony (ADTs, session-typed protocols, affine handles, and type/runtime negative controls) | see canonical facts | see canonical facts |
-| [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection) | see canonical facts | see canonical facts |
-| [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics; default term `modafinil`) | see canonical facts | see canonical facts |
-| [`projects/templates/template_madlib/`](projects/templates/template_madlib/) | Conditional token-injection manuscript generator (config-owned lexicon, QA probes, authoring contract, and IMRAD hydration) | see canonical facts | see canonical facts |
-| [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) | Methods paper: a tested controlled-method specification DSL (staged validation, deterministic compilation), informed by BPL as an upstream domain language | see canonical facts | see canonical facts |
-| [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) | Newspaper layout engine (data-driven 12-page broadsheet from YAML via ReportLab) | see canonical facts | see canonical facts |
-| [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
-| [`projects/templates/template_redacted_report/`](projects/templates/template_redacted_report/) | Redacted release-report scaffold (classification ceiling, source-control markings, release authority, redaction ledger, mosaic-risk checks) | see canonical facts | see canonical facts |
-| [`projects/templates/template_registered_report/`](projects/templates/template_registered_report/) | Registered-report scaffold (hypothesis lock, outcome registry, analysis plan, deviation ledger, confirmatory/exploratory boundaries) | see canonical facts | see canonical facts |
-| [`projects/templates/template_search_project/`](projects/templates/template_search_project/) | Literature-search pipeline (search → BibTeX → optional local LLM synthesis) | see canonical facts | see canonical facts |
-| [`projects/templates/template_sia/`](projects/templates/template_sia/) | SIA harness (meta → target → feedback loop, fixture replay) | see canonical facts | see canonical facts |
-| [`projects/templates/template_storybook/`](projects/templates/template_storybook/) | Full-page illustrated storybook PDF (shape-character generation, page scripts, text overlays, and symbolic raster art) | see canonical facts | see canonical facts |
-| [`projects/templates/template_template/`](projects/templates/template_template/) | Meta-template (introspects infrastructure and public exemplar roster) | see canonical facts | see canonical facts |
-| [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | Book-length manuscript scaffold (data-driven parts → chapters → labs/question banks, fillable stubs) | see canonical facts | see canonical facts |
-| [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) | Fonds/rules/tools resource-pool integration (passive data pools + governance rule sets + executable tool entry points) | see canonical facts | see canonical facts |
-| [`projects/templates/template_pitch_deck/`](projects/templates/template_pitch_deck/) | Reproducible short/medium/long PDF+PPTX pitch decks (token-validated, cliché-linted, diligence-cited; flagship deck pitches `template_template`) | see canonical facts | see canonical facts |
+<!-- BEGIN:PUBLIC_EXEMPLAR_ROSTER -->
+| Exemplar | When to use |
+| --- | --- |
+| [`template_active_inference`](projects/templates/template_active_inference/) | Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation. |
+| [`template_autoresearch_project`](projects/templates/template_autoresearch_project/) | Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates. |
+| [`template_autopoiesis`](projects/templates/template_autopoiesis/) | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
+| [`template_code_project`](projects/templates/template_code_project/) | Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results. |
+| [`template_data_descriptor`](projects/templates/template_data_descriptor/) | Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication. |
+| [`template_eda_notebook`](projects/templates/template_eda_notebook/) | Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures. |
+| [`template_formal`](projects/templates/template_formal/) | Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent. |
+| [`template_literature_meta_analysis`](projects/templates/template_literature_meta_analysis/) | Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts. |
+| [`template_madlib`](projects/templates/template_madlib/) | Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts. |
+| [`template_newspaper`](projects/templates/template_newspaper/) | Use this template when you need **data-driven, large-format print layout**: multi-page broadsheets/tabloids with precise column geometry, typography-first constraints, and strict content/engine separation (YAML editions in `content/`, pure-Python ReportLab engine in `src/`). |
+| [`template_pools_rules_tools`](projects/templates/template_pools_rules_tools/) | Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science. |
+| [`template_prose_project`](projects/templates/template_prose_project/) | Use this template for **manuscript-focused editorial pipelines**: readability gates (Flesch-Kincaid bands), structural checking, citation/BibTeX validation, and prose-quality review workflows where the document itself is the artifact under test. |
+| [`template_autoscientists`](projects/templates/template_autoscientists/) | Use this template when you need to **isolate and measure agent-coordination mechanisms**: coordinated teams vs single-thread baselines under matched budgets, deterministic ablation studies, and honest per-mechanism effect reporting (including nulls). |
+| [`template_gold_refinement`](projects/templates/template_gold_refinement/) | Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection. |
+| [`template_methods_paper`](projects/templates/template_methods_paper/) | Use this template when the paper you are writing **describes a methodology** rather than reports results: a procedure, protocol, or specification language, where the contribution is the controlled vocabulary and its guarantees (dimensional safety, staged validation, deterministic compilation) rather than a numeric outcome. |
+| [`template_redacted_report`](projects/templates/template_redacted_report/) | Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published. |
+| [`template_registered_report`](projects/templates/template_registered_report/) | Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted. |
+| [`template_search_project`](projects/templates/template_search_project/) | Use this template for **literature-review and evidence-synthesis pipelines**: multi-backend search (arXiv, Crossref, local corpora, optional Paperclip), deduplication, BibTeX generation, and LLM-assisted per-paper and corpus-level synthesis. |
+| [`template_sia`](projects/templates/template_sia/) | Use this template when you need a **self-improvement-agent evaluation harness**: Meta → Target → Feedback generation loops, public/private task splits to detect overfitting, deterministic fixture replay for testability, and fail-closed loop validation. |
+| [`template_storybook`](projects/templates/template_storybook/) | Use this template when you need **full-page illustrated PDF storytelling**: picture-book pages, symbolic scenes, character-generation methods, page-level orchestrators, and deterministic raster art assembled into a print-ready PDF. |
+| [`template_template`](projects/templates/template_template/) | Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes). |
+| [`template_textbook`](projects/templates/template_textbook/) | Use this template for **book-length manuscripts**: parts → chapters → labs → question banks declared in a single `config.yaml`, with auto-numbering, deterministic figure/diagram generation, and structural-contract tests that keep hundreds of pages from drifting. |
+| [`template_pitch_deck`](projects/templates/template_pitch_deck/) | Use this template when you need a pitch, grant report, or recurring stakeholder update treated as a build artifact — bound to live repository facts, validated for unresolved tokens and pitch-deck cliché, and regenerable byte-for-byte from source rather than hand-maintained in a proprietary slide tool. |
+<!-- END:PUBLIC_EXEMPLAR_ROSTER -->
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) after substantive changes.*
 
@@ -520,26 +530,26 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 > **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
 
 <!-- BEGIN:STAGE_TABLE -->
-<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
-| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
-| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
-| **5** Connector Search | `08_connector_search.py` | `science` | skipped if not configured |
-| **6** Provenance Record | `09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
-| **7** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
-| **8** Output Validation | `04_validate_output.py` | `core` | warning + report |
-| **9** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **10** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **11** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
-| **12** Ebook Generation | `11_ebook_generation.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `12_metadata_package.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
-| **15** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
+| **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
+| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
+| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | warning + report |
+| **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
+| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
+| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full per-stage flowchart, failure/skip transitions, and the script-to-stage

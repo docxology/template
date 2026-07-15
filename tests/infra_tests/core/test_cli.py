@@ -98,16 +98,17 @@ class TestCLISubprocess:
             scripts_dir.mkdir()
 
             script_files = [
-                "00_setup_environment.py",
-                "01_run_tests.py",
-                "02_run_analysis.py",
-                "03_render_pdf.py",
-                "04_validate_output.py",
-                "05_copy_outputs.py",
+                "pipeline/stage_00_setup.py",
+                "pipeline/stage_01_test.py",
+                "pipeline/stage_02_analysis.py",
+                "pipeline/stage_03_render.py",
+                "pipeline/stage_04_validate.py",
+                "pipeline/stage_05_copy.py",
             ]
 
             for script_file in script_files:
                 script_path = scripts_dir / script_file
+                script_path.parent.mkdir(parents=True, exist_ok=True)
                 script_path.write_text(
                     """
 import sys
@@ -179,16 +180,17 @@ authors:
             scripts_dir.mkdir()
 
             script_files = [
-                "00_setup_environment.py",
-                "01_run_tests.py",
-                "02_run_analysis.py",
-                "03_render_pdf.py",
-                "04_validate_output.py",
-                "05_copy_outputs.py",
+                "pipeline/stage_00_setup.py",
+                "pipeline/stage_01_test.py",
+                "pipeline/stage_02_analysis.py",
+                "pipeline/stage_03_render.py",
+                "pipeline/stage_04_validate.py",
+                "pipeline/stage_05_copy.py",
             ]
 
             for script_file in script_files:
                 script_path = scripts_dir / script_file
+                script_path.parent.mkdir(parents=True, exist_ok=True)
                 script_path.write_text(
                     """
 import sys

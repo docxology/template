@@ -148,7 +148,7 @@ jobs:
         run: uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}
 
       - name: Type checking
-        run: uv run mypy ${{ steps.public-scope.outputs.source_paths }}
+        run: uv run python scripts/gates/mypy_ratchet.py ${{ steps.public-scope.outputs.source_paths }}
 
       # MED5 gate: every re-exporting module under infrastructure/ must
       # declare __all__ — see docs/rules/api_design.md. Prevents regression
@@ -164,22 +164,21 @@ jobs:
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the
-      # informational health job below, but that job is wrapped in ``|| true``
-      # and never blocks — so without this step an oversized module could land
-      # on main unnoticed. Advisory warnings (>=800) still only warn.
+      # blocking health job below; keeping the focused step here gives an
+      # earlier, named failure in the lint job. Advisory warnings (>=800) still
+      # only warn.
       - name: Module line-count gate — composability budget
         run: uv run python scripts/gates/module_line_count_check.py
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 1b — Unified health report (informational, no fail)
+# Job 1b — Blocking static health report
 #
 # MED2: ``infrastructure.core.health`` aggregates every quality gate into a
-# single typed ``HealthReport``. The job runs after ``lint`` and uploads the
-# JSON for triage; ``|| true`` keeps the workflow green even if individual
-# gates regress here (their dedicated jobs above are the blocking ones).
+# single typed ``HealthReport``. Behavioral tests and platform matrices remain
+# separate jobs; every gate represented in this static report is blocking.
 # ─────────────────────────────────────────────────────────────────────────────
   health:
-    name: Unified Health Report (informational)
+    name: Static Health Report
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: [lint]
@@ -190,13 +189,15 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
 
+      - uses: ./.github/actions/setup-docs-lint
+
       - name: Sync dependencies
         run: uv sync
 
-      - name: Run unified health checks (informational)
+      - name: Run blocking static health checks
         run: |
           uv run python -m infrastructure.core.health --json --quiet \
-            > health-report.json || true
+            > health-report.json
 
       - name: Upload health report
         if: always()
@@ -229,10 +230,15 @@ jobs:
         run: uv sync
 
       # Branch-protection check name stays stable. This command is the lexical
-      # prohibited-framework gate only; semantic monkeypatch debt is available
-      # through --inventory and is not enforced until its measured count is 0.
+      # prohibited-framework gate; the following inventory gate separately
+      # enforces that semantic dependency replacements remain at zero.
       - name: Verify prohibited mock-framework syntax
         run: uv run python scripts/audit/verify_no_mocks.py
+
+      - name: Enforce zero semantic dependency replacements
+        run: >-
+          uv run python scripts/audit/verify_no_mocks.py
+          --inventory --max-dependency-replacements 0
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2b — Setup hook on Windows (conditional smoke)
@@ -327,8 +333,6 @@ jobs:
       - name: Run infrastructure tests
         env:
           COVERAGE_FILE: .coverage.infra
-        # macOS runners have socket.getfqdn timeout issues with werkzeug/httpserver
-        continue-on-error: ${{ runner.os == 'macOS' }}
         # -n auto parallelizes across runner cores (pytest-xdist); the suite is
         # parallel-safe (no-mocks tests use per-test tmp_path + random-port
         # httpserver). pytest-cov combines per-worker data before the gate.
@@ -342,7 +346,7 @@ jobs:
           --cov-report=xml:coverage-infra.xml
           --cov-fail-under=60
           --durations=10
-          -m "not requires_ollama and not requires_docker and not slow and not bench and not benchmark and not performance"
+          -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance"
           --timeout=120
 
       - name: Upload infrastructure coverage to Codecov
@@ -381,19 +385,8 @@ jobs:
       # exemplars ship colliding top-level ``src`` packages resolved via
       # per-project aliases + temporary sys.meta_path finders whose isolation is
       # collection-order-sensitive (see docs/maintenance/regression-testing.md).
-      # exit 5 (no tests collected on a clean scaffold) is tolerated so a future
-      # empty tier does not hard-fail the build; any real failure (exit 1) does.
       - name: Run claim-binding regression tier
-        run: |
-          set +e
-          uv run pytest tests/regression/ -q --no-cov --timeout=120
-          code=$?
-          set -e
-          if [ "$code" -eq 5 ]; then
-            echo "::notice::regression tier collected 0 tests (clean scaffold) — tolerated"
-            exit 0
-          fi
-          exit "$code"
+        run: uv run pytest tests/regression/ -q --no-cov --timeout=120
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (one parallel job per public exemplar)
@@ -668,10 +661,18 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
+      - name: Resolve public project names
+        id: security-scope
+        run: echo "names=$(uv run python -m infrastructure.project.public_scope project-names)" >> "$GITHUB_OUTPUT"
+
       - name: Dependency audit (pip-audit)
         run: |
           set -euo pipefail
           IGNORE_FILE=".github/pip-audit-ignore.txt"
+          LOCK_REQUIREMENTS="${RUNNER_TEMP}/template-all-requirements.txt"
+          uv run python scripts/gates/pip_audit_ignore_policy.py "$IGNORE_FILE"
+          uv export --all-groups --all-extras --frozen --no-hashes \
+            --no-emit-project --output-file "$LOCK_REQUIREMENTS"
           PIP_AUDIT_ARGS=()
           while IFS= read -r raw || [ -n "$raw" ]; do
             [[ "$raw" =~ ^[[:space:]]*# ]] && continue
@@ -681,7 +682,8 @@ jobs:
             PIP_AUDIT_ARGS+=(--ignore-vuln "$line")
           done < "$IGNORE_FILE"
           for attempt in 1 2 3; do
-            if uv run pip-audit "${PIP_AUDIT_ARGS[@]}"; then
+            if uv run pip-audit --requirement "$LOCK_REQUIREMENTS" \
+              --no-deps --disable-pip "${PIP_AUDIT_ARGS[@]}"; then
               exit 0
             fi
             echo "pip-audit attempt ${attempt} failed; retrying in 15s..." >&2
@@ -690,11 +692,13 @@ jobs:
           exit 1
 
       - name: Code security scan (Bandit MEDIUM+ severity)
-        run: >-
-          uv run bandit -c bandit.yaml -r -ll
-          infrastructure/
-          scripts/
-          projects/
+        run: |
+          set -euo pipefail
+          targets=(infrastructure scripts)
+          for project in ${{ steps.security-scope.outputs.names }}; do
+            targets+=("projects/$project")
+          done
+          uv run bandit -c bandit.yaml -r -ll "${targets[@]}"
 
       # Targeted shell-injection sweep at LOW severity: the MEDIUM+ gate above
       # rates a constant-string ``shell=True`` (B602/B604/B605/B609) as LOW and
@@ -702,12 +706,15 @@ jobs:
       # trees; keep it green by never introducing ``shell=True`` / partial-path
       # ``os.system`` calls (use list-form argv with ``shell=False``).
       - name: Shell-injection sweep (Bandit B602/B604/B605/B609, LOW+)
-        run: >-
-          uv run bandit -c bandit.yaml -r
-          -t B602,B604,B605,B609 --severity-level low
-          infrastructure/
-          scripts/
-          projects/
+        run: |
+          set -euo pipefail
+          targets=(infrastructure scripts)
+          for project in ${{ steps.security-scope.outputs.names }}; do
+            targets+=("projects/$project")
+          done
+          uv run bandit -c bandit.yaml -r \
+            -t B602,B604,B605,B609 --severity-level low \
+            "${targets[@]}"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 6b — Documentation Lint (mermaid + cross-links + consistency + doc pairs)
@@ -738,36 +745,10 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
 
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: "20"
-
-      - name: Cache puppeteer / chrome-headless-shell
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/puppeteer
-          key: puppeteer-chrome-headless-shell-${{ runner.os }}-v1
+      - uses: ./.github/actions/setup-docs-lint
 
       - name: Sync Python dependencies
         run: uv sync
-
-      - name: Install mermaid-cli
-        run: npm install -g @mermaid-js/mermaid-cli
-
-      - name: Install chrome-headless-shell for puppeteer
-        run: npx --yes puppeteer browsers install chrome-headless-shell
-
-      - name: Locate chrome-headless-shell binary
-        id: chrome
-        run: |
-          set -euo pipefail
-          CHROME_PATH=$(find "$HOME/.cache/puppeteer/chrome-headless-shell" -type f -name 'chrome-headless-shell' | head -n1)
-          if [ -z "$CHROME_PATH" ]; then
-            echo "ERROR: chrome-headless-shell binary not found"
-            exit 1
-          fi
-          echo "CHROME_EXECUTABLE_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
-          echo "Resolved chrome at: $CHROME_PATH"
 
       - name: Run docs linters (mermaid + cross-links + consistency + doc pairs)
         run: uv run python scripts/audit/lint_docs.py --quiet

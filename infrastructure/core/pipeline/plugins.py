@@ -11,8 +11,8 @@ The feature is entirely driven by the presence of plugin declarations:
 
 - No ``pipeline_plugins.yaml`` file  -> :func:`load_plugin_stages` returns ``[]``.
 - An empty file or ``plugins: []``    -> ``[]``.
-- ``[]`` declarations passed to :func:`merge_plugin_stages` /
-  :func:`append_plugin_specs` leave the plan unchanged.
+- ``[]`` declarations passed to :func:`merge_plugin_stages` leave the plan
+  unchanged.
 
 So with no declaration the built stage list is byte-identical to before this
 module existed. Nothing in the default pipeline path changes.
@@ -218,47 +218,6 @@ def merge_plugin_stages(dag: PipelineDAG, declarations: list[PluginStageDeclarat
     logger.info("Merged %d plugin stage(s) into the pipeline DAG", len(declarations))
 
 
-def append_plugin_specs(
-    specs: list[Any],
-    declarations: list[PluginStageDeclaration],
-    executor: Any,
-) -> list[Any]:
-    """Append plugin stages to an already-built ``StageSpec`` list.
-
-    Used on the executor's hardcoded fallback path where no DAG exists. Builds a
-    one-shot DAG from the existing spec names plus the plugins so the same
-    validation and topological ordering apply, then returns the combined list.
-
-    Args:
-        specs: The baseline ``StageSpec`` list.
-        declarations: Validated plugin declarations (``[]`` returns ``specs``).
-        executor: The executor used to resolve plugin script/method callables.
-
-    Returns:
-        A new list with plugin stages appended in dependency order. The baseline
-        spec ordering is preserved; plugins are ordered among themselves.
-
-    Raises:
-        PluginStageError: on name clobber or unknown dependency.
-    """
-    if not declarations:
-        return specs
-
-    existing_names = {s.name for s in specs}
-    _check_no_clobber(declarations, existing_names)
-    _check_dependencies(declarations, existing_names)
-
-    # Build a DAG over only the plugins (their inter-plugin deps + core deps
-    # already validated) to order them deterministically.
-    plugin_dag = PipelineDAG([decl.to_stage_definition() for decl in declarations])
-    ordered = plugin_dag.sorted_stages()
-    plugin_specs = plugin_dag.to_stage_specs(executor)
-    name_to_spec = {s.name: s for s in plugin_specs}
-    appended = [name_to_spec[stage.name] for stage in ordered]
-    logger.info("Appended %d plugin stage(s) to the fallback stage list", len(appended))
-    return list(specs) + appended
-
-
 def _as_str_list(value: Any, *, key: str, stage_name: str) -> list[str]:
     """Normalize an optional YAML list-of-strings field."""
     if value is None:
@@ -293,7 +252,6 @@ __all__ = [
     "PLUGIN_STAGES_FILENAME",
     "PluginStageDeclaration",
     "PluginStageError",
-    "append_plugin_specs",
     "load_plugin_stages",
     "merge_plugin_stages",
     "parse_plugin_stages",

@@ -13,9 +13,7 @@ import json
 import os
 import re
 import shutil
-import sys
 from pathlib import Path
-from types import ModuleType
 
 import pytest
 from pypdf import PdfReader, PdfWriter
@@ -691,7 +689,6 @@ def test_kmyth_seal_probe_times_out_on_hung_tool(tmp_path: Path) -> None:
 
 def test_resolve_kmyth_status_reports_unrunnable_and_runnable_tools(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     failing = _write_executable(tmp_path / "kmyth-seal-bad", "import sys\nsys.exit(2)\n")
     working = _write_executable(
@@ -711,20 +708,22 @@ def test_resolve_kmyth_status_reports_unrunnable_and_runnable_tools(
         def summary(self) -> str:
             return "kmyth tools discovered"
 
-    infrastructure_module = ModuleType("infrastructure")
-    steganography_module = ModuleType("infrastructure.steganography")
-    setattr(infrastructure_module, "steganography", steganography_module)
-    monkeypatch.setitem(sys.modules, "infrastructure", infrastructure_module)
-    monkeypatch.setitem(sys.modules, "infrastructure.steganography", steganography_module)
-
-    setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: Availability(failing))
-    unrunnable = visuals._resolve_kmyth_status(include_kmyth=True, binary_dir=tmp_path, seal_probe_timeout_seconds=5)
+    unrunnable = visuals._resolve_kmyth_status(
+        include_kmyth=True,
+        binary_dir=tmp_path,
+        seal_probe_timeout_seconds=5,
+        installation_validator=lambda binary_dir=None: Availability(failing),
+    )
     assert unrunnable["available"] is False
     assert unrunnable["tools_runnable"] is False
     assert "not runnable" in str(unrunnable["summary"])
 
-    setattr(steganography_module, "validate_kmyth_installation", lambda binary_dir=None: Availability(working))
-    runnable = visuals._resolve_kmyth_status(include_kmyth=True, binary_dir=tmp_path, seal_probe_timeout_seconds=10)
+    runnable = visuals._resolve_kmyth_status(
+        include_kmyth=True,
+        binary_dir=tmp_path,
+        seal_probe_timeout_seconds=10,
+        installation_validator=lambda binary_dir=None: Availability(working),
+    )
     assert runnable["available"] is True
     assert runnable["tools_runnable"] is True
     assert runnable["summary"] == "kmyth tools discovered"

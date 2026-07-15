@@ -101,9 +101,10 @@ thin CLI that parses flags, calls that adapter, and prints artifact paths.
 > as a bounded subprocess and records its evaluation, but it does **not** mutate
 > target code and uses **no sandbox**: the `improvement.md` feedback note is
 > illustrative and is never applied, so the target agent is identical across
-> generations. Self-improvement *across generations* is demonstrated only via
-> **fixture replay**. This exemplar shows the harness mechanics, not autonomous
-> live code modification.
+> generations. Fixture replay contains genuinely executed threshold variants,
+> but this toy dataset's separation gap makes all three score 1.0; the flat
+> trace is a robustness control, not evidence of improvement. This exemplar
+> shows harness mechanics, not autonomous live code modification.
 
 ## Documentation
 

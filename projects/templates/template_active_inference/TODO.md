@@ -8,7 +8,10 @@ registries rather than in this file.
 
 ## Current validation evidence
 
-Current evidence on 2026-06-23:
+Current evidence (re-run the commands below to refresh; live counts, coverage,
+and timings are read from
+[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
+here as a hardcoded date):
 
 ```bash
 uv run python scripts/validate_outputs.py

@@ -140,6 +140,7 @@ pages:
     title: "The Mega-Symbol"
     scene: "mega_symbol"
     overlay_box: true
+    caption_position: "top"
     palette: ["#141421", "#f8f2e9", "#f5c84c", "#62c7d8"]
     text: "When both families crossed, the valley rose into a mega-symbol: square inside triangle, triangle inside square, dark carrying light, light carrying dark."
   - number: 13

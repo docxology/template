@@ -7,6 +7,7 @@ import json
 import os
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
@@ -45,11 +46,70 @@ from contracts.artifact_contract import REQUIRED_GATE_ARTIFACTS as _REQUIRED_GAT
 from json_io import write_json
 
 
-def _required_gate_artifacts_signature(project_root: Path) -> str | None:
-    if not _REQUIRED_GATE_ARTIFACTS:
+def _validate_semantic_gluing(project_root: Path) -> list[str]:
+    from manuscript.sheaf.semantic import validate_semantic_gluing
+
+    return validate_semantic_gluing(project_root)
+
+
+def _validate_claim_ledger(project_root: Path) -> bool:
+    from gates.claim_ledger import validate_claim_ledger
+
+    return validate_claim_ledger(project_root)
+
+
+@dataclass
+class GateArtifactRuntime:
+    """Explicit cache, validators, and writers used by gate orchestration."""
+
+    required_artifacts: tuple[str, ...] = _REQUIRED_GATE_ARTIFACTS
+    bootstrapped_roots: set[Path] = field(default_factory=lambda: _BOOTSTRAPPED_ROOTS)
+    bootstrapped_signatures: dict[Path, str] = field(default_factory=lambda: _BOOTSTRAPPED_SIGNATURES)
+    signature_override: Callable[[Path], str | None] | None = None
+    readiness_override: Callable[[Path], tuple[str, ...]] | None = None
+    artifacts_present_override: Callable[[Path], bool] | None = None
+    required_exist_override: Callable[[Path], bool] | None = None
+    settle_override: Callable[..., None] | None = None
+    semantic_fixed_point_runner: Callable[..., dict] | None = None
+    validate_semantic: Callable[[Path], list[str]] = _validate_semantic_gluing
+    validate_animation: Callable[[Path], list[str]] = validate_animation_frame_deltas
+    validate_integration: Callable[[Path], list[str]] = validate_integration_audit_artifacts
+    validate_sheaf: Callable[[Path], list[str]] = validate_sheaf_track_artifacts
+    validate_claims: Callable[[Path], bool] = _validate_claim_ledger
+    analysis_runner: Callable[[Path], object] = run_analysis
+    pymdp_probe: Callable[[], bool] = pymdp_available
+    simulation_runner: Callable[[Path], object] = run_and_persist
+    policy_comparison_writer: Callable[[Path], object] = write_policy_comparison
+    policy_grid_writer: Callable[[Path], object] = write_policy_posterior_grid
+    graph_writer: Callable[[Path], object] = write_graph_world_artifacts
+    statistics_writer: Callable[[Path], object] = write_analysis_statistics
+    section_composer: Callable[[Path], object] = compose_all_sections
+    coverage_writer: Callable[..., object] = ensure_coverage_artifacts
+    validation_spine_writer: Callable[[Path], object] = write_validation_spine_artifacts
+    toy_sweep_writer: Callable[[Path], object] = write_toy_sweep_artifacts
+    formal_interop_writer: Callable[[Path], object] = write_formal_interop_artifacts
+    sheaf_writer: Callable[..., object] = write_sheaf_track_artifacts
+    figure_writer: Callable[[Path], object] = generate_all_figures
+    gif_writer: Callable[[Path], object] = write_belief_trajectory_gif
+    animation_writer: Callable[[Path], object] = write_animation_frame_deltas
+    integration_writer: Callable[[Path], object] = write_integration_audit_artifacts
+
+
+_DEFAULT_RUNTIME = GateArtifactRuntime()
+
+
+def _runtime(runtime: GateArtifactRuntime | None) -> GateArtifactRuntime:
+    return runtime or _DEFAULT_RUNTIME
+
+
+def _required_gate_artifacts_signature(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> str | None:
+    active = _runtime(runtime)
+    if active.signature_override is not None:
+        return active.signature_override(project_root)
+    if not active.required_artifacts:
         return None
     digest = hashlib.sha256()
-    for rel in _REQUIRED_GATE_ARTIFACTS:
+    for rel in active.required_artifacts:
         path = project_root / rel
         if not path.is_file():
             return None
@@ -74,23 +134,24 @@ def _gate_rebuild_allowed() -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
-def gate_artifact_readiness_issues(project_root: Path) -> tuple[str, ...]:
+def gate_artifact_readiness_issues(
+    project_root: Path, *, runtime: GateArtifactRuntime | None = None
+) -> tuple[str, ...]:
+    active = _runtime(runtime)
+    if active.readiness_override is not None:
+        return active.readiness_override(project_root)
     issues: list[str] = []
-    missing = [rel for rel in _REQUIRED_GATE_ARTIFACTS if not (project_root / rel).is_file()]
+    missing = [rel for rel in active.required_artifacts if not (project_root / rel).is_file()]
     if missing:
         shown = ", ".join(missing[:10])
         suffix = "" if len(missing) <= 10 else f", ... ({len(missing)} total)"
         issues.append(f"missing required gate artifacts: {shown}{suffix}")
         return tuple(issues)
     try:
-        from gates.claim_ledger import validate_claim_ledger
-        from manuscript.sheaf.semantic import validate_semantic_gluing
-        from roadmap_tracks import validate_integration_audit_artifacts, validate_sheaf_track_artifacts
-
-        semantic_issues = validate_semantic_gluing(project_root)
-        animation_issues = validate_animation_frame_deltas(project_root)
-        integration_issues = validate_integration_audit_artifacts(project_root)
-        sheaf_issues = validate_sheaf_track_artifacts(project_root)
+        semantic_issues = active.validate_semantic(project_root)
+        animation_issues = active.validate_animation(project_root)
+        integration_issues = active.validate_integration(project_root)
+        sheaf_issues = active.validate_sheaf(project_root)
         if semantic_issues:
             issues.append(f"semantic gluing issues: {len(semantic_issues)}")
         if animation_issues:
@@ -99,15 +160,15 @@ def gate_artifact_readiness_issues(project_root: Path) -> tuple[str, ...]:
             issues.append(f"integration audit issues: {len(integration_issues)}")
         if sheaf_issues:
             issues.append(f"sheaf track issues: {len(sheaf_issues)}")
-        if not validate_claim_ledger(project_root):
+        if not active.validate_claims(project_root):
             issues.append("claim ledger validation failed")
     except Exception as exc:
         issues.append(f"readiness check raised {type(exc).__name__}: {exc}")
     return tuple(issues)
 
 
-def _stale_gate_artifact_message(project_root: Path) -> str:
-    issues = gate_artifact_readiness_issues(project_root)
+def _stale_gate_artifact_message(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> str:
+    issues = gate_artifact_readiness_issues(project_root, runtime=runtime)
     detail = "\n".join(f"- {issue}" for issue in issues) or "- readiness status unknown"
     return (
         "template_active_inference gate artifacts are not ready. Standard pytest "
@@ -167,17 +228,27 @@ def _hydrate_fixed_point(project_root: Path, out: Path) -> None:
         write_manuscript_staleness_report(project_root)
 
 
-def _settle_generated_contracts(project_root: Path, out: Path, *, passes: int | None = None) -> None:
+def _settle_generated_contracts(
+    project_root: Path,
+    out: Path,
+    *,
+    passes: int | None = None,
+    runtime: GateArtifactRuntime | None = None,
+) -> None:
     """Converge visual, integration, sheaf, and hydrated-manuscript artifacts."""
-    from roadmap_tracks.fixed_point import run_semantic_fixed_point
+    active = _runtime(runtime)
+    if active.semantic_fixed_point_runner is None:
+        from roadmap_tracks.fixed_point import run_semantic_fixed_point
+    else:
+        run_semantic_fixed_point = active.semantic_fixed_point_runner
 
     requested_passes = _fixed_point_passes() if passes is None else passes
     semantic_max_passes = max(4, requested_passes * 4)
     for _ in range(max(1, requested_passes)):
-        write_sheaf_track_artifacts(project_root, finalize=False)
-        generate_all_figures(project_root)
-        write_belief_trajectory_gif(project_root)
-        write_animation_frame_deltas(project_root)
+        active.sheaf_writer(project_root, finalize=False)
+        active.figure_writer(project_root)
+        active.gif_writer(project_root)
+        active.animation_writer(project_root)
         run_semantic_fixed_point(
             project_root,
             require_analysis_outputs=False,
@@ -187,7 +258,12 @@ def _settle_generated_contracts(project_root: Path, out: Path, *, passes: int | 
         _hydrate_fixed_point(project_root, out)
 
 
-def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) -> None:
+def refresh_generated_gate_artifacts(
+    project_root: Path,
+    *,
+    force: bool = True,
+    runtime: GateArtifactRuntime | None = None,
+) -> None:
     """Refresh generated manuscript/semantic artifacts after mutation tests.
 
     Post-mutation cleanup forces regeneration by default because source and
@@ -195,50 +271,56 @@ def refresh_generated_gate_artifacts(project_root: Path, *, force: bool = True) 
     after the edited file is restored byte-for-byte. Callers that know no source
     or generated artifact changed may pass ``force=False`` to reuse the cache.
     """
+    active = _runtime(runtime)
     root = project_root.resolve()
-    existing_signature = _required_gate_artifacts_signature(root)
-    if not force and existing_signature and _BOOTSTRAPPED_SIGNATURES.get(root) == existing_signature:
+    existing_signature = _required_gate_artifacts_signature(root, runtime=active)
+    if not force and existing_signature and active.bootstrapped_signatures.get(root) == existing_signature:
         return
-    if not force and existing_signature and _gate_artifacts_present(root):
-        _BOOTSTRAPPED_SIGNATURES[root] = existing_signature
-        _BOOTSTRAPPED_ROOTS.add(root)
+    if not force and existing_signature and _gate_artifacts_present(root, runtime=active):
+        active.bootstrapped_signatures[root] = existing_signature
+        active.bootstrapped_roots.add(root)
         return
     out = root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    _settle_generated_contracts(root, out)
-    refresh_gate_artifact_session_signature(root)
+    if active.settle_override is not None:
+        active.settle_override(root, out)
+    else:
+        _settle_generated_contracts(root, out, runtime=active)
+    refresh_gate_artifact_session_signature(root, runtime=active)
 
 
-def refresh_gate_artifact_session_signature(project_root: Path) -> None:
+def refresh_gate_artifact_session_signature(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> None:
+    active = _runtime(runtime)
     root = project_root.resolve()
-    signature = _required_gate_artifacts_signature(root)
+    signature = _required_gate_artifacts_signature(root, runtime=active)
     if not signature:
         raise AssertionError("required gate artifacts are incomplete; cannot refresh session signature")
-    if not _gate_artifacts_present(root):
+    if not _gate_artifacts_present(root, runtime=active):
         raise AssertionError("gate artifacts are invalid; cannot refresh session signature")
-    _BOOTSTRAPPED_SIGNATURES[root] = signature
-    _BOOTSTRAPPED_ROOTS.add(root)
+    active.bootstrapped_signatures[root] = signature
+    active.bootstrapped_roots.add(root)
 
 
-def refresh_output_gate_contracts(project_root: Path) -> None:
+def refresh_output_gate_contracts(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> None:
+    active = _runtime(runtime)
     root = project_root.resolve()
-    animation_issues = validate_animation_frame_deltas(root)
-    integration_issues = validate_integration_audit_artifacts(root)
-    sheaf_issues = validate_sheaf_track_artifacts(root)
+    animation_issues = active.validate_animation(root)
+    integration_issues = active.validate_integration(root)
+    sheaf_issues = active.validate_sheaf(root)
     if not animation_issues and not integration_issues and not sheaf_issues:
-        refresh_gate_artifact_session_signature(root)
+        refresh_gate_artifact_session_signature(root, runtime=active)
         return
     if animation_issues:
-        write_animation_frame_deltas(root)
+        active.animation_writer(root)
     if integration_issues or sheaf_issues:
-        write_integration_audit_artifacts(root)
-        write_sheaf_track_artifacts(root)
-    animation_issues = validate_animation_frame_deltas(root)
+        active.integration_writer(root)
+        active.sheaf_writer(root)
+    animation_issues = active.validate_animation(root)
     if animation_issues:
-        write_animation_frame_deltas(root)
-        animation_issues = validate_animation_frame_deltas(root)
-    integration_issues = validate_integration_audit_artifacts(root)
-    sheaf_issues = validate_sheaf_track_artifacts(root)
+        active.animation_writer(root)
+        animation_issues = active.validate_animation(root)
+    integration_issues = active.validate_integration(root)
+    sheaf_issues = active.validate_sheaf(root)
     remaining = {
         "animation": animation_issues,
         "integration": integration_issues,
@@ -247,7 +329,7 @@ def refresh_output_gate_contracts(project_root: Path) -> None:
     remaining = {name: issues for name, issues in remaining.items() if issues}
     if remaining:
         raise AssertionError(f"output gate contracts remain invalid after refresh: {remaining}")
-    refresh_gate_artifact_session_signature(root)
+    refresh_gate_artifact_session_signature(root, runtime=active)
 
 
 def refresh_composed_gate_artifacts(project_root: Path) -> None:
@@ -267,12 +349,18 @@ def refresh_composed_gate_artifacts(project_root: Path) -> None:
     _hydrate_fixed_point(root, out)
 
 
-def _gate_artifacts_present(project_root: Path) -> bool:
-    return not gate_artifact_readiness_issues(project_root)
+def _gate_artifacts_present(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> bool:
+    active = _runtime(runtime)
+    if active.artifacts_present_override is not None:
+        return active.artifacts_present_override(project_root)
+    return not gate_artifact_readiness_issues(project_root, runtime=active)
 
 
-def _required_gate_artifacts_exist(project_root: Path) -> bool:
-    for rel in _REQUIRED_GATE_ARTIFACTS:
+def _required_gate_artifacts_exist(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> bool:
+    active = _runtime(runtime)
+    if active.required_exist_override is not None:
+        return active.required_exist_override(project_root)
+    for rel in active.required_artifacts:
         path = project_root / rel
         if not path.is_file():
             return False
@@ -285,45 +373,49 @@ def _required_gate_artifacts_exist(project_root: Path) -> bool:
     return True
 
 
-def ensure_gate_artifacts(project_root: Path) -> None:
+def ensure_gate_artifacts(project_root: Path, *, runtime: GateArtifactRuntime | None = None) -> None:
     """Rebuild analysis, simulation, sheaf, and figure outputs for gate checks."""
+    active = _runtime(runtime)
     root = project_root.resolve()
-    signature = _required_gate_artifacts_signature(root)
-    if signature and _BOOTSTRAPPED_SIGNATURES.get(root) == signature:
-        _BOOTSTRAPPED_ROOTS.add(root)
+    signature = _required_gate_artifacts_signature(root, runtime=active)
+    if signature and active.bootstrapped_signatures.get(root) == signature:
+        active.bootstrapped_roots.add(root)
         return
-    if _gate_artifacts_present(root):
-        _BOOTSTRAPPED_ROOTS.add(root)
+    if _gate_artifacts_present(root, runtime=active):
+        active.bootstrapped_roots.add(root)
         if signature:
-            _BOOTSTRAPPED_SIGNATURES[root] = signature
+            active.bootstrapped_signatures[root] = signature
         return
 
     if not _gate_rebuild_allowed():
-        raise AssertionError(_stale_gate_artifact_message(root))
+        raise AssertionError(_stale_gate_artifact_message(root, runtime=active))
 
-    run_analysis(project_root)
-    if pymdp_available():
-        run_and_persist(project_root)
-        write_policy_comparison(project_root)
-        write_policy_posterior_grid(project_root)
+    active.analysis_runner(project_root)
+    if active.pymdp_probe():
+        active.simulation_runner(project_root)
+        active.policy_comparison_writer(project_root)
+        active.policy_grid_writer(project_root)
     else:
         pytest.skip("pymdp not installed")
-    write_graph_world_artifacts(project_root)
-    write_analysis_statistics(project_root)
-    compose_all_sections(project_root)
-    ensure_coverage_artifacts(project_root, write_page=True, render_heatmap=True, force=True)
-    write_validation_spine_artifacts(project_root)
-    write_toy_sweep_artifacts(project_root)
-    write_formal_interop_artifacts(project_root)
-    write_validation_spine_artifacts(project_root)
-    write_sheaf_track_artifacts(project_root, finalize=False)
-    generate_all_figures(project_root)
-    write_belief_trajectory_gif(project_root)
-    write_animation_frame_deltas(project_root)
+    active.graph_writer(project_root)
+    active.statistics_writer(project_root)
+    active.section_composer(project_root)
+    active.coverage_writer(project_root, write_page=True, render_heatmap=True, force=True)
+    active.validation_spine_writer(project_root)
+    active.toy_sweep_writer(project_root)
+    active.formal_interop_writer(project_root)
+    active.validation_spine_writer(project_root)
+    active.sheaf_writer(project_root, finalize=False)
+    active.figure_writer(project_root)
+    active.gif_writer(project_root)
+    active.animation_writer(project_root)
     out = project_root / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    _settle_generated_contracts(project_root, out)
+    if active.settle_override is not None:
+        active.settle_override(project_root, out)
+    else:
+        _settle_generated_contracts(project_root, out, runtime=active)
     # NOTE: the final convergence pass is intentionally narrower than the full
     # bootstrap. It settles cross-artifact contract rows after figures, integration
     # reports, sheaf consolidation, and hydrated manuscript variables have all moved.
-    refresh_gate_artifact_session_signature(root)
+    refresh_gate_artifact_session_signature(root, runtime=active)

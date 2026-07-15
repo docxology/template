@@ -1,0 +1,40 @@
+{
+  "abstract": "Research groups routinely need to pitch their work \u2014 to funders, partners, or\ncollaborators \u2014 yet pitch decks are almost never treated as reproducible\nresearch artifacts: they are hand-assembled in proprietary slide tools,\ncontain unverifiable claims, and cannot be regenerated when the underlying\nfacts change. template_pitch_deck closes that gap. It generates six\nartifacts from one token-resolved content source \u2014 short, medium, and long\ndecks, each in both PDF and PPTX \u2014 with every numeric claim traced back to a\nlive introspection of the repository it describes, every {{TOKEN}}\nsubstitution verified to have actually landed, and every sentence checked\nagainst a denylist of pitch-deck clich\u00e9s.\n\nThe flagship content pitches template_template (../../template_template/), this\nmonorepo's own autopoietic meta-project, to a meta-science and\nscience-integrity audience \u2014 the kind of pitch an organization like the\nActive Inference Institute or COGSEC would actually hand to a funder. The\nrendering engine itself is new, reusable infrastructure:\ninfrastructure/rendering/slide_deck.py (ReportLab, PDF) and\ninfrastructure/rendering/pptx_deck.py (python-pptx) both consume the same\nDeckContent model, so a PDF and a PPTX built from identical content carry\nidentical slide counts and identical text \u2014 verified by direct read-back of\nboth file formats, not by inspection.\n\nKeywords: pitch deck, slide generation, reproducible research\ncommunication, meta-science infrastructure, token validation, PPTX, PDF\nrendering.",
+  "author_records": [
+    {
+      "affiliation": "Active Inference Institute",
+      "email": "daniel@activeinference.institute",
+      "name": "Daniel Ari Friedman",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "authors": [
+    "Daniel Ari Friedman"
+  ],
+  "citation_count": 0,
+  "conference": null,
+  "deposit_description": "Research groups routinely need to pitch their work \u2014 to funders, partners, or\ncollaborators \u2014 yet pitch decks are almost never treated as reproducible\nresearch artifacts: they are hand-assembled in proprietary slide tools,\ncontain unverifiable claims, and cannot be regenerated when the underlying\nfacts change. template_pitch_deck closes that gap. It generates six\nartifacts from one token-resolved content source \u2014 short, medium, and long\ndecks, each in both PDF and PPTX \u2014 with every numeric claim traced back to a\nlive introspection of the repository it describes, every {{TOKEN}}\nsubstitution verified to have actually landed, and every sentence checked\nagainst a denylist of pitch-deck clich\u00e9s.\n\nThe flagship content pitches template_template (../../template_template/), this\nmonorepo's own autopoietic meta-project, to a meta-science and\nscience-integrity audience \u2014 the kind of pitch an organization like the\nActive Inference Institute or COGSEC would actually hand to a funder. The\nrendering engine itself is new, reusable infrastructure:\ninfrastructure/rendering/slide_deck.py (ReportLab, PDF) and\ninfrastructure/rendering/pptx_deck.py (python-pptx) both consume the same\nDeckContent model, so a PDF and a PPTX built from identical content carry\nidentical slide counts and identical text \u2014 verified by direct read-back of\nboth file formats, not by inspection.\n\nKeywords: pitch deck, slide generation, reproducible research\ncommunication, meta-science infrastructure, token validation, PPTX, PDF\nrendering.\n\n---\nAssociated artifacts\nGitHub release: v1.0.0 (https://github.com/docxology/template-pitch-deck/releases/tag/v1.0.0)\nDOI: https://doi.org/10.5281/zenodo.21281510\nZenodo: https://zenodo.org/records/21281510\nPDF SHA-256: 66941950e2307d1e9717c0045f3db3196d7d2542c3f5ffceced00438f653c55b",
+  "doi": "10.5281/zenodo.21281509",
+  "download_count": 0,
+  "github_release_url": "https://github.com/docxology/template-pitch-deck/releases/tag/v1.0.0",
+  "journal": null,
+  "keywords": [
+    "pitch deck",
+    "slide generation",
+    "reproducible research communication",
+    "meta-science infrastructure",
+    "science integrity",
+    "token validation",
+    "PPTX",
+    "PDF rendering"
+  ],
+  "license": "MIT",
+  "paper_version": "1.0.0",
+  "pdf_sha256": "66941950e2307d1e9717c0045f3db3196d7d2542c3f5ffceced00438f653c55b",
+  "publication_date": "2026-07-08",
+  "publisher": null,
+  "release_tag": "v1.0.0",
+  "repository_url": null,
+  "title": "template_pitch_deck: Reproducible, Validated Pitch-Deck Generation",
+  "zenodo_description_override": null
+}

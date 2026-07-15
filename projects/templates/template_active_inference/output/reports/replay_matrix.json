@@ -381,7 +381,7 @@
         "output/data/cross_track_symbol_table.json": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
         "output/data/figure_source_map.json": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
         "output/data/manuscript_evidence_tables.json": "3495c0aa4deb2d43122c4424330481072e6f7c3d9e1a260b3c917b3686326b36",
-        "output/data/manuscript_token_provenance.json": "3afc9041ebd0139f4b824fa762049b69b7bda446ceaddac3f285d5756a6e65b7",
+        "output/data/manuscript_token_provenance.json": "41e94ded983339b6646881493ffbcd1138b638794dbc7ee8384f23cc6467b476",
         "output/data/statistical_visualization_bridge.json": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
         "output/data/validation_gate_index.json": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
         "output/reports/artifact_license_audit.json": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
@@ -457,7 +457,7 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
-        "output/data/artifact_contract_index.json": "96a0f9107206563bdc7af7b5114590b6bb17c81bb5b8773af931acdaf70b0f0b",
+        "output/data/artifact_contract_index.json": "770b58d14be41f05070ddf2417f89f304017ee4b66d954b22753062332bfbf3b",
         "output/data/evidence_field_index.json": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
         "output/data/proof_dependency_graph.json": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
         "output/data/scholarship_source_matrix.json": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
@@ -473,8 +473,8 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "107bd27b597ea671069a751276fbaa8dc237a96a633f656daece6db66f9d6276",
-        "output/reports/release_bundle_manifest.json": "bc00398572037ed3b664c0b5d3737251e407c47b309ca45ca2cfeceb9997cb81",
+        "output/reports/release_attestation.json": "cc463f83ff1d4f124e776fdc519fcf7ccea52c509ec7847d12f75793ac513b65",
+        "output/reports/release_bundle_manifest.json": "e341680cb4ff0e45aa0c36c2229c7b1fa66ca6087a606576eb7b02d60cd1beee",
         "output/reports/security_posture_audit.json": "0835e7f58e46fdac4e4cb14fdb234a37dd6d550757774b2822cb697d6eeb35a4",
         "output/reports/sheaf_render_log.json": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0"
       },

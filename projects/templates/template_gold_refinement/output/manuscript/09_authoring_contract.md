@@ -8,8 +8,8 @@
 | Config ownership | Keep lexicon and slots in config.yaml, not in generated prose. |
 | Regeneration contract | Regenerate outputs through the pipeline, not by hand-editing. |
 | Risk review | Treat high-residual-risk integrity dimensions as fork obligations before publication claims are expanded. |
-| Tool disclosure | Disclose AI, template, and automation assistance when it materially affects writing, analysis, or review. |
-| Software citation | Cite the exact software, template release, and executable package used to generate the manuscript. |
+| AI and template disclosure | Disclose material AI, template, and automation assistance, and keep responsibility for accuracy and claim boundaries with named human authors. |
+| Software and package citation | Cite the exact software/template release and preserve enough metadata for readers to identify and rebuild the executable manuscript object. |
 | Security evidence boundary | Treat security standards and Codex Security scan phases as scoped guidance unless generated scan artifacts and receipts are present. |
 
 The authoring boundary tokens for this section are analogy boundary and non-claim. They mark the point where an author must either add new evidence and validators or lower the claim from certification to analogy.

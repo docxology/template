@@ -387,7 +387,11 @@ def load_pipeline_stages_from_yaml(repo_root: Path) -> list[PipelineStage]:
     stages: list[PipelineStage] = []
     for index, stage in enumerate(data.get("stages", [])):
         script = stage.get("script") or ""
-        script_path = repo_root / "scripts" / script if script else repo_root
+        # ``script`` in pipeline.yaml is already repo-root-relative (e.g.
+        # "scripts/pipeline/stage_01_test.py") — do not re-prefix with
+        # "scripts/" here, or the resolved path doubles it
+        # ("scripts/scripts/pipeline/...") and never resolves to a real file.
+        script_path = repo_root / script if script else repo_root
         stages.append(
             PipelineStage(
                 number=index,

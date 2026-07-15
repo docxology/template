@@ -16,7 +16,7 @@ _WIDTH = 525
 _HEIGHT = 300
 
 
-def _font(size: int) -> ImageFont.ImageFont:
+def _font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
     """Return a portable bitmap font for the compact diagram."""
     try:
         return ImageFont.truetype("Arial.ttf", size)
@@ -29,7 +29,7 @@ def _centered_text(
     xy: tuple[float, float],
     text: str,
     *,
-    font: ImageFont.ImageFont,
+    font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
     fill: str = "#0f172a",
 ) -> None:
     bbox = draw.textbbox((0, 0), text, font=font)

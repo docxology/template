@@ -30,7 +30,6 @@ pytestmark = [pytest.mark.timeout(600)]
 @pytest.mark.long_running
 def test_sheaf_track_writer_looks_up_source_commit_once(
     project_root: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from roadmap_tracks import sheaf_tracks
 
@@ -43,9 +42,11 @@ def test_sheaf_track_writer_looks_up_source_commit_once(
         assert root == project_root.resolve()
         return "test-source-commit"
 
-    monkeypatch.setattr("roadmap_tracks.sheaf_tracks_write._source_commit", fake_source_commit)
-
-    sheaf_tracks.write_sheaf_track_artifacts(project_root, finalize=False)
+    sheaf_tracks.write_sheaf_track_artifacts(
+        project_root,
+        finalize=False,
+        source_commit_resolver=fake_source_commit,
+    )
 
     assert calls == 1
 

@@ -126,9 +126,13 @@ DEFAULT_NARRATIVE_MOVES: dict[str, tuple[str, ...]] = {
 
 
 class MadlibConfigError(ValueError):
-    """Data container for MadlibConfigError."""
+    """Raised when `manuscript/config.yaml` fails schema or invariant validation.
 
-    pass
+    Covers missing required keys, unknown section/lexicon references, and
+    other config-shape problems caught during `load_madlib_config` — always
+    raised with a message naming the offending `madlib.*` path so a fork can
+    fix the config without reading this module's source.
+    """
 
 
 @dataclass(frozen=True)

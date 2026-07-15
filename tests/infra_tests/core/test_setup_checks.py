@@ -9,8 +9,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from infrastructure.core.runtime.setup_checks import (
     aggregate_check_results,
     run_optional_setup_hook,
@@ -111,50 +109,33 @@ class TestSyncWorkspaceDependencies:
         # Should be True (all default deps are installed) — deterministic in CI.
         assert result is True
 
-    def test_timeout_branch_returns_true(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_timeout_branch_returns_true(self, tmp_path: Path) -> None:
         """TimeoutExpired during uv sync causes the function to return True."""
         import subprocess as sp
 
-        original_run = sp.run
-
         def _raise_timeout(*args, **kwargs):
-            # Only intercept the uv sync call; let other calls through.
-            if args and isinstance(args[0], list) and args[0][:2] == ["uv", "sync"]:
-                raise sp.TimeoutExpired(cmd=["uv", "sync"], timeout=30)
-            return original_run(*args, **kwargs)
+            raise sp.TimeoutExpired(cmd=["uv", "sync"], timeout=30)
 
-        monkeypatch.setattr(sp, "run", _raise_timeout)
-        result = sync_workspace_dependencies(tmp_path)
+        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_timeout)
         assert result is True
 
-    def test_file_not_found_fallback(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_file_not_found_fallback(self, tmp_path: Path) -> None:
         """FileNotFoundError (uv not in PATH) triggers fallback to check_dependencies."""
-        import subprocess as sp
-
-        original_run = sp.run
 
         def _raise_fnf(*args, **kwargs):
-            if args and isinstance(args[0], list) and args[0][:2] == ["uv", "sync"]:
-                raise FileNotFoundError("uv not found")
-            return original_run(*args, **kwargs)
+            raise FileNotFoundError("uv not found")
 
-        monkeypatch.setattr(sp, "run", _raise_fnf)
-        result = sync_workspace_dependencies(tmp_path)
+        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_fnf)
         assert isinstance(result, bool)
 
-    def test_subprocess_error_fallback(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_subprocess_error_fallback(self, tmp_path: Path) -> None:
         """SubprocessError during uv sync triggers fallback to check_dependencies."""
         import subprocess as sp
 
-        original_run = sp.run
-
         def _raise_sub(*args, **kwargs):
-            if args and isinstance(args[0], list) and args[0][:2] == ["uv", "sync"]:
-                raise sp.SubprocessError("generic subprocess error")
-            return original_run(*args, **kwargs)
+            raise sp.SubprocessError("generic subprocess error")
 
-        monkeypatch.setattr(sp, "run", _raise_sub)
-        result = sync_workspace_dependencies(tmp_path)
+        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_sub)
         assert isinstance(result, bool)
 
 
@@ -180,18 +161,16 @@ class TestValidateProjectDiscovery:
         result = validate_project_discovery(tmp_path, "nonexistent_project_xyz")
         assert result is False
 
-    def test_oserror_branch_returns_false(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_oserror_branch_returns_false(self, tmp_path: Path) -> None:
         """Returns False when project discovery raises an OSError."""
-        from infrastructure.project import discovery as disc_module
 
         def _raise_oserror(path: Path):
             raise OSError("simulated disk error")
 
-        monkeypatch.setattr(disc_module, "discover_projects", _raise_oserror)
         # Provide a valid project so validate_project_structure passes first.
         proj_name = "test_oserr"
         _make_valid_project(tmp_path, proj_name)
-        result = validate_project_discovery(tmp_path, proj_name)
+        result = validate_project_discovery(tmp_path, proj_name, project_discoverer=_raise_oserror)
         assert result is False
 
     def test_no_projects_directory_returns_false(self, tmp_path: Path) -> None:

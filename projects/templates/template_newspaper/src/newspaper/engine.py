@@ -34,10 +34,22 @@ class RenderResult:
         """Process all pages fit."""
         return not self.oversets
 
-    def to_dict(self) -> dict[str, object]:
-        """Serialize this object to a plain dict for JSON output."""
+    def to_dict(self, *, relative_to: Path | None = None) -> dict[str, object]:
+        """Serialize this object to a portable plain dictionary.
+
+        When ``relative_to`` is supplied, an output beneath that directory is
+        recorded as a repository-relative path. This keeps checked exemplar
+        evidence reproducible across clones while preserving the absolute
+        runtime path on :attr:`output_path` for callers that need it.
+        """
+        output_path = self.output_path
+        if relative_to is not None:
+            try:
+                output_path = output_path.resolve().relative_to(relative_to.resolve())
+            except ValueError:
+                pass
         return {
-            "output_path": str(self.output_path),
+            "output_path": output_path.as_posix(),
             "page_count": self.page_count,
             "all_pages_fit": self.all_pages_fit,
             "oversets": {str(k): v for k, v in self.oversets.items()},

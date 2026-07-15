@@ -18,6 +18,7 @@ import json
 import os
 import shutil
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
@@ -35,6 +36,7 @@ def render_mermaid_png(
     height: int = 900,
     background: str = "white",
     timeout: int = 90,
+    executable_resolver: Callable[[str], str | None] = shutil.which,
 ) -> Path:
     """Render ``source`` (a Mermaid diagram definition) to a PNG at ``output_path``.
 
@@ -43,7 +45,7 @@ def render_mermaid_png(
     content recorded alongside it (mirrors the caching behavior of the
     inline-fence renderer).
     """
-    mmdc = shutil.which("mmdc")
+    mmdc = executable_resolver("mmdc")
     if mmdc is None:
         raise RenderingError(
             "mmdc (mermaid-cli) not found on PATH. Install it (e.g. `npm install -g @mermaid-js/mermaid-cli`) "

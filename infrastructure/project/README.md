@@ -2,6 +2,9 @@
 
 Project discovery, validation, and metadata extraction for multi-project support.
 
+`codeowners.py` generates and validates the public-exemplar and sensitive-area
+ownership block in `.github/CODEOWNERS` from the canonical public scope.
+
 ## Overview
 
 The project module enables the template to manage multiple independent research projects within a single repository. It provides utilities for discovering, validating, and extracting metadata from projects.
@@ -136,6 +139,9 @@ or `.private_projects_root`.
 
 - `exemplar_roster.py` — `collect_entries(repo_root)` builds `ExemplarEntry`
   records from each public exemplar README; backs `docs/_generated/exemplar_roster.md`.
+- `export_smoke.py` — clean-exports an exemplar, installs its own locked
+  environment, and imports its top-level `src` package; `smoke_public_exemplars`
+  applies the contract to the canonical public roster.
 - `domain_profile.py` — `load_domain_profile(project_root)` returns a `DomainProfile`
   describing a project's validators, render tracks, and defaults.
 - `experiment_plan.py` — `load_experiment_plan(project_root)` /

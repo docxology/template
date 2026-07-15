@@ -1,5 +1,7 @@
 """Helper functions for prompt template generation."""
 
+from collections.abc import Mapping
+
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -8,7 +10,7 @@ logger = get_logger(__name__)
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
-    section_requirements: dict[str, str | None] | None = None,
+    section_requirements: Mapping[str, str | None] | None = None,
 ) -> str:
     """Return a FORMAT REQUIREMENTS block for injection into LLM prompts.
 
@@ -106,7 +108,7 @@ def content_requirements(
 
 def section_structure(
     sections: list[str],
-    section_descriptions: dict[str, str | None] | None = None,
+    section_descriptions: Mapping[str, str | None] | None = None,
     required_order: bool = True,
 ) -> str:
     """Return a SECTION STRUCTURE block for injection into LLM prompts.

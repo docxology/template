@@ -39,7 +39,7 @@ flowchart LR
 
 ### Job Graph
 
-`health` depends on **`lint`** only (informational). `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+`health` depends on **`lint`** only and is blocking. `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
 
 ```mermaid
 flowchart TB
@@ -72,7 +72,7 @@ flowchart TB
     class HEALTH info
 ```
 
-### Shared setup — `setup-python-env` composite action
+### Shared setup — local composite actions
 
 The 12 jobs that need Python all share one local composite action,
 [`.github/actions/setup-python-env`](../actions/setup-python-env/action.yml),
@@ -94,6 +94,12 @@ its own `uv sync …` line so optional groups (`rendering`/`monitoring`/`discopy
 remain visible per job. When bumping a setup action's SHA, edit the composite
 action — not each job.
 
+The `health` and `docs-lint` jobs additionally share
+[`.github/actions/setup-docs-lint`](../actions/setup-docs-lint/action.yml),
+which provisions the pinned Node runtime/cache plus real `mmdc` and
+`chrome-headless-shell`. This keeps unified health's `docs-lint` constituent
+behaviorally equivalent to the dedicated documentation job.
+
 ### Job Details
 
 #### 1. Lint & Type Check (`lint`)
@@ -102,11 +108,11 @@ action — not each job.
 - **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
 - **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
-#### 2. Unified Health Report (`health`)
+#### 2. Static Health Report (`health`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Depends on:** `lint`
-- **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json` artefact (non-blocking for merge; dedicated jobs enforce gates).
+- **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs.
 
 #### 3. Verify No Mocks Policy (`verify-no-mocks`)
 
@@ -115,10 +121,9 @@ action — not each job.
 - **Enforced policy:** no configured prohibited mock-framework imports/calls
   (`MagicMock`, `mocker.patch`, `unittest.mock`, and related lexical forms) in
   test files.
-- **Boundary:** `--inventory` separately measures monkeypatch environment
-  isolation and dependency replacement. It remains advisory until the
-  dependency-replacement count reaches zero; CI does not pass the strict
-  inventory flag today.
+- **Boundary:** `--inventory` separately classifies permitted environment
+  isolation and semantic dependency replacement. CI enforces a zero ceiling
+  for dependency replacements; environment isolation remains permitted.
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
 
@@ -206,7 +211,7 @@ action — not each job.
 |---|---|---|
 | Ruff linting | zero violations | `lint` job |
 | Ruff formatting | zero diffs | `lint` job |
-| mypy type check | no errors | `lint` job |
+| mypy strict gate | zero errors across the generated public source scope | `lint` job |
 | Mock-framework lexical gate | zero prohibited imports/calls | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |

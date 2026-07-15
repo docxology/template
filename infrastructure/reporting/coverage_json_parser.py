@@ -56,16 +56,16 @@ def parse_coverage_json(coverage_json_path: Path) -> dict[str, Any] | None:
         total_executed = sum(data["executed_lines"] for data in file_coverage.values())
         total_missing = sum(data["missing_lines"] for data in file_coverage.values())
         total_excluded = sum(data["excluded_lines"] for data in file_coverage.values())
-        total_lines = total_executed + total_missing + total_excluded
+        overall_total_lines: float | int = total_executed + total_missing + total_excluded
 
-        overall_coverage = (total_executed / total_lines * 100) if total_lines > 0 else 0.0
+        overall_coverage = (total_executed / overall_total_lines * 100) if overall_total_lines > 0 else 0.0
 
         return {
             "overall_coverage": overall_coverage,
             "total_executed": total_executed,
             "total_missing": total_missing,
             "total_excluded": total_excluded,
-            "total_lines": total_lines,
+            "total_lines": overall_total_lines,
             "file_coverage": file_coverage,
         }
 

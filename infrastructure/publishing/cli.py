@@ -5,7 +5,7 @@ Thin orchestrator wrapping infrastructure.publishing module functionality.
 
 import argparse
 import os
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from infrastructure.core.cli_scaffold import emit_schema
@@ -99,7 +99,11 @@ def generate_citation_command(args: argparse.Namespace) -> None:
     print(citation)
 
 
-def publish_zenodo_command(args: argparse.Namespace) -> None:
+def publish_zenodo_command(
+    args: argparse.Namespace,
+    *,
+    config_factory: Callable[..., ZenodoConfig] = ZenodoConfig,
+) -> None:
     """Upload and publish research outputs to Zenodo.
 
     Finds all PDF files in the specified output directory and uploads them
@@ -146,7 +150,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
     use_sandbox = not getattr(args, "production", False)
     env_label = "sandbox" if use_sandbox else "production"
     logger.info(f"Publishing {len(pdfs)} files to Zenodo ({env_label})")
-    config = ZenodoConfig(access_token=token, sandbox=use_sandbox)
+    config = config_factory(access_token=token, sandbox=use_sandbox)
     client = ZenodoClient(config=config)
 
     # Build Zenodo-formatted metadata
@@ -235,7 +239,11 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    command_overrides: dict[str, Callable[[argparse.Namespace], object]] | None = None,
+) -> int:
     """Main CLI entry point for publishing operations.
 
     Parses command-line arguments and dispatches to the appropriate
@@ -256,6 +264,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     """
     parser = build_parser()
     args = parser.parse_args(argv)
+    if command_overrides and args.command in command_overrides:
+        args.func = command_overrides[args.command]
 
     if not hasattr(args, "func"):
         parser.print_help()

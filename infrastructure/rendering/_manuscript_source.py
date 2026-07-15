@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import RenderingError, ValidationError
+from infrastructure.core.exceptions import TemplateError, ValidationError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger, log_success
@@ -232,9 +232,12 @@ def render_individual_files(
                 rendered_count += 1
             else:
                 logger.warning(f"  No output generated for {source_file.name}")
-        except RenderingError as re:
-            logger.warning(f"  ❌ Rendering error for {source_file.name}: {re.message}")
-            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
+        except TemplateError as render_error:
+            # RenderingError and all other template-domain failures carry the
+            # same diagnostic contract. Record a per-section failure instead
+            # of aborting before the combined-render summary is written.
+            logger.warning(f"  ❌ Rendering error for {source_file.name}: {render_error.message}")
+            reporter.record(render_error.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
             failed_files.append(source_file.name)
         except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")

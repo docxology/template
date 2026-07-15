@@ -20,7 +20,7 @@ def _load_config(project_root: Path) -> dict[str, Any] | None:
         from infrastructure.core.config.loader import load_config as _load
 
         loaded = _load(config_path)
-        return loaded if isinstance(loaded, dict) else None
+        return dict(loaded) if isinstance(loaded, dict) else None
     with config_path.open("r", encoding="utf-8") as fh:
         data = yaml.safe_load(fh) or {}
         return data if isinstance(data, dict) else None

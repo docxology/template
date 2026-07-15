@@ -104,11 +104,12 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
     def _resolve_pipeline_yaml(self) -> Path:
         """Return the pipeline YAML path to use: project-specific if it exists, else default."""
         project_yaml = Path(self.config.project_dir) / "pipeline.yaml"
-        default_yaml = Path(self.config.repo_root) / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
-        return project_yaml if project_yaml.exists() else default_yaml
+        return project_yaml if project_yaml.exists() else self._default_pipeline_yaml()
 
     def _default_pipeline_yaml(self) -> Path:
-        return Path(self.config.repo_root) / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+        """Return the repository DAG, or the identical installed package data."""
+        repository_yaml = Path(self.config.repo_root) / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+        return repository_yaml if repository_yaml.exists() else Path(__file__).with_name("pipeline.yaml")
 
     def _project_pipeline_yaml(self) -> Path:
         return Path(self.config.project_dir) / "pipeline.yaml"
@@ -153,77 +154,33 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         Resolution order:
         1. ``projects/{name}/pipeline.yaml`` (project-specific override)
-        2. ``infrastructure/core/pipeline/pipeline.yaml`` (default definition)
-        3. Hardcoded fallback (for tests or missing config)
+        2. repository ``infrastructure/core/pipeline/pipeline.yaml``
+        3. the same ``pipeline.yaml`` installed as package data
 
         Tag-based filtering applies ``skip_clean``, ``skip_infra``, and ``skip_llm``
         flags without modifying the YAML source.
         """
         from infrastructure.core.pipeline.dag import PipelineDAG
 
-        # Resolve YAML path: project-specific → default → fallback
+        # Resolve YAML path: project-specific → repository/package default.
         resolved = self._resolve_pipeline_yaml()
-        yaml_path: Path | None = None
-        if resolved.exists():
-            yaml_path = resolved
-            if resolved == self.config.project_dir / "pipeline.yaml":
-                logger.info(f"Using project-specific pipeline: {yaml_path}")
-            else:
-                logger.debug(f"Using default pipeline: {yaml_path}")
+        if resolved == self.config.project_dir / "pipeline.yaml":
+            logger.info("Using project-specific pipeline: %s", resolved)
+        else:
+            logger.debug("Using default pipeline: %s", resolved)
 
-        if yaml_path is not None:
-            dag = PipelineDAG.from_yaml(yaml_path)
-
-            # Apply flag-based filtering via tags. Long-horizon and opt-in
-            # science/provenance stages are declared in pipeline.yaml for
-            # documentation and direct script invocation (see the comment
-            # directly above the "Connector Search" stage there), but are
-            # not part of the default executor path.
-            exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival", "science", "provenance"}
-            if not include_llm or self.config.skip_llm:
-                exclude_tags.add("llm")
-            if skip_clean:
-                dag.remove_stage("Clean Output Directories")
-            if self.config.skip_infra:
-                dag.remove_stage("Infrastructure Tests")
-
-            if exclude_tags:
-                dag.filter_tags(exclude=exclude_tags)
-
-            # DEFAULT-OFF plugin stages: merge only when the project declares
-            # extra stages in projects/{name}/pipeline_plugins.yaml. With no
-            # declaration this is a no-op and the plan is unchanged.
-            self._merge_plugin_stages_into_dag(dag)
-
-            return dag.to_stage_specs(self)
-
-        # Hardcoded fallback when no pipeline.yaml is available (e.g. tests).
-        # Applies the same skip_clean/skip_infra/skip_llm flags as the YAML path above.
-        logger.debug("No pipeline.yaml found — using hardcoded stage list")
-        skip_llm = not include_llm or self.config.skip_llm
-        all_stages: list[StageSpec] = [
-            StageSpec("Clean Output Directories", self._run_clean_outputs),
-            StageSpec("Environment Setup", self._run_setup_environment),
-            StageSpec("Infrastructure Tests", self.run_infrastructure_tests),
-            StageSpec("Project Tests", self.run_project_tests),
-            StageSpec("Project Analysis", self._run_analysis),
-            StageSpec("PDF Rendering", self._run_pdf_rendering),
-            StageSpec("Output Validation", self._run_validation),
-            StageSpec("LLM Scientific Review", self._run_llm_review),
-            StageSpec("LLM Translations", self._run_llm_translations),
-            StageSpec("Copy Outputs", self._run_copy_outputs),
-        ]
-        skip_names: set[str] = set()
+        dag = PipelineDAG.from_yaml(resolved)
+        exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival", "science", "provenance"}
+        if not include_llm or self.config.skip_llm:
+            exclude_tags.add("llm")
         if skip_clean:
-            skip_names.add("Clean Output Directories")
+            dag.remove_stage("Clean Output Directories")
         if self.config.skip_infra:
-            skip_names.add("Infrastructure Tests")
-        if skip_llm:
-            skip_names.update({"LLM Scientific Review", "LLM Translations"})
-        base_specs = [s for s in all_stages if s.name not in skip_names]
+            dag.remove_stage("Infrastructure Tests")
+        dag.filter_tags(exclude=exclude_tags)
 
-        # DEFAULT-OFF plugin stages on the fallback path too (no-op when absent).
-        return self._append_plugin_stages_to_specs(base_specs)
+        self._merge_plugin_stages_into_dag(dag)
+        return dag.to_stage_specs(self)
 
     # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
 
@@ -238,12 +195,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         from infrastructure.core.pipeline.plugins import merge_plugin_stages
 
         merge_plugin_stages(dag, self._load_plugin_stages())
-
-    def _append_plugin_stages_to_specs(self, specs: list[StageSpec]) -> list[StageSpec]:
-        """Append declared plugin stages to a fallback spec list (no-op when none)."""
-        from infrastructure.core.pipeline.plugins import append_plugin_specs
-
-        return append_plugin_specs(specs, self._load_plugin_stages(), self)
 
     # -- Pipeline execution --------------------------------------------------
 

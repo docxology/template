@@ -30,9 +30,10 @@ def create_github_release(
     *,
     base_url: str = "https://api.github.com",
     target_commitish: str = "main",
+    requests_available: bool = _requests_available,
 ) -> str:
     """Create a GitHub release with attached assets."""
-    if not _requests_available:
+    if not requests_available:
         raise PublishingError("requests package is required for GitHub API calls")
     headers = {
         **make_token_auth_headers(token),
@@ -54,7 +55,7 @@ def create_github_release(
         response.raise_for_status()
         release_data = response.json()
         upload_url = release_data["upload_url"].split("{")[0]
-        html_url = release_data["html_url"]
+        html_url = str(release_data["html_url"])
 
         for asset in assets:
             if not asset.exists():

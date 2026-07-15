@@ -50,6 +50,8 @@ _SUPPRESSION_TOKEN = "# no-mocks-ok:"  # nosec B105
 # Modules whose import is, by itself, a no-mocks violation.
 _FORBIDDEN_IMPORT_ROOTS = frozenset({"mock", "pytest_mock"})
 _FORBIDDEN_UNITTEST_SUBMODULE = "mock"  # unittest.mock
+_FORBIDDEN_DYNAMIC_MODULES = frozenset({"mock", "pytest_mock", "unittest.mock"})
+_FORBIDDEN_DYNAMIC_ATTRIBUTES = frozenset({"Mock", "MagicMock", "create_autospec", "patch"})
 
 # Call / decorator usage patterns, matched against comment-stripped lines.
 # Word boundaries keep ``monkeypatch`` (allowed) distinct from ``patch``.
@@ -146,14 +148,20 @@ class SemanticStandInScanResult:
 
 
 def _import_violations(tree: ast.AST) -> set[int]:
-    """Return line numbers of forbidden mock-framework imports."""
+    """Return line numbers of static and dynamic mock-framework imports."""
     flagged: set[int] = set()
+    importlib_aliases = {"importlib"}
+    import_module_aliases: set[str] = set()
+    forbidden_module_variables: set[str] = set()
+
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
                 root = alias.name.split(".")[0]
                 if root in _FORBIDDEN_IMPORT_ROOTS or alias.name == "unittest.mock":
                     flagged.add(node.lineno)
+                if alias.name == "importlib":
+                    importlib_aliases.add(alias.asname or alias.name)
         elif isinstance(node, ast.ImportFrom):
             module = node.module or ""
             # from unittest import mock  /  from unittest.mock import X
@@ -161,6 +169,56 @@ def _import_violations(tree: ast.AST) -> set[int]:
                 flagged.add(node.lineno)
             elif module == "unittest.mock" or module.split(".")[0] in _FORBIDDEN_IMPORT_ROOTS:
                 flagged.add(node.lineno)
+            if module == "importlib":
+                import_module_aliases.update(
+                    alias.asname or alias.name for alias in node.names if alias.name == "import_module"
+                )
+
+    def dynamic_module(call: ast.Call) -> str | None:
+        function = call.func
+        is_import = isinstance(function, ast.Name) and function.id in {
+            "__import__",
+            *import_module_aliases,
+        }
+        if isinstance(function, ast.Attribute) and isinstance(function.value, ast.Name):
+            is_import = function.value.id in importlib_aliases and function.attr == "import_module"
+        if not is_import or not call.args:
+            return None
+        module_arg = call.args[0]
+        if isinstance(module_arg, ast.Constant) and isinstance(module_arg.value, str):
+            return module_arg.value
+        return None
+
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Assign, ast.AnnAssign)):
+            value = node.value
+            if isinstance(value, ast.Call) and dynamic_module(value) in _FORBIDDEN_DYNAMIC_MODULES:
+                flagged.add(value.lineno)
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                forbidden_module_variables.update(target.id for target in targets if isinstance(target, ast.Name))
+        if not isinstance(node, ast.Call):
+            continue
+        module_name = dynamic_module(node)
+        if module_name in _FORBIDDEN_DYNAMIC_MODULES:
+            flagged.add(node.lineno)
+        function = node.func
+        if (
+            isinstance(function, ast.Attribute)
+            and isinstance(function.value, ast.Name)
+            and function.value.id in forbidden_module_variables
+            and function.attr in _FORBIDDEN_DYNAMIC_ATTRIBUTES
+        ):
+            flagged.add(node.lineno)
+        if (
+            isinstance(function, ast.Name)
+            and function.id == "getattr"
+            and len(node.args) >= 2
+            and isinstance(node.args[0], ast.Name)
+            and node.args[0].id in forbidden_module_variables
+            and isinstance(node.args[1], ast.Constant)
+            and node.args[1].value in _FORBIDDEN_DYNAMIC_ATTRIBUTES
+        ):
+            flagged.add(node.lineno)
     return flagged
 
 
@@ -220,7 +278,7 @@ def _iter_test_python_files(tests_dir: Path) -> tuple[Path, ...]:
     files = []
     for py_file in tests_dir.rglob("*.py"):
         relative_parts = py_file.relative_to(tests_dir).parts
-        if "fixtures" not in relative_parts:
+        if "fixtures" not in relative_parts or py_file.name.startswith("test_"):
             files.append(py_file)
     return tuple(sorted(files, key=lambda path: path.as_posix()))
 
@@ -326,7 +384,7 @@ def _monkeypatch_aliases(tree: ast.AST) -> set[str]:
         elif isinstance(node, ast.Assign) and _is_monkeypatch_constructor(node.value):
             for target in node.targets:
                 names.update(_assigned_names(target))
-        elif isinstance(node, ast.AnnAssign) and _is_monkeypatch_constructor(node.value):
+        elif isinstance(node, ast.AnnAssign) and node.value is not None and _is_monkeypatch_constructor(node.value):
             names.update(_assigned_names(node.target))
 
     # ``with monkeypatch.context() as scoped:`` introduces another receiver.
@@ -369,12 +427,12 @@ def scan_semantic_standins(
     tests_dir: Path,
     repo_root: Path,
 ) -> SemanticStandInScanResult:
-    """Inventory monkeypatch operations without treating current debt as a gate.
+    """Inventory monkeypatch operations for the zero-debt repository gate.
 
     Classification is intentionally syntactic. In particular, every
     ``setattr``/``setitem`` call is recorded as dependency replacement even
     when a human review may later decide it only redirects a path. This gives
-    migration work a conservative, reproducible starting inventory.
+    the blocking gate a conservative, reproducible inventory.
     """
     uses: list[SemanticStandInUse] = []
     errors: list[str] = []

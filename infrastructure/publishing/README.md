@@ -2,6 +2,12 @@
 
 Tools for academic publishing, citations, and platform integration.
 
+Repository metadata is normalized by `repository_metadata.py`; non-dry-run
+payloads are validated and summarized without credential values by
+`preflight.py` before any publishing transport is invoked.
+`release_cli.py` owns the stable argument and credential-source resolution
+surface so the executable release script remains a thin orchestrator.
+
 For a release operator's path through standalone GitHub mirrors, real Zenodo DOI
 minting, optional mirrors, and archival handoff, start with
 [`../../docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).
@@ -109,6 +115,7 @@ graph TD
 - **archival/** - Multi-target long-horizon archival subpackage (`ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider`)
 - **registry.py** - `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` enum: 12 first-class
 - **status_report.py** - Compile registry + `config.yaml` metadata into a regenerable per-platform README status block (`compile_publishing_status()`, `render_status_block()`, `update_readme_block()`)
+- **reachability.py** - Run opt-in live repository and DOI reachability checks for publishing-status diagnostics
 - **credential_check.py** - Read-only, non-destructive verification that publishing credentials authenticate (`run_probe()`, `check_all()`)
 - **upload_runner.py** - Reusable multi-platform upload dispatch (`UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs()`, `run_uploads()` returning an `UploadRun`); the per-platform helpers + batch orchestrator extracted from `scripts/publish/upload_gold_refinement.py`, which is now a thin CLI
 - **transmission_models.py** - Shared dependency-light `TransmissionContext` value object used by barcode-strip and bookend generation without creating an import cycle

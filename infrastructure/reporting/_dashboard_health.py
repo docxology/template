@@ -65,7 +65,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
                 continue
 
             # Extract factor scores (convert to 0-100 scale)
-            scores = []
+            scores: list[float] = []
             for factor in factors:
                 factor_data = health["factors"].get(factor, {})
                 score = factor_data.get("score", 0)
@@ -162,9 +162,9 @@ def generate_health_comparison_chart(summary: ExecutiveSummary, output_dir: Path
             return saved_files
 
         # Extract health scores
-        project_names = []
-        overall_scores = []
-        factor_scores: dict[str, float] = {
+        project_names: list[str] = []
+        overall_scores: list[float] = []
+        factor_scores: dict[str, list[float]] = {
             "coverage": [],
             "integrity": [],
             "manuscript": [],
@@ -257,7 +257,7 @@ def generate_health_comparison_chart(summary: ExecutiveSummary, output_dir: Path
         # Save PNG
         organizer = OutputOrganizer()
         png_path = organizer.get_output_path(
-            "health_scores_comparison.png",  # type: ignore[arg-type]
+            "health_scores_comparison.png",
             output_dir,
             FileType.PNG,
         )
@@ -267,7 +267,7 @@ def generate_health_comparison_chart(summary: ExecutiveSummary, output_dir: Path
 
         # Save PDF
         pdf_path = organizer.get_output_path(
-            "health_scores_comparison.pdf",  # type: ignore[arg-type]
+            "health_scores_comparison.pdf",
             output_dir,
             FileType.PDF,
         )

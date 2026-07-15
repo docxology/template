@@ -90,7 +90,7 @@ class OpenAIDeepResearchProvider:
 
     def _client(self):
         try:
-            from openai import OpenAI  # type: ignore[import-not-found]
+            from openai import OpenAI
         except ImportError as exc:  # pragma: no cover - exercised only when optional SDK is absent
             raise OpenAIDeepResearchError(
                 "The optional 'openai' package is not installed. Install the OpenAI SDK to use this provider."

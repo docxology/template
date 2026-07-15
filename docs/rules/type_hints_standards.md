@@ -402,16 +402,12 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 uv run mypy infrastructure/core/test_runner.py
 ```
 
-**Do not run bare `mypy --strict` and expect a clean result** — the repo does
-not hold itself to blanket strict mode. `--strict` against the current public
-CI source paths reports 75 errors across 24 files (verified). The real CI gate
-is a custom progressive-strictness config: a permissive base
-(`disallow_untyped_defs = false`), specific modules opted into
-`disallow_untyped_defs = true` (`infrastructure.core.health_check`,
-`infrastructure.core.exceptions`, `infrastructure.rendering.*`), and several
-`infrastructure.*` packages still under `ignore_errors = true` pending
-narrowing — see `[tool.mypy]` in `pyproject.toml` (not a separate `mypy.ini`)
-for the authoritative, current list.
+The blocking gate is `scripts/gates/mypy_ratchet.py` (compatibility-named),
+which runs the repository's configured mypy policy over the generated public
+source scope and accepts zero errors. The base policy keeps
+`disallow_untyped_defs = false`; selected modules opt into it while the whole
+public scope remains free of `ignore_errors` exemptions. See `[tool.mypy]` in
+`pyproject.toml` (not a separate `mypy.ini`) for the authoritative policy.
 
 ### Configuration (`pyproject.toml` → `[tool.mypy]`)
 

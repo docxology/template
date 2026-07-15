@@ -22,10 +22,13 @@ _SIMPLE_DIAGRAM = """flowchart TB
 """
 
 
-def test_render_mermaid_png_raises_clear_error_without_mmdc(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(shutil, "which", lambda _name: None)
+def test_render_mermaid_png_raises_clear_error_without_mmdc(tmp_path: Path):
     with pytest.raises(RenderingError, match="mmdc"):
-        render_mermaid_png(_SIMPLE_DIAGRAM, tmp_path / "diagram.png")
+        render_mermaid_png(
+            _SIMPLE_DIAGRAM,
+            tmp_path / "diagram.png",
+            executable_resolver=lambda _name: None,
+        )
 
 
 @pytest.mark.skipif(not _MMDC_AVAILABLE, reason="mmdc (mermaid-cli) not installed")

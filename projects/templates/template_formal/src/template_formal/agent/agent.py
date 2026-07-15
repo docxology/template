@@ -64,7 +64,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generic, Protocol, Sequence, TypeVar
+from typing import Generic, Protocol, Sequence, TypeAlias, TypeVar
 from uuid import UUID
 
 from template_formal.protocol.session import (
@@ -113,7 +113,7 @@ class GaussianBelief(Protocol):
 
 StateT = TypeVar("StateT", bound=GaussianBelief)
 
-AnyProtocolPhase = ClosedSession | EstablishedSession | HandshakingSession | IdleSession
+AnyProtocolPhase: TypeAlias = ClosedSession | EstablishedSession | HandshakingSession | IdleSession
 """The union of every concrete phase class an ``Agent``'s protocol endpoint may hold.
 
 ``SessionEndpoint`` is generic over a *constrained* ``PhaseT`` (one of the

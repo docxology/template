@@ -76,7 +76,7 @@ def _iter_cache_chrome_candidates(
     return candidates
 
 
-def resolve_chrome_executable(*, include_macos_app: bool = False) -> Path | None:
+def resolve_chrome_executable(*, include_macos_app: bool = False, home: Path | None = None) -> Path | None:
     """Resolve the browser executable mmdc's Puppeteer should launch.
 
     Args:
@@ -85,6 +85,7 @@ def resolve_chrome_executable(*, include_macos_app: bool = False) -> Path | None
             False (its tests assert ``None`` past the on-PATH/cache search); the
             doc renderers set it True so local macOS dev works without a
             separate Chromium download.
+        home: Home-directory override for deterministic resolution tests.
 
     Returns:
         An executable browser :class:`~pathlib.Path`, or ``None`` to let
@@ -97,7 +98,8 @@ def resolve_chrome_executable(*, include_macos_app: bool = False) -> Path | None
             if _is_executable_file(candidate):
                 return candidate
 
-    cache_dir = Path(os.environ.get("PUPPETEER_CACHE_DIR", Path.home() / ".cache" / "puppeteer"))
+    home_dir = home or Path.home()
+    cache_dir = Path(os.environ.get("PUPPETEER_CACHE_DIR", home_dir / ".cache" / "puppeteer"))
     cache_candidates = _iter_cache_chrome_candidates(cache_dir)
     if cache_candidates:
         return max(
@@ -114,7 +116,7 @@ def resolve_chrome_executable(*, include_macos_app: bool = False) -> Path | None
             return candidate
 
     for executable_name in _SYSTEM_CHROME_NAMES:
-        candidate = Path.home() / executable_name
+        candidate = home_dir / executable_name
         if _is_executable_file(candidate):
             return candidate
 

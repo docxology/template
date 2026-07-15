@@ -1,0 +1,8 @@
+claims:
+  - claim_id: effective-primitive-domain-count
+    kind: number
+    value: 5
+    source: manuscript/config.yaml grammar.slots primitive_domain options
+    source_tier: project_config
+    freshness: active
+    artifact_path: manuscript/config.yaml

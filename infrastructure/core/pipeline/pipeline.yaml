@@ -5,8 +5,9 @@
 # execution plan from the stage list.
 #
 # Each stage has:
+#   key          — stable machine-facing identifier used by single-stage dispatch
 #   name         — human-readable label shown in progress logs
-#   script       — script filename inside scripts/ (or null for built-in functions)
+#   script       — canonical repository-relative script path (or null for built-ins)
 #   method       — executor method name (for stages that don't use subprocess scripts)
 #   args         — extra CLI arguments passed to the script
 #   allow_skip   — treat exit-code 2 as success (graceful skip)
@@ -24,6 +25,7 @@
 stages:
 
   - name: Clean Output Directories
+    key: clean
     method: _run_clean_outputs
     tags: [core, clean]
     failure_mode: soft fail
@@ -36,7 +38,8 @@ stages:
       rollback_to: "start"
 
   - name: Environment Setup
-    script: 00_setup_environment.py
+    key: setup
+    script: scripts/pipeline/stage_00_setup.py
     depends_on: [Clean Output Directories]
     tags: [core]
     failure_mode: hard fail
@@ -49,7 +52,8 @@ stages:
       rollback_to: "Clean Output Directories"
 
   - name: Infrastructure Tests
-    script: 01_run_tests.py
+    key: infra_tests
+    script: scripts/pipeline/stage_01_test.py
     args: [--infra-only, --verbose, --infra-scope, pipeline-smoke]
     depends_on: [Environment Setup]
     tags: [core, tests]
@@ -63,7 +67,8 @@ stages:
       rollback_to: "Environment Setup"
 
   - name: Project Tests
-    script: 01_run_tests.py
+    key: project_tests
+    script: scripts/pipeline/stage_01_test.py
     args: [--project-only, --verbose]
     depends_on: [Environment Setup]
     tags: [core, tests]
@@ -78,7 +83,8 @@ stages:
       rollback_to: "Environment Setup"
 
   - name: Project Analysis
-    script: 02_run_analysis.py
+    key: analysis
+    script: scripts/pipeline/stage_02_analysis.py
     depends_on: [Project Tests]
     tags: [core]
     failure_mode: hard fail
@@ -97,7 +103,8 @@ stages:
   #   uv run python scripts/pipeline/stage_09_provenance_record.py --project <name> --stage "Connector Search"
 
   - name: Connector Search
-    script: 08_connector_search.py
+    key: connector_search
+    script: scripts/pipeline/stage_08_connector_search.py
     depends_on: [Project Analysis]
     tags: [science]
     allow_skip: true
@@ -111,7 +118,8 @@ stages:
       rollback_to: "Project Analysis"
 
   - name: Provenance Record
-    script: 09_provenance_record.py
+    key: provenance_record
+    script: scripts/pipeline/stage_09_provenance_record.py
     args: [--stage, Connector Search]
     depends_on: [Connector Search]
     tags: [provenance]
@@ -126,7 +134,8 @@ stages:
       rollback_to: "Connector Search"
 
   - name: PDF Rendering
-    script: 03_render_pdf.py
+    key: render_pdf
+    script: scripts/pipeline/stage_03_render.py
     depends_on: [Project Analysis]
     tags: [core]
     failure_mode: hard fail
@@ -140,7 +149,8 @@ stages:
       rollback_to: "Project Analysis"
 
   - name: Output Validation
-    script: 04_validate_output.py
+    key: validate
+    script: scripts/pipeline/stage_04_validate.py
     depends_on: [PDF Rendering]
     tags: [core]
     failure_mode: warning + report
@@ -154,7 +164,8 @@ stages:
       rollback_to: "PDF Rendering"
 
   - name: LLM Scientific Review
-    script: 06_llm_review.py
+    key: llm_reviews
+    script: scripts/pipeline/stage_06_llm_review.py
     args: [--reviews-only]
     allow_skip: true
     depends_on: [Output Validation]
@@ -169,7 +180,8 @@ stages:
       rollback_to: "Output Validation"
 
   - name: LLM Translations
-    script: 06_llm_review.py
+    key: llm_translations
+    script: scripts/pipeline/stage_06_llm_review.py
     args: [--translations-only]
     allow_skip: true
     depends_on: [Output Validation]
@@ -184,7 +196,8 @@ stages:
       rollback_to: "Output Validation"
 
   - name: Copy Outputs
-    script: 05_copy_outputs.py
+    key: copy
+    script: scripts/pipeline/stage_05_copy.py
     depends_on: [Output Validation]
     tags: [core]
     failure_mode: soft fail
@@ -211,7 +224,8 @@ stages:
   #   uv run python scripts/runner/archive_publication.py --project <name>
 
   - name: Ebook Generation
-    script: 11_ebook_generation.py
+    key: ebook_generation
+    script: scripts/pipeline/stage_11_ebook.py
     allow_skip: true
     depends_on: [PDF Rendering]
     tags: [core, ebook]
@@ -225,7 +239,8 @@ stages:
       rollback_to: "PDF Rendering"
 
   - name: Metadata Package
-    script: 12_metadata_package.py
+    key: metadata_package
+    script: scripts/pipeline/stage_12_metadata.py
     allow_skip: true
     depends_on: [Copy Outputs]
     tags: [core, metadata]
@@ -239,7 +254,8 @@ stages:
       rollback_to: "Copy Outputs"
 
   - name: Executable Bundle
-    script: 08_executable_bundle.py
+    key: executable_bundle
+    script: scripts/runner/bundle_executable.py
     allow_skip: true
     depends_on: [PDF Rendering]
     tags: [bundle]
@@ -253,7 +269,8 @@ stages:
       rollback_to: "PDF Rendering"
 
   - name: Archival Publication
-    script: 09_archive_publication.py
+    key: archival_publication
+    script: scripts/runner/archive_publication.py
     allow_skip: true
     depends_on: [Executable Bundle]
     tags: [archival]

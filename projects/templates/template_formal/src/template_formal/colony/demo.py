@@ -107,15 +107,10 @@ def run_statistics_sweep(
     real harness's responsibility, not the caller's (ISC-66: every trial's
     agents still get real on-disk files, never ``:memory:``).
     """
-    # Justification for the ignore below: config_kwargs is a caller-supplied
-    # dict[str, object] (its keys/shapes come from scripts/02_run_analysis.py
-    # and tests, not from an untyped external boundary) spread into the
-    # strongly-typed ColonyTrialConfig constructor -- mypy cannot verify a
-    # dict spread matches a dataclass's field types. The runtime
-    # compensating check is ColonyTrialConfig.__post_init__ (ISC-80), which
-    # validates decay/sensing_noise_std/preference_variance unconditionally
-    # on every construction, typed spread or not.
     return [
-        run_colony_trial(ColonyTrialConfig(seed=seed_base + i, **config_kwargs), db_dir)  # type: ignore[arg-type]
+        run_colony_trial(
+            ColonyTrialConfig.from_mapping(seed=seed_base + i, values=config_kwargs),
+            db_dir,
+        )
         for i in range(num_trials)
     ]

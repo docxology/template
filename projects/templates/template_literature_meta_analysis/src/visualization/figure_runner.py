@@ -7,6 +7,7 @@ import json
 import logging
 import os
 from pathlib import Path
+from typing import Any
 
 import matplotlib
 import numpy as np
@@ -80,12 +81,13 @@ FIGURE_CAPTIONS = {
 }
 
 
-def _load_json(path: Path, logger: logging.Logger) -> dict:
+def _load_json(path: Path, logger: logging.Logger) -> Any:
     if not path.exists():
         logger.warning("%s not found, skipping", path)
         return {}
     with open(path, encoding="utf-8") as handle:
-        return json.load(handle)
+        loaded = json.load(handle)
+    return loaded
 
 
 def generate_all_figures(args: argparse.Namespace) -> list[str]:

@@ -53,6 +53,13 @@ confirmation band, reorganization).
   runs are manifest-authoritative.
 - Add a validator for stale live-Hermes transcripts if live transcript fixtures
   are ever checked in.
+- The shared `infrastructure.validation.evidence_registry` claim-ledger loader
+  does not check that a claim's `source` path actually resolves on disk — a
+  stale `04_results.md` reference in `data/claim_ledger.yaml` (should have been
+  `03_results.md`) went uncaught until an ad hoc audit found it. Add a
+  source-path-exists check (project-local test, or upstream in the shared
+  loader if it can be made generic) so a renamed/removed manuscript file fails
+  loudly instead of silently.
 
 ## Ordered improvement ladder
 

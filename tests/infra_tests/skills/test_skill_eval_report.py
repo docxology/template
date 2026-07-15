@@ -7,7 +7,6 @@ import json
 import sys
 from pathlib import Path
 
-import pytest
 
 _REPO = Path(__file__).resolve().parents[3]
 _SCRIPTS = _REPO / "docs/prompts/_skill-eval/scripts"
@@ -191,21 +190,15 @@ def test_format_compare_section_no_regressions() -> None:
     assert "No with_skill regressions." in text
 
 
-def test_load_baseline_benchmark_missing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import skill_eval.config as config_mod
-
-    monkeypatch.setattr(config_mod, "BASELINE_DIR", tmp_path / "missing-baseline")
-    assert load_baseline_benchmark() is None
+def test_load_baseline_benchmark_missing(tmp_path: Path) -> None:
+    assert load_baseline_benchmark(tmp_path / "missing-baseline") is None
 
 
-def test_load_baseline_benchmark_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import skill_eval.config as config_mod
-
+def test_load_baseline_benchmark_present(tmp_path: Path) -> None:
     baseline_dir = tmp_path / "baseline"
     baseline_dir.mkdir()
     payload = _sample_benchmark(run_dir="baseline")
     (baseline_dir / "benchmark.json").write_text(json.dumps(payload), encoding="utf-8")
-    monkeypatch.setattr(config_mod, "BASELINE_DIR", baseline_dir)
-    loaded = load_baseline_benchmark()
+    loaded = load_baseline_benchmark(baseline_dir)
     assert loaded is not None
     assert loaded["run_dir"] == "baseline"

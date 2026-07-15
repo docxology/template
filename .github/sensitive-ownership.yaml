@@ -1,0 +1,16 @@
+sensitive_areas:
+  - path: /infrastructure/steganography/
+    owners: ["@docxology"]
+    exception: null
+  - path: /infrastructure/publishing/
+    owners: ["@docxology"]
+    exception: null
+  - path: /scripts/publish/
+    owners: ["@docxology"]
+    exception: null
+  - path: /.github/workflows/
+    owners: ["@docxology"]
+    exception: null
+  - path: /rules/templates/*/strong/
+    owners: ["@docxology"]
+    exception: null

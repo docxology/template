@@ -10,7 +10,10 @@ This module coordinates the PDF rendering stage by:
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
 from infrastructure.project.discovery import resolve_project_root
@@ -44,11 +47,44 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter
 logger = get_logger(__name__)
 
 
-def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydration: bool = False) -> int:
+def _write_transmission_bookends(project_root: Path, project_name: str, *, repo_root: Path) -> None:
+    from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+
+    write_transmission_bookends(project_root, project_name, repo_root=repo_root)
+
+
+@dataclass(frozen=True)
+class RenderPipelineDependencies:
+    """Explicit collaborators for rendering orchestration and behavior tests."""
+
+    resolve_project: Callable[[Path, str], Path] = resolve_project_root
+    hydrate_manuscript: Callable[..., int] = _run_manuscript_variable_script
+    write_bookends: Callable[..., None] = _write_transmission_bookends
+    run_override: Callable[[Path, Path], int] = _run_override_script
+    validate_latex: Callable[..., int] = _validate_latex_packages
+    verify_figures: Callable[[Path, Path], dict[str, Any]] = verify_figures_exist
+    discover_manuscript: Callable[[Path], list[Path]] = discover_manuscript_files
+    load_project_config: Callable[[Path], dict[str, Any] | None] = _load_project_config_yaml
+    manager_factory: Callable[..., RenderManager] = RenderManager
+    render_individual: Callable[..., tuple[int, list[str]]] = _render_individual_files
+    render_combined: Callable[..., None] = _render_combined_outputs
+    generate_summary: Callable[..., dict[str, Any]] = generate_rendering_summary
+    log_summary: Callable[[dict[str, Any]], None] = log_rendering_summary
+    verify_outputs: Callable[..., bool] = verify_pdf_outputs
+
+
+def _render_pipeline_impl(
+    project_name: str = "project",
+    *,
+    skip_manuscript_hydration: bool = False,
+    repo_root: Path | None = None,
+    dependencies: RenderPipelineDependencies | None = None,
+) -> int:
     """Execute the PDF rendering pipeline using infrastructure rendering."""
+    deps = dependencies or RenderPipelineDependencies()
     logger.info(f"Executing PDF rendering pipeline for project '{project_name}'...")
-    repo_root = Path(__file__).parent.parent.parent
-    project_root = resolve_project_root(repo_root, project_name)
+    root = repo_root or Path(__file__).parent.parent.parent
+    project_root = deps.resolve_project(root, project_name)
     if not project_root.is_dir():
         logger.error(f"Project directory not found: {project_root}")
         return 1
@@ -61,27 +97,25 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
 
     if skip_manuscript_hydration:
         logger.info("Skipping manuscript-variable hydration (--skip-manuscript-hydration)")
-    elif _run_manuscript_variable_script(project_root, template_repo_root=repo_root) != 0:
+    elif deps.hydrate_manuscript(project_root, template_repo_root=root) != 0:
         return 1
 
     manuscript_dir = _resolve_manuscript_dir(project_root)
 
     try:
-        from infrastructure.publishing.transmission_bookends import write_transmission_bookends
-
-        write_transmission_bookends(project_root, project_name, repo_root=repo_root)
+        deps.write_bookends(project_root, project_name, repo_root=root)
     except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
         logger.warning("Transmission bookend generation skipped: %s", exc)
 
     override_script = project_root / "scripts" / "_render_pdf_override.py"
     if override_script.exists():
-        return _run_override_script(project_root, override_script)
+        return deps.run_override(project_root, override_script)
 
-    if _validate_latex_packages() != 0:
+    if deps.validate_latex() != 0:
         return 1
 
     logger.info("Verifying figures from analysis stage...")
-    fig_status = verify_figures_exist(project_root, manuscript_dir)
+    fig_status = deps.verify_figures(project_root, manuscript_dir)
     if fig_status["found_figures"]:
         logger.info(f"  Found figures: {', '.join(fig_status['found_figures'][:3])}")
         if len(fig_status["found_figures"]) > 3:
@@ -89,7 +123,7 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
     else:
         logger.warning("  ⚠️  No figures found - will render PDF with missing figures")
 
-    source_files = discover_manuscript_files(manuscript_dir)
+    source_files = deps.discover_manuscript(manuscript_dir)
     if not source_files:
         logger.warning("No manuscript files found")
         return 0
@@ -97,7 +131,7 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
     _log_manuscript_composition(source_files)
 
     try:
-        project_yaml = _load_project_config_yaml(manuscript_dir)
+        project_yaml = deps.load_project_config(manuscript_dir)
         env_config = RenderingConfig.from_project_config(project_yaml)
         config = RenderingConfig(
             manuscript_dir=str(manuscript_dir),
@@ -114,7 +148,11 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
             enable_docx=env_config.enable_docx,
             enable_epub=env_config.enable_epub,
         )
-        manager = RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=project_root / "output" / "figures")
+        manager = deps.manager_factory(
+            config,
+            manuscript_dir=manuscript_dir,
+            figures_dir=project_root / "output" / "figures",
+        )
         log_success("Initialized RenderManager from infrastructure.rendering", logger)
         logger.info(
             f"Render formats: pdf={config.enable_pdf} html={config.enable_html} "
@@ -125,10 +163,10 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
         return 1
 
     md_files = [f for f in source_files if f.suffix == ".md"]
-    rendered_count, failed_files = _render_individual_files(manager, source_files, reporter)
+    rendered_count, failed_files = deps.render_individual(manager, source_files, reporter)
 
     if md_files:
-        _render_combined_outputs(manager, md_files, manuscript_dir, project_name, reporter, rendered_count)
+        deps.render_combined(manager, md_files, manuscript_dir, project_name, reporter, rendered_count)
 
     if reporter.events:
         reporter.print_report()
@@ -142,8 +180,8 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
         for fname in failed_files:
             logger.warning(f"    - {fname}")
 
-    summary = generate_rendering_summary(project_name)
-    log_rendering_summary(summary)
+    summary = deps.generate_summary(project_name, repo_root=root)
+    deps.log_summary(summary)
     if failed_files:
         logger.error(f"PDF rendering pipeline failed: {len(failed_files)} manuscript file(s) had render errors")
         return 1
@@ -151,13 +189,26 @@ def _render_pipeline_impl(project_name: str = "project", *, skip_manuscript_hydr
     return 0
 
 
-def execute_render_pipeline(project_name: str = "project", *, skip_manuscript_hydration: bool = False) -> int:
+def execute_render_pipeline(
+    project_name: str = "project",
+    *,
+    skip_manuscript_hydration: bool = False,
+    repo_root: Path | None = None,
+    dependencies: RenderPipelineDependencies | None = None,
+) -> int:
     """Execute PDF rendering orchestration."""
+    deps = dependencies or RenderPipelineDependencies()
+    root = repo_root or Path(__file__).parent.parent.parent
     log_live_resource_usage("PDF rendering stage start", logger)
     try:
-        exit_code = _render_pipeline_impl(project_name, skip_manuscript_hydration=skip_manuscript_hydration)
+        exit_code = _render_pipeline_impl(
+            project_name,
+            skip_manuscript_hydration=skip_manuscript_hydration,
+            repo_root=root,
+            dependencies=deps,
+        )
         if exit_code == 0:
-            outputs_valid = verify_pdf_outputs(project_name)
+            outputs_valid = deps.verify_outputs(project_name, repo_root=root)
             if outputs_valid:
                 log_success("PDF rendering complete - ready for validation", logger)
             else:
@@ -178,5 +229,6 @@ __all__ = [
     "generate_rendering_summary",
     "log_rendering_summary",
     "verify_pdf_outputs",
+    "RenderPipelineDependencies",
     "execute_render_pipeline",
 ]

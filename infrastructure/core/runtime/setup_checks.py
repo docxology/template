@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success
@@ -33,11 +34,15 @@ def aggregate_check_results(
     return all_passed, lines
 
 
-def sync_workspace_dependencies(repo_root: Path) -> bool:
+def sync_workspace_dependencies(
+    repo_root: Path,
+    *,
+    process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> bool:
     """Run ``uv sync`` with fallback to per-package install."""
     logger.info("Checking for uv package manager...")
     try:
-        result = subprocess.run(
+        result = process_runner(
             ["uv", "sync"],
             cwd=str(repo_root),
             capture_output=True,
@@ -73,7 +78,12 @@ def sync_workspace_dependencies(repo_root: Path) -> bool:
         return all_present
 
 
-def validate_project_discovery(repo_root: Path, project_name: str) -> bool:
+def validate_project_discovery(
+    repo_root: Path,
+    project_name: str,
+    *,
+    project_discoverer: Callable[[Path], list] | None = None,
+) -> bool:
     """Validate project discovery."""
     from infrastructure.core.project_paths import resolve_project_root
     from infrastructure.project.discovery import discover_projects
@@ -88,7 +98,7 @@ def validate_project_discovery(repo_root: Path, project_name: str) -> bool:
             return False
         logger.info("Target project resolved: %s", target_root)
 
-        projects = discover_projects(repo_root)
+        projects = (project_discoverer or discover_projects)(repo_root)
         if not projects:
             logger.warning("No valid projects found in projects/ directory")
             return False

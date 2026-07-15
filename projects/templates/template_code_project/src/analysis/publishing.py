@@ -11,12 +11,12 @@ except ImportError:  # pragma: no cover
     from optimizer import OptimizationResult  # type: ignore[no-redef]
 
 from ._infra import (
-    INFRASTRUCTURE_AVAILABLE,
     PublicationMetadata,
     generate_citation_apa,
     generate_citation_bibtex,
     generate_citation_mla,
     get_logger,
+    infrastructure_available,
 )
 from .experiments import _project_root
 
@@ -49,14 +49,14 @@ def extract_optimization_metadata(results: dict[float, OptimizationResult]) -> d
             "methodology": "Gradient descent with fixed step sizes",
         }
     except (KeyError, ValueError, TypeError, AttributeError) as e:
-        if INFRASTRUCTURE_AVAILABLE and get_logger is not None:
+        if infrastructure_available() and get_logger is not None:
             get_logger(__name__).warning("Failed to extract optimization metadata: %s", e)
         return None
 
 
 def generate_citations_from_metadata(metadata: dict[str, Any]) -> dict[str, str] | None:
     """Generate citations from optimization metadata."""
-    if not INFRASTRUCTURE_AVAILABLE:
+    if not infrastructure_available():
         return None
     try:
         pub_metadata = PublicationMetadata(
@@ -107,10 +107,10 @@ def save_publishing_materials(metadata: dict[str, Any], citations: dict[str, str
                 for format_name, citation in citations.items():
                     f.write(f"### {format_name.upper()}\n\n{citation}\n\n")
 
-        if INFRASTRUCTURE_AVAILABLE and get_logger is not None:
+        if infrastructure_available() and get_logger is not None:
             get_logger(__name__).info("Publishing materials saved to: %s", output_dir)
     except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
-        if INFRASTRUCTURE_AVAILABLE and get_logger is not None:
+        if infrastructure_available() and get_logger is not None:
             get_logger(__name__).warning("Failed to save publishing materials: %s", e)
 
 

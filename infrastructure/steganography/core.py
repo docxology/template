@@ -187,7 +187,7 @@ class SteganographyProcessor:
     ) -> Path:
         """Merge overlay and barcode pages onto every page of the PDF."""
         try:
-            from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
+            from pypdf import PdfReader, PdfWriter
         except ImportError:
             raise ImportError("The 'pypdf' package is required. Install with: pip install pypdf") from None
 

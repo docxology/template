@@ -61,7 +61,7 @@ from infrastructure.llm.review.generation import (  # noqa: F401
 
 # Registry mapping review_type → (review_name, template_class, default_temperature).
 # Add new review types here; the _make_review_fn factory generates the public entry points.
-_REVIEW_REGISTRY: "dict[str, tuple[str, type[ResearchTemplate], float]]" = {
+_REVIEW_REGISTRY: "dict[ReviewType, tuple[str, type[ResearchTemplate], float]]" = {
     "executive_summary": ("executive summary", ManuscriptExecutiveSummary, 0.3),
     "quality_review": ("quality review", ManuscriptQualityReview, 0.3),
     "methodology_review": ("methodology review", ManuscriptMethodologyReview, 0.3),
@@ -70,7 +70,9 @@ _REVIEW_REGISTRY: "dict[str, tuple[str, type[ResearchTemplate], float]]" = {
 }
 
 
-def _make_review_fn(review_type: str) -> Callable[[LLMClient, str, str, float], tuple[str, ReviewMetrics]]:
+def _make_review_fn(
+    review_type: ReviewType,
+) -> Callable[[LLMClient, str, str], tuple[str | None, ReviewMetrics]]:
     """Return a named review function bound to a specific review_type from _REVIEW_REGISTRY.
 
     The factory sets ``__name__`` / ``__qualname__`` on the generated function so that
@@ -85,7 +87,7 @@ def _make_review_fn(review_type: str) -> Callable[[LLMClient, str, str, float], 
         text: str,
         model_name: str = "",
         temperature: float = default_temp,
-    ) -> tuple[str, ReviewMetrics]:
+    ) -> tuple[str | None, ReviewMetrics]:
         return generate_review_with_metrics(
             client=client,
             text=text,

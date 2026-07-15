@@ -11,7 +11,7 @@ def test_default_triple_skip_matches_repo_gate() -> None:
         skip_slow=True,
         skip_bench=True,
     ) == (
-        "not requires_ollama and not requires_docker and not slow and not bench and not benchmark "
+        "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark "
         "and not performance and not long_running and not private_project "
         "and not external_fixture"
     )
@@ -24,7 +24,7 @@ def test_include_slow_still_skips_long_running_ci_project_job_expression() -> No
             skip_slow=False,
             skip_bench=True,
         )
-        == "not requires_ollama and not requires_docker and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture"
+        == "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture"
     )
 
 
@@ -35,7 +35,7 @@ def test_include_ollama_include_slow_still_skips_bench() -> None:
             skip_slow=False,
             skip_bench=True,
         )
-        == "not requires_docker and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture"
+        == "not requires_docker and not network and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture"
     )
 
 
@@ -46,6 +46,7 @@ def test_all_skips_disabled_returns_none() -> None:
             skip_slow=False,
             skip_bench=False,
             skip_requires_docker=False,
+            skip_network=False,
             skip_long_running=False,
             skip_private_project=False,
             skip_external_fixture=False,
@@ -61,6 +62,7 @@ def test_only_slow_skip() -> None:
             skip_slow=True,
             skip_bench=False,
             skip_requires_docker=False,
+            skip_network=False,
         )
         == "not slow and not long_running and not private_project and not external_fixture"
     )
@@ -74,5 +76,5 @@ def test_include_long_running_omits_long_running_filter() -> None:
             skip_bench=True,
             skip_long_running=False,
         )
-        == "not requires_ollama and not requires_docker and not bench and not benchmark and not performance and not private_project and not external_fixture"
+        == "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance and not private_project and not external_fixture"
     )

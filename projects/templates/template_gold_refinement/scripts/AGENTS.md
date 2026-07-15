@@ -11,9 +11,12 @@ logic here — all computation lives in `src/`.
 |--------|------|
 | `refinement_analysis.py` | Run the refinery pipeline, write `output/data/refinery_results.json` and `output/reports/token_plan.json` |
 | `z_generate_manuscript_variables.py` | Generate `{{TOKEN}}` variables, write `output/data/manuscript_variables.json`, inject into `output/manuscript/` |
+| `zz_generate_cover_visualization.py` | Generate the manuscript cover image (`figures/cover_visualization.png`) from `src/cover_visualization.py` |
 
-The `z_` prefix on the second script means it runs **after** analysis — it
-consumes `output/data/refinery_results.json` and must run last before rendering.
+The `z_`/`zz_` prefixes encode run order: both scripts run **after** analysis
+and consume `output/data/refinery_results.json`; `zz_generate_cover_visualization.py`
+runs last, after manuscript variables are generated, so the cover reflects the
+same run's data.
 
 ## Commands
 
@@ -26,4 +29,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 
 # Draft mode (allows N/A fallbacks when analysis is missing)
 uv run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py --allow-draft
+
+# Generate the cover visualization (requires analysis outputs)
+uv run python projects/templates/template_gold_refinement/scripts/zz_generate_cover_visualization.py
 ```

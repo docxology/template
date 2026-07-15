@@ -28,6 +28,8 @@ def run_search_pipeline_cli(
     args: argparse.Namespace,
     project_root: Path,
     config: ProjectConfig,
+    *,
+    llm_builder=build_llm_callable,
 ) -> int:
     """Run the search-pipeline CLI flow and return the process exit code."""
     logger.info("Running literature pipeline for query: %r", config.search.query)
@@ -64,7 +66,7 @@ def run_search_pipeline_cli(
     do_llm = config.llm.enabled and not args.no_llm
     llm = None
     if do_llm and artifacts.papers:
-        llm = build_llm_callable(
+        llm = llm_builder(
             model=config.llm.model,
             seed=config.llm.seed,
             temperature=config.llm.temperature,

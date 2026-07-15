@@ -209,7 +209,7 @@ Real expected output (per ISA.md's own authoritative-invocation binding —
 a bare root-venv `uv run pytest` is not equivalent, see `ISA.md` Changelog):
 
 ```text
-Required test coverage of 90% reached. Total coverage: 95.93%
+Required test coverage of 90% reached. Total coverage: 95.91%
 278 passed (timing is machine-dependent)
 Project: ✓ PASSED (278/278 tests, 95.91% coverage)
 ```

@@ -37,13 +37,19 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     if not path.is_file():
         return {}
     stat = path.stat()
-    return copy.deepcopy(_parse_yaml_cached(str(path), stat.st_mtime_ns, stat.st_size))
+    loaded = copy.deepcopy(_parse_yaml_cached(str(path), stat.st_mtime_ns, stat.st_size))
+    if not isinstance(loaded, dict):
+        raise ValueError(f"expected YAML object in {path}")
+    return loaded
 
 
 def _load_structured(path: Path) -> dict[str, Any]:
     if path.suffix.lower() in {".yaml", ".yml"}:
         return _load_yaml(path)
-    return _load_json(path)
+    loaded = _load_json(path)
+    if not isinstance(loaded, dict):
+        raise ValueError(f"expected JSON object in {path}")
+    return dict(loaded)
 
 
 def _bridge_reference_section_status(row: dict[str, Any]) -> tuple[bool, bool]:
@@ -132,9 +138,9 @@ def _artifact_maps() -> tuple[dict[str, str], dict[str, tuple[str, ...]], dict[s
     return ARTIFACT_PRODUCERS, ARTIFACT_CONSUMERS, ARTIFACT_GATES
 
 
-def _source_commit(root: Path) -> str:
+def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
     try:
-        result = subprocess.run(
+        result = process_runner(
             ["git", "-C", str(root), "rev-parse", "HEAD"],
             check=True,
             capture_output=True,

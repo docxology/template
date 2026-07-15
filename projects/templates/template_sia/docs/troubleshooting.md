@@ -18,7 +18,7 @@ Add `pytest-timeout` to project dev dependencies (already in `pyproject.toml`). 
 
 ## `ModuleNotFoundError: No module named 'PIL'`
 
-The variables script must not import `infrastructure.rendering` package init. Use `src/reports.write_resolved_manuscript_tree` (lazy load of `manuscript_injection.py` only).
+The variables script must not import `infrastructure.rendering` package init. Use `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` (lazy load of `manuscript_injection.py` only, not the package `__init__.py`).
 
 ## `Unknown config key 'sia'`
 

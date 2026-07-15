@@ -153,8 +153,8 @@ def emit_text_report(report: DocsLintReport) -> None:
             logger.error(issue.format())
     if report.doc_pairs:
         log_header("DOC-PAIR ISSUES", logger)
-        for issue in report.doc_pairs:
-            logger.error(issue.format())
+        for pair_issue in report.doc_pairs:
+            logger.error(pair_issue.format())
 
 
 def emit_json_report(report: DocsLintReport, repo_root: Path) -> str:

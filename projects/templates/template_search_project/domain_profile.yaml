@@ -3,7 +3,6 @@ display_name: Literature Search & Synthesis Pipeline Exemplar
 required_packages:
   - pyyaml
   - matplotlib
-  - networkx
   - defusedxml
   - pytest
 preferred_outputs:

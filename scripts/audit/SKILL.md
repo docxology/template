@@ -44,6 +44,6 @@ All scripts use `parents[2]` from `scripts/audit/` — three levels to repo root
 - `check_tracked_projects.py` runs in pre-push hook — keep it fast.
 - `audit_documentation.py` is advisory; non-zero exit is a warning, not a gate.
 - `copy_exemplar.py` modifies tracked files — review diff before committing.
-- `verify_no_mocks.py --inventory` is advisory while dependency-replacement
-  debt is non-zero. Do not interpret the default lexical pass as proof that all
-  integration points are real.
+- `verify_no_mocks.py --inventory --max-dependency-replacements 0` is blocking
+  in CI. The default lexical pass and the semantic zero-debt gate are distinct
+  contracts; environment isolation remains separately classified.

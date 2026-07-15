@@ -25,7 +25,11 @@ SCRIPTS_DIR = PROJECT / "scripts"
 MANUSCRIPT = PROJECT / "manuscript"
 
 
-def ensure_project_paths(*, include_scripts: bool = False) -> Path:
+def ensure_project_paths(
+    *,
+    include_scripts: bool = False,
+    path_entries: list[str] | None = None,
+) -> Path:
     """Insert ``src/``, optional ``scripts/``, and the template root on ``sys.path``.
 
     Idempotent: calling multiple times with the same arguments is safe and does
@@ -38,20 +42,21 @@ def ensure_project_paths(*, include_scripts: bool = False) -> Path:
     Returns:
         The project root directory (:data:`PROJECT`).
     """
+    entries = sys.path if path_entries is None else path_entries
     if include_scripts:
         scripts_str = str(SCRIPTS_DIR)
-        if scripts_str not in sys.path:
-            sys.path.insert(0, scripts_str)
+        if scripts_str not in entries:
+            entries.insert(0, scripts_str)
 
     src_str = str(SRC)
-    if src_str not in sys.path:
-        sys.path.insert(0, src_str)
+    if src_str not in entries:
+        entries.insert(0, src_str)
 
     root = discover_template_root(PROJECT)
     if root is not None:
         root_str = str(root)
-        if root_str not in sys.path:
-            sys.path.insert(0, root_str)
+        if root_str not in entries:
+            entries.insert(0, root_str)
 
     return PROJECT
 

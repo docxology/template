@@ -48,6 +48,7 @@ def run_verification_checks(repo_root: Path) -> dict[str, Any]:
     roots = doc_roots(repo_root)
 
     lint_report = run_docs_lint(repo_root, quiet=True)
+    docs_lint: dict[str, Any]
     if lint_report.runtime_error:
         docs_lint = {
             "status": "skipped",

@@ -103,9 +103,15 @@ def _check_index_completeness(repo_root: Path) -> list[str]:
         return failures
 
     index_text = index_path.read_text(encoding="utf-8")
+    indexed_paths: set[str] = set()
+    for line in index_text.splitlines():
+        cells = [cell.strip() for cell in line.split("|")]
+        if len(cells) < 5 or not cells[2].startswith("`") or not cells[2].endswith("`"):
+            continue
+        indexed_paths.add(cells[2][1:-1])
     skills = discover_skills(repo_root, search_roots=DEFAULT_SKILL_SEARCH_ROOTS)
     for skill in skills:
-        if skill.path_posix not in index_text:
+        if skill.path_posix not in indexed_paths:
             failures.append(
                 f"FAIL index: skill {skill.path_posix} discovered under "
                 f"{', '.join(DEFAULT_SKILL_SEARCH_ROOTS)} but absent from "

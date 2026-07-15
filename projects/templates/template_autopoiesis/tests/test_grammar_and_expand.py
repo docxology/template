@@ -161,6 +161,63 @@ def test_parse_grammar_unknown_dep_raises():
         parse_grammar(block)
 
 
+# ---------------------------------------------------------------------------
+# Shorthand slot form: ``slots: {name: [options, ...]}``
+#
+# SYNTAX.md documents this as a valid alternative to the longhand
+# ``slots: [{"name": ..., "options": [...]}]`` list form, and claims
+# parse_grammar() "normalizes both forms". Before the fix that added
+# shorthand normalization, feeding a shorthand mapping into parse_grammar
+# raised `GrammarError: Each slot must be a mapping, got <class 'str'>`
+# (iterating a dict yields its string keys, which then fail the
+# `isinstance(entry, dict)` check) — exactly the crash a fresh fork hits
+# when following manuscript/config.yaml.example's documented quickstart.
+# ---------------------------------------------------------------------------
+
+
+def test_parse_grammar_shorthand_slots_form_parses():
+    block = {
+        "seed": 42,
+        "slots": {
+            "primitive_domain": list(KNOWN_DOMAINS),
+            "dep_mode": ["template", "vendor"],
+        },
+        "deps": [],
+    }
+    g = parse_grammar(block)
+    assert len(g.slots) == 2
+    assert g.slot("primitive_domain").options == tuple(KNOWN_DOMAINS)
+    assert g.slot("dep_mode").options == ("template", "vendor")
+
+
+def test_parse_grammar_shorthand_matches_longhand_equivalent():
+    shorthand = parse_grammar(
+        {
+            "seed": 7,
+            "slots": {"primitive_domain": ["optimization", "dynamics"]},
+            "deps": [],
+        }
+    )
+    longhand = parse_grammar(
+        {
+            "seed": 7,
+            "slots": [{"name": "primitive_domain", "options": ["optimization", "dynamics"]}],
+            "deps": [],
+        }
+    )
+    assert shorthand.canonical() == longhand.canonical()
+    assert shorthand.grammar_hash == longhand.grammar_hash
+
+
+def test_parse_grammar_shorthand_single_option_slot():
+    # A single-string option list (as used by manuscript/config.yaml.example's
+    # `domain: [optimization, dynamics, statistics, signal, graph]`) must
+    # normalize the same way regardless of how many options it has.
+    block = {"seed": 1, "slots": {"domain": ["optimization"]}, "deps": []}
+    g = parse_grammar(block)
+    assert g.slot("domain").options == ("optimization",)
+
+
 def test_parse_grammar_grammar_hash_stable():
     g1 = parse_grammar(_make_block())
     g2 = parse_grammar(_make_block())

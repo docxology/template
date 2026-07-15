@@ -132,7 +132,7 @@ class _StructuredQueryMixin:
             dataclasses.replace(options, max_tokens=max_tokens) if options else GenerationOptions(max_tokens=max_tokens)
         )
         response, _ = self._time_call(lambda: self.query(instruction + prompt, model=model_name, options=mode_options))
-        return response
+        return str(response)
 
     def query_structured(
         self,
@@ -218,7 +218,7 @@ class _StructuredQueryMixin:
                 },
             )
             return parsed
-        except (json.JSONDecodeError, ValueError) as e:
+        except (json.JSONDecodeError, ValueError):
             # Try to extract JSON if wrapped in surrounding text
             if "{" in response_text and "}" in response_text:
                 start = response_text.index("{")
@@ -257,7 +257,7 @@ class _StructuredQueryMixin:
             raise LLMError(
                 "Structured response must be valid JSON",
                 context={"response": response_text[:200]},
-            ) from e
+            )
 
     def stream_short(
         self,

@@ -35,9 +35,9 @@ class FooterConfig:
 def _get_reportlab():
     """Lazily import reportlab components."""
     try:
-        from reportlab.lib.pagesizes import letter  # type: ignore[import-untyped]
-        from reportlab.lib.units import inch  # type: ignore[import-untyped]
-        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.units import inch
+        from reportlab.pdfgen import canvas as rl_canvas
 
         return rl_canvas, letter, inch
     except ImportError:
@@ -128,7 +128,7 @@ def create_qr_overlay(
     """
     rl_canvas_mod, _letter, _inch = _get_reportlab()
     try:
-        from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
+        from reportlab.lib.utils import ImageReader
         from infrastructure.steganography.barcodes import generate_qr_code
     except ImportError as exc:
         raise ImportError("QR overlay requires optional dependencies: uv sync --group steganography") from exc

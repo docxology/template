@@ -83,7 +83,7 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | `performance` (import benchmarks) | ✅ Yes | Runs in container |
 | `detect` / `detect-projects` (optional-project + public-exemplar discovery) | ✅ Yes | Fully Linux-portable; gates `fep-lean` and the Windows smoke job below |
 | `actionlint` | ✅ Yes | Lints the workflow YAML itself |
-| `health` (unified health report, informational) | ✅ Yes | Runs `infrastructure.core.health`; needs `lint` |
+| `health` (blocking static-health report) | ✅ Yes | Runs `infrastructure.core.health`; needs `lint` and the shared Mermaid/Chrome setup action |
 | `verify-no-mocks` | ✅ Yes | Fully Linux-portable; needs `lint` |
 | `test-regression` (claim-binding pins) | ✅ Yes | Fully Linux-portable; needs `verify-no-mocks` |
 | `fep-lean` (gauss + lake, conditional) | ✅ Yes | Linux-only, `if: needs.detect.outputs.fep_lean == 'true'`; heavy (60 min timeout) |

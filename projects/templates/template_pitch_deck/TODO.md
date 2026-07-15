@@ -6,7 +6,7 @@ Forward-only integrity backlog for the pitch-deck generation exemplar.
 
 - Project tests and coverage: `uv run pytest projects/templates/template_pitch_deck/tests/ --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90` (derive the live result; do not copy an old count here).
 - Infra rendering tests: `uv run pytest tests/infra_tests/rendering/test_slide_deck.py tests/infra_tests/rendering/test_pptx_deck.py tests/infra_tests/rendering/test_pptx_determinism.py`.
-- Content audit: `uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py` — token resolution + cliche lint, all three lengths clean (169 text fields in the long deck alone).
+- Content audit: `uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py` — token resolution + cliche lint, all three lengths clean (170 text fields in the long deck alone).
 - Diligence audit: `uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.py` — 100% fact-citation coverage across all three lengths (this check also runs *inside* `render_orchestration.py` as a real `DiligenceAuditFailure` gate, added session 3).
 - Render: `uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py` — six real artifacts (short/medium/long × PDF/PPTX) + one standalone `.md` page per slide (104 total: 11+37+56), PDF↔PPTX slide-count parity verified.
 - Full real pipeline gate: `uv run python scripts/pipeline/stage_01_test.py --project templates/template_pitch_deck --project-only`.
@@ -47,5 +47,4 @@ Forward-only integrity backlog for the pitch-deck generation exemplar.
 
 1. Add the second pitch-subject deck (a broader meta-science-group pitch) to prove the schema generalizes beyond `template_template`.
 2. Add a `docs/architecture.md` walkthrough of the theme/slide-kind/diligence system.
-4. Add hypothesis-based property tests for budget filtering and token resolution.
-5. Once a real standalone repo/DOI exists, regenerate the PUBLISHING-STATUS block from real identifiers.
+3. Add hypothesis-based property tests for budget filtering and token resolution.

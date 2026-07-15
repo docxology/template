@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -424,7 +425,7 @@ __all__ = [
 ]
 
 
-def _cli() -> None:
+def _cli(argv: list[str] | None = None) -> None:
     import argparse
     import json
     import sys
@@ -443,16 +444,17 @@ def _cli() -> None:
         ],
     )
     parser.add_argument("--project-root", required=True, help="Project root directory")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     project_root = Path(args.project_root).resolve()
-    func = {
+    stages: dict[str, Callable[[Path], StageResult]] = {
         "bibliography_completeness": validate_bibliography_completeness,
         "variables_resolved": validate_variables_resolved,
         "infrastructure_usage": audit_infrastructure_imports,
         "determinism_check": check_determinism_artifacts,
         "test_suite_health": run_project_tests,
-    }[args.stage]
+    }
+    func = stages[args.stage]
 
     result = func(project_root)
     print(json.dumps(result.as_dict(), indent=2))

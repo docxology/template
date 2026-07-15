@@ -33,7 +33,7 @@ Examples:
 
 Pure-Python fallback (when act unavailable) runs:
   - ruff check + format
-  - mypy (strict on public CI source scope)
+  - mypy (zero-error strict gate across the generated public source scope)
   - bandit security scan
   - infra + project pytest with coverage gates
   - pre-commit hooks (all stages, including pre-push)
@@ -120,7 +120,7 @@ if [[ "$LIST_ONLY" -eq 1 ]]; then
   cat <<'EOF'
 Pure-Python fallback available steps (act not available):
   - lint        (ruff check + format)
-  - typecheck   (mypy strict)
+  - typecheck   (zero-error mypy strict gate)
   - security    (bandit)
   - tests       (infra + project pytest with coverage)
   - precommit   (all pre-commit stages including pre-push)
@@ -150,7 +150,7 @@ fi
 
 if [[ -z "$JOB" || "$JOB" == "typecheck" ]]; then
   echo "[ci_local] === Type check (mypy) ==="
-  uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"
+  uv run python scripts/gates/mypy_ratchet.py "${PUBLIC_CI_SOURCE_PATHS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "security" ]]; then

@@ -13,6 +13,8 @@ import sys
 from contextlib import contextmanager
 from pathlib import Path
 
+import pytest
+
 
 # Scripts directory
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
@@ -249,3 +251,84 @@ class TestGenerateFiguresScript:
         assert output_dir.exists()
         png_files = list(output_dir.glob("*.png"))
         assert len(png_files) >= 2, f"Expected at least 2 figures, got {len(png_files)}"
+
+
+class TestLiteratureEvaluationScript:
+    """Integration tests for 07_literature_evaluation.py entry point.
+
+    Regression guard for a real wiring bug: the CLI previously called
+    ``validate_fixture_honesty(manuscript_dir, corpus_path)`` positionally
+    (the real signature takes a keyword-only ``search_term``), and the error
+    branch read ``v.reason``/``v.line`` instead of the real
+    ``FixtureHonestyFinding`` fields ``message``/``line_number``. Both bugs
+    made ``--fixture-honesty`` raise instead of running. These tests exercise
+    both the clean-pass and violation-found branches through the real CLI
+    entry point (not just the underlying validator) so a regression on
+    either the call signature or the result-object fields fails loudly.
+    """
+
+    def test_fixture_honesty_passes_on_clean_manuscript(self, sample_papers, tmp_path):
+        """--fixture-honesty runs to completion when the manuscript is clean."""
+        from literature.corpus import Corpus
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "section.md").write_text(
+            "The {{SEARCH_TERM}} corpus uses a committed synthetic fixture for offline runs.\n",
+            encoding="utf-8",
+        )
+
+        corpus = Corpus()
+        for paper in sample_papers:
+            corpus.add(paper)
+        corpus_path = tmp_path / "corpus.jsonl"
+        corpus.save(corpus_path)
+        output_dir = tmp_path / "output"
+
+        mod = _load_script_module("literature_evaluation_clean", SCRIPTS_DIR / "07_literature_evaluation.py")
+        mod.PROJECT_ROOT = tmp_path
+        with _argv(
+            [
+                "07_literature_evaluation.py",
+                "--corpus",
+                str(corpus_path),
+                "--output-dir",
+                str(output_dir),
+                "--fixture-honesty",
+            ]
+        ):
+            mod.main()  # must not raise TypeError/AttributeError
+
+        assert (output_dir / "literature_evaluation.json").exists()
+
+    def test_fixture_honesty_exits_nonzero_on_violation(self, sample_papers, tmp_path):
+        """--fixture-honesty reports violations and exits 1 without raising."""
+        from literature.corpus import Corpus
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "bad.md").write_text("We found strong evidence in the synthetic run.\n", encoding="utf-8")
+
+        corpus = Corpus()
+        for paper in sample_papers:
+            corpus.add(paper)
+        corpus_path = tmp_path / "corpus.jsonl"
+        corpus.save(corpus_path)
+        output_dir = tmp_path / "output"
+
+        mod = _load_script_module("literature_evaluation_violation", SCRIPTS_DIR / "07_literature_evaluation.py")
+        mod.PROJECT_ROOT = tmp_path
+        with _argv(
+            [
+                "07_literature_evaluation.py",
+                "--corpus",
+                str(corpus_path),
+                "--output-dir",
+                str(output_dir),
+                "--fixture-honesty",
+            ]
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                mod.main()
+
+        assert exc_info.value.code == 1

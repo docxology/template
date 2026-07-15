@@ -6,6 +6,7 @@ variables, and validating uv sync results.
 
 import os
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success
@@ -14,7 +15,12 @@ from infrastructure.core.runtime._python_env import check_uv_available, get_subp
 logger = get_logger(__name__)
 
 
-def install_missing_packages(packages: list[str], cwd: Path | None = None) -> bool:
+def install_missing_packages(
+    packages: list[str],
+    cwd: Path | None = None,
+    *,
+    uv_available: Callable[[], bool] = check_uv_available,
+) -> bool:
     """Install packages with ``uv pip install`` when uv is available.
 
     Args:
@@ -26,7 +32,7 @@ def install_missing_packages(packages: list[str], cwd: Path | None = None) -> bo
     """
     if not packages:
         return True
-    if not check_uv_available():
+    if not uv_available():
         logger.warning("install_missing_packages: uv not on PATH")
         return False
     cmd = ["uv", "pip", "install", *packages]

@@ -1,0 +1,7 @@
+# Rendered evidence is binary; do not apply textual whitespace or merge rules.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg text eol=lf

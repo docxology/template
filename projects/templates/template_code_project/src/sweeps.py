@@ -77,11 +77,15 @@ class AlphaSweepResult:
     diverged: list[bool]
 
 
-def run_alpha_sweep(cfg: AlphaSweepConfig) -> AlphaSweepResult:
+def run_alpha_sweep(
+    cfg: AlphaSweepConfig,
+    *,
+    optimizer_factory=OptimizerSweepConfig,
+) -> AlphaSweepResult:
     """Run gradient descent for each α and collect convergence diagnostics."""
     alphas = cfg.resolved_alphas()
     x_star = np.linalg.solve(cfg.A, cfg.b)
-    sweep_cfg = OptimizerSweepConfig(
+    sweep_cfg = optimizer_factory(
         step_sizes=tuple(float(a) for a in alphas),
         A=tuple(tuple(row) for row in cfg.A),
         b=tuple(float(v) for v in cfg.b),

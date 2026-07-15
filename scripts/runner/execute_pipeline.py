@@ -7,7 +7,9 @@ Thin orchestrator over PipelineExecutor, post-run reporting, and HITL CLI.
 from __future__ import annotations
 
 import sys
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 repo_root = Path(__file__).resolve().parents[2]
 if str(repo_root) not in sys.path:
@@ -36,10 +38,14 @@ def execute_pipeline(
     core_only: bool = False,
     hitl_mode: str = "full-auto",
     incremental: bool = False,
+    *,
+    executor_factory: Callable[[PipelineConfig], Any] = PipelineExecutor,
+    interpreter_validator: Callable[[], object] = validate_interpreter,
+    report_writer: Callable[..., None] | None = None,
 ) -> int:
     """Execute pipeline for a single project."""
     try:
-        validate_interpreter()
+        interpreter_validator()
         config = PipelineConfig(
             project_name=project_name,
             repo_root=repo_root,
@@ -49,11 +55,14 @@ def execute_pipeline(
             hitl_mode=hitl_mode,
             incremental=IncrementalConfig(enabled=incremental),
         )
-        executor = PipelineExecutor(config)
+        executor = executor_factory(config)
         results = executor.execute_core_pipeline() if core_only else executor.execute_full_pipeline()
-        from infrastructure.core.pipeline.post_run_reporting import write_pipeline_post_run_reports
+        if report_writer is None:
+            from infrastructure.core.pipeline.post_run_reporting import write_pipeline_post_run_reports
 
-        write_pipeline_post_run_reports(
+            report_writer = write_pipeline_post_run_reports
+
+        report_writer(
             results=results,
             repo_root=repo_root,
             project_name=project_name,

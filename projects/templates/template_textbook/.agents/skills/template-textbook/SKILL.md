@@ -3,7 +3,7 @@ name: template-textbook
 description: Modular fillable textbook scaffold — parts/chapters/labs/question banks from config.yaml, auto-numbering, deterministic figures, structural contract enforcement.
 version: 0.1.0
 author: docxology
-license: MIT
+license: Apache-2.0 AND CC-BY-4.0
 tags: [exemplar, textbook, scaffold, contract]
 ---
 

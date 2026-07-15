@@ -5,8 +5,9 @@ units, health impact, and recommended ranges.
 """
 
 import csv
+from collections.abc import Iterable
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Protocol
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary
@@ -16,6 +17,12 @@ if TYPE_CHECKING:
     from infrastructure.reporting._executive_models import ProjectMetrics
 
 logger = get_logger(__name__)
+
+
+class RowWriter(Protocol):
+    """Structural type implemented by ``csv.writer`` instances."""
+
+    def writerow(self, row: Iterable[Any], /) -> Any: ...
 
 
 def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
@@ -55,7 +62,7 @@ def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_di
 # ── Internal helpers ─────────────────────────────────────────────────────────
 
 
-def _write_manuscript_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
+def _write_manuscript_rows(writer: RowWriter, project: "ProjectMetrics") -> None:
     """Write manuscript metric rows for a single project."""
     name = project.name
     m = project.manuscript
@@ -97,7 +104,7 @@ def _write_manuscript_rows(writer: csv.writer, project: "ProjectMetrics") -> Non
         writer.writerow(row)
 
 
-def _write_codebase_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
+def _write_codebase_rows(writer: RowWriter, project: "ProjectMetrics") -> None:
     """Write codebase metric rows for a single project."""
     name = project.name
     c = project.codebase
@@ -112,7 +119,7 @@ def _write_codebase_rows(writer: csv.writer, project: "ProjectMetrics") -> None:
         writer.writerow(row)
 
 
-def _write_test_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
+def _write_test_rows(writer: RowWriter, project: "ProjectMetrics") -> None:
     """Write test metric rows for a single project."""
     name = project.name
     t = project.tests
@@ -144,7 +151,7 @@ def _write_test_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # 
         writer.writerow(row)
 
 
-def _write_output_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
+def _write_output_rows(writer: RowWriter, project: "ProjectMetrics") -> None:
     """Write output metric rows for a single project."""
     name = project.name
     o = project.outputs
@@ -159,7 +166,7 @@ def _write_output_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  
         writer.writerow(row)
 
 
-def _write_pipeline_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
+def _write_pipeline_rows(writer: RowWriter, project: "ProjectMetrics") -> None:
     """Write pipeline metric rows for a single project."""
     name = project.name
     p = project.pipeline

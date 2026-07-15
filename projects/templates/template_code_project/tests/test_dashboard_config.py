@@ -41,13 +41,9 @@ class TestDashboardParseArgs:
         with pytest.raises(SystemExit):
             _parse_args(["--alpha-sweep-min", "2.0", "--alpha-sweep-max", "1.0"])
 
-    def test_rejects_empty_default_step_sizes(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setattr(
-            "src.dashboard.load_yaml_defaults",
-            lambda _path: ExperimentConfig(step_sizes=()),
-        )
+    def test_rejects_empty_default_step_sizes(self):
         with pytest.raises(SystemExit):
-            _parse_args([])
+            _parse_args([], defaults_loader=lambda _path: ExperimentConfig(step_sizes=()))
 
     def test_rejects_non_positive_step_size_direct(self):
         with pytest.raises(SystemExit):
@@ -84,8 +80,9 @@ class TestDashboardPayload:
         assert any(payload["alpha_sweep"]["diverged"])
         assert any(d > 1e3 for d in payload["alpha_sweep"]["final_dist"])
 
-    def test_compute_payload_records_sweep_exception(self, monkeypatch: pytest.MonkeyPatch):
+    def test_compute_payload_records_sweep_exception(self):
         from src.invariants import OptimizerSweepConfig
+        from src.sweeps import run_alpha_sweep
 
         calls = {"n": 0}
         original = OptimizerSweepConfig.run_for
@@ -96,7 +93,12 @@ class TestDashboardPayload:
                 raise OverflowError("diverged")
             return original(self, alpha)
 
-        monkeypatch.setattr(OptimizerSweepConfig, "run_for", _run_for_maybe_fail)
+        class _FailingFirstSweep(OptimizerSweepConfig):
+            run_for = _run_for_maybe_fail
+
+        def _run_sweep(config):
+            return run_alpha_sweep(config, optimizer_factory=_FailingFirstSweep)
+
         args = _parse_args(
             [
                 "--step-sizes",
@@ -117,7 +119,7 @@ class TestDashboardPayload:
                 "50",
             ]
         )
-        payload = _compute_payload(args)
+        payload = _compute_payload(args, sweep_runner=_run_sweep)
         sweep = payload["alpha_sweep"]
         assert float("inf") in sweep["final_dist"]
         assert True in sweep["diverged"]
@@ -146,9 +148,7 @@ class TestDashboardPayload:
         bundle = json.loads(js.read_text())
         assert "payload" in bundle
 
-    def test_main_exits_on_failed_invariants(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-    ):
+    def test_main_exits_on_failed_invariants(self, tmp_path: Path, capsys: pytest.CaptureFixture[str]):
         class _FailedDashboard:
             def write(self, **kwargs: object) -> dict[str, str]:
                 return {
@@ -161,7 +161,6 @@ class TestDashboardPayload:
             def evaluate_invariants(self) -> list[dict[str, object]]:
                 return [{"name": "bad_invariant", "passed": False}]
 
-        monkeypatch.setattr("src.dashboard.build_dashboard", lambda _args, _payload: _FailedDashboard())
         html = tmp_path / "dash.html"
         js = tmp_path / "dash.json"
         with pytest.raises(SystemExit) as exc:
@@ -175,7 +174,8 @@ class TestDashboardPayload:
                     str(tmp_path / "inv.txt"),
                     "--summary-out",
                     str(tmp_path / "sum.txt"),
-                ]
+                ],
+                dashboard_builder=lambda _args, _payload: _FailedDashboard(),
             )
         assert exc.value.code == 1
         captured = capsys.readouterr()

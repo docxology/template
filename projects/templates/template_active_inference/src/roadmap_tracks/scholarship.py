@@ -430,8 +430,8 @@ def build_scholarship_source_matrix(project_root: Path) -> dict[str, Any]:
 def write_scholarship_source_matrix(project_root: Path) -> Path:
     """Write the source-backed scholarship matrix."""
     root = project_root.resolve()
-    return _write_json(
-        root / "output" / "data" / "scholarship_source_matrix.json", build_scholarship_source_matrix(root)
+    return Path(
+        _write_json(root / "output" / "data" / "scholarship_source_matrix.json", build_scholarship_source_matrix(root))
     )
 
 

@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 
 def _get_qrcode():
     try:
-        import qrcode  # type: ignore[import-untyped]
+        import qrcode
 
         return qrcode
     except ImportError as e:
@@ -28,7 +28,7 @@ def _get_qrcode():
 
 def _get_barcode():
     try:
-        import barcode  # type: ignore[import-untyped]
+        import barcode
 
         return barcode
     except ImportError as e:
@@ -40,9 +40,9 @@ def _get_barcode():
 
 def _get_reportlab():
     try:
-        from reportlab.lib.units import inch, mm  # type: ignore[import-untyped]
-        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
-        from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
+        from reportlab.lib.units import inch, mm
+        from reportlab.pdfgen import canvas as rl_canvas
+        from reportlab.lib.utils import ImageReader
 
         return rl_canvas, inch, mm, ImageReader
     except ImportError as e:
@@ -107,7 +107,7 @@ def generate_code128(
         SVG image bytes.
     """
     barcode_mod = _get_barcode()
-    from barcode.writer import SVGWriter  # type: ignore[import-untyped]
+    from barcode.writer import SVGWriter
 
     code128 = barcode_mod.get_barcode_class("code128")
     bc = code128(data, writer=SVGWriter())

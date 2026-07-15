@@ -41,7 +41,12 @@ Two scripts execute in alphabetical order:
 
 ## Stage 03: PDF Rendering
 
-The pipeline's `03_render_pdf.py` contains a render hook (lines 56–62) that detects the presence of `output/manuscript/` and uses it instead of `manuscript/`. This means:
+The pipeline's `scripts/pipeline/stage_03_render.py` calls
+`infrastructure/rendering/_manuscript_source.py::resolve_manuscript_dir`, the render
+hook that detects the presence of `output/manuscript/` and uses it instead of
+`manuscript/` (population of `output/manuscript/*.md` itself happens via
+`infrastructure/rendering/manuscript_injection.py::write_resolved_manuscript_tree`,
+invoked from Stage 02's `inject_metrics.py`). This means:
 
 1. The raw manuscript files with `${variable}` tokens stay untouched in `manuscript/`
 2. The rendered files with computed values live in `output/manuscript/`
@@ -92,7 +97,7 @@ projects/templates/template_template/output/
 └── pdf/
     └── template_template_combined.pdf        # Final rendered PDF
 
-output/template_template/                      # Copies from Stage 05
+output/templates/template_template/             # Copies from Stage 05
 └── pdf/
     └── template_template_combined.pdf
 ```

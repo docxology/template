@@ -264,14 +264,16 @@ def _default_project_name(names: list[str]) -> str:
     return names[0]
 
 
-def _cmd_pipeline(ns: argparse.Namespace) -> int:
+def _cmd_pipeline(ns: argparse.Namespace, *, runner_factory=PipelineRunner) -> int:
     repo_root = _resolve_repo_root(ns)
-    runner = PipelineRunner(repo_root=repo_root)
+    runner = runner_factory(repo_root=repo_root)
     if ns.all_projects:
-        return runner.run_multi(
-            MultiProjectInvocation(
-                skip_infra=ns.skip_infra,
-                skip_llm=ns.skip_llm or ns.core_only,
+        return int(
+            runner.run_multi(
+                MultiProjectInvocation(
+                    skip_infra=ns.skip_infra,
+                    skip_llm=ns.skip_llm or ns.core_only,
+                )
             )
         )
     if not ns.project:
@@ -286,47 +288,53 @@ def _cmd_pipeline(ns: argparse.Namespace) -> int:
     else:
         project = validate_project_slug(ns.project, repo_root)
 
-    return runner.run(
-        PipelineInvocation(
-            project=project,
-            skip_infra=ns.skip_infra,
-            skip_llm=ns.skip_llm,
-            resume=ns.resume,
-            core_only=ns.core_only,
-            incremental=ns.incremental,
+    return int(
+        runner.run(
+            PipelineInvocation(
+                project=project,
+                skip_infra=ns.skip_infra,
+                skip_llm=ns.skip_llm,
+                resume=ns.resume,
+                core_only=ns.core_only,
+                incremental=ns.incremental,
+            )
         )
     )
 
 
-def _cmd_multi(ns: argparse.Namespace) -> int:
+def _cmd_multi(ns: argparse.Namespace, *, runner_factory=PipelineRunner) -> int:
     repo_root = _resolve_repo_root(ns)
-    runner = PipelineRunner(repo_root=repo_root)
-    return runner.run_multi(
-        MultiProjectInvocation(
-            skip_infra=ns.skip_infra,
-            skip_llm=ns.skip_llm or ns.core_only,
-            run_executive_report=not ns.no_executive_report,
+    runner = runner_factory(repo_root=repo_root)
+    return int(
+        runner.run_multi(
+            MultiProjectInvocation(
+                skip_infra=ns.skip_infra,
+                skip_llm=ns.skip_llm or ns.core_only,
+                run_executive_report=not ns.no_executive_report,
+            )
         )
     )
 
 
-def _cmd_secure(ns: argparse.Namespace) -> int:
+def _cmd_secure(ns: argparse.Namespace, *, secure_runner=run_secure_pipeline) -> int:
     repo_root = _resolve_repo_root(ns)
     # --deterministic is honoured by infrastructure.steganography.config at
     # call time (not import time), so setting the env var here propagates
     # to the downstream processor without touching the shell wrapper.
     if getattr(ns, "deterministic", False):
         os.environ["STEGANOGRAPHY_DETERMINISTIC"] = "1"
-    return run_secure_pipeline(
-        repo_root,
-        SecureRunOptions(
-            project=ns.project,
-            steganography_only=ns.steganography_only,
-            skip_infra=ns.skip_infra,
-            core_only=ns.core_only,
-            resume=ns.resume,
-            validate_kmyth=ns.validate_kmyth,
-        ),
+    return int(
+        secure_runner(
+            repo_root,
+            SecureRunOptions(
+                project=ns.project,
+                steganography_only=ns.steganography_only,
+                skip_infra=ns.skip_infra,
+                core_only=ns.core_only,
+                resume=ns.resume,
+                validate_kmyth=ns.validate_kmyth,
+            ),
+        )
     )
 
 
@@ -459,7 +467,13 @@ def _dispatch_menu_key(
     return 1
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    runner_factory=PipelineRunner,
+    secure_runner=run_secure_pipeline,
+    interactive_runner=_interactive,
+) -> int:
     """Entry point. Returns process exit code."""
     parser = build_parser()
     ns = parser.parse_args(argv)
@@ -477,12 +491,12 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if ns.command is None:
         # No subcommand → interactive menu (parity with bare ./run.sh)
-        return _interactive(_resolve_repo_root(ns))
+        return int(interactive_runner(_resolve_repo_root(ns)))
 
     dispatch = {
-        "pipeline": _cmd_pipeline,
-        "multi": _cmd_multi,
-        "secure": _cmd_secure,
+        "pipeline": lambda args: _cmd_pipeline(args, runner_factory=runner_factory),
+        "multi": lambda args: _cmd_multi(args, runner_factory=runner_factory),
+        "secure": lambda args: _cmd_secure(args, secure_runner=secure_runner),
         "menu": _cmd_menu,
         "list-projects": _cmd_list_projects,
         "link-projects": _cmd_link_projects,

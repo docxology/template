@@ -19,6 +19,7 @@ from infrastructure.documentation.publication_standalone import (
     replace_standalone_publication_block,
 )
 from infrastructure.project.public_scope import public_project_names
+from infrastructure.publishing.repository_metadata import normalized_repository_url
 
 README_BLOCK_BEGIN = "<!-- BEGIN:PUBLICATION_RECORDS -->"
 README_BLOCK_END = "<!-- END:PUBLICATION_RECORDS -->"
@@ -291,7 +292,7 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
         version_doi = str(publication.get("version_doi") or "").strip()
         version_record = str(publication.get("version_record") or "").strip()
         github_repository = str(publication.get("github_repository") or "").strip()
-        repository_url = str(publication.get("repository_url") or "").strip() or _github_repo_url(github_repository)
+        repository_url = normalized_repository_url(publication) or ""
 
         standalone_path = project_root / "STANDALONE.md"
         citation_path = project_root / "CITATION.cff"

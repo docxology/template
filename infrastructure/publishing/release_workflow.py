@@ -103,9 +103,9 @@ def resolve_combined_pdf(repo_root: Path, project_name: str) -> Path | None:
     """Locate the combined manuscript PDF for a project."""
     short_name = project_name.split("/")[-1]
     candidates = [
+        repo_root / "projects" / project_name / "output" / "pdf" / f"{short_name}_combined.pdf",
         repo_root / "output" / project_name / "pdf" / f"{short_name}_combined.pdf",
         repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
-        repo_root / "projects" / project_name / "output" / "pdf" / f"{short_name}_combined.pdf",
     ]
     seen: set[Path] = set()
     for path in candidates:
@@ -371,6 +371,8 @@ def run_release_workflow(
     request: ReleaseRequest,
     *,
     render_fn: RenderFn | None = None,
+    zenodo_publisher: Callable[..., Any] = publish_zenodo_for_release,
+    github_publisher: Callable[..., str | None] = run_github_release,
 ) -> ReleaseResult:
     """Execute Zenodo publish, GitHub release, DOI config update, and optional re-render."""
     validate_release_tag(request.tag)
@@ -425,7 +427,7 @@ def run_release_workflow(
 
     if not request.skip_zenodo:
         try:
-            publish_result = publish_zenodo_for_release(
+            publish_result = zenodo_publisher(
                 reserve_doi_first=request.reserve_doi_first,
                 dry_run=request.dry_run,
                 zenodo_token=request.zenodo_token,
@@ -465,7 +467,7 @@ def run_release_workflow(
 
     if not request.skip_github:
         try:
-            github_url = run_github_release(request, bundle, doi=doi)
+            github_url = github_publisher(request, bundle, doi=doi)
         except PublishingError as exc:
             errors.append(f"github: {exc}")
             if not request.dry_run:

@@ -211,6 +211,24 @@ class TestLoadPipelineStagesFromYaml:
         assert "bundle" in tags["Executable Bundle"]
         assert "archival" in tags["Archival Publication"]
 
+    def test_all_script_paths_resolve_to_real_files(self):
+        """Regression guard: every stage with a ``script:`` field in
+        pipeline.yaml must resolve to a file that actually exists on disk.
+
+        This previously silently failed: ``load_pipeline_stages_from_yaml``
+        re-prefixed the already repo-root-relative ``script:`` value (e.g.
+        "scripts/pipeline/stage_01_test.py") with an extra "scripts/" segment,
+        producing "scripts/scripts/pipeline/stage_01_test.py" — a path that
+        never resolves — for every single scripted stage.
+        """
+        stages = load_pipeline_stages_from_yaml(REPO_ROOT)
+        scripted_stages = [s for s in stages if s.script_name and s.script_name.endswith(".py")]
+        assert scripted_stages, "expected at least one stage with a script: field"
+        for stage in scripted_stages:
+            assert stage.script_path.is_file(), (
+                f"Stage {stage.name!r} script does not exist on disk: {stage.script_path}"
+            )
+
 
 class TestResolveTemplateRepoRoot:
     """Tests for ``resolve_template_repo_root``."""

@@ -14,6 +14,7 @@ from infrastructure.publishing.deposit_filename import (
     deposit_context_from_config,
 )
 from infrastructure.publishing.models import AuthorRecord, PublicationMetadata
+from infrastructure.publishing.repository_metadata import normalized_repository_url
 
 logger = get_logger(__name__)
 
@@ -208,7 +209,7 @@ def publication_metadata_from_config_dict(
         journal=str(publication["journal"]) if publication.get("journal") else None,
         publication_date=publication_date,
         license=_license_from_config(config),
-        repository_url=str(publication["repository_url"]) if publication.get("repository_url") else None,
+        repository_url=normalized_repository_url(publication),
         author_records=author_records,
         paper_version=paper_version,
         zenodo_description_override=zenodo_description_override,
@@ -228,7 +229,7 @@ def load_publication_release_context(
         raise MetadataError(f"Could not load config: {config_path}")
 
     metadata = publication_metadata_from_config_dict(
-        config,
+        dict(config),
         config_path,
         abstract_path=abstract_path,
         variables_path=variables_path,
@@ -236,8 +237,8 @@ def load_publication_release_context(
     )
     return PublicationReleaseContext(
         metadata=metadata,
-        deposit_context=deposit_context_from_config(config),
-        prior_doi=_prior_doi_from_config(config),
+        deposit_context=deposit_context_from_config(dict(config)),
+        prior_doi=_prior_doi_from_config(dict(config)),
     )
 
 

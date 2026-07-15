@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 import sys
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
 
 import pytest
@@ -57,13 +57,23 @@ def pytest_sessionstart(session: pytest.Session) -> None:
     restoring the manuscript files does not invalidate it.
     """
 
+    _prewarm_gate_artifacts(session)
+
+
+def _prewarm_gate_artifacts(
+    session: pytest.Session,
+    *,
+    source_iterator: Callable[[], Iterator[Path]] | None = None,
+) -> None:
+    """Prewarm helper with an injectable source iterator for contract tests."""
     if getattr(session.config.option, "collectonly", False):
         return
 
     try:
         from gate_support import ensure_gate_artifacts
 
-        snapshots = {path: path.read_bytes() for path in _iter_mutable_project_sources()}
+        iterator = _iter_mutable_project_sources if source_iterator is None else source_iterator
+        snapshots = {path: path.read_bytes() for path in iterator()}
         try:
             ensure_gate_artifacts(PROJECT_ROOT)
         finally:

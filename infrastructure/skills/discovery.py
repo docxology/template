@@ -27,6 +27,10 @@ DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     "rules/templates",
     "tools/templates",
     "docs/prompts",
+    # Repository-scoped Agent Skills shared by Codex/OpenAI, Hermes, and
+    # runtime adapters. This root is public and tracked; private lifecycle
+    # workspaces remain excluded by the narrower roots above.
+    ".agents/skills",
     ".cursor/skills",
 )
 
@@ -120,6 +124,12 @@ def _is_public_template_agent_skill_path(path: Path) -> bool:
     )
 
 
+def _is_public_root_agent_skill_path(path: Path) -> bool:
+    """Return True for tracked repository-scoped Agent Skills descriptors."""
+    parts = path.parts
+    return len(parts) >= 4 and parts[0] == ".agents" and parts[1] == "skills" and parts[-1] == "SKILL.md"
+
+
 def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
     """Yield absolute paths to ``SKILL.md`` under each root relative to ``repo_root``."""
     root_resolved = repo_root.resolve()
@@ -135,14 +145,14 @@ def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
             except ValueError:
                 rel_path = p
             # Skip vendored / tool-managed skill trees (.venv, site-packages,
-            # .claude, .agents, projects/archive, …) so discovery only sees
-            # first-party repo skills — same scope convention as doc scanning.
-            # Public exemplar-local `.agents/skills/*/SKILL.md` files are the
-            # one intentional exception: README/AGENTS advertise them as the
-            # Hermes / agentskills.io entry points for canonical templates, and
-            # MCP `list_skills` should surface them too.
-            if should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS) and not _is_public_template_agent_skill_path(
-                rel_path
+            # .claude, unscoped .agents, projects/archive, …) so discovery only
+            # sees tracked public skills. Two narrow `.agents` exceptions are
+            # deliberate: canonical exemplar descriptors and the repository
+            # root `.agents/skills` lane shared by Codex/OpenAI and Hermes.
+            if (
+                should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS)
+                and not _is_public_template_agent_skill_path(rel_path)
+                and not _is_public_root_agent_skill_path(rel_path)
             ):
                 continue
             yield p

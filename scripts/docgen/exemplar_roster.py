@@ -30,8 +30,10 @@ from infrastructure.project.exemplar_roster import (  # noqa: E402
     build_template_manifest,
     collect_entries,
     render_roster_markdown,
+    render_readme_with_rosters,
     unexpected_missing_use_when,
     write_roster_doc,
+    write_readme_rosters,
     write_template_manifest,
 )
 
@@ -65,6 +67,11 @@ def main() -> int:
         if expected_manifest != manifest_on_disk:
             print(f"STALE: {MANIFEST_RELATIVE_PATH} differs from a fresh render — regenerate it")
             return 1
+        readme_path = REPO_ROOT / "README.md"
+        readme = readme_path.read_text(encoding="utf-8")
+        if render_readme_with_rosters(readme, entries) != readme:
+            print("STALE: README.md public exemplar blocks differ from a fresh render")
+            return 1
         print(f"exemplar_roster: OK ({len(entries)} exemplars, doc + manifest in sync)")
         return 0
 
@@ -72,6 +79,7 @@ def main() -> int:
     print(str(written))
     manifest_written = write_template_manifest(REPO_ROOT)
     print(str(manifest_written))
+    print(str(write_readme_rosters(REPO_ROOT)))
     return 0
 
 

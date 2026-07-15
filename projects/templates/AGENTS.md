@@ -45,7 +45,7 @@ Every exemplar also carries these agent-facing surfaces:
 | `template_autoresearch_project/src/` | Plan/evidence/claim/readiness loop with ML, diagnostics, security, and writers. |
 | `template_code_project/src/__init__.py` | Centralized public API for the code exemplar. |
 | `template_gold_refinement/src/` | Refinery pipeline (ore → nine-nines), karat grading, mega-madlib token composition. |
-| `template_madlib/src/__init__.py` | Public authoring/evaluation API; large config/composition modules. |
+| `template_madlib/src/` | Config/token/composition/analysis modules imported directly by scripts and tests (`__init__.py` re-exports only `config` and `tokens`, not the full surface). |
 | `template_newspaper/src/newspaper/` | Layout geometry, typography, components, and rendered page figures. |
 | `template_textbook/src/` | Textbook paths, scaffold generation, visualization, and Mermaid helpers. |
 

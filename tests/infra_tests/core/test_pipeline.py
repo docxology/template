@@ -83,12 +83,13 @@ class TestPipelineExecutor:
     def _create_fake_repo(self, repo_root: Path, project_name: str, include_llm: bool) -> Path:
         """Create a minimal repo layout with scripts that always succeed.
 
-        The pipeline executor runs scripts from `{repo_root}/scripts/*.py`. For tests we create
+        The pipeline executor runs canonical scripts from `{repo_root}/scripts/pipeline/*.py`.
+        For tests we create
         minimal implementations that:
         - record their invocation to `{repo_root}/invocations.jsonl`
         - exit 0
         """
-        scripts_dir = repo_root / "scripts"
+        scripts_dir = repo_root / "scripts" / "pipeline"
         scripts_dir.mkdir(parents=True, exist_ok=True)
 
         # Minimal project structure so PYTHONPATH augmentation is stable
@@ -109,15 +110,15 @@ sys.exit(0)
 """
 
         scripts = [
-            "00_setup_environment.py",
-            "01_run_tests.py",
-            "02_run_analysis.py",
-            "03_render_pdf.py",
-            "04_validate_output.py",
-            "05_copy_outputs.py",
+            "stage_00_setup.py",
+            "stage_01_test.py",
+            "stage_02_analysis.py",
+            "stage_03_render.py",
+            "stage_04_validate.py",
+            "stage_05_copy.py",
         ]
         if include_llm:
-            scripts.append("06_llm_review.py")
+            scripts.append("stage_06_llm_review.py")
 
         for name in scripts:
             (scripts_dir / name).write_text(common_script, encoding="utf-8")
@@ -291,14 +292,16 @@ sys.exit(1)
 
         invocations = self._read_invocations(repo_root)
         invoked_scripts = {i["script"] for i in invocations}
-        assert "00_setup_environment.py" in invoked_scripts
-        assert "01_run_tests.py" in invoked_scripts
-        assert "02_run_analysis.py" in invoked_scripts
-        assert "03_render_pdf.py" in invoked_scripts
-        assert "04_validate_output.py" in invoked_scripts
-        assert "06_llm_review.py" in invoked_scripts
-        assert "05_copy_outputs.py" in invoked_scripts
-        infra_invocations = [i for i in invocations if i["script"] == "01_run_tests.py" and "--infra-only" in i["args"]]
+        assert "stage_00_setup.py" in invoked_scripts
+        assert "stage_01_test.py" in invoked_scripts
+        assert "stage_02_analysis.py" in invoked_scripts
+        assert "stage_03_render.py" in invoked_scripts
+        assert "stage_04_validate.py" in invoked_scripts
+        assert "stage_06_llm_review.py" in invoked_scripts
+        assert "stage_05_copy.py" in invoked_scripts
+        infra_invocations = [
+            i for i in invocations if i["script"] == "stage_01_test.py" and "--infra-only" in i["args"]
+        ]
         assert infra_invocations
         assert "--infra-scope" in infra_invocations[0]["args"]
         assert "pipeline-smoke" in infra_invocations[0]["args"]
@@ -343,7 +346,7 @@ sys.exit(1)
         assert all(r.success for r in results)
 
         invocations = self._read_invocations(repo_root)
-        infra_calls = [i for i in invocations if i["script"] == "01_run_tests.py" and "--infra-only" in i["args"]]
+        infra_calls = [i for i in invocations if i["script"] == "stage_01_test.py" and "--infra-only" in i["args"]]
         assert infra_calls == []
 
     def test_skip_llm_execution(self, tmp_path: Path):
@@ -362,7 +365,7 @@ sys.exit(1)
         assert all(r.success for r in results)
 
         invocations = self._read_invocations(repo_root)
-        llm_calls = [i for i in invocations if i["script"] == "06_llm_review.py"]
+        llm_calls = [i for i in invocations if i["script"] == "stage_06_llm_review.py"]
         assert llm_calls == []
 
     def test_resume_pipeline_missing_checkpoint_runs_fresh(self, tmp_path: Path):
@@ -377,7 +380,7 @@ sys.exit(1)
     def test_execute_core_pipeline_aborts_on_first_failure(self, tmp_path: Path):
         """Pipeline stops after the first failing stage; subsequent scripts are never invoked."""
         repo_root = tmp_path / "repo"
-        scripts_dir = repo_root / "scripts"
+        scripts_dir = repo_root / "scripts" / "pipeline"
         scripts_dir.mkdir(parents=True, exist_ok=True)
         (repo_root / "projects" / "test" / "src").mkdir(parents=True, exist_ok=True)
         (repo_root / "projects" / "test" / "output").mkdir(parents=True, exist_ok=True)
@@ -401,12 +404,12 @@ with open(log_path, "a", encoding="utf-8") as f:
 sys.exit(0)
 """
 
-        (scripts_dir / "00_setup_environment.py").write_text(failing_script, encoding="utf-8")
-        (scripts_dir / "01_run_tests.py").write_text(success_script, encoding="utf-8")
-        (scripts_dir / "02_run_analysis.py").write_text(success_script, encoding="utf-8")
-        (scripts_dir / "03_render_pdf.py").write_text(success_script, encoding="utf-8")
-        (scripts_dir / "04_validate_output.py").write_text(success_script, encoding="utf-8")
-        (scripts_dir / "05_copy_outputs.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "stage_00_setup.py").write_text(failing_script, encoding="utf-8")
+        (scripts_dir / "stage_01_test.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "stage_02_analysis.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "stage_03_render.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "stage_04_validate.py").write_text(success_script, encoding="utf-8")
+        (scripts_dir / "stage_05_copy.py").write_text(success_script, encoding="utf-8")
 
         executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False)
 
@@ -419,13 +422,13 @@ sys.exit(0)
         # No subsequent scripts should have been invoked.
         invocations = self._read_invocations(repo_root)
         invoked = {i["script"] for i in invocations}
-        assert "01_run_tests.py" not in invoked
-        assert "02_run_analysis.py" not in invoked
+        assert "stage_01_test.py" not in invoked
+        assert "stage_02_analysis.py" not in invoked
 
     def test_llm_stage_exit_code_2_treated_as_success(self, tmp_path: Path):
         """LLM stages that exit with code 2 (Ollama unavailable) are treated as success."""
         repo_root = tmp_path / "repo"
-        scripts_dir = repo_root / "scripts"
+        scripts_dir = repo_root / "scripts" / "pipeline"
         scripts_dir.mkdir(parents=True, exist_ok=True)
         (repo_root / "projects" / "test" / "src").mkdir(parents=True, exist_ok=True)
         (repo_root / "projects" / "test" / "output").mkdir(parents=True, exist_ok=True)
@@ -434,15 +437,15 @@ sys.exit(0)
         success_script = "import sys; sys.exit(0)\n"
 
         for name in [
-            "00_setup_environment.py",
-            "01_run_tests.py",
-            "02_run_analysis.py",
-            "03_render_pdf.py",
-            "04_validate_output.py",
-            "05_copy_outputs.py",
+            "stage_00_setup.py",
+            "stage_01_test.py",
+            "stage_02_analysis.py",
+            "stage_03_render.py",
+            "stage_04_validate.py",
+            "stage_05_copy.py",
         ]:
             (scripts_dir / name).write_text(success_script, encoding="utf-8")
-        (scripts_dir / "06_llm_review.py").write_text(skip_script, encoding="utf-8")
+        (scripts_dir / "stage_06_llm_review.py").write_text(skip_script, encoding="utf-8")
 
         executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=False, resume=False)
         results = executor.execute_full_pipeline()

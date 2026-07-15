@@ -5,6 +5,8 @@ Real subprocess and filesystem fixtures — no mocks.
 
 from __future__ import annotations
 
+import os
+import sys
 from importlib.metadata import version
 from pathlib import Path
 from textwrap import dedent
@@ -17,6 +19,7 @@ from infrastructure.core.pytest_orchestration import (
     build_project_pytest_command,
     build_union_pytest_command,
     enforce_project_suite_guards,
+    log_discovered_tests,
     parse_discovery_count,
     project_declared_coverage_floor,
     project_has_test_files,
@@ -93,6 +96,32 @@ def test_parse_discovery_count_variants() -> None:
     assert parse_discovery_count("collected 42 items") == 42
     assert parse_discovery_count("============== 7 tests collected ==============") == 7
     assert parse_discovery_count("no tests here") is None
+
+
+def test_discovery_with_parallel_execution_command_does_not_run_tests(tmp_path: Path) -> None:
+    """The count preflight must not execute a suite when xdist is enabled."""
+    sentinel = tmp_path / "executed"
+    test_file = tmp_path / "test_probe.py"
+    test_file.write_text(
+        "from pathlib import Path\n"
+        "def test_probe():\n"
+        f"    Path({str(sentinel)!r}).write_text('ran', encoding='utf-8')\n",
+        encoding="utf-8",
+    )
+    command = [
+        sys.executable,
+        "-m",
+        "pytest",
+        str(test_file),
+        "-n",
+        "2",
+        "--dist",
+        "worksteal",
+    ]
+
+    log_discovered_tests(command, tmp_path, os.environ.copy(), "regression", timeout_seconds=30.0)
+
+    assert not sentinel.exists()
 
 
 def test_resolve_infrastructure_test_paths_smoke_is_fast_subset(tmp_path: Path) -> None:
@@ -334,8 +363,9 @@ def test_resolve_xdist_args_zero_and_invalid_are_serial(monkeypatch: pytest.Monk
     assert resolve_xdist_args("") == []
 
 
-def test_build_union_pytest_command_omits_xdist_by_default(tmp_path: Path) -> None:
+def test_build_union_pytest_command_omits_xdist_by_default(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Default union command stays serial — no ``-n`` regression."""
+    monkeypatch.delenv(ENV_XDIST_WORKERS, raising=False)
     repo = tmp_path / "repo"
     project = repo / "projects" / "templates" / "demo"
     (project / "src").mkdir(parents=True)

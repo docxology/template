@@ -224,7 +224,7 @@ class KnowledgeGraph:
         """
         if self._use_rdflib:
             return len(self._rdf_graph)
-        return self._nx_graph.number_of_edges()
+        return int(self._nx_graph.number_of_edges())
 
     def get_papers(self) -> list[str]:
         """Return all paper IDs that have been added.

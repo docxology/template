@@ -30,7 +30,7 @@ _VALID_FIELDS = ("title", "abstract", "title_abstract", "full_text")
 def _l2_normalize(mat: np.ndarray) -> np.ndarray:
     norms = np.linalg.norm(mat, axis=1, keepdims=True)
     norms[norms == 0] = 1.0
-    return mat / norms
+    return np.asarray(mat / norms)
 
 
 def embed_texts(
@@ -133,7 +133,7 @@ def cluster_embeddings(mat: np.ndarray, n_clusters: int = 5, seed: int = DEFAULT
         return np.zeros((0,), dtype=int)
     k = max(1, min(n_clusters, n))
     km = KMeans(n_clusters=k, random_state=seed, n_init=10)
-    return km.fit_predict(mat).astype(int)
+    return np.asarray(km.fit_predict(mat).astype(int))
 
 
 def project_2d(mat: np.ndarray, seed: int = DEFAULT_SEED) -> np.ndarray:

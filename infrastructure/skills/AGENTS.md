@@ -27,7 +27,7 @@ flowchart TB
 
 ## Public API (`discovery.py`)
 
-- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "scripts", "projects/templates", "fonds/templates", "rules/templates", "tools/templates", "docs/prompts", ".cursor/skills")` relative to repo root; project-local `.agents/skills/*/SKILL.md` descriptors under public exemplars are intentionally included
+- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "scripts", "projects/templates", "fonds/templates", "rules/templates", "tools/templates", "docs/prompts", ".agents/skills", ".cursor/skills")` relative to repo root; repository-scoped and public-exemplar `.agents/skills/*/SKILL.md` descriptors are intentionally included
 - `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `cursor_at`
 - `split_yaml_frontmatter(source: str) -> tuple[dict | None, str]`
 - `load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor`
@@ -58,6 +58,21 @@ Static (AST-only; never imports the target modules) catalog of agent-invocable `
 - `write_operations_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.cursor/operations_manifest.json`
 - `load_operations_manifest(manifest_path) -> dict`
 - `operations_manifest_matches_discovery(repo_root, manifest_path, *, search_roots=None) -> tuple[bool, str]`
+
+## Cross-runtime sync (`runtime_sync.py`)
+
+- `validate_vendored_source(repo_root)` — verifies the pinned lock, exact tree
+  digest, inventory, and skill frontmatter without touching user state.
+- `runtime_status(repo_root, home)` — audits the revisioned shared store and
+  Codex (`~/.agents/skills`), Claude Code, and Hermes links.
+- `install_runtime_skills(repo_root, home)` — stages the reviewed tree under
+  `~/.local/share`, backs up same-name runtime paths under `~/.local/state`,
+  then creates managed links and a receipt. It never executes skill scripts.
+- CLI: `python -m infrastructure.skills runtime-status|runtime-install`; the
+  lower-level `python -m infrastructure.skills.runtime_sync status|install`
+  form also supports `--json`. The operation registry classifies
+  `infrastructure.skills` as `mutating` because its install/write subcommands
+  update repository or user-level state.
 
 ## CLI (`cli.py`)
 

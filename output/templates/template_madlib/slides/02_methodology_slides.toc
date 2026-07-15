@@ -1,1 +1,0 @@
-\beamer@sectionintoc {1}{Methods: Source-Owned Token Injection and Conditional IMRAD Assembly}{1}{0}{1}

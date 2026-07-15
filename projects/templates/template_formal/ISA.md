@@ -221,6 +221,7 @@ Ship a complete, self-contained, registered public template `template_formal` un
 - [x] ISC-118: The committed cover-art publication path must fail closed when generation cannot produce an asset, while successful output must be a readable, non-trivial, non-blank PNG. `require_cover_art` must raise on an unwritable destination, the regeneration script must use that required wrapper, and cover-art tests must validate format, dimensions, and rendered-color diversity.
 - [x] ISC-119: The README, standalone fork guide, and project skill must document the same `MYPYPATH`-qualified authoritative mypy command and current 26-source-file oracle result. A project synchronization test must fail if any surface reintroduces the unsafe bare command or stale source-file count.
 - [x] ISC-120: `scripts/02_run_analysis.py` must be a genuinely thin entrypoint: sweep configuration, statistical aggregation, JSON serialization, required-figure checks, and figure-registry construction live in a tested `src/template_formal/colony/analysis.py` service. The script may resolve the project root, call that service once, and print returned artifact paths; the module-line gate must no longer warn on the script.
+- [x] ISC-121: Every runtime typing import must honor the project's declared Python 3.10 floor. Types introduced in newer standard-library `typing` releases, including `Self`, must come from a declared compatibility backport, and the Python 3.10 project matrix must collect and execute the real suite rather than failing during import.
 
 ## Test Strategy
 
@@ -235,6 +236,7 @@ Ship a complete, self-contained, registered public template `template_formal` un
 | ISC-118 | publication-asset boundary | required cover-art wrapper + blocked-destination negative control + PNG quality assertions | generation failure raises; successful asset is readable, non-blank PNG with non-trivial dimensions | `pytest`, script |
 | ISC-119 | documentation synchronization | authoritative-command/source-count contract test | README, standalone guide, and skill agree on `MYPYPATH` command and 26-file oracle | `pytest` |
 | ISC-120 | thin-orchestrator boundary | source-owned analysis service + real artifact integration test + module-line gate | analysis script contains path wiring/call/printing only and emits complete real artifacts | `pytest`, drift gate, module-line gate |
+| ISC-121 | compatibility integration | run the project gate with the declared Python 3.10 interpreter | all modules collect and the real suite passes without typing-import errors | `uv`, `pytest` |
 | ISC-16..26 | integration+fault | in-process bus with seeded fault injection | protocol violation produces typed `Result.Err`, never crash | `pytest` |
 | ISC-27..31 | unit+numeric | hand-computed expected-free-energy comparison | matches within float tolerance | `pytest` |
 | ISC-32..34 | multi-agent integration | N≥3 real agents through colony tick loop | aggregate property observed from real per-agent state | `pytest` |
@@ -692,3 +694,11 @@ Coverage (round 16, cumulative): 119/119 ISC groups passed, 119/119 artifact-bac
 - Strict mypy: **27 source files clean**; Ruff check/format clean; the repository module-line gate is clean and no longer reports the analysis script.
 
 Coverage (round 17, cumulative): 120/120 ISC groups passed, 120/120 artifact-backed (0 `[DEFERRED-VERIFY]`).
+
+**Round 18 (declared Python-floor compatibility, 2026-07-13):** ISC-121 added and verified after the public Python 3.10 matrix exposed an import-time failure in `colony.experiment`: `typing.Self` is unavailable before Python 3.11 even though the project declares `requires-python = ">=3.10"`. `Self` now comes from the explicitly declared `typing-extensions` runtime dependency, preserving the annotation without weakening the supported floor.
+
+- Red phase: the clean Ubuntu/Python 3.10 CI job collected zero tests and raised `ImportError: cannot import name 'Self' from 'typing'` from `colony/experiment.py`; the stage correctly refused to score the zero-collection run as passed.
+- Green phase: an isolated project environment using CPython **3.10.18** collected and passed **278/278 tests** in 140.42 seconds with no skips or import errors.
+- Coverage phase: the same real Python 3.10 environment passed the 90% floor with **95.29%** line+branch coverage; the existing Python 3.12 evidence remains separately documented.
+
+Coverage (round 18, cumulative): 121/121 ISC groups passed, 121/121 artifact-backed (0 `[DEFERRED-VERIFY]`).

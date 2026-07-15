@@ -23,9 +23,4 @@
 ## Ordered improvement ladder
 
 1. Keep descriptor validation green.
-2. Field-level unit constraints — shipped in source/tests.
-3. Metadata-only release manifest generation — shipped in source/tests/script.
-4. Byte-level descriptor↔file verification — shipped in source/tests.
-5. Deterministic manuscript figures from descriptor + fixtures — shipped in source/tests/script.
-6. Rendered descriptor-review artifacts — shipped in script/output generation.
-7. Add external repository publication receipts after a real fork publishes.
+2. Add external repository publication receipts after a real fork publishes.

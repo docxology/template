@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 import yaml
@@ -61,15 +62,23 @@ def _combined_latex_compiler(configured: str, *, tagged_pdf: bool) -> str:
 class PDFRenderer:
     """Handles PDF generation logic."""
 
-    def __init__(self, config: RenderingConfig):
+    def __init__(
+        self,
+        config: RenderingConfig,
+        *,
+        executable_resolver: Callable[[str], str | None] = shutil.which,
+        process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    ):
         """Initialize the PDF renderer with configuration."""
         self.config = config
+        self.executable_resolver = executable_resolver
+        self.process_runner = process_runner
 
     def _markdown_pdf_engines(self) -> list[str]:
         candidates = [self.config.latex_compiler, "xelatex", "lualatex", "pdflatex"]
         engines: list[str] = []
         for engine in candidates:
-            if engine and engine not in engines and shutil.which(engine):
+            if engine and engine not in engines and self.executable_resolver(engine):
                 engines.append(engine)
         return engines
 
@@ -125,7 +134,7 @@ class PDFRenderer:
 
         logger.debug(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
 
-        if shutil.which(self.config.pandoc_path) is None:
+        if self.executable_resolver(self.config.pandoc_path) is None:
             raise RenderingError(
                 f"Pandoc not found: {self.config.pandoc_path}",
                 context={"source": str(source_file), "target": str(output_file)},
@@ -153,7 +162,7 @@ class PDFRenderer:
             ]
             cmd.extend(resource_paths)
             try:
-                subprocess.run(  # nosec B603
+                self.process_runner(  # nosec B603
                     cmd,
                     check=True,
                     capture_output=True,

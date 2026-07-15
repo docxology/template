@@ -266,7 +266,7 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
     projects = discover_projects(repo_root)
     md_files = discover_markdown_files(repo_root, scope="repo")
 
-    project_docs = {}
+    project_docs: dict[str, dict[str, Any]] = {}
 
     for project in projects:
         project_docs[project.name] = {

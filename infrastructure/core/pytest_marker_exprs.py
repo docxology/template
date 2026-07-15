@@ -13,6 +13,7 @@ def build_pytest_marker_expression(
     skip_slow: bool,
     skip_bench: bool,
     skip_requires_docker: bool = True,
+    skip_network: bool = True,
     skip_long_running: bool = True,
     skip_private_project: bool = True,
     skip_external_fixture: bool = True,
@@ -22,6 +23,7 @@ def build_pytest_marker_expression(
     Args:
         skip_requires_ollama: When True, append ``not requires_ollama``.
         skip_requires_docker: When True, append ``not requires_docker``.
+        skip_network: When True, append ``not network``.
         skip_slow: When True, append ``not slow``.
         skip_bench: When True, exclude ``bench``, ``benchmark``, and
             ``performance`` marker aliases.
@@ -34,6 +36,8 @@ def build_pytest_marker_expression(
         parts.append("not requires_ollama")
     if skip_requires_docker:
         parts.append("not requires_docker")
+    if skip_network:
+        parts.append("not network")
     if skip_slow:
         parts.append("not slow")
     if skip_bench:

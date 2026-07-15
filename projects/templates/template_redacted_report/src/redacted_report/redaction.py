@@ -20,7 +20,7 @@ _ALLOWED_REASONS = {
     "legal_privilege",
     "privacy",
 }
-_SENSITIVE_MARKERS = ("HUMINT", "SIGINT", "source", "selector", "location", "2026-")
+_SENSITIVE_MARKERS = ("HUMINT", "SIGINT", "source", "selector", "location")
 _REVIEW_DECISIONS = {"approve", "reject", "changes_requested"}
 
 
@@ -120,6 +120,7 @@ class ReleaseGateReport:
 DEFAULT_RESIDUAL_PATTERNS = tuple(
     ResidualPattern(f"marker:{marker}", re.escape(marker), "warning") for marker in _SENSITIVE_MARKERS
 ) + (
+    ResidualPattern("iso_calendar_date", r"\b20\d{2}-\d{2}-\d{2}\b", "warning"),
     ResidualPattern("email_address", r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", "warning"),
     ResidualPattern("ipv4_address", r"\b(?:\d{1,3}\.){3}\d{1,3}\b", "warning"),
     ResidualPattern("coordinate_pair", r"\b-?\d{1,2}\.\d{3,},\s*-?\d{1,3}\.\d{3,}\b", "warning"),
@@ -548,8 +549,18 @@ def _check_decisions(
         redact_text(segment.text, decisions)
     except ValueError as exc:
         findings.append(RedactionFinding("error", "bad_redaction_decision", f"{segment.id}: {exc}"))
-    for control in segment.source_controls:
-        if not any(decision.reason == "source_identity" for decision in decisions):
+    # Each distinct source control needs its *own* covering source_identity
+    # decision. Matching `_has_deviation`'s kind+target style binding (in
+    # registered_report.protocol) exactly isn't possible here because
+    # RedactionDecision carries no field naming which control it protects and
+    # a control's name need not appear verbatim in the segment text (see
+    # test_unique_sensitive_span_is_hashed_never_serialized). Instead we bind
+    # by count: the Nth source control requires the Nth source_identity
+    # decision to exist. A single decision anywhere in the segment can no
+    # longer vacuously "cover" every control regardless of how many there are.
+    source_identity_decisions = [decision for decision in decisions if decision.reason == "source_identity"]
+    for index, control in enumerate(segment.source_controls):
+        if index >= len(source_identity_decisions):
             findings.append(
                 RedactionFinding(
                     "error", "source_control_uncovered", f"{segment.id} source control {control} lacks source redaction"

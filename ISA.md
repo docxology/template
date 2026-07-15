@@ -1,9 +1,9 @@
 ---
 project: humos-template
-task: "Iteration 9 — user asked to deeply review projects/templates for completeness/accuracy, with especial emphasis on updating template_active_inference's workflow documentation"
+task: "Full Repository Hardening and Refactoring Program"
 effort: E4
-phase: complete
-progress: 50/50
+phase: observe
+progress: implementation verification in progress
 final_head_iter9: 138de2139110af3a563f18d5cfb70cf11509cd94 (external Hermes-Agent commit that absorbed this session's edits — see Decisions)
 iteration: 9-semantic-doc-accuracy-and-active-inference-workflow
 baseline_head_iter9: 1a983de2ddacce2d4674501ea6dee033d950c813
@@ -20,7 +20,7 @@ baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
 iteration: 5-multi-lens-review-plans-fixes
 mode: algorithm
 started: 2026-07-02
-updated: 2026-07-07
+updated: 2026-07-13
 ---
 
 # ISA — HumOS Template Package: Agentic Operability
@@ -152,7 +152,89 @@ agents query.
 - Forge/Cato unavailable this session (codex ChatGPT-account 401) → inline
   RedTeam substitution per Algorithm Rule 2a.
 
-## Goal
+## Current Program
+
+### Goal
+
+Make the public repository's green signals trustworthy: every blocking static
+gate must fail closed, pipeline routes must resolve one canonical
+implementation, publication metadata and artifacts must have one source of
+truth, standalone exports must include declared public resources, and
+state-changing publication must reject local-only inputs. Preserve compatibility,
+confidentiality, existing ISC identifiers, and externally published state.
+
+### Criteria
+
+- [x] ISC-252: checkpoint and rebase the pre-existing public worktree onto the refreshed `origin/main` without absorbing the dirty `infrastructure/steganography/kmyth` checkout.
+- [x] ISC-253: upgrade Pillow to the first fixed release (12.3.0) and refresh the lockfile.
+- [x] ISC-254: regenerate API documentation for all live `infrastructure.project` exports.
+- [x] ISC-255: regression collection fails closed when required modules or the minimum test count disappear.
+- [x] ISC-256: no-mocks enforcement detects aliased/dynamic imports and executable fixture tests.
+- [x] ISC-257: blocking static health accurately names and runs confidentiality, generated-artifact, drift, generated-doc, skills, Bandit, and architecture-parity gates without masked exits.
+- [x] ISC-258: module-size ratchets carry per-file ceilings and expiry dates; async functions, methods, and syntax errors fail closed.
+- [x] ISC-259: pipeline YAML owns stable keys and canonical repository-relative scripts; single-stage and full-DAG routes have a parity test.
+- [x] ISC-260: root numbered commands are thin compatibility wrappers over canonical stage entrypoints.
+- [x] ISC-261: importing pipeline types does not load reporting, Matplotlib, NumPy, or Pillow; package-level compatibility exports resolve lazily.
+- [x] ISC-262: repository URLs use one normalization accessor with explicit URL precedence and GitHub-slug fallback.
+- [x] ISC-263: standalone exemplar exports include declared public cross-root resources by default and record them in a content-addressed manifest; project-only export remains explicit.
+- [x] ISC-264: every public exemplar has a non-empty claim-ledger overlay and stale hard-coded roster prose is removed from authored manuscript text.
+- [x] ISC-265: project-local exemplar outputs are the sole tracked evidence tree; root copies are ignored, rejected if tracked, and unique release receipts are preserved project-locally.
+- [x] ISC-266: canonical output file-count, aggregate-byte, and duplicate-blob budgets fail closed.
+- [x] ISC-267: CODEOWNERS public-project rules are generated from `PUBLIC_PROJECT_NAMES`, with explicit sensitive-area ownership policy and parity tests.
+- [x] ISC-268: non-dry-run publishing preflight rejects local-only projects and out-of-project payloads while emitting exact payload sizes and credential-source names without secret values.
+- [x] ISC-269: all focused, infrastructure, regression, public-exemplar, export, lint, typing, security, documentation, and unified-health acceptance commands pass on the integrated branch.
+- [ ] ISC-270: GitHub required CI jobs are rerun and green; an action-download service outage is reported as external rather than bypassed.
+- [x] ISC-271: no private project source, external deposit, GitHub release, branch-protection setting, or public push is performed by this program.
+- [x] ISC-272: semantic dependency replacements are reduced from 380 to zero and CI enforces a zero ceiling while separately permitting environment isolation.
+- [x] ISC-273: coverage snapshots carry source-commit and per-exemplar source-hash provenance; generated-doc checks fail closed when source or tests change without a refreshed coverage run.
+- [x] ISC-274: root README skill and exemplar differentiation tables are generated from `PUBLIC_PROJECT_NAMES` and exemplar-owned use-when sections.
+- [x] ISC-275: active-inference/formal slow paths are profiled and split or documented with measured evidence after correctness gates stabilize.
+- [x] ISC-276: clean-wheel installation proves the reduced core dependency set, and every public exemplar export installs/imports/smokes in isolation.
+
+### Test Strategy
+
+Use negative controls for each oracle (zero regression collection, dynamic mock
+imports, stale architecture SVG, async/method-heavy scripts, syntax errors,
+budget overflow, CODEOWNERS drift, local-only publication payloads), followed by
+focused suites, Ruff/format/mypy/Bandit, repository audit gates, the regression
+tier, separate public-exemplar test invocations, and clean standalone exports.
+
+### Decisions
+
+- Project-local outputs remain canonical because they preserve standalone
+  forkability; top-level copies are disposable release products.
+- Existing CLI names and package-level imports remain available through thin
+  wrappers and lazy aliases during a compatibility window.
+- External release readiness remains advisory in ordinary CI and is not used to
+  authorize deposits or release creation.
+- Private AskOS promotion and GitHub repository administration remain explicit
+  external follow-ups.
+- Type safety is fail-closed through a checked per-package mypy baseline: errors
+  in new files, unlisted packages, or above a package ceiling block CI while the
+  six declared debt packages are reduced incrementally.
+
+### Verification
+
+Local verification is complete. The 23 isolated project gates meet their 90%
+coverage floors; formal passed 278 tests, and active-inference exercised 704
+tests at 93.6% coverage. Its measured integrity hotspots were the deliberately
+failing fixed-point control (177.93s), stale-artifact settlement (93.08s), and
+semantic-certificate validation (345.05s while a concurrent infrastructure
+suite wrote shared artifacts, 2.74s when rerun in isolation). These writers
+must remain serial rather than being split across a shared project output tree.
+Clean export/install/import smoke passed for all 23 public exemplars, the clean
+wheel loaded no Matplotlib/NumPy/Pillow/reporting modules through
+`pipeline.types`, and the 55-test claim-binding regression tier passed. The
+exact CI-scoped infrastructure command passed 8,649 tests with 83.00% coverage;
+Ruff, format, the zero-debt mypy gate, both Bandit scans, pip-audit, no-mocks,
+skills/export, confidentiality, generated-artifact, strict drift, documentation,
+and module-size gates passed. The unified blocking health report passed all 19
+checks. ISC-270 alone remains open pending a CI run of this branch; the branch is
+not pushed under ISC-271. The previously service-failed Performance job was
+rerun by job ID and passed; Security and Validate Manuscripts remain red only
+on the old `fbddb253` main run because the fixes are intentionally unpushed.
+
+## Historical iterations 1–3 — Goal
 
 **Iteration 3:** Every one of the 13 `projects/templates/*` exemplars surfaces its
 real cross-platform publishing state (code-generated `PUBLISHING-STATUS` block,
@@ -170,7 +252,7 @@ composition, and (d) the exemplar templates are structurally consistent — all
 delivered as additive, gate-green, behavior-preserving changes verified by tool
 probe and recorded in this ISA.
 
-## Goal (iteration 8)
+## Historical iteration 8 — Goal
 
 Every top-level gate (drift, no-mocks, module-line-count, docs-lint, api-reference,
 infra suite, regression tier, confidentiality) is green, and every one of the 18
@@ -182,7 +264,7 @@ AGENTS.md in sync with code, no drift). Findings are HEAD-probed (Gate J) before
 being fixed or deferred; anything not safely fixable this session is written to
 a durable, acceptance-lined plan.
 
-## Criteria (iteration 8)
+## Historical iteration 8 — Criteria
 
 - [x] ISC-62: `template_active_inference` — `uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference --project-only` exits 0 (its own test suite passes).
 - [x] ISC-63: `template_active_inference` — project coverage meets its documented floor (90% default, or a named CI matrix exception) per `coverage_project.json`.
@@ -325,7 +407,7 @@ a durable, acceptance-lined plan.
 - [x] ISC-200: Anti: every Workflow-agent finding (5) got an independent second-agent re-probe before being trusted; every pre-existing-vs-introduced question this session (4 instances) was resolved via `git stash` + re-run against clean HEAD, not assumption.
 - [x] ISC-201: Anti: confirmed — every `[x]` transition above cites the actual command/output; no "should work"/"looks fine" language used.
 
-## Test Strategy (iteration 8)
+## Historical iteration 8 — Test Strategy
 
 | ISC range | Type | Check | Tool |
 |---|---|---|---|
@@ -333,14 +415,14 @@ a durable, acceptance-lined plan.
 | ISC-188..197 (global gates) | functional/tested | `infrastructure.core.health`, `pytest`, audit scripts | `Bash` |
 | ISC-198..201 (process/anti) | process integrity | git snapshot diff, re-probe of subagent claims | `Bash`, `Grep`, `Read` |
 
-## Decisions (iteration 8, 2026-07-07)
+## Historical iteration 8 — Decisions (2026-07-07)
 
 - **Toolchain-Auth Probe (Gate H) fired at OBSERVE:** `codex login status` → "Logged in using ChatGPT" — confirms the session boot-time warning that Forge/Cato (GPT-5.x slugs) will 401 on this ChatGPT-tier account. Per Rule 2a substitution: `forge_unavailable: true`, `cato_unavailable: true`, `substituted: inline-RedTeam-scaled-to-per-project-findings` (ParallelAnalysis-weight, since this run spans architecture-level exemplar verification across 18 projects, not a single bounded edit). Anvil remains available as the non-Anthropic delegation producer and is used for any project-level remediation that needs whole-repo context.
 - **Workflow-tool invocation, resolved:** the user's message ends with the same trailing `/workflows` token that iteration 7's RE-READ flagged as ambiguous and asked the user to disambiguate. The user repeated the identical phrasing on a structurally similar request (deep review + exemplar verification across the same 18-project roster) without correction — treated as confirmation they want the `Workflow` tool specifically, not just "be thorough." This run uses `Workflow` for the per-project fan-out (BUILD/EXECUTE) rather than the iteration-5/7 pattern of direct `Agent` fan-out.
 - **Test-execution split to avoid CPU contention:** the aggregate ground-truth run (`stage_01_test.py --project-only --all-projects --public-projects`) is launched once, directly, in the background — not duplicated per-project inside each Workflow agent — because 18 concurrent `pytest` processes plus one 18-project serial aggregate run competing for the same cores would produce load-flaky failures the repo's own CI docs warn about (`-n auto` contention note in `CLAUDE.md` Testing section). Workflow agents own the non-pytest checks (docs sync, composability, manuscript config, CI wiring) per project; the aggregate run owns pass/fail + coverage ground truth, merged at VERIFY.
 - **Rule 2 advisor call (2026-07-07, pre-complete):** `Inference.ts --mode advisor --auto-state` loaded a stale, unrelated ISA (a QuadCraft session) instead of `<project>/ISA.md` — a repeat of the exact documented `feedback_advisor_autostate_misses_project_isas.md` failure mode; the substantive concerns raised were still evaluated on their merits: (1) fresh-clone functional verification was NOT done this session (all verification ran in the existing warm/dirty working tree) — recorded as an honest gap, not silently dropped; (2) CI-wiring was confirmed by reading `ci.yml` plus running the same commands CI runs locally, not a live GitHub Actions dry-run — a proxy, not full parity; (3) regression coverage for this session's own fixes IS present (`test_stage_10_research_workflow.py`, 8 tests; 2 new tests in `test_import_resolution.py`) — confirmed, not a gap; (4) spot-checked every new/edited file's diff for leaked absolute paths/secrets (clean) and ran `lint_docs.py --links-only` repo-wide (clean, exit 0) — addresses the "public-repo hygiene" concern within this session's scope; (5) verification scope is honestly `projects/templates/*` + the specific `infrastructure`/`scripts` files this session touched or the 11 automated gates covered — not a manual read of every file in the repo, and the final report says so explicitly rather than implying full coverage.
 
-## Decisions (iteration 8b, 2026-07-07 — "comprehensively proceed" follow-up)
+## Historical iteration 8b — Decisions (2026-07-07)
 
 - **User authorized commit + push to main** after reviewing the iteration 8
   summary ("Yes, comprehensively proceed with all improvements and additions
@@ -421,7 +503,7 @@ a durable, acceptance-lined plan.
   logic under time pressure — left as an honest, precisely-scoped residual
   finding rather than a vague "known issue."
 
-## Goal (iteration 9)
+## Historical iteration 9 — Goal
 
 Every one of the 18 `projects/templates/*` public exemplars receives a
 semantic (not just structural) documentation-accuracy pass — README/AGENTS.md/
@@ -435,7 +517,7 @@ HEAD-probed (Gate J) before being fixed; fixes are additive/corrective only
 (no destructive rewrites of accurate content); global gates stay green after
 every edit.
 
-## Criteria (iteration 9)
+## Historical iteration 9 — Criteria
 
 - [x] ISC-202: `template_active_inference` — semantic doc pass: README/AGENTS.md narrative cross-checked against actual `scripts/`, `src/`, `tracks.yaml` contents; findings recorded.
 - [x] ISC-203: `template_active_inference` — confirmed findings fixed (or explicitly deferred with reason); re-verified via `check_template_drift.py --project templates/template_active_inference --strict`.
@@ -488,7 +570,7 @@ every edit.
 - [x] ISC-250: Anti: no fabricated command/path/claim introduced — every new sentence in a doc edit traces to a real, probed file or command output (Gate E discipline). One fabricated edit *rationale* (not a fabricated doc claim) was caught in `template_autoscientists`' fix agent and reverted (see Decisions).
 - [x] ISC-251: Anti, PARTIALLY VIOLATED BY AN EXTERNAL PROCESS: this session itself executed no `git commit`/`git push`. However, a separate autonomous process ("Hermes Agent") sharing this checkout committed and pushed commit `138de2139110af3a563f18d5cfb70cf11509cd94` to public `origin/main` mid-session, sweeping in most of this session's uncommitted edits. Confirmed via `git ls-remote origin main` that this is already live. Disclosed prominently to the user; see Decisions for full detail and the new `feedback_shared_checkout_autocommit_daemon_publishes_uncommitted_work.md` memory this produced.
 
-## Test Strategy (iteration 9)
+## Historical iteration 9 — Test Strategy
 
 | ISC range | Type | Check | Tool |
 |---|---|---|---|
@@ -497,7 +579,7 @@ every edit.
 | ISC-244..247 (global re-verify) | regression | re-run drift + lint + project test suite + diff review after edits | `Bash` |
 | ISC-248..251 (process/anti) | process integrity | git snapshot diff, destructive-edit check, fabrication check, push-authorization check | `Bash`, `Grep` |
 
-## Decisions (iteration 9, 2026-07-07)
+## Historical iteration 9 — Decisions (2026-07-07)
 
 - **Toolchain-Auth Probe (Gate H) re-confirmed at OBSERVE:** session boot-time warning states `codex` is authenticated via a ChatGPT account, which 401s on GPT-5.x slugs — Forge and Cato are unavailable this run exactly as iteration 8 found. Per Rule 2a: `forge_unavailable: true`, `cato_unavailable: true`, `substituted: inline-RedTeam-QuickAttack-per-finding` (QuickAttack-weight, not full ParallelAnalysis like iteration 8's 18-project structural sweep — this iteration's edits are bounded, additive documentation corrections, not architecture changes). Anvil remains available as the non-Anthropic delegation producer.
 - **Redundancy check against iteration 8/8b (Gate J):** before scaffolding new ISCs, re-ran `check_template_drift.py --project all --strict` and `scripts/audit/lint_docs.py` fresh on current HEAD — both still exit clean, confirming iteration 8b's structural/functional verification (ISC-62..201) is still valid and does not need to be re-run. This iteration deliberately does NOT duplicate that ISC set; it adds a complementary semantic-documentation-accuracy layer the structural gates don't check (a doc section can be schema-valid and drift-clean while being stale or incomplete prose).
@@ -512,7 +594,7 @@ every edit.
 - **Discovered mid-session: a concurrent autonomous process ("Hermes Agent") committed AND pushed to `origin/main` while this session's edits sat uncommitted in the shared working tree.** Commit `138de2139110af3a563f18d5cfb70cf11509cd94` ("fix(coverage): close the aggregate union-coverage gate leak", authored by "Hermes Agent", 2026-07-07 15:22:54) swept 197 files into its own commit — including nearly all of this session's iteration-9 documentation fixes — and `git ls-remote origin main` confirms that commit is already live on the public `docxology/template` GitHub repo. This happened without this session issuing any `git add`/`commit`/`push`, and without the explicit push-authorization phrase Anti-ISC-251 requires — the push was performed by an external process operating on the same checkout, not by this session. Content-wise this is not a quality problem (every fix that shipped had already passed, or was subsequently confirmed by, the adversarial verify pass in this same iteration), but it is a process/authorization gap: publication happened before this session's own final review completed. Flagged prominently to the user; not something this session can safely undo (rewriting already-pushed public history is a materially larger risk than the exposure itself). New general lesson for a `feedback_*.md` memory: a shared (non-worktree-isolated) checkout with an autonomous background committer means "I haven't committed" does not imply "my uncommitted work is safe from being published" — the mitigation is worktree isolation for any session running alongside a known auto-commit/push daemon on the same repo.
 - **Self-inflicted structural bug, caught and fixed:** this session's own very first ISA edit (the "## Goal (iteration 9)" insertion at OBSERVE) used `old_string: "## Goal (iteration 7)"` and a `new_string` that never re-emitted that header, silently deleting the section boundary and leaving iteration 7's Goal paragraph orphaned under iteration 9's content for the rest of the session. Caught during LEARN while writing this Verification section (noticed `grep -n "^## "` didn't show a "## Goal (iteration 7)" line where one was expected) and restored. A direct violation of this iteration's own Anti-ISC-249 discipline, by this session's own hand — logged here rather than silently fixed, per the no-silent-fix rule.
 
-## Verification (iteration 9)
+## Historical iteration 9 — Verification
 
 - ISC-202/203: `template_active_inference` semantic pass — dual-lens review (workflow-completeness + cross-consistency) found real gaps in `docs/agent_instructions.md`'s `## Workflow` section and a stale `--skip-lean` flag in `docs/troubleshooting.md`; both fixed and re-verified. `check_template_drift.py --project templates/template_active_inference --strict` → "no drift detected."
 - ISC-204..237: all 17 remaining templates reviewed (Workflow tool pipeline + 5 recovered via follow-up `Agent` calls after transient API failures). 12 templates had confirmed findings fixed (autopoiesis, autoresearch_project, autoscientists, code_project, gold_refinement, literature_meta_analysis, madlib, methods_paper, newspaper, prose_project, search_project, sia, template_template, textbook — see per-template changes in Decisions above and in each recovered agent's report); 4 templates (eda_notebook, pools_rules_tools, storybook, and one branch of madlib) came back clean or with only already-accurate content confirmed. One unjustified addition (`template_autoscientists` → `projects/templates/AGENTS.md`) and one corrupted-output side effect (`template_sia`) were caught and reverted.
@@ -522,7 +604,7 @@ every edit.
 - ISC-246: `uv run pytest projects/templates/template_active_inference/tests --cov=... --cov-fail-under=90` → 495/497 passed, 91.07% coverage on the full contended run; the 2 timeouts confirmed as load flakiness via an isolated re-run of `tests/test_figures.py` (17/17 passed, 13.02s) after contending load cleared.
 - ISC-247: `git diff` reviewed per-template throughout the session; 2 disclosed source-code fixes (coverage-isolation) kept, both independently re-verified by adversarial passes; all corruption/unjustified-addition side effects reverted.
 - ISC-248..251: baseline captured (`1a983de2`); no destructive edits found on final review (2 pre-existing corruptions from other causes reverted, not caused by this session); one fabricated rationale caught and reverted; no push issued by this session, though see the Hermes Agent discovery above for the external-push caveat on ISC-251.
-## Goal (iteration 7)
+## Historical iteration 7 — Goal
 
 Every remaining review-plan refactor (R5–R10, R13, R14, R18) is implemented in
 worktree-isolated parallel agents, reconciled into the main checkout as its own
@@ -530,7 +612,7 @@ gate-verified logical commit, all repo gates + full infra suite green, then
 pushed to public `docxology/template` main — no pollution, no generated-block
 hand-edits.
 
-## Criteria (iteration 7)
+## Historical iteration 7 — Criteria
 
 - [x] ISC-53: WP1 (R7+R18) — single-file CLIs now discovered (live ops 18→31, incl. the 4 named); `OperationDescriptor.effect` tier added, MCP `invoke_cli` refuses mutating ops unless `allow_mutating`/`TEMPLATE_MCP_ALLOW_MUTATING` (probe: test_operation_registry + test_mcp_server 32→ pass; operations-check green; manifest regenerated).
 - [x] ISC-54: WP2 (R6+R8) — `_get_session`→`lazy_session`, `_iter_files`→`iter_bundle_files`, 4 numeric-cell helpers, `_read_json_object`/`_load_yaml_mapping`/`_rel` each consolidated to one home (dup-scan 0; `secure_run._load_yaml_mapping` intentionally kept — materially different error behavior); arXiv now pulls rendered `.tex` when present + honest references-only docstring/README with 2 tests (probe: publishing 597 pass).
@@ -542,7 +624,7 @@ hand-edits.
 - [x] ISC-60: Anti: no pollution — final changeset = 48 files, `output/` limited to the 5 intended R9 manifests; generated docs only via their generators; R10 test-run pollution reverted (probe: git status scan clean).
 - [x] ISC-61: Pushed to `origin/main` (`ed2f8b70`); remote HEAD live-verified == local (`git ls-remote origin main` == `git rev-parse HEAD`); full infra suite 7867 passed / 3 skipped / 0 failed pre-push.
 
-## Goal (iteration 5)
+## Historical iteration 5 — Goal
 
 A multi-lens (RedTeam / FirstPrinciples / Science / SystemsThinking / IterativeDepth)
 adversarially-verified review of the whole public repo produces (a) a severity-ranked,
@@ -550,7 +632,7 @@ HEAD-probed findings set, (b) durable scoped improvement plans committed under `
 and reconciled into `TO-DO.md`, and (c) every safely-fixable confirmed finding fixed
 this session with all repo gates green afterward — no irreversible external actions.
 
-## Criteria (iteration 5)
+## Historical iteration 5 — Criteria
 
 - [x] ISC-39: Review fan-out covers ≥8 distinct dimensions (docs-drift, claim-strength, code quality/thin-orchestrator, tests/regression, security posture, agent surface/MCP/skills, reproducibility/publishing, onboarding DX) with per-dimension findings files (probe: workflow returned 9 dimension reports, 55 agents, 0 errors).
 - [x] ISC-40: Every finding acted on (fixed OR planned OR deferred) carries a still-real-on-HEAD probe (Gate J) with file:line evidence (probe: 46 findings each ran a verify-stage refutation agent; 43 confirmed, 3 refuted; finding 38's "module missing" evidence refuted by my own `ls` → deferred not blindly acted on).
@@ -567,7 +649,7 @@ this session with all repo gates green afterward — no irreversible external ac
 - [x] ISC-51: Anti: no hand-edit inside any code-generated block — regeneration commands only (probe: `docs/_generated/{exemplar_roster,publication_records}.md` diffs are 1 + 2 lines, produced by their canonical generators; `template_manifest.json` regenerated by the roster generator; no by-hand edits inside generated markers).
 - [x] ISC-52: Cross-vendor coverage substituted per Rule 2a (Forge/Cato 401): the review workflow's per-finding verify stage adversarially refuted findings (3 dropped as NOT-REAL); the applied fixes were audited by the Anthropic-family advisor (`Inference.ts`), which surfaced the "gates verified only on their passing path" gap → I ran a negative control proving the mypy gate goes FAIL + prints diagnostics on an injected type error, and confirmed the drift gate's failure path is covered by the new no-mocks test.
 
-## Criteria
+## Historical iterations 1–3 — Criteria
 
 > Seed criteria — the OBSERVE reconnaissance workflow expands this to the E5
 > floor with specific, file-anchored, leverage-ranked ISCs before BUILD. IDs
@@ -614,7 +696,7 @@ this session with all repo gates green afterward — no irreversible external ac
 - [x] ISC-23: Six previously-non-invocable CLIs are now `python -m`-invocable (`__main__.py` added); the operation catalog lists 18 CLIs (probe: operations-list-json count).
 - [x] ISC-24: Anti: No test-induced or out-of-scope artifact is committed; changeset confined to infrastructure/scripts/tests/docs/.cursor/.pre-commit/ISA (probe: scope grep — reverted a test-clobbered manuscript table).
 
-## Test Strategy
+## Historical iterations 1–3 — Test Strategy
 
 | isc | type | check | threshold | tool |
 |-----|------|-------|-----------|------|
@@ -652,7 +734,7 @@ this session with all repo gates green afterward — no irreversible external ac
 | operations drift gate wiring | ISC-18 | operation_registry | no |
 | capability-surfaces doc | ISC-19 | all above | no |
 
-## Decisions
+## Historical iterations 1–3 — Decisions
 
 - 2026-06-30 (iteration 3, OBSERVE): Tier = E4 (classifier; REASON: "cross-cutting multi-project audit and improvement spanning templates and publishing infrastructure"). Working-tree baseline: clean (verified via `python3 -c subprocess.run(['git','status','--porcelain'])`, bypassing the documented RTK-Bash-mangles-git-output gotcha). Project ISA at template/ISA.md reused (phase was `complete` from iteration 2) — new Goal/Criteria appended as iteration 3 rather than overwriting history, per "ISA is a living articulation."
 - 2026-06-30: FeedbackMemoryConsult (mandatory, thinking capability): grepped `MEMORY/KNOWLEDGE/` (no hits) then read 3 directly-relevant gotcha memories from MEMORY.md index: `gotcha-doc-claim-must-be-backed-by-shipped-code` (manuscript/README claims need shipped-code backing, not ad-hoc probes) → binds ISC-25/27 (block must come from the CLI, never hand-typed); `gotcha-new-public-exemplar-registration-tax` (7-gate tax for new exemplars, drift --strict + lint_docs are the expensive gates) → informs the VERIFY plan; `gotcha-zenodo-reserve-first-doi-on-generated-cover` (real publish mechanics, version-bearing-file bumps) → confirms why real publish actions are Out of Scope here (irreversible, multi-file, costed).
@@ -693,7 +775,7 @@ this session with all repo gates green afterward — no irreversible external ac
 - 2026-06-22 (iteration 2): Rolled the uniform `schema` introspection across all 16 remaining CLIs via a 16-agent `/workflows` run; added `__main__.py` to 6 modules (operation catalog 12 → 18). Central verification (not agent self-reports) gated the push: 16/16 live schema probes, CI-scope ruff+mypy clean, bandit MEDIUM+ clean, 253 affected tests pass, all drift/export/no-mocks/confidentiality gates green.
 - 2026-06-22 (iteration 2): Scope guard caught a test-induced regression — the full infra suite refreshed a *generated* status table inside `template_active_inference/manuscript/08_methods_sheaf.md` to a degenerate state; reverted it (git-anchored: tree was clean at session start) rather than committing content loss.
 
-## Decisions (iteration 4, 2026-06-30 — real cross-platform publish pilot)
+## Historical iteration 4 — Decisions (2026-06-30)
 
 - User asked to bump all "2/12 published" templates toward 12/12. Scoped via AskUserQuestion before any real action: chose "pilot one template first" (`template_active_inference`) + TestPyPI (no real PYPI_TOKEN configured) over real PyPI.
 - GENERATOR-CHECK correction: my initial summary table showed "GitHub repo: —" for all 11 templates, which was WRONG — that field is a separate cosmetic header line in `status_report`'s output, not the per-platform github status. Live-verified via `curl -o /dev/null -w "%{http_code}"` against all 11 `github.com/docxology/<name>` URLs → all HTTP 200. All 11 already had real, live, public GitHub repos; "2/12" was always zenodo+github, not zenodo-only. This changed the pilot plan from "create a new repo" (high-stakes) to "just run the remaining 8 uploaders" (lower-stakes, no new public-repo creation needed).
@@ -708,7 +790,7 @@ this session with all repo gates green afterward — no irreversible external ac
 - Live-verified (not just trusting tool exit codes) all 9 new published-platform URLs via direct `curl` (or the platform's own API) before considering them done: Pinata gateway 200, OSF 200, HuggingFace 200, TestPyPI project page 200, GitHub Pages 200, Netlify 200, Software Heritage save-request "accepted" with a real archive ID, GitHub repo 200 (already-existing), Zenodo DOI (already-existing).
 - Scope for the remaining 10 templates: deferred to a follow-up, pending user go-ahead, now that the pilot has proven the process and fixed 4 real infra gaps (missing deps, missing CLI, wrong-token, GITHUB_REPO leak) that would have hit every subsequent template identically.
 
-## Decisions (iteration 5, 2026-07-02 — multi-lens review + scoped plans + ambitious fixes)
+## Historical iteration 5 — Decisions (2026-07-02)
 
 - Tier = E5 (classifier; user invoked `/RedTeam /FirstPrinciples /Science /workflows ultrathink ultracode`, "review vastly, make all scoped plans, fix ambitiously all you can"). Baseline HEAD `890abb6a`, clean tree (verified). Forge/Cato unavailable (codex ChatGPT-account 401 per SessionStart Gate H) → Rule 2a substitution: the review workflow's per-finding verify stage + the Anthropic-family advisor + a negative-control gate probe stand in. `forge_unavailable: true`, `cato_unavailable: true`, `substituted: workflow-verify-stage + advisor + gate negative-control`.
 - Capabilities (thinking, 8, meets E5 hard floor): FeedbackMemoryConsult (read `project_template_repo_navigability_audit_2026_07_01` + 4 template feedback memories — the worktree-pollution + import-collision + doc-pair-skip lessons directly shaped this run), RedTeam (9-dimension adversarial finder fan-out + per-finding refutation verify stage), Science (each finding a falsifiable conjecture, refuted-or-confirmed on HEAD), FirstPrinciples (docs-drift lens: derive facts from code, diff against prose), SystemsThinking + IterativeDepth (onboarding-DX + gate-integrity lenses), ContextSearch (memory grep), ISA (this document), Advisor (commitment-boundary Rule 2 call). Delegation (E5 soft floor ≥4): a `/workflows` run of 55 agents (9 review + 46 verify), well above floor.
@@ -720,7 +802,7 @@ this session with all repo gates green afterward — no irreversible external ac
 - Plans-dir gotcha: `/Plans` is gitignored (`.gitignore:269`), so a plan committed only there is a dead link on a fresh clone. Wrote the durable TRACKED plan to `docs/maintenance/review-remediation-2026-07.md` (where `regression-testing.md`/`ci-local.md` live) and redirected the TO-DO.md + STATUS.md pointers to it; kept the `Plans/` copy as local working scratch.
 - No commit/push executed — the changeset is left staged-clean for user commit approval (push to public `main` is the outward, approval-gated action; prior iterations show the permission classifier gates it explicitly).
 
-## Decisions (iteration 6, 2026-07-02 — comprehensive remediation + push)
+## Historical iteration 6 — Decisions (2026-07-02)
 
 - User approved: "comprehensively proceed with all ambitious tasks and to-do's, then push the public template/ repo." Executed the bounded, verifiable subset of the R1–R18 plan in the MAIN LOOP (per the worktree-pollution lesson), each change gate-verified before moving on.
 - **Shipped this pass (9 R-items):** R1 (CI `test-regression` job, serial + exit-5-tolerant), R2 (skills discovery scoped to `projects/templates` + strengthened test — the tracked manifest was already clean, only `skills_index.md`/`api-reference.md` self-description lines changed), R3 (new `.agents/skills` lane validation test, 16 cases), R4 (bandit `exclude_dirs` += `projects/ongoing`), R11 (OSF `osf_node_id` idempotency + no-mocks test), R12 (explicit `<a id>` anchors on the 2 emoji AGENTS.md headings the README deep-links — the other 3 deep-link targets are plain headings that already resolve), R15 (pinned `uv` installer via overridable `UV_INSTALL_VERSION`), R16 (always-on LOW shell-injection bandit sweep in CI — verified 0 findings on tracked code first), R17 (B603 justification corrected to name the real control `validate_project_slug`, after verifying `infrastructure.core.security` exists but is web-security, not argv validation).
@@ -783,7 +865,7 @@ this session with all repo gates green afterward — no irreversible external ac
   learned: the stdout-purity guard belongs at the data boundary (`stage_rows`), not at each call site; and any "speaks valid protocol" claim needs a transport-level test that exercises the log-emitting path.
   criterion_now: ISC-15 — no MCP tool may corrupt the JSON-RPC stdout stream, verified by a subprocess test that calls the DAG-loading tool.
 
-## Verification
+## Historical verification record
 
 ### Iteration 8 (2026-07-07)
 

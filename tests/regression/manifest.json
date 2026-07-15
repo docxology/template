@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "minimum_collected_tests": 55,
+  "required_test_files": [
+    "projects/template_active_inference/tables/test_analytical_sweep_claims.py",
+    "projects/template_autoresearch_project/tables/test_candidate_outcome_claims.py",
+    "projects/template_autoscientists/tables/test_coordination_results_claims.py",
+    "projects/template_code_project/figures/test_figure_TEMPLATE.py",
+    "projects/template_code_project/tables/test_optimization_results_claims.py",
+    "projects/template_eda_notebook/tables/test_eda_results_claims.py",
+    "projects/template_gold_refinement/tables/test_refinery_certification_claims.py",
+    "projects/template_literature_meta_analysis/tables/test_field_overview_claims.py",
+    "projects/template_madlib/tables/test_configuration_counts_claims.py",
+    "projects/template_methods_paper/tables/test_compiled_plan_claims.py",
+    "projects/template_newspaper/tables/test_layout_statistics_claims.py",
+    "projects/template_prose_project/tables/test_editorial_report_claims.py",
+    "projects/template_search_project/tables/test_run_snapshot_claims.py",
+    "projects/template_sia/tables/test_generation_metrics_claims.py",
+    "projects/template_template/tables/test_introspection_metrics_claims.py",
+    "projects/template_textbook/tables/test_structure_claims.py"
+  ]
+}

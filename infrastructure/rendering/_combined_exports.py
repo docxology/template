@@ -6,7 +6,9 @@ import re
 import shutil
 import subprocess
 import traceback
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
@@ -171,9 +173,14 @@ def render_combined_epub(
     manuscript_dir: Path,
     project_name: str,
     reporter: DiagnosticReporter,
+    *,
+    epub_renderer: Callable[..., Any] | None = None,
 ) -> None:
     """Render the combined EPUB from the preprocessed combined markdown."""
-    from infrastructure.rendering.epub_renderer import render_epub
+    if epub_renderer is None:
+        from infrastructure.rendering.epub_renderer import render_epub
+
+        epub_renderer = render_epub
 
     combined_md = resolve_combined_markdown(manuscript_dir)
     if combined_md is None:
@@ -230,7 +237,7 @@ def render_combined_epub(
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined EPUB manuscript...")
     try:
-        result = render_epub(
+        result = epub_renderer(
             combined_md,
             out_path,
             bibliography=None,

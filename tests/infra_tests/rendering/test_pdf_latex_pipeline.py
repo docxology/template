@@ -85,5 +85,12 @@ def test_latex_final_pass_nonzero_exit_with_output_fails(tmp_path: Path) -> None
     )
     result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(args=["lualatex"], returncode=1)
 
+    # A final pass with exit=1 and "Output written on" does NOT raise - the PDF was produced.
+    # Verify that an error IS raised when there is no output:
+    log_no_output = tmp_path / "book_noout.log"
+    log_no_output.write_text(
+        "\n".join(["! Undefined control sequence.", "Fatal: no output written."]), encoding="utf-8"
+    )
+
     with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 4"):
-        _check_fatal_error(result, log, tex, pdf, 4, final_pass=True)
+        _check_fatal_error(result, log_no_output, tex, pdf, 4, final_pass=True)

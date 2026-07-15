@@ -21,6 +21,7 @@
 
 - Bind manuscript tables to the canonical audit JSON only if rendering can preserve the text-free projection and fails closed when the audit schema changes.
 - Add pixel-level visual regression only if the repo adopts stable screenshot/PDF raster tooling for exemplar outputs.
+- Year-stable ISO-date residual detection and complete `s4` collection-platform span coverage shipped with negative controls on 2026-07-13. Keep the PDF proof-matrix scan synchronized with future fixture changes; contextual labels in explicitly public explanatory prose must remain distinguished from source-segment residuals.
 
 ## Ordered improvement ladder
 

@@ -84,10 +84,10 @@ analysis:
   scripts:
     - 02_meta_analysis_pipeline.py
     - 04_generate_figures.py
-    - 05_inject_variables.py
     - 06_fulltext_assessment.py
     - 07_literature_evaluation.py
     - 08_deep_research_dispatch.py
+    - 05_inject_variables.py
 
 # Project-specific configuration namespace.
 # Keys under project_config are passed through without schema validation warnings.

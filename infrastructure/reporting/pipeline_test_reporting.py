@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+from typing import Any
+
 from infrastructure.core.logging.constants import BANNER_WIDTH, TABLE_WIDTH
 from infrastructure.core.logging.helpers import format_duration as _format_duration
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
@@ -16,7 +19,7 @@ logger = get_logger(__name__)
 
 def _report_suite_failure(
     suite_name: str,
-    results: dict,
+    results: Mapping[str, Any],
     project_name: str = "",
 ) -> None:
     """Log failure details and fix suggestions for a test suite."""
@@ -52,7 +55,12 @@ def _report_suite_failure(
         logger.info(suggestion)
 
 
-def _report_suite_success(suite_name: str, results: dict, threshold: float, report: dict) -> None:
+def _report_suite_success(
+    suite_name: str,
+    results: Mapping[str, Any],
+    threshold: float,
+    report: dict,
+) -> None:
     """Log success details for a test suite."""
     passed = results.get("passed", 0)
     skipped = results.get("skipped", 0)
@@ -76,8 +84,8 @@ def _report_suite_success(suite_name: str, results: dict, threshold: float, repo
 def report_results(
     infra_exit: int,
     project_exit: int,
-    infra_results: dict,
-    project_results: dict,
+    infra_results: Mapping[str, Any],
+    project_results: Mapping[str, Any],
     report: dict,
     project_name: str = "project",
 ) -> None:
@@ -186,7 +194,7 @@ def report_results(
         logger.info("Run 'pytest projects/%s/tests/ -v' for detailed failure information", project_name)
 
 
-def report_infra_only_results(infra_exit: int, infra_results: dict) -> None:
+def report_infra_only_results(infra_exit: int, infra_results: Mapping[str, Any]) -> None:
     """Log infrastructure-only pipeline completion (no project test phase)."""
     log_header("Infrastructure Test Results", logger)
     if infra_exit == 0:

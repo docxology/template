@@ -158,7 +158,7 @@ madlib:
       gate: "pytest"
     - name: "Figure registry integrity"
       target: "Every referenced figure is registered."
-      evidence: "scripts/04_validate_output.py"
+      evidence: "scripts/pipeline/stage_04_validate.py"
       gate: "validation"
   failure_modes:
     - name: "Unresolved placeholder"

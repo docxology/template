@@ -118,26 +118,24 @@ def test_ensure_project_paths_scripts_already_present():
     assert sys.path.count(scripts_str) == count_before
 
 
-def test_ensure_project_paths_adds_src_when_absent(monkeypatch):
+def test_ensure_project_paths_adds_src_when_absent():
     """ensure_project_paths must insert SRC when it is not yet on sys.path."""
     src_str = str(textbook_paths.SRC)
     # Build a patched path without SRC in it.
     new_path = [p for p in sys.path if p != src_str]
-    monkeypatch.setattr(sys, "path", new_path)
-    textbook_paths.ensure_project_paths(include_scripts=False)
-    assert src_str in sys.path
+    textbook_paths.ensure_project_paths(include_scripts=False, path_entries=new_path)
+    assert src_str in new_path
 
 
-def test_ensure_project_paths_adds_root_when_absent(monkeypatch):
+def test_ensure_project_paths_adds_root_when_absent():
     """ensure_project_paths must insert the template root when not yet present."""
     root = textbook_paths.discover_template_root(textbook_paths.PROJECT)
     if root is None:
         return  # standalone checkout — nothing to test
     root_str = str(root)
     new_path = [p for p in sys.path if p != root_str]
-    monkeypatch.setattr(sys, "path", new_path)
-    textbook_paths.ensure_project_paths()
-    assert root_str in sys.path
+    textbook_paths.ensure_project_paths(path_entries=new_path)
+    assert root_str in new_path
 
 
 def test_template_root_helper():
@@ -191,17 +189,12 @@ def test_pad_png_missing_file_is_noop(tmp_path):
     assert textbook_visuals.pad_png_to_square(missing) == missing
 
 
-def test_pad_png_with_real_png_no_pillow(tmp_path, monkeypatch):
+def test_pad_png_with_real_png_no_pillow(tmp_path):
     """pad_png_to_square returns path unchanged when Pillow is not importable."""
+
     # Simulate Pillow absence by temporarily blocking the import.
-    import builtins
-
-    real_import = builtins.__import__
-
-    def mock_import(name, *args, **kwargs):
-        if name == "PIL" or name.startswith("PIL."):
-            raise ImportError("no pillow")
-        return real_import(name, *args, **kwargs)
+    def blocked_import(name: str):
+        raise ImportError(f"{name} unavailable")
 
     # Write a minimal valid 1×1 PNG.
     png_bytes = (
@@ -213,6 +206,5 @@ def test_pad_png_with_real_png_no_pillow(tmp_path, monkeypatch):
     png_path = tmp_path / "test.png"
     png_path.write_bytes(png_bytes)
 
-    monkeypatch.setattr(builtins, "__import__", mock_import)
-    result = textbook_visuals.pad_png_to_square(png_path)
+    result = textbook_visuals.pad_png_to_square(png_path, image_importer=blocked_import)
     assert result == png_path

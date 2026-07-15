@@ -27,6 +27,7 @@ set than the full manuscript.
 
 import re
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
@@ -50,9 +51,17 @@ logger = get_logger(__name__)
 class SlidesRenderer:
     """Handles slide generation (Beamer/Reveal.js)."""
 
-    def __init__(self, config: RenderingConfig):
+    def __init__(
+        self,
+        config: RenderingConfig,
+        *,
+        process_runner: Callable[..., object] = subprocess.run,
+        latex_compile: Callable[..., Path] = compile_latex,
+    ):
         """Initialize the slides renderer with configuration."""
         self.config = config
+        self._process_runner = process_runner
+        self._latex_compile = latex_compile
 
     def render(
         self,
@@ -105,7 +114,7 @@ class SlidesRenderer:
         logger.info(f"Generating reveal.js slides from {source_file}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
+            self._process_runner(cmd, check=True, capture_output=True, text=True, timeout=600)
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -175,7 +184,7 @@ class SlidesRenderer:
 
         try:
             # Convert markdown to LaTeX
-            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
+            self._process_runner(cmd, check=True, capture_output=True, text=True, timeout=600)
 
             # Read LaTeX content and fix figure paths
             tex_content = temp_tex.read_text(encoding="utf-8")
@@ -213,7 +222,7 @@ class SlidesRenderer:
                 raise
 
             # Compile LaTeX to PDF (written as {temp_tex.stem}.pdf, e.g. slides_slides.pdf)
-            compiled_pdf = compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
+            compiled_pdf = self._latex_compile(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():

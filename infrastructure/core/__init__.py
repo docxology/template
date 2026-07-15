@@ -1,59 +1,42 @@
-"""Core module — most-used symbols for cross-module convenience.
+"""Lightweight compatibility exports for core infrastructure utilities.
 
-Only symbols frequently imported via ``from infrastructure.core import X``
-appear here. Specialist or rarely-used symbols should be imported directly
-from their submodules:
-
-    infrastructure.core.exceptions    — full exception hierarchy
-    infrastructure.core.config.loader — load_config, get_config_as_dict
-    infrastructure.core.runtime.environment   — check_python_version, setup_directories
-    infrastructure.core.runtime.function_profiler — CodeProfiler, ProfilingMetrics, etc.
-    infrastructure.core.runtime.checkpoint    — PipelineCheckpoint, StageResult
-    infrastructure.core.pipeline      — PipelineConfig, PipelineExecutor
-    infrastructure.core.pipeline.multi_project — MultiProjectConfig, MultiProjectResult
-    infrastructure.core.runtime.health_check  — SystemHealthChecker (get_health_status), HealthStatus
-    infrastructure.core.telemetry     — TelemetryCollector, TelemetryConfig
+New code should import leaf modules directly.  Package-level conveniences are
+resolved lazily so importing an unrelated leaf such as ``pipeline.types`` does
+not initialize performance or scientific dependencies.
 """
 
-# Checkpoint (used by orchestrator scripts)
-from infrastructure.core.runtime.checkpoint import CheckpointManager
+from __future__ import annotations
 
-# Health (used by analysis scripts)
-from infrastructure.core.runtime.health_check import SystemHealthChecker
+from importlib import import_module
+from typing import Any
 
-# Logging (primary cross-cutting concern — all callers need these)
-from infrastructure.core.logging.helpers import format_duration
-from infrastructure.core.logging.utils import (
-    get_logger,
-    log_operation,
-    log_stage,
-    log_success,
-)
+_EXPORTS: dict[str, tuple[str, str]] = {
+    "CheckpointManager": ("infrastructure.core.runtime.checkpoint", "CheckpointManager"),
+    "SystemHealthChecker": ("infrastructure.core.runtime.health_check", "SystemHealthChecker"),
+    "format_duration": ("infrastructure.core.logging.helpers", "format_duration"),
+    "get_logger": ("infrastructure.core.logging.utils", "get_logger"),
+    "log_operation": ("infrastructure.core.logging.utils", "log_operation"),
+    "log_stage": ("infrastructure.core.logging.utils", "log_stage"),
+    "log_success": ("infrastructure.core.logging.utils", "log_success"),
+    "monitor_performance": ("infrastructure.core.runtime.function_profiler", "monitor_performance"),
+    "ProgressBar": ("infrastructure.core.progress", "ProgressBar"),
+    "TemplateError": ("infrastructure.core.exceptions", "TemplateError"),
+}
 
-# Performance (decorator used by analysis scripts)
-from infrastructure.core.runtime.function_profiler import monitor_performance
+__all__ = sorted(_EXPORTS)
 
-# Progress (used by long-running scripts)
-from infrastructure.core.progress import ProgressBar
 
-# Exceptions (commonly imported via core)
-from infrastructure.core.exceptions import TemplateError
+def __getattr__(name: str) -> Any:
+    """Resolve a legacy package-level export on first access."""
+    try:
+        module_name, attribute = _EXPORTS[name]
+    except KeyError as exc:
+        raise AttributeError(name) from exc
+    value = getattr(import_module(module_name), attribute)
+    globals()[name] = value
+    return value
 
-__all__ = [
-    # Checkpoint
-    "CheckpointManager",
-    # Exceptions
-    "TemplateError",
-    # Health
-    "SystemHealthChecker",
-    # Logging
-    "get_logger",
-    "log_operation",
-    "log_stage",
-    "log_success",
-    "format_duration",
-    # Performance
-    "monitor_performance",
-    # Progress
-    "ProgressBar",
-]
+
+def __dir__() -> list[str]:
+    """Expose lazy compatibility names during introspection."""
+    return sorted((*globals(), *__all__))

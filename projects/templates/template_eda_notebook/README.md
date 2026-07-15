@@ -138,8 +138,9 @@ shipped CSV resolves relative to the project root.
 
 ## Key features
 
-- **Deterministic dataset**: `data/measurements.csv`, generated once with a fixed
-  seed, so every statistic is reproducible.
+- **Deterministic dataset**: `data/measurements.csv` is a static, committed
+  fixture (fixed content, no generator step at run time), so every statistic
+  is reproducible.
 - **Tested EDA library** (`src/eda/`): `load_dataset`, `clean_dataset`,
   `normalize_numeric`, `summary_statistics`, `group_means`, `correlation_matrix`,
   `strongest_pairs`, and figure-data preparers.

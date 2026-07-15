@@ -3,14 +3,20 @@
 from __future__ import annotations
 
 from pathlib import Path
+from collections.abc import Callable
+from importlib import import_module
 from typing import Any
 
 from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
 
 
-def _load_yaml(path: Path) -> dict[str, Any]:
+def _load_yaml(
+    path: Path,
+    *,
+    yaml_importer: Callable[[str], Any] = import_module,
+) -> dict[str, Any]:
     try:
-        import yaml
+        yaml = yaml_importer("yaml")
     except ImportError:
         return {}
     if not path.exists():
@@ -22,7 +28,7 @@ def _load_yaml(path: Path) -> dict[str, Any]:
 
 def default_config_path() -> Path:
     """Return the canonical manuscript config path."""
-    return MANUSCRIPT_DIR / "config.yaml"
+    return Path(MANUSCRIPT_DIR / "config.yaml")
 
 
 def load_search_config(config_path: Path | None = None) -> dict[str, Any]:

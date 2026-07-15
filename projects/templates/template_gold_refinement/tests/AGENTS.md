@@ -18,8 +18,22 @@ computation — no mocks.
 | `test_formalisms.py` | Formalism uniqueness, equation labels, and traceability rows |
 | `test_integrity.py` | Integrity dimensions, evidence tiers, residual-risk records |
 | `test_figures.py` | Figure spec uniqueness, graph topology contracts, PNG/SVG generation, quality report thresholds |
+| `test_figures_submodules.py` | Direct unit tests for the split `src/figures/` subpackage (`_common`/`graphs`/`charts`/`diagrams`) |
 | `test_registry_integrity.py` | Manuscript figure/table/equation references, registry parity, figure quality report parity |
 | `test_scripts_smoke.py` | Analysis and manuscript-variable scripts, generated reports, SVG companions |
+| `test_cover_visualization.py` | Cover-image generation script, generated PNG dimensions and non-blank content |
+| `test_coercion.py` | Strict boolean coercion helper used by config parsing |
+| `test_dashboard.py` | Interactive HTML dashboard generation from `src/dashboard.py` |
+| `test_domain_adapter.py` | `domain_profile.yaml` loading and domain-adapter schema validation |
+| `test_edge_cases.py` | Uncovered-path edge cases for evidence, dashboard, figures, and manuscript variables |
+| `test_evidence.py` | Evidence registry construction and claim-ledger alignment (`src/evidence.py`) |
+| `test_negative_controls.py` | Deliberately broken inputs must fail correctly (negative-control proof for config/composition gates) |
+| `test_parsing.py` | Shared parsing helpers used across config and manuscript-variable modules |
+| `test_pipeline_policy.py` | `pipeline_policy.py` LLM-review gate reasoning and enablement logic |
+| `test_property_monotonicity.py` | Hypothesis property-based tests for monotone purity across refinery stages |
+| `test_security_assay.py` | Security assay record construction, table rendering, and claim-boundary summary |
+
+`__init__.py` and `conftest.py` are package/fixture scaffolding, not test files, and are omitted from the table above.
 
 ## Visualization QA contract
 

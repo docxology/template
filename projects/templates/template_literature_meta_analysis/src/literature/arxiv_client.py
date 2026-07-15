@@ -176,7 +176,7 @@ def _fetch_page(
         requests.HTTPError: If all retries are exhausted.
     """
     sleep_fn = delay_override or time.sleep
-    params = {
+    params: dict[str, str | int] = {
         "search_query": query,
         "start": start,
         "max_results": page_size,

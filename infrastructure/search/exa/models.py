@@ -14,7 +14,7 @@ date filters).
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dataclass_field
 from typing import Any, Mapping, Sequence
 
 from infrastructure.search.exa.errors import ExaError
@@ -40,13 +40,13 @@ class ExaResult:
     published_date: str | None = None
     author: str | None = None
     text: str | None = None
-    highlights: list[str] = field(default_factory=list)
-    highlight_scores: list[float] = field(default_factory=list)
+    highlights: list[str] = dataclass_field(default_factory=list)
+    highlight_scores: list[float] = dataclass_field(default_factory=list)
     summary: str | None = None
     image: str | None = None
     favicon: str | None = None
-    extras: dict[str, Any] = field(default_factory=dict)
-    raw: dict[str, Any] = field(default_factory=dict)
+    extras: dict[str, Any] = dataclass_field(default_factory=dict)
+    raw: dict[str, Any] = dataclass_field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> ExaResult:
@@ -74,7 +74,7 @@ class Grounding:
     """Field-level citation record returned when ``outputSchema`` is used."""
 
     field: str
-    citations: list[dict[str, Any]] = field(default_factory=list)
+    citations: list[dict[str, Any]] = dataclass_field(default_factory=list)
     confidence: str | None = None
 
     @classmethod
@@ -92,7 +92,7 @@ class SearchOutput:
     """Synthesised output from ``outputSchema`` searches (``output`` block)."""
 
     content: Any = None
-    grounding: list[Grounding] = field(default_factory=list)
+    grounding: list[Grounding] = dataclass_field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> SearchOutput:
@@ -107,12 +107,12 @@ class SearchOutput:
 class SearchResponse:
     """Response from ``POST /search`` (and ``/findSimilar``, same shape)."""
 
-    results: list[ExaResult] = field(default_factory=list)
+    results: list[ExaResult] = dataclass_field(default_factory=list)
     request_id: str | None = None
     search_type: str | None = None
     output: SearchOutput | None = None
     cost_dollars: float | None = None
-    raw: dict[str, Any] = field(default_factory=dict)
+    raw: dict[str, Any] = dataclass_field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> SearchResponse:
@@ -133,10 +133,10 @@ class SearchResponse:
 class ContentsResponse:
     """Response from ``POST /contents``."""
 
-    results: list[ExaResult] = field(default_factory=list)
+    results: list[ExaResult] = dataclass_field(default_factory=list)
     request_id: str | None = None
     cost_dollars: float | None = None
-    raw: dict[str, Any] = field(default_factory=dict)
+    raw: dict[str, Any] = dataclass_field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> ContentsResponse:
@@ -155,10 +155,10 @@ class AnswerResponse:
     """Response from ``POST /answer`` — a grounded answer plus its citations."""
 
     answer: Any = None
-    citations: list[ExaResult] = field(default_factory=list)
+    citations: list[ExaResult] = dataclass_field(default_factory=list)
     request_id: str | None = None
     cost_dollars: float | None = None
-    raw: dict[str, Any] = field(default_factory=dict)
+    raw: dict[str, Any] = dataclass_field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> AnswerResponse:

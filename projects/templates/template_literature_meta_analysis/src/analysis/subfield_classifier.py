@@ -46,10 +46,12 @@ def _get_default_field() -> str:
     """
     if not SUBFIELDS:
         raise ValueError("No subfields configured")
-    return max(
-        SUBFIELDS.items(),
-        key=lambda kv: kv[1].get("priority", 0),
-    )[0]
+    return str(
+        max(
+            SUBFIELDS.items(),
+            key=lambda kv: kv[1].get("priority", 0),
+        )[0]
+    )
 
 
 def classify_paper(paper: Paper) -> str:

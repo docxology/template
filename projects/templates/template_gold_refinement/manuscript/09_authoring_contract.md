@@ -4,13 +4,7 @@
 
 | Obligation | Requirement |
 |------------|-------------|
-| Domain validator | Add domain-specific evidence before making domain claims beyond the exemplar. |
-| Config ownership | Keep lexicon and slots in config.yaml, not in generated prose. |
-| Regeneration contract | Regenerate outputs through the pipeline, not by hand-editing. |
-| Risk review | Treat high-residual-risk integrity dimensions as fork obligations before publication claims are expanded. |
-| Tool disclosure | Disclose AI, template, and automation assistance when it materially affects writing, analysis, or review. |
-| Software citation | Cite the exact software, template release, and executable package used to generate the manuscript. |
-| Security evidence boundary | Treat security standards and Codex Security scan phases as scoped guidance unless generated scan artifacts and receipts are present. |
+{{AUTHORING_OBLIGATIONS_TABLE}}
 
 The authoring boundary tokens for this section are {{AUTHORING_BOUNDARY_TERM_1}} and {{AUTHORING_BOUNDARY_TERM_2}}. They mark the point where an author must either add new evidence and validators or lower the claim from certification to analogy.
 

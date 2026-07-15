@@ -6,9 +6,9 @@ This exemplar is a *self-improvement* harness: a Meta -> Target -> Feedback
 loop that, under fixture replay (``sia.live: false`` in manuscript/config.yaml,
 the CI default), advances a target agent across three generations and records
 an accuracy metric each time. The load-bearing manuscript claims are the
-self-refinement signal itself -- accuracy climbs 0.5000 -> 0.6667 -> 0.8333
-over three generations, a final-minus-first delta of 0.3333, and a final
-injected token ``accuracy=0.8333 (n=6)``. These pins bind those exact numbers
+self-refinement measurement itself -- accuracy remains 1.0000 across three
+genuinely executed threshold variants, for a final-minus-first delta of 0.0000
+and a final injected token ``accuracy=1.0000 (n=6)``. These pins bind those values
 to the source: each value is re-derived by running the real
 ``infrastructure.sia.run_sia_loop`` in fixture-replay mode (which copies the
 recorded per-generation fixtures into a fresh output tree and reads each
@@ -188,7 +188,8 @@ def test_generation_metric_progression_claims_rederive_from_source(
     # Loop length: the three-generation Meta -> Target -> Feedback cycle.
     _assert_pin_matches(_pin(pinned, "generation_count"), len(evaluations))
 
-    # Seed baseline (generation 1) and final (generation 3) accuracy.
+    # Seed baseline and final accuracy. Equality is load-bearing: it prevents
+    # the manuscript from inventing improvement across a saturated toy task.
     _assert_pin_matches(_pin(pinned, "first_generation_accuracy"), evaluations[0].metric_value)
     _assert_pin_matches(_pin(pinned, "final_generation_accuracy"), evaluations[-1].metric_value)
 
@@ -200,9 +201,9 @@ def test_self_improvement_delta_claim_rederives_from_source(
     load_pinned_values: Any,
     replay_evaluations: list[Any],
 ) -> None:
-    """Bind the self-improvement delta (final - first) to a fresh source run.
+    """Bind the measured delta (final - first) to a fresh source run.
 
-    03_results.md / 'Metric delta (final - first generation): 0.3333'. Computed
+    03_results.md / 'Metric delta (final - first generation): 0.0000'. Computed
     from the real loop's first and last evaluation.metric_value, not read from
     the rendered SIA_METRIC_DELTA token.
     """

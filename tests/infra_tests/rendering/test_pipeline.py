@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import os
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import RenderingError, TemplateError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
@@ -29,6 +30,7 @@ from infrastructure.rendering.pipeline import (
     _run_override_script,
     _validate_latex_packages,
     execute_render_pipeline,
+    RenderPipelineDependencies,
 )
 
 
@@ -452,6 +454,16 @@ class _ErrorRenderManager(RenderManager):
         )
 
 
+class _TemplateErrorRenderManager(RenderManager):
+    """RenderManager that raises a non-rendering template-domain error."""
+
+    def render_all(self, source_file: Path) -> list[Path]:
+        raise TemplateError(
+            f"template failed for {source_file.name}",
+            context={"source": str(source_file)},
+        )
+
+
 class _SuccessRenderManager(RenderManager):
     """RenderManager that writes a tiny marker file per source."""
 
@@ -491,6 +503,20 @@ def test_render_individual_files_rendering_error(tmp_path: Path) -> None:
     assert failed_files == ["02_methods.md"]
     assert len(reporter.events) == 1
     assert reporter.events[0].category == "RenderingError"
+
+
+def test_render_individual_files_template_error_is_a_recorded_failure(tmp_path: Path) -> None:
+    reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
+    md = tmp_path / "02b_template.md"
+    md.write_text("# Template", encoding="utf-8")
+    manager = _TemplateErrorRenderManager(RenderingConfig(output_dir=str(tmp_path)))
+
+    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+
+    assert rendered_count == 0
+    assert failed_files == ["02b_template.md"]
+    assert len(reporter.events) == 1
+    assert reporter.events[0].category == "TemplateError"
 
 
 def test_render_individual_files_success(tmp_path: Path) -> None:
@@ -550,9 +576,32 @@ def _write_minimal_project_tree(project_root: Path) -> None:
     (project_root / "manuscript" / "01_intro.md").write_text("# Intro", encoding="utf-8")
 
 
+def _dependencies_for(project_root: Path, **overrides: object) -> RenderPipelineDependencies:
+    """Return deterministic collaborators for focused orchestration tests."""
+    dependencies = RenderPipelineDependencies(
+        resolve_project=lambda _repo_root, _name: project_root,
+        hydrate_manuscript=lambda _project_root, template_repo_root=None: 0,
+        write_bookends=lambda _project_root, _project_name, repo_root: None,
+        validate_latex=lambda report=None: 0,
+        render_individual=lambda _manager, _source_files, _reporter: (0, []),
+        render_combined=lambda *_args, **_kwargs: None,
+        generate_summary=lambda project_name, repo_root=None: {
+            "project": project_name,
+            "combined_pdf": None,
+            "combined_html": None,
+            "individual_pdfs": [],
+            "web_outputs": [],
+            "slides": [],
+            "total_size_kb": 0,
+        },
+        log_summary=lambda _summary: None,
+        verify_outputs=lambda _project_name, repo_root=None: True,
+    )
+    return replace(dependencies, **overrides)
+
+
 def test_render_pipeline_impl_short_circuits_on_override_script(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """When _render_pdf_override.py exists, the pipeline delegates and skips LaTeX."""
     project = tmp_path / "override_proj"
@@ -560,19 +609,13 @@ def test_render_pipeline_impl_short_circuits_on_override_script(
     override = project / "scripts" / "_render_pdf_override.py"
     override.write_text("import sys\nsys.exit(42)\n", encoding="utf-8")
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-
-    rc = _render_pipeline_impl("override_proj")
+    rc = _render_pipeline_impl("override_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
     assert rc == 42
 
 
 def test_execute_render_pipeline_override_success_with_pdf(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Override script may finish the stage by writing a real combined PDF."""
     project = tmp_path / "override_ok"
@@ -597,16 +640,11 @@ def test_execute_render_pipeline_override_success_with_pdf(
         encoding="utf-8",
     )
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
+    rc = execute_render_pipeline(
+        "override_ok",
+        repo_root=tmp_path,
+        dependencies=_dependencies_for(project),
     )
-    monkeypatch.setattr(
-        "infrastructure.rendering._pipeline_summary.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-
-    rc = execute_render_pipeline("override_ok")
 
     assert rc == 0
     assert (project / "output" / "pdf" / "override_ok_combined.pdf").is_file()
@@ -635,42 +673,23 @@ def _make_project_with_manuscript(project_root: Path, *, n_md: int = 1, n_figure
 
 def test_render_pipeline_impl_missing_manuscript_dir_returns_zero(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """When discover_manuscript_files returns empty the pipeline logs a warning and exits 0."""
     project = tmp_path / "empty_ms_proj"
     _make_project_with_manuscript(project, n_md=0)
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
     # manuscript dir exists but has no .md files
-    rc = _render_pipeline_impl("empty_ms_proj")
+    rc = _render_pipeline_impl("empty_ms_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
     assert rc == 0
 
 
 def test_render_pipeline_impl_skip_manuscript_hydration_branch(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """skip_manuscript_hydration=True logs the skip message and does not call the variable script."""
     project = tmp_path / "skip_hydration_proj"
     _make_project_with_manuscript(project, n_md=1)
-
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
 
     called = []
 
@@ -678,12 +697,13 @@ def test_render_pipeline_impl_skip_manuscript_hydration_branch(
         called.append(True)
         return 0
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        _fail_if_called,
+    dependencies = _dependencies_for(project, hydrate_manuscript=_fail_if_called)
+    rc = _render_pipeline_impl(
+        "skip_hydration_proj",
+        skip_manuscript_hydration=True,
+        repo_root=tmp_path,
+        dependencies=dependencies,
     )
-
-    rc = _render_pipeline_impl("skip_hydration_proj", skip_manuscript_hydration=True)
 
     # Variable script must not have been called
     assert called == []
@@ -693,46 +713,23 @@ def test_render_pipeline_impl_skip_manuscript_hydration_branch(
 
 def test_render_pipeline_impl_manuscript_variable_script_nonzero_exits_one(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A non-zero return from _run_manuscript_variable_script causes _render_pipeline_impl to return 1."""
     project = tmp_path / "var_fail_proj"
     _make_project_with_manuscript(project, n_md=1)
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 1,
-    )
-
-    rc = _render_pipeline_impl("var_fail_proj")
+    dependencies = _dependencies_for(project, hydrate_manuscript=lambda project_root, template_repo_root=None: 1)
+    rc = _render_pipeline_impl("var_fail_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
 def test_render_pipeline_impl_render_manager_init_raises_exits_one(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """An OSError/ValueError/TypeError during RenderManager construction returns 1."""
     project = tmp_path / "rm_init_fail_proj"
     _make_project_with_manuscript(project, n_md=1)
-
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 0,
-    )
 
     original_render_manager = __import__("infrastructure.rendering", fromlist=["RenderManager"]).RenderManager
 
@@ -740,33 +737,18 @@ def test_render_pipeline_impl_render_manager_init_raises_exits_one(
         def __init__(self, *args, **kwargs):
             raise OSError("Simulated init failure from real OSError")
 
-    monkeypatch.setattr("infrastructure.rendering.pipeline.RenderManager", _FailingRenderManager)
-
-    rc = _render_pipeline_impl("rm_init_fail_proj")
+    dependencies = _dependencies_for(project, manager_factory=_FailingRenderManager)
+    rc = _render_pipeline_impl("rm_init_fail_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
 def test_render_pipeline_impl_failed_files_exits_one(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """When _render_individual_files returns non-empty failed_files, pipeline returns 1."""
     project = tmp_path / "fail_files_proj"
     _make_project_with_manuscript(project, n_md=1)
-
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 0,
-    )
 
     def _always_fail(manager, source_files, reporter):
         for sf in source_files:
@@ -782,34 +764,19 @@ def test_render_pipeline_impl_failed_files_exits_one(
                 )
         return 0, [sf.name for sf in source_files if sf.suffix == ".md"]
 
-    monkeypatch.setattr("infrastructure.rendering.pipeline._render_individual_files", _always_fail)
-
-    rc = _render_pipeline_impl("fail_files_proj")
+    dependencies = _dependencies_for(project, render_individual=_always_fail)
+    rc = _render_pipeline_impl("fail_files_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
 def test_render_pipeline_impl_reporter_events_triggers_print_save(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """When reporter.events is non-empty both print_report and save_report are called."""
     project = tmp_path / "reporter_events_proj"
     _make_project_with_manuscript(project, n_md=1)
-
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 0,
-    )
 
     print_called = []
     save_called = []
@@ -840,9 +807,8 @@ def test_render_pipeline_impl_reporter_events_triggers_print_save(
         reporter.save_report = _track_save
         return 0, []
 
-    monkeypatch.setattr("infrastructure.rendering.pipeline._render_individual_files", _inject_event_and_succeed)
-
-    _render_pipeline_impl("reporter_events_proj")
+    dependencies = _dependencies_for(project, render_individual=_inject_event_and_succeed)
+    _render_pipeline_impl("reporter_events_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert print_called, "reporter.print_report() was not called when events were present"
     assert save_called, "reporter.save_report() was not called when events were present"
@@ -850,7 +816,6 @@ def test_render_pipeline_impl_reporter_events_triggers_print_save(
 
 def test_render_pipeline_impl_figure_truncation_log(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """When more than 3 figures are found, the truncation log line fires."""
@@ -859,26 +824,10 @@ def test_render_pipeline_impl_figure_truncation_log(
     project = tmp_path / "fig_truncate_proj"
     _make_project_with_manuscript(project, n_md=1, n_figures=5)
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 0,
-    )
-    # Short-circuit rendering after figure verification step
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.discover_manuscript_files",
-        lambda manuscript_dir: [],
-    )
+    dependencies = _dependencies_for(project, discover_manuscript=lambda manuscript_dir: [])
 
     with caplog.at_level(logging.INFO, logger="infrastructure.rendering.pipeline"):
-        rc = _render_pipeline_impl("fig_truncate_proj")
+        rc = _render_pipeline_impl("fig_truncate_proj", repo_root=tmp_path, dependencies=dependencies)
 
     truncation_logged = any("... and" in record.message and "more" in record.message for record in caplog.records)
     assert truncation_logged, "Expected truncation log '... and N more' when figures > 3"
@@ -887,7 +836,6 @@ def test_render_pipeline_impl_figure_truncation_log(
 
 def test_render_pipeline_impl_no_figures_warning(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """When no figures are found a warning about missing figures is emitted."""
@@ -900,25 +848,10 @@ def test_render_pipeline_impl_no_figures_warning(
 
     shutil.rmtree(project / "output" / "figures", ignore_errors=True)
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.discover_manuscript_files",
-        lambda manuscript_dir: [],
-    )
+    dependencies = _dependencies_for(project, discover_manuscript=lambda manuscript_dir: [])
 
     with caplog.at_level(logging.WARNING, logger="infrastructure.rendering.pipeline"):
-        _render_pipeline_impl("no_fig_proj")
+        _render_pipeline_impl("no_fig_proj", repo_root=tmp_path, dependencies=dependencies)
 
     no_fig_warned = any("No figures found" in record.message for record in caplog.records)
     assert no_fig_warned, "Expected warning about no figures found"
@@ -926,7 +859,6 @@ def test_render_pipeline_impl_no_figures_warning(
 
 def test_render_pipeline_impl_transmission_bookend_exception_logged(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """When write_transmission_bookends raises, a warning is logged and pipeline continues."""
@@ -935,33 +867,17 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
     project = tmp_path / "bookend_exc_proj"
     _make_project_with_manuscript(project, n_md=1)
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._validate_latex_packages",
-        lambda report=None: 0,
-    )
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._run_manuscript_variable_script",
-        lambda project_root, template_repo_root=None: 0,
-    )
-
-    import infrastructure.publishing.transmission_bookends as _tb_module
-
     def _raise(*args, **kwargs):
         raise RuntimeError("simulated bookend failure")
 
-    monkeypatch.setattr(_tb_module, "write_transmission_bookends", _raise)
+    dependencies = _dependencies_for(
+        project,
+        write_bookends=_raise,
+        discover_manuscript=lambda manuscript_dir: [],
+    )
 
     with caplog.at_level(logging.WARNING, logger="infrastructure.rendering.pipeline"):
-        # Proceed until latex/manuscripts — the bookend exception must be swallowed
-        monkeypatch.setattr(
-            "infrastructure.rendering.pipeline.discover_manuscript_files",
-            lambda manuscript_dir: [],
-        )
-        rc = _render_pipeline_impl("bookend_exc_proj")
+        rc = _render_pipeline_impl("bookend_exc_proj", repo_root=tmp_path, dependencies=dependencies)
 
     bookend_warned = any(
         "Transmission bookend" in record.message or "bookend" in record.message.lower() for record in caplog.records
@@ -972,42 +888,29 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
 
 def test_execute_render_pipeline_verify_pdf_false_returns_one(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """When _render_pipeline_impl returns 0 but verify_pdf_outputs returns False, exit code is 1."""
     project = tmp_path / "verify_fail_proj"
     _make_project_with_manuscript(project, n_md=1)
 
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.resolve_project_root",
-        lambda _repo_root, name: project,
-    )
     # Make impl succeed immediately via override script exit(0)
     override = project / "scripts" / "_render_pdf_override.py"
     override.write_text("import sys\nsys.exit(0)\n", encoding="utf-8")
-    # verify_pdf_outputs looks for combined PDF — ensure none exists so it returns False
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline.verify_pdf_outputs",
-        lambda project_name: False,
-    )
-
-    rc = execute_render_pipeline("verify_fail_proj")
+    dependencies = _dependencies_for(project, verify_outputs=lambda project_name, repo_root=None: False)
+    rc = execute_render_pipeline("verify_fail_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
 def test_execute_render_pipeline_outer_exception_returns_one(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """An unexpected exception inside execute_render_pipeline is caught and returns 1."""
-    monkeypatch.setattr(
-        "infrastructure.rendering.pipeline._render_pipeline_impl",
-        lambda project_name, skip_manuscript_hydration=False: (_ for _ in ()).throw(
-            RuntimeError("catastrophic unexpected error")
-        ),
-    )
 
-    rc = execute_render_pipeline("any_project")
+    def _raise(_repo_root: Path, _project_name: str) -> Path:
+        raise RuntimeError("catastrophic unexpected error")
+
+    dependencies = replace(RenderPipelineDependencies(), resolve_project=_raise)
+    rc = execute_render_pipeline("any_project", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1

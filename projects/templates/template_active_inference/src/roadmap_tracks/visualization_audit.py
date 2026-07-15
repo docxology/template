@@ -293,9 +293,11 @@ def build_visualization_quality_audit(project_root: Path) -> dict[str, Any]:
 def write_visualization_quality_audit(project_root: Path) -> Path:
     """Write the deterministic visualization-quality audit report."""
     root = project_root.resolve()
-    return _write_json(
-        root / "output" / "reports" / "visualization_quality_audit.json",
-        build_visualization_quality_audit(root),
+    return Path(
+        _write_json(
+            root / "output" / "reports" / "visualization_quality_audit.json",
+            build_visualization_quality_audit(root),
+        )
     )
 
 
@@ -402,9 +404,11 @@ def build_statistical_visualization_bridge(project_root: Path) -> dict[str, Any]
 def write_statistical_visualization_bridge(project_root: Path) -> Path:
     """Write the statistical-visualization scholarship/sheaf crosswalk."""
     root = project_root.resolve()
-    return _write_json(
-        root / "output" / "data" / "statistical_visualization_bridge.json",
-        build_statistical_visualization_bridge(root),
+    return Path(
+        _write_json(
+            root / "output" / "data" / "statistical_visualization_bridge.json",
+            build_statistical_visualization_bridge(root),
+        )
     )
 
 

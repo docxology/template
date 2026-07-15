@@ -208,6 +208,23 @@ def draw_column_rules(c: Canvas, grid: ColumnGrid, top: float, bottom: float) ->
         _vrule(c, x, bottom, top, width=0.5, color=MUTED)
 
 
+# draw_lead_headline is manual canvas drawing (wrapOn/drawOn), which does NOT
+# respect a ParagraphStyle's spaceBefore/spaceAfter the way a Frame-managed
+# flowable would — so the vertical rhythm below is controlled entirely by
+# these explicit constants, not by the base "HeadlineLead"/"Deck" stylesheet
+# entries in typography.py. WHY these particular values: the display face is
+# a Didot-style serif with deep, thin descenders (comma tails, "g"/"y"). The
+# previous values (LEAD_HEAD_LEADING=46, a ~1.05x ratio to fontSize 44;
+# LEAD_HEAD_GAP=3; LEAD_DECK_LEADING=17) left a comma or descender on the
+# headline's wrapped last line sitting almost on the deck's first-line
+# baseline — at typical render resolutions the two visually merged into what
+# looked like a stray glyph (see tests/test_furniture.py for the regression
+# guard on these constants, and the visual evidence this was caught with).
+LEAD_HEAD_LEADING = 54  # fontSize 44 * ~1.23
+LEAD_HEAD_GAP = 7  # explicit gap after the headline, before the deck
+LEAD_DECK_LEADING = 19  # fontSize 13.5 * ~1.41
+
+
 def draw_lead_headline(
     c: Canvas, story: Story, x: float, top_y: float, width: float, styles: StyleSheet1, fonts: Fonts
 ) -> float:
@@ -219,14 +236,14 @@ def draw_lead_headline(
         consumed += 1
     head = Paragraph(
         story.headline,
-        styles["HeadlineLead"].clone("LeadHead", alignment=1, leading=46),
+        styles["HeadlineLead"].clone("LeadHead", alignment=1, leading=LEAD_HEAD_LEADING),
     )
     consumed += _draw_top(c, head, x, top_y - consumed, width)
-    consumed += 3
+    consumed += LEAD_HEAD_GAP
     if story.deck:
         deck = Paragraph(
             story.deck,
-            styles["Deck"].clone("LeadDeck", alignment=1, fontSize=13.5, leading=17),
+            styles["Deck"].clone("LeadDeck", alignment=1, fontSize=13.5, leading=LEAD_DECK_LEADING),
         )
         # centre the deck on a narrower measure for an elegant inverted pyramid
         deck_w = width * 0.82

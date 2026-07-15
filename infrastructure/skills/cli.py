@@ -23,6 +23,7 @@ from .operation_registry import (
     operations_manifest_matches_discovery,
     write_operations_manifest,
 )
+from .runtime_sync import install_runtime_skills, runtime_status
 
 logger = get_logger(__name__)
 
@@ -134,6 +135,23 @@ def cmd_operations_check(args: argparse.Namespace) -> int:
         return 0
     logger.error("%s", msg)
     return 1
+
+
+def cmd_runtime_status(args: argparse.Namespace) -> int:
+    """Audit the pinned source and Codex/Claude/Hermes user-runtime parity."""
+    payload = runtime_status(_repo_root_from_args(args), Path(args.home))
+    sys.stdout.write(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+    return 0 if payload["ok"] else 1
+
+
+def cmd_runtime_install(args: argparse.Namespace) -> int:
+    """Install reversible links for the pinned skills, then verify parity."""
+    root = _repo_root_from_args(args)
+    home = Path(args.home)
+    install = install_runtime_skills(root, home)
+    status = runtime_status(root, home)
+    sys.stdout.write(json.dumps({"install": install, "status": status}, indent=2, ensure_ascii=False) + "\n")
+    return 0 if status["ok"] else 1
 
 
 def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
@@ -248,6 +266,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Manifest path relative to repo root unless absolute",
     )
     p_ops_check.set_defaults(func=cmd_operations_check)
+
+    p_runtime_status = sub.add_parser(
+        "runtime-status",
+        help="Audit pinned Agent Skills across Codex, Claude Code, and Hermes",
+    )
+    _add_shared_cli_args(p_runtime_status)
+    p_runtime_status.add_argument("--home", default=str(Path.home()), help="User home to audit")
+    p_runtime_status.set_defaults(func=cmd_runtime_status)
+
+    p_runtime_install = sub.add_parser(
+        "runtime-install",
+        help="Reversibly install pinned Agent Skills across all three runtimes",
+    )
+    _add_shared_cli_args(p_runtime_install)
+    p_runtime_install.add_argument("--home", default=str(Path.home()), help="User home to update")
+    p_runtime_install.set_defaults(func=cmd_runtime_install)
 
     return parser
 

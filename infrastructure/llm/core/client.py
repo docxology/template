@@ -17,7 +17,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core._connection import _ConnectionMixin
 from infrastructure.llm.core._structured_queries import _StructuredQueryMixin
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig, ResponseMode
-from infrastructure.llm.core.context import ConversationContext
+from infrastructure.llm.core.context import ConversationContext, MessageDict
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 from infrastructure.llm.templates import get_template
 
@@ -263,7 +263,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         )
 
         # Create temporary context for raw query
-        messages = [{"role": "user", "content": prompt}]
+        messages: list[MessageDict] = [{"role": "user", "content": prompt}]
 
         response_text, _ = self._time_call(
             lambda: self._generate_response_direct(model_name, messages, options=options)

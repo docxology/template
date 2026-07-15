@@ -1,7 +1,9 @@
 # tasks/mini_classify/
 
-Default exemplar task: a tiny supervised-classification problem the SIA loop
-improves across generations. Deterministic by default (fixture replay); see
+Default exemplar task: a tiny supervised-classification problem used to test
+the SIA loop across generations. Its recorded threshold variants all score 1.0,
+so the fixture is a deterministic robustness control rather than an improvement
+claim. Deterministic by default (fixture replay); see
 [`docs/testing_philosophy.md`](../../docs/testing_philosophy.md) for the
 fixture-vs-live boundary.
 

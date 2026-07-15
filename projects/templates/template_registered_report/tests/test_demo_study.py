@@ -184,3 +184,33 @@ class TestDiagramData:
         assert [event.severity for event in events] == ["ok", "warning", "warning"]
         assert events[0].registered is True
         assert events[1].documented is True
+
+
+class TestManuscriptProseMatchesLiveAnalysis:
+    """Guard against manuscript prose drifting from the analysis it quotes.
+
+    Manuscript prose hardcodes the primary-outcome numbers (p-value, observed
+    difference, permutation count) rather than reading them from a token
+    generator. That's fine while the fixture is static, but nothing previously
+    caught the two from silently diverging if the registration or demo-data
+    parameters ever changed. These tests re-run the real analysis and assert
+    the committed prose still quotes its numbers.
+    """
+
+    def test_primary_outcome_numbers_match_committed_manuscript_prose(self) -> None:
+        frozen = freeze_registration(load_registration())
+        summary = run_registered_analysis(frozen)
+
+        p_value_str = f"{summary['p_value']:.4f}"
+        difference_str = f"{summary['observed_difference']:.3f}"
+        n_permutations_str = str(summary["n_permutations"])
+        n_extreme_str = str(summary["n_at_least_as_extreme"])
+
+        for relative_path, expected_tokens in {
+            "manuscript/00_abstract.md": (difference_str, p_value_str),
+            "manuscript/04_results.md": (p_value_str, difference_str, n_permutations_str, n_extreme_str),
+            "manuscript/06_discussion.md": (difference_str, p_value_str),
+        }.items():
+            text = (PROJECT_ROOT / relative_path).read_text(encoding="utf-8")
+            for token in expected_tokens:
+                assert token in text, f"{relative_path} no longer quotes live value {token!r}"

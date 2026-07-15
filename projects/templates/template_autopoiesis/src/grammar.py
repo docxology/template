@@ -158,6 +158,14 @@ def parse_grammar(block: dict, source_path: Optional[str] = None) -> Grammar:
     if not raw_slots:
         raise GrammarError("Grammar must define at least one slot")
 
+    # ``slots`` accepts two forms (see SYNTAX.md § Slot Format):
+    #   shorthand: {slot_name: [option, ...], ...}          (a mapping)
+    #   longhand:  [{"name": slot_name, "options": [...]}]  (a list of mappings)
+    # Normalize the shorthand mapping form into the longhand list-of-entries
+    # form here so the rest of parsing only has to handle one shape.
+    if isinstance(raw_slots, dict):
+        raw_slots = [{"name": name, "options": options} for name, options in raw_slots.items()]
+
     slots: list[GrammarSlot] = []
     for entry in raw_slots:
         if not isinstance(entry, dict):

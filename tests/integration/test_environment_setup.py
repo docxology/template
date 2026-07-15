@@ -258,14 +258,14 @@ package = false
                 elif var in os.environ:
                     del os.environ[var]
 
-    def test_install_missing_packages_fallback(self, monkeypatch, tmp_path):
+    def test_install_missing_packages_fallback(self, tmp_path):
         """Test install_missing_packages fallback behavior."""
-        from infrastructure.core.runtime import _packages
-
-        monkeypatch.setattr(_packages, "check_uv_available", lambda: False)
-
         # Should return False when uv is not available
-        result = install_missing_packages(["test_package"], cwd=tmp_path)
+        result = install_missing_packages(
+            ["test_package"],
+            cwd=tmp_path,
+            uv_available=lambda: False,
+        )
 
         assert result is False
 

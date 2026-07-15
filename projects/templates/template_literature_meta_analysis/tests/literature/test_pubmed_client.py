@@ -306,15 +306,12 @@ class TestSearchPubMed:
         assert papers[1].doi == "10.1000/pubmed.202"
         assert papers[1].pmid == "22222222"
 
-    def test_search_pubmed_batches_large_idlists(self, httpserver: HTTPServer, monkeypatch):
+    def test_search_pubmed_batches_large_idlists(self, httpserver: HTTPServer):
         """efetch is GET-batched so a large idlist does not overrun the URI limit (HTTP 414).
 
         With the batch size forced to 1, three PMIDs must produce three separate efetch
         requests (a single un-batched request would jam all ids into one URL).
         """
-        from literature import pubmed_client
-
-        monkeypatch.setattr(pubmed_client, "EFETCH_BATCH_SIZE", 1)
         one_article = (
             '<?xml version="1.0"?><PubmedArticleSet><PubmedArticle><MedlineCitation>'
             "<Article><ArticleTitle>Batched record</ArticleTitle></Article>"
@@ -327,6 +324,7 @@ class TestSearchPubMed:
             esearch_url=httpserver.url_for("/esearch"),
             efetch_url=httpserver.url_for("/efetch"),
             delay_override=lambda _: None,
+            efetch_batch_size=1,
         )
         assert len(papers) == 3  # 3 batches of 1 -> 3 single-article responses
         efetch_calls = sum(1 for req, _ in httpserver.log if "efetch" in req.path)

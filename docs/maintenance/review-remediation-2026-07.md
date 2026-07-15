@@ -169,13 +169,11 @@ pre-push security gate scans thousands of local-only files.
   `NON_RENDERED_SUBDIRS` or the denylist is removed in favor of a tracked scope.
 
 ### R5 · mypy strict-typing debt (make the config honest and shrink it) — ✅ SHIPPED
-`pyproject.toml` sets `disallow_untyped_defs=false` globally and `ignore_errors=true`
-for 8 `infrastructure.*` packages (≈46% of infra files); `mypy --strict infrastructure`
-reports 5 real errors in 3 files. STATUS.md was corrected this session to stop
-claiming `--strict`; the remaining work is to burn down the overrides.
-- **Acceptance**: fix the 5 strict errors; remove ≥1 package from the
-  `ignore_errors` list with `mypy` (CI config) still green; STATUS.md reflects
-  the reduced override count.
+The public source scope now passes the configured mypy policy with zero errors,
+all package-wide `ignore_errors` overrides are removed, and the former baseline
+file is deleted. The compatibility-named ratchet command now fails on any error.
+- **Acceptance**: `uv run python scripts/gates/mypy_ratchet.py $(uv run python
+  -m infrastructure.project.public_scope source-paths)` exits zero.
 
 ### R6 · De-duplicate verbatim helper bodies in infrastructure — ✅ SHIPPED
 AST-hash scan found `_get_session` ×5 and `_iter_files` ×3 in publishing

@@ -173,108 +173,6 @@ The per-package symbol listings below the
 
 *symbol — defined in `infrastructure.benchmark`*
 
-## Package: `infrastructure.core`
-
-### `CheckpointManager`
-
-*class — defined in `infrastructure.core.runtime.checkpoint`*
-
-```python
-class CheckpointManager(checkpoint_dir: Path | None=None, project_name: str='project', repo_root: Path | None=None, project_dir: Path | None=None)
-```
-
-Manages pipeline checkpoints for resume capability.
-
-### `format_duration`
-
-*function — defined in `infrastructure.core.logging.helpers`*
-
-```python
-format_duration(seconds: float) -> str
-```
-
-Format duration in seconds to human-readable string (e.g., '1m 23s', '45s').
-
-### `get_logger`
-
-*function — defined in `infrastructure.core.logging.setup`*
-
-```python
-get_logger(name: str) -> logging.Logger
-```
-
-Return a logger configured with standard handlers for the given name.
-
-### `log_operation`
-
-*function — defined in `infrastructure.core.logging.pipeline_logging`*
-
-```python
-log_operation(operation: str, logger: logging.Logger | None=None, level: int=logging.INFO, min_duration_to_log: float=0.1, log_completion: bool=True) -> Iterator[None]
-```
-
-Context manager that logs operation start, completion, and failure.
-
-### `log_stage`
-
-*function — defined in `infrastructure.core.logging.pipeline_logging`*
-
-```python
-log_stage(stage_num: int, total_stages: int, stage_name: str, logger: logging.Logger | None=None) -> None
-```
-
-Log a numbered pipeline stage header with a visual separator.
-
-### `log_success`
-
-*function — defined in `infrastructure.core.logging.pipeline_logging`*
-
-```python
-log_success(message: str, logger: logging.Logger | None=None) -> None
-```
-
-Log message at INFO level prefixed with the success emoji.
-
-### `monitor_performance`
-
-*function — defined in `infrastructure.core.runtime.function_profiler`*
-
-```python
-monitor_performance(operation_name: str, track_memory: bool=True) -> Callable[[Callable[..., Any]], Callable[..., Any]]
-```
-
-Decorator for monitoring function performance via the global CodeProfiler.
-
-### `ProgressBar`
-
-*class — defined in `infrastructure.core.progress`*
-
-```python
-class ProgressBar(total: int, task: str='', width: int=30, show_eta: bool=True, update_interval: float=0.1, use_ema: bool=True)
-```
-
-Simple text-based progress bar for terminal output.
-
-### `SystemHealthChecker`
-
-*class — defined in `infrastructure.core.runtime.health_check`*
-
-```python
-class SystemHealthChecker(repo_root: Path | None=None, start_time: float | None=None, network_test_hosts: tuple[str, ...] | None=None)
-```
-
-Comprehensive system health monitoring.
-
-### `TemplateError`
-
-*class — defined in `infrastructure.core._exceptions_core`*
-
-```python
-class TemplateError(message: str, context: dict[str, Any] | None=None, suggestions: list[str] | None=None, recovery_commands: list[str] | None=None)
-```
-
-Base exception for all template-related errors.
-
 ## Package: `infrastructure.doctor`
 
 ### `build_plans_for_findings`
@@ -862,7 +760,7 @@ Build the top-level argparse parser.
 *function — defined in `infrastructure.orchestration.cli`*
 
 ```python
-main(argv: Sequence[str] | None=None) -> int
+main(argv: Sequence[str] | None=None, *, runner_factory=PipelineRunner, secure_runner=run_secure_pipeline, interactive_runner=_interactive) -> int
 ```
 
 Entry point. Returns process exit code.
@@ -961,6 +859,10 @@ Validate a user-supplied project slug against discovered projects.
 
 *symbol — defined in `infrastructure.project`*
 
+### `discover_import_targets`
+
+*symbol — defined in `infrastructure.project`*
+
 ### `discover_projects`
 
 *function — defined in `infrastructure.project.discovery`*
@@ -970,6 +872,18 @@ discover_projects(repo_root: Path | str, projects_dir: str='projects') -> list[P
 ```
 
 Discover all valid projects in the active projects directory.
+
+### `export_exemplar`
+
+*symbol — defined in `infrastructure.project`*
+
+### `ExportManifest`
+
+*symbol — defined in `infrastructure.project`*
+
+### `ExportSmokeResult`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `find_setup_hook`
 
@@ -1015,6 +929,10 @@ class ProjectInfo
 
 Information about a discovered project.
 
+### `public_ci_lint_paths`
+
+*symbol — defined in `infrastructure.project`*
+
 ### `public_ci_source_paths`
 
 *symbol — defined in `infrastructure.project`*
@@ -1050,6 +968,14 @@ run_project_setup_hook(project_dir: Path) -> bool
 ```
 
 Run the project's setup hook, if present.
+
+### `smoke_exported_exemplar`
+
+*symbol — defined in `infrastructure.project`*
+
+### `smoke_public_exemplars`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `validate_project_structure`
 
@@ -1444,7 +1370,7 @@ A single review finding attached to a provenance node.
 *function — defined in `infrastructure.provenance.config`*
 
 ```python
-load_provenance_config(project_dir: Path | str) -> ProvenanceConfig
+load_provenance_config(project_dir: Path | str, *, yaml_importer: Callable[[str], Any]=import_module) -> ProvenanceConfig
 ```
 
 Load optional ``provenance.yaml`` from *project_dir*.
@@ -1664,7 +1590,7 @@ Create academic profile data for ORCID, ResearchGate, etc.
 *function — defined in `infrastructure.publishing.github.release`*
 
 ```python
-create_github_release(tag_name: str, release_name: str, description: str, assets: list[Path], token: str, repo: str, *, base_url: str='https://api.github.com', target_commitish: str='main') -> str
+create_github_release(tag_name: str, release_name: str, description: str, assets: list[Path], token: str, repo: str, *, base_url: str='https://api.github.com', target_commitish: str='main', requests_available: bool=_requests_available) -> str
 ```
 
 Create a GitHub release with attached assets.
@@ -2012,7 +1938,7 @@ Validate that the project is ready for publication.
 *class — defined in `infrastructure.publishing.zenodo.client`*
 
 ```python
-class ZenodoClient(config: ZenodoConfig)
+class ZenodoClient(config: ZenodoConfig, *, requests_available: bool=_requests_available)
 ```
 
 Client for the Zenodo Deposit REST API.
@@ -2204,7 +2130,7 @@ Configuration for rendering output.
 *class — defined in `infrastructure.rendering.core`*
 
 ```python
-class RenderManager(config: RenderingConfig | None=None, manuscript_dir: Path | None=None, figures_dir: Path | None=None)
+class RenderManager(config: RenderingConfig | None=None, manuscript_dir: Path | None=None, figures_dir: Path | None=None, *, slides_renderer: Any=None, web_renderer: Any=None)
 ```
 
 Orchestrates rendering of all output formats.
@@ -2434,7 +2360,7 @@ Load test results from a project's output directory; returns {} if not found.
 *function — defined in `infrastructure.reporting.output_statistics`*
 
 ```python
-log_output_summary(output_dir: Path, stats: dict[str, Any], structure_validation: dict[str, Any] | None=None) -> None
+log_output_summary(output_dir: Path, stats: dict[str, Any], structure_validation: Mapping[str, Any] | None=None) -> None
 ```
 
 Generate summary of output copying results.
@@ -3612,7 +3538,7 @@ Validate mathematical equation formatting and labeling.
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_output_structure(output_dir: Path) -> dict[str, Any]
+validate_output_structure(output_dir: Path) -> OutputStructureResult
 ```
 
 Validate complete output directory structure.

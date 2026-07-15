@@ -338,10 +338,7 @@ class TestPublishToZenodo:
 
 
 class TestCreateGithubReleaseImportGuard:
-    def test_requires_requests_package(self, monkeypatch) -> None:
-        import infrastructure.publishing.github.release as github_release
-
-        monkeypatch.setattr(github_release, "_requests_available", False)
+    def test_requires_requests_package(self) -> None:
         with pytest.raises(PublishingError, match="requests package is required"):
             create_github_release(
                 tag_name="v1.0",
@@ -350,6 +347,7 @@ class TestCreateGithubReleaseImportGuard:
                 assets=[],
                 token="token",
                 repo="owner/repo",
+                requests_available=False,
             )
 
     def test_http_failure_raises_publishing_error(self, httpserver: HTTPServer) -> None:

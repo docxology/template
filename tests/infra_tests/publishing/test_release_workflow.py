@@ -255,7 +255,6 @@ class TestReleaseWorkflow:
         tmp_path: Path,
         zenodo_release_test_server,
         github_test_server,
-        monkeypatch,
     ) -> None:
         _write_minimal_project(tmp_path)
         render_calls: list[str] = []
@@ -276,9 +275,6 @@ class TestReleaseWorkflow:
             stage_order.append("github")
             return original_github(*args, **kwargs)
 
-        monkeypatch.setattr(release_workflow_module, "publish_zenodo_for_release", track_zenodo)
-        monkeypatch.setattr(release_workflow_module, "run_github_release", track_github)
-
         request = ReleaseRequest(
             repo_root=tmp_path,
             project_name="test_release",
@@ -290,7 +286,12 @@ class TestReleaseWorkflow:
             zenodo_base_url=zenodo_release_test_server.url_for(""),
             allow_draft_abstract=False,
         )
-        result = run_release_workflow(request, render_fn=fake_render)
+        result = run_release_workflow(
+            request,
+            render_fn=fake_render,
+            zenodo_publisher=track_zenodo,
+            github_publisher=track_github,
+        )
         assert stage_order == ["zenodo", "github"]
         assert result.github_release_url is not None
         assert result.doi == "10.5281/zenodo.12345"

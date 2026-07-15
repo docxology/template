@@ -116,3 +116,18 @@ def test_gate_fails_when_index_missing_a_discovered_skill(tmp_path: Path, capsys
     assert exit_code == 1
     assert _SKILL_REL in captured.out
     assert "skill-reachability gate" in captured.out
+
+
+def test_gate_rejects_skill_path_mentioned_only_in_prose(tmp_path: Path, capsys) -> None:
+    """A prose decoy must not masquerade as a generated index row."""
+    _write_entrypoints(tmp_path)
+    write_doc(tmp_path / "docs" / "AGENTS.md", _GOOD_AGENTS)
+    _write_skill_and_index(tmp_path, in_index=False)
+    index = tmp_path / "docs" / "_generated" / "skills_index.md"
+    index.write_text(index.read_text(encoding="utf-8") + f"\nMentioned elsewhere: `{_SKILL_REL}`.\n", encoding="utf-8")
+
+    exit_code = gate_main(["--repo-root", str(tmp_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert _SKILL_REL in captured.out

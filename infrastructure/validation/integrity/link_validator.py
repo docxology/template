@@ -378,7 +378,7 @@ class LinkValidator:
         return "\n".join(report_lines)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """Main entry point for link validation."""
     import argparse
 
@@ -386,7 +386,7 @@ def main() -> int:
     parser.add_argument("--output", type=str, help="Output file for validation report")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     # Setup logging
     if args.verbose:

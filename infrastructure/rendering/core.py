@@ -2,6 +2,7 @@
 
 import subprocess
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
@@ -33,14 +34,17 @@ class RenderManager:
         config: RenderingConfig | None = None,
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
+        *,
+        slides_renderer: Any = None,
+        web_renderer: Any = None,
     ):
         """Initialize the render manager with configuration and directories."""
         self.config = config or RenderingConfig.from_env()
         self.manuscript_dir = manuscript_dir
         self.figures_dir = figures_dir
         self.pdf_renderer = PDFRenderer(self.config)
-        self.slides_renderer = SlidesRenderer(self.config)
-        self.web_renderer = WebRenderer(self.config)
+        self.slides_renderer = slides_renderer or SlidesRenderer(self.config)
+        self.web_renderer = web_renderer or WebRenderer(self.config)
 
     def render_all(self, source_file: Path) -> list[Path]:
         """Render all supported formats for a source file.

@@ -8,13 +8,14 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.project import git_guards
 from infrastructure.project.git_guards import (
     is_generated_artifact_path,
     is_public_template_output_path,
+    public_template_output_budget_findings,
     offending_tracked_projects,
     tracked_generated_artifacts,
     tracked_public_output_local_paths,
+    tracked_public_output_secrets,
 )
 
 
@@ -108,7 +109,7 @@ def test_offending_tracked_projects_flags_unknown_toplevel_md(tmp_path: Path) ->
     assert "projects/secret_roster.md" in offending_tracked_projects(tmp_path)
 
 
-def test_tracked_generated_artifacts_allows_public_template_output_tree(tmp_path: Path) -> None:
+def test_tracked_generated_artifacts_allows_only_project_local_public_output(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     project_artifact = tmp_path / "projects" / "templates" / "template_code_project" / "output" / "data" / "x.csv"
     copied_artifact = tmp_path / "output" / "templates" / "template_code_project" / "pdf" / "x.pdf"
@@ -119,7 +120,7 @@ def test_tracked_generated_artifacts_allows_public_template_output_tree(tmp_path
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
     subprocess.run(["git", "commit", "-m", "artifact"], cwd=tmp_path, check=True)
 
-    assert tracked_generated_artifacts(tmp_path) == []
+    assert tracked_generated_artifacts(tmp_path) == ["output/templates/template_code_project/pdf/x.pdf"]
 
 
 def test_tracked_generated_artifacts_detects_private_output_tree(tmp_path: Path) -> None:
@@ -134,7 +135,7 @@ def test_tracked_generated_artifacts_detects_private_output_tree(tmp_path: Path)
 
 
 def test_tracked_generated_artifacts_detects_oversized_public_template_output(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
 ) -> None:
     _init_git_repo(tmp_path)
     artifact = tmp_path / "output" / "templates" / "template_code_project" / "data" / "too-large.bin"
@@ -142,9 +143,9 @@ def test_tracked_generated_artifacts_detects_oversized_public_template_output(
     artifact.write_bytes(b"12345")
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
     subprocess.run(["git", "commit", "-m", "artifact"], cwd=tmp_path, check=True)
-    monkeypatch.setattr(git_guards, "PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES", 4)
-
-    assert "output/templates/template_code_project/data/too-large.bin" in tracked_generated_artifacts(tmp_path)
+    assert "output/templates/template_code_project/data/too-large.bin" in tracked_generated_artifacts(
+        tmp_path, public_output_max_bytes=4
+    )
 
 
 def test_tracked_public_output_local_paths_detects_machine_home(tmp_path: Path) -> None:
@@ -170,6 +171,49 @@ def test_tracked_public_output_local_paths_allows_portable_and_source_paths(tmp_
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
 
     assert tracked_public_output_local_paths(tmp_path) == []
+
+
+def test_tracked_public_output_local_paths_detects_windows_home(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text(r'{"path": "C:\\Users\\alice\\research\\result.csv"}' + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_local_paths(tmp_path) == [
+        "projects/templates/template_code_project/output/reports/report.json"
+    ]
+
+
+@pytest.mark.parametrize(
+    "secret",
+    [
+        "-----BEGIN PRIVATE KEY-----",
+        "ghp_abcdefghijklmnopqrstuvwxyzABCDEFGHIJ",
+        "AKIAABCDEFGHIJKLMNOP",
+        "sk-proj-abcdefghijklmnopqrstuvwxyz123456",
+    ],
+)
+def test_tracked_public_output_secrets_detects_structured_credentials(tmp_path: Path, secret: str) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text('{"credential": ' + repr(secret) + "}\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_secrets(tmp_path) == [
+        "projects/templates/template_code_project/output/reports/report.json"
+    ]
+
+
+def test_tracked_public_output_secrets_ignores_generic_placeholders(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/reports/report.json"
+    output.parent.mkdir(parents=True)
+    output.write_text('{"credential": "${GITHUB_TOKEN}"}\n', encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    assert tracked_public_output_secrets(tmp_path) == []
 
 
 def test_tracked_generated_artifacts_detects_codegraph_index(tmp_path: Path) -> None:
@@ -207,6 +251,20 @@ def test_generated_artifact_matcher_detects_agent_state_roots() -> None:
 
 def test_public_template_output_path_matcher_is_closed_to_private_outputs() -> None:
     assert is_public_template_output_path("projects/templates/template_code_project/output/data/results.json")
-    assert is_public_template_output_path("output/templates/template_code_project/pdf/paper.pdf")
+    assert not is_public_template_output_path("output/templates/template_code_project/pdf/paper.pdf")
     assert not is_public_template_output_path("projects/working/private/output/data/results.json")
     assert not is_public_template_output_path("output/private_project/pdf/paper.pdf")
+
+
+def test_public_output_budgets_fail_when_ratchet_is_exceeded(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/data"
+    output.mkdir(parents=True)
+    (output / "a.txt").write_text("duplicate\n", encoding="utf-8")
+    (output / "b.txt").write_text("duplicate\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-f", "projects/templates"], cwd=tmp_path, check=True)
+    findings = public_template_output_budget_findings(tmp_path, max_files=1, max_total_bytes=1, max_duplicate_bytes=1)
+
+    assert any("file count" in finding for finding in findings)
+    assert any("aggregate bytes" in finding for finding in findings)
+    assert any("duplicate bytes" in finding for finding in findings)

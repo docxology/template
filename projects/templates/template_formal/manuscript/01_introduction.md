@@ -22,7 +22,7 @@ introduce and easy to make structurally impossible.
 
 ## Why strong typing is the research subject, not an implementation detail
 
-Twenty existing exemplars in this monorepo (`projects/templates/*`) cover
+The public exemplars in this monorepo (`projects/templates/*`) cover
 numerical analysis, prose composition, textbooks, and Active Inference
 modeling, but none of them makes strongly-typed program design the load-
 bearing research claim. This gap has a specific character: Python is

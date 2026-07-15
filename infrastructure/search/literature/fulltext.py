@@ -152,7 +152,7 @@ class AbstractFetcher:
 def _extract_pdf_text(pdf_bytes: bytes) -> str | None:
     """Return plain text from *pdf_bytes*, or ``None`` if pypdf is missing."""
     try:
-        import pypdf  # type: ignore[import-untyped]
+        import pypdf
     except ImportError:
         return None
     try:

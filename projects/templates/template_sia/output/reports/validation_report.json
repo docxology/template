@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T02:08:51Z",
+  "timestamp": "2026-07-13T18:59:32Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -51,7 +51,7 @@
           "figures": {
             "exists": true,
             "files": 5,
-            "size_mb": 0.17,
+            "size_mb": 0.14,
             "readable": true,
             "optional": false
           },
@@ -65,7 +65,7 @@
           "reports": {
             "exists": true,
             "files": 27,
-            "size_mb": 0.16,
+            "size_mb": 0.15,
             "readable": true,
             "optional": false
           },
@@ -114,8 +114,8 @@
         "figures": {
           "exists": true,
           "file_count": 5,
-          "size_mb": "0.17",
-          "largest_file": "sia_improvement_delta.png"
+          "size_mb": "0.14",
+          "largest_file": "sia_metric_progression.png"
         },
         "data": {
           "exists": true,
@@ -126,7 +126,7 @@
         "reports": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "0.16",
+          "size_mb": "0.15",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
@@ -159,7 +159,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 0.6911735534667969,
+      "total_size_mb": 0.651158332824707,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -175,7 +175,7 @@
     },
     "figures": {
       "files": 5,
-      "size_mb": 0.1723766326904297
+      "size_mb": 0.14438152313232422
     },
     "data": {
       "files": 2,

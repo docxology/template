@@ -7,6 +7,7 @@ of publications across the configured subfields.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any, cast
 
 import matplotlib
 
@@ -18,7 +19,7 @@ from visualization.style import VIZ_CONFIG, SUBFIELD_NAMES
 
 def _format_subfield_label(sf: str) -> str:
     """Standardize subfield label using SUBFIELD_NAMES."""
-    return SUBFIELD_NAMES.get(sf, sf.replace("_", " ").title())
+    return str(SUBFIELD_NAMES.get(sf, sf.replace("_", " ").title()))
 
 
 def plot_field_summary(
@@ -134,7 +135,7 @@ def plot_subfield_distribution(
 
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure_size"], dpi=VIZ_CONFIG["dpi"])
 
-    wedges, texts, autotexts = ax.pie(
+    pie_result = ax.pie(
         sizes,
         labels=labels,
         colors=colors,
@@ -143,6 +144,7 @@ def plot_subfield_distribution(
         pctdistance=0.85,
         wedgeprops=dict(width=0.45, edgecolor="white", linewidth=1.5),
     )
+    wedges, texts, autotexts = cast(tuple[Any, Any, Any], pie_result)
 
     # Center text for donut
     ax.text(

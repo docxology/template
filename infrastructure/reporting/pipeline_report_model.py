@@ -12,7 +12,7 @@ from typing import Any, TypedDict
 try:
     from typing import NotRequired
 except ImportError:  # Python <3.11
-    from typing_extensions import NotRequired  # type: ignore[assignment]
+    from typing_extensions import NotRequired
 
 from infrastructure.core.runtime.checkpoint import StageResult
 from infrastructure.core.logging.utils import get_logger

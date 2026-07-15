@@ -8,6 +8,7 @@ authors:
     email: "author@research-template.org"
 publication:
   doi: ""
+  doi_status: ""
   version_doi: ""
   version_record: ""
   github_repository: ""

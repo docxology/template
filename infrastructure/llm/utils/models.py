@@ -83,7 +83,8 @@ def get_available_model_info(
             response = requests.get(f"{base_url}/api/tags", timeout=timeout)
             response.raise_for_status()
             data = response.json()
-            models = data.get("models", [])
+            raw_models = data.get("models", []) if isinstance(data, dict) else []
+            models = [model for model in raw_models if isinstance(model, dict)]
 
             if models:
                 logger.debug(f"Retrieved {len(models)} model(s) from Ollama")

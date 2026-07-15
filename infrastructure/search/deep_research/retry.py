@@ -43,6 +43,7 @@ def submit_with_transient_retry(
     provider: str,
     attempts: int = 3,
     base_delay_seconds: float = 2.0,
+    sleeper: Callable[[float], None] = sleep,
 ) -> T:
     """Run ``operation`` retrying transient failures with exponential backoff.
 
@@ -65,7 +66,7 @@ def submit_with_transient_retry(
                 attempts,
                 delay,
             )
-            sleep(delay)
+            sleeper(delay)
     raise RuntimeError(f"unreachable retry exit for {provider}") from last_exc  # pragma: no cover
 
 

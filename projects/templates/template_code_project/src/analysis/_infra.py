@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 
 INFRASTRUCTURE_AVAILABLE = False
+_INFRASTRUCTURE_OVERRIDE: ContextVar[bool | None] = ContextVar("template_code_infrastructure_available", default=None)
 ScriptExecutionError: type[Exception]
 TemplateError: type[Exception]
 ValidationError: type[Exception]
@@ -49,9 +53,9 @@ except ImportError as e:  # pragma: no cover — fallback when infrastructure is
     ScriptExecutionError = _FallbackScriptExecutionError
     TemplateError = _FallbackTemplateError
     ValidationError = _FallbackValidationError
-    ProgressBar = None  # type: ignore[misc, assignment]
-    SystemHealthChecker = None  # type: ignore[misc, assignment]
-    get_logger = None  # type: ignore[assignment]
+    ProgressBar = None
+    SystemHealthChecker = None
+    get_logger = None
     benchmark_function = None  # type: ignore[assignment]
     check_numerical_stability = None  # type: ignore[assignment]
     verify_output_integrity = None  # type: ignore[assignment]
@@ -65,7 +69,22 @@ except ImportError as e:  # pragma: no cover — fallback when infrastructure is
     InteractiveDashboard = None  # type: ignore[misc, assignment]
     Invariant = None  # type: ignore[misc, assignment]
     Panel = None  # type: ignore[misc, assignment]
-    log_success = None  # type: ignore[assignment]
+    log_success = None
+
+
+def infrastructure_available() -> bool:
+    override = _INFRASTRUCTURE_OVERRIDE.get()
+    return INFRASTRUCTURE_AVAILABLE if override is None else override
+
+
+@contextmanager
+def infrastructure_context(available: bool) -> Iterator[None]:
+    token = _INFRASTRUCTURE_OVERRIDE.set(available)
+    try:
+        yield
+    finally:
+        _INFRASTRUCTURE_OVERRIDE.reset(token)
+
 
 __all__ = [
     "INFRASTRUCTURE_AVAILABLE",
@@ -89,4 +108,6 @@ __all__ = [
     "get_logger",
     "log_success",
     "verify_output_integrity",
+    "infrastructure_available",
+    "infrastructure_context",
 ]

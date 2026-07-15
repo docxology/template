@@ -41,7 +41,7 @@ def test_orchestration_parser_incremental_flag_sets_true() -> None:
     assert ns.incremental is True
 
 
-def _capture_config(monkeypatch, *, incremental: bool):
+def _capture_config(*, incremental: bool):
     """Run ``execute_pipeline`` with a real capture-executor; return the config."""
     import scripts.execute_pipeline as ep
 
@@ -57,32 +57,29 @@ def _capture_config(monkeypatch, *, incremental: bool):
         def execute_core_pipeline(self) -> list:
             return []
 
-    monkeypatch.setattr(ep, "PipelineExecutor", _CaptureExecutor)
-    monkeypatch.setattr(ep, "validate_interpreter", lambda: None)
-    monkeypatch.setattr(
-        "infrastructure.core.pipeline.post_run_reporting.write_pipeline_post_run_reports",
-        lambda **kwargs: None,
-    )
     rc = ep.execute_pipeline(
         project_name="demo",
         repo_root=REPO_ROOT,
         incremental=incremental,
+        executor_factory=_CaptureExecutor,
+        interpreter_validator=lambda: None,
+        report_writer=lambda **kwargs: None,
     )
     assert rc == 0
     return captured["config"]
 
 
-def test_execute_pipeline_enables_incremental_only_with_flag(monkeypatch) -> None:
-    enabled_cfg = _capture_config(monkeypatch, incremental=True)
+def test_execute_pipeline_enables_incremental_only_with_flag() -> None:
+    enabled_cfg = _capture_config(incremental=True)
     assert enabled_cfg.incremental.enabled is True
 
 
-def test_execute_pipeline_incremental_disabled_by_default(monkeypatch) -> None:
-    default_cfg = _capture_config(monkeypatch, incremental=False)
+def test_execute_pipeline_incremental_disabled_by_default() -> None:
+    default_cfg = _capture_config(incremental=False)
     assert default_cfg.incremental.enabled is False
 
 
-def _capture_runner_config(monkeypatch, tmp_path, *, incremental: bool, core_only: bool = False):
+def _capture_runner_config(tmp_path, *, incremental: bool, core_only: bool = False):
     """Run PipelineRunner.run with a real capture-executor; return the config it built."""
     import io
 
@@ -100,14 +97,17 @@ def _capture_runner_config(monkeypatch, tmp_path, *, incremental: bool, core_onl
         def execute_core_pipeline(self) -> list:
             return []
 
-    monkeypatch.setattr(pr, "PipelineExecutor", _CaptureExecutor)
-    runner = pr.PipelineRunner(repo_root=tmp_path, stream=io.StringIO())
+    runner = pr.PipelineRunner(
+        repo_root=tmp_path,
+        stream=io.StringIO(),
+        executor_factory=_CaptureExecutor,
+    )
     rc = runner.run(pr.PipelineInvocation(project="demo", incremental=incremental, core_only=core_only))
     assert rc == 0
     return captured["config"]
 
 
-def test_orchestration_runner_threads_incremental_into_config(monkeypatch, tmp_path) -> None:
+def test_orchestration_runner_threads_incremental_into_config(tmp_path) -> None:
     """PipelineRunner.run must propagate the flag to PipelineConfig.incremental.enabled.
 
     This pins the orchestration threading that the parser-only tests miss: dropping
@@ -115,15 +115,15 @@ def test_orchestration_runner_threads_incremental_into_config(monkeypatch, tmp_p
     parser tests green but silently disable the feature for the documented
     `python -m infrastructure.orchestration pipeline --incremental` entrypoint.
     """
-    assert _capture_runner_config(monkeypatch, tmp_path, incremental=True).incremental.enabled is True
+    assert _capture_runner_config(tmp_path, incremental=True).incremental.enabled is True
 
 
-def test_orchestration_runner_incremental_disabled_by_default(monkeypatch, tmp_path) -> None:
-    assert _capture_runner_config(monkeypatch, tmp_path, incremental=False).incremental.enabled is False
+def test_orchestration_runner_incremental_disabled_by_default(tmp_path) -> None:
+    assert _capture_runner_config(tmp_path, incremental=False).incremental.enabled is False
 
 
-def test_orchestration_runner_incremental_with_core_only(monkeypatch, tmp_path) -> None:
-    cfg = _capture_runner_config(monkeypatch, tmp_path, incremental=True, core_only=True)
+def test_orchestration_runner_incremental_with_core_only(tmp_path) -> None:
+    cfg = _capture_runner_config(tmp_path, incremental=True, core_only=True)
     assert cfg.incremental.enabled is True
     assert cfg.skip_llm is True  # core_only implies skip_llm; incremental is orthogonal
 

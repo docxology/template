@@ -1,9 +1,0 @@
-\frametitle{Figure generation contract}
-\protect\phantomsection\label{figure-generation-contract}
-Each figure in \texttt{03\_results.md} maps to a figure-data preparer in
-\breaktt{src/eda/figures.py}: \texttt{histogram\_data} → height
-histogram, \breaktt{correlation\_heatmap\_data} → feature-correlation
-heatmap, and \breaktt{group\_count\_data} → per-group row counts.
-Captions name the preparer and the key parameters (bin count, value
-range) so reviewers can navigate from the PDF to the code without
-inferring hidden defaults.

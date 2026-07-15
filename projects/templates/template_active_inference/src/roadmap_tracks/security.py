@@ -291,9 +291,11 @@ def build_security_posture_audit(project_root: Path) -> dict[str, Any]:
 def write_security_posture_audit(project_root: Path) -> Path:
     """Write the deterministic security posture audit report."""
     root = project_root.resolve()
-    return _write_json(
-        root / "output" / "reports" / "security_posture_audit.json",
-        build_security_posture_audit(root),
+    return Path(
+        _write_json(
+            root / "output" / "reports" / "security_posture_audit.json",
+            build_security_posture_audit(root),
+        )
     )
 
 

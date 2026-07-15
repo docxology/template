@@ -52,7 +52,7 @@ from infrastructure.validation.output.claim_verification import (
     claim_verification_enabled as _is_claim_verification_enabled,
     verify_project_claims as _verify_project_claims,
 )
-from infrastructure.validation.output.validator import collect_detailed_validation_results
+from infrastructure.validation.output.validator import ValidationResultDict, collect_detailed_validation_results
 
 logger = get_logger(__name__)
 
@@ -69,14 +69,26 @@ class PipelineCheck:
     run: Callable[[], bool]
 
 
-def _build_core_checks(project_name: str) -> list[PipelineCheck]:
+def _build_core_checks(
+    project_name: str,
+    *,
+    repo_root: Path = _REPO_ROOT,
+    prose_validator: Callable[[str], bool] | None = None,
+) -> list[PipelineCheck]:
     checks = [
-        PipelineCheck("PDF validation", lambda: validate_pdfs(project_name)),
-        PipelineCheck("Transmission bookends", lambda: validate_transmission_bookends(project_name)),
-        PipelineCheck("Markdown validation", lambda: validate_manuscript_output_markdown(project_name)),
+        PipelineCheck("PDF validation", lambda: validate_pdfs(project_name, repo_root=repo_root)),
+        PipelineCheck(
+            "Transmission bookends",
+            lambda: validate_transmission_bookends(project_name, repo_root=repo_root),
+        ),
+        PipelineCheck(
+            "Markdown validation",
+            lambda: validate_manuscript_output_markdown(project_name, repo_root=repo_root),
+        ),
     ]
-    if _prose_quality_enabled(project_name):
-        checks.append(PipelineCheck("Prose quality", lambda: validate_prose_quality(project_name)))
+    if _prose_quality_enabled(project_name, repo_root=repo_root):
+        validate = prose_validator or (lambda name: validate_prose_quality(name, repo_root=repo_root))
+        checks.append(PipelineCheck("Prose quality", lambda: validate(project_name)))
     return checks
 
 
@@ -95,51 +107,62 @@ def _run_registered_checks(checks: list[PipelineCheck]) -> list[tuple[str, bool]
     return results
 
 
-def _project_root(project_name: str) -> Path:
+def _project_root(project_name: str, *, repo_root: Path = _REPO_ROOT) -> Path:
     """Resolve active or WIP project roots for validation stages."""
-    return resolve_project_root(_REPO_ROOT, project_name)
+    return resolve_project_root(repo_root, project_name)
 
 
-def _project_output_dir(project_name: str) -> Path:
+def _project_output_dir(project_name: str, *, repo_root: Path = _REPO_ROOT) -> Path:
     """Return the resolved project output directory."""
-    return _project_root(project_name) / "output"
+    return _project_root(project_name, repo_root=repo_root) / "output"
 
 
-def _project_relative_path(project_name: str, child: str = "") -> str:
+def _project_relative_path(project_name: str, child: str = "", *, repo_root: Path = _REPO_ROOT) -> str:
     """Return a repo-relative project path for reports and recommendations."""
-    path = _project_root(project_name)
+    path = _project_root(project_name, repo_root=repo_root)
     if child:
         path = path / child
     try:
-        return str(path.relative_to(_REPO_ROOT))
+        return str(path.relative_to(repo_root))
     except ValueError:
         return str(path)
 
 
-def validate_pdfs(project_name: str = "project") -> bool:
+def validate_pdfs(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> bool:
     """Validate generated PDF files.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
     """
-    return _validate_pdfs(_project_root(project_name))
+    return _validate_pdfs(_project_root(project_name, repo_root=repo_root))
 
 
-def validate_transmission_bookends(project_name: str = "project") -> bool:
+def validate_transmission_bookends(
+    project_name: str = "project",
+    *,
+    repo_root: Path = _REPO_ROOT,
+    page_validator: Callable[[Path], bool] | None = None,
+) -> bool:
     """Validate transmission bookend single-page contract when enabled."""
-    return _validate_transmission_bookends(_project_root(project_name), project_name)
+    return _validate_transmission_bookends(
+        _project_root(project_name, repo_root=repo_root),
+        project_name,
+        page_validator=page_validator,
+    )
 
 
-def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
+def validate_manuscript_output_markdown(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> bool:
     """Validate markdown files in manuscript using infrastructure validation module.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
     """
-    return _validate_markdown(_project_root(project_name), _REPO_ROOT, project_name)
+    return _validate_markdown(_project_root(project_name, repo_root=repo_root), repo_root, project_name)
 
 
-def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str, Any]]:
+def verify_outputs_exist(
+    project_name: str = "project", *, repo_root: Path = _REPO_ROOT
+) -> tuple[bool, ValidationResultDict]:
     """Verify all expected output files exist.
 
     Args:
@@ -150,7 +173,7 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str,
     """
     log_substep("Verifying output structure...", logger)
 
-    output_dir = _project_output_dir(project_name)
+    output_dir = _project_output_dir(project_name, repo_root=repo_root)
 
     detailed_validation = collect_detailed_validation_results(output_dir)
     structure_valid = detailed_validation["structure"]["valid"]
@@ -162,8 +185,10 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str,
                 logger.info(f"  • {dir_name}/: {dir_info['file_count']} files ({dir_info['size_mb']} MB)")
     else:
         logger.warning("Output structure validation has issues:")
-        for severity in ["critical", "warning"]:
-            issues = detailed_validation["issues_by_severity"].get(severity, [])
+        for severity, issues in (
+            ("critical", detailed_validation["issues_by_severity"]["critical"]),
+            ("warning", detailed_validation["issues_by_severity"]["warning"]),
+        ):
             if issues:
                 logger.warning(f"  {severity.upper()} issues:")
                 for issue in issues[:3]:
@@ -203,21 +228,21 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
     issues = [*error_issues, *warning_issues]
 
     if issues:
-        for issue in issues:
-            logger.warning(issue)
+        for issue_text in issues:
+            logger.warning(issue_text)
         return not error_issues, issues
 
     log_success("Evidence registry validation passed", logger)
     return True, []
 
 
-def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
+def validate_project_design(project_root: Path, *, repo_root: Path = _REPO_ROOT) -> tuple[bool, list[str]]:
     """Validate advisory domain profile, experiment plan, and opt-in readiness overlays."""
     from infrastructure.autoresearch import validate_autoresearch_overlay
 
     return _validate_project_design(
         project_root,
-        _REPO_ROOT,
+        repo_root,
         overlay_validators=(validate_autoresearch_overlay,),
     )
 
@@ -236,14 +261,16 @@ def generate_validation_report(
     figure_issues: list[str],
     output_statistics: dict[str, Any],
     project_name: str = "project",
+    *,
+    repo_root: Path = _REPO_ROOT,
 ) -> dict[str, Any]:
     """Generate validation report with structured output."""
     log_substep("Generating validation report...", logger)
 
-    output_dir = _project_output_dir(project_name) / "reports"
+    output_dir = _project_output_dir(project_name, repo_root=repo_root) / "reports"
 
-    validation_results = {
-        "timestamp": resolve_build_timestamp(repo_root=_REPO_ROOT),
+    validation_results: dict[str, Any] = {
+        "timestamp": resolve_build_timestamp(repo_root=repo_root),
         "checks": {name: result for name, result in check_results},
         "figure_issues": figure_issues,
         "output_statistics": output_statistics,
@@ -256,7 +283,7 @@ def generate_validation_report(
         },
     }
 
-    recommendations = []
+    recommendations: list[dict[str, str]] = []
     for check_name, result in check_results:
         if not result:
             if check_name == "PDF validation":
@@ -274,7 +301,9 @@ def generate_validation_report(
                         "priority": "high",
                         "issue": "Transmission bookend page-span validation failed",
                         "action": "Compact bookend content or reduce QR strip so BEGIN/END each fit one page",
-                        "file": _project_relative_path(project_name, f"output/pdf/{project_name}_combined.pdf"),
+                        "file": _project_relative_path(
+                            project_name, f"output/pdf/{project_name}_combined.pdf", repo_root=repo_root
+                        ),
                     }
                 )
             elif check_name == "Markdown validation":
@@ -283,7 +312,7 @@ def generate_validation_report(
                         "priority": "medium",
                         "issue": "Markdown validation issues found",
                         "action": "Review markdown validation output for formatting issues",
-                        "file": _project_relative_path(project_name, "manuscript"),
+                        "file": _project_relative_path(project_name, "manuscript", repo_root=repo_root),
                     }
                 )
             elif check_name == "Output structure":
@@ -292,7 +321,7 @@ def generate_validation_report(
                         "priority": "high",
                         "issue": "Missing output directories",
                         "action": "Ensure all analysis scripts completed successfully",
-                        "file": _project_relative_path(project_name, "output"),
+                        "file": _project_relative_path(project_name, "output", repo_root=repo_root),
                     }
                 )
             elif check_name == "Evidence registry":
@@ -301,7 +330,9 @@ def generate_validation_report(
                         "priority": "medium",
                         "issue": "Evidence registry reported unsupported manuscript facts",
                         "action": "Register generated facts or replace unsupported hard-coded claims",
-                        "file": _project_relative_path(project_name, "output/reports/evidence_registry.json"),
+                        "file": _project_relative_path(
+                            project_name, "output/reports/evidence_registry.json", repo_root=repo_root
+                        ),
                     }
                 )
             elif check_name == "Artifact manifest":
@@ -310,7 +341,9 @@ def generate_validation_report(
                         "priority": "medium",
                         "issue": "Artifact manifest reported drift or missing declared outputs",
                         "action": "Regenerate declared outputs or update the stage contract",
-                        "file": _project_relative_path(project_name, "output/reports/artifact_manifest.json"),
+                        "file": _project_relative_path(
+                            project_name, "output/reports/artifact_manifest.json", repo_root=repo_root
+                        ),
                     }
                 )
             elif check_name == "Project design overlays":
@@ -319,7 +352,7 @@ def generate_validation_report(
                         "priority": "low",
                         "issue": "Domain profile or experiment plan validation failed",
                         "action": "Fix domain_profile.yaml or experiment_plan.yaml schema and design declarations",
-                        "file": _project_relative_path(project_name),
+                        "file": _project_relative_path(project_name, repo_root=repo_root),
                     }
                 )
 
@@ -329,7 +362,9 @@ def generate_validation_report(
                 "priority": "medium",
                 "issue": f"{len(figure_issues)} figure reference issue(s)",
                 "action": "Register missing figures or remove unused references",
-                "file": _project_relative_path(project_name, "output/figures/figure_registry.json"),
+                "file": _project_relative_path(
+                    project_name, "output/figures/figure_registry.json", repo_root=repo_root
+                ),
             }
         )
 
@@ -368,17 +403,17 @@ def _load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
     return _load_config_yaml(manuscript_dir)
 
 
-def _prose_quality_enabled(project_name: str) -> bool:
+def _prose_quality_enabled(project_name: str, *, repo_root: Path = _REPO_ROOT) -> bool:
     """Whether the opt-in AI-writing prose gate is enabled for *project_name*.
 
     Toggle lives in ``manuscript/config.yaml`` under
     ``validation.prose_quality.enabled`` and defaults to ``False`` so existing
     runs are unaffected.
     """
-    return _is_prose_quality_enabled(_project_root(project_name))
+    return _is_prose_quality_enabled(_project_root(project_name, repo_root=repo_root))
 
 
-def validate_prose_quality(project_name: str = "project") -> bool:
+def validate_prose_quality(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> bool:
     """Report-only AI-writing fingerprint scan over manuscript Markdown.
 
     Flags prose patterns typical of unedited LLM output (stock-phrase density,
@@ -388,41 +423,49 @@ def validate_prose_quality(project_name: str = "project") -> bool:
     only invoked when ``validation.prose_quality.enabled`` is set in the project
     config, so disabled runs are byte-identical to the legacy behavior.
     """
-    return _validate_prose_quality(_project_root(project_name))
+    return _validate_prose_quality(_project_root(project_name, repo_root=repo_root))
 
 
-def execute_validation_pipeline(project_name: str = "project") -> int:
+def execute_validation_pipeline(
+    project_name: str = "project",
+    *,
+    repo_root: Path = _REPO_ROOT,
+    report_writer: Callable[..., dict[str, Any]] | None = None,
+    claim_verifier: Callable[[Path], Any] | None = None,
+    prose_validator: Callable[[str], bool] | None = None,
+) -> int:
     """Execute validation orchestration.
 
     Returns:
         Exit code (0=success, 1=failure)
     """
-    project_output_dir = _project_output_dir(project_name)
+    project_output_dir = _project_output_dir(project_name, repo_root=repo_root)
     DiagnosticReporter(
         project_name=project_name,
         output_dir=project_output_dir,
         load_existing=False,
     ).clear_report()
 
-    checks = _build_core_checks(project_name)
+    checks = _build_core_checks(project_name, repo_root=repo_root, prose_validator=prose_validator)
     results = _run_registered_checks(checks)
     figure_issues: list[str] = []
     detailed_validation = None
 
-    project_root = _project_root(project_name)
+    project_root = _project_root(project_name, repo_root=repo_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
 
     claim_report = None
     if _is_claim_verification_enabled(project_root):
         try:
-            claim_report = _verify_project_claims(project_root)
+            verify_claims = claim_verifier or _verify_project_claims
+            claim_report = verify_claims(project_root)
             results.append(("Claim verification", True))
         except Exception as e:
             logger.error(f"Error during claim verification: {e}", exc_info=True)
             results.append(("Claim verification", False))
 
     try:
-        structure_result, detailed_validation = verify_outputs_exist(project_name)
+        structure_result, detailed_validation = verify_outputs_exist(project_name, repo_root=repo_root)
         results.append(("Output structure", structure_result))
     except Exception as e:
         logger.error(f"Error during output structure validation: {e}", exc_info=True)
@@ -437,6 +480,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         results.append(("Figure registry", False))
         figure_issues = []
 
+    output_statistics: dict[str, Any]
     try:
         evidence_result, evidence_issues = validate_evidence_registry(project_root, manuscript_dir)
         results.append(("Evidence registry", evidence_result))
@@ -455,7 +499,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
     output_dir = project_root / "output"
 
     try:
-        design_result, design_issues = validate_project_design(project_root)
+        design_result, design_issues = validate_project_design(project_root, repo_root=repo_root)
         results.append(("Project design overlays", design_result))
         if design_issues:
             output_statistics["design_validation_issues"] = design_issues
@@ -490,7 +534,8 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
                 "size_mb": size_mb,
             }
 
-    generate_validation_report(results, figure_issues, output_statistics, project_name)
+    write_report = report_writer or generate_validation_report
+    write_report(results, figure_issues, output_statistics, project_name, repo_root=repo_root)
 
     logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("VALIDATION SUMMARY")
@@ -538,8 +583,8 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
             directories = detailed_validation.get("directories", {})
             for dir_name, dir_info in directories.items():
                 if dir_info.get("exists") and dir_info.get("file_count", 0) > 0:
-                    size_mb = dir_info.get("size_mb", "0.00")
-                    logger.info(f"  📁 {dir_name}/: {dir_info['file_count']} files ({size_mb} MB)")
+                    display_size_mb = dir_info.get("size_mb", "0.00")
+                    logger.info(f"  📁 {dir_name}/: {dir_info['file_count']} files ({display_size_mb} MB)")
         else:
             logger.warning("")
             logger.warning("Output Structure Issues:")

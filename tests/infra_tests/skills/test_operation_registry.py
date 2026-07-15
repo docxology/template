@@ -198,6 +198,7 @@ class TestAgainstLiveRepo:
         assert all(o.effect in {"read_only", "mutating"} for o in ops)
         # The publish/upload CLI is tiered mutating; a plain read-only CLI is not.
         assert by_module["infrastructure.publishing"].effect == "mutating"
+        assert by_module["infrastructure.skills"].effect == "mutating"
         assert by_module["infrastructure.core.health"].effect == "read_only"
 
     def test_cli_list_json_round_trips(self, capsys) -> None:

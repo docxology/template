@@ -20,7 +20,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 ```mermaid
 flowchart TB
-    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>informational JSON artefact]
+    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>blocking static JSON report]
     LINT --> VNM[verify-no-mocks]
     LINT --> VAL[validate<br/>markdown + api-ref check + imports]
     LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
@@ -48,9 +48,10 @@ flowchart TB
 |---|---|
 | Ruff lint | zero violations |
 | Ruff format | zero diffs |
-| mypy | no errors |
+| mypy strict gate | zero errors across the generated public source scope |
 | `check-all-exports` | zero violations |
-| Mock-framework lexical gate | zero prohibited imports/calls; stand-in inventory advisory |
+| Mock-framework lexical gate | zero prohibited imports/calls |
+| Semantic stand-in gate | zero dependency replacements; environment isolation classified separately |
 | Infrastructure coverage | ≥ 60% |
 | Per-project coverage (standalone) | ≥ 90% |
 | Combined-union public-project coverage | ≥ 75% |

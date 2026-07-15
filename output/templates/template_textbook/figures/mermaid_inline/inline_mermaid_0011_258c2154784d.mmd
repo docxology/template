@@ -1,6 +1,0 @@
-graph LR
-  A[Raw measurements] --> B[Group + average]
-  B --> C[Fit a trend]
-  C --> D{Within data range?}
-  D -->|yes| E[Interpolate: defensible]
-  D -->|no| F[Extrapolate: flag the risk]

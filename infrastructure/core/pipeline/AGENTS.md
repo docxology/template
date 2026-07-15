@@ -22,7 +22,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
   per-project `projects/<name>/output/logs/pipeline.log` so the parent
   never sees interleaved output.
 - `resume.py` - checkpoint resume helpers
-- `stages.py` - stage definitions
+- `stages.py` - subprocess execution and public multi-project test helpers; stage definitions live only in `pipeline.yaml`
 - `stage_monitor.py` - stage resource monitoring
 - `_stage_tracker.py` - tracking internals
 - `_performance_monitor.py` - performance internals

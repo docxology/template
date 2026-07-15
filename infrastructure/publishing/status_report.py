@@ -55,6 +55,7 @@ _STATE_BADGE = {
     "reserved": "🔵 reserved",
     "available": "⚪ available",
     "planned": "🟡 planned",
+    "unreachable": "❌ unreachable",
 }
 
 
@@ -65,6 +66,7 @@ class PublicationState(str, Enum):
     RESERVED = "reserved"
     AVAILABLE = "available"  # adapter implemented + locally verifiable, not yet published here
     PLANNED = "planned"  # documented intent only, no live adapter
+    UNREACHABLE = "unreachable"  # identifier recorded but failed the opt-in live check (reachability.py)
 
 
 @dataclass(frozen=True)
@@ -309,9 +311,17 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
         lines.append(f"_Keywords: {', '.join(report.keywords)}._")
         lines.append("")
 
+    # The ❌ legend fragment is conditional so that default (offline) runs stay
+    # byte-identical — committed README blocks are drift-gated against this output.
+    unreachable_legend = (
+        "❌ unreachable (recorded identifier failed the opt-in `--verify-reachability` live check) · "
+        if any(p.state is PublicationState.UNREACHABLE for p in report.platforms)
+        else ""
+    )
     lines.append(
         "_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · "
         "🔵 reserved (identifier reserved but not yet registered by final publication) · "
+        f"{unreachable_legend}"
         "⚪ available (adapter implemented and locally verifiable) · 🟡 planned. "
         "This block is generated — edit `manuscript/config.yaml`, then regenerate with "
         "`uv run python -m infrastructure.publishing.status_report --project <path> --write`._"
@@ -412,13 +422,67 @@ def main(argv: list[str] | None = None) -> int:
         metavar="name=url",
         help="Mark platforms published with a reference URL (e.g. ipfs_pinata=https://...)",
     )
+    parser.add_argument(
+        "--verify-reachability",
+        action="store_true",
+        help=(
+            "Opt-in live audit view: check the referenced GitHub repository and "
+            "concept DOI over the network and downgrade definitively unreachable "
+            "identifiers (HTTP 404/410) to '❌ unreachable' in the printed block. "
+            "Display-only — cannot be combined with --write/--check, because "
+            "committed README blocks must stay offline-deterministic. Default "
+            "runs are fully offline; never enable this in the default pipeline "
+            "or CI. On a finding, fix manuscript/config.yaml, don't commit the ❌."
+        ),
+    )
+    parser.add_argument(
+        "--github-base",
+        default=None,
+        help="Override the GitHub web base URL for --verify-reachability (tests/enterprise)",
+    )
+    parser.add_argument(
+        "--doi-base",
+        default=None,
+        help="Override the DOI resolver base URL for --verify-reachability (tests)",
+    )
     args = parser.parse_args(argv)
+
+    if args.verify_reachability and (args.write or args.check):
+        # A network-derived ❌ must never reach a committed README: the drift
+        # gate recompiles offline and would report the block stale forever.
+        parser.error(
+            "--verify-reachability is a display-only live audit; it cannot be "
+            "combined with --write or --check. Fix manuscript/config.yaml instead."
+        )
 
     report = compile_publishing_status(
         args.project,
         config_path=args.config,
         published=_parse_published(args.published),
     )
+
+    if args.verify_reachability:
+        import sys
+
+        from infrastructure.publishing.reachability import (
+            DOI_BASE,
+            GITHUB_BASE,
+            apply_reachability,
+            verify_reachability,
+        )
+
+        checks = verify_reachability(
+            report,
+            github_base=args.github_base or GITHUB_BASE,
+            doi_base=args.doi_base or DOI_BASE,
+        )
+        for check in checks:
+            print(
+                f"reachability: {check.platform} {check.identifier} -> {check.status} ({check.detail})",
+                file=sys.stderr,
+            )
+        report = apply_reachability(report, checks)
+
     readme_path = args.readme or (args.project / "README.md")
 
     if args.check:

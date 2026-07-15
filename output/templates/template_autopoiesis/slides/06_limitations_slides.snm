@@ -1,8 +1,0 @@
-\beamer@slide {limitations}{1}
-\beamer@slide {reserved-slots-are-excluded-from-the-effective-product-space}{1}
-\beamer@slide {no-child-pdf-rendering-in-ci}{1}
-\beamer@slide {within-platform-guarantee-only}{1}
-\beamer@slide {grammar-does-not-self-modify}{1}
-\beamer@slide {integrity-verification-checks-self-consistency-not-tamper-proofing}{1}
-\beamer@slide {coverage-is-uneven-across-modules-not-uniform-though-every-module-now-clears-the-floor}{1}
-\beamer@slide {cover-art-now-includes-the-qr-seal-but-that-code-path-is-untested}{1}

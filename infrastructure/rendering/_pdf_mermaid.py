@@ -49,12 +49,15 @@ class MermaidReplacementResult:
     diagrams_rendered: int
 
 
-def replace_inline_mermaid(content: str, manuscript_dir: Path | None) -> MermaidReplacementResult:
+def replace_inline_mermaid(
+    content: str, manuscript_dir: Path | None, *, home: Path | None = None
+) -> MermaidReplacementResult:
     """Render Mermaid fences and replace them with Markdown image references.
 
     Args:
         content: Combined Markdown content.
         manuscript_dir: Manuscript directory for resolving project output paths.
+        home: Home-directory override forwarded to Chrome resolution.
 
     Returns:
         Rewritten content and the number of Mermaid blocks processed.
@@ -69,7 +72,7 @@ def replace_inline_mermaid(content: str, manuscript_dir: Path | None) -> Mermaid
     output_dir.mkdir(parents=True, exist_ok=True)
     puppeteer_config = _find_puppeteer_config(Path(manuscript_dir))
     if puppeteer_config is None:
-        chrome_executable = _resolve_chrome_executable()
+        chrome_executable = _resolve_chrome_executable(home=home)
         if chrome_executable is None:
             render_disabled_reason = "no Chrome resolved"
         else:

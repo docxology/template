@@ -1,6 +1,0 @@
-order,step_id,name,kind,target
-0,1,"Add water to beaker",add,human
-1,2,"Add PBS tablet",add,human
-2,3,"Mix until dissolved",mix,human
-3,4,"Top up to final volume",add,human
-4,5,"Validate solution clarity and pH range",validate,human

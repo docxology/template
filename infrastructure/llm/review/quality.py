@@ -37,7 +37,7 @@ class ReviewQualityDetails(TypedDict, total=False):
     """Known shape of the details dict returned by validate_review_quality."""
 
     sections_found: list[str]
-    scores_found: list[str]
+    scores_found: list[tuple[Any, str]]
     format_compliance: dict[str, Any]
     repetition: dict[str, Any]
     repetition_warning: str
@@ -46,6 +46,11 @@ class ReviewQualityDetails(TypedDict, total=False):
     min_required: int
     sections_required: int
     has_assessment: bool
+    has_methodology_content: bool
+    priorities_found: list[str]
+    has_recommendations: bool
+    has_english_section: bool
+    has_translation_section: bool
 
 
 def validate_review_quality(
@@ -113,7 +118,7 @@ def validate_review_quality(
     return is_valid, issues, details
 
 
-def _validate_executive_summary_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
+def _validate_executive_summary_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     header_variations = [
         (["overview", "summary", "introduction", "abstract"], "overview"),
         (
@@ -131,7 +136,7 @@ def _validate_executive_summary_section(response_lower: str, details: dict[str, 
         issues.append("Missing expected structure (found: none of 5 expected sections)")
 
 
-def _validate_quality_review_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
+def _validate_quality_review_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     score_patterns = [
         (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
         (r"score:\s*(\d)/5", "Score: X/5"),
@@ -152,7 +157,7 @@ def _validate_quality_review_section(response_lower: str, details: dict[str, Any
         issues.append("Missing scoring or quality assessment")
 
 
-def _validate_methodology_review_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
+def _validate_methodology_review_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     methodology_sections = [
         (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
         (
@@ -171,7 +176,9 @@ def _validate_methodology_review_section(response_lower: str, details: dict[str,
         issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
 
 
-def _validate_improvement_suggestions_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
+def _validate_improvement_suggestions_section(
+    response_lower: str, details: ReviewQualityDetails, issues: list[str]
+) -> None:
     priority_variations = [
         (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
         (["medium priority", "moderate", "should address", "important", "significant"], "medium"),
@@ -187,7 +194,7 @@ def _validate_improvement_suggestions_section(response_lower: str, details: dict
         issues.append("Missing priority sections or recommendations")
 
 
-def _validate_translation_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
+def _validate_translation_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     has_english = (
         "english abstract" in response_lower
         or "## english" in response_lower
@@ -205,7 +212,7 @@ def _validate_translation_section(response_lower: str, details: dict[str, Any], 
 
 
 # Module-level dispatch table — built once after all validators are defined.
-_ValidatorFn = Callable[[str, dict[str, Any], list[str]], None]
+_ValidatorFn = Callable[[str, ReviewQualityDetails, list[str]], None]
 _REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
     "executive_summary": _validate_executive_summary_section,
     "quality_review": _validate_quality_review_section,

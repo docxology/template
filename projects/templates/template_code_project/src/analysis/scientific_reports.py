@@ -17,7 +17,7 @@ except ImportError:  # pragma: no cover
     from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum  # type: ignore[no-redef]
 
-from ._infra import ValidationError
+from ._infra import ValidationError, infrastructure_available
 from ._logging import get_logger
 from .experiments import _project_root
 
@@ -115,7 +115,7 @@ def _canonical_benchmark_payload(
 
 def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
     """Assess numerical stability of optimization algorithms."""
-    from . import INFRASTRUCTURE_AVAILABLE, check_numerical_stability
+    from . import check_numerical_stability
 
     logger = get_logger()
     logger.info("Running numerical stability analysis...")
@@ -126,7 +126,7 @@ def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
     _, optimal_value = quadratic_optimum(A, b)
     test_inputs = [np.array([float(x)]) for x in cfg.stability_starting_points[:4]]
 
-    if INFRASTRUCTURE_AVAILABLE and check_numerical_stability is not None:
+    if infrastructure_available() and check_numerical_stability is not None:
         stability_report = check_numerical_stability(
             func=functools.partial(quadratic_function, A=A, b=b),
             test_inputs=test_inputs,
@@ -162,7 +162,7 @@ def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
 
 def run_performance_benchmarking(config: ExperimentConfig | None = None) -> Path:
     """Run timing diagnostics and write a deterministic benchmark contract."""
-    from . import INFRASTRUCTURE_AVAILABLE, benchmark_function
+    from . import benchmark_function
 
     logger = get_logger()
     logger.info("Running performance benchmarking...")
@@ -173,7 +173,7 @@ def run_performance_benchmarking(config: ExperimentConfig | None = None) -> Path
     test_inputs = [np.array([0.0]), np.array([5.0]), np.array([20.0])]
     diagnostic_iterations = 50
 
-    if INFRASTRUCTURE_AVAILABLE and benchmark_function is not None:
+    if infrastructure_available() and benchmark_function is not None:
         benchmark_report = benchmark_function(
             func=functools.partial(quadratic_function, A=A, b=b),
             test_inputs=test_inputs,
@@ -203,18 +203,19 @@ def run_performance_benchmarking(config: ExperimentConfig | None = None) -> Path
     return benchmark_path
 
 
-def validate_generated_outputs() -> Any:
+def validate_generated_outputs(*, integrity_validator: Any = None) -> Any:
     """Validate integrity of generated analysis outputs."""
-    from . import INFRASTRUCTURE_AVAILABLE, verify_output_integrity
+    from . import verify_output_integrity
 
     logger = get_logger()
-    if not INFRASTRUCTURE_AVAILABLE or verify_output_integrity is None:
+    validate_integrity = integrity_validator or verify_output_integrity
+    if not infrastructure_available() or validate_integrity is None:
         logger.info("Skipping output validation (infrastructure not available)")
         return None
 
     logger.info("Validating generated outputs...")
     try:
-        integrity_report = verify_output_integrity(_root() / "output")
+        integrity_report = validate_integrity(_root() / "output")
         validation_summary = {
             "integrity_check": {
                 "total_files": len(integrity_report.file_integrity),
@@ -239,7 +240,7 @@ def validate_generated_outputs() -> Any:
         return None
 
 
-def save_validation_report(validation_report: Any) -> Any:
+def save_validation_report(validation_report: Any, *, file_opener: Any = open) -> Any:
     """Save validation report to file."""
     logger = get_logger()
     if not validation_report:
@@ -248,7 +249,7 @@ def save_validation_report(validation_report: Any) -> Any:
         output_dir = _root() / "output" / "reports"
         output_dir.mkdir(parents=True, exist_ok=True)
         report_path = output_dir / "output_validation.json"
-        with open(report_path, "w") as f:
+        with file_opener(report_path, "w") as f:
             json.dump(validation_report, f, indent=2, default=str)
         logger.info("Saved validation report to: %s", report_path)
         return report_path
@@ -257,16 +258,17 @@ def save_validation_report(validation_report: Any) -> Any:
         return None
 
 
-def register_figure() -> None:
+def register_figure(*, figure_manager_factory: Any = None) -> None:
     """Register generated figures for manuscript reference."""
     logger = get_logger()
     try:
         from ._infra import FigureManager
 
-        if FigureManager is None:
+        manager_factory = figure_manager_factory or FigureManager
+        if manager_factory is None:
             raise ImportError("FigureManager unavailable")
         registry_file = _root() / "output" / "figures" / "figure_registry.json"
-        fm = FigureManager(registry_file=str(registry_file))
+        fm = manager_factory(registry_file=str(registry_file))
         figures = [
             ("convergence_plot.png", "Gradient descent convergence for different step sizes", "fig:convergence"),
             (

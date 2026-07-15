@@ -48,15 +48,15 @@ def _run_dir_label(workspace: Path) -> str:
         return workspace.name
 
 
-def _save_baseline(workspace: Path) -> None:
-    config.BASELINE_DIR.mkdir(parents=True, exist_ok=True)
+def _save_baseline(workspace: Path, baseline_dir: Path) -> None:
+    baseline_dir.mkdir(parents=True, exist_ok=True)
     src = workspace / "benchmark.json"
     if not src.is_file():
         msg = f"Missing benchmark.json in {workspace}"
         raise FileNotFoundError(msg)
     benchmark = json.loads(src.read_text(encoding="utf-8"))
     benchmark["run_dir"] = "baseline"
-    (config.BASELINE_DIR / "benchmark.json").write_text(json.dumps(benchmark, indent=2) + "\n", encoding="utf-8")
+    (baseline_dir / "benchmark.json").write_text(json.dumps(benchmark, indent=2) + "\n", encoding="utf-8")
 
 
 def _check_fail_under(benchmark: dict, fail_under: float | None) -> int:
@@ -98,21 +98,21 @@ def _print_report(
         print(json.dumps(benchmark["summary"], indent=2))
 
 
-def _run_save_baseline_only(workspace: Path, args: argparse.Namespace) -> int:
+def _run_save_baseline_only(workspace: Path, args: argparse.Namespace, baseline_dir: Path) -> int:
     try:
         benchmark, _ = load_workspace_state(workspace)
     except FileNotFoundError as exc:
         print(str(exc), file=sys.stderr)
         return 1
 
-    _save_baseline(workspace)
+    _save_baseline(workspace, baseline_dir)
     rate = benchmark["summary"]["with_skill_positive_only_pass_rate"]
     src = workspace / "benchmark.json"
-    dest = config.BASELINE_DIR / "benchmark.json"
+    dest = baseline_dir / "benchmark.json"
     print(f"Pinned baseline from {src} → {dest}\nwith_skill positive-only: {rate * 100:.1f}%")
 
     if args.compare_only:
-        return _run_compare_only(workspace, args)
+        return _run_compare_only(workspace, args, baseline_dir)
 
     return _check_fail_under(benchmark, args.fail_under)
 
@@ -120,6 +120,7 @@ def _run_save_baseline_only(workspace: Path, args: argparse.Namespace) -> int:
 def _run_compare_only(
     workspace: Path,
     args: argparse.Namespace,
+    baseline_dir: Path,
 ) -> int:
     try:
         benchmark, gradings_by_eval = load_workspace_state(workspace)
@@ -127,10 +128,10 @@ def _run_compare_only(
         print(str(exc), file=sys.stderr)
         return 1
 
-    compare_benchmark = load_baseline_benchmark()
+    compare_benchmark = load_baseline_benchmark(baseline_dir)
     if compare_benchmark is None:
         print(
-            f"Missing baseline benchmark at {config.BASELINE_DIR / 'benchmark.json'}. "
+            f"Missing baseline benchmark at {baseline_dir / 'benchmark.json'}. "
             "Run with --save-baseline or --save-baseline-only first.",
             file=sys.stderr,
         )
@@ -170,7 +171,7 @@ def _default_output_dir_help() -> str:
         return "latest"
 
 
-def main() -> int:
+def main(argv: list[str] | None = None, *, baseline_dir: Path | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run template workflow skill eval harness")
     parser.add_argument(
         "--output-dir",
@@ -221,7 +222,8 @@ def main() -> int:
         metavar="RATE",
         help="Exit 1 if with_skill positive-only pass rate is below RATE (0-1)",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    resolved_baseline_dir = baseline_dir or config.BASELINE_DIR
 
     arg_error = _validate_args(args)
     if arg_error:
@@ -232,13 +234,13 @@ def main() -> int:
 
     if args.save_baseline_only and not args.compare_only:
         workspace.mkdir(parents=True, exist_ok=True)
-        return _run_save_baseline_only(workspace, args)
+        return _run_save_baseline_only(workspace, args, resolved_baseline_dir)
 
     if args.compare_only:
         workspace.mkdir(parents=True, exist_ok=True)
         if args.save_baseline_only:
-            return _run_save_baseline_only(workspace, args)
-        return _run_compare_only(workspace, args)
+            return _run_save_baseline_only(workspace, args, resolved_baseline_dir)
+        return _run_compare_only(workspace, args, resolved_baseline_dir)
 
     workspace.mkdir(parents=True, exist_ok=True)
     run_dir_label = _run_dir_label(workspace)
@@ -325,13 +327,13 @@ def main() -> int:
     (workspace / "benchmark.json").write_text(json.dumps(benchmark, indent=2) + "\n", encoding="utf-8")
 
     if args.save_baseline:
-        _save_baseline(workspace)
+        _save_baseline(workspace, resolved_baseline_dir)
 
     review_path: Path | None = None
     if args.write_review:
         review_path = generate_review(workspace)
 
-    compare_benchmark = load_baseline_benchmark() if args.compare else None
+    compare_benchmark = load_baseline_benchmark(resolved_baseline_dir) if args.compare else None
 
     _print_report(
         benchmark,

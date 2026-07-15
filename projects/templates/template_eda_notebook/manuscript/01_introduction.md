@@ -49,11 +49,12 @@ The project sits on the repository's three pillars:
 ## The dataset
 
 We analyze a small synthetic cohort of subject measurements — height (cm),
-weight (kg), and resting heart rate (bpm) across three groups — generated with a
-fixed seed so every statistic in [@sec:results] is reproducible. The data is
-shaped so that weight depends positively on height (a strong, easy-to-see
-correlation) while resting heart rate is only weakly related, and a few cells
-are left blank to exercise the missing-data path honestly.
+weight (kg), and resting heart rate (bpm) across three groups. The dataset is
+a static, committed fixture — the same file on every run — so every statistic
+in [@sec:results] is reproducible. The data is shaped so that weight depends
+positively on height (a strong, easy-to-see correlation) while resting heart
+rate is only weakly related, and a few cells are left blank to exercise the
+missing-data path honestly.
 
 ## Reader's guide to the manuscript
 

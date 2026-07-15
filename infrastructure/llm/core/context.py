@@ -160,12 +160,12 @@ class ConversationContext:
 
     def save_state(self) -> ContextState:
         """Save current context state for restoration via ``restore_state``."""
-        state = {
-            "messages": [asdict(msg) for msg in self.messages],
-            "estimated_tokens": self.estimated_tokens,
-            "max_tokens": self.max_tokens,
-            "usage_stats": self.get_usage_stats(),
-        }
+        state = ContextState(
+            messages=[asdict(msg) for msg in self.messages],
+            estimated_tokens=self.estimated_tokens,
+            max_tokens=self.max_tokens,
+            usage_stats=self.get_usage_stats(),
+        )
 
         logger.debug(
             "Context state saved",

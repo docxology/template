@@ -7,17 +7,25 @@ run against the live repo tree; the renderer is exercised with a real
 
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 from pathlib import Path
 
+import pytest
+
 from infrastructure.documentation.counts_doc import (
+    COVERAGE_PROVENANCE_RELATIVE_PATH,
+    COVERAGE_PROVENANCE_SCHEMA_VERSION,
     DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
-    check_counts_doc,
+    _exemplar_collected_count,
+    exemplar_source_hash,
     infrastructure_packages,
     render_counts_doc,
     tracked_infra_python_count,
+    validate_coverage_provenance,
     write_counts_doc,
 )
 from infrastructure.project.public_scope import public_project_names
@@ -49,6 +57,7 @@ def test_render_contains_parseable_markers() -> None:
         infra_py_count=553,
         project_tests=228,
         publishing_tests=395,
+        exemplar_tests={"template_alpha": 7, "template_beta": 11},
     )
     doc = render_counts_doc(facts)
 
@@ -80,10 +89,11 @@ def test_render_exemplar_table_one_row_per_snapshot() -> None:
         infra_py_count=1,
         project_tests=1,
         publishing_tests=1,
+        exemplar_tests={s.name: index for index, s in enumerate(EXEMPLAR_SNAPSHOT, 1)},
     )
     doc = render_counts_doc(facts)
-    for snap in EXEMPLAR_SNAPSHOT:
-        assert f"| `{snap.name}` | {snap.tests_collected} | {snap.coverage_pct} |" in doc
+    for index, snap in enumerate(EXEMPLAR_SNAPSHOT, 1):
+        assert f"| `{snap.name}` | {index} | {snap.coverage_pct} |" in doc
 
 
 def test_exemplar_snapshot_covers_public_scope() -> None:
@@ -93,17 +103,77 @@ def test_exemplar_snapshot_covers_public_scope() -> None:
     assert documented == expected
 
 
-def test_write_then_check_round_trips(tmp_path: Path) -> None:
-    """Writing to a scratch tree then checking it reports in-sync."""
-    # Build a minimal scratch repo mirroring the real tree's derivation inputs by
-    # copying the live-derived facts into a rendered doc, then verifying the
-    # round-trip against the real repo's COUNTS.md is in sync after a fresh write.
-    repo = _repo_root()
-    write_counts_doc(repo)  # refresh on-disk from the live tree
-    in_sync, message = check_counts_doc(repo)
-    assert in_sync, message
+def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:
+    """Writing supplied facts exercises real I/O without 23 subprocesses."""
+    facts = CountsFacts(
+        public_projects=[s.name for s in EXEMPLAR_SNAPSHOT],
+        packages=["core"],
+        infra_py_count=1,
+        project_tests=2,
+        publishing_tests=3,
+        exemplar_tests={s.name: 1 for s in EXEMPLAR_SNAPSHOT},
+    )
+    target = tmp_path / "COUNTS.md"
+    write_counts_doc(_repo_root(), out_path=target, facts=facts)
+    assert target.read_text(encoding="utf-8") == render_counts_doc(facts)
 
 
 def test_doc_relative_path_points_at_counts_md() -> None:
     """The generator targets COUNTS.md, not the retired COUNTS.md."""
     assert DOC_RELATIVE_PATH == Path("docs/_generated/COUNTS.md")
+    assert COVERAGE_PROVENANCE_RELATIVE_PATH == Path("docs/_generated/coverage_snapshot.json")
+
+
+def test_exemplar_source_hash_changes_with_source(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "templates" / "demo"
+    (project / "src").mkdir(parents=True)
+    (project / "tests").mkdir()
+    source = project / "src" / "demo.py"
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    before = exemplar_source_hash(tmp_path, "demo")
+    source.write_text("VALUE = 2\n", encoding="utf-8")
+    assert exemplar_source_hash(tmp_path, "demo") != before
+
+
+def test_exemplar_source_hash_ignores_untracked_build_metadata(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "templates" / "demo"
+    source = project / "src" / "demo.py"
+    test_file = project / "tests" / "test_demo.py"
+    source.parent.mkdir(parents=True)
+    test_file.parent.mkdir()
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    test_file.write_text("def test_value():\n    assert True\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "--", source, test_file], cwd=tmp_path, check=True)
+
+    before = exemplar_source_hash(tmp_path, "demo")
+    metadata = project / "src" / "demo.egg-info" / "PKG-INFO"
+    metadata.parent.mkdir()
+    metadata.write_text("platform-specific generated metadata\n", encoding="utf-8")
+
+    assert exemplar_source_hash(tmp_path, "demo") == before
+
+
+def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
+    projects: dict[str, dict[str, str]] = {}
+    for snapshot in EXEMPLAR_SNAPSHOT:
+        project = tmp_path / "projects" / "templates" / snapshot.name
+        (project / "src").mkdir(parents=True)
+        (project / "tests").mkdir()
+        projects[snapshot.name] = {
+            "coverage_pct": snapshot.coverage_pct,
+            "source_hash": exemplar_source_hash(tmp_path, snapshot.name),
+        }
+    path = tmp_path / COVERAGE_PROVENANCE_RELATIVE_PATH
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({"schema_version": 1, "projects": projects}), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="schema mismatch"):
+        validate_coverage_provenance(tmp_path)
+
+    assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 2
+
+
+def test_exemplar_collection_uses_declared_dev_dependencies() -> None:
+    count = _exemplar_collected_count(_repo_root(), "template_literature_meta_analysis")
+    assert count > 0

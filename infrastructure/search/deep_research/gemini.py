@@ -91,7 +91,7 @@ class GeminiDeepResearchProvider:
 
     def _client(self):
         try:
-            from google import genai  # type: ignore[import-not-found]
+            from google import genai
         except ImportError as exc:  # pragma: no cover - exercised only when optional SDK is absent
             raise GeminiDeepResearchError(
                 "The optional 'google-genai' package is not installed. Install the Gemini SDK to use this provider."

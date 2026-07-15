@@ -439,7 +439,7 @@ class TestLLMRuntimeCallable:
     ``query_long`` (preferred) and ``query`` (fallback) so the
     AttributeError fallback path is exercised."""
 
-    def test_callable_uses_query_long_when_available(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_callable_uses_query_long_when_available(self) -> None:
         from src import llm_runtime
 
         class _FakeClient:
@@ -459,15 +459,6 @@ class TestLLMRuntimeCallable:
             def from_env(cls) -> "_FakeConfig":
                 return cls()
 
-        # Monkeypatch the import inside build_llm_callable.
-        import sys
-        import types
-
-        fake_mod = types.ModuleType("infrastructure.llm")
-        fake_mod.LLMClient = _FakeClient
-        fake_mod.OllamaClientConfig = _FakeConfig
-        monkeypatch.setitem(sys.modules, "infrastructure.llm", fake_mod)
-
         call = llm_runtime.build_llm_callable(
             model="m",
             seed=1,
@@ -476,12 +467,13 @@ class TestLLMRuntimeCallable:
             long_max_tokens=512,
             max_input_length=1024,
             review_timeout=10.0,
+            component_loader=lambda: (_FakeClient, _FakeConfig),
         )
         assert call is not None
         out = call("hello")
         assert out == "long-response: hello"
 
-    def test_callable_falls_back_to_query_when_query_long_missing(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_callable_falls_back_to_query_when_query_long_missing(self) -> None:
         from src import llm_runtime
 
         class _OldClient:
@@ -502,14 +494,6 @@ class TestLLMRuntimeCallable:
             def from_env(cls) -> "_FakeConfig":
                 return cls()
 
-        import sys
-        import types
-
-        fake_mod = types.ModuleType("infrastructure.llm")
-        fake_mod.LLMClient = _OldClient
-        fake_mod.OllamaClientConfig = _FakeConfig
-        monkeypatch.setitem(sys.modules, "infrastructure.llm", fake_mod)
-
         call = llm_runtime.build_llm_callable(
             model="m",
             seed=1,
@@ -518,6 +502,7 @@ class TestLLMRuntimeCallable:
             long_max_tokens=512,
             max_input_length=1024,
             review_timeout=10.0,
+            component_loader=lambda: (_OldClient, _FakeConfig),
         )
         assert call is not None
         assert call("ping") == "old-response: ping"
@@ -527,45 +512,37 @@ class TestAnalysisCLIInProcess:
     """Cover ``analysis._cli`` in-process so coverage tracks it (subprocess
     invocation does not contribute to ``--cov`` totals)."""
 
-    def test_cli_bibliography_completeness_pass(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_cli_bibliography_completeness_pass(self, tmp_path: Path) -> None:
         from src import analysis
 
         md = tmp_path / "manuscript"
         md.mkdir()
         (md / "references.bib").write_text("@article{k1,\n title={x}\n}\n", encoding="utf-8")
         (md / "01_intro.md").write_text("Cite [@k1].", encoding="utf-8")
-        monkeypatch.setattr(
-            "sys.argv",
-            [
-                "analysis.py",
-                "--stage",
-                "bibliography_completeness",
-                "--project-root",
-                str(tmp_path),
-            ],
-        )
+        argv = [
+            "--stage",
+            "bibliography_completeness",
+            "--project-root",
+            str(tmp_path),
+        ]
         with pytest.raises(SystemExit) as excinfo:
-            analysis._cli()
+            analysis._cli(argv)
         assert excinfo.value.code == 0
 
-    def test_cli_determinism_check_routes_correctly(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_cli_determinism_check_routes_correctly(self, tmp_path: Path) -> None:
         from src import analysis
 
         # Set up an empty repo skeleton — determinism_check will fail
         # (no run_summary.json, etc.) which is fine; we only need to
         # exercise the CLI dispatch.
-        monkeypatch.setattr(
-            "sys.argv",
-            [
-                "analysis.py",
-                "--stage",
-                "determinism_check",
-                "--project-root",
-                str(tmp_path),
-            ],
-        )
+        argv = [
+            "--stage",
+            "determinism_check",
+            "--project-root",
+            str(tmp_path),
+        ]
         with pytest.raises(SystemExit) as excinfo:
-            analysis._cli()
+            analysis._cli(argv)
         # Exit code is 1 (failed) because run_summary missing — this is
         # the expected behaviour and it proves the dispatch + return-code
         # plumbing in _cli works.

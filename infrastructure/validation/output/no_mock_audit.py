@@ -2,9 +2,9 @@
 
 The default mode is the existing CI gate: it fails only on prohibited
 mock-framework imports/calls or an incomplete scan. The explicit inventory mode
-classifies ``pytest.monkeypatch`` operations and is advisory unless the caller
-opts into ``--fail-on-dependency-replacement``. CI does not enable that flag
-while the measured migration debt is non-zero.
+classifies ``pytest.monkeypatch`` operations. CI enables
+``--fail-on-dependency-replacement`` and holds the measured replacement count
+at zero; the advisory mode remains available for exploratory local inventories.
 """
 
 from __future__ import annotations
@@ -217,6 +217,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="With --inventory, exit 1 when setattr/setitem-style debt is non-zero",
     )
     parser.add_argument(
+        "--max-dependency-replacements",
+        type=int,
+        help="With --inventory, fail when replacement debt exceeds this ratchet",
+    )
+    parser.add_argument(
         "--details",
         action="store_true",
         help="With --inventory, print every classified operation",
@@ -289,6 +294,8 @@ def main(
     args = parser.parse_args(list(argv) if argv is not None else None)
     if args.fail_on_dependency_replacement and not args.inventory:
         parser.error("--fail-on-dependency-replacement requires --inventory")
+    if args.max_dependency_replacements is not None and not args.inventory:
+        parser.error("--max-dependency-replacements requires --inventory")
     if args.details and not args.inventory:
         parser.error("--details requires --inventory")
 
@@ -298,18 +305,34 @@ def main(
             root,
             fail_on_dependency_replacement=args.fail_on_dependency_replacement,
         )
+        ratchet_exceeded = (
+            args.max_dependency_replacements is not None
+            and report.counts["dependency_replacement"] > args.max_dependency_replacements
+        )
         if args.json:
-            print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+            payload = report.to_dict()
+            payload["dependency_replacement_ceiling"] = args.max_dependency_replacements
+            payload["ratchet_exceeded"] = ratchet_exceeded
+            if ratchet_exceeded:
+                payload["status"] = "ratchet_exceeded"
+                payload["exit_code"] = 1
+            print(json.dumps(payload, indent=2, sort_keys=True))
         else:
             _print_inventory_report(report, details=args.details)
-        return report.exit_code
+            if ratchet_exceeded:
+                print(
+                    "FAIL: dependency replacement debt "
+                    f"{report.counts['dependency_replacement']} exceeds ceiling "
+                    f"{args.max_dependency_replacements}"
+                )
+        return 1 if ratchet_exceeded else report.exit_code
 
-    report = collect_lexical_audit(root)
+    lexical_report = collect_lexical_audit(root)
     if args.json:
-        print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+        print(json.dumps(lexical_report.to_dict(), indent=2, sort_keys=True))
     else:
-        _print_lexical_report(report)
-    return report.exit_code
+        _print_lexical_report(lexical_report)
+    return lexical_report.exit_code
 
 
 __all__ = [

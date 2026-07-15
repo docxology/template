@@ -19,7 +19,7 @@ from visualization.style import VIZ_CONFIG, SUBFIELD_NAMES
 
 def _format_subfield_label(sf: str) -> str:
     """Standardize subfield label using SUBFIELD_NAMES."""
-    return SUBFIELD_NAMES.get(sf, sf.replace("_", " ").title())
+    return str(SUBFIELD_NAMES.get(sf, sf.replace("_", " ").title()))
 
 
 def plot_growth_curve(

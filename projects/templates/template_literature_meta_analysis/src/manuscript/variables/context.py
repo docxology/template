@@ -43,7 +43,7 @@ class ExtractContext:
             payload = load_json(self.output_dir / name)
         if payload.get("_error") is not None:
             return {}
-        return payload
+        return dict(payload)
 
     def load_json_raw(self, name: str) -> Any:
         """Load json raw from a file."""

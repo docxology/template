@@ -134,6 +134,45 @@ def test_resolve_deps_empty_no_files(template_root):
 
 
 # ---------------------------------------------------------------------------
+# _resolve_deps — "template" dep_mode is a documented-but-unimplemented gap
+# (SYNTAX.md describes a per-dependency template/vendor seam; the code only
+# reads one scalar dep_mode). Rather than silently no-op (produce zero files
+# and zero seam, indistinguishable from a bug), _resolve_deps must fail
+# loudly so a fork cannot mistake the gap for a working feature.
+# ---------------------------------------------------------------------------
+
+
+def test_resolve_deps_template_mode_raises_not_implemented(template_root):
+    g = _make_grammar(domain="optimization", dep_mode="template", deps=["glossary_gen"])
+    spec = expand(g)
+    with pytest.raises(NotImplementedError, match="dep_mode='template'"):
+        _resolve_deps(spec, template_root)
+
+
+def test_resolve_deps_template_mode_empty_deps_does_not_raise(template_root):
+    # No deps requested → nothing to resolve, regardless of dep_mode.
+    g = _make_grammar(domain="optimization", dep_mode="template", deps=[])
+    spec = expand(g)
+    additions, manifest = _resolve_deps(spec, template_root)
+    assert additions == {}
+    assert manifest == {}
+
+
+def test_resolve_deps_unknown_dep_mode_raises_value_error(template_root):
+    g = _make_grammar(domain="optimization", dep_mode="bogus_mode", deps=["glossary_gen"])
+    spec = expand(g)
+    with pytest.raises(ValueError, match="Unknown dep_mode"):
+        _resolve_deps(spec, template_root)
+
+
+def test_materialize_template_mode_raises_not_implemented(tmp_path, template_root):
+    g = _make_grammar(domain="optimization", dep_mode="template", deps=["glossary_gen"])
+    spec = expand(g)
+    with pytest.raises(NotImplementedError):
+        materialize(spec, out_root=tmp_path, template_root=template_root)
+
+
+# ---------------------------------------------------------------------------
 # Materialize with deps
 # ---------------------------------------------------------------------------
 

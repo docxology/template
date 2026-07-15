@@ -91,6 +91,31 @@ def test_headlines_do_not_split_words() -> None:
         assert ss[name].splitLongWords == 0
 
 
+def test_headline_leading_clears_descenders() -> None:
+    """Regression guard for a glyph-collision bug: the display face is a
+    Didot-style serif with deep, thin descenders (comma tails, "g"/"y"). A
+    leading value too close to the fontSize (e.g. the old HeadlinePrimary
+    leading=24 for fontSize=23, a ~1.04x ratio) leaves a wrapped headline's
+    last-line descenders sitting almost on the following flowable's
+    ascenders/dots — at render resolution the two visually merge into what
+    reads as a stray glyph (observed on rendered pages: "library," + "closes"
+    below it looked like an extra squiggle). Require a >= ~1.15x ratio so the
+    line box itself reserves descender headroom, and a non-trivial spaceAfter
+    so the following Deck/Byline has clearance too.
+    """
+    ss = build_stylesheet(register_fonts())
+    for name in ("HeadlineLead", "HeadlinePrimary", "HeadlineSecondary", "HeadlineMinor"):
+        style = ss[name]
+        ratio = style.leading / style.fontSize
+        assert ratio >= 1.15, f"{name} leading/fontSize ratio {ratio:.3f} too tight for descenders"
+        assert style.spaceAfter >= 4, f"{name} spaceAfter {style.spaceAfter} too small to clear the next flowable"
+
+    # Deck needs its own small spaceBefore as defense in depth (it may follow
+    # a headline drawn via a different code path that ignores the headline's
+    # own spaceAfter, e.g. the manual-canvas lead-headline furniture).
+    assert ss["Deck"].spaceBefore > 0
+
+
 def test_stylesheet_named_colors_are_darker_than_muted() -> None:
     """INK should be near-black and darker than MUTED — a sanity check on the
     newsprint palette constants."""

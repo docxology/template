@@ -53,4 +53,4 @@ def extract_assertions(
         config.base_url,
         config.nanopub_path or "None (in-memory only)",
     )
-    return extract_assertions_llm(papers, config)
+    return list(extract_assertions_llm(papers, config))

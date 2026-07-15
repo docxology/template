@@ -11,7 +11,7 @@ and the compiler — never re-declared per method:
 | Module | Declares | Cardinality |
 |---|---|---|
 | `src/methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` | {{DSL_STEP_KIND_COUNT}} step kinds, {{DSL_TARGET_COUNT}} targets |
-| `src/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | {{DSL_UNIT_COUNT}} controlled units across 7 dimensions |
+| `src/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | {{DSL_UNIT_COUNT}} controlled units across 8 dimensions |
 | `src/methods_dsl/validation.py` | The four staged gates | {{DSL_GATE_COUNT}} gates, fixed order |
 
 ## Worked examples

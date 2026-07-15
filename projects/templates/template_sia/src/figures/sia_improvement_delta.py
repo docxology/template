@@ -7,8 +7,8 @@ with:
 * value annotations above / below each bar,
 * a cumulative gain line overlaid on a secondary y-axis.
 
-The figure communicates the *incremental* self-improvement signal at each
-refinement step rather than the raw accumulated score.
+The figure exposes whether feedback produced a measured change. A flat trace is
+retained as an honest negative result rather than relabelled as improvement.
 """
 
 from __future__ import annotations

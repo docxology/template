@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 from infrastructure.core.files import find_combined_pdf
@@ -12,7 +13,12 @@ from infrastructure.rendering._pdf_latex_validation import validate_pdf_structur
 logger = get_logger(__name__)
 
 
-def validate_transmission_bookends(project_root: Path, project_name: str) -> bool:
+def validate_transmission_bookends(
+    project_root: Path,
+    project_name: str,
+    *,
+    page_validator: Callable[[Path], bool] | None = None,
+) -> bool:
     """Validate transmission bookend single-page contract when enabled."""
     from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
     from infrastructure.publishing.transmission_page_check import validate_transmission_bookend_pages
@@ -30,7 +36,8 @@ def validate_transmission_bookends(project_root: Path, project_name: str) -> boo
 
     log_substep("Validating transmission bookend page span...", logger)
     combined_pdf, _ = located_pdf
-    return validate_transmission_bookend_pages(combined_pdf)
+    validator = page_validator or validate_transmission_bookend_pages
+    return validator(combined_pdf)
 
 
 def validate_pdfs(project_root: Path) -> bool:

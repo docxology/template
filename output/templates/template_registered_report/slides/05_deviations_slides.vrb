@@ -1,9 +1,0 @@
-\frametitle{Reading the register}
-\protect\phantomsection\label{reading-the-register}
-The register is the mechanism that keeps {[}Section @sec:results{]}
-honest: the confirmatory claim is restricted to the registered
-\texttt{primary\_score} outcome, and the exploratory
-\texttt{secondary\_score} endpoint is visible, labelled, and excluded
-from confirmatory interpretation. Forks should extend this ledger ---
-never edit the frozen registration --- whenever the executed analysis
-must diverge from plan.

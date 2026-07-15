@@ -94,8 +94,8 @@ def stream_query_impl(
 
     full_response: list[str] = []
     chunk_count = 0
-    first_chunk_time = None
-    last_chunk_time = None
+    first_chunk_time: float | None = None
+    last_chunk_time: float | None = None
     error_count = 0
     partial_saved = False
     _timeout_warned = False

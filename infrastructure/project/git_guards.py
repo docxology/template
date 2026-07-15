@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import fnmatch
+import hashlib
 import re
 import subprocess
 from pathlib import Path
@@ -108,14 +109,26 @@ GENERATED_OUTPUT_PATTERNS: tuple[str, ...] = (
 )
 
 PUBLIC_TEMPLATE_OUTPUT_PREFIXES: tuple[str, ...] = tuple(
-    prefix
-    for name in PUBLIC_PROJECT_NAMES
-    for prefix in (f"projects/{name}/output/", f"output/{name}/")
-    if name.startswith("templates/")
+    f"projects/{name}/output/" for name in PUBLIC_PROJECT_NAMES if name.startswith("templates/")
 )
 
 PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
-_MACHINE_LOCAL_HOME_RE = re.compile(rb"(?:/Users|/home)/[^/\s\"'<>]+/")
+PUBLIC_TEMPLATE_OUTPUT_MAX_FILES = 3500
+PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 200 * 1024 * 1024
+PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES = 100 * 1024 * 1024
+_MACHINE_LOCAL_HOME_RE = re.compile(
+    rb"(?:"
+    rb"(?:file://)?/(?:Users|home)/[^/\s\"'<>]+/"
+    rb"|"
+    rb"[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s\"'<>]+[\\/]+"
+    rb")"
+)
+_PUBLIC_OUTPUT_SECRET_RES: tuple[re.Pattern[bytes], ...] = (
+    re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
+    re.compile(rb"\bgh[pousr]_[A-Za-z0-9]{30,255}\b"),
+    re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b"),
+    re.compile(rb"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,255}\b"),
+)
 
 
 def is_public_template_output_path(path: str) -> bool:
@@ -199,18 +212,22 @@ def is_generated_artifact_path(path: str) -> bool:
     return any(fnmatch.fnmatch(normalized, pattern) for pattern in GENERATED_OUTPUT_PATTERNS)
 
 
-def is_oversized_public_template_output(repo_root: Path, path: str) -> bool:
+def is_oversized_public_template_output(
+    repo_root: Path, path: str, *, max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+) -> bool:
     """Check whether oversized public template output."""
     normalized = path.replace("\\", "/")
     if not is_public_template_output_path(normalized):
         return False
     try:
-        return (repo_root / normalized).stat().st_size > PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+        return (repo_root / normalized).stat().st_size > max_bytes
     except OSError:
         return False
 
 
-def tracked_generated_artifacts(repo_root: Path) -> list[str]:
+def tracked_generated_artifacts(
+    repo_root: Path, *, public_output_max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
+) -> list[str]:
     """Return the set of tracked generated artifacts."""
     proc = subprocess.run(
         ["git", "ls-files", "-z"],
@@ -222,8 +239,48 @@ def tracked_generated_artifacts(repo_root: Path) -> list[str]:
     return sorted(
         path
         for path in paths
-        if is_generated_artifact_path(path) or is_oversized_public_template_output(repo_root, path)
+        if is_generated_artifact_path(path)
+        or is_oversized_public_template_output(repo_root, path, max_bytes=public_output_max_bytes)
     )
+
+
+def public_template_output_budget_findings(
+    repo_root: Path,
+    *,
+    max_files: int = PUBLIC_TEMPLATE_OUTPUT_MAX_FILES,
+    max_total_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES,
+    max_duplicate_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES,
+) -> list[str]:
+    """Return ratchet violations for canonical tracked exemplar evidence."""
+    proc = subprocess.run(
+        ["git", "ls-files", "-z", "projects/templates/*/output/**"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
+    total_bytes = 0
+    blobs: dict[str, tuple[int, int]] = {}
+    for path in paths:
+        try:
+            data = (repo_root / path).read_bytes()
+        except OSError:
+            continue
+        size = len(data)
+        total_bytes += size
+        digest = hashlib.sha256(data).hexdigest()
+        prior_size, prior_count = blobs.get(digest, (size, 0))
+        blobs[digest] = (prior_size, prior_count + 1)
+    duplicate_bytes = sum(size * (count - 1) for size, count in blobs.values() if count > 1)
+
+    findings: list[str] = []
+    if len(paths) > max_files:
+        findings.append(f"public output file count {len(paths)} exceeds {max_files}")
+    if total_bytes > max_total_bytes:
+        findings.append(f"public output aggregate bytes {total_bytes} exceeds {max_total_bytes}")
+    if duplicate_bytes > max_duplicate_bytes:
+        findings.append(f"public output duplicate bytes {duplicate_bytes} exceeds {max_duplicate_bytes}")
+    return findings
 
 
 def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
@@ -233,6 +290,23 @@ def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
     be portable across clones. Restrict scanning to text-like extensions so
     binary payloads are never decoded or rejected for coincidental bytes.
     """
+    local_paths, _secrets = tracked_public_output_leaks(repo_root)
+    return local_paths
+
+
+def tracked_public_output_secrets(repo_root: Path) -> list[str]:
+    """Return tracked text evidence containing high-confidence secret formats.
+
+    The patterns deliberately cover only structured credential formats and
+    private-key headers.  Generic words such as ``token`` or ``password`` are
+    not evidence of a secret and would create an unsafe ignore culture.
+    """
+    _local_paths, secrets = tracked_public_output_leaks(repo_root)
+    return secrets
+
+
+def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
+    """Scan tracked publication text once for local paths and secrets."""
     proc = subprocess.run(
         ["git", "ls-files", "-z"],
         cwd=repo_root,
@@ -240,7 +314,8 @@ def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
         capture_output=True,
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
-    offenders: list[str] = []
+    local_paths: list[str] = []
+    secrets: list[str] = []
     for path in paths:
         normalized = path.replace("\\", "/")
         if not is_public_template_output_path(normalized):
@@ -252,5 +327,7 @@ def tracked_public_output_local_paths(repo_root: Path) -> list[str]:
         except OSError:
             continue
         if _MACHINE_LOCAL_HOME_RE.search(content):
-            offenders.append(normalized)
-    return sorted(offenders)
+            local_paths.append(normalized)
+        if any(pattern.search(content) for pattern in _PUBLIC_OUTPUT_SECRET_RES):
+            secrets.append(normalized)
+    return sorted(local_paths), sorted(secrets)

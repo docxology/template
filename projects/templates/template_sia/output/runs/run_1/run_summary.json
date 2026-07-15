@@ -13,7 +13,7 @@
       "results": "output/runs/run_1/gen_1/results.json",
       "evaluation": {
         "metric_name": "accuracy",
-        "metric_value": 0.5,
+        "metric_value": 1.0,
         "n_samples": 6
       }
     },
@@ -26,7 +26,7 @@
       "results": "output/runs/run_1/gen_2/results.json",
       "evaluation": {
         "metric_name": "accuracy",
-        "metric_value": 0.6667,
+        "metric_value": 1.0,
         "n_samples": 6
       }
     },
@@ -39,7 +39,7 @@
       "results": "output/runs/run_1/gen_3/results.json",
       "evaluation": {
         "metric_name": "accuracy",
-        "metric_value": 0.8333,
+        "metric_value": 1.0,
         "n_samples": 6
       }
     }

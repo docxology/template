@@ -12,8 +12,9 @@ template/
 │   ├── project/ core/
 │   └── logrotate.d/      # Operational rotation templates (no Python pkg)
 ├── scripts/
-│   ├── 00_setup_environment.py … 07_generate_executive_report.py
-│   ├── execute_pipeline.py execute_multi_project.py
+│   ├── pipeline/          # stage_00_setup.py … stage_12_metadata.py (canonical, cited by pipeline.yaml)
+│   ├── runner/            # execute_pipeline.py execute_multi_project.py bundle_executable.py archive_publication.py
+│   └── 00_setup_environment.py … 12_metadata_package.py  # thin compat wrappers re-exporting scripts/pipeline/
 ├── projects/                    # Typed program subfolders (`discover_projects`)
 │   ├── templates/               # Public exemplars (git-tracked)
 │   │   ├── template_active_inference/

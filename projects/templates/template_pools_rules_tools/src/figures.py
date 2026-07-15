@@ -27,7 +27,10 @@ from __future__ import annotations
 import logging
 import pathlib
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING
+
+from .cover_figure import generate_cover_art
+from .rule_hierarchy_figure import generate_rule_hierarchy
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +48,13 @@ try:
 except ImportError:
     _MPL_AVAILABLE = False
     logger.warning("figures: matplotlib not available; all figure functions return None")
+
+if TYPE_CHECKING:
+    # Only needed for the `_save()` type annotation below; matplotlib's own
+    # import above is intentionally guarded (this module must still import
+    # cleanly when matplotlib is absent), so this stays behind TYPE_CHECKING
+    # rather than adding an unconditional runtime import.
+    from matplotlib.figure import Figure
 
 # ---------------------------------------------------------------------------
 # Theme (matches docxology/template brand)
@@ -151,15 +161,17 @@ def _default_output_dir() -> pathlib.Path:
 def _resolve_output(
     output_dir: str | pathlib.Path | None,
     filename: str,
+    *,
+    default_output_dir=_default_output_dir,
 ) -> pathlib.Path:
     if output_dir is None:
-        output_dir = _default_output_dir()
+        output_dir = default_output_dir()
     out_dir = pathlib.Path(output_dir)
     _ensure_dir(out_dir)
     return out_dir / filename
 
 
-def _save(fig: Any, dest: pathlib.Path) -> pathlib.Path:
+def _save(fig: Figure, dest: pathlib.Path) -> pathlib.Path:
     fig.savefig(dest, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     logger.info("figures: saved %s", dest)
@@ -174,12 +186,14 @@ def _save(fig: Any, dest: pathlib.Path) -> pathlib.Path:
 def generate_architecture_overview(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "architecture_overview.png",
+    *,
+    default_output_dir=_default_output_dir,
 ) -> pathlib.Path | None:
     """Generate a three-panel figure showing fonds → rules → tools architecture."""
     if not _MPL_AVAILABLE:
         return None
 
-    dest = _resolve_output(output_dir, filename)
+    dest = _resolve_output(output_dir, filename, default_output_dir=default_output_dir)
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.5), facecolor=BG)
     panel_titles = (
         "Fonds (Data Pools)",
@@ -248,7 +262,7 @@ def generate_resource_counts(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "resource_counts.png",
     counts: dict[str, int] | None = None,
-    _data: Any = None,
+    _data: object = None,
 ) -> pathlib.Path | None:
     """Generate a bar chart of resource counts."""
     if not _MPL_AVAILABLE:
@@ -302,7 +316,7 @@ def generate_status_dashboard(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "status_dashboard.png",
     statuses: dict[str, str] | None = None,
-    integration_result: Any = None,
+    integration_result: object = None,
 ) -> pathlib.Path | None:
     """Generate a status dashboard of component validation results."""
     if not _MPL_AVAILABLE:
@@ -319,8 +333,9 @@ def generate_status_dashboard(
             "Validator": "ok",
             "Skill": "ok",
         }
-    if integration_result is not None and hasattr(integration_result, "statuses"):
-        statuses = integration_result.statuses
+    carried_statuses = getattr(integration_result, "statuses", None)
+    if carried_statuses is not None:
+        statuses = carried_statuses
 
     dest = _resolve_output(output_dir, filename)
     n = len(statuses)
@@ -474,161 +489,6 @@ def generate_fond_taxonomy(
         fontweight="bold",
         color="#0f172a",
         pad=10,
-    )
-    fig.tight_layout()
-    return _save(fig, dest)
-
-
-# ---------------------------------------------------------------------------
-# Figure 5: Rule Hierarchy — soft/strong tree per rule set
-# ---------------------------------------------------------------------------
-
-
-def generate_rule_hierarchy(
-    output_dir: str | pathlib.Path | None = None,
-    filename: str = "rule_hierarchy.png",
-) -> pathlib.Path | None:
-    """Generate a tree diagram of the two rule sets split into soft/strong branches."""
-    if not _MPL_AVAILABLE:
-        return None
-
-    dest = _resolve_output(output_dir, filename)
-    fig, ax = plt.subplots(figsize=(9, 5.5), facecolor=BG)
-    ax.set_facecolor(WHITE)
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 6)
-    ax.axis("off")
-
-    root_xy = (5, 5.3)
-    ax.add_patch(
-        mpatches.FancyBboxPatch(
-            (root_xy[0] - 1.4, root_xy[1] - 0.35),
-            2.8,
-            0.7,
-            boxstyle="round,pad=0.08",
-            facecolor="#0f172a",
-            edgecolor="none",
-        )
-    )
-    ax.text(
-        root_xy[0],
-        root_xy[1],
-        "rules/templates/",
-        ha="center",
-        va="center",
-        color="white",
-        fontsize=10,
-        fontweight="bold",
-    )
-
-    rule_sets = [
-        (
-            "template_project_rules",
-            2.5,
-            BLUE,
-            ["module-structure.yaml", "coverage-gate.yaml"],
-            ["style", "commit-msgs"],
-        ),
-        (
-            "template_manuscript_rules",
-            7.5,
-            TEAL,
-            ["reference-schema.yaml", "section-schema.yaml"],
-            ["citation prefs"],
-        ),
-    ]
-
-    for name, x, color, strong_items, soft_items in rule_sets:
-        y = 3.9
-        ax.plot([root_xy[0], x], [root_xy[1] - 0.35, y + 0.35], color=GRID, linewidth=1.4, zorder=1)
-        ax.add_patch(
-            mpatches.FancyBboxPatch(
-                (x - 1.5, y - 0.3),
-                3.0,
-                0.6,
-                boxstyle="round,pad=0.06",
-                facecolor=color,
-                edgecolor="none",
-            )
-        )
-        ax.text(
-            x, y, name, ha="center", va="center", color="white", fontsize=8.6, fontweight="bold"
-        )
-
-        strong_y = 2.4
-        ax.plot([x, x - 1.1], [y - 0.3, strong_y + 0.28], color=GRID, linewidth=1.0, zorder=1)
-        ax.add_patch(
-            mpatches.FancyBboxPatch(
-                (x - 1.1 - 1.15, strong_y - 0.28),
-                2.3,
-                0.56,
-                boxstyle="round,pad=0.05",
-                facecolor="white",
-                edgecolor=color,
-                linewidth=1.2,
-            )
-        )
-        ax.text(
-            x - 1.1,
-            strong_y,
-            "strong/",
-            ha="center",
-            va="center",
-            color=color,
-            fontsize=8,
-            fontweight="bold",
-        )
-        for j, item in enumerate(strong_items):
-            ax.text(
-                x - 1.1,
-                strong_y - 0.75 - j * 0.45,
-                item,
-                ha="center",
-                va="center",
-                color=NEUTRAL,
-                fontsize=7,
-            )
-
-        soft_y = 2.4
-        ax.plot([x, x + 1.1], [y - 0.3, soft_y + 0.28], color=GRID, linewidth=1.0, zorder=1)
-        ax.add_patch(
-            mpatches.FancyBboxPatch(
-                (x + 1.1 - 1.15, soft_y - 0.28),
-                2.3,
-                0.56,
-                boxstyle="round,pad=0.05",
-                facecolor="white",
-                edgecolor=NEUTRAL_LIGHT,
-                linewidth=1.2,
-            )
-        )
-        ax.text(
-            x + 1.1,
-            soft_y,
-            "soft/",
-            ha="center",
-            va="center",
-            color=NEUTRAL,
-            fontsize=8,
-            fontweight="bold",
-        )
-        for j, item in enumerate(soft_items):
-            ax.text(
-                x + 1.1,
-                soft_y - 0.75 - j * 0.45,
-                item,
-                ha="center",
-                va="center",
-                color=NEUTRAL,
-                fontsize=7,
-            )
-
-    ax.set_title(
-        "Rule Hierarchy: Two Rule Sets × Soft/Strong Branches",
-        fontsize=12,
-        fontweight="bold",
-        color="#0f172a",
-        pad=6,
     )
     fig.tight_layout()
     return _save(fig, dest)
@@ -876,100 +736,13 @@ def generate_pipeline_flow(
 
 
 # ---------------------------------------------------------------------------
-# Cover Art — deterministic title-page illustration
-# ---------------------------------------------------------------------------
-
-
-def generate_cover_art(
-    output_dir: str | pathlib.Path | None = None,
-    filename: str = "cover_art.png",
-) -> pathlib.Path | None:
-    """Generate a deterministic cover illustration for the PDF title page.
-
-    Renders the three-layer fonds/rules/tools motif as concentric bands
-    behind the paper title, matching the repository's brand palette. Fully
-    reproducible from code — no external image-generation dependency.
-    """
-    if not _MPL_AVAILABLE:
-        return None
-
-    dest = _resolve_output(output_dir, filename)
-    fig, ax = plt.subplots(figsize=(8.5, 11), facecolor="#0f172a")
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.axis("off")
-    ax.set_facecolor("#0f172a")
-
-    band_colors = [BLUE, TEAL, BLUE_LIGHT]
-    band_labels = ["FONDS", "RULES", "TOOLS"]
-    for i, (color, label) in enumerate(zip(band_colors, band_labels, strict=True)):
-        y0 = 0.06 + i * 0.09
-        ax.add_patch(
-            mpatches.Rectangle(
-                (0.08, y0), 0.84, 0.065, facecolor=color, edgecolor="none", alpha=0.9
-            )
-        )
-        ax.text(
-            0.5,
-            y0 + 0.0325,
-            label,
-            ha="center",
-            va="center",
-            color="white",
-            fontsize=13,
-            fontweight="bold",
-            alpha=0.85,
-        )
-
-    ax.plot([0.14, 0.86], [0.42, 0.42], color=NEUTRAL_LIGHT, linewidth=0.8, alpha=0.5)
-
-    ax.text(
-        0.5,
-        0.62,
-        "Pools, Rules,\nand Tools",
-        ha="center",
-        va="center",
-        color="white",
-        fontsize=34,
-        fontweight="bold",
-        linespacing=1.2,
-    )
-    ax.text(
-        0.5,
-        0.47,
-        "A Template-Integrated Resource Architecture",
-        ha="center",
-        va="center",
-        color=NEUTRAL_LIGHT,
-        fontsize=13,
-        style="italic",
-    )
-
-    ax.text(
-        0.5,
-        0.03,
-        "docxology/template  ·  research template exemplar",
-        ha="center",
-        va="center",
-        color=NEUTRAL_LIGHT,
-        fontsize=9,
-        alpha=0.8,
-    )
-
-    fig.savefig(dest, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor())
-    plt.close(fig)
-    logger.info("figures: saved cover art %s", dest)
-    return dest
-
-
-# ---------------------------------------------------------------------------
 # Wrapper
 # ---------------------------------------------------------------------------
 
 
 def all_figures(
     output_dir: str | pathlib.Path | None = None,
-    integration_result: Any = None,
+    integration_result: object = None,
     counts: dict[str, int] | None = None,
     statuses: dict[str, str] | None = None,
 ) -> dict[str, pathlib.Path | None] | None:

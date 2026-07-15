@@ -100,7 +100,7 @@ class Paper:
         Unknown keys are dropped silently so older cache files / hand-written
         records remain compatible across schema additions.
         """
-        allowed = {f for f in cls.__dataclass_fields__}  # type: ignore[attr-defined]
+        allowed = {f for f in cls.__dataclass_fields__}
         kwargs = {k: v for k, v in data.items() if k in allowed}
         return cls(**kwargs)
 

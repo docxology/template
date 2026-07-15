@@ -86,10 +86,11 @@ class TestHandleRequest:
         payload = json.loads(resp["result"]["content"][0]["text"])
         assert any(op["module"] == "infrastructure.skills" for op in payload["operations"])
 
-    def test_tools_call_list_skills_includes_public_template_agent_skill(self) -> None:
+    def test_tools_call_list_skills_includes_agents_skill_lanes(self) -> None:
         resp = handle_request({"jsonrpc": "2.0", "id": 5, "method": "tools/call", "params": {"name": "list_skills"}})
         payload = json.loads(resp["result"]["content"][0]["text"])
         paths = {skill["path"] for skill in payload["skills"]}
+        assert ".agents/skills/context-fundamentals/SKILL.md" in paths
         assert "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md" in paths
 
     def test_unknown_tool_is_error(self) -> None:

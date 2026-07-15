@@ -250,12 +250,9 @@ class TestZenodoClient:
         assert client.config == config
         assert "Bearer test" in client.headers["Authorization"]
 
-    def test_create_deposition_success(self, zenodo_test_server, monkeypatch):
+    def test_create_deposition_success(self, zenodo_test_server):
         """Test successful deposition creation."""
-        config = ZenodoConfig(access_token="test")
-
-        # Override the base_url property for testing
-        monkeypatch.setattr(config, "base_url", zenodo_test_server.url_for(""))
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         result = client.create_deposition({"title": "Test"})
@@ -273,12 +270,9 @@ class TestZenodoClient:
         with pytest.raises(PublishingError):
             client.create_deposition({"title": "Test"})
 
-    def test_upload_file_success(self, tmp_path, zenodo_test_server, monkeypatch):
+    def test_upload_file_success(self, tmp_path, zenodo_test_server):
         """Test successful file upload."""
-        config = ZenodoConfig(access_token="test")
-
-        # Override the base_url property for testing
-        monkeypatch.setattr(config, "base_url", zenodo_test_server.url_for(""))
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
 
         # Create test file
