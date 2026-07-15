@@ -3,183 +3,186 @@ entering extended mode
 (./_combined_manuscript.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/xetex.def)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/size10.clo))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics-def/xetex.def)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsmath.sty
 For additional information on amsmath, use the `?' option.
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
-(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math-xetex.s
-ty (/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty)
- (/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fix-cm.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/ts1enc.def))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math-table.t
-ex))) (/usr/local/texlive/2026/texmf-dist/tex/latex/upquote/upquote.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/textcomp.sty))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype-xetex.def)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype.cfg))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/parskip/parskip.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/longtable.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/calc.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/footnotehyper/footnotehyper.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)))
-(/usr/local/texlive/2026/texmf-dist/tex/generic/babel/babel.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/babel/xebabel.def)
-(/usr/local/texlive/2026/texmf-dist/tex/generic/babel/locale/en/babel-english.t
-ex) (/usr/local/texlive/2026/texmf-dist/tex/generic/babel-english/english.ldf))
- (/usr/local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/subcaption.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/ltcaption.sty)))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
-ty)) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def)
-(/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
-(/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
-
-(/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
-))) (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/seqsplit/seqsplit.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amscls/amsthm.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
-(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/placeins/placeins.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/multirow/multirow.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/unicode-math/unicode-math.st
+y (/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3backend/l3backend-xetex.de
+f))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/unicode-math/unicode-math-xe
+tex.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e
+.sty) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/fontspec/fontspec.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/fix-cm.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/unicode-math/unicode-math-ta
+ble.tex)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/upquote/upquote.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/textcomp.sty))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/microtype.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/microtype-xetex.de
+f) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/microtype.cfg))
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/parskip/parskip.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/array.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/calc.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/footnotehyper/footnotehyper.
+sty) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/trig.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/babel.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/xebabel.def)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/locale/en/babel-engl
+ish.tex)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel-english/english.ldf)
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/natbib/natbib.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/subcaption.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/caption.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/caption3.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/ltcaption.sty)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/float/float.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/bookmark/bookmark.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.
+sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/gettitlestring/gettitlestr
+ing.sty))
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)
+)) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/hyperref/hxetex.def
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/rerunfilecheck/rerunfilechec
+k.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/uniquecounter/uniquecounte
+r.sty)))
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def))
+(/Users/hum/Library/texmf/tex/latex/seqsplit/seqsplit.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amscls/amsthm.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/ifvtex.sty))
+(/Users/hum/Library/texmf/tex/latex/placeins/placeins.sty)
+(/Users/hum/Library/texmf/tex/latex/multirow/multirow.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/listings.sty
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/lstpatch.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/lstmisc.sty)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/listings.cfg))
 ==> First Aid for listings.sty no longer applied!
     Expected:
         2024/09/23 1.10c (Carsten Heinz)
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-(/usr/local/texlive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty)
+(/Users/hum/Library/texmf/tex/latex/cleveref/cleveref.sty)
 ==> First Aid for cleveref.sty applied!
-(/usr/local/texlive/2026/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/xspace.sty)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/relsize/relsize.sty))
+(/Users/hum/Library/texmf/tex/latex/algorithm2e/algorithm2e.sty)
 (./_combined_manuscript.aux)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
-)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/mt-LatinModernRoma
+n.cfg)
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 [1] (./_combined_manuscript.toc
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg) [1])
-[2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
-Overfull \hbox (138.2228pt too wide) in paragraph at lines 998--999
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/mt-msa.cfg)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/mt-msb.cfg)
+[1]) [2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
+Overfull \hbox (138.22891pt too wide) in paragraph at lines 1009--1010
 [][]\TU/lmr/m/n/10 {{#fig:hypothesis_dashboard}} 
 [12] [13]
-Overfull \hbox (100.84279pt too wide) in paragraph at lines 1011--1012
+Overfull \hbox (100.83806pt too wide) in paragraph at lines 1022--1023
 [][]\TU/lmr/m/n/10 {{#fig:growth_curve}} 
 [14]
-Overfull \hbox (105.87073pt too wide) in paragraph at lines 1074--1075
+Overfull \hbox (105.87892pt too wide) in paragraph at lines 1085--1086
 [][]\TU/lmr/m/n/10 {{#fig:field_summary}} 
 
-Overfull \hbox (105.82016pt too wide) in paragraph at lines 1076--1077
+Overfull \hbox (131.80548pt too wide) in paragraph at lines 1087--1088
 [][]\TU/lmr/m/n/10 {{#fig:subfield_distribution}} 
 [15]
-Overfull \hbox (115.5728pt too wide) in paragraph at lines 1078--1079
+Overfull \hbox (115.56807pt too wide) in paragraph at lines 1089--1090
 [][]\TU/lmr/m/n/10 {{#fig:subfield_timeline}} 
 [16]
-Overfull \hbox (131.7369pt too wide) in paragraph at lines 1117--1118
+Overfull \hbox (131.73871pt too wide) in paragraph at lines 1128--1129
 [][]\TU/lmr/m/n/10 {{#fig:citation_distribution}} 
 [17]
-Overfull \hbox (90.28279pt too wide) in paragraph at lines 1142--1143
+Overfull \hbox (90.27806pt too wide) in paragraph at lines 1153--1154
 [][]\TU/lmr/m/n/10 {{#fig:top_venues}} 
 [18]
-Overfull \hbox (130.04279pt too wide) in paragraph at lines 1167--1168
+Overfull \hbox (130.03806pt too wide) in paragraph at lines 1178--1179
 [][]\TU/lmr/m/n/10 {{#fig:author_productivity}} 
 [19] [20] [21]
-Overfull \hbox (115.33797pt too wide) in paragraph at lines 1275--1276
+Overfull \hbox (115.3426pt too wide) in paragraph at lines 1286--1287
 [][]\TU/lmr/m/n/10 {{#fig:topic_term_bars}} 
 
-Overfull \hbox (113.6228pt too wide) in paragraph at lines 1285--1286
+Overfull \hbox (113.61807pt too wide) in paragraph at lines 1296--1297
 [][]\TU/lmr/m/n/10 {{#fig:pca_embeddings}} 
 [22]
-Overfull \hbox (91.96689pt too wide) in paragraph at lines 1287--1288
+Overfull \hbox (91.96178pt too wide) in paragraph at lines 1298--1299
 [][]\TU/lmr/m/n/10 {{#fig:dendrogram}} 
 [23]
-Overfull \hbox (105.53445pt too wide) in paragraph at lines 1295--1296
+Overfull \hbox (105.52371pt too wide) in paragraph at lines 1306--1307
 [][]\TU/lmr/m/n/10 {{#fig:term_heatmap}} 
 [24]
-Overfull \hbox (116.97243pt too wide) in paragraph at lines 1331--1332
+Overfull \hbox (116.95807pt too wide) in paragraph at lines 1342--1343
 [][]\TU/lmr/m/n/10 {{#fig:entity_bar_chart}} 
 [25] [26]
-Overfull \hbox (126.15279pt too wide) in paragraph at lines 1408--1409
+Overfull \hbox (126.14806pt too wide) in paragraph at lines 1417--1418
 [][]\TU/lmr/m/n/10 {{#fig:similarity_heatmap}} 
 
-Overfull \hbox (91.9399pt too wide) in paragraph at lines 1410--1411
+Overfull \hbox (91.93585pt too wide) in paragraph at lines 1419--1420
 [][]\TU/lmr/m/n/10 {{#fig:word_cloud}} 
 [27]
-Overfull \hbox (132.52747pt too wide) in paragraph at lines 1412--1413
+Overfull \hbox (132.52986pt too wide) in paragraph at lines 1421--1422
 [][]\TU/lmr/m/n/10 {{#fig:cooccurrence_matrix}} 
 [28] [29]
-Overfull \hbox (115.2649pt too wide) in paragraph at lines 1506--1507
+Overfull \hbox (115.2606pt too wide) in paragraph at lines 1515--1516
 [][]\TU/lmr/m/n/10 {{#fig:citation_network}} 
 [30]
-Overfull \hbox (126.1928pt too wide) in paragraph at lines 1508--1509
+Overfull \hbox (126.18806pt too wide) in paragraph at lines 1517--1518
 [][]\TU/lmr/m/n/10 {{#fig:degree_distribution}} 
-[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41]
+[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42]
 (./_combined_manuscript.bbl)
 
 Package caption Warning: Unused \captionsetup[sub] on input line 213.
 See the caption package documentation for explanation.
 
-[42] (./_combined_manuscript.aux) )
+[43] (./_combined_manuscript.aux) )
 (see the transcript file for additional information)
-Output written on _combined_manuscript.pdf (43 pages).
+Output written on _combined_manuscript.pdf (44 pages).
 Transcript written on _combined_manuscript.log.

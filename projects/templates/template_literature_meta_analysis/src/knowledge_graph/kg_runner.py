@@ -77,6 +77,20 @@ def run_knowledge_graph_pipeline(args: argparse.Namespace, *, project_root: Path
     papers = [p for p in corpus.papers if p.year is None or p.year >= KG_MIN_YEAR]
     logger.info("Loaded %d papers (filtered >= %d)", len(papers), KG_MIN_YEAR)
 
+    # Deterministic subsampling for the LLM stage.
+    from config_loader import _load_yaml
+    from literature.sampling import load_sampling_config, sample_papers
+    raw_cfg = _load_yaml(config_path) if config_path.exists() else {}
+    project_cfg = raw_cfg.get("project_config", {})
+    fraction, seed = load_sampling_config(project_cfg)
+    if fraction < 1.0:
+        sampled = sample_papers(papers, fraction=fraction, seed=seed)
+        logger.info(
+            "Subsampling: %d/%d papers (%.0f%%, seed=%d) for LLM extraction",
+            len(sampled), len(papers), fraction * 100, seed,
+        )
+        papers = sampled
+
     nanopub_path = data_dir / "nanopublications.jsonl"
     legacy_checkpoint = output_dir / "llm_checkpoint.jsonl"
     if legacy_checkpoint.exists():

@@ -139,10 +139,10 @@ pattern: no computational logic resides in scripts.
 \begin{enumerate}
 \item
   \textbf{Retrieval} (\breaktt{01\_literature\_search.py}) --- dispatch
-  the configured query across 7 engines (arXiv, OpenAlex, Semantic
-  Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv), merge, and
-  de-duplicate into \texttt{corpus.jsonl}. Each engine is an isolated
-  adapter exposing a uniform
+  the configured query across 9 engines (arXiv, OpenAlex, Semantic
+  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
+  bioRxiv/medRxiv), merge, and de-duplicate into \texttt{corpus.jsonl}.
+  Each engine is an isolated adapter exposing a uniform
   \texttt{search(query)\ -\textgreater{}\ list{[}Paper{]}} interface;
   engines that are keyless need no credentials, while Semantic Scholar
   uses a key when present. SovietRxiv and ChinaRxiv share a unified API
@@ -164,7 +164,7 @@ pattern: no computational logic resides in scripts.
   \breaktt{hypothesis\_scores.json}, and
   \breaktt{assertion\_summary.json}.
 \item
-  \textbf{Figures} (\breaktt{04\_generate\_figures.py}) --- render 18
+  \textbf{Figures} (\breaktt{04\_generate\_figures.py}) --- render 21
   publication-ready visualizations from the analysis JSON outputs. All
   figures use a colourblind-safe palette (Wong 2011), high-contrast
   labels at \(\geq 16\)pt, and a headless matplotlib backend (Agg).
@@ -175,8 +175,8 @@ pattern: no computational logic resides in scripts.
   not a silent gap.
 \item
   \textbf{Fulltext assessment} (\breaktt{06\_fulltext\_assessment.py})
-  --- report abstract coverage (55.5\%), open-access status (14.4\%),
-  and PDF availability (40.9\%) across the corpus.
+  --- report abstract coverage (61.6\%), open-access status (24.6\%),
+  and PDF availability (54.6\%) across the corpus.
 \end{enumerate}
 \end{frame}
 
@@ -187,7 +187,7 @@ committed synthetic seed corpus drives every stage with fixed seeds
 (seed = 42 for NMF, SVD, and graph layouts), so re-running produces
 byte-identical outputs. A live run with engines enabled and credentials
 supplied replaces the seed corpus with real records --- as in this
-instance, which retrieved 2302 live records. The template is
+instance, which retrieved 2334 live records. The template is
 domain-agnostic: the search term, query, keyword set, subfield taxonomy,
 and hypotheses all come from \breaktt{manuscript/config.yaml}.
 \end{frame}
@@ -203,7 +203,8 @@ A single \breaktt{manuscript/config.yaml} controls:
   relevance keywords, start year, max results, resume/clear behaviour
 \item
   \textbf{Engine toggles}: arXiv, OpenAlex, Semantic Scholar, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv (each independently enabled or disabled)
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each
+  independently enabled or disabled)
 \item
   \textbf{SovietRxiv/ChinaRxiv settings}: optional \texttt{api\_email}
   for the polite pool, \texttt{source} filter (\texttt{russiarxiv} or

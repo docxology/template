@@ -358,10 +358,18 @@ def weak_component_coverage(graph: WorkflowGraph) -> float:
     if not graph.nodes:
         return 0.0
 
+    known_ids = {n.node_id for n in graph.nodes}
     undirected: dict[str, set[str]] = {n.node_id: set() for n in graph.nodes}
     for edge in graph.edges:
-        undirected.setdefault(edge.source_node_id, set()).add(edge.target_node_id)
-        undirected.setdefault(edge.target_node_id, set()).add(edge.source_node_id)
+        # Skip edges with phantom endpoints not in graph.nodes — including
+        # them would inflate component sizes beyond len(graph.nodes) and
+        # could drive the result above 1.0, violating the [0.0, 1.0]
+        # contract. This can happen with hand-built WorkflowGraph objects
+        # whose edges were not filtered through build_workflow_graph.
+        if edge.source_node_id not in known_ids or edge.target_node_id not in known_ids:
+            continue
+        undirected[edge.source_node_id].add(edge.target_node_id)
+        undirected[edge.target_node_id].add(edge.source_node_id)
 
     visited_global: set[str] = set()
     largest = 0

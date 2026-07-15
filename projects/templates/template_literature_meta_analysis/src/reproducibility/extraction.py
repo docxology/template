@@ -43,6 +43,7 @@ from reproducibility.models import (
     get_processed_paper_ids,
     merge_workflow_graphs,
 )
+from reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_SYSTEM_PROMPT
 from reproducibility.prompts import build_prompt
 
 logger = logging.getLogger(__name__)
@@ -81,7 +82,7 @@ def extract_workflow_nodes(paper: Paper, fulltext: str, config: LLMConfig) -> li
 
     for attempt in range(1, config.max_retries + 1):
         try:
-            raw, _meta = call_ollama(prompt, config)
+            raw, _meta = call_ollama(prompt, config, system_prompt=_REPRO_SYSTEM_PROMPT)
             parsed = parse_llm_response(raw)
             nodes: list[WorkflowNode] = []
 

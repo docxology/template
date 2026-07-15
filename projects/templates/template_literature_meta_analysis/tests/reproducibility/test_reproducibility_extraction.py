@@ -255,3 +255,126 @@ def test_extract_workflow_graphs_llm_skips_papers_without_fulltext(httpserver: H
 
     assert graphs == []
     assert len(httpserver.log) == 0
+
+
+def test_extract_workflow_nodes_sends_reproducibility_system_prompt(httpserver: HTTPServer):
+    """call_ollama must receive the reproducibility system prompt, not the KG one.
+
+    The shared call_ollama() defaults to knowledge_graph.llm_prompts._SYSTEM_PROMPT
+    when system_prompt is not passed. The reproducibility module must pass its own
+    system prompt (describing the workflow-graph schema) — otherwise the LLM gets
+    a system prompt about hypothesis-support assertions and emits nodes with empty
+    node_type values that the validation layer silently drops. This test verifies
+    the request body's 'system' field matches the reproducibility module's prompt.
+    """
+    httpserver.expect_request("/api/generate", method="POST").respond_with_json(
+        {"response": json.dumps(_valid_workflow_response()), "done": True}
+    )
+
+    config = LLMConfig(
+        base_url=httpserver_base_url(httpserver),
+        model="test-model",
+        max_retries=1,
+    )
+    paper = make_paper(doi="10.1/sysprompt")
+
+    extract_workflow_nodes(paper, "some fulltext", config)
+
+    # Inspect the actual request body sent to the HTTP server.
+    request = httpserver.log[0][0]
+    body = json.loads(request.data)
+    from reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_PROMPT
+
+    assert body["system"] == _REPRO_PROMPT
+    assert "workflow graph" in body["system"]
+    assert "source_quote" in body["system"]
+
+
+def test_extract_workflow_nodes_coerces_non_numeric_rating(httpserver: HTTPServer):
+    """A non-numeric reproducibility_rating falls back to 1, not a dropped node."""
+    response_data = [
+        {
+            "node_id": "n1",
+            "node_name": "Bad Rating Step",
+            "node_type": "method",
+            "source_quote": "We applied the standard preprocessing pipeline.",
+            "description": "Preprocessing.",
+            "reproducibility_rating": "not_a_number",
+            "rationale": "Rating was malformed.",
+            "depends_on": [],
+        },
+    ]
+    httpserver.expect_request("/api/generate", method="POST").respond_with_json(
+        {"response": json.dumps(response_data), "done": True}
+    )
+
+    config = LLMConfig(
+        base_url=httpserver_base_url(httpserver),
+        model="test-model",
+        max_retries=1,
+    )
+
+    nodes = extract_workflow_nodes(make_paper(doi="10.1/badrating"), "some fulltext", config)
+
+    assert len(nodes) == 1
+    # Non-numeric rating coerces to 1 (the floor), node is not dropped.
+    assert nodes[0].reproducibility_rating == 1
+    assert nodes[0].node_id == "n1"
+
+
+def test_extract_workflow_graphs_llm_resumes_from_output_path(httpserver: HTTPServer, tmp_path):
+    """When output_path already exists, its graphs are loaded and merged (resume)."""
+    paper_a = make_paper(doi="10.1/resume-a", title="Resume Paper A")
+    paper_b = make_paper(doi="10.1/resume-b", title="Resume Paper B")
+
+    fulltext_dir = tmp_path / "fulltext"
+    fulltext_dir.mkdir()
+    for paper in (paper_a, paper_b):
+        (fulltext_dir / f"{safe_filename(paper.canonical_id)}.txt").write_text(
+            "Full text for pipeline decomposition.", encoding="utf-8"
+        )
+
+    # Pre-populate output_path with paper_a already processed.
+    from reproducibility.models import (
+        WorkflowNode,
+        build_workflow_graph,
+        serialize_workflow_graphs,
+    )
+
+    existing_node = WorkflowNode(
+        node_id="pre_n1",
+        node_name="Pre-existing Source",
+        node_type=NodeType.SOURCE,
+        source_quote="Pre-existing quote for resume test.",
+        description="Pre-existing node.",
+        reproducibility_rating=3,
+        paper_id=paper_a.canonical_id,
+    )
+    existing_graph = build_workflow_graph(paper_a.canonical_id, [existing_node])
+    output_path = tmp_path / "workflow_graphs.jsonl"
+    output_path.write_text(
+        "\n".join(serialize_workflow_graphs([existing_graph])) + "\n", encoding="utf-8"
+    )
+
+    # Only paper_b should hit the LLM.
+    httpserver.expect_request("/api/generate", method="POST").respond_with_json(
+        {"response": json.dumps(_valid_workflow_response()), "done": True}
+    )
+
+    config = LLMConfig(
+        base_url=httpserver_base_url(httpserver),
+        model="test-model",
+        max_retries=1,
+    )
+
+    graphs = extract_workflow_graphs_llm(
+        [paper_a, paper_b],
+        fulltext_dir,
+        config,
+        output_path=output_path,
+    )
+
+    # Only paper_b hit the LLM (paper_a was already in output_path).
+    assert len(httpserver.log) == 1
+    graph_ids = {g.paper_id for g in graphs}
+    assert graph_ids == {paper_a.canonical_id, paper_b.canonical_id}

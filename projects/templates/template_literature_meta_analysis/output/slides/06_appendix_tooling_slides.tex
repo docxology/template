@@ -196,7 +196,7 @@ This manuscript was generated from a live retrieval run. To reproduce:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Live search (all 7 engines, max 1000 per engine)}
+\CommentTok{\# Live search (all 9 engines, max 1000 per engine)}
 \ExtensionTok{uv}\NormalTok{ run python scripts/01\_literature\_search.py }\AttributeTok{{-}{-}query}\NormalTok{ modafinil }\AttributeTok{{-}{-}max{-}results}\NormalTok{ 1000 }\AttributeTok{{-}{-}no{-}resume}
 
 \CommentTok{\# Analysis pipeline}
@@ -205,6 +205,8 @@ This manuscript was generated from a live retrieval run. To reproduce:
 \ExtensionTok{uv}\NormalTok{ run python scripts/04\_generate\_figures.py }\AttributeTok{{-}{-}dpi}\NormalTok{ 300}
 \ExtensionTok{uv}\NormalTok{ run python scripts/05\_inject\_variables.py}
 \ExtensionTok{uv}\NormalTok{ run python scripts/06\_fulltext\_assessment.py}
+\ExtensionTok{uv}\NormalTok{ run python scripts/07\_literature\_evaluation.py}
+\ExtensionTok{uv}\NormalTok{ run python scripts/09\_export\_bibliography.py}
 \end{Highlighting}
 \end{Shaded}
 \end{frame}
@@ -228,7 +230,8 @@ skipped sources. The CLI supports per-engine skip flags:
 \texttt{-\/-skip-arxiv}, \texttt{-\/-skip-s2},
 \breaktt{-\/-skip-openalex}, \breaktt{-\/-skip-crossref},
 \texttt{-\/-skip-pubmed}, \breaktt{-\/-skip-sovietrxiv},
-\breaktt{-\/-skip-chinarxiv}.
+\breaktt{-\/-skip-chinarxiv}, \breaktt{-\/-skip-europepmc},
+\breaktt{-\/-skip-biorxiv}.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Deep Research (Offline Fixture
@@ -266,8 +269,7 @@ supplying \texttt{OPENAI\_API\_KEY} / \texttt{GEMINI\_API\_KEY}:
 \protect\phantomsection\label{test-suite}
 Every stage is covered by a no-mocks test suite (real computation and
 \breaktt{pytest-httpserver} for network adapters) gated at \(\geq 90\%\)
-statement coverage on \texttt{src/}. The suite includes 819 tests
-covering:
+statement coverage on \texttt{src/}. The suite covers:
 
 \begin{itemize}
 \tightlist
@@ -275,9 +277,9 @@ covering:
   Record models and serialization (deduplication, canonical ID
   hierarchy)
 \item
-  All 7 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv) with pytest-httpserver integration
-  tests
+  All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with
+  pytest-httpserver integration tests
 \item
   Search runner (multi-engine dispatch, relevance filtering,
   resume/clear, YAML config)

@@ -267,3 +267,182 @@ config) — flagged here for whoever next touches pytest's import-mode config.
 - Secrets sweep (advisor-prompted): `git diff` over the module's changed files, grepped for key/secret/token/password patterns → zero hits.
 - RedTeam QuickAttack (Cato substitute, Gate H unavailable): surfaced that `engine_enabled()` remains unwired into production (only `dispatch_ordered` is called from `search_runner.py`), so the bug fix has zero runtime behavior impact on the shipped feature. Remediated by adding an explicit module-docstring disclaimer in `engine_dispatch.py` stating this plainly, so the fix is not mistaken for a production behavior change.
 - Advisor call: flagged an ISA/task mismatch in the global session registry (`--auto-state` resolved to an unrelated `hum_nexus` ISA) — a known v6.2.x-deferred gap (project ISAs are not yet auto-discovered by the state registry); confirmed no hum_nexus ISC was touched this session. All other advisor-raised gaps (regression-test validity, cache-off rerun, no-mocks check, script end-to-end run, doc re-sweep, secrets sweep) were executed above.
+
+## Increment 3 — Adversarial review, hardening, and first real end-to-end run (2026-07-13)
+
+**Trigger:** user asked for a fresh adversarial read of the increment-1 and
+increment-2 work, not a re-confirmation that tests pass. "Don't just re-run
+the existing tests and call it done."
+
+**What was found and fixed:**
+
+1. **BUG (critical): wrong system prompt sent to LLM.** `call_ollama()` in
+   `knowledge_graph/llm_client.py` hardcoded `knowledge_graph.llm_prompts._
+   SYSTEM_PROMPT` as the system prompt for every LLM call. The
+   reproducibility module's `extraction.py` called `call_ollama(prompt,
+   config)` without passing its own system prompt (from `reproducibility/
+   prompts.py`, which describes the workflow-graph schema, node types, and
+   JSON format). Result: the LLM received a system prompt about
+   hypothesis-support assertions — a completely different task — and
+   emitted nodes with empty `node_type=""` that the validation layer
+   silently dropped, producing zero-node graphs. Tests did not catch this
+   because pytest-httpserver returns canned responses regardless of what
+   is sent to it. Fixed by adding an optional `system_prompt` parameter to
+   `call_ollama()` (keyword-only, defaults to `None` → falls back to the
+   knowledge-graph prompt for backward compatibility) and passing
+   `reproducibility.prompts._SYSTEM_PROMPT` from `extraction.py`. Added a
+   test (`test_extract_workflow_nodes_sends_reproducibility_system_prompt`)
+   that inspects the actual HTTP request body to verify the correct system
+   prompt is sent.
+
+2. **BUG (moderate): `weak_component_coverage` (rc5) could exceed 1.0.**
+   A hand-built `WorkflowGraph` whose edges reference `node_id`s not in
+   `graph.nodes` (phantom endpoints) would inflate the component size
+   beyond `len(graph.nodes)`, producing a result > 1.0 — violating the
+   documented `[0.0, 1.0]` contract. `build_workflow_graph` prevents this
+   in the normal pipeline (dangling references are counted, not turned
+   into edges), but hand-built test fixtures and any future direct-edge
+   construction bypass it. Fixed by filtering phantom-edge endpoints before
+   building the undirected adjacency. Added a test
+   (`test_phantom_edge_endpoints_do_not_inflate_rc5`).
+
+3. **Documentation gap: cycle handling undocumented.** `build_workflow_graph`
+   does not prevent cycles (A depends on B, B depends on A) or self-loops.
+   All scoring functions handle cycles correctly (BFS `visited` sets,
+   degree functions are inherently cycle-safe), but this was never
+   documented. Added a "Cycle handling" section to `models.py`'s module
+   docstring and a corresponding invariant in `AGENTS.md`. Added tests
+   (`test_two_node_cycle_scores_without_infinite_loop`,
+   `test_self_referencing_node_scores_without_error`).
+
+4. **Coverage gaps closed.** extraction.py was at 95.58% (uncovered:
+   non-numeric `reproducibility_rating` coercion, `output_path` resume
+   from file). Added tests
+   (`test_extract_workflow_nodes_coerces_non_numeric_rating`,
+   `test_extract_workflow_graphs_llm_resumes_from_output_path`).
+   extraction.py is now at 100.00%.
+
+5. **Upstream issues #2 and #3 remain unanswered.** Both GitHub issues
+   against the ARA paper's repo (AndresLaverdeMarin/agentic_reproducibility_
+   assessment) remain OPEN with zero comments. The implementation's
+   interpretation (rc3 counts method+experiment references only; rc4
+   normalizes by |sources|*|sinks|) matches the interpretation described
+   in those issues. No code change needed; the issues are documented as
+   deliberate modeling choices in `scoring.py`'s module docstring.
+
+6. **First-ever real end-to-end run.** Ran
+   `scripts/10_reproducibility_assessment.py` against two real papers'
+   fulltext with Ollama gemma3:4b. Before the system-prompt fix: 0 nodes
+   per paper (all dropped for empty `node_type`). After the fix: 9 and 8
+   workflow nodes respectively, with correct node-type classification,
+   quote verification rate of 1.0, and reasonable composite scores (0.87
+   and 0.95). This is the first time this module has ever run against real
+   data — all prior testing was via pytest-httpserver stubs.
+
+**Verification:**
+- `pytest tests/` → 1106 passed (up from 1099), coverage 96.41% (up from
+  96.29%).
+- `ruff check --no-cache` on all modified files → clean.
+- `mypy --no-incremental` on all modified files → clean.
+- End-to-end: `scripts/10_reproducibility_assessment.py` against real
+  Ollama + real fulltext → 2 papers, 17 nodes total, 14 edges, 0
+  dangling references, quote_verification_rate=1.0.
+
+## Increment 4 — Comprehensive meta-analysis exemplar improvement (2026-07-13)
+
+**Trigger:** user asked to "comprehensively review and improve the
+meta-analysis exemplar, ensure it makes full best use of the real methods."
+
+**What was found and fixed:**
+
+1. **Pipeline stage gap: `10_reproducibility_assessment.py` missing from
+   config.yaml.** The script existed and passed tests, but was not listed
+   in `analysis.scripts` (so it never ran in the default pipeline) nor
+   in `pipeline_stages` (so it was invisible in the declared DAG). Added
+   to both lists.
+
+2. **Pipeline stage gap: no fulltext download script.**
+   `literature.fulltext_download.download_and_extract_fulltext()` — the
+   function that resolves OA PDFs via Unpaywall, downloads them, and
+   extracts plaintext + figures — had zero callers from any script. The
+   reproducibility runner reads `.txt` files but nothing produced them.
+   Created `scripts/11_fulltext_download.py` (thin orchestrator) as the
+   bridge between the corpus and the reproducibility assessment. Added
+   to `analysis.scripts` and `pipeline_stages` in config.yaml.
+
+3. **Config documentation: output tree stale.** `src/config.py`'s
+   module docstring listed output/ artifacts but was missing
+   `fulltext_extraction.json`, `workflow_graphs.jsonl`,
+   `reproducibility_scores.json`, `reproducibility_summary.json`, and
+   the `fulltext/` directory. Updated.
+
+4. **Scripts AGENTS.md: architecture tree and script table stale.**
+   Missing `10_reproducibility_assessment.py` and `11_fulltext_download.py`
+   from the architecture tree, the script I/O table, and the default
+   run-order description. Updated all three.
+
+**What was verified as already correct (no change needed):**
+- All 7 manuscript variable extractors are registered and functional.
+- 03c_results_text_analytics.md already uses all text-analytics variables
+  (NUM_EMBEDDING_CLUSTERS, TOP_ENTITIES_TABLE, TOP_KEYPHRASES_TABLE,
+  TOP_SIMILAR_PAIRS_TABLE, NUM_TOPICS, TOPIC_TABLE, etc.).
+- The "missing variables" identified in the initial audit (A1_COUNT,
+  H1_SCORE, TOP_HUBS_TABLE, etc.) are either dynamically generated by
+  extractors (hypothesis scores use f-strings keyed by hypothesis ID) or
+  only referenced in AGENTS.md/README.md as examples, not in actual
+  manuscript sections.
+- 11 computed-but-unused variables (CORPUS_SIZE_LATEX, CITATION_EDGES_RAW,
+  etc.) are intentional alternate-format aliases kept for future use.
+
+**Verification:**
+- `pytest tests/` → 1106 passed, coverage 96.39%.
+- `ruff check --no-cache` on all modified files → clean.
+- `mypy --no-incremental` on new script → clean.
+
+## Increment 5 — Deep improvement of all literature methods (2026-07-13)
+
+**Trigger:** user asked to "deeply improve all the literature sure methods as
+demonstrated in the bibliography and full text methods of example project."
+
+**Reference standard** (from `bibliography.py` and `fulltext_download.py`):
+- Comprehensive module docstrings explaining WHY, not just WHAT
+- Self-contained with no external dependencies that fail to resolve
+- Graceful degradation (degrade-to-None/degrade-to-[] on errors)
+- Atomic file writes (temp-file + rename)
+- Multi-dimensional assessment (not just one metric)
+- Injectable base URLs for testability
+- Retry with exponential backoff
+- Clear separation of concerns
+
+**What was improved:**
+
+1. **`evaluation.py`** — Was 78 lines with no module docstring and a stale
+   7-engine `_SOURCE_KEYS` list (missing europepmc and biorxiv). Now has a
+   comprehensive docstring, 9-engine `_SOURCE_KEYS` list, type-annotated
+   `claim_verdicts` handling (supports dicts and dataclasses), and graceful
+   degradation for missing fields.
+
+2. **`fulltext_assessment.py`** — Was 70 lines with no module docstring.
+   Now has a comprehensive docstring explaining the pure-vs-realized
+   assessment split, adds `pmid` to `identifier_coverage` (was missing),
+   and documents the five assessment dimensions.
+
+3. **`query_router.py`** — Had no module docstring. Now has a comprehensive
+   docstring explaining the routing logic, the stateless classifier
+   contract, and why all nine engines appear in every source-order tuple.
+
+4. **`models.py`** — Added `keywords` field (with serialization/deserialization),
+   `referenced_works` property alias (matching OpenAlex/S2 field name),
+   improved preprint detection (added "europepmc" to `_PREPRINT_HINTS`),
+   and updated `metadata_completeness` to count the new `keywords` field.
+
+5. **`corpus.py`** — Added atomic save (temp-file + rename, matching the
+   convention in `reproducibility.models.append_workflow_graphs` and
+   `fulltext_download.download_fulltext`), added `summary()` method for
+   quick corpus diagnostics, and improved the module docstring to document
+   the two-tiered deduplication strategy.
+
+**Verification:**
+- `pytest tests/` → 1106 passed, coverage 96.37%.
+- `ruff check --no-cache` on all modified files → clean.
+- `mypy --no-incremental` on all modified files → clean.

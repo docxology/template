@@ -76,8 +76,19 @@
     "generated_by": "04_generate_figures.py",
     "metadata": {}
   },
-  "fig:word_cloud": {
+  "fig:evidence_timeline": {
     "figure_id": "figure_007",
+    "filename": "evidence_timeline.png",
+    "caption": "Timeline of evidence score accumulation for each hypothesis.",
+    "label": "fig:evidence_timeline",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:word_cloud": {
+    "figure_id": "figure_008",
     "filename": "word_cloud.png",
     "caption": "Word cloud of salient terms appearing in abstract text.",
     "label": "fig:word_cloud",
@@ -88,7 +99,7 @@
     "metadata": {}
   },
   "fig:topic_term_bars": {
-    "figure_id": "figure_008",
+    "figure_id": "figure_009",
     "filename": "topic_term_bars.png",
     "caption": "Top terms and corresponding weights per discovered topic.",
     "label": "fig:topic_term_bars",
@@ -99,7 +110,7 @@
     "metadata": {}
   },
   "fig:pca_embeddings": {
-    "figure_id": "figure_009",
+    "figure_id": "figure_010",
     "filename": "pca_embeddings.png",
     "caption": "PCA plot of TF-IDF vectors highlighting document clusters.",
     "label": "fig:pca_embeddings",
@@ -110,7 +121,7 @@
     "metadata": {}
   },
   "fig:term_heatmap": {
-    "figure_id": "figure_010",
+    "figure_id": "figure_011",
     "filename": "term_heatmap.png",
     "caption": "Heatmap of dominant TF-IDF terms across analyzed documents.",
     "label": "fig:term_heatmap",
@@ -121,7 +132,7 @@
     "metadata": {}
   },
   "fig:dendrogram": {
-    "figure_id": "figure_011",
+    "figure_id": "figure_012",
     "filename": "dendrogram.png",
     "caption": "Hierarchical clustering dendrogram showing document similarity.",
     "label": "fig:dendrogram",
@@ -132,7 +143,7 @@
     "metadata": {}
   },
   "fig:cooccurrence_matrix": {
-    "figure_id": "figure_012",
+    "figure_id": "figure_013",
     "filename": "cooccurrence_matrix.png",
     "caption": "Co-occurrence matrix for significant terms.",
     "label": "fig:cooccurrence_matrix",
@@ -142,8 +153,30 @@
     "generated_by": "04_generate_figures.py",
     "metadata": {}
   },
+  "fig:assertion_breakdown": {
+    "figure_id": "figure_014",
+    "filename": "assertion_breakdown.png",
+    "caption": "Breakdown of nanopublication assertion types by hypothesis.",
+    "label": "fig:assertion_breakdown",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
+  "fig:assertion_summary": {
+    "figure_id": "figure_015",
+    "filename": "assertion_summary.png",
+    "caption": "Summary of total extracted nanopublication assertions.",
+    "label": "fig:assertion_summary",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "04_generate_figures.py",
+    "metadata": {}
+  },
   "fig:citation_distribution": {
-    "figure_id": "figure_013",
+    "figure_id": "figure_016",
     "filename": "citation_distribution.png",
     "caption": "Histogram of citation counts with Gini coefficient of concentration.",
     "label": "fig:citation_distribution",
@@ -154,7 +187,7 @@
     "metadata": {}
   },
   "fig:top_venues": {
-    "figure_id": "figure_014",
+    "figure_id": "figure_017",
     "filename": "top_venues.png",
     "caption": "Top publication venues by number of papers in the corpus.",
     "label": "fig:top_venues",
@@ -165,7 +198,7 @@
     "metadata": {}
   },
   "fig:author_productivity": {
-    "figure_id": "figure_015",
+    "figure_id": "figure_018",
     "filename": "author_productivity.png",
     "caption": "Top authors ranked by number of corpus publications.",
     "label": "fig:author_productivity",
@@ -176,7 +209,7 @@
     "metadata": {}
   },
   "fig:entity_bar_chart": {
-    "figure_id": "figure_016",
+    "figure_id": "figure_019",
     "filename": "entity_bar_chart.png",
     "caption": "Top named entities extracted from abstracts.",
     "label": "fig:entity_bar_chart",
@@ -187,7 +220,7 @@
     "metadata": {}
   },
   "fig:similarity_heatmap": {
-    "figure_id": "figure_017",
+    "figure_id": "figure_020",
     "filename": "similarity_heatmap.png",
     "caption": "Top document pairs by cosine similarity of TF-IDF/SVD embeddings.",
     "label": "fig:similarity_heatmap",

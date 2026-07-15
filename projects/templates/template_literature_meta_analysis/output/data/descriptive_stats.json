@@ -1,146 +1,138 @@
 {
   "generated": {
-    "total_papers": 2204,
+    "total_papers": 2234,
     "schema_version": "1.0",
     "generator": "descriptive_stats.build_meta_report"
   },
   "descriptive_stats": {
-    "total": 2204,
+    "total": 2234,
     "year_min": 2000,
     "year_max": 2026,
     "counts_by_year": {
-      "2000": 24,
+      "2000": 23,
       "2001": 24,
       "2002": 39,
-      "2003": 38,
-      "2004": 65,
-      "2005": 87,
-      "2006": 92,
-      "2007": 81,
-      "2008": 88,
-      "2009": 80,
-      "2010": 99,
-      "2011": 65,
-      "2012": 69,
-      "2013": 64,
-      "2014": 70,
-      "2015": 101,
-      "2016": 110,
-      "2017": 109,
-      "2018": 101,
+      "2003": 39,
+      "2004": 63,
+      "2005": 85,
+      "2006": 85,
+      "2007": 77,
+      "2008": 80,
+      "2009": 77,
+      "2010": 90,
+      "2011": 63,
+      "2012": 67,
+      "2013": 56,
+      "2014": 67,
+      "2015": 87,
+      "2016": 103,
+      "2017": 106,
+      "2018": 96,
       "2019": 107,
-      "2020": 109,
-      "2021": 106,
-      "2022": 103,
-      "2023": 94,
-      "2024": 109,
-      "2025": 112,
-      "2026": 58
+      "2020": 112,
+      "2021": 103,
+      "2022": 117,
+      "2023": 106,
+      "2024": 123,
+      "2025": 147,
+      "2026": 92
     },
     "counts_by_venue": {
-      "Reactions Weekly": 142,
+      "Reactions Weekly": 61,
       "Psychopharmacology": 41,
       "SLEEP": 34,
       "Sleep Medicine": 33,
       "The Journal of Clinical Psychiatry": 31,
-      "European Neuropsychopharmacology": 27,
+      "European Neuropsychopharmacology": 26,
       "Neuropharmacology": 26,
       "Inpharma Weekly": 25,
-      "PubMed": 24,
+      "Sleep": 24,
       "American Journal of Psychiatry": 23
     },
-    "unique_authors": 7259,
-    "papers_per_author_mean": 1.337374293979887,
+    "unique_authors": 8152,
+    "papers_per_author_mean": 1.283611383709519,
     "papers_per_author_median": 1.0,
-    "citation_count_mean": 30.921506352087114,
+    "citation_count_mean": 30.280214861235454,
     "citation_count_median": 0.0,
-    "citation_count_max": 1333,
-    "citation_count_total": 68151,
-    "pct_open_access": 37.102473498233216,
-    "pct_with_abstract": 55.8076225045372,
-    "pct_with_doi": 97.95825771324864
+    "citation_count_max": 1353,
+    "citation_count_total": 67646,
+    "pct_open_access": 41.17210682492581,
+    "pct_with_abstract": 62.08594449418084,
+    "pct_with_doi": 97.224709042077
   },
   "citation_distribution": {
     "histogram": {
-      "0": 1184,
-      "1-9": 195,
-      "10-49": 421,
-      "50-99": 214,
-      "100-499": 179,
+      "0": 1253,
+      "1-9": 165,
+      "10-49": 416,
+      "50-99": 213,
+      "100-499": 176,
       "500+": 11
     },
-    "gini": 0.81162536585714,
-    "n": 2204,
-    "total_citations": 68151
+    "gini": 0.8169499806129074,
+    "n": 2234,
+    "total_citations": 67646
   },
   "author_productivity": [
     [
       "&NA;",
-      66
+      41
     ],
     [
       "Ronghua Yang",
-      26
+      25
     ],
     [
       "Yves Dauvilliers",
-      26
-    ],
-    [
-      "Amy Hauck Newman",
       22
     ],
     [
       "Barbara J. Sahakian",
-      20
+      19
     ],
     [
       "Edward T. Hellriegel",
       17
     ],
     [
-      "Gianluigi Tanda",
-      16
-    ],
-    [
       "Philmore Robertson",
       16
-    ],
-    [
-      "Sanjay Arora",
-      16
-    ],
-    [
-      "Gert Lubec",
-      15
-    ],
-    [
-      "Jed Black",
-      15
     ],
     [
       "Mona Darwish",
       15
     ],
     [
-      "Predrag Kalaba",
+      "Sanjay Arora",
+      15
+    ],
+    [
+      "Amy Hauck Newman",
       14
     ],
     [
-      "Isabelle Arnulf",
-      13
+      "Jed Black",
+      14
+    ],
+    [
+      "Gert Lubec",
+      12
+    ],
+    [
+      "Gianluigi Tanda",
+      12
+    ],
+    [
+      "Predrag Kalaba",
+      12
     ],
     [
       "Thomas Roth",
-      13
-    ],
-    [
-      "Jianjing Cao",
       12
     ],
     [
-      "Seiji Nishino",
-      12
+      "Dauvilliers Y",
+      11
     ],
     [
       "Jonathan Schwartz",
@@ -151,8 +143,16 @@
       11
     ],
     [
+      "Gary R. Morrow",
+      10
+    ],
+    [
       "Michael J. Thorpy",
-      11
+      10
+    ],
+    [
+      "Claudio L. Bassetti",
+      9
     ]
   ]
 }

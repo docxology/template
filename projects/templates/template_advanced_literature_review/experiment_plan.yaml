@@ -1,0 +1,87 @@
+conditions:
+  - name: offline_multi_phase_fixture
+    role: reference
+    description: "Run the deterministic 3-phase exoplanet corpus with no network or LLM dependency across foundation/JWST/molecular phases."
+  - name: live_multi_phase_retrieval
+    role: proposed
+    description: "Run enabled engines with phase-specific queries against live services with graceful phase-level degradation."
+  - name: cross_phase_validation_only
+    role: variant
+    description: "Skip new retrieval; validate existing hypotheses across temporal phases with cross-phase consistency checks."
+  - name: single_phase_baseline
+    role: control
+    description: "Run only the foundation phase for comparison with full multi-phase architecture."
+metrics:
+  primary:
+    name: cross_phase_validation_score
+    direction: maximize
+  secondary:
+    - name: phase_boundary_violations
+      direction: minimize
+    - name: temporal_coherence_score
+      direction: maximize
+    - name: llm_filter_precision
+      direction: maximize
+    - name: knowledge_graph_cross_phase_assertions
+      direction: maximize
+protocol: "Execute 3-phase search with temporal boundaries, apply deterministic + LLM filtering, extract phase-aware knowledge graph, validate hypotheses cross-temporally, generate phase statistics, and render manuscript with cross-phase analysis."
+expected_figures:
+  - fig:phase_timeline
+  - fig:cross_phase_validation_heatmap
+  - fig:growth_curves_by_phase
+  - fig:subfield_evolution_sankey
+  - fig:citation_network_temporal
+  - fig:topic_terms_phase_comparison
+  - fig:embeddings_phase_clusters
+  - fig:hypothesis_confidence_intervals
+expected_tables:
+  - tbl:phase_statistics_summary
+  - tbl:cross_phase_hypothesis_validation
+  - tbl:temporal_subfield_evolution
+  - tbl:llm_filter_performance_by_phase
+phases:
+  foundation:
+    name: "Foundation Phase"
+    temporal_boundary: "pre-2010"
+    methodological_focus: "Early atmospheric modeling and ground-based observations"
+    target_papers: 800
+    filtering_criteria:
+      - venue_tier: "tier_1_and_2"
+      - citation_threshold: 10
+      - abstract_relevance: "foundational_methods"
+  jwst_era:
+    name: "JWST Preparation Era"
+    temporal_boundary: "2010-2021"
+    methodological_focus: "Space-based preparation and theoretical advances"
+    target_papers: 1000
+    filtering_criteria:
+      - venue_tier: "tier_1_and_2"
+      - citation_threshold: 5
+      - abstract_relevance: "jwst_preparation"
+  molecular_detection:
+    name: "High-Precision Molecular Detection"
+    temporal_boundary: "2022+"
+    methodological_focus: "JWST observations and molecular characterization"
+    target_papers: 700
+    filtering_criteria:
+      - venue_tier: "all_peer_reviewed"
+      - citation_threshold: 0
+      - abstract_relevance: "molecular_detection"
+baselines:
+  - offline_multi_phase_fixture
+  - single_phase_baseline
+ablations:
+  - cross_phase_validation_only
+validation_experiments:
+  - name: phase_boundary_enforcement
+    description: "Verify temporal boundaries are strictly enforced in corpus assignment"
+    success_criteria: "Zero papers assigned to wrong phase based on publication date"
+  - name: llm_filter_calibration
+    description: "Measure precision/recall of LLM-based abstract filtering per phase"
+    success_criteria: "Precision ≥0.8, Recall ≥0.7 for each phase's methodological criteria"
+  - name: cross_phase_hypothesis_consistency
+    description: "Validate that hypothesis scores show coherent temporal trends"
+    success_criteria: "No contradictory hypothesis trends without methodological explanation"
+  - name: knowledge_graph_temporal_coherence
+    description: "Ensure knowledge graph assertions maintain temporal plausibility"
+    success_criteria: "Cross-phase assertion conflicts ≤5% with documented resolution"

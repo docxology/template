@@ -198,46 +198,47 @@ lists them with their scope and evidence score.</p>
 <td>H1</td>
 <td>Wakefulness Efficacy</td>
 <td>clinical</td>
-<td>+0.00</td>
+<td>+0.56</td>
 </tr>
 <tr>
 <td>H2</td>
 <td>Cognitive Enhancement</td>
 <td>cognitive</td>
-<td>+0.00</td>
+<td>+0.49</td>
 </tr>
 <tr>
 <td>H3</td>
 <td>Low Abuse Liability</td>
 <td>safety</td>
-<td>+0.00</td>
+<td>+0.62</td>
 </tr>
 <tr>
 <td>H4</td>
 <td>Dopaminergic Mechanism</td>
 <td>pharmacological</td>
-<td>+0.00</td>
+<td>+1.00</td>
 </tr>
 <tr>
 <td>H5</td>
 <td>Off-label Psychiatric Utility</td>
 <td>applied</td>
-<td>+0.00</td>
+<td>+0.35</td>
 </tr>
 <tr>
 <td>H6</td>
 <td>Tolerability</td>
 <td>safety</td>
-<td>+0.00</td>
+<td>+0.31</td>
 </tr>
 </tbody>
 </table>
 <p>Evidence scores are produced by the optional, LLM-gated
-knowledge-graph stage. In the offline default run that stage does not
-execute, so scores read <em>pending</em> — the hypotheses, their names,
-and their scope are nonetheless reported directly from configuration. A
-live run with a language model available populates the scores from
-citation-weighted assertion extraction.</p>
+knowledge-graph stage. When the knowledge-graph stage is skipped (no
+language model configured), scores read <em>pending</em>. When the stage
+runs (as in this instance, with 127 assertions extracted via Ollama),
+scores are populated from citation-weighted assertion extraction. The
+hypotheses, their names, and their scope are always reported directly
+from configuration regardless of whether the LLM stage executed.</p>
 <h2 id="interpretation">Interpretation</h2>
 <p>Reported scores, when present, should be read as relative rankings
 rather than calibrated probabilities: absolute magnitudes are inflated

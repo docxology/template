@@ -138,6 +138,14 @@ projects/templates/*
 !projects/templates/template_data_descriptor/**
 !projects/templates/template_literature_meta_analysis/
 !projects/templates/template_literature_meta_analysis/**
+!projects/templates/template_advanced_literature_review/
+!projects/templates/template_advanced_literature_review/**
+projects/templates/template_advanced_literature_review/output/
+projects/templates/template_advanced_literature_review/.venv/
+projects/templates/template_advanced_literature_review/.pytest_cache/
+projects/templates/template_advanced_literature_review/.ruff_cache/
+projects/templates/template_advanced_literature_review/htmlcov/
+projects/templates/template_advanced_literature_review/**/__pycache__/
 !projects/templates/template_prose_project/
 !projects/templates/template_prose_project/**
 !projects/templates/template_redacted_report/

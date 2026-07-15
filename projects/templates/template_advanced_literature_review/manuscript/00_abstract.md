@@ -1,0 +1,15 @@
+# Abstract
+
+Traditional single-term literature reviews often miss important papers and fail to capture the evolving complexity of rapidly advancing research domains. We present an advanced multi-phase systematic review methodology that combines iterative query refinement with LLM-based content filtering to comprehensively survey the exoplanet atmospheric composition literature.
+
+Our approach implements a **three-phase search strategy** targeting distinct but complementary aspects of exoplanet atmospheric research: (1) foundational atmospheric studies ({{PHASE_1_PAPERS}} papers), (2) James Webb Space Telescope observations ({{PHASE_2_PAPERS}} papers), and (3) specific molecular detection studies ({{PHASE_3_PAPERS}} papers). Each phase employs {{N_ENGINES}} academic databases ({{ENGINE_LIST}}) with phase-specific query sets, deterministic filters (publication year ≥ {{MIN_YEAR}}, citation count ≥ {{MIN_CITATIONS}}, venue quality), and LLM-based abstract classification for study type and content relevance.
+
+The multi-phase approach identified **{{CORPUS_SIZE}} unique papers** spanning {{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years), with {{CROSS_PHASE_OVERLAP_PCT}}% overlap between phases indicating complementary discovery patterns. Cross-phase validation revealed {{CROSS_PHASE_CITATION_RATE}}% of later-phase papers cited foundational work, demonstrating strong methodological coherence. **LLM filtering** achieved {{LLM_FILTER_PRECISION}}% precision in content classification, removing {{LLM_FILTERED_OUT}} non-relevant papers while preserving methodological diversity.
+
+Knowledge graph extraction identified **{{TOTAL_ASSERTIONS}} evidence assertions** across {{N_HYPOTHESES}} domain hypotheses. JWST atmospheric characterization showed strongest support (H1: +{{H1_SCORE}}), followed by molecular diversity detection (H2: +{{H2_SCORE}}) and cross-method consistency (H3: +{{H3_SCORE}}). Citation network analysis revealed {{CITATION_EDGES}} cross-references with {{PHASE_CITATION_DENSITY}}% density between phases, confirming the literature's interconnected structure.
+
+**Phase-aware bibliometrics** show the field's rapid evolution: foundational work peaked in {{FOUNDATION_PEAK_YEAR}}, JWST papers emerged strongly post-{{JWST_LAUNCH_YEAR}} ({{JWST_GROWTH_RATE}}% annual growth), and molecular detection studies span the entire timeline with consistent {{MOL_DETECTION_GROWTH_RATE}}% growth. Topic modeling identified {{NUM_TOPICS}} research themes with clear phase specialization: atmospheric modeling dominates Phase 1, observational techniques define Phase 2, and spectroscopic analysis characterizes Phase 3.
+
+The methodology demonstrates **superior coverage and quality control** compared to single-term approaches, particularly for rapidly evolving fields with diverse methodological paradigms. The framework is generalizable to other scientific domains requiring comprehensive literature synthesis across multiple research phases and is implemented as an open-source, reproducible pipeline for **living literature reviews**.
+
+**Keywords:** {{KEYWORDS_LIST}}

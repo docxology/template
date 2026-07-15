@@ -4,14 +4,14 @@ The subfield taxonomy is defined entirely in configuration; for this instance it
 6 buckets (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience). Each record is assigned to the
 highest-priority bucket whose keywords it matches, so the distribution reflects the
 configured taxonomy rather than a fixed schema. Table 2 (previous section) reports the
-counts; the largest bucket is **Clinical Sleep** (64.3\%).
+counts; the largest bucket is **Clinical Sleep** (63.0\%).
 
 ## Per-Subfield Characterization
 
 The subfield breakdown reveals the multi-disciplinary nature of the modafinil
 literature:
 
-- **Clinical Sleep** dominates at 64.3\%, reflecting the drug's primary
+- **Clinical Sleep** dominates at 63.0\%, reflecting the drug's primary
   indication for narcolepsy, shift-work disorder, and obstructive sleep apnea. This
   bucket includes randomized controlled trials, meta-analyses of efficacy, and
   long-term safety studies in sleep-disorder populations.

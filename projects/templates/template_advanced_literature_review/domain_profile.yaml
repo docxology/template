@@ -1,0 +1,100 @@
+domain: advanced_literature_review
+display_name: Advanced Multi-Phase Literature Review Exemplar
+required_packages:
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - networkx
+  - matplotlib
+  - rdflib
+  - pytest
+  - transformers
+  - torch
+preferred_outputs:
+  - pdf
+  - html
+  - docx
+  - epub
+validation_gates:
+  - multi_phase_integrity
+  - cross_phase_validation
+  - artifact_manifest
+  - evidence_grounding
+  - render_validation
+  - publication_readiness
+  - no_mock_tests
+figure_types:
+  - phase_timeline
+  - cross_phase_validation
+  - growth_curves_by_phase
+  - subfield_evolution
+  - citation_network_temporal
+  - topic_terms_by_phase
+  - embeddings_phase_clusters
+  - hypothesis_confidence_intervals
+citation_policy: scholarly_with_phase_attribution
+source_policy: "Use multi-phase configured literature records, real corpus with phase provenance, and generated cross-temporal analysis artifacts. Maintain phase attribution throughout pipeline."
+review_gates:
+  - render_validation
+  - publication_readiness
+  - phase_boundary_validation
+  - cross_temporal_consistency
+artifact_expectations:
+  - output/data/phase_1_corpus.jsonl
+  - output/data/phase_2_corpus.jsonl  
+  - output/data/phase_3_corpus.jsonl
+  - output/data/merged_corpus.jsonl
+  - output/data/phase_statistics.json
+  - output/data/cross_phase_validation.json
+  - output/data/temporal_analysis.json
+  - output/data/subfield_classification.json
+  - output/data/topics.json
+  - output/data/citation_network.json
+  - output/figures/figure_registry.json
+  - output/manuscript/00_abstract.md
+benchmark_rubric:
+  name: advanced-literature-review-readiness
+  dimensions:
+    - name: multi_phase_architecture
+      weight: 2.0
+    - name: phase_boundary_integrity
+      weight: 1.5
+    - name: cross_phase_validation
+      weight: 2.0
+    - name: temporal_coherence
+      weight: 1.5
+    - name: llm_filter_calibration
+      weight: 1.0
+    - name: artifact_manifest
+      weight: 1.0
+    - name: evidence_grounding
+      weight: 2.0
+    - name: phase_provenance_tracking
+      weight: 1.5
+    - name: render_success
+      weight: 1.0
+llm_prompt_guidance: "Use LLM filtering for abstract content analysis with phase-appropriate methodological criteria; maintain phase attribution in all extractions; validate cross-temporal consistency of knowledge graph assertions."
+phase_configuration:
+  supported_architectures:
+    - three_phase_temporal  # foundation -> development -> current
+    - five_phase_methodological  # theory -> methods -> validation -> application -> synthesis
+    - custom_domain_specific
+  temporal_boundaries:
+    enforce_strict_boundaries: true
+    allow_overlap_windows: false
+    require_methodological_justification: true
+  filtering_pipeline:
+    deterministic_filters:
+      - temporal_boundary
+      - venue_quality
+      - citation_threshold
+      - language_filter
+    llm_filters:
+      - abstract_relevance
+      - methodological_phase_fit
+      - cross_phase_validation_potential
+  cross_validation:
+    hypothesis_consistency_checks: true
+    temporal_trend_validation: true
+    methodological_progression_tracking: true

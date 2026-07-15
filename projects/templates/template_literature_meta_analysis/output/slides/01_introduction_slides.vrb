@@ -5,24 +5,24 @@ The pipeline contributes an end-to-end, domain-agnostic workflow:
 \begin{enumerate}
 \item
   \textbf{Multiple-engine retrieval with graceful degradation.} Records
-  are gathered from 7 independent engines (arXiv, OpenAlex, Semantic
-  Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv). An engine with
-  no API key or no network reports a \emph{skipped} status; the run
-  completes from whatever engines remain plus a committed offline
-  corpus. For this live run, OpenAlex contributed the largest share of
-  records, followed by Crossref and PubMed; Semantic Scholar was
-  rate-limited (HTTP 429) and returned zero records without aborting the
-  pipeline.
+  are gathered from 9 independent engines (arXiv, OpenAlex, Semantic
+  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
+  bioRxiv/medRxiv). An engine with no API key or no network reports a
+  \emph{skipped} status; the run completes from whatever engines remain
+  plus a committed offline corpus. Each new retrieval persists
+  per-engine outcome and count provenance in
+  \breaktt{output/data/retrieval\_report.json}; the merged corpus alone
+  is never used to infer which engine supplied a record.
 \item
   \textbf{Record de-duplication.} Heterogeneous records are merged by a
   canonical identifier hierarchy, keeping the most complete version of
-  each work. Of 2302 retrieved records, 2248 carry DOIs, 932 carry
+  each work. Of 2334 retrieved records, 2260 carry DOIs, 923 carry
   OpenAlex IDs, and 1 carry arXiv IDs.
 \item
   \textbf{Descriptive and bibliometric analysis.} Counts by year, venue,
-  and author; growth metrics (CAGR 3.45\%, doubling time 11.3 years); a
+  and author; growth metrics (CAGR 5.48\%, doubling time 9.2 years); a
   configurable 6-bucket subfield classification; topic models; and a
-  citation network with 1377 communities.
+  citation network with 1416 communities.
 \item
   \textbf{Language, entity, and embedding analysis.} Keyphrase and
   entity extraction and offline deterministic document embeddings over

@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -197,9 +211,9 @@ Linguistic Structure</h2>
 full text. A TF-IDF representation over a 500-feature vocabulary feeds
 non-negative matrix factorization, which extracts 5 latent topics
 cross-cutting the subfield taxonomy. The top vocabulary terms are:
-modafinil, treatment, study, effects, patients, results, sleep, used,
-use, drug, studies, clinical, mg, using, placebo, cognitive, associated,
-effect, however, disorder.</p>
+modafinil, treatment, study, results, patients, effects, sleep, used,
+clinical, use, drug, studies, mg, using, sleepiness, disorder,
+associated, cognitive, narcolepsy, significant.</p>
 <p><strong>Table 3. NMF topics extracted from the corpus.</strong></p>
 <table>
 <colgroup>
@@ -215,26 +229,26 @@ effect, however, disorder.</p>
 <tbody>
 <tr>
 <td>0</td>
-<td>cognitive, use, drugs, enhancement, performance, drug, effects,
-modafinil</td>
+<td>modafinil, mg, kg, effects, rats, mice, induced, sleep</td>
 </tr>
 <tr>
 <td>1</td>
-<td>adhd, ci, 95, studies, trials, evidence, risk, treatment</td>
+<td>fatigue, patients, placebo, modafinil, scale, armodafinil,
+treatment, depression</td>
 </tr>
 <tr>
 <td>2</td>
-<td>modafinil, mg, kg, effects, dose, rats, induced, placebo</td>
+<td>h4, methods, results, conclusion, 95, analysis, ci, risk</td>
 </tr>
 <tr>
 <td>3</td>
-<td>sleep, narcolepsy, sleepiness, patients, eds, daytime, excessive,
-cataplexy</td>
+<td>use, cognitive, drugs, adhd, studies, drug, cocaine,
+methylphenidate</td>
 </tr>
 <tr>
 <td>4</td>
-<td>fatigue, patients, placebo, modafinil, scale, depression, treatment,
-armodafinil</td>
+<td>sleep, narcolepsy, sleepiness, cataplexy, daytime, patients, eds,
+excessive</td>
 </tr>
 </tbody>
 </table>
@@ -269,7 +283,7 @@ global mean) are selected for display.</p>
 <p><img src="../figures/term_heatmap.png" title="Term Heatmap"
 alt="Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms." />{{#fig:term_heatmap}}</p>
 <h2 id="named-entity-analysis">Named Entity Analysis</h2>
-<p>Named entity extraction over the 1277 abstracts identified 30 unique
+<p>Named entity extraction over the 1437 abstracts identified 30 unique
 entities. The most frequent entities reflect the clinical and
 pharmacological vocabulary of the modafinil literature.</p>
 <p><strong>Table 4. Top named entities in abstracts.</strong></p>
@@ -283,50 +297,54 @@ pharmacological vocabulary of the modafinil literature.</p>
 <tbody>
 <tr>
 <td>ADHD</td>
-<td>338</td>
+<td>392</td>
 </tr>
 <tr>
 <td>CI</td>
-<td>315</td>
+<td>343</td>
 </tr>
 <tr>
 <td>EDS</td>
-<td>258</td>
+<td>326</td>
 </tr>
 <tr>
 <td>OSA</td>
-<td>236</td>
+<td>272</td>
 </tr>
 <tr>
 <td>MOD</td>
-<td>158</td>
-</tr>
-<tr>
-<td>RESULTS</td>
-<td>152</td>
-</tr>
-<tr>
-<td>DAT</td>
-<td>133</td>
-</tr>
-<tr>
-<td>MS</td>
-<td>132</td>
-</tr>
-<tr>
-<td>CONCLUSIONS</td>
-<td>130</td>
+<td>181</td>
 </tr>
 <tr>
 <td>ESS</td>
-<td>127</td>
+<td>148</td>
+</tr>
+<tr>
+<td>RESULTS</td>
+<td>148</td>
+</tr>
+<tr>
+<td>MS</td>
+<td>145</td>
+</tr>
+<tr>
+<td>DAT</td>
+<td>134</td>
+</tr>
+<tr>
+<td>NT1</td>
+<td>131</td>
 </tr>
 <tr>
 <td>SD</td>
-<td>113</td>
+<td>130</td>
 </tr>
 <tr>
-<td>METHODS</td>
+<td>CONCLUSIONS</td>
+<td>129</td>
+</tr>
+<tr>
+<td>MD</td>
 <td>102</td>
 </tr>
 <tr>
@@ -334,12 +352,8 @@ pharmacological vocabulary of the modafinil literature.</p>
 <td>101</td>
 </tr>
 <tr>
-<td>MD</td>
-<td>97</td>
-</tr>
-<tr>
 <td>IH</td>
-<td>88</td>
+<td>101</td>
 </tr>
 </tbody>
 </table>
@@ -376,6 +390,10 @@ alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 mos
 <td>0.1053</td>
 </tr>
 <tr>
+<td>sub</td>
+<td>0.0881</td>
+</tr>
+<tr>
 <td>md</td>
 <td>0.0870</td>
 </tr>
@@ -396,6 +414,10 @@ alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 mos
 <td>0.0741</td>
 </tr>
 <tr>
+<td>cognitive</td>
+<td>0.0714</td>
+</tr>
+<tr>
 <td>substance</td>
 <td>0.0694</td>
 </tr>
@@ -405,14 +427,6 @@ alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 mos
 </tr>
 <tr>
 <td>conditions</td>
-<td>0.0667</td>
-</tr>
-<tr>
-<td>continuous</td>
-<td>0.0667</td>
-</tr>
-<tr>
-<td>continuous flow</td>
 <td>0.0667</td>
 </tr>
 </tbody>
@@ -450,34 +464,24 @@ reveal the most closely related works in the corpus.</p>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.1197/j.aem.2005.08.013</td>
-<td>doi:10.1111/j.1553-2712.2006.t</td>
-<td>1.0000</td>
-</tr>
-<tr>
 <td>doi:10.1345/aph.1h302</td>
 <td>doi:10.1136/bcr.08.2011.4652</td>
-<td>0.9687</td>
+<td>0.9660</td>
 </tr>
 <tr>
 <td>doi:10.4088/jcp.09m05900gry</td>
 <td>doi:10.1186/s40345-015-0034-0</td>
-<td>0.9628</td>
+<td>0.9566</td>
 </tr>
 <tr>
-<td>doi:10.1016/s2215-0366(18)3026</td>
-<td>doi:10.1016/s2215-0366(25)0006</td>
-<td>0.9621</td>
+<td>doi:10.1111/bdi.12859</td>
+<td>doi:10.1111/acps.12712</td>
+<td>0.9558</td>
 </tr>
 <tr>
-<td>doi:10.1345/aph.1h302</td>
-<td>doi:10.1017/neu.2023.6</td>
-<td>0.9598</td>
-</tr>
-<tr>
-<td>doi:10.1111/j.1365-2869.2008.0</td>
-<td>doi:10.3109/07420528.2011.6352</td>
-<td>0.9538</td>
+<td>doi:10.1111/j.1360-0443.2008.0</td>
+<td>doi:10.1111/j.1465-3362.2012.0</td>
+<td>0.9536</td>
 </tr>
 <tr>
 <td>doi:10.1513/annalsats.202006-6</td>
@@ -485,9 +489,19 @@ reveal the most closely related works in the corpus.</p>
 <td>0.9532</td>
 </tr>
 <tr>
-<td>doi:10.1345/aph.1h302</td>
-<td>doi:10.1192/bjo.2024.75</td>
-<td>0.9517</td>
+<td>doi:10.1164/ajrccm.164.9.21030</td>
+<td>doi:10.1093/sleep/28.4.464</td>
+<td>0.9513</td>
+</tr>
+<tr>
+<td>doi:10.1093/sleep/28.4.464</td>
+<td>doi:10.1164/ajrccm.164.9.21030</td>
+<td>0.9513</td>
+</tr>
+<tr>
+<td>doi:10.1002/cncr.25083</td>
+<td>doi:10.1200/jco.2005.23.16_sup</td>
+<td>0.9507</td>
 </tr>
 </tbody>
 </table>

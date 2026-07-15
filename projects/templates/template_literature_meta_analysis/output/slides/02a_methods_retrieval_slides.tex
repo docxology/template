@@ -135,26 +135,32 @@
 De-duplication}\label{retrieval-and-de-duplication}
 
 \begin{frame}[fragile,allowframebreaks]{Retrieval and De-duplication}
-Retrieval dispatches the configured query across 7 independent
+Retrieval dispatches the configured query across 9 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, and ChinaRxiv). Each engine is an isolated adapter exposing
-a uniform \texttt{search(query)\ -\textgreater{}\ list{[}Record{]}}
-interface; engines that are keyless --- arXiv, OpenAlex
-\breakseq{[@priem2022openalex]}, Crossref \breakseq{[@hendricks2020crossref]},
-PubMed/Entrez \breakseq{[@sayers2022entrez]}, SovietRxiv / RussiaRxiv, and
-ChinaRxiv --- need no credentials, while Semantic Scholar
+SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is
+an isolated adapter exposing a uniform
+\texttt{search(query)\ -\textgreater{}\ list{[}Record{]}} interface;
+engines that are keyless --- arXiv, OpenAlex \breakseq{[@priem2022openalex]},
+Crossref \breakseq{[@hendricks2020crossref]}, PubMed/Entrez
+\breakseq{[@sayers2022entrez]}, SovietRxiv / RussiaRxiv, ChinaRxiv, Europe PMC,
+and bioRxiv/medRxiv --- need no credentials, while Semantic Scholar
 \breakseq{[@kinney2023semantic]} uses a key when present. SovietRxiv is a
 translated archive of Soviet-era scientific preprints sourced from
 Math-Net.Ru and CyberLeninka \breakseq{[@sovietrxiv]}; ChinaRxiv serves
 translated Chinese preprints from ChinaXiv via the same unified API.
 Both retain original-language PDFs alongside each translation, and their
 polite rate-limit pool (300/min vs 30/min anonymous) is activated by an
-optional \texttt{X-API-Email} header. Optional full-text resolution
-queries Unpaywall \breakseq{[@piwowar2018state]} for open-access locations.
-\textbf{Multiple dispatch degrades gracefully}: an engine that is
-disabled in the configuration, lacks a required key, or cannot reach the
-network returns a \emph{skipped} status, and the run completes from the
-remaining engines plus the committed offline corpus.
+optional \texttt{X-API-Email} header. Europe PMC is a keyless biomedical
+aggregator covering PubMed, PMC, patents, and preprints in a single
+search call. bioRxiv/medRxiv share one unified date-window + cursor API;
+unlike the other engines it is not a free-text search endpoint, so the
+adapter walks the date window page by page and keeps only records whose
+title and abstract match every query term client-side. Optional
+full-text resolution queries Unpaywall \breakseq{[@piwowar2018state]} for
+open-access locations. \textbf{Multiple dispatch degrades gracefully}:
+an engine that is disabled in the configuration, lacks a required key,
+or cannot reach the network returns a \emph{skipped} status, and the run
+completes from the remaining engines plus the committed offline corpus.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Engine Details}
@@ -168,11 +174,10 @@ engine hardcodes its URL inside the function body.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Engine
@@ -182,32 +187,34 @@ Rate limit
 Pagination
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Auth
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Records (this run)
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-arXiv & 3s between requests & 100/page, offset & Keyless & Sparse \\
-Semantic Scholar & 1 req/s (unauth.) & 100/page, offset & Optional key &
-Skipped (429) \\
-OpenAlex & Polite pool (mailto) & 200/page, cursor & Keyless & 1,000 \\
-Crossref & Polite pool (mailto) & 1,000/page, offset & Keyless &
-1,000 \\
-PubMed & NCBI usage policy & retstart/retmax & Keyless & 986 \\
+arXiv & 3s between requests & 100/page, offset & Keyless \\
+Semantic Scholar & 1 req/s (unauth.) & 100/page, offset & Optional
+key \\
+OpenAlex & Polite pool (mailto) & 200/page, cursor & Keyless \\
+Crossref & Polite pool (mailto) & 1,000/page, offset & Keyless \\
+PubMed & NCBI usage policy & retstart/retmax & Keyless \\
 SovietRxiv & 30/min (300/min polite) & 1--100/page, cursor &
-\texttt{X-API-Email} & 0 \\
+\texttt{X-API-Email} \\
 ChinaRxiv & 30/min (300/min polite) & 1--100/page, cursor &
-\texttt{X-API-Email} & 0 \\
+\texttt{X-API-Email} \\
+Europe PMC & \textasciitilde10 req/s (undocumented hard limit) & Up to
+1,000/page & Keyless \\
+bioRxiv/medRxiv & No documented limit & 100/page fixed, cursor &
+Keyless \\
 \bottomrule\noalign{}
 \end{longtable}
 }
 
-SovietRxiv and ChinaRxiv returned zero records for the modafinil query,
-which is expected: the Soviet-era archive covers mathematics, physics,
-and engineering preprints, while ChinaXiv covers Chinese scientific
-preprints, and neither domain has substantial modafinil literature. The
-engines dispatched correctly, queried the live API, and returned empty
-result sets without error --- confirming graceful degradation.
+Every new search writes \breaktt{output/data/retrieval\_report.json}, a
+timestamp-free report that records each attempted, skipped, or failed
+source with fetched, new-record, and duplicate counts. A zero-result
+response is therefore distinguishable from a disabled adapter or an HTTP
+failure. The committed corpus predates that report contract, so this
+paper intentionally does not reconstruct source-specific counts from the
+merged corpus.
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Canonical Identifier Hierarchy}
@@ -219,9 +226,9 @@ records share a canonical identifier they are merged, keeping the
 version with the most complete metadata (a count of non-None optional
 fields). The DOI is normalized: case-folded, resolver-prefix stripped,
 so the same paper returned by two engines under case/format-variant DOIs
-merges. For this run, 2248 records carry DOIs, 932 carry OpenAlex IDs,
+merges. For this run, 2260 records carry DOIs, 923 carry OpenAlex IDs,
 and 1 carry arXiv IDs. The de-duplicated corpus for this run holds
-\(N = 2302\) records published across 2000--2026.
+\(N = 2334\) records published across 2000--2026.
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Relevance Filtering}

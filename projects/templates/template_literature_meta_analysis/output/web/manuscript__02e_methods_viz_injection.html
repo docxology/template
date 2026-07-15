@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -198,7 +212,7 @@ the publication growth curve, the citation network, topic-term bars, a
 term cloud, and embedding projections. All figures use a
 colourblind-safe palette (Wong 2011, 8 colours) with high-contrast
 labels at <span class="math inline">\(\geq 16\)</span>pt. This run
-produced 18 figures at 300 DPI. The full figure set includes:</p>
+produced 21 figures at 300 DPI. The full figure set includes:</p>
 <ul>
 <li><strong>Field overview</strong>: field summary and subfield
 distribution ((Figure field summary; Figure subfield distribution))</li>

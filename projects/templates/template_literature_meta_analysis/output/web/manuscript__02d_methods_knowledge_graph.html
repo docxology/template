@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -237,11 +251,13 @@ run that is interrupted can resume without re-processing. The
 <code>--clear-assertions</code> flag discards previous results for a
 fresh start.</p>
 <h2 id="gating-and-defaults">Gating and Defaults</h2>
-<p>This stage is entirely optional and never runs in the offline
-default: with no language model available it is skipped, and the
-hypothesis evidence scores read <em>pending</em>. The hypotheses
-themselves — their names and scope — come from configuration and are
-reported regardless of whether the scoring stage has run.</p>
+<p>This stage is optional and gated by language-model availability. With
+no language model configured, the hypothesis evidence scores read
+<em>pending</em>; with Ollama configured (as in this instance, with 127
+assertions extracted), scores are populated from citation-weighted
+assertion extraction. The hypotheses themselves — their names and scope
+— come from configuration and are reported regardless of whether the
+scoring stage has run.</p>
 <p>The hypotheses explored in this instance are: H1 Wakefulness
 Efficacy; H2 Cognitive Enhancement; H3 Low Abuse Liability; H4
 Dopaminergic Mechanism; H5 Off-label Psychiatric Utility; H6

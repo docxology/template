@@ -1,0 +1,75 @@
+subfields:
+  atmospheric_modeling:
+    - radiative transfer
+    - general circulation model
+    - thermal structure
+    - temperature-pressure profile
+    - atmospheric dynamics
+    - cloud formation
+    - aerosols
+    - photochemistry
+  observational_techniques:
+    - transit spectroscopy
+    - emission spectroscopy
+    - direct imaging
+    - radial velocity
+    - phase curves
+    - secondary eclipse
+    - transmission spectrum
+    - thermal emission
+  instrumentation:
+    - james webb space telescope
+    - jwst
+    - hubble space telescope
+    - spitzer
+    - kepler
+    - tess
+    - ground-based telescopes
+    - coronagraphy
+  molecular_detection:
+    - water vapor
+    - carbon dioxide
+    - methane
+    - ammonia
+    - hydrogen sulfide
+    - sodium
+    - potassium
+    - titanium oxide
+    - vanadium oxide
+    - molecular abundance
+  atmospheric_composition:
+    - metallicity
+    - carbon-to-oxygen ratio
+    - elemental abundances
+    - trace gases
+    - noble gases
+    - isotope ratios
+    - chemical equilibrium
+    - disequilibrium chemistry
+  planetary_types:
+    - hot jupiter
+    - super earth
+    - neptune-like
+    - terrestrial planets
+    - mini neptune
+    - gas giant
+    - rocky planets
+    - habitable zone
+  atmospheric_phenomena:
+    - thermal inversion
+    - hazes
+    - clouds
+    - winds
+    - atmospheric escape
+    - mass loss
+    - stellar irradiation
+    - tidal heating
+  characterization_methods:
+    - atmospheric retrieval
+    - forward modeling
+    - bayesian analysis
+    - machine learning
+    - statistical methods
+    - cross-correlation
+    - template matching
+    - spectral fitting

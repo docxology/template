@@ -2,8 +2,7 @@
 \protect\phantomsection\label{test-suite}
 Every stage is covered by a no-mocks test suite (real computation and
 \breaktt{pytest-httpserver} for network adapters) gated at \(\geq 90\%\)
-statement coverage on \texttt{src/}. The suite includes 819 tests
-covering:
+statement coverage on \texttt{src/}. The suite covers:
 
 \begin{itemize}
 \tightlist
@@ -11,9 +10,9 @@ covering:
   Record models and serialization (deduplication, canonical ID
   hierarchy)
 \item
-  All 7 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv) with pytest-httpserver integration
-  tests
+  All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with
+  pytest-httpserver integration tests
 \item
   Search runner (multi-engine dispatch, relevance filtering,
   resume/clear, YAML config)

@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -218,25 +232,26 @@ researcher entering the field would ask:</p>
 <ol type="1">
 <li><p><strong>RQ1 — Field size and growth.</strong> How large is the
 literature on Modafinil, how fast is it growing, and when did it peak?
-The corpus of <span class="math inline">\(N = 2302\)</span> records
+The corpus of <span class="math inline">\(N = 2334\)</span> records
 spanning 2000–2026 answers this directly, with a compound annual growth
-rate of 3.45% and a peak in 2025.</p></li>
+rate of 5.48% and a peak in 2025.</p></li>
 <li><p><strong>RQ2 — Subfield composition.</strong> What sub-areas
 compose the literature, and what is their relative weight? A
 configurable 6-bucket taxonomy (Clinical Sleep, Cognition, Pharmacology,
 Psychiatry, Safety, and Neuroscience) classifies every record, with
-<strong>Clinical Sleep</strong> the largest bucket at 64.3%.</p></li>
+<strong>Clinical Sleep</strong> the largest bucket at 63.0%.</p></li>
 <li><p><strong>RQ3 — Topical and linguistic structure.</strong> What
 language and concepts recur, and what latent topics cross-cut the
 keyword taxonomy? TF-IDF over a 500-feature vocabulary feeds
 non-negative matrix factorization, which extracts 5 latent topics. The
-top vocabulary terms are: modafinil, treatment, study, effects,
-patients, results, sleep, used, use, drug, studies, clinical, mg, using,
-placebo, cognitive, associated, effect, however, disorder.</p></li>
+top vocabulary terms are: modafinil, treatment, study, results,
+patients, effects, sleep, used, clinical, use, drug, studies, mg, using,
+sleepiness, disorder, associated, cognitive, narcolepsy,
+significant.</p></li>
 <li><p><strong>RQ4 — Citation geometry and evidence landscape.</strong>
 Which works anchor the citation structure, how self-contained is the
 retrieved slice, and which claims does the field test? The citation
-network of 2204 nodes and 8,772 edges (22.6% reference resolution rate)
+network of 2234 nodes and 8,623 edges (22.4% reference resolution rate)
 exposes hubs, authorities, and communities, while 6 configured
 hypotheses frame the evidence landscape.</p></li>
 </ol>
@@ -244,22 +259,22 @@ hypotheses frame the evidence landscape.</p></li>
 <p>The pipeline contributes an end-to-end, domain-agnostic workflow:</p>
 <ol type="1">
 <li><p><strong>Multiple-engine retrieval with graceful
-degradation.</strong> Records are gathered from 7 independent engines
-(arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, and
-ChinaRxiv). An engine with no API key or no network reports a
-<em>skipped</em> status; the run completes from whatever engines remain
-plus a committed offline corpus. For this live run, OpenAlex contributed
-the largest share of records, followed by Crossref and PubMed; Semantic
-Scholar was rate-limited (HTTP 429) and returned zero records without
-aborting the pipeline.</p></li>
+degradation.</strong> Records are gathered from 9 independent engines
+(arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
+ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). An engine with no API key
+or no network reports a <em>skipped</em> status; the run completes from
+whatever engines remain plus a committed offline corpus. Each new
+retrieval persists per-engine outcome and count provenance in
+<code>output/data/retrieval_report.json</code>; the merged corpus alone
+is never used to infer which engine supplied a record.</p></li>
 <li><p><strong>Record de-duplication.</strong> Heterogeneous records are
 merged by a canonical identifier hierarchy, keeping the most complete
-version of each work. Of 2302 retrieved records, 2248 carry DOIs, 932
+version of each work. Of 2334 retrieved records, 2260 carry DOIs, 923
 carry OpenAlex IDs, and 1 carry arXiv IDs.</p></li>
 <li><p><strong>Descriptive and bibliometric analysis.</strong> Counts by
-year, venue, and author; growth metrics (CAGR 3.45%, doubling time 11.3
+year, venue, and author; growth metrics (CAGR 5.48%, doubling time 9.2
 years); a configurable 6-bucket subfield classification; topic models;
-and a citation network with 1377 communities.</p></li>
+and a citation network with 1416 communities.</p></li>
 <li><p><strong>Language, entity, and embedding analysis.</strong>
 Keyphrase and entity extraction and offline deterministic document
 embeddings over titles, abstracts, and full text. The TF-IDF vocabulary

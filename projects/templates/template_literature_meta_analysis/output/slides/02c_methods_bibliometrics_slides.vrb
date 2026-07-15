@@ -5,7 +5,7 @@ buckets (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
 and Neuroscience) by priority-aware keyword matching; the taxonomy is
 defined entirely in configuration
 (\breaktt{project\_config.subfield\_keywords}). The largest bucket is
-\textbf{Clinical Sleep} at 64.3\% of the classified corpus. A
+\textbf{Clinical Sleep} at 63.0\% of the classified corpus. A
 per-subfield temporal breakdown (\breaktt{subfield\_timeline.json})
 tracks how each sub-area has grown over time, enabling identification of
 emerging or declining research threads.

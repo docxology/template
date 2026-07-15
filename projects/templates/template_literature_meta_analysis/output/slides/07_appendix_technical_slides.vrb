@@ -18,7 +18,7 @@ Description
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-\texttt{corpus.jsonl} & 01 & De-duplicated corpus (2302 records) \\
+\texttt{corpus.jsonl} & 01 & De-duplicated corpus (2334 records) \\
 \breaktt{temporal\_analysis.json} & 02 & Year counts, CAGR, doubling
 time, peak year \\
 \breaktt{subfield\_classification.json} & 02 & Per-bucket paper counts \\

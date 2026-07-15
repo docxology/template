@@ -35,8 +35,8 @@ The open work below should add tests or validators before promoting new claim su
 
 | ID | Track | Future improvement | Proving artifact | Gate |
 | --- | --- | --- | --- | --- |
-| `LIT-ENGINE-POLITENESS-1` | Retrieval | Add per-engine persisted rate-limit/backoff metadata for live retrieval runs | `output/data/retrieval_run_manifest.json` | Live-run smoke with skipped/limited engine rows |
-| `LIT-FULLTEXT-1` | Full text | Expand full-text availability report with provider, license, and checksum fields | `output/fulltext/fulltext_inventory.json` | Full-text report test with OA and non-OA fixtures |
+| `LIT-ENGINE-POLITENESS-1` | Retrieval | Persist per-engine retry and rate-limit-hit metadata alongside the existing elapsed time | `output/data/retrieval_run_manifest.json` | Live-run smoke with skipped/limited engine rows |
+| `LIT-FULLTEXT-1` | Full text | Add license and checksum fields to the provider-aware full-text availability report | `output/fulltext/fulltext_inventory.json` | Full-text report test with OA and non-OA fixtures |
 | `LIT-KG-CALIBRATION-1` | Knowledge graph | Add extraction-calibration fixtures for each configured hypothesis family | calibration fixture bundle | KG parser/scorer tests preserve score direction |
 
 ## Ordered improvement ladder

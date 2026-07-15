@@ -1,9 +1,9 @@
 \frametitle{Reproducibility}
 \protect\phantomsection\label{reproducibility}
-This manuscript was generated from a live retrieval run using 7 engines.
+This manuscript was generated from a live retrieval run using 9 engines.
 Every number, table, and figure in this document is injected from a
 committed artifact (\breaktt{output/data/*.json},
 \breaktt{output/figures/*.png}). Re-running the pipeline with the same
-configuration reproduces identical data outputs; the 18 figures are
+configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated
 from the same template. No number in this document was typed by hand.

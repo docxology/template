@@ -8,18 +8,19 @@ scope and evidence score.
 
 | ID | Hypothesis | Scope | Evidence score |
 | --- | --- | --- | --- |
-| H1 | Wakefulness Efficacy | clinical | +0.00 |
-| H2 | Cognitive Enhancement | cognitive | +0.00 |
-| H3 | Low Abuse Liability | safety | +0.00 |
-| H4 | Dopaminergic Mechanism | pharmacological | +0.00 |
-| H5 | Off-label Psychiatric Utility | applied | +0.00 |
-| H6 | Tolerability | safety | +0.00 |
+| H1 | Wakefulness Efficacy | clinical | +0.56 |
+| H2 | Cognitive Enhancement | cognitive | +0.49 |
+| H3 | Low Abuse Liability | safety | +0.62 |
+| H4 | Dopaminergic Mechanism | pharmacological | +1.00 |
+| H5 | Off-label Psychiatric Utility | applied | +0.35 |
+| H6 | Tolerability | safety | +0.31 |
 
-Evidence scores are produced by the optional, LLM-gated knowledge-graph stage. In the
-offline default run that stage does not execute, so scores read *pending* — the
-hypotheses, their names, and their scope are nonetheless reported directly from
-configuration. A live run with a language model available populates the scores from
-citation-weighted assertion extraction.
+Evidence scores are produced by the optional, LLM-gated knowledge-graph stage. When
+the knowledge-graph stage is skipped (no language model configured), scores read
+*pending*. When the stage runs (as in this instance, with 127
+assertions extracted via Ollama), scores are populated from citation-weighted
+assertion extraction. The hypotheses, their names, and their scope are always reported
+directly from configuration regardless of whether the LLM stage executed.
 
 ## Interpretation
 

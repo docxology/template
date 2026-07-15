@@ -6,21 +6,26 @@ of hardcoding literal values to ensure consistency and maintainability.
 
 Project layout
 --------------
-output/
-├── data/           Analysis JSON results and intermediate artifacts
-│   ├── corpus.jsonl
-│   ├── subfield_classification.json
-│   ├── temporal_analysis.json
-│   ├── tfidf_data.json
-│   ├── topics.json
-│   ├── citation_network.json
-│   ├── citation_graph.gml
-│   ├── nanopublications.jsonl
-│   ├── hypothesis_scores.json
-│   ├── hypothesis_trends.json
-│   └── fulltext_assessment.json
-├── figures/        Publication-ready PNG figures
-└── manuscript/     Rendered markdown with variables injected
+# output/
+# ├── data/           Analysis JSON results and intermediate artifacts
+# │   ├── corpus.jsonl
+# │   ├── subfield_classification.json
+# │   ├── temporal_analysis.json
+# │   ├── tfidf_data.json
+# │   ├── topics.json
+# │   ├── citation_network.json
+# │   ├── citation_graph.gml
+# │   ├── nanopublications.jsonl
+# │   ├── hypothesis_scores.json
+# │   ├── hypothesis_trends.json
+# │   ├── fulltext_assessment.json
+# │   ├── fulltext_extraction.json
+# │   ├── workflow_graphs.jsonl
+# │   ├── reproducibility_scores.json
+# │   └── reproducibility_summary.json
+# ├── fulltext/       Downloaded PDFs, extracted .txt, and figures/
+# ├── figures/        Publication-ready PNG figures
+# └── manuscript/     Rendered markdown with variables injected
 
 Pipeline defaults
 -----------------

@@ -196,26 +196,29 @@ paper on modafinil’s cognitive effects in ADHD patients belongs to the
 “ADHD Treatment” topics. This multi-resolution view is more informative
 than either approach alone.</p>
 <h2 id="engine-coverage-and-bias">Engine Coverage and Bias</h2>
-<p>For this live run, the corpus is dominated by OpenAlex (1,000
-records) and Crossref (1,000 records), with PubMed contributing 986
-records and arXiv contributing 1. Semantic Scholar was rate-limited
-(HTTP 429) and returned zero records — a known limitation of its
-unauthenticated API tier. SovietRxiv and ChinaRxiv returned zero records
-for the modafinil query, which is expected given their coverage
-domains.</p>
+<p>The committed analysis corpus is a bounded retrieval snapshot. It
+predates the deterministic per-engine retrieval report introduced by
+this template, so this paper does not attribute record counts or
+success/failure states to individual engines by reverse-engineering the
+merged corpus. New runs write those facts directly to
+<code>output/data/retrieval_report.json</code>; a resumed legacy
+snapshot is explicitly labelled
+<code>resume_without_prior_retrieval_report</code> rather than being
+given invented provenance.</p>
 <p>The max-results cap of 1,000 per engine means the full literature is
-larger than the retrieved corpus; the 2302 records represent a bounded
+larger than the retrieved corpus; the 2334 records represent a bounded
 sample rather than the complete literature. The citation network
-resolution rate of 22.6% reflects this: many cited works lie outside the
+resolution rate of 22.4% reflects this: many cited works lie outside the
 retrieved slice. Increasing the cap or adding more engines would improve
 coverage but also increase runtime and API load.</p>
 <h2 id="honest-defaults">Honest Defaults</h2>
-<p>The committed seed corpus is synthetic (reserved test DOIs, generated
-authors) so that the whole pipeline runs offline and byte-identically.
-Its numbers demonstrate the machinery; they are not empirical findings
-about modafinil. Real claims require a live retrieval run with
-regenerated figures, reports, and manuscript variables — as produced in
-this instance.</p>
+<p>The small corpus under <code>data/fixtures/</code> is synthetic
+(reserved test DOIs and generated authors) and exists only for offline
+tests. It is not silently substituted for the tracked analysis corpus. A
+user who regenerates empirical findings must run retrieval, analysis,
+figures, and manuscript injection together and retain the resulting
+corpus and retrieval report; fixture-only runs demonstrate machinery,
+not findings about modafinil.</p>
 <h2 id="limitations-and-extensions">Limitations and Extensions</h2>
 <p>Several limitations bound the interpretation of results:</p>
 <ul>
@@ -232,11 +235,12 @@ They capture term co-occurrence but not semantic similarity; a
 transformer backend (<code>embeddings</code> extra) would improve the
 quality of nearest-neighbour retrieval and clustering.</p></li>
 <li><p><strong>Hypothesis scoring depends on an external language
-model.</strong> Without Ollama running, scores read <em>pending</em>.
-The scoring is also sensitive to prompt design and model choice; the
-default <code>gemma3:4b</code> is a lightweight model suitable for
-demonstration but may miss nuanced assertions.</p></li>
-<li><p><strong>Abstract coverage is 55.5%.</strong> Text analytics
+model.</strong> Without Ollama running, scores read <em>pending</em>;
+with Ollama configured (as in this run, with 127 assertions extracted),
+scores are populated. The scoring is also sensitive to prompt design and
+model choice; the default <code>gemma3:4b</code> is a lightweight model
+suitable for demonstration but may miss nuanced assertions.</p></li>
+<li><p><strong>Abstract coverage is 61.6%.</strong> Text analytics
 operate only on the subset of records with abstracts, biasing topic
 models and embeddings toward well-indexed sources.</p></li>
 </ul>

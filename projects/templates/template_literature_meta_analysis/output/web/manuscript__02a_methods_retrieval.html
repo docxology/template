@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -190,22 +204,29 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
 <h1 id="retrieval-and-de-duplication">Retrieval and De-duplication</h1>
-<p>Retrieval dispatches the configured query across 7 independent
+<p>Retrieval dispatches the configured query across 9 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, and ChinaRxiv). Each engine is an isolated adapter exposing
-a uniform <code>search(query) -&gt; list[Record]</code> interface;
-engines that are keyless — arXiv, OpenAlex [priem2022openalex], Crossref
+SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is
+an isolated adapter exposing a uniform
+<code>search(query) -&gt; list[Record]</code> interface; engines that
+are keyless — arXiv, OpenAlex [priem2022openalex], Crossref
 [hendricks2020crossref], PubMed/Entrez [sayers2022entrez], SovietRxiv /
-RussiaRxiv, and ChinaRxiv — need no credentials, while Semantic Scholar
-[kinney2023semantic] uses a key when present. SovietRxiv is a translated
-archive of Soviet-era scientific preprints sourced from Math-Net.Ru and
-CyberLeninka [sovietrxiv]; ChinaRxiv serves translated Chinese preprints
-from ChinaXiv via the same unified API. Both retain original-language
-PDFs alongside each translation, and their polite rate-limit pool
-(300/min vs 30/min anonymous) is activated by an optional
-<code>X-API-Email</code> header. Optional full-text resolution queries
-Unpaywall [piwowar2018state] for open-access locations. <strong>Multiple
-dispatch degrades gracefully</strong>: an engine that is disabled in the
+RussiaRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv — need no
+credentials, while Semantic Scholar [kinney2023semantic] uses a key when
+present. SovietRxiv is a translated archive of Soviet-era scientific
+preprints sourced from Math-Net.Ru and CyberLeninka [sovietrxiv];
+ChinaRxiv serves translated Chinese preprints from ChinaXiv via the same
+unified API. Both retain original-language PDFs alongside each
+translation, and their polite rate-limit pool (300/min vs 30/min
+anonymous) is activated by an optional <code>X-API-Email</code> header.
+Europe PMC is a keyless biomedical aggregator covering PubMed, PMC,
+patents, and preprints in a single search call. bioRxiv/medRxiv share
+one unified date-window + cursor API; unlike the other engines it is not
+a free-text search endpoint, so the adapter walks the date window page
+by page and keeps only records whose title and abstract match every
+query term client-side. Optional full-text resolution queries Unpaywall
+[piwowar2018state] for open-access locations. <strong>Multiple dispatch
+degrades gracefully</strong>: an engine that is disabled in the
 configuration, lacks a required key, or cannot reach the network returns
 a <em>skipped</em> status, and the run completes from the remaining
 engines plus the committed offline corpus.</p>
@@ -218,11 +239,10 @@ parameter for hermetic testing with <code>pytest-httpserver</code> — no
 engine hardcodes its URL inside the function body.</p>
 <table>
 <colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
 </colgroup>
 <thead>
 <tr>
@@ -230,7 +250,6 @@ engine hardcodes its URL inside the function body.</p>
 <th>Rate limit</th>
 <th>Pagination</th>
 <th>Auth</th>
-<th>Records (this run)</th>
 </tr>
 </thead>
 <tbody>
@@ -239,59 +258,65 @@ engine hardcodes its URL inside the function body.</p>
 <td>3s between requests</td>
 <td>100/page, offset</td>
 <td>Keyless</td>
-<td>Sparse</td>
 </tr>
 <tr>
 <td>Semantic Scholar</td>
 <td>1 req/s (unauth.)</td>
 <td>100/page, offset</td>
 <td>Optional key</td>
-<td>Skipped (429)</td>
 </tr>
 <tr>
 <td>OpenAlex</td>
 <td>Polite pool (mailto)</td>
 <td>200/page, cursor</td>
 <td>Keyless</td>
-<td>1,000</td>
 </tr>
 <tr>
 <td>Crossref</td>
 <td>Polite pool (mailto)</td>
 <td>1,000/page, offset</td>
 <td>Keyless</td>
-<td>1,000</td>
 </tr>
 <tr>
 <td>PubMed</td>
 <td>NCBI usage policy</td>
 <td>retstart/retmax</td>
 <td>Keyless</td>
-<td>986</td>
 </tr>
 <tr>
 <td>SovietRxiv</td>
 <td>30/min (300/min polite)</td>
 <td>1–100/page, cursor</td>
 <td><code>X-API-Email</code></td>
-<td>0</td>
 </tr>
 <tr>
 <td>ChinaRxiv</td>
 <td>30/min (300/min polite)</td>
 <td>1–100/page, cursor</td>
 <td><code>X-API-Email</code></td>
-<td>0</td>
+</tr>
+<tr>
+<td>Europe PMC</td>
+<td>~10 req/s (undocumented hard limit)</td>
+<td>Up to 1,000/page</td>
+<td>Keyless</td>
+</tr>
+<tr>
+<td>bioRxiv/medRxiv</td>
+<td>No documented limit</td>
+<td>100/page fixed, cursor</td>
+<td>Keyless</td>
 </tr>
 </tbody>
 </table>
-<p>SovietRxiv and ChinaRxiv returned zero records for the modafinil
-query, which is expected: the Soviet-era archive covers mathematics,
-physics, and engineering preprints, while ChinaXiv covers Chinese
-scientific preprints, and neither domain has substantial modafinil
-literature. The engines dispatched correctly, queried the live API, and
-returned empty result sets without error — confirming graceful
-degradation.</p>
+<p>Every new search writes
+<code>output/data/retrieval_report.json</code>, a timestamp-free report
+that records each attempted, skipped, or failed source with fetched,
+new-record, and duplicate counts. A zero-result response is therefore
+distinguishable from a disabled adapter or an HTTP failure. The
+committed corpus predates that report contract, so this paper
+intentionally does not reconstruct source-specific counts from the
+merged corpus.</p>
 <h2 id="canonical-identifier-hierarchy">Canonical Identifier
 Hierarchy</h2>
 <p>Heterogeneous records are reconciled by a <strong>canonical
@@ -304,9 +329,9 @@ title. When two records share a canonical identifier they are merged,
 keeping the version with the most complete metadata (a count of non-None
 optional fields). The DOI is normalized: case-folded, resolver-prefix
 stripped, so the same paper returned by two engines under
-case/format-variant DOIs merges. For this run, 2248 records carry DOIs,
-932 carry OpenAlex IDs, and 1 carry arXiv IDs. The de-duplicated corpus
-for this run holds <span class="math inline">\(N = 2302\)</span> records
+case/format-variant DOIs merges. For this run, 2260 records carry DOIs,
+923 carry OpenAlex IDs, and 1 carry arXiv IDs. The de-duplicated corpus
+for this run holds <span class="math inline">\(N = 2334\)</span> records
 published across 2000–2026.</p>
 <h2 id="relevance-filtering">Relevance Filtering</h2>
 <p>After de-duplication, a relevance filter drops papers whose title and

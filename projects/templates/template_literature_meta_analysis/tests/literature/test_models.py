@@ -369,6 +369,7 @@ class TestPaperSerialization:
             "pdf_url",
             "is_open_access",
             "full_text_source",
+            "keywords",
         }
         assert set(data.keys()) == expected_keys
 

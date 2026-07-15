@@ -2,7 +2,7 @@
 
 ## Figure Accessibility
 
-All 18 figures are rendered with a colourblind-safe palette (Wong 2011,
+All 21 figures are rendered with a colourblind-safe palette (Wong 2011,
 8 colours) and high-contrast labels at publication DPI (300). Each figure carries a
 descriptive caption so the visual claims are recoverable from text alone. The palette
 avoids red-green colour pairs that are indistinguishable for deuteranopia and
@@ -47,4 +47,4 @@ principles:
 The default corpus is synthetic and labelled as such; the manuscript does not present
 fixture-derived numbers as empirical findings about modafinil. Live findings require
 a real retrieval run with regenerated artifacts — as produced in this instance, which
-retrieved 2302 real records from 7 live engines.
+retrieved 2334 real records from 9 live engines.

@@ -122,6 +122,22 @@ this, unlike `knowledge_graph.hypothesis`'s `STANDARD_HYPOTHESES` list.
 - **No mock policy.** Tests must use real `WorkflowNode`/`WorkflowGraph`
   objects and real score computations; HTTP-boundary tests use
   `pytest-httpserver`, mirroring `knowledge_graph`'s pattern exactly.
+- **Cyclic dependency graphs are handled, not rejected.** `build_workflow_graph`
+  does not prevent cycles (A depends on B, B depends on A) or self-loops — the
+  source paper assumes acyclicity, but an LLM can emit a cycle. All scoring
+  functions are cycle-safe: BFS-based functions use `visited` sets, and
+  degree-based functions are inherently cycle-safe. A cycle lowers `rc4`
+  (path coverage, since a cycle cannot reach a SINK outside itself) but
+  raises `rc5` (cohesion, since the cycle is one connected component).
+  See `models.py`'s module docstring "Cycle handling" section.
+- **`weak_component_coverage` (rc5) filters phantom edge endpoints.** A
+  hand-built `WorkflowGraph` whose edges reference `node_id`s not in
+  `graph.nodes` would previously inflate the component size beyond
+  `len(graph.nodes)`, producing a result > 1.0 — a contract violation.
+  The function now skips edges with phantom endpoints before building
+  the undirected adjacency. `build_workflow_graph` already prevents this
+  in the normal pipeline (dangling references are counted, not turned
+  into edges), but hand-built test fixtures bypass it.
 
 ## Workflow
 
@@ -139,7 +155,13 @@ uv run python scripts/10_reproducibility_assessment.py --fulltext-dir output/ful
 
 Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled
 (same LLM boundary as `knowledge_graph`, sharing `LLMConfig`,
-`call_ollama()`, and `parse_llm_response()`).
+`call_ollama()`, and `parse_llm_response()`). The reproducibility module
+passes its own `_SYSTEM_PROMPT` (from `prompts.py`) to `call_ollama()` via
+the `system_prompt=` keyword argument — without this, `call_ollama()` would
+default to the knowledge-graph module's system prompt (which describes
+hypothesis-support assertions, not the workflow-graph schema), and the LLM
+would emit nodes with empty/invalid `node_type` values that the validation
+layer would silently drop.
 
 ## Known Limitations
 

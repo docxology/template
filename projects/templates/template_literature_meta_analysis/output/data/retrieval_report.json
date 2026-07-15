@@ -1,9 +1,133 @@
 {
-  "corpus_records": 2302,
-  "engines": [],
+  "corpus_records": 2334,
+  "engines": [
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 30.57,
+      "fetched": 0,
+      "new_records": 0,
+      "source": "Semantic Scholar",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 12.24,
+      "fetched": 1000,
+      "new_records": 1000,
+      "source": "OpenAlex",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 255,
+      "elapsed_seconds": 1.54,
+      "fetched": 1000,
+      "new_records": 745,
+      "source": "Crossref",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 267,
+      "elapsed_seconds": 8.25,
+      "fetched": 986,
+      "new_records": 719,
+      "source": "PubMed",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 463,
+      "elapsed_seconds": 9.43,
+      "fetched": 1000,
+      "new_records": 537,
+      "source": "Europe PMC",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 3.82,
+      "fetched": 1,
+      "new_records": 1,
+      "source": "arXiv[1]",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 3.41,
+      "fetched": 0,
+      "new_records": 0,
+      "source": "arXiv[2]",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 3.46,
+      "fetched": 0,
+      "new_records": 0,
+      "source": "arXiv[3]",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 1,
+      "elapsed_seconds": 3.48,
+      "fetched": 1,
+      "new_records": 0,
+      "source": "arXiv[4]",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 1.86,
+      "fetched": 0,
+      "new_records": 0,
+      "source": "bioRxiv",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 0.45,
+      "fetched": 0,
+      "new_records": 0,
+      "source": "SovietRxiv",
+      "status": "ok"
+    },
+    {
+      "detail": "",
+      "duplicates": 0,
+      "elapsed_seconds": 0.36,
+      "fetched": 0,
+      "new_records": 0,
+      "source": "ChinaRxiv",
+      "status": "ok"
+    }
+  ],
   "max_results_per_engine": 1000,
   "query": "\"modafinil\" OR \"provigil\" OR \"armodafinil\"",
-  "route": {},
-  "run_mode": "resume_without_prior_retrieval_report",
+  "route": {
+    "confidence": 0.5,
+    "prefer_preprints": false,
+    "query_type": "mixed",
+    "source_order": [
+      "semantic_scholar",
+      "openalex",
+      "crossref",
+      "pubmed",
+      "europepmc",
+      "arxiv",
+      "biorxiv",
+      "sovietrxiv",
+      "chinarxiv"
+    ]
+  },
+  "run_mode": "retrieval",
   "schema_version": "template-literature-retrieval-report-v1"
 }

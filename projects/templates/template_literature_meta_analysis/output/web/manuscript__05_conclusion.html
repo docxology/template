@@ -183,34 +183,34 @@
 <p>We have presented a configurable, reproducible meta-analysis template
 that turns a single search term into a complete, evidence-bound portrait
 of its literature. Applied to <strong>Modafinil</strong>, it retrieved
-and de-duplicated 2302 records across 7 engines (arXiv, OpenAlex,
-Semantic Scholar, Crossref, PubMed, SovietRxiv, and ChinaRxiv),
-classified them into 6 configurable subfields (with <strong>Clinical
-Sleep</strong> dominant at 64.3%), extracted 5 topics over a 500-feature
-vocabulary, computed reproducible document embeddings, mapped the
-citation network (2204 nodes, 8,772 edges, 1377 communities), and framed
-6 hypotheses for optional evidence scoring.</p>
+and de-duplicated 2334 records across 9 engines (arXiv, OpenAlex,
+Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+and bioRxiv/medRxiv), classified them into 6 configurable subfields
+(with <strong>Clinical Sleep</strong> dominant at 63.0%), extracted 5
+topics over a 500-feature vocabulary, computed reproducible document
+embeddings, mapped the citation network (2234 nodes, 8,623 edges, 1416
+communities), and framed 6 hypotheses for optional evidence scoring.</p>
 <h2 id="key-findings">Key Findings</h2>
 <p>The analysis answers the four research questions posed in the
 introduction:</p>
 <ol type="1">
 <li><p><strong>RQ1 (Growth)</strong>: The modafinil literature spans 26
-years (2000–2026) and grows at a CAGR of 3.45%, doubling every 11.3
-years. The peak year 2025 produced 112 publications, indicating
+years (2000–2026) and grows at a CAGR of 5.48%, doubling every 9.2
+years. The peak year 2025 produced 147 publications, indicating
 sustained and active research interest.</p></li>
 <li><p><strong>RQ2 (Subfields)</strong>: The 6-bucket taxonomy reveals a
 multi-disciplinary literature dominated by clinical sleep research
-(64.3%), with significant representation from cognition, psychiatry, and
+(63.0%), with significant representation from cognition, psychiatry, and
 pharmacology.</p></li>
 <li><p><strong>RQ3 (Topics)</strong>: NMF extracted 5 latent topics —
 cognitive enhancement, ADHD treatment, pharmacological dose-response,
 sleep disorders, and psychiatric fatigue — that cross-cut the explicit
 subfield taxonomy and reveal the thematic structure of the
 field.</p></li>
-<li><p><strong>RQ4 (Citations)</strong>: The citation network of 2204
-nodes and 8,772 edges has a resolution rate of 22.6%, 1377 communities,
+<li><p><strong>RQ4 (Citations)</strong>: The citation network of 2234
+nodes and 8,623 edges has a resolution rate of 22.4%, 1416 communities,
 and a maximum in-degree of</p>
-<ol start="165" type="1">
+<ol start="163" type="1">
 <li>The heavy-tailed degree distribution is characteristic of citation
 networks, with a small number of foundational works anchoring the
 structure.</li>
@@ -226,11 +226,11 @@ Combined with an offline, deterministic default run, this yields a
 on demand as a field evolves, with every number traceable to a
 regenerable artifact.</p>
 <h2 id="reproducibility">Reproducibility</h2>
-<p>This manuscript was generated from a live retrieval run using 7
+<p>This manuscript was generated from a live retrieval run using 9
 engines. Every number, table, and figure in this document is injected
 from a committed artifact (<code>output/data/*.json</code>,
 <code>../figures/*.png</code>). Re-running the pipeline with the same
-configuration reproduces identical data outputs; the 18 figures are
+configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated
 from the same template. No number in this document was typed by
 hand.</p>

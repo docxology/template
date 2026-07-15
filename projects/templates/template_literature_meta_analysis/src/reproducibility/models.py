@@ -43,6 +43,21 @@ dropped from ``edges`` and counted in ``dangling_reference_count``
 instead of raising -- extraction is inherently partial, and a dangling
 reference is signal (something the paper alludes to but that our
 extraction did not capture as its own node), not an error.
+
+Cycle handling
+--------------
+Neither :func:`build_workflow_graph` nor :class:`WorkflowNode` prevents
+a cycle in ``depends_on`` (e.g. node A depends on B, B depends on A).
+The source paper assumes an acyclic workflow, but an LLM can emit a
+cyclic dependency graph. All scoring functions in
+:mod:`reproducibility.scoring` handle cycles correctly: BFS-based
+functions (``source_sink_path_coverage``, ``weak_component_coverage``)
+use ``visited`` sets that prevent infinite traversal, and degree-based
+functions (``source_consumption``, ``sink_production``) are inherently
+cycle-safe. A cycle is therefore scored without error but will lower
+``rc4`` (path coverage) since a cycle cannot reach a SINK that is not
+already in the cycle, and ``rc5`` (cohesion) will treat the entire cycle
+as one weakly-connected component.
 """
 
 from __future__ import annotations

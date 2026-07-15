@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -252,13 +266,13 @@ loadings.</p>
 class="math inline">\(N_{\text{end}}\)</span> are the publication counts
 in the first and last years of the corpus, respectively. The doubling
 time is <span class="math inline">\(t_d = \ln(2) / \ln(1 +
-\text{CAGR})\)</span>. For this run: CAGR = 3.45%, doubling time = 11.3
+\text{CAGR})\)</span>. For this run: CAGR = 5.48%, doubling time = 9.2
 years.</p>
 <h2 id="configuration-surface">Configuration Surface</h2>
 <p>A single <code>manuscript/config.yaml</code> controls the search
 term, per-engine query and keyword sets, engine enable toggles, subfield
 taxonomy, hypotheses, full-text and embedding options, and paper
-metadata. This run drew on 7 engines, a 6-bucket taxonomy, and 6
+metadata. This run drew on 9 engines, a 6-bucket taxonomy, and 6
 hypotheses.</p>
 <h2 id="artifacts">Artifacts</h2>
 <p>Intermediate and final outputs live under <code>output/</code> and
@@ -280,7 +294,7 @@ are disposable and regenerable:</p>
 <tr>
 <td><code>corpus.jsonl</code></td>
 <td>01</td>
-<td>De-duplicated corpus (2302 records)</td>
+<td>De-duplicated corpus (2334 records)</td>
 </tr>
 <tr>
 <td><code>temporal_analysis.json</code></td>

@@ -37,6 +37,8 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
             variables["ASSERTION_CONTRADICT_PCT"] = "0.0"
     else:
         logger.info("assertion_summary.json not found; assertion variables skipped")
+        variables["TOTAL_ASSERTIONS"] = "pending"
+        variables["TOTAL_ASSERTIONS_RAW"] = "0"
 
     scores = ctx.load_json("hypothesis_scores.json")
     if scores:

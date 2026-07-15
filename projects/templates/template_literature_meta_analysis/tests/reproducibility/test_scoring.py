@@ -639,3 +639,104 @@ class TestVerifySourceQuote:
         fulltext = "The quick brown fox leaps over the lazy dog in the morning."
         near_quote = "The quick brown fox jumps over the lazy dog in the morning"
         assert verify_source_quote(near_quote, fulltext, fuzzy_threshold=0.999) is False
+
+    def test_verify_source_quote_whitespace_only_quote_returns_false(self) -> None:
+        """A quote that splits to zero words (whitespace-only) must return False."""
+        assert verify_source_quote("   \t  \n  ", "some fulltext content here") is False
+
+
+class TestWeakComponentCoveragePhantomEdges:
+    """Verify rc5 never exceeds 1.0 when edges reference phantom node ids."""
+
+    def test_phantom_edge_endpoints_do_not_inflate_rc5(self) -> None:
+        """Edges with one endpoint not in graph.nodes must not inflate rc5 above 1.0.
+
+        A hand-built WorkflowGraph with two SOURCE nodes and one edge that
+        references a phantom third node would previously cause the BFS to
+        add the phantom to the component, inflating len(component) to 3
+        while len(graph.nodes) is 2, yielding 3/2 = 1.5 > 1.0.
+        """
+        s1 = _make_node("s1", NodeType.SOURCE, 3)
+        s2 = _make_node("s2", NodeType.SOURCE, 3)
+        graph = WorkflowGraph(
+            paper_id="p",
+            nodes=[s1, s2],
+            edges=[
+                # s1 connects to a real node s2.
+                WorkflowEdge(source_node_id="s1", target_node_id="s2"),
+                # s2 also connects to a phantom "ghost" not in graph.nodes.
+                WorkflowEdge(source_node_id="s2", target_node_id="ghost"),
+            ],
+        )
+        rc5 = weak_component_coverage(graph)
+        assert rc5 <= 1.0
+        # s1 and s2 form one component of size 2; ghost is ignored.
+        assert rc5 == 1.0
+
+
+class TestCycleHandling:
+    """Verify all scoring functions handle cyclic dependency graphs without error."""
+
+    def test_two_node_cycle_scores_without_infinite_loop(self) -> None:
+        """A depends on B, B depends on A — a cycle that the paper assumes away.
+
+        rc5 (cohesion) should be 1.0 because the cycle is one component.
+        composite_score should not hang or raise.
+        """
+        # Cycle: s1 depends on m1, m1 depends on s1.
+        s1_cyclic = WorkflowNode(
+            node_id="s1",
+            node_name="s1",
+            node_type=NodeType.SOURCE,
+            source_quote="q",
+            description="d",
+            reproducibility_rating=3,
+            depends_on=["m1"],
+            paper_id="p",
+        )
+        m1_cyclic = WorkflowNode(
+            node_id="m1",
+            node_name="m1",
+            node_type=NodeType.METHOD,
+            source_quote="q",
+            description="d",
+            reproducibility_rating=3,
+            depends_on=["s1"],
+            paper_id="p",
+        )
+        graph = WorkflowGraph(
+            paper_id="p",
+            nodes=[s1_cyclic, m1_cyclic],
+            edges=[
+                WorkflowEdge(source_node_id="s1", target_node_id="m1"),
+                WorkflowEdge(source_node_id="m1", target_node_id="s1"),
+            ],
+        )
+        # Must not hang, must not raise.
+        result = composite_score(graph)
+        assert 0.0 <= result.composite_score <= 1.0
+        # The cycle is one weakly-connected component of size 2.
+        assert result.structural_components["cohesion"] == 1.0
+
+    def test_self_referencing_node_scores_without_error(self) -> None:
+        """A node that depends on itself — a degenerate cycle.
+
+        build_workflow_graph will create a self-loop edge. Scoring must
+        not hang or raise; rc1/rc2/rc3/rc4/rc5 should all be well-defined.
+        """
+        n1 = WorkflowNode(
+            node_id="n1",
+            node_name="self-referencing",
+            node_type=NodeType.SOURCE,
+            source_quote="q",
+            description="d",
+            reproducibility_rating=3,
+            depends_on=["n1"],
+            paper_id="p",
+        )
+        from reproducibility.models import build_workflow_graph
+
+        graph = build_workflow_graph("p", [n1])
+        assert len(graph.edges) == 1
+        result = composite_score(graph)
+        assert 0.0 <= result.composite_score <= 1.0

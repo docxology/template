@@ -19,6 +19,8 @@ scripts/
 ├── 07_literature_evaluation.py   # → literature/evaluation.py
 ├── 08_deep_research_dispatch.py  # → deep_research/deep_research_adapter.py
 ├── 09_export_bibliography.py     # → literature/bibliography.py
+├── 10_reproducibility_assessment.py # → reproducibility/runner.py
+├── 11_fulltext_download.py       # → literature/fulltext_download.py
 └── __pycache__/                  # Python bytecode cache (gitignored)
 ```
 
@@ -42,6 +44,8 @@ explicitly per the note in `manuscript/config.yaml`).
 | `07` | `corpus.jsonl` | `output/data/literature_evaluation.json` | `01` |
 | `08` | provider config | `deep_research_replay.json` | none |
 | `09` | `corpus.jsonl` | `output/data/bibliography.bib` | `01` |
+| `10` | `corpus.jsonl`, `output/fulltext/` | `workflow_graphs.jsonl`, `reproducibility_scores.json`, `reproducibility_summary.json` | `01`, `11` (or manual fulltext), Ollama (optional) |
+| `11` | `corpus.jsonl` | `output/fulltext/`, `output/data/fulltext_extraction.json` | `01`, network (Unpaywall) |
 | `05` | `output/data/*.json` (incl. `06`'s `fulltext_assessment.json`), `manuscript/*.md` | `output/manuscript/*.md` (rendered) | `02`, `03`, `06` |
 
 ## Script Details

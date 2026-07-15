@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -194,10 +208,10 @@ Analysis</h1>
 <p>Descriptive statistics summarize the corpus along every available
 axis: counts by year, venue, and author; citation-count distributions;
 and author productivity. Temporal analysis fits the publication time
-series, reporting a compound annual growth rate of 3.45% across
+series, reporting a compound annual growth rate of 5.48% across
 2000–2026 (a span of 26 years), with a mean year-over-year growth rate
-of 6.3% and a doubling time of 11.3 years. The peak publication year is
-2025 with 112 records.</p>
+of 7.8% and a doubling time of 9.2 years. The peak publication year is
+2025 with 147 records.</p>
 <h2 id="growth-metrics">Growth Metrics</h2>
 <p>The compound annual growth rate (CAGR) is computed as:</p>
 <p><span class="math display">\[
@@ -220,7 +234,7 @@ buckets (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
 and Neuroscience) by priority-aware keyword matching; the taxonomy is
 defined entirely in configuration
 (<code>project_config.subfield_keywords</code>). The largest bucket is
-<strong>Clinical Sleep</strong> at 64.3% of the classified corpus. A
+<strong>Clinical Sleep</strong> at 63.0% of the classified corpus. A
 per-subfield temporal breakdown (<code>subfield_timeline.json</code>)
 tracks how each sub-area has grown over time, enabling identification of
 emerging or declining research threads.</p>

@@ -58,16 +58,14 @@ def test_search_source_adds_papers(tmp_path: Path) -> None:
     result = search_source("Test", fake_search, "query", 10, corpus, logger, observations=observations)
     assert result is not None
     assert len(corpus) == 1
-    assert observations == [
-        {
-            "source": "Test",
-            "status": "ok",
-            "fetched": 1,
-            "new_records": 1,
-            "duplicates": 0,
-            "detail": "",
-        }
-    ]
+    obs = observations[0]
+    assert obs["source"] == "Test"
+    assert obs["status"] == "ok"
+    assert obs["fetched"] == 1
+    assert obs["new_records"] == 1
+    assert obs["duplicates"] == 0
+    assert obs["detail"] == ""
+    assert "elapsed_seconds" in obs
 
 
 def test_run_literature_search_skips_sources(tmp_output_dir: str) -> None:

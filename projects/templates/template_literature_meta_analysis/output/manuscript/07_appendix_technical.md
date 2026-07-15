@@ -56,14 +56,14 @@ $$
 
 where $N_{\text{start}}$ and $N_{\text{end}}$ are the publication counts in the first and
 last years of the corpus, respectively. The doubling time is
-$t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 3.45\%, doubling time
-= 11.3 years.
+$t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 5.48\%, doubling time
+= 9.2 years.
 
 ## Configuration Surface
 
 A single `manuscript/config.yaml` controls the search term, per-engine query and keyword
 sets, engine enable toggles, subfield taxonomy, hypotheses, full-text and embedding
-options, and paper metadata. This run drew on 7 engines, a
+options, and paper metadata. This run drew on 9 engines, a
 6-bucket taxonomy, and 6 hypotheses.
 
 ## Artifacts
@@ -72,7 +72,7 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 
 | File | Stage | Description |
 | --- | --- | --- |
-| `corpus.jsonl` | 01 | De-duplicated corpus (2302 records) |
+| `corpus.jsonl` | 01 | De-duplicated corpus (2334 records) |
 | `temporal_analysis.json` | 02 | Year counts, CAGR, doubling time, peak year |
 | `subfield_classification.json` | 02 | Per-bucket paper counts |
 | `subfield_timeline.json` | 02 | Per-subfield annual breakdown |

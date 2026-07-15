@@ -45,33 +45,37 @@
 \contentsline {subsection}{\numberline {13.1}RQ4: Citation Geometry}{30}{subsection.13.1}%
 \contentsline {subsection}{\numberline {13.2}Centrality Analysis}{30}{subsection.13.2}%
 \contentsline {subsection}{\numberline {13.3}Advanced Network Metrics}{32}{subsection.13.3}%
-\contentsline {section}{\numberline {14}Discussion}{33}{section.14}%
-\contentsline {subsection}{\numberline {14.1}What the Template Is, and Is Not}{33}{subsection.14.1}%
-\contentsline {subsection}{\numberline {14.2}Engine Coverage and Bias}{33}{subsection.14.2}%
-\contentsline {subsection}{\numberline {14.3}Honest Defaults}{33}{subsection.14.3}%
-\contentsline {subsection}{\numberline {14.4}Limitations and Extensions}{33}{subsection.14.4}%
-\contentsline {section}{\numberline {15}Conclusion}{34}{section.15}%
-\contentsline {subsection}{\numberline {15.1}Key Findings}{34}{subsection.15.1}%
-\contentsline {subsection}{\numberline {15.2}Architectural Contribution}{34}{subsection.15.2}%
-\contentsline {subsection}{\numberline {15.3}Reproducibility}{34}{subsection.15.3}%
-\contentsline {section}{\numberline {16}Appendix A: Tooling and Reproduction}{35}{section.16}%
-\contentsline {subsection}{\numberline {16.1}Reproduce the Offline Default Run}{35}{subsection.16.1}%
-\contentsline {subsection}{\numberline {16.2}Reproduce the Live Run}{35}{subsection.16.2}%
-\contentsline {subsection}{\numberline {16.3}Re-target to Another Topic}{35}{subsection.16.3}%
-\contentsline {subsection}{\numberline {16.4}Live Retrieval}{35}{subsection.16.4}%
-\contentsline {subsection}{\numberline {16.5}Deep Research (Offline Fixture Replay)}{35}{subsection.16.5}%
-\contentsline {subsection}{\numberline {16.6}Test Suite}{36}{subsection.16.6}%
-\contentsline {section}{\numberline {17}Appendix B: Technical Notes}{37}{section.17}%
-\contentsline {subsection}{\numberline {17.1}Determinism}{37}{subsection.17.1}%
-\contentsline {subsection}{\numberline {17.2}Data Model}{37}{subsection.17.2}%
-\contentsline {subsection}{\numberline {17.3}NMF Mathematics}{37}{subsection.17.3}%
-\contentsline {subsection}{\numberline {17.4}Growth Rate Estimation}{37}{subsection.17.4}%
-\contentsline {subsection}{\numberline {17.5}Configuration Surface}{37}{subsection.17.5}%
-\contentsline {subsection}{\numberline {17.6}Artifacts}{37}{subsection.17.6}%
-\contentsline {section}{\numberline {18}Appendix C: Accessibility and Provenance}{39}{section.18}%
-\contentsline {subsection}{\numberline {18.1}Figure Accessibility}{39}{subsection.18.1}%
-\contentsline {subsection}{\numberline {18.2}Provenance Chain}{39}{subsection.18.2}%
-\contentsline {subsection}{\numberline {18.3}FAIR Data Principles}{39}{subsection.18.3}%
-\contentsline {subsection}{\numberline {18.4}Honesty}{39}{subsection.18.4}%
-\contentsline {section}{\numberline {19}Glossary}{40}{section.19}%
-\contentsline {section}{\numberline {20}References}{41}{section.20}%
+\contentsline {section}{\numberline {14}Results: Reproducibility Assessment}{33}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Low-Scoring Papers}{33}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Gating and Defaults}{33}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Interpretation}{33}{subsection.14.3}%
+\contentsline {section}{\numberline {15}Discussion}{34}{section.15}%
+\contentsline {subsection}{\numberline {15.1}What the Template Is, and Is Not}{34}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Engine Coverage and Bias}{34}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Honest Defaults}{34}{subsection.15.3}%
+\contentsline {subsection}{\numberline {15.4}Limitations and Extensions}{34}{subsection.15.4}%
+\contentsline {section}{\numberline {16}Conclusion}{35}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Key Findings}{35}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Architectural Contribution}{35}{subsection.16.2}%
+\contentsline {subsection}{\numberline {16.3}Reproducibility}{35}{subsection.16.3}%
+\contentsline {section}{\numberline {17}Appendix A: Tooling and Reproduction}{36}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Reproduce the Offline Default Run}{36}{subsection.17.1}%
+\contentsline {subsection}{\numberline {17.2}Reproduce the Live Run}{36}{subsection.17.2}%
+\contentsline {subsection}{\numberline {17.3}Re-target to Another Topic}{36}{subsection.17.3}%
+\contentsline {subsection}{\numberline {17.4}Live Retrieval}{36}{subsection.17.4}%
+\contentsline {subsection}{\numberline {17.5}Deep Research (Offline Fixture Replay)}{36}{subsection.17.5}%
+\contentsline {subsection}{\numberline {17.6}Test Suite}{37}{subsection.17.6}%
+\contentsline {section}{\numberline {18}Appendix B: Technical Notes}{38}{section.18}%
+\contentsline {subsection}{\numberline {18.1}Determinism}{38}{subsection.18.1}%
+\contentsline {subsection}{\numberline {18.2}Data Model}{38}{subsection.18.2}%
+\contentsline {subsection}{\numberline {18.3}NMF Mathematics}{38}{subsection.18.3}%
+\contentsline {subsection}{\numberline {18.4}Growth Rate Estimation}{38}{subsection.18.4}%
+\contentsline {subsection}{\numberline {18.5}Configuration Surface}{38}{subsection.18.5}%
+\contentsline {subsection}{\numberline {18.6}Artifacts}{38}{subsection.18.6}%
+\contentsline {section}{\numberline {19}Appendix C: Accessibility and Provenance}{40}{section.19}%
+\contentsline {subsection}{\numberline {19.1}Figure Accessibility}{40}{subsection.19.1}%
+\contentsline {subsection}{\numberline {19.2}Provenance Chain}{40}{subsection.19.2}%
+\contentsline {subsection}{\numberline {19.3}FAIR Data Principles}{40}{subsection.19.3}%
+\contentsline {subsection}{\numberline {19.4}Honesty}{40}{subsection.19.4}%
+\contentsline {section}{\numberline {20}Glossary}{41}{section.20}%
+\contentsline {section}{\numberline {21}References}{42}{section.21}%

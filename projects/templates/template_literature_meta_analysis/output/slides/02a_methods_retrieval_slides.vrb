@@ -9,11 +9,10 @@ engine hardcodes its URL inside the function body.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Engine
@@ -23,29 +22,31 @@ Rate limit
 Pagination
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Auth
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Records (this run)
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-arXiv & 3s between requests & 100/page, offset & Keyless & Sparse \\
-Semantic Scholar & 1 req/s (unauth.) & 100/page, offset & Optional key &
-Skipped (429) \\
-OpenAlex & Polite pool (mailto) & 200/page, cursor & Keyless & 1,000 \\
-Crossref & Polite pool (mailto) & 1,000/page, offset & Keyless &
-1,000 \\
-PubMed & NCBI usage policy & retstart/retmax & Keyless & 986 \\
+arXiv & 3s between requests & 100/page, offset & Keyless \\
+Semantic Scholar & 1 req/s (unauth.) & 100/page, offset & Optional
+key \\
+OpenAlex & Polite pool (mailto) & 200/page, cursor & Keyless \\
+Crossref & Polite pool (mailto) & 1,000/page, offset & Keyless \\
+PubMed & NCBI usage policy & retstart/retmax & Keyless \\
 SovietRxiv & 30/min (300/min polite) & 1--100/page, cursor &
-\texttt{X-API-Email} & 0 \\
+\texttt{X-API-Email} \\
 ChinaRxiv & 30/min (300/min polite) & 1--100/page, cursor &
-\texttt{X-API-Email} & 0 \\
+\texttt{X-API-Email} \\
+Europe PMC & \textasciitilde10 req/s (undocumented hard limit) & Up to
+1,000/page & Keyless \\
+bioRxiv/medRxiv & No documented limit & 100/page fixed, cursor &
+Keyless \\
 \bottomrule\noalign{}
 \end{longtable}
 }
 
-SovietRxiv and ChinaRxiv returned zero records for the modafinil query,
-which is expected: the Soviet-era archive covers mathematics, physics,
-and engineering preprints, while ChinaXiv covers Chinese scientific
-preprints, and neither domain has substantial modafinil literature. The
-engines dispatched correctly, queried the live API, and returned empty
-result sets without error --- confirming graceful degradation.
+Every new search writes \breaktt{output/data/retrieval\_report.json}, a
+timestamp-free report that records each attempted, skipped, or failed
+source with fetched, new-record, and duplicate counts. A zero-result
+response is therefore distinguishable from a disabled adapter or an HTTP
+failure. The committed corpus predates that report contract, so this
+paper intentionally does not reconstruct source-specific counts from the
+merged corpus.

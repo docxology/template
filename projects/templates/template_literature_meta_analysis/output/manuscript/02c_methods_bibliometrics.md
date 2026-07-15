@@ -3,10 +3,10 @@
 Descriptive statistics summarize the corpus along every available axis: counts by year,
 venue, and author; citation-count distributions; and author productivity. Temporal
 analysis fits the publication time series, reporting a compound annual growth rate of
-3.45\% across 2000--2026 (a span of 26 years), with
-a mean year-over-year growth rate of 6.3\% and a doubling time of
-11.3 years. The peak publication year is 2025 with
-112 records.
+5.48\% across 2000--2026 (a span of 26 years), with
+a mean year-over-year growth rate of 7.8\% and a doubling time of
+9.2 years. The peak publication year is 2025 with
+147 records.
 
 ## Growth Metrics
 
@@ -27,7 +27,7 @@ and injected into the manuscript at render time.
 Subfield classification assigns each record to one of 6 configurable buckets
 (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience) by priority-aware keyword matching; the taxonomy is defined entirely
 in configuration (`project_config.subfield_keywords`). The largest bucket is
-**Clinical Sleep** at 64.3\% of the classified corpus. A per-subfield
+**Clinical Sleep** at 63.0\% of the classified corpus. A per-subfield
 temporal breakdown (`subfield_timeline.json`) tracks how each sub-area has grown over
 time, enabling identification of emerging or declining research threads.
 

@@ -38,9 +38,11 @@ discards previous results for a fresh start.
 
 ## Gating and Defaults
 
-This stage is entirely optional and never runs in the offline default: with no language
-model available it is skipped, and the hypothesis evidence scores read *pending*. The
-hypotheses themselves — their names and scope — come from configuration and are reported
-regardless of whether the scoring stage has run.
+This stage is optional and gated by language-model availability. With no language
+model configured, the hypothesis evidence scores read *pending*; with Ollama configured
+(as in this instance, with 127 assertions extracted), scores are populated
+from citation-weighted assertion extraction. The hypotheses themselves — their names and
+scope — come from configuration and are reported regardless of whether the scoring stage
+has run.
 
 The hypotheses explored in this instance are: H1 Wakefulness Efficacy; H2 Cognitive Enhancement; H3 Low Abuse Liability; H4 Dopaminergic Mechanism; H5 Off-label Psychiatric Utility; H6 Tolerability.

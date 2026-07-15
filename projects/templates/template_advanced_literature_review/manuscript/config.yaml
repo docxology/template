@@ -1,0 +1,424 @@
+# Advanced Multi-Phase Literature Review Configuration
+#
+# This template supports multi-phrase search with filtering phases, building complex
+# literature reviews through iterative query refinement and LLM-based attribute 
+# classification. Each phase can discover new papers and apply both deterministic
+# (year, venue, citation count) and LLM-based (abstract content analysis) filters.
+
+paper:
+  title: "Multi-Phase Systematic Review of Exoplanet Atmospheric Composition"
+  subtitle: "Advanced Search Phases, LLM Filtering, and Cross-Method Validation"
+  version: "0.1.0"
+  date: "" # Auto-generated
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "forthcoming"
+  version_doi: "forthcoming"
+  version_record: ""
+  github_repository: "docxology/template_advanced_literature_review"
+  repository_url: "https://github.com/docxology/template_advanced_literature_review"
+  repository_label: "docxology/template_advanced_literature_review"
+  published_artifacts:
+    ipfs_pinata: ""
+    huggingface_hub: ""
+    osf: ""
+    pypi: ""
+    netlify: ""
+    github_pages: ""
+    software_heritage: ""
+  journal: ""
+  volume: ""
+  pages: ""
+  year: "2026"
+
+keywords:
+  - "exoplanet atmospheres"
+  - "systematic review"
+  - "multi-phase search"
+  - "LLM filtering"
+  - "James Webb Space Telescope"
+  - "atmospheric composition"
+  - "transit spectroscopy"
+  - "bibliometrics"
+  - "cross-validation"
+
+metadata:
+  license: "CC-BY-4.0"
+  language: "en"
+  repository: "https://github.com/docxology/template_advanced_literature_review"
+
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary
+  translations:
+    enabled: true
+    languages:
+      - zh
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+analysis:
+  scripts:
+    - 02_meta_analysis_pipeline.py
+    - 04_generate_figures.py
+    - 06_fulltext_assessment.py
+    - 07_literature_evaluation.py
+    - 08_deep_research_dispatch.py
+    - 09_export_bibliography.py
+    - 10_reproducibility_assessment.py
+    - 11_fulltext_download.py
+    - 05_inject_variables.py
+
+# Advanced Multi-Phase Configuration
+project_config:
+  # Base search configuration (used by search_runner for each query)
+  search:
+    term: "exoplanet atmospheres"
+    query: '"exoplanet atmosphere" OR "exoplanet atmospheric"'
+    start_year: 2010
+    max_results: 500
+    resume: false
+    clear_corpus: true
+    engines:
+      arxiv: true
+      openalex: true
+      semantic_scholar: true
+      crossref: true
+      pubmed: false
+      sovietrxiv: false
+      chinarxiv: false
+      europepmc: false
+      biorxiv: false
+    relevance_keywords:
+      - "exoplanet"
+      - "atmosphere"
+      - "transit spectroscopy"
+      - "JWST"
+      - "molecular detection"
+      - "atmospheric composition"
+
+  # Multi-phase search design: each phase builds on previous phases
+  # Phase order matters - later phases can reference papers from earlier phases
+  search_phases:
+    # Phase 1: Broad foundational search
+    phase_1_foundation:
+      name: "Exoplanet Atmosphere Foundation"
+      description: "Core papers on exoplanet atmospheric studies"
+      queries:
+        - '"exoplanet atmosphere" OR "exoplanet atmospheric"'
+        - '"transit spectroscopy" AND "atmosphere"'
+        - '"atmospheric composition" AND "exoplanet"'
+      max_results_per_query: 500
+      engines:
+        arxiv: true
+        openalex: true
+        semantic_scholar: true
+        crossref: true
+        pubmed: false  # Not relevant for astronomy
+        europepmc: false  # Not relevant for astronomy
+        biorxiv: false  # Not relevant for astronomy
+      # Deterministic filters applied immediately after search
+      deterministic_filters:
+        min_year: 2010
+        max_year: 2026
+        min_citation_count: 0  # Keep all papers regardless of citation count
+
+    # Phase 2: JWST-specific search
+    phase_2_jwst:
+      name: "James Webb Space Telescope Studies"
+      description: "Papers using JWST data for atmospheric analysis"
+      queries:
+        - '"James Webb" AND "atmosphere" AND ("exoplanet" OR "planet")'
+        - '"JWST" AND "transit" AND "spectroscopy"'
+        - '"NIRSpec" OR "MIRI" OR "NIRCam" AND "exoplanet"'
+      max_results_per_query: 300
+      engines:
+        arxiv: true
+        openalex: true
+        semantic_scholar: true
+        crossref: true
+        pubmed: false
+        europepmc: false
+        biorxiv: false
+      deterministic_filters:
+        min_year: 2020  # JWST launched 2021, early papers 2020+
+        max_year: 2026
+        min_citation_count: 0  # New field, lower citation threshold
+      # Depends on phase 1 - can cross-reference for validation
+      depends_on: ["phase_1_foundation"]
+
+    # Phase 3: Specific atmospheric molecules
+    phase_3_molecules:
+      name: "Molecular Detection Studies"
+      description: "Papers detecting specific atmospheric molecules"
+      queries:
+        - '"water vapor" AND "exoplanet" AND ("detection" OR "abundance")'
+        - '"carbon dioxide" AND "exoplanet" AND ("CO2" OR "atmosphere")'
+        - '"methane" AND "exoplanet" AND ("CH4" OR "atmosphere")'
+        - '"hydrogen sulfide" OR "H2S" AND "exoplanet"'
+        - '"sodium" OR "potassium" AND "exoplanet atmosphere"'
+      max_results_per_query: 200
+      engines:
+        arxiv: true
+        openalex: true
+        semantic_scholar: true
+        crossref: true
+        pubmed: false
+        europepmc: false
+        biorxiv: false
+      deterministic_filters:
+        min_year: 2015
+        max_year: 2026
+        min_citation_count: 0
+      depends_on: ["phase_1_foundation", "phase_2_jwst"]
+
+  # LLM-based content filtering (applied after deterministic filters)
+  # NOTE: LLM filters are disabled for the initial search run to maximize coverage.
+  # Enable them by setting apply_to_phases to include the relevant phases.
+  llm_filters:
+    study_type_classifier:
+      name: "Study Type Classification"
+      description: "Classify papers as observational, theoretical, or review"
+      prompt: |
+        Classify this paper's abstract into ONE of these categories:
+        - observational: Uses real telescope/instrument data to study exoplanet atmospheres
+        - theoretical: Develops models, simulations, or theoretical frameworks
+        - review: Review article, survey, or meta-analysis
+        - other: Doesn't fit the above categories
+
+        Abstract: {abstract}
+        
+        Return only the category name (observational/theoretical/review/other).
+      apply_to_phases: []  # Disabled for initial run
+      keep_categories: ["observational", "theoretical"]
+
+    jwst_data_filter:
+      name: "JWST Data Analysis"
+      description: "Identify papers that analyze JWST observational data"
+      prompt: |
+        Does this paper analyze actual observational data from the James Webb Space Telescope (JWST)?
+        Look for mentions of:
+        - JWST instrument data (NIRSpec, MIRI, NIRCam, NIRISS)
+        - Specific JWST observations or programs
+        - Analysis of JWST spectra or photometry
+        - JWST data reduction or calibration
+
+        Abstract: {abstract}
+        
+        Return "yes" if the paper analyzes JWST data, "no" if it doesn't.
+      apply_to_phases: []  # Disabled for initial run
+      keep_values: ["yes"]
+
+    molecular_detection_filter:
+      name: "Molecular Detection Focus"
+      description: "Identify papers focused on detecting atmospheric molecules"
+      prompt: |
+        Is this paper primarily focused on detecting, measuring, or analyzing specific 
+        atmospheric molecules in exoplanet atmospheres? Look for:
+        - Spectroscopic detection of molecules (H2O, CO2, CH4, etc.)
+        - Abundance measurements or constraints
+        - Molecular signatures in spectra
+        - Chemical composition analysis
+
+        Abstract: {abstract}
+        
+        Return "yes" if focused on molecular detection/analysis, "no" otherwise.
+      apply_to_phases: []  # Disabled for initial run
+      keep_values: ["yes"]
+
+  # Cross-phase validation and deduplication
+  phase_integration:
+    # How to handle papers found in multiple phases
+    duplicate_resolution: "merge_metadata"  # Options: merge_metadata, keep_first, keep_last
+    # Validation: papers from later phases should cite papers from earlier phases
+    citation_validation:
+      enabled: true
+      min_cross_phase_citations: 2  # Phase 2/3 papers should cite ≥2 Phase 1 papers
+    # Quality gates: phase-specific minimum quality thresholds
+    quality_gates:
+      phase_1_foundation:
+        min_papers: 100
+        min_citation_avg: 20
+      phase_2_jwst:
+        min_papers: 20
+        min_citation_avg: 5
+      phase_3_molecules:
+        min_papers: 50
+        min_citation_avg: 10
+
+  # Deterministic subsampling (same as single-term template)
+  sampling:
+    fraction: 0.1  # 10% for LLM stages
+    seed: 42
+
+  # Optional full-text download
+  fulltext:
+    enabled: false
+    unpaywall_email: ""
+    download_dir: "output/fulltext"
+
+  # Embeddings configuration
+  embeddings:
+    method: "tfidf_svd"
+    n_components: 50
+    max_features: 2000
+    seed: 42
+
+  knowledge_graph:
+    resume: true
+    checkpoint_interval: 50
+    checkpoint_path: "output/data/nanopublications.jsonl"
+    clear_assertions: false
+    max_papers: null
+
+  llm_extraction:
+    model: "gemma3:4b"
+    base_url: "http://localhost:11434"
+    temperature: 0.1
+    max_tokens: 2048
+    timeout_seconds: 120
+    max_retries: 3
+    min_confidence: 0.6
+
+  reproducibility_assessment:
+    checkpoint_interval: 50
+    clear_workflow_graphs: false
+    max_papers: null
+    llm_model: "gemma3:4b"
+    llm_url: "http://localhost:11434"
+    llm_temperature: 0.1
+    llm_max_tokens: 2048
+    llm_timeout: 120
+    llm_max_retries: 3
+    content_weights:
+      sources: 0.30
+      methods: 0.20
+      experiments: 0.20
+      sinks: 0.30
+    structural_weights:
+      source_consumption: 0.25
+      sink_production: 0.25
+      reference_resolution: 0.20
+      path_coverage: 0.15
+      cohesion: 0.15
+    low_score_threshold: 0.4
+    fuzzy_quote_threshold: 0.85
+
+  # Multi-phase hypothesis definitions
+  hypothesis_definitions:
+    H1:
+      name: "JWST Atmospheric Characterization"
+      description: "JWST enables unprecedented precision in exoplanet atmospheric characterization compared to previous instruments"
+      scope: "observational"
+      relevant_phases: ["phase_1_foundation", "phase_2_jwst"]
+    H2:
+      name: "Molecular Diversity Detection"
+      description: "Multiple atmospheric molecules can be reliably detected in hot Jupiter atmospheres"
+      scope: "chemical"
+      relevant_phases: ["phase_3_molecules"]
+    H3:
+      name: "Cross-Method Consistency"
+      description: "Different observational methods (transit, emission, phase curves) yield consistent atmospheric properties"
+      scope: "methodological"
+      relevant_phases: ["phase_1_foundation", "phase_2_jwst", "phase_3_molecules"]
+    H4:
+      name: "Theoretical-Observational Agreement"
+      description: "Theoretical atmospheric models accurately predict observed spectroscopic features"
+      scope: "theoretical"
+      relevant_phases: ["phase_1_foundation"]
+
+  # Phase-specific pipeline stages
+  pipeline_stages:
+    - name: phase_search
+      script: 01_multi_phase_search.py
+      inputs: []
+      outputs:
+        - output/data/phase_1_corpus.jsonl
+        - output/data/phase_2_corpus.jsonl
+        - output/data/phase_3_corpus.jsonl
+        - output/data/combined_corpus.jsonl
+        - output/data/phase_metadata.json
+      description: "Execute multi-phase search with deterministic and LLM filtering"
+
+    - name: meta_analysis
+      script: 02_meta_analysis_pipeline.py
+      inputs:
+        - output/data/combined_corpus.jsonl
+      outputs:
+        - output/data/subfield_classification.json
+        - output/data/phase_analysis.json
+        - output/data/temporal_analysis.json
+        - output/data/tfidf_data.json
+        - output/data/topics.json
+        - output/data/citation_network.json
+        - output/data/citation_graph.gml
+      description: "Multi-phase aware analysis with cross-phase validation"
+
+    - name: knowledge_graph
+      script: 03_build_knowledge_graph.py
+      inputs:
+        - output/data/combined_corpus.jsonl
+      outputs:
+        - output/data/nanopublications.jsonl
+        - output/data/nanopublications.trig
+        - output/data/hypothesis_scores.json
+        - output/data/hypothesis_trends.json
+        - output/data/assertion_summary.json
+      description: "Multi-phase hypothesis scoring and knowledge graph construction"
+
+    - name: figure_generation
+      script: 04_generate_figures.py
+      inputs:
+        - output/data/phase_analysis.json
+        - output/data/temporal_analysis.json
+        - output/data/topics.json
+        - output/data/citation_network.json
+      outputs:
+        - output/figures/phase_overview.png
+        - output/figures/phase_timeline.png
+        - output/figures/cross_phase_citations.png
+        - output/figures/molecular_detection_summary.png
+        - output/figures/jwst_impact.png
+      description: "Multi-phase aware visualizations"
+
+  # Phase-aware subfield taxonomy
+  subfield_keywords:
+    observational_methods:
+      - "transit spectroscopy"
+      - "emission spectroscopy"
+      - "phase curve"
+      - "secondary eclipse"
+      - "high resolution spectroscopy"
+    atmospheric_molecules:
+      - "water vapor"
+      - "carbon dioxide"
+      - "methane"
+      - "hydrogen sulfide"
+      - "sodium"
+      - "potassium"
+      - "carbon monoxide"
+    jwst_instruments:
+      - "NIRSpec"
+      - "MIRI"
+      - "NIRCam"
+      - "NIRISS"
+      - "James Webb"
+      - "JWST"
+    theoretical_modeling:
+      - "atmospheric models"
+      - "radiative transfer"
+      - "chemical equilibrium"
+      - "circulation models"
+      - "retrieval algorithms"

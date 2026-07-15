@@ -1,5 +1,36 @@
 {
-  "total_assertions": 0,
-  "type_counts": {},
-  "per_hypothesis": {}
+  "total_assertions": 127,
+  "type_counts": {
+    "neutral": 76,
+    "supports": 47,
+    "contradicts": 4
+  },
+  "per_hypothesis": {
+    "OPTIMAL_PERFORMANCE": {
+      "neutral": 16,
+      "supports": 11,
+      "contradicts": 2
+    },
+    "CLINICAL_UTILITY": {
+      "neutral": 23,
+      "supports": 8,
+      "contradicts": 1
+    },
+    "PRIMARY_EFFICACY": {
+      "neutral": 26,
+      "supports": 17
+    },
+    "MECHANISTIC_BASIS": {
+      "supports": 6,
+      "neutral": 4,
+      "contradicts": 1
+    },
+    "SCALABILITY": {
+      "supports": 4,
+      "neutral": 7
+    },
+    "PROCESS_MODEL": {
+      "supports": 1
+    }
+  }
 }

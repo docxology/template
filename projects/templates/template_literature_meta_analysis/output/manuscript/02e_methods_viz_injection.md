@@ -6,7 +6,7 @@ Figures are rendered headlessly (matplotlib Agg backend) and deterministically f
 analysis artifacts: subfield distributions, the publication growth curve, the citation
 network, topic-term bars, a term cloud, and embedding projections. All figures use a
 colourblind-safe palette (Wong 2011, 8 colours) with high-contrast labels at $\geq 16$pt.
-This run produced 18 figures at 300 DPI. The full figure set includes:
+This run produced 21 figures at 300 DPI. The full figure set includes:
 
 - **Field overview**: field summary and subfield distribution
   ((Figure field summary; Figure subfield distribution))

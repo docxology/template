@@ -16,7 +16,7 @@ from literature.engine_dispatch import dispatch_ordered
 from literature.query_router import QueryRouter
 
 
-class RetrievalObservation(TypedDict):
+class RetrievalObservation(TypedDict, total=False):
     """Deterministic per-source provenance for one retrieval attempt."""
 
     source: str
@@ -25,6 +25,9 @@ class RetrievalObservation(TypedDict):
     new_records: int
     duplicates: int
     detail: str
+    elapsed_seconds: float
+    rate_limit_hits: int
+    retries: int
 
 
 def _record_skipped(observations: list[RetrievalObservation], source: str, detail: str) -> None:
@@ -105,6 +108,7 @@ def search_source(
                     "new_records": new_papers,
                     "duplicates": duplicates,
                     "detail": "",
+                    "elapsed_seconds": round(elapsed, 2),
                 }
             )
         return f"{source_name} ({len(papers)} papers, {new_papers} new)"
@@ -120,6 +124,7 @@ def search_source(
                     "new_records": 0,
                     "duplicates": 0,
                     "detail": type(exc).__name__,
+                    "elapsed_seconds": round(elapsed, 2),
                 }
             )
         return None

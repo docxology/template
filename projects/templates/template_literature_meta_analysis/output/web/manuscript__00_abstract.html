@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -195,32 +209,32 @@ literature, and ad-hoc reviews bind no evidence to a reproducible
 pipeline. We present a configurable, reproducible meta-analysis
 framework that takes a single search term and produces a complete
 quantitative portrait of its literature. For this instance the term is
-<strong>Modafinil</strong>. The pipeline dispatches across 7 literature
+<strong>Modafinil</strong>. The pipeline dispatches across 9 literature
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, and ChinaRxiv), each degrading gracefully to a skipped
-source when an API key or the network is unavailable, then merges and
-de-duplicates records by a canonical identifier hierarchy (DOI <span
-class="math inline">\(&gt;\)</span> arXiv ID <span
-class="math inline">\(&gt;\)</span> Semantic Scholar ID <span
-class="math inline">\(&gt;\)</span> OpenAlex ID <span
+SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading
+gracefully to a skipped source when an API key or the network is
+unavailable, then merges and de-duplicates records by a canonical
+identifier hierarchy (DOI <span class="math inline">\(&gt;\)</span>
+arXiv ID <span class="math inline">\(&gt;\)</span> Semantic Scholar ID
+<span class="math inline">\(&gt;\)</span> OpenAlex ID <span
 class="math inline">\(&gt;\)</span> title digest) into a corpus of <span
-class="math inline">\(N = 2302\)</span> records spanning 2000–2026 (26
+class="math inline">\(N = 2334\)</span> records spanning 2000–2026 (26
 years). Records are classified into a configurable 6-bucket subfield
 taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
 and Neuroscience); the largest subfield is <strong>Clinical
-Sleep</strong> (64.3% of the classified corpus). The corpus grows at a
-compound annual rate of 3.45% (mean year-over-year growth 6.3%, doubling
-time 11.3 years), peaking in 2025 with 112 records.</p>
+Sleep</strong> (63.0% of the classified corpus). The corpus grows at a
+compound annual rate of 5.48% (mean year-over-year growth 7.8%, doubling
+time 9.2 years), peaking in 2025 with 147 records.</p>
 <p>Non-negative matrix factorization extracts 5 latent topics over a
 500-feature vocabulary, offline deterministic embeddings place every
 title, abstract, and (when available) full text in a shared vector
 space, and citation-network analysis exposes the corpus’s internal
-structure (8,772 intra-corpus edges across 2204 nodes, 1377 communities,
-graph density 0.18%). Of 38,802 total outgoing references, 22.6% resolve
-to another record inside the corpus. Abstract coverage stands at 55.5%,
-open-access status is known for 14.4% of records, and 40.9% have a
+structure (8,623 intra-corpus edges across 2234 nodes, 1416 communities,
+graph density 0.17%). Of 38,489 total outgoing references, 22.4% resolve
+to another record inside the corpus. Abstract coverage stands at 61.6%,
+open-access status is known for 24.6% of records, and 54.6% have a
 direct PDF link. An optional, LLM-gated knowledge-graph stage scores the
-6 hypotheses explored against the evidence. This run produced 18
+6 hypotheses explored against the evidence. This run produced 21
 publication-quality figures.</p>
 <p>Every domain-specific value in this manuscript — the search term,
 keyword set, engine roster, subfield taxonomy, and hypotheses — is

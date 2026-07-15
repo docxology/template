@@ -21,6 +21,10 @@
       "score": 0.10526315789473684
     },
     {
+      "phrase": "sub",
+      "score": 0.08807339449541285
+    },
+    {
       "phrase": "md",
       "score": 0.08695652173913043
     },
@@ -39,6 +43,10 @@
     {
       "phrase": "depression",
       "score": 0.07407407407407407
+    },
+    {
+      "phrase": "cognitive",
+      "score": 0.07142857142857142
     },
     {
       "phrase": "substance",
@@ -94,7 +102,47 @@
     },
     {
       "phrase": "article",
-      "score": 0.06060606060606061
+      "score": 0.0625
+    },
+    {
+      "phrase": "10",
+      "score": 0.0625
+    },
+    {
+      "phrase": "10 7759",
+      "score": 0.0625
+    },
+    {
+      "phrase": "10 7759 cureus",
+      "score": 0.0625
+    },
+    {
+      "phrase": "27287",
+      "score": 0.0625
+    },
+    {
+      "phrase": "7759",
+      "score": 0.0625
+    },
+    {
+      "phrase": "7759 cureus",
+      "score": 0.0625
+    },
+    {
+      "phrase": "7759 cureus 27287",
+      "score": 0.0625
+    },
+    {
+      "phrase": "article doi",
+      "score": 0.0625
+    },
+    {
+      "phrase": "article doi 10",
+      "score": 0.0625
+    },
+    {
+      "phrase": "h4",
+      "score": 0.06201550387596899
     },
     {
       "phrase": "information",
@@ -109,12 +157,12 @@
       "score": 0.06060606060606061
     },
     {
-      "phrase": "p",
-      "score": 0.06
+      "phrase": "narcolepsy",
+      "score": 0.06040268456375839
     },
     {
-      "phrase": "cognitive",
-      "score": 0.058577405857740586
+      "phrase": "treatment",
+      "score": 0.057692307692307696
     },
     {
       "phrase": "apathy",
@@ -127,6 +175,10 @@
     {
       "phrase": "associated",
       "score": 0.05357142857142857
+    },
+    {
+      "phrase": "i",
+      "score": 0.05286343612334802
     },
     {
       "phrase": "access link",
@@ -147,58 +199,6 @@
     {
       "phrase": "link",
       "score": 0.05263157894736842
-    },
-    {
-      "phrase": "pregnancy",
-      "score": 0.05194805194805195
-    },
-    {
-      "phrase": "research",
-      "score": 0.05128205128205128
-    },
-    {
-      "phrase": "md phd",
-      "score": 0.05128205128205128
-    },
-    {
-      "phrase": "phd",
-      "score": 0.05128205128205128
-    },
-    {
-      "phrase": "cleveland clinic",
-      "score": 0.05084745762711865
-    },
-    {
-      "phrase": "clinic",
-      "score": 0.05084745762711865
-    },
-    {
-      "phrase": "cocaine",
-      "score": 0.05063291139240506
-    },
-    {
-      "phrase": "years",
-      "score": 0.05
-    },
-    {
-      "phrase": "ksr",
-      "score": 0.05
-    },
-    {
-      "phrase": "fatigue",
-      "score": 0.04895104895104895
-    },
-    {
-      "phrase": "patients",
-      "score": 0.048582995951417005
-    },
-    {
-      "phrase": "mch",
-      "score": 0.04838709677419355
-    },
-    {
-      "phrase": "performance",
-      "score": 0.046875
     }
   ]
 }
